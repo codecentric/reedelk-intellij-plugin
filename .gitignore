@@ -30,3 +30,7 @@ testdir/
 hostkey.ser
 *.h2.db
 *.factorypath
+
+.gradle
+build/
+gradle/
