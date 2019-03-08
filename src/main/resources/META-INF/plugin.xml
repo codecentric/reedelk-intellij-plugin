@@ -1,0 +1,37 @@
+<idea-plugin>
+    <id>com.esb.esb-intellij-plugin</id>
+    <name>ESB Flow Designer</name>
+    <vendor email="support@esb.com" url="http://www.esb.com">ESB</vendor>
+
+    <description>
+        <![CDATA[
+    <p>1.0.0-SNAPSHOT</p>
+    <ul>
+        <li>First Release</li>
+    </ul>
+    <p>1.0.0-SNAPSHOT</p>
+    <ul>
+        <li>First Release</li>
+    </ul>
+    ]]>
+    </description>
+
+    <depends>com.intellij.modules.lang</depends>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+        <moduleType id="ESB_MODULE" implementationClass="com.esb.plugin.module.ESBModuleType"/>
+        <moduleBuilder builderClass="com.esb.plugin.module.ESBModuleBuilder" id="MODULE_BUILDER" order="first"/>
+    </extensions>
+
+    <actions>
+
+    </actions>
+
+</idea-plugin>
