@@ -16,22 +16,29 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 
+import static com.esb.plugin.ESBLabel.*;
 import static java.awt.GridBagConstraints.*;
-import static java.awt.GridBagConstraints.HORIZONTAL;
 
 public class ConfigureRuntime extends ModuleWizardStep {
 
-    private JPanel jPanel;
+    private final JPanel jPanel;
+    private final JTextField groupIdInput;
+    private final JTextField versionInput;
+    private final JTextField artifactIdInput;
+    private final TextFieldWithBrowseButton textFieldWithBrowseButton;
+
+    private final ESBModuleBuilder moduleBuilder;
 
     public ConfigureRuntime(WizardContext context, ESBModuleBuilder moduleBuilder) {
-        jPanel = new JPanel(new GridBagLayout());
+        this.moduleBuilder = moduleBuilder;
+        this.jPanel = new JPanel(new GridBagLayout());
 
-        addBrowseRuntimeHome(context, moduleBuilder);
+        this.textFieldWithBrowseButton = addBrowseRuntimeHome(context, moduleBuilder);
         addHorizontalSeparator();
 
-        buildInput("GroupId: ");
-        buildInput("ArtifactId: ");
-        buildInput("Version: ");
+        this.groupIdInput = buildInput(GROUP_ID.value());
+        this.artifactIdInput = buildInput(ARTIFACT_ID.value());
+        this.versionInput = buildInput(VERSION.value());
 
         addFiller();
     }
@@ -43,13 +50,23 @@ public class ConfigureRuntime extends ModuleWizardStep {
 
     @Override
     public void updateDataModel() {
+        String runtimeHome = textFieldWithBrowseButton.getText();
+        moduleBuilder.setRuntimeHome(runtimeHome);
 
+        String groupId = groupIdInput.getText();
+        moduleBuilder.setGroupId(groupId);
+
+        String artifactId = artifactIdInput.getText();
+        moduleBuilder.setArtifactId(artifactId);
+
+        String version = versionInput.getText();
+        moduleBuilder.setVersion(version);
     }
 
-    private void addBrowseRuntimeHome(WizardContext context, ESBModuleBuilder moduleBuilder) {
+    private TextFieldWithBrowseButton addBrowseRuntimeHome(WizardContext context, ESBModuleBuilder moduleBuilder) {
         FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-        TextFieldWithBrowseButton browseButton = new TextFieldWithBrowseButton();
-        browseButton.addBrowseFolderListener(new TextBrowseFolderListener(descriptor, context.getProject()) {
+        TextFieldWithBrowseButton inputWithBrowse = new TextFieldWithBrowseButton();
+        inputWithBrowse.addBrowseFolderListener(new TextBrowseFolderListener(descriptor, context.getProject()) {
             @NotNull
             @Override
             protected String chosenFileToResultingText(@NotNull VirtualFile chosenFile) {
@@ -58,7 +75,8 @@ public class ConfigureRuntime extends ModuleWizardStep {
                 return contentEntryPath == null ? path : path.substring(StringUtil.commonPrefixLength(contentEntryPath, path));
             }
         });
-        addComponentWithLabel("Runtime Home: ", browseButton);
+        addComponentWithLabel(RUNTIME_HOME.value(), inputWithBrowse);
+        return inputWithBrowse;
     }
 
     private void addFiller() {
@@ -85,12 +103,15 @@ public class ConfigureRuntime extends ModuleWizardStep {
         jPanel.add(new JSeparator(JSeparator.HORIZONTAL), constraints);
     }
 
-    private void buildInput(String inputLabel) {
+    private JTextField buildInput(String inputLabel) {
+        inputLabel += ": ";
         JTextField inputTextField = new JTextField();
         addComponentWithLabel(inputLabel, inputTextField);
+        return inputTextField;
     }
 
     private void addComponentWithLabel(String labelText, JComponent component) {
+        labelText += ": ";
         JLabel labelRuntimeHome = new JBLabel(labelText);
         labelRuntimeHome.setLabelFor(component);
         labelRuntimeHome.setVerticalAlignment(SwingConstants.TOP);
