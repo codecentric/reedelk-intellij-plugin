@@ -1,31 +1,40 @@
 package com.esb.plugin.templating;
 
+import com.google.common.base.Preconditions;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.*;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.google.common.base.Preconditions.*;
 
 public class POMTemplate {
 
 
-    public void create(String groupId, String version, String artifactId, String javaVersion) throws IOException, TemplateException {
-        Configuration cfg = new Configuration();
+    public void create(String groupId, String version, String artifactId, String javaVersion, String directory) throws IOException, TemplateException {
+        checkArgument(groupId != null, "groupId");
+        checkArgument(version != null, "version");
+        checkArgument(artifactId != null, "artifactId");
+        checkArgument(javaVersion != null, "javaVersion");
+        checkArgument(directory != null, "directory");
+
         Map<String, Object> input = new HashMap<String, Object>();
-        input.put("groupId", "com.testing.scenario");
-        input.put("version", "1.0.0-SNAPSHOT");
-        input.put("artifactId", "testsomething");
-        input.put("javaVersion", "1.8");
+        input.put("groupId", groupId);
+        input.put("version", version);
+        input.put("artifactId", artifactId);
+        input.put("javaVersion", javaVersion);
 
-        cfg.setClassForTemplateLoading(POMTemplate.class, "/");
-        Template template = cfg.getTemplate("pom_template.ftl");
+        Template template = POMConfig.get().getTemplate("pom_template.ftl");
 
-        // Write output to the console
-        Writer consoleWriter = new OutputStreamWriter(System.out);
-        template.process(input, consoleWriter);
+        Writer file = new FileWriter(Paths.get(directory, "pom.xml").toFile());
+        template.process(input, file);
+
+        file.flush();
+        file.close();
+
     }
 }

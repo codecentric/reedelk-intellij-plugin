@@ -104,7 +104,6 @@ public class ConfigureRuntime extends ModuleWizardStep {
     }
 
     private JTextField buildInput(String inputLabel) {
-        inputLabel += ": ";
         JTextField inputTextField = new JTextField();
         addComponentWithLabel(inputLabel, inputTextField);
         return inputTextField;

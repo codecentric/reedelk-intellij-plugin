@@ -1,6 +1,7 @@
 package com.esb.plugin.module;
 
 import com.esb.plugin.module.wizard.step.ConfigureRuntime;
+import com.esb.plugin.templating.POMConfig;
 import com.esb.plugin.templating.POMTemplate;
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
@@ -20,7 +21,7 @@ public class ESBModuleBuilder extends ModuleBuilder {
     private String groupId;
     private String version;
     private String artifactId;
-    private String javaVersion;
+    private String javaVersion = "1.8";
 
     private String runtimeHome;
 
@@ -42,15 +43,15 @@ public class ESBModuleBuilder extends ModuleBuilder {
     @Override
     public Project createProject(String name, String path) {
         Project project = super.createProject(name, path);
-        // Create pom.xml template
+
+
         POMTemplate template = new POMTemplate();
         try {
-            template.create(groupId, version, artifactId, javaVersion);
+            template.create(groupId, version, artifactId, javaVersion, project.getBasePath());
         } catch (IOException | TemplateException e) {
             e.printStackTrace();
         }
 
-        String basePath = project.getBasePath();
         return project;
     }
 
