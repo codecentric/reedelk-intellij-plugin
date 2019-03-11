@@ -9,5 +9,5 @@ import java.util.List;
 public class ESBRuntimes {
     @Property(surroundWithTag = false)
     @XCollection
-    private List<ESBRuntime> runtimes = new ArrayList<>();
+    public List<ESBRuntime> runtimes = new ArrayList<>();
 }

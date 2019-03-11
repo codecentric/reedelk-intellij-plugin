@@ -11,35 +11,35 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @State(name = "ESBRuntimesService", storages = @Storage("esb-runtimes.xml"))
 public class ESBRuntimeServiceImpl implements ESBRuntimeService, PersistentStateComponent<ESBRuntimes> {
 
+    private final List<ESBRuntime> runtimes = new ArrayList<>();
+
     @Override
     public Collection<ESBRuntime> listRuntimes() {
-        List<ESBRuntime> runtimes = new ArrayList<>();
+        return Collections.unmodifiableCollection(runtimes);
+    }
 
-        ESBRuntime runtime1 = new ESBRuntime();
-        runtime1.name = "Runtime1";
-        runtime1.path = "/Users/lorenzo/runtime1";
-        ESBRuntime runtime2 = new ESBRuntime();
-        runtime2.name = "Runtime2";
-        runtime2.path = "/Users/lorenzo/runtime2";
-
-        runtimes.add(runtime1);
-        runtimes.add(runtime2);
-        return runtimes;
+    @Override
+    public void addRuntime(ESBRuntime runtime) {
+        this.runtimes.add(runtime);
     }
 
     @Nullable
     @Override
     public ESBRuntimes getState() {
-        return new ESBRuntimes();
+        ESBRuntimes runtimes = new ESBRuntimes();
+        runtimes.runtimes.addAll(this.runtimes);
+        return runtimes;
     }
 
     @Override
     public void loadState(@NotNull ESBRuntimes state) {
-
+        this.runtimes.clear();
+        this.runtimes.addAll(state.runtimes);
     }
 }

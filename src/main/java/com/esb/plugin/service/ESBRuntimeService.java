@@ -10,4 +10,6 @@ public interface ESBRuntimeService {
     }
 
     Collection<ESBRuntime> listRuntimes();
+
+    void addRuntime(ESBRuntime runtime);
 }

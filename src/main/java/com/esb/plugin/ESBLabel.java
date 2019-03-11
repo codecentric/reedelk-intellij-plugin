@@ -3,7 +3,7 @@ package com.esb.plugin;
 public enum ESBLabel {
 
 
-    RUNTIME_HOME("ESBRuntime Home");
+    RUNTIME_HOME("Runtime Path");
 
     private final String value;
 

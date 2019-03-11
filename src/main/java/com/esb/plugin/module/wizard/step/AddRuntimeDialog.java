@@ -1,0 +1,126 @@
+package com.esb.plugin.module.wizard.step;
+
+import com.esb.plugin.module.ESBModuleBuilder;
+import com.esb.plugin.service.ESBRuntime;
+import com.intellij.ide.util.projectWizard.WizardContext;
+import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.ui.TextBrowseFolderListener;
+import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.DocumentAdapter;
+import com.intellij.ui.components.JBLabel;
+import com.intellij.uiDesigner.core.GridConstraints;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.esb.plugin.ESBLabel.RUNTIME_HOME;
+import static com.intellij.uiDesigner.core.GridConstraints.*;
+
+public class AddRuntimeDialog extends DialogWrapper {
+    private final TextFieldWithBrowseButton inputWithBrowse;
+    private JTextField runtimeNameTextField;
+    private JPanel jPanel;
+
+
+    protected AddRuntimeDialog(@NotNull Component parent, WizardContext wizardContext, ESBModuleBuilder moduleBuilder) {
+        super(parent, false);
+        setTitle("Add Runtime");
+
+        init();
+
+
+        inputWithBrowse = addBrowseRuntimeHome(wizardContext, moduleBuilder);
+
+        DocumentAdapter l = new DocumentAdapter() {
+            @Override
+            protected void textChanged(@NotNull DocumentEvent e) {
+                doValidateInput();
+            }
+        };
+
+        runtimeNameTextField.getDocument().addDocumentListener(l);
+        inputWithBrowse.getTextField().getDocument().addDocumentListener(l);
+        doValidateInput();
+    }
+
+    private void doValidateInput() {
+        List<String> errors = new ArrayList<>();
+        if (StringUtil.isEmptyOrSpaces(runtimeNameTextField.getText())) errors.add("Runtime Name");
+        if (StringUtil.isEmptyOrSpaces(inputWithBrowse.getText())) errors.add("Runtime Path");
+
+        if (errors.isEmpty()) {
+            setErrorText(null);
+            getOKAction().setEnabled(true);
+            return;
+        }
+        String message = "Please specify " + StringUtil.join(errors, ", ");
+        setErrorText(message);
+        getOKAction().setEnabled(false);
+        getRootPane().revalidate();
+    }
+
+    private TextFieldWithBrowseButton addBrowseRuntimeHome(WizardContext context, ESBModuleBuilder moduleBuilder) {
+        FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
+        TextFieldWithBrowseButton inputWithBrowse = new TextFieldWithBrowseButton();
+        inputWithBrowse.addBrowseFolderListener(new TextBrowseFolderListener(descriptor, context.getProject()) {
+            @NotNull
+            @Override
+            protected String chosenFileToResultingText(@NotNull VirtualFile chosenFile) {
+                String contentEntryPath = moduleBuilder.getContentEntryPath();
+                String path = chosenFile.getPath();
+                return contentEntryPath == null ? path : path.substring(StringUtil.commonPrefixLength(contentEntryPath, path));
+            }
+        });
+
+        addComponentWithLabel(RUNTIME_HOME.value(), inputWithBrowse);
+        return inputWithBrowse;
+    }
+
+    @Nullable
+    @Override
+    protected JComponent createCenterPanel() {
+        return jPanel;
+    }
+
+    public ESBRuntime getRuntime() {
+        ESBRuntime runtime = new ESBRuntime();
+        runtime.name = runtimeNameTextField.getText();
+        runtime.path = inputWithBrowse.getText();
+        return runtime;
+    }
+
+
+    private void addComponentWithLabel(String labelText, JComponent component) {
+        JLabel label = new JBLabel(labelText);
+        label.setLabelFor(component);
+        label.setVerticalAlignment(SwingConstants.TOP);
+
+        GridConstraints constraints = new GridConstraints();
+        constraints.setColumn(0);
+        constraints.setRow(1);
+        jPanel.add(label, constraints);
+
+        GridConstraints selectorConstraints = new GridConstraints(1, 1, 1, 1,
+                ANCHOR_CENTER,
+                FILL_NONE,
+                SIZEPOLICY_CAN_GROW | SIZEPOLICY_CAN_SHRINK,
+                SIZEPOLICY_CAN_GROW | SIZEPOLICY_CAN_SHRINK,
+                new Dimension(-1, -1),
+                new Dimension(400, -1),
+                new Dimension(-1, -1));
+
+
+        jPanel.add(component, selectorConstraints);
+    }
+}
