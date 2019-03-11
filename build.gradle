@@ -18,6 +18,7 @@ dependencies {
 }
 
 intellij {
+    plugins = ["maven"]
     version '2018.3.5'
 }
 patchPluginXml {
