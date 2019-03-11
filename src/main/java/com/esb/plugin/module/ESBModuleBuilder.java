@@ -1,19 +1,25 @@
 package com.esb.plugin.module;
 
+import com.esb.plugin.ESBIcons;
 import com.esb.plugin.module.wizard.step.ConfigureRuntime;
-import com.esb.plugin.templating.POMConfig;
+import com.esb.plugin.module.wizard.step.EmptyStep;
+import com.esb.plugin.module.wizard.step.MavenConfigStep;
 import com.esb.plugin.templating.POMTemplate;
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
+import com.intellij.openapi.Disposable;
+import com.intellij.openapi.module.JavaModuleType;
 import com.intellij.openapi.module.ModuleType;
-import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
+import com.intellij.openapi.util.Disposer;
 import freemarker.template.TemplateException;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.io.IOException;
 
 public class ESBModuleBuilder extends ModuleBuilder {
@@ -25,26 +31,20 @@ public class ESBModuleBuilder extends ModuleBuilder {
 
     private String runtimeHome;
 
-    @Override
-    public ModuleType getModuleType() {
-        return ESBModuleType.getInstance();
-    }
 
     @Override
-    public ModuleWizardStep[] createWizardSteps(@NotNull WizardContext wizardContext, @NotNull ModulesProvider modulesProvider) {
-        return new ModuleWizardStep[]{ new ConfigureRuntime(wizardContext, this)};
-    }
-
-    @Override
-    public void setupRootModel(ModifiableRootModel modifiableRootModel) throws ConfigurationException {
-
+    public void setupRootModel(@NotNull ModifiableRootModel rootModel) {
+        final Project project = rootModel.getProject();
+        if (myJdk != null){
+            rootModel.setSdk(myJdk);
+        } else {
+            rootModel.inheritSdk();
+        }
     }
 
     @Override
     public Project createProject(String name, String path) {
         Project project = super.createProject(name, path);
-
-
         POMTemplate template = new POMTemplate();
         try {
             template.create(groupId, version, artifactId, javaVersion, project.getBasePath());
@@ -53,6 +53,13 @@ public class ESBModuleBuilder extends ModuleBuilder {
         }
 
         return project;
+    }
+
+    @Override
+    public ModuleWizardStep[] createWizardSteps(@NotNull WizardContext wizardContext, @NotNull ModulesProvider modulesProvider) {
+        return new ModuleWizardStep[] {
+                new ConfigureRuntime(wizardContext, this),
+                new MavenConfigStep(wizardContext, this) };
     }
 
     public void setGroupId(String groupId) {
@@ -71,4 +78,31 @@ public class ESBModuleBuilder extends ModuleBuilder {
         this.runtimeHome = runtimeHome;
     }
 
+    @Override
+    public String getPresentableName() {
+        return "ESB Designer";
+    }
+
+    @Override
+    public Icon getNodeIcon() {
+        return ESBIcons.Module;
+    }
+
+    @Nullable
+    @Override
+    public ModuleWizardStep getCustomOptionsStep(WizardContext context, Disposable parentDisposable) {
+        EmptyStep step = new EmptyStep();
+        Disposer.register(parentDisposable, step);
+        return step;
+    }
+
+    @Override
+    public String getParentGroup() {
+        return JavaModuleType.JAVA_GROUP;
+    }
+
+    @Override
+    public ModuleType getModuleType() {
+        return ESBModuleType.getInstance();
+    }
 }

@@ -1,7 +1,5 @@
 package com.esb.plugin.templating;
 
-import com.google.common.base.Preconditions;
-import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 

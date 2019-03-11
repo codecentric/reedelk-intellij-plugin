@@ -22,9 +22,6 @@ import static java.awt.GridBagConstraints.*;
 public class ConfigureRuntime extends ModuleWizardStep {
 
     private final JPanel jPanel;
-    private final JTextField groupIdInput;
-    private final JTextField versionInput;
-    private final JTextField artifactIdInput;
     private final TextFieldWithBrowseButton textFieldWithBrowseButton;
 
     private final ESBModuleBuilder moduleBuilder;
@@ -35,10 +32,6 @@ public class ConfigureRuntime extends ModuleWizardStep {
 
         this.textFieldWithBrowseButton = addBrowseRuntimeHome(context, moduleBuilder);
         addHorizontalSeparator();
-
-        this.groupIdInput = buildInput(GROUP_ID.value());
-        this.artifactIdInput = buildInput(ARTIFACT_ID.value());
-        this.versionInput = buildInput(VERSION.value());
 
         addFiller();
     }
@@ -52,15 +45,6 @@ public class ConfigureRuntime extends ModuleWizardStep {
     public void updateDataModel() {
         String runtimeHome = textFieldWithBrowseButton.getText();
         moduleBuilder.setRuntimeHome(runtimeHome);
-
-        String groupId = groupIdInput.getText();
-        moduleBuilder.setGroupId(groupId);
-
-        String artifactId = artifactIdInput.getText();
-        moduleBuilder.setArtifactId(artifactId);
-
-        String version = versionInput.getText();
-        moduleBuilder.setVersion(version);
     }
 
     private TextFieldWithBrowseButton addBrowseRuntimeHome(WizardContext context, ESBModuleBuilder moduleBuilder) {
@@ -103,11 +87,6 @@ public class ConfigureRuntime extends ModuleWizardStep {
         jPanel.add(new JSeparator(JSeparator.HORIZONTAL), constraints);
     }
 
-    private JTextField buildInput(String inputLabel) {
-        JTextField inputTextField = new JTextField();
-        addComponentWithLabel(inputLabel, inputTextField);
-        return inputTextField;
-    }
 
     private void addComponentWithLabel(String labelText, JComponent component) {
         labelText += ": ";
