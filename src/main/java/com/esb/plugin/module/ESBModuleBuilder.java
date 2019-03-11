@@ -1,7 +1,7 @@
 package com.esb.plugin.module;
 
 import com.esb.plugin.ESBIcons;
-import com.esb.plugin.module.wizard.step.ConfigureRuntime;
+import com.esb.plugin.module.wizard.step.ConfigureRuntimeStep;
 import com.esb.plugin.module.wizard.step.EmptyStep;
 import com.esb.plugin.module.wizard.step.MavenConfigStep;
 import com.esb.plugin.templating.POMTemplate;
@@ -58,7 +58,7 @@ public class ESBModuleBuilder extends ModuleBuilder {
     @Override
     public ModuleWizardStep[] createWizardSteps(@NotNull WizardContext wizardContext, @NotNull ModulesProvider modulesProvider) {
         return new ModuleWizardStep[] {
-                new ConfigureRuntime(wizardContext, this),
+                new ConfigureRuntimeStep(wizardContext, this),
                 new MavenConfigStep(wizardContext, this) };
     }
 

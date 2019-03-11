@@ -31,7 +31,7 @@ public class ConfigureRuntime extends ModuleWizardStep {
         this.jPanel = new JPanel(new GridBagLayout());
 
         this.textFieldWithBrowseButton = addBrowseRuntimeHome(context, moduleBuilder);
-        addHorizontalSeparator();
+
 
         addFiller();
     }
@@ -75,18 +75,6 @@ public class ConfigureRuntime extends ModuleWizardStep {
         constraints.fill = BOTH;
         jPanel.add(filler, constraints);
     }
-
-    private void addHorizontalSeparator() {
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.gridy = RELATIVE;
-        constraints.gridx = 0;
-        constraints.weightx = 1;
-        constraints.weighty = 0;
-        constraints.gridwidth = REMAINDER;
-        constraints.fill = HORIZONTAL;
-        jPanel.add(new JSeparator(JSeparator.HORIZONTAL), constraints);
-    }
-
 
     private void addComponentWithLabel(String labelText, JComponent component) {
         labelText += ": ";

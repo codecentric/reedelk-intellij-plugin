@@ -2,10 +2,8 @@ package com.esb.plugin;
 
 public enum ESBLabel {
 
-    GROUP_ID("GroupId"),
-    VERSION("Version"),
-    ARTIFACT_ID("ArtifactId"),
-    RUNTIME_HOME("Runtime Home");
+
+    RUNTIME_HOME("ESBRuntime Home");
 
     private final String value;
 

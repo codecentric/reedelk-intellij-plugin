@@ -28,6 +28,8 @@
         <!-- Add your extensions here -->
         <moduleType id="ESB_MODULE" implementationClass="com.esb.plugin.module.ESBModuleType"/>
         <moduleBuilder builderClass="com.esb.plugin.module.ESBModuleBuilder" id="ESB_MODULE_BUILDER" order="first"/>
+        <applicationService serviceInterface="com.esb.plugin.service.ESBRuntimeService"
+                            serviceImplementation="com.esb.plugin.service.impl.ESBRuntimeServiceImpl"/>
     </extensions>
 
     <actions>
