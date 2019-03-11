@@ -19,19 +19,13 @@
     <depends>com.intellij.modules.lang</depends>
     <depends>org.jetbrains.idea.maven</depends>
 
-    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
-         on how to target different products -->
-    <!-- uncomment to enable plugin in all products
-    <depends>com.intellij.modules.lang</depends>
-    -->
-
     <extensions defaultExtensionNs="com.intellij">
         <!-- File Templates -->
         <internalFileTemplate name="Maven Module"/>
         <internalFileTemplate name="Maven Project"/>
 
         <!-- Add your extensions here -->
-        <moduleType id="ESB_MODULE" implementationClass="com.esb.plugin.module.ESBModuleType"/>
+
         <moduleBuilder builderClass="com.esb.plugin.module.ESBModuleBuilder" id="ESB_MODULE_BUILDER" order="first"/>
         <applicationService serviceInterface="com.esb.plugin.service.runtime.ESBRuntimeService"
                             serviceImplementation="com.esb.plugin.service.runtime.impl.ESBRuntimeServiceImpl"/>

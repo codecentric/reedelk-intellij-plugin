@@ -8,7 +8,6 @@ import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.JavaModuleType;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -27,11 +26,6 @@ import java.io.File;
 
 public class ESBModuleBuilder extends MavenModuleBuilder {
 
-    private String groupId;
-    private String version;
-    private String artifactId;
-    private String javaVersion = "1.8";
-
     private String runtimeHome;
 
     public ESBModuleBuilder() {
@@ -42,6 +36,8 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
     @Override
     public void setupRootModel(@NotNull ModifiableRootModel rootModel) {
         super.setupRootModel(rootModel);
+
+        String sdkVersion = rootModel.getSdk().getVersionString();
 
         addListener(new ModuleBuilderListener() {
             @Override
@@ -69,32 +65,24 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
     }
 
 
-    /**
     @Override
-    public ModuleWizardStep[] createWizardSteps(@NotNull WizardContext wizardContext, @NotNull ModulesProvider modulesProvider) {
-        return new ModuleWizardStep[] {
-                new MavenConfigStep(wizardContext, this) };
-    }*/
-
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
+    public String getBuilderId() {
+        return getClass().getName();
     }
 
-    public void setVersion(String version) {
-        this.version = version;
+    @Override
+    public String getName() {
+        return "ESB Module";
     }
 
-    public void setArtifactId(String artifactId) {
-        this.artifactId = artifactId;
-    }
-
-    public void setRuntimeHome(String runtimeHome) {
-        this.runtimeHome = runtimeHome;
+    @Override
+    public String getDescription() {
+        return "Creates an ESB Maven Based Project";
     }
 
     @Override
     public String getPresentableName() {
-        return "ESB Designer";
+        return "ESB Module";
     }
 
     @Override
@@ -115,8 +103,8 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
         return JavaModuleType.JAVA_GROUP;
     }
 
-    @Override
-    public ModuleType getModuleType() {
-        return ESBModuleType.getInstance();
+    public void setRuntimeHome(String runtimeHome) {
+        this.runtimeHome = runtimeHome;
     }
+
 }
