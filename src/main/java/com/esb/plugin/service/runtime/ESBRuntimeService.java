@@ -1,10 +1,11 @@
-package com.esb.plugin.service;
+package com.esb.plugin.service.runtime;
 
 import com.intellij.openapi.components.ServiceManager;
 
 import java.util.Collection;
 
 public interface ESBRuntimeService {
+
     static ESBRuntimeService getInstance() {
         return ServiceManager.getService(ESBRuntimeService.class);
     }

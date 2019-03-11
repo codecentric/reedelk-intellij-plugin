@@ -1,8 +1,8 @@
-package com.esb.plugin.service.impl;
+package com.esb.plugin.service.runtime.impl;
 
-import com.esb.plugin.service.ESBRuntime;
-import com.esb.plugin.service.ESBRuntimeService;
-import com.esb.plugin.service.ESBRuntimes;
+import com.esb.plugin.service.runtime.ESBRuntime;
+import com.esb.plugin.service.runtime.ESBRuntimeService;
+import com.esb.plugin.service.runtime.ESBRuntimes;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;

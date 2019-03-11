@@ -1,4 +1,4 @@
-package com.esb.plugin.service;
+package com.esb.plugin.service.runtime;
 
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Tag;

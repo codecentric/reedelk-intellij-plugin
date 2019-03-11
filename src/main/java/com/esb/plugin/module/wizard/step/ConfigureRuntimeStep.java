@@ -1,19 +1,20 @@
 package com.esb.plugin.module.wizard.step;
 
 import com.esb.plugin.module.ESBModuleBuilder;
-import com.esb.plugin.service.ESBRuntime;
-import com.esb.plugin.service.ESBRuntimeService;
+import com.esb.plugin.service.runtime.ESBRuntime;
+import com.esb.plugin.service.runtime.ESBRuntimeService;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 
 import javax.swing.*;
 import java.util.Collection;
 
-public class ConfigureRuntimeStep extends ModuleWizardStep {
+public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable {
 
-    private final ESBModuleBuilder moduleBuilder;
+    private ESBModuleBuilder moduleBuilder;
     private JComboBox<RuntimeItem> runtimeCombo;
     private JButton btnAddRuntime;
     private JPanel jPanel;
@@ -35,10 +36,10 @@ public class ConfigureRuntimeStep extends ModuleWizardStep {
             }
 
             ESBRuntime runtime = dialog.getRuntime();
-            ServiceManager.getService(ESBRuntimeService.class).addRuntime(runtime);
-            addRuntimeAndUpdateCombo(runtime);
+            saveRuntime(runtime);
+            updateComboAndSetSelected(runtime);
+            moduleBuilder.setRuntimeHome(runtime.path);
         });
-
     }
 
     @Override
@@ -51,7 +52,16 @@ public class ConfigureRuntimeStep extends ModuleWizardStep {
         this.moduleBuilder.setRuntimeHome("test");
     }
 
-    private void addRuntimeAndUpdateCombo(final ESBRuntime selected) {
+    @Override
+    public void dispose() {
+
+    }
+
+    private void saveRuntime(final ESBRuntime newRuntime) {
+        ServiceManager.getService(ESBRuntimeService.class).addRuntime(newRuntime);
+    }
+
+    private void updateComboAndSetSelected(final ESBRuntime selected) {
         ApplicationManager.getApplication().assertIsDispatchThread();
         RuntimeItem newItem = new RuntimeItem(selected);
         runtimeCombo.addItem(newItem);

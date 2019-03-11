@@ -44,7 +44,9 @@ public class ESBModuleBuilder extends ModuleBuilder {
 
     @Override
     public Project createProject(String name, String path) {
+
         Project project = super.createProject(name, path);
+
         POMTemplate template = new POMTemplate();
         try {
             template.create(groupId, version, artifactId, javaVersion, project.getBasePath());
@@ -58,7 +60,6 @@ public class ESBModuleBuilder extends ModuleBuilder {
     @Override
     public ModuleWizardStep[] createWizardSteps(@NotNull WizardContext wizardContext, @NotNull ModulesProvider modulesProvider) {
         return new ModuleWizardStep[] {
-                new ConfigureRuntimeStep(wizardContext, this),
                 new MavenConfigStep(wizardContext, this) };
     }
 
@@ -91,7 +92,7 @@ public class ESBModuleBuilder extends ModuleBuilder {
     @Nullable
     @Override
     public ModuleWizardStep getCustomOptionsStep(WizardContext context, Disposable parentDisposable) {
-        EmptyStep step = new EmptyStep();
+        ConfigureRuntimeStep step = new ConfigureRuntimeStep(context, this);
         Disposer.register(parentDisposable, step);
         return step;
     }
