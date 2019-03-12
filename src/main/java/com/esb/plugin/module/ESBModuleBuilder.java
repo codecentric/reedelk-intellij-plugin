@@ -28,10 +28,7 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
     private String runtimeHome;
 
     public ESBModuleBuilder() {
-        setProjectId(new MavenId(
-                ESBLabel.DEFAULT_GROUP_ID.get(),
-                ESBLabel.DEFAULT_ARTIFACT_ID.get(),
-                ESBLabel.DEFAULT_VERSION.get()));
+        setProjectId(defaultMavenId());
     }
 
     @Override
@@ -42,10 +39,9 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
         final VirtualFile root = createAndGetContentEntry();
         rootModel.addContentEntry(root);
 
-        final MavenId parentId = getParentProject() != null ? getParentProject().getMavenId() : null;
         final MavenId projectId = getProjectId();
+        final MavenId parentId = getParentMavenId();
         final String sdkVersion = rootModel.getSdkName();
-
 
         MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> {
             try {
@@ -59,6 +55,11 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
     @Override
     public String getBuilderId() {
         return getClass().getName();
+    }
+
+    @Override
+    public Icon getNodeIcon() {
+        return ESBIcons.Module;
     }
 
     @Override
@@ -76,11 +77,6 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
         return ESBLabel.MODULE_BUILDER_DESCRIPTION.get();
     }
 
-    @Override
-    public Icon getNodeIcon() {
-        return ESBIcons.Module;
-    }
-
     @Nullable
     @Override
     public ModuleWizardStep getCustomOptionsStep(WizardContext context, Disposable parentDisposable) {
@@ -91,7 +87,7 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
 
     @Override
     public String getParentGroup() {
-        return JavaModuleType.JAVA_GROUP;
+        return JavaModuleType.BUILD_TOOLS_GROUP;
     }
 
     public void setRuntimeHome(String runtimeHome) {
@@ -102,5 +98,18 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
         String path = FileUtil.toSystemIndependentName(getContentEntryPath());
         (new File(path)).mkdirs();
         return LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
+    }
+
+    private MavenId getParentMavenId() {
+        return getParentProject() != null ?
+                getParentProject().getMavenId() :
+                null;
+    }
+
+    private MavenId defaultMavenId() {
+        return new MavenId(
+                ESBLabel.DEFAULT_GROUP_ID.get(),
+                ESBLabel.DEFAULT_ARTIFACT_ID.get(),
+                ESBLabel.DEFAULT_VERSION.get());
     }
 }
