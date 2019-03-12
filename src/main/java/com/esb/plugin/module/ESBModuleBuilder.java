@@ -1,11 +1,14 @@
 package com.esb.plugin.module;
 
 import com.esb.plugin.module.wizard.step.ConfigureRuntimeStep;
+import com.esb.plugin.service.runtime.ESBRuntime;
+import com.esb.plugin.service.runtime.ESBRuntimeService;
 import com.esb.plugin.utils.ESBIcons;
 import com.esb.plugin.utils.ESBLabel;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.JavaModuleType;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
@@ -25,7 +28,7 @@ import java.io.File;
 
 public class ESBModuleBuilder extends MavenModuleBuilder {
 
-    private String runtimeHome;
+    private ESBRuntime runtime;
 
     public ESBModuleBuilder() {
         setProjectId(defaultMavenId());
@@ -36,6 +39,17 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
         super.setupRootModel(rootModel);
 
         final Project project = rootModel.getProject();
+        ESBRuntimeService runtimeService = ServiceManager.getService(ESBRuntimeService.class);
+        if (!runtimeService.contains(runtime)) {
+            runtimeService.addRuntime(runtime);
+        }
+
+
+        // Associate to this module the runtime
+
+
+
+
         final VirtualFile root = createAndGetContentEntry();
         rootModel.addContentEntry(root);
 
@@ -90,10 +104,7 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
         return JavaModuleType.BUILD_TOOLS_GROUP;
     }
 
-    public void setRuntimeHome(String runtimeHome) {
-        this.runtimeHome = runtimeHome;
-    }
-
+    //TODO: To be removed since done by super.setRootModel
     private VirtualFile createAndGetContentEntry() {
         String path = FileUtil.toSystemIndependentName(getContentEntryPath());
         (new File(path)).mkdirs();
@@ -112,4 +123,10 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
                 ESBLabel.DEFAULT_ARTIFACT_ID.get(),
                 ESBLabel.DEFAULT_VERSION.get());
     }
+
+    public void setRuntime(ESBRuntime runtime) {
+        this.runtime = runtime;
+    }
+
+
 }

@@ -10,10 +10,12 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 
 import javax.swing.*;
+import java.awt.event.ItemEvent;
 import java.util.Collection;
 
 public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable {
 
+    private ESBRuntime runtime;
     private ESBModuleBuilder moduleBuilder;
 
     private JPanel jPanel;
@@ -30,16 +32,21 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
             runtimeCombo.addItem(new RuntimeItem(runtime));
         }
 
+        runtimeCombo.addItemListener(event -> {
+            if (event.getStateChange() == ItemEvent.SELECTED) {
+                RuntimeItem item = (RuntimeItem) event.getItem();
+                this.runtime = item.getRuntime();
+            }
+        });
+
         btnAddRuntime.addActionListener(e -> {
             AddRuntimeDialog dialog = new AddRuntimeDialog(jPanel, wizardContext, moduleBuilder);
             if(!dialog.showAndGet()) {
                 return;
             }
 
-            ESBRuntime runtime = dialog.getRuntime();
-            saveRuntime(runtime);
+            this.runtime = dialog.getRuntime();
             updateComboAndSetSelected(runtime);
-            moduleBuilder.setRuntimeHome(runtime.path);
         });
     }
 
@@ -50,16 +57,12 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
 
     @Override
     public void updateDataModel() {
-        this.moduleBuilder.setRuntimeHome("test");
+        moduleBuilder.setRuntime(this.runtime);
     }
 
     @Override
     public void dispose() {
 
-    }
-
-    private void saveRuntime(final ESBRuntime newRuntime) {
-        ServiceManager.getService(ESBRuntimeService.class).addRuntime(newRuntime);
     }
 
     private void updateComboAndSetSelected(final ESBRuntime selected) {
@@ -86,4 +89,5 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
             return runtime.name;
         }
     }
+
 }

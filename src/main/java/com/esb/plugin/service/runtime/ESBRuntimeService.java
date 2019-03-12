@@ -13,4 +13,6 @@ public interface ESBRuntimeService {
     Collection<ESBRuntime> listRuntimes();
 
     void addRuntime(ESBRuntime runtime);
+
+    boolean contains(ESBRuntime runtime);
 }

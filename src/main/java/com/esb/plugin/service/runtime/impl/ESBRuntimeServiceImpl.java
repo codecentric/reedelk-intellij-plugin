@@ -29,6 +29,12 @@ public class ESBRuntimeServiceImpl implements ESBRuntimeService, PersistentState
         this.runtimes.add(runtime);
     }
 
+    @Override
+    public boolean contains(ESBRuntime runtime) {
+        return runtimes.stream()
+                .anyMatch(item -> item.name.equals(runtime.name));
+    }
+
     @Nullable
     @Override
     public ESBRuntimes getState() {

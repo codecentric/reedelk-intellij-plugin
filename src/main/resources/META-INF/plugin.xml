@@ -24,15 +24,21 @@
         <internalFileTemplate name="Maven Module"/>
         <internalFileTemplate name="Maven Project"/>
 
-        <!-- Add your extensions here -->
 
         <moduleBuilder builderClass="com.esb.plugin.module.ESBModuleBuilder" id="ESB_MODULE_BUILDER" order="first"/>
+
         <applicationService serviceInterface="com.esb.plugin.service.runtime.ESBRuntimeService"
                             serviceImplementation="com.esb.plugin.service.runtime.impl.ESBRuntimeServiceImpl"/>
         <projectService serviceInterface="com.esb.plugin.service.project.ESBProjectService"
                         serviceImplementation="com.esb.plugin.service.project.impl.ESBProjectServiceImpl"/>
         <projectService serviceInterface="com.esb.plugin.service.project.ESBProjectRuntimeService"
                         serviceImplementation="com.esb.plugin.service.project.impl.ESBProjectRuntimeServiceImpl"/>
+
+        <moduleService serviceInterface="com.esb.plugin.service.module.ESBModuleRuntimeService"
+                       serviceImplementation="com.esb.plugin.service.module.impl.ESBModuleRuntimeServiceImpl"/>
+
+        <configurationType implementation="com.esb.plugin.runconfig.ESBRuntimeRunConfigurationType"/>
+
     </extensions>
 
     <actions>
