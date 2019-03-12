@@ -126,5 +126,4 @@ public class AddRuntimeDialog extends DialogWrapper {
                     new Dimension(400, -1),
                     new Dimension(-1, -1));
 
-
 }

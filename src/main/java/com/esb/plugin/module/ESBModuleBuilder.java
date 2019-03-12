@@ -40,13 +40,12 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
 
         final Project project = rootModel.getProject();
         ESBRuntimeService runtimeService = ServiceManager.getService(ESBRuntimeService.class);
-        if (!runtimeService.contains(runtime)) {
+        if (runtime != null && !runtimeService.contains(runtime)) {
             runtimeService.addRuntime(runtime);
         }
 
 
         // Associate to this module the runtime
-
 
 
 
