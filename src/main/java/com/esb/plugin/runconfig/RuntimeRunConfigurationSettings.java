@@ -21,7 +21,6 @@ import static com.intellij.uiDesigner.core.GridConstraints.*;
 public class RuntimeRunConfigurationSettings extends SettingsEditor<ESBRuntimeRunConfiguration> {
 
     private JPanel jPanel;
-    private JTextField jdkTextField;
     private JTextField vmOptionsTextField;
     private JTextField runtimePortTextField;
     private TextFieldWithBrowseButton runtimeHomeField;
@@ -29,29 +28,6 @@ public class RuntimeRunConfigurationSettings extends SettingsEditor<ESBRuntimeRu
     public RuntimeRunConfigurationSettings(Project project) {
         buildRuntimeInputField(project);
     }
-
-
-    private void buildRuntimeInputField(Project project) {
-        FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-        TextFieldWithBrowseButton inputWithBrowse = new TextFieldWithBrowseButton();
-        inputWithBrowse.addBrowseFolderListener(new TextBrowseFolderListener(descriptor, project) {
-            @NotNull
-            @Override
-            protected String chosenFileToResultingText(@NotNull VirtualFile chosenFile) {
-                return chosenFile.getPath();
-            }
-        });
-
-        JLabel label = new JBLabel(ESBLabel.RUNTIME_HOME.get());
-        label.setLabelFor(inputWithBrowse);
-        label.setVerticalAlignment(SwingConstants.TOP);
-
-
-        jPanel.add(inputWithBrowse, CHOOSE_RUNTIME_INPUT_GRID_CONSTRAINTS);
-
-        this.runtimeHomeField = inputWithBrowse;
-    }
-
 
     @Override
     protected void resetEditorFrom(@NotNull ESBRuntimeRunConfiguration s) {
@@ -69,7 +45,24 @@ public class RuntimeRunConfigurationSettings extends SettingsEditor<ESBRuntimeRu
         return jPanel;
     }
 
+    private void buildRuntimeInputField(Project project) {
+        FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
+        runtimeHomeField = new TextFieldWithBrowseButton();
+        runtimeHomeField.addBrowseFolderListener(new TextBrowseFolderListener(descriptor, project) {
+            @NotNull
+            @Override
+            protected String chosenFileToResultingText(@NotNull VirtualFile chosenFile) {
+                return chosenFile.getPath();
+            }
+        });
 
+        JLabel label = new JBLabel(ESBLabel.RUNTIME_HOME.get());
+        label.setLabelFor(runtimeHomeField);
+        label.setVerticalAlignment(SwingConstants.TOP);
+
+
+        jPanel.add(runtimeHomeField, CHOOSE_RUNTIME_INPUT_GRID_CONSTRAINTS);
+    }
 
     private static final GridConstraints CHOOSE_RUNTIME_INPUT_GRID_CONSTRAINTS =
             new GridConstraints(0, 3, 1, 1,
@@ -77,6 +70,17 @@ public class RuntimeRunConfigurationSettings extends SettingsEditor<ESBRuntimeRu
                     FILL_HORIZONTAL,
                     SIZEPOLICY_CAN_GROW | SIZEPOLICY_CAN_SHRINK,
                     SIZEPOLICY_CAN_GROW | SIZEPOLICY_CAN_SHRINK,
+                    new Dimension(-1, -1),
+                    new Dimension(-1, -1),
+                    new Dimension(-1, -1));
+
+
+    private static final GridConstraints JRE_SELECTOR_CONSTRAINTS =
+            new GridConstraints(1, 3, 1, 1,
+                    ANCHOR_WEST,
+                    FILL_HORIZONTAL,
+                    SIZEPOLICY_CAN_GROW | SIZEPOLICY_CAN_SHRINK,
+                    SIZEPOLICY_CAN_SHRINK,
                     new Dimension(-1, -1),
                     new Dimension(-1, -1),
                     new Dimension(-1, -1));
