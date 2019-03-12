@@ -1,5 +1,6 @@
-package com.esb.plugin.runconfig;
+package com.esb.plugin.runconfig.runtime;
 
+import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfiguration;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.ConfigurationException;

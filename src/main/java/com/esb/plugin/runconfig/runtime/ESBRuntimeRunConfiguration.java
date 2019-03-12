@@ -1,4 +1,4 @@
-package com.esb.plugin.runconfig;
+package com.esb.plugin.runconfig.runtime;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
