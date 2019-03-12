@@ -15,14 +15,12 @@ import org.jetbrains.annotations.Nullable;
 public class ESBRuntimeRunConfiguration extends RunConfigurationBase {
 
     private String vmOptions;
-    private String jdk;
     private String runtimePort;
     private String runtimeHomeDirectory;
 
     protected ESBRuntimeRunConfiguration(@NotNull Project project, @Nullable ConfigurationFactory factory, @Nullable String name) {
         super(project, factory, name);
     }
-
 
     @NotNull
     @Override
@@ -45,10 +43,6 @@ public class ESBRuntimeRunConfiguration extends RunConfigurationBase {
         this.vmOptions = vmOptions;
     }
 
-    public void setJdk(String jdk) {
-        this.jdk = jdk;
-    }
-
     public void setRuntimePort(String runtimePort) {
         this.runtimePort = runtimePort;
     }
@@ -59,10 +53,6 @@ public class ESBRuntimeRunConfiguration extends RunConfigurationBase {
 
     public String getVmOptions() {
         return vmOptions;
-    }
-
-    public String getJdk() {
-        return jdk;
     }
 
     public String getRuntimePort() {

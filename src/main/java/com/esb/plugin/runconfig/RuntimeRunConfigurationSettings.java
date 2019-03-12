@@ -1,6 +1,5 @@
 package com.esb.plugin.runconfig;
 
-import com.esb.plugin.utils.ESBLabel;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.ConfigurationException;
@@ -9,7 +8,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.components.JBLabel;
 import com.intellij.uiDesigner.core.GridConstraints;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,13 +28,17 @@ public class RuntimeRunConfigurationSettings extends SettingsEditor<ESBRuntimeRu
     }
 
     @Override
-    protected void resetEditorFrom(@NotNull ESBRuntimeRunConfiguration s) {
-
+    protected void resetEditorFrom(@NotNull ESBRuntimeRunConfiguration runtimeRunConfiguration) {
+        vmOptionsTextField.setText(runtimeRunConfiguration.getVmOptions());
+        runtimePortTextField.setText(runtimeRunConfiguration.getRuntimePort());
+        runtimeHomeField.setText(runtimeRunConfiguration.getRuntimeHomeDirectory());
     }
 
     @Override
-    protected void applyEditorTo(@NotNull ESBRuntimeRunConfiguration s) throws ConfigurationException {
-
+    protected void applyEditorTo(@NotNull ESBRuntimeRunConfiguration configuration) throws ConfigurationException {
+        configuration.setRuntimeHomeDirectory(runtimeHomeField.getText());
+        configuration.setVmOptions(vmOptionsTextField.getText());
+        configuration.setRuntimePort(runtimePortTextField.getText());
     }
 
     @NotNull
@@ -55,12 +57,6 @@ public class RuntimeRunConfigurationSettings extends SettingsEditor<ESBRuntimeRu
                 return chosenFile.getPath();
             }
         });
-
-        JLabel label = new JBLabel(ESBLabel.RUNTIME_HOME.get());
-        label.setLabelFor(runtimeHomeField);
-        label.setVerticalAlignment(SwingConstants.TOP);
-
-
         jPanel.add(runtimeHomeField, CHOOSE_RUNTIME_INPUT_GRID_CONSTRAINTS);
     }
 
@@ -74,14 +70,4 @@ public class RuntimeRunConfigurationSettings extends SettingsEditor<ESBRuntimeRu
                     new Dimension(-1, -1),
                     new Dimension(-1, -1));
 
-
-    private static final GridConstraints JRE_SELECTOR_CONSTRAINTS =
-            new GridConstraints(1, 3, 1, 1,
-                    ANCHOR_WEST,
-                    FILL_HORIZONTAL,
-                    SIZEPOLICY_CAN_GROW | SIZEPOLICY_CAN_SHRINK,
-                    SIZEPOLICY_CAN_SHRINK,
-                    new Dimension(-1, -1),
-                    new Dimension(-1, -1),
-                    new Dimension(-1, -1));
 }
