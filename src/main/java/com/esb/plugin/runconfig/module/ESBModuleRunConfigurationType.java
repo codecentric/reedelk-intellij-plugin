@@ -1,5 +1,6 @@
 package com.esb.plugin.runconfig.module;
 
+import com.esb.plugin.utils.ESBIcons;
 import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.execution.configurations.ConfigurationType;
 import org.jetbrains.annotations.Nls;
@@ -11,28 +12,28 @@ public class ESBModuleRunConfigurationType implements ConfigurationType {
     @NotNull
     @Override
     public String getDisplayName() {
-        return null;
+        return "ESB Module Run Config";
     }
 
     @Nls
     @Override
     public String getConfigurationTypeDescription() {
-        return null;
+        return "Install/Update ESB Module";
     }
 
     @Override
     public Icon getIcon() {
-        return null;
+        return ESBIcons.Module;
     }
 
     @NotNull
     @Override
     public String getId() {
-        return null;
+        return "ESB_MODULE_CONFIGURATION";
     }
 
     @Override
     public ConfigurationFactory[] getConfigurationFactories() {
-        return new ConfigurationFactory[0];
+        return new ConfigurationFactory[] { new ESBModuleRunConfigurationFactory(this) };
     }
 }

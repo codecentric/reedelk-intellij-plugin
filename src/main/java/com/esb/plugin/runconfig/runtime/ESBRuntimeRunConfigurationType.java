@@ -34,6 +34,8 @@ public class ESBRuntimeRunConfigurationType implements ConfigurationType {
 
     @Override
     public ConfigurationFactory[] getConfigurationFactories() {
-        return new ConfigurationFactory[]{new ESBRuntimeRunConfigurationFactory(this)};
+        return new ConfigurationFactory[]{
+                new ESBRuntimeRunConfigurationFactory(this)
+        };
     }
 }

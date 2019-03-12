@@ -21,7 +21,7 @@ public class ESBModuleRunConfiguration extends RunConfigurationBase implements
     @NotNull
     @Override
     public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
-        return null;
+        return new ESBModuleRunConfigurationSettings();
     }
 
     @Nullable
