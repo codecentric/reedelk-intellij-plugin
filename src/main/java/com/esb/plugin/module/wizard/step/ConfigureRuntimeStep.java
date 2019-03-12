@@ -15,9 +15,10 @@ import java.util.Collection;
 public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable {
 
     private ESBModuleBuilder moduleBuilder;
-    private JComboBox<RuntimeItem> runtimeCombo;
-    private JButton btnAddRuntime;
+
     private JPanel jPanel;
+    private JButton btnAddRuntime;
+    private JComboBox<RuntimeItem> runtimeCombo;
 
     public ConfigureRuntimeStep(WizardContext wizardContext, ESBModuleBuilder moduleBuilder) {
         this.moduleBuilder = moduleBuilder;
