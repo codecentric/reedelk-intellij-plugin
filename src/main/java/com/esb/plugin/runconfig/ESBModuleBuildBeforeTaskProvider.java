@@ -30,7 +30,6 @@ public class ESBModuleBuildBeforeTaskProvider extends MavenBeforeRunTasksProvide
         return "Super";
     }
 
-
     @Override
     public String getDescription(MavenBeforeRunTask task) {
         return "ESB Build Module";
@@ -58,6 +57,8 @@ public class ESBModuleBuildBeforeTaskProvider extends MavenBeforeRunTasksProvide
     public MavenBeforeRunTask createTask(@NotNull RunConfiguration runConfiguration) {
         MavenBeforeRunTask task = new MavenBeforeRunTask();
         task.setGoal("package -DskipTests=true");
+
+        task.setProjectPath("/Users/lorenzo/IdeaProjects/sample-module/another-child-module/another-one-child");
         task.setEnabled(runConfiguration instanceof ESBModuleRunConfiguration);
         return task;
     }

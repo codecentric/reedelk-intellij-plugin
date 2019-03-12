@@ -8,6 +8,8 @@ import javax.swing.*;
 
 public class ESBModuleRunConfigurationSettings extends SettingsEditor<ESBModuleRunConfiguration> {
 
+    // Make Module Selectable
+    // Make Runtime Selectable
     private JPanel jPanel;
 
     @Override
