@@ -6,12 +6,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.esb</groupId>
-        <artifactId>module-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <groupId>${groupId}</groupId>
+        <artifactId>${parentId}</artifactId>
+        <version>${parentVersion}</version>
     </parent>
 
-    <groupId>${groupId}</groupId>
     <version>${version}</version>
     <artifactId>${artifactId}</artifactId>
     <packaging>bundle</packaging>
@@ -20,9 +19,6 @@
         <maven.compiler.target>${javaVersion}</maven.compiler.target>
         <maven.compiler.source>${javaVersion}</maven.compiler.source>
     </properties>
-
-    <dependencies>
-    </dependencies>
 
     <build>
         <plugins>

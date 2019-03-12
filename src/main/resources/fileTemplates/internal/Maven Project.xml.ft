@@ -21,9 +21,6 @@
         <maven.compiler.source>${javaVersion}</maven.compiler.source>
     </properties>
 
-    <dependencies>
-    </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -43,6 +40,5 @@
             </plugin>
         </plugins>
     </build>
-
 
 </project>

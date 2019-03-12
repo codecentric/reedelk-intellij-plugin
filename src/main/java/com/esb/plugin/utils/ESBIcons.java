@@ -1,4 +1,4 @@
-package com.esb.plugin;
+package com.esb.plugin.utils;
 
 import com.intellij.openapi.util.IconLoader;
 

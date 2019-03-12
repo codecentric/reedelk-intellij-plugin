@@ -2,6 +2,7 @@ package com.esb.plugin.module.wizard.step;
 
 import com.esb.plugin.module.ESBModuleBuilder;
 import com.esb.plugin.service.runtime.ESBRuntime;
+import com.esb.plugin.utils.ESBLabel;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
@@ -22,7 +23,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.esb.plugin.ESBLabel.RUNTIME_HOME;
 import static com.intellij.uiDesigner.core.GridConstraints.*;
 
 public class AddRuntimeDialog extends DialogWrapper {
@@ -34,7 +34,7 @@ public class AddRuntimeDialog extends DialogWrapper {
 
     protected AddRuntimeDialog(@NotNull Component parent, WizardContext wizardContext, ESBModuleBuilder moduleBuilder) {
         super(parent, false);
-        setTitle("Add Runtime");
+        setTitle(ESBLabel.ADD_RUNTIME.get());
 
         init();
 
@@ -79,7 +79,7 @@ public class AddRuntimeDialog extends DialogWrapper {
             }
         });
 
-        JLabel label = new JBLabel(RUNTIME_HOME.value());
+        JLabel label = new JBLabel(ESBLabel.RUNTIME_HOME.get());
         label.setLabelFor(inputWithBrowse);
         label.setVerticalAlignment(SwingConstants.TOP);
 
@@ -99,7 +99,7 @@ public class AddRuntimeDialog extends DialogWrapper {
             getOKAction().setEnabled(true);
             return;
         }
-        String message = "Please specify " + StringUtil.join(errors, ", ");
+        String message = ESBLabel.PLEASE_SPECIFY.get() + " " + StringUtil.join(errors, ", ");
         setErrorText(message);
         getOKAction().setEnabled(false);
         getRootPane().revalidate();

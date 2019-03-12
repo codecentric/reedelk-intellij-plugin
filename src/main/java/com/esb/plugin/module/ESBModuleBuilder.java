@@ -1,13 +1,12 @@
 package com.esb.plugin.module;
 
-import com.esb.plugin.ESBIcons;
 import com.esb.plugin.module.wizard.step.ConfigureRuntimeStep;
-import com.intellij.ide.util.projectWizard.ModuleBuilderListener;
+import com.esb.plugin.utils.ESBIcons;
+import com.esb.plugin.utils.ESBLabel;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.JavaModuleType;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -27,43 +26,37 @@ import java.io.File;
 public class ESBModuleBuilder extends MavenModuleBuilder {
 
     private String runtimeHome;
+    private boolean isMultiModuleProject;
 
     public ESBModuleBuilder() {
-        setProjectId(new MavenId("com.esb.module", "sample-module", "1.0.0-SNAPSHOT"));
+        setProjectId(new MavenId(
+                ESBLabel.DEFAULT_GROUP_ID.get(),
+                ESBLabel.DEFAULT_ARTIFACT_ID.get(),
+                ESBLabel.DEFAULT_VERSION.get()));
     }
-
 
     @Override
     public void setupRootModel(@NotNull ModifiableRootModel rootModel) {
         super.setupRootModel(rootModel);
 
-        String sdkVersion = rootModel.getSdk().getVersionString();
-
-        addListener(new ModuleBuilderListener() {
-            @Override
-            public void moduleCreated(@NotNull Module module) {
-                // After module created
-            }
-        });
 
         final Project project = rootModel.getProject();
         final VirtualFile root = createAndGetContentEntry();
-
         rootModel.addContentEntry(root);
 
         final MavenId parentId = getParentProject() != null ? getParentProject().getMavenId() : null;
         final MavenId projectId = getProjectId();
+        final String sdkVersion = rootModel.getSdkName();
 
-        MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () ->
-                new ESBMavenProjectBuilderHelper().configure(project, projectId, parentId, root));
+
+        MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> {
+            try {
+                new ESBMavenProjectBuilderHelper().configure(project, projectId, parentId, root, sdkVersion, isMultiModuleProject);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        });
     }
-
-    private VirtualFile createAndGetContentEntry() {
-        String path = FileUtil.toSystemIndependentName(this.getContentEntryPath());
-        (new File(path)).mkdirs();
-        return LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
-    }
-
 
     @Override
     public String getBuilderId() {
@@ -72,17 +65,17 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
 
     @Override
     public String getName() {
-        return "ESB Module";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Creates an ESB Maven Based Project";
+        return ESBLabel.MODULE_BUILDER_NAME.get();
     }
 
     @Override
     public String getPresentableName() {
-        return "ESB Module";
+        return ESBLabel.MODULE_BUILDER_NAME.get();
+    }
+
+    @Override
+    public String getDescription() {
+        return ESBLabel.MODULE_BUILDER_DESCRIPTION.get();
     }
 
     @Override
@@ -107,4 +100,13 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
         this.runtimeHome = runtimeHome;
     }
 
+    public void setIsMultiModuleProject(boolean selected) {
+        this.isMultiModuleProject = selected;
+    }
+
+    private VirtualFile createAndGetContentEntry() {
+        String path = FileUtil.toSystemIndependentName(getContentEntryPath());
+        (new File(path)).mkdirs();
+        return LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
+    }
 }
