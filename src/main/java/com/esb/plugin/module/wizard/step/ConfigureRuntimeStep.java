@@ -8,7 +8,6 @@ import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
-import org.jetbrains.idea.maven.project.MavenProject;
 
 import javax.swing.*;
 import java.util.Collection;

@@ -16,14 +16,14 @@ import java.util.Properties;
 
 class ESBMavenProjectBuilderHelper {
 
-    void configure(Project project, MavenId projectId, @Nullable MavenId parentId, VirtualFile root, String sdkVersion, boolean isMultiModuleProject) throws Throwable {
+    void configure(Project project, MavenId projectId, @Nullable MavenId parentId, VirtualFile root, String sdkVersion) throws Throwable {
 
         if (parentId == null) {
-            // Parent Id IS NULL
+            // Parent ID IS NULL
             MavenProjectProperties props = new MavenProjectProperties(projectId, sdkVersion);
             createFromTemplate(project, props, Template.Internal.MAVEN_PROJECT, root);
         } else {
-            // Parent Id is NOT NULL
+            // Parent ID is NOT NULL
             MavenProjectProperties props = new MavenProjectProperties(projectId, sdkVersion, parentId);
             createFromTemplate(project, props, Template.Internal.MAVEN_MODULE, root);
         }

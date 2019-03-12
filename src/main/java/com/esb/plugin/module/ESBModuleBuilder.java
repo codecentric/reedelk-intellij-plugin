@@ -26,7 +26,6 @@ import java.io.File;
 public class ESBModuleBuilder extends MavenModuleBuilder {
 
     private String runtimeHome;
-    private boolean isMultiModuleProject;
 
     public ESBModuleBuilder() {
         setProjectId(new MavenId(
@@ -39,7 +38,6 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
     public void setupRootModel(@NotNull ModifiableRootModel rootModel) {
         super.setupRootModel(rootModel);
 
-
         final Project project = rootModel.getProject();
         final VirtualFile root = createAndGetContentEntry();
         rootModel.addContentEntry(root);
@@ -51,7 +49,7 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
 
         MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> {
             try {
-                new ESBMavenProjectBuilderHelper().configure(project, projectId, parentId, root, sdkVersion, isMultiModuleProject);
+                new ESBMavenProjectBuilderHelper().configure(project, projectId, parentId, root, sdkVersion);
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
             }
@@ -98,10 +96,6 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
 
     public void setRuntimeHome(String runtimeHome) {
         this.runtimeHome = runtimeHome;
-    }
-
-    public void setIsMultiModuleProject(boolean selected) {
-        this.isMultiModuleProject = selected;
     }
 
     private VirtualFile createAndGetContentEntry() {
