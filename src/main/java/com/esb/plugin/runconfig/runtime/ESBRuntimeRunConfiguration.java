@@ -9,10 +9,21 @@ import com.intellij.execution.configurations.RuntimeConfigurationException;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.util.JDOMExternalizerUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
+
 public class ESBRuntimeRunConfiguration extends RunConfigurationBase {
+
+    private static final String PREFIX = "ESBRuntimeRunConfiguration-";
+    private static final String VM_OPTIONS = PREFIX + "VmOptions";
+    private static final String PORT = PREFIX + "Port";
+    private static final String RUNTIME_HOME_DIRECTORY = PREFIX + "RuntimeHomeDirectory";
 
     private String vmOptions;
     private String runtimePort = "9988";
@@ -30,7 +41,26 @@ public class ESBRuntimeRunConfiguration extends RunConfigurationBase {
 
     @Override
     public void checkConfiguration() throws RuntimeConfigurationException {
+        super.checkConfiguration();
+        checkOrThrow(StringUtils.isNotBlank(runtimeHomeDirectory), "ESB Runtime home directory can not be empty");
+        checkOrThrow(new File(runtimeHomeDirectory).exists(), "ESB Runtime home directory must be present");
+        checkOrThrow(isNumberGreaterOrEqualToZero(runtimePort), "ESB Runtime port must be a number greater than zero");
+    }
 
+    @Override
+    public void readExternal(@NotNull Element element) throws InvalidDataException {
+        super.readExternal(element);
+        runtimePort = JDOMExternalizerUtil.readField(element, PORT);
+        vmOptions = JDOMExternalizerUtil.readField(element, VM_OPTIONS);
+        runtimeHomeDirectory = JDOMExternalizerUtil.readField(element, RUNTIME_HOME_DIRECTORY);
+    }
+
+    @Override
+    public void writeExternal(@NotNull Element element) {
+        super.writeExternal(element);
+        JDOMExternalizerUtil.writeField(element, PORT, runtimePort);
+        JDOMExternalizerUtil.writeField(element, VM_OPTIONS, vmOptions);
+        JDOMExternalizerUtil.writeField(element, RUNTIME_HOME_DIRECTORY, runtimeHomeDirectory);
     }
 
     @Nullable
@@ -61,6 +91,21 @@ public class ESBRuntimeRunConfiguration extends RunConfigurationBase {
 
     public String getRuntimeHomeDirectory() {
         return runtimeHomeDirectory;
+    }
+
+    private void checkOrThrow(boolean condition, String message) throws RuntimeConfigurationException {
+        if (!condition) {
+            throw new RuntimeConfigurationException(message);
+        }
+    }
+
+    private boolean isNumberGreaterOrEqualToZero(String number) {
+        try {
+            Integer integer = Integer.valueOf(number);
+            return integer >= 0;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }
