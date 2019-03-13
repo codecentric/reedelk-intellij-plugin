@@ -10,6 +10,8 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
@@ -141,7 +143,11 @@ public class ESBModuleBuildBeforeTaskProvider extends BeforeRunTaskProvider<ESBM
 
 
     private MavenProject getMavenProject(ESBModuleRunConfiguration configuration, Project project) {
-        String pomXmlPath = configuration.getModule().getModuleFile().getParent().getPath() + "/" + MavenConstants.POM_XML;
+        String moduleName = configuration.getModule();
+        Module moduleByName = ModuleManager.getInstance(project).findModuleByName(moduleName);
+        if (moduleByName == null) return null;
+
+        String pomXmlPath = moduleByName.getModuleFile().getParent().getPath() + "/" + MavenConstants.POM_XML;
         if (StringUtil.isEmpty(pomXmlPath)) return null;
 
         VirtualFile file = LocalFileSystem.getInstance().findFileByPath(pomXmlPath);

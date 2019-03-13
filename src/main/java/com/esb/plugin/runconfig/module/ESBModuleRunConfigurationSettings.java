@@ -2,6 +2,7 @@ package com.esb.plugin.runconfig.module;
 
 import com.intellij.application.options.ModuleDescriptionsComboBox;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
@@ -35,14 +36,18 @@ public class ESBModuleRunConfigurationSettings extends SettingsEditor<ESBModuleR
 
     @Override
     protected void resetEditorFrom(@NotNull ESBModuleRunConfiguration configuration) {
-        Module module = configuration.getModule();
-        moduleComboBox.setSelectedModule(module);
+        String module = configuration.getModule();
+        if (module != null) {
+            Project project = configuration.getProject();
+            Module moduleByName = ModuleManager.getInstance(project).findModuleByName(module);
+            if (moduleByName != null) moduleComboBox.setSelectedModule(moduleByName);
+        }
     }
 
     @Override
     protected void applyEditorTo(@NotNull ESBModuleRunConfiguration configuration) throws ConfigurationException {
         Module selectedModule = moduleComboBox.getSelectedModule();
-        configuration.setModule(selectedModule);
+        if (selectedModule != null) configuration.setModule(selectedModule.getName());
     }
 
 

@@ -5,7 +5,7 @@ import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.runners.GenericProgramRunner;
 import org.jetbrains.annotations.NotNull;
 
-//TODO: This is why the run button shows up! Provide a custom executor
+
 public class ESBDeploymentRunner extends GenericProgramRunner {
     @NotNull
     @Override
@@ -18,6 +18,5 @@ public class ESBDeploymentRunner extends GenericProgramRunner {
         return executorId.equals(ESBExecutor.EXECUTOR_ID) &&
                 profile instanceof ESBModuleRunConfiguration;
     }
-
 
 }

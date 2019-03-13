@@ -10,7 +10,6 @@ import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.RunConfigurationWithSuppressedDefaultRunAction;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 public class ESBModuleRunConfiguration extends RunConfigurationBase implements RunConfigurationWithSuppressedDefaultRunAction {
 
     private String runtimePath;
-    private Module module;
+    private String moduleName;
 
     protected ESBModuleRunConfiguration(@NotNull Project project, @Nullable ConfigurationFactory factory, @Nullable String name) {
         super(project, factory, name);
@@ -42,7 +41,6 @@ public class ESBModuleRunConfiguration extends RunConfigurationBase implements R
         return EmptyRunProfileState.INSTANCE;
     }
 
-
     public String getRuntimePath() {
         return runtimePath;
     }
@@ -51,11 +49,11 @@ public class ESBModuleRunConfiguration extends RunConfigurationBase implements R
         this.runtimePath = runtimePath;
     }
 
-    public void setModule(Module selectedModule) {
-        this.module = selectedModule;
+    public void setModule(String moduleName) {
+        this.moduleName = moduleName;
     }
 
-    public Module getModule() {
-        return module;
+    public String getModule() {
+        return moduleName;
     }
 }

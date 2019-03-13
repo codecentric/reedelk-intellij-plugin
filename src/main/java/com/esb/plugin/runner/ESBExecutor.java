@@ -47,7 +47,7 @@ public class ESBExecutor extends Executor {
     @NotNull
     @Override
     public String getId() {
-        return "ESB Module Deployment";
+        return EXECUTOR_ID;
     }
 
     @NotNull
