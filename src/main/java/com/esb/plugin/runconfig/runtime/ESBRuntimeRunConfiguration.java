@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 public class ESBRuntimeRunConfiguration extends RunConfigurationBase {
 
     private String vmOptions;
-    private String runtimePort;
+    private String runtimePort = "9988";
     private String runtimeHomeDirectory;
 
     protected ESBRuntimeRunConfiguration(@NotNull Project project, @Nullable ConfigurationFactory factory, @Nullable String name) {

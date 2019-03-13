@@ -24,7 +24,7 @@
         <internalFileTemplate name="Maven Module"/>
         <internalFileTemplate name="Maven Project"/>
 
-        <stepsBeforeRunProvider implementation="com.esb.plugin.runconfig.ESBModuleBuildBeforeTaskProvider"/>
+        <stepsBeforeRunProvider implementation="com.esb.plugin.ESBModuleBuildBeforeTaskProvider"/>
 
         <!-- Module Builder -->
         <moduleBuilder builderClass="com.esb.plugin.module.ESBModuleBuilder" id="ESB_MODULE_BUILDER" order="first"/>
@@ -41,6 +41,8 @@
         <moduleService serviceInterface="com.esb.plugin.service.module.ESBModuleRuntimeService"
                        serviceImplementation="com.esb.plugin.service.module.impl.ESBModuleRuntimeServiceImpl"/>
 
+        <programRunner implementation="com.esb.plugin.runner.ESBDeploymentRunner" order="first"/>
+
         <!-- Run Configurations -->
         <configurationType implementation="com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfigurationType"/>
         <configurationType implementation="com.esb.plugin.runconfig.module.ESBModuleRunConfigurationType"/>
@@ -49,6 +51,10 @@
 
     <actions>
 
+        <action id="deployModule" class="com.esb.plugin.action.DeployModuleAction" text="DeployModuleAction"
+                description="Deploy a Module" icon="AllIcons.Nodes.Deploy">
+            <add-to-group group-id="ToolbarRunGroup" anchor="after" relative-to-action="RunConfiguration"/>
+        </action>
     </actions>
 
 </idea-plugin>

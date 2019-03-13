@@ -1,6 +1,5 @@
 package com.esb.plugin.runconfig.module;
 
-import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfiguration;
 import com.intellij.execution.BeforeRunTask;
 import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.execution.configurations.ConfigurationType;
@@ -13,7 +12,6 @@ public class ESBModuleRunConfigurationFactory extends ConfigurationFactory {
 
     private static final String FACTORY_NAME = "ESB Module Run Configuration Factory";
 
-
     protected ESBModuleRunConfigurationFactory(@NotNull ConfigurationType type) {
         super(type);
     }
@@ -21,7 +19,7 @@ public class ESBModuleRunConfigurationFactory extends ConfigurationFactory {
     @NotNull
     @Override
     public RunConfiguration createTemplateConfiguration(@NotNull Project project) {
-        return new ESBModuleRunConfiguration(project, this, "ESB Module Run Configuration");
+        return new ESBModuleRunConfiguration("ESB Module Run Configuration",  project, this);
     }
 
     @NotNull
