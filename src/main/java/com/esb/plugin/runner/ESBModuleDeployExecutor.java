@@ -7,14 +7,14 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class ESBExecutor extends Executor {
+public class ESBModuleDeployExecutor extends Executor {
 
     @NonNls
     public static final String EXECUTOR_ID = "deployESBModule";
 
     @Override
     public String getToolWindowId() {
-        return EXECUTOR_ID;
+        return "ESB Module";
     }
 
     @Override
@@ -35,7 +35,7 @@ public class ESBExecutor extends Executor {
 
     @Override
     public String getDescription() {
-        return "Deploying ESB Module to Runtime";
+        return "Deploy ESB Module to Runtime";
     }
 
     @NotNull
@@ -63,6 +63,6 @@ public class ESBExecutor extends Executor {
 
     @Override
     public String getHelpId() {
-        return "id";
+        return "deploy.esb.id";
     }
 }

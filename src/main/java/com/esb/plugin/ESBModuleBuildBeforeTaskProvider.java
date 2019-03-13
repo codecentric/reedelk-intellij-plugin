@@ -1,6 +1,7 @@
 package com.esb.plugin;
 
 import com.esb.plugin.runconfig.module.ESBModuleRunConfiguration;
+import com.esb.plugin.runner.ESBModuleUnDeployExecutor;
 import com.esb.plugin.utils.ESBIcons;
 import com.intellij.execution.BeforeRunTaskProvider;
 import com.intellij.execution.configurations.RunConfiguration;
@@ -83,6 +84,12 @@ public class ESBModuleBuildBeforeTaskProvider extends BeforeRunTaskProvider<ESBM
     public boolean executeTask(DataContext context, @NotNull RunConfiguration configuration, @NotNull ExecutionEnvironment env, @NotNull ESBModuleBuildBeforeTask task) {
         if (!(configuration instanceof ESBModuleRunConfiguration)) return false;
 
+        // We should also skip this step if there are no files changed in the src directory
+
+        // We skip this step if the executor is Un-Deploy
+        if (ESBModuleUnDeployExecutor.EXECUTOR_ID.equals(env.getExecutor().getId())) {
+            return true;
+        }
         final Semaphore targetDone = new Semaphore();
         final boolean[] result = new boolean[]{true};
         try {

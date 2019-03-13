@@ -42,7 +42,8 @@
                        serviceImplementation="com.esb.plugin.service.module.impl.ESBModuleRuntimeServiceImpl"/>
 
         <programRunner implementation="com.esb.plugin.runner.ESBDeploymentRunner" order="first"/>
-        <executor implementation="com.esb.plugin.runner.ESBExecutor"/>
+        <executor implementation="com.esb.plugin.runner.ESBModuleDeployExecutor"/>
+        <executor implementation="com.esb.plugin.runner.ESBModuleUnDeployExecutor"/>
 
 
         <!-- Run Configurations -->
@@ -53,9 +54,6 @@
 
     <actions>
 
-        <action id="deployModule" class="com.esb.plugin.action.DeployModuleAction" text="DeployModuleAction"
-                description="Deploy a Module">
-        </action>
     </actions>
 
 </idea-plugin>

@@ -2,11 +2,12 @@ package com.esb.plugin.runner;
 
 import com.esb.plugin.runconfig.module.ESBModuleRunConfiguration;
 import com.intellij.execution.configurations.RunProfile;
-import com.intellij.execution.runners.GenericProgramRunner;
+import com.intellij.execution.runners.DefaultProgramRunner;
 import org.jetbrains.annotations.NotNull;
 
 
-public class ESBDeploymentRunner extends GenericProgramRunner {
+public class ESBDeploymentRunner extends DefaultProgramRunner {
+
     @NotNull
     @Override
     public String getRunnerId() {
@@ -15,7 +16,8 @@ public class ESBDeploymentRunner extends GenericProgramRunner {
 
     @Override
     public boolean canRun(@NotNull String executorId, @NotNull RunProfile profile) {
-        return executorId.equals(ESBExecutor.EXECUTOR_ID) &&
+        return (ESBModuleDeployExecutor.EXECUTOR_ID.equals(executorId) ||
+                ESBModuleUnDeployExecutor.EXECUTOR_ID.equals(executorId)) &&
                 profile instanceof ESBModuleRunConfiguration;
     }
 
