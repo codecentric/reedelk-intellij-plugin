@@ -1,7 +1,7 @@
 package com.esb.plugin.runconfig.module;
 
 import com.intellij.application.options.ModuleDescriptionsComboBox;
-import com.intellij.execution.ui.ConfigurationModuleSelector;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
@@ -16,27 +16,40 @@ import static com.intellij.uiDesigner.core.GridConstraints.*;
 
 public class ESBModuleRunConfigurationSettings extends SettingsEditor<ESBModuleRunConfiguration> {
 
-    private ConfigurationModuleSelector myModuleSelector;
-
-
     // Make Module Selectable
     // Make Runtime Selectable
     private JPanel jPanel;
-
+    private ModuleDescriptionsComboBox moduleComboBox;
 
 
     public ESBModuleRunConfigurationSettings(@NotNull Project project) {
+        moduleComboBox = new ModuleDescriptionsComboBox();
+        moduleComboBox.setAllModulesFromProject(project);
 
-        ModuleDescriptionsComboBox myModuleCombo = new ModuleDescriptionsComboBox();
-        myModuleCombo.setAllModulesFromProject(project);
-
-        myModuleSelector = new ConfigurationModuleSelector(project, myModuleCombo);
-
-        JPanel moduleChooserPanel = UI.PanelFactory.panel(myModuleCombo).withLabel("Module:").
+        JPanel moduleChooserPanel = UI.PanelFactory.panel(moduleComboBox).withLabel("Module:").
                 withComment("Choose the ESB Module this run configuration will be applied to")
                 .createPanel();
 
         jPanel.add(moduleChooserPanel, MODULE_SELECTOR);
+    }
+
+    @Override
+    protected void resetEditorFrom(@NotNull ESBModuleRunConfiguration configuration) {
+        Module module = configuration.getModule();
+        moduleComboBox.setSelectedModule(module);
+    }
+
+    @Override
+    protected void applyEditorTo(@NotNull ESBModuleRunConfiguration configuration) throws ConfigurationException {
+        Module selectedModule = moduleComboBox.getSelectedModule();
+        configuration.setModule(selectedModule);
+    }
+
+
+    @NotNull
+    @Override
+    protected JComponent createEditor() {
+        return jPanel;
     }
 
     private static final GridConstraints MODULE_SELECTOR  =
@@ -49,21 +62,4 @@ public class ESBModuleRunConfigurationSettings extends SettingsEditor<ESBModuleR
                     new Dimension(-1, -1),
                     new Dimension(-1, -1));
 
-
-    @Override
-    protected void resetEditorFrom(@NotNull ESBModuleRunConfiguration configuration) {
-        myModuleSelector.reset(configuration);
-
-    }
-
-    @Override
-    protected void applyEditorTo(@NotNull ESBModuleRunConfiguration configuration) throws ConfigurationException {
-        myModuleSelector.applyTo(configuration);
-    }
-
-    @NotNull
-    @Override
-    protected JComponent createEditor() {
-        return jPanel;
-    }
 }

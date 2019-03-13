@@ -42,6 +42,8 @@
                        serviceImplementation="com.esb.plugin.service.module.impl.ESBModuleRuntimeServiceImpl"/>
 
         <programRunner implementation="com.esb.plugin.runner.ESBDeploymentRunner" order="first"/>
+        <executor implementation="com.esb.plugin.runner.ESBExecutor"/>
+
 
         <!-- Run Configurations -->
         <configurationType implementation="com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfigurationType"/>
@@ -52,8 +54,7 @@
     <actions>
 
         <action id="deployModule" class="com.esb.plugin.action.DeployModuleAction" text="DeployModuleAction"
-                description="Deploy a Module" icon="AllIcons.Nodes.Deploy">
-            <add-to-group group-id="ToolbarRunGroup" anchor="after" relative-to-action="RunConfiguration"/>
+                description="Deploy a Module">
         </action>
     </actions>
 

@@ -4,24 +4,25 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionTarget;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configuration.EmptyRunProfileState;
-import com.intellij.execution.configurations.*;
+import com.intellij.execution.configurations.ConfigurationFactory;
+import com.intellij.execution.configurations.RunConfiguration;
+import com.intellij.execution.configurations.RunConfigurationBase;
+import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.execution.runners.RunConfigurationWithSuppressedDefaultRunAction;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
-import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.Collection;
+public class ESBModuleRunConfiguration extends RunConfigurationBase implements RunConfigurationWithSuppressedDefaultRunAction {
 
-public class ESBModuleRunConfiguration extends ModuleBasedConfiguration<JavaRunConfigurationModule, Element> {
+    private String runtimePath;
+    private Module module;
 
-
-    public ESBModuleRunConfiguration(String name, @NotNull Project project, @NotNull ConfigurationFactory factory) {
-        super(name, new JavaRunConfigurationModule(project, true), factory);
+    protected ESBModuleRunConfiguration(@NotNull Project project, @Nullable ConfigurationFactory factory, @Nullable String name) {
+        super(project, factory, name);
     }
 
     @NotNull
@@ -42,9 +43,19 @@ public class ESBModuleRunConfiguration extends ModuleBasedConfiguration<JavaRunC
     }
 
 
-    @Override
-    public Collection<Module> getValidModules() {
-        // TODO:  Create Utility which check which one is actually an ESB module!!! (e.g contains marker)
-        return Arrays.asList(ModuleManager.getInstance(getProject()).getModules());
+    public String getRuntimePath() {
+        return runtimePath;
+    }
+
+    public void setRuntimePath(String runtimePath) {
+        this.runtimePath = runtimePath;
+    }
+
+    public void setModule(Module selectedModule) {
+        this.module = selectedModule;
+    }
+
+    public Module getModule() {
+        return module;
     }
 }

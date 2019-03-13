@@ -19,7 +19,7 @@ public class ESBModuleRunConfigurationFactory extends ConfigurationFactory {
     @NotNull
     @Override
     public RunConfiguration createTemplateConfiguration(@NotNull Project project) {
-        return new ESBModuleRunConfiguration("ESB Module Run Configuration",  project, this);
+        return new ESBModuleRunConfiguration(project, this, "ESB Module Run Configuration");
     }
 
     @NotNull
