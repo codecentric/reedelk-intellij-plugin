@@ -22,6 +22,12 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
     private RuntimeComboManager runtimeComboManager;
 
     public ConfigureRuntimeStep(WizardContext wizardContext, ESBModuleBuilder moduleBuilder) {
+        if (wizardContext.isCreatingNewProject()) {
+            System.out.println("Creating new project!");
+            runtimeCombo.setVisible(false);
+        }
+
+
         this.moduleBuilder = moduleBuilder;
 
         runtimeComboManager = new RuntimeComboManager(runtimeCombo, ServiceManager.getService(ESBRuntimeService.class));
