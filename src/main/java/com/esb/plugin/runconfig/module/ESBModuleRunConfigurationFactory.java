@@ -12,7 +12,7 @@ public class ESBModuleRunConfigurationFactory extends ConfigurationFactory {
 
     private static final String FACTORY_NAME = "ESB Module Run Configuration Factory";
 
-    protected ESBModuleRunConfigurationFactory(@NotNull ConfigurationType type) {
+    public ESBModuleRunConfigurationFactory(@NotNull ConfigurationType type) {
         super(type);
     }
 

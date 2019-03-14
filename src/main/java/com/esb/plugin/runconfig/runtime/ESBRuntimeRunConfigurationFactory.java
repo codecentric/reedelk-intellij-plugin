@@ -10,7 +10,7 @@ public class ESBRuntimeRunConfigurationFactory extends ConfigurationFactory {
 
     private static final String FACTORY_NAME = "ESB Runtime Run Configuration Factory";
 
-    protected ESBRuntimeRunConfigurationFactory(@NotNull ConfigurationType type) {
+    public ESBRuntimeRunConfigurationFactory(@NotNull ConfigurationType type) {
         super(type);
     }
 
