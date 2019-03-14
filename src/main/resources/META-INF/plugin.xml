@@ -47,6 +47,8 @@
         <configurationType implementation="com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfigurationType"/>
         <configurationType implementation="com.esb.plugin.runconfig.module.ESBModuleRunConfigurationType"/>
 
+        <applicationService serviceInterface="com.esb.plugin.service.application.http.ESBHttpService"
+                            serviceImplementation="com.esb.plugin.service.application.http.impl.ESBHttpServiceImpl"/>
     </extensions>
 
     <actions>
