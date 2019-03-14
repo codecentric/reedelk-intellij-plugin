@@ -26,6 +26,11 @@ public class ESBModuleUtils {
         fileChangeService.unchanged(moduleName);
     }
 
+    public static void changed(Project project, String moduleName) {
+        ESBFileChangeService fileChangeService = ServiceManager.getService(project, ESBFileChangeService.class);
+        fileChangeService.changed(moduleName);
+    }
+
     public static Optional<MavenProject> getMavenProject(String moduleName, Project project) {
        Optional<String> optionalPomXml = getModulePomXml(moduleName, project);
        if (optionalPomXml.isPresent()) {
@@ -52,4 +57,5 @@ public class ESBModuleUtils {
         }
         return Optional.empty();
     }
+
 }

@@ -60,6 +60,11 @@ public class ESBFileChangeServiceImpl implements ESBFileChangeService, BulkFileL
     }
 
     @Override
+    public void changed(String moduleName) {
+        moduleNameChangedMap.put(moduleName, CHANGED);
+    }
+
+    @Override
     public void after(@NotNull List<? extends VFileEvent> events) {
         events.forEach(vFileEvent -> {
             if(isJavaSource(vFileEvent.getFile())) {

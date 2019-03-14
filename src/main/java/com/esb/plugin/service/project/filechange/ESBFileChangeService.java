@@ -14,4 +14,6 @@ public interface ESBFileChangeService {
 
     void unchanged(String moduleName);
 
+    void changed(String moduleName);
+
 }

@@ -49,13 +49,15 @@ public class ESBModuleRunConfiguration extends RunConfigurationBase implements R
     @Override
     public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment) throws ExecutionException {
 
+        Project project = getProject();
+
         // Deploy Executor
         if (ESBModuleDeployExecutor.EXECUTOR_ID.equals(executor.getId())) {
-            return new DeployRunProfile(getProject(), moduleName);
+            return new DeployRunProfile(project, moduleName);
 
             // UnDeploy Executor
         } else if (ESBModuleUnDeployExecutor.EXECUTOR_ID.equals(executor.getId())) {
-            return new UndeployRunProfile();
+            return new UndeployRunProfile(project, moduleName);
 
         } else {
             throw new ExecutionException("Executor not valid!");
