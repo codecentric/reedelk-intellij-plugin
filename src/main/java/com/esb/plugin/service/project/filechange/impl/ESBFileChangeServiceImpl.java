@@ -50,10 +50,13 @@ public class ESBFileChangeServiceImpl implements ESBFileChangeService, BulkFileL
     }
 
     @Override
-    public boolean isCompileRequiredAndSetUnchanged(String moduleName) {
-        Boolean isCodeChanged = moduleNameChangedMap.getOrDefault(moduleName, CHANGED);
+    public boolean isCompileRequired(String moduleName) {
+        return moduleNameChangedMap.getOrDefault(moduleName, CHANGED);
+    }
+
+    @Override
+    public void unchanged(String moduleName) {
         moduleNameChangedMap.put(moduleName, UNCHANGED);
-        return isCodeChanged;
     }
 
     @Override

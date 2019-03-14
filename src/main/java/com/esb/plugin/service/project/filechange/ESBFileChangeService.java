@@ -10,5 +10,8 @@ public interface ESBFileChangeService {
         return ServiceManager.getService(project, ESBFileChangeService.class);
     }
 
-    boolean isCompileRequiredAndSetUnchanged(String moduleName);
+    boolean isCompileRequired(String moduleName);
+
+    void unchanged(String moduleName);
+
 }

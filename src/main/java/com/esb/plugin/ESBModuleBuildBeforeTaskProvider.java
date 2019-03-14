@@ -2,9 +2,8 @@ package com.esb.plugin;
 
 import com.esb.plugin.runconfig.module.ESBModuleRunConfiguration;
 import com.esb.plugin.runner.ESBModuleUnDeployExecutor;
-import com.esb.plugin.service.project.filechange.ESBFileChangeService;
 import com.esb.plugin.utils.ESBIcons;
-import com.esb.plugin.utils.ESBMavenUtils;
+import com.esb.plugin.utils.ESBModuleUtils;
 import com.intellij.execution.BeforeRunTaskProvider;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.runners.ExecutionEnvironment;
@@ -12,7 +11,6 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
@@ -104,14 +102,14 @@ public class ESBModuleBuildBeforeTaskProvider extends BeforeRunTaskProvider<ESBM
                 FileDocumentManager.getInstance().saveAllDocuments();
 
                 // No Need to re-compile
-                if (isHotSwap(env.getProject(), ((ESBModuleRunConfiguration) configuration).getModuleName())) {
+                if (ESBModuleUtils.isHotSwap(env.getProject(), ((ESBModuleRunConfiguration) configuration).getModuleName())) {
                     return;
                 }
 
                 final Project project = CommonDataKeys.PROJECT.getData(context);
                 if (project == null || project.isDisposed()) return;
 
-                Optional<MavenProject> optionalMavenProject = ESBMavenUtils.getMavenProject(moduleRunConfiguration.getModuleName(), env.getProject());
+                Optional<MavenProject> optionalMavenProject = ESBModuleUtils.getMavenProject(moduleRunConfiguration.getModuleName(), env.getProject());
 
                 if (!optionalMavenProject.isPresent()) return;
 
@@ -165,9 +163,5 @@ public class ESBModuleBuildBeforeTaskProvider extends BeforeRunTaskProvider<ESBM
         return result[0];
     }
 
-    private boolean isHotSwap(Project project, String module) {
-        ESBFileChangeService fileChangeService = ServiceManager.getService(project, ESBFileChangeService.class);
-        return !fileChangeService.isCompileRequiredAndSetUnchanged(module);
-    }
 
 }
