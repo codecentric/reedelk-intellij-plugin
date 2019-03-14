@@ -53,7 +53,8 @@ abstract class AbstractRunProfile implements RunProfileState {
     void switchToRunToolWindow() {
         ToolWindowManager
                 .getInstance(project)
-                .getToolWindow(ToolWindowId.RUN).show(null);
+                .getToolWindow(ToolWindowId.RUN)
+                .show(null);
     }
 
     // TODO: Url how to determine?

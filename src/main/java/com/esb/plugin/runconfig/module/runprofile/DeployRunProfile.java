@@ -28,7 +28,6 @@ public class DeployRunProfile extends AbstractRunProfile {
         if(ESBModuleUtils.isHotSwap(project, moduleName)) {
             // Hot swap
 
-
             String mavenDirectory = mavenProject.getDirectory();
             Path resourcesRootDirectory = Paths.get(mavenDirectory, "src", "main", "resources");
 
@@ -41,6 +40,8 @@ public class DeployRunProfile extends AbstractRunProfile {
             String json = InternalAPI.HotSwap.V1.POST.Req.serialize(req);
 
             HotSwapPOSTRes response = post("hotswap", json, InternalAPI.HotSwap.V1.POST.Res::deserialize);
+
+            switchToRunToolWindow();
 
             ESBNotification.notifyInfo("Hot swapped module with id: " + response.getModuleId(), project);
 
@@ -56,12 +57,12 @@ public class DeployRunProfile extends AbstractRunProfile {
 
             ModulePOSTRes response = post("module", json, InternalAPI.Module.V1.POST.Res::deserialize);
 
-            ESBNotification.notifyInfo("Updated module with id: " + response.getModuleId(), project);
-
             ESBModuleUtils.unchanged(project, moduleName);
-        }
 
-        switchToRunToolWindow();
+            switchToRunToolWindow();
+
+            ESBNotification.notifyInfo("Updated module with id: " + response.getModuleId(), project);
+        }
 
         return null;
     }

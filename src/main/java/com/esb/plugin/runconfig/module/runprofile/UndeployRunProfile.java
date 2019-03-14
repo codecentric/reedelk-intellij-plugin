@@ -31,11 +31,11 @@ public class UndeployRunProfile extends AbstractRunProfile {
 
         ModuleDELETERes response = delete("module", json, InternalAPI.Module.V1.DELETE.Res::deserialize);
 
-        ESBNotification.notifyInfo("Un deployed module with id: " + response.getModuleId(), project);
-
         ESBModuleUtils.changed(project, moduleName);
 
         switchToRunToolWindow();
+
+        ESBNotification.notifyInfo("Un deployed module with id: " + response.getModuleId(), project);
 
         return null;
 
