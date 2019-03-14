@@ -34,11 +34,8 @@ public class DeployRunProfile extends AbstractRunProfile {
             Path resourcesRootDirectory = Paths.get(mavenDirectory, "src", "main", "resources");
 
             HotSwapPOSTReq req = new HotSwapPOSTReq();
-
             req.setModuleFilePath(moduleFile);
-
             req.setResourcesRootDirectory(resourcesRootDirectory.toString());
-
             String json = InternalAPI.HotSwap.V1.POST.Req.serialize(req);
 
             HotSwapPOSTRes response = post("hotswap", json, InternalAPI.HotSwap.V1.POST.Res::deserialize);
@@ -54,9 +51,7 @@ public class DeployRunProfile extends AbstractRunProfile {
             // Redeploy Module Jar
 
             ModulePOSTReq req = new ModulePOSTReq();
-
             req.setModuleFilePath(moduleFile);
-
             String json = InternalAPI.Module.V1.POST.Req.serialize(req);
 
             ModulePOSTRes response = post("module", json, InternalAPI.Module.V1.POST.Res::deserialize);
