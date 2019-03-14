@@ -36,7 +36,7 @@ public class ESBModuleRunConfigurationSettings extends SettingsEditor<ESBModuleR
 
     @Override
     protected void resetEditorFrom(@NotNull ESBModuleRunConfiguration configuration) {
-        String module = configuration.getModule();
+        String module = configuration.getModuleName();
         if (module != null) {
             Project project = configuration.getProject();
             Module moduleByName = ModuleManager.getInstance(project).findModuleByName(module);

@@ -2,19 +2,14 @@ package com.esb.plugin.runconfig.module;
 
 import com.esb.internal.rest.api.InternalAPI;
 import com.esb.internal.rest.api.module.v1.ModulePOSTReq;
-import com.esb.plugin.service.application.runtime.ESBRuntimeService;
-import com.esb.plugin.service.project.filechange.ESBFileChangeService;
+import com.esb.plugin.utils.ESBMavenUtils;
 import com.esb.plugin.utils.ESBNotification;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionTarget;
 import com.intellij.execution.Executor;
-import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.configurations.RunConfigurationBase;
-import com.intellij.execution.configurations.RunProfileState;
+import com.intellij.execution.configurations.*;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.RunConfigurationWithSuppressedDefaultRunAction;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.SettingsEditor;
@@ -31,11 +26,17 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.idea.maven.model.MavenId;
+import org.jetbrains.idea.maven.project.MavenProject;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Optional;
 
 public class ESBModuleRunConfiguration extends RunConfigurationBase implements RunConfigurationWithSuppressedDefaultRunAction {
 
@@ -65,13 +66,25 @@ public class ESBModuleRunConfiguration extends RunConfigurationBase implements R
     @Override
     public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment) throws ExecutionException {
         // If executor is undeploy, then undeploy, otherwise deploy
-        String module = getModule();
-        Module moduleByName = ModuleManager.getInstance(getProject()).findModuleByName(module);
+        String moduleName = getModuleName();
+        Module moduleByName = ModuleManager.getInstance(getProject()).findModuleByName(moduleName);
 
+        Optional<MavenProject> optionalMavenProject = ESBMavenUtils.getMavenProject(moduleName, environment.getProject());
+        if (!optionalMavenProject.isPresent()) {
+            throw new ExecutionException("Maven project could not be found");
+        }
+
+        MavenProject mavenProject = optionalMavenProject.get();
+        String targetDir = mavenProject.getBuildDirectory();
+
+        MavenId mavenId = mavenProject.getMavenId();
+        String jarName = mavenId.getArtifactId() + "-" + mavenId.getVersion() + ".jar";
+
+        Path finalJarPath = Paths.get(targetDir, jarName);
 
         return (executor1, runner) -> {
 
-            String moduleBaseDir = moduleByName.getModuleFile().getParent().getPath();
+
             String url = "http://localhost:9988/module";
 
             HttpClient client = HttpClientBuilder.create().build();
@@ -81,7 +94,7 @@ public class ESBModuleRunConfiguration extends RunConfigurationBase implements R
             BasicHttpEntity entity = new BasicHttpEntity();
 
             ModulePOSTReq req = new ModulePOSTReq();
-            req.setModuleFilePath("file:/Users/lorenzo/Desktop/esb-project/modules/flow-internal-tests/target/flow-internal-tests-1.0.0-SNAPSHOT.jar");
+            req.setModuleFilePath("file:" + finalJarPath.toString());
             String json = InternalAPI.Module.V1.POST.Req.serialize(req);
             entity.setContentLength(json.getBytes().length);
             entity.setContent(new ByteArrayInputStream(json.getBytes()));
@@ -93,9 +106,6 @@ public class ESBModuleRunConfiguration extends RunConfigurationBase implements R
                 e.printStackTrace();
                 return null;
             }
-
-            System.out.println("Response Code : "
-                    + response.getStatusLine().getStatusCode());
 
             BufferedReader rd = null;
             try {
@@ -154,7 +164,7 @@ public class ESBModuleRunConfiguration extends RunConfigurationBase implements R
         this.moduleName = moduleName;
     }
 
-    public String getModule() {
+    public String getModuleName() {
         return moduleName;
     }
 }

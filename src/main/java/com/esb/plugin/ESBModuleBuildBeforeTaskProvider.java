@@ -4,6 +4,7 @@ import com.esb.plugin.runconfig.module.ESBModuleRunConfiguration;
 import com.esb.plugin.runner.ESBModuleUnDeployExecutor;
 import com.esb.plugin.service.project.filechange.ESBFileChangeService;
 import com.esb.plugin.utils.ESBIcons;
+import com.esb.plugin.utils.ESBMavenUtils;
 import com.intellij.execution.BeforeRunTaskProvider;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.runners.ExecutionEnvironment;
@@ -13,22 +14,16 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.execution.ParametersListUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.execution.MavenRunner;
 import org.jetbrains.idea.maven.execution.MavenRunnerParameters;
-import org.jetbrains.idea.maven.model.MavenConstants;
 import org.jetbrains.idea.maven.model.MavenExplicitProfiles;
 import org.jetbrains.idea.maven.project.MavenProject;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
@@ -37,6 +32,7 @@ import org.jetbrains.idea.maven.utils.MavenLog;
 
 import javax.swing.*;
 import java.util.Collections;
+import java.util.Optional;
 
 public class ESBModuleBuildBeforeTaskProvider extends BeforeRunTaskProvider<ESBModuleBuildBeforeTask> {
 
@@ -84,6 +80,7 @@ public class ESBModuleBuildBeforeTaskProvider extends BeforeRunTaskProvider<ESBM
 
     @Override
     public boolean executeTask(DataContext context, @NotNull RunConfiguration configuration, @NotNull ExecutionEnvironment env, @NotNull ESBModuleBuildBeforeTask task) {
+
         if (!(configuration instanceof ESBModuleRunConfiguration)) return false;
 
 
@@ -94,6 +91,7 @@ public class ESBModuleBuildBeforeTaskProvider extends BeforeRunTaskProvider<ESBM
             return true;
         }
 
+        ESBModuleRunConfiguration moduleRunConfiguration = (ESBModuleRunConfiguration) configuration;
 
 
         final Semaphore targetDone = new Semaphore();
@@ -101,17 +99,23 @@ public class ESBModuleBuildBeforeTaskProvider extends BeforeRunTaskProvider<ESBM
         try {
             ApplicationManager.getApplication().invokeAndWait(() -> {
 
+                // By saving all documents we trigger the File listener to commit files,
+                // Hence we know if we can hotswap.
                 FileDocumentManager.getInstance().saveAllDocuments();
 
                 // No Need to re-compile
-                if (isHotSwap(env.getProject(), ((ESBModuleRunConfiguration) configuration).getModule())) {
+                if (isHotSwap(env.getProject(), ((ESBModuleRunConfiguration) configuration).getModuleName())) {
                     return;
                 }
 
                 final Project project = CommonDataKeys.PROJECT.getData(context);
-                final MavenProject mavenProject = getMavenProject((ESBModuleRunConfiguration) configuration, env.getProject());
+                if (project == null || project.isDisposed()) return;
 
-                if (project == null || project.isDisposed() || mavenProject == null) return;
+                Optional<MavenProject> optionalMavenProject = ESBMavenUtils.getMavenProject(moduleRunConfiguration.getModuleName(), env.getProject());
+
+                if (!optionalMavenProject.isPresent()) return;
+
+                MavenProject mavenProject = optionalMavenProject.get();
 
 
                 final MavenExplicitProfiles explicitProfiles = MavenProjectsManager.getInstance(project).getExplicitProfiles();
@@ -126,7 +130,7 @@ public class ESBModuleBuildBeforeTaskProvider extends BeforeRunTaskProvider<ESBM
                                     true,
                                     mavenProject.getDirectory(),
                                     mavenProject.getFile().getName(),
-                                    ParametersListUtil.parse("package"),
+                                    ParametersListUtil.parse("package -DskipTests=true"),
                                     explicitProfiles.getEnabledProfiles(),
                                     explicitProfiles.getDisabledProfiles());
 
@@ -166,18 +170,4 @@ public class ESBModuleBuildBeforeTaskProvider extends BeforeRunTaskProvider<ESBM
         return !fileChangeService.isCompileRequiredAndSetUnchanged(module);
     }
 
-
-    private MavenProject getMavenProject(ESBModuleRunConfiguration configuration, Project project) {
-        String moduleName = configuration.getModule();
-        Module moduleByName = ModuleManager.getInstance(project).findModuleByName(moduleName);
-        if (moduleByName == null) return null;
-
-        String pomXmlPath = moduleByName.getModuleFile().getParent().getPath() + "/" + MavenConstants.POM_XML;
-        if (StringUtil.isEmpty(pomXmlPath)) return null;
-
-        VirtualFile file = LocalFileSystem.getInstance().findFileByPath(pomXmlPath);
-        if (file == null) return null;
-
-        return MavenProjectsManager.getInstance(project).findProject(file);
-    }
 }
