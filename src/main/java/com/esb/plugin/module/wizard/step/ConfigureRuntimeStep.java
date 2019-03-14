@@ -1,8 +1,8 @@
 package com.esb.plugin.module.wizard.step;
 
 import com.esb.plugin.module.ESBModuleBuilder;
-import com.esb.plugin.service.runtime.ESBRuntime;
-import com.esb.plugin.service.runtime.ESBRuntimeService;
+import com.esb.plugin.service.application.runtime.ESBRuntime;
+import com.esb.plugin.service.application.runtime.ESBRuntimeService;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.Disposable;

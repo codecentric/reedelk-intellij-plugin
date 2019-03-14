@@ -2,6 +2,7 @@ package com.esb.plugin;
 
 import com.esb.plugin.runconfig.module.ESBModuleRunConfiguration;
 import com.esb.plugin.runner.ESBModuleUnDeployExecutor;
+import com.esb.plugin.service.project.filechange.ESBFileChangeService;
 import com.esb.plugin.utils.ESBIcons;
 import com.intellij.execution.BeforeRunTaskProvider;
 import com.intellij.execution.configurations.RunConfiguration;
@@ -10,6 +11,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -84,22 +86,33 @@ public class ESBModuleBuildBeforeTaskProvider extends BeforeRunTaskProvider<ESBM
     public boolean executeTask(DataContext context, @NotNull RunConfiguration configuration, @NotNull ExecutionEnvironment env, @NotNull ESBModuleBuildBeforeTask task) {
         if (!(configuration instanceof ESBModuleRunConfiguration)) return false;
 
+
         // We should also skip this step if there are no files changed in the src directory
 
         // We skip this step if the executor is Un-Deploy
         if (ESBModuleUnDeployExecutor.EXECUTOR_ID.equals(env.getExecutor().getId())) {
             return true;
         }
+
+
+
         final Semaphore targetDone = new Semaphore();
         final boolean[] result = new boolean[]{true};
         try {
             ApplicationManager.getApplication().invokeAndWait(() -> {
+
+                FileDocumentManager.getInstance().saveAllDocuments();
+
+                // No Need to re-compile
+                if (isHotSwap(env.getProject(), ((ESBModuleRunConfiguration) configuration).getModule())) {
+                    return;
+                }
+
                 final Project project = CommonDataKeys.PROJECT.getData(context);
                 final MavenProject mavenProject = getMavenProject((ESBModuleRunConfiguration) configuration, env.getProject());
 
                 if (project == null || project.isDisposed() || mavenProject == null) return;
 
-                FileDocumentManager.getInstance().saveAllDocuments();
 
                 final MavenExplicitProfiles explicitProfiles = MavenProjectsManager.getInstance(project).getExplicitProfiles();
                 final MavenRunner mavenRunner = MavenRunner.getInstance(project);
@@ -146,6 +159,11 @@ public class ESBModuleBuildBeforeTaskProvider extends BeforeRunTaskProvider<ESBM
         }
         targetDone.waitFor();
         return result[0];
+    }
+
+    private boolean isHotSwap(Project project, String module) {
+        ESBFileChangeService fileChangeService = ServiceManager.getService(project, ESBFileChangeService.class);
+        return !fileChangeService.isCompileRequiredAndSetUnchanged(module);
     }
 
 

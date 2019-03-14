@@ -2,7 +2,8 @@ package com.esb.plugin.runconfig.module;
 
 import com.esb.internal.rest.api.InternalAPI;
 import com.esb.internal.rest.api.module.v1.ModulePOSTReq;
-import com.esb.plugin.service.runtime.ESBRuntimeService;
+import com.esb.plugin.service.application.runtime.ESBRuntimeService;
+import com.esb.plugin.service.project.filechange.ESBFileChangeService;
 import com.esb.plugin.utils.ESBNotification;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionTarget;
@@ -66,7 +67,8 @@ public class ESBModuleRunConfiguration extends RunConfigurationBase implements R
         // If executor is undeploy, then undeploy, otherwise deploy
         String module = getModule();
         Module moduleByName = ModuleManager.getInstance(getProject()).findModuleByName(module);
-        ESBRuntimeService runtimeService = ServiceManager.getService(ESBRuntimeService.class);
+
+
         return (executor1, runner) -> {
 
             String moduleBaseDir = moduleByName.getModuleFile().getParent().getPath();

@@ -1,8 +1,8 @@
 package com.esb.plugin.module;
 
 import com.esb.plugin.module.wizard.step.ConfigureRuntimeStep;
-import com.esb.plugin.service.runtime.ESBRuntime;
-import com.esb.plugin.service.runtime.ESBRuntimeService;
+import com.esb.plugin.service.application.runtime.ESBRuntime;
+import com.esb.plugin.service.application.runtime.ESBRuntimeService;
 import com.esb.plugin.utils.ESBIcons;
 import com.esb.plugin.utils.ESBLabel;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;

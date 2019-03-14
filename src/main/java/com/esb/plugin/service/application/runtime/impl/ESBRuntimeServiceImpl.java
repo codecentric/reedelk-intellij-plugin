@@ -1,18 +1,11 @@
-package com.esb.plugin.service.runtime.impl;
+package com.esb.plugin.service.application.runtime.impl;
 
-import com.esb.plugin.service.runtime.ESBRuntime;
-import com.esb.plugin.service.runtime.ESBRuntimeService;
-import com.esb.plugin.service.runtime.ESBRuntimes;
-import com.intellij.openapi.application.ApplicationManager;
+import com.esb.plugin.service.application.runtime.ESBRuntime;
+import com.esb.plugin.service.application.runtime.ESBRuntimeService;
+import com.esb.plugin.service.application.runtime.ESBRuntimes;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.vfs.VirtualFileListener;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.VirtualFilePropertyEvent;
-import com.intellij.openapi.vfs.newvfs.BulkFileListener;
-import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
-import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,15 +15,9 @@ import java.util.Collections;
 import java.util.List;
 
 @State(name = "ESBRuntimesService", storages = @Storage("esb-runtimes.xml"))
-public class ESBRuntimeServiceImpl implements ESBRuntimeService, PersistentStateComponent<ESBRuntimes>, BulkFileListener {
+public class ESBRuntimeServiceImpl implements ESBRuntimeService, PersistentStateComponent<ESBRuntimes> {
 
     private final List<ESBRuntime> runtimes = new ArrayList<>();
-    private final MessageBusConnection connection;
-
-    public ESBRuntimeServiceImpl() {
-        this.connection = ApplicationManager.getApplication().getMessageBus().connect();
-        connection.subscribe(VirtualFileManager.VFS_CHANGES, this);
-    }
 
     @Override
     public Collection<ESBRuntime> listRuntimes() {
@@ -60,13 +47,5 @@ public class ESBRuntimeServiceImpl implements ESBRuntimeService, PersistentState
     public void loadState(@NotNull ESBRuntimes state) {
         this.runtimes.clear();
         this.runtimes.addAll(state.runtimes);
-    }
-
-    public void before(@NotNull List<? extends VFileEvent> events) {
-        System.out.println("After");
-    }
-
-    public void after(@NotNull List<? extends VFileEvent> events) {
-        System.out.println("Af");
     }
 }

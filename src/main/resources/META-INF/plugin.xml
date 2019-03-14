@@ -30,17 +30,14 @@
         <moduleBuilder builderClass="com.esb.plugin.module.ESBModuleBuilder" id="ESB_MODULE_BUILDER" order="first"/>
 
         <!-- Services -->
-        <applicationService serviceInterface="com.esb.plugin.service.runtime.ESBRuntimeService"
-                            serviceImplementation="com.esb.plugin.service.runtime.impl.ESBRuntimeServiceImpl"/>
+        <applicationService serviceInterface="com.esb.plugin.service.application.runtime.ESBRuntimeService"
+                            serviceImplementation="com.esb.plugin.service.application.runtime.impl.ESBRuntimeServiceImpl"/>
 
-        <projectService serviceInterface="com.esb.plugin.service.project.ESBProjectService"
-                        serviceImplementation="com.esb.plugin.service.project.impl.ESBProjectServiceImpl"/>
-        <projectService serviceInterface="com.esb.plugin.service.project.ESBProjectRuntimeService"
-                        serviceImplementation="com.esb.plugin.service.project.impl.ESBProjectRuntimeServiceImpl"/>
+        <projectService serviceInterface="com.esb.plugin.service.project.filechange.ESBFileChangeService"
+                        serviceImplementation="com.esb.plugin.service.project.filechange.impl.ESBFileChangeServiceImpl"/>
 
-        <moduleService serviceInterface="com.esb.plugin.service.module.ESBModuleRuntimeService"
-                       serviceImplementation="com.esb.plugin.service.module.impl.ESBModuleRuntimeServiceImpl"/>
 
+        <!-- Program Runner and Executors -->
         <programRunner implementation="com.esb.plugin.runner.ESBDeploymentRunner" order="first"/>
         <executor implementation="com.esb.plugin.runner.ESBModuleDeployExecutor"/>
         <executor implementation="com.esb.plugin.runner.ESBModuleUnDeployExecutor"/>
