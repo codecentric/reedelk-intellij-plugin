@@ -11,6 +11,8 @@ import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.project.MavenProject;
 
+import static java.lang.String.format;
+
 public class UndeployRunProfile extends AbstractRunProfile {
 
 
@@ -35,7 +37,9 @@ public class UndeployRunProfile extends AbstractRunProfile {
 
         switchToRunToolWindow();
 
-        ESBNotification.notifyInfo("Un deployed module with id: " + response.getModuleId(), project);
+        ESBNotification
+                .notifyWarn(format("Module <b>%s</b> (id: %d) uninstalled", moduleName,
+                        response.getModuleId()), project);
 
         return null;
 

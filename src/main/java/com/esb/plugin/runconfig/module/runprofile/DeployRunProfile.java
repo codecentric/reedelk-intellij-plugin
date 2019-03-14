@@ -16,6 +16,8 @@ import org.jetbrains.idea.maven.project.MavenProject;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static java.lang.String.format;
+
 public class DeployRunProfile extends AbstractRunProfile {
 
     public DeployRunProfile(Project project, String moduleName) {
@@ -43,7 +45,9 @@ public class DeployRunProfile extends AbstractRunProfile {
 
             switchToRunToolWindow();
 
-            ESBNotification.notifyInfo("Hot swapped module with id: " + response.getModuleId(), project);
+            ESBNotification
+                    .notifyInfo(format("Module <b>%s</b> (id: %d) reloaded", moduleName,
+                            response.getModuleId()), project);
 
 
         } else {
@@ -61,7 +65,9 @@ public class DeployRunProfile extends AbstractRunProfile {
 
             switchToRunToolWindow();
 
-            ESBNotification.notifyInfo("Updated module with id: " + response.getModuleId(), project);
+            ESBNotification
+                    .notifyInfo(format("Module <b>%s</b> (id: %d) updated", moduleName,
+                            response.getModuleId()), project);
         }
 
         return null;
