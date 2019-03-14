@@ -3,50 +3,35 @@ package com.esb.plugin.module.wizard.step;
 import com.esb.plugin.module.ESBModuleBuilder;
 import com.esb.plugin.service.application.runtime.ESBRuntime;
 import com.esb.plugin.service.application.runtime.ESBRuntimeService;
+import com.esb.plugin.ui.RuntimeComboManager;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 
 import javax.swing.*;
-import java.awt.event.ItemEvent;
-import java.util.Collection;
 
 public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable {
 
-    private ESBRuntime runtime;
     private ESBModuleBuilder moduleBuilder;
 
     private JPanel jPanel;
     private JButton btnAddRuntime;
     private JComboBox<RuntimeItem> runtimeCombo;
 
+    private RuntimeComboManager runtimeComboManager;
+
     public ConfigureRuntimeStep(WizardContext wizardContext, ESBModuleBuilder moduleBuilder) {
         this.moduleBuilder = moduleBuilder;
 
-        ESBRuntimeService runtimeService = ServiceManager.getService(ESBRuntimeService.class);
-        Collection<ESBRuntime> definedRuntimes = runtimeService.listRuntimes();
-
-        for (ESBRuntime runtime : definedRuntimes) {
-            runtimeCombo.addItem(new RuntimeItem(runtime));
-        }
-
-        runtimeCombo.addItemListener(event -> {
-            if (event.getStateChange() == ItemEvent.SELECTED) {
-                RuntimeItem item = (RuntimeItem) event.getItem();
-                this.runtime = item.getRuntime();
-            }
-        });
+        runtimeComboManager = new RuntimeComboManager(runtimeCombo, ServiceManager.getService(ESBRuntimeService.class));
 
         btnAddRuntime.addActionListener(e -> {
             AddRuntimeDialog dialog = new AddRuntimeDialog(jPanel, wizardContext, moduleBuilder);
             if(!dialog.showAndGet()) {
                 return;
             }
-
-            this.runtime = dialog.getRuntime();
-            updateComboAndSetSelected(runtime);
+            runtimeComboManager.addAndSelect(dialog.getRuntime());
         });
     }
 
@@ -57,7 +42,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
 
     @Override
     public void updateDataModel() {
-        moduleBuilder.setRuntime(this.runtime);
+        moduleBuilder.setRuntime(runtimeComboManager.getSelected());
     }
 
     @Override
@@ -65,18 +50,11 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
 
     }
 
-    private void updateComboAndSetSelected(final ESBRuntime selected) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
-        RuntimeItem newItem = new RuntimeItem(selected);
-        runtimeCombo.addItem(newItem);
-        runtimeCombo.setSelectedItem(newItem);
-    }
-
-    private static class RuntimeItem {
+    public static class RuntimeItem {
 
         private final ESBRuntime runtime;
 
-        RuntimeItem(ESBRuntime runtime) {
+        public RuntimeItem(ESBRuntime runtime) {
             this.runtime = runtime;
         }
 

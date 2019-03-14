@@ -1,4 +1,4 @@
-package com.esb.plugin;
+package com.esb.plugin.beforetask;
 
 import com.intellij.execution.BeforeRunTask;
 import com.intellij.openapi.util.Key;

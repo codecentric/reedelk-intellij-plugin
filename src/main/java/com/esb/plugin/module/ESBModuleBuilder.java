@@ -2,13 +2,11 @@ package com.esb.plugin.module;
 
 import com.esb.plugin.module.wizard.step.ConfigureRuntimeStep;
 import com.esb.plugin.service.application.runtime.ESBRuntime;
-import com.esb.plugin.service.application.runtime.ESBRuntimeService;
 import com.esb.plugin.utils.ESBIcons;
 import com.esb.plugin.utils.ESBLabel;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.JavaModuleType;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
@@ -28,8 +26,6 @@ import java.io.File;
 
 public class ESBModuleBuilder extends MavenModuleBuilder {
 
-    private ESBRuntime runtime;
-
     public ESBModuleBuilder() {
         setProjectId(defaultMavenId());
     }
@@ -39,14 +35,8 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
         super.setupRootModel(rootModel);
 
         final Project project = rootModel.getProject();
-        ESBRuntimeService runtimeService = ServiceManager.getService(ESBRuntimeService.class);
-        if (runtime != null && !runtimeService.contains(runtime)) {
-            runtimeService.addRuntime(runtime);
-        }
 
-
-        // Associate to this module the runtime
-
+        // TODO: Create Run Config For Runtime
 
 
         final VirtualFile root = createAndGetContentEntry();
@@ -124,7 +114,7 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
     }
 
     public void setRuntime(ESBRuntime runtime) {
-        this.runtime = runtime;
+        ESBRuntime runtime1 = runtime;
     }
 
 
