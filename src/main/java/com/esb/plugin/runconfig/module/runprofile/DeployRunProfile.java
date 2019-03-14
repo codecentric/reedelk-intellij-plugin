@@ -28,6 +28,7 @@ public class DeployRunProfile extends AbstractRunProfile {
         if(ESBModuleUtils.isHotSwap(project, moduleName)) {
             // Hot swap
 
+
             String mavenDirectory = mavenProject.getDirectory();
             Path resourcesRootDirectory = Paths.get(mavenDirectory, "src", "main", "resources");
 
