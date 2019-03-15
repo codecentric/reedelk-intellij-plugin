@@ -117,7 +117,7 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
     @Nullable
     @Override
     public ModuleWizardStep getCustomOptionsStep(WizardContext context, Disposable parentDisposable) {
-        ConfigureRuntimeStep step = new ConfigureRuntimeStep(context, this);
+        ConfigureRuntimeStep step = new ConfigureRuntimeStep(context, this, context.getProject());
         Disposer.register(parentDisposable, step);
         return step;
     }
@@ -125,13 +125,6 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
     @Override
     public String getParentGroup() {
         return JavaModuleType.BUILD_TOOLS_GROUP;
-    }
-
-    //TODO: To be removed since done by super.setRootModel
-    private VirtualFile createAndGetContentEntry() {
-        String path = FileUtil.toSystemIndependentName(getContentEntryPath());
-        (new File(path)).mkdirs();
-        return LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
     }
 
     private MavenId getParentMavenId() {

@@ -11,6 +11,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.text.StringUtil;
@@ -42,22 +43,17 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
 
     private boolean isNewProject;
 
-    public ConfigureRuntimeStep(WizardContext wizardContext, ESBModuleBuilder moduleBuilder) {
-
+    public ConfigureRuntimeStep(WizardContext wizardContext, ESBModuleBuilder builder, Project project) {
         isNewProject = wizardContext.isCreatingNewProject();
         if (isNewProject) {
-
             chooseRuntimePanel.setVisible(false);
         } else {
             addRuntimePanel.setVisible(false);
         }
 
-        this.moduleBuilder = moduleBuilder;
-
-        runtimeComboManager = new RuntimeComboManager(runtimeCombo, ServiceManager.getService(ESBRuntimeService.class));
-
-        buildRuntimeInputField(wizardContext, moduleBuilder);
-
+        this.moduleBuilder = builder;
+        runtimeComboManager = new RuntimeComboManager(runtimeCombo, project);
+        createInputWithBrowse(wizardContext, moduleBuilder);
     }
 
     @Override
@@ -84,7 +80,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
 
     }
 
-    private void buildRuntimeInputField(WizardContext context, ESBModuleBuilder moduleBuilder) {
+    private void createInputWithBrowse(WizardContext context, ESBModuleBuilder moduleBuilder) {
         FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
         inputWithBrowse = new TextFieldWithBrowseButton();
         inputWithBrowse.addBrowseFolderListener(new TextBrowseFolderListener(descriptor, context.getProject()) {

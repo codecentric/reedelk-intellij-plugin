@@ -1,5 +1,7 @@
 package com.esb.plugin.runconfig.module;
 
+import com.esb.plugin.module.wizard.step.ConfigureRuntimeStep;
+import com.esb.plugin.ui.RuntimeComboManager;
 import com.intellij.application.options.ModuleDescriptionsComboBox;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -13,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 
+import static com.esb.plugin.module.wizard.step.ConfigureRuntimeStep.*;
 import static com.intellij.uiDesigner.core.GridConstraints.*;
 
 public class ESBModuleRunConfigurationSettings extends SettingsEditor<ESBModuleRunConfiguration> {
@@ -20,18 +23,24 @@ public class ESBModuleRunConfigurationSettings extends SettingsEditor<ESBModuleR
     // Make Module Selectable
     // Make Runtime Selectable
     private JPanel jPanel;
+    private JComboBox<RuntimeItem> runtimeCombo;
     private ModuleDescriptionsComboBox moduleComboBox;
+    private RuntimeComboManager runtimeComboManager;
 
 
     public ESBModuleRunConfigurationSettings(@NotNull Project project) {
         moduleComboBox = new ModuleDescriptionsComboBox();
         moduleComboBox.setAllModulesFromProject(project);
 
-        JPanel moduleChooserPanel = UI.PanelFactory.panel(moduleComboBox).withLabel("Module:").
+
+        JPanel moduleChooserPanel = UI.PanelFactory.panel(moduleComboBox).
                 withComment("Choose the ESB Module this run configuration will be applied to")
                 .createPanel();
 
         jPanel.add(moduleChooserPanel, MODULE_SELECTOR);
+
+
+        runtimeComboManager = new RuntimeComboManager(runtimeCombo, project);
     }
 
     @Override
@@ -58,7 +67,7 @@ public class ESBModuleRunConfigurationSettings extends SettingsEditor<ESBModuleR
     }
 
     private static final GridConstraints MODULE_SELECTOR  =
-            new GridConstraints(0, 0, 1, 1,
+            new GridConstraints(1, 1, 1, 1,
                     ANCHOR_WEST,
                     FILL_HORIZONTAL,
                     SIZEPOLICY_CAN_GROW | SIZEPOLICY_CAN_SHRINK,
