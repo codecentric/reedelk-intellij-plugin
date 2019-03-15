@@ -1,10 +1,7 @@
 package com.esb.plugin.ui;
 
-import com.esb.plugin.runconfig.module.ESBModuleRunConfiguration;
-import com.esb.plugin.runconfig.module.ESBModuleRunConfigurationType;
 import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfiguration;
 import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfigurationType;
-import com.esb.plugin.service.application.runtime.ESBRuntime;
 import com.intellij.execution.RunManager;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.openapi.project.Project;
@@ -14,15 +11,12 @@ import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.util.List;
 
-import static com.esb.plugin.module.wizard.step.ConfigureRuntimeStep.RuntimeItem;
-
 public class RuntimeComboManager {
 
-    private ESBRuntime runtime;
-    private JComboBox<RuntimeItem> comboBox;
+    private String runtimeConfigName;
+    private JComboBox<String> comboBox;
 
-
-    public RuntimeComboManager(@NotNull JComboBox<RuntimeItem> comboBox, Project project) {
+    public RuntimeComboManager(@NotNull JComboBox<String> comboBox, Project project) {
         this.comboBox = comboBox;
 
         if (project != null) {
@@ -32,25 +26,24 @@ public class RuntimeComboManager {
                     .stream()
                     .map(configuration -> (ESBRuntimeRunConfiguration) configuration)
                     .forEach(configuration -> {
-                        ESBRuntime runtime = new ESBRuntime();
-                        runtime.name = configuration.getName();
-                        runtime.path = configuration.getRuntimeHomeDirectory();
-                        comboBox.addItem(new RuntimeItem(runtime));
+                        comboBox.addItem(configuration.getName());
                     });
         }
 
 
         this.comboBox.addItemListener(event -> {
             if (event.getStateChange() == ItemEvent.SELECTED) {
-                RuntimeItem item = (RuntimeItem) event.getItem();
-                this.runtime = item.getRuntime();
+                this.runtimeConfigName = (String) event.getItem();
             }
         });
 
     }
 
-    public ESBRuntime getSelected() {
-        return runtime;
+    public String getRuntimeConfigName() {
+        return runtimeConfigName;
     }
 
+    public void setRuntimeConfigName(String runtimeConfigName) {
+        comboBox.setSelectedItem(runtimeConfigName);
+    }
 }

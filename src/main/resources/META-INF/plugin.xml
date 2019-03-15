@@ -30,12 +30,11 @@
         <moduleBuilder builderClass="com.esb.plugin.module.ESBModuleBuilder" id="ESB_MODULE_BUILDER" order="first"/>
 
         <!-- Services -->
-        <applicationService serviceInterface="com.esb.plugin.service.application.runtime.ESBRuntimeService"
-                            serviceImplementation="com.esb.plugin.service.application.runtime.impl.ESBRuntimeServiceImpl"/>
-
         <projectService serviceInterface="com.esb.plugin.service.project.filechange.ESBFileChangeService"
                         serviceImplementation="com.esb.plugin.service.project.filechange.impl.ESBFileChangeServiceImpl"/>
 
+        <applicationService serviceInterface="com.esb.plugin.service.application.http.ESBHttpService"
+                            serviceImplementation="com.esb.plugin.service.application.http.impl.ESBHttpServiceImpl"/>
 
         <!-- Program Runner and Executors -->
         <programRunner implementation="com.esb.plugin.runner.ESBDeploymentRunner" order="first"/>
@@ -47,8 +46,6 @@
         <configurationType implementation="com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfigurationType"/>
         <configurationType implementation="com.esb.plugin.runconfig.module.ESBModuleRunConfigurationType"/>
 
-        <applicationService serviceInterface="com.esb.plugin.service.application.http.ESBHttpService"
-                            serviceImplementation="com.esb.plugin.service.application.http.impl.ESBHttpServiceImpl"/>
     </extensions>
 
     <actions>

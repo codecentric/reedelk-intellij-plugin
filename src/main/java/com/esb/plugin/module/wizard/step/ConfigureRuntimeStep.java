@@ -1,13 +1,10 @@
 package com.esb.plugin.module.wizard.step;
 
 import com.esb.plugin.module.ESBModuleBuilder;
-import com.esb.plugin.service.application.runtime.ESBRuntime;
-import com.esb.plugin.service.application.runtime.ESBRuntimeService;
 import com.esb.plugin.ui.RuntimeComboManager;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.ConfigurationException;
@@ -35,8 +32,8 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
     private JLabel runtimeName;
     private JPanel addRuntimePanel;
     private JPanel chooseRuntimePanel;
-    private JTextField runtimeNameTextField;
-    private JComboBox<RuntimeItem> runtimeCombo;
+    private JComboBox<String> runtimeCombo;
+    private JTextField runtimeConfigNameTextField;
     private TextFieldWithBrowseButton inputWithBrowse;
 
     private RuntimeComboManager runtimeComboManager;
@@ -63,16 +60,15 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
 
     @Override
     public void updateDataModel() {
-        ESBRuntime runtime;
-        if (isNewProject) {
-            runtime = new ESBRuntime();
-            runtime.name = runtimeNameTextField.getText();
-            runtime.path = inputWithBrowse.getText();
-        } else {
-            runtime = runtimeComboManager.getSelected();
-        }
+
         moduleBuilder.isNewProject(isNewProject);
-        moduleBuilder.setRuntime(runtime);
+        if (isNewProject) {
+            moduleBuilder.setRuntimeConfigName(runtimeConfigNameTextField.getText());
+            moduleBuilder.setRuntimeHomeDirectory(inputWithBrowse.getText());
+        } else {
+            moduleBuilder.setRuntimeConfigName(runtimeComboManager.getRuntimeConfigName());
+        }
+
     }
 
     @Override
@@ -105,7 +101,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
     @Override
     public boolean validate() throws ConfigurationException {
         List<String> errors = new ArrayList<>();
-        if (StringUtil.isEmptyOrSpaces(runtimeNameTextField.getText())) errors.add("Runtime Name");
+        if (StringUtil.isEmptyOrSpaces(runtimeConfigNameTextField.getText())) errors.add("Runtime Name");
         if (StringUtil.isEmptyOrSpaces(inputWithBrowse.getText())) errors.add("Runtime Path");
         return errors.isEmpty();
     }
@@ -119,23 +115,4 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
                     new Dimension(-1, -1),
                     new Dimension(-1, -1),
                     new Dimension(-1, -1));
-
-    public static class RuntimeItem {
-
-        private final ESBRuntime runtime;
-
-        public RuntimeItem(ESBRuntime runtime) {
-            this.runtime = runtime;
-        }
-
-        public ESBRuntime getRuntime() {
-            return runtime;
-        }
-
-        @Override
-        public String toString() {
-            return runtime.name;
-        }
-    }
-
 }

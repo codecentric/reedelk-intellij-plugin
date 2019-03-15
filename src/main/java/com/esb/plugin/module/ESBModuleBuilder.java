@@ -7,7 +7,6 @@ import com.esb.plugin.runconfig.module.ESBModuleRunConfigurationType;
 import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfiguration;
 import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfigurationFactory;
 import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfigurationType;
-import com.esb.plugin.service.application.runtime.ESBRuntime;
 import com.esb.plugin.utils.ESBIcons;
 import com.esb.plugin.utils.ESBLabel;
 import com.intellij.execution.RunManager;
@@ -33,8 +32,9 @@ import javax.swing.*;
 
 public class ESBModuleBuilder extends MavenModuleBuilder {
 
-    private ESBRuntime runtime;
     private boolean isNewProject;
+    private String runtimeConfigName;
+    private String runtimeHomeDirectory;
 
     public ESBModuleBuilder() {
         setProjectId(defaultMavenId());
@@ -51,11 +51,10 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
         if (isNewProject) {
             // Create Runtime Run Configuration
             // Associate to this module the run configuration just created above
-            RunnerAndConfigurationSettings runConfigurationSettings = RunManager.getInstance(project).createConfiguration(runtime.name,
-                    new ESBRuntimeRunConfigurationFactory(new ESBRuntimeRunConfigurationType()));
+            RunnerAndConfigurationSettings runConfigurationSettings = RunManager.getInstance(project).createConfiguration(runtimeConfigName, new ESBRuntimeRunConfigurationFactory(new ESBRuntimeRunConfigurationType()));
             ESBRuntimeRunConfiguration  configuration = (ESBRuntimeRunConfiguration) runConfigurationSettings.getConfiguration();
-            configuration.setRuntimeHomeDirectory(runtime.path);
-            configuration.setName(runtime.name);
+            configuration.setRuntimeHomeDirectory(runtimeHomeDirectory);
+            configuration.setName(runtimeConfigName);
 
             RunManager.getInstance(project).addConfiguration(runConfigurationSettings);
             RunManager.getInstance(project).setSelectedConfiguration(runConfigurationSettings);
@@ -64,12 +63,11 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
         // Add Module Config with this Runtime ID
         Module module = rootModel.getModule();
 
-        RunnerAndConfigurationSettings moduleConfigurationSettings = RunManager.getInstance(project).createConfiguration(module.getName(),
-                new ESBModuleRunConfigurationFactory(new ESBModuleRunConfigurationType()));
+        RunnerAndConfigurationSettings moduleConfigurationSettings = RunManager.getInstance(project).createConfiguration(module.getName(), new ESBModuleRunConfigurationFactory(new ESBModuleRunConfigurationType()));
 
         ESBModuleRunConfiguration esbModuleRunConfiguration = (ESBModuleRunConfiguration) moduleConfigurationSettings.getConfiguration();
         esbModuleRunConfiguration.setModule(module.getName());
-        esbModuleRunConfiguration.setRuntimeConfigName(runtime.name);
+        esbModuleRunConfiguration.setRuntimeConfigName(runtimeConfigName);
         RunManager.getInstance(project).addConfiguration(moduleConfigurationSettings);
 
 
@@ -138,10 +136,13 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
                 ESBLabel.DEFAULT_VERSION.get());
     }
 
-    public void setRuntime(ESBRuntime runtime) {
-        this.runtime = runtime;
+    public void setRuntimeConfigName(String runtimeConfigName) {
+        this.runtimeConfigName = runtimeConfigName;
     }
 
+    public void setRuntimeHomeDirectory(String runtimeHomeDirectory) {
+        this.runtimeHomeDirectory = runtimeHomeDirectory;
+    }
 
     public void isNewProject(boolean isNewProject) {
         this.isNewProject = isNewProject;

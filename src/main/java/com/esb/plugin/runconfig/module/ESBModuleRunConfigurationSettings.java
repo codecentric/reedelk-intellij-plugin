@@ -1,7 +1,5 @@
 package com.esb.plugin.runconfig.module;
 
-import com.esb.plugin.module.wizard.step.ConfigureRuntimeStep;
-import com.esb.plugin.service.application.runtime.ESBRuntime;
 import com.esb.plugin.ui.RuntimeComboManager;
 import com.intellij.application.options.ModuleDescriptionsComboBox;
 import com.intellij.openapi.module.Module;
@@ -16,17 +14,14 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 
-import static com.esb.plugin.module.wizard.step.ConfigureRuntimeStep.*;
 import static com.intellij.uiDesigner.core.GridConstraints.*;
 
 public class ESBModuleRunConfigurationSettings extends SettingsEditor<ESBModuleRunConfiguration> {
 
-    // Make Module Selectable
-    // Make Runtime Selectable
     private JPanel jPanel;
-    private JComboBox<RuntimeItem> runtimeCombo;
-    private ModuleDescriptionsComboBox moduleComboBox;
+    private JComboBox<String> runtimeCombo;
     private RuntimeComboManager runtimeComboManager;
+    private ModuleDescriptionsComboBox moduleComboBox;
 
 
     public ESBModuleRunConfigurationSettings(@NotNull Project project) {
@@ -55,8 +50,7 @@ public class ESBModuleRunConfigurationSettings extends SettingsEditor<ESBModuleR
 
         String runtimeConfigName = configuration.getRuntimeConfigName();
         if (runtimeConfigName != null) {
-            // TODO: Add me!
-            //runtimeComboManager.setSelected()
+            runtimeComboManager.setRuntimeConfigName(runtimeConfigName);
         }
     }
 
@@ -65,8 +59,8 @@ public class ESBModuleRunConfigurationSettings extends SettingsEditor<ESBModuleR
         Module selectedModule = moduleComboBox.getSelectedModule();
         if (selectedModule != null) configuration.setModule(selectedModule.getName());
 
-        if (runtimeComboManager.getSelected() != null) {
-            configuration.setRuntimeConfigName(runtimeComboManager.getSelected().name);
+        if (runtimeComboManager.getRuntimeConfigName() != null) {
+            configuration.setRuntimeConfigName(runtimeComboManager.getRuntimeConfigName());
         }
     }
 
