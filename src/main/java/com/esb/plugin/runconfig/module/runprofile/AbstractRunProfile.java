@@ -1,10 +1,9 @@
 package com.esb.plugin.runconfig.module.runprofile;
 
+import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfiguration;
 import com.esb.plugin.service.application.http.ESBHttpService;
 import com.esb.plugin.utils.ESBModuleUtils;
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.ExecutionResult;
-import com.intellij.execution.Executor;
+import com.intellij.execution.*;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.components.ServiceManager;
@@ -27,10 +26,13 @@ abstract class AbstractRunProfile implements RunProfileState {
 
     protected final Project project;
     protected final String moduleName;
+    private final String runtimeConfigName;
+    private int port;
 
-    AbstractRunProfile(final Project project, final String moduleName) {
+    AbstractRunProfile(final Project project, final String moduleName, String runtimeConfigName) {
         this.project = project;
         this.moduleName = moduleName;
+        this.runtimeConfigName = runtimeConfigName;
     }
 
     @Nullable
@@ -45,6 +47,11 @@ abstract class AbstractRunProfile implements RunProfileState {
         MavenProject mavenProject = optionalMavenProject.get();
         String moduleJarFilePath = getModuleJarFile(mavenProject);
 
+        RunnerAndConfigurationSettings configSettings = RunManager.getInstance(project).findConfigurationByName(runtimeConfigName);
+        if (configSettings == null) throw new ExecutionException("Could not find config with name = " + runtimeConfigName + ", check module run configuration");
+        ESBRuntimeRunConfiguration runtimeRunConfiguration = (ESBRuntimeRunConfiguration) configSettings.getConfiguration();
+        this.port = Integer.parseInt(runtimeRunConfiguration.getRuntimePort());
+        // TODO: add host
         return execute(mavenProject, moduleJarFilePath);
     }
 
@@ -60,7 +67,7 @@ abstract class AbstractRunProfile implements RunProfileState {
     // TODO: Url how to determine?
     <T> T post(String api, String json, Function<String, T> responseMapper) throws ExecutionException {
 
-        String url = "http://localhost:9988/" + api;
+        String url = String.format("http://localhost:%d/", port) + api;
 
         ESBHttpService ESBHttpService = ServiceManager.getService(ESBHttpService.class);
         try {
@@ -73,7 +80,7 @@ abstract class AbstractRunProfile implements RunProfileState {
 
     <T> T delete(String api, String json, Function<String, T> responseMapper) throws ExecutionException {
 
-        String url = "http://localhost:9988/" + api;
+        String url = String.format("http://localhost:%d/", port) + api;
 
         ESBHttpService ESBHttpService = ServiceManager.getService(ESBHttpService.class);
         try {

@@ -27,7 +27,7 @@ public class ESBModuleRunConfiguration extends RunConfigurationBase implements R
     private static final String MODULE_NAME = PREFIX + "ModuleName";
     private static final String RUNTIME_HOME_DIRECTORY = PREFIX + "HomeDirectory";
 
-    private String runtimePath;
+    private String runtimeConfigName;
     private String moduleName;
 
     protected ESBModuleRunConfiguration(@NotNull Project project, @Nullable ConfigurationFactory factory, @Nullable String name) {
@@ -53,11 +53,11 @@ public class ESBModuleRunConfiguration extends RunConfigurationBase implements R
 
         // Deploy Executor
         if (ESBModuleDeployExecutor.EXECUTOR_ID.equals(executor.getId())) {
-            return new DeployRunProfile(project, moduleName);
+            return new DeployRunProfile(project, moduleName, runtimeConfigName);
 
             // UnDeploy Executor
         } else if (ESBModuleUnDeployExecutor.EXECUTOR_ID.equals(executor.getId())) {
-            return new UndeployRunProfile(project, moduleName);
+            return new UndeployRunProfile(project, moduleName, runtimeConfigName);
 
         } else {
             throw new ExecutionException("Executor not valid!");
@@ -68,23 +68,23 @@ public class ESBModuleRunConfiguration extends RunConfigurationBase implements R
     @Override
     public void readExternal(@NotNull Element element) throws InvalidDataException {
         super.readExternal(element);
-        runtimePath = JDOMExternalizerUtil.readField(element, RUNTIME_HOME_DIRECTORY);
+        runtimeConfigName = JDOMExternalizerUtil.readField(element, RUNTIME_HOME_DIRECTORY);
         moduleName = JDOMExternalizerUtil.readField(element, MODULE_NAME);
     }
 
     @Override
     public void writeExternal(@NotNull Element element) {
         super.writeExternal(element);
-        JDOMExternalizerUtil.writeField(element, RUNTIME_HOME_DIRECTORY, runtimePath);
+        JDOMExternalizerUtil.writeField(element, RUNTIME_HOME_DIRECTORY, runtimeConfigName);
         JDOMExternalizerUtil.writeField(element, MODULE_NAME, moduleName);
     }
 
-    public String getRuntimePath() {
-        return runtimePath;
+    public String getRuntimeConfigName() {
+        return runtimeConfigName;
     }
 
-    public void setRuntimePath(String runtimePath) {
-        this.runtimePath = runtimePath;
+    public void setRuntimeConfigName(String runtimePath) {
+        this.runtimeConfigName = runtimePath;
     }
 
     public void setModule(String moduleName) {

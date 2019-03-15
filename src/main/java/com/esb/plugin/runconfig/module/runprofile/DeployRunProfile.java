@@ -20,8 +20,8 @@ import static java.lang.String.format;
 
 public class DeployRunProfile extends AbstractRunProfile {
 
-    public DeployRunProfile(Project project, String moduleName) {
-        super(project, moduleName);
+    public DeployRunProfile(Project project, String moduleName, String runtimeConfigName) {
+        super(project, moduleName, runtimeConfigName);
     }
 
     @Override

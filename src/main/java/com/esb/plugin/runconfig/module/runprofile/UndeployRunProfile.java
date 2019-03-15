@@ -16,8 +16,8 @@ import static java.lang.String.format;
 public class UndeployRunProfile extends AbstractRunProfile {
 
 
-    public UndeployRunProfile(Project project, String moduleName) {
-        super(project, moduleName);
+    public UndeployRunProfile(Project project, String moduleName, String runtimeConfigName) {
+        super(project, moduleName, runtimeConfigName);
     }
 
     @Override

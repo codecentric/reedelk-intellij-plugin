@@ -1,6 +1,7 @@
 package com.esb.plugin.runconfig.module;
 
 import com.esb.plugin.module.wizard.step.ConfigureRuntimeStep;
+import com.esb.plugin.service.application.runtime.ESBRuntime;
 import com.esb.plugin.ui.RuntimeComboManager;
 import com.intellij.application.options.ModuleDescriptionsComboBox;
 import com.intellij.openapi.module.Module;
@@ -51,12 +52,22 @@ public class ESBModuleRunConfigurationSettings extends SettingsEditor<ESBModuleR
             Module moduleByName = ModuleManager.getInstance(project).findModuleByName(module);
             if (moduleByName != null) moduleComboBox.setSelectedModule(moduleByName);
         }
+
+        String runtimeConfigName = configuration.getRuntimeConfigName();
+        if (runtimeConfigName != null) {
+            // TODO: Add me!
+            //runtimeComboManager.setSelected()
+        }
     }
 
     @Override
     protected void applyEditorTo(@NotNull ESBModuleRunConfiguration configuration) throws ConfigurationException {
         Module selectedModule = moduleComboBox.getSelectedModule();
         if (selectedModule != null) configuration.setModule(selectedModule.getName());
+
+        if (runtimeComboManager.getSelected() != null) {
+            configuration.setRuntimeConfigName(runtimeComboManager.getSelected().name);
+        }
     }
 
 

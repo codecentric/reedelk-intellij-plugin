@@ -21,7 +21,6 @@ import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +30,6 @@ import org.jetbrains.idea.maven.utils.MavenUtil;
 import org.jetbrains.idea.maven.wizards.MavenModuleBuilder;
 
 import javax.swing.*;
-import java.io.File;
 
 public class ESBModuleBuilder extends MavenModuleBuilder {
 
@@ -71,7 +69,7 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
 
         ESBModuleRunConfiguration esbModuleRunConfiguration = (ESBModuleRunConfiguration) moduleConfigurationSettings.getConfiguration();
         esbModuleRunConfiguration.setModule(module.getName());
-        esbModuleRunConfiguration.setRuntimePath(runtime.name);
+        esbModuleRunConfiguration.setRuntimeConfigName(runtime.name);
         RunManager.getInstance(project).addConfiguration(moduleConfigurationSettings);
 
 
