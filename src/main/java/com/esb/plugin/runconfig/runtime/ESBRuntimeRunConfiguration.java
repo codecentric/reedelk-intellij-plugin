@@ -2,10 +2,7 @@ package com.esb.plugin.runconfig.runtime;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
-import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.execution.configurations.RunConfigurationBase;
-import com.intellij.execution.configurations.RunProfileState;
-import com.intellij.execution.configurations.RuntimeConfigurationException;
+import com.intellij.execution.configurations.*;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
@@ -18,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
-public class ESBRuntimeRunConfiguration extends RunConfigurationBase {
+public class ESBRuntimeRunConfiguration extends RunConfigurationBase implements ModuleRunProfile {
 
     private static final String PREFIX = "ESBRuntimeRunConfiguration-";
     private static final String VM_OPTIONS = PREFIX + "VmOptions";
