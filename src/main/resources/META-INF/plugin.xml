@@ -46,6 +46,8 @@
         <configurationType implementation="com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfigurationType"/>
         <configurationType implementation="com.esb.plugin.runconfig.module.ESBModuleRunConfigurationType"/>
 
+        <projectService serviceInterface="com.esb.plugin.service.project.toolwindow.ESBToolWindowService"
+                        serviceImplementation="com.esb.plugin.service.project.toolwindow.impl.ESBToolWindowServiceImpl"/>
     </extensions>
 
     <actions>

@@ -4,24 +4,23 @@ import com.esb.plugin.runconfig.module.runprofile.DeployRunProfile;
 import com.esb.plugin.runconfig.module.runprofile.UndeployRunProfile;
 import com.esb.plugin.runner.ESBModuleDeployExecutor;
 import com.esb.plugin.runner.ESBModuleUnDeployExecutor;
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.ExecutionTarget;
-import com.intellij.execution.Executor;
-import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.configurations.RunConfigurationBase;
-import com.intellij.execution.configurations.RunProfileState;
+import com.intellij.execution.*;
+import com.intellij.execution.configurations.*;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.RunConfigurationWithSuppressedDefaultRunAction;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizerUtil;
+import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowManager;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ESBModuleRunConfiguration extends RunConfigurationBase implements RunConfigurationWithSuppressedDefaultRunAction {
+public class ESBModuleRunConfiguration extends RunConfigurationBase implements
+        RunConfigurationWithSuppressedDefaultRunAction,
+        RunConfigurationWithSuppressedDefaultDebugAction {
 
     private static final String PREFIX = "ESBModuleRunConfiguration-";
     private static final String MODULE_NAME = PREFIX + "ModuleName";

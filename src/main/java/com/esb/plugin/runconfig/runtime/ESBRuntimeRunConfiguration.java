@@ -1,9 +1,12 @@
 package com.esb.plugin.runconfig.runtime;
 
+import com.esb.plugin.service.project.filechange.ESBFileChangeService;
+import com.esb.plugin.service.project.toolwindow.ESBToolWindowService;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.*;
 import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.InvalidDataException;
@@ -63,6 +66,11 @@ public class ESBRuntimeRunConfiguration extends RunConfigurationBase implements 
     @Nullable
     @Override
     public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment) throws ExecutionException {
+        // Store the ToolWindowId associated to this RunConfig. It will be used
+        // later by a ModuleRun Configuration to switch to this tool window when a
+        // deploy/un-deploy action is completed.
+        ESBToolWindowService toolWindowService = ServiceManager.getService(getProject(), ESBToolWindowService.class);
+        toolWindowService.put(getName(), executor.getToolWindowId());
         return new ESBRuntimeRunCommandLine(this, environment);
     }
 

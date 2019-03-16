@@ -2,13 +2,15 @@ package com.esb.plugin.runconfig.module.runprofile;
 
 import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfiguration;
 import com.esb.plugin.service.application.http.ESBHttpService;
+import com.esb.plugin.service.project.toolwindow.ESBToolWindowService;
 import com.esb.plugin.utils.ESBModuleUtils;
+import com.esb.plugin.utils.ESBNotification;
 import com.intellij.execution.*;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.ToolWindowId;
+import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +28,7 @@ abstract class AbstractRunProfile implements RunProfileState {
 
     protected final Project project;
     protected final String moduleName;
-    private final String runtimeConfigName;
+    protected final String runtimeConfigName;
     private int port;
 
     AbstractRunProfile(final Project project, final String moduleName, String runtimeConfigName) {
@@ -57,14 +59,7 @@ abstract class AbstractRunProfile implements RunProfileState {
 
     protected abstract ExecutionResult execute(@NotNull MavenProject mavenProject, @NotNull String moduleFile) throws ExecutionException;
 
-    void switchToRunToolWindow() {
-        ToolWindowManager
-                .getInstance(project)
-                .getToolWindow(ToolWindowId.RUN)
-                .show(null);
-    }
 
-    // TODO: Url how to determine?
     <T> T post(String api, String json, Function<String, T> responseMapper) throws ExecutionException {
 
         String url = String.format("http://localhost:%d/", port) + api;
@@ -91,6 +86,19 @@ abstract class AbstractRunProfile implements RunProfileState {
         }
     }
 
+    protected void switchToolWindowAndNotifyWithMessage(String message) {
+        ESBToolWindowService toolWindowService = ServiceManager.getService(project, ESBToolWindowService.class);
+        Optional<String> optionalToolWindowId = toolWindowService.get(runtimeConfigName);
+        optionalToolWindowId.ifPresent(toolWindowId -> getToolWindowById(toolWindowId).show(null));
+        optionalToolWindowId.ifPresent(toolWindowId -> ESBNotification.notifyInfo(toolWindowId, message, project));
+    }
+
+    protected ToolWindow getToolWindowById(String toolWindowId) {
+        return ToolWindowManager
+                .getInstance(project)
+                .getToolWindow(toolWindowId);
+    }
+
     private String getModuleJarFile(MavenProject mavenProject) {
         String targetDir = mavenProject.getBuildDirectory();
         MavenId mavenId = mavenProject.getMavenId();
@@ -99,5 +107,4 @@ abstract class AbstractRunProfile implements RunProfileState {
                 mavenId.getArtifactId(),
                 mavenId.getVersion());
     }
-
 }

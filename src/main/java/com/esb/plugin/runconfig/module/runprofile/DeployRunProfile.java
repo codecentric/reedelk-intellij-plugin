@@ -9,12 +9,16 @@ import com.esb.plugin.utils.ESBModuleUtils;
 import com.esb.plugin.utils.ESBNotification;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
+import com.intellij.execution.impl.ConsoleViewUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.wm.impl.content.ToolWindowContentUi;
+import groovy.ui.ConsoleView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.project.MavenProject;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 import static java.lang.String.format;
 
@@ -38,13 +42,11 @@ public class DeployRunProfile extends AbstractRunProfile {
             req.setResourcesRootDirectory(resourcesRootDirectory.toString());
             String json = InternalAPI.HotSwap.V1.POST.Req.serialize(req);
 
+            // TODO: do something with this response
             HotSwapPOSTRes response = post("hotswap", json, InternalAPI.HotSwap.V1.POST.Res::deserialize);
 
-            switchToRunToolWindow();
-
-            ESBNotification
-                    .notifyInfo(format("Module <b>%s</b> (id: %d) reloaded", moduleName,
-                            response.getModuleId()), project);
+            String message = format("Module <b>%s</b> reloaded", moduleName);
+            switchToolWindowAndNotifyWithMessage(message);
 
 
         } else {
@@ -54,19 +56,16 @@ public class DeployRunProfile extends AbstractRunProfile {
             req.setModuleFilePath(moduleFile);
             String json = InternalAPI.Module.V1.POST.Req.serialize(req);
 
+            // TODO: do something with this response
             ModulePOSTRes response = post("module", json, InternalAPI.Module.V1.POST.Res::deserialize);
 
             ESBModuleUtils.unchanged(project, moduleName);
 
-            switchToRunToolWindow();
-
-            ESBNotification
-                    .notifyInfo(format("Module <b>%s</b> (id: %d) updated", moduleName,
-                            response.getModuleId()), project);
+            String message = format("Module <b>%s</b> updated", moduleName);
+            switchToolWindowAndNotifyWithMessage(message);
         }
 
         return null;
     }
-
 
 }

@@ -2,6 +2,7 @@ package com.esb.plugin.runner;
 
 import com.esb.plugin.utils.ESBIcons;
 import com.intellij.execution.Executor;
+import com.intellij.openapi.wm.ToolWindowId;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,7 +15,7 @@ public class ESBModuleDeployExecutor extends Executor {
 
     @Override
     public String getToolWindowId() {
-        return "ESB Module";
+        return ToolWindowId.RUN;
     }
 
     @Override

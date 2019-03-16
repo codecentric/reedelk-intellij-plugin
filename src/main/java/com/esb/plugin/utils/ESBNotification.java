@@ -8,10 +8,10 @@ import com.intellij.openapi.wm.ToolWindowManager;
 
 public class ESBNotification {
 
-    public static void notifyInfo(final String text, final Project project) {
+    public static void notifyInfo(final String toolWindowId, final String text, final Project project) {
         ToolWindowManager
                 .getInstance(project)
-                .notifyByBalloon(ToolWindowId.RUN, MessageType.INFO, text);
+                .notifyByBalloon(toolWindowId, MessageType.INFO, text);
 
     }
 

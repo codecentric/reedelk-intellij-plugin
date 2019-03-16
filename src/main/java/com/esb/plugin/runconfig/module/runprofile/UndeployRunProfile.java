@@ -4,7 +4,6 @@ import com.esb.internal.rest.api.InternalAPI;
 import com.esb.internal.rest.api.module.v1.ModuleDELETEReq;
 import com.esb.internal.rest.api.module.v1.ModuleDELETERes;
 import com.esb.plugin.utils.ESBModuleUtils;
-import com.esb.plugin.utils.ESBNotification;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.openapi.project.Project;
@@ -31,15 +30,13 @@ public class UndeployRunProfile extends AbstractRunProfile {
 
         String json = InternalAPI.Module.V1.DELETE.Req.serialize(req);
 
+        // TODO: do something with this response
         ModuleDELETERes response = delete("module", json, InternalAPI.Module.V1.DELETE.Res::deserialize);
 
         ESBModuleUtils.changed(project, moduleName);
 
-        switchToRunToolWindow();
-
-        ESBNotification
-                .notifyWarn(format("Module <b>%s</b> (id: %d) uninstalled", moduleName,
-                        response.getModuleId()), project);
+        String message = format("Module <b>%s</b> uninstalled", moduleName);
+        switchToolWindowAndNotifyWithMessage(message);
 
         return null;
 
