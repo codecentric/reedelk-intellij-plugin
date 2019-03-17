@@ -27,7 +27,7 @@ import static com.intellij.uiDesigner.core.GridConstraints.*;
 public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable {
 
     private ESBModuleBuilder moduleBuilder;
-
+    
     private JPanel jPanel;
     private JLabel runtimeName;
     private JPanel addRuntimePanel;

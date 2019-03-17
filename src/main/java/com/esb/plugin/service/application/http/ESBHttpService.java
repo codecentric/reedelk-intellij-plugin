@@ -14,9 +14,9 @@ public interface ESBHttpService {
         return ServiceManager.getService(ESBHttpService.class);
     }
 
-    String post(String url, String payload, MediaType mediaType) throws IOException;
+    HttpResponse post(String url, String payload, MediaType mediaType) throws IOException;
 
-    String get(String url) throws IOException;
+    HttpResponse get(String url) throws IOException;
 
-    String delete(String url, String payload, MediaType mediaType) throws IOException;
+    HttpResponse delete(String url, String payload, MediaType mediaType) throws IOException;
 }

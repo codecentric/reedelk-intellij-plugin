@@ -2,6 +2,7 @@ package com.esb.plugin.runconfig.module.runprofile;
 
 import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfiguration;
 import com.esb.plugin.service.application.http.ESBHttpService;
+import com.esb.plugin.service.application.http.HttpResponse;
 import com.esb.plugin.service.project.toolwindow.ESBToolWindowService;
 import com.esb.plugin.utils.ESBModuleUtils;
 import com.esb.plugin.utils.ESBNotification;
@@ -66,8 +67,12 @@ abstract class AbstractRunProfile implements RunProfileState {
 
         ESBHttpService ESBHttpService = ServiceManager.getService(ESBHttpService.class);
         try {
-            String result = ESBHttpService.post(url, json, ESBHttpService.JSON);
-            return responseMapper.apply(result);
+            HttpResponse result = ESBHttpService.post(url, json, ESBHttpService.JSON);
+            if (result.isSuccessful()) {
+                return responseMapper.apply(result.getBody());
+            } else {
+                throw new ExecutionException(result.getBody());
+            }
         } catch (IOException e) {
             throw new ExecutionException(e);
         }
@@ -79,21 +84,25 @@ abstract class AbstractRunProfile implements RunProfileState {
 
         ESBHttpService ESBHttpService = ServiceManager.getService(ESBHttpService.class);
         try {
-            String result = ESBHttpService.delete(url, json, ESBHttpService.JSON);
-            return responseMapper.apply(result);
+            HttpResponse result = ESBHttpService.delete(url, json, ESBHttpService.JSON);
+            if (result.isSuccessful()) {
+                return responseMapper.apply(result.getBody());
+            } else {
+                throw new ExecutionException(result.getBody());
+            }
         } catch (IOException e) {
             throw new ExecutionException(e);
         }
     }
 
-    protected void switchToolWindowAndNotifyWithMessage(String message) {
+    void switchToolWindowAndNotifyWithMessage(String message) {
         ESBToolWindowService toolWindowService = ServiceManager.getService(project, ESBToolWindowService.class);
         Optional<String> optionalToolWindowId = toolWindowService.get(runtimeConfigName);
         optionalToolWindowId.ifPresent(toolWindowId -> getToolWindowById(toolWindowId).show(null));
         optionalToolWindowId.ifPresent(toolWindowId -> ESBNotification.notifyInfo(toolWindowId, message, project));
     }
 
-    protected ToolWindow getToolWindowById(String toolWindowId) {
+    private ToolWindow getToolWindowById(String toolWindowId) {
         return ToolWindowManager
                 .getInstance(project)
                 .getToolWindow(toolWindowId);

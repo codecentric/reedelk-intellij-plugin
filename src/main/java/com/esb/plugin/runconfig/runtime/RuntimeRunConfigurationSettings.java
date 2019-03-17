@@ -18,6 +18,7 @@ import static com.intellij.uiDesigner.core.GridConstraints.*;
 
 public class RuntimeRunConfigurationSettings extends SettingsEditor<ESBRuntimeRunConfiguration> {
 
+    // TODO: Add Bind Address (default localhost)
     private JPanel jPanel;
     private JTextField vmOptionsTextField;
     private JTextField runtimePortTextField;

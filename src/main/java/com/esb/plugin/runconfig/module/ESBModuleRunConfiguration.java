@@ -47,7 +47,6 @@ public class ESBModuleRunConfiguration extends RunConfigurationBase implements
     @Nullable
     @Override
     public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment) throws ExecutionException {
-
         Project project = getProject();
 
         // Deploy Executor

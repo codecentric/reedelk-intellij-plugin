@@ -2,6 +2,8 @@ package com.esb.plugin.runconfig.runtime;
 
 import com.esb.plugin.service.project.filechange.ESBFileChangeService;
 import com.esb.plugin.service.project.toolwindow.ESBToolWindowService;
+import com.esb.plugin.utils.ESBNetworkUtils;
+import com.esb.plugin.utils.ESBNotification;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.*;
@@ -66,6 +68,13 @@ public class ESBRuntimeRunConfiguration extends RunConfigurationBase implements 
     @Nullable
     @Override
     public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment) throws ExecutionException {
+        // Check if port is available
+        boolean isPortAvailable = ESBNetworkUtils.available(Integer.parseInt(runtimePort));
+        if (!isPortAvailable) {
+            throw new ExecutionException(String.format("Could not start runtime on port %s. The port is in use.", runtimePort));
+        }
+
+
         // Store the ToolWindowId associated to this RunConfig. It will be used
         // later by a ModuleRun Configuration to switch to this tool window when a
         // deploy/un-deploy action is completed.

@@ -20,6 +20,11 @@ public class ESBNotification {
                 .notifyByBalloon(ToolWindowId.RUN, MessageType.WARNING, text);
     }
 
+    public static void notifyError(final String text, final Project project) {
+        ToolWindowManager.getInstance(project)
+                .notifyByBalloon(ToolWindowId.RUN, MessageType.ERROR, StringUtil.notNullize(text, "internal error"));
+    }
+
     public static void notifyError(final Exception ex, final Project project) {
         ToolWindowManager.getInstance(project)
                 .notifyByBalloon(ToolWindowId.RUN, MessageType.ERROR, StringUtil.notNullize(ex.getMessage(), "internal error"));
