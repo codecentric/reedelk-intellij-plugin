@@ -1,6 +1,6 @@
-package com.esb.plugin.module.wizard.step;
+package com.esb.plugin.module.builder;
 
-import com.esb.plugin.module.ESBModuleBuilder;
+import com.esb.plugin.module.builder.ESBModuleBuilder;
 import com.esb.plugin.ui.RuntimeComboManager;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;

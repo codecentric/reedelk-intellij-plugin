@@ -1,6 +1,5 @@
-package com.esb.plugin.module;
+package com.esb.plugin.module.builder;
 
-import com.esb.plugin.module.wizard.step.ConfigureRuntimeStep;
 import com.esb.plugin.runconfig.module.ESBModuleRunConfigurationBuilder;
 import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfigurationBuilder;
 import com.esb.plugin.utils.ESBIcons;

@@ -1,4 +1,4 @@
-package com.esb.plugin.module;
+package com.esb.plugin.module.builder;
 
 import com.esb.plugin.template.Template;
 import com.esb.plugin.utils.ESBLog;

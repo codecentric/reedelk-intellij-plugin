@@ -1,5 +1,6 @@
 package com.esb.plugin.runconfig.module.runprofile;
 
+import com.esb.plugin.service.application.rest.RESTModuleService;
 import com.esb.plugin.service.project.filechange.ESBFileChangeService;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;

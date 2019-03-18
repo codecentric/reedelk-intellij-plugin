@@ -1,4 +1,4 @@
-package com.esb.plugin.runconfig.module.runprofile;
+package com.esb.plugin.service.application.rest;
 
 import com.esb.internal.rest.api.InternalAPI;
 import com.esb.internal.rest.api.hotswap.v1.HotSwapPOSTReq;
