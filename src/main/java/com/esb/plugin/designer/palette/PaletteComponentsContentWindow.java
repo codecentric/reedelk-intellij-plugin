@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class PaletteComponentsContentWindow extends JPanel implements Scrollable {
+
     @Override
     public Dimension getPreferredScrollableViewportSize() {
         return null;

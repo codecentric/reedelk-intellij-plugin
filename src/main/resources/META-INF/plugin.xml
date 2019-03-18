@@ -20,6 +20,10 @@
     <depends>org.jetbrains.idea.maven</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+
+        <!-- File Type -->
+        <fileTypeFactory implementation="com.esb.plugin.FlowFileTypeFactory"/>
+
         <!-- File Templates -->
         <internalFileTemplate name="Maven Module"/>
         <internalFileTemplate name="Maven Project"/>
@@ -49,7 +53,7 @@
         <configurationType implementation="com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfigurationType"/>
         <configurationType implementation="com.esb.plugin.runconfig.module.ESBModuleRunConfigurationType"/>
 
-        <fileEditorProvider implementation="com.intellij.uiDesigner.editor.UIFormEditorProvider"/>
+        <fileEditorProvider implementation="com.esb.plugin.designer.editor.UIFlowEditorProvider"/>
 
     </extensions>
 
