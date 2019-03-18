@@ -1,7 +1,7 @@
 package com.esb.plugin.beforetask;
 
 import com.esb.plugin.runconfig.module.ESBModuleRunConfiguration;
-import com.esb.plugin.runner.ESBModuleUnDeployExecutor;
+import com.esb.plugin.runconfig.module.runner.ESBModuleUnDeployExecutor;
 import com.esb.plugin.utils.ESBIcons;
 import com.esb.plugin.utils.ESBModuleUtils;
 import com.intellij.execution.BeforeRunTaskProvider;

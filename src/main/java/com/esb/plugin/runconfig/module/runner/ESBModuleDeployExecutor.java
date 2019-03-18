@@ -1,4 +1,4 @@
-package com.esb.plugin.runner;
+package com.esb.plugin.runconfig.module.runner;
 
 import com.esb.plugin.utils.ESBIcons;
 import com.intellij.execution.Executor;

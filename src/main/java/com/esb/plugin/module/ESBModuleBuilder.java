@@ -2,14 +2,9 @@ package com.esb.plugin.module;
 
 import com.esb.plugin.module.wizard.step.ConfigureRuntimeStep;
 import com.esb.plugin.runconfig.module.ESBModuleRunConfigurationBuilder;
-import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfiguration;
 import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfigurationBuilder;
-import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfigurationFactory;
-import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfigurationType;
 import com.esb.plugin.utils.ESBIcons;
 import com.esb.plugin.utils.ESBLabel;
-import com.intellij.execution.RunManager;
-import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.Disposable;
@@ -54,14 +49,13 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
                     .add(project);
         }
 
-        // Add Module Config with this Runtime Config Name
+        // Add Module Run Configuration
         Module module = rootModel.getModule();
 
         ESBModuleRunConfigurationBuilder.build()
                 .withModuleName(module.getName())
                 .withRuntimeConfigName(runtimeConfigName)
                 .add(project);
-
 
         final MavenId projectId = getProjectId();
         final MavenId parentId = getParentMavenId();

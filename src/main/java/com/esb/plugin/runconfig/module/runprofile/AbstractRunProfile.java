@@ -30,7 +30,7 @@ abstract class AbstractRunProfile implements RunProfileState {
     protected final Project project;
     protected final String moduleName;
     protected final String runtimeConfigName;
-    private int port;
+    protected int port;
 
     AbstractRunProfile(final Project project, final String moduleName, String runtimeConfigName) {
         this.project = project;
@@ -61,18 +61,10 @@ abstract class AbstractRunProfile implements RunProfileState {
     protected abstract ExecutionResult execute(@NotNull MavenProject mavenProject, @NotNull String moduleFile) throws ExecutionException;
 
 
-    <T> T post(String api, String json, Function<String, T> responseMapper) throws ExecutionException {
-
-        String url = String.format("http://localhost:%d/", port) + api;
-
+    HttpResponse post(String url, String json) throws ExecutionException {
         ESBHttpService ESBHttpService = ServiceManager.getService(ESBHttpService.class);
         try {
-            HttpResponse result = ESBHttpService.post(url, json, ESBHttpService.JSON);
-            if (result.isSuccessful()) {
-                return responseMapper.apply(result.getBody());
-            } else {
-                throw new ExecutionException(result.getBody());
-            }
+            return ESBHttpService.post(url, json, ESBHttpService.JSON);
         } catch (IOException e) {
             throw new ExecutionException(e);
         }

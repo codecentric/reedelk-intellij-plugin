@@ -40,9 +40,9 @@
                             serviceImplementation="com.esb.plugin.service.application.http.impl.ESBHttpServiceImpl"/>
 
         <!-- Program Runner and Executors -->
-        <programRunner implementation="com.esb.plugin.runner.ESBDeploymentRunner" order="first"/>
-        <executor implementation="com.esb.plugin.runner.ESBModuleDeployExecutor"/>
-        <executor implementation="com.esb.plugin.runner.ESBModuleUnDeployExecutor"/>
+        <programRunner implementation="com.esb.plugin.runconfig.module.runner.ESBDeploymentRunner" order="first"/>
+        <executor implementation="com.esb.plugin.runconfig.module.runner.ESBModuleDeployExecutor"/>
+        <executor implementation="com.esb.plugin.runconfig.module.runner.ESBModuleUnDeployExecutor"/>
 
 
         <!-- Run Configurations -->

@@ -18,10 +18,10 @@ import static com.intellij.uiDesigner.core.GridConstraints.*;
 
 public class RuntimeRunConfigurationSettings extends SettingsEditor<ESBRuntimeRunConfiguration> {
 
-    // TODO: Add Bind Address (default localhost)
     private JPanel jPanel;
     private JTextField vmOptionsTextField;
     private JTextField runtimePortTextField;
+    private JTextField runtimeAddressTextField;
     private TextFieldWithBrowseButton runtimeHomeField;
 
     public RuntimeRunConfigurationSettings(Project project) {
@@ -33,6 +33,7 @@ public class RuntimeRunConfigurationSettings extends SettingsEditor<ESBRuntimeRu
         vmOptionsTextField.setText(runtimeRunConfiguration.getVmOptions());
         runtimePortTextField.setText(runtimeRunConfiguration.getRuntimePort());
         runtimeHomeField.setText(runtimeRunConfiguration.getRuntimeHomeDirectory());
+        runtimeAddressTextField.setText(runtimeRunConfiguration.getRuntimeBindAddress());
     }
 
     @Override
@@ -40,6 +41,7 @@ public class RuntimeRunConfigurationSettings extends SettingsEditor<ESBRuntimeRu
         configuration.setRuntimeHomeDirectory(runtimeHomeField.getText());
         configuration.setVmOptions(vmOptionsTextField.getText());
         configuration.setRuntimePort(runtimePortTextField.getText());
+        configuration.setRuntimeBindAddress(runtimeAddressTextField.getText());
     }
 
     @NotNull

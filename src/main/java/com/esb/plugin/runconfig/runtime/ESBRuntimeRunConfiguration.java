@@ -1,9 +1,7 @@
 package com.esb.plugin.runconfig.runtime;
 
-import com.esb.plugin.service.project.filechange.ESBFileChangeService;
 import com.esb.plugin.service.project.toolwindow.ESBToolWindowService;
 import com.esb.plugin.utils.ESBNetworkUtils;
-import com.esb.plugin.utils.ESBNotification;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.*;
@@ -29,6 +27,7 @@ public class ESBRuntimeRunConfiguration extends RunConfigurationBase implements 
 
     private String vmOptions;
     private String runtimePort = "9988";
+    private String runtimeBindAddress = "localhost";
     private String runtimeHomeDirectory;
 
     protected ESBRuntimeRunConfiguration(@NotNull Project project, @Nullable ConfigurationFactory factory, @Nullable String name) {
@@ -122,4 +121,11 @@ public class ESBRuntimeRunConfiguration extends RunConfigurationBase implements 
         }
     }
 
+    public void setRuntimeBindAddress(String runtimeBindAddress) {
+        this.runtimeBindAddress = runtimeBindAddress;
+    }
+
+    public String getRuntimeBindAddress() {
+        return runtimeBindAddress;
+    }
 }
