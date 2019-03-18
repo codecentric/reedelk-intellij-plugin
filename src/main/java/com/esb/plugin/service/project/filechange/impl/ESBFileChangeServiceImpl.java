@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import static java.util.Arrays.stream;
 
@@ -67,6 +68,15 @@ public class ESBFileChangeServiceImpl implements ESBFileChangeService, BulkFileL
     public void changed(String runtimeConfigName, String moduleName) {
         BiKey key = new BiKey(runtimeConfigName, moduleName);
         moduleNameChangedMap.put(key, CHANGED);
+    }
+
+    @Override
+    public void reset(String runtimeConfigName) {
+        moduleNameChangedMap.entrySet()
+                .removeIf(biKeyBooleanEntry -> {
+                    BiKey key = biKeyBooleanEntry.getKey();
+                    return key.key1.equals(runtimeConfigName);
+                });
     }
 
     @Override

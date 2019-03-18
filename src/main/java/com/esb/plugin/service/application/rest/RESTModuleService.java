@@ -13,10 +13,11 @@ import java.io.IOException;
 
 public class RESTModuleService {
 
+    private static final String BASE_ADMIN_CONSOLE_URL_TEMPLATE = "http://%s:%d/api";
     private final String baseUrl;
 
     public RESTModuleService(String address, int port) {
-        this.baseUrl = String.format("http://%s:%d", address, port);
+        this.baseUrl = String.format(BASE_ADMIN_CONSOLE_URL_TEMPLATE, address, port);
     }
 
     public void hotSwap(String moduleFile, String resourcesRootDirectory) throws ExecutionException {

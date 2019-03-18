@@ -18,4 +18,6 @@ public interface ESBFileChangeService {
 
     void changed(String runtimeConfigName, String moduleName);
 
+    void reset(String runtimeConfigName);
+
 }
