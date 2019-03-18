@@ -32,6 +32,7 @@ public class RESTModuleService {
         HttpResponse response = post(baseUrl + "/hotswap", json);
         if (response.isNotSuccessful()) {
             ESBLog.LOG.error(response.getBody());
+
             // TODO: Formalize this response (as JSON)
             throw new ExecutionException(response.getBody());
         }
@@ -47,6 +48,7 @@ public class RESTModuleService {
         HttpResponse response = post(baseUrl + "/module", json);
         if (response.isNotSuccessful()) {
             ESBLog.LOG.error(response.getBody());
+
             // TODO: Formalize this response (as JSON)
             throw new ExecutionException(response.getBody());
         }
@@ -62,6 +64,7 @@ public class RESTModuleService {
         HttpResponse response = delete(baseUrl + "/module", json);
         if (response.isNotSuccessful()) {
             ESBLog.LOG.error(response.getBody());
+
             // TODO: Formalize this response (as JSON)
             throw new ExecutionException(response.getBody());
         }
