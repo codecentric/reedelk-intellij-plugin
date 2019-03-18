@@ -4,10 +4,6 @@ import java.util.ResourceBundle;
 
 public enum ESBLabel {
 
-    ADD("Add..."),
-    ADD_RUNTIME("addRuntime"),
-    RUNTIME_HOME("runtimeHome"),
-    PLEASE_SPECIFY("pleaseSpecify"),
     DEFAULT_GROUP_ID("defaultGroupId"),
     DEFAULT_VERSION("defaultVersion"),
     DEFAULT_ARTIFACT_ID("defaultArtifactId"),

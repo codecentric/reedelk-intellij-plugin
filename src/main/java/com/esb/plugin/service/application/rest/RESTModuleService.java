@@ -6,6 +6,7 @@ import com.esb.internal.rest.api.module.v1.ModuleDELETEReq;
 import com.esb.internal.rest.api.module.v1.ModulePOSTReq;
 import com.esb.plugin.service.application.http.ESBHttpService;
 import com.esb.plugin.service.application.http.HttpResponse;
+import com.esb.plugin.utils.ESBLog;
 import com.intellij.execution.ExecutionException;
 import com.intellij.openapi.components.ServiceManager;
 
@@ -30,6 +31,7 @@ public class RESTModuleService {
 
         HttpResponse response = post(baseUrl + "/hotswap", json);
         if (response.isNotSuccessful()) {
+            ESBLog.LOG.error(response.getBody());
             // TODO: Formalize this response (as JSON)
             throw new ExecutionException(response.getBody());
         }
@@ -44,6 +46,7 @@ public class RESTModuleService {
 
         HttpResponse response = post(baseUrl + "/module", json);
         if (response.isNotSuccessful()) {
+            ESBLog.LOG.error(response.getBody());
             // TODO: Formalize this response (as JSON)
             throw new ExecutionException(response.getBody());
         }
@@ -58,6 +61,7 @@ public class RESTModuleService {
 
         HttpResponse response = delete(baseUrl + "/module", json);
         if (response.isNotSuccessful()) {
+            ESBLog.LOG.error(response.getBody());
             // TODO: Formalize this response (as JSON)
             throw new ExecutionException(response.getBody());
         }

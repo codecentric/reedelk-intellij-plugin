@@ -3,7 +3,7 @@ package com.esb.plugin.service.project.filechange.impl;
 import com.esb.plugin.service.project.filechange.ESBFileChangeService;
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.ModuleListener;
@@ -17,7 +17,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 import static java.util.Arrays.stream;
 
@@ -31,7 +30,7 @@ public class ESBFileChangeServiceImpl implements ESBFileChangeService, BulkFileL
     private Map<String,String> moduleNameRootPathMap = new HashMap<>();
     private Map<BiKey, Boolean> moduleNameChangedMap = new HashMap<>();
 
-    public ESBFileChangeServiceImpl(Project project) {
+    public ESBFileChangeServiceImpl(Project project, Application application) {
         project.getMessageBus()
                 .connect(this)
                 .subscribe(ProjectTopics.MODULES, this);
@@ -41,7 +40,7 @@ public class ESBFileChangeServiceImpl implements ESBFileChangeService, BulkFileL
                 .getModules())
                 .forEach(new RegisterModuleConsumer());
 
-        ApplicationManager.getApplication()
+        application
                 .getMessageBus()
                 .connect(this)
                 .subscribe(VirtualFileManager.VFS_CHANGES, this);
@@ -83,8 +82,7 @@ public class ESBFileChangeServiceImpl implements ESBFileChangeService, BulkFileL
     public void after(@NotNull List<? extends VFileEvent> events) {
         events.forEach(vFileEvent -> {
             if(isJavaSource(vFileEvent.getFile())) {
-                isModuleSourceChange(vFileEvent.getFile())
-                        .ifPresent(moduleName -> setToChangedMatching(moduleName));
+                isModuleSourceChange(vFileEvent.getFile()).ifPresent(this::setToChangedMatching);
             }
         });
     }

@@ -1,7 +1,8 @@
 package com.esb.plugin.module.builder;
 
-import com.esb.plugin.module.builder.ESBModuleBuilder;
 import com.esb.plugin.ui.RuntimeComboManager;
+import com.esb.plugin.validator.RuntimeHomeValidator;
+import com.esb.plugin.validator.Validator;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.Disposable;
@@ -34,7 +35,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
     private JPanel chooseRuntimePanel;
     private JComboBox<String> runtimeCombo;
     private JTextField runtimeConfigNameTextField;
-    private TextFieldWithBrowseButton inputWithBrowse;
+    private TextFieldWithBrowseButton runtimeHomeDirectoryBrowse;
 
     private RuntimeComboManager runtimeComboManager;
 
@@ -64,7 +65,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
         moduleBuilder.isNewProject(isNewProject);
         if (isNewProject) {
             moduleBuilder.setRuntimeConfigName(runtimeConfigNameTextField.getText());
-            moduleBuilder.setRuntimeHomeDirectory(inputWithBrowse.getText());
+            moduleBuilder.setRuntimeHomeDirectory(runtimeHomeDirectoryBrowse.getText());
         } else {
             moduleBuilder.setRuntimeConfigName(runtimeComboManager.getRuntimeConfigName());
         }
@@ -78,8 +79,8 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
 
     private void createInputWithBrowse(WizardContext context, ESBModuleBuilder moduleBuilder) {
         FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-        inputWithBrowse = new TextFieldWithBrowseButton();
-        inputWithBrowse.addBrowseFolderListener(new TextBrowseFolderListener(descriptor, context.getProject()) {
+        runtimeHomeDirectoryBrowse = new TextFieldWithBrowseButton();
+        runtimeHomeDirectoryBrowse.addBrowseFolderListener(new TextBrowseFolderListener(descriptor, context.getProject()) {
             @NotNull
             @Override
             protected String chosenFileToResultingText(@NotNull VirtualFile chosenFile) {
@@ -89,7 +90,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
             }
         });
 
-        JPanel runtimeChooserPanel = UI.PanelFactory.panel(inputWithBrowse).
+        JPanel runtimeChooserPanel = UI.PanelFactory.panel(runtimeHomeDirectoryBrowse).
                 withComment("Select ESB runtime home directory this project will be using. " +
                         "The runtime will be used to provide a default configuration for this project.")
                 .createPanel();
@@ -101,8 +102,14 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
     @Override
     public boolean validate() throws ConfigurationException {
         List<String> errors = new ArrayList<>();
-        if (StringUtil.isEmptyOrSpaces(runtimeConfigNameTextField.getText())) errors.add("Runtime Name");
-        if (StringUtil.isEmptyOrSpaces(inputWithBrowse.getText())) errors.add("Runtime Path");
+        if (StringUtil.isEmptyOrSpaces(runtimeConfigNameTextField.getText()))
+            errors.add("Runtime Name can not be empty");
+        if (StringUtil.isEmptyOrSpaces(runtimeHomeDirectoryBrowse.getText()))
+            errors.add("Runtime Path can not be empty");
+
+        Validator validator = new RuntimeHomeValidator(runtimeHomeDirectoryBrowse.getText());
+        validator.validate(errors);
+
         return errors.isEmpty();
     }
 

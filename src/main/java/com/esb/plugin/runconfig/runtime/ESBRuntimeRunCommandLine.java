@@ -1,5 +1,6 @@
 package com.esb.plugin.runconfig.runtime;
 
+import com.esb.plugin.utils.ESBFileUtils;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.JavaCommandLineState;
 import com.intellij.execution.configurations.JavaParameters;
@@ -9,6 +10,8 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Paths;
+
+import static java.lang.String.format;
 
 public class ESBRuntimeRunCommandLine extends JavaCommandLineState {
 
@@ -29,9 +32,18 @@ public class ESBRuntimeRunCommandLine extends JavaCommandLineState {
         javaParams.getVMParametersList().add("-Dadmin.console.bind.port=" + configuration.getRuntimePort());
 
 
-        String homeDirectory = configuration.getRuntimeHomeDirectory();
-        // TODO: Fix this hardcoded runtime name.
-        javaParams.setJarPath(Paths.get(homeDirectory, "bin", "runtime-1.0.0-SNAPSHOT.jar").toString());
+        String runtimeHomeDirectory = configuration.getRuntimeHomeDirectory();
+
+        String jarPath = getJarPath(runtimeHomeDirectory);
+        javaParams.setJarPath(jarPath);
+
         return javaParams;
+    }
+
+    private String getJarPath(String runtimeHomeDirectory) throws ExecutionException {
+        String runtimeJarName = ESBFileUtils
+                .findRuntimeJarName(runtimeHomeDirectory)
+                .orElseThrow(() -> new ExecutionException(format("Could not find suitable runtime (home directory: %s)", runtimeHomeDirectory)));
+        return Paths.get(runtimeHomeDirectory, "bin", runtimeJarName).toString();
     }
 }
