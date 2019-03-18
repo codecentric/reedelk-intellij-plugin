@@ -1,7 +1,5 @@
 package com.esb.plugin.utils;
 
-import com.esb.plugin.service.project.filechange.ESBFileChangeService;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -14,22 +12,6 @@ import org.jetbrains.idea.maven.project.MavenProjectsManager;
 import java.util.Optional;
 
 public class ESBModuleUtils {
-
-
-    public static boolean isHotSwap(Project project, String moduleName) {
-        ESBFileChangeService fileChangeService = ServiceManager.getService(project, ESBFileChangeService.class);
-        return !fileChangeService.isCompileRequired(moduleName);
-    }
-
-    public static void unchanged(Project project, String moduleName) {
-        ESBFileChangeService fileChangeService = ServiceManager.getService(project, ESBFileChangeService.class);
-        fileChangeService.unchanged(moduleName);
-    }
-
-    public static void changed(Project project, String moduleName) {
-        ESBFileChangeService fileChangeService = ServiceManager.getService(project, ESBFileChangeService.class);
-        fileChangeService.changed(moduleName);
-    }
 
     public static Optional<MavenProject> getMavenProject(Project project, String moduleName) {
        Optional<String> optionalPomXml = getModulePomXml(moduleName, project);

@@ -30,6 +30,7 @@ public class ESBRuntimeRunCommandLine extends JavaCommandLineState {
 
 
         String homeDirectory = configuration.getRuntimeHomeDirectory();
+        // TODO: Fix this hardcoded runtime name.
         javaParams.setJarPath(Paths.get(homeDirectory, "bin", "runtime-1.0.0-SNAPSHOT.jar").toString());
         return javaParams;
     }

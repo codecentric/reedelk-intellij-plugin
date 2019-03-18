@@ -2,6 +2,7 @@ package com.esb.plugin.beforetask;
 
 import com.esb.plugin.runconfig.module.ESBModuleRunConfiguration;
 import com.esb.plugin.runconfig.module.runner.ESBModuleUnDeployExecutor;
+import com.esb.plugin.service.project.filechange.ESBFileChangeService;
 import com.esb.plugin.utils.ESBIcons;
 import com.esb.plugin.utils.ESBModuleUtils;
 import com.intellij.execution.BeforeRunTaskProvider;
@@ -101,15 +102,18 @@ public class ESBModuleBuildBeforeTaskProvider extends BeforeRunTaskProvider<ESBM
                 // Hence we know if we can hotswap.
                 FileDocumentManager.getInstance().saveAllDocuments();
 
-                // No Need to re-compile
-                if (ESBModuleUtils.isHotSwap(env.getProject(), ((ESBModuleRunConfiguration) configuration).getModuleName())) {
+                String moduleName = moduleRunConfiguration.getModuleName();
+                String runtimeConfigName = moduleRunConfiguration.getRuntimeConfigName();
+
+                // No Need to re-compile and build the project.
+                if (ESBFileChangeService.getInstance(env.getProject()).isHotSwap(runtimeConfigName, moduleName)) {
                     return;
                 }
 
                 final Project project = CommonDataKeys.PROJECT.getData(context);
                 if (project == null || project.isDisposed()) return;
 
-                Optional<MavenProject> optionalMavenProject = ESBModuleUtils.getMavenProject(env.getProject(), moduleRunConfiguration.getModuleName());
+                Optional<MavenProject> optionalMavenProject = ESBModuleUtils.getMavenProject(env.getProject(), moduleName);
 
                 if (!optionalMavenProject.isPresent()) return;
 

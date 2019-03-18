@@ -10,10 +10,12 @@ public interface ESBFileChangeService {
         return ServiceManager.getService(project, ESBFileChangeService.class);
     }
 
-    boolean isCompileRequired(String moduleName);
+    boolean isHotSwap(String runtimeConfigName, String moduleName);
 
-    void unchanged(String moduleName);
+    boolean isCompileRequired(String runtimeConfigName, String moduleName);
 
-    void changed(String moduleName);
+    void unchanged(String runtimeConfigName, String moduleName);
+
+    void changed(String runtimeConfigName, String moduleName);
 
 }

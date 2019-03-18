@@ -4,6 +4,7 @@ import com.esb.internal.rest.api.InternalAPI;
 import com.esb.internal.rest.api.hotswap.v1.HotSwapPOSTReq;
 import com.esb.internal.rest.api.module.v1.ModulePOSTReq;
 import com.esb.plugin.service.application.http.HttpResponse;
+import com.esb.plugin.service.project.filechange.ESBFileChangeService;
 import com.esb.plugin.utils.ESBModuleUtils;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
@@ -28,7 +29,7 @@ public class DeployRunProfile extends AbstractRunProfile {
     @Override
     protected ExecutionResult execute(@NotNull MavenProject mavenProject, @NotNull String moduleFile) throws ExecutionException {
 
-        if(ESBModuleUtils.isHotSwap(project, moduleName)) {
+        if(ESBFileChangeService.getInstance(project).isHotSwap(runtimeConfigName, moduleName)) {
             // Hot swap
             String mavenDirectory = mavenProject.getDirectory();
             Path resourcesRootDirectory = Paths.get(mavenDirectory, "src", "main", "resources");
@@ -60,7 +61,7 @@ public class DeployRunProfile extends AbstractRunProfile {
 
             HttpResponse post = post(url, json);
 
-            ESBModuleUtils.unchanged(project, moduleName);
+            ESBFileChangeService.getInstance(project).unchanged(runtimeConfigName, moduleName);
 
             String message = format("Module <b>%s</b> updated", moduleName);
             switchToolWindowAndNotifyWithMessage(message);

@@ -15,10 +15,7 @@ import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.Function;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 
 import static java.util.Arrays.stream;
@@ -31,7 +28,7 @@ public class ESBFileChangeServiceImpl implements ESBFileChangeService, BulkFileL
     private static final Boolean UNCHANGED = false;
 
     private Map<String,String> moduleNameRootPathMap = new HashMap<>();
-    private Map<String, Boolean> moduleNameChangedMap = new HashMap<>();
+    private Map<BiKey, Boolean> moduleNameChangedMap = new HashMap<>();
 
     public ESBFileChangeServiceImpl(Project project) {
         project.getMessageBus()
@@ -50,18 +47,26 @@ public class ESBFileChangeServiceImpl implements ESBFileChangeService, BulkFileL
     }
 
     @Override
-    public boolean isCompileRequired(String moduleName) {
-        return moduleNameChangedMap.getOrDefault(moduleName, CHANGED);
+    public boolean isHotSwap(String runtimeConfigName, String moduleName) {
+        return !isCompileRequired(runtimeConfigName, moduleName);
     }
 
     @Override
-    public void unchanged(String moduleName) {
-        moduleNameChangedMap.put(moduleName, UNCHANGED);
+    public boolean isCompileRequired(String runtimeConfigName, String moduleName) {
+        BiKey key = new BiKey(runtimeConfigName, moduleName);
+        return moduleNameChangedMap.getOrDefault(key, CHANGED);
     }
 
     @Override
-    public void changed(String moduleName) {
-        moduleNameChangedMap.put(moduleName, CHANGED);
+    public void unchanged(String runtimeConfigName, String moduleName) {
+        BiKey key = new BiKey(runtimeConfigName, moduleName);
+        moduleNameChangedMap.put(key, UNCHANGED);
+    }
+
+    @Override
+    public void changed(String runtimeConfigName, String moduleName) {
+        BiKey key = new BiKey(runtimeConfigName, moduleName);
+        moduleNameChangedMap.put(key, CHANGED);
     }
 
     @Override
@@ -69,29 +74,24 @@ public class ESBFileChangeServiceImpl implements ESBFileChangeService, BulkFileL
         events.forEach(vFileEvent -> {
             if(isJavaSource(vFileEvent.getFile())) {
                 isModuleSourceChange(vFileEvent.getFile())
-                        .ifPresent(moduleName -> moduleNameChangedMap.put(moduleName, CHANGED));
+                        .ifPresent(moduleName -> setToChangedMatching(moduleName));
             }
         });
     }
 
     @Override
     public void moduleAdded(@NotNull Project project, @NotNull Module module) {
-        moduleNameChangedMap.putIfAbsent(module.getName(), CHANGED);
+        // nothing to do
     }
 
     @Override
     public void moduleRemoved(@NotNull Project project, @NotNull Module module) {
-        moduleNameChangedMap.remove(module.getName());
-        moduleNameRootPathMap.remove(module.getName());
+        // nothing to do
     }
 
     @Override
     public void modulesRenamed(@NotNull Project project, @NotNull List<Module> modules, @NotNull Function<Module, String> oldNameProvider) {
-        modules.forEach(((Consumer<Module>) module -> {
-            String oldModuleName = oldNameProvider.fun(module);
-            moduleNameChangedMap.remove(oldModuleName);
-            moduleNameRootPathMap.remove(oldModuleName);
-        }).andThen(new RegisterModuleConsumer()));
+        // nothing to do
     }
 
     @Override
@@ -118,14 +118,45 @@ public class ESBFileChangeServiceImpl implements ESBFileChangeService, BulkFileL
         return false;
     }
 
+    private void setToChangedMatching(String moduleName) {
+        for (Map.Entry<BiKey, Boolean> entry : moduleNameChangedMap.entrySet()) {
+            if (entry.getKey().key2.equals(moduleName)) {
+                entry.setValue(CHANGED);
+            }
+        }
+    }
+
     class RegisterModuleConsumer implements Consumer<Module> {
 
         @Override
         public void accept(Module module) {
             if (module.getModuleFile() != null) {
-                moduleNameChangedMap.putIfAbsent(module.getName(), CHANGED);
                 moduleNameRootPathMap.putIfAbsent(module.getName(), module.getModuleFile().getParent().getPath());
             }
+        }
+    }
+
+    private static class BiKey {
+        String key1;
+        String key2;
+
+        BiKey(String key1, String key2) {
+            this.key1 = key1;
+            this.key2 = key2;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            BiKey biKey = (BiKey) o;
+            return key1.equals(biKey.key1) &&
+                    key2.equals(biKey.key2);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(key1, key2);
         }
     }
 }

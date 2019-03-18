@@ -3,6 +3,7 @@ package com.esb.plugin.runconfig.module.runprofile;
 import com.esb.internal.rest.api.InternalAPI;
 import com.esb.internal.rest.api.module.v1.ModuleDELETEReq;
 import com.esb.plugin.service.application.http.HttpResponse;
+import com.esb.plugin.service.project.filechange.ESBFileChangeService;
 import com.esb.plugin.utils.ESBModuleUtils;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
@@ -36,8 +37,11 @@ public class UndeployRunProfile extends AbstractRunProfile {
         HttpResponse response = delete(url, json);
 
         if (response.isSuccessful()) {
-            ESBModuleUtils.changed(project, moduleName);
+
+            ESBFileChangeService.getInstance(project).changed(runtimeConfigName, moduleName);
+
             String message = format("Module <b>%s</b> uninstalled", moduleName);
+
             switchToolWindowAndNotifyWithMessage(message);
 
         } else {
