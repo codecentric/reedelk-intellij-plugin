@@ -25,8 +25,8 @@ public class HttpResponse {
      * Returns true if the code is in [200..300), which means the request was successfully received,
      * understood, and accepted.
      */
-    public boolean isSuccessful() {
-        return this.status >= 200 && this.status < 300;
+    public boolean isNotSuccessful() {
+        return this.status < 200 || this.status >= 300;
     }
 
 }

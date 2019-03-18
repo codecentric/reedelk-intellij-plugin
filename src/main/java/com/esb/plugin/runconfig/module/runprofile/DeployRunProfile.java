@@ -21,7 +21,7 @@ public class DeployRunProfile extends AbstractRunProfile {
     @Override
     protected ExecutionResult execute(@NotNull MavenProject mavenProject, @NotNull String moduleFile) throws ExecutionException {
 
-        RESTService service = new RESTService(address, port);
+        RESTModuleService service = new RESTModuleService(address, port);
 
         // Check if we can hot swap the module flows.
         if (ESBFileChangeService.getInstance(project).isHotSwap(runtimeConfigName, moduleName)) {

@@ -11,11 +11,11 @@ import com.intellij.openapi.components.ServiceManager;
 
 import java.io.IOException;
 
-public class RESTService {
+public class RESTModuleService {
 
     private final String baseUrl;
 
-    public RESTService(String address, int port) {
+    public RESTModuleService(String address, int port) {
         this.baseUrl = String.format("http://%s:%d", address, port);
     }
 
@@ -28,7 +28,7 @@ public class RESTService {
 
 
         HttpResponse response = post(baseUrl + "/hotswap", json);
-        if (!response.isSuccessful()) {
+        if (response.isNotSuccessful()) {
             // TODO: Formalize this response (as JSON)
             throw new ExecutionException(response.getBody());
         }
@@ -42,7 +42,7 @@ public class RESTService {
 
 
         HttpResponse response = post(baseUrl + "/module", json);
-        if (!response.isSuccessful()) {
+        if (response.isNotSuccessful()) {
             // TODO: Formalize this response (as JSON)
             throw new ExecutionException(response.getBody());
         }
@@ -56,7 +56,7 @@ public class RESTService {
         String json = InternalAPI.Module.V1.DELETE.Req.serialize(req);
 
         HttpResponse response = delete(baseUrl + "/module", json);
-        if (!response.isSuccessful()) {
+        if (response.isNotSuccessful()) {
             // TODO: Formalize this response (as JSON)
             throw new ExecutionException(response.getBody());
         }
