@@ -49,6 +49,8 @@
         <configurationType implementation="com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfigurationType"/>
         <configurationType implementation="com.esb.plugin.runconfig.module.ESBModuleRunConfigurationType"/>
 
+        <fileEditorProvider implementation="com.intellij.uiDesigner.editor.UIFormEditorProvider"/>
+
     </extensions>
 
     <actions>
