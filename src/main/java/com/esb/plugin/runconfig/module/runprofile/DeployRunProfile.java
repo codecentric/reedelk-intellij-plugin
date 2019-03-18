@@ -5,7 +5,6 @@ import com.esb.internal.rest.api.hotswap.v1.HotSwapPOSTReq;
 import com.esb.internal.rest.api.module.v1.ModulePOSTReq;
 import com.esb.plugin.service.application.http.HttpResponse;
 import com.esb.plugin.service.project.filechange.ESBFileChangeService;
-import com.esb.plugin.utils.ESBModuleUtils;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.openapi.project.Project;

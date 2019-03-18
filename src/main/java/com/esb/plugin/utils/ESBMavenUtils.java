@@ -11,7 +11,7 @@ import org.jetbrains.idea.maven.project.MavenProjectsManager;
 
 import java.util.Optional;
 
-public class ESBModuleUtils {
+public class ESBMavenUtils {
 
     public static Optional<MavenProject> getMavenProject(Project project, String moduleName) {
        Optional<String> optionalPomXml = getModulePomXml(moduleName, project);
@@ -24,11 +24,11 @@ public class ESBModuleUtils {
        return Optional.empty();
     }
 
-    public static Module findModuleByName(String name, Project project) {
+    private static Module findModuleByName(String name, Project project) {
         return ModuleManager.getInstance(project).findModuleByName(name);
     }
 
-    public static Optional<String> getModulePomXml(String moduleName, Project project) {
+    private static Optional<String> getModulePomXml(String moduleName, Project project) {
         Module moduleByName = findModuleByName(moduleName, project);
         if (moduleByName != null) {
             VirtualFile moduleFile = moduleByName.getModuleFile();

@@ -6,7 +6,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
 
-public class ESBNotification {
+public class ESBNotificationUtils {
 
     public static void notifyInfo(final String toolWindowId, final String text, final Project project) {
         ToolWindowManager

@@ -6,8 +6,8 @@ import java.net.ServerSocket;
 
 public class ESBNetworkUtils {
 
-    public static final int MIN_PORT_NUMBER = 1100;
-    public static final int MAX_PORT_NUMBER = 49151;
+    private static final int MIN_PORT_NUMBER = 1100;
+    private static final int MAX_PORT_NUMBER = 49151;
 
     public static boolean available(String bindAddress, int port) {
         if (port < MIN_PORT_NUMBER || port > MAX_PORT_NUMBER) {

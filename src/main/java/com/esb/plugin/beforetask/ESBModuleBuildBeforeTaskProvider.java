@@ -4,7 +4,7 @@ import com.esb.plugin.runconfig.module.ESBModuleRunConfiguration;
 import com.esb.plugin.runconfig.module.runner.ESBModuleUnDeployExecutor;
 import com.esb.plugin.service.project.filechange.ESBFileChangeService;
 import com.esb.plugin.utils.ESBIcons;
-import com.esb.plugin.utils.ESBModuleUtils;
+import com.esb.plugin.utils.ESBMavenUtils;
 import com.intellij.execution.BeforeRunTaskProvider;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.runners.ExecutionEnvironment;
@@ -113,7 +113,7 @@ public class ESBModuleBuildBeforeTaskProvider extends BeforeRunTaskProvider<ESBM
                 final Project project = CommonDataKeys.PROJECT.getData(context);
                 if (project == null || project.isDisposed()) return;
 
-                Optional<MavenProject> optionalMavenProject = ESBModuleUtils.getMavenProject(env.getProject(), moduleName);
+                Optional<MavenProject> optionalMavenProject = ESBMavenUtils.getMavenProject(env.getProject(), moduleName);
 
                 if (!optionalMavenProject.isPresent()) return;
 
