@@ -26,7 +26,7 @@ public class ESBRuntimeRunCommandLine extends JavaCommandLineState {
         ProjectRootManager manager = ProjectRootManager.getInstance(project);
         javaParams.setJdk(manager.getProjectSdk());
 
-        javaParams.getVMParametersList().add("-Dlistening.port=" + configuration.getRuntimePort());
+        javaParams.getVMParametersList().add("-Dadmin.console.bind.port=" + configuration.getRuntimePort());
 
 
         String homeDirectory = configuration.getRuntimeHomeDirectory();
