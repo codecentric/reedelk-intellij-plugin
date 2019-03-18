@@ -1,8 +1,5 @@
 package com.esb.plugin.runconfig.module.runprofile;
 
-import com.esb.internal.rest.api.InternalAPI;
-import com.esb.internal.rest.api.module.v1.ModuleDELETEReq;
-import com.esb.plugin.service.application.http.HttpResponse;
 import com.esb.plugin.service.project.filechange.ESBFileChangeService;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
@@ -22,30 +19,15 @@ public class UndeployRunProfile extends AbstractRunProfile {
     @Override
     protected ExecutionResult execute(@NotNull MavenProject mavenProject, @NotNull String moduleFile) throws ExecutionException {
 
+        RESTService service = new RESTService(address, port);
+
         // Un Deploy Module
+        service.delete(moduleFile);
 
-        ModuleDELETEReq req = new ModuleDELETEReq();
+        ESBFileChangeService.getInstance(project).changed(runtimeConfigName, moduleName);
 
-        req.setModuleFilePath(moduleFile);
-
-        String json = InternalAPI.Module.V1.DELETE.Req.serialize(req);
-
-        String url = getAdminUrlFromResourcePath("/module");
-
-        // TODO: do something with this response
-        HttpResponse response = delete(url, json);
-
-        if (response.isSuccessful()) {
-
-            ESBFileChangeService.getInstance(project).changed(runtimeConfigName, moduleName);
-
-            String message = format("Module <b>%s</b> uninstalled", moduleName);
-
-            switchToolWindowAndNotifyWithMessage(message);
-
-        } else {
-            throw new ExecutionException("Error while un-deploying module");
-        }
+        String message = format("Module <b>%s</b> uninstalled", moduleName);
+        switchToolWindowAndNotifyWithMessage(message);
 
         return null;
 

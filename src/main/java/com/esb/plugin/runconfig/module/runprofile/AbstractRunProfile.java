@@ -30,8 +30,8 @@ abstract class AbstractRunProfile implements RunProfileState {
     protected final String moduleName;
     protected final String runtimeConfigName;
 
-    private String address;
-    private int port;
+    String address;
+    int port;
 
     AbstractRunProfile(final Project project, final String moduleName, String runtimeConfigName) {
         this.project = project;
@@ -54,6 +54,7 @@ abstract class AbstractRunProfile implements RunProfileState {
         RunnerAndConfigurationSettings configSettings = RunManager.getInstance(project).findConfigurationByName(runtimeConfigName);
         if (configSettings == null) throw new ExecutionException("Could not find config with name = " + runtimeConfigName + ", check module run configuration");
         ESBRuntimeRunConfiguration runtimeRunConfiguration = (ESBRuntimeRunConfiguration) configSettings.getConfiguration();
+
         this.port = Integer.parseInt(runtimeRunConfiguration.getRuntimePort());
         this.address = runtimeRunConfiguration.getRuntimeBindAddress();
 
@@ -62,28 +63,6 @@ abstract class AbstractRunProfile implements RunProfileState {
 
     protected abstract ExecutionResult execute(@NotNull MavenProject mavenProject, @NotNull String moduleFile) throws ExecutionException;
 
-
-    HttpResponse post(String url, String json) throws ExecutionException {
-        ESBHttpService ESBHttpService = ServiceManager.getService(ESBHttpService.class);
-        try {
-            return ESBHttpService.post(url, json, ESBHttpService.JSON);
-        } catch (IOException e) {
-            throw new ExecutionException(e);
-        }
-    }
-
-    HttpResponse delete(String url, String json) throws ExecutionException {
-        ESBHttpService ESBHttpService = ServiceManager.getService(ESBHttpService.class);
-        try {
-            return ESBHttpService.delete(url, json, ESBHttpService.JSON);
-        } catch (IOException e) {
-            throw new ExecutionException(e);
-        }
-    }
-
-    String getAdminUrlFromResourcePath(String resourcePath) {
-        return String.format("http://%s:%d%s", address, port, resourcePath);
-    }
 
     void switchToolWindowAndNotifyWithMessage(String message) {
         ESBToolWindowService toolWindowService = ServiceManager.getService(project, ESBToolWindowService.class);

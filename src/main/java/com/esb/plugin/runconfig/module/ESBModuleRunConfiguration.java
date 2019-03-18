@@ -49,7 +49,7 @@ public class ESBModuleRunConfiguration extends RunConfigurationBase implements
 
         // Deploy Executor
         if (ESBModuleDeployExecutor.EXECUTOR_ID.equals(executor.getId())) {
-            return new DeployRunProfile(project, moduleName, getName(), runtimeConfigName);
+            return new DeployRunProfile(project, moduleName, runtimeConfigName);
 
             // UnDeploy Executor
         } else if (ESBModuleUnDeployExecutor.EXECUTOR_ID.equals(executor.getId())) {
