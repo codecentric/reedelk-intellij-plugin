@@ -2,7 +2,7 @@ package com.esb.plugin.runconfig.module.runprofile;
 
 import com.esb.internal.rest.api.InternalAPI;
 import com.esb.internal.rest.api.module.v1.ModuleDELETEReq;
-import com.esb.internal.rest.api.module.v1.ModuleDELETERes;
+import com.esb.plugin.service.application.http.HttpResponse;
 import com.esb.plugin.utils.ESBModuleUtils;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
@@ -30,13 +30,19 @@ public class UndeployRunProfile extends AbstractRunProfile {
 
         String json = InternalAPI.Module.V1.DELETE.Req.serialize(req);
 
+        String url = getAdminUrlFromResourcePath("/module");
+
         // TODO: do something with this response
-        ModuleDELETERes response = delete("module", json, InternalAPI.Module.V1.DELETE.Res::deserialize);
+        HttpResponse response = delete(url, json);
 
-        ESBModuleUtils.changed(project, moduleName);
+        if (response.isSuccessful()) {
+            ESBModuleUtils.changed(project, moduleName);
+            String message = format("Module <b>%s</b> uninstalled", moduleName);
+            switchToolWindowAndNotifyWithMessage(message);
 
-        String message = format("Module <b>%s</b> uninstalled", moduleName);
-        switchToolWindowAndNotifyWithMessage(message);
+        } else {
+            throw new ExecutionException("Error while un-deploying module");
+        }
 
         return null;
 

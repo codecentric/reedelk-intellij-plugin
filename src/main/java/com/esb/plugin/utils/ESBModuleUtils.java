@@ -31,7 +31,7 @@ public class ESBModuleUtils {
         fileChangeService.changed(moduleName);
     }
 
-    public static Optional<MavenProject> getMavenProject(String moduleName, Project project) {
+    public static Optional<MavenProject> getMavenProject(Project project, String moduleName) {
        Optional<String> optionalPomXml = getModulePomXml(moduleName, project);
        if (optionalPomXml.isPresent()) {
            VirtualFile file = LocalFileSystem.getInstance().findFileByPath(optionalPomXml.get());

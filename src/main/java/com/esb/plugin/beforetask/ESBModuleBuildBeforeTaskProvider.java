@@ -109,7 +109,7 @@ public class ESBModuleBuildBeforeTaskProvider extends BeforeRunTaskProvider<ESBM
                 final Project project = CommonDataKeys.PROJECT.getData(context);
                 if (project == null || project.isDisposed()) return;
 
-                Optional<MavenProject> optionalMavenProject = ESBModuleUtils.getMavenProject(moduleRunConfiguration.getModuleName(), env.getProject());
+                Optional<MavenProject> optionalMavenProject = ESBModuleUtils.getMavenProject(env.getProject(), moduleRunConfiguration.getModuleName());
 
                 if (!optionalMavenProject.isPresent()) return;
 

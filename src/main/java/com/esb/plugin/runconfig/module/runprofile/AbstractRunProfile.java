@@ -21,7 +21,6 @@ import org.jetbrains.idea.maven.project.MavenProject;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
-import java.util.function.Function;
 
 import static java.lang.String.format;
 
@@ -30,7 +29,9 @@ abstract class AbstractRunProfile implements RunProfileState {
     protected final Project project;
     protected final String moduleName;
     protected final String runtimeConfigName;
-    protected int port;
+
+    private String address;
+    private int port;
 
     AbstractRunProfile(final Project project, final String moduleName, String runtimeConfigName) {
         this.project = project;
@@ -42,7 +43,7 @@ abstract class AbstractRunProfile implements RunProfileState {
     @Override
     public ExecutionResult execute(Executor executor, @NotNull ProgramRunner runner) throws ExecutionException {
 
-        Optional<MavenProject> optionalMavenProject = ESBModuleUtils.getMavenProject(moduleName, project);
+        Optional<MavenProject> optionalMavenProject = ESBModuleUtils.getMavenProject(project, moduleName);
         if (!optionalMavenProject.isPresent()) {
             throw new ExecutionException("Maven project could not be found");
         }
@@ -54,7 +55,8 @@ abstract class AbstractRunProfile implements RunProfileState {
         if (configSettings == null) throw new ExecutionException("Could not find config with name = " + runtimeConfigName + ", check module run configuration");
         ESBRuntimeRunConfiguration runtimeRunConfiguration = (ESBRuntimeRunConfiguration) configSettings.getConfiguration();
         this.port = Integer.parseInt(runtimeRunConfiguration.getRuntimePort());
-        // TODO: add host
+        this.address = runtimeRunConfiguration.getRuntimeBindAddress();
+
         return execute(mavenProject, moduleJarFilePath);
     }
 
@@ -70,21 +72,17 @@ abstract class AbstractRunProfile implements RunProfileState {
         }
     }
 
-    <T> T delete(String api, String json, Function<String, T> responseMapper) throws ExecutionException {
-
-        String url = String.format("http://localhost:%d/", port) + api;
-
+    HttpResponse delete(String url, String json) throws ExecutionException {
         ESBHttpService ESBHttpService = ServiceManager.getService(ESBHttpService.class);
         try {
-            HttpResponse result = ESBHttpService.delete(url, json, ESBHttpService.JSON);
-            if (result.isSuccessful()) {
-                return responseMapper.apply(result.getBody());
-            } else {
-                throw new ExecutionException(result.getBody());
-            }
+            return ESBHttpService.delete(url, json, ESBHttpService.JSON);
         } catch (IOException e) {
             throw new ExecutionException(e);
         }
+    }
+
+    String getAdminUrlFromResourcePath(String resourcePath) {
+        return String.format("http://%s:%d%s", address, port, resourcePath);
     }
 
     void switchToolWindowAndNotifyWithMessage(String message) {

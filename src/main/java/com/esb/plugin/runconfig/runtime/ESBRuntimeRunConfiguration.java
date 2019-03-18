@@ -67,12 +67,8 @@ public class ESBRuntimeRunConfiguration extends RunConfigurationBase implements 
     @Nullable
     @Override
     public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment) throws ExecutionException {
-        // Check if port is available
-        boolean isPortAvailable = ESBNetworkUtils.available(Integer.parseInt(runtimePort));
-        if (!isPortAvailable) {
-            throw new ExecutionException(String.format("Could not start runtime on port %s. The port is in use.", runtimePort));
-        }
-
+        // Check if port is available or throw exception (the runtime could not be started if port not available)
+        checkPortAvailableOrThrow(runtimeBindAddress, Integer.parseInt(runtimePort));
 
         // Store the ToolWindowId associated to this RunConfig. It will be used
         // later by a ModuleRun Configuration to switch to this tool window when a
@@ -127,5 +123,12 @@ public class ESBRuntimeRunConfiguration extends RunConfigurationBase implements 
 
     public String getRuntimeBindAddress() {
         return runtimeBindAddress;
+    }
+
+    private static void checkPortAvailableOrThrow(String runtimeBindAddress, int runtimeBindPort) throws ExecutionException {
+        boolean isPortAvailable = ESBNetworkUtils.available(runtimeBindAddress, runtimeBindPort);
+        if (!isPortAvailable) {
+            throw new ExecutionException(String.format("Could not start runtime on port %s. The port is in use.", runtimeBindPort));
+        }
     }
 }

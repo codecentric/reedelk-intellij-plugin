@@ -1,7 +1,7 @@
 package com.esb.plugin.utils;
 
 import java.io.IOException;
-import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 
 public class ESBNetworkUtils {
@@ -9,25 +9,20 @@ public class ESBNetworkUtils {
     public static final int MIN_PORT_NUMBER = 1100;
     public static final int MAX_PORT_NUMBER = 49151;
 
-    public static boolean available(int port) {
+    public static boolean available(String bindAddress, int port) {
         if (port < MIN_PORT_NUMBER || port > MAX_PORT_NUMBER) {
             throw new IllegalArgumentException("Invalid start port: " + port);
         }
 
         ServerSocket ss = null;
-        DatagramSocket ds = null;
         try {
-            ss = new ServerSocket(port);
+            InetSocketAddress socketAddress = new InetSocketAddress(bindAddress, port);
+            ss = new ServerSocket();
+            ss.bind(socketAddress);
             ss.setReuseAddress(true);
-            ds = new DatagramSocket(port);
-            ds.setReuseAddress(true);
             return true;
         } catch (IOException e) {
         } finally {
-            if (ds != null) {
-                ds.close();
-            }
-
             if (ss != null) {
                 try {
                     ss.close();
