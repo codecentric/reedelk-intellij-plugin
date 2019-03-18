@@ -22,7 +22,8 @@
     <extensions defaultExtensionNs="com.intellij">
 
         <!-- File Type -->
-        <fileTypeFactory implementation="com.esb.plugin.FlowFileTypeFactory"/>
+        <fileTypeFactory implementation="com.esb.plugin.filetype.FlowFileTypeFactory"/>
+        <fileTypeFactory implementation="com.esb.plugin.filetype.FlowConfigFileTypeFactory"/>
 
         <!-- File Templates -->
         <internalFileTemplate name="Maven Module"/>
