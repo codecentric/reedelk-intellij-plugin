@@ -19,7 +19,7 @@ public class UIFlowEditorProvider implements FileEditorProvider, DumbAware {
     @NotNull
     @Override
     public FileEditor createEditor(@NotNull Project project, @NotNull VirtualFile file) {
-        return new UIFlowEditor();
+        return new UIFlowEditor(project, file);
     }
 
     @NotNull

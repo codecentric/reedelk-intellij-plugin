@@ -6,7 +6,9 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorLocation;
 import com.intellij.openapi.fileEditor.FileEditorState;
 import com.intellij.openapi.project.PossiblyDumbAware;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolderBase;
+import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,11 +17,10 @@ import java.beans.PropertyChangeListener;
 
 public class UIFlowEditor extends UserDataHolderBase implements FileEditor, PossiblyDumbAware {
 
-    private JPanel editor;
+    private UIFlowEditorPanel editor;
 
-    public UIFlowEditor() {
-        editor = new JPanel();
-        editor.add(new JLabel("Hello spenkk!"));
+    public UIFlowEditor(Project project, VirtualFile file) {
+        editor = new UIFlowEditorPanel(project);
     }
 
     @NotNull
