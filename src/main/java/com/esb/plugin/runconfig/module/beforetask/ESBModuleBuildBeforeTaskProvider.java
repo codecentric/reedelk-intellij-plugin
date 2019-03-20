@@ -1,4 +1,4 @@
-package com.esb.plugin.beforetask;
+package com.esb.plugin.runconfig.module.beforetask;
 
 import com.esb.plugin.runconfig.module.ESBModuleRunConfiguration;
 import com.esb.plugin.runconfig.module.runner.ESBModuleUnDeployExecutor;

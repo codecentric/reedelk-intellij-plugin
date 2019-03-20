@@ -29,7 +29,8 @@
         <internalFileTemplate name="Maven Module"/>
         <internalFileTemplate name="Maven Project"/>
 
-        <stepsBeforeRunProvider implementation="com.esb.plugin.beforetask.ESBModuleBuildBeforeTaskProvider"/>
+        <stepsBeforeRunProvider
+                implementation="com.esb.plugin.runconfig.module.beforetask.ESBModuleBuildBeforeTaskProvider"/>
 
         <!-- Module Builder -->
         <moduleBuilder builderClass="com.esb.plugin.module.builder.ESBModuleBuilder" id="ESB_MODULE_BUILDER" order="first"/>
