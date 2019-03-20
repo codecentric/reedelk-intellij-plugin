@@ -1,10 +1,12 @@
 package com.esb.plugin.runconfig.module;
 
-import com.esb.plugin.runconfig.module.runprofile.DeployRunProfile;
-import com.esb.plugin.runconfig.module.runprofile.UndeployRunProfile;
 import com.esb.plugin.runconfig.module.runner.ESBModuleDeployExecutor;
 import com.esb.plugin.runconfig.module.runner.ESBModuleUnDeployExecutor;
-import com.intellij.execution.*;
+import com.esb.plugin.runconfig.module.runprofile.DeployRunProfile;
+import com.esb.plugin.runconfig.module.runprofile.UndeployRunProfile;
+import com.intellij.execution.ExecutionException;
+import com.intellij.execution.ExecutionTarget;
+import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.*;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.RunConfigurationWithSuppressedDefaultRunAction;
@@ -22,7 +24,7 @@ public class ESBModuleRunConfiguration extends RunConfigurationBase implements
 
     private static final String PREFIX = "ESBModuleRunConfiguration-";
     private static final String MODULE_NAME = PREFIX + "ModuleName";
-    private static final String RUNTIME_HOME_DIRECTORY = PREFIX + "HomeDirectory";
+    private static final String RUNTIME_CONFIG_NAME = PREFIX + "RuntimeConfigName";
 
     private String runtimeConfigName;
     private String moduleName;
@@ -64,14 +66,14 @@ public class ESBModuleRunConfiguration extends RunConfigurationBase implements
     @Override
     public void readExternal(@NotNull Element element) throws InvalidDataException {
         super.readExternal(element);
-        runtimeConfigName = JDOMExternalizerUtil.readField(element, RUNTIME_HOME_DIRECTORY);
+        runtimeConfigName = JDOMExternalizerUtil.readField(element, RUNTIME_CONFIG_NAME);
         moduleName = JDOMExternalizerUtil.readField(element, MODULE_NAME);
     }
 
     @Override
     public void writeExternal(@NotNull Element element) {
         super.writeExternal(element);
-        JDOMExternalizerUtil.writeField(element, RUNTIME_HOME_DIRECTORY, runtimeConfigName);
+        JDOMExternalizerUtil.writeField(element, RUNTIME_CONFIG_NAME, runtimeConfigName);
         JDOMExternalizerUtil.writeField(element, MODULE_NAME, moduleName);
     }
 

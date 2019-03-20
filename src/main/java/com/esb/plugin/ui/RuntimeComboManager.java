@@ -28,6 +28,8 @@ public class RuntimeComboManager {
                     .forEach(configuration -> {
                         comboBox.addItem(configuration.getName());
                     });
+
+            comboBox.setSelectedIndex(-1);
         }
 
 
