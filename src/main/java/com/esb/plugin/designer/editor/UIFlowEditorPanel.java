@@ -12,9 +12,12 @@ public class UIFlowEditorPanel extends ThreeComponentsSplitter {
     public UIFlowEditorPanel(Project project) {
         super(VERTICAL);
 
+        PalettePanel palettePanel = new PalettePanel();
+        FlowDesignerPanel flowDesignerPanel = new FlowDesignerPanel();
+
         ThreeComponentsSplitter horizontalSplitter = new ThreeComponentsSplitter();
-        horizontalSplitter.setInnerComponent(new FlowDesignerPanel());
-        horizontalSplitter.setLastComponent(new PalettePanel());
+        horizontalSplitter.setInnerComponent(flowDesignerPanel);
+        horizontalSplitter.setLastComponent(palettePanel);
         horizontalSplitter.setLastSize(PALETTE_SIZE);
         horizontalSplitter.setDividerWidth(2);
 

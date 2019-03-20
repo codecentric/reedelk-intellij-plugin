@@ -1,5 +1,6 @@
 package com.esb.plugin.designer.editor;
 
+import com.esb.plugin.designer.editor.component.ComponentTransferHandler;
 import com.esb.plugin.utils.ESBIcons;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
@@ -47,6 +48,8 @@ public class PalettePanel extends JBPanel {
         tree = new Tree(root);
         tree.setCellRenderer(renderer);
         tree.setRootVisible(false);
+        tree.setDragEnabled(true);
+        tree.setTransferHandler(new ComponentTransferHandler());
 
         JBScrollPane componentsTreeScrollPanel = new JBScrollPane(tree);
 
