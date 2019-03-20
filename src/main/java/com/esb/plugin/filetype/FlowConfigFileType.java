@@ -11,7 +11,7 @@ import javax.swing.*;
 public class FlowConfigFileType extends LanguageFileType {
 
     public static final FlowConfigFileType INSTANCE = new FlowConfigFileType();
-    public static final String DEFAULT_EXTENSION = "flow.config";
+    public static final String DEFAULT_EXTENSION = "fconfig";
 
 
     public FlowConfigFileType() {

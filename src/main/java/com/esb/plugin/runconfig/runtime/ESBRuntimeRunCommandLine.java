@@ -4,6 +4,7 @@ import com.esb.plugin.utils.ESBFileUtils;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.JavaCommandLineState;
 import com.intellij.execution.configurations.JavaParameters;
+import com.intellij.execution.configurations.ParametersList;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -29,8 +30,12 @@ public class ESBRuntimeRunCommandLine extends JavaCommandLineState {
         ProjectRootManager manager = ProjectRootManager.getInstance(project);
         javaParams.setJdk(manager.getProjectSdk());
 
-        javaParams.getVMParametersList().add("-Dadmin.console.bind.port=" + configuration.getRuntimePort());
+        ParametersList parameters = javaParams.getVMParametersList();
 
+        JavaVersion javaVersion = JavaVersion.from(manager.getProjectSdk());
+        javaVersion.apply(parameters);
+
+        parameters.add("-Dadmin.console.bind.port=" + configuration.getRuntimePort());
 
         String runtimeHomeDirectory = configuration.getRuntimeHomeDirectory();
 
