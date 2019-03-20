@@ -22,6 +22,7 @@ public class FlowDesignerPanel extends JPanel implements MouseMotionListener, Mo
     private int offsety;
 
     public FlowDesignerPanel() {
+        setSize(new Dimension(700, 400));
         setDropTarget(new DrawingPanelDropTarget(this));
         setBackground(JBColor.WHITE);
         addMouseListener(this);

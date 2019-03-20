@@ -2,6 +2,9 @@ package com.esb.plugin.designer.editor;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
+import com.intellij.ui.components.JBScrollPane;
+
+import javax.swing.*;
 
 public class UIFlowEditorPanel extends ThreeComponentsSplitter {
 
@@ -15,8 +18,11 @@ public class UIFlowEditorPanel extends ThreeComponentsSplitter {
         PalettePanel palettePanel = new PalettePanel();
         FlowDesignerPanel flowDesignerPanel = new FlowDesignerPanel();
 
+        // TODO: Not working scrollpanel
+        JScrollPane jScrollPane = new JBScrollPane(flowDesignerPanel);
+
         ThreeComponentsSplitter horizontalSplitter = new ThreeComponentsSplitter();
-        horizontalSplitter.setInnerComponent(flowDesignerPanel);
+        horizontalSplitter.setInnerComponent(jScrollPane);
         horizontalSplitter.setLastComponent(palettePanel);
         horizontalSplitter.setLastSize(PALETTE_SIZE);
         horizontalSplitter.setDividerWidth(2);
