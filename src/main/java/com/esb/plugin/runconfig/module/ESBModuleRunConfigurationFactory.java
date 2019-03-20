@@ -1,11 +1,9 @@
 package com.esb.plugin.runconfig.module;
 
-import com.intellij.execution.BeforeRunTask;
 import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.execution.configurations.ConfigurationType;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NotNull;
 
 public class ESBModuleRunConfigurationFactory extends ConfigurationFactory {
@@ -28,8 +26,4 @@ public class ESBModuleRunConfigurationFactory extends ConfigurationFactory {
         return FACTORY_NAME;
     }
 
-    @Override
-    public void configureBeforeRunTaskDefaults(Key<? extends BeforeRunTask> providerID, BeforeRunTask task) {
-        super.configureBeforeRunTaskDefaults(providerID, task);
-    }
 }

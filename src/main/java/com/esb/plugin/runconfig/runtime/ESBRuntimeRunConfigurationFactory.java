@@ -25,4 +25,5 @@ public class ESBRuntimeRunConfigurationFactory extends ConfigurationFactory {
     public String getName() {
         return FACTORY_NAME;
     }
+
 }

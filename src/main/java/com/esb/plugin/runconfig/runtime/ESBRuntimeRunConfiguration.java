@@ -18,8 +18,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.util.Collections;
 
-public class ESBRuntimeRunConfiguration extends RunConfigurationBase implements ModuleRunProfile {
+public class ESBRuntimeRunConfiguration extends RunConfigurationBase<ESBRuntimeRunConfiguration> implements ModuleRunProfile {
 
     private static final String PREFIX = "ESBRuntimeRunConfiguration-";
     private static final String VM_OPTIONS = PREFIX + "VmOptions";
@@ -38,7 +39,10 @@ public class ESBRuntimeRunConfiguration extends RunConfigurationBase implements 
     @NotNull
     @Override
     public SettingsEditor<ESBRuntimeRunConfiguration> getConfigurationEditor() {
-        return new RuntimeRunConfigurationSettings(getProject());
+        RuntimeRunConfigurationSettings runtimeRunConfigurationSettings = new RuntimeRunConfigurationSettings(getProject());
+        // Runtime Run Config does not have any Before Task to be executed prior to Runtime Launch.
+        setBeforeRunTasks(Collections.emptyList());
+        return runtimeRunConfigurationSettings;
     }
 
     @Override
