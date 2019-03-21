@@ -10,8 +10,6 @@ public interface Drawable {
 
     Point getPosition();
 
-    void setPosition(Point point);
-
     int width();
 
     int height();

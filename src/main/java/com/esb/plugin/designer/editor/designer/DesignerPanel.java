@@ -3,6 +3,8 @@ package com.esb.plugin.designer.editor.designer;
 import com.esb.plugin.designer.editor.common.Tile;
 import com.esb.plugin.designer.editor.component.Drawable;
 import com.intellij.ui.JBColor;
+import com.intellij.util.ui.JBDimension;
+import com.intellij.util.ui.JBUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,8 +17,11 @@ import java.util.Optional;
 
 public class DesignerPanel extends JPanel implements MouseMotionListener, MouseListener {
 
+    private static final JBDimension PREFERRED_SIZE = JBUI.size(700, 400);
+    private static final JBColor BACKGROUND_COLOR = JBColor.WHITE;
 
     private static final Color GRID_COLOR = new Color(226, 226, 236, 255);
+
     private List<Drawable> drawableList = new ArrayList<>();
     private boolean dragging;
     private Drawable selected;
@@ -25,7 +30,8 @@ public class DesignerPanel extends JPanel implements MouseMotionListener, MouseL
 
     public DesignerPanel() {
         setDropTarget(new DesignerPanelDropTarget(this));
-        setBackground(JBColor.WHITE);
+        setBackground(BACKGROUND_COLOR);
+        setPreferredSize(PREFERRED_SIZE);
         addMouseListener(this);
         addMouseMotionListener(this);
     }

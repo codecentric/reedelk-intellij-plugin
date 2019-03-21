@@ -1,6 +1,7 @@
 package com.esb.plugin.designer.editor.designer;
 
 import com.esb.plugin.designer.editor.component.Component;
+import com.esb.plugin.designer.editor.component.DrawableComponent;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -19,12 +20,16 @@ public class DesignerPanelDropTarget extends DropTarget {
     }
 
     @Override
-    public synchronized void drop(DropTargetDropEvent dtde) {
+    public synchronized void drop(DropTargetDropEvent dropEvent) {
         clearAutoscroll();
-        dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+        dropEvent.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
         try {
-            Object componentName = dtde.getTransferable().getTransferData(DataFlavor.stringFlavor);
-            drawingPanel.add(new Component((String) componentName, drawingPanel, dtde.getLocation()));
+            String componentName = (String) dropEvent.getTransferable().getTransferData(DataFlavor.stringFlavor);
+
+            Component component = new Component(componentName);
+            component.setComponentDescription("A test description");
+
+            drawingPanel.add(new DrawableComponent(component, drawingPanel, dropEvent.getLocation()));
             drawingPanel.repaint();
         } catch (UnsupportedFlavorException | IOException e) {
             e.printStackTrace();
