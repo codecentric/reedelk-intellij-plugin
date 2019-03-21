@@ -25,8 +25,7 @@ public class Component implements Drawable {
 
     @Override
     public void draw(Graphics g) {
-        // Given Tile
-
+        // If goes beyond the width (or height) update the set preferred Dimension of the parent.
         int offset = Math.floorDiv(Tile.INSTANCE.width - width(), 2);
         g.drawImage(componentImage, topLeft.x + offset, topLeft.y + offset, parent);
         g.setColor(JBColor.GRAY);
