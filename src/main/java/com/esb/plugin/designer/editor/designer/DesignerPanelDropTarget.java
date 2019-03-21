@@ -1,4 +1,4 @@
-package com.esb.plugin.designer.editor;
+package com.esb.plugin.designer.editor.designer;
 
 import com.esb.plugin.designer.editor.component.Component;
 
@@ -9,12 +9,12 @@ import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
 import java.io.IOException;
 
-public class DrawingPanelDropTarget extends DropTarget {
+public class DesignerPanelDropTarget extends DropTarget {
 
 
-    private final FlowDesignerPanel drawingPanel;
+    private final DesignerPanel drawingPanel;
 
-    public DrawingPanelDropTarget(FlowDesignerPanel drawingPanel) {
+    public DesignerPanelDropTarget(DesignerPanel drawingPanel) {
         this.drawingPanel = drawingPanel;
     }
 

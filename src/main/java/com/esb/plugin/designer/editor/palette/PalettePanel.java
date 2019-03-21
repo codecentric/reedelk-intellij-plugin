@@ -1,4 +1,4 @@
-package com.esb.plugin.designer.editor;
+package com.esb.plugin.designer.editor.palette;
 
 import com.esb.plugin.designer.editor.component.ComponentTransferHandler;
 import com.esb.plugin.utils.ESBIcons;

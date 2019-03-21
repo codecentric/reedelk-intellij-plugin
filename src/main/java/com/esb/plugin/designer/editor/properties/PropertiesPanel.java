@@ -1,4 +1,4 @@
-package com.esb.plugin.designer.editor;
+package com.esb.plugin.designer.editor.properties;
 
 import javax.swing.*;
 

@@ -9,7 +9,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
-public class UIFlowEditorProvider implements FileEditorProvider, DumbAware {
+public class FlowEditorProvider implements FileEditorProvider, DumbAware {
 
     @Override
     public boolean accept(@NotNull Project project, @NotNull VirtualFile file) {
@@ -19,7 +19,7 @@ public class UIFlowEditorProvider implements FileEditorProvider, DumbAware {
     @NotNull
     @Override
     public FileEditor createEditor(@NotNull Project project, @NotNull VirtualFile file) {
-        return new UIFlowEditor(project, file);
+        return new FlowEditor(project, file);
     }
 
     @NotNull

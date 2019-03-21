@@ -1,7 +1,6 @@
 package com.esb.plugin.designer.editor.component;
 
-import com.esb.plugin.designer.editor.Drawable;
-import com.esb.plugin.designer.editor.Tile;
+import com.esb.plugin.designer.editor.common.Tile;
 import com.intellij.ui.JBColor;
 
 import javax.swing.*;

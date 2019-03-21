@@ -1,5 +1,7 @@
-package com.esb.plugin.designer.editor;
+package com.esb.plugin.designer.editor.designer;
 
+import com.esb.plugin.designer.editor.common.Tile;
+import com.esb.plugin.designer.editor.component.Drawable;
 import com.intellij.ui.JBColor;
 
 import javax.swing.*;
@@ -11,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class FlowDesignerPanel extends JPanel implements MouseMotionListener, MouseListener {
+public class DesignerPanel extends JPanel implements MouseMotionListener, MouseListener {
 
 
     private static final Color GRID_COLOR = new Color(226, 226, 236, 255);
@@ -21,8 +23,8 @@ public class FlowDesignerPanel extends JPanel implements MouseMotionListener, Mo
     private int offsetx;
     private int offsety;
 
-    public FlowDesignerPanel() {
-        setDropTarget(new DrawingPanelDropTarget(this));
+    public DesignerPanel() {
+        setDropTarget(new DesignerPanelDropTarget(this));
         setBackground(JBColor.WHITE);
         addMouseListener(this);
         addMouseMotionListener(this);

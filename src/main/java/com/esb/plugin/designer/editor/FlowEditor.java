@@ -15,12 +15,12 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
 
-public class UIFlowEditor extends UserDataHolderBase implements FileEditor, PossiblyDumbAware {
+public class FlowEditor extends UserDataHolderBase implements FileEditor, PossiblyDumbAware {
 
-    private UIFlowEditorPanel editor;
+    private FlowEditorPanel editor;
 
-    public UIFlowEditor(Project project, VirtualFile file) {
-        editor = new UIFlowEditorPanel(project);
+    public FlowEditor(Project project, VirtualFile file) {
+        editor = new FlowEditorPanel(project);
     }
 
     @NotNull
@@ -101,7 +101,7 @@ public class UIFlowEditor extends UserDataHolderBase implements FileEditor, Poss
             @NotNull
             @Override
             public FileEditor getEditor() {
-                return UIFlowEditor.this;
+                return FlowEditor.this;
             }
 
             @Override

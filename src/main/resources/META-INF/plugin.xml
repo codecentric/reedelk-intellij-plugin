@@ -55,7 +55,7 @@
         <configurationType implementation="com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfigurationType"/>
         <configurationType implementation="com.esb.plugin.runconfig.module.ESBModuleRunConfigurationType"/>
 
-        <fileEditorProvider implementation="com.esb.plugin.designer.editor.UIFlowEditorProvider"/>
+        <fileEditorProvider implementation="com.esb.plugin.designer.editor.FlowEditorProvider"/>
 
     </extensions>
 
