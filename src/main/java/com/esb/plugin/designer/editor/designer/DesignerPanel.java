@@ -1,46 +1,50 @@
 package com.esb.plugin.designer.editor.designer;
 
+import com.esb.plugin.designer.editor.common.FlowDataStructure;
+import com.esb.plugin.designer.editor.common.FlowDataStructureListener;
 import com.esb.plugin.designer.editor.common.Tile;
 import com.esb.plugin.designer.editor.component.Drawable;
 import com.intellij.ui.JBColor;
+import com.intellij.ui.components.JBPanel;
 import com.intellij.util.ui.JBDimension;
-import com.intellij.util.ui.JBUI;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
-public class DesignerPanel extends JPanel implements MouseMotionListener, MouseListener {
+public class DesignerPanel extends JBPanel implements MouseMotionListener, MouseListener, FlowDataStructureListener {
 
-    private static final JBDimension PREFERRED_SIZE = JBUI.size(700, 400);
-    private static final JBColor BACKGROUND_COLOR = JBColor.WHITE;
+    private final JBColor BACKGROUND_COLOR = JBColor.WHITE;
+    private final Color GRID_COLOR = new JBColor(new Color(226, 226, 236, 255), new Color(226, 226, 236, 255));
 
-    private static final Color GRID_COLOR = new Color(226, 226, 236, 255);
+    private final int PREFERRED_WIDTH = 700;
+    private final int PREFERRED_HEIGHT = 400;
 
-    private List<Drawable> drawableList = new ArrayList<>();
+    private final FlowDataStructure flowDataStructure;
+
     private boolean dragging;
     private Drawable selected;
     private int offsetx;
     private int offsety;
 
-    public DesignerPanel() {
-        setDropTarget(new DesignerPanelDropTarget(this));
+    public DesignerPanel(FlowDataStructure flowDataStructure) {
         setBackground(BACKGROUND_COLOR);
-        setPreferredSize(PREFERRED_SIZE);
-        addMouseListener(this);
-        addMouseMotionListener(this);
+        setPreferredSize(new JBDimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
+        setDropTarget(new DesignerPanelDropTarget(flowDataStructure, this));
+        // addMouseListener(this);
+        //addMouseMotionListener(this);
+
+        this.flowDataStructure = flowDataStructure;
+        this.flowDataStructure.setListener(this);
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         drawGrid(g);
-        drawableList.forEach(drawable -> drawable.draw(g));
+        flowDataStructure.draw(g);
     }
 
     @Override
@@ -105,7 +109,7 @@ public class DesignerPanel extends JPanel implements MouseMotionListener, MouseL
         int x = e.getX();
         int y = e.getY();
 
-        computeSnapToGridCoordinates(selected, x, y);
+        //  computeSnapToGridCoordinates(selected, x, y);
 
         selected = null;
         dragging = false;
@@ -128,16 +132,19 @@ public class DesignerPanel extends JPanel implements MouseMotionListener, MouseL
     }
 
     private Optional<Drawable> getDrawableWithin(int x, int y) {
-        return drawableList.stream().filter(drawable -> drawable.contains(new Point(x, y))).findFirst();
+        // TODO: Implement this
+        //return drawableList.stream().filter(drawable -> drawable.contains(new Point(x, y))).findFirst();
+        return Optional.empty();
     }
 
     public void add(Drawable component) {
         int x = component.getPosition().x;
         int y = component.getPosition().y;
 
-        computeSnapToGridCoordinates(component, x, y);
+        //  computeSnapToGridCoordinates(component, x, y);
 
-        drawableList.add(component);
+        // TODO: Implement this
+        //drawableList.add(component);
     }
 
     private void drawGrid(Graphics graphics) {
@@ -173,5 +180,10 @@ public class DesignerPanel extends JPanel implements MouseMotionListener, MouseL
         int snapY = Math.floorDiv(y, Tile.INSTANCE.height) * Tile.INSTANCE.height;
         drawable.getPosition().x = snapX;
         drawable.getPosition().y = snapY;
+    }
+
+    @Override
+    public void onChange() {
+        repaint();
     }
 }

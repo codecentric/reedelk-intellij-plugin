@@ -1,5 +1,7 @@
 package com.esb.plugin.designer.editor;
 
+import com.esb.plugin.designer.editor.common.FlowDataStructure;
+import com.esb.plugin.designer.editor.designer.DesignerPanel;
 import com.esb.plugin.designer.editor.designer.ScrollableDesignerPanel;
 import com.esb.plugin.designer.editor.palette.PalettePanel;
 import com.esb.plugin.designer.editor.properties.PropertiesPanel;
@@ -18,10 +20,13 @@ public class FlowEditorPanel extends ThreeComponentsSplitter {
         super(VERTICAL);
 
         PalettePanel palettePanel = new PalettePanel();
-        ScrollableDesignerPanel designerPanel = new ScrollableDesignerPanel();
+
+        FlowDataStructure flowDataStructure = new FlowDataStructure();
+        DesignerPanel designerPanel = new DesignerPanel(flowDataStructure);
+        ScrollableDesignerPanel scrollableDesignerPanel = new ScrollableDesignerPanel(designerPanel);
 
         ThreeComponentsSplitter paletteAndDesignerSplitter = new ThreeComponentsSplitter();
-        paletteAndDesignerSplitter.setInnerComponent(designerPanel);
+        paletteAndDesignerSplitter.setInnerComponent(scrollableDesignerPanel);
         paletteAndDesignerSplitter.setLastComponent(palettePanel);
         paletteAndDesignerSplitter.setLastSize(PALETTE_SIZE);
         paletteAndDesignerSplitter.setDividerWidth(DIVIDER_WIDTH);

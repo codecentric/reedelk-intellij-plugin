@@ -4,8 +4,8 @@ import com.intellij.ui.components.JBScrollPane;
 
 public class ScrollableDesignerPanel extends JBScrollPane {
 
-    public ScrollableDesignerPanel() {
-        super(new DesignerPanel());
+    public ScrollableDesignerPanel(DesignerPanel designerPanel) {
+        super(designerPanel);
 
         createHorizontalScrollBar();
         createVerticalScrollBar();

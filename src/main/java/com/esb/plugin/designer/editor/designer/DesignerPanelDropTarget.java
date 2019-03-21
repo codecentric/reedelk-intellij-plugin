@@ -1,6 +1,8 @@
 package com.esb.plugin.designer.editor.designer;
 
+import com.esb.plugin.designer.editor.common.FlowDataStructure;
 import com.esb.plugin.designer.editor.component.Component;
+import com.esb.plugin.designer.editor.component.Drawable;
 import com.esb.plugin.designer.editor.component.DrawableComponent;
 
 import java.awt.datatransfer.DataFlavor;
@@ -14,25 +16,35 @@ public class DesignerPanelDropTarget extends DropTarget {
 
 
     private final DesignerPanel drawingPanel;
+    private final FlowDataStructure flowDataStructure;
 
-    public DesignerPanelDropTarget(DesignerPanel drawingPanel) {
+    public DesignerPanelDropTarget(FlowDataStructure flowDataStructure, DesignerPanel drawingPanel) {
         this.drawingPanel = drawingPanel;
+        this.flowDataStructure = flowDataStructure;
     }
 
     @Override
     public synchronized void drop(DropTargetDropEvent dropEvent) {
+        String componentName;
+        try {
+            componentName = (String) dropEvent.getTransferable().getTransferData(DataFlavor.stringFlavor);
+        } catch (UnsupportedFlavorException | IOException e) {
+            dropEvent.rejectDrop();
+            return;
+        }
+
         clearAutoscroll();
         dropEvent.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
-        try {
-            String componentName = (String) dropEvent.getTransferable().getTransferData(DataFlavor.stringFlavor);
 
-            Component component = new Component(componentName);
-            component.setComponentDescription("A test description");
+        Component component = new Component(componentName);
+        component.setComponentDescription("A description");
 
-            drawingPanel.add(new DrawableComponent(component, drawingPanel, dropEvent.getLocation()));
-            drawingPanel.repaint();
-        } catch (UnsupportedFlavorException | IOException e) {
-            e.printStackTrace();
-        }
+        DrawableComponent drawableComponent = new DrawableComponent(component, drawingPanel, dropEvent.getLocation());
+        // Here need to decide given the position where this component should go.
+        Drawable drawable = flowDataStructure.closestParentOf(drawableComponent);
+        flowDataStructure.add(drawable, drawableComponent);
+        flowDataStructure.computeNodesPositions();
+        flowDataStructure.notifyChange();
     }
+
 }
