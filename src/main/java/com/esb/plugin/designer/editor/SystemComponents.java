@@ -1,4 +1,4 @@
-package com.esb.plugin.designer.icon;
+package com.esb.plugin.designer.editor;
 
 public enum SystemComponents {
 

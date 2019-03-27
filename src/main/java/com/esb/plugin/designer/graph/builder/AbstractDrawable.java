@@ -2,7 +2,7 @@ package com.esb.plugin.designer.graph.builder;
 
 import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.Node;
-import com.esb.plugin.designer.icon.IconProvider;
+import com.esb.plugin.test.utils.ESBIcons;
 import com.intellij.ui.JBColor;
 
 import java.awt.*;
@@ -18,7 +18,7 @@ abstract class AbstractDrawable implements Node {
 
     public AbstractDrawable(Component component) {
         this.component = component;
-        this.image = IconProvider.forComponent(component.getName());
+        this.image = ESBIcons.forComponentAsImage(component.getName());
     }
 
     @Override
