@@ -9,7 +9,7 @@ import java.util.List;
 
 public class FlowGraphLayout {
 
-    private final int X_LEFT_PADDING = 20;
+    private final int X_LEFT_PADDING = Math.floorDiv(Tile.WIDTH, 2);
 
     private final List<List<Node>> layers;
     private final DirectedGraph<Node> graph;
