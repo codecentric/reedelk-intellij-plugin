@@ -1,6 +1,6 @@
 package com.esb.plugin.runconfig.module;
 
-import com.esb.plugin.utils.ESBIcons;
+import com.esb.plugin.test.utils.ESBIcons;
 import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.execution.configurations.ConfigurationType;
 import org.jetbrains.annotations.Nls;

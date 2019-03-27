@@ -1,24 +1,28 @@
 package com.esb.plugin.designer.editor.component;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Component {
 
-    private final String componentName;
-    private String componentDescription;
+    private final String name;
+    private final Map<String, Object> properties = new HashMap<>();
+    private String description;
 
-    public Component(String componentName) {
-        this.componentName = componentName;
+    public Component(String name) {
+        this.name = name;
     }
 
-    public String getComponentName() {
-        return componentName;
+    public String getName() {
+        return name;
     }
 
-    public String getComponentDescription() {
-        return componentDescription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setComponentDescription(String componentDescription) {
-        this.componentDescription = componentDescription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
 

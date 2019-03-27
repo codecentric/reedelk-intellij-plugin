@@ -1,6 +1,6 @@
 package com.esb.plugin.designer.editor.common;
 
-import com.esb.plugin.designer.editor.component.Drawable;
+import com.esb.plugin.graph.handler.Drawable;
 import com.google.common.base.Preconditions;
 import com.google.common.graph.GraphBuilder;
 import com.google.common.graph.MutableGraph;
@@ -36,6 +36,7 @@ public class FlowDataStructure {
             Set<Drawable> successors = flowGraph.successors(before);
             Iterator<Drawable> it = successors.iterator();
 
+
             // TODO: this one throws concurrent modification exception
             // Connect before to current and current to all adjacent nodes
             while (it.hasNext()) {
@@ -61,7 +62,7 @@ public class FlowDataStructure {
     }
 
     public void draw(Graphics graphics) {
-        flowGraph.nodes().forEach(drawable -> drawable.draw(graphics));
+        flowGraph.nodes().forEach(drawable -> drawable.draw(graphics, null));
     }
 
     public Drawable closestParentOf(Drawable drawableComponent) {

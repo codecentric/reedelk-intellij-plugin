@@ -1,6 +1,6 @@
 package com.esb.plugin.runconfig.runtime;
 
-import com.esb.plugin.utils.ESBFileUtils;
+import com.esb.plugin.test.utils.ESBFileUtils;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.JavaCommandLineState;
 import com.intellij.execution.configurations.JavaParameters;

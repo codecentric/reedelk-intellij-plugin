@@ -1,53 +1,52 @@
 package com.esb.plugin.designer.editor.component;
 
 import com.esb.plugin.designer.editor.common.Tile;
+import com.esb.plugin.graph.handler.Drawable;
 import com.intellij.ui.JBColor;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.ImageObserver;
 
 public class DrawableComponent implements Drawable {
 
     private static final int COMPONENT_LABEL_PADDING_TOP = 2;
-    private final JPanel parent;
     private final Image componentImage;
     private final Component component;
     private Point topLeft;
 
-    public DrawableComponent(Component component, JPanel parent, Point topLeft) {
+    public DrawableComponent(Component component) {
         this.component = component;
-        this.topLeft = topLeft;
-        this.parent = parent;
+        this.topLeft = new Point(0, 0);
         this.componentImage = Toolkit.getDefaultToolkit().getImage("/Users/lorenzo/IdeaProjects/drag-and-drop/resources/fork.png");
     }
 
     @Override
-    public void draw(Graphics graphics) {
+    public void draw(Graphics graphics, ImageObserver observer) {
         // If goes beyond the width (or height) update the set preferred Dimension of the parent.
 
-        int totalHeight = getIconHeight() +
+        int totalHeight = getIconHeight(observer) +
                 getComponentNameTextHeight(graphics) +
                 getComponentDescriptionTextHeight(graphics);
 
         int verticalOffset = Math.floorDiv(Tile.INSTANCE.height - totalHeight, 2); // you can cache this value
-        int horizontalOffset = Math.floorDiv(Tile.INSTANCE.width - width(), 2);
+        int horizontalOffset = Math.floorDiv(Tile.INSTANCE.width - width(observer), 2);
 
-        graphics.drawImage(componentImage, topLeft.x + horizontalOffset, topLeft.y + verticalOffset, parent);
+        graphics.drawImage(componentImage, topLeft.x + horizontalOffset, topLeft.y + verticalOffset, observer);
         graphics.setColor(JBColor.GRAY);
 
         // Compute center of the tile
-        drawComponentNameLabel(graphics, component.getComponentName(), Tile.INSTANCE.width, topLeft.x, topLeft.y + height() + verticalOffset);
-        drawComponentNameLabel(graphics, component.getComponentDescription(), Tile.INSTANCE.width, topLeft.x, topLeft.y + height() + verticalOffset + getComponentNameTextHeight(graphics));
+        drawComponentNameLabel(graphics, component.getName(), Tile.INSTANCE.width, topLeft.x, topLeft.y + height(observer) + verticalOffset);
+        drawComponentNameLabel(graphics, component.getDescription(), Tile.INSTANCE.width, topLeft.x, topLeft.y + height(observer) + verticalOffset + getComponentNameTextHeight(graphics));
 
     }
 
-    private int getIconHeight() {
-        return componentImage.getHeight(parent);
+    private int getIconHeight(ImageObserver observer) {
+        return componentImage.getHeight(observer);
     }
 
-    private int getIconWidth() {
-        return componentImage.getWidth(parent);
+    private int getIconWidth(ImageObserver observer) {
+        return componentImage.getWidth(observer);
     }
 
     private int getComponentNameTextHeight(Graphics graphics) {
@@ -83,13 +82,18 @@ public class DrawableComponent implements Drawable {
     }
 
     @Override
-    public int width() {
-        return componentImage.getWidth(parent);
+    public Component component() {
+        return component;
     }
 
     @Override
-    public int height() {
-        return componentImage.getHeight(parent);
+    public int width(ImageObserver observer) {
+        return componentImage.getWidth(observer);
+    }
+
+    @Override
+    public int height(ImageObserver observer) {
+        return componentImage.getHeight(observer);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.esb.plugin.utils;
+package com.esb.plugin.test.utils;
 
 import java.io.File;
 import java.nio.file.Paths;

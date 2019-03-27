@@ -1,6 +1,6 @@
 package com.esb.plugin.designer.editor.common;
 
-import com.esb.plugin.designer.editor.component.Drawable;
+import com.esb.plugin.graph.handler.Drawable;
 import com.google.common.graph.Graph;
 
 import java.util.Set;

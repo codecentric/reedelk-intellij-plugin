@@ -1,12 +1,19 @@
 package com.esb.plugin.designer.editor;
 
+import com.esb.internal.commons.FileUtils;
 import com.esb.plugin.designer.editor.common.FlowDataStructure;
 import com.esb.plugin.designer.editor.designer.DesignerPanel;
 import com.esb.plugin.designer.editor.designer.ScrollableDesignerPanel;
 import com.esb.plugin.designer.editor.palette.PalettePanel;
 import com.esb.plugin.designer.editor.properties.PropertiesPanel;
+import com.esb.plugin.graph.FlowGraph;
+import com.esb.plugin.graph.FlowGraphBuilder;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
+import com.intellij.openapi.vfs.VirtualFile;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 
 public class FlowEditorPanel extends ThreeComponentsSplitter {
@@ -16,13 +23,24 @@ public class FlowEditorPanel extends ThreeComponentsSplitter {
     private static final int PALETTE_SIZE = 210;
     private static final int PROPERTIES_PANEL_SIZE = 100;
 
-    public FlowEditorPanel(Project project) {
+    public FlowEditorPanel(Project project, VirtualFile file) {
         super(VERTICAL);
+
+        FlowGraph graph;
+        try {
+            String json = FileUtils.readFrom(new URL(file.getUrl()));
+            FlowGraphBuilder builder = new FlowGraphBuilder(json);
+            graph = builder.get();
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return;
+        }
 
         PalettePanel palettePanel = new PalettePanel();
 
         FlowDataStructure flowDataStructure = new FlowDataStructure();
-        DesignerPanel designerPanel = new DesignerPanel(flowDataStructure);
+        DesignerPanel designerPanel = new DesignerPanel(graph);
         ScrollableDesignerPanel scrollableDesignerPanel = new ScrollableDesignerPanel(designerPanel);
 
         ThreeComponentsSplitter paletteAndDesignerSplitter = new ThreeComponentsSplitter();
@@ -34,6 +52,7 @@ public class FlowEditorPanel extends ThreeComponentsSplitter {
         setInnerComponent(paletteAndDesignerSplitter);
         setLastComponent(new PropertiesPanel());
         setLastSize(PROPERTIES_PANEL_SIZE);
+
     }
 
 }

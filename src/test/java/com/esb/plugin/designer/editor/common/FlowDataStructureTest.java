@@ -1,6 +1,7 @@
 package com.esb.plugin.designer.editor.common;
 
-import com.esb.plugin.designer.editor.component.Drawable;
+
+import com.esb.plugin.graph.handler.Drawable;
 import com.google.common.graph.MutableGraph;
 import org.assertj.core.util.introspection.FieldSupport;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,10 +16,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
-public class FlowDataStructureTest {
+class FlowDataStructureTest {
 
     @Mock
-    private Drawable N1;
+    private com.esb.plugin.graph.handler.Drawable N1;
     @Mock
     private Drawable N2;
     @Mock
@@ -114,7 +115,6 @@ public class FlowDataStructureTest {
         assertThat(drawable).isEqualTo(N2);
 
     }
-
 
     private MutableGraph<Drawable> extractGraphUsingReflection() {
         return FieldSupport.EXTRACTION.fieldValue("flowGraph", MutableGraph.class, structure);

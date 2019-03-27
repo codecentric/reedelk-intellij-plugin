@@ -20,7 +20,7 @@ public class FlowEditor extends UserDataHolderBase implements FileEditor, Possib
     private FlowEditorPanel editor;
 
     public FlowEditor(Project project, VirtualFile file) {
-        editor = new FlowEditorPanel(project);
+        editor = new FlowEditorPanel(project, file);
     }
 
     @NotNull

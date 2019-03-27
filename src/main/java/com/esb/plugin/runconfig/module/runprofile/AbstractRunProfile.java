@@ -1,11 +1,9 @@
 package com.esb.plugin.runconfig.module.runprofile;
 
 import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfiguration;
-import com.esb.plugin.service.application.http.ESBHttpService;
-import com.esb.plugin.service.application.http.HttpResponse;
 import com.esb.plugin.service.project.toolwindow.ESBToolWindowService;
-import com.esb.plugin.utils.ESBMavenUtils;
-import com.esb.plugin.utils.ESBNotificationUtils;
+import com.esb.plugin.test.utils.ESBMavenUtils;
+import com.esb.plugin.test.utils.ESBNotificationUtils;
 import com.intellij.execution.*;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.runners.ProgramRunner;
@@ -19,7 +17,6 @@ import org.jetbrains.idea.maven.model.MavenId;
 import org.jetbrains.idea.maven.project.MavenProject;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Optional;
 
 import static java.lang.String.format;

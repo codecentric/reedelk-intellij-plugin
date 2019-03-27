@@ -1,9 +1,9 @@
 package com.esb.plugin.designer.editor.designer;
 
-import com.esb.plugin.designer.editor.common.FlowDataStructure;
 import com.esb.plugin.designer.editor.common.FlowDataStructureListener;
 import com.esb.plugin.designer.editor.common.Tile;
-import com.esb.plugin.designer.editor.component.Drawable;
+import com.esb.plugin.graph.FlowGraph;
+import com.esb.plugin.graph.handler.Drawable;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.util.ui.JBDimension;
@@ -22,29 +22,29 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     private final int PREFERRED_WIDTH = 700;
     private final int PREFERRED_HEIGHT = 400;
 
-    private final FlowDataStructure flowDataStructure;
+    private final FlowGraph graph;
 
     private boolean dragging;
     private Drawable selected;
     private int offsetx;
     private int offsety;
 
-    public DesignerPanel(FlowDataStructure flowDataStructure) {
+    public DesignerPanel(FlowGraph graph) {
         setBackground(BACKGROUND_COLOR);
         setPreferredSize(new JBDimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
-        setDropTarget(new DesignerPanelDropTarget(flowDataStructure, this));
+        //setDropTarget(new DesignerPanelDropTarget(flowDataStructure, this));
         // addMouseListener(this);
         //addMouseMotionListener(this);
 
-        this.flowDataStructure = flowDataStructure;
-        this.flowDataStructure.setListener(this);
+        this.graph = graph;
+        //this.flowDataStructure.setListener(this);
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         drawGrid(g);
-        flowDataStructure.draw(g);
+        //flowDataStructure.draw(g);
     }
 
     @Override
@@ -61,13 +61,13 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
             if (selectedPosition.x < 0) {
                 selectedPosition.x = 0;
-            } else if (selectedPosition.x + selected.width() > getWidth()) {
-                selectedPosition.x = getWidth() - selected.width();
+            } else if (selectedPosition.x + selected.width(this) > getWidth()) {
+                selectedPosition.x = getWidth() - selected.width(this);
             }
             if (selectedPosition.y < 0) {
                 selectedPosition.y = 0;
-            } else if (selectedPosition.y + selected.height() > getHeight()) {
-                selectedPosition.y = getHeight() - selected.height();
+            } else if (selectedPosition.y + selected.height(this) > getHeight()) {
+                selectedPosition.y = getHeight() - selected.height(this);
             }
 
             repaint();

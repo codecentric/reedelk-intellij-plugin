@@ -2,8 +2,8 @@ package com.esb.plugin.designer.editor.designer;
 
 import com.esb.plugin.designer.editor.common.FlowDataStructure;
 import com.esb.plugin.designer.editor.component.Component;
-import com.esb.plugin.designer.editor.component.Drawable;
 import com.esb.plugin.designer.editor.component.DrawableComponent;
+import com.esb.plugin.graph.handler.Drawable;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -37,10 +37,13 @@ public class DesignerPanelDropTarget extends DropTarget {
         dropEvent.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
 
         Component component = new Component(componentName);
-        component.setComponentDescription("A description");
+        component.setDescription("A description");
 
-        DrawableComponent drawableComponent = new DrawableComponent(component, drawingPanel, dropEvent.getLocation());
+        DrawableComponent drawableComponent = new DrawableComponent(component);
         // Here need to decide given the position where this component should go.
+
+        // Find parent
+        // If parent is a choice or a fork, then check between siblings where it is
         Drawable drawable = flowDataStructure.closestParentOf(drawableComponent);
         flowDataStructure.add(drawable, drawableComponent);
         flowDataStructure.computeNodesPositions();
