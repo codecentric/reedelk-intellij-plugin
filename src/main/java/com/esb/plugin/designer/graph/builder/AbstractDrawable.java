@@ -1,4 +1,4 @@
-package com.esb.plugin.designer.graph.handler;
+package com.esb.plugin.designer.graph.builder;
 
 import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.Node;
@@ -20,7 +20,7 @@ abstract class AbstractDrawable implements Node {
 
     @Override
     public String stringValue() {
-        return null;
+        return component.getName();
     }
 
     @Override

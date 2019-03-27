@@ -1,6 +1,6 @@
 package com.esb.plugin.designer.graph;
 
-import com.esb.plugin.designer.graph.layout.GraphLayout;
+import com.esb.plugin.designer.graph.layout.FlowGraphLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +32,7 @@ public class FlowGraph {
     }
 
     public void computePositions() {
-        GraphLayout positions = new GraphLayout(graph);
+        FlowGraphLayout positions = new FlowGraphLayout(graph);
         positions.compute();
     }
 

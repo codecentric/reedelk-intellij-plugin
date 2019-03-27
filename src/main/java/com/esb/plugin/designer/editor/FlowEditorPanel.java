@@ -6,7 +6,7 @@ import com.esb.plugin.designer.editor.designer.ScrollableDesignerPanel;
 import com.esb.plugin.designer.editor.palette.PalettePanel;
 import com.esb.plugin.designer.editor.properties.PropertiesPanel;
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.FlowGraphBuilder;
+import com.esb.plugin.designer.graph.builder.FlowGraphBuilder;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import com.intellij.openapi.vfs.VirtualFile;

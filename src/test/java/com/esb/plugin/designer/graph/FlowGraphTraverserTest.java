@@ -2,6 +2,7 @@ package com.esb.plugin.designer.graph;
 
 import com.esb.internal.commons.FileUtils;
 import com.esb.plugin.designer.Tile;
+import com.esb.plugin.designer.graph.builder.FlowGraphBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.net.URL;

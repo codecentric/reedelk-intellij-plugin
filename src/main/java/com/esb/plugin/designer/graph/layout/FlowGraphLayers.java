@@ -13,15 +13,15 @@ import java.util.stream.Collectors;
 // [1] ["N2", "N3"]
 // [2] ["N6", "N4", "N5"]
 // [3] ["N7"]
-public class GraphLayers {
+class FlowGraphLayers {
 
     private final DirectedGraph<Node> graph;
 
-    public GraphLayers(DirectedGraph<Node> graph) {
+    FlowGraphLayers(DirectedGraph<Node> graph) {
         this.graph = graph.copy();
     }
 
-    public List<List<Node>> compute() {
+    List<List<Node>> compute() {
         List<List<Node>> sorted = new ArrayList<>();
 
         List<Node> noIncomingEdgesNodes = getNodesWithoutIncomingEdges();

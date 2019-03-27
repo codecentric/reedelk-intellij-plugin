@@ -1,21 +1,22 @@
 package com.esb.plugin.designer.graph.layout;
 
+import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.graph.DirectedGraph;
 import com.esb.plugin.designer.graph.Node;
 
 import java.util.Collections;
 import java.util.List;
 
-public class GraphLayout {
+public class FlowGraphLayout {
 
     private final int X_LEFT_PADDING = 20;
 
     private final List<List<Node>> layers;
     private final DirectedGraph<Node> graph;
 
-    public GraphLayout(DirectedGraph<Node> graph) {
+    public FlowGraphLayout(DirectedGraph<Node> graph) {
         this.graph = graph;
-        GraphLayers layers = new GraphLayers(graph);
+        FlowGraphLayers layers = new FlowGraphLayers(graph);
         this.layers = layers.compute();
     }
 

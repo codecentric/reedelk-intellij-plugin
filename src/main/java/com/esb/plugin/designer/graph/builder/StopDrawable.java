@@ -1,17 +1,16 @@
-package com.esb.plugin.designer.graph.handler;
+package com.esb.plugin.designer.graph.builder;
 
 import com.esb.plugin.designer.editor.component.Component;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
-public class DrawableFork extends AbstractDrawable {
+public class StopDrawable extends AbstractDrawable {
 
-    private final Image image = Toolkit.getDefaultToolkit().getImage("/Users/lorenzo/Desktop/fork.png");
-
-    public DrawableFork(Component component) {
-        super(component);
+    public StopDrawable() {
+        super(new Component("Stop"));
     }
+
 
     @Override
     public void draw(Graphics graphics, ImageObserver observer) {

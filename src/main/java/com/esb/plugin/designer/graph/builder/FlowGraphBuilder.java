@@ -1,7 +1,8 @@
-package com.esb.plugin.designer.graph;
+package com.esb.plugin.designer.graph.builder;
 
 import com.esb.internal.commons.JsonParser;
-import com.esb.plugin.designer.graph.handler.HandlerFactory;
+import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.Node;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

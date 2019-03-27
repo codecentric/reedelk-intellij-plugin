@@ -1,4 +1,4 @@
-package com.esb.plugin.designer.graph.handler;
+package com.esb.plugin.designer.graph.builder;
 
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.designer.editor.component.Component;
