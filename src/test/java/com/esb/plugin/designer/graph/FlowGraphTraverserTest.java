@@ -1,8 +1,7 @@
-package com.esb.plugin.graph;
+package com.esb.plugin.designer.graph;
 
 import com.esb.internal.commons.FileUtils;
-import com.esb.plugin.designer.editor.common.Tile;
-import com.esb.plugin.graph.handler.Drawable;
+import com.esb.plugin.designer.Tile;
 import org.junit.jupiter.api.Test;
 
 import java.net.URL;

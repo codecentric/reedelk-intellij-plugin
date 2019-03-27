@@ -1,4 +1,4 @@
-package com.esb.plugin.graph.handler;
+package com.esb.plugin.designer.graph.handler;
 
 import com.esb.plugin.designer.editor.component.Component;
 
@@ -15,11 +15,6 @@ public class StopDrawable extends AbstractDrawable {
     @Override
     public void draw(Graphics graphics, ImageObserver observer) {
 
-    }
-
-    @Override
-    public boolean contains(Point point) {
-        return false;
     }
 
     @Override

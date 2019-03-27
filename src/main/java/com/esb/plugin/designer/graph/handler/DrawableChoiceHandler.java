@@ -1,15 +1,16 @@
-package com.esb.plugin.graph.handler;
+package com.esb.plugin.designer.graph.handler;
 
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.designer.editor.component.Component;
-import com.esb.plugin.graph.FlowGraph;
+import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.Node;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class DrawableChoiceHandler implements DrawableComponentHandler<StopDrawable> {
 
     @Override
-    public StopDrawable handle(Drawable parent, JSONObject implementorDefinition, FlowGraph graph) {
+    public StopDrawable handle(Node parent, JSONObject implementorDefinition, FlowGraph graph) {
 
         StopDrawable stopDrawable = new StopDrawable();
 
@@ -26,7 +27,7 @@ public class DrawableChoiceHandler implements DrawableComponentHandler<StopDrawa
         for (int i = 0; i < when.length(); i++) {
             JSONObject whenComponent = when.getJSONObject(i);
 
-            Drawable currentNode = drawableChoice;
+            Node currentNode = drawableChoice;
 
             JSONArray next = JsonParser.Choice.getNext(whenComponent);
             for (int j = 0; j < next.length(); j++) {
@@ -39,12 +40,12 @@ public class DrawableChoiceHandler implements DrawableComponentHandler<StopDrawa
 
 
         // Otherwise
-        Drawable currentNode = drawableChoice;
+        Node currentNode = drawableChoice;
 
         JSONArray otherwise = JsonParser.Choice.getOtherwise(implementorDefinition);
         for (int i = 0; i < otherwise.length(); i++) {
             JSONObject currentComponentDef = otherwise.getJSONObject(i);
-            Drawable lastNode = HandlerFactory.get(currentComponentDef).handle(currentNode, currentComponentDef, graph);
+            Node lastNode = HandlerFactory.get(currentComponentDef).handle(currentNode, currentComponentDef, graph);
 
             graph.add(currentNode, lastNode);
             currentNode = lastNode;

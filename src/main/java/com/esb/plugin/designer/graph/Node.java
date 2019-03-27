@@ -1,17 +1,21 @@
-package com.esb.plugin.graph.handler;
+package com.esb.plugin.designer.graph;
 
 import com.esb.plugin.designer.editor.component.Component;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
-public interface Drawable {
+public interface Node {
+
+    String stringValue();
+
+    void setPosition(int x, int y);
+
+    int x();
+
+    int y();
 
     void draw(Graphics graphics, ImageObserver observer);
-
-    boolean contains(Point point);
-
-    Point getPosition();
 
     Component component();
 

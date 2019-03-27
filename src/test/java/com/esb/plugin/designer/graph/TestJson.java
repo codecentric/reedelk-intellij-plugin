@@ -1,4 +1,4 @@
-package com.esb.plugin.graph;
+package com.esb.plugin.designer.graph;
 
 import java.net.URL;
 

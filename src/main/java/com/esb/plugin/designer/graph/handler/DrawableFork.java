@@ -1,26 +1,21 @@
-package com.esb.plugin.graph.handler;
+package com.esb.plugin.designer.graph.handler;
 
 import com.esb.plugin.designer.editor.component.Component;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
-public class DrawableGeneric extends AbstractDrawable {
+public class DrawableFork extends AbstractDrawable {
 
-    private final Image image = Toolkit.getDefaultToolkit().getImage("/Users/lorenzo/Desktop/log.png");
+    private final Image image = Toolkit.getDefaultToolkit().getImage("/Users/lorenzo/Desktop/fork.png");
 
-    public DrawableGeneric(Component component) {
+    public DrawableFork(Component component) {
         super(component);
     }
 
     @Override
     public void draw(Graphics graphics, ImageObserver observer) {
 
-    }
-
-    @Override
-    public boolean contains(Point point) {
-        return false;
     }
 
     @Override

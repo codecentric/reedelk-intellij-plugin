@@ -1,4 +1,4 @@
-package com.esb.plugin.graph.handler;
+package com.esb.plugin.designer.graph.handler;
 
 import com.esb.internal.commons.JsonParser;
 import com.google.common.collect.ImmutableMap;

@@ -1,13 +1,12 @@
 package com.esb.plugin.designer.editor;
 
 import com.esb.internal.commons.FileUtils;
-import com.esb.plugin.designer.editor.common.FlowDataStructure;
 import com.esb.plugin.designer.editor.designer.DesignerPanel;
 import com.esb.plugin.designer.editor.designer.ScrollableDesignerPanel;
 import com.esb.plugin.designer.editor.palette.PalettePanel;
 import com.esb.plugin.designer.editor.properties.PropertiesPanel;
-import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.FlowGraphBuilder;
+import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.FlowGraphBuilder;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -26,20 +25,9 @@ public class FlowEditorPanel extends ThreeComponentsSplitter {
     public FlowEditorPanel(Project project, VirtualFile file) {
         super(VERTICAL);
 
-        FlowGraph graph;
-        try {
-            String json = FileUtils.readFrom(new URL(file.getUrl()));
-            FlowGraphBuilder builder = new FlowGraphBuilder(json);
-            graph = builder.get();
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return;
-        }
+        FlowGraph graph = buildGraphFromFile(file);
 
         PalettePanel palettePanel = new PalettePanel();
-
-        FlowDataStructure flowDataStructure = new FlowDataStructure();
         DesignerPanel designerPanel = new DesignerPanel(graph);
         ScrollableDesignerPanel scrollableDesignerPanel = new ScrollableDesignerPanel(designerPanel);
 
@@ -52,7 +40,15 @@ public class FlowEditorPanel extends ThreeComponentsSplitter {
         setInnerComponent(paletteAndDesignerSplitter);
         setLastComponent(new PropertiesPanel());
         setLastSize(PROPERTIES_PANEL_SIZE);
-
     }
 
+    private FlowGraph buildGraphFromFile(VirtualFile file) {
+        try {
+            String json = FileUtils.readFrom(new URL(file.getUrl()));
+            FlowGraphBuilder builder = new FlowGraphBuilder(json);
+            return builder.get();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

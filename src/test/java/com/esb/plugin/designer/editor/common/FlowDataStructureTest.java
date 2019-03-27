@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.editor.common;
 
 
-import com.esb.plugin.graph.handler.Drawable;
+import com.esb.plugin.designer.graph.Drawable;
 import com.google.common.graph.MutableGraph;
 import org.assertj.core.util.introspection.FieldSupport;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.doReturn;
 class FlowDataStructureTest {
 
     @Mock
-    private com.esb.plugin.graph.handler.Drawable N1;
+    private Drawable N1;
     @Mock
     private Drawable N2;
     @Mock

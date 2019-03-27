@@ -1,4 +1,4 @@
-package com.esb.plugin.designer.editor.common;
+package com.esb.plugin.designer.editor;
 
 import com.google.common.graph.Graph;
 

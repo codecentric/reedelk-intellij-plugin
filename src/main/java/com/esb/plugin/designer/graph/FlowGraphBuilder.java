@@ -1,8 +1,7 @@
-package com.esb.plugin.graph;
+package com.esb.plugin.designer.graph;
 
 import com.esb.internal.commons.JsonParser;
-import com.esb.plugin.graph.handler.Drawable;
-import com.esb.plugin.graph.handler.HandlerFactory;
+import com.esb.plugin.designer.graph.handler.HandlerFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -22,7 +21,7 @@ public class FlowGraphBuilder {
     public FlowGraph get() {
         JSONArray flow = JsonParser.Flow.getFlow(flowDefinition);
 
-        Drawable current = null;
+        Node current = null;
         for (int i = 0; i < flow.length(); i++) {
             JSONObject implementorDefinition = (JSONObject) flow.get(i);
 

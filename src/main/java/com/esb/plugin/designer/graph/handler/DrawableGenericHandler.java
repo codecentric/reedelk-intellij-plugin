@@ -1,14 +1,15 @@
-package com.esb.plugin.graph.handler;
+package com.esb.plugin.designer.graph.handler;
 
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.designer.editor.component.Component;
-import com.esb.plugin.graph.FlowGraph;
+import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.Node;
 import org.json.JSONObject;
 
 public class DrawableGenericHandler implements DrawableComponentHandler<DrawableGeneric> {
 
     @Override
-    public DrawableGeneric handle(Drawable parent, JSONObject implementorDefinition, FlowGraph graph) {
+    public DrawableGeneric handle(Node parent, JSONObject implementorDefinition, FlowGraph graph) {
 
         String name = JsonParser.Implementor.name(implementorDefinition);
 

@@ -1,8 +1,7 @@
-package com.esb.plugin.graph;
+package com.esb.plugin.designer.graph;
 
 import com.esb.internal.commons.FileUtils;
 import com.esb.plugin.designer.editor.component.Component;
-import com.esb.plugin.graph.handler.Drawable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
