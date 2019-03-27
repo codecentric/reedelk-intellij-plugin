@@ -44,7 +44,9 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
         graph.breadthFirstTraversal(graph.root(), node -> {
             Rectangle2D stringBounds = g.getFontMetrics().getStringBounds(node.stringValue(), g);
             int width = (int) Math.floor(stringBounds.getWidth());

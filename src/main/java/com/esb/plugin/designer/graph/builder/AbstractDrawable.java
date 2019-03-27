@@ -20,7 +20,8 @@ abstract class AbstractDrawable implements Node {
 
     @Override
     public String stringValue() {
-        return component.getName();
+        String[] segments = component.getName().split("\\.");
+        return segments[segments.length - 1];
     }
 
     @Override
