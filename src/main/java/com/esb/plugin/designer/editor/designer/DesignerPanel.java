@@ -1,6 +1,5 @@
 package com.esb.plugin.designer.editor.designer;
 
-import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.Node;
 import com.intellij.ui.JBColor;
@@ -11,8 +10,10 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.geom.Rectangle2D;
 import java.util.Optional;
+
+import static java.awt.RenderingHints.KEY_ANTIALIASING;
+import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
 public class DesignerPanel extends JBPanel implements MouseMotionListener, MouseListener {
 
@@ -42,29 +43,12 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
-        graph.breadthFirstTraversal(graph.root(), node -> {
-            Rectangle2D stringBounds = g.getFontMetrics().getStringBounds(node.stringValue(), g);
-            int width = (int) Math.floor(stringBounds.getWidth());
-            int height = (int) Math.floor(stringBounds.getHeight());
-
-            int circleWidth = Math.floorDiv(Tile.WIDTH, 2);
-            int circleHeight = Math.floorDiv(Tile.HEIGHT, 2);
-
-            g.drawString(
-                    node.stringValue(),
-                    node.x() - Math.floorDiv(width, 2),
-                    node.y() + Math.floorDiv(height, 2));
-            g.drawOval(
-                    node.x() - Math.floorDiv(circleWidth, 2),
-                    node.y() - Math.floorDiv(circleHeight, 2),
-                    circleWidth,
-                    circleHeight);
-        });
+    protected void paintComponent(Graphics graphics) {
+        super.paintComponent(graphics);
+        Graphics2D g2 = (Graphics2D) graphics;
+        g2.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
+        graph.breadthFirstTraversal(graph.root(),
+                node -> node.draw(graphics, this));
     }
 
     @Override
