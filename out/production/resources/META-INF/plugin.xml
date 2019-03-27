@@ -1,0 +1,66 @@
+<idea-plugin>
+    <id>com.esb.intellij.designer</id>
+    <name>ESB Flow Designer</name>
+    <vendor email="support@esb.com" url="http://www.esb.com">ESB</vendor>
+
+    <description>
+        <![CDATA[
+    <p>1.0.0-SNAPSHOT</p>
+    <ul>
+        <li>First Release</li>
+    </ul>
+    <p>1.0.0-SNAPSHOT</p>
+    <ul>
+        <li>First Release</li>
+    </ul>
+    ]]>
+    </description>
+
+    <depends>com.intellij.modules.lang</depends>
+    <depends>org.jetbrains.idea.maven</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+
+        <!-- File Type -->
+        <fileTypeFactory implementation="com.esb.plugin.filetype.FlowFileTypeFactory"/>
+        <fileTypeFactory implementation="com.esb.plugin.filetype.FlowConfigFileTypeFactory"/>
+
+        <!-- File Templates -->
+        <internalFileTemplate name="Maven Module"/>
+        <internalFileTemplate name="Maven Project"/>
+
+        <stepsBeforeRunProvider
+                implementation="com.esb.plugin.runconfig.module.beforetask.ESBModuleBuildBeforeTaskProvider"/>
+
+        <!-- Module Builder -->
+        <moduleBuilder builderClass="com.esb.plugin.module.builder.ESBModuleBuilder" id="ESB_MODULE_BUILDER" order="first"/>
+
+        <!-- Services -->
+        <projectService serviceInterface="com.esb.plugin.service.project.filechange.ESBFileChangeService"
+                        serviceImplementation="com.esb.plugin.service.project.filechange.impl.ESBFileChangeServiceImpl"/>
+
+        <projectService serviceInterface="com.esb.plugin.service.project.toolwindow.ESBToolWindowService"
+                        serviceImplementation="com.esb.plugin.service.project.toolwindow.impl.ESBToolWindowServiceImpl"/>
+
+        <applicationService serviceInterface="com.esb.plugin.service.application.http.ESBHttpService"
+                            serviceImplementation="com.esb.plugin.service.application.http.impl.ESBHttpServiceImpl"/>
+
+        <!-- Program Runner and Executors -->
+        <programRunner implementation="com.esb.plugin.runconfig.module.runner.ESBDeploymentRunner" order="first"/>
+        <executor implementation="com.esb.plugin.runconfig.module.runner.ESBModuleDeployExecutor"/>
+        <executor implementation="com.esb.plugin.runconfig.module.runner.ESBModuleUnDeployExecutor"/>
+
+
+        <!-- Run Configurations -->
+        <configurationType implementation="com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfigurationType"/>
+        <configurationType implementation="com.esb.plugin.runconfig.module.ESBModuleRunConfigurationType"/>
+
+        <fileEditorProvider implementation="com.esb.plugin.designer.editor.FlowEditorProvider"/>
+
+    </extensions>
+
+    <actions>
+
+    </actions>
+
+</idea-plugin>
