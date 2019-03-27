@@ -45,10 +45,7 @@ public class DrawableChoiceHandler implements DrawableComponentHandler<StopDrawa
         JSONArray otherwise = JsonParser.Choice.getOtherwise(implementorDefinition);
         for (int i = 0; i < otherwise.length(); i++) {
             JSONObject currentComponentDef = otherwise.getJSONObject(i);
-            Node lastNode = HandlerFactory.get(currentComponentDef).handle(currentNode, currentComponentDef, graph);
-
-            graph.add(currentNode, lastNode);
-            currentNode = lastNode;
+            currentNode = HandlerFactory.get(currentComponentDef).handle(currentNode, currentComponentDef, graph);
         }
 
 
