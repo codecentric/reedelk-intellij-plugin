@@ -19,11 +19,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(MockitoExtension.class)
 abstract class AbstractBuilderTest {
 
-    protected Drawable firstSuccessorOf(FlowGraph graph, Drawable target) {
+    Drawable firstSuccessorOf(FlowGraph graph, Drawable target) {
         return graph.successors(target).stream().findFirst().get();
     }
 
-    protected void assertSuccessorsAre(FlowGraph graph, Drawable target, String... successorsComponentNames) {
+    void assertSuccessorsAre(FlowGraph graph, Drawable target, String... successorsComponentNames) {
         int numberOfSuccessors = successorsComponentNames.length;
         List<Drawable> successors = graph.successors(target);
         assertThat(successors).isNotNull();
@@ -36,7 +36,7 @@ abstract class AbstractBuilderTest {
         assertThat(toBeFound).isEmpty();
     }
 
-    protected void assertPredecessorsAre(FlowGraph graph, Drawable target, String... predecessorsComponentsNames) {
+    void assertPredecessorsAre(FlowGraph graph, Drawable target, String... predecessorsComponentsNames) {
         int numberOfPredecessors = predecessorsComponentsNames.length;
         List<Drawable> predecessors = graph.predecessors(target);
         assertThat(predecessors).isNotNull();
@@ -49,7 +49,7 @@ abstract class AbstractBuilderTest {
         assertThat(toBeFound).isEmpty();
     }
 
-    protected Drawable getDrawableWithComponentName(Collection<Drawable> drawableCollection, String componentName) {
+    Drawable getDrawableWithComponentName(Collection<Drawable> drawableCollection, String componentName) {
         for (Drawable successor : drawableCollection) {
             Component component = successor.component();
             if (componentName.equals(component.getName())) {
@@ -59,14 +59,14 @@ abstract class AbstractBuilderTest {
         throw new RuntimeException("Could not find: " + componentName);
     }
 
-    protected void assertThatComponentHasName(Drawable target, String expectedName) {
+    void assertThatComponentHasName(Drawable target, String expectedName) {
         assertThat(target).isNotNull();
         Component component = target.component();
         assertThat(component).isNotNull();
         assertThat(component.getName()).isEqualTo(expectedName);
     }
 
-    protected String readJson(TestJson testJson) {
+    String readJson(TestJson testJson) {
         URL url = testJson.url();
         return FileUtils.readFrom(url);
     }

@@ -1,5 +1,6 @@
 package com.esb.plugin.designer.graph.builder;
 
+import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import org.json.JSONObject;
@@ -36,10 +37,11 @@ class GenericDrawableBuilderTest extends AbstractBuilderTest {
         Drawable genericDrawable = builder.build(root, componentDefinition, graph);
 
         // Then
-        assertThat(genericDrawable).isNotNull();
-        assertThat(genericDrawable.component().getName()).isEqualTo(GENERIC_COMPONENT_NAME);
-
         assertThat(graph.nodesCount()).isEqualTo(2);
+
+        Component component = genericDrawable.component();
+        assertThat(component).isNotNull();
+        assertThat(component.getName()).isEqualTo(GENERIC_COMPONENT_NAME);
     }
 
 }

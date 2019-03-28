@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class ComponentDefinitionBuilder {
 
-    public static JSONArray createNextComponentsArray(String... componentsNames) {
+    static JSONArray createNextComponentsArray(String... componentsNames) {
         JSONArray nextComponents = new JSONArray();
         for (String componentName : componentsNames) {
             nextComponents.put(ComponentDefinitionBuilder.forComponent(componentName)
@@ -20,7 +20,7 @@ public class ComponentDefinitionBuilder {
         return nextComponents;
     }
 
-    public static Builder forComponent(String componentName) {
+    static Builder forComponent(String componentName) {
         Builder builder = new Builder();
         builder.with(JsonParser.Implementor.name(), componentName);
         return builder;
@@ -30,12 +30,12 @@ public class ComponentDefinitionBuilder {
 
         private Map<String, Object> componentProperties = new HashMap<>();
 
-        public Builder with(String propertyName, Object propertyValue) {
+        Builder with(String propertyName, Object propertyValue) {
             componentProperties.put(propertyName, propertyValue);
             return this;
         }
 
-        public JSONObject build() {
+        JSONObject build() {
             JSONObject componentDefinition = new JSONObject();
             for (Map.Entry<String, Object> entry : componentProperties.entrySet()) {
                 componentDefinition.put(entry.getKey(), entry.getValue());
