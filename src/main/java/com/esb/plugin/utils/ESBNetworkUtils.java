@@ -1,4 +1,4 @@
-package com.esb.plugin.test.utils;
+package com.esb.plugin.utils;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

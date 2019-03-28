@@ -2,7 +2,7 @@ package com.esb.plugin.designer.graph.builder;
 
 import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.Node;
-import com.esb.plugin.test.utils.ESBIcons;
+import com.esb.plugin.utils.ESBIcons;
 import com.intellij.ui.JBColor;
 
 import java.awt.*;
