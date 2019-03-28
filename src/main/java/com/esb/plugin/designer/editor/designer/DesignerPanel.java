@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.editor.designer;
 
+import com.esb.plugin.designer.graph.Drawable;
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.Node;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.util.ui.JBDimension;
@@ -26,7 +26,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     private final FlowGraph graph;
 
     private boolean dragging;
-    private Node selected;
+    private Drawable selected;
     private int offsetx;
     private int offsety;
 
@@ -82,7 +82,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     public void mouseMoved(MouseEvent event) {
         int x = event.getX();
         int y = event.getY();
-        Optional<Node> first = getDrawableWithin(x, y);
+        Optional<Drawable> first = getDrawableWithin(x, y);
         if (first.isPresent()) {
             setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         } else {
@@ -137,13 +137,13 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     }
 
-    private Optional<Node> getDrawableWithin(int x, int y) {
+    private Optional<Drawable> getDrawableWithin(int x, int y) {
         // TODO: Implement this
         //return drawableList.stream().filter(drawable -> drawable.contains(new Point(x, y))).findFirst();
         return Optional.empty();
     }
 
-    public void add(Node component) {
+    public void add(Drawable component) {
         /**
         int x = component.getPosition().x;
         int y = component.getPosition().y;
@@ -155,7 +155,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         //drawableList.add(component);
     }
 
-    private void computeSnapToGridCoordinates(Node drawable, int x, int y) {
+    private void computeSnapToGridCoordinates(Drawable drawable, int x, int y) {
         // Get the closest X and Y coordinate to the center of a Tile
         /**
          int snapX = Math.floorDiv(x, Tile.INSTANCE.width) * Tile.INSTANCE.width;

@@ -1,0 +1,22 @@
+package com.esb.plugin.designer.graph;
+
+import com.esb.plugin.designer.editor.component.Component;
+
+import java.awt.*;
+import java.awt.image.ImageObserver;
+
+public interface Drawable {
+
+    Component component();
+
+    String displayName();
+
+    void draw(Graphics graphics, ImageObserver observer);
+
+    void setPosition(int x, int y);
+
+    int y();
+
+    int x();
+
+}

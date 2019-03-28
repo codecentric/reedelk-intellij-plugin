@@ -2,15 +2,17 @@ package com.esb.plugin.designer.graph.builder;
 
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.designer.editor.component.Component;
+import com.esb.plugin.designer.graph.Drawable;
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.Node;
+import com.esb.plugin.designer.graph.drawable.DrawableChoice;
+import com.esb.plugin.designer.graph.drawable.StopDrawable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class DrawableChoiceHandler implements DrawableComponentHandler<StopDrawable> {
 
     @Override
-    public StopDrawable handle(Node parent, JSONObject implementorDefinition, FlowGraph graph) {
+    public StopDrawable handle(Drawable parent, JSONObject implementorDefinition, FlowGraph graph) {
 
         StopDrawable stopDrawable = new StopDrawable();
 
@@ -27,30 +29,30 @@ public class DrawableChoiceHandler implements DrawableComponentHandler<StopDrawa
         for (int i = 0; i < when.length(); i++) {
             JSONObject whenComponent = when.getJSONObject(i);
 
-            Node currentNode = drawableChoice;
+            Drawable currentDrawable = drawableChoice;
 
             JSONArray next = JsonParser.Choice.getNext(whenComponent);
             for (int j = 0; j < next.length(); j++) {
                 JSONObject currentComponentDef = next.getJSONObject(j);
-                currentNode = HandlerFactory.get(currentComponentDef).handle(currentNode, currentComponentDef, graph);
+                currentDrawable = HandlerFactory.get(currentComponentDef).handle(currentDrawable, currentComponentDef, graph);
             }
 
-            graph.add(currentNode, stopDrawable);
+            graph.add(currentDrawable, stopDrawable);
         }
 
 
         // Otherwise
-        Node currentNode = drawableChoice;
+        Drawable currentDrawable = drawableChoice;
 
         JSONArray otherwise = JsonParser.Choice.getOtherwise(implementorDefinition);
         for (int i = 0; i < otherwise.length(); i++) {
             JSONObject currentComponentDef = otherwise.getJSONObject(i);
-            currentNode = HandlerFactory.get(currentComponentDef).handle(currentNode, currentComponentDef, graph);
+            currentDrawable = HandlerFactory.get(currentComponentDef).handle(currentDrawable, currentComponentDef, graph);
         }
 
 
         // Last node is stop node.
-        graph.add(currentNode, stopDrawable);
+        graph.add(currentDrawable, stopDrawable);
         return stopDrawable;
     }
 }

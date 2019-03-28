@@ -2,8 +2,8 @@ package com.esb.plugin.designer.graph.builder;
 
 import com.esb.internal.commons.FileUtils;
 import com.esb.plugin.designer.editor.component.Component;
+import com.esb.plugin.designer.graph.Drawable;
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.Node;
 import com.esb.plugin.designer.graph.TestJson;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,51 +33,51 @@ class FlowGraphBuilderTest {
         // Then
         assertThat(graph).isNotNull();
 
-        Node root = graph.root();
+        Drawable root = graph.root();
         assertThatComponentHasName(root, "com.esb.rest.component.RestListener");
         assertSuccessorsAre(graph, root, "com.esb.component.Choice");
 
-        Node choice = findFirstSuccessor(graph, root);
+        Drawable choice = findFirstSuccessor(graph, root);
         assertSuccessorsAre(graph, choice,
                 "com.esb.core.component.SetPayload1",
                 "com.esb.core.component.SetPayload2",
                 "com.esb.core.component.SetPayload3");
 
 
-        Node setPayload1 = getNode(graph.successors(choice), "com.esb.core.component.SetPayload1");
-        Node stopNode = findFirstSuccessor(graph, setPayload1);
-        assertSuccessorsAre(graph, stopNode, "com.esb.rest.component.SetHeader");
+        Drawable setPayload1 = getNode(graph.successors(choice), "com.esb.core.component.SetPayload1");
+        Drawable stopDrawable = findFirstSuccessor(graph, setPayload1);
+        assertSuccessorsAre(graph, stopDrawable, "com.esb.rest.component.SetHeader");
 
-        Node setHeaderNode = findFirstSuccessor(graph, stopNode);
-        assertSuccessorsAre(graph, setHeaderNode, "com.esb.rest.component.SetStatus");
+        Drawable setHeaderDrawable = findFirstSuccessor(graph, stopDrawable);
+        assertSuccessorsAre(graph, setHeaderDrawable, "com.esb.rest.component.SetStatus");
 
-        Node setStatusNode = findFirstSuccessor(graph, setHeaderNode);
-        assertSuccessorsAre(graph, setStatusNode, "com.esb.logger.component.LogComponent");
+        Drawable setStatusDrawable = findFirstSuccessor(graph, setHeaderDrawable);
+        assertSuccessorsAre(graph, setStatusDrawable, "com.esb.logger.component.LogComponent");
 
 
-        Node logComponentNode = findFirstSuccessor(graph, setStatusNode);
-        assertThat(graph.successors(logComponentNode)).isEmpty();
+        Drawable logComponentDrawable = findFirstSuccessor(graph, setStatusDrawable);
+        assertThat(graph.successors(logComponentDrawable)).isEmpty();
     }
 
-    private Node findFirstSuccessor(FlowGraph graph, Node target) {
+    private Drawable findFirstSuccessor(FlowGraph graph, Drawable target) {
         return graph.successors(target).stream().findFirst().get();
     }
 
-    private void assertSuccessorsAre(FlowGraph graph, Node target, String... successorsComponentNames) {
+    private void assertSuccessorsAre(FlowGraph graph, Drawable target, String... successorsComponentNames) {
         int numberOfSuccessors = successorsComponentNames.length;
-        List<Node> successors = graph.successors(target);
+        List<Drawable> successors = graph.successors(target);
         assertThat(successors).isNotNull();
         assertThat(successors).hasSize(numberOfSuccessors);
         Collection<String> toBeFound = new ArrayList<>(Arrays.asList(successorsComponentNames));
-        for (Node successor : successors) {
+        for (Drawable successor : successors) {
             String componentName = successor.component().getName();
             toBeFound.remove(componentName);
         }
         assertThat(toBeFound).isEmpty();
     }
 
-    private Node getNode(Collection<Node> drawableCollection, String componentName) {
-        for (Node successor : drawableCollection) {
+    private Drawable getNode(Collection<Drawable> drawableCollection, String componentName) {
+        for (Drawable successor : drawableCollection) {
             Component component = successor.component();
             if (componentName.equals(component.getName())) {
                 return successor;
@@ -86,7 +86,7 @@ class FlowGraphBuilderTest {
         throw new RuntimeException("Could not find: " + componentName);
     }
 
-    private void assertThatComponentHasName(Node target, String expectedName) {
+    private void assertThatComponentHasName(Drawable target, String expectedName) {
         assertThat(target).isNotNull();
         Component component = target.component();
         assertThat(component).isNotNull();

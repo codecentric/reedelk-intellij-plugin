@@ -11,9 +11,9 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class FlowGraph {
 
-    private DirectedGraph<Node> graph;
+    private DirectedGraph<Drawable> graph;
 
-    public void add(@Nullable Node n1, @NotNull Node n2) {
+    public void add(@Nullable Drawable n1, @NotNull Drawable n2) {
         if (n1 == null) {
             checkState(graph == null, "Root was not null");
             graph = new DirectedGraph<>(n2);
@@ -23,11 +23,11 @@ public class FlowGraph {
         }
     }
 
-    public List<Node> successors(@NotNull Node n1) {
+    public List<Drawable> successors(@NotNull Drawable n1) {
         return graph.successors(n1);
     }
 
-    public Node root() {
+    public Drawable root() {
         return graph.root();
     }
 
@@ -36,8 +36,8 @@ public class FlowGraph {
         positions.compute();
     }
 
-    public void breadthFirstTraversal(Node node, Consumer<Node> consumer) {
-        graph.breadthFirstTraversal(node, consumer);
+    public void breadthFirstTraversal(Drawable drawable, Consumer<Drawable> consumer) {
+        graph.breadthFirstTraversal(drawable, consumer);
     }
 
 }

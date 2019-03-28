@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.graph.layout;
 
 import com.esb.plugin.designer.graph.DirectedGraph;
-import com.esb.plugin.designer.graph.Node;
+import com.esb.plugin.designer.graph.Drawable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,35 +15,35 @@ import java.util.stream.Collectors;
 // [3] ["N7"]
 class FlowGraphLayers {
 
-    private final DirectedGraph<Node> graph;
+    private final DirectedGraph<Drawable> graph;
 
-    FlowGraphLayers(DirectedGraph<Node> graph) {
+    FlowGraphLayers(DirectedGraph<Drawable> graph) {
         this.graph = graph.copy();
     }
 
-    List<List<Node>> compute() {
-        List<List<Node>> sorted = new ArrayList<>();
+    List<List<Drawable>> compute() {
+        List<List<Drawable>> sorted = new ArrayList<>();
 
-        List<Node> noIncomingEdgesNodes = getNodesWithoutIncomingEdges();
+        List<Drawable> noIncomingEdgesDrawables = getNodesWithoutIncomingEdges();
 
-        while (!noIncomingEdgesNodes.isEmpty()) {
-            sorted.add(noIncomingEdgesNodes);
+        while (!noIncomingEdgesDrawables.isEmpty()) {
+            sorted.add(noIncomingEdgesDrawables);
 
             // Remove all edges starting from nodes in noIncomingEdgesNodes
-            noIncomingEdgesNodes.forEach(graph::removeEdgesStartingFrom);
+            noIncomingEdgesDrawables.forEach(graph::removeEdgesStartingFrom);
 
             // Remove all nodes without incoming edge
-            noIncomingEdgesNodes.forEach(graph::removeNode);
+            noIncomingEdgesDrawables.forEach(graph::removeNode);
 
             // Recompute nodes without incoming edges
-            noIncomingEdgesNodes = getNodesWithoutIncomingEdges();
+            noIncomingEdgesDrawables = getNodesWithoutIncomingEdges();
         }
 
         return sorted;
     }
 
-    private List<Node> getNodesWithoutIncomingEdges() {
-        List<Node> collect = graph
+    private List<Drawable> getNodesWithoutIncomingEdges() {
+        List<Drawable> collect = graph
                 .nodes()
                 .stream()
                 .filter(node -> graph.predecessors(node).isEmpty())

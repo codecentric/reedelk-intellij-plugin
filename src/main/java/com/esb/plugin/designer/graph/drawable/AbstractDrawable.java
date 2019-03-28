@@ -1,7 +1,7 @@
-package com.esb.plugin.designer.graph.builder;
+package com.esb.plugin.designer.graph.drawable;
 
 import com.esb.plugin.designer.editor.component.Component;
-import com.esb.plugin.designer.graph.Node;
+import com.esb.plugin.designer.graph.Drawable;
 import com.esb.plugin.utils.ESBIcons;
 import com.intellij.ui.JBColor;
 
@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ImageObserver;
 
-abstract class AbstractDrawable implements Node {
+abstract class AbstractDrawable implements Drawable {
 
     protected final Image image;
     private final Component component;
@@ -29,7 +29,7 @@ abstract class AbstractDrawable implements Node {
         int textTopY = y() + Math.floorDiv(image.getHeight(observer), 2);
 
         graphics.setColor(JBColor.GRAY);
-        textTopY += drawText(graphics, stringValue(), textCenterX, textTopY);
+        textTopY += drawText(graphics, displayName(), textCenterX, textTopY);
 
         graphics.setColor(JBColor.LIGHT_GRAY);
         drawText(graphics, "A Description", textCenterX, textTopY);
@@ -52,7 +52,7 @@ abstract class AbstractDrawable implements Node {
     }
 
     @Override
-    public String stringValue() {
+    public String displayName() {
         String[] segments = component.getName().split("\\.");
         return segments[segments.length - 1];
     }
