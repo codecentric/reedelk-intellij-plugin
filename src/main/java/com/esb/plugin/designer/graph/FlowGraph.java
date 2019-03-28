@@ -9,11 +9,19 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 
 public class FlowGraph {
 
     private DirectedGraph<Drawable> graph;
+
+    public FlowGraph() {
+    }
+
+    private FlowGraph(DirectedGraph<Drawable> graph) {
+        this.graph = graph;
+    }
 
     public void add(@Nullable Drawable n1, @NotNull Drawable n2) {
         if (n1 == null) {
@@ -23,6 +31,16 @@ public class FlowGraph {
         } else {
             graph.putEdge(n1, n2);
         }
+    }
+
+    public void remove(Drawable n1) {
+        graph.removeNode(n1);
+    }
+
+    public void remove(Drawable n1, Drawable n2) {
+        checkArgument(n1 != null, "n1");
+        checkArgument(n2 != null, "n2");
+        graph.removeEdge(n1, n2);
     }
 
     public List<Drawable> successors(@NotNull Drawable n1) {
@@ -45,6 +63,10 @@ public class FlowGraph {
         graph.breadthFirstTraversal(drawable, consumer);
     }
 
+    public void breadthFirstTraversal(@NotNull Consumer<Drawable> consumer) {
+        graph.breadthFirstTraversal(graph.root(), consumer);
+    }
+
     public Drawable root() {
         return graph.root();
     }
@@ -53,4 +75,9 @@ public class FlowGraph {
         FlowGraphLayout positions = new FlowGraphLayout(graph);
         positions.compute();
     }
+
+    public FlowGraph copy() {
+        return new FlowGraph(graph.copy());
+    }
+
 }

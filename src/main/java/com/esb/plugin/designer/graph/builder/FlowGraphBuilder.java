@@ -25,15 +25,11 @@ public class FlowGraphBuilder {
         Drawable current = null;
         for (int i = 0; i < flow.length(); i++) {
             JSONObject implementorDefinition = (JSONObject) flow.get(i);
-
             current = BuilderFactory
                     .get(implementorDefinition)
                     .build(current, implementorDefinition, flowGraph);
-
         }
 
-        // TODO: Remove all stop drawables! When we display the graph we don't need it
-        return flowGraph;
+        return RemoveStopDrawables.from(flowGraph);
     }
-
 }
