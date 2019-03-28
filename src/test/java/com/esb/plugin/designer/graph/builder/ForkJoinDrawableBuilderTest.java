@@ -15,11 +15,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ForkJoinDrawableBuilderTest extends AbstractBuilderTest {
 
+    private final String STOP_COMPONENT_NAME = "Stop";
+    private final String JOIN_COMPONENT_NAME = "com.esb.component.JoinString";
+
     private final String COMPONENT_1_NAME = "com.esb.component.Name1";
     private final String COMPONENT_2_NAME = "com.esb.component.Name2";
     private final String COMPONENT_3_NAME = "com.esb.component.Name3";
     private final String COMPONENT_4_NAME = "com.esb.component.Name4";
-    private final String JOIN_COMPONENT_NAME = "com.esb.component.JoinString";
 
     @Mock
     private Drawable root;
@@ -53,7 +55,7 @@ class ForkJoinDrawableBuilderTest extends AbstractBuilderTest {
         // When
         Drawable joinDrawable = builder.build(root, componentDefinition, graph);
 
-        // Then: last node must be a stop drawable
+        // Then: last node must be a join drawable
         assertThat(joinDrawable.component().getName()).isEqualTo(JOIN_COMPONENT_NAME);
 
         // Then: check successors of fork
@@ -62,15 +64,19 @@ class ForkJoinDrawableBuilderTest extends AbstractBuilderTest {
 
         Drawable component3Drawable = getDrawableWithComponentName(graph.successors(fork), COMPONENT_3_NAME);
         assertSuccessorsAre(graph, component3Drawable, COMPONENT_2_NAME);
-        //Drawable component2Drawable = getDrawableWithComponentName(graph.successors(component3Drawable), COMPONENT_2_NAME);
 
+        Drawable component2Drawable = getDrawableWithComponentName(graph.successors(component3Drawable), COMPONENT_2_NAME);
+        assertSuccessorsAre(graph, component2Drawable, STOP_COMPONENT_NAME);
 
         Drawable component1Drawable = getDrawableWithComponentName(graph.successors(fork), COMPONENT_1_NAME);
         assertSuccessorsAre(graph, component1Drawable, COMPONENT_4_NAME);
 
+        Drawable component4Drawable = getDrawableWithComponentName(graph.successors(component1Drawable), COMPONENT_4_NAME);
+        assertSuccessorsAre(graph, component4Drawable, STOP_COMPONENT_NAME);
 
-
-
+        Drawable stopDrawable = getDrawableWithComponentName(graph.successors(component4Drawable), STOP_COMPONENT_NAME);
+        Drawable stopSuccessor = graph.successors(stopDrawable).get(0);
+        assertThat(joinDrawable).isEqualTo(stopSuccessor);
     }
 
     private JSONObject createNextObject(String... componentNames) {
