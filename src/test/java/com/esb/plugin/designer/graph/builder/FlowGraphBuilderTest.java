@@ -47,4 +47,49 @@ class FlowGraphBuilderTest extends AbstractBuilderTest {
         assertThat(graph.successors(logComponentDrawable)).isEmpty();
     }
 
+    @Test
+    void shouldBuildFlowWithForkJoinCorrectly() {
+        // Given
+
+        // When
+
+        // Then
+    }
+
+    @Test
+    void shouldBuildFlowWithGenericComponentCorrectly() {
+        // Given
+
+        // When
+
+        // Then
+    }
+
+    @Test
+    void shouldBuildFlowWithFlowReferenceCorrectly() {
+        // Given
+
+        // When
+
+        // Then
+    }
+
+    @Test
+    void shouldBuildEmptyFlowCorrectly() {
+        // Given
+
+        // When
+
+        // Then
+    }
+
+    @Test
+    void shouldThrowExceptionWhenJsonIsNotParsable() {
+        // Given
+
+        // When
+
+        // Then
+    }
+
 }

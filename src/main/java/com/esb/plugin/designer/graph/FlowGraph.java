@@ -28,6 +28,14 @@ public class FlowGraph {
         return graph.successors(n1);
     }
 
+    public List<Drawable> predecessors(@NotNull Drawable target) {
+        return graph.predecessors(target);
+    }
+
+    public void breadthFirstTraversal(@NotNull Drawable drawable, @NotNull Consumer<Drawable> consumer) {
+        graph.breadthFirstTraversal(drawable, consumer);
+    }
+
     public Drawable root() {
         return graph.root();
     }
@@ -36,9 +44,4 @@ public class FlowGraph {
         FlowGraphLayout positions = new FlowGraphLayout(graph);
         positions.compute();
     }
-
-    public void breadthFirstTraversal(Drawable drawable, Consumer<Drawable> consumer) {
-        graph.breadthFirstTraversal(drawable, consumer);
-    }
-
 }

@@ -7,10 +7,10 @@ import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.GenericComponentDrawable;
 import org.json.JSONObject;
 
-public class GenericDrawableBuilder implements Builder<GenericComponentDrawable> {
+public class GenericDrawableBuilder implements Builder {
 
     @Override
-    public GenericComponentDrawable build(Drawable parent, JSONObject componentDefinition, FlowGraph graph) {
+    public Drawable build(Drawable parent, JSONObject componentDefinition, FlowGraph graph) {
 
         String name = JsonParser.Implementor.name(componentDefinition);
 

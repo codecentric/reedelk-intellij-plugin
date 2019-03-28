@@ -9,10 +9,10 @@ import com.esb.plugin.designer.graph.drawable.StopDrawable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class ChoiceDrawableBuilder implements Builder<StopDrawable> {
+public class ChoiceDrawableBuilder implements Builder {
 
     @Override
-    public StopDrawable build(Drawable parent, JSONObject componentDefinition, FlowGraph graph) {
+    public Drawable build(Drawable parent, JSONObject componentDefinition, FlowGraph graph) {
 
         StopDrawable stopDrawable = new StopDrawable();
 

@@ -5,8 +5,8 @@ import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import org.json.JSONObject;
 
-public interface Builder<T extends Drawable> {
+public interface Builder {
 
-    T build(Drawable parent, JSONObject componentDefinition, FlowGraph graph);
+    Drawable build(Drawable parent, JSONObject componentDefinition, FlowGraph graph);
 
 }

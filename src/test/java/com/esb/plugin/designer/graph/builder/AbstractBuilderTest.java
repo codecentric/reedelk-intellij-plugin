@@ -36,6 +36,19 @@ abstract class AbstractBuilderTest {
         assertThat(toBeFound).isEmpty();
     }
 
+    protected void assertPredecessorsAre(FlowGraph graph, Drawable target, String... predecessorsComponentsNames) {
+        int numberOfPredecessors = predecessorsComponentsNames.length;
+        List<Drawable> predecessors = graph.predecessors(target);
+        assertThat(predecessors).isNotNull();
+        assertThat(predecessors).hasSize(numberOfPredecessors);
+        Collection<String> toBeFound = new ArrayList<>(Arrays.asList(predecessorsComponentsNames));
+        for (Drawable successor : predecessors) {
+            String componentName = successor.component().getName();
+            toBeFound.remove(componentName);
+        }
+        assertThat(toBeFound).isEmpty();
+    }
+
     protected Drawable getDrawableWithComponentName(Collection<Drawable> drawableCollection, String componentName) {
         for (Drawable successor : drawableCollection) {
             Component component = successor.component();

@@ -2,12 +2,12 @@ package com.esb.plugin.designer.graph.builder;
 
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
-import com.esb.plugin.designer.graph.drawable.StopDrawable;
 import org.json.JSONObject;
 
-public class FlowReferenceDrawableBuilder implements Builder<StopDrawable> {
+public class FlowReferenceDrawableBuilder implements Builder {
+
     @Override
-    public StopDrawable build(Drawable parent, JSONObject componentDefinition, FlowGraph graph) {
+    public Drawable build(Drawable parent, JSONObject componentDefinition, FlowGraph graph) {
         return null;
     }
 }
