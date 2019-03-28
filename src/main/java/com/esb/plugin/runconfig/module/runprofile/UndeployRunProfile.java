@@ -1,7 +1,7 @@
 package com.esb.plugin.runconfig.module.runprofile;
 
 import com.esb.plugin.service.application.rest.RESTModuleService;
-import com.esb.plugin.service.project.filechange.ESBFileChangeService;
+import com.esb.plugin.service.project.sourcechange.SourceChangeService;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.openapi.project.Project;
@@ -25,7 +25,7 @@ public class UndeployRunProfile extends AbstractRunProfile {
         // Un Deploy Module
         service.delete(moduleFile);
 
-        ESBFileChangeService.getInstance(project).changed(runtimeConfigName, moduleName);
+        SourceChangeService.getInstance(project).changed(runtimeConfigName, moduleName);
 
         String message = format("Module <b>%s</b> uninstalled", moduleName);
         switchToolWindowAndNotifyWithMessage(message);

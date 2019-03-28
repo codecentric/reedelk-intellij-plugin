@@ -1,7 +1,7 @@
 package com.esb.plugin.runconfig.module.runprofile;
 
 import com.esb.plugin.service.application.rest.RESTModuleService;
-import com.esb.plugin.service.project.filechange.ESBFileChangeService;
+import com.esb.plugin.service.project.sourcechange.SourceChangeService;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.openapi.project.Project;
@@ -25,7 +25,7 @@ public class DeployRunProfile extends AbstractRunProfile {
         RESTModuleService service = new RESTModuleService(address, port);
 
         // Check if we can hot swap the module flows.
-        if (ESBFileChangeService.getInstance(project).isHotSwap(runtimeConfigName, moduleName)) {
+        if (SourceChangeService.getInstance(project).isHotSwap(runtimeConfigName, moduleName)) {
             String mavenDirectory = mavenProject.getDirectory();
             Path resourcesRootDirectory = Paths.get(mavenDirectory, "src", "main", "resources");
 
@@ -39,7 +39,7 @@ public class DeployRunProfile extends AbstractRunProfile {
         } else {
             service.deploy(moduleFile);
 
-            ESBFileChangeService.getInstance(project).unchanged(runtimeConfigName, moduleName);
+            SourceChangeService.getInstance(project).unchanged(runtimeConfigName, moduleName);
 
             String message = format("Module <b>%s</b> updated", moduleName);
             switchToolWindowAndNotifyWithMessage(message);

@@ -1,7 +1,7 @@
 package com.esb.plugin.runconfig.runtime;
 
 import com.esb.plugin.commons.ESBNetworkUtils;
-import com.esb.plugin.service.project.filechange.ESBFileChangeService;
+import com.esb.plugin.service.project.sourcechange.SourceChangeService;
 import com.esb.plugin.service.project.toolwindow.ESBToolWindowService;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
@@ -76,7 +76,7 @@ public class ESBRuntimeRunConfiguration extends RunConfigurationBase<ESBRuntimeR
         checkPortAvailableOrThrow(runtimeBindAddress, Integer.parseInt(runtimePort));
 
         // Reset the state of the modules for this runtime
-        ESBFileChangeService.getInstance(getProject()).reset(getName());
+        SourceChangeService.getInstance(getProject()).reset(getName());
 
         // Store the ToolWindowId associated to this RunConfig. It will be used
         // later by a ModuleRun Configuration to switch to this tool window when a

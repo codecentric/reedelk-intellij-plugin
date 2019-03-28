@@ -4,7 +4,7 @@ import com.esb.plugin.commons.ESBIcons;
 import com.esb.plugin.commons.ESBMavenUtils;
 import com.esb.plugin.runconfig.module.ESBModuleRunConfiguration;
 import com.esb.plugin.runconfig.module.runner.ESBModuleUnDeployExecutor;
-import com.esb.plugin.service.project.filechange.ESBFileChangeService;
+import com.esb.plugin.service.project.sourcechange.SourceChangeService;
 import com.intellij.execution.BeforeRunTaskProvider;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.runners.ExecutionEnvironment;
@@ -106,7 +106,7 @@ public class ESBModuleBuildBeforeTaskProvider extends BeforeRunTaskProvider<ESBM
                 String runtimeConfigName = moduleRunConfiguration.getRuntimeConfigName();
 
                 // No Need to re-compile and build the project.
-                if (ESBFileChangeService.getInstance(env.getProject()).isHotSwap(runtimeConfigName, moduleName)) {
+                if (SourceChangeService.getInstance(env.getProject()).isHotSwap(runtimeConfigName, moduleName)) {
                     return;
                 }
 

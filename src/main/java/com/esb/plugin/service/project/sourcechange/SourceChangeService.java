@@ -1,13 +1,13 @@
-package com.esb.plugin.service.project.filechange;
+package com.esb.plugin.service.project.sourcechange;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
-public interface ESBFileChangeService {
+public interface SourceChangeService {
 
-    static ESBFileChangeService getInstance(@NotNull Project project) {
-        return ServiceManager.getService(project, ESBFileChangeService.class);
+    static SourceChangeService getInstance(@NotNull Project project) {
+        return ServiceManager.getService(project, SourceChangeService.class);
     }
 
     boolean isHotSwap(String runtimeConfigName, String moduleName);

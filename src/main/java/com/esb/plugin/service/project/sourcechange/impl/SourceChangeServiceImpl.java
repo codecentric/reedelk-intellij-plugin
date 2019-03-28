@@ -1,6 +1,6 @@
-package com.esb.plugin.service.project.filechange.impl;
+package com.esb.plugin.service.project.sourcechange.impl;
 
-import com.esb.plugin.service.project.filechange.ESBFileChangeService;
+import com.esb.plugin.service.project.sourcechange.SourceChangeService;
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 
 import static java.util.Arrays.stream;
 
-public class ESBFileChangeServiceImpl implements ESBFileChangeService, BulkFileListener, ModuleListener, Disposable {
+public class SourceChangeServiceImpl implements SourceChangeService, BulkFileListener, ModuleListener, Disposable {
 
     private static final String JAVA_SOURCE_EXTENSION = "java";
 
@@ -30,7 +30,7 @@ public class ESBFileChangeServiceImpl implements ESBFileChangeService, BulkFileL
     private Map<String,String> moduleNameRootPathMap = new HashMap<>();
     private Map<BiKey, Boolean> moduleNameChangedMap = new HashMap<>();
 
-    public ESBFileChangeServiceImpl(Project project, Application application) {
+    public SourceChangeServiceImpl(Project project, Application application) {
         project.getMessageBus()
                 .connect(this)
                 .subscribe(ProjectTopics.MODULES, this);

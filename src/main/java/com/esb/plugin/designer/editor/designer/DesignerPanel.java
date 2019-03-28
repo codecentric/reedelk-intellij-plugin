@@ -2,7 +2,9 @@ package com.esb.plugin.designer.editor.designer;
 
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.builder.FlowGraphBuilder;
 import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.intellij.openapi.project.Project;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
 
@@ -28,7 +30,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     private int offsetx;
     private int offsety;
 
-    public DesignerPanel(FlowGraph graph) {
+    public DesignerPanel(FlowGraph graph, Project project) {
         setBackground(BACKGROUND_COLOR);
 
 
@@ -38,6 +40,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         //this.flowDataStructure.setListener(this);
 
         SwingUtilities.invokeLater(new ComputeGraphPositionRunnable(this, graph));
+
     }
 
     @Override
@@ -50,6 +53,35 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
             graph.breadthFirstTraversal(graph.root(),
                     node -> node.draw(graphics, this));
         }
+    }
+
+
+    private FlowGraph buildGraph(String json) {
+        try {
+            FlowGraphBuilder builder = new FlowGraphBuilder(json);
+            return builder.graph();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void modifiedJson(String json) {
+        SwingUtilities.invokeLater(() -> {
+            FlowGraph flowGraph = buildGraph(json);
+            if (flowGraph != null) {
+                flowGraph.computePositions();
+                graph = flowGraph;
+
+                int maxX = graph.nodes().stream().mapToInt(Drawable::x).max().getAsInt();
+                int maxY = graph.nodes().stream().mapToInt(Drawable::y).max().getAsInt();
+                setPreferredSize(new Dimension(
+                        maxX + Math.floorDiv(Tile.WIDTH, 2),
+                        maxY + Tile.HEIGHT));
+
+                repaint();
+            }
+        });
+
     }
 
     class ComputeGraphPositionRunnable implements Runnable {
@@ -89,13 +121,13 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 /**
  if (selected.x < 0) {
  selected.x = 0;
-            } else if (selectedPosition.x + selected.width(this) > getWidth()) {
-                selectedPosition.x = getWidth() - selected.width(this);
-            }
-            if (selectedPosition.y < 0) {
-                selectedPosition.y = 0;
-            } else if (selectedPosition.y + selected.height(this) > getHeight()) {
-                selectedPosition.y = getHeight() - selected.height(this);
+ } else if (selectedPosition.x + selected.width(this) > getWidth()) {
+ selectedPosition.x = getWidth() - selected.width(this);
+ }
+ if (selectedPosition.y < 0) {
+ selectedPosition.y = 0;
+ } else if (selectedPosition.y + selected.height(this) > getHeight()) {
+ selectedPosition.y = getHeight() - selected.height(this);
  }*/
 
             repaint();
@@ -169,8 +201,8 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     public void add(Drawable component) {
         /**
-        int x = component.getPosition().x;
-        int y = component.getPosition().y;
+         int x = component.getPosition().x;
+         int y = component.getPosition().y;
          */
 
         //  computeSnapToGridCoordinates(component, x, y);

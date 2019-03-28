@@ -36,8 +36,8 @@
         <moduleBuilder builderClass="com.esb.plugin.module.builder.ESBModuleBuilder" id="ESB_MODULE_BUILDER" order="first"/>
 
         <!-- Services -->
-        <projectService serviceInterface="com.esb.plugin.service.project.filechange.ESBFileChangeService"
-                        serviceImplementation="com.esb.plugin.service.project.filechange.impl.ESBFileChangeServiceImpl"/>
+        <projectService serviceInterface="com.esb.plugin.service.project.sourcechange.SourceChangeService"
+                        serviceImplementation="com.esb.plugin.service.project.sourcechange.impl.SourceChangeServiceImpl"/>
 
         <projectService serviceInterface="com.esb.plugin.service.project.toolwindow.ESBToolWindowService"
                         serviceImplementation="com.esb.plugin.service.project.toolwindow.impl.ESBToolWindowServiceImpl"/>
