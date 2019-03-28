@@ -2,9 +2,9 @@ package com.esb.plugin.designer.graph.drawable;
 
 import com.esb.plugin.designer.editor.component.Component;
 
-public class DrawableFork extends AbstractDrawable {
+public class ForkJoinDrawable extends AbstractDrawable {
 
-    public DrawableFork(Component component) {
+    public ForkJoinDrawable(Component component) {
         super(component);
     }
 

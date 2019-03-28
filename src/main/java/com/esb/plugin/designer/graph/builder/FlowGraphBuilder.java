@@ -26,9 +26,9 @@ public class FlowGraphBuilder {
         for (int i = 0; i < flow.length(); i++) {
             JSONObject implementorDefinition = (JSONObject) flow.get(i);
 
-            current = HandlerFactory
+            current = BuilderFactory
                     .get(implementorDefinition)
-                    .handle(current, implementorDefinition, flowGraph);
+                    .build(current, implementorDefinition, flowGraph);
 
         }
 

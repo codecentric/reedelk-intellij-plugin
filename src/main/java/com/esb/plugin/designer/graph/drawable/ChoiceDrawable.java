@@ -2,9 +2,9 @@ package com.esb.plugin.designer.graph.drawable;
 
 import com.esb.plugin.designer.editor.component.Component;
 
-public class DrawableChoice extends AbstractDrawable {
+public class ChoiceDrawable extends AbstractDrawable {
 
-    public DrawableChoice(Component component) {
+    public ChoiceDrawable(Component component) {
         super(component);
     }
 
