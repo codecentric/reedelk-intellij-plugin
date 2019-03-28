@@ -1,11 +1,12 @@
 package com.esb.plugin.designer.editor.designer;
 
+import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
-import com.intellij.util.ui.JBDimension;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -18,12 +19,9 @@ import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 public class DesignerPanel extends JBPanel implements MouseMotionListener, MouseListener {
 
     private final JBColor BACKGROUND_COLOR = JBColor.WHITE;
-    private final Color GRID_COLOR = new JBColor(new Color(226, 226, 236, 255), new Color(226, 226, 236, 255));
 
-    private final int PREFERRED_WIDTH = 700;
-    private final int PREFERRED_HEIGHT = 400;
 
-    private final FlowGraph graph;
+    private FlowGraph graph;
 
     private boolean dragging;
     private Drawable selected;
@@ -32,23 +30,49 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     public DesignerPanel(FlowGraph graph) {
         setBackground(BACKGROUND_COLOR);
-        setPreferredSize(new JBDimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
+
+
         //setDropTarget(new DesignerPanelDropTarget(flowDataStructure, this));
         //addMouseListener(this);
         //addMouseMotionListener(this);
-
-        this.graph = graph;
-        this.graph.computePositions();
         //this.flowDataStructure.setListener(this);
+
+        SwingUtilities.invokeLater(new ComputeGraphPositionRunnable(this, graph));
     }
 
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
-        Graphics2D g2 = (Graphics2D) graphics;
-        g2.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
-        graph.breadthFirstTraversal(graph.root(),
-                node -> node.draw(graphics, this));
+
+        if (graph != null) {
+            Graphics2D g2 = (Graphics2D) graphics;
+            g2.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
+            graph.breadthFirstTraversal(graph.root(),
+                    node -> node.draw(graphics, this));
+        }
+    }
+
+    class ComputeGraphPositionRunnable implements Runnable {
+
+        private final FlowGraph graph;
+        private final DesignerPanel panel;
+
+        public ComputeGraphPositionRunnable(DesignerPanel panel, FlowGraph graph) {
+            this.graph = graph;
+            this.panel = panel;
+        }
+
+        @Override
+        public void run() {
+            graph.computePositions();
+            panel.graph = graph;
+            int maxX = graph.nodes().stream().mapToInt(Drawable::x).max().getAsInt();
+            int maxY = graph.nodes().stream().mapToInt(Drawable::y).max().getAsInt();
+            panel.setPreferredSize(new Dimension(
+                    maxX + Math.floorDiv(Tile.WIDTH, 2),
+                    maxY + Tile.HEIGHT));
+            panel.repaint();
+        }
     }
 
     @Override

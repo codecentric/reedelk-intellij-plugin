@@ -5,6 +5,7 @@ import com.esb.plugin.designer.graph.layout.FlowGraphLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -34,6 +35,10 @@ public class FlowGraph {
 
     public int nodesCount() {
         return graph.nodes().size();
+    }
+
+    public Collection<Drawable> nodes() {
+        return graph.nodes();
     }
 
     public void breadthFirstTraversal(@NotNull Drawable drawable, @NotNull Consumer<Drawable> consumer) {
