@@ -43,6 +43,7 @@ public class PalettePanel extends JBPanel {
 
     }
 
+    // The following tree nodes should be dynamically built.
     private DefaultMutableTreeNode rest() {
         DefaultMutableTreeNode restNode = new DefaultMutableTreeNode("REST");
         restNode.add(new DefaultMutableTreeNode(new Pair<>("REST Listener", "default")));

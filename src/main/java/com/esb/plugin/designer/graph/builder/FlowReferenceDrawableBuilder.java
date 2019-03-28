@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.graph.builder;
 
-import com.esb.plugin.designer.graph.Drawable;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.StopDrawable;
 import org.json.JSONObject;
 

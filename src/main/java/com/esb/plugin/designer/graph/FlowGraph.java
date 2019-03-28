@@ -1,5 +1,6 @@
 package com.esb.plugin.designer.graph;
 
+import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.layout.FlowGraphLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

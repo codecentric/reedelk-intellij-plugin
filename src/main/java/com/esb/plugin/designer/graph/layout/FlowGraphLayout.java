@@ -2,7 +2,7 @@ package com.esb.plugin.designer.graph.layout;
 
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.graph.DirectedGraph;
-import com.esb.plugin.designer.graph.Drawable;
+import com.esb.plugin.designer.graph.drawable.Drawable;
 
 import java.util.Collections;
 import java.util.List;
