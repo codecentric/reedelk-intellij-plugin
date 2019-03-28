@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FlowGraphBuilderTest {
 
     @Test
-    void shouldBuildGraphCorrectly() {
+    void shouldBuildFlowWithChoiceCorrectly() {
         // Given
         String json = readJson(TestJson.FLOW_WITH_CHOICE);
         FlowGraphBuilder builder = new FlowGraphBuilder(json);

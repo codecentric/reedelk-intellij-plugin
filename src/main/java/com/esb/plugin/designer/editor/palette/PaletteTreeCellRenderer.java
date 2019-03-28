@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.editor.palette;
 
 
-import com.esb.plugin.utils.ESBIcons;
+import com.esb.plugin.commons.ESBIcons;
 import com.intellij.openapi.util.Pair;
 
 import javax.swing.*;

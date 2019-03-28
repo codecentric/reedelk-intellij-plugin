@@ -1,4 +1,4 @@
-package com.esb.plugin.utils;
+package com.esb.plugin.commons;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;

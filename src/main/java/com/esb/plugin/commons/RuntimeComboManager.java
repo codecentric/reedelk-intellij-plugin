@@ -1,4 +1,4 @@
-package com.esb.plugin.ui;
+package com.esb.plugin.commons;
 
 import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfiguration;
 import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfigurationType;

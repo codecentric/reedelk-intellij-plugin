@@ -1,6 +1,6 @@
 package com.esb.plugin.filetype;
 
-import com.esb.plugin.utils.ESBIcons;
+import com.esb.plugin.commons.ESBIcons;
 import com.intellij.json.JsonLanguage;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import org.jetbrains.annotations.NotNull;

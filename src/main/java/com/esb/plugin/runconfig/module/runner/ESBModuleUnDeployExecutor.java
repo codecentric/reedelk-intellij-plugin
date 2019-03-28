@@ -1,6 +1,6 @@
 package com.esb.plugin.runconfig.module.runner;
 
-import com.esb.plugin.utils.ESBIcons;
+import com.esb.plugin.commons.ESBIcons;
 import com.intellij.execution.Executor;
 import com.intellij.openapi.wm.ToolWindowId;
 import org.jetbrains.annotations.NonNls;

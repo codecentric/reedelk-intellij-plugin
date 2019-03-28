@@ -1,9 +1,9 @@
 package com.esb.plugin.module.builder;
 
+import com.esb.plugin.commons.ESBIcons;
+import com.esb.plugin.commons.ESBLabel;
 import com.esb.plugin.runconfig.module.ESBModuleRunConfigurationBuilder;
 import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfigurationBuilder;
-import com.esb.plugin.utils.ESBIcons;
-import com.esb.plugin.utils.ESBLabel;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.Disposable;

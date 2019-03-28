@@ -1,6 +1,6 @@
 package com.esb.plugin.validator;
 
-import com.esb.plugin.utils.ESBFileUtils;
+import com.esb.plugin.commons.ESBFileUtils;
 
 import java.io.File;
 import java.nio.file.Paths;

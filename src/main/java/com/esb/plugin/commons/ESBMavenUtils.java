@@ -1,4 +1,4 @@
-package com.esb.plugin.utils;
+package com.esb.plugin.commons;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;

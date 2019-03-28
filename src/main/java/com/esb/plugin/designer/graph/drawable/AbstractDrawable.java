@@ -1,8 +1,8 @@
 package com.esb.plugin.designer.graph.drawable;
 
+import com.esb.plugin.commons.ESBIcons;
 import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.Drawable;
-import com.esb.plugin.utils.ESBIcons;
 import com.intellij.ui.JBColor;
 
 import java.awt.*;
@@ -33,17 +33,6 @@ abstract class AbstractDrawable implements Drawable {
 
         graphics.setColor(JBColor.LIGHT_GRAY);
         drawText(graphics, "A Description", textCenterX, textTopY);
-    }
-
-
-    @Override
-    public int width(ImageObserver imageObserver) {
-        return image.getWidth(imageObserver);
-    }
-
-    @Override
-    public int height(ImageObserver imageObserver) {
-        return image.getHeight(imageObserver);
     }
 
     @Override

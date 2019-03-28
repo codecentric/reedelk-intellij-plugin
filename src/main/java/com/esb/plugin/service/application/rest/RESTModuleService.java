@@ -4,9 +4,9 @@ import com.esb.internal.rest.api.InternalAPI;
 import com.esb.internal.rest.api.hotswap.v1.HotSwapPOSTReq;
 import com.esb.internal.rest.api.module.v1.ModuleDELETEReq;
 import com.esb.internal.rest.api.module.v1.ModulePOSTReq;
+import com.esb.plugin.commons.ESBLog;
 import com.esb.plugin.service.application.http.ESBHttpService;
 import com.esb.plugin.service.application.http.HttpResponse;
-import com.esb.plugin.utils.ESBLog;
 import com.intellij.execution.ExecutionException;
 import com.intellij.openapi.components.ServiceManager;
 

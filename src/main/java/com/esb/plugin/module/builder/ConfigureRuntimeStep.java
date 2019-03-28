@@ -1,6 +1,6 @@
 package com.esb.plugin.module.builder;
 
-import com.esb.plugin.ui.RuntimeComboManager;
+import com.esb.plugin.commons.RuntimeComboManager;
 import com.esb.plugin.validator.RuntimeHomeValidator;
 import com.esb.plugin.validator.Validator;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;

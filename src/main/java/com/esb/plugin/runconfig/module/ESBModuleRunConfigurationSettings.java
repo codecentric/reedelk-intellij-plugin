@@ -1,6 +1,6 @@
 package com.esb.plugin.runconfig.module;
 
-import com.esb.plugin.ui.RuntimeComboManager;
+import com.esb.plugin.commons.RuntimeComboManager;
 import com.intellij.application.options.ModuleDescriptionsComboBox;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;

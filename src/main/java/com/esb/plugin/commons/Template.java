@@ -1,4 +1,4 @@
-package com.esb.plugin.template;
+package com.esb.plugin.commons;
 
 public class Template {
 

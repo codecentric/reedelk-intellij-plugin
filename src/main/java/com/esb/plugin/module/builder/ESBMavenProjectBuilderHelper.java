@@ -1,7 +1,7 @@
 package com.esb.plugin.module.builder;
 
-import com.esb.plugin.template.Template;
-import com.esb.plugin.utils.ESBLog;
+import com.esb.plugin.commons.ESBLog;
+import com.esb.plugin.commons.Template;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.command.WriteCommandAction;
