@@ -27,13 +27,6 @@ class ChoiceDrawableBuilderTest extends AbstractBuilderTest {
     private FlowGraph graph;
     private ChoiceDrawableBuilder builder;
 
-    private static JSONObject conditionalBranch(String condition, String... componentsNames) {
-        JSONObject object = new JSONObject();
-        object.put("condition", condition);
-        object.put("next", createNextComponentsArray(componentsNames));
-        return object;
-    }
-
     @BeforeEach
     void setUp() {
         this.graph = new FlowGraph();
@@ -80,6 +73,13 @@ class ChoiceDrawableBuilderTest extends AbstractBuilderTest {
         // Then: check that the number of nodes in the graph is correct
         int expectedNodes = 9;
         assertThat(graph.nodesCount()).isEqualTo(expectedNodes);
+    }
+
+    private static JSONObject conditionalBranch(String condition, String... componentsNames) {
+        JSONObject object = new JSONObject();
+        object.put("condition", condition);
+        object.put("next", createNextComponentsArray(componentsNames));
+        return object;
     }
 
 }
