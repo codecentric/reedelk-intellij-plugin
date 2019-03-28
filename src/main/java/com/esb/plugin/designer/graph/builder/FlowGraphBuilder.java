@@ -19,7 +19,7 @@ public class FlowGraphBuilder {
         this.flowDefinition = JsonParser.from(json);
     }
 
-    public FlowGraph get() {
+    public FlowGraph graph() {
         JSONArray flow = JsonParser.Flow.getFlow(flowDefinition);
 
         Drawable current = null;

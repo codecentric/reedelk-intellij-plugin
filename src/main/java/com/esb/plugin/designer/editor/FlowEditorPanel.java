@@ -46,7 +46,7 @@ public class FlowEditorPanel extends ThreeComponentsSplitter {
         try {
             String json = FileUtils.readFrom(new URL(file.getUrl()));
             FlowGraphBuilder builder = new FlowGraphBuilder(json);
-            return builder.get();
+            return builder.graph();
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
