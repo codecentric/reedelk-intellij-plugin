@@ -16,10 +16,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ChoiceDrawableBuilderTest extends AbstractBuilderTest {
 
-    private static final String COMPONENT_1_NAME = "com.esb.component.Name1";
-    private static final String COMPONENT_2_NAME = "com.esb.component.Name2";
-    private static final String COMPONENT_3_NAME = "com.esb.component.Name3";
-    private static final String COMPONENT_4_NAME = "com.esb.component.Name4";
+    private final String COMPONENT_1_NAME = "com.esb.component.Name1";
+    private final String COMPONENT_2_NAME = "com.esb.component.Name2";
+    private final String COMPONENT_3_NAME = "com.esb.component.Name3";
+    private final String COMPONENT_4_NAME = "com.esb.component.Name4";
 
     @Mock
     private Drawable root;

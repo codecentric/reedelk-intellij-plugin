@@ -32,27 +32,28 @@ public class ChoiceDrawableBuilder implements Builder {
             Drawable currentDrawable = choiceDrawable;
 
             JSONArray next = JsonParser.Choice.getNext(whenComponent);
-            for (int j = 0; j < next.length(); j++) {
-                JSONObject currentComponentDef = next.getJSONObject(j);
-                currentDrawable = BuilderFactory.get(currentComponentDef).build(currentDrawable, currentComponentDef, graph);
-            }
+            currentDrawable = buildArrayOfComponents(graph, currentDrawable, next);
 
+            // Last node is connected to stop node.
             graph.add(currentDrawable, stopDrawable);
         }
-
 
         // Otherwise
         Drawable currentDrawable = choiceDrawable;
 
         JSONArray otherwise = JsonParser.Choice.getOtherwise(componentDefinition);
-        for (int i = 0; i < otherwise.length(); i++) {
-            JSONObject currentComponentDef = otherwise.getJSONObject(i);
-            currentDrawable = BuilderFactory.get(currentComponentDef).build(currentDrawable, currentComponentDef, graph);
-        }
-
+        currentDrawable = buildArrayOfComponents(graph, currentDrawable, otherwise);
 
         // Last node is stop node.
         graph.add(currentDrawable, stopDrawable);
         return stopDrawable;
+    }
+
+    private Drawable buildArrayOfComponents(FlowGraph graph, Drawable currentDrawable, JSONArray next) {
+        for (int j = 0; j < next.length(); j++) {
+            JSONObject currentComponentDef = next.getJSONObject(j);
+            currentDrawable = BuilderFactory.get(currentComponentDef).build(currentDrawable, currentComponentDef, graph);
+        }
+        return currentDrawable;
     }
 }

@@ -32,6 +32,7 @@ public class FlowGraphBuilder {
 
         }
 
+        // TODO: Remove all stop drawables! When we display the graph we don't need it
         return flowGraph;
     }
 

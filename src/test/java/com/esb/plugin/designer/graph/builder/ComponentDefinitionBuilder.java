@@ -20,10 +20,6 @@ public class ComponentDefinitionBuilder {
         return nextComponents;
     }
 
-    public static Builder create() {
-        return new Builder();
-    }
-
     public static Builder forComponent(String componentName) {
         Builder builder = new Builder();
         builder.with(JsonParser.Implementor.name(), componentName);
