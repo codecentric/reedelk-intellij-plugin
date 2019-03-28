@@ -32,6 +32,10 @@ public class FlowGraph {
         return graph.predecessors(target);
     }
 
+    public int nodesCount() {
+        return graph.nodes().size();
+    }
+
     public void breadthFirstTraversal(@NotNull Drawable drawable, @NotNull Consumer<Drawable> consumer) {
         graph.breadthFirstTraversal(drawable, consumer);
     }

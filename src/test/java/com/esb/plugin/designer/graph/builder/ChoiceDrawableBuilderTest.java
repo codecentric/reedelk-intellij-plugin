@@ -61,6 +61,7 @@ class ChoiceDrawableBuilderTest extends AbstractBuilderTest {
         // Then: last node must be a stop drawable
         assertThat(stopDrawable).isInstanceOf(StopDrawable.class);
 
+        // Then: check successors of choice
         Drawable choice = firstSuccessorOf(graph, root);
         assertSuccessorsAre(graph, choice, COMPONENT_3_NAME, COMPONENT_2_NAME, COMPONENT_4_NAME);
 
@@ -73,7 +74,12 @@ class ChoiceDrawableBuilderTest extends AbstractBuilderTest {
         Drawable component4Drawable = getDrawableWithComponentName(graph.successors(choice), COMPONENT_4_NAME);
         assertSuccessorsAre(graph, component4Drawable, COMPONENT_3_NAME);
 
+        // Then: check predecessors of last stop node
         assertPredecessorsAre(graph, stopDrawable, COMPONENT_1_NAME, COMPONENT_4_NAME, COMPONENT_3_NAME);
+
+        // Then: check that the number of nodes in the graph is correct
+        int expectedNodes = 9;
+        assertThat(graph.nodesCount()).isEqualTo(expectedNodes);
     }
 
 }
