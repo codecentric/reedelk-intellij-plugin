@@ -77,6 +77,10 @@ class ForkJoinDrawableBuilderTest extends AbstractBuilderTest {
         Drawable stopDrawable = getDrawableWithComponentName(graph.successors(component4Drawable), STOP_COMPONENT_NAME);
         Drawable stopSuccessor = graph.successors(stopDrawable).get(0);
         assertThat(joinDrawable).isEqualTo(stopSuccessor);
+
+        // Then: check that the number of nodes in the graph is correct
+        int expectedNodes = 8;
+        assertThat(graph.nodesCount()).isEqualTo(expectedNodes);
     }
 
     private JSONObject createNextObject(String... componentNames) {
