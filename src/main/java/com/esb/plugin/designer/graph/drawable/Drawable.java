@@ -13,10 +13,11 @@ public interface Drawable {
 
     void draw(Graphics graphics, ImageObserver observer);
 
-    void setPosition(int x, int y);
-
     int y();
 
     int x();
 
+    void setPosition(int x, int y);
+
+    boolean contains(int x, int y);
 }

@@ -1,6 +1,7 @@
 package com.esb.plugin.designer.graph.drawable;
 
 import com.esb.plugin.commons.ESBIcons;
+import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.editor.component.Component;
 import com.intellij.ui.JBColor;
 
@@ -12,17 +13,29 @@ abstract class AbstractDrawable implements Drawable {
 
     protected final Image image;
     private final Component component;
+
+    private final int halfTileWidth;
+    private final int halfTileHeight;
+
+    // The center x position of this drawable
     private int x;
+
+    // The center y position of this drawable
     private int y;
 
     public AbstractDrawable(Component component) {
         this.component = component;
         this.image = ESBIcons.forComponentAsImage(component.getName());
+
+        this.halfTileWidth = Math.floorDiv(Tile.WIDTH, 2);
+        this.halfTileHeight = Math.floorDiv(Tile.HEIGHT, 2);
     }
 
     @Override
     public void draw(Graphics graphics, ImageObserver observer) {
-        graphics.drawImage(image, x() - Math.floorDiv(image.getWidth(observer), 2), y() - Math.floorDiv(this.image.getHeight(observer), 2), observer);
+        int imageX = x() - Math.floorDiv(image.getWidth(observer), 2);
+        int imageY = y() - Math.floorDiv(image.getHeight(observer), 2);
+        graphics.drawImage(image, imageX, imageY, observer);
 
         int textCenterX = x();
         int textTopY = y() + Math.floorDiv(image.getHeight(observer), 2);
@@ -59,6 +72,20 @@ abstract class AbstractDrawable implements Drawable {
     @Override
     public int y() {
         return y;
+    }
+
+    @Override
+    public boolean contains(int x, int y) {
+
+        boolean containsOnXAxis =
+                x >= this.x - halfTileWidth &&
+                        x <= this.x + halfTileWidth;
+
+        boolean containsOnYAxis =
+                y >= this.y - halfTileHeight &&
+                        y <= this.y + halfTileHeight;
+
+        return containsOnXAxis && containsOnYAxis;
     }
 
     private int drawText(Graphics graphics, String stringToDraw, int centerX, int topY) {

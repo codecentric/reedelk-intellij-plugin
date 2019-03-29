@@ -32,11 +32,10 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     public DesignerPanel() {
         setBackground(BACKGROUND_COLOR);
+        addMouseMotionListener(this);
 
         //setDropTarget(new DesignerPanelDropTarget(flowDataStructure, this));
         //addMouseListener(this);
-        //addMouseMotionListener(this);
-        //this.flowDataStructure.setListener(this);
     }
 
     @Override
@@ -91,11 +90,12 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         }
     }
 
+    // Changes the cursor when mouse goes over (or out) a Drawable Node in the flow.
     @Override
     public void mouseMoved(MouseEvent event) {
         int x = event.getX();
         int y = event.getY();
-        Optional<Drawable> first = getDrawableWithin(x, y);
+        Optional<Drawable> first = getDrawableContaining(x, y);
         if (first.isPresent()) {
             setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         } else {
@@ -150,12 +150,6 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     }
 
-    private Optional<Drawable> getDrawableWithin(int x, int y) {
-        // TODO: Implement this
-        //return drawableList.stream().filter(drawable -> drawable.contains(new Point(x, y))).findFirst();
-        return Optional.empty();
-    }
-
     public void add(Drawable component) {
         /**
          int x = component.getPosition().x;
@@ -176,6 +170,11 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
          drawable.getPosition().x = snapX;
          drawable.getPosition().y = snapY;
          */
+    }
+
+    private Optional<Drawable> getDrawableContaining(int x, int y) {
+        return graph.nodes().stream().filter(drawable -> drawable.contains(x, y))
+                .findFirst();
     }
 
     private void paintGraph(Graphics graphics, FlowGraph graph) {

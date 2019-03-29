@@ -1,5 +1,7 @@
 package com.esb.plugin.designer.editor.component;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -26,6 +28,7 @@ public class TransferableComponent implements Transferable {
     }
 
     @Override
+    @NotNull
     public String getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
         return componentFullyQualifiedName;
     }
