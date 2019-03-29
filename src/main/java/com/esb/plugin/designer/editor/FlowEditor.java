@@ -19,9 +19,10 @@ import java.beans.PropertyChangeListener;
 public class FlowEditor extends UserDataHolderBase implements FileEditor, PossiblyDumbAware, DocumentListener {
 
     private FlowEditorPanel editor;
+    private GraphManager manager;
 
     FlowEditor(Project project, VirtualFile file) {
-        GraphManager manager = new GraphManager(project, file);
+        this.manager = new GraphManager(project, file);
         this.editor = new FlowEditorPanel(manager); // remove passing file to the editor panel
         manager.addGraphChangeListener(this.editor);
     }
@@ -116,7 +117,7 @@ public class FlowEditor extends UserDataHolderBase implements FileEditor, Possib
 
     @Override
     public void dispose() {
-
+        this.manager.dispose();
     }
 
 }

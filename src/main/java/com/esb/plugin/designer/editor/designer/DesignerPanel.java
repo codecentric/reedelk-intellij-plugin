@@ -51,7 +51,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         SwingUtilities.invokeLater(() -> {
             graph = updatedGraph;
             adjustWindowSize();
-            repaint();
+            invalidate();
         });
     }
 
@@ -167,6 +167,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         int maxY = graph.nodes().stream().mapToInt(Drawable::y).max().getAsInt();
         int newSizeX = maxX + Math.floorDiv(Tile.WIDTH, 2);
         int newSizeY = maxY + Tile.HEIGHT;
+        setSize(new Dimension(newSizeX, newSizeY));
         setPreferredSize(new Dimension(newSizeX, newSizeY));
     }
 
