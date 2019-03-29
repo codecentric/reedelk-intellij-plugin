@@ -8,11 +8,11 @@ import java.io.IOException;
 public class TransferableComponent implements Transferable {
 
     private final DataFlavor[] flavors;
-    private String componentName;
+    private String componentFullyQualifiedName;
 
-    public TransferableComponent(String componentName) {
+    public TransferableComponent(String componentFullyQualifiedName) {
         this.flavors = new DataFlavor[]{DataFlavor.stringFlavor};
-        this.componentName = componentName;
+        this.componentFullyQualifiedName = componentFullyQualifiedName;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class TransferableComponent implements Transferable {
 
     @Override
     public String getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
-        return componentName;
+        return componentFullyQualifiedName;
     }
 
 }
