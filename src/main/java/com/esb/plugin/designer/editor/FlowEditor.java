@@ -1,6 +1,7 @@
 package com.esb.plugin.designer.editor;
 
 import com.esb.internal.commons.FileUtils;
+import com.esb.plugin.designer.editor.designer.DesignerPanelDropTarget;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.builder.FlowGraphBuilder;
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
@@ -28,6 +29,8 @@ import static java.util.Arrays.stream;
 public class FlowEditor extends UserDataHolderBase implements FileEditor, PossiblyDumbAware, FileEditorManagerListener, DocumentListener {
 
     private FlowEditorPanel editor;
+    private VirtualFile editorFile;
+
     private final Consumer<FlowGraph> computePositionsAndUpdate = new Consumer<FlowGraph>() {
         @Override
         public void accept(FlowGraph graph) {
@@ -35,10 +38,12 @@ public class FlowEditor extends UserDataHolderBase implements FileEditor, Possib
             editor.updated(graph);
         }
     };
-    private VirtualFile editorFile;
 
     FlowEditor(Project project, VirtualFile file) {
-        this.editor = new FlowEditorPanel(); // remove passing file to the editor panel
+
+        DesignerPanelDropTarget designerPanelDropTarget = new DesignerPanelDropTarget();
+
+        this.editor = new FlowEditorPanel(designerPanelDropTarget); // remove passing file to the editor panel
         this.editorFile = file;
 
         buildGraph(file).ifPresent(computePositionsAndUpdate);
@@ -46,21 +51,6 @@ public class FlowEditor extends UserDataHolderBase implements FileEditor, Possib
         project.getMessageBus()
                 .connect(this)
                 .subscribe(FILE_EDITOR_MANAGER, this);
-    }
-
-    @Override
-    public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
-        if (!editorFile.getUrl().equals(file.getUrl())) return;
-
-        // Find Associated Text Editor and attach document listener
-        FileEditor[] editors = source.getEditors(file);
-        stream(editors).filter(fileEditor -> fileEditor instanceof TextEditor)
-                .findFirst()
-                .map(fileEditor -> (TextEditor) fileEditor)
-                .ifPresent(textEditor -> {
-                    Document document = textEditor.getEditor().getDocument();
-                    document.addDocumentListener(FlowEditor.this);
-                });
     }
 
     @NotNull
@@ -174,11 +164,31 @@ public class FlowEditor extends UserDataHolderBase implements FileEditor, Possib
         }
     }
 
+    // TODO: I would extract this. Because this editor should not be aware of the other
+    // TODO: editor!!!
+    @Override
+    public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+        if (!editorFile.getUrl().equals(file.getUrl())) return;
+
+
+        // Find Associated Text Editor and attach document listener
+        FileEditor[] editors = source.getEditors(file);
+        stream(editors).filter(fileEditor -> fileEditor instanceof TextEditor)
+                .findFirst()
+                .map(fileEditor -> (TextEditor) fileEditor)
+                .ifPresent(textEditor -> {
+                    Document document = textEditor.getEditor().getDocument();
+                    document.addDocumentListener(FlowEditor.this);
+                });
+    }
+
     private Optional<FlowGraph> buildGraph(String json) {
-        FlowGraphBuilder builder = new FlowGraphBuilder(json);
         try {
+            FlowGraphBuilder builder = new FlowGraphBuilder(json);
             return Optional.of(builder.graph());
         } catch (Exception e) {
+            // TODO: Log this
+            e.printStackTrace();
             return Optional.empty();
         }
     }

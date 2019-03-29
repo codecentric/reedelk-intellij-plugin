@@ -2,6 +2,7 @@ package com.esb.plugin.designer.editor.designer;
 
 import com.esb.plugin.designer.editor.component.Component;
 
+import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
@@ -10,12 +11,6 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.io.IOException;
 
 public class DesignerPanelDropTarget extends DropTarget {
-
-    private final DesignerPanel drawingPanel;
-
-    public DesignerPanelDropTarget(DesignerPanel drawingPanel) {
-        this.drawingPanel = drawingPanel;
-    }
 
     @Override
     public synchronized void drop(DropTargetDropEvent dropEvent) {
@@ -32,6 +27,8 @@ public class DesignerPanelDropTarget extends DropTarget {
 
         Component component = new Component(componentName);
         component.setDescription("A description");
+        Point location = dropEvent.getLocation();
+
 
 
         // TODO: Here need to decide given the position where this component should go in the tree

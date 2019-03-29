@@ -9,6 +9,7 @@ import com.intellij.ui.components.JBPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.dnd.DropTarget;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -22,7 +23,6 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     private final JBColor BACKGROUND_COLOR = JBColor.WHITE;
 
-
     private FlowGraph graph;
 
     private boolean dragging;
@@ -30,11 +30,10 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     private int offsetx;
     private int offsety;
 
-    public DesignerPanel() {
+    public DesignerPanel(DropTarget dropTarget) {
         setBackground(BACKGROUND_COLOR);
         addMouseMotionListener(this);
-
-        //setDropTarget(new DesignerPanelDropTarget(flowDataStructure, this));
+        setDropTarget(dropTarget);
         //addMouseListener(this);
     }
 
@@ -53,12 +52,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
         SwingUtilities.invokeLater(() -> {
             graph = updatedGraph;
-            int maxX = graph.nodes().stream().mapToInt(Drawable::x).max().getAsInt();
-            int maxY = graph.nodes().stream().mapToInt(Drawable::y).max().getAsInt();
-
-            int newSizeX = maxX + Math.floorDiv(Tile.WIDTH, 2);
-            int newSizeY = maxY + Tile.HEIGHT;
-            setPreferredSize(new Dimension(newSizeX, newSizeY));
+            adjustWindowSize();
             repaint();
         });
     }
@@ -68,11 +62,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         if (!dragging) return;
 
         if (selected != null) {
-
-
             selected.setPosition(event.getX() - offsetx, event.getY() - offsety);  // Get new position of rect.
-
-
             /* Clamp (x,y) so that dragging does not goes beyond frame border */
 /**
  if (selected.x < 0) {
@@ -172,15 +162,32 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
          */
     }
 
+    private void adjustWindowSize() {
+        // We might need to adapt window size, since the new graph might
+        // have grown on the X (or Y) axis.
+        int maxX = graph.nodes().stream().mapToInt(Drawable::x).max().getAsInt();
+        int maxY = graph.nodes().stream().mapToInt(Drawable::y).max().getAsInt();
+        int newSizeX = maxX + Math.floorDiv(Tile.WIDTH, 2);
+        int newSizeY = maxY + Tile.HEIGHT;
+        setPreferredSize(new Dimension(newSizeX, newSizeY));
+    }
+
     private Optional<Drawable> getDrawableContaining(int x, int y) {
-        return graph.nodes().stream().filter(drawable -> drawable.contains(x, y))
+        // TODO: Remove all these checks if graph is null! Use
+        // TODO: something more object oriented!! Like an empty graph!
+        if (graph == null) return Optional.empty();
+        return graph
+                .nodes()
+                .stream()
+                .filter(drawable -> drawable.contains(x, y))
                 .findFirst();
     }
 
     private void paintGraph(Graphics graphics, FlowGraph graph) {
         Graphics2D g2 = (Graphics2D) graphics;
         g2.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
-        graph.breadthFirstTraversal(graph.root(),
+        graph.breadthFirstTraversal(
+                graph.root(),
                 node -> node.draw(graphics, this));
     }
 
