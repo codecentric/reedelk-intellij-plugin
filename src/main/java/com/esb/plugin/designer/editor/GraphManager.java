@@ -1,11 +1,9 @@
 package com.esb.plugin.designer.editor;
 
 import com.esb.internal.commons.FileUtils;
-import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.GraphNodeAdder;
 import com.esb.plugin.designer.graph.builder.FlowGraphBuilder;
-import com.esb.plugin.designer.graph.drawable.Drawable;
-import com.esb.plugin.designer.graph.drawable.GenericComponentDrawable;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentEvent;
@@ -27,7 +25,6 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -43,11 +40,13 @@ public class GraphManager extends DropTarget implements FileEditorManagerListene
 
     private FlowGraph graph;
     private GraphChangeListener listener;
+    private GraphNodeAdder graphNodeAdder;
     private MessageBusConnection busConnection;
 
     GraphManager(Project project, VirtualFile managedGraphFile) {
         this.busConnection = project.getMessageBus().connect();
         this.busConnection.subscribe(FILE_EDITOR_MANAGER, this);
+        this.graphNodeAdder = new GraphNodeAdder();
 
         buildGraph(managedGraphFile)
                 .ifPresent(((Consumer<FlowGraph>) fromFileGraph -> graph = fromFileGraph)
@@ -77,57 +76,23 @@ public class GraphManager extends DropTarget implements FileEditorManagerListene
 
     @Override
     public synchronized void drop(DropTargetDropEvent dropEvent) {
-        String componentName;
+
         try {
-            componentName = (String) dropEvent.getTransferable().getTransferData(DataFlavor.stringFlavor);
+            String componentName = (String) dropEvent.getTransferable().getTransferData(DataFlavor.stringFlavor);
+
+            Point location = dropEvent.getLocation();
+            Optional<FlowGraph> added = graphNodeAdder.add(graph, location, componentName);
+            if (!added.isPresent()) {
+                dropEvent.rejectDrop();
+            } else {
+                added.ifPresent(((Consumer<FlowGraph>) fromFileGraph -> graph = fromFileGraph)
+                        .andThen(graph -> dropEvent.acceptDrop(ACTION_COPY_OR_MOVE))
+                        .andThen(graph -> computeGraphPositionsAndNotifyChange()));
+            }
+
         } catch (UnsupportedFlavorException | IOException e) {
             dropEvent.rejectDrop();
-            return;
         }
-
-        //clearAutoscroll();
-        dropEvent.acceptDrop(ACTION_COPY_OR_MOVE);
-
-        Component component = new Component(componentName);
-        component.setDescription("A description");
-
-
-        Point location = dropEvent.getLocation();
-        int dropX = location.x;
-        int dropY = location.y;
-
-        // TODO: Here need to decide given the position where this component should go in the tree
-
-        FlowGraph copy = graph.copy();
-
-        // If graph is empty
-        // - add root
-
-        // DETECT THE POSITION
-
-        for (Drawable node : graph.nodes()) {
-            if (dropX > node.x()) {
-
-                GenericComponentDrawable genericDrawable = new GenericComponentDrawable(component);
-
-                List<Drawable> successors = graph.successors(node);
-                if (successors.isEmpty()) {
-                    // Last node of the subtree, OK
-                    copy.add(node, genericDrawable);
-                }
-                for (Drawable successor : successors) {
-                    if (dropX < successor.x()) {
-                        copy.add(node, genericDrawable);
-                        copy.remove(node, successor);
-                        copy.add(genericDrawable, successor);
-                    }
-                }
-            }
-        }
-
-        Optional.of(copy)
-                .ifPresent(((Consumer<FlowGraph>) fromFileGraph -> graph = fromFileGraph)
-                        .andThen(graph -> computeGraphPositionsAndNotifyChange()));
     }
 
     void addGraphChangeListener(GraphChangeListener listener) {
