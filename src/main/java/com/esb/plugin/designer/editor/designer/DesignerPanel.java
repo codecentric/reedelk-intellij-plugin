@@ -9,7 +9,6 @@ import com.intellij.ui.components.JBPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.dnd.DropTarget;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -30,10 +29,9 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     private int offsetx;
     private int offsety;
 
-    public DesignerPanel(DropTarget dropTarget) {
+    public DesignerPanel() {
         setBackground(BACKGROUND_COLOR);
         addMouseMotionListener(this);
-        setDropTarget(dropTarget);
         //addMouseListener(this);
     }
 
