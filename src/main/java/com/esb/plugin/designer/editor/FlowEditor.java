@@ -1,11 +1,14 @@
 package com.esb.plugin.designer.editor;
 
+import com.esb.internal.commons.FileUtils;
+import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.builder.FlowGraphBuilder;
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
 import com.intellij.codeHighlighting.HighlightingPass;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorLocation;
-import com.intellij.openapi.fileEditor.FileEditorManagerListener;
-import com.intellij.openapi.fileEditor.FileEditorState;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.event.DocumentEvent;
+import com.intellij.openapi.editor.event.DocumentListener;
+import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.project.PossiblyDumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolderBase;
@@ -15,13 +18,49 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Optional;
+import java.util.function.Consumer;
 
-public class FlowEditor extends UserDataHolderBase implements FileEditor, PossiblyDumbAware, FileEditorManagerListener {
+import static java.util.Arrays.stream;
+
+public class FlowEditor extends UserDataHolderBase implements FileEditor, PossiblyDumbAware, FileEditorManagerListener, DocumentListener {
 
     private FlowEditorPanel editor;
+    private final Consumer<FlowGraph> computePositionsAndUpdate = new Consumer<FlowGraph>() {
+        @Override
+        public void accept(FlowGraph graph) {
+            graph.computePositions();
+            editor.updated(graph);
+        }
+    };
+    private VirtualFile editorFile;
 
-    public FlowEditor(Project project, VirtualFile file) {
-        editor = new FlowEditorPanel(project, file);
+    FlowEditor(Project project, VirtualFile file) {
+        this.editor = new FlowEditorPanel(); // remove passing file to the editor panel
+        this.editorFile = file;
+
+        buildGraph(file).ifPresent(computePositionsAndUpdate);
+
+        project.getMessageBus()
+                .connect(this)
+                .subscribe(FILE_EDITOR_MANAGER, this);
+    }
+
+    @Override
+    public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+        if (!editorFile.getUrl().equals(file.getUrl())) return;
+
+        // Find Associated Text Editor and attach document listener
+        FileEditor[] editors = source.getEditors(file);
+        stream(editors).filter(fileEditor -> fileEditor instanceof TextEditor)
+                .findFirst()
+                .map(fileEditor -> (TextEditor) fileEditor)
+                .ifPresent(textEditor -> {
+                    Document document = textEditor.getEditor().getDocument();
+                    document.addDocumentListener(FlowEditor.this);
+                });
     }
 
     @NotNull
@@ -115,5 +154,32 @@ public class FlowEditor extends UserDataHolderBase implements FileEditor, Possib
     @Override
     public void dispose() {
 
+    }
+
+    @Override
+    public void documentChanged(@NotNull DocumentEvent event) {
+        Document document = event.getDocument();
+        String json = document.getText();
+        buildGraph(json).ifPresent(computePositionsAndUpdate);
+    }
+
+    private Optional<FlowGraph> buildGraph(VirtualFile file) {
+        try {
+            String json = FileUtils.readFrom(new URL(file.getUrl()));
+            return buildGraph(json);
+        } catch (MalformedURLException e) {
+            // TODO: Log this
+            e.printStackTrace();
+            return Optional.empty();
+        }
+    }
+
+    private Optional<FlowGraph> buildGraph(String json) {
+        FlowGraphBuilder builder = new FlowGraphBuilder(json);
+        try {
+            return Optional.of(builder.graph());
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 }

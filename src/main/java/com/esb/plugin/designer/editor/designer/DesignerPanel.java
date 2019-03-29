@@ -1,10 +1,9 @@
 package com.esb.plugin.designer.editor.designer;
 
 import com.esb.plugin.designer.Tile;
+import com.esb.plugin.designer.editor.GraphChangeListener;
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.builder.FlowGraphBuilder;
 import com.esb.plugin.designer.graph.drawable.Drawable;
-import com.intellij.openapi.project.Project;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
 
@@ -15,10 +14,11 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Optional;
 
+import static com.google.common.base.Preconditions.checkState;
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
-public class DesignerPanel extends JBPanel implements MouseMotionListener, MouseListener {
+public class DesignerPanel extends JBPanel implements MouseMotionListener, MouseListener, GraphChangeListener {
 
     private final JBColor BACKGROUND_COLOR = JBColor.WHITE;
 
@@ -30,17 +30,13 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     private int offsetx;
     private int offsety;
 
-    public DesignerPanel(FlowGraph graph, Project project) {
+    public DesignerPanel() {
         setBackground(BACKGROUND_COLOR);
-
 
         //setDropTarget(new DesignerPanelDropTarget(flowDataStructure, this));
         //addMouseListener(this);
         //addMouseMotionListener(this);
         //this.flowDataStructure.setListener(this);
-
-        SwingUtilities.invokeLater(new ComputeGraphPositionRunnable(this, graph));
-
     }
 
     @Override
@@ -48,63 +44,24 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         super.paintComponent(graphics);
 
         if (graph != null) {
-            Graphics2D g2 = (Graphics2D) graphics;
-            g2.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
-            graph.breadthFirstTraversal(graph.root(),
-                    node -> node.draw(graphics, this));
+            paintGraph(graphics, graph);
         }
     }
 
+    @Override
+    public void updated(FlowGraph updatedGraph) {
+        checkState(updatedGraph != null, "Updated Graph Was null");
 
-    private FlowGraph buildGraph(String json) {
-        try {
-            FlowGraphBuilder builder = new FlowGraphBuilder(json);
-            return builder.graph();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public void modifiedJson(String json) {
         SwingUtilities.invokeLater(() -> {
-            FlowGraph flowGraph = buildGraph(json);
-            if (flowGraph != null) {
-                flowGraph.computePositions();
-                graph = flowGraph;
-
-                int maxX = graph.nodes().stream().mapToInt(Drawable::x).max().getAsInt();
-                int maxY = graph.nodes().stream().mapToInt(Drawable::y).max().getAsInt();
-                setPreferredSize(new Dimension(
-                        maxX + Math.floorDiv(Tile.WIDTH, 2),
-                        maxY + Tile.HEIGHT));
-
-                repaint();
-            }
-        });
-
-    }
-
-    class ComputeGraphPositionRunnable implements Runnable {
-
-        private final FlowGraph graph;
-        private final DesignerPanel panel;
-
-        public ComputeGraphPositionRunnable(DesignerPanel panel, FlowGraph graph) {
-            this.graph = graph;
-            this.panel = panel;
-        }
-
-        @Override
-        public void run() {
-            graph.computePositions();
-            panel.graph = graph;
+            graph = updatedGraph;
             int maxX = graph.nodes().stream().mapToInt(Drawable::x).max().getAsInt();
             int maxY = graph.nodes().stream().mapToInt(Drawable::y).max().getAsInt();
-            panel.setPreferredSize(new Dimension(
-                    maxX + Math.floorDiv(Tile.WIDTH, 2),
-                    maxY + Tile.HEIGHT));
-            panel.repaint();
-        }
+
+            int newSizeX = maxX + Math.floorDiv(Tile.WIDTH, 2);
+            int newSizeY = maxY + Tile.HEIGHT;
+            setPreferredSize(new Dimension(newSizeX, newSizeY));
+            repaint();
+        });
     }
 
     @Override
@@ -219,6 +176,13 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
          drawable.getPosition().x = snapX;
          drawable.getPosition().y = snapY;
          */
+    }
+
+    private void paintGraph(Graphics graphics, FlowGraph graph) {
+        Graphics2D g2 = (Graphics2D) graphics;
+        g2.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
+        graph.breadthFirstTraversal(graph.root(),
+                node -> node.draw(graphics, this));
     }
 
 }
