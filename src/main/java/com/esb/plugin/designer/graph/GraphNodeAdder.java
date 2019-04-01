@@ -77,7 +77,10 @@ public class GraphNodeAdder {
 
             // Need to handle the following cases:
             // 1. Add new layer in between
-            // 2.
+            // Need to find common successor
+            List<Drawable> successors = graph.successors(closestPrecedingNode);
+            // Need to find between where dropY lies
+            // Find the bottom one
 
 
         } else {

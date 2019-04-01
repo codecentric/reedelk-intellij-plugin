@@ -58,11 +58,10 @@ public class DirectedGraph<NodeType> {
             List<NodeType> adjacentNodes = adjacentNodesMap.get(n1);
             adjacentNodes.remove(n2);
         }
-
     }
 
     public List<NodeType> successors(NodeType n) {
-        return adjacentNodesMap.getOrDefault(n, new ArrayList<>());
+        return Collections.unmodifiableList(adjacentNodesMap.getOrDefault(n, new ArrayList<>()));
     }
 
     public List<NodeType> predecessors(NodeType n) {
@@ -74,7 +73,7 @@ public class DirectedGraph<NodeType> {
                 predecessors.add(entry.getKey());
             }
         }
-        return predecessors;
+        return Collections.unmodifiableList(predecessors);
     }
 
     public void breadthFirstTraversal(NodeType root, Consumer<NodeType> visitor) {
@@ -92,6 +91,32 @@ public class DirectedGraph<NodeType> {
             }
             visitor.accept(n);
         }
+    }
+
+    public Optional<NodeType> commonSuccessor(NodeType n1, NodeType n2) {
+        Collection<NodeType> n1Descendants = descendants(n1);
+        List<NodeType> successors = successors(n2);
+        for (NodeType successor : successors) {
+            if (n1Descendants.contains(successor)) {
+                return Optional.of(successor);
+            }
+        }
+        for (NodeType successor : successors) {
+            Optional<NodeType> commonSuccessor = commonSuccessor(n1, successor);
+            if (commonSuccessor.isPresent()) {
+                return commonSuccessor;
+            }
+        }
+        return Optional.empty();
+    }
+
+    private Collection<NodeType> descendants(NodeType n1) {
+        List<NodeType> descendants = new ArrayList<>();
+        for (NodeType descendant : successors(n1)) {
+            descendants.add(descendant);
+            descendants.addAll(descendants(descendant));
+        }
+        return descendants;
     }
 
     public DirectedGraph<NodeType> copy() {
