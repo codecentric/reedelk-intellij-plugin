@@ -9,132 +9,150 @@ import com.esb.plugin.designer.graph.drawable.MultipathDrawable;
 import java.awt.*;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import static com.esb.internal.commons.Preconditions.checkState;
 import static java.util.stream.Collectors.toList;
 
+/**
+ * Adds to the graph a new node representing the Component Name to the given location.
+ * The returned graph is a copy. An empty optional is returned if the node could not be
+ * added.
+ * <p>
+ * This class find the best position where to place the node in the Graph given
+ * the drop point location
+ */
 public class GraphNodeAdder {
 
-    /**
-     * Adds to the graph a new node representing the Component Name to the given location.
-     * The returned graph is a copy. An empty optional is returned if the node could not be
-     * added.
-     */
-    public Optional<FlowGraph> add(FlowGraph graph, Point location, String componentName) {
+
+    private static Predicate<Drawable> byPrecedingNodes(FlowGraph graph, int dropX) {
+        return preceding -> {
+
+            // The drop point is before/after the center of the node or the center + next node position.
+            if (dropX <= preceding.x() || dropX >= preceding.x() + Tile.WIDTH + Tile.HALF_WIDTH) {
+                return false;
+            }
+
+            for (Drawable successor : graph.successors(preceding)) {
+                // If exists a successor of the current preceding preceding in the preceding + 1 position,
+                // then we restrict the drop position so that we consider valid if and only if its x
+                // coordinates are between preceding x and successor x.
+                if (successor.x() == preceding.x() + Tile.WIDTH) {
+                    return dropX > preceding.x() && dropX < successor.x();
+                }
+            }
+
+            // The next successor is beyond the next position so we consider valid a drop point
+            // between preceding x and until the end of preceding + 1 position
+            return true;
+
+        };
+    }
+
+    public Optional<FlowGraph> add(FlowGraph graph, Point dropPoint, String componentName) {
 
         Component component = new Component(componentName);
         component.setDescription("A description");
 
-        int dropX = location.x;
-        int dropY = location.y;
+        int dropX = dropPoint.x;
+        int dropY = dropPoint.y;
 
-        FlowGraph copy = graph.copy(); // TODO: Handle adding first component (root)
+        // TODO: Handle adding first component (root)
+        // TODO: Handle adding last component
+        FlowGraph copy = graph.copy();
 
-        // Another strategy
-        // Find preceding nodes.
-        // Amongst the preceding nodes, find the closest on the Y axis.
-        // If the closest is MultipathDrawable:
-        //  - Handle it by finding the right position
-        // Otherwise:
-        //  - If current is MultipathDrawableContext and successor is NOT, then it must be size one
-        //  - if it is in the first half
-
-
+        // Find all preceding nodes on X axis
         List<Drawable> precedingNodes = graph
                 .nodes()
                 .stream()
-                .filter(node -> dropX > node.x() && dropX < node.x() + Tile.WIDTH)
+                .filter(byPrecedingNodes(graph, dropX))
                 .collect(toList());
 
+
+        // Amongst all preceding nodes find the closest on the Y axis
+        Drawable closestPrecedingNode = findClosestOnYAxis(precedingNodes, dropY);
+        checkState(closestPrecedingNode != null, "Closest node could not be null");
+
+        if (closestPrecedingNode instanceof MultipathDrawable) {
+
+            // Need to handle the following cases:
+            // 1. Add new layer in between
+            // 2.
+
+
+        } else {
+            List<Drawable> successors = graph.successors(closestPrecedingNode);
+            checkState(successors.size() == 1, "Successor must be one");
+
+            Drawable successor = successors.get(0);
+
+            List<Drawable> predecessors = graph.predecessors(successor);
+            // one-to-one drawable connection N1 -> N2 -> N3
+            if (predecessors.size() == 1) {
+
+                if (withinYBounds(dropY, closestPrecedingNode)) {
+                    GenericComponentDrawable genericDrawable = new GenericComponentDrawable(component);
+                    copy.add(closestPrecedingNode, genericDrawable);
+                    copy.add(genericDrawable, successor);
+                    copy.remove(closestPrecedingNode, successor);
+                }
+
+            } else if (predecessors.size() > 1) {
+                // If successor of closesPrecedingNode has n > 1 predecessors:
+                // many-to-one drawable connection
+                // N1   N2
+                //  \  /
+                //   N3
+
+                //  1. If it is first before successor minus half tile width,
+                //  then attach it to closest preceding node.
+                if (dropX < successor.x() - Tile.HALF_WIDTH) {
+
+                    // Check that it is aligned on Y axis on the preceding node before link it.
+                    if (withinYBounds(dropY, closestPrecedingNode)) {
+                        GenericComponentDrawable genericDrawable = new GenericComponentDrawable(component);
+                        copy.add(closestPrecedingNode, genericDrawable);
+                        copy.add(genericDrawable, successor);
+                        copy.remove(closestPrecedingNode, successor);
+                    }
+
+                } else {
+
+                    // 2. If dropX is between successor mid point minus half tile width, then
+                    // the node is going do replace the join.
+                    if (withinYBounds(dropY, successor)) {
+                        GenericComponentDrawable genericDrawable = new GenericComponentDrawable(component);
+                        for (Drawable predecessor : predecessors) {
+                            copy.add(predecessor, genericDrawable);
+                            copy.remove(predecessor, successor);
+                        }
+                        copy.add(genericDrawable, successor);
+                    }
+                }
+            } else {
+                throw new IllegalStateException("Predecessors must not be 0 or less than 0");
+            }
+        }
+
+        return Optional.of(copy);
+    }
+
+    private Drawable findClosestOnYAxis(List<Drawable> precedingNodes, int dropY) {
         int min = Integer.MAX_VALUE;
         Drawable closestPrecedingNode = null;
         for (Drawable precedingNode : precedingNodes) {
-            int y = precedingNode.y();
-            int delta = Math.abs(y - dropY);
+            int delta = Math.abs(precedingNode.y() - dropY);
             if (delta < min) {
                 closestPrecedingNode = precedingNode;
                 min = delta;
             }
         }
-        checkState(closestPrecedingNode != null, "Closest node could not be null");
-
-        if (closestPrecedingNode instanceof MultipathDrawable) {
-
-        } else {
-            List<Drawable> successors = graph.successors(closestPrecedingNode);
-            checkState(successors.size() == 1, "Must be of size 1");
-
-            Drawable successor = successors.get(0);
-
-            if (withinYBounds(dropY, closestPrecedingNode)) {
-                GenericComponentDrawable genericDrawable = new GenericComponentDrawable(component);
-                copy.add(closestPrecedingNode, genericDrawable);
-                copy.add(genericDrawable, successor);
-                copy.remove(closestPrecedingNode, successor);
-            }
-        }
-
-
-        /**
-         GenericComponentDrawable genericDrawable = new GenericComponentDrawable(component);
-
-        for (Drawable precedingNode : precedingNodes) {
-
-            if (precedingNode instanceof MultipathDrawable) {
-         // If Multipath no bound on the actual Y axis (the bound is given by the successors)
-
-                continue; // TODO: Handle this
-
-            } else {
-
-         graph.successors(precedingNode)
-                        .stream()
-                        .filter(successor -> dropX < successor.x())
-                        .findFirst()
-                        .ifPresent(successor -> {
-
-
-         List<Drawable> predecessors = graph.predecessors(successor);
-         if (predecessors.size() == 1) {
-         // We must check that is within Y bound of the preceding node
-         if (withinYBounds(dropY, precedingNode)) {
-         copy.add(precedingNode, genericDrawable);
-         copy.add(genericDrawable, successor);
-         copy.remove(precedingNode, successor);
-         }
-
-         } else {
-
-         boolean secondHalf = Math.abs(dropX - successor.x()) < Math.floorDiv(Tile.WIDTH, 2);
-         if (secondHalf) {
-         predecessors.forEach(predecessor -> {
-         copy.add(predecessor, genericDrawable);
-         copy.remove(predecessor, successor);
-         });
-         copy.add(genericDrawable, successor);
-         } else {
-         // Find on which predecessor we need to connect
-         predecessors.forEach(predecessor -> {
-         // We must check that is within Y bound of the preceding node
-         if (withinYBounds(dropY, predecessor)) {
-         if (!copy.nodes().contains(genericDrawable)) {
-         copy.add(predecessor, genericDrawable);
-         copy.add(genericDrawable, successor);
-         copy.remove(predecessor, successor);
-         }
-         }
-         });
-         }
-         }
-                        });
-            }
-         }*/
-
-        return Optional.of(copy);
+        return closestPrecedingNode;
     }
 
     private boolean withinYBounds(int dropY, Drawable node) {
-        return dropY > node.y() - Math.floorDiv(Tile.HEIGHT, 2) &&
-                dropY < node.y() + Math.floorDiv(Tile.HEIGHT, 2);
+        return dropY > node.y() - Tile.HALF_HEIGHT &&
+                dropY < node.y() + Tile.HALF_HEIGHT;
     }
+
 }

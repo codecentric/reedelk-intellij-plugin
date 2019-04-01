@@ -20,7 +20,7 @@ public class ChoiceDrawableBuilder implements Builder {
 
         Component component = new Component(name);
 
-        ChoiceDrawable choiceDrawable = new ChoiceDrawable(component);
+        Drawable choiceDrawable = new ChoiceDrawable(component);
 
         graph.add(parent, choiceDrawable);
 
@@ -46,6 +46,7 @@ public class ChoiceDrawableBuilder implements Builder {
 
         // Last node is stop node.
         graph.add(currentDrawable, stopDrawable);
+
         return stopDrawable;
     }
 
