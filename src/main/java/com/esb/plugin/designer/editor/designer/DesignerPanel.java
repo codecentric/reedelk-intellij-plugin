@@ -12,6 +12,8 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.Point2D;
+import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkState;
@@ -41,6 +43,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
         if (graph != null) {
             paintGraph(graphics, graph);
+            paintArrows(graphics, graph);
         }
     }
 
@@ -191,4 +194,19 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
                 node -> node.draw(graphics, this));
     }
 
+    private void paintArrows(Graphics graphics, FlowGraph graph) {
+        paintArrow(graphics, graph, graph.root());
+    }
+
+    private void paintArrow(Graphics graphics, FlowGraph graph, Drawable root) {
+        List<Drawable> successors = graph.successors(root);
+        for (Drawable successor : successors) {
+            graphics.setColor(JBColor.LIGHT_GRAY);
+            Arrow.draw((Graphics2D) graphics,
+                    new Point2D.Double(root.x() + Math.floorDiv(Tile.WIDTH, 2) - 15, root.y()),
+                    new Point2D.Double(successor.x() - Math.floorDiv(Tile.WIDTH, 2) + 15, successor.y()),
+                    10);
+            paintArrow(graphics, graph, successor);
+        }
+    }
 }
