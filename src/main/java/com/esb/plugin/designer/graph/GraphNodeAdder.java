@@ -7,6 +7,7 @@ import com.esb.plugin.designer.graph.drawable.GenericComponentDrawable;
 import com.esb.plugin.designer.graph.drawable.MultipathDrawable;
 
 import java.awt.*;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -96,27 +97,27 @@ public class GraphNodeAdder {
             // Need to find between where dropY lies
             // Find the bottom one
 
-            /**
-             for (int i = 0; i < successors.size(); i++) {
-             Drawable successor = successors.get(i);
 
-             // We look if it goes in between two nodes
-             int yTopBound = successor.y() + Tile.HALF_HEIGHT + Math.floorDiv(Tile.HEIGHT, 4);
-             int yBottomBound = successor.y() + Tile.HALF_HEIGHT - Math.floorDiv(Tile.HEIGHT, 4);
-             if (dropY > yBottomBound && dropY < yTopBound) {
-             System.out.println("Yeah");
-             graph.breadthFirstTraversal();
-             if (optional.isPresent()) {
-             Drawable commonSucessor = optional.get();
-             GenericComponentDrawable genericDrawable = new GenericComponentDrawable(component);
-             graph.add(closestPrecedingNode, genericDrawable);
-             graph.add(genericDrawable, commonSucessor);
-             } else {
-             throw new RuntimeException("Could not find common successor!");
-             }
+            for (int i = 0; i < successors.size(); i++) {
+                Drawable successor = successors.get(i);
 
-             }
-             }*/
+                // We look if it goes in between two nodes
+                int yTopBound = successor.y() + Tile.HALF_HEIGHT + Math.floorDiv(Tile.HEIGHT, 4);
+                int yBottomBound = successor.y() + Tile.HALF_HEIGHT - Math.floorDiv(Tile.HEIGHT, 4);
+                if (dropY > yBottomBound && dropY < yTopBound) {
+                    // Need to find the first common successor:
+                    Optional<Drawable> common = findFirstNotInCollection(graph, ((MultipathDrawable) closestPrecedingNode).getScope(), closestPrecedingNode);
+                    if (common.isPresent()) {
+                        Drawable commonSucessor = common.get();
+                        GenericComponentDrawable genericDrawable = new GenericComponentDrawable(component);
+                        copy.add(closestPrecedingNode, genericDrawable, i + 1);
+                        copy.add(genericDrawable, commonSucessor);
+
+
+                        // We need to att the node in the correct index
+                    }
+                }
+            }
 
 
         } else {
@@ -177,4 +178,15 @@ public class GraphNodeAdder {
     }
 
 
+    // Basically we need to find the first drawable outside the scope.
+    private Optional<Drawable> findFirstNotInCollection(FlowGraph graph, Collection<Drawable> collection, Drawable root) {
+        for (Drawable successor : graph.successors(root)) {
+            if (!collection.contains(successor)) {
+                return Optional.of(successor);
+            }
+            Optional<Drawable> found = findFirstNotInCollection(graph, collection, successor);
+            if (found.isPresent()) return found;
+        }
+        return Optional.empty();
+    }
 }

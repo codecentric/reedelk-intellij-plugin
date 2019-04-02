@@ -33,6 +33,10 @@ public class FlowGraph {
         }
     }
 
+    public void add(@NotNull Drawable n1, @NotNull Drawable n2, int index) {
+        graph.putEdge(n1, n2, index);
+    }
+
     public void remove(Drawable n1) {
         graph.removeNode(n1);
     }

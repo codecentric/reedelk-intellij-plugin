@@ -40,6 +40,14 @@ public class DirectedGraph<NodeType> {
         }
     }
 
+    public void putEdge(NodeType n1, NodeType n2, int index) {
+        checkState(adjacentNodesMap.containsKey(n1), "n1 must be already in graph in order to add an edge");
+        if (!adjacentNodesMap.containsKey(n2)) {
+            adjacentNodesMap.put(n2, new ArrayList<>());
+        }
+        adjacentNodesMap.get(n1).add(index, n2);
+    }
+
     public void putEdge(NodeType n1, NodeType n2) {
         checkState(adjacentNodesMap.containsKey(n1), "n1 must be already in graph in order to add an edge");
         if (!adjacentNodesMap.containsKey(n2)) {

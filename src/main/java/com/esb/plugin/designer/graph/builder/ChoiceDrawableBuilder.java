@@ -9,6 +9,11 @@ import com.esb.plugin.designer.graph.drawable.StopDrawable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class ChoiceDrawableBuilder implements Builder {
 
     @Override
@@ -20,7 +25,7 @@ public class ChoiceDrawableBuilder implements Builder {
 
         Component component = new Component(name);
 
-        Drawable choiceDrawable = new ChoiceDrawable(component);
+        ChoiceDrawable choiceDrawable = new ChoiceDrawable(component);
 
         graph.add(parent, choiceDrawable);
 
@@ -47,6 +52,10 @@ public class ChoiceDrawableBuilder implements Builder {
         // Last node is stop node.
         graph.add(currentDrawable, stopDrawable);
 
+        Collection<Drawable> allNodesBelongingToThisChoice = listNodesBetween(graph, choiceDrawable, stopDrawable);
+        allNodesBelongingToThisChoice
+                .forEach(choiceDrawable::addToScope);
+
         return stopDrawable;
     }
 
@@ -56,5 +65,17 @@ public class ChoiceDrawableBuilder implements Builder {
             currentDrawable = BuilderFactory.get(currentComponentDef).build(currentDrawable, currentComponentDef, graph);
         }
         return currentDrawable;
+    }
+
+    private Collection<Drawable> listNodesBetween(FlowGraph graph, Drawable n1, Drawable n2) {
+        Set<Drawable> accumulator = new HashSet<>();
+        List<Drawable> successors = graph.successors(n1);
+        for (Drawable successor : successors) {
+            if (successor != n2) {
+                accumulator.add(successor);
+            }
+            accumulator.addAll(listNodesBetween(graph, successor, n2));
+        }
+        return accumulator;
     }
 }
