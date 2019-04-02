@@ -52,6 +52,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
             graph = updatedGraph;
             adjustWindowSize();
             invalidate();
+            repaint();
         });
     }
 
