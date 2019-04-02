@@ -2,8 +2,8 @@ package com.esb.plugin.designer.editor;
 
 import com.esb.internal.commons.FileUtils;
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.GraphNodeAdder;
 import com.esb.plugin.designer.graph.builder.FlowGraphBuilder;
+import com.esb.plugin.designer.graph.dnd.GraphNodeAdder;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentEvent;

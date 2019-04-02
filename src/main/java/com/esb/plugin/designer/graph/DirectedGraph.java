@@ -8,7 +8,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class DirectedGraph<NodeType> {
 
-    private final NodeType root;
+    private NodeType root;
     private Map<NodeType, List<NodeType>> adjacentNodesMap = new HashMap<>();
 
     public DirectedGraph(NodeType root) {
@@ -18,6 +18,10 @@ public class DirectedGraph<NodeType> {
 
     public NodeType root() {
         return root;
+    }
+
+    public void root(NodeType root) {
+        this.root = root;
     }
 
     public Collection<NodeType> nodes() {

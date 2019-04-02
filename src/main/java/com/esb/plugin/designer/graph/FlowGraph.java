@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -21,6 +22,14 @@ public class FlowGraph {
 
     private FlowGraph(DirectedGraph<Drawable> graph) {
         this.graph = graph;
+    }
+
+    public void add(@NotNull Drawable n1) {
+        graph.addNode(n1);
+    }
+
+    public void root(@NotNull Drawable n1) {
+        graph.root(n1);
     }
 
     public void add(@Nullable Drawable n1, @NotNull Drawable n2) {
@@ -60,6 +69,7 @@ public class FlowGraph {
     }
 
     public Collection<Drawable> nodes() {
+        if (graph == null) return Collections.emptyList(); // TODO: This is horrible
         return graph.nodes();
     }
 
@@ -81,7 +91,11 @@ public class FlowGraph {
     }
 
     public FlowGraph copy() {
-        return new FlowGraph(graph.copy());
+        if (graph == null) {
+            return new FlowGraph();
+        } else {
+            return new FlowGraph(graph.copy());
+        }
     }
 
 }
