@@ -201,7 +201,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     private void paintArrow(Graphics graphics, FlowGraph graph, Drawable root) {
         List<Drawable> successors = graph.successors(root);
         for (Drawable successor : successors) {
-            graphics.setColor(JBColor.LIGHT_GRAY);
+            graphics.setColor(JBColor.lightGray);
             Arrow.draw((Graphics2D) graphics,
                     new Point2D.Double(root.x() + Math.floorDiv(Tile.WIDTH, 2) - 15, root.y()),
                     new Point2D.Double(successor.x() - Math.floorDiv(Tile.WIDTH, 2) + 15, successor.y()),

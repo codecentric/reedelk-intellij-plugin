@@ -7,6 +7,7 @@ import com.esb.plugin.designer.graph.drawable.DrawableFactory;
 import com.esb.plugin.designer.graph.drawable.MultipathDrawable;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -148,13 +149,12 @@ public class GraphNodeAdder {
             int yBottomBound = successor.y() - Tile.HALF_HEIGHT - Math.floorDiv(Tile.HEIGHT, 4);
             if (dropY > yBottomBound && dropY < yTopBound) {
                 copy.add(closestPrecedingNode, genericDrawable, i);
-                ((MultipathDrawable) closestPrecedingNode).addToScope(genericDrawable);
+                addToScopeIfNecessary(graph, closestPrecedingNode, genericDrawable);
                 // Need to find the first common successor:
                 Optional<Drawable> common = findFirstNotInCollection(graph, ((MultipathDrawable) closestPrecedingNode).getScope(), closestPrecedingNode);
                 if (common.isPresent()) {
                     Drawable commonSucessor = common.get();
                     copy.add(genericDrawable, commonSucessor);
-
                 }
                 return;
             }
@@ -165,7 +165,7 @@ public class GraphNodeAdder {
 
         // This is the first node to be added of the choice component
         copy.add(closestPrecedingNode, genericDrawable);
-        ((MultipathDrawable) closestPrecedingNode).addToScope(genericDrawable);
+        addToScopeIfNecessary(graph, closestPrecedingNode, genericDrawable);
         // Need to find the first common successor:
         Optional<Drawable> common = findFirstNotInCollection(graph, ((MultipathDrawable) closestPrecedingNode).getScope(), closestPrecedingNode);
         if (common.isPresent()) {
@@ -176,23 +176,38 @@ public class GraphNodeAdder {
     }
 
     private void addToScopeIfNecessary(FlowGraph graph, Drawable closestPrecedingNode, Drawable genericDrawable) {
-        Optional<MultipathDrawable> scopeObject = getScopeObject(graph, closestPrecedingNode);
-        scopeObject.ifPresent(multipathDrawable -> multipathDrawable.addToScope(genericDrawable));
+        if (closestPrecedingNode instanceof MultipathDrawable) {
+            MultipathDrawable multipathDrawable = (MultipathDrawable) closestPrecedingNode;
+            multipathDrawable.addToScope(genericDrawable);
+        }
+        List<MultipathDrawable> scopeObjects = getScopeObjects(graph, closestPrecedingNode);
+        scopeObjects.forEach(multipathDrawable -> multipathDrawable.addToScope(genericDrawable));
     }
 
-    private Optional<MultipathDrawable> getScopeObject(FlowGraph graph, Drawable drawable) {
+    // A node might belong to multiple scopes....
+    private List<MultipathDrawable> getScopeObjects(FlowGraph graph, Drawable closestPrecedingNode) {
+        List<MultipathDrawable> scopes = new ArrayList<>();
         Collection<Drawable> nodes = graph.nodes();
         for (Drawable node : nodes) {
             if (node instanceof MultipathDrawable) {
-                if (((MultipathDrawable) node).getScope().contains(drawable)) {
-                    return Optional.of((MultipathDrawable) node);
+                if (((MultipathDrawable) node).getScope().contains(closestPrecedingNode)) {
+                    // But this one might be part of another scope as well...
+                    scopes.add((MultipathDrawable) node);
+                    List<Drawable> predecessors = graph.predecessors(node);
+                    if (!predecessors.isEmpty()) {
+                        for (Drawable predecessor : predecessors) {
+                            scopes.addAll(getScopeObjects(graph, predecessor));
+                        }
+
+                    }
                 }
             }
         }
-        return Optional.empty();
+        return scopes;
     }
 
     // Basically we need to find the first drawable outside the scope.
+    // We need to find the first one outside the current scope
     private Optional<Drawable> findFirstNotInCollection(FlowGraph graph, Collection<Drawable> collection, Drawable root) {
         for (Drawable successor : graph.successors(root)) {
             if (!collection.contains(successor)) {
