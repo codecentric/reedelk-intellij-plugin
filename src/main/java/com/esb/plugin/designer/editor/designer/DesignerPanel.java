@@ -165,7 +165,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         // have grown on the X (or Y) axis.
         int maxX = graph.nodes().stream().mapToInt(Drawable::x).max().getAsInt();
         int maxY = graph.nodes().stream().mapToInt(Drawable::y).max().getAsInt();
-        int newSizeX = maxX + Math.floorDiv(Tile.WIDTH, 2);
+        int newSizeX = maxX + Tile.WIDTH;
         int newSizeY = maxY + Tile.HEIGHT;
         setSize(new Dimension(newSizeX, newSizeY));
         setPreferredSize(new Dimension(newSizeX, newSizeY));
