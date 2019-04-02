@@ -27,26 +27,40 @@ public class GraphNodeAdder {
 
     private static Predicate<Drawable> byPrecedingNodes(FlowGraph graph, int dropX) {
         return preceding -> {
-
             // The drop point is before/after the center of the node or the center + next node position.
             if (dropX <= preceding.x() || dropX >= preceding.x() + Tile.WIDTH + Tile.HALF_WIDTH) {
                 return false;
             }
-
+            // If exists a successor of the current preceding preceding in the preceding + 1 position,
+            // then we restrict the drop position so that we consider valid if and only if its x
+            // coordinates are between preceding x and successor x.
             for (Drawable successor : graph.successors(preceding)) {
-                // If exists a successor of the current preceding preceding in the preceding + 1 position,
-                // then we restrict the drop position so that we consider valid if and only if its x
-                // coordinates are between preceding x and successor x.
                 if (successor.x() == preceding.x() + Tile.WIDTH) {
                     return dropX > preceding.x() && dropX < successor.x();
                 }
             }
-
             // The next successor is beyond the next position so we consider valid a drop point
             // between preceding x and until the end of preceding + 1 position
             return true;
-
         };
+    }
+
+    private Drawable findClosestOnYAxis(List<Drawable> precedingNodes, int dropY) {
+        int min = Integer.MAX_VALUE;
+        Drawable closestPrecedingNode = null;
+        for (Drawable precedingNode : precedingNodes) {
+            int delta = Math.abs(precedingNode.y() - dropY);
+            if (delta < min) {
+                closestPrecedingNode = precedingNode;
+                min = delta;
+            }
+        }
+        return closestPrecedingNode;
+    }
+
+    private boolean withinYBounds(int dropY, Drawable node) {
+        return dropY > node.y() - Tile.HALF_HEIGHT &&
+                dropY < node.y() + Tile.HALF_HEIGHT;
     }
 
     public Optional<FlowGraph> add(FlowGraph graph, Point dropPoint, String componentName) {
@@ -81,6 +95,28 @@ public class GraphNodeAdder {
             List<Drawable> successors = graph.successors(closestPrecedingNode);
             // Need to find between where dropY lies
             // Find the bottom one
+
+            /**
+             for (int i = 0; i < successors.size(); i++) {
+             Drawable successor = successors.get(i);
+
+             // We look if it goes in between two nodes
+             int yTopBound = successor.y() + Tile.HALF_HEIGHT + Math.floorDiv(Tile.HEIGHT, 4);
+             int yBottomBound = successor.y() + Tile.HALF_HEIGHT - Math.floorDiv(Tile.HEIGHT, 4);
+             if (dropY > yBottomBound && dropY < yTopBound) {
+             System.out.println("Yeah");
+             graph.breadthFirstTraversal();
+             if (optional.isPresent()) {
+             Drawable commonSucessor = optional.get();
+             GenericComponentDrawable genericDrawable = new GenericComponentDrawable(component);
+             graph.add(closestPrecedingNode, genericDrawable);
+             graph.add(genericDrawable, commonSucessor);
+             } else {
+             throw new RuntimeException("Could not find common successor!");
+             }
+
+             }
+             }*/
 
 
         } else {
@@ -140,22 +176,5 @@ public class GraphNodeAdder {
         return Optional.of(copy);
     }
 
-    private Drawable findClosestOnYAxis(List<Drawable> precedingNodes, int dropY) {
-        int min = Integer.MAX_VALUE;
-        Drawable closestPrecedingNode = null;
-        for (Drawable precedingNode : precedingNodes) {
-            int delta = Math.abs(precedingNode.y() - dropY);
-            if (delta < min) {
-                closestPrecedingNode = precedingNode;
-                min = delta;
-            }
-        }
-        return closestPrecedingNode;
-    }
-
-    private boolean withinYBounds(int dropY, Drawable node) {
-        return dropY > node.y() - Tile.HALF_HEIGHT &&
-                dropY < node.y() + Tile.HALF_HEIGHT;
-    }
 
 }

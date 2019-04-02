@@ -93,32 +93,6 @@ public class DirectedGraph<NodeType> {
         }
     }
 
-    public Optional<NodeType> commonSuccessor(NodeType n1, NodeType n2) {
-        Collection<NodeType> n1Descendants = descendants(n1);
-        List<NodeType> successors = successors(n2);
-        for (NodeType successor : successors) {
-            if (n1Descendants.contains(successor)) {
-                return Optional.of(successor);
-            }
-        }
-        for (NodeType successor : successors) {
-            Optional<NodeType> commonSuccessor = commonSuccessor(n1, successor);
-            if (commonSuccessor.isPresent()) {
-                return commonSuccessor;
-            }
-        }
-        return Optional.empty();
-    }
-
-    private Collection<NodeType> descendants(NodeType n1) {
-        List<NodeType> descendants = new ArrayList<>();
-        for (NodeType descendant : successors(n1)) {
-            descendants.add(descendant);
-            descendants.addAll(descendants(descendant));
-        }
-        return descendants;
-    }
-
     public DirectedGraph<NodeType> copy() {
         DirectedGraph<NodeType> copy = new DirectedGraph<>(root);
         Map<NodeType, List<NodeType>> edges = edges();
