@@ -84,19 +84,23 @@ public class GraphNodeAdder {
                 copy.add(closestPrecedingNode, genericDrawable);
                 addToScopeIfNecessary(graph, closestPrecedingNode, genericDrawable);
             } else {
-                // The closest preceding node belongs to a scope, we need to check if it is in the first
-                // or second half
-                if (dropX <= closestPrecedingNode.x() + Tile.WIDTH) {
+                // The closest preceding node belongs to a scope, we need to check if it is within the
+                // scope boundaries
+                if (dropX <= getScopeXEdge(nodeScopedDrawables.get(0))) {
                     copy.add(closestPrecedingNode, genericDrawable);
                     addToScopeIfNecessary(graph, closestPrecedingNode, genericDrawable);
 
-                } else if (dropX > closestPrecedingNode.x() + Tile.WIDTH) {
-                    // Add it outside and connect all child nodes
-                    copy.add(closestPrecedingNode, genericDrawable);
-                    addToScopeIfNecessary(graph, closestPrecedingNode, genericDrawable);
-                } else {
-                    copy.add(closestPrecedingNode, genericDrawable);
-                    addToScopeIfNecessary(graph, closestPrecedingNode, genericDrawable);
+                    // The reality is that here we need to find the boundaries of the scope
+                    // Get scope x edge:
+                } else if (dropX > getScopeXEdge(nodeScopedDrawables.get(0))) {
+                    // Add it outside the scope and connect all child nodes
+                    Collection<Drawable> nodesConnectedToZeroOrOutsideScopeDrawables = findNodesConnectedToZeroOrOutsideScopeDrawables(graph, nodeScopedDrawables.get(0));
+                    for (Drawable lastNode : nodesConnectedToZeroOrOutsideScopeDrawables) {
+                        copy.add(lastNode, genericDrawable);
+                    }
+
+                } else {//TODO: Should never get to this point
+                    throw new RuntimeException("Should never get to this point");
                 }
             }
 
@@ -104,52 +108,47 @@ public class GraphNodeAdder {
         }
 
         // Successor MUST be 1, otherwise it would be a multipath drawable.
-        Drawable successor = successors.get(0);
+        Drawable successorOfClosestPrecedingNode = successors.get(0);
+        // If closest preceding node belongs to a scope and successor to another one,
+        // need to detect where it belongs.
+        if (belongToDifferentScopes(graph, successorOfClosestPrecedingNode, closestPrecedingNode)) {
+            // Do Stuff
+            List<ScopedDrawable> nodeScopedDrawables = findScopesForNode(graph, closestPrecedingNode);
 
-        List<Drawable> predecessors = graph.predecessors(successor);
-        // one-to-one drawable connection N1 -> N2 -> N3
-        if (predecessors.size() == 1) {
-
-            if (withinYBounds(dropY, closestPrecedingNode)) {
+            if (dropX <= getScopeXEdge(nodeScopedDrawables.get(0))) {
                 copy.add(closestPrecedingNode, genericDrawable);
-                copy.add(genericDrawable, successor);
-                copy.remove(closestPrecedingNode, successor);
+                copy.remove(closestPrecedingNode, successorOfClosestPrecedingNode);
+                copy.add(genericDrawable, successorOfClosestPrecedingNode);
                 addToScopeIfNecessary(graph, closestPrecedingNode, genericDrawable);
-            }
-
-        } else if (predecessors.size() > 1) {
-            // If successor of closesPrecedingNode has n > 1 predecessors:
-            // many-to-one drawable connection
-            // N1   N2
-            //  \  /
-            //   N3
-            //  1. If it is first before successor minus half tile width,
-            //  then attach it to closest preceding node.
-            if (dropX < successor.x() - Tile.HALF_WIDTH) {
-
-                // Check that it is aligned on Y axis on the preceding node before link it.
-                if (withinYBounds(dropY, closestPrecedingNode)) {
-                    copy.add(closestPrecedingNode, genericDrawable);
-                    copy.add(genericDrawable, successor);
-                    copy.remove(closestPrecedingNode, successor);
-                    addToScopeIfNecessary(graph, closestPrecedingNode, genericDrawable);
+            } else if (dropX > getScopeXEdge(nodeScopedDrawables.get(0))) {
+                // Add it outside the scope and connect all child nodes
+                Collection<Drawable> nodesConnectedToZeroOrOutsideScopeDrawables = findNodesConnectedToZeroOrOutsideScopeDrawables(graph, nodeScopedDrawables.get(0));
+                for (Drawable lastNode : nodesConnectedToZeroOrOutsideScopeDrawables) {
+                    copy.add(lastNode, genericDrawable);
+                    copy.remove(lastNode, successorOfClosestPrecedingNode);
                 }
-
-            } else {
-
-                // 2. If dropX is between successor mid point minus half tile width, then
-                // the node is going do replace the join.
-                if (withinYBounds(dropY, successor)) {
-                    for (Drawable predecessor : predecessors) {
-                        copy.add(predecessor, genericDrawable);
-                        copy.remove(predecessor, successor);
-                    }
-                    copy.add(genericDrawable, successor);
-                }
+                copy.add(genericDrawable, successorOfClosestPrecedingNode);
+            } else {//TODO: Should never get to this point
+                throw new RuntimeException("Should never get to this point");
             }
         } else {
-            throw new IllegalStateException("Predecessors must not be 0 or less than 0");
+            if (withinYBounds(dropY, closestPrecedingNode)) {
+                copy.add(closestPrecedingNode, genericDrawable);
+                copy.add(genericDrawable, successorOfClosestPrecedingNode);
+                copy.remove(closestPrecedingNode, successorOfClosestPrecedingNode);
+                addToScopeIfNecessary(graph, closestPrecedingNode, genericDrawable);
+            }
         }
+    }
+
+    private boolean belongToDifferentScopes(FlowGraph graph, Drawable drawable1, Drawable drawable2) {
+        List<ScopedDrawable> scopesForNode1 = findScopesForNode(graph, drawable1);
+        List<ScopedDrawable> scopesForNode2 = findScopesForNode(graph, drawable2);
+        return !scopesForNode1.containsAll(scopesForNode2);
+    }
+
+    private int getScopeXEdge(ScopedDrawable scopedDrawable) {
+        return scopedDrawable.listDrawables().stream().mapToInt(Drawable::x).max().getAsInt() + Tile.HALF_WIDTH;
     }
 
     /*
@@ -260,4 +259,14 @@ public class GraphNodeAdder {
         return dropY > node.y() - Tile.HALF_HEIGHT &&
                 dropY < node.y() + Tile.HALF_HEIGHT;
     }
+
+    private Collection<Drawable> findNodesConnectedToZeroOrOutsideScopeDrawables(FlowGraph graph, ScopedDrawable scope) {
+        Collection<Drawable> drawablesInTheScope = scope.listDrawables();
+        return drawablesInTheScope.stream().filter(drawable -> {
+            List<Drawable> successors = graph.successors(drawable);
+            if (successors.isEmpty()) return true;
+            return !drawablesInTheScope.containsAll(successors);
+        }).collect(toList());
+    }
+
 }
