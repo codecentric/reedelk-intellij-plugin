@@ -14,6 +14,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -47,7 +48,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         if (graph != null) {
             paintGraph(graphics, graph);
             paintConnections(graphics, graph);
-            //paintScopes(graphics, graph);
+            paintScopes(graphics, graph);
         }
     }
 
@@ -225,12 +226,19 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         }
     }
 
-    private void paintScope(Graphics graphics, ScopedDrawable scopedDrawable) {
+    private <T extends ScopedDrawable> void paintScope(Graphics graphics, T scopedDrawable) {
         Collection<Drawable> drawables = scopedDrawable.listDrawables();
-        int maxX = drawables.stream().mapToInt(Drawable::x).max().getAsInt();
-        int maxY = drawables.stream().mapToInt(Drawable::y).max().getAsInt();
-        int minX = drawables.stream().mapToInt(Drawable::x).min().getAsInt();
-        int minY = drawables.stream().mapToInt(Drawable::y).min().getAsInt();
+        if (drawables.isEmpty()) {
+            return;
+        }
+
+        List<Drawable> drawables1 = new ArrayList<>(drawables);
+        drawables1.add(scopedDrawable);
+        int maxX = drawables1.stream().mapToInt(Drawable::x).max().getAsInt();
+        int maxY = drawables1.stream().mapToInt(Drawable::y).max().getAsInt();
+        int minX = drawables1.stream().mapToInt(Drawable::x).min().getAsInt();
+        int minY = drawables1.stream().mapToInt(Drawable::y).min().getAsInt();
+
 
         // Draw line between :
         int line1X = minX - Tile.HALF_WIDTH;
