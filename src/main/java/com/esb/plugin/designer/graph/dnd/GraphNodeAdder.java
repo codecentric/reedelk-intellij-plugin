@@ -7,9 +7,11 @@ import com.esb.plugin.designer.graph.drawable.DrawableFactory;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 
 import java.awt.*;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+
+import static com.esb.plugin.designer.graph.dnd.GraphNodeAdderUtilities.*;
+import static com.google.common.base.Preconditions.checkState;
 
 /**
  * Adds to the graph a new node representing the Component Name to the given location.
@@ -41,21 +43,20 @@ public class GraphNodeAdder {
             modifiableGraph.add(null, nodeToAdd);
 
             // Check if we are replacing the first (root) node.
-        } else if (GraphNodeAdderUtilities.isReplacingRoot(graph, dropPoint)) {
+        } else if (isReplacingRoot(graph, dropPoint)) {
             modifiableGraph.add(nodeToAdd);
             modifiableGraph.add(nodeToAdd, graph.root());
             modifiableGraph.root(nodeToAdd);
 
         } else {
-            Optional<Drawable> optionalClosestPrecedingDrawable =
-                    GraphNodeAdderUtilities.findClosestPrecedingDrawable(graph, dropPoint);
-            optionalClosestPrecedingDrawable.ifPresent(precedingDrawable -> {
-                if (precedingDrawable instanceof ScopedDrawable) {
-                    scopedPrecedingDrawable((ScopedDrawable) precedingDrawable);
-                } else {
-                    precedingDrawable(precedingDrawable);
-                }
-            });
+            findClosestPrecedingDrawable(graph, dropPoint)
+                    .ifPresent(precedingDrawable -> {
+                        if (precedingDrawable instanceof ScopedDrawable) {
+                            scopedPrecedingDrawable((ScopedDrawable) precedingDrawable);
+                        } else {
+                            precedingDrawable(precedingDrawable);
+                        }
+                    });
         }
 
         return Optional.of(modifiableGraph);
@@ -65,8 +66,10 @@ public class GraphNodeAdder {
         List<Drawable> successors = graph.successors(closestPrecedingNode);
         if (successors.isEmpty()) {
             precedingDrawableWithoutSuccessors(closestPrecedingNode);
+
         } else {
-            // Successor MUST be 1, otherwise it would be a Scoped Drawable.
+            checkState(successors.size() == 1,
+                    "Successors size MUST be 1, otherwise it is a Scoped Drawable");
             Drawable successorOfClosestPrecedingNode = successors.get(0);
             precedingDrawableWithOneSuccessor(closestPrecedingNode, successorOfClosestPrecedingNode);
         }
@@ -87,24 +90,23 @@ public class GraphNodeAdder {
             ScopeUtilities.addToScopeIfNecessary(graph, closestPrecedingNode, nodeToAdd);
 
         } else {
-
             if (dropPoint.x <= ScopeUtilities.getScopeXEdge(nodeScopedDrawables.get(0))) {
                 modifiableGraph.add(closestPrecedingNode, nodeToAdd);
                 ScopeUtilities.addToScopeIfNecessary(graph, closestPrecedingNode, nodeToAdd);
+
             } else {
-                Collection<Drawable> nodesConnectedToZeroOrOutsideScopeDrawables = ScopeUtilities.findNodesConnectedToZeroOrOutsideScopeDrawables(graph, nodeScopedDrawables.get(0));
-                for (Drawable lastNode : nodesConnectedToZeroOrOutsideScopeDrawables) {
-                    modifiableGraph.add(lastNode, nodeToAdd);
-                }
+                ScopeUtilities
+                        .findNodesConnectedToZeroOrOutsideScopeDrawables(graph, nodeScopedDrawables.get(0))
+                        .forEach(lastNode -> modifiableGraph.add(lastNode, nodeToAdd));
             }
         }
     }
 
-    private void precedingDrawableWithOneSuccessor(Drawable closestPrecedingNode, Drawable successorOfClosestPrecedingNode) {
+
+    private void precedingDrawableWithOneSuccessor(final Drawable closestPrecedingNode, final Drawable successorOfClosestPrecedingNode) {
 
         if (ScopeUtilities.belongToDifferentScopes(graph, closestPrecedingNode, successorOfClosestPrecedingNode)) {
             List<ScopedDrawable> nodeScopedDrawables = ScopeUtilities.findScopesForNode(graph, closestPrecedingNode);
-
             if (dropPoint.x <= ScopeUtilities.getScopeXEdge(nodeScopedDrawables.get(0))) {
                 // The drop point is inside the scope x edge.
                 modifiableGraph.add(closestPrecedingNode, nodeToAdd);
@@ -114,15 +116,17 @@ public class GraphNodeAdder {
             } else {
                 // The drop point is outside the scope x edge. We must connect all the last
                 // nodes belonging to the scope to this node.
-                ScopeUtilities.findNodesConnectedToZeroOrOutsideScopeDrawables(graph, nodeScopedDrawables.get(0))
+                ScopeUtilities
+                        .findNodesConnectedToZeroOrOutsideScopeDrawables(graph, nodeScopedDrawables.get(0))
                         .forEach(lastNode -> {
                             modifiableGraph.add(lastNode, nodeToAdd);
                             modifiableGraph.remove(lastNode, successorOfClosestPrecedingNode);
                         });
                 modifiableGraph.add(nodeToAdd, successorOfClosestPrecedingNode);
             }
+
         } else {
-            if (GraphNodeAdderUtilities.withinYBounds(dropPoint.y, closestPrecedingNode)) {
+            if (withinYBounds(dropPoint.y, closestPrecedingNode)) {
                 modifiableGraph.add(closestPrecedingNode, nodeToAdd);
                 modifiableGraph.add(nodeToAdd, successorOfClosestPrecedingNode);
                 modifiableGraph.remove(closestPrecedingNode, successorOfClosestPrecedingNode);
