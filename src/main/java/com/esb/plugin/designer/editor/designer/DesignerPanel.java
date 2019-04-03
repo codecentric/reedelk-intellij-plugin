@@ -204,17 +204,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         paintConnection(graphics, graph, graph.root());
     }
 
-    private void paintConnection(Graphics graphics, FlowGraph graph, Drawable root) {
-        List<Drawable> successors = graph.successors(root);
-        for (Drawable successor : successors) {
-            graphics.setColor(JBColor.lightGray);
-            Arrow.draw((Graphics2D) graphics,
-                    new Point2D.Double(root.x() + Math.floorDiv(Tile.WIDTH, 2) - 15, root.y()),
-                    new Point2D.Double(successor.x() - Math.floorDiv(Tile.WIDTH, 2) + 15, successor.y()),
-                    10);
-            paintConnection(graphics, graph, successor);
-        }
-    }
+    private final int INNER_PADDING = 3;
 
     private void paintScopes(Graphics graphics, FlowGraph graph) {
         List<ScopedDrawable> scopedDrawables = graph.nodes().stream()
@@ -227,32 +217,63 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         }
     }
 
-    private <T extends ScopedDrawable> void paintScope(Graphics graphics, T scopedDrawable) {
+    private void paintConnection(Graphics graphics, FlowGraph graph, Drawable root) {
+        List<Drawable> successors = graph.successors(root);
+        for (Drawable successor : successors) {
+            if (!(root instanceof ScopedDrawable)) {
+                graphics.setColor(JBColor.lightGray);
+                Arrow.draw((Graphics2D) graphics,
+                        new Point2D.Double(root.x() + Math.floorDiv(Tile.WIDTH, 2) - 15, root.y()),
+                        new Point2D.Double(successor.x() - Math.floorDiv(Tile.WIDTH, 2) + 15, successor.y()),
+                        10);
+            }
+            paintConnection(graphics, graph, successor);
+        }
+    }
+
+    private void paintScope(Graphics graphics, ScopedDrawable scopedDrawable) {
         Collection<Drawable> drawables = scopedDrawable.getDrawablesInScope();
+
+        int maxX;
+        int maxY;
+        int minX;
+        int minY;
+
         if (drawables.isEmpty()) {
-            return;
+            // Draw a line only bounding the box
+            maxX = scopedDrawable.x();
+            maxY = scopedDrawable.y();
+            minX = scopedDrawable.x();
+            minY = scopedDrawable.y();
+        } else {
+            List<Drawable> drawables1 = new ArrayList<>(drawables);
+            drawables1.add(scopedDrawable);
+            maxX = drawables1.stream().mapToInt(Drawable::x).max().getAsInt();
+            maxY = drawables1.stream().mapToInt(Drawable::y).max().getAsInt();
+            minX = drawables1.stream().mapToInt(Drawable::x).min().getAsInt();
+            minY = drawables1.stream().mapToInt(Drawable::y).min().getAsInt();
         }
 
-        List<Drawable> drawables1 = new ArrayList<>(drawables);
-        drawables1.add(scopedDrawable);
-        int maxX = drawables1.stream().mapToInt(Drawable::x).max().getAsInt();
-        int maxY = drawables1.stream().mapToInt(Drawable::y).max().getAsInt();
-        int minX = drawables1.stream().mapToInt(Drawable::x).min().getAsInt();
-        int minY = drawables1.stream().mapToInt(Drawable::y).min().getAsInt();
 
+        // Horizontal
+        int verticalX = scopedDrawable.x() + Tile.HALF_WIDTH;
+        int verticalMinY = minY - Math.floorDiv(Tile.HEIGHT, 3);
+        int verticalMaxY = maxY + Math.floorDiv(Tile.HEIGHT, 3);
+        graphics.setColor(new JBColor(Gray._200, Gray._30));
+        graphics.drawLine(verticalX, verticalMinY, verticalX, verticalMaxY);
 
-        // Draw line between :
-        int line1X = minX - Tile.HALF_WIDTH;
-        int line1Y = minY - Tile.HALF_HEIGHT;
+        // Draw square
+        int line1X = minX - Tile.HALF_WIDTH + INNER_PADDING;
+        int line1Y = minY - Tile.HALF_HEIGHT + INNER_PADDING;
 
-        int line2X = maxX + Tile.HALF_WIDTH;
-        int line2Y = minY - Tile.HALF_HEIGHT;
+        int line2X = maxX + Tile.HALF_WIDTH - INNER_PADDING;
+        int line2Y = minY - Tile.HALF_HEIGHT + INNER_PADDING;
 
-        int line3X = maxX + Tile.HALF_WIDTH;
-        int line3Y = maxY + Tile.HALF_HEIGHT;
+        int line3X = maxX + Tile.HALF_WIDTH - INNER_PADDING;
+        int line3Y = maxY + Tile.HALF_HEIGHT - INNER_PADDING;
 
-        int line4X = minX - Tile.HALF_WIDTH;
-        int line4Y = maxY + Tile.HALF_HEIGHT;
+        int line4X = minX - Tile.HALF_WIDTH + INNER_PADDING;
+        int line4Y = maxY + Tile.HALF_HEIGHT - INNER_PADDING;
 
         graphics.setColor(new JBColor(Gray._235, Gray._30));
         graphics.drawLine(line1X, line1Y, line2X, line2Y);
