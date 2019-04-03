@@ -6,7 +6,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -69,8 +68,12 @@ public class FlowGraph {
     }
 
     public Collection<Drawable> nodes() {
-        if (graph == null) return Collections.emptyList(); // TODO: This is horrible
+        checkState(graph != null, "It is not possible to call node on an un-initialized graph");
         return graph.nodes();
+    }
+
+    public boolean isEmpty() {
+        return graph == null || graph.nodes().isEmpty();
     }
 
     public void breadthFirstTraversal(@NotNull Drawable drawable, @NotNull Consumer<Drawable> consumer) {

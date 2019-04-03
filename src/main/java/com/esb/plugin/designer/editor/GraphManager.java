@@ -40,13 +40,11 @@ public class GraphManager extends DropTarget implements FileEditorManagerListene
 
     private FlowGraph graph;
     private GraphChangeListener listener;
-    private GraphNodeAdder graphNodeAdder;
     private MessageBusConnection busConnection;
 
     GraphManager(Project project, VirtualFile managedGraphFile) {
         this.busConnection = project.getMessageBus().connect();
         this.busConnection.subscribe(FILE_EDITOR_MANAGER, this);
-        this.graphNodeAdder = new GraphNodeAdder();
 
         buildGraph(managedGraphFile)
                 .ifPresent(((Consumer<FlowGraph>) fromFileGraph -> graph = fromFileGraph)
@@ -81,15 +79,17 @@ public class GraphManager extends DropTarget implements FileEditorManagerListene
             String componentName = (String) dropEvent.getTransferable().getTransferData(DataFlavor.stringFlavor);
 
             Point location = dropEvent.getLocation();
-            Optional<FlowGraph> added = graphNodeAdder.add(graph, location, componentName);
-            if (!added.isPresent()) {
-                dropEvent.rejectDrop();
-            } else {
-                added.ifPresent(((Consumer<FlowGraph>) fromFileGraph -> graph = fromFileGraph)
-                        .andThen(graph -> dropEvent.acceptDrop(ACTION_COPY_OR_MOVE))
-                        .andThen(graph -> computeGraphPositionsAndNotifyChange()));
-            }
+            GraphNodeAdder nodeAdder = new GraphNodeAdder(graph, location, componentName);
+            Optional<FlowGraph> modifiedGraph = nodeAdder.add();
 
+            if (modifiedGraph.isPresent()) {
+                modifiedGraph.ifPresent(((Consumer<FlowGraph>) updatedGraph -> graph = updatedGraph)
+                        .andThen(updatedGraph -> dropEvent.acceptDrop(ACTION_COPY_OR_MOVE))
+                        .andThen(updatedGraph -> computeGraphPositionsAndNotifyChange()));
+            } else {
+                // Drop rejected if the graph was not modified.
+                dropEvent.rejectDrop();
+            }
         } catch (UnsupportedFlavorException | IOException e) {
             dropEvent.rejectDrop();
         }

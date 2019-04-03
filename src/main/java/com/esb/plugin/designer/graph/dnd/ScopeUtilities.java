@@ -61,24 +61,26 @@ public class ScopeUtilities {
         scopedDrawableObjects.forEach(scopedDrawable -> scopedDrawable.add(targetDrawableToAdd));
     }
 
-
-    // Basically we need to find the first drawable outside the scope.
-    // We need to find the first one outside the current scope
-    public static Optional<Drawable> findFirstNotInCollection(FlowGraph graph, Collection<Drawable> collection, Drawable root) {
-        for (Drawable successor : graph.successors(root)) {
-            if (!collection.contains(successor)) {
-                return Optional.of(successor);
-            }
-            Optional<Drawable> found = findFirstNotInCollection(graph, collection, successor);
-            if (found.isPresent()) return found;
-        }
-        return Optional.empty();
-    }
-
-
     public static int getScopeXEdge(ScopedDrawable scopedDrawable) {
         return scopedDrawable.listDrawables().stream().mapToInt(Drawable::x).max().getAsInt() + Tile.HALF_WIDTH;
     }
 
+    /**
+     * It finds the first node outside the given ScopedDrawable.
+     */
+    public static Optional<Drawable> findFirstNodeOutsideScope(FlowGraph graph, ScopedDrawable scopedDrawable) {
+        return findFirstOutsideCollection(graph, scopedDrawable.listDrawables(), scopedDrawable);
+    }
+
+    private static Optional<Drawable> findFirstOutsideCollection(FlowGraph graph, Collection<Drawable> collection, Drawable root) {
+        for (Drawable successor : graph.successors(root)) {
+            if (!collection.contains(successor)) {
+                return Optional.of(successor);
+            }
+            Optional<Drawable> found = findFirstOutsideCollection(graph, collection, successor);
+            if (found.isPresent()) return found;
+        }
+        return Optional.empty();
+    }
 
 }

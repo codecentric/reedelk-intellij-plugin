@@ -11,9 +11,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import static com.esb.plugin.designer.graph.dnd.DndPredicates.byPrecedingNodesOnX;
-import static java.util.stream.Collectors.toList;
-
 /**
  * Adds to the graph a new node representing the Component Name to the given location.
  * The returned graph is a copy. An empty optional is returned if the node could not be
@@ -24,158 +21,146 @@ import static java.util.stream.Collectors.toList;
  */
 public class GraphNodeAdder {
 
-    public Optional<FlowGraph> add(FlowGraph graph, Point dropPoint, String componentName) {
+    private final Point dropPoint;
+    private final Drawable nodeToAdd;
 
-        Drawable genericDrawable = DrawableFactory.get(componentName);
+    private final FlowGraph graph;
+    private final FlowGraph modifiableGraph;
 
-        if (graph == null) graph = new FlowGraph();
-
-        FlowGraph copy = graph.copy();
-        if (graph.nodes().isEmpty()) {
-            copy.add(null, genericDrawable);
-            return Optional.of(copy);
-        }
-
-        int dropX = dropPoint.x;
-        int dropY = dropPoint.y;
-
-        // If does not exists a node before the current dropX, then we are replacing the root.
-        if (GraphNodeAdderUtilities.isReplacingRoot(graph, dropX)) {
-            copy.add(genericDrawable);
-            copy.add(genericDrawable, graph.root());
-            copy.root(genericDrawable);
-            return Optional.of(copy);
-        }
-
-        // Find all preceding nodes on X axis
-        List<Drawable> precedingNodes = graph
-                .nodes()
-                .stream()
-                .filter(byPrecedingNodesOnX(graph, dropX))
-                .collect(toList());
-
-        // Amongst all preceding nodes find the closest on the Y axis
-        Drawable closestPrecedingDrawable = GraphNodeAdderUtilities.findClosestOnYAxis(precedingNodes, dropY);
-
-        if (closestPrecedingDrawable instanceof ScopedDrawable) {
-            handlePrecedingMultipathDrawable(graph, genericDrawable, copy, dropY, closestPrecedingDrawable);
-
-        } else if (closestPrecedingDrawable != null) {
-            handlePrecedingDrawable(graph, genericDrawable, copy, dropX, dropY, closestPrecedingDrawable);
-
-        } else {
-            // closest preceding node is null, the drop point is too far.
-            // Nothing to do. Original graph is unchanged.
-        }
-
-        return Optional.of(copy);
+    public GraphNodeAdder(FlowGraph graph, Point dropPoint, String componentName) {
+        this.graph = graph == null ? new FlowGraph() : graph;
+        this.modifiableGraph = this.graph.copy();
+        this.dropPoint = dropPoint;
+        this.nodeToAdd = DrawableFactory.get(componentName);
     }
 
-    private void handlePrecedingDrawable(FlowGraph graph, Drawable genericDrawable, FlowGraph copy, int dropX, int dropY, Drawable closestPrecedingNode) {
+
+    public Optional<FlowGraph> add() {
+        // First Drawable added to the canvas (it is root)
+        if (graph.isEmpty()) {
+            modifiableGraph.add(null, nodeToAdd);
+
+            // Check if we are replacing the first (root) node.
+        } else if (GraphNodeAdderUtilities.isReplacingRoot(graph, dropPoint)) {
+            modifiableGraph.add(nodeToAdd);
+            modifiableGraph.add(nodeToAdd, graph.root());
+            modifiableGraph.root(nodeToAdd);
+
+        } else {
+            Optional<Drawable> optionalClosestPrecedingDrawable =
+                    GraphNodeAdderUtilities.findClosestPrecedingDrawable(graph, dropPoint);
+            optionalClosestPrecedingDrawable.ifPresent(precedingDrawable -> {
+                if (precedingDrawable instanceof ScopedDrawable) {
+                    scopedPrecedingDrawable((ScopedDrawable) precedingDrawable);
+                } else {
+                    precedingDrawable(precedingDrawable);
+                }
+            });
+        }
+
+        return Optional.of(modifiableGraph);
+    }
+
+    private void precedingDrawable(Drawable closestPrecedingNode) {
         List<Drawable> successors = graph.successors(closestPrecedingNode);
         if (successors.isEmpty()) {
-            // This is the last node:
-            // If the closestPreceding node belongs to a scope, then:
-            // If it is in the first half, then we add it to that scope,
-            // otherwise we add it outside
-            List<ScopedDrawable> nodeScopedDrawables = ScopeUtilities.findScopesForNode(graph, closestPrecedingNode);
-            if (nodeScopedDrawables.isEmpty()) {
-                copy.add(closestPrecedingNode, genericDrawable);
-                ScopeUtilities.addToScopeIfNecessary(graph, closestPrecedingNode, genericDrawable);
-            } else {
-                // The closest preceding node belongs to a scope, we need to check if it is within the
-                // scope boundaries
-                if (dropX <= ScopeUtilities.getScopeXEdge(nodeScopedDrawables.get(0))) {
-                    copy.add(closestPrecedingNode, genericDrawable);
-                    ScopeUtilities.addToScopeIfNecessary(graph, closestPrecedingNode, genericDrawable);
-
-                    // The reality is that here we need to find the boundaries of the scope
-                    // Get scope x edge:
-                } else if (dropX > ScopeUtilities.getScopeXEdge(nodeScopedDrawables.get(0))) {
-                    // Add it outside the scope and connect all child nodes
-                    Collection<Drawable> nodesConnectedToZeroOrOutsideScopeDrawables = ScopeUtilities.findNodesConnectedToZeroOrOutsideScopeDrawables(graph, nodeScopedDrawables.get(0));
-                    for (Drawable lastNode : nodesConnectedToZeroOrOutsideScopeDrawables) {
-                        copy.add(lastNode, genericDrawable);
-                    }
-
-                } else {//TODO: Should never get to this point
-                    throw new RuntimeException("Should never get to this point");
-                }
-            }
-
-            return;
+            precedingDrawableWithoutSuccessors(closestPrecedingNode);
+        } else {
+            // Successor MUST be 1, otherwise it would be a Scoped Drawable.
+            Drawable successorOfClosestPrecedingNode = successors.get(0);
+            precedingDrawableWithOneSuccessor(closestPrecedingNode, successorOfClosestPrecedingNode);
         }
+    }
 
-        // Successor MUST be 1, otherwise it would be a Scoped Drawable.
-        Drawable successorOfClosestPrecedingNode = successors.get(0);
-
-        if (ScopeUtilities.belongToDifferentScopes(graph, successorOfClosestPrecedingNode, closestPrecedingNode)) {
-
-            List<ScopedDrawable> nodeScopedDrawables = ScopeUtilities.findScopesForNode(graph, closestPrecedingNode);
-
-            if (dropX <= ScopeUtilities.getScopeXEdge(nodeScopedDrawables.get(0))) {
-                copy.add(closestPrecedingNode, genericDrawable);
-                copy.remove(closestPrecedingNode, successorOfClosestPrecedingNode);
-                copy.add(genericDrawable, successorOfClosestPrecedingNode);
-                ScopeUtilities.addToScopeIfNecessary(graph, closestPrecedingNode, genericDrawable);
-
-                //dropX > ScopeUtilities.getScopeXEdge(nodeScopedDrawables.get(0))
-            } else {
-                // Add it outside the scope and connect all child nodes
-                Collection<Drawable> nodesConnectedToZeroOrOutsideScopeDrawables = ScopeUtilities.findNodesConnectedToZeroOrOutsideScopeDrawables(graph, nodeScopedDrawables.get(0));
-                for (Drawable lastNode : nodesConnectedToZeroOrOutsideScopeDrawables) {
-                    copy.add(lastNode, genericDrawable);
-                    copy.remove(lastNode, successorOfClosestPrecedingNode);
-                }
-                copy.add(genericDrawable, successorOfClosestPrecedingNode);
-            }
+    /**
+     * Handles the case where the closest preceding node is the LAST NODE.
+     * If the closest preceding node belongs to a scope, then:
+     * - if it is within the scope x edge, then add it to that scope.
+     * - if it is NOT within the scope x edge, add it outside and connect all last nodes from the scope
+     * If the closest preceding node does not belong to a scope, then:
+     * - Add the node as successor.
+     */
+    private void precedingDrawableWithoutSuccessors(Drawable closestPrecedingNode) {
+        List<ScopedDrawable> nodeScopedDrawables = ScopeUtilities.findScopesForNode(graph, closestPrecedingNode);
+        if (nodeScopedDrawables.isEmpty()) {
+            modifiableGraph.add(closestPrecedingNode, nodeToAdd);
+            ScopeUtilities.addToScopeIfNecessary(graph, closestPrecedingNode, nodeToAdd);
 
         } else {
-            if (GraphNodeAdderUtilities.withinYBounds(dropY, closestPrecedingNode)) {
-                copy.add(closestPrecedingNode, genericDrawable);
-                copy.add(genericDrawable, successorOfClosestPrecedingNode);
-                copy.remove(closestPrecedingNode, successorOfClosestPrecedingNode);
-                ScopeUtilities.addToScopeIfNecessary(graph, closestPrecedingNode, genericDrawable);
+
+            if (dropPoint.x <= ScopeUtilities.getScopeXEdge(nodeScopedDrawables.get(0))) {
+                modifiableGraph.add(closestPrecedingNode, nodeToAdd);
+                ScopeUtilities.addToScopeIfNecessary(graph, closestPrecedingNode, nodeToAdd);
+            } else {
+                Collection<Drawable> nodesConnectedToZeroOrOutsideScopeDrawables = ScopeUtilities.findNodesConnectedToZeroOrOutsideScopeDrawables(graph, nodeScopedDrawables.get(0));
+                for (Drawable lastNode : nodesConnectedToZeroOrOutsideScopeDrawables) {
+                    modifiableGraph.add(lastNode, nodeToAdd);
+                }
+            }
+        }
+    }
+
+    private void precedingDrawableWithOneSuccessor(Drawable closestPrecedingNode, Drawable successorOfClosestPrecedingNode) {
+
+        if (ScopeUtilities.belongToDifferentScopes(graph, closestPrecedingNode, successorOfClosestPrecedingNode)) {
+            List<ScopedDrawable> nodeScopedDrawables = ScopeUtilities.findScopesForNode(graph, closestPrecedingNode);
+
+            if (dropPoint.x <= ScopeUtilities.getScopeXEdge(nodeScopedDrawables.get(0))) {
+                // The drop point is inside the scope x edge.
+                modifiableGraph.add(closestPrecedingNode, nodeToAdd);
+                modifiableGraph.remove(closestPrecedingNode, successorOfClosestPrecedingNode);
+                modifiableGraph.add(nodeToAdd, successorOfClosestPrecedingNode);
+                ScopeUtilities.addToScopeIfNecessary(graph, closestPrecedingNode, nodeToAdd);
+            } else {
+                // The drop point is outside the scope x edge. We must connect all the last
+                // nodes belonging to the scope to this node.
+                ScopeUtilities.findNodesConnectedToZeroOrOutsideScopeDrawables(graph, nodeScopedDrawables.get(0))
+                        .forEach(lastNode -> {
+                            modifiableGraph.add(lastNode, nodeToAdd);
+                            modifiableGraph.remove(lastNode, successorOfClosestPrecedingNode);
+                        });
+                modifiableGraph.add(nodeToAdd, successorOfClosestPrecedingNode);
+            }
+        } else {
+            if (GraphNodeAdderUtilities.withinYBounds(dropPoint.y, closestPrecedingNode)) {
+                modifiableGraph.add(closestPrecedingNode, nodeToAdd);
+                modifiableGraph.add(nodeToAdd, successorOfClosestPrecedingNode);
+                modifiableGraph.remove(closestPrecedingNode, successorOfClosestPrecedingNode);
+                ScopeUtilities.addToScopeIfNecessary(graph, closestPrecedingNode, nodeToAdd);
             }
         }
     }
 
 
+    private void scopedPrecedingDrawable(ScopedDrawable precedingScopedDrawable) {
+        List<Drawable> successors = graph.successors(precedingScopedDrawable);
 
-    private void handlePrecedingMultipathDrawable(FlowGraph graph, Drawable genericDrawable, FlowGraph copy, int dropY, Drawable closestPrecedingNode) {
-        List<Drawable> successors = graph.successors(closestPrecedingNode);
-        for (int i = 0; i < successors.size(); i++) {
-            Drawable successor = successors.get(i);
-
-            // We look if it goes in between two nodes
+        for (int successorIndex = 0; successorIndex < successors.size(); successorIndex++) {
+            // We search the node on which the drop point lies on the Y axis.
+            // If one is found, we stop.
+            Drawable successor = successors.get(successorIndex);
             int yTopBound = successor.y() - Tile.HALF_HEIGHT + Math.floorDiv(Tile.HEIGHT, 4);
             int yBottomBound = successor.y() - Tile.HALF_HEIGHT - Math.floorDiv(Tile.HEIGHT, 4);
-            if (dropY > yBottomBound && dropY < yTopBound) {
-                copy.add(closestPrecedingNode, genericDrawable, i);
-                ScopeUtilities.addToScopeIfNecessary(graph, closestPrecedingNode, genericDrawable);
-                // Need to find the first common successor:
-                Optional<Drawable> common = ScopeUtilities.findFirstNotInCollection(graph, ((ScopedDrawable) closestPrecedingNode).listDrawables(), closestPrecedingNode);
-                if (common.isPresent()) {
-                    Drawable commonSucessor = common.get();
-                    copy.add(genericDrawable, commonSucessor);
-                }
+
+            if (dropPoint.y > yBottomBound && dropPoint.y < yTopBound) {
+                modifiableGraph.add(precedingScopedDrawable, nodeToAdd, successorIndex);
+                ScopeUtilities.addToScopeIfNecessary(graph, precedingScopedDrawable, nodeToAdd);
+                connectCommonSuccessor(precedingScopedDrawable);
                 return;
             }
         }
-
-        // Case where there are no successors to choice or it does not belong before anything.
-        // At to the end.
-
-        // This is the first node to be added of the choice component
-        copy.add(closestPrecedingNode, genericDrawable);
-        ScopeUtilities.addToScopeIfNecessary(graph, closestPrecedingNode, genericDrawable);
-        // Need to find the first common successor:
-        Optional<Drawable> common = ScopeUtilities.findFirstNotInCollection(graph, ((ScopedDrawable) closestPrecedingNode).listDrawables(), closestPrecedingNode);
-        if (common.isPresent()) {
-            Drawable commonSucessor = common.get();
-            copy.add(genericDrawable, commonSucessor);
-        }
-
+        // If we get to this point, then the node to add is in the LAST position
+        // OR it is the first node to be added to the choice component.
+        modifiableGraph.add(precedingScopedDrawable, nodeToAdd);
+        ScopeUtilities.addToScopeIfNecessary(graph, precedingScopedDrawable, nodeToAdd); // add this method to the ScopedDrawable object
+        connectCommonSuccessor(precedingScopedDrawable);
     }
 
+    private void connectCommonSuccessor(ScopedDrawable closestPrecedingNode) {
+        Optional<Drawable> commonSuccessor = ScopeUtilities.findFirstNodeOutsideScope(graph, closestPrecedingNode);
+        if (commonSuccessor.isPresent()) {
+            Drawable successor = commonSuccessor.get();
+            modifiableGraph.add(nodeToAdd, successor);
+        }
+    }
 }
