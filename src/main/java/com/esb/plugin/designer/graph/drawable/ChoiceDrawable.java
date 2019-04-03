@@ -23,7 +23,12 @@ public class ChoiceDrawable extends AbstractDrawable implements ScopedDrawable {
         this.scope.remove(drawable);
     }
 
-    public Collection<Drawable> listDrawables() {
+    public Collection<Drawable> getDrawablesInScope() {
         return Collections.unmodifiableSet(scope);
+    }
+
+    @Override
+    public boolean contains(Drawable drawable) {
+        return scope.contains(drawable);
     }
 }

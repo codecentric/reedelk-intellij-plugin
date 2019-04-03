@@ -5,6 +5,7 @@ import com.esb.plugin.designer.editor.GraphChangeListener;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
+import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
 
@@ -227,7 +228,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     }
 
     private <T extends ScopedDrawable> void paintScope(Graphics graphics, T scopedDrawable) {
-        Collection<Drawable> drawables = scopedDrawable.listDrawables();
+        Collection<Drawable> drawables = scopedDrawable.getDrawablesInScope();
         if (drawables.isEmpty()) {
             return;
         }
@@ -253,6 +254,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         int line4X = minX - Tile.HALF_WIDTH;
         int line4Y = maxY + Tile.HALF_HEIGHT;
 
+        graphics.setColor(new JBColor(Gray._235, Gray._30));
         graphics.drawLine(line1X, line1Y, line2X, line2Y);
         graphics.drawLine(line2X, line2Y, line3X, line3Y);
         graphics.drawLine(line3X, line3Y, line4X, line4Y);

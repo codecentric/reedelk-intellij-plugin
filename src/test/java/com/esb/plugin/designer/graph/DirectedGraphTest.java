@@ -2,10 +2,6 @@ package com.esb.plugin.designer.graph;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 class DirectedGraphTest {
 
     private final LiteralNode n1 = LiteralNode.create("N1");
@@ -28,14 +24,12 @@ class DirectedGraphTest {
         graph.putEdge(n5, n6);
 
         // When
-        Optional<LiteralNode> successor = graph.commonSuccessor(n2, n3);
+        // TODO: Do something here
+        // Optional<LiteralNode> successor = graph.co.commonSuccessor(n2, n3);
 
         // Then
-        assertThat(successor).isNotNull();
-        assertThat(successor.isPresent()).isTrue();
 
-        LiteralNode actual = successor.get();
-        assertThat(actual).isEqualTo(n6);
+
     }
 
 

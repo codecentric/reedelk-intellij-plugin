@@ -8,6 +8,8 @@ public interface ScopedDrawable extends Drawable {
 
     void remove(Drawable drawable);
 
-    Collection<Drawable> listDrawables();
+    Collection<Drawable> getDrawablesInScope();
+
+    boolean contains(Drawable drawable);
 
 }
