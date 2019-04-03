@@ -4,7 +4,7 @@ import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.DrawableFactory;
-import com.esb.plugin.designer.graph.drawable.MultipathDrawable;
+import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ public class GraphNodeAdder {
         // Amongst all preceding nodes find the closest on the Y axis
         Drawable closestPrecedingNode = findClosestOnYAxis(precedingNodes, dropY);
 
-        if (closestPrecedingNode instanceof MultipathDrawable) {
+        if (closestPrecedingNode instanceof ScopedDrawable) {
             handlePrecedingMultipathDrawable(graph, genericDrawable, copy, dropY, closestPrecedingNode);
 
         } else if (closestPrecedingNode != null) {
@@ -75,12 +75,35 @@ public class GraphNodeAdder {
     private void handlePrecedingDrawable(FlowGraph graph, Drawable genericDrawable, FlowGraph copy, int dropX, int dropY, Drawable closestPrecedingNode) {
         List<Drawable> successors = graph.successors(closestPrecedingNode);
         if (successors.isEmpty()) {
-            // This is the last node
-            copy.add(closestPrecedingNode, genericDrawable);
-            addToScopeIfNecessary(graph, closestPrecedingNode, genericDrawable);
+            // This is the last node:
+            // If the closestPreceding node belongs to a scope, then:
+            // If it is in the first half, then we add it to that scope,
+            // otherwise we add it outside
+            List<ScopedDrawable> nodeScopedDrawables = findScopesForNode(graph, closestPrecedingNode);
+            if (nodeScopedDrawables.isEmpty()) {
+                copy.add(closestPrecedingNode, genericDrawable);
+                addToScopeIfNecessary(graph, closestPrecedingNode, genericDrawable);
+            } else {
+                // The closest preceding node belongs to a scope, we need to check if it is in the first
+                // or second half
+                if (dropX <= closestPrecedingNode.x() + Tile.WIDTH) {
+                    copy.add(closestPrecedingNode, genericDrawable);
+                    addToScopeIfNecessary(graph, closestPrecedingNode, genericDrawable);
+
+                } else if (dropX > closestPrecedingNode.x() + Tile.WIDTH) {
+                    // Add it outside and connect all child nodes
+                    copy.add(closestPrecedingNode, genericDrawable);
+                    addToScopeIfNecessary(graph, closestPrecedingNode, genericDrawable);
+                } else {
+                    copy.add(closestPrecedingNode, genericDrawable);
+                    addToScopeIfNecessary(graph, closestPrecedingNode, genericDrawable);
+                }
+            }
+
             return;
         }
 
+        // Successor MUST be 1, otherwise it would be a multipath drawable.
         Drawable successor = successors.get(0);
 
         List<Drawable> predecessors = graph.predecessors(successor);
@@ -131,6 +154,7 @@ public class GraphNodeAdder {
 
     /*
      * Checks if we are replacing the root (i.e there are no nodes preceding the drop point on X).
+     * Do a check on the Y axis as well
      */
     private boolean isReplacingRoot(FlowGraph graph, int dropX) {
         return graph
@@ -151,7 +175,7 @@ public class GraphNodeAdder {
                 copy.add(closestPrecedingNode, genericDrawable, i);
                 addToScopeIfNecessary(graph, closestPrecedingNode, genericDrawable);
                 // Need to find the first common successor:
-                Optional<Drawable> common = findFirstNotInCollection(graph, ((MultipathDrawable) closestPrecedingNode).getScope(), closestPrecedingNode);
+                Optional<Drawable> common = findFirstNotInCollection(graph, ((ScopedDrawable) closestPrecedingNode).listDrawables(), closestPrecedingNode);
                 if (common.isPresent()) {
                     Drawable commonSucessor = common.get();
                     copy.add(genericDrawable, commonSucessor);
@@ -167,7 +191,7 @@ public class GraphNodeAdder {
         copy.add(closestPrecedingNode, genericDrawable);
         addToScopeIfNecessary(graph, closestPrecedingNode, genericDrawable);
         // Need to find the first common successor:
-        Optional<Drawable> common = findFirstNotInCollection(graph, ((MultipathDrawable) closestPrecedingNode).getScope(), closestPrecedingNode);
+        Optional<Drawable> common = findFirstNotInCollection(graph, ((ScopedDrawable) closestPrecedingNode).listDrawables(), closestPrecedingNode);
         if (common.isPresent()) {
             Drawable commonSucessor = common.get();
             copy.add(genericDrawable, commonSucessor);
@@ -176,34 +200,34 @@ public class GraphNodeAdder {
     }
 
     private void addToScopeIfNecessary(FlowGraph graph, Drawable closestPrecedingNode, Drawable genericDrawable) {
-        if (closestPrecedingNode instanceof MultipathDrawable) {
-            MultipathDrawable multipathDrawable = (MultipathDrawable) closestPrecedingNode;
-            multipathDrawable.addToScope(genericDrawable);
+        if (closestPrecedingNode instanceof ScopedDrawable) {
+            ScopedDrawable scopedDrawable = (ScopedDrawable) closestPrecedingNode;
+            scopedDrawable.add(genericDrawable);
         }
-        List<MultipathDrawable> scopeObjects = getScopeObjects(graph, closestPrecedingNode);
-        scopeObjects.forEach(multipathDrawable -> multipathDrawable.addToScope(genericDrawable));
+        List<ScopedDrawable> scopedDrawableObjects = findScopesForNode(graph, closestPrecedingNode);
+        scopedDrawableObjects.forEach(scopedDrawable -> scopedDrawable.add(genericDrawable));
     }
 
     // A node might belong to multiple scopes....
-    private List<MultipathDrawable> getScopeObjects(FlowGraph graph, Drawable closestPrecedingNode) {
-        List<MultipathDrawable> scopes = new ArrayList<>();
+    private List<ScopedDrawable> findScopesForNode(FlowGraph graph, Drawable targetDrawable) {
+        List<ScopedDrawable> scopedDrawables = new ArrayList<>();
         Collection<Drawable> nodes = graph.nodes();
         for (Drawable node : nodes) {
-            if (node instanceof MultipathDrawable) {
-                if (((MultipathDrawable) node).getScope().contains(closestPrecedingNode)) {
+            if (node instanceof ScopedDrawable) {
+                if (((ScopedDrawable) node).listDrawables().contains(targetDrawable)) {
                     // But this one might be part of another scope as well...
-                    scopes.add((MultipathDrawable) node);
+                    scopedDrawables.add((ScopedDrawable) node);
                     List<Drawable> predecessors = graph.predecessors(node);
                     if (!predecessors.isEmpty()) {
                         for (Drawable predecessor : predecessors) {
-                            scopes.addAll(getScopeObjects(graph, predecessor));
+                            scopedDrawables.addAll(findScopesForNode(graph, predecessor));
                         }
 
                     }
                 }
             }
         }
-        return scopes;
+        return scopedDrawables;
     }
 
     // Basically we need to find the first drawable outside the scope.

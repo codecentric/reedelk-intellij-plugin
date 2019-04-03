@@ -4,6 +4,7 @@ import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.editor.GraphChangeListener;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
 
@@ -13,8 +14,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkState;
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
@@ -43,7 +46,8 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
         if (graph != null) {
             paintGraph(graphics, graph);
-            paintArrows(graphics, graph);
+            paintConnections(graphics, graph);
+            //paintScopes(graphics, graph);
         }
     }
 
@@ -194,11 +198,11 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
                 node -> node.draw(graphics, this));
     }
 
-    private void paintArrows(Graphics graphics, FlowGraph graph) {
-        paintArrow(graphics, graph, graph.root());
+    private void paintConnections(Graphics graphics, FlowGraph graph) {
+        paintConnection(graphics, graph, graph.root());
     }
 
-    private void paintArrow(Graphics graphics, FlowGraph graph, Drawable root) {
+    private void paintConnection(Graphics graphics, FlowGraph graph, Drawable root) {
         List<Drawable> successors = graph.successors(root);
         for (Drawable successor : successors) {
             graphics.setColor(JBColor.lightGray);
@@ -206,7 +210,45 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
                     new Point2D.Double(root.x() + Math.floorDiv(Tile.WIDTH, 2) - 15, root.y()),
                     new Point2D.Double(successor.x() - Math.floorDiv(Tile.WIDTH, 2) + 15, successor.y()),
                     10);
-            paintArrow(graphics, graph, successor);
+            paintConnection(graphics, graph, successor);
         }
+    }
+
+    private void paintScopes(Graphics graphics, FlowGraph graph) {
+        List<ScopedDrawable> scopedDrawables = graph.nodes().stream()
+                .filter(drawable -> drawable instanceof ScopedDrawable)
+                .map(drawable -> (ScopedDrawable) drawable)
+                .collect(Collectors.toList());
+
+        for (ScopedDrawable scopedDrawable : scopedDrawables) {
+            paintScope(graphics, scopedDrawable);
+        }
+    }
+
+    private void paintScope(Graphics graphics, ScopedDrawable scopedDrawable) {
+        Collection<Drawable> drawables = scopedDrawable.listDrawables();
+        int maxX = drawables.stream().mapToInt(Drawable::x).max().getAsInt();
+        int maxY = drawables.stream().mapToInt(Drawable::y).max().getAsInt();
+        int minX = drawables.stream().mapToInt(Drawable::x).min().getAsInt();
+        int minY = drawables.stream().mapToInt(Drawable::y).min().getAsInt();
+
+        // Draw line between :
+        int line1X = minX - Tile.HALF_WIDTH;
+        int line1Y = minY - Tile.HALF_HEIGHT;
+
+        int line2X = maxX + Tile.HALF_WIDTH;
+        int line2Y = minY - Tile.HALF_HEIGHT;
+
+        int line3X = maxX + Tile.HALF_WIDTH;
+        int line3Y = maxY + Tile.HALF_HEIGHT;
+
+        int line4X = minX - Tile.HALF_WIDTH;
+        int line4Y = maxY + Tile.HALF_HEIGHT;
+
+        graphics.drawLine(line1X, line1Y, line2X, line2Y);
+        graphics.drawLine(line2X, line2Y, line3X, line3Y);
+        graphics.drawLine(line3X, line3Y, line4X, line4Y);
+        graphics.drawLine(line4X, line4Y, line1X, line1Y);
+
     }
 }

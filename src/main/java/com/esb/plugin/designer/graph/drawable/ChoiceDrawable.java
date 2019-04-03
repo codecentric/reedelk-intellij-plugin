@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ChoiceDrawable extends AbstractDrawable implements MultipathDrawable {
+public class ChoiceDrawable extends AbstractDrawable implements ScopedDrawable {
 
     private Set<Drawable> scope = new HashSet<>();
 
@@ -15,15 +15,15 @@ public class ChoiceDrawable extends AbstractDrawable implements MultipathDrawabl
         super(component);
     }
 
-    public void addToScope(Drawable drawable) {
+    public void add(Drawable drawable) {
         this.scope.add(drawable);
     }
 
-    public void removeFromScope(Drawable drawable) {
+    public void remove(Drawable drawable) {
         this.scope.remove(drawable);
     }
 
-    public Collection<Drawable> getScope() {
+    public Collection<Drawable> listDrawables() {
         return Collections.unmodifiableSet(scope);
     }
 }
