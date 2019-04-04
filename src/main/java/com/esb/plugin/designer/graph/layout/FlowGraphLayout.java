@@ -3,6 +3,7 @@ package com.esb.plugin.designer.graph.layout;
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.graph.DirectedGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +34,7 @@ public class FlowGraphLayout {
             if (predecessors.isEmpty()) {
                 centerInSubtree(top, drawable);
 
-                // Single node with more than one predecessor
+                // Single node with one or more predecessor/s
             } else {
                 int tmpX = X_LEFT_PADDING + findLayer(drawable) * Tile.WIDTH;
                 int min = predecessors.stream().mapToInt(Drawable::y).min().getAsInt();
@@ -48,13 +49,14 @@ public class FlowGraphLayout {
             // Center them all in their respective subtrees.
         } else if (drawables.size() > 1) {
             for (Drawable drawable : drawables) {
+                top += 5;
                 top += centerInSubtree(top, drawable);
             }
         }
     }
 
     private int centerInSubtree(int top, Drawable drawable) {
-        int maxSubtreeHeight = maxSubtreeNodes(drawable) * Tile.HEIGHT;
+        int maxSubtreeHeight = computeMax(drawable);
         int tmpX = X_LEFT_PADDING + findLayer(drawable) * Tile.WIDTH;
         int tmpY = top + Math.floorDiv(maxSubtreeHeight, 2);
         drawable.setPosition(tmpX, tmpY);
@@ -62,12 +64,6 @@ public class FlowGraphLayout {
         _calculate(top, graph.successors(drawable));
 
         return maxSubtreeHeight;
-    }
-
-    private int maxSubtreeNodes(Drawable drawable) {
-        List<Drawable> successors = graph.successors(drawable);
-        return successors.isEmpty() ? 1 :
-                successors.stream().mapToInt(this::maxSubtreeNodes).sum();
     }
 
     private int findLayer(Drawable current) {
@@ -78,4 +74,18 @@ public class FlowGraphLayout {
         }
         throw new RuntimeException("Could not find layer for node " + current);
     }
+
+    int computeMax(Drawable root) {
+        List<Drawable> successors = graph.successors(root);
+        int max = successors.stream()
+                .map(this::computeMax)
+                .mapToInt(value -> value)
+                .sum();
+
+        int extra = 0;
+        if (root instanceof ScopedDrawable) extra += 10;
+        if (max > root.height()) return max + extra;
+        return root.height() + extra;
+    }
+
 }

@@ -204,7 +204,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         paintConnection(graphics, graph, graph.root());
     }
 
-    private final int INNER_PADDING = 3;
+    private final int INNER_PADDING = 0;
 
     private void paintScopes(Graphics graphics, FlowGraph graph) {
         List<ScopedDrawable> scopedDrawables = graph.nodes().stream()
@@ -234,46 +234,62 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     private void paintScope(Graphics graphics, ScopedDrawable scopedDrawable) {
         Collection<Drawable> drawables = scopedDrawable.getDrawablesInScope();
 
-        int maxX;
-        int maxY;
-        int minX;
-        int minY;
+        Drawable drawableWithMaxX = scopedDrawable;
+        Drawable drawableWithMinX = scopedDrawable;
+        Drawable drawableWithMaxY = scopedDrawable;
+        Drawable drawableWithMinY = scopedDrawable;
 
-        if (drawables.isEmpty()) {
-            // Draw a line only bounding the box
-            maxX = scopedDrawable.x();
-            maxY = scopedDrawable.y();
-            minX = scopedDrawable.x();
-            minY = scopedDrawable.y();
-        } else {
-            List<Drawable> drawables1 = new ArrayList<>(drawables);
-            drawables1.add(scopedDrawable);
-            maxX = drawables1.stream().mapToInt(Drawable::x).max().getAsInt();
-            maxY = drawables1.stream().mapToInt(Drawable::y).max().getAsInt();
-            minX = drawables1.stream().mapToInt(Drawable::x).min().getAsInt();
-            minY = drawables1.stream().mapToInt(Drawable::y).min().getAsInt();
+
+        if (!drawables.isEmpty()) {
+            List<Drawable> allDrawables = new ArrayList<>(drawables);
+            allDrawables.add(scopedDrawable);
+            // We need to find max x
+            for (Drawable drawable : allDrawables) {
+                if (drawableWithMaxX.x() < drawable.x()) {
+                    drawableWithMaxX = drawable;
+                }
+            }
+
+            for (Drawable drawable : allDrawables) {
+                if (drawableWithMinX.x() > drawable.x()) {
+                    drawableWithMinX = drawable;
+                }
+            }
+
+            for (Drawable drawable : allDrawables) {
+                if (drawableWithMaxY.y() < drawable.y()) {
+                    drawableWithMaxY = drawable;
+                }
+            }
+            for (Drawable drawable : allDrawables) {
+                if (drawableWithMinY.y() > drawable.y()) {
+                    drawableWithMinY = drawable;
+                }
+            }
         }
 
 
-        // Horizontal
+        // Vertical Bar Separating Choice with rest
         int verticalX = scopedDrawable.x() + Tile.HALF_WIDTH;
-        int verticalMinY = minY - Math.floorDiv(Tile.HEIGHT, 3);
-        int verticalMaxY = maxY + Math.floorDiv(Tile.HEIGHT, 3);
+        int verticalMinY = drawableWithMinY.y() - Math.floorDiv(Tile.HEIGHT, 3);
+        int verticalMaxY = drawableWithMaxY.y() + Math.floorDiv(Tile.HEIGHT, 3);
         graphics.setColor(new JBColor(Gray._200, Gray._30));
         graphics.drawLine(verticalX, verticalMinY, verticalX, verticalMaxY);
 
-        // Draw square
-        int line1X = minX - Tile.HALF_WIDTH + INNER_PADDING;
-        int line1Y = minY - Tile.HALF_HEIGHT + INNER_PADDING;
+        int minY = scopedDrawable.y() - Math.floorDiv(computeMax(scopedDrawable), 2);
+        int maxY = scopedDrawable.y() + Math.floorDiv(computeMax(scopedDrawable), 2);
+        // Draw Scope Boundaries
+        int line1X = drawableWithMinX.x() - Math.floorDiv(drawableWithMinX.width(), 2) + INNER_PADDING;
+        int line1Y = minY; //drawableWithMinY.y() - Math.floorDiv(drawableWithMinY.height(), 2) + INNER_PADDING;
 
-        int line2X = maxX + Tile.HALF_WIDTH - INNER_PADDING;
-        int line2Y = minY - Tile.HALF_HEIGHT + INNER_PADDING;
+        int line2X = drawableWithMaxX.x() + Math.floorDiv(drawableWithMaxX.width(), 2) - INNER_PADDING;
+        int line2Y = minY;//drawableWithMinY.y() - Math.floorDiv(drawableWithMinY.height(), 2) + INNER_PADDING;
 
-        int line3X = maxX + Tile.HALF_WIDTH - INNER_PADDING;
-        int line3Y = maxY + Tile.HALF_HEIGHT - INNER_PADDING;
+        int line3X = drawableWithMaxX.x() + Math.floorDiv(drawableWithMaxX.width(), 2) - INNER_PADDING;
+        int line3Y = maxY;//drawableWithMaxY.y() + Math.floorDiv(drawableWithMaxY.height(), 2) - INNER_PADDING;
 
-        int line4X = minX - Tile.HALF_WIDTH + INNER_PADDING;
-        int line4Y = maxY + Tile.HALF_HEIGHT - INNER_PADDING;
+        int line4X = drawableWithMinX.x() - Math.floorDiv(drawableWithMinX.width(), 2) + INNER_PADDING;
+        int line4Y = maxY;//drawableWithMaxY.y() + Math.floorDiv(drawableWithMaxY.height(), 2) - INNER_PADDING;
 
         graphics.setColor(new JBColor(Gray._235, Gray._30));
         graphics.drawLine(line1X, line1Y, line2X, line2Y);
@@ -281,5 +297,18 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         graphics.drawLine(line3X, line3Y, line4X, line4Y);
         graphics.drawLine(line4X, line4Y, line1X, line1Y);
 
+    }
+
+    int computeMax(Drawable root) {
+        List<Drawable> successors = graph.successors(root);
+        int max = successors.stream()
+                .map(this::computeMax)
+                .mapToInt(value -> value)
+                .sum();
+
+        int extra = 0;
+        if (root instanceof ScopedDrawable) extra += 10;
+        if (max > root.height()) return max + extra;
+        return root.height() + extra;
     }
 }

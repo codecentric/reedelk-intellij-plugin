@@ -20,4 +20,8 @@ public interface Drawable {
     void setPosition(int x, int y);
 
     boolean contains(int x, int y);
+
+    int height();
+
+    int width();
 }
