@@ -53,4 +53,27 @@ class FlowGraphLayoutTest {
         // Then
         Assertions.assertThat(max).isEqualTo(200);
     }
+
+    @Test
+    void shouldCorrectlyComputeMax_3() {
+        // Given
+        Drawable n1 = new GenericComponentDrawable(new Component("n1"));
+        Drawable choice1 = new ChoiceDrawable(new Component("choice1"));
+        Drawable choice2 = new ChoiceDrawable(new Component("choice2"));
+        Drawable choice3 = new ChoiceDrawable(new Component("choice2"));
+
+
+        DirectedGraph<Drawable> graph = new DirectedGraph<>(n1);
+        graph.putEdge(n1, choice1);
+        graph.putEdge(choice1, choice2);
+        graph.putEdge(choice1, choice3);
+
+        FlowGraphLayout layout = new FlowGraphLayout(graph);
+
+        // When
+        int max = layout.computeMaximumHeight(choice3);
+
+        // Then
+        Assertions.assertThat(max).isEqualTo(390);
+    }
 }

@@ -48,8 +48,6 @@ public class FlowGraphLayout {
             // Center them all in their respective subtrees.
         } else if (drawables.size() > 1) {
             for (Drawable drawable : drawables) {
-                if (drawable instanceof ScopedDrawable)
-                    top += 10;
                 top += centerInSubtree(top, drawable);
             }
         }
