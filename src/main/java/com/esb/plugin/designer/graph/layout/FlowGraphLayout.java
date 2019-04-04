@@ -41,7 +41,6 @@ public class FlowGraphLayout {
                 int max = predecessors.stream().mapToInt(Drawable::y).max().getAsInt();
                 int tmpY = Math.floorDiv(max + min, 2);
                 drawable.setPosition(tmpX, tmpY);
-
                 _calculate(top, graph.successors(drawable));
             }
 
@@ -49,14 +48,15 @@ public class FlowGraphLayout {
             // Center them all in their respective subtrees.
         } else if (drawables.size() > 1) {
             for (Drawable drawable : drawables) {
-                top += 5;
+                if (drawable instanceof ScopedDrawable)
+                    top += 10;
                 top += centerInSubtree(top, drawable);
             }
         }
     }
 
     private int centerInSubtree(int top, Drawable drawable) {
-        int maxSubtreeHeight = computeMax(drawable);
+        int maxSubtreeHeight = computeMaximumHeight(drawable);
         int tmpX = X_LEFT_PADDING + findLayer(drawable) * Tile.WIDTH;
         int tmpY = top + Math.floorDiv(maxSubtreeHeight, 2);
         drawable.setPosition(tmpX, tmpY);
@@ -75,10 +75,29 @@ public class FlowGraphLayout {
         throw new RuntimeException("Could not find layer for node " + current);
     }
 
-    int computeMax(Drawable root) {
+    int computeMaximumHeight(Drawable root) {
+        if (graph.successors(root).isEmpty()) {
+            if (root instanceof ScopedDrawable) {
+                return root.height() + 10;
+            }
+            return root.height();
+        }
+        int sum = graph.successors(root)
+                .stream()
+                .map(this::computeMaxHeight)
+                .mapToInt(value -> value)
+                .sum();
+        if (root instanceof ScopedDrawable) {
+            return sum + 10;
+        } else {
+            return sum;
+        }
+    }
+
+    int computeMaxHeight(Drawable root) {
         List<Drawable> successors = graph.successors(root);
         int max = successors.stream()
-                .map(this::computeMax)
+                .map(this::computeMaximumHeight)
                 .mapToInt(value -> value)
                 .sum();
 

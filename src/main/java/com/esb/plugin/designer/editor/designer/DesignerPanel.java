@@ -270,14 +270,14 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
 
         // Vertical Bar Separating Choice with rest
-        int verticalX = scopedDrawable.x() + Tile.HALF_WIDTH;
+        int verticalX = scopedDrawable.x() + Tile.HALF_WIDTH - 6;
         int verticalMinY = drawableWithMinY.y() - Math.floorDiv(Tile.HEIGHT, 3);
         int verticalMaxY = drawableWithMaxY.y() + Math.floorDiv(Tile.HEIGHT, 3);
         graphics.setColor(new JBColor(Gray._200, Gray._30));
         graphics.drawLine(verticalX, verticalMinY, verticalX, verticalMaxY);
 
-        int minY = scopedDrawable.y() - Math.floorDiv(computeMax(scopedDrawable), 2);
-        int maxY = scopedDrawable.y() + Math.floorDiv(computeMax(scopedDrawable), 2);
+        int minY = scopedDrawable.y() - Math.floorDiv(computeMaximumHeight(scopedDrawable), 2);
+        int maxY = minY + computeMaximumHeight(scopedDrawable);
         // Draw Scope Boundaries
         int line1X = drawableWithMinX.x() - Math.floorDiv(drawableWithMinX.width(), 2) + INNER_PADDING;
         int line1Y = minY; //drawableWithMinY.y() - Math.floorDiv(drawableWithMinY.height(), 2) + INNER_PADDING;
@@ -299,10 +299,30 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     }
 
-    int computeMax(Drawable root) {
+    // TODO: This should probably compute max within the scope
+    int computeMaximumHeight(Drawable root) {
+        if (graph.successors(root).isEmpty()) {
+            if (root instanceof ScopedDrawable) {
+                return root.height() + 10;
+            }
+            return root.height();
+        }
+        int sum = graph.successors(root)
+                .stream()
+                .map(this::computeMaxHeight)
+                .mapToInt(value -> value)
+                .sum();
+        if (root instanceof ScopedDrawable) {
+            return sum + 10;
+        } else {
+            return sum;
+        }
+    }
+
+    int computeMaxHeight(Drawable root) {
         List<Drawable> successors = graph.successors(root);
         int max = successors.stream()
-                .map(this::computeMax)
+                .map(this::computeMaximumHeight)
                 .mapToInt(value -> value)
                 .sum();
 

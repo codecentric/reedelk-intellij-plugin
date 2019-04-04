@@ -10,15 +10,15 @@ import org.junit.jupiter.api.Test;
 
 class FlowGraphLayoutTest {
 
-    private Drawable n1 = new GenericComponentDrawable(new Component("n1"));
-    private Drawable n2 = new GenericComponentDrawable(new Component("n2"));
-    private Drawable n3 = new GenericComponentDrawable(new Component("n3"));
-    private Drawable choice1 = new ChoiceDrawable(new Component("choice1"));
-    private Drawable choice2 = new ChoiceDrawable(new Component("choice2"));
-
     @Test
     void shouldCorrectlyComputeMax() {
         // Given
+        Drawable n1 = new GenericComponentDrawable(new Component("n1"));
+        Drawable n2 = new GenericComponentDrawable(new Component("n2"));
+        Drawable n3 = new GenericComponentDrawable(new Component("n3"));
+        Drawable choice1 = new ChoiceDrawable(new Component("choice1"));
+        Drawable choice2 = new ChoiceDrawable(new Component("choice2"));
+
         DirectedGraph<Drawable> graph = new DirectedGraph<>(n1);
         graph.putEdge(n1, choice1);
         graph.putEdge(choice1, n2);
@@ -28,9 +28,29 @@ class FlowGraphLayoutTest {
         FlowGraphLayout layout = new FlowGraphLayout(graph);
 
         // When
-        int max = layout.computeMax(n1);
+        int max = layout.computeMaximumHeight(n1);
 
         // Then
-        Assertions.assertThat(max).isEqualTo(310);
+        Assertions.assertThat(max).isEqualTo(330);
+    }
+
+    @Test
+    void shouldCorrectlyComputeMax_2() {
+        // Given
+        Drawable n1 = new GenericComponentDrawable(new Component("n1"));
+        Drawable choice1 = new ChoiceDrawable(new Component("choice1"));
+        Drawable choice2 = new ChoiceDrawable(new Component("choice2"));
+
+        DirectedGraph<Drawable> graph = new DirectedGraph<>(n1);
+        graph.putEdge(n1, choice1);
+        graph.putEdge(choice1, choice2);
+
+        FlowGraphLayout layout = new FlowGraphLayout(graph);
+
+        // When
+        int max = layout.computeMaximumHeight(n1);
+
+        // Then
+        Assertions.assertThat(max).isEqualTo(200);
     }
 }
