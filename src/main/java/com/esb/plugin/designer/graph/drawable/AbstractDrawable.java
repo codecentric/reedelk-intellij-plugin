@@ -55,11 +55,11 @@ abstract class AbstractDrawable implements Drawable {
         int y3 = y() + Math.floorDiv(height(), 2);
         int x4 = x() + Math.floorDiv(width(), 2);
         int y4 = y() + Math.floorDiv(height(), 2);
-
+/**
         graphics.drawLine(x1, y1, x2, y2);
          graphics.drawLine(x2,y2,x4,y4);
          graphics.drawLine(x4,y4,x3,y3);
-         graphics.drawLine(x3,y3,x1,y1);
+ graphics.drawLine(x3,y3,x1,y1);*/
 
     }
 

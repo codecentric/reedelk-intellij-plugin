@@ -25,6 +25,21 @@ public class FlowGraphLayout {
         _calculate(0, Collections.singletonList(graph.root()));
     }
 
+    public static int computeSubTreeHeight(DirectedGraph<Drawable> graph, Drawable root) {
+        int max = graph.successors(root)
+                .stream()
+                .map(item -> FlowGraphLayout.computeSubTreeHeight(graph, item))
+                .mapToInt(value -> value)
+                .sum();
+        int scopedDrawablePadding = 0;
+        if (root instanceof ScopedDrawable) {
+            scopedDrawablePadding = 5 + 5;
+        }
+        return max > root.height() ?
+                max + scopedDrawablePadding :
+                root.height() + scopedDrawablePadding;
+    }
+
     private void _calculate(int top, List<Drawable> drawables) {
         if (drawables.size() == 1) {
             Drawable drawable = drawables.get(0);
@@ -40,6 +55,7 @@ public class FlowGraphLayout {
                 int min = predecessors.stream().mapToInt(Drawable::y).min().getAsInt();
                 int max = predecessors.stream().mapToInt(Drawable::y).max().getAsInt();
                 int tmpY = Math.floorDiv(max + min, 2);
+
                 drawable.setPosition(tmpX, tmpY);
 
                 if (drawable instanceof ScopedDrawable) {
@@ -53,21 +69,21 @@ public class FlowGraphLayout {
             // Successors can be > 1 only when predecessor is ScopedDrawable
         } else if (drawables.size() > 1) {
             for (Drawable drawable : drawables) {
-                top += centerInSubtree(top, drawable);
-                if (drawable instanceof ScopedDrawable) top += 5;
+
+                if (drawable instanceof ScopedDrawable) {
+                    top += 5;
+                }
+
+                int tmpX = X_LEFT_PADDING + findLayer(drawable) * Tile.WIDTH;
+                int tmpY = top + Math.floorDiv(drawable.height(), 2);
+                drawable.setPosition(tmpX, tmpY);
+
+                _calculate(top, graph.successors(drawable));
+
+                top += drawable.height() + 5;
+
             }
         }
-    }
-
-    private int centerInSubtree(int top, Drawable drawable) {
-        int maxSubtreeHeight = computeMaximumHeight(drawable);
-        int tmpX = X_LEFT_PADDING + findLayer(drawable) * Tile.WIDTH;
-        int tmpY = top + Math.floorDiv(maxSubtreeHeight, 2);
-        drawable.setPosition(tmpX, tmpY);
-
-        _calculate(top, graph.successors(drawable));
-
-        return maxSubtreeHeight;
     }
 
     private int findLayer(Drawable current) {
@@ -79,36 +95,15 @@ public class FlowGraphLayout {
         throw new RuntimeException("Could not find layer for node " + current);
     }
 
-    int computeMaximumHeight(Drawable root) {
-        if (graph.successors(root).isEmpty()) {
-            if (root instanceof ScopedDrawable) {
-                return root.height() + 10;
-            }
-            return root.height();
-        }
-        int sum = graph.successors(root)
-                .stream()
-                .map(this::computeMaxHeight)
-                .mapToInt(value -> value)
-                .sum();
-        if (root instanceof ScopedDrawable) {
-            return sum + 10;
-        } else {
-            return sum;
-        }
-    }
+    private int centerInSubtree(int top, Drawable drawable) {
+        int maxSubtreeHeight = computeSubTreeHeight(graph, drawable);
+        int tmpX = X_LEFT_PADDING + findLayer(drawable) * Tile.WIDTH;
+        int tmpY = top + Math.floorDiv(maxSubtreeHeight, 2);
+        drawable.setPosition(tmpX, tmpY);
 
-    int computeMaxHeight(Drawable root) {
-        List<Drawable> successors = graph.successors(root);
-        int max = successors.stream()
-                .map(this::computeMaximumHeight)
-                .mapToInt(value -> value)
-                .sum();
+        _calculate(top, graph.successors(drawable));
 
-        int extra = 0;
-        if (root instanceof ScopedDrawable) extra += 10;
-        if (max > root.height()) return max + extra;
-        return root.height() + extra;
+        return maxSubtreeHeight;
     }
 
 }

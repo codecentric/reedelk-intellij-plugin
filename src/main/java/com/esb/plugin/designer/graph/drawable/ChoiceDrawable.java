@@ -9,8 +9,6 @@ import java.util.Set;
 
 public class ChoiceDrawable extends AbstractDrawable implements ScopedDrawable {
 
-    private final int PADDING_SCOPE = 50;
-
     private Set<Drawable> scope = new HashSet<>();
 
     public ChoiceDrawable(Component component) {
@@ -34,8 +32,4 @@ public class ChoiceDrawable extends AbstractDrawable implements ScopedDrawable {
         return scope.contains(drawable);
     }
 
-    @Override
-    public int height() {
-        return super.height() + PADDING_SCOPE;
-    }
 }

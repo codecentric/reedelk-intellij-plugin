@@ -5,75 +5,76 @@ import com.esb.plugin.designer.graph.DirectedGraph;
 import com.esb.plugin.designer.graph.drawable.ChoiceDrawable;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.GenericComponentDrawable;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class FlowGraphLayoutTest {
 
     @Test
-    void shouldCorrectlyComputeMax() {
+    void shouldComputeSubTreeHeightForGenericRootCorrectly() {
         // Given
         Drawable n1 = new GenericComponentDrawable(new Component("n1"));
-        Drawable n2 = new GenericComponentDrawable(new Component("n2"));
-        Drawable n3 = new GenericComponentDrawable(new Component("n3"));
-        Drawable choice1 = new ChoiceDrawable(new Component("choice1"));
-        Drawable choice2 = new ChoiceDrawable(new Component("choice2"));
 
         DirectedGraph<Drawable> graph = new DirectedGraph<>(n1);
-        graph.putEdge(n1, choice1);
-        graph.putEdge(choice1, n2);
-        graph.putEdge(choice1, n3);
-        graph.putEdge(n2, choice2);
-
-        FlowGraphLayout layout = new FlowGraphLayout(graph);
 
         // When
-        int max = layout.computeMaximumHeight(n1);
+        int height = FlowGraphLayout.computeSubTreeHeight(graph, n1);
 
         // Then
-        Assertions.assertThat(max).isEqualTo(330);
+        assertThat(height).isEqualTo(130);
     }
 
     @Test
-    void shouldCorrectlyComputeMax_2() {
+    void shouldComputeSubTreeHeightForScopedDrawableCorrectly() {
         // Given
-        Drawable n1 = new GenericComponentDrawable(new Component("n1"));
+        Drawable choice = new ChoiceDrawable(new Component("choice"));
+
+        DirectedGraph<Drawable> graph = new DirectedGraph<>(choice);
+
+        // When
+        int height = FlowGraphLayout.computeSubTreeHeight(graph, choice);
+
+        // Then
+        assertThat(height).isEqualTo(130 + 5 + 5);
+    }
+
+    @Test
+    void shouldComputeSubTreeHeightForNestedChoiceCorrectly() {
+        // Given
+        Drawable root = new GenericComponentDrawable(new Component("root"));
         Drawable choice1 = new ChoiceDrawable(new Component("choice1"));
         Drawable choice2 = new ChoiceDrawable(new Component("choice2"));
 
-        DirectedGraph<Drawable> graph = new DirectedGraph<>(n1);
-        graph.putEdge(n1, choice1);
+        DirectedGraph<Drawable> graph = new DirectedGraph<>(root);
+        graph.putEdge(root, choice1);
         graph.putEdge(choice1, choice2);
 
-        FlowGraphLayout layout = new FlowGraphLayout(graph);
-
         // When
-        int max = layout.computeMaximumHeight(n1);
+        int height = FlowGraphLayout.computeSubTreeHeight(graph, root);
 
-        // Then
-        Assertions.assertThat(max).isEqualTo(200);
+        // Then: plus 2 padding/s for two choices
+        assertThat(height).isEqualTo(130 + 5 + 5 + 5 + 5);
     }
 
     @Test
-    void shouldCorrectlyComputeMax_3() {
+    void shouldComputeSubTreeHeightForMultipleNextedChoices() {
         // Given
-        Drawable n1 = new GenericComponentDrawable(new Component("n1"));
+        Drawable root = new GenericComponentDrawable(new Component("root"));
         Drawable choice1 = new ChoiceDrawable(new Component("choice1"));
         Drawable choice2 = new ChoiceDrawable(new Component("choice2"));
-        Drawable choice3 = new ChoiceDrawable(new Component("choice2"));
+        Drawable choice3 = new ChoiceDrawable(new Component("choice3"));
 
-
-        DirectedGraph<Drawable> graph = new DirectedGraph<>(n1);
-        graph.putEdge(n1, choice1);
+        DirectedGraph<Drawable> graph = new DirectedGraph<>(root);
+        graph.putEdge(root, choice1);
         graph.putEdge(choice1, choice2);
         graph.putEdge(choice1, choice3);
 
-        FlowGraphLayout layout = new FlowGraphLayout(graph);
-
         // When
-        int max = layout.computeMaximumHeight(choice3);
+        int height = FlowGraphLayout.computeSubTreeHeight(graph, root);
 
-        // Then
-        Assertions.assertThat(max).isEqualTo(390);
+        // Then: 2 choices on top of each other + 3 padding/s for 3 choices
+        assertThat(height).isEqualTo(130 + 130 + 5 + 5 + 5 + 5 + 5 + 5);
     }
+
 }
