@@ -67,7 +67,7 @@ public class FlowGraphLayout {
                 drawable.setPosition(tmpX, tmpY);
 
                 if (drawable instanceof ScopedDrawable) {
-                    top += 5;
+                    top += ScopedDrawable.VERTICAL_PADDING; // top padding
                 }
                 _calculate(top, graph.successors(drawable));
             }
@@ -80,16 +80,18 @@ public class FlowGraphLayout {
 
                 // Center in subtree
                 if (drawable instanceof ScopedDrawable) {
-                    top += 5;
+                    top += ScopedDrawable.VERTICAL_PADDING; // top padding
                 }
 
                 int tmpX = X_LEFT_PADDING + findLayer(drawable) * Tile.WIDTH;
 
                 int maxSubtreeHeight = computeSubTreeHeight(graph, drawable);
-                // Need to subtract the current padding since we are adding it here.
 
+                // Need to subtract the current padding since it was
+                // added while computing max subtree height also.
+                // The padding is added here.
                 if (drawable instanceof ScopedDrawable) {
-                    maxSubtreeHeight -= 5 + 5;
+                    maxSubtreeHeight -= ScopedDrawable.VERTICAL_PADDING + ScopedDrawable.VERTICAL_PADDING; // top and bottom
                 }
 
                 int tmpY = top + Math.floorDiv(maxSubtreeHeight, 2);
@@ -98,7 +100,7 @@ public class FlowGraphLayout {
                 _calculate(top, graph.successors(drawable));
 
                 if (drawable instanceof ScopedDrawable) {
-                    top += 5;
+                    top += ScopedDrawable.VERTICAL_PADDING; // bottom padding
                 }
 
                 top += maxSubtreeHeight;

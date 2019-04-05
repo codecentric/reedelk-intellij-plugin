@@ -205,8 +205,6 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         paintConnection(graphics, graph, graph.root());
     }
 
-    private final int INNER_PADDING = 0;
-
     private void paintScopes(Graphics graphics, FlowGraph graph) {
         List<ScopedDrawable> scopedDrawables = graph.nodes().stream()
                 .filter(drawable -> drawable instanceof ScopedDrawable)
@@ -270,29 +268,32 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
             }
         }
 
+        paintVerticalBar(graphics, scopedDrawable, drawableWithMaxY, drawableWithMinY);
+        paintScopeBoundaries(graphics, scopedDrawable, drawableWithMaxX, drawableWithMinX);
+    }
 
-        // Vertical Bar Separating Choice with rest
+    private void paintVerticalBar(Graphics graphics, ScopedDrawable scopedDrawable, Drawable drawableWithMaxY, Drawable drawableWithMinY) {
         int verticalX = scopedDrawable.x() + Tile.HALF_WIDTH - 6;
         int verticalMinY = drawableWithMinY.y() - Math.floorDiv(Tile.HEIGHT, 3);
         int verticalMaxY = drawableWithMaxY.y() + Math.floorDiv(Tile.HEIGHT, 3);
         graphics.setColor(new JBColor(Gray._200, Gray._30));
         graphics.drawLine(verticalX, verticalMinY, verticalX, verticalMaxY);
+    }
 
-
+    private void paintScopeBoundaries(Graphics graphics, ScopedDrawable scopedDrawable, Drawable drawableWithMaxX, Drawable drawableWithMinX) {
         int subTreeHeight = FlowGraphLayout.computeSubTreeHeight(graph, scopedDrawable);
-        int minY = scopedDrawable.y() - Math.floorDiv(subTreeHeight, 2) + 5;
-        int maxY = minY + subTreeHeight - 5;
+        int minY = scopedDrawable.y() - Math.floorDiv(subTreeHeight, 2) + ScopedDrawable.VERTICAL_PADDING;
+        int maxY = minY + subTreeHeight - ScopedDrawable.VERTICAL_PADDING;
 
         // Draw Scope Boundaries
-        int line1X = drawableWithMinX.x() - Math.floorDiv(drawableWithMinX.width(), 2) + INNER_PADDING;
-        int line2X = drawableWithMaxX.x() + Math.floorDiv(drawableWithMaxX.width(), 2) - INNER_PADDING;
-        int line3X = drawableWithMaxX.x() + Math.floorDiv(drawableWithMaxX.width(), 2) - INNER_PADDING;
-        int line4X = drawableWithMinX.x() - Math.floorDiv(drawableWithMinX.width(), 2) + INNER_PADDING;
+        int line1X = drawableWithMinX.x() - Math.floorDiv(drawableWithMinX.width(), 2);
+        int line2X = drawableWithMaxX.x() + Math.floorDiv(drawableWithMaxX.width(), 2);
+        int line3X = drawableWithMaxX.x() + Math.floorDiv(drawableWithMaxX.width(), 2);
+        int line4X = drawableWithMinX.x() - Math.floorDiv(drawableWithMinX.width(), 2);
         graphics.setColor(new JBColor(Gray._235, Gray._30));
         graphics.drawLine(line1X, minY, line2X, minY);
         graphics.drawLine(line2X, minY, line3X, maxY);
         graphics.drawLine(line3X, maxY, line4X, maxY);
         graphics.drawLine(line4X, maxY, line1X, minY);
-
     }
 }

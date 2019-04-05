@@ -4,6 +4,8 @@ import java.util.Collection;
 
 public interface ScopedDrawable extends Drawable {
 
+    public static final int VERTICAL_PADDING = 5;
+
     void add(Drawable drawable);
 
     void remove(Drawable drawable);
