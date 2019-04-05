@@ -1,6 +1,6 @@
 package com.esb.plugin.designer.graph.layout;
 
-import com.esb.plugin.designer.graph.DirectedGraph;
+import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 
 import java.util.ArrayList;
@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
 // [3] ["N7"]
 class FlowGraphLayers {
 
-    private final DirectedGraph<Drawable> graph;
+    private final FlowGraph graph;
 
-    FlowGraphLayers(DirectedGraph<Drawable> graph) {
+    FlowGraphLayers(FlowGraph graph) {
         this.graph = graph.copy();
     }
 

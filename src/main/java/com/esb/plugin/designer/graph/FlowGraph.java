@@ -89,7 +89,7 @@ public class FlowGraph {
     }
 
     public void computePositions() {
-        FlowGraphLayout positions = new FlowGraphLayout(graph);
+        FlowGraphLayout positions = new FlowGraphLayout(this);
         positions.compute();
     }
 
@@ -101,4 +101,11 @@ public class FlowGraph {
         }
     }
 
+    public void removeEdgesStartingFrom(Drawable drawable) {
+        graph.removeEdgesStartingFrom(drawable);
+    }
+
+    public void removeNode(Drawable drawable) {
+        graph.removeNode(drawable);
+    }
 }

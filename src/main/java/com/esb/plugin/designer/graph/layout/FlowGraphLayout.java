@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.graph.layout;
 
 import com.esb.plugin.designer.Tile;
-import com.esb.plugin.designer.graph.DirectedGraph;
+import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 
@@ -13,9 +13,9 @@ public class FlowGraphLayout {
     private final int X_LEFT_PADDING = Math.floorDiv(Tile.WIDTH, 2);
 
     private final List<List<Drawable>> layers;
-    private final DirectedGraph<Drawable> graph;
+    private final FlowGraph graph;
 
-    public FlowGraphLayout(DirectedGraph<Drawable> graph) {
+    public FlowGraphLayout(FlowGraph graph) {
         this.graph = graph;
         FlowGraphLayers layers = new FlowGraphLayers(graph);
         this.layers = layers.compute();
@@ -25,7 +25,7 @@ public class FlowGraphLayout {
         _calculate(0, Collections.singletonList(graph.root()));
     }
 
-    public static int computeSubTreeHeight(DirectedGraph<Drawable> graph, Drawable root) {
+    public static int computeSubTreeHeight(FlowGraph graph, Drawable root) {
         int max = graph.successors(root)
                 .stream()
                 .map(item -> FlowGraphLayout.computeSubTreeHeight(graph, item))
@@ -47,7 +47,15 @@ public class FlowGraphLayout {
 
             // Root
             if (predecessors.isEmpty()) {
-                centerInSubtree(top, drawable);
+
+                // Center in subtree
+                int maxSubtreeHeight = computeSubTreeHeight(graph, drawable);
+                int tmpX = X_LEFT_PADDING + findLayer(drawable) * Tile.WIDTH;
+                int tmpY = top + Math.floorDiv(maxSubtreeHeight, 2);
+                drawable.setPosition(tmpX, tmpY);
+
+                _calculate(top, graph.successors(drawable));
+
 
                 // Single node with one or more predecessor/s
             } else {
@@ -70,6 +78,7 @@ public class FlowGraphLayout {
         } else if (drawables.size() > 1) {
             for (Drawable drawable : drawables) {
 
+                // Center in subtree
                 if (drawable instanceof ScopedDrawable) {
                     top += 5;
                 }
@@ -107,15 +116,5 @@ public class FlowGraphLayout {
         throw new RuntimeException("Could not find layer for node " + current);
     }
 
-    private int centerInSubtree(int top, Drawable drawable) {
-        int maxSubtreeHeight = computeSubTreeHeight(graph, drawable);
-        int tmpX = X_LEFT_PADDING + findLayer(drawable) * Tile.WIDTH;
-        int tmpY = top + Math.floorDiv(maxSubtreeHeight, 2);
-        drawable.setPosition(tmpX, tmpY);
-
-        _calculate(top, graph.successors(drawable));
-
-        return maxSubtreeHeight;
-    }
 
 }

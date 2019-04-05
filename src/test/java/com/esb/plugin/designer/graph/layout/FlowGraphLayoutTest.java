@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.graph.layout;
 
 import com.esb.plugin.designer.editor.component.Component;
-import com.esb.plugin.designer.graph.DirectedGraph;
+import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.ChoiceDrawable;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.GenericComponentDrawable;
@@ -16,7 +16,8 @@ class FlowGraphLayoutTest {
         // Given
         Drawable n1 = new GenericComponentDrawable(new Component("n1"));
 
-        DirectedGraph<Drawable> graph = new DirectedGraph<>(n1);
+        FlowGraph graph = new FlowGraph();
+        graph.add(null, n1);
 
         // When
         int height = FlowGraphLayout.computeSubTreeHeight(graph, n1);
@@ -30,7 +31,8 @@ class FlowGraphLayoutTest {
         // Given
         Drawable choice = new ChoiceDrawable(new Component("choice"));
 
-        DirectedGraph<Drawable> graph = new DirectedGraph<>(choice);
+        FlowGraph graph = new FlowGraph();
+        graph.add(null, choice);
 
         // When
         int height = FlowGraphLayout.computeSubTreeHeight(graph, choice);
@@ -46,9 +48,10 @@ class FlowGraphLayoutTest {
         Drawable choice1 = new ChoiceDrawable(new Component("choice1"));
         Drawable choice2 = new ChoiceDrawable(new Component("choice2"));
 
-        DirectedGraph<Drawable> graph = new DirectedGraph<>(root);
-        graph.putEdge(root, choice1);
-        graph.putEdge(choice1, choice2);
+        FlowGraph graph = new FlowGraph();
+        graph.add(null, root);
+        graph.add(root, choice1);
+        graph.add(choice1, choice2);
 
         // When
         int height = FlowGraphLayout.computeSubTreeHeight(graph, root);
@@ -65,10 +68,11 @@ class FlowGraphLayoutTest {
         Drawable choice2 = new ChoiceDrawable(new Component("choice2"));
         Drawable choice3 = new ChoiceDrawable(new Component("choice3"));
 
-        DirectedGraph<Drawable> graph = new DirectedGraph<>(root);
-        graph.putEdge(root, choice1);
-        graph.putEdge(choice1, choice2);
-        graph.putEdge(choice1, choice3);
+        FlowGraph graph = new FlowGraph();
+        graph.add(null, root);
+        graph.add(root, choice1);
+        graph.add(choice1, choice2);
+        graph.add(choice1, choice3);
 
         // When
         int height = FlowGraphLayout.computeSubTreeHeight(graph, root);
