@@ -47,6 +47,7 @@ abstract class AbstractDrawable implements Drawable {
         drawText(graphics, "A Description", textCenterX, textTopY);
 
         // Draw bounding box:
+        graphics.setColor(JBColor.RED);
         int x1 = x() - Math.floorDiv(width(), 2);
         int y1 = y() - Math.floorDiv(height(), 2);
         int x2 = x() + Math.floorDiv(width(), 2);
@@ -55,11 +56,13 @@ abstract class AbstractDrawable implements Drawable {
         int y3 = y() + Math.floorDiv(height(), 2);
         int x4 = x() + Math.floorDiv(width(), 2);
         int y4 = y() + Math.floorDiv(height(), 2);
-/**
+
+        /**
         graphics.drawLine(x1, y1, x2, y2);
          graphics.drawLine(x2,y2,x4,y4);
          graphics.drawLine(x4,y4,x3,y3);
- graphics.drawLine(x3,y3,x1,y1);*/
+         graphics.drawLine(x3,y3,x1,y1);
+         */
 
     }
 

@@ -283,7 +283,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     private void paintScopeBoundaries(Graphics graphics, ScopedDrawable scopedDrawable, Drawable drawableWithMaxX, Drawable drawableWithMinX) {
         int subTreeHeight = FlowGraphLayout.computeSubTreeHeight(graph, scopedDrawable);
         int minY = scopedDrawable.y() - Math.floorDiv(subTreeHeight, 2) + ScopedDrawable.VERTICAL_PADDING;
-        int maxY = minY + subTreeHeight - ScopedDrawable.VERTICAL_PADDING;
+        int maxY = scopedDrawable.y() + Math.floorDiv(subTreeHeight, 2) - ScopedDrawable.VERTICAL_PADDING;
 
         // Draw Scope Boundaries
         int line1X = drawableWithMinX.x() - Math.floorDiv(drawableWithMinX.width(), 2);

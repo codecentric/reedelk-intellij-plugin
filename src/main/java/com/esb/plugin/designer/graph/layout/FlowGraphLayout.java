@@ -91,7 +91,7 @@ public class FlowGraphLayout {
                 // added while computing max subtree height also.
                 // The padding is added here.
                 if (drawable instanceof ScopedDrawable) {
-                    maxSubtreeHeight -= ScopedDrawable.VERTICAL_PADDING + ScopedDrawable.VERTICAL_PADDING; // top and bottom
+                    maxSubtreeHeight -= (ScopedDrawable.VERTICAL_PADDING + ScopedDrawable.VERTICAL_PADDING); // top and bottom
                 }
 
                 int tmpY = top + Math.floorDiv(maxSubtreeHeight, 2);
