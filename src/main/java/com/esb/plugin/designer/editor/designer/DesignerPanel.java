@@ -291,6 +291,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         int line4X = drawableWithMinX.x() - Math.floorDiv(drawableWithMinX.width(), 2) + INNER_PADDING;
         int line4Y = maxY;//drawableWithMaxY.y() + Math.floorDiv(drawableWithMaxY.height(), 2) - INNER_PADDING;
 
+
         graphics.setColor(new JBColor(Gray._235, Gray._30));
         graphics.drawLine(line1X, line1Y, line2X, line2Y);
         graphics.drawLine(line2X, line2Y, line3X, line3Y);

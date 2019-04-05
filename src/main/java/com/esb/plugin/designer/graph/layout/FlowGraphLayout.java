@@ -41,14 +41,20 @@ public class FlowGraphLayout {
                 int max = predecessors.stream().mapToInt(Drawable::y).max().getAsInt();
                 int tmpY = Math.floorDiv(max + min, 2);
                 drawable.setPosition(tmpX, tmpY);
+
+                if (drawable instanceof ScopedDrawable) {
+                    top += 5;
+                }
                 _calculate(top, graph.successors(drawable));
             }
 
             // Layer with multiple nodes.
             // Center them all in their respective subtrees.
+            // Successors can be > 1 only when predecessor is ScopedDrawable
         } else if (drawables.size() > 1) {
             for (Drawable drawable : drawables) {
                 top += centerInSubtree(top, drawable);
+                if (drawable instanceof ScopedDrawable) top += 5;
             }
         }
     }
