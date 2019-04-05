@@ -75,12 +75,24 @@ public class FlowGraphLayout {
                 }
 
                 int tmpX = X_LEFT_PADDING + findLayer(drawable) * Tile.WIDTH;
-                int tmpY = top + Math.floorDiv(drawable.height(), 2);
+
+                int maxSubtreeHeight = computeSubTreeHeight(graph, drawable);
+                // Need to subtract the current padding since we are adding it here.
+
+                if (drawable instanceof ScopedDrawable) {
+                    maxSubtreeHeight -= 5 + 5;
+                }
+
+                int tmpY = top + Math.floorDiv(maxSubtreeHeight, 2);
                 drawable.setPosition(tmpX, tmpY);
 
                 _calculate(top, graph.successors(drawable));
 
-                top += drawable.height() + 5;
+                if (drawable instanceof ScopedDrawable) {
+                    top += 5;
+                }
+
+                top += maxSubtreeHeight;
 
             }
         }
