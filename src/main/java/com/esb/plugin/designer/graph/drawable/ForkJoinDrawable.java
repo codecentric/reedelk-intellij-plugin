@@ -15,7 +15,7 @@ public class ForkJoinDrawable extends AbstractDrawable implements ScopedDrawable
         super(component);
     }
 
-    public void addInScope(Drawable drawable) {
+    public void addToScope(Drawable drawable) {
         this.scope.add(drawable);
     }
 

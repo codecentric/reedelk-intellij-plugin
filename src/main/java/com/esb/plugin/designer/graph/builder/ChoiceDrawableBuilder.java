@@ -54,7 +54,7 @@ public class ChoiceDrawableBuilder implements Builder {
 
         Collection<Drawable> allNodesBelongingToThisChoice = listNodesBetween(graph, choiceDrawable, stopDrawable);
         allNodesBelongingToThisChoice
-                .forEach(choiceDrawable::addInScope);
+                .forEach(choiceDrawable::addToScope);
 
         return stopDrawable;
     }

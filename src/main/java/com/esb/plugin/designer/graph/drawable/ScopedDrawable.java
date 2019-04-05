@@ -6,7 +6,7 @@ public interface ScopedDrawable extends Drawable {
 
     int VERTICAL_PADDING = 5;
 
-    void addInScope(Drawable drawable);
+    void addToScope(Drawable drawable);
 
     void removeFromScope(Drawable drawable);
 

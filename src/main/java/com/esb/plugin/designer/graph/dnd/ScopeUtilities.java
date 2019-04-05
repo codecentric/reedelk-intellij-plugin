@@ -72,10 +72,10 @@ class ScopeUtilities {
     static void addToScopeIfNecessary(FlowGraph graph, Drawable adjacentNode, Drawable targetDrawableToAdd) {
         if (adjacentNode instanceof ScopedDrawable) {
             ScopedDrawable scopedDrawable = (ScopedDrawable) adjacentNode;
-            scopedDrawable.addInScope(targetDrawableToAdd);
+            scopedDrawable.addToScope(targetDrawableToAdd);
         }
         List<ScopedDrawable> scopedDrawableObjects = ScopeUtilities.findScopesForNode(graph, adjacentNode);
-        scopedDrawableObjects.forEach(scopedDrawable -> scopedDrawable.addInScope(targetDrawableToAdd));
+        scopedDrawableObjects.forEach(scopedDrawable -> scopedDrawable.addToScope(targetDrawableToAdd));
     }
 
     static int getScopeXEdge(ScopedDrawable scopedDrawable) {
@@ -108,7 +108,7 @@ class ScopeUtilities {
                 return true;
             }
         }
-        Optional<ScopedDrawable> scope = getScope(graph, drawable);
+        Optional<ScopedDrawable> scope = findScope(graph, drawable);
         if (!scope.isPresent()) return false;
 
         List<Drawable> successors = graph.successors(drawable);
@@ -118,16 +118,17 @@ class ScopeUtilities {
                 .anyMatch(d -> !scope.get().scopeContains(d));
     }
 
-    public static Optional<ScopedDrawable> getScope(FlowGraph graph, Drawable drawable) {
-        List<ScopedDrawable> scopedDrawables = graph.nodes().stream()
-                .filter(d -> d instanceof ScopedDrawable)
-                .map(drawable1 -> (ScopedDrawable) drawable1)
-                .collect(toList());
-        for (ScopedDrawable scope : scopedDrawables) {
-            if (scope.scopeContains(drawable)) {
-                return Optional.of(scope);
+    public static int countNumberOfNestedScopes(FlowGraph graph, Drawable drawable) {
+        if (drawable instanceof ScopedDrawable) {
+            ScopedDrawable scopedDrawable = (ScopedDrawable) drawable;
+            if (scopedDrawable.getScope().isEmpty()) {
+                return 1 + findScope(graph, scopedDrawable)
+                        .map(d -> 1 + countNumberOfNestedScopes(graph, d))
+                        .orElse(0);
             }
         }
-        return Optional.empty();
+        return findScope(graph, drawable)
+                .map(scopedDrawable -> 1 + countNumberOfNestedScopes(graph, scopedDrawable))
+                .orElse(0);
     }
 }

@@ -127,7 +127,7 @@ public class GraphNodeAdder {
                 modifiableGraph.add(closestPrecedingNode, nodeToAdd);
                 modifiableGraph.add(nodeToAdd, successorOfClosestPrecedingNode);
                 modifiableGraph.remove(closestPrecedingNode, successorOfClosestPrecedingNode);
-                closestPrecedingNodeScope.addInScope(nodeToAdd);
+                closestPrecedingNodeScope.addToScope(nodeToAdd);
 
             } else {
                 // The drop point is outside the closestPrecedingNodeScope
