@@ -23,7 +23,7 @@ public class FlowEditor extends UserDataHolderBase implements FileEditor, Possib
 
     FlowEditor(Project project, VirtualFile file) {
         this.manager = new GraphManager(project, file);
-        this.editor = new FlowEditorPanel(manager); // remove passing file to the editor panel
+        this.editor = new FlowEditorPanel(manager); // removeFromScope passing file to the editor panel
         manager.addGraphChangeListener(this.editor);
     }
 

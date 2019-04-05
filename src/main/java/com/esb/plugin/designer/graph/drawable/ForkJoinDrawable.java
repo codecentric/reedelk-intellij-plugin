@@ -15,20 +15,20 @@ public class ForkJoinDrawable extends AbstractDrawable implements ScopedDrawable
         super(component);
     }
 
-    public void add(Drawable drawable) {
+    public void addInScope(Drawable drawable) {
         this.scope.add(drawable);
     }
 
-    public void remove(Drawable drawable) {
+    public void removeFromScope(Drawable drawable) {
         this.scope.remove(drawable);
     }
 
-    public Collection<Drawable> getDrawablesInScope() {
+    public Collection<Drawable> getScope() {
         return Collections.unmodifiableSet(scope);
     }
 
     @Override
-    public boolean contains(Drawable drawable) {
+    public boolean scopeContains(Drawable drawable) {
         return scope.contains(drawable);
     }
 

@@ -4,14 +4,14 @@ import java.util.Collection;
 
 public interface ScopedDrawable extends Drawable {
 
-    public static final int VERTICAL_PADDING = 5;
+    int VERTICAL_PADDING = 5;
 
-    void add(Drawable drawable);
+    void addInScope(Drawable drawable);
 
-    void remove(Drawable drawable);
+    void removeFromScope(Drawable drawable);
 
-    Collection<Drawable> getDrawablesInScope();
+    Collection<Drawable> getScope();
 
-    boolean contains(Drawable drawable);
+    boolean scopeContains(Drawable drawable);
 
 }

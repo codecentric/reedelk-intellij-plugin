@@ -34,7 +34,7 @@ class ScopeUtilities {
                 .stream()
                 .filter(drawable -> drawable instanceof ScopedDrawable)
                 .map(drawable -> (ScopedDrawable) drawable)
-                .filter(scopedDrawable -> scopedDrawable.contains(target))
+                .filter(scopedDrawable -> scopedDrawable.scopeContains(target))
                 .findFirst();
     }
 
@@ -44,7 +44,7 @@ class ScopeUtilities {
         Collection<Drawable> nodes = graph.nodes();
         for (Drawable node : nodes) {
             if (node instanceof ScopedDrawable) {
-                if (((ScopedDrawable) node).getDrawablesInScope().contains(targetDrawable)) {
+                if (((ScopedDrawable) node).getScope().contains(targetDrawable)) {
                     // But this one might be part of another scope as well...
                     scopedDrawables.add((ScopedDrawable) node);
                     List<Drawable> predecessors = graph.predecessors(node);
@@ -61,7 +61,7 @@ class ScopeUtilities {
     }
 
     static Collection<Drawable> findNodesConnectedToZeroOrOutsideScopeDrawables(FlowGraph graph, ScopedDrawable scope) {
-        Collection<Drawable> drawablesInTheScope = scope.getDrawablesInScope();
+        Collection<Drawable> drawablesInTheScope = scope.getScope();
         return drawablesInTheScope.stream().filter(drawable -> {
             List<Drawable> successors = graph.successors(drawable);
             if (successors.isEmpty()) return true;
@@ -72,21 +72,21 @@ class ScopeUtilities {
     static void addToScopeIfNecessary(FlowGraph graph, Drawable adjacentNode, Drawable targetDrawableToAdd) {
         if (adjacentNode instanceof ScopedDrawable) {
             ScopedDrawable scopedDrawable = (ScopedDrawable) adjacentNode;
-            scopedDrawable.add(targetDrawableToAdd);
+            scopedDrawable.addInScope(targetDrawableToAdd);
         }
         List<ScopedDrawable> scopedDrawableObjects = ScopeUtilities.findScopesForNode(graph, adjacentNode);
-        scopedDrawableObjects.forEach(scopedDrawable -> scopedDrawable.add(targetDrawableToAdd));
+        scopedDrawableObjects.forEach(scopedDrawable -> scopedDrawable.addInScope(targetDrawableToAdd));
     }
 
     static int getScopeXEdge(ScopedDrawable scopedDrawable) {
-        return scopedDrawable.getDrawablesInScope().stream().mapToInt(Drawable::x).max().getAsInt() + Tile.HALF_WIDTH;
+        return scopedDrawable.getScope().stream().mapToInt(Drawable::x).max().getAsInt() + Tile.HALF_WIDTH;
     }
 
     /**
      * It finds the first node outside the given ScopedDrawable.
      */
     static Optional<Drawable> findFirstNodeOutsideScope(FlowGraph graph, ScopedDrawable scopedDrawable) {
-        return findFirstOutsideCollection(graph, scopedDrawable.getDrawablesInScope(), scopedDrawable);
+        return findFirstOutsideCollection(graph, scopedDrawable.getScope(), scopedDrawable);
     }
 
     private static Optional<Drawable> findFirstOutsideCollection(FlowGraph graph, Collection<Drawable> collection, Drawable root) {
@@ -96,6 +96,37 @@ class ScopeUtilities {
             }
             Optional<Drawable> found = findFirstOutsideCollection(graph, collection, successor);
             if (found.isPresent()) return found;
+        }
+        return Optional.empty();
+    }
+
+    public static boolean isLastOfScope(FlowGraph graph, Drawable drawable) {
+        if (drawable instanceof ScopedDrawable) {
+            if (graph.successors(drawable).isEmpty()) {
+                // A ScopedDrawable node is last in
+                // the scope if it does not have children.
+                return true;
+            }
+        }
+        Optional<ScopedDrawable> scope = getScope(graph, drawable);
+        if (!scope.isPresent()) return false;
+
+        List<Drawable> successors = graph.successors(drawable);
+        if (successors.isEmpty()) return true;
+        return successors
+                .stream()
+                .anyMatch(d -> !scope.get().scopeContains(d));
+    }
+
+    public static Optional<ScopedDrawable> getScope(FlowGraph graph, Drawable drawable) {
+        List<ScopedDrawable> scopedDrawables = graph.nodes().stream()
+                .filter(d -> d instanceof ScopedDrawable)
+                .map(drawable1 -> (ScopedDrawable) drawable1)
+                .collect(toList());
+        for (ScopedDrawable scope : scopedDrawables) {
+            if (scope.scopeContains(drawable)) {
+                return Optional.of(scope);
+            }
         }
         return Optional.empty();
     }

@@ -232,7 +232,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
 
     private void paintScope(Graphics graphics, ScopedDrawable scopedDrawable) {
-        Collection<Drawable> drawables = scopedDrawable.getDrawablesInScope();
+        Collection<Drawable> drawables = scopedDrawable.getScope();
 
         Drawable drawableWithMaxX = scopedDrawable;
         Drawable drawableWithMinX = scopedDrawable;
