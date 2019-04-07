@@ -12,7 +12,7 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
-class ScopeUtilities {
+public class ScopeUtilities {
 
     static boolean haveSameScope(FlowGraph graph, Drawable drawable1, Drawable drawable2) {
         Optional<ScopedDrawable> scope1 = findScope(graph, drawable1);
@@ -100,6 +100,37 @@ class ScopeUtilities {
         return Optional.empty();
     }
 
+    public static Collection<Drawable> listLastDrawablesOfScope(FlowGraph graph, ScopedDrawable scopedDrawable) {
+        final List<Drawable> lastOfScope = new ArrayList<>();
+        if (scopedDrawable.getScope().isEmpty()) {
+            lastOfScope.add(scopedDrawable);
+        } else {
+            for (Drawable drawable : scopedDrawable.getScope()) {
+                if (drawable instanceof ScopedDrawable) {
+                    if (((ScopedDrawable) drawable).getScope().isEmpty()) {
+                        lastOfScope.add(drawable);
+                    } else {
+                        Collection<Drawable> innerDrawables = listLastDrawablesOfScope(graph, (ScopedDrawable) drawable);
+                        for (Drawable innerDrawable : innerDrawables) {
+                            List<Drawable> successors = graph.successors(innerDrawable);
+                            for (Drawable successor : successors) {
+                                if (!scopedDrawable.scopeContains(successor)) {
+                                    lastOfScope.add(successor);
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    if (isLastOfScope(graph, drawable)) {
+                        lastOfScope.add(drawable);
+                    }
+                }
+            }
+        }
+        return lastOfScope;
+
+    }
+
     public static boolean isLastOfScope(FlowGraph graph, Drawable drawable) {
         if (drawable instanceof ScopedDrawable) {
             if (graph.successors(drawable).isEmpty()) {
@@ -130,5 +161,24 @@ class ScopeUtilities {
         return findScope(graph, drawable)
                 .map(scopedDrawable -> 1 + countNumberOfNestedScopes(graph, scopedDrawable))
                 .orElse(0);
+    }
+
+    public static Optional<Integer> scopesBetween(ScopedDrawable scopedDrawable, Drawable target) {
+        return scopesBetween(0, scopedDrawable, target);
+    }
+
+    public static Optional<Integer> scopesBetween(int depth, ScopedDrawable scopedDrawable, Drawable target) {
+        if (scopedDrawable == target) return Optional.of(depth);
+        if (scopedDrawable.getScope().isEmpty()) {
+            return Optional.of(depth);
+        }
+        for (Drawable drawableInScope : scopedDrawable.getScope()) {
+            if (drawableInScope instanceof ScopedDrawable) {
+                return scopesBetween(depth + 1, (ScopedDrawable) drawableInScope, target);
+            } else if (drawableInScope == target) {
+                return Optional.of(depth);
+            }
+        }
+        return Optional.empty();
     }
 }

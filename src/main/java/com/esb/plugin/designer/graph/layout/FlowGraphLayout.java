@@ -2,6 +2,7 @@ package com.esb.plugin.designer.graph.layout;
 
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.dnd.ScopeUtilities;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 
@@ -50,7 +51,7 @@ public class FlowGraphLayout {
 
                 // Center in subtree
                 int maxSubtreeHeight = computeSubTreeHeight(graph, drawable);
-                int tmpX = X_LEFT_PADDING + findLayer(drawable) * Tile.WIDTH;
+                int tmpX = X_LEFT_PADDING + sumLayerWidthForLayersBelow(findLayer(drawable));
                 int tmpY = top + Math.floorDiv(maxSubtreeHeight, 2);
                 drawable.setPosition(tmpX, tmpY);
 
@@ -59,7 +60,7 @@ public class FlowGraphLayout {
 
                 // Single node with one or more predecessor/s
             } else {
-                int tmpX = X_LEFT_PADDING + findLayer(drawable) * Tile.WIDTH;
+                int tmpX = X_LEFT_PADDING + sumLayerWidthForLayersBelow(findLayer(drawable));
                 int min = predecessors.stream().mapToInt(Drawable::y).min().getAsInt();
                 int max = predecessors.stream().mapToInt(Drawable::y).max().getAsInt();
                 int tmpY = Math.floorDiv(max + min, 2);
@@ -83,7 +84,7 @@ public class FlowGraphLayout {
                     top += ScopedDrawable.VERTICAL_PADDING; // top padding
                 }
 
-                int tmpX = X_LEFT_PADDING + findLayer(drawable) * Tile.WIDTH;
+                int tmpX = X_LEFT_PADDING + sumLayerWidthForLayersBelow(findLayer(drawable));
 
                 int maxSubtreeHeight = computeSubTreeHeight(graph, drawable);
 
@@ -116,6 +117,25 @@ public class FlowGraphLayout {
             }
         }
         throw new RuntimeException("Could not find layer for node " + current);
+    }
+
+    private int sumLayerWidthForLayersBelow(int layerNumber) {
+        int sum = 0;
+        for (int i = 0; i < layerNumber; i++) {
+            sum += maxLayerWidth(i);
+        }
+        return sum;
+    }
+
+    private int maxLayerWidth(int layerNumber) {
+        List<Drawable> layerDrawables = layers.get(layerNumber);
+        int max = 0;
+        for (Drawable layerDrawable : layerDrawables) {
+            int nestedScopes = ScopeUtilities.countNumberOfNestedScopes(graph, layerDrawable);
+            int total = layerDrawable.width() + nestedScopes * ScopedDrawable.HORIZONTAL_PADDING;
+            if (total > max) max = total;
+        }
+        return max;
     }
 
 
