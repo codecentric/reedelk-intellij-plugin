@@ -31,13 +31,13 @@ abstract class AbstractDrawable implements Drawable {
         this.component = component;
         this.image = ESBIcons.forComponentAsImage(component.getName());
 
-        this.halfTileWidth = Math.floorDiv(Tile.WIDTH, 2);
-        this.halfTileHeight = Math.floorDiv(Tile.HEIGHT, 2);
+        this.halfTileWidth = Tile.HALF_WIDTH;
+        this.halfTileHeight = Tile.HALF_HEIGHT;
     }
 
     @Override
     public void draw(FlowGraph graph, Graphics graphics, ImageObserver observer) {
-        drawNodeAndDescription(graph, graphics, observer);
+        drawNodeAndDescription(graphics, observer);
         drawArrows(graph, graphics);
 
         //drawBoundingBox(graphics);
@@ -93,7 +93,7 @@ abstract class AbstractDrawable implements Drawable {
         return containsOnXAxis && containsOnYAxis;
     }
 
-    void drawNodeAndDescription(FlowGraph graph, Graphics graphics, ImageObserver observer) {
+    void drawNodeAndDescription(Graphics graphics, ImageObserver observer) {
         int imageX = x() - Math.floorDiv(image.getWidth(observer), 2);
         int imageY = y() - Math.floorDiv(image.getHeight(observer), 2);
         graphics.drawImage(image, imageX, imageY, observer);
@@ -121,11 +121,9 @@ abstract class AbstractDrawable implements Drawable {
     private void drawArrows(FlowGraph graph, Graphics graphics) {
         List<Drawable> successors = graph.successors(this);
         for (Drawable successor : successors) {
-            graphics.setColor(JBColor.lightGray);
             Arrow.draw((Graphics2D) graphics,
                     new Point2D.Double(x() + Math.floorDiv(Tile.WIDTH, 2) - 15, y()),
-                    new Point2D.Double(successor.x() - Math.floorDiv(Tile.WIDTH, 2) + 15, successor.y()),
-                    10);
+                    new Point2D.Double(successor.x() - Math.floorDiv(Tile.WIDTH, 2) + 15, successor.y()));
         }
     }
 

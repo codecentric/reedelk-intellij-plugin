@@ -1,36 +1,39 @@
 package com.esb.plugin.designer.editor.designer;
 
+import com.intellij.ui.JBColor;
+
 import java.awt.*;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 
 public class Arrow {
 
-    public static void draw(final Graphics2D gfx, final Point2D start, final Point2D end, final float arrowSize) {
+    private static final int ARROW_SIZE = 10;
+    private static final double ARROW_ANGLE = Math.PI / 5.0d;
+
+    public static void draw(final Graphics2D gfx, final Point2D start, final Point2D end) {
+        gfx.setColor(JBColor.lightGray);
 
         final double startx = start.getX();
         final double starty = start.getY();
 
-
         final double deltax = startx - end.getX();
-        final double result;
+
+        final double angle;
         if (deltax == 0.0d) {
-            result = Math.PI / 2;
+            angle = Math.PI / 2;
         } else {
-            result = Math.atan((starty - end.getY()) / deltax) + (startx < end.getX() ? Math.PI : 0);
+            angle = Math.atan((starty - end.getY()) / deltax) + (startx < end.getX() ? Math.PI : 0);
         }
 
-        final double angle = result;
+        // Draws the small triangle at the end of the arrow.
+        final double x1 = ARROW_SIZE * Math.cos(angle - ARROW_ANGLE);
+        final double y1 = ARROW_SIZE * Math.sin(angle - ARROW_ANGLE);
+        final double x2 = ARROW_SIZE * Math.cos(angle + ARROW_ANGLE);
+        final double y2 = ARROW_SIZE * Math.sin(angle + ARROW_ANGLE);
 
-        final double arrowAngle = Math.PI / 5.0d;
-
-        final double x1 = arrowSize * Math.cos(angle - arrowAngle);
-        final double y1 = arrowSize * Math.sin(angle - arrowAngle);
-        final double x2 = arrowSize * Math.cos(angle + arrowAngle);
-        final double y2 = arrowSize * Math.sin(angle + arrowAngle);
-
-        final double cx = (arrowSize / 2.0f) * Math.cos(angle);
-        final double cy = (arrowSize / 2.0f) * Math.sin(angle);
+        final double cx = (ARROW_SIZE / 2.0f) * Math.cos(angle);
+        final double cy = (ARROW_SIZE / 2.0f) * Math.sin(angle);
 
         final GeneralPath polygon = new GeneralPath();
         polygon.moveTo(end.getX(), end.getY());
@@ -39,7 +42,7 @@ public class Arrow {
         polygon.closePath();
         gfx.fill(polygon);
 
-
+        // Draws the arrow's line from the start to the center of the small triangle
         gfx.drawLine((int) startx, (int) starty, (int) (end.getX() + cx), (int) (end.getY() + cy));
 
     }

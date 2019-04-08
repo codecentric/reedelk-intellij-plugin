@@ -40,13 +40,13 @@ public class ChoiceDrawable extends AbstractDrawable implements ScopedDrawable {
 
     @Override
     public void draw(FlowGraph graph, Graphics graphics, ImageObserver observer) {
-        drawNodeAndDescription(graph, graphics, observer);
+        drawNodeAndDescription(graphics, observer);
         drawVerticalBar(graphics);
         drawScopeBoundaries(graph, graphics);
     }
 
     private void drawVerticalBar(Graphics graphics) {
-        java.util.List<Drawable> drawablesInTheScope = new ArrayList<Drawable>();
+        List<Drawable> drawablesInTheScope = new ArrayList<Drawable>();
         drawablesInTheScope.add(this);
         drawablesInTheScope.addAll(getScope());
 
