@@ -3,7 +3,6 @@ package com.esb.plugin.designer.graph.dnd;
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
-import com.esb.plugin.designer.graph.drawable.DrawableFactory;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 
 import java.awt.*;
@@ -21,7 +20,7 @@ import static com.google.common.base.Preconditions.checkState;
  * This class find the best position where to place the node in the Graph given
  * the drop point location
  */
-public class GraphNodeAdder {
+public abstract class AbstractNodeAdder {
 
     private final Point dropPoint;
     private final Drawable nodeToAdd;
@@ -29,11 +28,11 @@ public class GraphNodeAdder {
     private final FlowGraph graph;
     private final FlowGraph modifiableGraph;
 
-    public GraphNodeAdder(FlowGraph graph, Point dropPoint, String componentName) {
+    public AbstractNodeAdder(FlowGraph graph, Point dropPoint, Drawable nodeToAdd) {
         this.graph = graph == null ? new FlowGraph() : graph;
         this.modifiableGraph = this.graph.copy();
         this.dropPoint = dropPoint;
-        this.nodeToAdd = DrawableFactory.get(componentName);
+        this.nodeToAdd = nodeToAdd;
     }
 
 

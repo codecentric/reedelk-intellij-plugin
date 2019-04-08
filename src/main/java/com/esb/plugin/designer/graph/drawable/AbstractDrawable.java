@@ -16,28 +16,33 @@ import static java.awt.BasicStroke.JOIN_ROUND;
 
 public abstract class AbstractDrawable implements Drawable {
 
-    protected final Image image;
+    private static final int INNER_PADDING = 4;
+    private final Stroke DOTTED_STROKE = new BasicStroke(0.7f, CAP_ROUND, JOIN_ROUND, 0, new float[]{3}, 0);
+    private final Image image;
     private final Component component;
 
     // x and y are the center position os this Drawable.
     private int x;
     private int y;
+    private int draggedX;
+    private int draggedY;
 
     private boolean selected;
+    private boolean dragging;
 
     public AbstractDrawable(Component component) {
         this.component = component;
         this.image = ESBIcons.forComponentAsImage(component.getName());
     }
 
-    @Override
-    public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-        drawNodeAndDescription(graphics, observer);
-        drawArrows(graph, graphics, observer);
-
-        if (selected) {
-            drawBoundingBox(graphics);
-        }
+    private static int drawText(Graphics graphics, String stringToDraw, int centerX, int topY) {
+        Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(stringToDraw, graphics);
+        int stringWidth = (int) stringBounds.getWidth();
+        int stringHeight = (int) stringBounds.getHeight();
+        int startX = centerX - Math.floorDiv(stringWidth, 2);
+        int startY = topY + stringHeight;
+        graphics.drawString(stringToDraw, startX, startY);
+        return stringHeight;
     }
 
     @Override
@@ -102,6 +107,34 @@ public abstract class AbstractDrawable implements Drawable {
         this.selected = false;
     }
 
+    @Override
+    public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+        drawNodeAndDescription(graphics, observer);
+        drawArrows(graph, graphics, observer);
+        if (selected) {
+            drawSelectedItemBox(graphics);
+        }
+        if (dragging) {
+            drawDraggedElement(graphics, observer);
+        }
+    }
+
+    @Override
+    public void drag(int x, int y) {
+        this.draggedX = x;
+        this.draggedY = y;
+    }
+
+    @Override
+    public void dragging() {
+        this.dragging = true;
+    }
+
+    @Override
+    public void release() {
+        this.dragging = false;
+    }
+
     protected void drawNodeAndDescription(Graphics graphics, ImageObserver observer) {
         int imageX = x() - Math.floorDiv(image.getWidth(observer), 2);
         int imageY = y() - Math.floorDiv(image.getHeight(observer), 2);
@@ -117,14 +150,19 @@ public abstract class AbstractDrawable implements Drawable {
         drawText(graphics, "A Description", textCenterX, textTopY);
     }
 
-    private int drawText(Graphics graphics, String stringToDraw, int centerX, int topY) {
-        Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(stringToDraw, graphics);
-        int stringWidth = (int) stringBounds.getWidth();
-        int stringHeight = (int) stringBounds.getHeight();
-        int startX = centerX - Math.floorDiv(stringWidth, 2);
-        int startY = topY + stringHeight;
-        graphics.drawString(stringToDraw, startX, startY);
-        return stringHeight;
+    private void drawDraggedElement(Graphics2D graphics, ImageObserver observer) {
+        int imageX = draggedX - Math.floorDiv(image.getWidth(observer), 2);
+        int imageY = draggedY - Math.floorDiv(image.getHeight(observer), 2);
+        graphics.drawImage(image, imageX, imageY, observer);
+
+        int textCenterX = draggedX;
+        int textTopY = draggedY + Math.floorDiv(image.getHeight(observer), 2);
+
+        graphics.setColor(JBColor.GRAY);
+        textTopY += drawText(graphics, displayName(), textCenterX, textTopY);
+
+        graphics.setColor(JBColor.LIGHT_GRAY);
+        drawText(graphics, "A Description", textCenterX, textTopY);
     }
 
     private void drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
@@ -135,26 +173,20 @@ public abstract class AbstractDrawable implements Drawable {
         }
     }
 
-    private final Stroke DOTTED_STROKE = new BasicStroke(0.5f,
-            CAP_ROUND,
-            JOIN_ROUND,
-            0,
-            new float[]{3},
-            0);
-
-    private void drawBoundingBox(Graphics graphics) {
+    private void drawSelectedItemBox(Graphics2D graphics) {
+        graphics.setStroke(DOTTED_STROKE);
         graphics.setColor(JBColor.lightGray);
 
-        ((Graphics2D) graphics).setStroke(DOTTED_STROKE);
-
-        int x1 = x() - Math.floorDiv(width(), 2);
-        int y1 = y() - Math.floorDiv(height(), 2);
-        int x2 = x() + Math.floorDiv(width(), 2);
-        int y2 = y() - Math.floorDiv(height(), 2);
-        int x3 = x() - Math.floorDiv(width(), 2);
-        int y3 = y() + Math.floorDiv(height(), 2);
-        int x4 = x() + Math.floorDiv(width(), 2);
-        int y4 = y() + Math.floorDiv(height(), 2);
+        int halfWidth = Math.floorDiv(width(), 2);
+        int halfHeight = Math.floorDiv(height(), 2);
+        int x1 = x() - halfWidth + INNER_PADDING;
+        int y1 = y() - halfHeight + INNER_PADDING;
+        int x2 = x() + halfWidth - INNER_PADDING;
+        int y2 = y() - halfHeight + INNER_PADDING;
+        int x3 = x() - halfWidth + INNER_PADDING;
+        int y3 = y() + halfHeight - INNER_PADDING;
+        int x4 = x() + halfWidth - INNER_PADDING;
+        int y4 = y() + halfHeight - INNER_PADDING;
 
         graphics.drawLine(x1, y1, x2, y2);
         graphics.drawLine(x2, y2, x4, y4);

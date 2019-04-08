@@ -3,7 +3,9 @@ package com.esb.plugin.designer.editor;
 import com.esb.internal.commons.FileUtils;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.builder.FlowGraphBuilder;
-import com.esb.plugin.designer.graph.dnd.GraphNodeAdder;
+import com.esb.plugin.designer.graph.dnd.ExistingNodeAdder;
+import com.esb.plugin.designer.graph.dnd.NewNodeAdder;
+import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentEvent;
@@ -25,6 +27,7 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -36,7 +39,7 @@ import static java.util.Arrays.stream;
  * - The text editor associated with the flow designer (the user manually updates the JSON)
  * - The Canvas updates (drag and drop and moving around components)
  */
-public class GraphManager extends DropTarget implements FileEditorManagerListener, DocumentListener, Disposable {
+public class GraphManager extends DropTarget implements DesignerPanelDropListener, FileEditorManagerListener, DocumentListener, Disposable {
 
     private FlowGraph graph;
     private GraphChangeListener listener;
@@ -79,7 +82,7 @@ public class GraphManager extends DropTarget implements FileEditorManagerListene
             String componentName = (String) dropEvent.getTransferable().getTransferData(DataFlavor.stringFlavor);
 
             Point location = dropEvent.getLocation();
-            GraphNodeAdder nodeAdder = new GraphNodeAdder(graph, location, componentName);
+            NewNodeAdder nodeAdder = new NewNodeAdder(graph, location, componentName);
             Optional<FlowGraph> modifiedGraph = nodeAdder.add();
 
             if (modifiedGraph.isPresent()) {
@@ -146,5 +149,30 @@ public class GraphManager extends DropTarget implements FileEditorManagerListene
     @Override
     public void dispose() {
         this.busConnection.disconnect();
+    }
+
+    @Override
+    public void drop(int x, int y, Drawable dropped) {
+        // Get the predecessors of the node and connect it to the successors
+        List<Drawable> predecessors = graph.predecessors(dropped);
+        List<Drawable> successors = graph.successors(dropped);
+        if (predecessors.isEmpty()) {
+            graph.root(successors.get(0));
+        } else {
+            for (Drawable predecessor : predecessors) {
+                for (Drawable successor : successors) {
+                    graph.add(predecessor, successor);
+                }
+            }
+        }
+        graph.remove(dropped);
+
+        // Need to copy over the node, and remove it from its previous place.
+        ExistingNodeAdder nodeAdder = new ExistingNodeAdder(graph, new Point(x, y), dropped);
+        Optional<FlowGraph> addedNode = nodeAdder.add();
+        if (addedNode.isPresent()) {
+            addedNode.ifPresent(((Consumer<FlowGraph>) updatedGraph -> graph = updatedGraph)
+                    .andThen(updatedGraph -> computeGraphPositionsAndNotifyChange()));
+        }
     }
 }

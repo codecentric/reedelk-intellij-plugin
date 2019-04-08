@@ -14,6 +14,12 @@ public interface Drawable {
 
     void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer);
 
+    void drag(int x, int y);
+
+    void dragging();
+
+    void release();
+
     int y();
 
     int x();

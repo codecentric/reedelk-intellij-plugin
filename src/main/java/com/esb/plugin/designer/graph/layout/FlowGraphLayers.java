@@ -33,7 +33,7 @@ class FlowGraphLayers {
             noIncomingEdgesDrawables.forEach(graph::removeEdgesStartingFrom);
 
             // Remove all nodes without incoming edge
-            noIncomingEdgesDrawables.forEach(graph::removeNode);
+            noIncomingEdgesDrawables.forEach(graph::remove);
 
             // Recompute nodes without incoming edges
             noIncomingEdgesDrawables = getNodesWithoutIncomingEdges();

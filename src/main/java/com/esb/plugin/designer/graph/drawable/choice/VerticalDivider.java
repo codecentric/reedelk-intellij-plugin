@@ -18,7 +18,7 @@ import static java.awt.BasicStroke.JOIN_ROUND;
 
 public class VerticalDivider implements Drawable {
 
-    private final Stroke STROKE = new BasicStroke(1.5f, CAP_ROUND, JOIN_ROUND);
+    private final Stroke STROKE = new BasicStroke(1.3f, CAP_ROUND, JOIN_ROUND);
     private final JBColor VERTICAL_DIVIDER_COLOR = new JBColor(Gray._200, Gray._30);
 
     private final ScopedDrawable scopedDrawable;
@@ -44,6 +44,21 @@ public class VerticalDivider implements Drawable {
         int verticalMaxY = maxY + Math.floorDiv(Tile.HEIGHT, 3);
 
         graphics.drawLine(verticalX, verticalMinY, verticalX, verticalMaxY);
+    }
+
+    @Override
+    public void drag(int x, int y) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void dragging() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void release() {
+        throw new UnsupportedOperationException();
     }
 
     @Override

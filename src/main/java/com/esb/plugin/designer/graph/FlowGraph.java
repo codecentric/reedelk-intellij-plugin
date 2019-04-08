@@ -105,7 +105,4 @@ public class FlowGraph {
         graph.removeEdgesStartingFrom(drawable);
     }
 
-    public void removeNode(Drawable drawable) {
-        graph.removeNode(drawable);
-    }
 }

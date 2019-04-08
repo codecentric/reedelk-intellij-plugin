@@ -66,6 +66,21 @@ public class Arrow implements Drawable {
     }
 
     @Override
+    public void drag(int x, int y) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void dragging() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void release() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public Component component() {
         throw new UnsupportedOperationException();
     }

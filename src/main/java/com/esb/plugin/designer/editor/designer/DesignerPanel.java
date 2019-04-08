@@ -1,6 +1,7 @@
 package com.esb.plugin.designer.editor.designer;
 
 import com.esb.plugin.designer.Tile;
+import com.esb.plugin.designer.editor.DesignerPanelDropListener;
 import com.esb.plugin.designer.editor.GraphChangeListener;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
@@ -24,11 +25,13 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     private static final JBColor BACKGROUND_COLOR = JBColor.WHITE;
 
     private FlowGraph graph;
-
-    private boolean dragging;
     private Drawable selected;
+
     private int offsetx;
     private int offsety;
+
+    private boolean dragging;
+    private DesignerPanelDropListener designerPanelDropListener;
 
     public DesignerPanel() {
         setBackground(BACKGROUND_COLOR);
@@ -53,7 +56,6 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     @Override
     public void updated(FlowGraph updatedGraph) {
         checkState(updatedGraph != null, "Updated Graph Was null");
-
         SwingUtilities.invokeLater(() -> {
             graph = updatedGraph;
             adjustWindowSize();
@@ -67,7 +69,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         if (!dragging) return;
 
         if (selected != null) {
-            selected.setPosition(event.getX() - offsetx, event.getY() - offsety);  // Get new position of rect.
+            selected.drag(event.getX() - offsetx, event.getY() - offsety);
             /* Clamp (x,y) so that dragging does not goes beyond frame border */
 /**
  if (selected.x < 0) {
@@ -85,7 +87,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         }
     }
 
-    // Changes the cursor when mouse goes over (or out) a Drawable Node in the flow.
+
     @Override
     public void mouseMoved(MouseEvent event) {
         int x = event.getX();
@@ -103,19 +105,22 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         int x = event.getX();
         int y = event.getY();
         Optional<Drawable> drawableWithinCoordinates = getDrawableWithinCoordinates(x, y);
-        drawableWithinCoordinates.ifPresent(target -> {
+        if (drawableWithinCoordinates.isPresent()) {
             if (selected != null) {
                 selected.unselected();
                 selected = null;
             }
-            selected = target;
-            target.selected();
+            selected = drawableWithinCoordinates.get();
+            selected.selected();
             dragging = true;
+            selected.dragging();
+
             offsetx = event.getX() - selected.x();
             offsety = event.getY() - selected.y();
-        });
 
-        if (!drawableWithinCoordinates.isPresent()) {
+            selected.drag(event.getX() - offsetx, event.getY() - offsety);
+
+        } else {
             if (selected != null) {
                 selected.unselected();
                 selected = null;
@@ -126,21 +131,19 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (!dragging) return;
+        if (dragging) {
+            int x = e.getX();
+            int y = e.getY();
+            dragging = false;
 
-        // Compute snap to grid, set new position, redraw and reset dragging state
-
-        int x = e.getX();
-        int y = e.getY();
-
-        //  computeSnapToGridCoordinates(selected, x, y);
-
-
-        // selected.unselected();
-        //selected = null;
-        //dragging = false;
-
-        //  repaint();
+            if (selected != null) {
+                selected.drag(x, y);
+                selected.release();
+                designerPanelDropListener.drop(x, y, selected);
+            } else {
+                repaint();
+            }
+        }
     }
 
     @Override
@@ -157,9 +160,11 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     }
 
+    /**
+     * We might need to adapt window size, since the new graph might have
+     * grown beyond the X (or Y) axis.
+     */
     private void adjustWindowSize() {
-        // We might need to adapt window size, since the new graph might
-        // have grown on the X (or Y) axis.
         int maxX = graph.nodes().stream().mapToInt(Drawable::x).max().getAsInt();
         int maxY = graph.nodes().stream().mapToInt(Drawable::y).max().getAsInt();
         int newSizeX = maxX + Tile.WIDTH;
@@ -168,15 +173,18 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         setPreferredSize(new Dimension(newSizeX, newSizeY));
     }
 
+    /**
+     * TODO: Graph should never be null.
+     */
     private Optional<Drawable> getDrawableWithinCoordinates(int x, int y) {
-        // TODO: Remove all these checks if graph is null! Use
-        // TODO: something more object oriented!! Like an empty graph!
-        if (graph == null) return Optional.empty();
-        return graph
-                .nodes()
-                .stream()
-                .filter(drawable -> drawable.contains(this, x, y))
-                .findFirst();
+        return graph == null ? Optional.empty() :
+                graph.nodes()
+                        .stream()
+                        .filter(drawable -> drawable.contains(this, x, y))
+                        .findFirst();
     }
 
+    public void setDesignerPanelDropListener(DesignerPanelDropListener dropListener) {
+        this.designerPanelDropListener = dropListener;
+    }
 }

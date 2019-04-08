@@ -20,12 +20,13 @@ public class FlowEditorPanel extends ThreeComponentsSplitter implements GraphCha
     private PalettePanel palette;
     private DesignerPanel designer;
 
-    FlowEditorPanel(DropTarget dropTarget) {
+    FlowEditorPanel(DropTarget dropTarget, DesignerPanelDropListener dropListener) {
         super(VERTICAL);
 
         this.palette = new PalettePanel();
         this.designer = new DesignerPanel();
         this.designer.setDropTarget(dropTarget);
+        this.designer.setDesignerPanelDropListener(dropListener);
 
         ThreeComponentsSplitter paletteAndDesigner = new ThreeComponentsSplitter();
         ScrollableDesignerPanel designerScrollable = new ScrollableDesignerPanel(designer);
