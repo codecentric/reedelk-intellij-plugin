@@ -6,6 +6,7 @@ import com.esb.plugin.designer.graph.builder.FlowGraphBuilder;
 import com.esb.plugin.designer.graph.dnd.ExistingNodeAdder;
 import com.esb.plugin.designer.graph.dnd.NewNodeAdder;
 import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentEvent;
@@ -98,6 +99,47 @@ public class GraphManager extends DropTarget implements DesignerPanelDropListene
         }
     }
 
+    @Override
+    public void dispose() {
+        this.busConnection.disconnect();
+    }
+
+    @Override
+    public void drop(int x, int y, Drawable dropped) {
+        // Get the predecessors of the node and connect it to the successors
+        List<Drawable> predecessors = graph.predecessors(dropped);
+        List<Drawable> successors = graph.successors(dropped);
+        if (predecessors.isEmpty()) {
+            graph.root(successors.get(0));
+        } else {
+            for (Drawable predecessor : predecessors) {
+                for (Drawable successor : successors) {
+                    graph.add(predecessor, successor);
+                }
+            }
+        }
+        graph.remove(dropped);
+
+        // We remove the node from any scope it might belong to
+        removeFromAnyScope(dropped);
+
+        // Need to copy over the node, and remove it from its previous place.
+        ExistingNodeAdder nodeAdder = new ExistingNodeAdder(graph, new Point(x, y), dropped);
+        Optional<FlowGraph> addedNode = nodeAdder.add();
+        if (addedNode.isPresent()) {
+            addedNode.ifPresent(((Consumer<FlowGraph>) updatedGraph -> graph = updatedGraph)
+                    .andThen(updatedGraph -> computeGraphPositionsAndNotifyChange()));
+        }
+    }
+
+    private void removeFromAnyScope(Drawable dropped) {
+        graph.breadthFirstTraversal(drawable -> {
+            if (drawable instanceof ScopedDrawable) {
+                ((ScopedDrawable) drawable).removeFromScope(dropped);
+            }
+        });
+    }
+
     void addGraphChangeListener(GraphChangeListener listener) {
         this.listener = listener;
         if (graph != null) {
@@ -145,34 +187,4 @@ public class GraphManager extends DropTarget implements DesignerPanelDropListene
                 .map(textEditor -> textEditor.getEditor().getDocument());
     }
 
-
-    @Override
-    public void dispose() {
-        this.busConnection.disconnect();
-    }
-
-    @Override
-    public void drop(int x, int y, Drawable dropped) {
-        // Get the predecessors of the node and connect it to the successors
-        List<Drawable> predecessors = graph.predecessors(dropped);
-        List<Drawable> successors = graph.successors(dropped);
-        if (predecessors.isEmpty()) {
-            graph.root(successors.get(0));
-        } else {
-            for (Drawable predecessor : predecessors) {
-                for (Drawable successor : successors) {
-                    graph.add(predecessor, successor);
-                }
-            }
-        }
-        graph.remove(dropped);
-
-        // Need to copy over the node, and remove it from its previous place.
-        ExistingNodeAdder nodeAdder = new ExistingNodeAdder(graph, new Point(x, y), dropped);
-        Optional<FlowGraph> addedNode = nodeAdder.add();
-        if (addedNode.isPresent()) {
-            addedNode.ifPresent(((Consumer<FlowGraph>) updatedGraph -> graph = updatedGraph)
-                    .andThen(updatedGraph -> computeGraphPositionsAndNotifyChange()));
-        }
-    }
 }

@@ -26,18 +26,6 @@ public class ChoiceDrawable extends AbstractDrawable implements ScopedDrawable {
         this.scopeBoundaries = new ScopeBoundaries(this);
     }
 
-    public void addToScope(Drawable drawable) {
-        this.scope.add(drawable);
-    }
-
-    public void removeFromScope(Drawable drawable) {
-        this.scope.remove(drawable);
-    }
-
-    public Collection<Drawable> getScope() {
-        return Collections.unmodifiableSet(scope);
-    }
-
     @Override
     public boolean scopeContains(Drawable drawable) {
         return scope.contains(drawable);
@@ -45,8 +33,25 @@ public class ChoiceDrawable extends AbstractDrawable implements ScopedDrawable {
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-        drawNodeAndDescription(graphics, observer);
+        drawIcon(graphics, observer);
+        drawComponentNameAndDescription(graphics, observer);
         verticalDivider.draw(graph, graphics, observer);
         scopeBoundaries.draw(graph, graphics, observer);
     }
+
+    @Override
+    public void addToScope(Drawable drawable) {
+        this.scope.add(drawable);
+    }
+
+    @Override
+    public void removeFromScope(Drawable drawable) {
+        this.scope.remove(drawable);
+    }
+
+    @Override
+    public Collection<Drawable> getScope() {
+        return Collections.unmodifiableSet(scope);
+    }
+
 }

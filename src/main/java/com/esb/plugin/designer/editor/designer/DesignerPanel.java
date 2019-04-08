@@ -66,24 +66,11 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     @Override
     public void mouseDragged(MouseEvent event) {
-        if (!dragging) return;
-
-        if (selected != null) {
-            selected.drag(event.getX() - offsetx, event.getY() - offsety);
-            /* Clamp (x,y) so that dragging does not goes beyond frame border */
-/**
- if (selected.x < 0) {
- selected.x = 0;
- } else if (selectedPosition.x + selected.width(this) > getWidth()) {
- selectedPosition.x = getWidth() - selected.width(this);
- }
- if (selectedPosition.y < 0) {
- selectedPosition.y = 0;
- } else if (selectedPosition.y + selected.height(this) > getHeight()) {
- selectedPosition.y = getHeight() - selected.height(this);
- }*/
-
-            repaint();
+        if (dragging) {
+            if (selected != null) {
+                selected.drag(event.getX() - offsetx, event.getY() - offsety);
+                repaint();
+            }
         }
     }
 
@@ -104,44 +91,43 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     public void mousePressed(MouseEvent event) {
         int x = event.getX();
         int y = event.getY();
+
         Optional<Drawable> drawableWithinCoordinates = getDrawableWithinCoordinates(x, y);
         if (drawableWithinCoordinates.isPresent()) {
-            if (selected != null) {
-                selected.unselected();
-                selected = null;
-            }
+            resetSelected();
+
             selected = drawableWithinCoordinates.get();
-            selected.selected();
-            dragging = true;
-            selected.dragging();
+
 
             offsetx = event.getX() - selected.x();
             offsety = event.getY() - selected.y();
 
+            selected.selected();
+            selected.dragging();
             selected.drag(event.getX() - offsetx, event.getY() - offsety);
 
+            dragging = true;
+
         } else {
-            if (selected != null) {
-                selected.unselected();
-                selected = null;
-            }
+            // If no drawable is selected, then we reset it.
+            resetSelected();
         }
+
         repaint();
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         if (dragging) {
-            int x = e.getX();
-            int y = e.getY();
             dragging = false;
 
             if (selected != null) {
+                int x = e.getX();
+                int y = e.getY();
+
                 selected.drag(x, y);
                 selected.release();
                 designerPanelDropListener.drop(x, y, selected);
-            } else {
-                repaint();
             }
         }
     }
@@ -186,5 +172,12 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     public void setDesignerPanelDropListener(DesignerPanelDropListener dropListener) {
         this.designerPanelDropListener = dropListener;
+    }
+
+    private void resetSelected() {
+        if (selected != null) {
+            selected.unselected();
+            selected = null;
+        }
     }
 }

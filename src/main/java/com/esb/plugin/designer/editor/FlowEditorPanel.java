@@ -42,6 +42,7 @@ public class FlowEditorPanel extends ThreeComponentsSplitter implements GraphCha
 
     @Override
     public void updated(FlowGraph graph) {
-        this.designer.updated(graph); // TODO: Should not be like this. Designer Panel should be argument of this class and set listener *BEFORE* during construction
+        // TODO: Should not be like this. Designer Panel should be argument of this class and set listener *BEFORE* during construction
+        this.designer.updated(graph);
     }
 }

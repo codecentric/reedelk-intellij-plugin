@@ -109,11 +109,14 @@ public abstract class AbstractDrawable implements Drawable {
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-        drawNodeAndDescription(graphics, observer);
+        drawIcon(graphics, observer);
+        drawComponentNameAndDescription(graphics, observer);
         drawArrows(graph, graphics, observer);
+
         if (selected) {
             drawSelectedItemBox(graphics);
         }
+
         if (dragging) {
             drawDraggedElement(graphics, observer);
         }
@@ -135,11 +138,7 @@ public abstract class AbstractDrawable implements Drawable {
         this.dragging = false;
     }
 
-    protected void drawNodeAndDescription(Graphics graphics, ImageObserver observer) {
-        int imageX = x() - Math.floorDiv(image.getWidth(observer), 2);
-        int imageY = y() - Math.floorDiv(image.getHeight(observer), 2);
-        graphics.drawImage(image, imageX, imageY, observer);
-
+    protected void drawComponentNameAndDescription(Graphics graphics, ImageObserver observer) {
         int textCenterX = x();
         int textTopY = y() + Math.floorDiv(image.getHeight(observer), 2);
 
@@ -148,6 +147,12 @@ public abstract class AbstractDrawable implements Drawable {
 
         graphics.setColor(JBColor.LIGHT_GRAY);
         drawText(graphics, "A Description", textCenterX, textTopY);
+    }
+
+    protected void drawIcon(Graphics2D graphics, ImageObserver observer) {
+        int imageX = x() - Math.floorDiv(image.getWidth(observer), 2);
+        int imageY = y() - Math.floorDiv(image.getHeight(observer), 2);
+        graphics.drawImage(image, imageX, imageY, observer);
     }
 
     private void drawDraggedElement(Graphics2D graphics, ImageObserver observer) {
