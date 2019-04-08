@@ -21,7 +21,7 @@ import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
 public class DesignerPanel extends JBPanel implements MouseMotionListener, MouseListener, GraphChangeListener {
 
-    private final JBColor BACKGROUND_COLOR = JBColor.WHITE;
+    private static final JBColor BACKGROUND_COLOR = JBColor.WHITE;
 
     private FlowGraph graph;
 
@@ -143,18 +143,6 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     @Override
     public void mouseExited(MouseEvent e) {
 
-    }
-
-    public void add(Drawable component) {
-        /**
-         int x = component.getPosition().x;
-         int y = component.getPosition().y;
-         */
-
-        //  computeSnapToGridCoordinates(component, x, y);
-
-        // TODO: Implement this
-        //drawableList.add(component);
     }
 
     private void adjustWindowSize() {

@@ -1,6 +1,7 @@
 package com.esb.plugin.designer.graph.drawable;
 
 import com.esb.plugin.designer.editor.component.Component;
+import com.esb.plugin.designer.graph.drawable.choice.ChoiceDrawable;
 import com.google.common.collect.ImmutableMap;
 
 import java.lang.reflect.InvocationTargetException;

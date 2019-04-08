@@ -3,17 +3,15 @@ package com.esb.plugin.designer.graph.drawable;
 import com.esb.plugin.commons.ESBIcons;
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.editor.component.Component;
-import com.esb.plugin.designer.editor.designer.Arrow;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.intellij.ui.JBColor;
 
 import java.awt.*;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ImageObserver;
 import java.util.List;
 
-abstract class AbstractDrawable implements Drawable {
+public abstract class AbstractDrawable implements Drawable {
 
     protected final Image image;
     private final Component component;
@@ -33,7 +31,7 @@ abstract class AbstractDrawable implements Drawable {
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         drawNodeAndDescription(graphics, observer);
-        drawArrows(graph, graphics);
+        drawArrows(graph, graphics, observer);
 
         if (selected) {
             drawBoundingBox(graphics);
@@ -102,7 +100,7 @@ abstract class AbstractDrawable implements Drawable {
         this.selected = false;
     }
 
-    void drawNodeAndDescription(Graphics graphics, ImageObserver observer) {
+    protected void drawNodeAndDescription(Graphics graphics, ImageObserver observer) {
         int imageX = x() - Math.floorDiv(image.getWidth(observer), 2);
         int imageY = y() - Math.floorDiv(image.getHeight(observer), 2);
         graphics.drawImage(image, imageX, imageY, observer);
@@ -127,12 +125,11 @@ abstract class AbstractDrawable implements Drawable {
         return stringHeight;
     }
 
-    private void drawArrows(FlowGraph graph, Graphics graphics) {
+    private void drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         List<Drawable> successors = graph.successors(this);
         for (Drawable successor : successors) {
-            Arrow.draw((Graphics2D) graphics,
-                    new Point2D.Double(x() + Math.floorDiv(Tile.WIDTH, 2) - 15, y()),
-                    new Point2D.Double(successor.x() - Math.floorDiv(Tile.WIDTH, 2) + 15, successor.y()));
+            Arrow arrow = new Arrow(this, successor);
+            arrow.draw(graph, graphics, observer);
         }
     }
 
