@@ -4,7 +4,6 @@ import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.editor.GraphChangeListener;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
-import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
 
@@ -13,8 +12,6 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.geom.Point2D;
-import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkState;
@@ -42,10 +39,12 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
-        if (graph != null) {
-            paintGraph(graphics, graph);
-            paintConnection(graphics, graph, graph.root());
-        }
+        if (graph == null) return;
+
+        // Paint the whole graph
+        Graphics2D g2 = (Graphics2D) graphics;
+        g2.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
+        graph.breadthFirstTraversal(graph.root(), node -> node.draw(graph, graphics, this));
     }
 
     @Override
@@ -176,28 +175,5 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
                 .filter(drawable -> drawable.contains(x, y))
                 .findFirst();
     }
-
-    private void paintGraph(Graphics graphics, FlowGraph graph) {
-        Graphics2D g2 = (Graphics2D) graphics;
-        g2.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
-        graph.breadthFirstTraversal(
-                graph.root(),
-                node -> node.draw(graph, graphics, this));
-    }
-
-    private void paintConnection(Graphics graphics, FlowGraph graph, Drawable root) {
-        // We don't draw arrows from nodes of type scoped drawable.
-        if (root instanceof ScopedDrawable) return;
-        List<Drawable> successors = graph.successors(root);
-        for (Drawable successor : successors) {
-            graphics.setColor(JBColor.lightGray);
-            Arrow.draw((Graphics2D) graphics,
-                    new Point2D.Double(root.x() + Math.floorDiv(Tile.WIDTH, 2) - 15, root.y()),
-                    new Point2D.Double(successor.x() - Math.floorDiv(Tile.WIDTH, 2) + 15, successor.y()),
-                    10);
-            paintConnection(graphics, graph, successor);
-        }
-    }
-
 
 }

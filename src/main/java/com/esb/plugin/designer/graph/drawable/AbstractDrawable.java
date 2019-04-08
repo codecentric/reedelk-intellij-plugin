@@ -3,12 +3,15 @@ package com.esb.plugin.designer.graph.drawable;
 import com.esb.plugin.commons.ESBIcons;
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.editor.component.Component;
+import com.esb.plugin.designer.editor.designer.Arrow;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.intellij.ui.JBColor;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ImageObserver;
+import java.util.List;
 
 abstract class AbstractDrawable implements Drawable {
 
@@ -34,22 +37,10 @@ abstract class AbstractDrawable implements Drawable {
 
     @Override
     public void draw(FlowGraph graph, Graphics graphics, ImageObserver observer) {
-        int imageX = x() - Math.floorDiv(image.getWidth(observer), 2);
-        int imageY = y() - Math.floorDiv(image.getHeight(observer), 2);
-        graphics.drawImage(image, imageX, imageY, observer);
+        drawNodeAndDescription(graph, graphics, observer);
+        drawArrows(graph, graphics);
 
-        int textCenterX = x();
-        int textTopY = y() + Math.floorDiv(image.getHeight(observer), 2);
-
-        graphics.setColor(JBColor.GRAY);
-        textTopY += drawText(graphics, displayName(), textCenterX, textTopY);
-
-        graphics.setColor(JBColor.LIGHT_GRAY);
-        drawText(graphics, "A Description", textCenterX, textTopY);
-
-        // Draw bounding box:
         //drawBoundingBox(graphics);
-
     }
 
     @Override
@@ -91,7 +82,6 @@ abstract class AbstractDrawable implements Drawable {
 
     @Override
     public boolean contains(int x, int y) {
-
         boolean containsOnXAxis =
                 x >= this.x - halfTileWidth &&
                         x <= this.x + halfTileWidth;
@@ -103,6 +93,21 @@ abstract class AbstractDrawable implements Drawable {
         return containsOnXAxis && containsOnYAxis;
     }
 
+    void drawNodeAndDescription(FlowGraph graph, Graphics graphics, ImageObserver observer) {
+        int imageX = x() - Math.floorDiv(image.getWidth(observer), 2);
+        int imageY = y() - Math.floorDiv(image.getHeight(observer), 2);
+        graphics.drawImage(image, imageX, imageY, observer);
+
+        int textCenterX = x();
+        int textTopY = y() + Math.floorDiv(image.getHeight(observer), 2);
+
+        graphics.setColor(JBColor.GRAY);
+        textTopY += drawText(graphics, displayName(), textCenterX, textTopY);
+
+        graphics.setColor(JBColor.LIGHT_GRAY);
+        drawText(graphics, "A Description", textCenterX, textTopY);
+    }
+
     private int drawText(Graphics graphics, String stringToDraw, int centerX, int topY) {
         Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(stringToDraw, graphics);
         int stringWidth = (int) stringBounds.getWidth();
@@ -111,6 +116,17 @@ abstract class AbstractDrawable implements Drawable {
         int startY = topY + stringHeight;
         graphics.drawString(stringToDraw, startX, startY);
         return stringHeight;
+    }
+
+    private void drawArrows(FlowGraph graph, Graphics graphics) {
+        List<Drawable> successors = graph.successors(this);
+        for (Drawable successor : successors) {
+            graphics.setColor(JBColor.lightGray);
+            Arrow.draw((Graphics2D) graphics,
+                    new Point2D.Double(x() + Math.floorDiv(Tile.WIDTH, 2) - 15, y()),
+                    new Point2D.Double(successor.x() - Math.floorDiv(Tile.WIDTH, 2) + 15, successor.y()),
+                    10);
+        }
     }
 
     private void drawBoundingBox(Graphics graphics) {
