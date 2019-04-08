@@ -3,6 +3,7 @@ package com.esb.plugin.designer.graph.drawable;
 import com.esb.plugin.commons.ESBIcons;
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.editor.component.Component;
+import com.esb.plugin.designer.graph.FlowGraph;
 import com.intellij.ui.JBColor;
 
 import java.awt.*;
@@ -32,7 +33,7 @@ abstract class AbstractDrawable implements Drawable {
     }
 
     @Override
-    public void draw(Graphics graphics, ImageObserver observer) {
+    public void draw(FlowGraph graph, Graphics graphics, ImageObserver observer) {
         int imageX = x() - Math.floorDiv(image.getWidth(observer), 2);
         int imageY = y() - Math.floorDiv(image.getHeight(observer), 2);
         graphics.drawImage(image, imageX, imageY, observer);
