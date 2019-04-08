@@ -12,6 +12,7 @@ import java.awt.image.ImageObserver;
 
 public class Arrow implements Drawable {
 
+    private final Stroke STROKE = new BasicStroke(1f);
     private static final JBColor ARROW_COLOR = JBColor.lightGray;
 
     private static final int ARROW_SIZE = 10;
@@ -27,6 +28,7 @@ public class Arrow implements Drawable {
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+        graphics.setStroke(STROKE);
         graphics.setColor(ARROW_COLOR);
 
         Point2D.Double source = new Point2D.Double(this.source.x() + Math.floorDiv(Tile.WIDTH, 2) - 15, this.source.y());
