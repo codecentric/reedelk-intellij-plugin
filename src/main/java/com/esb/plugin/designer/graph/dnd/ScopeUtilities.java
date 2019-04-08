@@ -5,10 +5,7 @@ import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
@@ -69,13 +66,14 @@ public class ScopeUtilities {
         }).collect(toList());
     }
 
-    static void addToScopeIfNecessary(FlowGraph graph, Drawable adjacentNode, Drawable targetDrawableToAdd) {
-        if (adjacentNode instanceof ScopedDrawable) {
-            ScopedDrawable scopedDrawable = (ScopedDrawable) adjacentNode;
+    static void addToScopeIfNecessary(FlowGraph graph, Drawable closestPrecedingNode, Drawable targetDrawableToAdd) {
+        if (closestPrecedingNode instanceof ScopedDrawable) {
+            ScopedDrawable scopedDrawable = (ScopedDrawable) closestPrecedingNode;
             scopedDrawable.addToScope(targetDrawableToAdd);
+        } else {
+            List<ScopedDrawable> scopedDrawableObjects = ScopeUtilities.findScopesForNode(graph, closestPrecedingNode);
+            scopedDrawableObjects.forEach(scopedDrawable -> scopedDrawable.addToScope(targetDrawableToAdd));
         }
-        List<ScopedDrawable> scopedDrawableObjects = ScopeUtilities.findScopesForNode(graph, adjacentNode);
-        scopedDrawableObjects.forEach(scopedDrawable -> scopedDrawable.addToScope(targetDrawableToAdd));
     }
 
     static int getScopeXEdge(ScopedDrawable scopedDrawable) {
@@ -101,34 +99,28 @@ public class ScopeUtilities {
     }
 
     public static Collection<Drawable> listLastDrawablesOfScope(FlowGraph graph, ScopedDrawable scopedDrawable) {
-        final List<Drawable> lastOfScope = new ArrayList<>();
-        if (scopedDrawable.getScope().isEmpty()) {
-            lastOfScope.add(scopedDrawable);
-        } else {
-            for (Drawable drawable : scopedDrawable.getScope()) {
-                if (drawable instanceof ScopedDrawable) {
-                    if (((ScopedDrawable) drawable).getScope().isEmpty()) {
-                        lastOfScope.add(drawable);
-                    } else {
-                        Collection<Drawable> innerDrawables = listLastDrawablesOfScope(graph, (ScopedDrawable) drawable);
-                        for (Drawable innerDrawable : innerDrawables) {
-                            List<Drawable> successors = graph.successors(innerDrawable);
-                            for (Drawable successor : successors) {
-                                if (!scopedDrawable.scopeContains(successor)) {
-                                    lastOfScope.add(successor);
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    if (isLastOfScope(graph, drawable)) {
-                        lastOfScope.add(drawable);
-                    }
-                }
-            }
-        }
-        return lastOfScope;
+        // Collect all ScopedDrawable
+        Collection<Drawable> allElementsInScopeAndNestedScopes = collectAllScopedDrawableElements(scopedDrawable);
+        return allElementsInScopeAndNestedScopes.stream().filter(drawable -> {
+            List<Drawable> successors = graph.successors(drawable);
+            if (successors.isEmpty()) return true;
+            // If exists at least one
+            return !allElementsInScopeAndNestedScopes.containsAll(successors);
+        }).collect(toList());
+    }
 
+    private static Collection<Drawable> collectAllScopedDrawableElements(ScopedDrawable scopedDrawable) {
+        Collection<Drawable> scope = scopedDrawable.getScope();
+        Set<Drawable> allElements = new HashSet<>(scope);
+        Set<Drawable> nested = new HashSet<>();
+        allElements.forEach(drawable -> {
+            if (drawable instanceof ScopedDrawable) {
+                nested.addAll(collectAllScopedDrawableElements((ScopedDrawable) drawable));
+            }
+        });
+        allElements.addAll(nested);
+        allElements.add(scopedDrawable);
+        return allElements;
     }
 
     public static boolean isLastOfScope(FlowGraph graph, Drawable drawable) {

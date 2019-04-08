@@ -323,6 +323,19 @@ class ScopeUtilitiesTest {
             // Then
             assertThat(actualScopesBetween.get()).isEqualTo(1);
         }
+
+        @Test
+        void shouldReturnTwoWhenTwoNestedScopes() {
+            // Given
+            choice1.addToScope(choice2);
+            choice2.addToScope(choice3);
+
+            // When
+            Optional<Integer> actualScopesBetween = ScopeUtilities.scopesBetween(choice1, choice3);
+
+            // Then
+            assertThat(actualScopesBetween.get()).isEqualTo(2);
+        }
     }
 
     @Nested
@@ -391,6 +404,48 @@ class ScopeUtilitiesTest {
 
             // Then
             assertThat(lastDrawablesOfScope).containsExactly(choice2);
+        }
+
+        @Test
+        void shouldReturnCorrectlyLastDrawableOfScopeWhenThreeNestedScopeDrawables() {
+            // Given
+            FlowGraph graph = new FlowGraph();
+            graph.add(null, root);
+            graph.add(root, choice1);
+            graph.add(choice1, choice2);
+            graph.add(choice2, choice3);
+
+            choice1.addToScope(choice2);
+            choice2.addToScope(choice3);
+
+            // When
+            Collection<Drawable> lastDrawablesOfScope = ScopeUtilities.listLastDrawablesOfScope(graph, choice1);
+
+            // Then
+            assertThat(lastDrawablesOfScope).containsExactly(choice3);
+        }
+
+        @Test
+        void shouldReturnCorrectlyLastDrawableOfScopeWhenNestedContainsNodes() {
+            // Given
+            FlowGraph graph = new FlowGraph();
+            graph.add(null, root);
+            graph.add(root, choice1);
+            graph.add(choice1, n1);
+            graph.add(choice1, choice2);
+            graph.add(choice1, n2);
+            graph.add(choice2, n3);
+
+            choice1.addToScope(n1);
+            choice1.addToScope(choice2);
+            choice1.addToScope(n2);
+            choice2.addToScope(n3);
+
+            // When
+            Collection<Drawable> lastDrawablesOfScope = ScopeUtilities.listLastDrawablesOfScope(graph, choice1);
+
+            // Then
+            assertThat(lastDrawablesOfScope).containsExactlyInAnyOrder(n1, n2, n3);
         }
     }
 }

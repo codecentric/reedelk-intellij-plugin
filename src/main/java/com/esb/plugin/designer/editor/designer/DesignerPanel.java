@@ -210,13 +210,13 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     private void paintConnection(Graphics graphics, FlowGraph graph, Drawable root) {
         List<Drawable> successors = graph.successors(root);
         for (Drawable successor : successors) {
-            if (!(root instanceof ScopedDrawable)) {
+            //   if (!(root instanceof ScopedDrawable)) {
                 graphics.setColor(JBColor.lightGray);
                 Arrow.draw((Graphics2D) graphics,
                         new Point2D.Double(root.x() + Math.floorDiv(Tile.WIDTH, 2) - 15, root.y()),
                         new Point2D.Double(successor.x() - Math.floorDiv(Tile.WIDTH, 2) + 15, successor.y()),
                         10);
-            }
+            //  }
             paintConnection(graphics, graph, successor);
         }
     }
@@ -245,7 +245,8 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     private void paintScopeBoundaries(Graphics graphics, ScopedDrawable scopedDrawable) {
 
-        Collection<Drawable> drawables = scopedDrawable.getScope();
+        Collection<Drawable> drawables = ScopeUtilities.listLastDrawablesOfScope(graph, scopedDrawable);
+
 
         Drawable drawableWithMaxX = scopedDrawable;
         Drawable drawableWithMinX = scopedDrawable;
@@ -287,7 +288,6 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         int maxY = scopedDrawable.y() + Math.floorDiv(subTreeHeight, 2) - ScopedDrawable.VERTICAL_PADDING;
 
         // Draw Scope Boundaries
-
         int maxScopes = getMaxScopes(scopedDrawable);
 
 
