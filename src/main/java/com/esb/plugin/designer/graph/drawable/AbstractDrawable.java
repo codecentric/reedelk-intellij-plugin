@@ -18,29 +18,26 @@ abstract class AbstractDrawable implements Drawable {
     protected final Image image;
     private final Component component;
 
-    private final int halfTileWidth;
-    private final int halfTileHeight;
-
-    // The center x position of this drawable
+    // x and y are the center position os this Drawable.
     private int x;
-
-    // The center y position of this drawable
     private int y;
+
+    private boolean selected;
 
     public AbstractDrawable(Component component) {
         this.component = component;
         this.image = ESBIcons.forComponentAsImage(component.getName());
 
-        this.halfTileWidth = Tile.HALF_WIDTH;
-        this.halfTileHeight = Tile.HALF_HEIGHT;
     }
 
     @Override
-    public void draw(FlowGraph graph, Graphics graphics, ImageObserver observer) {
+    public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         drawNodeAndDescription(graphics, observer);
         drawArrows(graph, graphics);
 
-        //drawBoundingBox(graphics);
+        if (selected) {
+            drawBoundingBox(graphics);
+        }
     }
 
     @Override
@@ -81,16 +78,28 @@ abstract class AbstractDrawable implements Drawable {
     }
 
     @Override
-    public boolean contains(int x, int y) {
+    public boolean contains(ImageObserver observer, int x, int y) {
+        int halfImageWidth = Math.floorDiv(image.getWidth(observer), 2);
+        int halfImageHeight = Math.floorDiv(image.getHeight(observer), 2);
         boolean containsOnXAxis =
-                x >= this.x - halfTileWidth &&
-                        x <= this.x + halfTileWidth;
+                x >= this.x - halfImageWidth &&
+                        x <= this.x + halfImageWidth;
 
         boolean containsOnYAxis =
-                y >= this.y - halfTileHeight &&
-                        y <= this.y + halfTileHeight;
+                y >= this.y - halfImageHeight &&
+                        y <= this.y + halfImageHeight;
 
         return containsOnXAxis && containsOnYAxis;
+    }
+
+    @Override
+    public void selected() {
+        this.selected = true;
+    }
+
+    @Override
+    public void unselected() {
+        this.selected = false;
     }
 
     void drawNodeAndDescription(Graphics graphics, ImageObserver observer) {
@@ -128,7 +137,12 @@ abstract class AbstractDrawable implements Drawable {
     }
 
     private void drawBoundingBox(Graphics graphics) {
-        graphics.setColor(JBColor.RED);
+        graphics.setColor(JBColor.lightGray);
+
+        //set the stroke of the copy, not the original
+        Stroke dashed = new BasicStroke(0.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{3}, 0);
+        ((Graphics2D) graphics).setStroke(dashed);
+
         int x1 = x() - Math.floorDiv(width(), 2);
         int y1 = y() - Math.floorDiv(height(), 2);
         int x2 = x() + Math.floorDiv(width(), 2);

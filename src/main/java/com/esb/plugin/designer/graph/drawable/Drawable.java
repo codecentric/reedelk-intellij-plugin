@@ -12,7 +12,7 @@ public interface Drawable {
 
     String displayName();
 
-    void draw(FlowGraph graph, Graphics graphics, ImageObserver observer);
+    void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer);
 
     int y();
 
@@ -20,9 +20,14 @@ public interface Drawable {
 
     void setPosition(int x, int y);
 
-    boolean contains(int x, int y);
+    boolean contains(ImageObserver observer, int x, int y);
 
     int height();
 
     int width();
+
+    void selected();
+
+    void unselected();
+
 }

@@ -15,6 +15,8 @@ import java.util.*;
 
 public class ChoiceDrawable extends AbstractDrawable implements ScopedDrawable {
 
+    private final JBColor BOUNDARIES_COLOR = new JBColor(Gray._235, Gray._30);
+
     private Set<Drawable> scope = new HashSet<>();
 
     public ChoiceDrawable(Component component) {
@@ -39,7 +41,7 @@ public class ChoiceDrawable extends AbstractDrawable implements ScopedDrawable {
     }
 
     @Override
-    public void draw(FlowGraph graph, Graphics graphics, ImageObserver observer) {
+    public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         drawNodeAndDescription(graphics, observer);
         drawVerticalBar(graphics);
         drawScopeBoundaries(graph, graphics);
@@ -74,45 +76,37 @@ public class ChoiceDrawable extends AbstractDrawable implements ScopedDrawable {
         if (!drawables.isEmpty()) {
             List<Drawable> allDrawables = new ArrayList<>(drawables);
             allDrawables.add(this);
-            // We need to find max x
+
+            // We need to find min x, max x, min y and max y
             for (Drawable drawable : allDrawables) {
                 if (drawableWithMaxX.x() < drawable.x()) {
                     drawableWithMaxX = drawable;
                 }
-            }
-
-            for (Drawable drawable : allDrawables) {
                 if (drawableWithMinX.x() > drawable.x()) {
                     drawableWithMinX = drawable;
                 }
-            }
-
-            for (Drawable drawable : allDrawables) {
                 if (drawableWithMaxY.y() < drawable.y()) {
                     drawableWithMaxY = drawable;
                 }
-            }
-            for (Drawable drawable : allDrawables) {
                 if (drawableWithMinY.y() > drawable.y()) {
                     drawableWithMinY = drawable;
                 }
             }
         }
 
-
         int subTreeHeight = FlowGraphLayout.computeSubTreeHeight(graph, this);
         int minY = y() - Math.floorDiv(subTreeHeight, 2) + ScopedDrawable.VERTICAL_PADDING;
         int maxY = y() + Math.floorDiv(subTreeHeight, 2) - ScopedDrawable.VERTICAL_PADDING;
 
-        // Draw Scope Boundaries
+        // Draw Scope Boundaries we need to compute the maximum number of scopes
         int maxScopes = getMaxScopes(graph, this);
-
 
         int line1X = drawableWithMinX.x() - Math.floorDiv(drawableWithMinX.width(), 2);
         int line2X = drawableWithMaxX.x() + Math.floorDiv(drawableWithMaxX.width(), 2) + (maxScopes * 5);
         int line3X = drawableWithMaxX.x() + Math.floorDiv(drawableWithMaxX.width(), 2) + (maxScopes * 5);
         int line4X = drawableWithMinX.x() - Math.floorDiv(drawableWithMinX.width(), 2);
-        graphics.setColor(new JBColor(Gray._235, Gray._30));
+
+        graphics.setColor(BOUNDARIES_COLOR);
         graphics.drawLine(line1X, minY, line2X, minY);
         graphics.drawLine(line2X, minY, line3X, maxY);
         graphics.drawLine(line3X, maxY, line4X, maxY);

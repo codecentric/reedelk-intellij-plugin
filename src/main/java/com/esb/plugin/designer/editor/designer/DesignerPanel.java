@@ -41,10 +41,13 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         super.paintComponent(graphics);
         if (graph == null) return;
 
-        // Paint the whole graph
+        // Set Antialiasing
         Graphics2D g2 = (Graphics2D) graphics;
         g2.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
-        graph.breadthFirstTraversal(graph.root(), node -> node.draw(graph, graphics, this));
+
+        // Draw the graph
+        graph.breadthFirstTraversal(graph.root(),
+                node -> node.draw(graph, g2, this));
     }
 
     @Override
@@ -87,8 +90,8 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     public void mouseMoved(MouseEvent event) {
         int x = event.getX();
         int y = event.getY();
-        Optional<Drawable> first = getDrawableContaining(x, y);
-        if (first.isPresent()) {
+        Optional<Drawable> drawableWithinCoordinates = getDrawableWithinCoordinates(x, y);
+        if (drawableWithinCoordinates.isPresent()) {
             setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         } else {
             setCursor(Cursor.getDefaultCursor());
@@ -99,16 +102,14 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     public void mousePressed(MouseEvent event) {
         int x = event.getX();
         int y = event.getY();
-
-        /**
-         Optional<Drawable> first = getDrawableWithin(x, y);
-         first.ifPresent(drawable -> {
-         selected = drawable;
-         dragging = true;
-         offsetx = event.getX() - selected.getPosition().x;
-         offsety = event.getY() - selected.getPosition().y;
-         });
-         */
+        Optional<Drawable> drawableWithinCoordinates = getDrawableWithinCoordinates(x, y);
+        drawableWithinCoordinates.ifPresent(target -> {
+            selected = target;
+            target.selected();
+            dragging = true;
+            offsetx = event.getX() - selected.x();
+            offsety = event.getY() - selected.y();
+        });
     }
 
     @Override
@@ -122,6 +123,8 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
         //  computeSnapToGridCoordinates(selected, x, y);
 
+
+        selected.unselected();
         selected = null;
         dragging = false;
 
@@ -165,14 +168,14 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         setPreferredSize(new Dimension(newSizeX, newSizeY));
     }
 
-    private Optional<Drawable> getDrawableContaining(int x, int y) {
+    private Optional<Drawable> getDrawableWithinCoordinates(int x, int y) {
         // TODO: Remove all these checks if graph is null! Use
         // TODO: something more object oriented!! Like an empty graph!
         if (graph == null) return Optional.empty();
         return graph
                 .nodes()
                 .stream()
-                .filter(drawable -> drawable.contains(x, y))
+                .filter(drawable -> drawable.contains(this, x, y))
                 .findFirst();
     }
 
