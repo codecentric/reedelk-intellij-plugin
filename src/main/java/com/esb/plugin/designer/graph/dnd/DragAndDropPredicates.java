@@ -6,7 +6,7 @@ import com.esb.plugin.designer.graph.drawable.Drawable;
 
 import java.util.function.Predicate;
 
-public class DndPredicates {
+public class DragAndDropPredicates {
 
     public static Predicate<Drawable> byPrecedingNodesOnX(FlowGraph graph, int dropX) {
         return preceding -> {

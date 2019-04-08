@@ -8,7 +8,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
-import static com.esb.plugin.designer.graph.dnd.DndPredicates.byPrecedingNodesOnX;
+import static com.esb.plugin.designer.graph.dnd.DragAndDropPredicates.byPrecedingNodesOnX;
 import static java.util.stream.Collectors.toList;
 
 public class GraphNodeAdderUtilities {
