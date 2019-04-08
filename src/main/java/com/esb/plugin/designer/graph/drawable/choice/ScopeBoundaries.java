@@ -18,6 +18,7 @@ import java.util.Optional;
 
 public class ScopeBoundaries implements Drawable {
 
+    private final Stroke STROKE = new BasicStroke(1f);
     private final JBColor BOUNDARIES_COLOR = new JBColor(Gray._235, Gray._30);
 
     private final ScopedDrawable scopedDrawable;
@@ -28,6 +29,7 @@ public class ScopeBoundaries implements Drawable {
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+        graphics.setStroke(STROKE);
         graphics.setColor(BOUNDARIES_COLOR);
 
         Collection<Drawable> drawables = ScopeUtilities.listLastDrawablesOfScope(graph, scopedDrawable);

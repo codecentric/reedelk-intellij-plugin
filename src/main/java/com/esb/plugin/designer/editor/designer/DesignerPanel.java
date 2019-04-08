@@ -104,12 +104,24 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         int y = event.getY();
         Optional<Drawable> drawableWithinCoordinates = getDrawableWithinCoordinates(x, y);
         drawableWithinCoordinates.ifPresent(target -> {
+            if (selected != null) {
+                selected.unselected();
+                selected = null;
+            }
             selected = target;
             target.selected();
             dragging = true;
             offsetx = event.getX() - selected.x();
             offsety = event.getY() - selected.y();
         });
+
+        if (!drawableWithinCoordinates.isPresent()) {
+            if (selected != null) {
+                selected.unselected();
+                selected = null;
+            }
+        }
+        repaint();
     }
 
     @Override
@@ -124,11 +136,11 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         //  computeSnapToGridCoordinates(selected, x, y);
 
 
-        selected.unselected();
-        selected = null;
-        dragging = false;
+        // selected.unselected();
+        //selected = null;
+        //dragging = false;
 
-        repaint();
+        //  repaint();
     }
 
     @Override

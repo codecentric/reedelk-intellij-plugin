@@ -13,8 +13,12 @@ import java.awt.image.ImageObserver;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.awt.BasicStroke.CAP_ROUND;
+import static java.awt.BasicStroke.JOIN_ROUND;
+
 public class VerticalDivider implements Drawable {
 
+    private final Stroke STROKE = new BasicStroke(1.5f, CAP_ROUND, JOIN_ROUND);
     private final JBColor VERTICAL_DIVIDER_COLOR = new JBColor(Gray._200, Gray._30);
 
     private final ScopedDrawable scopedDrawable;
@@ -25,6 +29,7 @@ public class VerticalDivider implements Drawable {
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+        graphics.setStroke(STROKE);
         graphics.setColor(VERTICAL_DIVIDER_COLOR);
 
         List<Drawable> drawablesInTheScope = new ArrayList<>();

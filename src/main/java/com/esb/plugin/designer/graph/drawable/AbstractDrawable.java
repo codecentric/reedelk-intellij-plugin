@@ -11,6 +11,9 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.ImageObserver;
 import java.util.List;
 
+import static java.awt.BasicStroke.CAP_ROUND;
+import static java.awt.BasicStroke.JOIN_ROUND;
+
 public abstract class AbstractDrawable implements Drawable {
 
     protected final Image image;
@@ -25,7 +28,6 @@ public abstract class AbstractDrawable implements Drawable {
     public AbstractDrawable(Component component) {
         this.component = component;
         this.image = ESBIcons.forComponentAsImage(component.getName());
-
     }
 
     @Override
@@ -133,12 +135,17 @@ public abstract class AbstractDrawable implements Drawable {
         }
     }
 
+    private final Stroke DOTTED_STROKE = new BasicStroke(0.5f,
+            CAP_ROUND,
+            JOIN_ROUND,
+            0,
+            new float[]{3},
+            0);
+
     private void drawBoundingBox(Graphics graphics) {
         graphics.setColor(JBColor.lightGray);
 
-        //set the stroke of the copy, not the original
-        Stroke dashed = new BasicStroke(0.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{3}, 0);
-        ((Graphics2D) graphics).setStroke(dashed);
+        ((Graphics2D) graphics).setStroke(DOTTED_STROKE);
 
         int x1 = x() - Math.floorDiv(width(), 2);
         int y1 = y() - Math.floorDiv(height(), 2);
