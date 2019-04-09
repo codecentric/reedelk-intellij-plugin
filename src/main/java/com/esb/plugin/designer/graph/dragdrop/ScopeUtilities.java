@@ -1,4 +1,4 @@
-package com.esb.plugin.designer.graph.dnd;
+package com.esb.plugin.designer.graph.dragdrop;
 
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.graph.FlowGraph;

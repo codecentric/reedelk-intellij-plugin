@@ -51,8 +51,8 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         Graphics2D g2 = (Graphics2D) graphics;
         g2.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
 
+        // We compute again the graph layout if and only if it was updated.
         if (updated) {
-            // This should be done only if updated!!
             FlowGraphLayout.compute(graph, g2);
             adjustWindowSize();
             updated = false;
@@ -62,6 +62,8 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         graph.breadthFirstTraversal(
                 graph.root(),
                 drawable -> {
+                    // We skip the current selected drawable,
+                    // since it must be drawn on to of all the other ones LAST (see below).
                     if (!drawable.isSelected()) {
                         drawable.draw(graph, g2, this);
                     }

@@ -2,7 +2,7 @@ package com.esb.plugin.designer.graph.drawable.decorators;
 
 import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.dnd.ScopeUtilities;
+import com.esb.plugin.designer.graph.dragdrop.ScopeUtilities;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 import com.esb.plugin.designer.graph.layout.FlowGraphLayout;

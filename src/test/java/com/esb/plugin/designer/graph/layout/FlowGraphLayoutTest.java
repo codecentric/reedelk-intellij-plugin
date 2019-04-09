@@ -6,10 +6,19 @@ import com.esb.plugin.designer.graph.drawable.ChoiceDrawable;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.GenericComponentDrawable;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.awt.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ExtendWith(MockitoExtension.class)
 class FlowGraphLayoutTest {
+
+    @Mock
+    private Graphics2D graphics;
 
     @Test
     void shouldComputeSubTreeHeightForGenericRootCorrectly() {
@@ -20,7 +29,7 @@ class FlowGraphLayoutTest {
         graph.add(null, n1);
 
         // When
-        int height = FlowGraphLayout.computeSubTreeHeight(graph, n1);
+        int height = FlowGraphLayout.computeSubTreeHeight(graph, n1, graphics);
 
         // Then
         assertThat(height).isEqualTo(130);
@@ -35,7 +44,7 @@ class FlowGraphLayoutTest {
         graph.add(null, choice);
 
         // When
-        int height = FlowGraphLayout.computeSubTreeHeight(graph, choice);
+        int height = FlowGraphLayout.computeSubTreeHeight(graph, choice, graphics);
 
         // Then
         assertThat(height).isEqualTo(130 + 5 + 5);
@@ -54,7 +63,7 @@ class FlowGraphLayoutTest {
         graph.add(choice1, choice2);
 
         // When
-        int height = FlowGraphLayout.computeSubTreeHeight(graph, root);
+        int height = FlowGraphLayout.computeSubTreeHeight(graph, root, graphics);
 
         // Then: plus 2 padding/s for two choices
         assertThat(height).isEqualTo(130 + 5 + 5 + 5 + 5);
@@ -75,7 +84,7 @@ class FlowGraphLayoutTest {
         graph.add(choice1, choice3);
 
         // When
-        int height = FlowGraphLayout.computeSubTreeHeight(graph, root);
+        int height = FlowGraphLayout.computeSubTreeHeight(graph, root, graphics);
 
         // Then: 2 choices on top of each other + 3 padding/s for 3 choices
         assertThat(height).isEqualTo(130 + 130 + 5 + 5 + 5 + 5 + 5 + 5);
