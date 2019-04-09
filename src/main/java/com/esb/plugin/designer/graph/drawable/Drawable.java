@@ -8,6 +8,7 @@ import java.awt.image.ImageObserver;
 
 public interface Drawable {
 
+    // TODO: Component and display name should be removed from this interface
     Component component();
 
     String displayName();
@@ -28,9 +29,9 @@ public interface Drawable {
 
     boolean contains(ImageObserver observer, int x, int y);
 
-    int height();
+    int height(Graphics2D graphics);
 
-    int width();
+    int width(Graphics2D graphics);
 
     void selected();
 

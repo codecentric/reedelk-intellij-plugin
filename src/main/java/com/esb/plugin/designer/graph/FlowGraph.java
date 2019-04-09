@@ -1,7 +1,6 @@
 package com.esb.plugin.designer.graph;
 
 import com.esb.plugin.designer.graph.drawable.Drawable;
-import com.esb.plugin.designer.graph.layout.FlowGraphLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -86,11 +85,6 @@ public class FlowGraph {
 
     public Drawable root() {
         return graph.root();
-    }
-
-    public void computePositions() {
-        FlowGraphLayout positions = new FlowGraphLayout(this);
-        positions.compute();
     }
 
     public FlowGraph copy() {

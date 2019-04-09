@@ -33,8 +33,7 @@ public class ChoiceDrawable extends AbstractDrawable implements ScopedDrawable {
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-        drawIcon(graphics, observer);
-        drawComponentNameAndDescription(graphics, observer);
+        super.draw(graph, graphics, observer);
         verticalDivider.draw(graph, graphics, observer);
         scopeBoundaries.draw(graph, graphics, observer);
     }

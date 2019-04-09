@@ -5,6 +5,7 @@ import com.esb.plugin.designer.editor.DesignerPanelDropListener;
 import com.esb.plugin.designer.editor.GraphChangeListener;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.layout.FlowGraphLayout;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
 
@@ -30,8 +31,10 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     private int offsetx;
     private int offsety;
 
+    private boolean updated;
     private boolean dragging;
     private DesignerPanelDropListener designerPanelDropListener;
+
 
     public DesignerPanel() {
         setBackground(BACKGROUND_COLOR);
@@ -48,6 +51,13 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         Graphics2D g2 = (Graphics2D) graphics;
         g2.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
 
+        if (updated) {
+            // This should be done only if updated!!
+            FlowGraphLayout.compute(graph, g2);
+            adjustWindowSize();
+            updated = false;
+        }
+
         // Draw the graph
         graph.breadthFirstTraversal(graph.root(),
                 node -> node.draw(graph, g2, this));
@@ -58,7 +68,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         checkState(updatedGraph != null, "Updated Graph Was null");
         SwingUtilities.invokeLater(() -> {
             graph = updatedGraph;
-            adjustWindowSize();
+            updated = true;
             invalidate();
             repaint();
         });
@@ -97,7 +107,6 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
             resetSelected();
 
             selected = drawableWithinCoordinates.get();
-
 
             offsetx = event.getX() - selected.x();
             offsety = event.getY() - selected.y();

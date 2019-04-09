@@ -82,12 +82,12 @@ public class VerticalDivider implements Drawable {
     }
 
     @Override
-    public int height() {
+    public int height(Graphics2D graphics) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public int width() {
+    public int width(Graphics2D graphics) {
         throw new UnsupportedOperationException();
     }
 

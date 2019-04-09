@@ -60,17 +60,17 @@ public class ScopeBoundaries implements Drawable {
             }
         }
 
-        int subTreeHeight = FlowGraphLayout.computeSubTreeHeight(graph, scopedDrawable);
+        int subTreeHeight = FlowGraphLayout.computeSubTreeHeight(graph, scopedDrawable, graphics);
         int minY = scopedDrawable.y() - Math.floorDiv(subTreeHeight, 2) + ScopedDrawable.VERTICAL_PADDING;
         int maxY = scopedDrawable.y() + Math.floorDiv(subTreeHeight, 2) - ScopedDrawable.VERTICAL_PADDING;
 
         // Draw Scope Boundaries we need to compute the maximum number of scopes
         int maxScopes = getMaxScopes(graph);
 
-        int point1X = drawableWithMinX.x() - Math.floorDiv(drawableWithMinX.width(), 2);
-        int point2X = drawableWithMaxX.x() + Math.floorDiv(drawableWithMaxX.width(), 2) + (maxScopes * 5);
-        int point3X = drawableWithMaxX.x() + Math.floorDiv(drawableWithMaxX.width(), 2) + (maxScopes * 5);
-        int point4X = drawableWithMinX.x() - Math.floorDiv(drawableWithMinX.width(), 2);
+        int point1X = drawableWithMinX.x() - Math.floorDiv(drawableWithMinX.width(graphics), 2);
+        int point2X = drawableWithMaxX.x() + Math.floorDiv(drawableWithMaxX.width(graphics), 2) + (maxScopes * 5);
+        int point3X = drawableWithMaxX.x() + Math.floorDiv(drawableWithMaxX.width(graphics), 2) + (maxScopes * 5);
+        int point4X = drawableWithMinX.x() - Math.floorDiv(drawableWithMinX.width(graphics), 2);
 
         graphics.drawLine(point1X, minY, point2X, minY);
         graphics.drawLine(point2X, minY, point3X, maxY);
@@ -124,12 +124,12 @@ public class ScopeBoundaries implements Drawable {
     }
 
     @Override
-    public int height() {
+    public int height(Graphics2D graphics) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public int width() {
+    public int width(Graphics2D graphics) {
         throw new UnsupportedOperationException();
     }
 

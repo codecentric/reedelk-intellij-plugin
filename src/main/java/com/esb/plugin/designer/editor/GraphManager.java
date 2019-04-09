@@ -52,7 +52,7 @@ public class GraphManager extends DropTarget implements DesignerPanelDropListene
 
         buildGraph(managedGraphFile)
                 .ifPresent(((Consumer<FlowGraph>) fromFileGraph -> graph = fromFileGraph)
-                        .andThen(graph -> computeGraphPositionsAndNotifyChange()));
+                        .andThen(graph -> notifyGraphUpdated()));
     }
 
     @Override
@@ -61,7 +61,7 @@ public class GraphManager extends DropTarget implements DesignerPanelDropListene
         String json = document.getText();
         buildGraph(json)
                 .ifPresent(((Consumer<FlowGraph>) fromFileGraph -> graph = fromFileGraph)
-                        .andThen(graph -> computeGraphPositionsAndNotifyChange()));
+                        .andThen(graph -> notifyGraphUpdated()));
     }
 
     @Override
@@ -89,7 +89,7 @@ public class GraphManager extends DropTarget implements DesignerPanelDropListene
             if (modifiedGraph.isPresent()) {
                 modifiedGraph.ifPresent(((Consumer<FlowGraph>) updatedGraph -> graph = updatedGraph)
                         .andThen(updatedGraph -> dropEvent.acceptDrop(ACTION_COPY_OR_MOVE))
-                        .andThen(updatedGraph -> computeGraphPositionsAndNotifyChange()));
+                        .andThen(updatedGraph -> notifyGraphUpdated()));
             } else {
                 // Drop rejected if the graph was not modified.
                 dropEvent.rejectDrop();
@@ -128,7 +128,7 @@ public class GraphManager extends DropTarget implements DesignerPanelDropListene
         Optional<FlowGraph> addedNode = nodeAdder.add();
         if (addedNode.isPresent()) {
             addedNode.ifPresent(((Consumer<FlowGraph>) updatedGraph -> graph = updatedGraph)
-                    .andThen(updatedGraph -> computeGraphPositionsAndNotifyChange()));
+                    .andThen(updatedGraph -> notifyGraphUpdated()));
         }
     }
 
@@ -169,8 +169,7 @@ public class GraphManager extends DropTarget implements DesignerPanelDropListene
         }
     }
 
-    private void computeGraphPositionsAndNotifyChange() {
-        graph.computePositions();
+    private void notifyGraphUpdated() {
         if (listener != null) {
             listener.updated(graph);
         }
