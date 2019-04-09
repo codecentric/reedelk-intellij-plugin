@@ -5,6 +5,7 @@ import com.esb.plugin.designer.editor.DesignerPanelDropListener;
 import com.esb.plugin.designer.editor.GraphChangeListener;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.drawable.decorators.NothingSelectedDrawable;
 import com.esb.plugin.designer.graph.layout.FlowGraphLayout;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
@@ -24,10 +25,12 @@ import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
 public class DesignerPanel extends JBPanel implements MouseMotionListener, MouseListener, GraphChangeListener {
 
+    private final Drawable NOTHING_SELECTED = new NothingSelectedDrawable();
+
     private static final JBColor BACKGROUND_COLOR = JBColor.WHITE;
 
     private FlowGraph graph;
-    private Drawable selected;
+    private Drawable selected = NOTHING_SELECTED;
 
     private int offsetx;
     private int offsety;
@@ -63,12 +66,12 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
         // Draw each node of the graph
         graphNodes.forEach(drawable -> {
-                    // We skip the current selected drawable,
-                    // since it must be drawn on to of all the other ones LAST (see below).
-                    if (!drawable.isSelected()) {
-                        drawable.draw(graph, g2, DesignerPanel.this);
-                    }
-                });
+            // We skip the current selected drawable,
+            // since it must be drawn on to of all the other ones LAST (see below).
+            if (!drawable.isSelected()) {
+                drawable.draw(graph, g2, DesignerPanel.this);
+            }
+        });
 
         // The selected drawable must be drawn LAST so
         // that it is on top of all the other drawables.
@@ -81,7 +84,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     @Override
     public void updated(FlowGraph updatedGraph) {
-        checkState(updatedGraph != null, "Updated Graph Was null");
+        checkState(updatedGraph != null, "Updated graph must not be null");
         SwingUtilities.invokeLater(() -> {
             graph = updatedGraph;
             updated = true;
@@ -93,10 +96,8 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     @Override
     public void mouseDragged(MouseEvent event) {
         if (dragging) {
-            if (selected != null) {
-                selected.drag(event.getX() - offsetx, event.getY() - offsety);
-                repaint();
-            }
+            selected.drag(event.getX() - offsetx, event.getY() - offsety);
+            repaint();
         }
     }
 
@@ -105,6 +106,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     public void mouseMoved(MouseEvent event) {
         int x = event.getX();
         int y = event.getY();
+
         Optional<Drawable> drawableWithinCoordinates = getDrawableWithinCoordinates(x, y);
         if (drawableWithinCoordinates.isPresent()) {
             setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -120,8 +122,8 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
         Optional<Drawable> drawableWithinCoordinates = getDrawableWithinCoordinates(x, y);
         if (drawableWithinCoordinates.isPresent()) {
-            resetSelected();
-
+            // Unselect the previous one
+            selected.unselected();
             selected = drawableWithinCoordinates.get();
 
             offsetx = event.getX() - selected.x();
@@ -135,7 +137,8 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
         } else {
             // If no drawable is selected, then we reset it.
-            resetSelected();
+            selected.unselected();
+            selected = NOTHING_SELECTED;
         }
 
         repaint();
@@ -145,11 +148,11 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     public void mouseReleased(MouseEvent e) {
         if (dragging) {
             dragging = false;
-            if (selected != null) {
-                int x = e.getX();
-                int y = e.getY();
-                selected.drag(x, y);
-                selected.release();
+            int x = e.getX();
+            int y = e.getY();
+            selected.drag(x, y);
+            selected.release();
+            if (!(selected instanceof NothingSelectedDrawable)) {
                 designerPanelDropListener.drop(x, y, selected);
             }
         }
@@ -157,16 +160,17 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        // nothing to do
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-
+        // nothing to do
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-
+        // nothing to do
     }
 
     /**
@@ -192,13 +196,5 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     public void setDesignerPanelDropListener(DesignerPanelDropListener dropListener) {
         this.designerPanelDropListener = dropListener;
-    }
-
-    // TODO: Replace with more object oriented solution. It should be like: NoSelectedDrawable instead of null.
-    private void resetSelected() {
-        if (selected != null) {
-            selected.unselected();
-            selected = null;
-        }
     }
 }
