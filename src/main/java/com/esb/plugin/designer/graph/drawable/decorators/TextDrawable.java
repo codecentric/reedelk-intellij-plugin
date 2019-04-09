@@ -30,16 +30,16 @@ public abstract class TextDrawable implements Drawable {
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         graphics.setColor(color);
 
-        int stringWidth = width(graphics);
-        int stringHeight = height(graphics);
-        int startX = x() - Math.floorDiv(stringWidth, 2);
-        int startY = y() + Math.floorDiv(stringHeight, 2);
+        int halfWidth = Math.floorDiv(width(graphics), 2);
+        int halfHeight = Math.floorDiv(height(graphics), 2);
+        int startX = x() - halfWidth;
+        int startY = y() + halfHeight;
         graphics.drawString(text, startX, startY);
 
         if (dragging) {
-            int textCenterX = draggedX;
-            int textTopY = draggedY;
-            graphics.drawString(text, textCenterX, textTopY);
+            startX = draggedX - halfWidth;
+            startY = draggedY + halfHeight;
+            graphics.drawString(text, startX, startY);
         }
     }
 

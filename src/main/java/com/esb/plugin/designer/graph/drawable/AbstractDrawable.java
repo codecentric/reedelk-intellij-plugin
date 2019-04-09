@@ -41,34 +41,43 @@ public abstract class AbstractDrawable implements Drawable {
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         int iconDrawableHeight = iconDrawable.height(graphics);
+        int halfIconDrawableHeight = Math.floorDiv(iconDrawableHeight, 2);
+
         int componentTitleHeight = componentTitleDrawable.height(graphics);
+        int halfComponentTitleHeight = Math.floorDiv(componentTitleHeight, 2);
+
         int componentDescriptionHeight = componentDescriptionDrawable.height(graphics);
+        int halfComponentDescriptionHeight = Math.floorDiv(componentDescriptionHeight, 2);
 
         int totalHeight = iconDrawableHeight + componentTitleHeight + componentDescriptionHeight;
+        int halfTotalHeight = Math.floorDiv(totalHeight, 2);
 
         // Center icon
-        int centerIconY = y() - Math.floorDiv(totalHeight, 2) + Math.floorDiv(iconDrawableHeight, 2);
+        int centerIconY = y() - halfTotalHeight + halfIconDrawableHeight;
         iconDrawable.setPosition(x(), centerIconY);
 
         // Center title below icon
-        int centerTitleY = y() - Math.floorDiv(totalHeight, 2) + iconDrawableHeight + Math.floorDiv(componentTitleHeight, 2);
+        int centerTitleY = y() - halfTotalHeight + iconDrawableHeight + halfComponentTitleHeight;
         componentTitleDrawable.setPosition(x(), centerTitleY);
 
         // Center description below title
-        int centerDescriptionY = y() - Math.floorDiv(totalHeight, 2) + iconDrawableHeight + componentTitleHeight + Math.floorDiv(componentDescriptionHeight, 2);
+        int centerDescriptionY = y() - halfTotalHeight + iconDrawableHeight + componentTitleHeight + halfComponentDescriptionHeight;
         componentDescriptionDrawable.setPosition(x(), centerDescriptionY);
 
         // Center selected box
         selectedItemDrawable.setPosition(x(), y());
 
+        // Dragging positions
         if (dragging) {
-            // Compute dragging centering
-            int iconX = draggedX - Math.floorDiv(iconDrawableHeight, 2);
-            int iconY = draggedY - Math.floorDiv(iconDrawableHeight, 2);
-            iconDrawable.drag(iconX, iconY);
 
-            // TODO: Apply centering on text and description as well.
+            centerIconY = draggedY - halfTotalHeight + halfIconDrawableHeight;
+            iconDrawable.drag(draggedX, centerIconY);
 
+            centerTitleY = draggedY - halfTotalHeight + iconDrawableHeight + halfComponentTitleHeight;
+            componentTitleDrawable.drag(draggedX, centerTitleY);
+
+            centerDescriptionY = draggedY - halfTotalHeight + iconDrawableHeight + componentTitleHeight + halfComponentDescriptionHeight;
+            componentDescriptionDrawable.drag(draggedX, centerDescriptionY);
         }
 
         iconDrawable.draw(graph, graphics, observer);

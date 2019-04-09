@@ -28,13 +28,15 @@ public class IconDrawable implements Drawable {
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-        int imageX = x() - Math.floorDiv(image.getWidth(observer), 2);
-        int imageY = y() - Math.floorDiv(image.getHeight(observer), 2);
+        int halfWidth = Math.floorDiv(image.getWidth(observer), 2);
+        int halfHeight = Math.floorDiv(image.getHeight(observer), 2);
+        int imageX = x() - halfWidth;
+        int imageY = y() - halfHeight;
         graphics.drawImage(image, imageX, imageY, observer);
 
         if (dragging) {
-            imageX = draggedX - Math.floorDiv(image.getWidth(observer), 2);
-            imageY = draggedY - Math.floorDiv(image.getHeight(observer), 2);
+            imageX = draggedX - halfWidth;
+            imageY = draggedY - halfHeight;
             graphics.drawImage(image, imageX, imageY, observer);
         }
     }
