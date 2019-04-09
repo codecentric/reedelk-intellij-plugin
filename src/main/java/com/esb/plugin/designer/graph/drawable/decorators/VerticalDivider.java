@@ -1,7 +1,6 @@
 package com.esb.plugin.designer.graph.drawable.decorators;
 
 import com.esb.plugin.designer.Tile;
-import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
@@ -111,13 +110,4 @@ public class VerticalDivider implements Drawable {
         throw new UnsupportedOperationException();
     }
 
-    @Override
-    public Component component() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public String displayName() {
-        throw new UnsupportedOperationException();
-    }
 }

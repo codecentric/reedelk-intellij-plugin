@@ -1,17 +1,11 @@
 package com.esb.plugin.designer.graph.drawable;
 
-import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
 public interface Drawable {
-
-    // TODO: Component and display name should be removed from this interface
-    Component component();
-
-    String displayName();
 
     void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer);
 
@@ -38,7 +32,6 @@ public interface Drawable {
     void selected();
 
     void unselected();
-
     /*
      * It is the graphical center of the Drawable. For instance,
      * A component might have an icon + text below. The bary center is however

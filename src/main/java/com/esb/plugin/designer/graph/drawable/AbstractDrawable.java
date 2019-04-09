@@ -8,7 +8,7 @@ import com.esb.plugin.designer.graph.drawable.decorators.*;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
-public abstract class AbstractDrawable implements Drawable {
+public abstract class AbstractDrawable implements Drawable, ComponentAware {
 
     private final Component component;
 

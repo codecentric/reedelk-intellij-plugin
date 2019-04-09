@@ -1,7 +1,6 @@
 package com.esb.plugin.designer.graph.drawable.decorators;
 
 import com.esb.plugin.designer.Tile;
-import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.intellij.ui.JBColor;
@@ -94,16 +93,6 @@ public class ArrowsDrawable implements Drawable {
 
     @Override
     public Point getBaryCenter(Graphics2D graphics) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Component component() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public String displayName() {
         throw new UnsupportedOperationException();
     }
 
