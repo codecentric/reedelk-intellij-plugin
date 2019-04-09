@@ -13,7 +13,7 @@ import static java.awt.BasicStroke.JOIN_ROUND;
 
 public class SelectedItemDrawable implements Drawable {
 
-    private static final int INNER_PADDING = 4;
+    private static final int INNER_PADDING = 3;
     private final Stroke DOTTED_STROKE = new BasicStroke(0.7f, CAP_ROUND, JOIN_ROUND, 0, new float[]{3}, 0);
 
     private final Drawable parent;
