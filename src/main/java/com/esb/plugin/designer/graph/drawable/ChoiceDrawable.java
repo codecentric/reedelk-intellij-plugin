@@ -1,10 +1,9 @@
-package com.esb.plugin.designer.graph.drawable.choice;
+package com.esb.plugin.designer.graph.drawable;
 
 import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.drawable.AbstractDrawable;
-import com.esb.plugin.designer.graph.drawable.Drawable;
-import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
+import com.esb.plugin.designer.graph.drawable.decorators.ScopeBoundaries;
+import com.esb.plugin.designer.graph.drawable.decorators.VerticalDivider;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;

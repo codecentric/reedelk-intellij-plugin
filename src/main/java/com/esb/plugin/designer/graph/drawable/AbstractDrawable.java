@@ -3,6 +3,7 @@ package com.esb.plugin.designer.graph.drawable;
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.drawable.decorators.*;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;

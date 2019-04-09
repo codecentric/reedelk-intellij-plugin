@@ -1,8 +1,9 @@
-package com.esb.plugin.designer.graph.drawable;
+package com.esb.plugin.designer.graph.drawable.decorators;
 
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.intellij.ui.JBColor;
 
 import java.awt.*;

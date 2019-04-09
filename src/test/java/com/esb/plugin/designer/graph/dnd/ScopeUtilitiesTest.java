@@ -2,10 +2,10 @@ package com.esb.plugin.designer.graph.dnd;
 
 import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.drawable.ChoiceDrawable;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.GenericComponentDrawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
-import com.esb.plugin.designer.graph.drawable.choice.ChoiceDrawable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

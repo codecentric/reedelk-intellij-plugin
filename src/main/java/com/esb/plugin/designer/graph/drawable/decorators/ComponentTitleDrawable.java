@@ -1,4 +1,4 @@
-package com.esb.plugin.designer.graph.drawable;
+package com.esb.plugin.designer.graph.drawable.decorators;
 
 import com.intellij.ui.JBColor;
 
