@@ -134,6 +134,11 @@ public class ScopeBoundaries implements Drawable {
     }
 
     @Override
+    public boolean isSelected() {
+        return false;
+    }
+
+    @Override
     public void selected() {
         throw new UnsupportedOperationException();
     }

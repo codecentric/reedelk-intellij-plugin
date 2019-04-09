@@ -59,8 +59,21 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         }
 
         // Draw the graph
-        graph.breadthFirstTraversal(graph.root(),
-                node -> node.draw(graph, g2, this));
+        graph.breadthFirstTraversal(
+                graph.root(),
+                drawable -> {
+                    if (!drawable.isSelected()) {
+                        drawable.draw(graph, g2, this);
+                    }
+                });
+
+        // The selected drawable must be drawn LAST so that it is on top of
+        // all the other drawables.
+        graph.nodes()
+                .stream()
+                .filter(Drawable::isSelected)
+                .findFirst()
+                .ifPresent(drawable -> drawable.draw(graph, g2, DesignerPanel.this));
     }
 
     @Override

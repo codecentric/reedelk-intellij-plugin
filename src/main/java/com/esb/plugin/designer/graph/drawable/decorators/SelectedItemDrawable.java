@@ -95,6 +95,11 @@ public class SelectedItemDrawable implements Drawable {
     }
 
     @Override
+    public boolean isSelected() {
+        return false;
+    }
+
+    @Override
     public void selected() {
         this.selected = true;
     }

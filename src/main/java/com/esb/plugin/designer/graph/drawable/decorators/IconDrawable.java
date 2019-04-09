@@ -62,6 +62,11 @@ public class IconDrawable implements Drawable {
     }
 
     @Override
+    public boolean isSelected() {
+        return false;
+    }
+
+    @Override
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;

@@ -92,6 +92,11 @@ public class VerticalDivider implements Drawable {
     }
 
     @Override
+    public boolean isSelected() {
+        return false;
+    }
+
+    @Override
     public void selected() {
         throw new UnsupportedOperationException();
     }

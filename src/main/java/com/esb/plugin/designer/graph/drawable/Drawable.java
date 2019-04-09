@@ -33,6 +33,8 @@ public interface Drawable {
 
     int width(Graphics2D graphics);
 
+    boolean isSelected();
+
     void selected();
 
     void unselected();

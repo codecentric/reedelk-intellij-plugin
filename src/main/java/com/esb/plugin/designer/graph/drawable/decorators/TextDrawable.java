@@ -72,6 +72,11 @@ public abstract class TextDrawable implements Drawable {
     }
 
     @Override
+    public boolean isSelected() {
+        return false;
+    }
+
+    @Override
     public void selected() {
     }
 

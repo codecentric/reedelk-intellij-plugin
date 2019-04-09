@@ -27,6 +27,7 @@ public abstract class AbstractDrawable implements Drawable {
     private int draggedY;
 
     private boolean dragging;
+    private boolean selected;
 
     public AbstractDrawable(Component component) {
         this.component = component;
@@ -67,9 +68,8 @@ public abstract class AbstractDrawable implements Drawable {
         // Center selected box
         selectedItemDrawable.setPosition(x(), y());
 
-        // Dragging positions
         if (dragging) {
-
+            // Dragging positions we need to center again
             centerIconY = draggedY - halfTotalHeight + halfIconDrawableHeight;
             iconDrawable.drag(draggedX, centerIconY);
 
@@ -80,11 +80,12 @@ public abstract class AbstractDrawable implements Drawable {
             componentDescriptionDrawable.drag(draggedX, centerDescriptionY);
         }
 
+        arrowsDrawable.draw(graph, graphics, observer);
+
         iconDrawable.draw(graph, graphics, observer);
         componentTitleDrawable.draw(graph, graphics, observer);
         componentDescriptionDrawable.draw(graph, graphics, observer);
         selectedItemDrawable.draw(graph, graphics, observer);
-        arrowsDrawable.draw(graph, graphics, observer);
     }
 
     @Override
@@ -119,7 +120,13 @@ public abstract class AbstractDrawable implements Drawable {
     }
 
     @Override
+    public boolean isSelected() {
+        return selected;
+    }
+
+    @Override
     public void selected() {
+        selected = true;
         iconDrawable.selected();
         selectedItemDrawable.selected();
         componentTitleDrawable.selected();
@@ -128,6 +135,7 @@ public abstract class AbstractDrawable implements Drawable {
 
     @Override
     public void unselected() {
+        selected = false;
         iconDrawable.unselected();
         selectedItemDrawable.unselected();
         componentTitleDrawable.unselected();
