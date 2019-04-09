@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Collection;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkState;
@@ -58,20 +59,20 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
             updated = false;
         }
 
-        // Draw the graph
-        graph.breadthFirstTraversal(
-                graph.root(),
-                drawable -> {
+        Collection<Drawable> graphNodes = graph.nodes();
+
+        // Draw each node of the graph
+        graphNodes.forEach(drawable -> {
                     // We skip the current selected drawable,
                     // since it must be drawn on to of all the other ones LAST (see below).
                     if (!drawable.isSelected()) {
-                        drawable.draw(graph, g2, this);
+                        drawable.draw(graph, g2, DesignerPanel.this);
                     }
                 });
 
-        // The selected drawable must be drawn LAST so that it is on top of
-        // all the other drawables.
-        graph.nodes()
+        // The selected drawable must be drawn LAST so
+        // that it is on top of all the other drawables.
+        graphNodes
                 .stream()
                 .filter(Drawable::isSelected)
                 .findFirst()
@@ -144,11 +145,9 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     public void mouseReleased(MouseEvent e) {
         if (dragging) {
             dragging = false;
-
             if (selected != null) {
                 int x = e.getX();
                 int y = e.getY();
-
                 selected.drag(x, y);
                 selected.release();
                 designerPanelDropListener.drop(x, y, selected);
@@ -171,8 +170,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     }
 
     /**
-     * We might need to adapt window size, since the new graph might have
-     * grown beyond the X (or Y) axis.
+     * We might need to adapt window size, since the new graph might have grown beyond the X (or Y) axis.
      */
     private void adjustWindowSize() {
         int maxX = graph.nodes().stream().mapToInt(Drawable::x).max().getAsInt();
@@ -183,10 +181,8 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         setPreferredSize(new Dimension(newSizeX, newSizeY));
     }
 
-    /**
-     * TODO: Graph should never be null.
-     */
     private Optional<Drawable> getDrawableWithinCoordinates(int x, int y) {
+        //TODO: Graph should never be null.
         return graph == null ? Optional.empty() :
                 graph.nodes()
                         .stream()
@@ -198,6 +194,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         this.designerPanelDropListener = dropListener;
     }
 
+    // TODO: Replace with more object oriented solution. It should be like: NoSelectedDrawable instead of null.
     private void resetSelected() {
         if (selected != null) {
             selected.unselected();

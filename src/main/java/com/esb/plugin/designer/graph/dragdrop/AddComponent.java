@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkState;
  * This class find the best position where to place the node in the Graph given
  * the drop point location
  */
-public abstract class AbstractNodeAdder {
+public class AddComponent {
 
     private final Point dropPoint;
     private final Drawable nodeToAdd;
@@ -28,11 +28,11 @@ public abstract class AbstractNodeAdder {
     private final FlowGraph graph;
     private final FlowGraph modifiableGraph;
 
-    public AbstractNodeAdder(FlowGraph graph, Point dropPoint, Drawable nodeToAdd) {
+    public AddComponent(FlowGraph graph, Point dropPoint, Drawable componentToAdd) {
         this.graph = graph == null ? new FlowGraph() : graph;
         this.modifiableGraph = this.graph.copy();
         this.dropPoint = dropPoint;
-        this.nodeToAdd = nodeToAdd;
+        this.nodeToAdd = componentToAdd;
     }
 
 

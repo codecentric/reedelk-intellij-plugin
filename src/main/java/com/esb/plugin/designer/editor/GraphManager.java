@@ -3,9 +3,9 @@ package com.esb.plugin.designer.editor;
 import com.esb.internal.commons.FileUtils;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.builder.FlowGraphBuilder;
-import com.esb.plugin.designer.graph.dragdrop.ExistingNodeAdder;
-import com.esb.plugin.designer.graph.dragdrop.NewNodeAdder;
+import com.esb.plugin.designer.graph.dragdrop.AddComponent;
 import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.drawable.DrawableFactory;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Document;
@@ -83,7 +83,9 @@ public class GraphManager extends DropTarget implements DesignerPanelDropListene
             String componentName = (String) dropEvent.getTransferable().getTransferData(DataFlavor.stringFlavor);
 
             Point location = dropEvent.getLocation();
-            NewNodeAdder nodeAdder = new NewNodeAdder(graph, location, componentName);
+            Drawable componentToAdd = DrawableFactory.get(componentName);
+
+            AddComponent nodeAdder = new AddComponent(graph, location, componentToAdd);
             Optional<FlowGraph> modifiedGraph = nodeAdder.add();
 
             if (modifiedGraph.isPresent()) {
@@ -124,12 +126,12 @@ public class GraphManager extends DropTarget implements DesignerPanelDropListene
         removeFromAnyScope(dropped);
 
         // Need to copy over the node, and remove it from its previous place.
-        ExistingNodeAdder nodeAdder = new ExistingNodeAdder(graph, new Point(x, y), dropped);
-        Optional<FlowGraph> addedNode = nodeAdder.add();
-        if (addedNode.isPresent()) {
-            addedNode.ifPresent(((Consumer<FlowGraph>) updatedGraph -> graph = updatedGraph)
-                    .andThen(updatedGraph -> notifyGraphUpdated()));
-        }
+        AddComponent componentAdder = new AddComponent(graph, new Point(x, y), dropped);
+        Optional<FlowGraph> addedNode = componentAdder.add();
+
+        addedNode
+                .ifPresent(((Consumer<FlowGraph>) updatedGraph -> graph = updatedGraph)
+                        .andThen(updatedGraph -> notifyGraphUpdated()));
     }
 
     private void removeFromAnyScope(Drawable dropped) {

@@ -27,6 +27,22 @@ public class SelectedItemDrawable implements Drawable {
     }
 
     @Override
+    public int y() {
+        return y;
+    }
+
+    @Override
+    public int x() {
+        return x;
+    }
+
+    @Override
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         if (selected) {
             graphics.setStroke(DOTTED_STROKE);
@@ -60,22 +76,6 @@ public class SelectedItemDrawable implements Drawable {
 
     @Override
     public void release() {
-    }
-
-    @Override
-    public int y() {
-        return y;
-    }
-
-    @Override
-    public int x() {
-        return x;
-    }
-
-    @Override
-    public void setPosition(int x, int y) {
-        this.x = x;
-        this.y = y;
     }
 
     @Override
