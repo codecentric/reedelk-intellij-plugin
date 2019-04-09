@@ -143,6 +143,11 @@ public class ScopeBoundaries implements Drawable {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public Point getBaryCenter(Graphics2D graphics) {
+        throw new UnsupportedOperationException();
+    }
+
     private int getMaxScopes(FlowGraph graph) {
         int max = 0;
         Collection<Drawable> allTerminalDrawables = ScopeUtilities.listLastDrawablesOfScope(graph, scopedDrawable);

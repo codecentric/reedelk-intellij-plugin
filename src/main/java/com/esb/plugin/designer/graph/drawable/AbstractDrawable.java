@@ -39,14 +39,43 @@ public abstract class AbstractDrawable implements Drawable {
     }
 
     @Override
-    public Component component() {
-        return component;
-    }
+    public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+        int iconDrawableHeight = iconDrawable.height(graphics);
+        int componentTitleHeight = componentTitleDrawable.height(graphics);
+        int componentDescriptionHeight = componentDescriptionDrawable.height(graphics);
 
-    @Override
-    public String displayName() {
-        String[] segments = component.getName().split("\\.");
-        return segments[segments.length - 1];
+        int totalHeight = iconDrawableHeight + componentTitleHeight + componentDescriptionHeight;
+
+        // Center icon
+        int centerIconY = y() - Math.floorDiv(totalHeight, 2) + Math.floorDiv(iconDrawableHeight, 2);
+        iconDrawable.setPosition(x(), centerIconY);
+
+        // Center title below icon
+        int centerTitleY = y() - Math.floorDiv(totalHeight, 2) + iconDrawableHeight + Math.floorDiv(componentTitleHeight, 2);
+        componentTitleDrawable.setPosition(x(), centerTitleY);
+
+        // Center description below title
+        int centerDescriptionY = y() - Math.floorDiv(totalHeight, 2) + iconDrawableHeight + componentTitleHeight + Math.floorDiv(componentDescriptionHeight, 2);
+        componentDescriptionDrawable.setPosition(x(), centerDescriptionY);
+
+        // Center selected box
+        selectedItemDrawable.setPosition(x(), y());
+
+        if (dragging) {
+            // Compute dragging centering
+            int iconX = draggedX - Math.floorDiv(iconDrawableHeight, 2);
+            int iconY = draggedY - Math.floorDiv(iconDrawableHeight, 2);
+            iconDrawable.drag(iconX, iconY);
+
+            // TODO: Apply centering on text and description as well.
+
+        }
+
+        iconDrawable.draw(graph, graphics, observer);
+        componentTitleDrawable.draw(graph, graphics, observer);
+        componentDescriptionDrawable.draw(graph, graphics, observer);
+        selectedItemDrawable.draw(graph, graphics, observer);
+        arrowsDrawable.draw(graph, graphics, observer);
     }
 
     @Override
@@ -97,46 +126,6 @@ public abstract class AbstractDrawable implements Drawable {
     }
 
     @Override
-    public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-        int iconDrawableHeight = iconDrawable.height(graphics);
-        int componentTitleHeight = componentTitleDrawable.height(graphics);
-        int componentDescriptionHeight = componentDescriptionDrawable.height(graphics);
-
-        int totalHeight = iconDrawableHeight + componentTitleHeight + componentDescriptionHeight;
-
-        // Center icon
-        int centerIconY = y() - Math.floorDiv(totalHeight, 2) + Math.floorDiv(iconDrawableHeight, 2);
-        iconDrawable.setPosition(x(), centerIconY);
-
-        // Center title below icon
-        int centerTitleY = y() - Math.floorDiv(totalHeight, 2) + iconDrawableHeight + Math.floorDiv(componentTitleHeight, 2);
-        componentTitleDrawable.setPosition(x(), centerTitleY);
-
-        // Center description below title
-        int centerDescriptionY = y() - Math.floorDiv(totalHeight, 2) + iconDrawableHeight + componentTitleHeight + Math.floorDiv(componentDescriptionHeight, 2);
-        componentDescriptionDrawable.setPosition(x(), centerDescriptionY);
-
-        selectedItemDrawable.setPosition(x(), y());
-
-
-        if (dragging) {
-            // Compute dragging centering
-            int iconX = draggedX - Math.floorDiv(iconDrawableHeight, 2);
-            int iconY = draggedY - Math.floorDiv(iconDrawableHeight, 2);
-            iconDrawable.drag(iconX, iconY);
-
-            // TODO: Apply centering on text and description as well.
-
-        }
-
-        iconDrawable.draw(graph, graphics, observer);
-        componentTitleDrawable.draw(graph, graphics, observer);
-        componentDescriptionDrawable.draw(graph, graphics, observer);
-        selectedItemDrawable.draw(graph, graphics, observer);
-        arrowsDrawable.draw(graph, graphics, observer);
-    }
-
-    @Override
     public void drag(int x, int y) {
         draggedX = x;
         draggedY = y;
@@ -165,5 +154,30 @@ public abstract class AbstractDrawable implements Drawable {
         selectedItemDrawable.release();
         componentTitleDrawable.release();
         componentDescriptionDrawable.release();
+    }
+
+    @Override
+    public Component component() {
+        return component;
+    }
+
+    @Override
+    public String displayName() {
+        String[] segments = component.getName().split("\\.");
+        return segments[segments.length - 1];
+    }
+
+    @Override
+    public Point getBaryCenter(Graphics2D graphics) {
+        // It it is the center of the Icon.
+        int iconDrawableHeight = iconDrawable.height(graphics);
+        int componentTitleHeight = componentTitleDrawable.height(graphics);
+        int componentDescriptionHeight = componentDescriptionDrawable.height(graphics);
+
+        int totalHeight = iconDrawableHeight + componentTitleHeight + componentDescriptionHeight;
+
+        // Center icon
+        int centerIconY = y() - Math.floorDiv(totalHeight, 2) + Math.floorDiv(iconDrawableHeight, 2);
+        return new Point(x(), centerIconY);
     }
 }

@@ -20,6 +20,8 @@ public class ArrowsDrawable implements Drawable {
     private static final double ARROW_ANGLE = Math.PI / 5.0d;
 
     private final Drawable parent;
+    private int x;
+    private int y;
 
     public ArrowsDrawable(Drawable parent) {
         this.parent = parent;
@@ -30,48 +32,36 @@ public class ArrowsDrawable implements Drawable {
         graphics.setStroke(STROKE);
         graphics.setColor(ARROW_COLOR);
         graph.successors(parent).forEach(successor -> {
-            drawArrow(graphics, parent, successor);
+            drawArrow(graphics, successor);
         });
     }
 
     @Override
     public void drag(int x, int y) {
-        throw new UnsupportedOperationException();
     }
 
     @Override
     public void dragging() {
-        throw new UnsupportedOperationException();
     }
 
     @Override
     public void release() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Component component() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public String displayName() {
-        throw new UnsupportedOperationException();
     }
 
     @Override
     public int y() {
-        throw new UnsupportedOperationException();
+        return y;
     }
 
     @Override
     public int x() {
-        throw new UnsupportedOperationException();
+        return x;
     }
 
     @Override
     public void setPosition(int x, int y) {
-        throw new UnsupportedOperationException();
+        this.x = x;
+        this.y = y;
     }
 
     @Override
@@ -91,17 +81,34 @@ public class ArrowsDrawable implements Drawable {
 
     @Override
     public void selected() {
-        throw new UnsupportedOperationException();
     }
 
     @Override
     public void unselected() {
+    }
+
+    @Override
+    public Point getBaryCenter(Graphics2D graphics) {
         throw new UnsupportedOperationException();
     }
 
-    private void drawArrow(Graphics2D graphics, Drawable sourceDrawable, Drawable targetDrawable) {
-        Point2D.Double source = new Point2D.Double(sourceDrawable.x() + Math.floorDiv(Tile.WIDTH, 2) - 15, sourceDrawable.y());
-        Point2D.Double target = new Point2D.Double(targetDrawable.x() - Math.floorDiv(Tile.WIDTH, 2) + 15, targetDrawable.y());
+    @Override
+    public Component component() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String displayName() {
+        throw new UnsupportedOperationException();
+    }
+
+
+    private void drawArrow(Graphics2D graphics, Drawable targetDrawable) {
+        Point sourceBaryCenter = parent.getBaryCenter(graphics);
+        Point2D.Double source = new Point2D.Double(sourceBaryCenter.x + Math.floorDiv(Tile.WIDTH, 2) - 15, sourceBaryCenter.y);
+        Point2D.Double target = new Point2D.Double(
+                targetDrawable.getBaryCenter(graphics).x - Math.floorDiv(Tile.WIDTH, 2) + 15,
+                targetDrawable.getBaryCenter(graphics).y);
 
         final double startx = source.getX();
         final double starty = source.getY();
@@ -133,6 +140,7 @@ public class ArrowsDrawable implements Drawable {
         // Draws the arrow's line from the start to the center of the small triangle
         graphics.drawLine((int) startx, (int) starty, (int) (target.getX() + cx), (int) (target.getY() + cy));
     }
+
 }
 
 

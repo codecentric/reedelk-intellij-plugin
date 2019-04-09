@@ -105,6 +105,11 @@ public class IconDrawable implements Drawable {
     }
 
     @Override
+    public Point getBaryCenter(Graphics2D graphics) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public Component component() {
         throw new UnsupportedOperationException();
     }

@@ -110,4 +110,8 @@ public abstract class TextDrawable implements Drawable {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public Point getBaryCenter(Graphics2D graphics) {
+        throw new UnsupportedOperationException();
+    }
 }

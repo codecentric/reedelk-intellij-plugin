@@ -37,4 +37,11 @@ public interface Drawable {
 
     void unselected();
 
+    /*
+     * It is the graphical center of the Drawable. For instance,
+     * A component might have an icon + text below. The bary center is however
+     * the center of the Icon.
+     */
+    Point getBaryCenter(Graphics2D graphics);
+
 }
