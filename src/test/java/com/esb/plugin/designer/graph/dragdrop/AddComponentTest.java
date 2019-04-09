@@ -120,7 +120,7 @@ class AddComponentTest {
         }
 
         @Test
-        void shouldAddComponentAfterRootAndSuccessor() {
+        void shouldAddComponentBetweenRootAndSuccessor() {
             // Given
             FlowGraph graph = new FlowGraph();
 
