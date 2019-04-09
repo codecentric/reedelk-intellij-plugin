@@ -23,7 +23,7 @@ import static com.google.common.base.Preconditions.checkState;
 public class AddComponent {
 
     private final Point dropPoint;
-    private final Drawable nodeToAdd;
+    private final Drawable componentToAdd;
 
     private final FlowGraph graph;
     private final FlowGraph modifiableGraph;
@@ -32,33 +32,39 @@ public class AddComponent {
         this.graph = graph == null ? new FlowGraph() : graph;
         this.modifiableGraph = this.graph.copy();
         this.dropPoint = dropPoint;
-        this.nodeToAdd = componentToAdd;
+        this.componentToAdd = componentToAdd;
     }
 
 
     public Optional<FlowGraph> add() {
         // First Drawable added to the canvas (it is root)
         if (graph.isEmpty()) {
-            modifiableGraph.add(null, nodeToAdd);
+            modifiableGraph.add(null, componentToAdd);
+            return Optional.of(modifiableGraph);
 
             // Check if we are replacing the first (root) node.
         } else if (isReplacingRoot(graph, dropPoint)) {
-            modifiableGraph.add(nodeToAdd);
-            modifiableGraph.add(nodeToAdd, graph.root());
-            modifiableGraph.root(nodeToAdd);
+            modifiableGraph.add(componentToAdd);
+            modifiableGraph.add(componentToAdd, graph.root());
+            modifiableGraph.root(componentToAdd);
+            return Optional.of(modifiableGraph);
 
         } else {
-            findClosestPrecedingDrawable(graph, dropPoint)
-                    .ifPresent(precedingDrawable -> {
-                        if (precedingDrawable instanceof ScopedDrawable) {
-                            scopedPrecedingDrawable((ScopedDrawable) precedingDrawable);
-                        } else {
-                            precedingDrawable(precedingDrawable);
-                        }
-                    });
+
+            Optional<Drawable> optionalClosestPrecedingDrawable = findClosestPrecedingDrawable(graph, dropPoint);
+            if (optionalClosestPrecedingDrawable.isPresent()) {
+                Drawable closestPrecedingDrawable = optionalClosestPrecedingDrawable.get();
+                if (closestPrecedingDrawable instanceof ScopedDrawable) {
+                    scopedPrecedingDrawable((ScopedDrawable) closestPrecedingDrawable);
+                } else {
+                    precedingDrawable(closestPrecedingDrawable);
+                }
+                return Optional.of(modifiableGraph);
+            }
         }
 
-        return Optional.of(modifiableGraph);
+        // Nothing was changed (the component could not be added to the graph)
+        return Optional.empty();
     }
 
     private void precedingDrawable(Drawable closestPrecedingNode) {
@@ -85,18 +91,18 @@ public class AddComponent {
     private void precedingDrawableWithoutSuccessors(Drawable closestPrecedingNode) {
         List<ScopedDrawable> nodeScopedDrawables = ScopeUtilities.findScopesForNode(graph, closestPrecedingNode);
         if (nodeScopedDrawables.isEmpty()) {
-            modifiableGraph.add(closestPrecedingNode, nodeToAdd);
-            ScopeUtilities.addToScopeIfNecessary(graph, closestPrecedingNode, nodeToAdd);
+            modifiableGraph.add(closestPrecedingNode, componentToAdd);
+            ScopeUtilities.addToScopeIfNecessary(graph, closestPrecedingNode, componentToAdd);
 
         } else {
             if (dropPoint.x <= ScopeUtilities.getScopeXEdge(nodeScopedDrawables.get(0))) {
-                modifiableGraph.add(closestPrecedingNode, nodeToAdd);
-                ScopeUtilities.addToScopeIfNecessary(graph, closestPrecedingNode, nodeToAdd);
+                modifiableGraph.add(closestPrecedingNode, componentToAdd);
+                ScopeUtilities.addToScopeIfNecessary(graph, closestPrecedingNode, componentToAdd);
 
             } else {
                 ScopeUtilities
                         .findNodesConnectedToZeroOrOutsideScopeDrawables(graph, nodeScopedDrawables.get(0))
-                        .forEach(lastNode -> modifiableGraph.add(lastNode, nodeToAdd));
+                        .forEach(lastNode -> modifiableGraph.add(lastNode, componentToAdd));
             }
         }
     }
@@ -106,10 +112,10 @@ public class AddComponent {
 
         if (ScopeUtilities.haveSameScope(graph, closestPrecedingNode, successorOfClosestPrecedingNode)) {
             if (withinYBounds(dropPoint.y, closestPrecedingNode)) {
-                modifiableGraph.add(closestPrecedingNode, nodeToAdd);
-                modifiableGraph.add(nodeToAdd, successorOfClosestPrecedingNode);
+                modifiableGraph.add(closestPrecedingNode, componentToAdd);
+                modifiableGraph.add(componentToAdd, successorOfClosestPrecedingNode);
                 modifiableGraph.remove(closestPrecedingNode, successorOfClosestPrecedingNode);
-                ScopeUtilities.addToScopeIfNecessary(graph, closestPrecedingNode, nodeToAdd);
+                ScopeUtilities.addToScopeIfNecessary(graph, closestPrecedingNode, componentToAdd);
             }
             return;
         }
@@ -123,10 +129,10 @@ public class AddComponent {
             // The drop point is inside the closestPrecedingNodeScope
             ScopedDrawable closestPrecedingNodeScope = optionalClosestPrecedingNodeScope.get();
             if (dropPoint.x <= ScopeUtilities.getScopeXEdge(closestPrecedingNodeScope)) {
-                modifiableGraph.add(closestPrecedingNode, nodeToAdd);
-                modifiableGraph.add(nodeToAdd, successorOfClosestPrecedingNode);
+                modifiableGraph.add(closestPrecedingNode, componentToAdd);
+                modifiableGraph.add(componentToAdd, successorOfClosestPrecedingNode);
                 modifiableGraph.remove(closestPrecedingNode, successorOfClosestPrecedingNode);
-                closestPrecedingNodeScope.addToScope(nodeToAdd);
+                closestPrecedingNodeScope.addToScope(componentToAdd);
 
             } else {
                 // The drop point is outside the closestPrecedingNodeScope
@@ -134,15 +140,16 @@ public class AddComponent {
                 ScopeUtilities
                         .findNodesConnectedToZeroOrOutsideScopeDrawables(graph, closestPrecedingNodeScope)
                         .forEach(lastNode -> {
-                            modifiableGraph.add(lastNode, nodeToAdd);
+                            modifiableGraph.add(lastNode, componentToAdd);
                             modifiableGraph.remove(lastNode, successorOfClosestPrecedingNode);
                         });
-                modifiableGraph.add(nodeToAdd, successorOfClosestPrecedingNode);
+                modifiableGraph.add(componentToAdd, successorOfClosestPrecedingNode);
             }
         }
 
     }
 
+    // It is the only type of node with potentially many successors.
     private void scopedPrecedingDrawable(ScopedDrawable precedingScopedDrawable) {
         List<Drawable> successors = graph.successors(precedingScopedDrawable);
 
@@ -154,16 +161,17 @@ public class AddComponent {
             int yBottomBound = successor.y() - Tile.HALF_HEIGHT - Math.floorDiv(Tile.HEIGHT, 4);
 
             if (dropPoint.y > yBottomBound && dropPoint.y < yTopBound) {
-                modifiableGraph.add(precedingScopedDrawable, nodeToAdd, successorIndex);
-                ScopeUtilities.addToScopeIfNecessary(graph, precedingScopedDrawable, nodeToAdd);
+                modifiableGraph.add(precedingScopedDrawable, componentToAdd, successorIndex);
+                ScopeUtilities.addToScopeIfNecessary(graph, precedingScopedDrawable, componentToAdd);
                 connectCommonSuccessor(precedingScopedDrawable);
                 return;
             }
         }
+
         // If we get to this point, then the node to add is in the LAST position
         // OR it is the first node to be added to the choice component.
-        modifiableGraph.add(precedingScopedDrawable, nodeToAdd);
-        ScopeUtilities.addToScopeIfNecessary(graph, precedingScopedDrawable, nodeToAdd); // add this method to the ScopedDrawable object
+        modifiableGraph.add(precedingScopedDrawable, componentToAdd);
+        ScopeUtilities.addToScopeIfNecessary(graph, precedingScopedDrawable, componentToAdd); // add this method to the ScopedDrawable object
         connectCommonSuccessor(precedingScopedDrawable);
     }
 
@@ -171,7 +179,7 @@ public class AddComponent {
         Optional<Drawable> commonSuccessor = ScopeUtilities.findFirstNodeOutsideScope(graph, closestPrecedingNode);
         if (commonSuccessor.isPresent()) {
             Drawable successor = commonSuccessor.get();
-            modifiableGraph.add(nodeToAdd, successor);
+            modifiableGraph.add(componentToAdd, successor);
         }
     }
 }

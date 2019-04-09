@@ -73,7 +73,7 @@ public class NothingSelectedDrawable implements Drawable {
     }
 
     @Override
-    public Point getBaryCenter(Graphics2D graphics) {
+    public Point getBarycenter(Graphics2D graphics) {
         return null;
     }
 }

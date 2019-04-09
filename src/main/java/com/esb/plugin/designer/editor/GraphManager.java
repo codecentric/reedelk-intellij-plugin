@@ -154,8 +154,6 @@ public class GraphManager extends DropTarget implements DesignerPanelDropListene
             String json = FileUtils.readFrom(new URL(file.getUrl()));
             return buildGraph(json);
         } catch (MalformedURLException e) {
-            // TODO: Log this
-            e.printStackTrace();
             return Optional.empty();
         }
     }
@@ -165,8 +163,6 @@ public class GraphManager extends DropTarget implements DesignerPanelDropListene
             FlowGraphBuilder builder = new FlowGraphBuilder(json);
             return Optional.of(builder.graph());
         } catch (Exception e) {
-            // TODO: Log this
-            e.printStackTrace();
             return Optional.empty();
         }
     }

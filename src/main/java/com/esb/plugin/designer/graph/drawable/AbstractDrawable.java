@@ -8,7 +8,7 @@ import com.esb.plugin.designer.graph.drawable.decorators.*;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
-public abstract class AbstractDrawable implements Drawable, ComponentAware {
+public abstract class AbstractDrawable implements Drawable {
 
     private final Component component;
 
@@ -185,7 +185,7 @@ public abstract class AbstractDrawable implements Drawable, ComponentAware {
     }
 
     @Override
-    public Point getBaryCenter(Graphics2D graphics) {
+    public Point getBarycenter(Graphics2D graphics) {
         // It it is the center of the Icon.
         int iconDrawableHeight = iconDrawable.height(graphics);
         int componentTitleHeight = componentTitleDrawable.height(graphics);

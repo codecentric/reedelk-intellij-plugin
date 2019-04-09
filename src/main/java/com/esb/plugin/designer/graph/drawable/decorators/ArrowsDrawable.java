@@ -92,17 +92,17 @@ public class ArrowsDrawable implements Drawable {
     }
 
     @Override
-    public Point getBaryCenter(Graphics2D graphics) {
+    public Point getBarycenter(Graphics2D graphics) {
         throw new UnsupportedOperationException();
     }
 
 
     private void drawArrow(Graphics2D graphics, Drawable targetDrawable) {
-        Point sourceBaryCenter = parent.getBaryCenter(graphics);
+        Point sourceBaryCenter = parent.getBarycenter(graphics);
         Point2D.Double source = new Point2D.Double(sourceBaryCenter.x + Math.floorDiv(Tile.WIDTH, 2) - 15, sourceBaryCenter.y);
         Point2D.Double target = new Point2D.Double(
-                targetDrawable.getBaryCenter(graphics).x - Math.floorDiv(Tile.WIDTH, 2) + 15,
-                targetDrawable.getBaryCenter(graphics).y);
+                targetDrawable.getBarycenter(graphics).x - Math.floorDiv(Tile.WIDTH, 2) + 15,
+                targetDrawable.getBarycenter(graphics).y);
 
         final double startx = source.getX();
         final double starty = source.getY();

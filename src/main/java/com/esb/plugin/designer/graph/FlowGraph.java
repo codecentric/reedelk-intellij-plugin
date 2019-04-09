@@ -27,14 +27,17 @@ public class FlowGraph {
     }
 
     public void root(@NotNull Drawable n1) {
-        graph.root(n1);
+        if (graph == null) {
+            graph = new DirectedGraph<>(n1);
+        } else {
+            graph.root(n1);
+        }
     }
 
     public void add(@Nullable Drawable n1, @NotNull Drawable n2) {
         if (n1 == null) {
             checkState(graph == null, "Root was not null");
             graph = new DirectedGraph<>(n2);
-            graph.addNode(n2);
         } else {
             graph.putEdge(n1, n2);
         }

@@ -5,7 +5,7 @@ import com.esb.plugin.designer.graph.FlowGraph;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
-public interface Drawable {
+public interface Drawable extends ComponentAware {
 
     void drag(int x, int y);
 
@@ -38,6 +38,6 @@ public interface Drawable {
      * A component might have an icon + text below. The bary center is however
      * the center of the Icon.
      */
-    Point getBaryCenter(Graphics2D graphics);
+    Point getBarycenter(Graphics2D graphics);
 
 }
