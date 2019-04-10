@@ -23,7 +23,6 @@ public class AddDrawableToGraph {
 
     private final Point dropPoint;
     private final Drawable componentToAdd;
-
     private final FlowGraph modifiableGraph;
 
     public AddDrawableToGraph(FlowGraph graph, Point dropPoint, Drawable componentToAdd) {

@@ -37,6 +37,18 @@ class AddDrawableToGraphTest {
         choice3 = new ChoiceDrawable(new Component("choice3"));
     }
 
+    private void assertIsChangedWithNodesCount(FlowGraphChangeAware graph, int nodesCount) {
+        assertThat(graph.isChanged()).isTrue();
+        assertThat(graph.nodesCount()).isEqualTo(nodesCount);
+    }
+
+    private FlowGraphChangeAware addDrawableToGraph(FlowGraph graph, Drawable drawableToAdd, Point dropPoint) {
+        FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
+        AddDrawableToGraph componentAdder = new AddDrawableToGraph(modifiableGraph, dropPoint, drawableToAdd);
+        componentAdder.add();
+        return modifiableGraph;
+    }
+
     @Nested
     @DisplayName("Root tests")
     class RootComponent {
@@ -48,13 +60,10 @@ class AddDrawableToGraphTest {
             Point dropPoint = new Point(20, 20);
 
             // When
-            FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
-            AddDrawableToGraph componentAdder = new AddDrawableToGraph(modifiableGraph, dropPoint, root);
-            componentAdder.add();
+            FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, root, dropPoint);
 
             // Then
-            assertThat(modifiableGraph.isChanged()).isTrue();
-            assertThat(graph.nodesCount()).isEqualTo(1);
+            assertIsChangedWithNodesCount(modifiableGraph, 1);
             assertThat(graph.root()).isEqualTo(root);
         }
 
@@ -68,12 +77,10 @@ class AddDrawableToGraphTest {
             Point dropPoint = new Point(10, 20); // x drop point smaller than the root x coordinate.
 
             // When
-            AddDrawableToGraph componentAdder = new AddDrawableToGraph(graph, dropPoint, n1);
-            boolean modified = true;// componentAdder.add();
+            FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, n1, dropPoint);
 
             // Then
-            assertThat(modified).isTrue();
-            assertThat(graph.nodesCount()).isEqualTo(2);
+            assertIsChangedWithNodesCount(modifiableGraph, 2);
 
             Drawable newRoot = graph.root();
             assertThat(newRoot).isEqualTo(n1);
@@ -83,7 +90,6 @@ class AddDrawableToGraphTest {
             // Old root has been replaced by n1, therefore successor of n1 is root.
             assertThat(successorsOfRoot).containsExactly(root);
         }
-
     }
 
     @Nested
@@ -100,12 +106,10 @@ class AddDrawableToGraphTest {
             Point dropPoint = new Point(25, 23);  // a little bit after root center x coordinate
 
             // When
-            AddDrawableToGraph componentAdder = new AddDrawableToGraph(graph, dropPoint, n1);
-            boolean modified = true; //componentAdder.add();
+            FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, n1, dropPoint);
 
             // Then
-            assertThat(modified).isTrue();
-            assertThat(graph.nodesCount()).isEqualTo(2);
+            assertIsChangedWithNodesCount(modifiableGraph, 2);
 
             Drawable root = graph.root();
             assertThat(root).isEqualTo(root);
@@ -128,12 +132,10 @@ class AddDrawableToGraphTest {
             Point dropPoint = new Point(30, 20); // drop it between root and n2
 
             // When
-            AddDrawableToGraph componentAdder = new AddDrawableToGraph(graph, dropPoint, n1);
-            boolean modified = true;//componentAdder.add();
+            FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, n1, dropPoint);
 
             // Then
-            assertThat(modified).isTrue();
-            assertThat(graph.nodesCount()).isEqualTo(3);
+            assertIsChangedWithNodesCount(modifiableGraph, 3);
 
             Drawable root = graph.root();
             List<Drawable> successorOfRoot = graph.successors(root);

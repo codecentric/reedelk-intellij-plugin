@@ -1,6 +1,6 @@
 package com.esb.plugin.designer.graph.builder;
 
-import com.esb.plugin.designer.graph.FlowGraphImpl;
+import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.TestJson;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ class FlowGraphBuilderTest extends AbstractBuilderTest {
         FlowGraphBuilder builder = new FlowGraphBuilder(json);
 
         // When
-        FlowGraphImpl graph = builder.graph();
+        FlowGraph graph = builder.graph();
 
         // Then
         assertThat(graph).isNotNull();

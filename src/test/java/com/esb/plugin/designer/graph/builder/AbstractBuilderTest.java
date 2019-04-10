@@ -2,7 +2,7 @@ package com.esb.plugin.designer.graph.builder;
 
 import com.esb.internal.commons.FileUtils;
 import com.esb.plugin.designer.editor.component.Component;
-import com.esb.plugin.designer.graph.FlowGraphImpl;
+import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.TestJson;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,11 +19,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(MockitoExtension.class)
 abstract class AbstractBuilderTest {
 
-    Drawable firstSuccessorOf(FlowGraphImpl graph, Drawable target) {
+    Drawable firstSuccessorOf(FlowGraph graph, Drawable target) {
         return graph.successors(target).stream().findFirst().get();
     }
 
-    void assertSuccessorsAre(FlowGraphImpl graph, Drawable target, String... successorsComponentNames) {
+    void assertSuccessorsAre(FlowGraph graph, Drawable target, String... successorsComponentNames) {
         int numberOfSuccessors = successorsComponentNames.length;
         List<Drawable> successors = graph.successors(target);
         assertThat(successors).isNotNull();
@@ -36,7 +36,7 @@ abstract class AbstractBuilderTest {
         assertThat(toBeFound).isEmpty();
     }
 
-    void assertPredecessorsAre(FlowGraphImpl graph, Drawable target, String... predecessorsComponentsNames) {
+    void assertPredecessorsAre(FlowGraph graph, Drawable target, String... predecessorsComponentsNames) {
         int numberOfPredecessors = predecessorsComponentsNames.length;
         List<Drawable> predecessors = graph.predecessors(target);
         assertThat(predecessors).isNotNull();
