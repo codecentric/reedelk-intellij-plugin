@@ -65,18 +65,23 @@ public class ScopeUtilities {
         }).collect(toList());
     }
 
-    static void addToScopeIfNecessary(FlowGraph graph, Drawable closestPrecedingNode, Drawable targetDrawableToAdd) {
+    static void addToScopeIfNecessary(FlowGraph graph, Drawable closestPrecedingNode, Connector connector) {
         if (closestPrecedingNode instanceof ScopedDrawable) {
             ScopedDrawable scopedDrawable = (ScopedDrawable) closestPrecedingNode;
-            scopedDrawable.addToScope(targetDrawableToAdd);
+            connector.addToScope(scopedDrawable);
         } else {
             List<ScopedDrawable> scopedDrawableObjects = ScopeUtilities.findScopesForNode(graph, closestPrecedingNode);
-            scopedDrawableObjects.forEach(scopedDrawable -> scopedDrawable.addToScope(targetDrawableToAdd));
+            scopedDrawableObjects.forEach(connector::addToScope);
         }
     }
 
     static int getScopeXEdge(ScopedDrawable scopedDrawable) {
-        return scopedDrawable.getScope().stream().mapToInt(Drawable::x).max().getAsInt() + Tile.HALF_WIDTH;
+        return scopedDrawable
+                .getScope()
+                .stream()
+                .mapToInt(Drawable::x)
+                .max()
+                .getAsInt() + Tile.HALF_WIDTH;
     }
 
     /**

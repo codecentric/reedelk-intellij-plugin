@@ -48,11 +48,14 @@ public class PaletteDropTarget {
 
         Point dropPoint = dropEvent.getLocation();
         Drawable componentToAdd = DrawableFactory.get(componentName);
+
         // TODO: The component to add might be a scoped drawable.
 
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph.copy());
+
+        Connector connector = new DrawableConnector(modifiableGraph, componentToAdd);
         // TODO: Create a builder here
-        AddDrawableToGraph nodeAdder = new AddDrawableToGraph(modifiableGraph, dropPoint, componentToAdd);
+        AddDrawableToGraph nodeAdder = new AddDrawableToGraph(modifiableGraph, dropPoint, connector);
         nodeAdder.add();
 
         if (modifiableGraph.isChanged()) {

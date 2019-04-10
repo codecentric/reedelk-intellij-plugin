@@ -46,8 +46,10 @@ public class MoveDropTarget {
 
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
 
+        Connector connector = new DrawableConnector(modifiableGraph, dropped);
+
         // 4. Add the dropped component back to the graph to the dropped position.
-        AddDrawableToGraph componentAdder = new AddDrawableToGraph(modifiableGraph, dropPoint, dropped);
+        AddDrawableToGraph componentAdder = new AddDrawableToGraph(modifiableGraph, dropPoint, connector);
         componentAdder.add();
 
         // 5. If the copy of the graph was changed, then update the graph
