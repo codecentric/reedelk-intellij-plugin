@@ -1,16 +1,14 @@
 package com.esb.plugin.designer.graph.drawable.decorators;
 
-import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
+import com.esb.plugin.designer.graph.layout.FlowGraphLayout;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
-import java.util.ArrayList;
-import java.util.List;
 
 import static java.awt.BasicStroke.CAP_ROUND;
 import static java.awt.BasicStroke.JOIN_ROUND;
@@ -31,18 +29,17 @@ public class VerticalDivider implements Drawable {
         graphics.setStroke(STROKE);
         graphics.setColor(VERTICAL_DIVIDER_COLOR);
 
-        List<Drawable> drawablesInTheScope = new ArrayList<>();
-        drawablesInTheScope.add(scopedDrawable);
-        drawablesInTheScope.addAll(scopedDrawable.getScope());
+        int padding = (ScopedDrawable.VERTICAL_PADDING * 4) * 2;
+        int scopeHeight = FlowGraphLayout.computeSubTreeHeight(graph, scopedDrawable, graphics) - padding;
+        int halfScopeHeight = Math.floorDiv(scopeHeight, 2);
 
-        int minY = drawablesInTheScope.stream().mapToInt(Drawable::y).min().getAsInt();
-        int maxY = drawablesInTheScope.stream().mapToInt(Drawable::y).max().getAsInt();
+        int halfWidth = Math.floorDiv(scopedDrawable.width(graphics), 2);
 
-        int verticalX = scopedDrawable.x() + Tile.HALF_WIDTH - 6;
-        int verticalMinY = minY - Math.floorDiv(Tile.HEIGHT, 3);
-        int verticalMaxY = maxY + Math.floorDiv(Tile.HEIGHT, 3);
+        int verticalX = scopedDrawable.x() + halfWidth - 6;
+        int verticalSeparatorMinY = scopedDrawable.y() - halfScopeHeight;
+        int verticalSeparatorMaxY = scopedDrawable.y() + halfScopeHeight;
 
-        graphics.drawLine(verticalX, verticalMinY, verticalX, verticalMaxY);
+        graphics.drawLine(verticalX, verticalSeparatorMinY, verticalX, verticalSeparatorMaxY);
     }
 
     @Override
