@@ -98,7 +98,7 @@ public class IconDrawable implements Drawable {
     }
 
     @Override
-    public void release() {
+    public void drop() {
         this.dragging = false;
     }
 

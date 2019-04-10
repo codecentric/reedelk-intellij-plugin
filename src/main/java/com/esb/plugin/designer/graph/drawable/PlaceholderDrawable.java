@@ -97,7 +97,7 @@ public class PlaceholderDrawable implements Drawable {
     }
 
     @Override
-    public void release() {
+    public void drop() {
 
     }
 }

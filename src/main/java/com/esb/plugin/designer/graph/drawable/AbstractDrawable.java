@@ -164,13 +164,13 @@ public abstract class AbstractDrawable implements Drawable {
     }
 
     @Override
-    public void release() {
+    public void drop() {
         dragging = false;
 
-        iconDrawable.release();
-        selectedItemDrawable.release();
-        componentTitleDrawable.release();
-        componentDescriptionDrawable.release();
+        iconDrawable.drop();
+        selectedItemDrawable.drop();
+        componentTitleDrawable.drop();
+        componentDescriptionDrawable.drop();
     }
 
     @Override

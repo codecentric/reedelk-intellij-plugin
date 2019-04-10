@@ -56,7 +56,7 @@ public class VerticalDivider implements Drawable {
     }
 
     @Override
-    public void release() {
+    public void drop() {
         throw new UnsupportedOperationException();
     }
 

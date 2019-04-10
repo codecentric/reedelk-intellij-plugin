@@ -147,7 +147,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
             int dragX = e.getX();
             int dragY = e.getY();
             selected.drag(dragX, dragY);
-            selected.release();
+            selected.drop();
 
             // TODO: Maybe this logic should be encapsulated into the drop method below.
             // If outside the current selected area, then we consider the drop as effective.
@@ -167,9 +167,9 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
                 if (!(selected instanceof NothingSelectedDrawable)) {
                     dropListener.drop(dragX, dragY, selected);
                 }
-            } else {
-                repaint();
             }
+
+            repaint();
         }
     }
 

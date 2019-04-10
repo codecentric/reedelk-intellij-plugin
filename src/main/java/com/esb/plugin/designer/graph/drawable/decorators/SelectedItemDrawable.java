@@ -75,7 +75,7 @@ public class SelectedItemDrawable implements Drawable {
     }
 
     @Override
-    public void release() {
+    public void drop() {
     }
 
     @Override

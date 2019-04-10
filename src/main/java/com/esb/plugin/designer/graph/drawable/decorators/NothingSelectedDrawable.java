@@ -18,7 +18,7 @@ public class NothingSelectedDrawable implements Drawable {
     }
 
     @Override
-    public void release() {
+    public void drop() {
 
     }
 

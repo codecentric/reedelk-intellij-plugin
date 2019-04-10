@@ -3,8 +3,6 @@ package com.esb.plugin.designer.graph;
 import com.esb.internal.commons.FileUtils;
 import com.esb.plugin.designer.graph.builder.FlowGraphBuilder;
 import com.esb.plugin.designer.graph.drawable.Drawable;
-import com.esb.plugin.designer.graph.drawable.DrawableFactory;
-import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentEvent;
@@ -18,23 +16,13 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import static com.google.common.base.Preconditions.checkState;
-import static java.awt.datatransfer.DataFlavor.stringFlavor;
-import static java.awt.dnd.DnDConstants.ACTION_COPY_OR_MOVE;
-import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 
 /**
@@ -47,8 +35,12 @@ public class GraphManager extends DropTarget implements DropListener, FileEditor
     private FlowGraph graph;
     private GraphChangeListener listener;
     private MessageBusConnection busConnection;
+    private MoveDropTarget moveDropTargetDelegate;
+    private PaletteDropTarget paletteDropTargetDelegate;
 
     public GraphManager(Project project, VirtualFile managedGraphFile) {
+        this.moveDropTargetDelegate = new MoveDropTarget();
+        this.paletteDropTargetDelegate = new PaletteDropTarget();
         this.busConnection = project.getMessageBus().connect();
         this.busConnection.subscribe(FILE_EDITOR_MANAGER, this);
 
@@ -89,98 +81,26 @@ public class GraphManager extends DropTarget implements DropListener, FileEditor
      */
     @Override
     public synchronized void drop(DropTargetDropEvent dropEvent) {
-
-        Transferable transferable = dropEvent.getTransferable();
-
-        DataFlavor[] transferDataFlavor = transferable.getTransferDataFlavors();
-        if (!asList(transferDataFlavor).contains(stringFlavor)) {
-            dropEvent.rejectDrop();
-            return;
-        }
-
-        String componentName = null;
-        try {
-            componentName = (String) transferable.getTransferData(stringFlavor);
-        } catch (UnsupportedFlavorException | IOException e) {
-            dropEvent.rejectDrop();
-        }
-
-        checkState(componentName != null, "Component name");
-
-        if (graph == null) {
-            graph = new FlowGraphImpl();
-        }
-
-        Point location = dropEvent.getLocation();
-        Drawable componentToAdd = DrawableFactory.get(componentName);
-        // TODO: The component to add might be a scoped drawable.
-
-        FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph.copy());
-        // TODO: Create a builder here
-        AddDrawableToGraph nodeAdder = new AddDrawableToGraph(modifiableGraph, location, componentToAdd);
-        nodeAdder.add();
-
-        if (modifiableGraph.isChanged()) {
-            graph = modifiableGraph;
-            dropEvent.acceptDrop(ACTION_COPY_OR_MOVE);
-            notifyGraphUpdated();
-        } else {
-            dropEvent.rejectDrop();
-        }
+        paletteDropTargetDelegate
+                .drop(dropEvent, graph)
+                .ifPresent(updatedGraph -> {
+                    graph = updatedGraph;
+                    notifyGraphUpdated();
+                });
     }
 
     /**
-     * Called when we drop a drawable because we are moving it.
+     * Called when we drop a drawable into the canvas from a move operation.
      */
     @Override
     public void drop(int x, int y, Drawable dropped) {
-        // Steps when we drop:
-        if (graph == null) {
-            graph = new FlowGraphImpl();
-        }
-
-        // 1. Copy the original graph
-        FlowGraph copy = graph.copy();
-
-        // 2. Remove the dropped node from the copy graph
-        // Get the predecessors of the node and connect it to the successors
-        List<Drawable> predecessors = graph.predecessors(dropped);
-        List<Drawable> successors = graph.successors(dropped);
-        if (predecessors.isEmpty()) {
-            copy.root(successors.get(0));
-        } else {
-            for (Drawable predecessor : predecessors) {
-                for (Drawable successor : successors) {
-                    copy.add(predecessor, successor);
-                }
-            }
-        }
-
-        copy.remove(dropped);
-
-        // 3. Remove the dropped node from any scope it might belong to
-        Optional<ScopedDrawable> scopeContainingDroppedDrawable = ScopeUtilities.findScope(copy, dropped);
-        scopeContainingDroppedDrawable
-                .ifPresent(scopedDrawable -> scopedDrawable.removeFromScope(dropped));
-
-
-        FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
-        // 4. Add the dropped component back to the graph to the dropped position.
-        AddDrawableToGraph componentAdder = new AddDrawableToGraph(modifiableGraph, new Point(x, y), dropped);
-        componentAdder.add();
-
-        // 5. If the copy of the graph was changed, then update the graph
-        if (modifiableGraph.isChanged()) {
-            graph = modifiableGraph;
-        } else {
-            // Re-add the node to the scope if nothing was changed.
-            scopeContainingDroppedDrawable
-                    .ifPresent(scopedDrawable -> scopedDrawable.addToScope(dropped));
-        }
-
-        notifyGraphUpdated();
+        moveDropTargetDelegate
+                .drop(x, y, graph, dropped)
+                .ifPresent(updatedGraph -> {
+                    graph = updatedGraph;
+                    notifyGraphUpdated();
+                });
     }
-
 
     public void addGraphChangeListener(GraphChangeListener listener) {
         this.listener = listener;

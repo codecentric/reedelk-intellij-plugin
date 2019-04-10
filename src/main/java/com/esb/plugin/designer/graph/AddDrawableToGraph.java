@@ -58,8 +58,7 @@ public class AddDrawableToGraph {
             precedingDrawableWithoutSuccessors(closestPrecedingNode);
 
         } else {
-            checkState(successors.size() == 1,
-                    "Successors size MUST be 1, otherwise it is a Scoped Drawable");
+            checkState(successors.size() == 1, "Successors size MUST be 1, otherwise it is a Scoped Drawable");
             Drawable successorOfClosestPrecedingNode = successors.get(0);
             precedingDrawableWithOneSuccessor(closestPrecedingNode, successorOfClosestPrecedingNode);
         }

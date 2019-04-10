@@ -11,7 +11,7 @@ public interface Drawable extends ComponentAware {
 
     void dragging();
 
-    void release();
+    void drop();
 
     void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer);
 

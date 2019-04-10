@@ -44,7 +44,7 @@ public class ArrowsDrawable implements Drawable {
     }
 
     @Override
-    public void release() {
+    public void drop() {
     }
 
     @Override
