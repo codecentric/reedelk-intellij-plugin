@@ -1,10 +1,7 @@
 package com.esb.plugin.designer.editor;
 
 import com.esb.internal.commons.FileUtils;
-import com.esb.plugin.designer.graph.AddDrawableToGraph;
-import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.FlowGraphChangeAware;
-import com.esb.plugin.designer.graph.FlowGraphImpl;
+import com.esb.plugin.designer.graph.*;
 import com.esb.plugin.designer.graph.builder.FlowGraphBuilder;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.DrawableFactory;
@@ -46,7 +43,7 @@ import static java.util.Arrays.stream;
  * - The text editor associated with the flow designer (the user manually updates the JSON)
  * - The Canvas updates (drag and drop and moving around components)
  */
-public class GraphManager extends DropTarget implements DesignerPanelDropListener, FileEditorManagerListener, DocumentListener, Disposable {
+public class GraphManager extends DropTarget implements DropListener, FileEditorManagerListener, DocumentListener, Disposable {
 
     private FlowGraph graph;
     private GraphChangeListener listener;
@@ -154,11 +151,10 @@ public class GraphManager extends DropTarget implements DesignerPanelDropListene
         copy.remove(dropped);
 
         // 3. Remove the dropped node from any scope it might belong to
-        copy.breadthFirstTraversal(drawable -> {
-            if (drawable instanceof ScopedDrawable) {
-                ((ScopedDrawable) drawable).removeFromScope(dropped);
-            }
-        });
+        Optional<ScopedDrawable> scopeContainingDroppedDrawable = ScopeUtilities.findScope(copy, dropped);
+        scopeContainingDroppedDrawable
+                .ifPresent(scopedDrawable -> scopedDrawable.removeFromScope(dropped));
+
 
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
         // 4. Add the dropped component back to the graph to the dropped position.
@@ -168,9 +164,13 @@ public class GraphManager extends DropTarget implements DesignerPanelDropListene
         // 5. If the copy of the graph was changed, then update the graph
         if (modifiableGraph.isChanged()) {
             graph = modifiableGraph;
-            notifyGraphUpdated();
+        } else {
+            // Re-add the node to the scope if nothing was changed.
+            scopeContainingDroppedDrawable
+                    .ifPresent(scopedDrawable -> scopedDrawable.addToScope(dropped));
         }
 
+        notifyGraphUpdated();
     }
 
 

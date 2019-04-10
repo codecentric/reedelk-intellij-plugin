@@ -1,8 +1,6 @@
-package com.esb.plugin.designer.graph.dragdrop;
+package com.esb.plugin.designer.graph;
 
 import com.esb.plugin.designer.editor.component.Component;
-import com.esb.plugin.designer.graph.FlowGraphImpl;
-import com.esb.plugin.designer.graph.ScopeUtilities;
 import com.esb.plugin.designer.graph.drawable.ChoiceDrawable;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.GenericComponentDrawable;

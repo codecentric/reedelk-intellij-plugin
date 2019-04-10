@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.editor.designer;
 
 import com.esb.plugin.designer.Tile;
-import com.esb.plugin.designer.editor.DesignerPanelDropListener;
+import com.esb.plugin.designer.editor.DropListener;
 import com.esb.plugin.designer.editor.GraphChangeListener;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.FlowGraphLayout;
@@ -9,6 +9,7 @@ import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.decorators.NothingSelectedDrawable;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,19 +26,17 @@ import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
 public class DesignerPanel extends JBPanel implements MouseMotionListener, MouseListener, GraphChangeListener {
 
+    private final JBColor BACKGROUND_COLOR = JBColor.WHITE;
     private final Drawable NOTHING_SELECTED = new NothingSelectedDrawable();
 
-    private static final JBColor BACKGROUND_COLOR = JBColor.WHITE;
-
     private FlowGraph graph;
+    private DropListener dropListener;
     private Drawable selected = NOTHING_SELECTED;
 
     private int offsetx;
     private int offsety;
-
     private boolean updated;
     private boolean dragging;
-    private DesignerPanelDropListener designerPanelDropListener;
 
 
     public DesignerPanel() {
@@ -64,10 +63,8 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
         Collection<Drawable> graphNodes = graph.nodes();
 
-        // Draw each node of the graph
+        // Draw each node of the graph (except the current selected Drawable - see below)
         graphNodes.forEach(drawable -> {
-            // We skip the current selected drawable,
-            // since it must be drawn on to of all the other ones LAST (see below).
             if (!drawable.isSelected()) {
                 drawable.draw(graph, g2, DesignerPanel.this);
             }
@@ -100,7 +97,6 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
             repaint();
         }
     }
-
 
     @Override
     public void mouseMoved(MouseEvent event) {
@@ -153,10 +149,19 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
             selected.drag(dragX, dragY);
             selected.release();
 
-            if (Math.abs(dragX - offsetx - selected.x()) > 15 ||
-                    Math.abs(dragY - offsety - selected.y()) > 15) {
+            // TODO: Maybe this logic should be encapsulated into the drop method below.
+            // If outside the current selected area, then we consider the drop as effective.
+            boolean withinX =
+                    dragX > selected.x() - Math.floorDiv(selected.width((Graphics2D) getGraphics()), 2) &&
+                            dragX < selected.x() + Math.floorDiv(selected.width((Graphics2D) getGraphics()), 2);
+
+            boolean withinY =
+                    dragY > selected.y() - Math.floorDiv(selected.height((Graphics2D) getGraphics()), 2) &&
+                            dragY < selected.y() + Math.floorDiv(selected.height((Graphics2D) getGraphics()), 2);
+
+            if (!(withinX && withinY)) {
                 if (!(selected instanceof NothingSelectedDrawable)) {
-                    designerPanelDropListener.drop(dragX, dragY, selected);
+                    dropListener.drop(dragX, dragY, selected);
                 }
             } else {
                 repaint();
@@ -179,8 +184,12 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         // nothing to do
     }
 
+    public void setDropListener(@NotNull DropListener dropListener) {
+        this.dropListener = dropListener;
+    }
+
     /**
-     * We might need to adapt window size, since the new graph might have grown beyond the X (or Y) axis.
+     * If the graph has grown beyond the current window size, we must adapt-it.
      */
     private void adjustWindowSize() {
         int maxX = graph.nodes().stream().mapToInt(Drawable::x).max().getAsInt();
@@ -198,9 +207,5 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
                         .stream()
                         .filter(drawable -> drawable.contains(this, x, y))
                         .findFirst();
-    }
-
-    public void setDesignerPanelDropListener(DesignerPanelDropListener dropListener) {
-        this.designerPanelDropListener = dropListener;
     }
 }
