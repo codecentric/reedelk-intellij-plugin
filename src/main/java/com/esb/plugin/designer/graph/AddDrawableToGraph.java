@@ -8,7 +8,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
-import static com.esb.plugin.designer.graph.AddComponentUtilities.*;
+import static com.esb.plugin.designer.graph.AddDrawableToGraphUtilities.*;
 import static com.google.common.base.Preconditions.checkState;
 
 /**
@@ -19,35 +19,30 @@ import static com.google.common.base.Preconditions.checkState;
  * This class find the best position where to place the node in the Graph given
  * the drop point location
  */
-public class AddComponent {
-
-    private final boolean MODIFIED = true;
-    private final boolean NOT_MODIFIED = false;
+public class AddDrawableToGraph {
 
     private final Point dropPoint;
     private final Drawable componentToAdd;
 
     private final FlowGraph modifiableGraph;
 
-    public AddComponent(FlowGraph graph, Point dropPoint, Drawable componentToAdd) {
+    public AddDrawableToGraph(FlowGraph graph, Point dropPoint, Drawable componentToAdd) {
         this.dropPoint = dropPoint;
         this.modifiableGraph = graph;
         this.componentToAdd = componentToAdd;
     }
 
 
-    public boolean add() {
+    public void add() {
         // First Drawable added to the canvas (it is root)
         if (modifiableGraph.isEmpty()) {
             modifiableGraph.add(null, componentToAdd);
-            return MODIFIED;
 
             // Check if we are replacing the first (root) node.
         } else if (isReplacingRoot(modifiableGraph, dropPoint)) {
             modifiableGraph.add(componentToAdd);
             modifiableGraph.add(componentToAdd, modifiableGraph.root());
             modifiableGraph.root(componentToAdd);
-            return MODIFIED;
 
         } else {
 
@@ -59,12 +54,8 @@ public class AddComponent {
                 } else {
                     precedingDrawable(closestPrecedingDrawable);
                 }
-                return MODIFIED;
             }
         }
-
-        // Nothing was changed (the component could not be added to the graph)
-        return NOT_MODIFIED;
     }
 
     private void precedingDrawable(Drawable closestPrecedingNode) {

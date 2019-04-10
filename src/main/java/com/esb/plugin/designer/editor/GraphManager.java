@@ -1,8 +1,9 @@
 package com.esb.plugin.designer.editor;
 
 import com.esb.internal.commons.FileUtils;
-import com.esb.plugin.designer.graph.AddComponent;
+import com.esb.plugin.designer.graph.AddDrawableToGraph;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.FlowGraphChangeAware;
 import com.esb.plugin.designer.graph.FlowGraphImpl;
 import com.esb.plugin.designer.graph.builder.FlowGraphBuilder;
 import com.esb.plugin.designer.graph.drawable.Drawable;
@@ -52,7 +53,6 @@ public class GraphManager extends DropTarget implements DesignerPanelDropListene
     private MessageBusConnection busConnection;
 
     GraphManager(Project project, VirtualFile managedGraphFile) {
-        this.graph = new FlowGraphImpl();
         this.busConnection = project.getMessageBus().connect();
         this.busConnection.subscribe(FILE_EDITOR_MANAGER, this);
 
@@ -106,16 +106,19 @@ public class GraphManager extends DropTarget implements DesignerPanelDropListene
         }
 
         checkState(componentName != null, "Component name");
-        checkState(graph != null, "Graph must not be null");
+
+        if (graph == null) {
+            graph = new FlowGraphImpl();
+        }
 
         Point location = dropEvent.getLocation();
         Drawable componentToAdd = DrawableFactory.get(componentName);
 
-        FlowGraph modifiableGraph = graph.copy();
-        AddComponent nodeAdder = new AddComponent(modifiableGraph, location, componentToAdd);
-        boolean modified = nodeAdder.add();
+        FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph.copy());
+        AddDrawableToGraph nodeAdder = new AddDrawableToGraph(modifiableGraph, location, componentToAdd);
+        nodeAdder.add();
 
-        if (modified) {
+        if (modifiableGraph.isChanged()) {
             graph = modifiableGraph;
             dropEvent.acceptDrop(ACTION_COPY_OR_MOVE);
             notifyGraphUpdated();
@@ -127,39 +130,43 @@ public class GraphManager extends DropTarget implements DesignerPanelDropListene
     @Override
     public void drop(int x, int y, Drawable dropped) {
         // Steps when we drop:
+        if (graph == null) {
+            graph = new FlowGraphImpl();
+        }
 
         // 1. Copy the original graph
-        FlowGraph modifiableGraph = graph.copy();
+        FlowGraph copy = graph.copy();
 
         // 2. Remove the dropped node from the copy graph
         // Get the predecessors of the node and connect it to the successors
         List<Drawable> predecessors = graph.predecessors(dropped);
         List<Drawable> successors = graph.successors(dropped);
         if (predecessors.isEmpty()) {
-            modifiableGraph.root(successors.get(0));
+            copy.root(successors.get(0));
         } else {
             for (Drawable predecessor : predecessors) {
                 for (Drawable successor : successors) {
-                    modifiableGraph.add(predecessor, successor);
+                    copy.add(predecessor, successor);
                 }
             }
         }
 
-        modifiableGraph.remove(dropped);
+        copy.remove(dropped);
 
         // 3. Remove the dropped node from any scope it might belong to
-        modifiableGraph.breadthFirstTraversal(drawable -> {
+        copy.breadthFirstTraversal(drawable -> {
             if (drawable instanceof ScopedDrawable) {
                 ((ScopedDrawable) drawable).removeFromScope(dropped);
             }
         });
 
+        FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
         // 4. Add the dropped component back to the graph to the dropped position.
-        AddComponent componentAdder = new AddComponent(graph, new Point(x, y), dropped);
-        boolean modified = componentAdder.add();
+        AddDrawableToGraph componentAdder = new AddDrawableToGraph(modifiableGraph, new Point(x, y), dropped);
+        componentAdder.add();
 
         // 5. If the copy of the graph was changed, then update the graph
-        if (modified) {
+        if (modifiableGraph.isChanged()) {
             graph = modifiableGraph;
             notifyGraphUpdated();
         }

@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.graph.dragdrop;
 
 import com.esb.plugin.designer.editor.component.Component;
-import com.esb.plugin.designer.graph.AddComponent;
+import com.esb.plugin.designer.graph.AddDrawableToGraph;
 import com.esb.plugin.designer.graph.FlowGraphImpl;
 import com.esb.plugin.designer.graph.drawable.ChoiceDrawable;
 import com.esb.plugin.designer.graph.drawable.Drawable;
@@ -17,7 +17,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class AddComponentTest {
+class AddDrawableToGraphTest {
 
     private Drawable root;
     private Drawable n1;
@@ -50,7 +50,7 @@ class AddComponentTest {
             Point dropPoint = new Point(20, 20);
 
             // When
-            AddComponent componentAdder = new AddComponent(graph, dropPoint, root);
+            AddDrawableToGraph componentAdder = new AddDrawableToGraph(graph, dropPoint, root);
             boolean modified = componentAdder.add();
 
             // Then
@@ -69,7 +69,7 @@ class AddComponentTest {
             Point dropPoint = new Point(10, 20); // x drop point smaller than the root x coordinate.
 
             // When
-            AddComponent componentAdder = new AddComponent(graph, dropPoint, n1);
+            AddDrawableToGraph componentAdder = new AddDrawableToGraph(graph, dropPoint, n1);
             boolean modified = componentAdder.add();
 
             // Then
@@ -89,7 +89,7 @@ class AddComponentTest {
 
     @Nested
     @DisplayName("Adding a component after root")
-    class AddComponentAfterRoot {
+    class AddDrawableToGraphAfterRoot {
 
         @Test
         void shouldAddComponentAfterRootAsLast() {
@@ -101,7 +101,7 @@ class AddComponentTest {
             Point dropPoint = new Point(25, 23);  // a little bit after root center x coordinate
 
             // When
-            AddComponent componentAdder = new AddComponent(graph, dropPoint, n1);
+            AddDrawableToGraph componentAdder = new AddDrawableToGraph(graph, dropPoint, n1);
             boolean modified = componentAdder.add();
 
             // Then
@@ -129,7 +129,7 @@ class AddComponentTest {
             Point dropPoint = new Point(30, 20); // drop it between root and n2
 
             // When
-            AddComponent componentAdder = new AddComponent(graph, dropPoint, n1);
+            AddDrawableToGraph componentAdder = new AddDrawableToGraph(graph, dropPoint, n1);
             boolean modified = componentAdder.add();
 
             // Then

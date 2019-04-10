@@ -10,7 +10,7 @@ import java.util.Optional;
 import static com.esb.plugin.designer.graph.Predicates.byPrecedingNodesOnX;
 import static java.util.stream.Collectors.toList;
 
-public class AddComponentUtilities {
+public class AddDrawableToGraphUtilities {
 
     /*
      * Finds the closest preceding (on X axis) drawable and closest on Y axis.
