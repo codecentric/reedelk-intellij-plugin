@@ -15,7 +15,6 @@ public class MoveDropTarget {
     public Optional<FlowGraph> drop(int x, int y, FlowGraph graph, Drawable dropped) {
         Point dropPoint = new Point(x, y);
 
-        // Steps when we drop:
         if (graph == null) {
             graph = new FlowGraphImpl();
         }
@@ -23,9 +22,8 @@ public class MoveDropTarget {
         // 1. Copy the original graph
         FlowGraph copy = graph.copy();
 
-        // 2. Remove the dropped node from the copy graph
-        // Get the predecessors of the node and connect it to the successors
-        java.util.List<Drawable> predecessors = graph.predecessors(dropped);
+        // 2. Remove the dropped node from the copy graph (connect predecessors to successors)
+        List<Drawable> predecessors = graph.predecessors(dropped);
         List<Drawable> successors = graph.successors(dropped);
         if (predecessors.isEmpty()) {
             copy.root(successors.get(0));
@@ -36,19 +34,15 @@ public class MoveDropTarget {
                 }
             }
         }
-
         copy.remove(dropped);
 
         // 3. Remove the dropped node from any scope it might belong to
         Optional<ScopedDrawable> scopeContainingDroppedDrawable = ScopeUtilities.findScope(copy, dropped);
-        scopeContainingDroppedDrawable
-                .ifPresent(scopedDrawable -> scopedDrawable.removeFromScope(dropped));
-
-        FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
-
-        Connector connector = new DrawableConnector(modifiableGraph, dropped);
+        scopeContainingDroppedDrawable.ifPresent(scopedDrawable -> scopedDrawable.removeFromScope(dropped));
 
         // 4. Add the dropped component back to the graph to the dropped position.
+        FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
+        Connector connector = new DrawableConnector(modifiableGraph, dropped);
         AddDrawableToGraph componentAdder = new AddDrawableToGraph(modifiableGraph, dropPoint, connector);
         componentAdder.add();
 
@@ -56,7 +50,8 @@ public class MoveDropTarget {
         if (modifiableGraph.isChanged()) {
             return Optional.of(modifiableGraph);
         }
-        // Re-add the node to the scope if nothing was changed.
+
+        // 6. Re-add the node to the scope if the original graph was not changed.
         scopeContainingDroppedDrawable
                 .ifPresent(scopedDrawable -> scopedDrawable.addToScope(dropped));
 
