@@ -1,6 +1,7 @@
 package com.esb.plugin.designer.graph;
 
 import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.manager.MoveDropTarget;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

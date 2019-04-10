@@ -1,6 +1,9 @@
-package com.esb.plugin.designer.graph;
+package com.esb.plugin.designer.graph.manager;
 
 import com.esb.internal.commons.FileUtils;
+import com.esb.plugin.designer.graph.DropListener;
+import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.FlowGraphChangeListener;
 import com.esb.plugin.designer.graph.builder.FlowGraphBuilder;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.intellij.openapi.Disposable;

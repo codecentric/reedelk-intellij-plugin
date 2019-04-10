@@ -1,5 +1,9 @@
-package com.esb.plugin.designer.graph;
+package com.esb.plugin.designer.graph.manager;
 
+import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.FlowGraphChangeAware;
+import com.esb.plugin.designer.graph.FlowGraphImpl;
+import com.esb.plugin.designer.graph.ScopeUtilities;
 import com.esb.plugin.designer.graph.action.AddDrawableToGraph;
 import com.esb.plugin.designer.graph.connector.Connector;
 import com.esb.plugin.designer.graph.connector.DrawableConnector;

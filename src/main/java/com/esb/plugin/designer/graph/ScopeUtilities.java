@@ -25,7 +25,6 @@ public class ScopeUtilities {
         return false;
     }
 
-
     public static Optional<ScopedDrawable> findScope(FlowGraph graph, Drawable target) {
         return graph.nodes()
                 .stream()

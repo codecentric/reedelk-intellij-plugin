@@ -4,6 +4,7 @@ import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.drawable.ChoiceDrawable;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.GenericComponentDrawable;
+import com.esb.plugin.designer.graph.layout.FlowGraphLayout;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
