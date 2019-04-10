@@ -1,7 +1,8 @@
 package com.esb.plugin.designer.graph.dragdrop;
 
 import com.esb.plugin.designer.editor.component.Component;
-import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.AddComponent;
+import com.esb.plugin.designer.graph.FlowGraphImpl;
 import com.esb.plugin.designer.graph.drawable.ChoiceDrawable;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.GenericComponentDrawable;
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -46,27 +46,23 @@ class AddComponentTest {
         @Test
         void shouldCorrectlyAddRootComponent() {
             // Given
-            FlowGraph graph = new FlowGraph();
+            FlowGraphImpl graph = new FlowGraphImpl();
             Point dropPoint = new Point(20, 20);
 
             // When
             AddComponent componentAdder = new AddComponent(graph, dropPoint, root);
-            Optional<FlowGraph> optionalGraph = componentAdder.add();
+            boolean modified = componentAdder.add();
 
             // Then
-            assertThat(optionalGraph.isPresent()).isTrue();
-
-            FlowGraph modifiedGraph = optionalGraph.get();
-            assertThat(modifiedGraph).isNotEqualTo(graph);
-
-            assertThat(modifiedGraph.nodesCount()).isEqualTo(1);
-            assertThat(modifiedGraph.root()).isEqualTo(root);
+            assertThat(modified).isTrue();
+            assertThat(graph.nodesCount()).isEqualTo(1);
+            assertThat(graph.root()).isEqualTo(root);
         }
 
         @Test
         void shouldCorrectlyReplaceRootComponentWhenXCoordinateIsSmallerThanCurrentRoot() {
             // Given
-            FlowGraph graph = new FlowGraph();
+            FlowGraphImpl graph = new FlowGraphImpl();
             graph.root(root);
             root.setPosition(20, 20);
 
@@ -74,16 +70,16 @@ class AddComponentTest {
 
             // When
             AddComponent componentAdder = new AddComponent(graph, dropPoint, n1);
-            Optional<FlowGraph> optionalGraph = componentAdder.add();
+            boolean modified = componentAdder.add();
 
             // Then
-            FlowGraph modifiedGraph = optionalGraph.get();
-            assertThat(modifiedGraph.nodesCount()).isEqualTo(2);
+            assertThat(modified).isTrue();
+            assertThat(graph.nodesCount()).isEqualTo(2);
 
-            Drawable newRoot = modifiedGraph.root();
+            Drawable newRoot = graph.root();
             assertThat(newRoot).isEqualTo(n1);
 
-            List<Drawable> successorsOfRoot = modifiedGraph.successors(newRoot);
+            List<Drawable> successorsOfRoot = graph.successors(newRoot);
 
             // Old root has been replaced by n1, therefore successor of n1 is root.
             assertThat(successorsOfRoot).containsExactly(root);
@@ -98,7 +94,7 @@ class AddComponentTest {
         @Test
         void shouldAddComponentAfterRootAsLast() {
             // Given
-            FlowGraph graph = new FlowGraph();
+            FlowGraphImpl graph = new FlowGraphImpl();
             graph.root(root);
             root.setPosition(20, 20);
 
@@ -106,23 +102,23 @@ class AddComponentTest {
 
             // When
             AddComponent componentAdder = new AddComponent(graph, dropPoint, n1);
-            Optional<FlowGraph> optionalFlowGraph = componentAdder.add();
+            boolean modified = componentAdder.add();
 
             // Then
-            FlowGraph modifiedGraph = optionalFlowGraph.get();
-            assertThat(modifiedGraph.nodesCount()).isEqualTo(2);
+            assertThat(modified).isTrue();
+            assertThat(graph.nodesCount()).isEqualTo(2);
 
-            Drawable root = modifiedGraph.root();
+            Drawable root = graph.root();
             assertThat(root).isEqualTo(root);
 
-            List<Drawable> successorOfRoot = modifiedGraph.successors(root);
+            List<Drawable> successorOfRoot = graph.successors(root);
             assertThat(successorOfRoot).containsExactly(n1);
         }
 
         @Test
         void shouldAddComponentBetweenRootAndSuccessor() {
             // Given
-            FlowGraph graph = new FlowGraph();
+            FlowGraphImpl graph = new FlowGraphImpl();
 
             graph.root(root);
             root.setPosition(20, 20);
@@ -134,17 +130,17 @@ class AddComponentTest {
 
             // When
             AddComponent componentAdder = new AddComponent(graph, dropPoint, n1);
-            Optional<FlowGraph> optionalFlowGraph = componentAdder.add();
+            boolean modified = componentAdder.add();
 
             // Then
-            FlowGraph modifiedGraph = optionalFlowGraph.get();
-            assertThat(modifiedGraph.nodesCount()).isEqualTo(3);
+            assertThat(modified).isTrue();
+            assertThat(graph.nodesCount()).isEqualTo(3);
 
-            Drawable root = modifiedGraph.root();
-            List<Drawable> successorOfRoot = modifiedGraph.successors(root);
+            Drawable root = graph.root();
+            List<Drawable> successorOfRoot = graph.successors(root);
             assertThat(successorOfRoot).containsExactly(n1);
 
-            List<Drawable> successorsOfN1 = modifiedGraph.successors(n1);
+            List<Drawable> successorsOfN1 = graph.successors(n1);
             assertThat(successorsOfN1).containsExactly(n2);
         }
     }

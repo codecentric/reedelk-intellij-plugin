@@ -1,6 +1,6 @@
 package com.esb.plugin.designer.graph.builder;
 
-import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.FlowGraphImpl;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.StopDrawable;
 import org.json.JSONArray;
@@ -24,12 +24,12 @@ class ChoiceDrawableBuilderTest extends AbstractBuilderTest {
     @Mock
     private Drawable root;
 
-    private FlowGraph graph;
+    private FlowGraphImpl graph;
     private ChoiceDrawableBuilder builder;
 
     @BeforeEach
     void setUp() {
-        this.graph = new FlowGraph();
+        this.graph = new FlowGraphImpl();
         this.graph.add(null, this.root);
         this.builder = new ChoiceDrawableBuilder();
     }

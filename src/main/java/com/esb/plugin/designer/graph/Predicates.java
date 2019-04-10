@@ -1,12 +1,11 @@
-package com.esb.plugin.designer.graph.dragdrop;
+package com.esb.plugin.designer.graph;
 
 import com.esb.plugin.designer.Tile;
-import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 
 import java.util.function.Predicate;
 
-public class DragAndDropPredicates {
+public class Predicates {
 
     public static Predicate<Drawable> byPrecedingNodesOnX(FlowGraph graph, int dropX) {
         return preceding -> {

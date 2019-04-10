@@ -1,8 +1,6 @@
-package com.esb.plugin.designer.graph.layout;
+package com.esb.plugin.designer.graph;
 
 import com.esb.plugin.designer.Tile;
-import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.dragdrop.ScopeUtilities;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 

@@ -1,6 +1,6 @@
 package com.esb.plugin.designer.graph.builder;
 
-import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.FlowGraphImpl;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -26,12 +26,12 @@ class ForkJoinDrawableBuilderTest extends AbstractBuilderTest {
     @Mock
     private Drawable root;
 
-    private FlowGraph graph;
+    private FlowGraphImpl graph;
     private ForkJoinDrawableBuilder builder;
 
     @BeforeEach
     void setUp() {
-        this.graph = new FlowGraph();
+        this.graph = new FlowGraphImpl();
         this.graph.add(null, root);
         this.builder = new ForkJoinDrawableBuilder();
     }

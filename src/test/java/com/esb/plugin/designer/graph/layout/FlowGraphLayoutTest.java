@@ -1,7 +1,8 @@
 package com.esb.plugin.designer.graph.layout;
 
 import com.esb.plugin.designer.editor.component.Component;
-import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.FlowGraphImpl;
+import com.esb.plugin.designer.graph.FlowGraphLayout;
 import com.esb.plugin.designer.graph.drawable.ChoiceDrawable;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.GenericComponentDrawable;
@@ -25,7 +26,7 @@ class FlowGraphLayoutTest {
         // Given
         Drawable n1 = new GenericComponentDrawable(new Component("n1"));
 
-        FlowGraph graph = new FlowGraph();
+        FlowGraphImpl graph = new FlowGraphImpl();
         graph.add(null, n1);
 
         // When
@@ -40,7 +41,7 @@ class FlowGraphLayoutTest {
         // Given
         Drawable choice = new ChoiceDrawable(new Component("choice"));
 
-        FlowGraph graph = new FlowGraph();
+        FlowGraphImpl graph = new FlowGraphImpl();
         graph.add(null, choice);
 
         // When
@@ -57,7 +58,7 @@ class FlowGraphLayoutTest {
         Drawable choice1 = new ChoiceDrawable(new Component("choice1"));
         Drawable choice2 = new ChoiceDrawable(new Component("choice2"));
 
-        FlowGraph graph = new FlowGraph();
+        FlowGraphImpl graph = new FlowGraphImpl();
         graph.add(null, root);
         graph.add(root, choice1);
         graph.add(choice1, choice2);
@@ -77,7 +78,7 @@ class FlowGraphLayoutTest {
         Drawable choice2 = new ChoiceDrawable(new Component("choice2"));
         Drawable choice3 = new ChoiceDrawable(new Component("choice3"));
 
-        FlowGraph graph = new FlowGraph();
+        FlowGraphImpl graph = new FlowGraphImpl();
         graph.add(null, root);
         graph.add(root, choice1);
         graph.add(choice1, choice2);

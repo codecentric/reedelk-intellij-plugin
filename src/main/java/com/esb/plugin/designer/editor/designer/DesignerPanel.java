@@ -4,9 +4,9 @@ import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.editor.DesignerPanelDropListener;
 import com.esb.plugin.designer.editor.GraphChangeListener;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.FlowGraphLayout;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.decorators.NothingSelectedDrawable;
-import com.esb.plugin.designer.graph.layout.FlowGraphLayout;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
 
@@ -42,8 +42,8 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     public DesignerPanel() {
         setBackground(BACKGROUND_COLOR);
-        addMouseMotionListener(this);
         addMouseListener(this);
+        addMouseMotionListener(this);
     }
 
     @Override
@@ -148,12 +148,18 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     public void mouseReleased(MouseEvent e) {
         if (dragging) {
             dragging = false;
-            int x = e.getX();
-            int y = e.getY();
-            selected.drag(x, y);
+            int dragX = e.getX();
+            int dragY = e.getY();
+            selected.drag(dragX, dragY);
             selected.release();
-            if (!(selected instanceof NothingSelectedDrawable)) {
-                designerPanelDropListener.drop(x, y, selected);
+
+            if (Math.abs(dragX - offsetx - selected.x()) > 15 ||
+                    Math.abs(dragY - offsety - selected.y()) > 15) {
+                if (!(selected instanceof NothingSelectedDrawable)) {
+                    designerPanelDropListener.drop(dragX, dragY, selected);
+                }
+            } else {
+                repaint();
             }
         }
     }

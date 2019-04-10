@@ -1,10 +1,10 @@
 package com.esb.plugin.designer.graph.drawable.decorators;
 
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.dragdrop.ScopeUtilities;
+import com.esb.plugin.designer.graph.FlowGraphLayout;
+import com.esb.plugin.designer.graph.ScopeUtilities;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
-import com.esb.plugin.designer.graph.layout.FlowGraphLayout;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 

@@ -1,17 +1,16 @@
-package com.esb.plugin.designer.graph.dragdrop;
+package com.esb.plugin.designer.graph;
 
 import com.esb.plugin.designer.Tile;
-import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 
 import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
-import static com.esb.plugin.designer.graph.dragdrop.DragAndDropPredicates.byPrecedingNodesOnX;
+import static com.esb.plugin.designer.graph.Predicates.byPrecedingNodesOnX;
 import static java.util.stream.Collectors.toList;
 
-public class GraphNodeAdderUtilities {
+public class AddComponentUtilities {
 
     /*
      * Finds the closest preceding (on X axis) drawable and closest on Y axis.

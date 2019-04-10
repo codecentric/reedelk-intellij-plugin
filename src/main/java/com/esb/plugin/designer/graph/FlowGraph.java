@@ -8,98 +8,35 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkState;
+public interface FlowGraph {
 
-public class FlowGraph {
+    void root(@NotNull Drawable n1);
 
-    private DirectedGraph<Drawable> graph;
+    void add(@NotNull Drawable n1);
 
-    public FlowGraph() {
-    }
+    void add(@Nullable Drawable n1, @NotNull Drawable n2);
 
-    private FlowGraph(DirectedGraph<Drawable> graph) {
-        this.graph = graph;
-    }
+    void add(@NotNull Drawable n1, @NotNull Drawable n2, int index);
 
-    public void add(@NotNull Drawable n1) {
-        graph.addNode(n1);
-    }
+    void remove(Drawable n1);
 
-    public void root(@NotNull Drawable n1) {
-        if (graph == null) {
-            graph = new DirectedGraph<>(n1);
-        } else {
-            graph.root(n1);
-        }
-    }
+    void remove(Drawable n1, Drawable n2);
 
-    public void add(@Nullable Drawable n1, @NotNull Drawable n2) {
-        if (n1 == null) {
-            checkState(graph == null, "Root was not null");
-            graph = new DirectedGraph<>(n2);
-        } else {
-            graph.putEdge(n1, n2);
-        }
-    }
+    List<Drawable> successors(@NotNull Drawable n1);
 
-    public void add(@NotNull Drawable n1, @NotNull Drawable n2, int index) {
-        graph.putEdge(n1, n2, index);
-    }
+    List<Drawable> predecessors(@NotNull Drawable n1);
 
-    public void remove(Drawable n1) {
-        graph.removeNode(n1);
-    }
+    int nodesCount();
 
-    public void remove(Drawable n1, Drawable n2) {
-        checkArgument(n1 != null, "n1");
-        checkArgument(n2 != null, "n2");
-        graph.removeEdge(n1, n2);
-    }
+    Collection<Drawable> nodes();
 
-    public List<Drawable> successors(@NotNull Drawable n1) {
-        return graph.successors(n1);
-    }
+    boolean isEmpty();
 
-    public List<Drawable> predecessors(@NotNull Drawable target) {
-        return graph.predecessors(target);
-    }
+    void breadthFirstTraversal(@NotNull Consumer<Drawable> consumer);
 
-    public int nodesCount() {
-        return graph.nodes().size();
-    }
+    Drawable root();
 
-    public Collection<Drawable> nodes() {
-        checkState(graph != null, "It is not possible to call node on an un-initialized graph");
-        return graph.nodes();
-    }
+    FlowGraph copy();
 
-    public boolean isEmpty() {
-        return graph == null || graph.nodes().isEmpty();
-    }
-
-    public void breadthFirstTraversal(@NotNull Drawable drawable, @NotNull Consumer<Drawable> consumer) {
-        graph.breadthFirstTraversal(drawable, consumer);
-    }
-
-    public void breadthFirstTraversal(@NotNull Consumer<Drawable> consumer) {
-        graph.breadthFirstTraversal(graph.root(), consumer);
-    }
-
-    public Drawable root() {
-        return graph.root();
-    }
-
-    public FlowGraph copy() {
-        if (graph == null) {
-            return new FlowGraph();
-        } else {
-            return new FlowGraph(graph.copy());
-        }
-    }
-
-    public void removeEdgesStartingFrom(Drawable drawable) {
-        graph.removeEdgesStartingFrom(drawable);
-    }
-
+    void removeEdgesStartingFrom(Drawable drawable);
 }

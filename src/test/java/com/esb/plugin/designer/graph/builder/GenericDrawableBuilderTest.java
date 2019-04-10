@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.graph.builder;
 
 import com.esb.plugin.designer.editor.component.Component;
-import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.FlowGraphImpl;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,12 +17,12 @@ class GenericDrawableBuilderTest extends AbstractBuilderTest {
     @Mock
     private Drawable root;
 
-    private FlowGraph graph;
+    private FlowGraphImpl graph;
     private GenericDrawableBuilder builder;
 
     @BeforeEach
     void setUp() {
-        this.graph = new FlowGraph();
+        this.graph = new FlowGraphImpl();
         this.graph.add(null, this.root);
         this.builder = new GenericDrawableBuilder();
     }

@@ -1,9 +1,10 @@
 package com.esb.plugin.designer.editor;
 
 import com.esb.internal.commons.FileUtils;
+import com.esb.plugin.designer.graph.AddComponent;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.FlowGraphImpl;
 import com.esb.plugin.designer.graph.builder.FlowGraphBuilder;
-import com.esb.plugin.designer.graph.dragdrop.AddComponent;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.DrawableFactory;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
@@ -22,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
@@ -32,7 +34,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import static com.google.common.base.Preconditions.checkState;
+import static java.awt.datatransfer.DataFlavor.stringFlavor;
 import static java.awt.dnd.DnDConstants.ACTION_COPY_OR_MOVE;
+import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 
 /**
@@ -47,10 +52,11 @@ public class GraphManager extends DropTarget implements DesignerPanelDropListene
     private MessageBusConnection busConnection;
 
     GraphManager(Project project, VirtualFile managedGraphFile) {
+        this.graph = new FlowGraphImpl();
         this.busConnection = project.getMessageBus().connect();
         this.busConnection.subscribe(FILE_EDITOR_MANAGER, this);
 
-        buildGraph(managedGraphFile)
+        buildFlowGraph(managedGraphFile)
                 .ifPresent(((Consumer<FlowGraph>) fromFileGraph -> graph = fromFileGraph)
                         .andThen(graph -> notifyGraphUpdated()));
     }
@@ -59,7 +65,7 @@ public class GraphManager extends DropTarget implements DesignerPanelDropListene
     public void documentChanged(@NotNull DocumentEvent event) {
         Document document = event.getDocument();
         String json = document.getText();
-        buildGraph(json)
+        buildFlowGraph(json)
                 .ifPresent(((Consumer<FlowGraph>) fromFileGraph -> graph = fromFileGraph)
                         .andThen(graph -> notifyGraphUpdated()));
     }
@@ -77,70 +83,89 @@ public class GraphManager extends DropTarget implements DesignerPanelDropListene
     }
 
     @Override
-    public synchronized void drop(DropTargetDropEvent dropEvent) {
-
-        try {
-            String componentName = (String) dropEvent.getTransferable().getTransferData(DataFlavor.stringFlavor);
-
-            Point location = dropEvent.getLocation();
-            Drawable componentToAdd = DrawableFactory.get(componentName);
-
-            AddComponent nodeAdder = new AddComponent(graph, location, componentToAdd);
-            Optional<FlowGraph> modifiedGraph = nodeAdder.add();
-
-            if (modifiedGraph.isPresent()) {
-                modifiedGraph.ifPresent(((Consumer<FlowGraph>) updatedGraph -> graph = updatedGraph)
-                        .andThen(updatedGraph -> dropEvent.acceptDrop(ACTION_COPY_OR_MOVE))
-                        .andThen(updatedGraph -> notifyGraphUpdated()));
-            } else {
-                // Drop rejected if the graph was not modified.
-                dropEvent.rejectDrop();
-            }
-        } catch (UnsupportedFlavorException | IOException e) {
-            dropEvent.rejectDrop();
-        }
-    }
-
-    @Override
     public void dispose() {
         this.busConnection.disconnect();
     }
 
     @Override
+    public synchronized void drop(DropTargetDropEvent dropEvent) {
+
+        Transferable transferable = dropEvent.getTransferable();
+
+        DataFlavor[] transferDataFlavor = transferable.getTransferDataFlavors();
+        if (!asList(transferDataFlavor).contains(stringFlavor)) {
+            dropEvent.rejectDrop();
+            return;
+        }
+
+        String componentName = null;
+        try {
+            componentName = (String) transferable.getTransferData(stringFlavor);
+        } catch (UnsupportedFlavorException | IOException e) {
+            dropEvent.rejectDrop();
+        }
+
+        checkState(componentName != null, "Component name");
+        checkState(graph != null, "Graph must not be null");
+
+        Point location = dropEvent.getLocation();
+        Drawable componentToAdd = DrawableFactory.get(componentName);
+
+        FlowGraph modifiableGraph = graph.copy();
+        AddComponent nodeAdder = new AddComponent(modifiableGraph, location, componentToAdd);
+        boolean modified = nodeAdder.add();
+
+        if (modified) {
+            graph = modifiableGraph;
+            dropEvent.acceptDrop(ACTION_COPY_OR_MOVE);
+            notifyGraphUpdated();
+        } else {
+            dropEvent.rejectDrop();
+        }
+    }
+
+    @Override
     public void drop(int x, int y, Drawable dropped) {
+        // Steps when we drop:
+
+        // 1. Copy the original graph
+        FlowGraph modifiableGraph = graph.copy();
+
+        // 2. Remove the dropped node from the copy graph
         // Get the predecessors of the node and connect it to the successors
         List<Drawable> predecessors = graph.predecessors(dropped);
         List<Drawable> successors = graph.successors(dropped);
         if (predecessors.isEmpty()) {
-            graph.root(successors.get(0));
+            modifiableGraph.root(successors.get(0));
         } else {
             for (Drawable predecessor : predecessors) {
                 for (Drawable successor : successors) {
-                    graph.add(predecessor, successor);
+                    modifiableGraph.add(predecessor, successor);
                 }
             }
         }
-        graph.remove(dropped);
 
-        // We remove the node from any scope it might belong to
-        removeFromAnyScope(dropped);
+        modifiableGraph.remove(dropped);
 
-        // Need to copy over the node, and remove it from its previous place.
-        AddComponent componentAdder = new AddComponent(graph, new Point(x, y), dropped);
-        Optional<FlowGraph> addedNode = componentAdder.add();
-
-        addedNode
-                .ifPresent(((Consumer<FlowGraph>) updatedGraph -> graph = updatedGraph)
-                        .andThen(updatedGraph -> notifyGraphUpdated()));
-    }
-
-    private void removeFromAnyScope(Drawable dropped) {
-        graph.breadthFirstTraversal(drawable -> {
+        // 3. Remove the dropped node from any scope it might belong to
+        modifiableGraph.breadthFirstTraversal(drawable -> {
             if (drawable instanceof ScopedDrawable) {
                 ((ScopedDrawable) drawable).removeFromScope(dropped);
             }
         });
+
+        // 4. Add the dropped component back to the graph to the dropped position.
+        AddComponent componentAdder = new AddComponent(graph, new Point(x, y), dropped);
+        boolean modified = componentAdder.add();
+
+        // 5. If the copy of the graph was changed, then update the graph
+        if (modified) {
+            graph = modifiableGraph;
+            notifyGraphUpdated();
+        }
+
     }
+
 
     void addGraphChangeListener(GraphChangeListener listener) {
         this.listener = listener;
@@ -149,16 +174,16 @@ public class GraphManager extends DropTarget implements DesignerPanelDropListene
         }
     }
 
-    private Optional<FlowGraph> buildGraph(VirtualFile file) {
+    private Optional<FlowGraph> buildFlowGraph(VirtualFile file) {
         try {
             String json = FileUtils.readFrom(new URL(file.getUrl()));
-            return buildGraph(json);
+            return buildFlowGraph(json);
         } catch (MalformedURLException e) {
             return Optional.empty();
         }
     }
 
-    private Optional<FlowGraph> buildGraph(String json) {
+    private Optional<FlowGraph> buildFlowGraph(String json) {
         try {
             FlowGraphBuilder builder = new FlowGraphBuilder(json);
             return Optional.of(builder.graph());

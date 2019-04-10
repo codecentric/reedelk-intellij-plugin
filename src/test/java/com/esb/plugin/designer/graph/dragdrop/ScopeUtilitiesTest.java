@@ -1,7 +1,8 @@
 package com.esb.plugin.designer.graph.dragdrop;
 
 import com.esb.plugin.designer.editor.component.Component;
-import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.FlowGraphImpl;
+import com.esb.plugin.designer.graph.ScopeUtilities;
 import com.esb.plugin.designer.graph.drawable.ChoiceDrawable;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.GenericComponentDrawable;
@@ -51,7 +52,7 @@ class ScopeUtilitiesTest {
         @Test
         void shouldReturnCorrectScope() {
             // Given
-            FlowGraph graph = new FlowGraph();
+            FlowGraphImpl graph = new FlowGraphImpl();
             graph.add(null, root);
             graph.add(root, choice1);
             graph.add(choice1, choice2);
@@ -76,7 +77,7 @@ class ScopeUtilitiesTest {
         @Test
         void shouldReturnTrueWhenNoSuccessors() {
             // Given
-            FlowGraph graph = new FlowGraph();
+            FlowGraphImpl graph = new FlowGraphImpl();
             graph.add(null, root);
             graph.add(root, choice1);
             graph.add(choice1, n1);
@@ -93,7 +94,7 @@ class ScopeUtilitiesTest {
         @Test
         void shouldReturnTrueWhenOneSuccessorInAnotherScope() {
             // Given
-            FlowGraph graph = new FlowGraph();
+            FlowGraphImpl graph = new FlowGraphImpl();
             graph.add(null, root);
             graph.add(root, choice1);
             graph.add(choice1, choice2);
@@ -114,7 +115,7 @@ class ScopeUtilitiesTest {
         @Test
         void shouldReturnTrueWhenOneSuccessorIsNotInAnyScope() {
             // Given
-            FlowGraph graph = new FlowGraph();
+            FlowGraphImpl graph = new FlowGraphImpl();
             graph.add(null, root);
             graph.add(root, choice1);
             graph.add(choice1, choice2);
@@ -133,7 +134,7 @@ class ScopeUtilitiesTest {
         @Test
         void shouldReturnTrueWhenScopedDrawableWithoutChildren() {
             // Given
-            FlowGraph graph = new FlowGraph();
+            FlowGraphImpl graph = new FlowGraphImpl();
             graph.add(null, root);
             graph.add(root, choice1);
 
@@ -152,7 +153,7 @@ class ScopeUtilitiesTest {
         @Test
         void shouldReturnZeroWhenNodeDoesNotBelongToAnyScope() {
             // Given
-            FlowGraph graph = new FlowGraph();
+            FlowGraphImpl graph = new FlowGraphImpl();
             graph.add(null, root);
             graph.add(root, n1);
 
@@ -166,7 +167,7 @@ class ScopeUtilitiesTest {
         @Test
         void shouldReturnOneWhenNodeBelongsToOneScope() {
             // Given
-            FlowGraph graph = new FlowGraph();
+            FlowGraphImpl graph = new FlowGraphImpl();
             graph.add(null, root);
             graph.add(root, choice1);
             graph.add(choice1, n1);
@@ -183,7 +184,7 @@ class ScopeUtilitiesTest {
         @Test
         void shouldReturnTwoWhenNodeBelongsToTwoScopes() {
             // Given
-            FlowGraph graph = new FlowGraph();
+            FlowGraphImpl graph = new FlowGraphImpl();
             graph.add(null, root);
             graph.add(root, choice1);
             graph.add(choice1, choice2);
@@ -202,7 +203,7 @@ class ScopeUtilitiesTest {
         @Test
         void shouldReturnOneWhenNodeIsScopedDrawable() {
             // Given
-            FlowGraph graph = new FlowGraph();
+            FlowGraphImpl graph = new FlowGraphImpl();
             graph.add(null, root);
             graph.add(root, choice1);
 
@@ -216,7 +217,7 @@ class ScopeUtilitiesTest {
         @Test
         void shouldReturnTwoWhenNestedScopedDrawables() {
             // Given
-            FlowGraph graph = new FlowGraph();
+            FlowGraphImpl graph = new FlowGraphImpl();
             graph.add(null, root);
             graph.add(root, choice1);
             graph.add(choice1, choice2);
@@ -232,7 +233,7 @@ class ScopeUtilitiesTest {
         @Test
         void shouldReturnThreeWhenNestedScopedDrawables() {
             // Given
-            FlowGraph graph = new FlowGraph();
+            FlowGraphImpl graph = new FlowGraphImpl();
             graph.add(null, root);
             graph.add(root, choice1);
             graph.add(choice1, choice2);
@@ -251,7 +252,7 @@ class ScopeUtilitiesTest {
         @Test
         void shouldReturnTwoWhenThreeNestedScopesAndNodeIsOutFromInnermost() {
             // Given
-            FlowGraph graph = new FlowGraph();
+            FlowGraphImpl graph = new FlowGraphImpl();
             graph.add(null, root);
             graph.add(root, choice1);
             graph.add(choice1, choice2);
@@ -345,7 +346,7 @@ class ScopeUtilitiesTest {
         @Test
         void shouldReturnCorrectlyLastDrawablesFromInnerScope() {
             // Given
-            FlowGraph graph = new FlowGraph();
+            FlowGraphImpl graph = new FlowGraphImpl();
             graph.add(null, root);
             graph.add(root, choice1);
             graph.add(choice1, choice2);
@@ -369,7 +370,7 @@ class ScopeUtilitiesTest {
         @Test
         void shouldReturnCorrectlyLastDrawablesFromOuterScope() {
             // Given
-            FlowGraph graph = new FlowGraph();
+            FlowGraphImpl graph = new FlowGraphImpl();
             graph.add(null, root);
             graph.add(root, choice1);
             graph.add(choice1, choice2);
@@ -393,7 +394,7 @@ class ScopeUtilitiesTest {
         @Test
         void shouldReturnCorrectlyLastDrawablesWhenInnerDrawableIsScopedDrawable() {
             // Given
-            FlowGraph graph = new FlowGraph();
+            FlowGraphImpl graph = new FlowGraphImpl();
             graph.add(null, root);
             graph.add(root, choice1);
             graph.add(choice1, choice2);
@@ -409,7 +410,7 @@ class ScopeUtilitiesTest {
         @Test
         void shouldReturnCorrectlyLastDrawableOfScopeWhenThreeNestedScopeDrawables() {
             // Given
-            FlowGraph graph = new FlowGraph();
+            FlowGraphImpl graph = new FlowGraphImpl();
             graph.add(null, root);
             graph.add(root, choice1);
             graph.add(choice1, choice2);
@@ -428,7 +429,7 @@ class ScopeUtilitiesTest {
         @Test
         void shouldReturnCorrectlyLastDrawableOfScopeWhenNestedContainsNodes() {
             // Given
-            FlowGraph graph = new FlowGraph();
+            FlowGraphImpl graph = new FlowGraphImpl();
             graph.add(null, root);
             graph.add(root, choice1);
             graph.add(choice1, n1);
