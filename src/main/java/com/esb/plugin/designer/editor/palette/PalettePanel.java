@@ -36,6 +36,7 @@ public class PalettePanel extends JBPanel {
         tree.setRootVisible(false);
         tree.setDragEnabled(true);
         tree.setTransferHandler(new ComponentTransferHandler());
+        expandRows(tree);
 
         JBScrollPane componentsTreeScrollPanel = new JBScrollPane(tree);
 
@@ -43,6 +44,15 @@ public class PalettePanel extends JBPanel {
 
     }
 
+    private void expandRows(Tree tree) {
+        int j = tree.getRowCount();
+        int i = 0;
+        while (i < j) {
+            tree.expandRow(i);
+            i += 1;
+            j = tree.getRowCount();
+        }
+    }
     // The following tree nodes should be dynamically built.
     private DefaultMutableTreeNode rest() {
         DefaultMutableTreeNode restNode = new DefaultMutableTreeNode("REST");

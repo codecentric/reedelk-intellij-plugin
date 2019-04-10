@@ -2,7 +2,7 @@ package com.esb.plugin.designer.graph.drawable;
 
 import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.drawable.decorators.ScopeBoundaries;
+import com.esb.plugin.designer.graph.drawable.decorators.ScopeBoundariesDrawable;
 import com.esb.plugin.designer.graph.drawable.decorators.VerticalDivider;
 
 import java.awt.*;
@@ -15,14 +15,14 @@ import java.util.Set;
 public class ChoiceDrawable extends AbstractDrawable implements ScopedDrawable {
 
     private final Drawable verticalDivider;
-    private final ScopeBoundaries scopeBoundaries;
+    private final Drawable scopeBoundariesDrawable;
 
     private Set<Drawable> scope = new HashSet<>();
 
     public ChoiceDrawable(Component component) {
         super(component);
         this.verticalDivider = new VerticalDivider(this);
-        this.scopeBoundaries = new ScopeBoundaries(this);
+        this.scopeBoundariesDrawable = new ScopeBoundariesDrawable(this);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class ChoiceDrawable extends AbstractDrawable implements ScopedDrawable {
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         super.draw(graph, graphics, observer);
         verticalDivider.draw(graph, graphics, observer);
-        scopeBoundaries.draw(graph, graphics, observer);
+        scopeBoundariesDrawable.draw(graph, graphics, observer);
     }
 
     @Override
