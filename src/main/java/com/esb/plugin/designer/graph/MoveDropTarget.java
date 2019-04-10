@@ -1,5 +1,8 @@
 package com.esb.plugin.designer.graph;
 
+import com.esb.plugin.designer.graph.action.AddDrawableToGraph;
+import com.esb.plugin.designer.graph.connector.Connector;
+import com.esb.plugin.designer.graph.connector.DrawableConnector;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 
@@ -30,6 +33,7 @@ public class MoveDropTarget {
         } else {
             for (Drawable predecessor : predecessors) {
                 for (Drawable successor : successors) {
+
                     copy.add(predecessor, successor);
                 }
             }

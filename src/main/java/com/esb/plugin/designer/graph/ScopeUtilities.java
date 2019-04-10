@@ -1,6 +1,7 @@
 package com.esb.plugin.designer.graph;
 
 import com.esb.plugin.designer.Tile;
+import com.esb.plugin.designer.graph.connector.Connector;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 
@@ -10,7 +11,7 @@ import static java.util.stream.Collectors.toList;
 
 public class ScopeUtilities {
 
-    static boolean haveSameScope(FlowGraph graph, Drawable drawable1, Drawable drawable2) {
+    public static boolean haveSameScope(FlowGraph graph, Drawable drawable1, Drawable drawable2) {
         Optional<ScopedDrawable> scope1 = findScope(graph, drawable1);
         Optional<ScopedDrawable> scope2 = findScope(graph, drawable2);
         if (!scope1.isPresent() && !scope2.isPresent()) {
@@ -35,7 +36,7 @@ public class ScopeUtilities {
     }
 
     // A node might belong to multiple scopes....
-    static List<ScopedDrawable> findScopesForNode(FlowGraph graph, Drawable targetDrawable) {
+    public static List<ScopedDrawable> findScopesForNode(FlowGraph graph, Drawable targetDrawable) {
         List<ScopedDrawable> scopedDrawables = new ArrayList<>();
         Collection<Drawable> nodes = graph.nodes();
         for (Drawable node : nodes) {
@@ -56,7 +57,7 @@ public class ScopeUtilities {
         return scopedDrawables;
     }
 
-    static Collection<Drawable> findNodesConnectedToZeroOrOutsideScopeDrawables(FlowGraph graph, ScopedDrawable scope) {
+    public static Collection<Drawable> findNodesConnectedToZeroOrOutsideScopeDrawables(FlowGraph graph, ScopedDrawable scope) {
         Collection<Drawable> drawablesInTheScope = scope.getScope();
         return drawablesInTheScope.stream().filter(drawable -> {
             List<Drawable> successors = graph.successors(drawable);
@@ -65,7 +66,7 @@ public class ScopeUtilities {
         }).collect(toList());
     }
 
-    static void addToScopeIfNecessary(FlowGraph graph, Drawable closestPrecedingNode, Connector connector) {
+    public static void addToScopeIfNecessary(FlowGraph graph, Drawable closestPrecedingNode, Connector connector) {
         if (closestPrecedingNode instanceof ScopedDrawable) {
             ScopedDrawable scopedDrawable = (ScopedDrawable) closestPrecedingNode;
             connector.addToScope(scopedDrawable);
@@ -75,7 +76,7 @@ public class ScopeUtilities {
         }
     }
 
-    static int getScopeXEdge(ScopedDrawable scopedDrawable) {
+    public static int getScopeXEdge(ScopedDrawable scopedDrawable) {
         return scopedDrawable
                 .getScope()
                 .stream()
@@ -87,7 +88,7 @@ public class ScopeUtilities {
     /**
      * It finds the first node outside the given ScopedDrawable.
      */
-    static Optional<Drawable> findFirstNodeOutsideScope(FlowGraph graph, ScopedDrawable scopedDrawable) {
+    public static Optional<Drawable> findFirstNodeOutsideScope(FlowGraph graph, ScopedDrawable scopedDrawable) {
         return findFirstOutsideCollection(graph, scopedDrawable.getScope(), scopedDrawable);
     }
 

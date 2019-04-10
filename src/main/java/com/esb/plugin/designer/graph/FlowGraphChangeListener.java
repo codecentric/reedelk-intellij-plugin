@@ -1,6 +1,6 @@
 package com.esb.plugin.designer.graph;
 
-public interface GraphChangeListener {
+public interface FlowGraphChangeListener {
 
     void updated(FlowGraph graph);
 

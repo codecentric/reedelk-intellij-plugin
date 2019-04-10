@@ -1,11 +1,9 @@
 package com.esb.plugin.designer.graph;
 
-import com.esb.plugin.designer.editor.component.Component;
-import com.esb.plugin.designer.graph.drawable.ChoiceDrawable;
+import com.esb.plugin.designer.graph.action.AddDrawableToGraph;
+import com.esb.plugin.designer.graph.connector.Connector;
+import com.esb.plugin.designer.graph.connector.DrawableConnector;
 import com.esb.plugin.designer.graph.drawable.Drawable;
-import com.esb.plugin.designer.graph.drawable.GenericComponentDrawable;
-import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -15,39 +13,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class AddDrawableToGraphTest {
-
-    private Drawable root;
-    private Drawable n1;
-    private Drawable n2;
-    private Drawable n3;
-
-    private ScopedDrawable choice1;
-    private ScopedDrawable choice2;
-    private ScopedDrawable choice3;
-
-    @BeforeEach
-    void setUp() {
-        root = new GenericComponentDrawable(new Component("root"));
-        n1 = new GenericComponentDrawable(new Component("n1"));
-        n2 = new GenericComponentDrawable(new Component("n2"));
-        n3 = new GenericComponentDrawable(new Component("n3"));
-        choice1 = new ChoiceDrawable(new Component("choice1"));
-        choice2 = new ChoiceDrawable(new Component("choice2"));
-        choice3 = new ChoiceDrawable(new Component("choice3"));
-    }
-
-    private void assertIsChangedWithNodesCount(FlowGraphChangeAware graph, int nodesCount) {
-        assertThat(graph.isChanged()).isTrue();
-        assertThat(graph.nodesCount()).isEqualTo(nodesCount);
-    }
-
-    private FlowGraphChangeAware addDrawableToGraph(FlowGraph graph, Drawable drawableToAdd, Point dropPoint) {
-        FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
-        AddDrawableToGraph componentAdder = new AddDrawableToGraph(modifiableGraph, dropPoint, drawableToAdd);
-        componentAdder.add();
-        return modifiableGraph;
-    }
+class AddDrawableToGraphTest extends AbstractGraphTest {
 
     @Nested
     @DisplayName("Root tests")
@@ -144,6 +110,19 @@ class AddDrawableToGraphTest {
             List<Drawable> successorsOfN1 = graph.successors(n1);
             assertThat(successorsOfN1).containsExactly(n2);
         }
+    }
+
+    private void assertIsChangedWithNodesCount(FlowGraphChangeAware graph, int nodesCount) {
+        assertThat(graph.isChanged()).isTrue();
+        assertThat(graph.nodesCount()).isEqualTo(nodesCount);
+    }
+
+    private FlowGraphChangeAware addDrawableToGraph(FlowGraph graph, Drawable drawableToAdd, Point dropPoint) {
+        FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
+        Connector connector = new DrawableConnector(modifiableGraph, drawableToAdd);
+        AddDrawableToGraph componentAdder = new AddDrawableToGraph(modifiableGraph, dropPoint, connector);
+        componentAdder.add();
+        return modifiableGraph;
     }
 
 }

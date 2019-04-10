@@ -1,4 +1,4 @@
-package com.esb.plugin.designer.graph;
+package com.esb.plugin.designer.graph.connector;
 
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;

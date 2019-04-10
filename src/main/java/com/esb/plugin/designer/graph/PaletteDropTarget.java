@@ -1,6 +1,10 @@
 package com.esb.plugin.designer.graph;
 
 import com.esb.plugin.designer.editor.component.Component;
+import com.esb.plugin.designer.graph.action.AddDrawableToGraph;
+import com.esb.plugin.designer.graph.connector.ChoiceConnector;
+import com.esb.plugin.designer.graph.connector.Connector;
+import com.esb.plugin.designer.graph.connector.DrawableConnector;
 import com.esb.plugin.designer.graph.drawable.ChoiceDrawable;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.DrawableFactory;

@@ -6,13 +6,13 @@ import com.esb.plugin.designer.editor.palette.PalettePanel;
 import com.esb.plugin.designer.editor.properties.PropertiesPanel;
 import com.esb.plugin.designer.graph.DropListener;
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.GraphChangeListener;
+import com.esb.plugin.designer.graph.FlowGraphChangeListener;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 
 import java.awt.dnd.DropTarget;
 
 
-public class FlowEditorPanel extends ThreeComponentsSplitter implements GraphChangeListener {
+public class FlowEditorPanel extends ThreeComponentsSplitter implements FlowGraphChangeListener {
 
     private static final int DIVIDER_WIDTH = 2;
     private static final int PALETTE_SIZE = 210;

@@ -3,8 +3,8 @@ package com.esb.plugin.designer.editor.designer;
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.graph.DropListener;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.FlowGraphChangeListener;
 import com.esb.plugin.designer.graph.FlowGraphLayout;
-import com.esb.plugin.designer.graph.GraphChangeListener;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.decorators.NothingSelectedDrawable;
 import com.intellij.ui.JBColor;
@@ -24,7 +24,7 @@ import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
 
-public class DesignerPanel extends JBPanel implements MouseMotionListener, MouseListener, GraphChangeListener {
+public class DesignerPanel extends JBPanel implements MouseMotionListener, MouseListener, FlowGraphChangeListener {
 
     private final JBColor BACKGROUND_COLOR = JBColor.WHITE;
     private final Drawable NOTHING_SELECTED = new NothingSelectedDrawable();

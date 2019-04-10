@@ -1,6 +1,9 @@
-package com.esb.plugin.designer.graph;
+package com.esb.plugin.designer.graph.action;
 
 import com.esb.plugin.designer.Tile;
+import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.ScopeUtilities;
+import com.esb.plugin.designer.graph.connector.Connector;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 
@@ -8,7 +11,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
-import static com.esb.plugin.designer.graph.AddDrawableToGraphUtilities.*;
+import static com.esb.plugin.designer.graph.action.AddDrawableToGraphUtilities.*;
 import static com.google.common.base.Preconditions.checkState;
 
 /**

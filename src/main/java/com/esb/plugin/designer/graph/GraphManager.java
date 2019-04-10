@@ -33,7 +33,7 @@ import static java.util.Arrays.stream;
 public class GraphManager extends DropTarget implements DropListener, FileEditorManagerListener, DocumentListener, Disposable {
 
     private FlowGraph graph;
-    private GraphChangeListener listener;
+    private FlowGraphChangeListener listener;
     private MessageBusConnection busConnection;
     private MoveDropTarget moveDropTargetDelegate;
     private PaletteDropTarget paletteDropTargetDelegate;
@@ -102,7 +102,7 @@ public class GraphManager extends DropTarget implements DropListener, FileEditor
                 });
     }
 
-    public void addGraphChangeListener(GraphChangeListener listener) {
+    public void addGraphChangeListener(FlowGraphChangeListener listener) {
         this.listener = listener;
         if (graph != null) {
             this.listener.updated(graph);
