@@ -32,8 +32,8 @@ public class MoveDropTarget {
         componentRemover.remove();
 
         // 3. Remove the dropped node from any scope it might belong to
-        Optional<ScopedDrawable> scopeContainingDroppedDrawable = ScopeUtilities.findScope(copy, dropped);
-        scopeContainingDroppedDrawable.ifPresent(scopedDrawable -> scopedDrawable.removeFromScope(dropped));
+        Optional<ScopedDrawable> droppedDrawableScope = ScopeUtilities.findScope(copy, dropped);
+        droppedDrawableScope.ifPresent(scopedDrawable -> scopedDrawable.removeFromScope(dropped));
 
         // 4. Add the dropped component back to the graph to the dropped position.
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
@@ -46,9 +46,8 @@ public class MoveDropTarget {
             return Optional.of(modifiableGraph);
         }
 
-        // 6. Re-add the node to the scope if the original graph was not changed.
-        scopeContainingDroppedDrawable
-                .ifPresent(scopedDrawable -> scopedDrawable.addToScope(dropped));
+        // 6. Add back the node to the scope if the original graph was not changed.
+        droppedDrawableScope.ifPresent(scopedDrawable -> scopedDrawable.addToScope(dropped));
 
         return Optional.empty();
     }
