@@ -4,7 +4,9 @@ import com.esb.plugin.designer.editor.designer.DesignerPanel;
 import com.esb.plugin.designer.editor.designer.ScrollableDesignerPanel;
 import com.esb.plugin.designer.editor.palette.PalettePanel;
 import com.esb.plugin.designer.editor.properties.PropertiesPanel;
+import com.esb.plugin.designer.graph.DropListener;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.GraphChangeListener;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 
 import java.awt.dnd.DropTarget;

@@ -1,10 +1,10 @@
 package com.esb.plugin.designer.editor.designer;
 
 import com.esb.plugin.designer.Tile;
-import com.esb.plugin.designer.editor.DropListener;
-import com.esb.plugin.designer.editor.GraphChangeListener;
+import com.esb.plugin.designer.graph.DropListener;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.FlowGraphLayout;
+import com.esb.plugin.designer.graph.GraphChangeListener;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.decorators.NothingSelectedDrawable;
 import com.intellij.ui.JBColor;
@@ -151,6 +151,8 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
             // TODO: Maybe this logic should be encapsulated into the drop method below.
             // If outside the current selected area, then we consider the drop as effective.
+            // Create a method inside selected to check if given coordinates are within hover area.
+            // this logic should be encapsulated there
             boolean withinX =
                     dragX > selected.x() - Math.floorDiv(selected.width((Graphics2D) getGraphics()), 2) &&
                             dragX < selected.x() + Math.floorDiv(selected.width((Graphics2D) getGraphics()), 2);
@@ -159,6 +161,8 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
                     dragY > selected.y() - Math.floorDiv(selected.height((Graphics2D) getGraphics()), 2) &&
                             dragY < selected.y() + Math.floorDiv(selected.height((Graphics2D) getGraphics()), 2);
 
+            // TODO: The drop method from the drop listener should be called by the drawable so that
+            // TODO: we encapsulate it.
             if (!(withinX && withinY)) {
                 if (!(selected instanceof NothingSelectedDrawable)) {
                     dropListener.drop(dragX, dragY, selected);

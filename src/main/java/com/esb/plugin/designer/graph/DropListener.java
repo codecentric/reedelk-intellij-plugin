@@ -1,4 +1,4 @@
-package com.esb.plugin.designer.editor;
+package com.esb.plugin.designer.graph;
 
 import com.esb.plugin.designer.graph.drawable.Drawable;
 

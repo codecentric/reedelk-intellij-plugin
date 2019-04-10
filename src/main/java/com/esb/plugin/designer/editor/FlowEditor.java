@@ -1,5 +1,6 @@
 package com.esb.plugin.designer.editor;
 
+import com.esb.plugin.designer.graph.GraphManager;
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
 import com.intellij.codeHighlighting.HighlightingPass;
 import com.intellij.openapi.editor.event.DocumentListener;

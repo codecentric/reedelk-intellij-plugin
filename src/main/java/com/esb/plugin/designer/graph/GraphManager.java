@@ -1,7 +1,6 @@
-package com.esb.plugin.designer.editor;
+package com.esb.plugin.designer.graph;
 
 import com.esb.internal.commons.FileUtils;
-import com.esb.plugin.designer.graph.*;
 import com.esb.plugin.designer.graph.builder.FlowGraphBuilder;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.DrawableFactory;
@@ -49,7 +48,7 @@ public class GraphManager extends DropTarget implements DropListener, FileEditor
     private GraphChangeListener listener;
     private MessageBusConnection busConnection;
 
-    GraphManager(Project project, VirtualFile managedGraphFile) {
+    public GraphManager(Project project, VirtualFile managedGraphFile) {
         this.busConnection = project.getMessageBus().connect();
         this.busConnection.subscribe(FILE_EDITOR_MANAGER, this);
 
@@ -84,6 +83,10 @@ public class GraphManager extends DropTarget implements DropListener, FileEditor
         this.busConnection.disconnect();
     }
 
+    /* *
+     *
+     * Called when we drop a component from the PALETTE
+     */
     @Override
     public synchronized void drop(DropTargetDropEvent dropEvent) {
 
@@ -110,8 +113,10 @@ public class GraphManager extends DropTarget implements DropListener, FileEditor
 
         Point location = dropEvent.getLocation();
         Drawable componentToAdd = DrawableFactory.get(componentName);
+        // TODO: The component to add might be a scoped drawable.
 
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph.copy());
+        // TODO: Create a builder here
         AddDrawableToGraph nodeAdder = new AddDrawableToGraph(modifiableGraph, location, componentToAdd);
         nodeAdder.add();
 
@@ -124,6 +129,9 @@ public class GraphManager extends DropTarget implements DropListener, FileEditor
         }
     }
 
+    /**
+     * Called when we drop a drawable because we are moving it.
+     */
     @Override
     public void drop(int x, int y, Drawable dropped) {
         // Steps when we drop:
@@ -174,7 +182,7 @@ public class GraphManager extends DropTarget implements DropListener, FileEditor
     }
 
 
-    void addGraphChangeListener(GraphChangeListener listener) {
+    public void addGraphChangeListener(GraphChangeListener listener) {
         this.listener = listener;
         if (graph != null) {
             this.listener.updated(graph);

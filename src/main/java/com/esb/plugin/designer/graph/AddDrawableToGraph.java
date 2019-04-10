@@ -13,11 +13,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 /**
  * Adds to the graph a new node representing the Component Name to the given location.
- * The returned graph is a copy. An empty optional is returned if the node could not be
- * added.
- * <p>
- * This class find the best position where to place the node in the Graph given
- * the drop point location
+ * This class find the best position where to place the node in the Graph given the drop point location.
  */
 public class AddDrawableToGraph {
 
@@ -30,7 +26,6 @@ public class AddDrawableToGraph {
         this.modifiableGraph = graph;
         this.componentToAdd = componentToAdd;
     }
-
 
     public void add() {
         // First Drawable added to the canvas (it is root)
