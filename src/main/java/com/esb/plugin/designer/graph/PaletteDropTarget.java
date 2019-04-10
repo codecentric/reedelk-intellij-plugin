@@ -1,7 +1,10 @@
 package com.esb.plugin.designer.graph;
 
+import com.esb.plugin.designer.editor.component.Component;
+import com.esb.plugin.designer.graph.drawable.ChoiceDrawable;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.DrawableFactory;
+import com.esb.plugin.designer.graph.drawable.FlowReferenceDrawable;
 
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -25,35 +28,22 @@ public class PaletteDropTarget {
      * Return an empty optional if the component could not be added to the graph.
      */
     public Optional<FlowGraph> drop(DropTargetDropEvent dropEvent, FlowGraph graph) {
-
-        Transferable transferable = dropEvent.getTransferable();
-
-        DataFlavor[] transferDataFlavor = transferable.getTransferDataFlavors();
-        if (!asList(transferDataFlavor).contains(stringFlavor)) {
+        Optional<String> optionalComponentName = getComponentName(dropEvent);
+        if (!optionalComponentName.isPresent()) {
             dropEvent.rejectDrop();
             return Optional.empty();
         }
 
-        String componentName;
-        try {
-            componentName = (String) transferable.getTransferData(stringFlavor);
-        } catch (UnsupportedFlavorException | IOException e) {
-            dropEvent.rejectDrop();
-            return Optional.empty();
-        }
+        Point dropPoint = dropEvent.getLocation();
+        String componentName = optionalComponentName.get();
+
 
         if (graph == null) {
             graph = new FlowGraphImpl();
         }
-
-        Point dropPoint = dropEvent.getLocation();
-        Drawable componentToAdd = DrawableFactory.get(componentName);
-
-        // TODO: The component to add might be a scoped drawable.
-
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph.copy());
+        Connector connector = createComponentConnector(componentName, modifiableGraph);
 
-        Connector connector = new DrawableConnector(modifiableGraph, componentToAdd);
         // TODO: Create a builder here
         AddDrawableToGraph nodeAdder = new AddDrawableToGraph(modifiableGraph, dropPoint, connector);
         nodeAdder.add();
@@ -66,5 +56,33 @@ public class PaletteDropTarget {
 
         dropEvent.rejectDrop();
         return Optional.empty();
+    }
+
+    private Optional<String> getComponentName(DropTargetDropEvent dropEvent) {
+        Transferable transferable = dropEvent.getTransferable();
+        DataFlavor[] transferDataFlavor = transferable.getTransferDataFlavors();
+        if (asList(transferDataFlavor).contains(stringFlavor)) {
+            try {
+                String componentName = (String) transferable.getTransferData(stringFlavor);
+                return Optional.of(componentName);
+            } catch (UnsupportedFlavorException | IOException e) {
+                // TODO: Log this exception
+            }
+        }
+        return Optional.empty();
+    }
+
+    private Connector createComponentConnector(String componentName, FlowGraph graph) {
+        Drawable componentToAdd = DrawableFactory.get(componentName);
+
+        if (componentToAdd instanceof ChoiceDrawable) {
+            FlowGraph choiceGraph = new FlowGraphImpl();
+            choiceGraph.root(componentToAdd);
+            FlowReferenceDrawable placeholderDrawable = new FlowReferenceDrawable(new Component("Flow ref"));
+            choiceGraph.add(componentToAdd, placeholderDrawable);
+            ((ChoiceDrawable) componentToAdd).addToScope(placeholderDrawable);
+            return new ChoiceConnector(graph, choiceGraph);
+        }
+        return new DrawableConnector(graph, componentToAdd);
     }
 }
