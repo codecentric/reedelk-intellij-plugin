@@ -44,15 +44,8 @@ public class PalettePanel extends JBPanel {
 
     }
 
-    private void expandRows(Tree tree) {
-        int j = tree.getRowCount();
-        int i = 0;
-        while (i < j) {
-            tree.expandRow(i);
-            i += 1;
-            j = tree.getRowCount();
-        }
-    }
+    // TODO: These components are only temporary. They will be dinamically loaded
+    // TODO: by the framework.
     // The following tree nodes should be dynamically built.
     private DefaultMutableTreeNode rest() {
         DefaultMutableTreeNode restNode = new DefaultMutableTreeNode("REST");
@@ -77,4 +70,13 @@ public class PalettePanel extends JBPanel {
         return jmsNode;
     }
 
+    private void expandRows(Tree tree) {
+        int j = tree.getRowCount();
+        int i = 0;
+        while (i < j) {
+            tree.expandRow(i);
+            i += 1;
+            j = tree.getRowCount();
+        }
+    }
 }
