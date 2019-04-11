@@ -12,6 +12,7 @@ import com.esb.plugin.designer.graph.drawable.ChoiceDrawable;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.DrawableFactory;
 import com.esb.plugin.designer.graph.drawable.FlowReferenceDrawable;
+import com.intellij.openapi.diagnostic.Logger;
 
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -30,6 +31,8 @@ import static java.util.Arrays.asList;
  * Called when we drop a component from the PALETTE
  */
 public class PaletteDropTarget {
+
+    private static final Logger LOG = Logger.getInstance(PaletteDropTarget.class);
 
     /**
      * Return an empty optional if the component could not be added to the graph.
@@ -51,9 +54,7 @@ public class PaletteDropTarget {
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph.copy());
         Connector connector = createComponentConnector(componentName, modifiableGraph);
 
-        // TODO: Create a builder here
-        AddDrawableToGraph nodeAdder = new AddDrawableToGraph(modifiableGraph, dropPoint, connector);
-        nodeAdder.add();
+        addDroppedDrawableToGraph(modifiableGraph, dropPoint, connector);
 
         if (modifiableGraph.isChanged()) {
             graph = modifiableGraph;
@@ -73,7 +74,7 @@ public class PaletteDropTarget {
                 String componentName = (String) transferable.getTransferData(stringFlavor);
                 return Optional.of(componentName);
             } catch (UnsupportedFlavorException | IOException e) {
-                // TODO: Log this exception
+                LOG.error("Could not extract dropped component name", e);
             }
         }
         return Optional.empty();
@@ -90,5 +91,11 @@ public class PaletteDropTarget {
             return new ChoiceConnector(graph, choiceGraph);
         }
         return new DrawableConnector(graph, componentToAdd);
+    }
+
+    private void addDroppedDrawableToGraph(FlowGraph graph, Point dropPoint, Connector connector) {
+        // TODO: Create a builder here
+        AddDrawableToGraph nodeAdder = new AddDrawableToGraph(graph, dropPoint, connector);
+        nodeAdder.add();
     }
 }

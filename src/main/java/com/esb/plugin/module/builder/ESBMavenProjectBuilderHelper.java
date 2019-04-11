@@ -52,6 +52,7 @@ class ESBMavenProjectBuilderHelper {
         createDirectories(root);
     }
 
+    // TODO: Improve this.
     private void createDirectories(VirtualFile root) {
         try {
             VfsUtil.createDirectories(root.getPath() + "/src/main/resources/flows");
