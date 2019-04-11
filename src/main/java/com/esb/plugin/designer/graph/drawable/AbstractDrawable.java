@@ -80,7 +80,8 @@ public abstract class AbstractDrawable implements Drawable {
             componentDescriptionDrawable.drag(draggedX, centerDescriptionY);
         }
 
-        arrowsDrawable.draw(graph, graphics, observer);
+
+        drawConnections(graph, graphics, observer);
 
         iconDrawable.draw(graph, graphics, observer);
         componentTitleDrawable.draw(graph, graphics, observer);
@@ -196,5 +197,9 @@ public abstract class AbstractDrawable implements Drawable {
         // Center icon
         int centerIconY = y() - Math.floorDiv(totalHeight, 2) + Math.floorDiv(iconDrawableHeight, 2);
         return new Point(x(), centerIconY);
+    }
+
+    protected void drawConnections(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+        arrowsDrawable.draw(graph, graphics, observer);
     }
 }

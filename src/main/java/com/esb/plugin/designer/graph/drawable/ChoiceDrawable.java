@@ -1,16 +1,16 @@
 package com.esb.plugin.designer.graph.drawable;
 
+import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.drawable.decorators.Arrow;
 import com.esb.plugin.designer.graph.drawable.decorators.ScopeBoundariesDrawable;
 import com.esb.plugin.designer.graph.drawable.decorators.VerticalDivider;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.*;
 
 public class ChoiceDrawable extends AbstractDrawable implements ScopedDrawable {
 
@@ -35,6 +35,24 @@ public class ChoiceDrawable extends AbstractDrawable implements ScopedDrawable {
         super.draw(graph, graphics, observer);
         verticalDivider.draw(graph, graphics, observer);
         scopeBoundariesDrawable.draw(graph, graphics, observer);
+    }
+
+    @Override
+    protected void drawConnections(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+        // Draw arrows -> perpendicular to the vertical bar.
+        int halfWidth = Math.floorDiv(width(graphics), 2);
+        int verticalX = x() + halfWidth - 6;
+
+        List<Drawable> successors = graph.successors(this);
+        for (Drawable successor : successors) {
+            Point targetBaryCenter = successor.getBarycenter(graphics);
+            Point sourceBaryCenter = new Point(verticalX, targetBaryCenter.y);
+            Point target = new Point(
+                    targetBaryCenter.x - Math.floorDiv(Tile.WIDTH, 2) + 15,
+                    targetBaryCenter.y);
+            Arrow arrow = new Arrow(sourceBaryCenter, target);
+            arrow.draw(graphics);
+        }
     }
 
     @Override

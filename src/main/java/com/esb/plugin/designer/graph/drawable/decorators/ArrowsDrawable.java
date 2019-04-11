@@ -3,7 +3,6 @@ package com.esb.plugin.designer.graph.drawable.decorators;
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
-import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
@@ -20,22 +19,22 @@ public class ArrowsDrawable implements Drawable {
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-        // TODO: This is not good here
-        if (parent instanceof ScopedDrawable) return;
+        graph.successors(parent).forEach(successor -> {
 
-        graph.successors(parent)
-                .forEach(successor -> {
-                    Point sourceBaryCenter = parent.getBarycenter(graphics);
-                    Point source = new Point(
-                            sourceBaryCenter.x + Math.floorDiv(Tile.WIDTH, 2) - 15,
-                            sourceBaryCenter.y);
+            Point sourceBaryCenter = parent.getBarycenter(graphics);
+            Point source = new Point(
+                    sourceBaryCenter.x + Math.floorDiv(Tile.WIDTH, 2) - 15,
+                    sourceBaryCenter.y);
 
-                    Point target = new Point(
-                            successor.getBarycenter(graphics).x - Math.floorDiv(Tile.WIDTH, 2) + 15,
-                            successor.getBarycenter(graphics).y);
-                    Arrow arrow = new Arrow(source, target);
-                    arrow.draw(graphics);
-                });
+            Point targetBaryCenter = successor.getBarycenter(graphics);
+            Point target = new Point(
+                    targetBaryCenter.x - Math.floorDiv(Tile.WIDTH, 2) + 15,
+                    targetBaryCenter.y);
+
+            Arrow arrow = new Arrow(source, target);
+            arrow.draw(graphics);
+
+        });
     }
 
     @Override
