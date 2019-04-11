@@ -1,4 +1,4 @@
-package com.esb.plugin.designer.graph.action;
+package com.esb.plugin.designer.graph.action.strategy;
 
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.ScopeUtilities;
@@ -12,7 +12,7 @@ import java.util.Stack;
 public class PrecedingDrawableWithoutSuccessor extends AbstractAddStrategy {
 
 
-    PrecedingDrawableWithoutSuccessor(FlowGraph graph, Point dropPoint, Connector connector) {
+    public PrecedingDrawableWithoutSuccessor(FlowGraph graph, Point dropPoint, Connector connector) {
         super(graph, dropPoint, connector);
     }
 

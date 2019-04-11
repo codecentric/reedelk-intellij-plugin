@@ -1,4 +1,4 @@
-package com.esb.plugin.designer.graph.action;
+package com.esb.plugin.designer.graph.action.strategy;
 
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.ScopeUtilities;
