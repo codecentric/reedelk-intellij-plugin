@@ -253,6 +253,18 @@ public class PaletteDropTargetTest extends AbstractGraphTest {
         FlowGraph updatedGraph = optionalUpdatedGraph.get();
 
         assertThatRootIs(updatedGraph, root);
+        assertThatSuccessorsAreExactly(updatedGraph, root, choice1);
+        assertThatSuccessorsAreExactly(updatedGraph, choice1, n1, n3);
+        assertThatSuccessorsAreExactly(updatedGraph, n1, choice2);
+        assertThatSuccessorsAreExactly(updatedGraph, choice2, n2);
+        assertThatSuccessorsAreExactly(updatedGraph, n2, n7);
+        assertThatSuccessorsAreExactly(updatedGraph, n7, n8);
+        assertThatSuccessorsAreExactly(updatedGraph, n3, n4);
+        assertThatSuccessorsAreExactly(updatedGraph, n4, n5);
+        assertThatSuccessorsAreExactly(updatedGraph, n5, n6);
+
+        assertThat(choice2.getScope()).containsExactly(n2);
+        assertThat(choice1.getScope()).containsExactlyInAnyOrder(n1, n3, n4, n5, n6, n7, n8, choice2);
     }
 
     private void assertThatRootIs(FlowGraph graph, Drawable root) {
