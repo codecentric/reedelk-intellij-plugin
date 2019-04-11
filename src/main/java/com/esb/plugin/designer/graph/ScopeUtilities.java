@@ -1,5 +1,6 @@
 package com.esb.plugin.designer.graph;
 
+import com.esb.plugin.commons.StackUtils;
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.graph.connector.Connector;
 import com.esb.plugin.designer.graph.drawable.Drawable;
@@ -48,15 +49,23 @@ public class ScopeUtilities {
     private static Optional<Stack<ScopedDrawable>> doFindTargetScopes(FlowGraph graph, Drawable parent, Drawable target, Stack<ScopedDrawable> stack) {
         List<Drawable> successors = graph.successors(parent);
         for (Drawable successor : successors) {
-            if (successor == target) return Optional.of(stack);
             if (successor instanceof ScopedDrawable) {
                 stack.push((ScopedDrawable) successor);
+            }
+            if (successor == target) {
+                return Optional.of(stack);
+            }
+            if (successor instanceof ScopedDrawable) {
                 if (((ScopedDrawable) successor).scopeContains(target)) {
                     return Optional.of(stack);
                 }
             }
-            Optional<Stack<ScopedDrawable>> scopeFound = doFindTargetScopes(graph, successor, target, stack);
+            Optional<Stack<ScopedDrawable>> scopeFound = doFindTargetScopes(graph, successor, target, new Stack<>());
             if (scopeFound.isPresent()) {
+                StackUtils.reverse(scopeFound.get());
+                while (!scopeFound.get().isEmpty()) {
+                    stack.push(scopeFound.get().pop());
+                }
                 return Optional.of(stack);
             }
         }

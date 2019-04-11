@@ -44,7 +44,6 @@ public class AddDrawableToGraph {
             connector.root();
 
         } else {
-
             Optional<Drawable> optionalClosestPrecedingDrawable = findClosestPrecedingDrawable(graph, dropPoint);
             if (optionalClosestPrecedingDrawable.isPresent()) {
                 Drawable closestPrecedingDrawable = optionalClosestPrecedingDrawable.get();

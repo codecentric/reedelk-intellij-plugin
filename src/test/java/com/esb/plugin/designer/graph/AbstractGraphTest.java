@@ -24,10 +24,15 @@ public abstract class AbstractGraphTest {
     protected Drawable n6;
     protected Drawable n7;
     protected Drawable n8;
+    protected Drawable n9;
+    protected Drawable n10;
+    protected Drawable n11;
 
     protected ScopedDrawable choice1;
     protected ScopedDrawable choice2;
     protected ScopedDrawable choice3;
+    protected ScopedDrawable choice4;
+    protected ScopedDrawable choice5;
 
     @BeforeEach
     protected void setUp() {
@@ -40,9 +45,15 @@ public abstract class AbstractGraphTest {
         n6 = new GenericComponentDrawable(new Component("n6"));
         n7 = new GenericComponentDrawable(new Component("n7"));
         n8 = new GenericComponentDrawable(new Component("n8"));
+        n9 = new GenericComponentDrawable(new Component("n9"));
+        n10 = new GenericComponentDrawable(new Component("n10"));
+        n11 = new GenericComponentDrawable(new Component("n11"));
+
         choice1 = new ChoiceDrawable(new Component("choice1"));
         choice2 = new ChoiceDrawable(new Component("choice2"));
         choice3 = new ChoiceDrawable(new Component("choice3"));
+        choice4 = new ChoiceDrawable(new Component("choice4"));
+        choice5 = new ChoiceDrawable(new Component("choice5"));
     }
 
 }
