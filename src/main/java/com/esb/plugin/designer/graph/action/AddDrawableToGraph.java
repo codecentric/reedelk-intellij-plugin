@@ -11,6 +11,7 @@ import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 import java.awt.*;
 import java.util.List;
 import java.util.Optional;
+import java.util.Stack;
 
 import static com.esb.plugin.designer.graph.action.AddDrawableToGraphUtilities.*;
 import static com.google.common.base.Preconditions.checkState;
@@ -77,19 +78,37 @@ public class AddDrawableToGraph {
      * - Add the node as successor.
      */
     private void precedingDrawableWithoutSuccessors(Drawable closestPrecedingNode) {
-        List<ScopedDrawable> nodeScopedDrawables = ScopeUtilities.findScopesForNode(graph, closestPrecedingNode);
-        if (nodeScopedDrawables.isEmpty()) {
+        // Find all the scopes this closest preceding node belongs to.
+        Stack<ScopedDrawable> stackOfScopes = ScopeUtilities.findScopesForNode_1(graph, closestPrecedingNode);
+
+        // If it does not belong to any scope,
+        if (stackOfScopes.isEmpty()) {
+            // If does not belong to any scope, we just add it as a predecessor.
             connector.addPredecessor(closestPrecedingNode);
-            addToScopeIfNeeded(closestPrecedingNode);
 
         } else {
-            if (dropPoint.x <= ScopeUtilities.getMaxScopeXBound(graph, nodeScopedDrawables.get(0))) {
+            // If drop point belongs to the scope of the closest Preceding node (innermost scope),
+            // then add it as predecessor and add it to the same scope.
+            ScopedDrawable innerMostScope = stackOfScopes.pop();
+            int innerMostScopeMaxXBound = ScopeUtilities.getMaxScopeXBound(graph, innerMostScope);
+            if (dropPoint.x <= innerMostScopeMaxXBound) {
                 connector.addPredecessor(closestPrecedingNode);
-                addToScopeIfNeeded(closestPrecedingNode);
+                connector.addToScope(innerMostScope);
 
             } else {
+                // Otherwise traverse up to the scopes and find where the x belongs to.
+                ScopedDrawable lastInnerMostScope = innerMostScope;
+                while (!stackOfScopes.isEmpty()) {
+                    ScopedDrawable nextInnerMostScope = stackOfScopes.pop();
+                    int nextInnerMostScopeMaxXBound = ScopeUtilities.getMaxScopeXBound(graph, nextInnerMostScope);
+                    if (dropPoint.x <= nextInnerMostScopeMaxXBound) {
+                        break;
+                    }
+                    lastInnerMostScope = nextInnerMostScope;
+                }
+
                 ScopeUtilities
-                        .findNodesConnectedToZeroOrOutsideScopeDrawables(graph, nodeScopedDrawables.get(0))
+                        .listLastDrawablesOfScope(graph, lastInnerMostScope)
                         .forEach(connector::addPredecessor);
             }
         }
@@ -125,7 +144,7 @@ public class AddDrawableToGraph {
                 // The drop point is outside the closestPrecedingNodeScope
                 // Find the scope where it belongs to.
                 ScopeUtilities
-                        .findNodesConnectedToZeroOrOutsideScopeDrawables(graph, closestPrecedingNodeScope)
+                        .listLastDrawablesOfScope(graph, closestPrecedingNodeScope)
                         .forEach(lastNode -> {
                             connector.addPredecessor(lastNode);
                             graph.remove(lastNode, successorOfClosestPrecedingNode);

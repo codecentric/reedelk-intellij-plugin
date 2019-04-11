@@ -57,6 +57,56 @@ public class ScopeUtilities {
         return scopedDrawables;
     }
 
+    /*
+     * Returns a Stack containing all the scopes the target node belongs to. The topmost
+     * element of the stack is the innermost scope this target belongs to. The last element
+     * of the stack is the outermost scope this target belongs to.
+     */
+    public static Stack<ScopedDrawable> findScopesForNode_1(FlowGraph graph, Drawable target) {
+        Stack<ScopedDrawable> scopes = new Stack<>();
+        List<Drawable> predecessors = graph.predecessors(target);
+        for (Drawable predecessor : predecessors) {
+            Stack<ScopedDrawable> allScopesFound = findScopesForNode_1(graph, predecessor);
+            reverseStack(allScopesFound);
+            while (!allScopesFound.isEmpty()) {
+                scopes.push(allScopesFound.pop());
+            }
+        }
+        if (target instanceof ScopedDrawable) {
+            scopes.push((ScopedDrawable) target);
+        }
+        return scopes;
+    }
+
+    public static <T> void reverseStack(Stack<T> stack) {
+        if (stack.isEmpty()) {
+            return;
+        }
+        // Remove bottom element from stack
+        T bottom = popBottom(stack);
+
+        // Reverse everything else in stack
+        reverseStack(stack);
+
+        // Add original bottom element to top of stack
+        stack.push(bottom);
+    }
+
+    private static <T> T popBottom(Stack<T> stack) {
+        T top = stack.pop();
+        if (stack.isEmpty()) {
+            // If we removed the last element, return it
+            return top;
+        } else {
+            // We didn't remove the last element, so remove the last element from what remains
+            T bottom = popBottom(stack);
+            // Since the element we removed in this function call isn't the bottom element,
+            // add it back onto the top of the stack where it came from
+            stack.push(top);
+            return bottom;
+        }
+    }
+
     public static void addToScopeIfNecessary(FlowGraph graph, Drawable closestPrecedingNode, Connector connector) {
         if (closestPrecedingNode instanceof ScopedDrawable) {
             ScopedDrawable scopedDrawable = (ScopedDrawable) closestPrecedingNode;
@@ -102,18 +152,6 @@ public class ScopeUtilities {
             // If exists at least one
             return !allElementsInScopeAndNestedScopes.containsAll(successors);
         }).collect(toList());
-    }
-
-    public static Collection<Drawable> findNodesConnectedToZeroOrOutsideScopeDrawables(FlowGraph graph, ScopedDrawable scope) {
-        Collection<Drawable> drawablesInTheScope = scope.getScope();
-        return drawablesInTheScope
-                .stream()
-                .filter(drawable -> {
-                    List<Drawable> successors = graph.successors(drawable);
-                    if (successors.isEmpty()) return true;
-                    return !drawablesInTheScope.containsAll(successors);
-                })
-                .collect(toList());
     }
 
     private static Collection<Drawable> collectAllScopedDrawableElements(ScopedDrawable scopedDrawable) {

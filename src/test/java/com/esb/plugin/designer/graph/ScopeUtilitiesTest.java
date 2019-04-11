@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Stack;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -520,6 +521,90 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             // Then
             assertThat(maxScopeXBound).isEqualTo(330);
         }
+    }
 
+    @Nested
+    @DisplayName("Find scopes for node tests")
+    class FindScopesForNode {
+
+        @Test
+        void shouldCorrectlyReturnStackForTwoNestedScopes() {
+            // Given
+            FlowGraph graph = new FlowGraphImpl();
+            graph.root(root);
+            graph.add(root, choice1);
+            graph.add(choice1, n1);
+            graph.add(n1, choice2);
+            graph.add(choice2, n3);
+
+            choice1.addToScope(n1);
+            choice1.addToScope(choice2);
+            choice2.addToScope(n3);
+
+            // When
+            Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesForNode_1(graph, n3);
+
+            // Then
+            assertThat(scopes.pop()).isEqualTo(choice2); // innermost is choice 2
+            assertThat(scopes.pop()).isEqualTo(choice1); // outermost is choice 1
+            assertThat(scopes).isEmpty();
+        }
+
+        @Test
+        void shouldCorrectlyReturnStackForThreeNestedScopes() {
+            // Given
+            FlowGraph graph = new FlowGraphImpl();
+            graph.root(root);
+            graph.add(root, choice1);
+            graph.add(choice1, n1);
+            graph.add(n1, choice2);
+            graph.add(choice2, n2);
+            graph.add(n2, choice3);
+            graph.add(choice3, n3);
+            graph.add(n3, n4);
+
+            choice1.addToScope(n1);
+            choice1.addToScope(choice2);
+            choice2.addToScope(n2);
+            choice2.addToScope(choice3);
+            choice3.addToScope(n3);
+            choice3.addToScope(n4);
+
+            // When
+            Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesForNode_1(graph, n4);
+
+            // Then
+            assertThat(scopes.pop()).isEqualTo(choice3);
+            assertThat(scopes.pop()).isEqualTo(choice2);
+            assertThat(scopes.pop()).isEqualTo(choice1);
+            assertThat(scopes).isEmpty();
+        }
+
+        @Test
+        void shouldCorrectlyReturnEmptyStack() {
+            // Given
+            FlowGraph graph = new FlowGraphImpl();
+            graph.root(root);
+            graph.add(root, n1);
+
+            // When
+            Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesForNode_1(graph, n1);
+
+            // Then
+            assertThat(scopes).isEmpty();
+        }
+
+        @Test
+        void shouldCorrectlyReturnEmptyStackForRoot() {
+            // Given
+            FlowGraph graph = new FlowGraphImpl();
+            graph.root(root);
+
+            // When
+            Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesForNode_1(graph, root);
+
+            // Then
+            assertThat(scopes).isEmpty();
+        }
     }
 }
