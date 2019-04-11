@@ -7,7 +7,6 @@ import com.esb.plugin.designer.graph.connector.DrawableConnector;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import java.awt.*;
 import java.awt.dnd.DropTargetDropEvent;
@@ -19,9 +18,6 @@ import static org.mockito.Mockito.*;
 public class PaletteDropTargetTest extends AbstractGraphTest {
 
     private PaletteDropTarget delegate;
-
-    @Mock
-    private Graphics2D graphics;
 
     @BeforeEach
     protected void setUp() {
