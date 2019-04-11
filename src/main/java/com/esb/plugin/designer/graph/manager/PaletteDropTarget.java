@@ -35,7 +35,7 @@ public class PaletteDropTarget {
      * Return an empty optional if the component could not be added to the graph.
      */
     public Optional<FlowGraph> drop(DropTargetDropEvent dropEvent, FlowGraph graph) {
-        Optional<String> optionalComponentName = getComponentName(dropEvent);
+        Optional<String> optionalComponentName = extractComponentName(dropEvent);
         if (!optionalComponentName.isPresent()) {
             dropEvent.rejectDrop();
             return Optional.empty();
@@ -59,13 +59,13 @@ public class PaletteDropTarget {
             graph = modifiableGraph;
             dropEvent.acceptDrop(ACTION_COPY_OR_MOVE);
             return Optional.of(graph);
+        } else {
+            dropEvent.rejectDrop();
+            return Optional.empty();
         }
-
-        dropEvent.rejectDrop();
-        return Optional.empty();
     }
 
-    private Optional<String> getComponentName(DropTargetDropEvent dropEvent) {
+    Optional<String> extractComponentName(DropTargetDropEvent dropEvent) {
         Transferable transferable = dropEvent.getTransferable();
         DataFlavor[] transferDataFlavor = transferable.getTransferDataFlavors();
         if (asList(transferDataFlavor).contains(stringFlavor)) {
@@ -79,9 +79,8 @@ public class PaletteDropTarget {
         return Optional.empty();
     }
 
-    private Connector createComponentConnector(String componentName, FlowGraph graph) {
+    Connector createComponentConnector(String componentName, FlowGraph graph) {
         Drawable componentToAdd = DrawableFactory.get(componentName);
-
         if (componentToAdd instanceof ChoiceDrawable) {
             FlowGraph choiceGraph = new FlowGraphImpl();
             choiceGraph.root(componentToAdd);

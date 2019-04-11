@@ -18,6 +18,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkState;
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
@@ -57,6 +58,13 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         // We compute again the graph layout if and only if it was updated.
         if (updated) {
             FlowGraphLayout.compute(graph, g2);
+            System.out.println("------- Graph Updated --------");
+            graph.breadthFirstTraversal(new Consumer<Drawable>() {
+                @Override
+                public void accept(Drawable drawable) {
+                    System.out.println("Name: " + drawable.component().getName() + ", x: " + drawable.x() + ", y: " + drawable.y());
+                }
+            });
             adjustWindowSize();
             updated = false;
         }

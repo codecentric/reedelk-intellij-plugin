@@ -56,15 +56,6 @@ public class ScopeUtilities {
         return scopedDrawables;
     }
 
-    public static Collection<Drawable> findNodesConnectedToZeroOrOutsideScopeDrawables(FlowGraph graph, ScopedDrawable scope) {
-        Collection<Drawable> drawablesInTheScope = scope.getScope();
-        return drawablesInTheScope.stream().filter(drawable -> {
-            List<Drawable> successors = graph.successors(drawable);
-            if (successors.isEmpty()) return true;
-            return !drawablesInTheScope.containsAll(successors);
-        }).collect(toList());
-    }
-
     public static void addToScopeIfNecessary(FlowGraph graph, Drawable closestPrecedingNode, Connector connector) {
         if (closestPrecedingNode instanceof ScopedDrawable) {
             ScopedDrawable scopedDrawable = (ScopedDrawable) closestPrecedingNode;
@@ -87,19 +78,14 @@ public class ScopeUtilities {
     /**
      * It finds the first node outside the given ScopedDrawable.
      */
-    public static Optional<Drawable> findFirstNodeOutsideScope(FlowGraph graph, ScopedDrawable scopedDrawable) {
-        return findFirstOutsideCollection(graph, scopedDrawable.getScope(), scopedDrawable);
-    }
-
-    private static Optional<Drawable> findFirstOutsideCollection(FlowGraph graph, Collection<Drawable> collection, Drawable root) {
-        for (Drawable successor : graph.successors(root)) {
-            if (!collection.contains(successor)) {
-                return Optional.of(successor);
-            }
-            Optional<Drawable> found = findFirstOutsideCollection(graph, collection, successor);
-            if (found.isPresent()) return found;
-        }
-        return Optional.empty();
+    public static Collection<Drawable> listFirstDrawablesOutsideScope(FlowGraph graph, ScopedDrawable scopedDrawable) {
+        Collection<Drawable> lastDrawablesOfScope = listLastDrawablesOfScope(graph, scopedDrawable);
+        List<Drawable> firstDrawablesOutsideScope = new ArrayList<>();
+        lastDrawablesOfScope.forEach(lastDrawableOfScope -> {
+            List<Drawable> successors = graph.successors(lastDrawableOfScope);
+            firstDrawablesOutsideScope.addAll(successors);
+        });
+        return firstDrawablesOutsideScope;
     }
 
     public static Collection<Drawable> listLastDrawablesOfScope(FlowGraph graph, ScopedDrawable scopedDrawable) {
@@ -110,6 +96,15 @@ public class ScopeUtilities {
             if (successors.isEmpty()) return true;
             // If exists at least one
             return !allElementsInScopeAndNestedScopes.containsAll(successors);
+        }).collect(toList());
+    }
+
+    public static Collection<Drawable> findNodesConnectedToZeroOrOutsideScopeDrawables(FlowGraph graph, ScopedDrawable scope) {
+        Collection<Drawable> drawablesInTheScope = scope.getScope();
+        return drawablesInTheScope.stream().filter(drawable -> {
+            List<Drawable> successors = graph.successors(drawable);
+            if (successors.isEmpty()) return true;
+            return !drawablesInTheScope.containsAll(successors);
         }).collect(toList());
     }
 

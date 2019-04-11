@@ -23,17 +23,25 @@ public class AddDrawableToGraphUtilities {
                 .stream()
                 .filter(byPrecedingNodesOnX(graph, dropPoint.x))
                 .collect(toList());
-        return findClosestOnYAxis(precedingNodes, dropPoint.y);
+        return findClosestOnYAxis(precedingNodes, dropPoint.y, dropPoint.x);
     }
 
-    private static Optional<Drawable> findClosestOnYAxis(List<Drawable> precedingNodes, int dropY) {
-        int min = Integer.MAX_VALUE;
+    // If there are two on the same Y we pick the closest on X
+    private static Optional<Drawable> findClosestOnYAxis(List<Drawable> precedingNodes, int dropY, int dropX) {
+        int minY = Integer.MAX_VALUE;
+        int minX = Integer.MAX_VALUE;
         Drawable closestPrecedingNode = null;
         for (Drawable precedingNode : precedingNodes) {
             int delta = Math.abs(precedingNode.y() - dropY);
-            if (delta < min) {
+            if (delta < minY) {
                 closestPrecedingNode = precedingNode;
-                min = delta;
+                minY = delta;
+                minX = precedingNode.x();
+            } else if (delta == minY) {
+                if (Math.abs(dropX - precedingNode.x()) < Math.abs(minX - dropX)) {
+                    closestPrecedingNode = precedingNode;
+                    minX = precedingNode.x();
+                }
             }
         }
         return Optional.ofNullable(closestPrecedingNode);

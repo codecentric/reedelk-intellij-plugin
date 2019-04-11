@@ -10,7 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-abstract class AbstractGraphTest {
+public abstract class AbstractGraphTest {
 
     protected Drawable root;
     protected Drawable n1;
@@ -22,7 +22,7 @@ abstract class AbstractGraphTest {
     protected ScopedDrawable choice3;
 
     @BeforeEach
-    void setUp() {
+    protected void setUp() {
         root = new GenericComponentDrawable(new Component("root"));
         n1 = new GenericComponentDrawable(new Component("n1"));
         n2 = new GenericComponentDrawable(new Component("n2"));

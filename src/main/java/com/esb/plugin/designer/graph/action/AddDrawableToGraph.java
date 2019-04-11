@@ -149,7 +149,7 @@ public class AddDrawableToGraph {
             if (dropPoint.y > yBottomBound && dropPoint.y < yTopBound) {
                 connector.addPredecessor(precedingScopedDrawable, successorIndex);
                 addToScopeIfNeeded(precedingScopedDrawable);
-                linkCommonSuccessors(precedingScopedDrawable);
+                connectCommonSuccessorsOf(precedingScopedDrawable);
                 return;
             }
         }
@@ -158,15 +158,13 @@ public class AddDrawableToGraph {
         // OR it is the first node to be added to the choice component.
         connector.addPredecessor(precedingScopedDrawable);
         addToScopeIfNeeded(precedingScopedDrawable);
-        linkCommonSuccessors(precedingScopedDrawable);
+        connectCommonSuccessorsOf(precedingScopedDrawable);
     }
 
-    private void linkCommonSuccessors(ScopedDrawable closestPrecedingNode) {
-        Optional<Drawable> commonSuccessor = ScopeUtilities.findFirstNodeOutsideScope(modifiableGraph, closestPrecedingNode);
-        if (commonSuccessor.isPresent()) {
-            Drawable successor = commonSuccessor.get();
-            connector.addSuccessor(successor);
-        }
+    private void connectCommonSuccessorsOf(ScopedDrawable closestPrecedingNode) {
+        ScopeUtilities
+                .listFirstDrawablesOutsideScope(modifiableGraph, closestPrecedingNode)
+                .forEach(connector::addSuccessor);
     }
 
     private void addToScopeIfNeeded(Drawable closestPrecedingNode) {
