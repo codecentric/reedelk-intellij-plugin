@@ -36,11 +36,40 @@ public class AddDrawableToGraph {
         this.connector = connector;
     }
 
-    /*
-     * Finds the closest preceding (on X axis) drawable and closest on Y axis.
-     */
+    public void add() {
+        // First Drawable added to the canvas (it is root)
+        if (graph.isEmpty()) {
+            connector.addPredecessor(null);
+
+            // Check if we are replacing the first (root) node.
+        } else if (isReplacingRoot(graph, dropPoint)) {
+            connector.add();
+            connector.addSuccessor(graph.root());
+            connector.root();
+
+        } else {
+
+            findClosestPrecedingDrawable(graph, dropPoint).ifPresent(closestPrecedingDrawable -> {
+                AddStrategy strategy;
+                if (closestPrecedingDrawable instanceof ScopedDrawable) {
+                    strategy = new PrecedingScopedDrawable(graph, dropPoint, connector);
+                } else if (graph.successors(closestPrecedingDrawable).isEmpty()) {
+                    strategy = new PrecedingDrawableWithoutSuccessor(graph, dropPoint, connector);
+                } else {
+                    // Only ScopedDrawable nodes might have multiple successors. In all other cases
+                    // a node in the flow must have at most one successor.
+                    checkState(graph.successors(closestPrecedingDrawable).size() == 1,
+                            "Successors size MUST be 1, otherwise it must be a Scoped Drawable");
+                    strategy = new PrecedingDrawableWithOneSuccessor(graph, dropPoint, connector);
+                }
+                strategy.execute(closestPrecedingDrawable);
+
+            });
+        }
+    }
+
+
     private static Optional<Drawable> findClosestPrecedingDrawable(FlowGraph graph, Point dropPoint) {
-        // Find all preceding nodes on X axis
         List<Drawable> precedingNodes = graph
                 .nodes()
                 .stream()
@@ -88,38 +117,6 @@ public class AddDrawableToGraph {
             // between preceding x and until the end of preceding + 1 position
             return true;
         };
-    }
-
-    public void add() {
-        // First Drawable added to the canvas (it is root)
-        if (graph.isEmpty()) {
-            connector.addPredecessor(null);
-
-            // Check if we are replacing the first (root) node.
-        } else if (isReplacingRoot(graph, dropPoint)) {
-            connector.add();
-            connector.addSuccessor(graph.root());
-            connector.root();
-
-        } else {
-
-            findClosestPrecedingDrawable(graph, dropPoint).ifPresent(closestPrecedingDrawable -> {
-                AddStrategy strategy;
-                if (closestPrecedingDrawable instanceof ScopedDrawable) {
-                    strategy = new PrecedingScopedDrawable(graph, dropPoint, connector);
-                } else if (graph.successors(closestPrecedingDrawable).isEmpty()) {
-                    strategy = new PrecedingDrawableWithoutSuccessor(graph, dropPoint, connector);
-                } else {
-                    // Only ScopedDrawable nodes might have multiple successors. In all other cases
-                    // a node in the flow must have at most one successor.
-                    checkState(graph.successors(closestPrecedingDrawable).size() == 1,
-                            "Successors size MUST be 1, otherwise it must be a Scoped Drawable");
-                    strategy = new PrecedingDrawableWithOneSuccessor(graph, dropPoint, connector);
-                }
-                strategy.execute(closestPrecedingDrawable);
-
-            });
-        }
     }
 
 }
