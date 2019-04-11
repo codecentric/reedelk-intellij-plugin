@@ -542,7 +542,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice2.addToScope(n3);
 
             // When
-            Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesForNode_1(graph, n3);
+            Stack<ScopedDrawable> scopes = ScopeUtilities.findTargetScopes(graph, n3);
 
             // Then
             assertThat(scopes.pop()).isEqualTo(choice2); // innermost is choice 2
@@ -571,7 +571,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice3.addToScope(n4);
 
             // When
-            Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesForNode_1(graph, n4);
+            Stack<ScopedDrawable> scopes = ScopeUtilities.findTargetScopes(graph, n4);
 
             // Then
             assertThat(scopes.pop()).isEqualTo(choice3);
@@ -588,7 +588,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             graph.add(root, n1);
 
             // When
-            Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesForNode_1(graph, n1);
+            Stack<ScopedDrawable> scopes = ScopeUtilities.findTargetScopes(graph, n1);
 
             // Then
             assertThat(scopes).isEmpty();
@@ -601,9 +601,33 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             graph.root(root);
 
             // When
-            Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesForNode_1(graph, root);
+            Stack<ScopedDrawable> scopes = ScopeUtilities.findTargetScopes(graph, root);
 
             // Then
+            assertThat(scopes).isEmpty();
+        }
+
+        @Test
+        void shouldCorrectReturnScopeWhenElementRightOutsideInnermostScope() {
+            // Given
+            FlowGraph graph = new FlowGraphImpl();
+            graph.root(root);
+            graph.add(root, choice1);
+            graph.add(choice1, n1);
+            graph.add(n1, choice2);
+            graph.add(choice2, n2);
+            graph.add(n2, n3);
+
+            choice1.addToScope(n1);
+            choice1.addToScope(choice2);
+            choice2.addToScope(n2);
+            choice1.addToScope(n3);
+
+            // When
+            Stack<ScopedDrawable> scopes = ScopeUtilities.findTargetScopes(graph, n3);
+
+            // Then
+            assertThat(scopes.pop()).isEqualTo(choice1); // scope is only choice 1
             assertThat(scopes).isEmpty();
         }
     }

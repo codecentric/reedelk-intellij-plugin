@@ -23,6 +23,7 @@ public abstract class AbstractGraphTest {
     protected Drawable n5;
     protected Drawable n6;
     protected Drawable n7;
+    protected Drawable n8;
 
     protected ScopedDrawable choice1;
     protected ScopedDrawable choice2;
@@ -38,6 +39,7 @@ public abstract class AbstractGraphTest {
         n5 = new GenericComponentDrawable(new Component("n5"));
         n6 = new GenericComponentDrawable(new Component("n6"));
         n7 = new GenericComponentDrawable(new Component("n7"));
+        n8 = new GenericComponentDrawable(new Component("n8"));
         choice1 = new ChoiceDrawable(new Component("choice1"));
         choice2 = new ChoiceDrawable(new Component("choice2"));
         choice3 = new ChoiceDrawable(new Component("choice3"));

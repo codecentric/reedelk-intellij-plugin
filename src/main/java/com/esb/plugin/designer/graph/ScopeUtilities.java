@@ -1,6 +1,5 @@
 package com.esb.plugin.designer.graph;
 
-import com.esb.plugin.commons.StackUtils;
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.graph.connector.Connector;
 import com.esb.plugin.designer.graph.drawable.Drawable;
@@ -36,47 +35,32 @@ public class ScopeUtilities {
                 .findFirst();
     }
 
-    // A node might belong to multiple scopes....
-    public static List<ScopedDrawable> findScopesForNode(FlowGraph graph, Drawable targetDrawable) {
-        List<ScopedDrawable> scopedDrawables = new ArrayList<>();
-        Collection<Drawable> nodes = graph.nodes();
-        for (Drawable node : nodes) {
-            if (node instanceof ScopedDrawable) {
-                if (((ScopedDrawable) node).getScope().contains(targetDrawable)) {
-                    // But this one might be part of another scope as well...
-                    scopedDrawables.add((ScopedDrawable) node);
-                    List<Drawable> predecessors = graph.predecessors(node);
-                    if (!predecessors.isEmpty()) {
-                        for (Drawable predecessor : predecessors) {
-                            scopedDrawables.addAll(findScopesForNode(graph, predecessor));
-                        }
-
-                    }
-                }
-            }
-        }
-        return scopedDrawables;
-    }
-
     /*
      * Returns a Stack containing all the scopes the target node belongs to. The topmost
      * element of the stack is the innermost scope this target belongs to. The last element
      * of the stack is the outermost scope this target belongs to.
      */
-    public static Stack<ScopedDrawable> findScopesForNode_1(FlowGraph graph, Drawable target) {
-        Stack<ScopedDrawable> scopes = new Stack<>();
-        List<Drawable> predecessors = graph.predecessors(target);
-        for (Drawable predecessor : predecessors) {
-            Stack<ScopedDrawable> allScopesFound = findScopesForNode_1(graph, predecessor);
-            StackUtils.reverse(allScopesFound);
-            while (!allScopesFound.isEmpty()) {
-                scopes.push(allScopesFound.pop());
+    public static Stack<ScopedDrawable> findTargetScopes(FlowGraph graph, Drawable target) {
+        Optional<Stack<ScopedDrawable>> targetScopes = doFindTargetScopes(graph, graph.root(), target, new Stack<>());
+        return targetScopes.orElseGet(Stack::new);
+    }
+
+    private static Optional<Stack<ScopedDrawable>> doFindTargetScopes(FlowGraph graph, Drawable parent, Drawable target, Stack<ScopedDrawable> stack) {
+        List<Drawable> successors = graph.successors(parent);
+        for (Drawable successor : successors) {
+            if (successor == target) return Optional.of(stack);
+            if (successor instanceof ScopedDrawable) {
+                stack.push((ScopedDrawable) successor);
+                if (((ScopedDrawable) successor).scopeContains(target)) {
+                    return Optional.of(stack);
+                }
+            }
+            Optional<Stack<ScopedDrawable>> scopeFound = doFindTargetScopes(graph, successor, target, stack);
+            if (scopeFound.isPresent()) {
+                return Optional.of(stack);
             }
         }
-        if (target instanceof ScopedDrawable) {
-            scopes.push((ScopedDrawable) target);
-        }
-        return scopes;
+        return Optional.empty();
     }
 
 
@@ -85,7 +69,7 @@ public class ScopeUtilities {
             ScopedDrawable scopedDrawable = (ScopedDrawable) closestPrecedingNode;
             connector.addToScope(scopedDrawable);
         } else {
-            List<ScopedDrawable> scopedDrawableObjects = ScopeUtilities.findScopesForNode(graph, closestPrecedingNode);
+            List<ScopedDrawable> scopedDrawableObjects = findTargetScopes(graph, closestPrecedingNode);
             scopedDrawableObjects.forEach(connector::addToScope);
         }
     }

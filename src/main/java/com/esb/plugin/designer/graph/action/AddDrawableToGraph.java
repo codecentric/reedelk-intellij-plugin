@@ -73,56 +73,43 @@ public class AddDrawableToGraph {
      * Handles the case where the closest preceding node is the LAST NODE.
      * If the closest preceding node belongs to a scope, then:
      * - if it is within the scope x edge, then add it to that scope.
-     * - if it is NOT within the scope x edge, add it outside and connect all last nodes from the scope
+     * - if it is NOT within the scope x edge, then finds in which scope it
+     * belongs to and connect it from the last elements of the last innermost scope.
+     * <p>
      * If the closest preceding node does not belong to a scope, then:
      * - Add the node as successor.
      */
     private void precedingDrawableWithoutSuccessors(Drawable closestPrecedingNode) {
         // Find all the scopes this closest preceding node belongs to.
-        Stack<ScopedDrawable> stackOfScopes = ScopeUtilities.findScopesForNode_1(graph, closestPrecedingNode);
+        Stack<ScopedDrawable> stackOfScopes = ScopeUtilities.findTargetScopes(graph, closestPrecedingNode);
 
-        // If it does not belong to any scope,
         if (stackOfScopes.isEmpty()) {
-            // If does not belong to any scope, we just add it as a predecessor.
             connector.addPredecessor(closestPrecedingNode);
-
-        } else {
-            // If drop point belongs to the scope of the closest Preceding node (innermost scope),
-            // then add it as predecessor and add it to the same scope.
-            ScopedDrawable innerMostScope = stackOfScopes.pop();
-            int innerMostScopeMaxXBound = ScopeUtilities.getMaxScopeXBound(graph, innerMostScope);
-            if (dropPoint.x <= innerMostScopeMaxXBound) {
-                connector.addPredecessor(closestPrecedingNode);
-                connector.addToScope(innerMostScope);
-
-            } else {
-                // Otherwise traverse up to the scopes and find where the x belongs to.
-                ScopedDrawable lastInnerMostScope = innerMostScope;
-                ScopedDrawable currentScope = null;
-                while (!stackOfScopes.isEmpty()) {
-                    currentScope = stackOfScopes.pop();
-                    int nextInnerMostScopeMaxXBound = ScopeUtilities.getMaxScopeXBound(graph, currentScope);
-                    if (dropPoint.x <= nextInnerMostScopeMaxXBound) {
-                        break;
-                    }
-                    lastInnerMostScope = currentScope;
-                }
-
-                // Need to find the preceding scope
-                ScopeUtilities
-                        .listLastDrawablesOfScope(graph, lastInnerMostScope)
-                        .forEach(connector::addPredecessor);
-
-                if (currentScope != null) {
-                    connector.addToScope(currentScope);
-                }
-            }
+            return;
         }
+
+        ScopedDrawable lastInnerMostScope = null;
+        ScopedDrawable currentScope = null;
+        while (!stackOfScopes.isEmpty()) {
+            currentScope = stackOfScopes.pop();
+            int maxXBound = ScopeUtilities.getMaxScopeXBound(graph, currentScope);
+            if (dropPoint.x <= maxXBound) break;
+            lastInnerMostScope = currentScope;
+        }
+
+        if (lastInnerMostScope != null) {
+            ScopeUtilities
+                    .listLastDrawablesOfScope(graph, lastInnerMostScope)
+                    .forEach(connector::addPredecessor);
+        } else {
+            connector.addPredecessor(closestPrecedingNode);
+        }
+
+        connector.addToScope(currentScope);
     }
 
 
     private void precedingDrawableWithOneSuccessor(final Drawable closestPrecedingNode, final Drawable successorOfClosestPrecedingNode) {
-
         if (ScopeUtilities.haveSameScope(graph, closestPrecedingNode, successorOfClosestPrecedingNode)) {
             if (withinYBounds(dropPoint.y, closestPrecedingNode)) {
                 connector.addPredecessor(closestPrecedingNode);
