@@ -1,47 +1,17 @@
 package com.esb.plugin.designer.graph;
 
-import com.esb.plugin.designer.editor.component.Component;
-import com.esb.plugin.designer.graph.drawable.ChoiceDrawable;
 import com.esb.plugin.designer.graph.drawable.Drawable;
-import com.esb.plugin.designer.graph.drawable.GenericComponentDrawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 
 import java.util.Collection;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
-class ScopeUtilitiesTest {
-
-    private Drawable root;
-    private Drawable n1;
-    private Drawable n2;
-    private Drawable n3;
-
-    private ScopedDrawable choice1;
-    private ScopedDrawable choice2;
-    private ScopedDrawable choice3;
-
-    @BeforeEach
-    void setUp() {
-        root = new GenericComponentDrawable(new Component("root"));
-        n1 = new GenericComponentDrawable(new Component("n1"));
-        n2 = new GenericComponentDrawable(new Component("n2"));
-        n3 = new GenericComponentDrawable(new Component("n3"));
-        choice1 = new ChoiceDrawable(new Component("choice1"));
-        choice2 = new ChoiceDrawable(new Component("choice2"));
-        choice3 = new ChoiceDrawable(new Component("choice3"));
-    }
+class ScopeUtilitiesTest extends AbstractGraphTest {
 
     @Nested
     @DisplayName("Find Scope Tests")
@@ -449,7 +419,7 @@ class ScopeUtilitiesTest {
     }
 
     @Nested
-    @DisplayName("Find First Node Outside Scope")
+    @DisplayName("Find First Node Outside Scope Tests")
     class FindFirstOutsideScope {
 
         @Test
@@ -476,5 +446,80 @@ class ScopeUtilitiesTest {
             // Then
             assertThat(drawables).isEmpty();
         }
+    }
+
+    @Nested
+    @DisplayName("Max Scope X Bound Tests")
+    class MaxScopeXBound {
+
+        @Test
+        void shouldCorrectlyReturnMaxScopeBoundWhenNestedScopes() {
+            // Given
+            FlowGraph graph = new FlowGraphImpl();
+            graph.root(root);
+            graph.add(root, choice1);
+            graph.add(choice1, n1);
+            graph.add(n1, choice2);
+            graph.add(choice2, n2);
+            graph.add(choice1, n3);
+
+            choice1.addToScope(n1);
+            choice1.addToScope(n3);
+            choice1.addToScope(choice2);
+            choice2.addToScope(n2);
+
+            root.setPosition(55, 140);
+            choice1.setPosition(165, 140);
+            choice2.setPosition(390, 75);
+            n1.setPosition(275, 75);
+            n2.setPosition(505, 75);
+            n3.setPosition(275, 210);
+
+            // When
+            int maxScopeXBound = ScopeUtilities.getMaxScopeXBound(graph, choice1);
+
+            // Then
+            // Max should be drawable with max x + half drawable's width
+            assertThat(maxScopeXBound).isEqualTo(560);
+        }
+
+        @Test
+        void shouldCorrectlyReturnMaxScopeBoundWhenScopeDoesNotContainAnyDrawable() {
+            // Given
+            FlowGraph graph = new FlowGraphImpl();
+            graph.root(root);
+            graph.add(root, choice1);
+
+            root.setPosition(55, 140);
+            choice1.setPosition(165, 140);
+
+            // When
+            int maxScopeXBound = ScopeUtilities.getMaxScopeXBound(graph, choice1);
+
+            // Then
+            assertThat(maxScopeXBound).isEqualTo(220);
+        }
+
+        @Test
+        void shouldCorrectlyReturnMaxScopeBoundWhenScopeContainsOnlyOneElement() {
+            // Given
+            FlowGraph graph = new FlowGraphImpl();
+            graph.root(root);
+            graph.add(root, choice1);
+            graph.add(choice1, n1);
+
+            root.setPosition(55, 140);
+            choice1.setPosition(165, 140);
+            n1.setPosition(275, 140);
+
+            choice1.addToScope(n1);
+
+            // When
+            int maxScopeXBound = ScopeUtilities.getMaxScopeXBound(graph, choice1);
+
+            // Then
+            assertThat(maxScopeXBound).isEqualTo(330);
+        }
+
     }
 }

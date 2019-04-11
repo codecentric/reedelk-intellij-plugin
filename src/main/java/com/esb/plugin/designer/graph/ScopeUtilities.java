@@ -4,6 +4,7 @@ import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.graph.connector.Connector;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -66,13 +67,17 @@ public class ScopeUtilities {
         }
     }
 
-    public static int getScopeXEdge(ScopedDrawable scopedDrawable) {
-        return scopedDrawable
-                .getScope()
-                .stream()
-                .mapToInt(Drawable::x)
-                .max()
-                .getAsInt() + Tile.HALF_WIDTH;
+    public static int getMaxScopeXBound(@NotNull FlowGraph graph, @NotNull ScopedDrawable scopedDrawable) {
+        Collection<Drawable> lastDrawablesOfScope = listLastDrawablesOfScope(graph, scopedDrawable);
+        int maxX = scopedDrawable.x();
+        Drawable drawableWithMaxX = scopedDrawable;
+        for (Drawable lastDrawableOfScope : lastDrawablesOfScope) {
+            if (lastDrawableOfScope.x() >= maxX) {
+                maxX = lastDrawableOfScope.x();
+                drawableWithMaxX = lastDrawableOfScope;
+            }
+        }
+        return drawableWithMaxX.x() + Tile.HALF_WIDTH;
     }
 
     /**
@@ -101,11 +106,14 @@ public class ScopeUtilities {
 
     public static Collection<Drawable> findNodesConnectedToZeroOrOutsideScopeDrawables(FlowGraph graph, ScopedDrawable scope) {
         Collection<Drawable> drawablesInTheScope = scope.getScope();
-        return drawablesInTheScope.stream().filter(drawable -> {
-            List<Drawable> successors = graph.successors(drawable);
-            if (successors.isEmpty()) return true;
-            return !drawablesInTheScope.containsAll(successors);
-        }).collect(toList());
+        return drawablesInTheScope
+                .stream()
+                .filter(drawable -> {
+                    List<Drawable> successors = graph.successors(drawable);
+                    if (successors.isEmpty()) return true;
+                    return !drawablesInTheScope.containsAll(successors);
+                })
+                .collect(toList());
     }
 
     private static Collection<Drawable> collectAllScopedDrawableElements(ScopedDrawable scopedDrawable) {
