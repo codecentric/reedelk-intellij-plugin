@@ -98,18 +98,24 @@ public class AddDrawableToGraph {
             } else {
                 // Otherwise traverse up to the scopes and find where the x belongs to.
                 ScopedDrawable lastInnerMostScope = innerMostScope;
+                ScopedDrawable currentScope = null;
                 while (!stackOfScopes.isEmpty()) {
-                    ScopedDrawable nextInnerMostScope = stackOfScopes.pop();
-                    int nextInnerMostScopeMaxXBound = ScopeUtilities.getMaxScopeXBound(graph, nextInnerMostScope);
+                    currentScope = stackOfScopes.pop();
+                    int nextInnerMostScopeMaxXBound = ScopeUtilities.getMaxScopeXBound(graph, currentScope);
                     if (dropPoint.x <= nextInnerMostScopeMaxXBound) {
                         break;
                     }
-                    lastInnerMostScope = nextInnerMostScope;
+                    lastInnerMostScope = currentScope;
                 }
 
+                // Need to find the preceding scope
                 ScopeUtilities
                         .listLastDrawablesOfScope(graph, lastInnerMostScope)
                         .forEach(connector::addPredecessor);
+
+                if (currentScope != null) {
+                    connector.addToScope(currentScope);
+                }
             }
         }
     }
