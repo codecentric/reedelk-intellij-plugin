@@ -1,6 +1,6 @@
 package com.esb.plugin.runconfig.module.runner;
 
-import com.esb.plugin.commons.ESBIcons;
+import com.esb.plugin.commons.Icons;
 import com.intellij.execution.Executor;
 import com.intellij.execution.ExecutorRegistry;
 import com.intellij.openapi.wm.ToolWindowId;
@@ -21,18 +21,18 @@ public class ESBModuleDeployExecutor extends Executor {
 
     @Override
     public Icon getToolWindowIcon() {
-        return ESBIcons.Module;
+        return Icons.Module;
     }
 
     @NotNull
     @Override
     public Icon getIcon() {
-        return ESBIcons.ModuleDeploy;
+        return Icons.ModuleDeploy;
     }
 
     @Override
     public Icon getDisabledIcon() {
-        return ESBIcons.ModuleDeployDisabled;
+        return Icons.ModuleDeployDisabled;
     }
 
     @Override

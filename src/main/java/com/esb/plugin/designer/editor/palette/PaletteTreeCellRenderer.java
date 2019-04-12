@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.editor.palette;
 
 
-import com.esb.plugin.commons.ESBIcons;
+import com.esb.plugin.commons.Icons;
 import com.intellij.openapi.util.Pair;
 
 import javax.swing.*;
@@ -20,7 +20,7 @@ public class PaletteTreeCellRenderer extends DefaultTreeCellRenderer {
         if (userObject instanceof Pair) {
             Pair<String, String> displayAndFullyQualifiedName = (Pair<String, String>) userObject;
             setText(displayAndFullyQualifiedName.first);
-            setIcon(ESBIcons.forComponentAsIcon(displayAndFullyQualifiedName.second));
+            setIcon(Icons.forComponentAsIcon(displayAndFullyQualifiedName.second));
         }
 
         return this;

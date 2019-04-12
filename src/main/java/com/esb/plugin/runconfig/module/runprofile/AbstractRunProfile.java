@@ -1,7 +1,7 @@
 package com.esb.plugin.runconfig.module.runprofile;
 
-import com.esb.plugin.commons.ESBMavenUtils;
-import com.esb.plugin.commons.ESBNotificationUtils;
+import com.esb.plugin.commons.MavenUtils;
+import com.esb.plugin.commons.NotificationUtils;
 import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfiguration;
 import com.esb.plugin.service.project.toolwindow.ESBToolWindowService;
 import com.intellij.execution.*;
@@ -40,7 +40,7 @@ abstract class AbstractRunProfile implements RunProfileState {
     @Override
     public ExecutionResult execute(Executor executor, @NotNull ProgramRunner runner) throws ExecutionException {
 
-        Optional<MavenProject> optionalMavenProject = ESBMavenUtils.getMavenProject(project, moduleName);
+        Optional<MavenProject> optionalMavenProject = MavenUtils.getMavenProject(project, moduleName);
         if (!optionalMavenProject.isPresent()) {
             throw new ExecutionException("Maven project could not be found");
         }
@@ -65,7 +65,7 @@ abstract class AbstractRunProfile implements RunProfileState {
         ESBToolWindowService toolWindowService = ServiceManager.getService(project, ESBToolWindowService.class);
         Optional<String> optionalToolWindowId = toolWindowService.get(runtimeConfigName);
         optionalToolWindowId.ifPresent(toolWindowId -> getToolWindowById(toolWindowId).show(null));
-        optionalToolWindowId.ifPresent(toolWindowId -> ESBNotificationUtils.notifyInfo(toolWindowId, message, project));
+        optionalToolWindowId.ifPresent(toolWindowId -> NotificationUtils.notifyInfo(toolWindowId, message, project));
     }
 
     private ToolWindow getToolWindowById(String toolWindowId) {

@@ -1,7 +1,7 @@
 package com.esb.plugin.module.builder;
 
-import com.esb.plugin.commons.ESBIcons;
 import com.esb.plugin.commons.ESBLabel;
+import com.esb.plugin.commons.Icons;
 import com.esb.plugin.runconfig.module.ESBModuleRunConfigurationBuilder;
 import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfigurationBuilder;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
@@ -76,7 +76,7 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
 
     @Override
     public Icon getNodeIcon() {
-        return ESBIcons.Module;
+        return Icons.Module;
     }
 
     @Override

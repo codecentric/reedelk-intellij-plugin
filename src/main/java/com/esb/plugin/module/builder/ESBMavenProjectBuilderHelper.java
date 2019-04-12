@@ -1,10 +1,10 @@
 package com.esb.plugin.module.builder;
 
-import com.esb.plugin.commons.ESBLog;
 import com.esb.plugin.commons.Template;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.util.Properties;
 
 class ESBMavenProjectBuilderHelper {
+
+    private static final Logger LOG = Logger.getInstance(ESBMavenProjectBuilderHelper.class);
 
     void configure(Project project, MavenId projectId, @Nullable MavenId parentId, VirtualFile root, String sdkVersion) throws Throwable {
 
@@ -52,13 +54,12 @@ class ESBMavenProjectBuilderHelper {
         createDirectories(root);
     }
 
-    // TODO: Improve this.
     private void createDirectories(VirtualFile root) {
         try {
             VfsUtil.createDirectories(root.getPath() + "/src/main/resources/flows");
             VfsUtil.createDirectories(root.getPath() + "/src/main/resources/configs");
         } catch (IOException e) {
-            ESBLog.LOG.info(e);
+            LOG.info("Error creating project directories", e);
         }
     }
 

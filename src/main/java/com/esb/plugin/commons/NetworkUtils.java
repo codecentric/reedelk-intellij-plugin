@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 
-public class ESBNetworkUtils {
+public class NetworkUtils {
 
     private static final int MIN_PORT_NUMBER = 1100;
     private static final int MAX_PORT_NUMBER = 49151;

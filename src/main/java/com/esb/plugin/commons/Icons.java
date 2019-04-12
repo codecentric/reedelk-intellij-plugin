@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 
-public class ESBIcons {
+public class Icons {
 
     public static final Icon Module = IconLoader.getIcon("/icons/icon-16x-blue.png");
     public static final Icon Runtime = IconLoader.getIcon("/icons/play-16x-red.png");
@@ -32,6 +32,6 @@ public class ESBIcons {
 
 
     private static URL componentIconResource(String componentName) {
-        return ESBIcons.class.getResource("/icons/component/" + componentName + ".png");
+        return Icons.class.getResource("/icons/component/" + componentName + ".png");
     }
 }

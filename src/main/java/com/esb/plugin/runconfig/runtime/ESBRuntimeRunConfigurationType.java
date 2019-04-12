@@ -1,6 +1,6 @@
 package com.esb.plugin.runconfig.runtime;
 
-import com.esb.plugin.commons.ESBIcons;
+import com.esb.plugin.commons.Icons;
 import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.execution.configurations.ConfigurationType;
 import org.jetbrains.annotations.Nls;
@@ -23,7 +23,7 @@ public class ESBRuntimeRunConfigurationType implements ConfigurationType {
 
     @Override
     public Icon getIcon() {
-        return ESBIcons.Runtime;
+        return Icons.Runtime;
     }
 
     @NotNull

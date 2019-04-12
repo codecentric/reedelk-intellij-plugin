@@ -1,6 +1,6 @@
 package com.esb.plugin.designer.graph.drawable.decorators;
 
-import com.esb.plugin.commons.ESBIcons;
+import com.esb.plugin.commons.Icons;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 
@@ -22,7 +22,7 @@ public class IconDrawable implements Drawable {
     private boolean dragging;
 
     public IconDrawable(String componentName) {
-        this.image = ESBIcons.forComponentAsImage(componentName);
+        this.image = Icons.forComponentAsImage(componentName);
     }
 
     @Override

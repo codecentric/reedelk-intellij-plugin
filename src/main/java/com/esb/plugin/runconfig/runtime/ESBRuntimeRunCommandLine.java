@@ -1,6 +1,6 @@
 package com.esb.plugin.runconfig.runtime;
 
-import com.esb.plugin.commons.ESBFileUtils;
+import com.esb.plugin.commons.FileUtils;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.JavaCommandLineState;
 import com.intellij.execution.configurations.JavaParameters;
@@ -46,7 +46,7 @@ public class ESBRuntimeRunCommandLine extends JavaCommandLineState {
     }
 
     private String getJarPath(String runtimeHomeDirectory) throws ExecutionException {
-        String runtimeJarName = ESBFileUtils
+        String runtimeJarName = FileUtils
                 .findRuntimeJarName(runtimeHomeDirectory)
                 .orElseThrow(() -> new ExecutionException(format("Could not find suitable runtime (home directory: %s)", runtimeHomeDirectory)));
         return Paths.get(runtimeHomeDirectory, "bin", runtimeJarName).toString();

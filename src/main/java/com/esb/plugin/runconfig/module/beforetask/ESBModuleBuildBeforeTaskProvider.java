@@ -1,7 +1,7 @@
 package com.esb.plugin.runconfig.module.beforetask;
 
-import com.esb.plugin.commons.ESBIcons;
-import com.esb.plugin.commons.ESBMavenUtils;
+import com.esb.plugin.commons.Icons;
+import com.esb.plugin.commons.MavenUtils;
 import com.esb.plugin.runconfig.module.ESBModuleRunConfiguration;
 import com.esb.plugin.runconfig.module.runner.ESBModuleUnDeployExecutor;
 import com.esb.plugin.service.project.sourcechange.SourceChangeService;
@@ -50,7 +50,7 @@ public class ESBModuleBuildBeforeTaskProvider extends BeforeRunTaskProvider<ESBM
     @Nullable
     @Override
     public Icon getIcon() {
-        return ESBIcons.Module;
+        return Icons.Module;
     }
 
     @Override
@@ -113,7 +113,7 @@ public class ESBModuleBuildBeforeTaskProvider extends BeforeRunTaskProvider<ESBM
                 final Project project = CommonDataKeys.PROJECT.getData(context);
                 if (project == null || project.isDisposed()) return;
 
-                Optional<MavenProject> optionalMavenProject = ESBMavenUtils.getMavenProject(env.getProject(), moduleName);
+                Optional<MavenProject> optionalMavenProject = MavenUtils.getMavenProject(env.getProject(), moduleName);
 
                 if (!optionalMavenProject.isPresent()) return;
 

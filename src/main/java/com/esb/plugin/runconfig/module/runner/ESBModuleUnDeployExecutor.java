@@ -1,6 +1,6 @@
 package com.esb.plugin.runconfig.module.runner;
 
-import com.esb.plugin.commons.ESBIcons;
+import com.esb.plugin.commons.Icons;
 import com.intellij.execution.Executor;
 import com.intellij.openapi.wm.ToolWindowId;
 import org.jetbrains.annotations.NonNls;
@@ -20,18 +20,18 @@ public class ESBModuleUnDeployExecutor extends Executor {
 
     @Override
     public Icon getToolWindowIcon() {
-        return ESBIcons.Module;
+        return Icons.Module;
     }
 
     @NotNull
     @Override
     public Icon getIcon() {
-        return ESBIcons.ModuleUnDeploy;
+        return Icons.ModuleUnDeploy;
     }
 
     @Override
     public Icon getDisabledIcon() {
-        return ESBIcons.ModuleUnDeployDisabled;
+        return Icons.ModuleUnDeployDisabled;
     }
 
     @Override

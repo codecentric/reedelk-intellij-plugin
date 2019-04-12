@@ -4,15 +4,17 @@ import com.esb.internal.rest.api.InternalAPI;
 import com.esb.internal.rest.api.hotswap.v1.HotSwapPOSTReq;
 import com.esb.internal.rest.api.module.v1.ModuleDELETEReq;
 import com.esb.internal.rest.api.module.v1.ModulePOSTReq;
-import com.esb.plugin.commons.ESBLog;
 import com.esb.plugin.service.application.http.ESBHttpService;
 import com.esb.plugin.service.application.http.HttpResponse;
 import com.intellij.execution.ExecutionException;
 import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.diagnostic.Logger;
 
 import java.io.IOException;
 
 public class RESTModuleService {
+
+    private static final Logger LOG = Logger.getInstance(RESTModuleService.class);
 
     private static final String BASE_ADMIN_CONSOLE_URL_TEMPLATE = "http://%s:%d/api";
     private final String baseUrl;
@@ -31,7 +33,7 @@ public class RESTModuleService {
 
         HttpResponse response = post(baseUrl + "/hotswap", json);
         if (response.isNotSuccessful()) {
-            ESBLog.LOG.error(response.getBody());
+            LOG.error("HotSwap error", response.getBody());
 
             // TODO: Formalize this response (as JSON)
             throw new ExecutionException(response.getBody());
@@ -47,7 +49,7 @@ public class RESTModuleService {
 
         HttpResponse response = post(baseUrl + "/module", json);
         if (response.isNotSuccessful()) {
-            ESBLog.LOG.error(response.getBody());
+            LOG.error("Deploy error", response.getBody());
 
             // TODO: Formalize this response (as JSON)
             throw new ExecutionException(response.getBody());
@@ -63,7 +65,7 @@ public class RESTModuleService {
 
         HttpResponse response = delete(baseUrl + "/module", json);
         if (response.isNotSuccessful()) {
-            ESBLog.LOG.error(response.getBody());
+            LOG.error("Delete error", response.getBody());
 
             // TODO: Formalize this response (as JSON)
             throw new ExecutionException(response.getBody());

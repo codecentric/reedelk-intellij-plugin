@@ -1,6 +1,6 @@
 package com.esb.plugin.designer.editor.palette;
 
-import com.esb.plugin.commons.ESBIcons;
+import com.esb.plugin.commons.Icons;
 import com.esb.plugin.commons.SystemComponents;
 import com.esb.plugin.designer.editor.component.ComponentTransferHandler;
 import com.intellij.openapi.util.Pair;
@@ -27,8 +27,8 @@ public class PalettePanel extends JBPanel {
         root.add(jms());
 
         PaletteTreeCellRenderer renderer = new PaletteTreeCellRenderer();
-        renderer.setOpenIcon(ESBIcons.ModuleDeploy);
-        renderer.setClosedIcon(ESBIcons.ModuleUnDeploy);
+        renderer.setOpenIcon(Icons.ModuleDeploy);
+        renderer.setClosedIcon(Icons.ModuleUnDeploy);
 
 
         tree = new Tree(root);

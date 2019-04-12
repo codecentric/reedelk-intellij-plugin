@@ -11,7 +11,7 @@ import org.jetbrains.idea.maven.project.MavenProjectsManager;
 
 import java.util.Optional;
 
-public class ESBMavenUtils {
+public class MavenUtils {
 
     public static Optional<MavenProject> getMavenProject(Project project, String moduleName) {
        Optional<String> optionalPomXml = getModulePomXml(moduleName, project);

@@ -1,6 +1,6 @@
 package com.esb.plugin.validator;
 
-import com.esb.plugin.commons.ESBFileUtils;
+import com.esb.plugin.commons.FileUtils;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -57,7 +57,7 @@ public class RuntimeHomeValidator implements Validator {
         }
 
         // Check that exists runtime jar.
-        Optional<String> runtimeJarName = ESBFileUtils.findRuntimeJarName(runtimeHomeDirectory);
+        Optional<String> runtimeJarName = FileUtils.findRuntimeJarName(runtimeHomeDirectory);
         if (!runtimeJarName.isPresent()) {
             errors.add(format("Could not find suitable runtime (home directory: %s)", runtimeHomeDirectory));
         }

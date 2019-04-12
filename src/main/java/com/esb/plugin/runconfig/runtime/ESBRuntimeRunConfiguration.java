@@ -1,6 +1,6 @@
 package com.esb.plugin.runconfig.runtime;
 
-import com.esb.plugin.commons.ESBNetworkUtils;
+import com.esb.plugin.commons.NetworkUtils;
 import com.esb.plugin.service.project.sourcechange.SourceChangeService;
 import com.esb.plugin.service.project.toolwindow.ESBToolWindowService;
 import com.intellij.execution.ExecutionException;
@@ -134,7 +134,7 @@ public class ESBRuntimeRunConfiguration extends RunConfigurationBase<ESBRuntimeR
     }
 
     private static void checkPortAvailableOrThrow(String runtimeBindAddress, int runtimeBindPort) throws ExecutionException {
-        boolean isPortAvailable = ESBNetworkUtils.available(runtimeBindAddress, runtimeBindPort);
+        boolean isPortAvailable = NetworkUtils.available(runtimeBindAddress, runtimeBindPort);
         if (!isPortAvailable) {
             throw new ExecutionException(String.format("Could not start runtime on port %s. The port is in use.", runtimeBindPort));
         }

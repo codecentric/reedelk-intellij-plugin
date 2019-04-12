@@ -1,6 +1,6 @@
 package com.esb.plugin.filetype;
 
-import com.esb.plugin.commons.ESBIcons;
+import com.esb.plugin.commons.Icons;
 import com.intellij.json.JsonLanguage;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import org.jetbrains.annotations.NotNull;
@@ -39,6 +39,6 @@ public class FlowConfigFileType extends LanguageFileType {
     @Nullable
     @Override
     public Icon getIcon() {
-        return ESBIcons.FileTypeFlowConfig;
+        return Icons.FileTypeFlowConfig;
     }
 }

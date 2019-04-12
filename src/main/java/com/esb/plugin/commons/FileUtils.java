@@ -4,7 +4,7 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-public class ESBFileUtils {
+public class FileUtils {
 
     public static Optional<String> findRuntimeJarName(String runtimeHomeDirectory) {
         String binDirectoryPath = Paths.get(runtimeHomeDirectory, "bin").toString();
