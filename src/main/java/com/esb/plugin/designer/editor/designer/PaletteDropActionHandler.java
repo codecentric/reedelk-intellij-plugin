@@ -43,10 +43,10 @@ class PaletteDropActionHandler extends AbstractActionHandler {
         String componentName = optionalComponentName.get();
 
         FlowGraph copy = graph == null ? new FlowGraphImpl() : graph.copy();
-        FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
 
+        FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
         Drawable componentToAdd = DrawableFactory.get(componentName);
-        addDrawableToGraph(graph, componentToAdd, dropPoint, graphics);
+        addDrawableToGraph(modifiableGraph, componentToAdd, dropPoint, graphics);
 
         if (modifiableGraph.isChanged()) {
             dropEvent.acceptDrop(ACTION_COPY_OR_MOVE);

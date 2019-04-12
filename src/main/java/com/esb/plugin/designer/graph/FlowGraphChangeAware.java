@@ -13,7 +13,7 @@ public class FlowGraphChangeAware implements FlowGraph {
     private final FlowGraph wrapped;
     private boolean changed = false;
 
-    public FlowGraphChangeAware(FlowGraph wrapped) {
+    public FlowGraphChangeAware(@NotNull FlowGraph wrapped) {
         this.wrapped = wrapped;
     }
 
