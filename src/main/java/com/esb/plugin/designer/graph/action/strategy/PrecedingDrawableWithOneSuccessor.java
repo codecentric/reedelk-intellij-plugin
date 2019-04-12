@@ -15,7 +15,6 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class PrecedingDrawableWithOneSuccessor extends AbstractAddStrategy {
 
-
     public PrecedingDrawableWithOneSuccessor(FlowGraph graph, Point dropPoint, Connector connector) {
         super(graph, dropPoint, connector);
     }
