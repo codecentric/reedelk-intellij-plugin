@@ -2,7 +2,6 @@ package com.esb.plugin.designer.graph.action.strategy;
 
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.ScopeUtilities;
 import com.esb.plugin.designer.graph.connector.Connector;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
@@ -11,6 +10,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.Stack;
 
+import static com.esb.plugin.designer.graph.ScopeUtilities.*;
 import static com.google.common.base.Preconditions.checkState;
 
 public class PrecedingDrawableWithOneSuccessor extends AbstractAddStrategy {
@@ -26,7 +26,7 @@ public class PrecedingDrawableWithOneSuccessor extends AbstractAddStrategy {
 
         Drawable successorOfClosestPrecedingNode = successors.get(0);
 
-        if (ScopeUtilities.haveSameScope(graph, closestPrecedingDrawable, successorOfClosestPrecedingNode)) {
+        if (belongToSameScope(graph, closestPrecedingDrawable, successorOfClosestPrecedingNode)) {
             if (withinYBounds(dropPoint.y, closestPrecedingDrawable)) {
                 connector.addPredecessor(closestPrecedingDrawable);
                 connector.addSuccessor(successorOfClosestPrecedingNode);
@@ -41,7 +41,7 @@ public class PrecedingDrawableWithOneSuccessor extends AbstractAddStrategy {
 
     private void handleDifferentScopes(Drawable closestPrecedingDrawable, Drawable successorOfClosestPrecedingNode) {
 
-        Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesOf(graph, closestPrecedingDrawable);
+        Stack<ScopedDrawable> scopes = findScopesOf(graph, closestPrecedingDrawable);
         if (scopes.isEmpty()) {
             connector.addPredecessor(closestPrecedingDrawable);
             connector.addSuccessor(successorOfClosestPrecedingNode);
@@ -56,7 +56,7 @@ public class PrecedingDrawableWithOneSuccessor extends AbstractAddStrategy {
 
             currentScope = scopes.pop();
 
-            int maxXBound = ScopeUtilities.getScopeMaxXBound(graph, currentScope);
+            int maxXBound = getScopeMaxXBound(graph, currentScope);
 
             if (dropPoint.x <= maxXBound) break;
 
@@ -68,8 +68,7 @@ public class PrecedingDrawableWithOneSuccessor extends AbstractAddStrategy {
         }
 
         if (lastInnerMostScope != null) {
-            ScopeUtilities
-                    .listLastDrawablesOfScope(graph, lastInnerMostScope)
+            listLastDrawablesOfScope(graph, lastInnerMostScope)
                     .forEach(drawable -> {
                         connector.addPredecessor(drawable);
                         graph.remove(drawable, successorOfClosestPrecedingNode);

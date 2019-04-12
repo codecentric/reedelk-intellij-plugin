@@ -13,7 +13,7 @@ import static java.util.stream.Collectors.toList;
 
 public class ScopeUtilities {
 
-    public static boolean haveSameScope(FlowGraph graph, Drawable drawable1, Drawable drawable2) {
+    public static boolean belongToSameScope(FlowGraph graph, Drawable drawable1, Drawable drawable2) {
         Optional<ScopedDrawable> scope1 = findScope(graph, drawable1);
         Optional<ScopedDrawable> scope2 = findScope(graph, drawable2);
         if (!scope1.isPresent() && !scope2.isPresent()) {
