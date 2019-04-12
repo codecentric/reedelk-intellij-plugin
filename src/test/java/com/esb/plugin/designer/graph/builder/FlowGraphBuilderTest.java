@@ -34,10 +34,15 @@ class FlowGraphBuilderTest extends AbstractBuilderTest {
 
 
         Drawable setPayload1 = getDrawableWithComponentName(graph.successors(choice), "com.esb.core.component.SetPayload1");
-        Drawable stopDrawable = firstSuccessorOf(graph, setPayload1);
-        assertSuccessorsAre(graph, stopDrawable, "com.esb.rest.component.SetHeader");
+        assertSuccessorsAre(graph, setPayload1, "com.esb.rest.component.SetHeader");
 
-        Drawable setHeaderDrawable = firstSuccessorOf(graph, stopDrawable);
+        Drawable setPayload2 = getDrawableWithComponentName(graph.successors(choice), "com.esb.core.component.SetPayload2");
+        assertSuccessorsAre(graph, setPayload2, "com.esb.rest.component.SetHeader");
+
+        Drawable setPayload3 = getDrawableWithComponentName(graph.successors(choice), "com.esb.core.component.SetPayload3");
+        assertSuccessorsAre(graph, setPayload3, "com.esb.rest.component.SetHeader");
+
+        Drawable setHeaderDrawable = getDrawableWithComponentName(graph.successors(setPayload1), "com.esb.rest.component.SetHeader");
         assertSuccessorsAre(graph, setHeaderDrawable, "com.esb.rest.component.SetStatus");
 
         Drawable setStatusDrawable = firstSuccessorOf(graph, setHeaderDrawable);

@@ -36,19 +36,24 @@ public class MoveDropTarget {
         droppedDrawableScope.ifPresent(scopedDrawable -> scopedDrawable.removeFromScope(dropped));
 
         // 4. Add the dropped component back to the graph to the dropped position.
-        FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
-        Connector connector = new DrawableConnector(modifiableGraph, dropped);
-        AddDrawableToGraph componentAdder = new AddDrawableToGraph(modifiableGraph, dropPoint, connector);
-        componentAdder.add();
+        FlowGraphChangeAware updatedGraph = addDrawableToGraph(copy, dropped, dropPoint);
 
         // 5. If the copy of the graph was changed, then update the graph
-        if (modifiableGraph.isChanged()) {
-            return Optional.of(modifiableGraph);
+        if (updatedGraph.isChanged()) {
+            return Optional.of(updatedGraph);
         }
 
         // 6. Add back the node to the scope if the original graph was not changed.
         droppedDrawableScope.ifPresent(scopedDrawable -> scopedDrawable.addToScope(dropped));
 
         return Optional.empty();
+    }
+
+    private FlowGraphChangeAware addDrawableToGraph(FlowGraph graph, Drawable dropped, Point dropPoint) {
+        FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
+        Connector connector = new DrawableConnector(modifiableGraph, dropped);
+        AddDrawableToGraph componentAdder = new AddDrawableToGraph(modifiableGraph, dropPoint, connector);
+        componentAdder.add();
+        return modifiableGraph;
     }
 }
