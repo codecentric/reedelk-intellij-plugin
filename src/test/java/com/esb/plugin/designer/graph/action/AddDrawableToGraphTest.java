@@ -263,6 +263,37 @@ class AddDrawableToGraphTest extends AbstractGraphTest {
         assertThatSuccessorsAreExactly(updatedGraph, root, choice1);
         assertThatSuccessorsAreExactly(updatedGraph, choice1, n1);
         assertThatSuccessorsAreExactly(updatedGraph, n1, n2);
+        assertThatSuccessorsAreExactly(updatedGraph, n2);
+
+        assertThat(choice1.getScope()).containsExactly(n1);
+    }
+
+    @Test
+    void shouldCorrectlyAddTwoNodesAfterScope() {
+        // Given
+        FlowGraph graph = new FlowGraphImpl();
+        graph.root(root);
+        graph.add(root, choice1);
+        graph.add(choice1, n1);
+        graph.add(n1, n2);
+        choice1.addToScope(n1);
+
+        root.setPosition(55, 70);
+        choice1.setPosition(165, 70);
+        n1.setPosition(275, 70);
+        n2.setPosition(390, 70);
+
+        Point dropPoint = new Point(478, 45);
+
+        // When
+        FlowGraph updatedGraph = addDrawableToGraph(graph, n3, dropPoint);
+
+        // Then
+        assertThatRootIs(updatedGraph, root);
+        assertThatSuccessorsAreExactly(updatedGraph, root, choice1);
+        assertThatSuccessorsAreExactly(updatedGraph, choice1, n1);
+        assertThatSuccessorsAreExactly(updatedGraph, n1, n2);
+        assertThatSuccessorsAreExactly(updatedGraph, n2, n3);
 
         assertThat(choice1.getScope()).containsExactly(n1);
     }

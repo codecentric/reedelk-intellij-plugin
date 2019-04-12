@@ -41,32 +41,48 @@ public class ScopeUtilities {
      * element of the stack is the innermost scope this target belongs to. The last element
      * of the stack is the outermost scope this target belongs to.
      */
-    public static Stack<ScopedDrawable> findTargetScopes(FlowGraph graph, Drawable target) {
+    public static Stack<ScopedDrawable> findTargetScopes(@NotNull FlowGraph graph, @NotNull Drawable target) {
+        boolean targetBelongsToScope = graph.nodes()
+                .stream()
+                .filter(drawable -> drawable instanceof ScopedDrawable)
+                .map(drawable -> (ScopedDrawable) drawable)
+                .anyMatch(scopedDrawable -> scopedDrawable.scopeContains(target));
+
+        if (!targetBelongsToScope) {
+            if (target instanceof ScopedDrawable) {
+                Stack<ScopedDrawable> singleElement = new Stack();
+                singleElement.push((ScopedDrawable) target);
+                return singleElement;
+            }
+            return new Stack<>();
+        }
+
         Optional<Stack<ScopedDrawable>> targetScopes = doFindTargetScopes(graph, graph.root(), target, new Stack<>());
         return targetScopes.orElseGet(Stack::new);
     }
 
-    private static Optional<Stack<ScopedDrawable>> doFindTargetScopes(FlowGraph graph, Drawable parent, Drawable target, Stack<ScopedDrawable> stack) {
+    private static Optional<Stack<ScopedDrawable>> doFindTargetScopes(@NotNull FlowGraph graph, @NotNull Drawable parent, @NotNull Drawable target, @NotNull Stack<ScopedDrawable> scopesStack) {
         List<Drawable> successors = graph.successors(parent);
         for (Drawable successor : successors) {
             if (successor instanceof ScopedDrawable) {
-                stack.push((ScopedDrawable) successor);
+                scopesStack.push((ScopedDrawable) successor);
             }
             if (successor == target) {
-                return Optional.of(stack);
+                return Optional.of(scopesStack);
             }
             if (successor instanceof ScopedDrawable) {
                 if (((ScopedDrawable) successor).scopeContains(target)) {
-                    return Optional.of(stack);
+                    return Optional.of(scopesStack);
                 }
             }
-            Optional<Stack<ScopedDrawable>> scopeFound = doFindTargetScopes(graph, successor, target, new Stack<>());
+            Optional<Stack<ScopedDrawable>> scopeFound =
+                    doFindTargetScopes(graph, successor, target, new Stack<>());
             if (scopeFound.isPresent()) {
                 StackUtils.reverse(scopeFound.get());
                 while (!scopeFound.get().isEmpty()) {
-                    stack.push(scopeFound.get().pop());
+                    scopesStack.push(scopeFound.get().pop());
                 }
-                return Optional.of(stack);
+                return Optional.of(scopesStack);
             }
         }
         return Optional.empty();
@@ -83,7 +99,7 @@ public class ScopeUtilities {
         }
     }
 
-    public static int getMaxScopeXBound(@NotNull FlowGraph graph, @NotNull ScopedDrawable scopedDrawable) {
+    public static int getScopeMaxXBound(@NotNull FlowGraph graph, @NotNull ScopedDrawable scopedDrawable) {
         Collection<Drawable> lastDrawablesOfScope = listLastDrawablesOfScope(graph, scopedDrawable);
         int maxX = scopedDrawable.x();
         Drawable drawableWithMaxX = scopedDrawable;

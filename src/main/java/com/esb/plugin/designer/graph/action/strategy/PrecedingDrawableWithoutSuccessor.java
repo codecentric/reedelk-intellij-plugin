@@ -41,7 +41,7 @@ public class PrecedingDrawableWithoutSuccessor extends AbstractAddStrategy {
         while (!stackOfScopes.isEmpty()) {
             currentScope = stackOfScopes.pop();
 
-            int maxXBound = ScopeUtilities.getMaxScopeXBound(graph, currentScope);
+            int maxXBound = ScopeUtilities.getScopeMaxXBound(graph, currentScope);
             if (dropPoint.x <= maxXBound) break;
 
             lastInnerMostScope = currentScope;

@@ -45,7 +45,7 @@ public class PrecedingDrawableWithOneSuccessor extends AbstractAddStrategy {
         if (optionalClosestPrecedingNodeScope.isPresent()) {
             // The drop point is inside the closestPrecedingNodeScope
             ScopedDrawable closestPrecedingNodeScope = optionalClosestPrecedingNodeScope.get();
-            if (dropPoint.x <= ScopeUtilities.getMaxScopeXBound(graph, closestPrecedingNodeScope)) {
+            if (dropPoint.x <= ScopeUtilities.getScopeMaxXBound(graph, closestPrecedingNodeScope)) {
                 connector.addPredecessor(closestPrecedingDrawable);
                 connector.addToScope(closestPrecedingNodeScope);
                 connector.addSuccessor(successorOfClosestPrecedingNode);

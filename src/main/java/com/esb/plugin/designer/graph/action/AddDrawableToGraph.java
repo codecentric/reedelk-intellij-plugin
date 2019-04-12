@@ -49,22 +49,23 @@ public class AddDrawableToGraph {
 
         } else {
 
-            findClosestPrecedingDrawable(graph, dropPoint).ifPresent(closestPrecedingDrawable -> {
-                AddStrategy strategy;
-                if (closestPrecedingDrawable instanceof ScopedDrawable) {
-                    strategy = new PrecedingScopedDrawable(graph, dropPoint, connector);
-                } else if (graph.successors(closestPrecedingDrawable).isEmpty()) {
-                    strategy = new PrecedingDrawableWithoutSuccessor(graph, dropPoint, connector);
-                } else {
-                    // Only ScopedDrawable nodes might have multiple successors. In all other cases
-                    // a node in the flow must have at most one successor.
-                    checkState(graph.successors(closestPrecedingDrawable).size() == 1,
-                            "Successors size MUST be 1, otherwise it must be a Scoped Drawable");
-                    strategy = new PrecedingDrawableWithOneSuccessor(graph, dropPoint, connector);
-                }
-                strategy.execute(closestPrecedingDrawable);
+            findClosestPrecedingDrawable(graph, dropPoint)
+                    .ifPresent(closestPrecedingDrawable -> {
+                        AddStrategy strategy;
+                        if (closestPrecedingDrawable instanceof ScopedDrawable) {
+                            strategy = new PrecedingScopedDrawable(graph, dropPoint, connector);
+                        } else if (graph.successors(closestPrecedingDrawable).isEmpty()) {
+                            strategy = new PrecedingDrawableWithoutSuccessor(graph, dropPoint, connector);
+                        } else {
+                            // Only ScopedDrawable nodes might have multiple successors. In all other cases
+                            // a node in the flow must have at most one successor.
+                            checkState(graph.successors(closestPrecedingDrawable).size() == 1,
+                                    "Successors size MUST be 1, otherwise it must be a Scoped Drawable");
+                            strategy = new PrecedingDrawableWithOneSuccessor(graph, dropPoint, connector);
+                        }
+                        strategy.execute(closestPrecedingDrawable);
 
-            });
+                    });
         }
     }
 

@@ -20,9 +20,10 @@ public class MoveDropTarget {
      * Called when we drop a drawable because we are moving it.
      */
     public Optional<FlowGraph> drop(int x, int y, FlowGraph graph, Drawable dropped) {
-        Point dropPoint = new Point(x, y);
 
-        if (graph == null) graph = new FlowGraphImpl();
+        if (graph == null) {
+            graph = new FlowGraphImpl();
+        }
 
         // 1. Copy the original graph
         FlowGraph copy = graph.copy();
@@ -36,17 +37,20 @@ public class MoveDropTarget {
         droppedDrawableScope.ifPresent(scopedDrawable -> scopedDrawable.removeFromScope(dropped));
 
         // 4. Add the dropped component back to the graph to the dropped position.
+        Point dropPoint = new Point(x, y);
         FlowGraphChangeAware updatedGraph = addDrawableToGraph(copy, dropped, dropPoint);
 
         // 5. If the copy of the graph was changed, then update the graph
         if (updatedGraph.isChanged()) {
             return Optional.of(updatedGraph);
+
+        } else {
+            // 6. Add back the node to the scope if the original graph was not changed.
+            droppedDrawableScope.ifPresent(scopedDrawable -> scopedDrawable.addToScope(dropped));
+
+            // 7. Returning empty since nothing was changed
+            return Optional.empty();
         }
-
-        // 6. Add back the node to the scope if the original graph was not changed.
-        droppedDrawableScope.ifPresent(scopedDrawable -> scopedDrawable.addToScope(dropped));
-
-        return Optional.empty();
     }
 
     private FlowGraphChangeAware addDrawableToGraph(FlowGraph graph, Drawable dropped, Point dropPoint) {

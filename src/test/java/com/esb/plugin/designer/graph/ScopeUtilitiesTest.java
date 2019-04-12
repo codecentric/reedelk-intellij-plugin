@@ -477,7 +477,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             n3.setPosition(275, 210);
 
             // When
-            int maxScopeXBound = ScopeUtilities.getMaxScopeXBound(graph, choice1);
+            int maxScopeXBound = ScopeUtilities.getScopeMaxXBound(graph, choice1);
 
             // Then
             // Max should be drawable with max x + half drawable's width
@@ -495,7 +495,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice1.setPosition(165, 140);
 
             // When
-            int maxScopeXBound = ScopeUtilities.getMaxScopeXBound(graph, choice1);
+            int maxScopeXBound = ScopeUtilities.getScopeMaxXBound(graph, choice1);
 
             // Then
             assertThat(maxScopeXBound).isEqualTo(220);
@@ -516,7 +516,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice1.addToScope(n1);
 
             // When
-            int maxScopeXBound = ScopeUtilities.getMaxScopeXBound(graph, choice1);
+            int maxScopeXBound = ScopeUtilities.getScopeMaxXBound(graph, choice1);
 
             // Then
             assertThat(maxScopeXBound).isEqualTo(330);
@@ -720,6 +720,23 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             assertThat(scopes.pop()).isEqualTo(choice4);
             assertThat(scopes.pop()).isEqualTo(choice3);
             assertThat(scopes.pop()).isEqualTo(choice1);
+            assertThat(scopes).isEmpty();
+        }
+
+        @Test
+        void shouldReturnEmptyScopeWhenNodeRightAfterScope() {
+            // Given
+            FlowGraph graph = new FlowGraphImpl();
+            graph.root(root);
+            graph.add(root, choice1);
+            graph.add(choice1, n1);
+            graph.add(n1, n2);
+            choice1.addToScope(n1);
+
+            // When
+            Stack<ScopedDrawable> scopes = ScopeUtilities.findTargetScopes(graph, n2);
+
+            // Then
             assertThat(scopes).isEmpty();
         }
     }
