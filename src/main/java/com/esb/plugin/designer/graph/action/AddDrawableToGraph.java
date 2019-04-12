@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import static com.esb.plugin.designer.graph.action.AddDrawableToGraphUtilities.isReplacingRoot;
 import static com.google.common.base.Preconditions.checkState;
 import static java.util.stream.Collectors.toList;
 
@@ -119,5 +118,17 @@ public class AddDrawableToGraph {
             return true;
         };
     }
+
+    /*
+     * Checks if we are replacing the root (i.e there are no nodes preceding the drop point on X).
+     * Do a check on the Y axis as well
+     */
+    public static boolean isReplacingRoot(FlowGraph graph, Point dropPoint) {
+        return graph
+                .nodes()
+                .stream()
+                .noneMatch(drawable -> drawable.x() < dropPoint.x);
+    }
+
 
 }

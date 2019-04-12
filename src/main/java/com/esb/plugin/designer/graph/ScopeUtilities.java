@@ -17,7 +17,8 @@ public class ScopeUtilities {
         Optional<ScopedDrawable> scope1 = findScope(graph, drawable1);
         Optional<ScopedDrawable> scope2 = findScope(graph, drawable2);
         if (!scope1.isPresent() && !scope2.isPresent()) {
-            return true;  // no scope at all so it is the same overall scope.
+            // they both don't belong to ANY scope.
+            return true;
         }
         if (scope1.isPresent()) {
             if (scope2.isPresent()) {
