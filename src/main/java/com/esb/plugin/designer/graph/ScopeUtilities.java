@@ -105,18 +105,6 @@ public class ScopeUtilities {
     public static int getScopeMaxXBound(@NotNull FlowGraph graph, @NotNull ScopedDrawable scopedDrawable, @NotNull Graphics2D graphics) {
         ScopeBoundaries scopeBoundaries = scopedDrawable.getScopeBoundaries(graph, graphics);
         return scopeBoundaries.getX() + scopeBoundaries.getWidth();
-        /**
-        Collection<Drawable> lastDrawablesOfScope = listLastDrawablesOfScope(graph, scopedDrawable);
-        int maxX = scopedDrawable.x();
-        Drawable drawableWithMaxX = scopedDrawable;
-        for (Drawable lastDrawableOfScope : lastDrawablesOfScope) {
-            if (lastDrawableOfScope.x() >= maxX) {
-                maxX = lastDrawableOfScope.x();
-                drawableWithMaxX = lastDrawableOfScope;
-            }
-        }
-        return drawableWithMaxX.x() + Tile.HALF_WIDTH;
-         */
     }
 
     /**
@@ -133,23 +121,22 @@ public class ScopeUtilities {
     }
 
     public static Collection<Drawable> listLastDrawablesOfScope(FlowGraph graph, ScopedDrawable scopedDrawable) {
-        // Collect all ScopedDrawable
-        Collection<Drawable> allElementsInScopeAndNestedScopes = collectAllScopedDrawableElements(scopedDrawable);
-        return allElementsInScopeAndNestedScopes.stream().filter(drawable -> {
+        Collection<Drawable> allDrawablesInScopeAndNestedScope = collectAllDrawablesInsideScopesFrom(scopedDrawable);
+        return allDrawablesInScopeAndNestedScope.stream().filter(drawable -> {
             List<Drawable> successors = graph.successors(drawable);
             if (successors.isEmpty()) return true;
             // If exists at least one
-            return !allElementsInScopeAndNestedScopes.containsAll(successors);
+            return !allDrawablesInScopeAndNestedScope.containsAll(successors);
         }).collect(toList());
     }
 
-    private static Collection<Drawable> collectAllScopedDrawableElements(ScopedDrawable scopedDrawable) {
+    private static Collection<Drawable> collectAllDrawablesInsideScopesFrom(ScopedDrawable scopedDrawable) {
         Collection<Drawable> scope = scopedDrawable.getScope();
         Set<Drawable> allElements = new HashSet<>(scope);
         Set<Drawable> nested = new HashSet<>();
         allElements.forEach(drawable -> {
             if (drawable instanceof ScopedDrawable) {
-                nested.addAll(collectAllScopedDrawableElements((ScopedDrawable) drawable));
+                nested.addAll(collectAllDrawablesInsideScopesFrom((ScopedDrawable) drawable));
             }
         });
         allElements.addAll(nested);
@@ -200,7 +187,8 @@ public class ScopeUtilities {
         }
         for (Drawable drawableInScope : scopedDrawable.getScope()) {
             if (drawableInScope instanceof ScopedDrawable) {
-                return scopesBetween(depth + 1, (ScopedDrawable) drawableInScope, target);
+                Optional<Integer> found = scopesBetween(depth + 1, (ScopedDrawable) drawableInScope, target);
+                if (found.isPresent()) return found;
             } else if (drawableInScope == target) {
                 return Optional.of(depth);
             }
