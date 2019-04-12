@@ -549,7 +549,7 @@ class AddDrawableToGraphTest extends AbstractGraphTest {
                 assertThatSuccessorsAreExactly(updatedGraph, choice2, n2);
                 assertThatSuccessorsAreExactly(updatedGraph, n2, n4);
                 assertThatSuccessorsAreExactly(updatedGraph, n4, n3);
-                assertThat(choice1.getScope()).containsExactly(n1, choice2);
+                assertThat(choice1.getScope()).containsExactlyInAnyOrder(n1, choice2);
                 assertThat(choice2.getScope()).containsExactly(n2);
             }
 
