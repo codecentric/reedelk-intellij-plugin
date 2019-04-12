@@ -7,13 +7,114 @@ import com.esb.plugin.designer.graph.FlowGraphImpl;
 import com.esb.plugin.designer.graph.connector.Connector;
 import com.esb.plugin.designer.graph.connector.DrawableConnector;
 import com.esb.plugin.designer.graph.drawable.Drawable;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class AddDrawableToGraphTest extends AbstractGraphTest {
+
+    @Nested
+    @DisplayName("Root tests")
+    class RootComponent {
+
+        @Test
+        void shouldCorrectlyAddRootComponent() {
+            // Given
+            FlowGraph graph = new FlowGraphImpl();
+            Point dropPoint = new Point(20, 20);
+
+            // When
+            FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, root, dropPoint);
+
+            // Then
+            assertIsChangedWithNodesCount(modifiableGraph, 1);
+            assertThat(graph.root()).isEqualTo(root);
+        }
+
+        @Test
+        void shouldCorrectlyReplaceRootComponentWhenXCoordinateIsSmallerThanCurrentRoot() {
+            // Given
+            FlowGraphImpl graph = new FlowGraphImpl();
+            graph.root(root);
+            root.setPosition(20, 20);
+
+            Point dropPoint = new Point(10, 20); // x drop point smaller than the root x coordinate.
+
+            // When
+            FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, n1, dropPoint);
+
+            // Then
+            assertIsChangedWithNodesCount(modifiableGraph, 2);
+
+            Drawable newRoot = graph.root();
+            assertThat(newRoot).isEqualTo(n1);
+
+            java.util.List<Drawable> successorsOfRoot = graph.successors(newRoot);
+
+            // Old root has been replaced by n1, therefore successor of n1 is root.
+            assertThat(successorsOfRoot).containsExactly(root);
+        }
+    }
+
+    @Nested
+    @DisplayName("Adding a component after root")
+    class AddDrawableToGraphAfterRoot {
+
+        @Test
+        void shouldAddComponentAfterRootAsLast() {
+            // Given
+            FlowGraphImpl graph = new FlowGraphImpl();
+            graph.root(root);
+            root.setPosition(20, 20);
+
+            Point dropPoint = new Point(25, 23);  // a little bit after root center x coordinate
+
+            // When
+            FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, n1, dropPoint);
+
+            // Then
+            assertIsChangedWithNodesCount(modifiableGraph, 2);
+
+            Drawable root = graph.root();
+            assertThat(root).isEqualTo(root);
+
+            java.util.List<Drawable> successorOfRoot = graph.successors(root);
+            assertThat(successorOfRoot).containsExactly(n1);
+        }
+
+        @Test
+        void shouldAddComponentBetweenRootAndSuccessor() {
+            // Given
+            FlowGraphImpl graph = new FlowGraphImpl();
+
+            graph.root(root);
+            root.setPosition(20, 20);
+
+            graph.add(root, n2);
+            n2.setPosition(40, 20);
+
+            Point dropPoint = new Point(30, 20); // drop it between root and n2
+
+            // When
+            FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, n1, dropPoint);
+
+            // Then
+            assertIsChangedWithNodesCount(modifiableGraph, 3);
+
+            Drawable root = graph.root();
+            java.util.List<Drawable> successorOfRoot = graph.successors(root);
+            assertThat(successorOfRoot).containsExactly(n1);
+
+            List<Drawable> successorsOfN1 = graph.successors(n1);
+            assertThat(successorsOfN1).containsExactly(n2);
+        }
+    }
+
 
     @Test
     void shouldAddDrawableAtTheEndOfScope() {
@@ -298,7 +399,7 @@ class AddDrawableToGraphTest extends AbstractGraphTest {
         assertThat(choice1.getScope()).containsExactly(n1);
     }
 
-    private FlowGraph addDrawableToGraph(FlowGraph graph, Drawable dropped, Point dropPoint) {
+    private FlowGraphChangeAware addDrawableToGraph(FlowGraph graph, Drawable dropped, Point dropPoint) {
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
         Connector connector = new DrawableConnector(modifiableGraph, dropped);
         AddDrawableToGraph action = new AddDrawableToGraph(modifiableGraph, dropPoint, connector);
@@ -309,7 +410,6 @@ class AddDrawableToGraphTest extends AbstractGraphTest {
     private void assertNodeCountIs(FlowGraph flowGraph, int expectedCount) {
         assertThat(flowGraph.nodesCount()).isEqualTo(expectedCount);
     }
-
 
     private void assertThatRootIs(FlowGraph graph, Drawable root) {
         assertThat(graph.root()).isEqualTo(root);
@@ -323,5 +423,9 @@ class AddDrawableToGraphTest extends AbstractGraphTest {
         }
     }
 
+    private void assertIsChangedWithNodesCount(FlowGraphChangeAware graph, int nodesCount) {
+        assertThat(graph.isChanged()).isTrue();
+        assertThat(graph.nodesCount()).isEqualTo(nodesCount);
+    }
 
 }
