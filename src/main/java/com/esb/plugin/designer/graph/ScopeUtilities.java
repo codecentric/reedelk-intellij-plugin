@@ -41,7 +41,7 @@ public class ScopeUtilities {
      * element of the stack is the innermost scope this target belongs to. The last element
      * of the stack is the outermost scope this target belongs to.
      */
-    public static Stack<ScopedDrawable> findTargetScopes(@NotNull FlowGraph graph, @NotNull Drawable target) {
+    public static Stack<ScopedDrawable> findScopesOf(@NotNull FlowGraph graph, @NotNull Drawable target) {
         boolean targetBelongsToScope = graph.nodes()
                 .stream()
                 .filter(drawable -> drawable instanceof ScopedDrawable)
@@ -94,7 +94,7 @@ public class ScopeUtilities {
             ScopedDrawable scopedDrawable = (ScopedDrawable) closestPrecedingNode;
             connector.addToScope(scopedDrawable);
         } else {
-            List<ScopedDrawable> scopedDrawableObjects = findTargetScopes(graph, closestPrecedingNode);
+            List<ScopedDrawable> scopedDrawableObjects = findScopesOf(graph, closestPrecedingNode);
             scopedDrawableObjects.forEach(connector::addToScope);
         }
     }

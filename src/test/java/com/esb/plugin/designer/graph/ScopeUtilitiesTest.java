@@ -542,7 +542,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice2.addToScope(n3);
 
             // When
-            Stack<ScopedDrawable> scopes = ScopeUtilities.findTargetScopes(graph, n3);
+            Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesOf(graph, n3);
 
             // Then
             assertThat(scopes.pop()).isEqualTo(choice2); // innermost is choice 2
@@ -571,7 +571,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice3.addToScope(n4);
 
             // When
-            Stack<ScopedDrawable> scopes = ScopeUtilities.findTargetScopes(graph, n4);
+            Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesOf(graph, n4);
 
             // Then
             assertThat(scopes.pop()).isEqualTo(choice3);
@@ -588,7 +588,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             graph.add(root, n1);
 
             // When
-            Stack<ScopedDrawable> scopes = ScopeUtilities.findTargetScopes(graph, n1);
+            Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesOf(graph, n1);
 
             // Then
             assertThat(scopes).isEmpty();
@@ -601,7 +601,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             graph.root(root);
 
             // When
-            Stack<ScopedDrawable> scopes = ScopeUtilities.findTargetScopes(graph, root);
+            Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesOf(graph, root);
 
             // Then
             assertThat(scopes).isEmpty();
@@ -624,7 +624,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice1.addToScope(n3);
 
             // When
-            Stack<ScopedDrawable> scopes = ScopeUtilities.findTargetScopes(graph, n3);
+            Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesOf(graph, n3);
 
             // Then
             assertThat(scopes.pop()).isEqualTo(choice1); // scope is only choice 1
@@ -639,7 +639,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             graph.add(root, choice1);
 
             // When
-            Stack<ScopedDrawable> scopes = ScopeUtilities.findTargetScopes(graph, choice1);
+            Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesOf(graph, choice1);
 
             // Then
             assertThat(scopes.pop()).isEqualTo(choice1);
@@ -656,7 +656,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice1.addToScope(n1);
 
             // When
-            Stack<ScopedDrawable> scopes = ScopeUtilities.findTargetScopes(graph, n1);
+            Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesOf(graph, n1);
 
             // Then
             assertThat(scopes.pop()).isEqualTo(choice1);
@@ -713,7 +713,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice5.addToScope(n10);
 
             // When
-            Stack<ScopedDrawable> scopes = ScopeUtilities.findTargetScopes(graph, n10);
+            Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesOf(graph, n10);
 
             // Then
             assertThat(scopes.pop()).isEqualTo(choice5);
@@ -734,7 +734,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice1.addToScope(n1);
 
             // When
-            Stack<ScopedDrawable> scopes = ScopeUtilities.findTargetScopes(graph, n2);
+            Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesOf(graph, n2);
 
             // Then
             assertThat(scopes).isEmpty();
