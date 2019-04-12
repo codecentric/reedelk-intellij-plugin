@@ -53,11 +53,8 @@ class AddDrawableToGraphTest extends AbstractGraphTest {
 
             Drawable newRoot = graph.root();
             assertThat(newRoot).isEqualTo(n1);
-
-            java.util.List<Drawable> successorsOfRoot = graph.successors(newRoot);
-
             // Old root has been replaced by n1, therefore successor of n1 is root.
-            assertThat(successorsOfRoot).containsExactly(root);
+            assertThat(graph.successors(newRoot)).containsExactly(root);
         }
     }
 
@@ -400,6 +397,170 @@ class AddDrawableToGraphTest extends AbstractGraphTest {
             assertThatSuccessorsAreExactly(updatedGraph, n2, n3);
 
             assertThat(choice1.getScope()).containsExactly(n1);
+        }
+
+        @Nested
+        @DisplayName("Preceding drawable with one successor")
+        class PrecedingDrawableWithOneSuccessor {
+
+            @Test
+            void shouldAddNodeBetweenPredecessorOutsideScopeAndSuccessorInsideScope() {
+                // Given
+                FlowGraph graph = new FlowGraphImpl();
+                graph.root(root);
+                graph.add(root, choice1);
+                graph.add(choice1, n1);
+                choice1.addToScope(n1);
+
+                root.setPosition(55, 70);
+                choice1.setPosition(165, 70);
+                n1.setPosition(275, 70);
+
+                Point dropPoint = new Point(103, 56);
+
+                // When
+                FlowGraph updatedGraph = addDrawableToGraph(graph, n2, dropPoint);
+
+                // Then
+                assertThatRootIs(updatedGraph, root);
+                assertThatSuccessorsAreExactly(updatedGraph, root, n2);
+                assertThatSuccessorsAreExactly(updatedGraph, n2, choice1);
+                assertThatSuccessorsAreExactly(updatedGraph, choice1, n1);
+                assertThat(choice1.getScope()).containsExactly(n1);
+            }
+
+            @Test
+            void shouldAddNodeBetweenPredecessorInScope1AndSuccessorInScope2() {
+                // Given
+                FlowGraph graph = new FlowGraphImpl();
+                graph.root(root);
+                graph.add(root, choice1);
+                graph.add(choice1, n1);
+                graph.add(n1, choice2);
+                graph.add(choice2, n2);
+                choice1.addToScope(n1);
+                choice2.addToScope(n2);
+
+                root.setPosition(55, 75);
+                choice1.setPosition(165, 75);
+                n1.setPosition(275, 75);
+                choice2.setPosition(390, 75);
+                n2.setPosition(500, 75);
+
+                Point dropPoint = new Point(333, 60);
+
+                // When
+                FlowGraph updatedGraph = addDrawableToGraph(graph, n3, dropPoint);
+
+                // Then
+                assertThatRootIs(updatedGraph, root);
+                assertThatSuccessorsAreExactly(updatedGraph, root, choice1);
+                assertThatSuccessorsAreExactly(updatedGraph, choice1, n1);
+                assertThatSuccessorsAreExactly(updatedGraph, n1, n3);
+                assertThatSuccessorsAreExactly(updatedGraph, n3, choice2);
+                assertThatSuccessorsAreExactly(updatedGraph, choice2, n2);
+                assertThat(choice1.getScope()).containsExactly(n1);
+                assertThat(choice2.getScope()).containsExactly(n2);
+            }
+
+            @Test
+            void shouldAddNodeBetweenPredecessorInScopeAndSuccessorOutsideScope() {
+                // Given
+                FlowGraph graph = new FlowGraphImpl();
+                graph.root(root);
+                graph.add(root, choice1);
+                graph.add(choice1, n1);
+                graph.add(n1, n2);
+
+                root.setPosition(55, 70);
+                choice1.setPosition(165, 70);
+                n1.setPosition(275, 70);
+                n2.setPosition(390, 70);
+
+                choice1.addToScope(n1);
+
+                Point dropPoint = new Point(338, 53);
+
+                // When
+                FlowGraph updatedGraph = addDrawableToGraph(graph, n3, dropPoint);
+
+                // Then
+                assertThatRootIs(updatedGraph, root);
+                assertThatSuccessorsAreExactly(updatedGraph, root, choice1);
+                assertThatSuccessorsAreExactly(updatedGraph, choice1, n1);
+                assertThatSuccessorsAreExactly(updatedGraph, n1, n3);
+                assertThatSuccessorsAreExactly(updatedGraph, n3, n2);
+                assertThat(choice1.getScope()).containsExactly(n1);
+            }
+
+            @Test
+            void shouldAddNodeBetweenPredecessorAndSuccessorBothOutsideScope() {
+                // Given
+                FlowGraph graph = new FlowGraphImpl();
+                graph.root(root);
+                graph.add(root, n1);
+
+                root.setPosition(55, 65);
+                n1.setPosition(165, 65);
+
+                Point dropPoint = new Point(106, 45);
+
+                // When
+                FlowGraph updatedGraph = addDrawableToGraph(graph, n2, dropPoint);
+
+                // Then
+                assertThatRootIs(updatedGraph, root);
+                assertThatSuccessorsAreExactly(updatedGraph, root, n2);
+                assertThatSuccessorsAreExactly(updatedGraph, n2, n1);
+            }
+
+            @Test
+            void shouldAddNodeBetweenPredecessorInMultipleScopeAndSuccessorOutsideScope() {
+                // Given
+                FlowGraph graph = new FlowGraphImpl();
+                graph.root(root);
+                graph.add(root, choice1);
+                graph.add(choice1, n1);
+                graph.add(n1, choice2);
+                graph.add(choice2, n2);
+                graph.add(n2, n3);
+
+                choice1.addToScope(n1);
+                choice1.addToScope(choice2);
+                choice2.addToScope(n2);
+
+                root.setPosition(55, 75);
+                choice1.setPosition(165, 75);
+                n1.setPosition(275, 75);
+                choice2.setPosition(390, 75);
+                n2.setPosition(505, 75);
+                n3.setPosition(625, 75);
+
+                Point dropPoint = new Point(583, 61);
+
+                // When
+                FlowGraph updatedGraph = addDrawableToGraph(graph, n4, dropPoint);
+
+                // Then
+                assertThatRootIs(updatedGraph, root);
+                assertThatSuccessorsAreExactly(updatedGraph, root, choice1);
+                assertThatSuccessorsAreExactly(updatedGraph, choice1, n1);
+                assertThatSuccessorsAreExactly(updatedGraph, n1, choice2);
+                assertThatSuccessorsAreExactly(updatedGraph, choice2, n2);
+                assertThatSuccessorsAreExactly(updatedGraph, n2, n4);
+                assertThatSuccessorsAreExactly(updatedGraph, n4, n3);
+                assertThat(choice1.getScope()).containsExactly(n1, choice2);
+                assertThat(choice2.getScope()).containsExactly(n2);
+            }
+
+
+        }
+
+        @Nested
+        @DisplayName("Preceding drawable without successor")
+        class PrecedingDrawableWithoutSuccessor {
+
+
         }
 
     }
