@@ -12,9 +12,11 @@ abstract class AbstractAddStrategy implements AddStrategy {
     protected final FlowGraph graph;
     protected final Point dropPoint;
     protected final Connector connector;
+    protected final Graphics2D graphics;
 
-    public AbstractAddStrategy(FlowGraph graph, Point dropPoint, Connector connector) {
+    public AbstractAddStrategy(FlowGraph graph, Point dropPoint, Connector connector, Graphics2D graphics) {
         this.graph = graph;
+        this.graphics = graphics;
         this.dropPoint = dropPoint;
         this.connector = connector;
     }

@@ -1,7 +1,9 @@
 package com.esb.plugin.designer.graph.drawable;
 
 import com.esb.plugin.designer.editor.component.Component;
+import com.esb.plugin.designer.graph.FlowGraph;
 
+import java.awt.*;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -31,5 +33,11 @@ public class ForkJoinDrawable extends AbstractDrawable implements ScopedDrawable
     public boolean scopeContains(Drawable drawable) {
         return scope.contains(drawable);
     }
+
+    @Override
+    public ScopeBoundaries getScopeBoundaries(FlowGraph graph, Graphics2D graphics) {
+        return null;
+    }
+
 
 }

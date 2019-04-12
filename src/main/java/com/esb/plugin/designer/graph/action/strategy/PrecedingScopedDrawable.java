@@ -14,9 +14,8 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class PrecedingScopedDrawable extends AbstractAddStrategy {
 
-
-    public PrecedingScopedDrawable(FlowGraph graph, Point dropPoint, Connector connector) {
-        super(graph, dropPoint, connector);
+    public PrecedingScopedDrawable(FlowGraph graph, Point dropPoint, Connector connector, Graphics2D graphics) {
+        super(graph, dropPoint, connector, graphics);
     }
 
     // It is the only type of node with potentially many successors.

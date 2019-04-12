@@ -19,8 +19,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetDropEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Optional;
@@ -33,17 +31,13 @@ import static java.util.Arrays.stream;
  * - The text editor associated with the flow designer (the user manually updates the JSON)
  * - The Canvas updates (drag and drop and moving around components)
  */
-public class GraphManager extends DropTarget implements DropListener, FileEditorManagerListener, DocumentListener, Disposable {
+public class GraphManager implements DropListener, FileEditorManagerListener, DocumentListener, Disposable {
 
     private FlowGraph graph;
     private FlowGraphChangeListener listener;
     private MessageBusConnection busConnection;
-    private MoveDropTarget moveDropTargetDelegate;
-    private PaletteDropTarget paletteDropTargetDelegate;
 
     public GraphManager(Project project, VirtualFile managedGraphFile) {
-        this.moveDropTargetDelegate = new MoveDropTarget();
-        this.paletteDropTargetDelegate = new PaletteDropTarget();
         this.busConnection = project.getMessageBus().connect();
         this.busConnection.subscribe(FILE_EDITOR_MANAGER, this);
 
@@ -78,31 +72,14 @@ public class GraphManager extends DropTarget implements DropListener, FileEditor
         this.busConnection.disconnect();
     }
 
-    /* *
-     *
-     * Called when we drop a component from the PALETTE
-     */
-    @Override
-    public synchronized void drop(DropTargetDropEvent dropEvent) {
-        paletteDropTargetDelegate
-                .drop(dropEvent, graph)
-                .ifPresent(updatedGraph -> {
-                    graph = updatedGraph;
-                    notifyGraphUpdated();
-                });
-    }
+
 
     /**
      * Called when we drop a drawable into the canvas from a move operation.
      */
     @Override
     public void drop(int x, int y, Drawable dropped) {
-        moveDropTargetDelegate
-                .drop(x, y, graph, dropped)
-                .ifPresent(updatedGraph -> {
-                    graph = updatedGraph;
-                    notifyGraphUpdated();
-                });
+        // TODO: Fill me up
     }
 
     public void addGraphChangeListener(FlowGraphChangeListener listener) {

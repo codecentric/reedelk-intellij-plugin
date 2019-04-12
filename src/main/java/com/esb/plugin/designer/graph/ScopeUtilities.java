@@ -1,12 +1,14 @@
 package com.esb.plugin.designer.graph;
 
 import com.esb.plugin.commons.StackUtils;
-import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.graph.connector.Connector;
 import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.drawable.ScopeBoundaries;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
+import java.util.List;
 import java.util.*;
 
 import static java.util.stream.Collectors.toList;
@@ -100,7 +102,10 @@ public class ScopeUtilities {
         }
     }
 
-    public static int getScopeMaxXBound(@NotNull FlowGraph graph, @NotNull ScopedDrawable scopedDrawable) {
+    public static int getScopeMaxXBound(@NotNull FlowGraph graph, @NotNull ScopedDrawable scopedDrawable, @NotNull Graphics2D graphics) {
+        ScopeBoundaries scopeBoundaries = scopedDrawable.getScopeBoundaries(graph, graphics);
+        return scopeBoundaries.getX() + scopeBoundaries.getWidth();
+        /**
         Collection<Drawable> lastDrawablesOfScope = listLastDrawablesOfScope(graph, scopedDrawable);
         int maxX = scopedDrawable.x();
         Drawable drawableWithMaxX = scopedDrawable;
@@ -111,6 +116,7 @@ public class ScopeUtilities {
             }
         }
         return drawableWithMaxX.x() + Tile.HALF_WIDTH;
+         */
     }
 
     /**

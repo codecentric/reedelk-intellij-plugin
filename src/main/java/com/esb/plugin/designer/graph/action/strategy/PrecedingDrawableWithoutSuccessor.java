@@ -21,8 +21,9 @@ import java.util.Stack;
  */
 public class PrecedingDrawableWithoutSuccessor extends AbstractAddStrategy {
 
-    public PrecedingDrawableWithoutSuccessor(FlowGraph graph, Point dropPoint, Connector connector) {
-        super(graph, dropPoint, connector);
+
+    public PrecedingDrawableWithoutSuccessor(FlowGraph graph, Point dropPoint, Connector connector, Graphics2D graphics) {
+        super(graph, dropPoint, connector, graphics);
     }
 
     @Override
@@ -42,7 +43,7 @@ public class PrecedingDrawableWithoutSuccessor extends AbstractAddStrategy {
 
             currentScope = scopes.pop();
 
-            int maxXBound = ScopeUtilities.getScopeMaxXBound(graph, currentScope);
+            int maxXBound = ScopeUtilities.getScopeMaxXBound(graph, currentScope, graphics);
 
             if (dropPoint.x <= maxXBound) break;
 

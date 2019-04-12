@@ -1,5 +1,8 @@
 package com.esb.plugin.designer.graph.drawable;
 
+import com.esb.plugin.designer.graph.FlowGraph;
+
+import java.awt.*;
 import java.util.Collection;
 
 public interface ScopedDrawable extends Drawable {
@@ -14,5 +17,7 @@ public interface ScopedDrawable extends Drawable {
     Collection<Drawable> getScope();
 
     boolean scopeContains(Drawable drawable);
+
+    ScopeBoundaries getScopeBoundaries(FlowGraph graph, Graphics2D graphics);
 
 }

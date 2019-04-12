@@ -9,8 +9,6 @@ import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.FlowGraphChangeListener;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 
-import java.awt.dnd.DropTarget;
-
 
 public class FlowEditorPanel extends ThreeComponentsSplitter implements FlowGraphChangeListener {
 
@@ -22,12 +20,11 @@ public class FlowEditorPanel extends ThreeComponentsSplitter implements FlowGrap
     private PalettePanel palette;
     private DesignerPanel designer;
 
-    FlowEditorPanel(DropTarget dropTarget, DropListener dropListener) {
+    FlowEditorPanel(DropListener dropListener) {
         super(VERTICAL);
 
         this.palette = new PalettePanel();
         this.designer = new DesignerPanel();
-        this.designer.setDropTarget(dropTarget);
         this.designer.setDropListener(dropListener);
 
         ThreeComponentsSplitter paletteAndDesigner = new ThreeComponentsSplitter();

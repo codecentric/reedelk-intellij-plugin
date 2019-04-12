@@ -15,8 +15,9 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class PrecedingDrawableWithOneSuccessor extends AbstractAddStrategy {
 
-    public PrecedingDrawableWithOneSuccessor(FlowGraph graph, Point dropPoint, Connector connector) {
-        super(graph, dropPoint, connector);
+
+    public PrecedingDrawableWithOneSuccessor(FlowGraph graph, Point dropPoint, Connector connector, Graphics2D graphics) {
+        super(graph, dropPoint, connector, graphics);
     }
 
     @Override
@@ -56,7 +57,7 @@ public class PrecedingDrawableWithOneSuccessor extends AbstractAddStrategy {
 
             currentScope = scopes.pop();
 
-            int maxXBound = getScopeMaxXBound(graph, currentScope);
+            int maxXBound = getScopeMaxXBound(graph, currentScope, graphics);
 
             if (dropPoint.x <= maxXBound) break;
 

@@ -5,7 +5,9 @@ import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
+import java.awt.*;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Stack;
@@ -13,6 +15,9 @@ import java.util.Stack;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ScopeUtilitiesTest extends AbstractGraphTest {
+
+    @Mock
+    private Graphics2D graphics;
 
     @Nested
     @DisplayName("Find Scope Tests")
@@ -477,11 +482,10 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             n3.setPosition(275, 210);
 
             // When
-            int maxScopeXBound = ScopeUtilities.getScopeMaxXBound(graph, choice1);
+            int maxScopeXBound = ScopeUtilities.getScopeMaxXBound(graph, choice1, graphics);
 
             // Then
-            // Max should be drawable with max x + half drawable's width
-            assertThat(maxScopeXBound).isEqualTo(560);
+            assertThat(maxScopeXBound).isEqualTo(565);
         }
 
         @Test
@@ -495,7 +499,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice1.setPosition(165, 140);
 
             // When
-            int maxScopeXBound = ScopeUtilities.getScopeMaxXBound(graph, choice1);
+            int maxScopeXBound = ScopeUtilities.getScopeMaxXBound(graph, choice1, graphics);
 
             // Then
             assertThat(maxScopeXBound).isEqualTo(220);
@@ -516,7 +520,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice1.addToScope(n1);
 
             // When
-            int maxScopeXBound = ScopeUtilities.getScopeMaxXBound(graph, choice1);
+            int maxScopeXBound = ScopeUtilities.getScopeMaxXBound(graph, choice1, graphics);
 
             // Then
             assertThat(maxScopeXBound).isEqualTo(330);

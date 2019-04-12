@@ -7,31 +7,34 @@ import com.esb.plugin.designer.graph.FlowGraphChangeListener;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.decorators.NothingSelectedDrawable;
 import com.esb.plugin.designer.graph.layout.FlowGraphLayout;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.dnd.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.TooManyListenersException;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkState;
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
+public class DesignerPanel extends JBPanel implements MouseMotionListener, MouseListener, FlowGraphChangeListener, DropTargetListener {
 
-public class DesignerPanel extends JBPanel implements MouseMotionListener, MouseListener, FlowGraphChangeListener {
+    private static final Logger LOG = Logger.getInstance(DesignerPanel.class);
 
     private final JBColor BACKGROUND_COLOR = JBColor.WHITE;
     private final Drawable NOTHING_SELECTED = new NothingSelectedDrawable();
 
     private FlowGraph graph;
-    private DropListener dropListener;
     private Drawable selected = NOTHING_SELECTED;
 
     private int offsetx;
@@ -41,6 +44,13 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
 
     public DesignerPanel() {
+        DropTarget dropTarget = new DropTarget();
+        try {
+            dropTarget.addDropTargetListener(this);
+        } catch (TooManyListenersException e) {
+            LOG.error(e);
+        }
+        setDropTarget(dropTarget);
         setBackground(BACKGROUND_COLOR);
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -106,6 +116,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         }
     }
 
+
     @Override
     public void mouseMoved(MouseEvent event) {
         int x = event.getX();
@@ -152,30 +163,19 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     public void mouseReleased(MouseEvent e) {
         if (dragging) {
             dragging = false;
+
             int dragX = e.getX();
             int dragY = e.getY();
+
             selected.drag(dragX, dragY);
             selected.drop();
 
-            // TODO: Maybe this logic should be encapsulated into the drop method below.
-            // If outside the current selected area, then we consider the drop as effective.
-            // Create a method inside selected to check if given coordinates are within hover area.
-            // this logic should be encapsulated there
-            boolean withinX =
-                    dragX > selected.x() - Math.floorDiv(selected.width((Graphics2D) getGraphics()), 2) &&
-                            dragX < selected.x() + Math.floorDiv(selected.width((Graphics2D) getGraphics()), 2);
-
-            boolean withinY =
-                    dragY > selected.y() - Math.floorDiv(selected.height((Graphics2D) getGraphics()), 2) &&
-                            dragY < selected.y() + Math.floorDiv(selected.height((Graphics2D) getGraphics()), 2);
-
-            // TODO: The drop method from the drop listener should be called by the drawable so that
-            // TODO: we encapsulate it.
-            if (!(withinX && withinY)) {
-                if (!(selected instanceof NothingSelectedDrawable)) {
-                    dropListener.drop(dragX, dragY, selected);
-                }
-            }
+            MoveActionHandler delegate = new MoveActionHandler(
+                    graph,
+                    (Graphics2D) getGraphics(),
+                    selected,
+                    new Point(dragX, dragY));
+            delegate.handle().ifPresent(this::updated);
 
             repaint();
         }
@@ -196,8 +196,36 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         // nothing to do
     }
 
+    @Override
+    public void drop(DropTargetDropEvent dropEvent) {
+        PaletteDropActionHandler delegate = new PaletteDropActionHandler(graph, (Graphics2D) getGraphics(), dropEvent);
+        Optional<FlowGraph> updatedGraph = delegate.handle();
+        updatedGraph.ifPresent(this::updated);
+    }
+
+    @Override
+    public void dragEnter(DropTargetDragEvent dtde) {
+        System.out.println("Drag enter");
+    }
+
+    @Override
+    public void dragOver(DropTargetDragEvent dtde) {
+        System.out.println("Drag over");
+    }
+
+    @Override
+    public void dropActionChanged(DropTargetDragEvent dtde) {
+        System.out.println("Drop Action Changed");
+    }
+
+    @Override
+    public void dragExit(DropTargetEvent dte) {
+        System.out.println("Drag exit");
+    }
+
     public void setDropListener(@NotNull DropListener dropListener) {
-        this.dropListener = dropListener;
+        // TODO: Do something about this.
+        //  this.dropListener = dropListener;
     }
 
     /**
@@ -220,4 +248,5 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
                         .filter(drawable -> drawable.contains(this, x, y))
                         .findFirst();
     }
+
 }

@@ -15,7 +15,7 @@ import java.util.*;
 public class ChoiceDrawable extends AbstractDrawable implements ScopedDrawable {
 
     private final Drawable verticalDivider;
-    private final Drawable scopeBoundariesDrawable;
+    private final ScopeBoundariesDrawable scopeBoundariesDrawable;
 
     private Set<Drawable> scope = new HashSet<>();
 
@@ -28,6 +28,11 @@ public class ChoiceDrawable extends AbstractDrawable implements ScopedDrawable {
     @Override
     public boolean scopeContains(Drawable drawable) {
         return scope.contains(drawable);
+    }
+
+    @Override
+    public ScopeBoundaries getScopeBoundaries(FlowGraph graph, Graphics2D graphics) {
+        return scopeBoundariesDrawable.getBoundaries(graph, graphics);
     }
 
     @Override

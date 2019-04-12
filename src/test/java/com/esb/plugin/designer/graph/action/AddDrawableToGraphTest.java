@@ -10,6 +10,7 @@ import com.esb.plugin.designer.graph.drawable.Drawable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 import java.awt.*;
 import java.util.List;
@@ -17,6 +18,9 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class AddDrawableToGraphTest extends AbstractGraphTest {
+
+    @Mock
+    private Graphics2D graphics;
 
     @Nested
     @DisplayName("Root tests")
@@ -552,14 +556,48 @@ class AddDrawableToGraphTest extends AbstractGraphTest {
                 assertThat(choice1.getScope()).containsExactlyInAnyOrder(n1, choice2);
                 assertThat(choice2.getScope()).containsExactly(n2);
             }
-
-
         }
 
         @Nested
         @DisplayName("Preceding drawable without successor")
         class PrecedingDrawableWithoutSuccessor {
 
+            @Test
+            void shouldAddNodeBetweenPredecessorInMultipleScopeAndDropPointInsideUpperScope() {
+                // Given
+                FlowGraph graph = new FlowGraphImpl();
+                graph.root(root);
+                graph.add(root, choice1);
+                graph.add(choice1, n1);
+                graph.add(n1, choice2);
+                graph.add(choice2, n2);
+
+                root.setPosition(55, 75);
+                choice1.setPosition(165, 75);
+                n1.setPosition(275, 75);
+                choice2.setPosition(390, 75);
+                n2.setPosition(505, 75);
+
+                choice1.addToScope(n1);
+                choice1.addToScope(choice2);
+                choice2.addToScope(n2);
+
+                Point dropPoint = new Point(563, 56);
+
+                // When
+                FlowGraph updatedGraph = addDrawableToGraph(graph, n3, dropPoint);
+
+                // Then
+                assertThatRootIs(updatedGraph, root);
+                assertThatSuccessorsAreExactly(updatedGraph, root, choice1);
+                assertThatSuccessorsAreExactly(updatedGraph, choice1, n1);
+                assertThatSuccessorsAreExactly(updatedGraph, n1, choice2);
+                assertThatSuccessorsAreExactly(updatedGraph, choice2, n2);
+                assertThatSuccessorsAreExactly(updatedGraph, n2, n3);
+
+                assertThat(choice1.getScope()).containsExactlyInAnyOrder(n1, choice2, n3);
+                assertThat(choice2.getScope()).containsExactlyInAnyOrder(n2);
+            }
 
         }
 
@@ -568,7 +606,7 @@ class AddDrawableToGraphTest extends AbstractGraphTest {
     private FlowGraphChangeAware addDrawableToGraph(FlowGraph graph, Drawable dropped, Point dropPoint) {
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
         Connector connector = new DrawableConnector(modifiableGraph, dropped);
-        AddDrawableToGraph action = new AddDrawableToGraph(modifiableGraph, dropPoint, connector);
+        AddDrawableToGraph action = new AddDrawableToGraph(modifiableGraph, dropPoint, connector, graphics);
         action.add();
         return modifiableGraph;
     }
