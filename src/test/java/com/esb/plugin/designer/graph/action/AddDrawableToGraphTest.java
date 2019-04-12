@@ -81,6 +81,9 @@ class AddDrawableToGraphTest extends AbstractGraphTest {
         assertThatSuccessorsAreExactly(updatedGraph, choice2, n2);
         assertThatSuccessorsAreExactly(updatedGraph, n3);
         assertThatSuccessorsAreExactly(updatedGraph, n2);
+
+        assertThat(choice1.getScope()).containsExactlyInAnyOrder(n1, n3, choice2);
+        assertThat(choice2.getScope()).containsExactly(n2);
     }
 
     @Test
@@ -123,6 +126,9 @@ class AddDrawableToGraphTest extends AbstractGraphTest {
         assertThatSuccessorsAreExactly(updatedGraph, n5);
         assertThatSuccessorsAreExactly(updatedGraph, n1, choice2);
         assertThatSuccessorsAreExactly(updatedGraph, choice2, n2);
+
+        assertThat(choice1.getScope()).containsExactlyInAnyOrder(n1, n3, n4, n5, choice2);
+        assertThat(choice2.getScope()).containsExactly(n2);
     }
 
 
@@ -232,6 +238,33 @@ class AddDrawableToGraphTest extends AbstractGraphTest {
 
         assertThat(choice2.getScope()).containsExactly(n2);
         assertThat(choice1.getScope()).containsExactlyInAnyOrder(n1, n3, n4, n5, n6, n7, n8, choice2);
+    }
+
+    @Test
+    void shouldAddNodeOutsideScope() {
+        // Given
+        FlowGraph graph = new FlowGraphImpl();
+        graph.root(root);
+        graph.add(root, choice1);
+        graph.add(choice1, n1);
+
+        root.setPosition(55, 70);
+        choice1.setPosition(165, 70);
+        n1.setPosition(275, 70);
+        choice1.addToScope(n1);
+
+        Point dropPoint = new Point(386, 52);
+
+        // When
+        FlowGraph updatedGraph = addDrawableToGraph(graph, n2, dropPoint);
+
+        // Then
+        assertThatRootIs(updatedGraph, root);
+        assertThatSuccessorsAreExactly(updatedGraph, root, choice1);
+        assertThatSuccessorsAreExactly(updatedGraph, choice1, n1);
+        assertThatSuccessorsAreExactly(updatedGraph, n1, n2);
+
+        assertThat(choice1.getScope()).containsExactly(n1);
     }
 
     private FlowGraph addDrawableToGraph(FlowGraph graph, Drawable dropped, Point dropPoint) {

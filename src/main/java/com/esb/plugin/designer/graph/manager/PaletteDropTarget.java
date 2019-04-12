@@ -98,4 +98,6 @@ public class PaletteDropTarget {
         AddDrawableToGraph nodeAdder = new AddDrawableToGraph(graph, dropPoint, connector);
         nodeAdder.add();
     }
+
+
 }

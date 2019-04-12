@@ -40,9 +40,15 @@ public class PrecedingDrawableWithoutSuccessor extends AbstractAddStrategy {
         ScopedDrawable currentScope = null;
         while (!stackOfScopes.isEmpty()) {
             currentScope = stackOfScopes.pop();
+
             int maxXBound = ScopeUtilities.getMaxScopeXBound(graph, currentScope);
             if (dropPoint.x <= maxXBound) break;
+
             lastInnerMostScope = currentScope;
+
+            if (stackOfScopes.isEmpty()) {
+                currentScope = null;
+            }
         }
 
         if (lastInnerMostScope != null) {
@@ -53,6 +59,8 @@ public class PrecedingDrawableWithoutSuccessor extends AbstractAddStrategy {
             connector.addPredecessor(closestPrecedingDrawable);
         }
 
-        connector.addToScope(currentScope);
+        if (currentScope != null) {
+            connector.addToScope(currentScope);
+        }
     }
 }
