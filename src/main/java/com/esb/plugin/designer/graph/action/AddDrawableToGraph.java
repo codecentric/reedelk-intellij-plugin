@@ -50,24 +50,26 @@ public class AddDrawableToGraph {
 
         } else {
 
-            // TODO: fix this
-            findClosestPrecedingDrawable(graph, dropPoint)
-                    .ifPresent(closestPrecedingDrawable -> {
-                        AddStrategy strategy;
-                        if (closestPrecedingDrawable instanceof ScopedDrawable) {
-                            strategy = new PrecedingScopedDrawable(graph, dropPoint, connector, graphics);
-                        } else if (graph.successors(closestPrecedingDrawable).isEmpty()) {
-                            strategy = new PrecedingDrawableWithoutSuccessor(graph, dropPoint, connector, graphics);
-                        } else {
-                            // Only ScopedDrawable nodes might have multiple successors. In all other cases
-                            // a node in the flow must have at most one successor.
-                            checkState(graph.successors(closestPrecedingDrawable).size() == 1,
-                                    "Successors size MUST be 1, otherwise it must be a Scoped Drawable");
-                            strategy = new PrecedingDrawableWithOneSuccessor(graph, dropPoint, connector, graphics);
-                        }
-                        strategy.execute(closestPrecedingDrawable);
+            Optional<Drawable> optionalPrecedingNode = findClosestPrecedingDrawable(graph, dropPoint);
+            if (optionalPrecedingNode.isPresent()) {
+                Drawable closestPrecedingDrawable = optionalPrecedingNode.get();
+                AddStrategy strategy;
 
-                    });
+                if (closestPrecedingDrawable instanceof ScopedDrawable) {
+                    strategy = new PrecedingScopedDrawable(graph, dropPoint, connector, graphics);
+
+                } else if (graph.successors(closestPrecedingDrawable).isEmpty()) {
+                    strategy = new PrecedingDrawableWithoutSuccessor(graph, dropPoint, connector, graphics);
+
+                } else {
+                    // Only ScopedDrawable nodes might have multiple successors. In all other cases
+                    // a node in the flow must have at most one successor.
+                    checkState(graph.successors(closestPrecedingDrawable).size() == 1,
+                            "Successors size MUST be 1, otherwise it must be a Scoped Drawable");
+                    strategy = new PrecedingDrawableWithOneSuccessor(graph, dropPoint, connector, graphics);
+                }
+                strategy.execute(closestPrecedingDrawable);
+            }
         }
     }
 

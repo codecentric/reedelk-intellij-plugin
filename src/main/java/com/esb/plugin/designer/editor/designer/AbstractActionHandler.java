@@ -16,7 +16,7 @@ import java.awt.*;
 
 abstract class AbstractActionHandler {
 
-    // TODO: something should be done about this
+    // TODO: Here you should provide a proper constructor for connector.
     protected Connector createComponentConnector(Drawable componentToAdd, FlowGraph graph) {
         if (componentToAdd instanceof ChoiceDrawable) {
             FlowGraph choiceGraph = new FlowGraphImpl();
