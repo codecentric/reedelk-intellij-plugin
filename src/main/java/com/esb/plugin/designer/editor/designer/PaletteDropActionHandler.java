@@ -37,6 +37,7 @@ class PaletteDropActionHandler extends AbstractActionHandler {
         Optional<String> optionalComponentName = extractComponentName(dropEvent);
         if (!optionalComponentName.isPresent()) {
             dropEvent.rejectDrop();
+            return Optional.empty();
         }
 
         Point dropPoint = dropEvent.getLocation();
