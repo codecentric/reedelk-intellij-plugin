@@ -68,13 +68,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         // We compute again the graph layout if and only if it was updated.
         if (updated) {
             FlowGraphLayout.compute(graph, g2);
-            System.out.println("------- Graph Updated --------");
-            graph.breadthFirstTraversal(new Consumer<Drawable>() {
-                @Override
-                public void accept(Drawable drawable) {
-                    System.out.println("Name: " + drawable.component().getName() + ", x: " + drawable.x() + ", y: " + drawable.y());
-                }
-            });
+            debugGraphNodesPosition(); // TODO: debug only
             adjustWindowSize();
             updated = false;
         }
@@ -116,7 +110,6 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         }
     }
 
-
     @Override
     public void mouseMoved(MouseEvent event) {
         int x = event.getX();
@@ -151,9 +144,8 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
             dragging = true;
 
         } else {
-            // If no drawable is selected, then we reset it.
-            selected.unselected();
-            selected = NOTHING_SELECTED;
+            // If no drawable is selected, then unselect the current one
+            unselect();
         }
 
         repaint();
@@ -170,11 +162,9 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
             selected.drag(dragX, dragY);
             selected.drop();
 
-            MoveActionHandler delegate = new MoveActionHandler(
-                    graph,
-                    (Graphics2D) getGraphics(),
-                    selected,
-                    new Point(dragX, dragY));
+            Point movePoint = new Point(dragX, dragY);
+
+            MoveActionHandler delegate = new MoveActionHandler(graph, getGraphics2D(), selected, movePoint);
             delegate.handle().ifPresent(this::updated);
 
             repaint();
@@ -205,17 +195,18 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     @Override
     public void dragEnter(DropTargetDragEvent dtde) {
-        System.out.println("Drag enter");
+        unselect();
+        repaint();
     }
 
     @Override
     public void dragOver(DropTargetDragEvent dtde) {
-        System.out.println("Drag over");
+        // TODO: Might be useful
     }
 
     @Override
     public void dropActionChanged(DropTargetDragEvent dtde) {
-        System.out.println("Drop Action Changed");
+        // TODO: Might be useful
     }
 
     @Override
@@ -247,6 +238,25 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
                         .stream()
                         .filter(drawable -> drawable.contains(this, x, y))
                         .findFirst();
+    }
+
+    private void unselect() {
+        selected.unselected();
+        selected = NOTHING_SELECTED;
+    }
+
+    private Graphics2D getGraphics2D() {
+        return (Graphics2D) getGraphics();
+    }
+
+    private void debugGraphNodesPosition() {
+        System.out.println("------- Graph Updated --------");
+        graph.breadthFirstTraversal(new Consumer<Drawable>() {
+            @Override
+            public void accept(Drawable drawable) {
+                System.out.println("Name: " + drawable.component().getName() + ", x: " + drawable.x() + ", y: " + drawable.y());
+            }
+        });
     }
 
 }
