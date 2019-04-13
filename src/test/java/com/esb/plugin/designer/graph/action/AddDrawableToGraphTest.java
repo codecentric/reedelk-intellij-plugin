@@ -615,18 +615,6 @@ class AddDrawableToGraphTest extends AbstractGraphTest {
         assertThat(flowGraph.nodesCount()).isEqualTo(expectedCount);
     }
 
-    private void assertThatRootIs(FlowGraph graph, Drawable root) {
-        assertThat(graph.root()).isEqualTo(root);
-    }
-
-    private void assertThatSuccessorsAreExactly(FlowGraph graph, Drawable target, Drawable... successors) {
-        if (successors.length == 0) {
-            assertThat(graph.successors(target)).isEmpty();
-        } else {
-            assertThat(graph.successors(target)).containsExactly(successors);
-        }
-    }
-
     private void assertIsChangedWithNodesCount(FlowGraphChangeAware graph, int nodesCount) {
         assertThat(graph.isChanged()).isTrue();
         assertThat(graph.nodesCount()).isEqualTo(nodesCount);

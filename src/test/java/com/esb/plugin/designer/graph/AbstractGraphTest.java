@@ -11,6 +11,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public abstract class AbstractGraphTest {
@@ -55,5 +57,18 @@ public abstract class AbstractGraphTest {
         choice4 = new ChoiceDrawable(new Component("choice4"));
         choice5 = new ChoiceDrawable(new Component("choice5"));
     }
+
+    protected void assertThatRootIs(FlowGraph graph, Drawable root) {
+        assertThat(graph.root()).isEqualTo(root);
+    }
+
+    protected void assertThatSuccessorsAreExactly(FlowGraph graph, Drawable target, Drawable... successors) {
+        if (successors.length == 0) {
+            assertThat(graph.successors(target)).isEmpty();
+        } else {
+            assertThat(graph.successors(target)).containsExactly(successors);
+        }
+    }
+
 
 }
