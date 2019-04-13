@@ -7,10 +7,16 @@ import com.esb.plugin.designer.editor.properties.PropertiesPanel;
 import com.esb.plugin.designer.graph.DropListener;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.FlowGraphChangeListener;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
+
+import java.awt.dnd.DropTarget;
+import java.util.TooManyListenersException;
 
 
 public class FlowEditorPanel extends ThreeComponentsSplitter implements FlowGraphChangeListener {
+
+    private static final Logger LOG = Logger.getInstance(FlowEditorPanel.class);
 
     private static final int DIVIDER_WIDTH = 2;
     private static final int PALETTE_SIZE = 210;
@@ -23,9 +29,10 @@ public class FlowEditorPanel extends ThreeComponentsSplitter implements FlowGrap
     FlowEditorPanel(DropListener dropListener) {
         super(VERTICAL);
 
-        this.palette = new PalettePanel();
         this.designer = new DesignerPanel();
-        this.designer.setDropListener(dropListener);
+        registerDropTargetListener(this.designer);
+
+        this.palette = new PalettePanel();
 
         ThreeComponentsSplitter paletteAndDesigner = new ThreeComponentsSplitter();
         ScrollableDesignerPanel designerScrollable = new ScrollableDesignerPanel(designer);
@@ -41,7 +48,19 @@ public class FlowEditorPanel extends ThreeComponentsSplitter implements FlowGrap
 
     @Override
     public void updated(FlowGraph graph) {
-        // TODO: Should not be like this. Designer Panel should be argument of this class and set listener *BEFORE* during construction
+        // TODO: Should not be like this.
+        //  Designer Panel should be argument of this class and
+        //  set listener *BEFORE* during construction
         this.designer.updated(graph);
+    }
+
+    private void registerDropTargetListener(DesignerPanel designer) {
+        DropTarget dropTarget = new DropTarget();
+        designer.setDropTarget(dropTarget);
+        try {
+            dropTarget.addDropTargetListener(designer);
+        } catch (TooManyListenersException e) {
+            LOG.error("DropTarget listener error", e);
+        }
     }
 }

@@ -7,29 +7,27 @@ import com.esb.plugin.designer.graph.FlowGraphChangeListener;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.decorators.NothingSelectedDrawable;
 import com.esb.plugin.designer.graph.layout.FlowGraphLayout;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.dnd.*;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.TooManyListenersException;
-import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkState;
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
 public class DesignerPanel extends JBPanel implements MouseMotionListener, MouseListener, FlowGraphChangeListener, DropTargetListener {
-
-    private static final Logger LOG = Logger.getInstance(DesignerPanel.class);
 
     private final JBColor BACKGROUND_COLOR = JBColor.WHITE;
     private final Drawable NOTHING_SELECTED = new NothingSelectedDrawable();
@@ -44,13 +42,6 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
 
     public DesignerPanel() {
-        DropTarget dropTarget = new DropTarget();
-        try {
-            dropTarget.addDropTargetListener(this);
-        } catch (TooManyListenersException e) {
-            LOG.error(e);
-        }
-        setDropTarget(dropTarget);
         setBackground(BACKGROUND_COLOR);
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -188,7 +179,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     @Override
     public void drop(DropTargetDropEvent dropEvent) {
-        PaletteDropActionHandler delegate = new PaletteDropActionHandler(graph, (Graphics2D) getGraphics(), dropEvent);
+        PaletteDropActionHandler delegate = new PaletteDropActionHandler(graph, getGraphics2D(), dropEvent);
         Optional<FlowGraph> updatedGraph = delegate.handle();
         updatedGraph.ifPresent(this::updated);
     }
@@ -251,12 +242,8 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     private void debugGraphNodesPosition() {
         System.out.println("------- Graph Updated --------");
-        graph.breadthFirstTraversal(new Consumer<Drawable>() {
-            @Override
-            public void accept(Drawable drawable) {
-                System.out.println("Name: " + drawable.component().getName() + ", x: " + drawable.x() + ", y: " + drawable.y());
-            }
-        });
+        graph.breadthFirstTraversal(drawable ->
+                System.out.println("Name: " + drawable.component().getName() + ", x: " + drawable.x() + ", y: " + drawable.y()));
     }
 
 }

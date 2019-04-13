@@ -5,9 +5,9 @@ import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.FlowGraphChangeAware;
 import com.esb.plugin.designer.graph.FlowGraphImpl;
 import com.esb.plugin.designer.graph.action.AddDrawableToGraph;
-import com.esb.plugin.designer.graph.connector.ChoiceConnector;
 import com.esb.plugin.designer.graph.connector.Connector;
 import com.esb.plugin.designer.graph.connector.DrawableConnector;
+import com.esb.plugin.designer.graph.connector.ScopeDrawableConnector;
 import com.esb.plugin.designer.graph.drawable.ChoiceDrawable;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.FlowReferenceDrawable;
@@ -24,7 +24,7 @@ abstract class AbstractActionHandler {
             FlowReferenceDrawable placeholderDrawable = new FlowReferenceDrawable(new Component("Flow ref"));
             choiceGraph.add(componentToAdd, placeholderDrawable);
             ((ChoiceDrawable) componentToAdd).addToScope(placeholderDrawable);
-            return new ChoiceConnector(graph, choiceGraph);
+            return new ScopeDrawableConnector(graph, choiceGraph);
         }
         return new DrawableConnector(graph, componentToAdd);
     }
