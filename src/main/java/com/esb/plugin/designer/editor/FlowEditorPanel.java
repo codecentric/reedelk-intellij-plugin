@@ -23,14 +23,17 @@ public class FlowEditorPanel extends ThreeComponentsSplitter implements FlowGrap
     private static final int PROPERTIES_PANEL_SIZE = 100;
 
     private static final boolean VERTICAL = true;
+    private final PropertiesPanel propertiesPanel;
     private PalettePanel palette;
     private DesignerPanel designer;
 
     FlowEditorPanel(DropListener dropListener) {
         super(VERTICAL);
 
+        this.propertiesPanel = new PropertiesPanel();
         this.designer = new DesignerPanel();
         registerDropTargetListener(this.designer);
+        this.designer.addSelectListener(propertiesPanel);
 
         this.palette = new PalettePanel();
 
@@ -42,7 +45,7 @@ public class FlowEditorPanel extends ThreeComponentsSplitter implements FlowGrap
         paletteAndDesigner.setLastSize(PALETTE_SIZE);
 
         setInnerComponent(paletteAndDesigner);
-        setLastComponent(new PropertiesPanel());
+        setLastComponent(this.propertiesPanel);
         setLastSize(PROPERTIES_PANEL_SIZE);
     }
 

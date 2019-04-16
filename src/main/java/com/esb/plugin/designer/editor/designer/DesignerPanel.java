@@ -1,6 +1,7 @@
 package com.esb.plugin.designer.editor.designer;
 
 import com.esb.plugin.designer.Tile;
+import com.esb.plugin.designer.editor.SelectListener;
 import com.esb.plugin.designer.graph.DropListener;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.FlowGraphChangeListener;
@@ -34,6 +35,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     private FlowGraph graph;
     private Drawable selected = NOTHING_SELECTED;
+    private SelectListener selectListener;
 
     private int offsetx;
     private int offsety;
@@ -45,6 +47,10 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         setBackground(BACKGROUND_COLOR);
         addMouseListener(this);
         addMouseMotionListener(this);
+    }
+
+    public void addSelectListener(SelectListener listener) {
+        this.selectListener = listener;
     }
 
     @Override
@@ -119,24 +125,19 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         int x = event.getX();
         int y = event.getY();
 
+        unselect();
+
         Optional<Drawable> drawableWithinCoordinates = getDrawableWithinCoordinates(x, y);
         if (drawableWithinCoordinates.isPresent()) {
             // Unselect the previous one
-            selected.unselected();
-            selected = drawableWithinCoordinates.get();
+            select(drawableWithinCoordinates.get());
+            selected.dragging();
 
             offsetx = event.getX() - selected.x();
             offsety = event.getY() - selected.y();
-
-            selected.selected();
-            selected.dragging();
             selected.drag(event.getX() - offsetx, event.getY() - offsety);
 
             dragging = true;
-
-        } else {
-            // If no drawable is selected, then unselect the current one
-            unselect();
         }
 
         repaint();
@@ -233,7 +234,14 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     private void unselect() {
         selected.unselected();
-        selected = NOTHING_SELECTED;
+        selectListener.onUnselect(selected);
+        select(NOTHING_SELECTED);
+    }
+
+    private void select(Drawable drawable) {
+        selected = drawable;
+        selected.selected();
+        selectListener.onSelect(selected);
     }
 
     private Graphics2D getGraphics2D() {
