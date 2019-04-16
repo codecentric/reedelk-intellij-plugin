@@ -13,6 +13,9 @@ import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import java.awt.dnd.DropTarget;
 import java.util.TooManyListenersException;
 
+import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED;
+import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
+
 
 public class FlowEditorPanel extends ThreeComponentsSplitter implements FlowGraphChangeListener {
 
@@ -37,8 +40,12 @@ public class FlowEditorPanel extends ThreeComponentsSplitter implements FlowGrap
 
         this.palette = new PalettePanel();
 
-        ThreeComponentsSplitter paletteAndDesigner = new ThreeComponentsSplitter();
+
         ScrollableDesignerPanel designerScrollable = new ScrollableDesignerPanel(designer);
+        designerScrollable.setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        designerScrollable.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        ThreeComponentsSplitter paletteAndDesigner = new ThreeComponentsSplitter();
         paletteAndDesigner.setDividerWidth(DIVIDER_WIDTH);
         paletteAndDesigner.setInnerComponent(designerScrollable);
         paletteAndDesigner.setLastComponent(palette);
