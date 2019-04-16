@@ -515,6 +515,28 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             // Then
             assertThat(drawables).isEmpty();
         }
+        
+        @Test
+        void shouldCorrectlyReturnFirstDrawableOutsideScopeWhenChoiceWithTwoChildren() {
+            // Given
+            FlowGraph graph = new FlowGraphImpl();
+            graph.root(root);
+            graph.add(root, choice1);
+            graph.add(choice1, n1);
+            graph.add(choice1, n2);
+            graph.add(n1, n3);
+            graph.add(n2, n3);
+
+            choice1.addToScope(n1);
+            choice1.addToScope(n2);
+
+            // When
+            Collection<Drawable> drawables = ScopeUtilities
+                    .listFirstDrawablesOutsideScope(graph, choice1);
+
+            // Then
+            assertThat(drawables).containsExactlyInAnyOrder(n3);
+        }
     }
 
     @Nested

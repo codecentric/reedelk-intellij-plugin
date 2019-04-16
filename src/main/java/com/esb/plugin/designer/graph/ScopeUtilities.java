@@ -112,7 +112,7 @@ public class ScopeUtilities {
      */
     public static Collection<Drawable> listFirstDrawablesOutsideScope(FlowGraph graph, ScopedDrawable scopedDrawable) {
         Collection<Drawable> lastDrawablesOfScope = listLastDrawablesOfScope(graph, scopedDrawable);
-        List<Drawable> firstDrawablesOutsideScope = new ArrayList<>();
+        Set<Drawable> firstDrawablesOutsideScope = new HashSet<>();
         lastDrawablesOfScope.forEach(lastDrawableOfScope -> {
             List<Drawable> successors = graph.successors(lastDrawableOfScope);
             firstDrawablesOutsideScope.addAll(successors);

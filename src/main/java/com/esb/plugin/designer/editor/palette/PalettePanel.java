@@ -57,7 +57,7 @@ public class PalettePanel extends JBPanel {
     private DefaultMutableTreeNode commons() {
         DefaultMutableTreeNode commonsNode = new DefaultMutableTreeNode("Commons");
         commonsNode.add(new DefaultMutableTreeNode(new Pair<>("Set Payload", "com.esb.core.component.SetPayload")));
-        commonsNode.add(new DefaultMutableTreeNode(new Pair<>("Fork", "com.esb.component.Fork")));
+        commonsNode.add(new DefaultMutableTreeNode(new Pair<>("Fork", SystemComponents.FORK.qualifiedName())));
         commonsNode.add(new DefaultMutableTreeNode(new Pair<>("Choice", SystemComponents.CHOICE.qualifiedName())));
         commonsNode.add(new DefaultMutableTreeNode(new Pair<>("Flow Reference", SystemComponents.FLOW_REFERENCE.qualifiedName())));
         return commonsNode;
