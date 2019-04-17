@@ -36,7 +36,7 @@ public class FlowGraphLayoutUtils {
         return sum;
     }
 
-    public static int maxLayerWidth(int layerNumber, java.util.List<java.util.List<Drawable>> layers, Graphics2D graphics, FlowGraph graph) {
+    public static int maxLayerWidth(int layerNumber, List<java.util.List<Drawable>> layers, Graphics2D graphics, FlowGraph graph) {
         List<Drawable> layerDrawables = layers.get(layerNumber);
         int max = 0;
         for (Drawable layerDrawable : layerDrawables) {
