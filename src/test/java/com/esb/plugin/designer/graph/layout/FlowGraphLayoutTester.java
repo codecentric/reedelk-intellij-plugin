@@ -5,7 +5,7 @@ import com.esb.plugin.designer.graph.FlowGraph;
 import javax.swing.*;
 import java.awt.*;
 
-import static com.esb.plugin.designer.graph.layout.GraphSamples.*;
+import static com.esb.plugin.designer.graph.layout.GraphSamples.graph6;
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
@@ -13,11 +13,14 @@ public class FlowGraphLayoutTester extends JFrame {
 
 
     private FlowGraphLayoutTester() {
+        /*
         new GraphVisualizer(graph1());
         new GraphVisualizer(graph2());
         new GraphVisualizer(graph3());
         new GraphVisualizer(graph4());
         new GraphVisualizer(graph5());
+        */
+        new GraphVisualizer(graph6());
     }
 
     class GraphVisualizer extends JFrame {
