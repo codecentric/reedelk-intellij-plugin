@@ -51,6 +51,28 @@ public class GraphSamples {
         return new GraphSamples().buildGraph6();
     }
 
+    public static FlowGraph graph7() {
+        return new GraphSamples().buildGraph7();
+    }
+
+    private FlowGraph buildGraph7() {
+        FlowGraph graph = new FlowGraphImpl();
+        graph.root(root);
+        graph.add(root, c1);
+        graph.add(c1, c2);
+        graph.add(c1, c3);
+        graph.add(c2, n1);
+        graph.add(c3, n2);
+
+        c1.addToScope(c2);
+        c1.addToScope(c3);
+        c2.addToScope(n1);
+        c3.addToScope(n2);
+
+
+        return graph;
+    }
+
     private FlowGraph buildGraph6() {
         FlowGraph graph = new FlowGraphImpl();
         graph.root(root);

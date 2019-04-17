@@ -13,7 +13,6 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class FlowGraphLayoutUtils {
 
-
     public static int computeSubTreeHeight(FlowGraph graph, Drawable root, Graphics2D graphics) {
         return computeMaxHeight(graphics, graph, root, Optional.empty(), 0);
     }
@@ -75,7 +74,7 @@ public class FlowGraphLayoutUtils {
             if (subMaxHeight > currentMax) {
                 currentMax = subMaxHeight;
             }
-            return currentMax;
+            return currentMax + ScopedDrawable.VERTICAL_PADDING + ScopedDrawable.VERTICAL_PADDING;
 
         } else {
 

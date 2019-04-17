@@ -45,6 +45,7 @@ public class FlowGraphLayout {
                 int tmpX = X_LEFT_PADDING + sumLayerWidthForLayersPreceding(findLayer(drawable, layers), layers, graphics, graph);
                 int min = predecessors.stream().mapToInt(Drawable::y).min().getAsInt();
                 int max = predecessors.stream().mapToInt(Drawable::y).max().getAsInt();
+
                 int tmpY = Math.floorDiv(max + min, 2);
 
                 drawable.setPosition(tmpX, tmpY);
@@ -52,6 +53,7 @@ public class FlowGraphLayout {
                 if (drawable instanceof ScopedDrawable) {
                     top += ScopedDrawable.VERTICAL_PADDING; // top padding
                 }
+
                 compute(top, graph, graphics, graph.successors(drawable), layers);
             }
 
@@ -65,7 +67,7 @@ public class FlowGraphLayout {
 
             int maxSubTreeHeight = computeMaxHeight(graphics, graph, commonParent, firstDrawableOutsideScope, 0);
 
-            top = commonParent.y() - Math.floorDiv(maxSubTreeHeight, 2);
+            top = 5 + commonParent.y() - Math.floorDiv(maxSubTreeHeight, 2);
 
             // Need to find max height until the end of the scope
 
@@ -84,7 +86,7 @@ public class FlowGraphLayout {
                 // added while computing max subtree height also.
                 // The padding is added here.
                 if (drawable instanceof ScopedDrawable) {
-                    //     maxSubtreeHeight -= (ScopedDrawable.VERTICAL_PADDING + ScopedDrawable.VERTICAL_PADDING); // top and bottom
+                    maxSubtreeHeight -= (ScopedDrawable.VERTICAL_PADDING + ScopedDrawable.VERTICAL_PADDING); // top and bottom
                 }
 
                 int tmpY = top + Math.floorDiv(maxSubtreeHeight, 2);

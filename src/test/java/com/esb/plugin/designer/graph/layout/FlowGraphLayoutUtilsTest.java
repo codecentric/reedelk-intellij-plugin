@@ -68,6 +68,40 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         }
 
         @Test
+        void shouldComputeMaxHeightCorrectlyForChoice() {
+            // Given
+            FlowGraph graph = new FlowGraphImpl();
+            graph.root(choice1);
+            graph.add(choice1, n1);
+
+            // When
+            int actual = FlowGraphLayoutUtils.computeMaxHeight(graphics, graph, choice1, Optional.empty(), 0);
+
+            // Then
+            assertThat(actual).isEqualTo(140);
+        }
+
+        @Test
+        void shouldComputeMaxHeightCorrectlyForNestedChoice() {
+            // Given
+            FlowGraph graph = new FlowGraphImpl();
+            graph.root(choice1);
+            graph.add(choice1, n1);
+            graph.add(n1, choice2);
+            graph.add(choice2, n2);
+
+            choice1.addToScope(n1);
+            choice1.addToScope(choice2);
+            choice2.addToScope(n2);
+
+            // When
+            int actual = FlowGraphLayoutUtils.computeMaxHeight(graphics, graph, choice1, Optional.empty(), 0);
+
+            // Then
+            assertThat(actual).isEqualTo(150);
+        }
+
+        @Test
         void shouldComputeMaxHeightCorrectlyForDisjointSubsequentChoice() {
             // Given
             FlowGraph graph = new FlowGraphImpl();
