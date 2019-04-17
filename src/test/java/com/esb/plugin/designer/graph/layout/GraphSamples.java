@@ -31,6 +31,14 @@ public class GraphSamples {
         return new GraphSamples().buildGraph1();
     }
 
+    public static FlowGraph graph1a() {
+        return new GraphSamples().buildGraph1a();
+    }
+
+    public static FlowGraph graph1b() {
+        return new GraphSamples().buildGraph1b();
+    }
+
     public static FlowGraph graph2() {
         return new GraphSamples().buildGraph2();
     }
@@ -115,6 +123,56 @@ public class GraphSamples {
 
         c2.addToScope(n4);
         c2.addToScope(n5);
+        return graph;
+    }
+
+    private FlowGraph buildGraph1a() {
+        FlowGraph graph = new FlowGraphImpl();
+        graph.root(root);
+        graph.add(root, c1);
+        graph.add(c1, n1);
+        graph.add(c1, n2);
+        graph.add(n1, n3);
+        graph.add(n2, n3);
+        graph.add(n3, c2);
+        graph.add(c2, n4);
+        graph.add(c2, n5);
+        graph.add(c2, c3);
+        graph.add(n4, n6);
+        graph.add(n5, n6);
+        graph.add(c3, n7);
+        graph.add(n7, n6);
+
+        c1.addToScope(n1);
+        c1.addToScope(n2);
+
+        c2.addToScope(n4);
+        c2.addToScope(n5);
+        c2.addToScope(c3);
+
+        c3.addToScope(n7);
+        return graph;
+    }
+
+    private FlowGraph buildGraph1b() {
+        FlowGraph graph = new FlowGraphImpl();
+        graph.root(root);
+        graph.add(root, c1);
+        graph.add(c1, n1);
+        graph.add(c1, n2);
+        graph.add(c1, c3);
+        graph.add(c3, n3);
+
+        graph.add(n1, n4);
+        graph.add(n2, n4);
+        graph.add(n3, n4);
+
+        c1.addToScope(n1);
+        c1.addToScope(n2);
+        c1.addToScope(c3);
+
+        c3.addToScope(n3);
+
         return graph;
     }
 

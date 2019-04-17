@@ -13,15 +13,15 @@ public class FlowGraphLayoutTester extends JFrame {
 
 
     private FlowGraphLayoutTester() {
-
         new GraphVisualizer(graph1());
+        new GraphVisualizer(graph1a());
+        new GraphVisualizer(graph1b());
         new GraphVisualizer(graph2());
         new GraphVisualizer(graph3());
         new GraphVisualizer(graph4());
         new GraphVisualizer(graph5());
         new GraphVisualizer(graph6());
         new GraphVisualizer(graph7());
-
     }
 
     class GraphVisualizer extends JFrame {

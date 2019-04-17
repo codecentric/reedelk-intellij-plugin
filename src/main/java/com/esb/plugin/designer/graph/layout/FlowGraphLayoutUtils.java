@@ -9,6 +9,8 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 
+import static com.esb.plugin.designer.graph.drawable.ScopedDrawable.HORIZONTAL_PADDING;
+import static com.esb.plugin.designer.graph.drawable.ScopedDrawable.VERTICAL_PADDING;
 import static com.google.common.base.Preconditions.checkState;
 
 public class FlowGraphLayoutUtils {
@@ -39,7 +41,7 @@ public class FlowGraphLayoutUtils {
         int max = 0;
         for (Drawable layerDrawable : layerDrawables) {
             int nestedScopes = ScopeUtilities.countNumberOfNestedScopes(graph, layerDrawable);
-            int total = layerDrawable.width(graphics) + nestedScopes * ScopedDrawable.HORIZONTAL_PADDING;
+            int total = layerDrawable.width(graphics) + nestedScopes * HORIZONTAL_PADDING;
             if (total > max) max = total;
         }
         return max;
@@ -68,13 +70,9 @@ public class FlowGraphLayoutUtils {
                 subMaxHeight = computeMaxHeight(graphics, graph, firstNodeOutsideScope.get(), end, sum);
             }
 
-            if (sum > currentMax) {
-                currentMax = sum;
-            }
-            if (subMaxHeight > currentMax) {
-                currentMax = subMaxHeight;
-            }
-            return currentMax + ScopedDrawable.VERTICAL_PADDING + ScopedDrawable.VERTICAL_PADDING;
+            return sum > subMaxHeight ?
+                    sum + VERTICAL_PADDING + VERTICAL_PADDING :
+                    subMaxHeight + VERTICAL_PADDING + VERTICAL_PADDING;
 
         } else {
 
@@ -88,11 +86,11 @@ public class FlowGraphLayoutUtils {
             List<Drawable> successors = graph.successors(start);
             checkState(successors.size() == 1 || successors.isEmpty(),
                     "Only ScopedDrawables might have more than one successor");
-            return successors
-                    .stream()
-                    .findFirst()
-                    .map(drawable -> computeMaxHeight(graphics, graph, drawable, end, newMax))
-                    .orElse(newMax);
+
+            if (successors.isEmpty()) return newMax;
+
+            Drawable successor = successors.get(0);
+            return computeMaxHeight(graphics, graph, successor, end, newMax);
         }
     }
 }
