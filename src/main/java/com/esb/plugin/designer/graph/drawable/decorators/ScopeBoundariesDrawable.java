@@ -148,9 +148,10 @@ public class ScopeBoundariesDrawable implements Drawable {
             }
         }
 
+        Optional<Drawable> optionalFirstNodeOutsideScope = ScopeUtilities.getFirstNodeOutsideScope(graph, scopedDrawable);
+        Drawable firstNodeOutsideScope = optionalFirstNodeOutsideScope.orElse(null);
 
-        Optional<Drawable> firstNodeOutsideScope = ScopeUtilities.getFirstNodeOutsideScope(graph, scopedDrawable);
-        int subTreeHeight = FlowGraphLayoutUtils.computeMaxHeight(graphics, graph, scopedDrawable, firstNodeOutsideScope, 0);
+        int subTreeHeight = FlowGraphLayoutUtils.computeSubTreeHeight(graph, graphics, scopedDrawable, firstNodeOutsideScope);
 
         int minY = scopedDrawable.y() - Math.floorDiv(subTreeHeight, 2) + ScopedDrawable.VERTICAL_PADDING;
         int maxY = scopedDrawable.y() + Math.floorDiv(subTreeHeight, 2) - ScopedDrawable.VERTICAL_PADDING;

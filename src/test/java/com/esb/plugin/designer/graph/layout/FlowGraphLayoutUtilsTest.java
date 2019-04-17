@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import java.awt.*;
-import java.util.Optional;
 
 import static com.esb.plugin.designer.graph.layout.FlowGraphLayoutUtils.computeSubTreeHeight;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,7 +29,7 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
             graph.root(root);
 
             // When
-            int actual = FlowGraphLayoutUtils.computeMaxHeight(graphics, graph, root, Optional.empty(), 0);
+            int actual = computeSubTreeHeight(graph, graphics, root);
 
             // Then
             assertThat(actual).isEqualTo(130);
@@ -44,7 +43,7 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
             graph.add(root, n1);
 
             // When
-            int actual = FlowGraphLayoutUtils.computeMaxHeight(graphics, graph, root, Optional.empty(), 0);
+            int actual = computeSubTreeHeight(graph, graphics, root);
 
             // Then
             assertThat(actual).isEqualTo(130);
@@ -61,7 +60,7 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
             choice1.addToScope(n2);
 
             // When
-            int actual = FlowGraphLayoutUtils.computeMaxHeight(graphics, graph, choice1, Optional.empty(), 0);
+            int actual = computeSubTreeHeight(graph, graphics, choice1);
 
             // Then
             assertThat(actual).isEqualTo(260);
@@ -75,7 +74,7 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
             graph.add(choice1, n1);
 
             // When
-            int actual = FlowGraphLayoutUtils.computeMaxHeight(graphics, graph, choice1, Optional.empty(), 0);
+            int actual = computeSubTreeHeight(graph, graphics, choice1);
 
             // Then
             assertThat(actual).isEqualTo(140);
@@ -95,7 +94,7 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
             choice2.addToScope(n2);
 
             // When
-            int actual = FlowGraphLayoutUtils.computeMaxHeight(graphics, graph, choice1, Optional.empty(), 0);
+            int actual = computeSubTreeHeight(graph, graphics, choice1);
 
             // Then
             assertThat(actual).isEqualTo(150);
@@ -126,7 +125,7 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
             choice2.addToScope(n6);
 
             // When
-            int actual = FlowGraphLayoutUtils.computeMaxHeight(graphics, graph, choice1, Optional.empty(), 0);
+            int actual = computeSubTreeHeight(graph, graphics, choice1);
 
             // Then
             assertThat(actual).isEqualTo(390);
@@ -141,10 +140,10 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         graph.root(n1);
 
         // When
-        int height = computeSubTreeHeight(graph, n1, graphics);
+        int actual = computeSubTreeHeight(graph, graphics, n1);
 
         // Then
-        assertThat(height).isEqualTo(130);
+        assertThat(actual).isEqualTo(130);
     }
 
     @Test
@@ -154,10 +153,10 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         graph.root(choice1);
 
         // When
-        int height = computeSubTreeHeight(graph, choice1, graphics);
+        int actual = computeSubTreeHeight(graph, graphics, choice1);
 
         // Then
-        assertThat(height).isEqualTo(130 + 5 + 5);
+        assertThat(actual).isEqualTo(130 + 5 + 5);
     }
 
     @Test
@@ -169,10 +168,10 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         graph.add(choice1, choice2);
 
         // When
-        int height = computeSubTreeHeight(graph, root, graphics);
+        int actual = computeSubTreeHeight(graph, graphics, root);
 
         // Then: plus 2 padding/s for two choices
-        assertThat(height).isEqualTo(130 + 5 + 5 + 5 + 5);
+        assertThat(actual).isEqualTo(130 + 5 + 5 + 5 + 5);
     }
 
     @Test
@@ -185,10 +184,10 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         graph.add(choice1, choice3);
 
         // When
-        int height = computeSubTreeHeight(graph, root, graphics);
+        int actual = computeSubTreeHeight(graph, graphics, root);
 
         // Then: 2 choices on top of each other + 3 padding/s for 3 choices
-        assertThat(height).isEqualTo(130 + 130 + 5 + 5 + 5 + 5 + 5 + 5);
+        assertThat(actual).isEqualTo(130 + 130 + 5 + 5 + 5 + 5 + 5 + 5);
     }
 
     @Test
@@ -210,10 +209,10 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         graph.add(n6, n7);
 
         // When
-        int height = computeSubTreeHeight(graph, root, graphics);
+        int actual = computeSubTreeHeight(graph, graphics, root);
 
         // Then
-        assertThat(height).isEqualTo(130 + 5 + 5 + 130 + 5 + 5 + 130 + 5 + 5);
+        assertThat(actual).isEqualTo(130 + 5 + 5 + 130 + 5 + 5 + 130 + 5 + 5);
     }
 
 }

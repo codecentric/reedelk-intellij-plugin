@@ -32,9 +32,13 @@ public class FlowGraphLayout {
             // Root
             if (predecessors.isEmpty()) {
 
+                // Find layer containing this drawable
+                int containingLayerIndex = findContainingLayer(layers, drawable);
+
                 // Center in subtree
-                int maxSubtreeHeight = computeSubTreeHeight(graph, drawable, graphics);
-                int tmpX = X_LEFT_PADDING + sumLayerWidthForLayersPreceding(findLayer(drawable, layers), layers, graphics, graph);
+                int maxSubtreeHeight = computeSubTreeHeight(graph, graphics, drawable);
+
+                int tmpX = X_LEFT_PADDING + layerWidthSumPreceding(graph, graphics, layers, containingLayerIndex);
                 int tmpY = top + Math.floorDiv(maxSubtreeHeight, 2);
                 drawable.setPosition(tmpX, tmpY);
 
@@ -43,7 +47,11 @@ public class FlowGraphLayout {
 
                 // Single node with one or more predecessor/s
             } else {
-                int tmpX = X_LEFT_PADDING + sumLayerWidthForLayersPreceding(findLayer(drawable, layers), layers, graphics, graph);
+
+                // Find layer containing this drawable
+                int containingLayerIndex = findContainingLayer(layers, drawable);
+
+                int tmpX = X_LEFT_PADDING + layerWidthSumPreceding(graph, graphics, layers, containingLayerIndex);
                 int min = predecessors.stream().mapToInt(Drawable::y).min().getAsInt();
                 int max = predecessors.stream().mapToInt(Drawable::y).max().getAsInt();
 
@@ -63,25 +71,28 @@ public class FlowGraphLayout {
             // Layer with multiple nodes.
             // Center them all in their respective subtrees.
             // Successors can be > 1 only when predecessor is ScopedDrawable
-
             Drawable commonParent = findCommonParent(graph, drawables);
-            Optional<Drawable> firstDrawableOutsideScope = getFirstNodeOutsideScope(graph, (ScopedDrawable) commonParent);
+            Optional<Drawable> optionalFirstDrawableOutsideScope = getFirstNodeOutsideScope(graph, (ScopedDrawable) commonParent);
+            Drawable firstDrawableOutsideScope = optionalFirstDrawableOutsideScope.orElse(null);
 
-            int maxSubTreeHeight = computeMaxHeight(graphics, graph, commonParent, firstDrawableOutsideScope, 0);
+            int maxSubTreeHeight = computeSubTreeHeight(graph, graphics, commonParent, firstDrawableOutsideScope);
 
             top = VERTICAL_PADDING + commonParent.y() - Math.floorDiv(maxSubTreeHeight, 2);
 
 
             for (Drawable drawable : drawables) {
 
+                // Find layer containing this drawable
+                int containingLayerIndex = findContainingLayer(layers, drawable);
+
                 // Center in subtree
                 if (drawable instanceof ScopedDrawable) {
                     top += VERTICAL_PADDING; // top padding
                 }
 
-                int tmpX = X_LEFT_PADDING + sumLayerWidthForLayersPreceding(findLayer(drawable, layers), layers, graphics, graph);
+                int tmpX = X_LEFT_PADDING + layerWidthSumPreceding(graph, graphics, layers, containingLayerIndex);
 
-                int maxSubtreeHeight = computeMaxHeight(graphics, graph, drawable, firstDrawableOutsideScope, 0);
+                int maxSubtreeHeight = computeSubTreeHeight(graph, graphics, drawable, firstDrawableOutsideScope);
 
                 // We must subtract the current padding since it
                 // was added while computing max subtree height as well.
