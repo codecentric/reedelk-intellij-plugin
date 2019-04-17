@@ -5,7 +5,7 @@ import com.esb.plugin.designer.graph.ScopeUtilities;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopeBoundaries;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
-import com.esb.plugin.designer.graph.layout.FlowGraphLayout;
+import com.esb.plugin.designer.graph.layout.FlowGraphLayoutUtils;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 
@@ -148,7 +148,10 @@ public class ScopeBoundariesDrawable implements Drawable {
             }
         }
 
-        int subTreeHeight = FlowGraphLayout.computeSubTreeHeight(graph, scopedDrawable, graphics);
+
+        Optional<Drawable> firstNodeOutsideScope = ScopeUtilities.getFirstNodeOutsideScope(graph, scopedDrawable);
+        int subTreeHeight = FlowGraphLayoutUtils.computeMaxHeight(graphics, graph, scopedDrawable, firstNodeOutsideScope, 0);
+
         int minY = scopedDrawable.y() - Math.floorDiv(subTreeHeight, 2) + ScopedDrawable.VERTICAL_PADDING;
         int maxY = scopedDrawable.y() + Math.floorDiv(subTreeHeight, 2) - ScopedDrawable.VERTICAL_PADDING;
 

@@ -36,7 +36,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice2.addToScope(n1);
 
             // When
-            Optional<ScopedDrawable> actualScope = ScopeUtilities.findScope(graph, n1);
+            Optional<ScopedDrawable> actualScope = ScopeUtilities.findScopeOf(graph, n1);
 
             // Then
             assertThat(actualScope.isPresent()).isTrue();
@@ -509,11 +509,10 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice2.addToScope(n2);
 
             // When
-            Collection<Drawable> drawables = ScopeUtilities
-                    .listFirstDrawablesOutsideScope(graph, choice1);
+            Optional<Drawable> firstNodeOutsideScope = ScopeUtilities.getFirstNodeOutsideScope(graph, choice1);
 
             // Then
-            assertThat(drawables).isEmpty();
+            assertThat(firstNodeOutsideScope.isPresent()).isFalse();
         }
         
         @Test
@@ -531,11 +530,11 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice1.addToScope(n2);
 
             // When
-            Collection<Drawable> drawables = ScopeUtilities
-                    .listFirstDrawablesOutsideScope(graph, choice1);
+            Optional<Drawable> drawables = ScopeUtilities
+                    .getFirstNodeOutsideScope(graph, choice1);
 
             // Then
-            assertThat(drawables).containsExactlyInAnyOrder(n3);
+            assertThat(drawables.get()).isEqualTo(n3);
         }
     }
 

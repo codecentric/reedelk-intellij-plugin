@@ -1,14 +1,16 @@
 package com.esb.plugin.designer.graph.drawable.decorators;
 
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.ScopeUtilities;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
-import com.esb.plugin.designer.graph.layout.FlowGraphLayout;
+import com.esb.plugin.designer.graph.layout.FlowGraphLayoutUtils;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
+import java.util.Optional;
 
 import static java.awt.BasicStroke.CAP_ROUND;
 import static java.awt.BasicStroke.JOIN_ROUND;
@@ -30,7 +32,11 @@ public class VerticalDivider implements Drawable {
         graphics.setColor(VERTICAL_DIVIDER_COLOR);
 
         int padding = (ScopedDrawable.VERTICAL_PADDING * 4) * 2;
-        int scopeHeight = FlowGraphLayout.computeSubTreeHeight(graph, scopedDrawable, graphics) - padding;
+
+        Optional<Drawable> firstNodeOutsideScope = ScopeUtilities.getFirstNodeOutsideScope(graph, scopedDrawable);
+        int scopeHeight = FlowGraphLayoutUtils.computeMaxHeight(graphics, graph, scopedDrawable, firstNodeOutsideScope, 0);
+        scopeHeight -= padding;
+
         int halfScopeHeight = Math.floorDiv(scopeHeight, 2);
 
         int halfWidth = Math.floorDiv(scopedDrawable.width(graphics), 2);

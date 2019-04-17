@@ -11,13 +11,14 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 
+import static com.google.common.base.Preconditions.checkState;
 import static java.util.stream.Collectors.toList;
 
 public class ScopeUtilities {
 
     public static boolean belongToSameScope(FlowGraph graph, Drawable drawable1, Drawable drawable2) {
-        Optional<ScopedDrawable> scope1 = findScope(graph, drawable1);
-        Optional<ScopedDrawable> scope2 = findScope(graph, drawable2);
+        Optional<ScopedDrawable> scope1 = findScopeOf(graph, drawable1);
+        Optional<ScopedDrawable> scope2 = findScopeOf(graph, drawable2);
         if (!scope1.isPresent() && !scope2.isPresent()) {
             // they both don't belong to ANY scope.
             return true;
@@ -30,7 +31,7 @@ public class ScopeUtilities {
         return false;
     }
 
-    public static Optional<ScopedDrawable> findScope(FlowGraph graph, Drawable target) {
+    public static Optional<ScopedDrawable> findScopeOf(FlowGraph graph, Drawable target) {
         return graph.nodes()
                 .stream()
                 .filter(drawable -> drawable instanceof ScopedDrawable)
@@ -39,10 +40,13 @@ public class ScopeUtilities {
                 .findFirst();
     }
 
-    /*
+    /**
      * Returns a Stack containing all the scopes the target node belongs to. The topmost
      * element of the stack is the innermost scope this target belongs to. The last element
      * of the stack is the outermost scope this target belongs to.
+     * @param graph
+     * @param target
+     * @return Stack containing all the scopes the target node belongs to.
      */
     public static Stack<ScopedDrawable> findScopesOf(@NotNull FlowGraph graph, @NotNull Drawable target) {
         boolean targetBelongsToScope = graph.nodes()
@@ -60,11 +64,10 @@ public class ScopeUtilities {
             return new Stack<>();
         }
 
-        Optional<Stack<ScopedDrawable>> targetScopes = doFindTargetScopes(graph, graph.root(), target, new Stack<>());
-        return targetScopes.orElseGet(Stack::new);
+        return findScopes(graph, graph.root(), target, new Stack<>()).orElseGet(Stack::new);
     }
 
-    private static Optional<Stack<ScopedDrawable>> doFindTargetScopes(@NotNull FlowGraph graph, @NotNull Drawable parent, @NotNull Drawable target, @NotNull Stack<ScopedDrawable> scopesStack) {
+    private static Optional<Stack<ScopedDrawable>> findScopes(@NotNull FlowGraph graph, @NotNull Drawable parent, @NotNull Drawable target, @NotNull Stack<ScopedDrawable> scopesStack) {
         List<Drawable> successors = graph.successors(parent);
         for (Drawable successor : successors) {
             if (successor instanceof ScopedDrawable) {
@@ -78,8 +81,7 @@ public class ScopeUtilities {
                     return Optional.of(scopesStack);
                 }
             }
-            Optional<Stack<ScopedDrawable>> scopeFound =
-                    doFindTargetScopes(graph, successor, target, new Stack<>());
+            Optional<Stack<ScopedDrawable>> scopeFound = findScopes(graph, successor, target, new Stack<>());
             if (scopeFound.isPresent()) {
                 StackUtils.reverse(scopeFound.get());
                 while (!scopeFound.get().isEmpty()) {
@@ -108,16 +110,23 @@ public class ScopeUtilities {
     }
 
     /**
-     * It finds the first node outside the given ScopedDrawable.
+     * It finds the first node outside the given ScopedDrawable. By definition a scope block
+     * must be followed only by one node.
+     * @param graph
+     * @param scopedDrawable
+     * @return
      */
-    public static Collection<Drawable> listFirstDrawablesOutsideScope(FlowGraph graph, ScopedDrawable scopedDrawable) {
+    public static Optional<Drawable> getFirstNodeOutsideScope(FlowGraph graph, ScopedDrawable scopedDrawable) {
         Collection<Drawable> lastDrawablesOfScope = listLastDrawablesOfScope(graph, scopedDrawable);
         Set<Drawable> firstDrawablesOutsideScope = new HashSet<>();
         lastDrawablesOfScope.forEach(lastDrawableOfScope -> {
             List<Drawable> successors = graph.successors(lastDrawableOfScope);
             firstDrawablesOutsideScope.addAll(successors);
         });
-        return firstDrawablesOutsideScope;
+        checkState(firstDrawablesOutsideScope.isEmpty() ||
+                        firstDrawablesOutsideScope.size() == 1,
+                "First node outside scope must be asent or at most one");
+        return firstDrawablesOutsideScope.stream().findFirst();
     }
 
     public static Collection<Drawable> listLastDrawablesOfScope(FlowGraph graph, ScopedDrawable scopedDrawable) {
@@ -152,7 +161,7 @@ public class ScopeUtilities {
                 return true;
             }
         }
-        Optional<ScopedDrawable> scope = findScope(graph, drawable);
+        Optional<ScopedDrawable> scope = findScopeOf(graph, drawable);
         if (!scope.isPresent()) return false;
 
         List<Drawable> successors = graph.successors(drawable);
@@ -166,12 +175,12 @@ public class ScopeUtilities {
         if (drawable instanceof ScopedDrawable) {
             ScopedDrawable scopedDrawable = (ScopedDrawable) drawable;
             if (scopedDrawable.getScope().isEmpty()) {
-                return 1 + findScope(graph, scopedDrawable)
-                        .map(d -> 1 + countNumberOfNestedScopes(graph, d))
+                return 1 + findScopeOf(graph, scopedDrawable)
+                        .map(scope -> 1 + countNumberOfNestedScopes(graph, scope))
                         .orElse(0);
             }
         }
-        return findScope(graph, drawable)
+        return findScopeOf(graph, drawable)
                 .map(scopedDrawable -> 1 + countNumberOfNestedScopes(graph, scopedDrawable))
                 .orElse(0);
     }

@@ -51,8 +51,8 @@ public class PrecedingScopedDrawable extends AbstractAddStrategy {
 
     private void connectCommonSuccessorsOf(ScopedDrawable closestPrecedingNode) {
         ScopeUtilities
-                .listFirstDrawablesOutsideScope(graph, closestPrecedingNode)
-                .forEach(connector::addSuccessor);
+                .getFirstNodeOutsideScope(graph, closestPrecedingNode)
+                .ifPresent(connector::addSuccessor);
     }
 
 }
