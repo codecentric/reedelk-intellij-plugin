@@ -69,7 +69,7 @@ public class FlowGraphLayoutUtils {
                 subMaxHeight = computeMaxHeight(graphics, graph, firstNodeOutsideScope, end, sum);
             }
 
-            return sum > subMaxHeight ?
+            return sum + VERTICAL_PADDING + VERTICAL_PADDING > subMaxHeight ?
                     sum + VERTICAL_PADDING + VERTICAL_PADDING :
                     subMaxHeight;
 
