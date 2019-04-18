@@ -15,12 +15,12 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class FlowGraphLayoutUtils {
 
-    public static int computeSubTreeHeight(FlowGraph graph, Graphics2D graphics, Drawable start, Drawable end) {
-        return computeMaxHeight(graphics, graph, start, end, 0);
-    }
-
     static int computeSubTreeHeight(FlowGraph graph, Graphics2D graphics, Drawable start) {
         return computeSubTreeHeight(graph, graphics, start, null);
+    }
+
+    public static int computeSubTreeHeight(FlowGraph graph, Graphics2D graphics, Drawable start, Drawable end) {
+        return computeMaxHeight(graphics, graph, start, end, 0);
     }
 
     static int findContainingLayer(List<List<Drawable>> layers, Drawable current) {
@@ -60,6 +60,10 @@ public class FlowGraphLayoutUtils {
                 sum += computeMaxHeight(graphics, graph, successor, firstNodeOutsideScope, currentMax);
             }
 
+            if (successors.isEmpty()) {
+                sum += scope.height(graphics);
+            }
+
             int subMaxHeight = 0;
             if (firstNodeOutsideScope != null) {
                 subMaxHeight = computeMaxHeight(graphics, graph, firstNodeOutsideScope, end, sum);
@@ -67,7 +71,7 @@ public class FlowGraphLayoutUtils {
 
             return sum > subMaxHeight ?
                     sum + VERTICAL_PADDING + VERTICAL_PADDING :
-                    subMaxHeight + VERTICAL_PADDING + VERTICAL_PADDING;
+                    subMaxHeight;
 
         } else {
 

@@ -63,7 +63,7 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
             int actual = computeSubTreeHeight(graph, graphics, choice1);
 
             // Then
-            assertThat(actual).isEqualTo(260);
+            assertThat(actual).isEqualTo(130 + 130 + 5 + 5);
         }
 
         @Test
@@ -72,6 +72,7 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
             FlowGraph graph = new FlowGraphImpl();
             graph.root(choice1);
             graph.add(choice1, n1);
+            choice1.addToScope(n1);
 
             // When
             int actual = computeSubTreeHeight(graph, graphics, choice1);
@@ -167,6 +168,8 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         graph.add(root, choice1);
         graph.add(choice1, choice2);
 
+        choice1.addToScope(choice2);
+
         // When
         int actual = computeSubTreeHeight(graph, graphics, root);
 
@@ -183,11 +186,14 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         graph.add(choice1, choice2);
         graph.add(choice1, choice3);
 
+        choice1.addToScope(choice2);
+        choice1.addToScope(choice3);
+
         // When
         int actual = computeSubTreeHeight(graph, graphics, root);
 
-        // Then: 2 choices on top of each other + 3 padding/s for 3 choices
-        assertThat(actual).isEqualTo(130 + 130 + 5 + 5 + 5 + 5 + 5 + 5);
+        // Then: 2 choices on top of each other + padding/s for 2 choices
+        assertThat(actual).isEqualTo(130 + 5 + 5 + 130 + 5 + 5 + 5 + 5);
     }
 
     @Test
@@ -208,11 +214,18 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         graph.add(n5, n7);
         graph.add(n6, n7);
 
+        choice1.addToScope(n1);
+        choice1.addToScope(n2);
+        choice2.addToScope(n4);
+        choice2.addToScope(n5);
+        choice2.addToScope(n6);
+
         // When
         int actual = computeSubTreeHeight(graph, graphics, root);
 
         // Then
-        assertThat(actual).isEqualTo(130 + 5 + 5 + 130 + 5 + 5 + 130 + 5 + 5);
+        // n4, n5, n6
+        assertThat(actual).isEqualTo(130 + 130 + 130);
     }
 
 }
