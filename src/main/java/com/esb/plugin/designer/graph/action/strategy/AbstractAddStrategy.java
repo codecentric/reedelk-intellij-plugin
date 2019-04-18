@@ -22,6 +22,6 @@ abstract class AbstractAddStrategy implements AddStrategy {
     }
 
     protected void addToScopeIfNeeded(Drawable closestPrecedingNode) {
-        ScopeUtilities.addToScopeIfNecessary(graph, closestPrecedingNode, connector);
+        ScopeUtilities.addToScopeIfNeeded(graph, closestPrecedingNode, connector);
     }
 }

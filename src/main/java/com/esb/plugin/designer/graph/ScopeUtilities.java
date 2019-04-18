@@ -16,6 +16,29 @@ import static java.util.stream.Collectors.toList;
 
 public class ScopeUtilities {
 
+    // TODO: Test this method
+    public static Optional<ScopedDrawable> getScopeItIsJoining(FlowGraph graph, Drawable drawable) {
+        List<ScopedDrawable> scopedDrawables = graph.nodes()
+                .stream()
+                .filter(drawable1 -> drawable1 instanceof ScopedDrawable)
+                .map(drawable12 -> (ScopedDrawable) drawable12)
+                .collect(toList());
+
+        List<ScopedDrawable> scopes = scopedDrawables.stream()
+                .filter(scopedDrawable -> {
+                    Optional<Drawable> firstNode = getFirstNodeOutsideScope(graph, scopedDrawable);
+                    return firstNode.filter(drawable1 -> drawable1 == drawable).isPresent();
+                }).collect(toList());
+
+        // TODO: we need to select the outer most amongst all the scopes.
+        // The outermost is the one with the lowest X
+        if (!scopes.isEmpty()) {
+            return Optional.of(scopes.get(0));
+        }
+
+        return Optional.empty();
+    }
+
     public static boolean belongToSameScope(FlowGraph graph, Drawable drawable1, Drawable drawable2) {
         Optional<ScopedDrawable> scope1 = findScopeOf(graph, drawable1);
         Optional<ScopedDrawable> scope2 = findScopeOf(graph, drawable2);
@@ -44,6 +67,7 @@ public class ScopeUtilities {
      * Returns a Stack containing all the scopes the target node belongs to. The topmost
      * element of the stack is the innermost scope this target belongs to. The last element
      * of the stack is the outermost scope this target belongs to.
+     *
      * @param graph
      * @param target
      * @return Stack containing all the scopes the target node belongs to.
@@ -94,7 +118,7 @@ public class ScopeUtilities {
     }
 
 
-    public static void addToScopeIfNecessary(FlowGraph graph, Drawable closestPrecedingNode, Connector connector) {
+    public static void addToScopeIfNeeded(FlowGraph graph, Drawable closestPrecedingNode, Connector connector) {
         if (closestPrecedingNode instanceof ScopedDrawable) {
             ScopedDrawable scopedDrawable = (ScopedDrawable) closestPrecedingNode;
             connector.addToScope(scopedDrawable);
@@ -112,9 +136,10 @@ public class ScopeUtilities {
     /**
      * It finds the first node outside the given ScopedDrawable. By definition a scope block
      * must be followed only by one node.
-     * @param graph
-     * @param scopedDrawable
-     * @return
+     *
+     * @param graph          the graph this scope belongs to
+     * @param scopedDrawable the scope for which we want to find the first node outside its scope
+     * @return the first node outside this scope if any. An empty optional otherwise.
      */
     public static Optional<Drawable> getFirstNodeOutsideScope(FlowGraph graph, ScopedDrawable scopedDrawable) {
         Collection<Drawable> lastDrawablesOfScope = listLastDrawablesOfScope(graph, scopedDrawable);

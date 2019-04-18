@@ -5,7 +5,7 @@ import com.esb.plugin.designer.graph.FlowGraph;
 import javax.swing.*;
 import java.awt.*;
 
-import static com.esb.plugin.designer.graph.layout.GraphSamples.*;
+import static com.esb.plugin.designer.graph.layout.GraphSamples.graph4;
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
@@ -13,20 +13,23 @@ public class FlowGraphLayoutTester extends JFrame {
 
 
     private FlowGraphLayoutTester() {
-        new GraphVisualizer(graph1());
-        new GraphVisualizer(graph1a());
-        new GraphVisualizer(graph1b());
-        new GraphVisualizer(graph2());
-        new GraphVisualizer(graph3());
-        new GraphVisualizer(graph4());
-        new GraphVisualizer(graph5());
-        new GraphVisualizer(graph6());
-        new GraphVisualizer(graph7());
+        /**
+         new GraphVisualizer(graph1(), "Graph1");
+         new GraphVisualizer(graph1a(), "Graph1a");
+         new GraphVisualizer(graph1b(), "Graph1b");
+         new GraphVisualizer(graph2(), "Graph2");
+         new GraphVisualizer(graph3(), "Graph3");
+         new GraphVisualizer(graph4(), "Graph4");
+         new GraphVisualizer(graph5(), "Graph5");
+         new GraphVisualizer(graph6(), "Graph6");
+         new GraphVisualizer(graph7(), "Graph7");
+         */
+        new GraphVisualizer(graph4(), "Graph4");
     }
 
     class GraphVisualizer extends JFrame {
-        GraphVisualizer(FlowGraph graph) {
-            setTitle("Graph Layout test");
+        GraphVisualizer(FlowGraph graph, String title) {
+            setTitle(title);
             setVisible(true);
             setSize(1000, 600);
             setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

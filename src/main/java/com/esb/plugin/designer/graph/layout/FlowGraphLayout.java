@@ -2,7 +2,9 @@ package com.esb.plugin.designer.graph.layout;
 
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.ScopeUtilities;
 import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.drawable.ScopeBoundaries;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 
 import java.awt.*;
@@ -52,8 +54,25 @@ public class FlowGraphLayout {
                 int containingLayerIndex = findContainingLayer(layers, drawable);
 
                 int tmpX = X_LEFT_PADDING + layerWidthSumPreceding(graph, graphics, layers, containingLayerIndex);
+
+                // If it is the first node outside a scope, center it in the middle of the scope
+                // this node is joining from.
+
+                // Otherwise take min and max.
+                Optional<ScopedDrawable> scopeItIsJoining = ScopeUtilities.getScopeItIsJoining(graph, drawable);
+
                 int min = predecessors.stream().mapToInt(Drawable::y).min().getAsInt();
                 int max = predecessors.stream().mapToInt(Drawable::y).max().getAsInt();
+
+                // TODO: Test this logic properly and optimize the code.
+                // If this node is joining a scope, then we place it in the
+                // center of the scope this node is joining to.
+                if (scopeItIsJoining.isPresent()) {
+                    ScopedDrawable scope = scopeItIsJoining.get();
+                    ScopeBoundaries scopeBoundaries = scope.getScopeBoundaries(graph, graphics);
+                    min = scope.y() - Math.floorDiv(scopeBoundaries.getHeight(), 2);
+                    max = scope.y() + Math.floorDiv(scopeBoundaries.getHeight(), 2);
+                }
 
                 int tmpY = Math.floorDiv(max + min, 2);
 
