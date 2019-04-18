@@ -111,9 +111,6 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
             graph.add(choice1, n2);
             graph.add(n1, n3);
             graph.add(n2, n3);
-            choice1.addToScope(n1);
-            choice1.addToScope(n2);
-
             graph.add(n3, choice2);
             graph.add(choice2, n4);
             graph.add(choice2, n5);
@@ -121,6 +118,10 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
             graph.add(n4, n7);
             graph.add(n5, n7);
             graph.add(n6, n7);
+
+            choice1.addToScope(n1);
+            choice1.addToScope(n2);
+
             choice2.addToScope(n4);
             choice2.addToScope(n5);
             choice2.addToScope(n6);
@@ -129,7 +130,7 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
             int actual = computeSubTreeHeight(graph, graphics, choice1);
 
             // Then
-            assertThat(actual).isEqualTo(390);
+            assertThat(actual).isEqualTo(130 + 130 + 130 + 5 + 5);
         }
 
         @Test
@@ -223,7 +224,7 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
 
             // Then
             // n4, n5, n6
-            assertThat(actual).isEqualTo(130 + 130 + 130);
+            assertThat(actual).isEqualTo(130 + 130 + 130 + 5 + 5);
         }
 
         @Test
