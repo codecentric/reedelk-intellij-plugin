@@ -35,7 +35,7 @@ public class FlowGraphLayoutUtils {
             int newMax = currentMax > start.height(graphics) ? currentMax : start.height(graphics);
             List<Drawable> successors = graph.successors(start);
             checkState(successors.size() == 1 || successors.isEmpty(),
-                    "Only ScopedDrawables might have more than one successor");
+                    "Zero or at most one successors expected");
 
             if (successors.isEmpty()) {
                 return newMax;
