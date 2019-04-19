@@ -11,7 +11,7 @@ import java.awt.*;
 import java.awt.image.ImageObserver;
 import java.util.Optional;
 
-import static com.esb.plugin.designer.graph.layout.FlowGraphLayoutUtils.computeSubTreeHeight;
+import static com.esb.plugin.designer.graph.layout.FlowGraphLayoutUtils.computeMaxHeight;
 import static java.awt.BasicStroke.CAP_ROUND;
 import static java.awt.BasicStroke.JOIN_ROUND;
 
@@ -36,7 +36,7 @@ public class VerticalDivider implements Drawable {
         Optional<Drawable> optionalFirstNodeOutsideScope = ScopeUtilities.getFirstNodeOutsideScope(graph, scopedDrawable);
         Drawable firstNodeOutsideScope = optionalFirstNodeOutsideScope.orElse(null);
 
-        int scopeHeight = computeSubTreeHeight(graph, graphics, scopedDrawable, firstNodeOutsideScope);
+        int scopeHeight = computeMaxHeight(graph, graphics, scopedDrawable, firstNodeOutsideScope);
         scopeHeight -= padding;
 
         int halfScopeHeight = Math.floorDiv(scopeHeight, 2);

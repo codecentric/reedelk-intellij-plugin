@@ -15,37 +15,12 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class FlowGraphLayoutUtils {
 
-    static int computeSubTreeHeight(FlowGraph graph, Graphics2D graphics, Drawable start) {
-        return computeSubTreeHeight(graph, graphics, start, null);
+    static int computeMaxHeight(FlowGraph graph, Graphics2D graphics, Drawable start) {
+        return computeMaxHeight(graph, graphics, start, null);
     }
 
-    public static int computeSubTreeHeight(FlowGraph graph, Graphics2D graphics, Drawable start, Drawable end) {
+    public static int computeMaxHeight(FlowGraph graph, Graphics2D graphics, Drawable start, Drawable end) {
         return computeMaxHeight(graphics, graph, start, end, 0);
-    }
-
-    static int findContainingLayer(List<List<Drawable>> layers, Drawable current) {
-        for (int i = 0; i < layers.size(); i++) {
-            if (layers.get(i).contains(current)) {
-                return i;
-            }
-        }
-        throw new RuntimeException("Could not find containing layer for node " + current);
-    }
-
-    static int layerWidthSumPreceding(FlowGraph graph, Graphics2D graphics, List<List<Drawable>> layers, int precedingLayerIndex) {
-        int sum = 0;
-        for (int i = 0; i < precedingLayerIndex; i++) {
-            List<Drawable> layerDrawables = layers.get(i);
-            sum += maxLayerWidth(graph, graphics, layerDrawables);
-        }
-        return sum;
-    }
-
-    static Drawable findCommonParent(FlowGraph graph, Collection<Drawable> drawables) {
-        Set<Drawable> commonParents = new HashSet<>();
-        drawables.forEach(drawable -> commonParents.addAll(graph.predecessors(drawable)));
-        checkState(commonParents.size() == 1, "Common parent must be one");
-        return commonParents.stream().findFirst().get();
     }
 
     private static int computeMaxHeight(Graphics2D graphics, FlowGraph graph, Drawable start, Drawable end, int currentMax) {
@@ -93,6 +68,31 @@ public class FlowGraphLayoutUtils {
             Drawable successor = successors.get(0);
             return computeMaxHeight(graphics, graph, successor, end, newMax);
         }
+    }
+
+    static int findContainingLayer(List<List<Drawable>> layers, Drawable current) {
+        for (int i = 0; i < layers.size(); i++) {
+            if (layers.get(i).contains(current)) {
+                return i;
+            }
+        }
+        throw new RuntimeException("Could not find containing layer for node " + current);
+    }
+
+    static int layerWidthSumPreceding(FlowGraph graph, Graphics2D graphics, List<List<Drawable>> layers, int precedingLayerIndex) {
+        int sum = 0;
+        for (int i = 0; i < precedingLayerIndex; i++) {
+            List<Drawable> layerDrawables = layers.get(i);
+            sum += maxLayerWidth(graph, graphics, layerDrawables);
+        }
+        return sum;
+    }
+
+    static Drawable findCommonParent(FlowGraph graph, Collection<Drawable> drawables) {
+        Set<Drawable> commonParents = new HashSet<>();
+        drawables.forEach(drawable -> commonParents.addAll(graph.predecessors(drawable)));
+        checkState(commonParents.size() == 1, "Common parent must be one");
+        return commonParents.stream().findFirst().get();
     }
 
     private static int maxLayerWidth(FlowGraph graph, Graphics2D graphics, List<Drawable> layerDrawables) {
