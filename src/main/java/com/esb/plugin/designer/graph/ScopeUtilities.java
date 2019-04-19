@@ -32,11 +32,18 @@ public class ScopeUtilities {
 
         // TODO: we need to select the outer most amongst all the scopes.
         // The outermost is the one with the lowest X
-        if (!scopes.isEmpty()) {
-            return Optional.of(scopes.get(0));
+        ScopedDrawable outermost = null;
+        for (ScopedDrawable scope : scopes) {
+            if (outermost == null) {
+                outermost = scope;
+                continue;
+            }
+            if (scope.x() < outermost.x()) {
+                outermost = scope;
+            }
         }
 
-        return Optional.empty();
+        return Optional.ofNullable(outermost);
     }
 
     public static boolean belongToSameScope(FlowGraph graph, Drawable drawable1, Drawable drawable2) {

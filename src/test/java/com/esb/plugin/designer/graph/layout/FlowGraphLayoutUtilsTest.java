@@ -247,5 +247,27 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
             // Then
             assertThat(actual).isEqualTo(130 + 5 + 5);
         }
+
+        @Test
+        void shouldComputeSubTreeHeightCorrectlyForChoiceFollowedByChoice() {
+            // Given
+            FlowGraph graph = new FlowGraphImpl();
+            graph.root(root);
+            graph.add(root, choice1);
+            graph.add(choice1, n1);
+            graph.add(n1, choice2);
+            graph.add(choice2, n2);
+
+            choice1.addToScope(n1);
+            choice2.addToScope(n2);
+
+            // When
+            int actual = computeSubTreeHeight(graph, graphics, root);
+
+            // Then
+            assertThat(actual).isEqualTo(130 + 5 + 5);
+        }
+
+
     }
 }

@@ -49,6 +49,9 @@ public class FlowGraphLayoutUtils {
     }
 
     private static int computeMaxHeight(Graphics2D graphics, FlowGraph graph, Drawable start, Drawable end, int currentMax) {
+
+        if (start == end) return currentMax;
+
         if (start instanceof ScopedDrawable) {
             ScopedDrawable scope = (ScopedDrawable) start;
             List<Drawable> successors = graph.successors(scope);
@@ -57,27 +60,26 @@ public class FlowGraphLayoutUtils {
 
             int sum = 0;
             for (Drawable successor : successors) {
-                sum += computeMaxHeight(graphics, graph, successor, firstNodeOutsideScope, currentMax);
+                // We are looking for the max in the subtree starting from this successor.
+                sum += computeMaxHeight(graphics, graph, successor, firstNodeOutsideScope, 0);
             }
 
             if (successors.isEmpty()) {
                 sum += scope.height(graphics);
             }
 
-            int subMaxHeight = 0;
-            if (firstNodeOutsideScope != null) {
-                subMaxHeight = computeMaxHeight(graphics, graph, firstNodeOutsideScope, end, sum);
+            int newCurrentMax = sum + VERTICAL_PADDING + VERTICAL_PADDING > currentMax ?
+                    sum + VERTICAL_PADDING + VERTICAL_PADDING :
+                    currentMax;
+
+            int newOuterMax = 0;
+            if (firstNodeOutsideScope != end && firstNodeOutsideScope != null) {
+                newOuterMax = computeMaxHeight(graphics, graph, firstNodeOutsideScope, null, 0);
             }
 
-            return sum + VERTICAL_PADDING + VERTICAL_PADDING > subMaxHeight ?
-                    sum + VERTICAL_PADDING + VERTICAL_PADDING :
-                    subMaxHeight;
+            return newOuterMax > newCurrentMax ? newOuterMax : newCurrentMax;
 
         } else {
-
-            if (end != null && start == end) {
-                return start.height(graphics);
-            }
 
             int newMax = currentMax > start.height(graphics) ? currentMax : start.height(graphics);
             List<Drawable> successors = graph.successors(start);
