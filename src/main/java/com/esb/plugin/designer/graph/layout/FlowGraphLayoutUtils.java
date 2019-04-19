@@ -24,35 +24,11 @@ public class FlowGraphLayoutUtils {
     }
 
     private static int computeMaxHeight(Graphics2D graphics, FlowGraph graph, Drawable start, Drawable end, int currentMax) {
+        if (start == end) {
+            return currentMax;
 
-        if (start == end) return currentMax;
-
-        if (start instanceof ScopedDrawable) {
-            ScopedDrawable scope = (ScopedDrawable) start;
-            List<Drawable> successors = graph.successors(scope);
-            Optional<Drawable> optionalFirstNodeOutsideScope = ScopeUtilities.getFirstNodeOutsideScope(graph, scope);
-            Drawable firstNodeOutsideScope = optionalFirstNodeOutsideScope.orElse(null);
-
-            int sum = 0;
-            for (Drawable successor : successors) {
-                // We are looking for the max in the subtree starting from this successor.
-                sum += computeMaxHeight(graphics, graph, successor, firstNodeOutsideScope, 0);
-            }
-
-            if (successors.isEmpty()) {
-                sum += scope.height(graphics);
-            }
-
-            int newCurrentMax = sum + VERTICAL_PADDING + VERTICAL_PADDING > currentMax ?
-                    sum + VERTICAL_PADDING + VERTICAL_PADDING :
-                    currentMax;
-
-            int newOuterMax = 0;
-            if (firstNodeOutsideScope != end && firstNodeOutsideScope != null) {
-                newOuterMax = computeMaxHeight(graphics, graph, firstNodeOutsideScope, null, 0);
-            }
-
-            return newOuterMax > newCurrentMax ? newOuterMax : newCurrentMax;
+        } else if (start instanceof ScopedDrawable) {
+            return computeMaxHeight(graphics, graph, (ScopedDrawable) start, end, currentMax);
 
         } else {
 
@@ -69,6 +45,35 @@ public class FlowGraphLayoutUtils {
             return computeMaxHeight(graphics, graph, successor, end, newMax);
         }
     }
+
+    private static int computeMaxHeight(Graphics2D graphics, FlowGraph graph, ScopedDrawable scopedDrawable, Drawable end, int currentMax) {
+        List<Drawable> successors = graph.successors(scopedDrawable);
+        Optional<Drawable> optionalFirstNodeOutsideScope = ScopeUtilities.getFirstNodeOutsideScope(graph, scopedDrawable);
+        Drawable firstNodeOutsideScope = optionalFirstNodeOutsideScope.orElse(null);
+
+        int sum = VERTICAL_PADDING + VERTICAL_PADDING;
+        for (Drawable successor : successors) {
+            // We are looking for the max in the subtree starting from this successor.
+            // Therefore the current max starts again from 0.
+            sum += computeMaxHeight(graphics, graph, successor, firstNodeOutsideScope, 0);
+        }
+
+        // If this scope does not have successors, the sum is its height.
+        if (successors.isEmpty()) {
+            sum += scopedDrawable.height(graphics);
+        }
+
+        int followingMax = 0;
+        if (firstNodeOutsideScope != end && firstNodeOutsideScope != null) {
+            followingMax = computeMaxHeight(graphics, graph, firstNodeOutsideScope, null, 0);
+        }
+
+
+        int newCurrentMax = sum > currentMax ? sum : currentMax;
+
+        return followingMax > newCurrentMax ? followingMax : newCurrentMax;
+    }
+
 
     static int findContainingLayer(List<List<Drawable>> layers, Drawable current) {
         for (int i = 0; i < layers.size(); i++) {
