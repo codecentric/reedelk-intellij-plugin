@@ -237,4 +237,11 @@ public class ScopeUtilities {
         return Optional.empty();
     }
 
+    public static boolean isLastScopeBeforeNode(FlowGraph graph, ScopedDrawable scope, Drawable firstNodeOutsideScope) {
+        Optional<ScopedDrawable> possibleScope = ScopeUtilities.findScopeOf(graph, firstNodeOutsideScope);
+        return possibleScope
+                .map(s -> s.scopeContains(scope))
+                .orElseGet(() -> !ScopeUtilities.findScopeOf(graph, scope).isPresent());
+    }
+
 }

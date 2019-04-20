@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.Stack;
 
+import static com.esb.plugin.designer.graph.ScopeUtilities.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ScopeUtilitiesTest extends AbstractGraphTest {
@@ -36,7 +37,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice2.addToScope(n1);
 
             // When
-            Optional<ScopedDrawable> actualScope = ScopeUtilities.findScopeOf(graph, n1);
+            Optional<ScopedDrawable> actualScope = findScopeOf(graph, n1);
 
             // Then
             assertThat(actualScope.isPresent()).isTrue();
@@ -59,7 +60,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice1.addToScope(n1);
 
             // When
-            boolean isBoundary = ScopeUtilities.isLastOfScope(graph, n1);
+            boolean isBoundary = isLastOfScope(graph, n1);
 
             // Then
             assertThat(isBoundary).isTrue();
@@ -80,7 +81,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice1.addToScope(n2);
 
             // When
-            boolean isBoundary = ScopeUtilities.isLastOfScope(graph, n1);
+            boolean isBoundary = isLastOfScope(graph, n1);
 
             // Then
             assertThat(isBoundary).isTrue();
@@ -99,7 +100,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice2.addToScope(n1);
 
             // When
-            boolean isBoundary = ScopeUtilities.isLastOfScope(graph, n1);
+            boolean isBoundary = isLastOfScope(graph, n1);
 
             // Then
             assertThat(isBoundary).isTrue();
@@ -113,7 +114,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             graph.add(root, choice1);
 
             // When
-            boolean isBoundary = ScopeUtilities.isLastOfScope(graph, choice1);
+            boolean isBoundary = isLastOfScope(graph, choice1);
 
             // Then
             assertThat(isBoundary).isTrue();
@@ -132,7 +133,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             graph.add(root, n1);
 
             // When
-            int scopesCount = ScopeUtilities.countNumberOfNestedScopes(graph, n1);
+            int scopesCount = countNumberOfNestedScopes(graph, n1);
 
             // Then
             assertThat(scopesCount).isEqualTo(0);
@@ -149,7 +150,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice1.addToScope(n1);
 
             // When
-            int scopesCount = ScopeUtilities.countNumberOfNestedScopes(graph, n1);
+            int scopesCount = countNumberOfNestedScopes(graph, n1);
 
             // Then
             assertThat(scopesCount).isEqualTo(1);
@@ -168,7 +169,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice2.addToScope(n1);
 
             // When
-            int scopesCount = ScopeUtilities.countNumberOfNestedScopes(graph, n1);
+            int scopesCount = countNumberOfNestedScopes(graph, n1);
 
             // Then
             assertThat(scopesCount).isEqualTo(2);
@@ -182,7 +183,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             graph.add(root, choice1);
 
             // When
-            int scopesCount = ScopeUtilities.countNumberOfNestedScopes(graph, choice1);
+            int scopesCount = countNumberOfNestedScopes(graph, choice1);
 
             // Then
             assertThat(scopesCount).isEqualTo(1);
@@ -198,7 +199,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice1.addToScope(choice2);
 
             // When
-            int scopesCount = ScopeUtilities.countNumberOfNestedScopes(graph, choice2);
+            int scopesCount = countNumberOfNestedScopes(graph, choice2);
 
             // Then
             assertThat(scopesCount).isEqualTo(2);
@@ -217,7 +218,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice2.addToScope(choice3);
 
             // When
-            int scopesCount = ScopeUtilities.countNumberOfNestedScopes(graph, choice3);
+            int scopesCount = countNumberOfNestedScopes(graph, choice3);
 
             // Then
             assertThat(scopesCount).isEqualTo(3);
@@ -238,7 +239,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice2.addToScope(n1);
 
             // When
-            int scopesCount = ScopeUtilities.countNumberOfNestedScopes(graph, n1);
+            int scopesCount = countNumberOfNestedScopes(graph, n1);
 
             // Then
             assertThat(scopesCount).isEqualTo(2);
@@ -256,7 +257,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice1.addToScope(n1);
 
             // When
-            Optional<Integer> actualScopesBetween = ScopeUtilities.scopesBetween(choice1, n1);
+            Optional<Integer> actualScopesBetween = scopesBetween(choice1, n1);
 
             // Then
             assertThat(actualScopesBetween.get()).isEqualTo(0);
@@ -269,7 +270,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice2.addToScope(n1);
 
             // When
-            Optional<Integer> actualScopesBetween = ScopeUtilities.scopesBetween(choice1, n1);
+            Optional<Integer> actualScopesBetween = scopesBetween(choice1, n1);
 
             // Then
             assertThat(actualScopesBetween.get()).isEqualTo(1);
@@ -281,7 +282,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice1.addToScope(n1);
 
             // When
-            Optional<Integer> actualScopesBetween = ScopeUtilities.scopesBetween(choice1, choice1);
+            Optional<Integer> actualScopesBetween = scopesBetween(choice1, choice1);
 
             // Then
             assertThat(actualScopesBetween.get()).isEqualTo(0);
@@ -293,7 +294,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice1.addToScope(choice2);
 
             // When
-            Optional<Integer> actualScopesBetween = ScopeUtilities.scopesBetween(choice1, choice2);
+            Optional<Integer> actualScopesBetween = scopesBetween(choice1, choice2);
 
             // Then
             assertThat(actualScopesBetween.get()).isEqualTo(1);
@@ -306,7 +307,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice2.addToScope(choice3);
 
             // When
-            Optional<Integer> actualScopesBetween = ScopeUtilities.scopesBetween(choice1, choice3);
+            Optional<Integer> actualScopesBetween = scopesBetween(choice1, choice3);
 
             // Then
             assertThat(actualScopesBetween.get()).isEqualTo(2);
@@ -327,13 +328,13 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice3.addToScope(n2);
 
             // When
-            Optional<Integer> actualScopesBetween = ScopeUtilities.scopesBetween(choice1, n3);
+            Optional<Integer> actualScopesBetween = scopesBetween(choice1, n3);
 
             // Then
             assertThat(actualScopesBetween.get()).isEqualTo(0);
 
             // When
-            actualScopesBetween = ScopeUtilities.scopesBetween(choice1, n7);
+            actualScopesBetween = scopesBetween(choice1, n7);
 
             // Then
             assertThat(actualScopesBetween.get()).isEqualTo(1);
@@ -363,7 +364,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice2.addToScope(n2);
 
             // When
-            Collection<Drawable> lastDrawablesOfScope = ScopeUtilities.listLastDrawablesOfScope(graph, choice2);
+            Collection<Drawable> lastDrawablesOfScope = listLastDrawablesOfScope(graph, choice2);
 
             // Then
             assertThat(lastDrawablesOfScope).containsExactlyInAnyOrder(n1, n2);
@@ -387,7 +388,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice2.addToScope(n2);
 
             // When
-            Collection<Drawable> lastDrawablesOfScope = ScopeUtilities.listLastDrawablesOfScope(graph, choice1);
+            Collection<Drawable> lastDrawablesOfScope = listLastDrawablesOfScope(graph, choice1);
 
             // Then
             assertThat(lastDrawablesOfScope).containsExactly(n3);
@@ -403,7 +404,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice1.addToScope(choice2);
 
             // When
-            Collection<Drawable> lastDrawablesOfScope = ScopeUtilities.listLastDrawablesOfScope(graph, choice1);
+            Collection<Drawable> lastDrawablesOfScope = listLastDrawablesOfScope(graph, choice1);
 
             // Then
             assertThat(lastDrawablesOfScope).containsExactly(choice2);
@@ -422,7 +423,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice2.addToScope(choice3);
 
             // When
-            Collection<Drawable> lastDrawablesOfScope = ScopeUtilities.listLastDrawablesOfScope(graph, choice1);
+            Collection<Drawable> lastDrawablesOfScope = listLastDrawablesOfScope(graph, choice1);
 
             // Then
             assertThat(lastDrawablesOfScope).containsExactly(choice3);
@@ -445,7 +446,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice2.addToScope(n3);
 
             // When
-            Collection<Drawable> lastDrawablesOfScope = ScopeUtilities.listLastDrawablesOfScope(graph, choice1);
+            Collection<Drawable> lastDrawablesOfScope = listLastDrawablesOfScope(graph, choice1);
 
             // Then
             assertThat(lastDrawablesOfScope).containsExactlyInAnyOrder(n1, n2, n3);
@@ -480,7 +481,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice3.addToScope(n2);
 
             // When
-            Collection<Drawable> lastDrawablesOfScope = ScopeUtilities.listLastDrawablesOfScope(graph, choice1);
+            Collection<Drawable> lastDrawablesOfScope = listLastDrawablesOfScope(graph, choice1);
 
             // Then
             assertThat(lastDrawablesOfScope).containsExactlyInAnyOrder(n3, n7);
@@ -509,7 +510,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice2.addToScope(n2);
 
             // When
-            Optional<Drawable> firstNodeOutsideScope = ScopeUtilities.getFirstNodeOutsideScope(graph, choice1);
+            Optional<Drawable> firstNodeOutsideScope = getFirstNodeOutsideScope(graph, choice1);
 
             // Then
             assertThat(firstNodeOutsideScope.isPresent()).isFalse();
@@ -530,8 +531,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice1.addToScope(n2);
 
             // When
-            Optional<Drawable> drawables = ScopeUtilities
-                    .getFirstNodeOutsideScope(graph, choice1);
+            Optional<Drawable> drawables = getFirstNodeOutsideScope(graph, choice1);
 
             // Then
             assertThat(drawables.get()).isEqualTo(n3);
@@ -566,7 +566,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             n3.setPosition(275, 210);
 
             // When
-            int maxScopeXBound = ScopeUtilities.getScopeMaxXBound(graph, choice1, graphics);
+            int maxScopeXBound = getScopeMaxXBound(graph, choice1, graphics);
 
             // Then
             assertThat(maxScopeXBound).isEqualTo(565);
@@ -583,7 +583,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice1.setPosition(165, 140);
 
             // When
-            int maxScopeXBound = ScopeUtilities.getScopeMaxXBound(graph, choice1, graphics);
+            int maxScopeXBound = getScopeMaxXBound(graph, choice1, graphics);
 
             // Then
             assertThat(maxScopeXBound).isEqualTo(220);
@@ -604,7 +604,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice1.addToScope(n1);
 
             // When
-            int maxScopeXBound = ScopeUtilities.getScopeMaxXBound(graph, choice1, graphics);
+            int maxScopeXBound = getScopeMaxXBound(graph, choice1, graphics);
 
             // Then
             assertThat(maxScopeXBound).isEqualTo(330);
@@ -630,7 +630,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice2.addToScope(n3);
 
             // When
-            Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesOf(graph, n3);
+            Stack<ScopedDrawable> scopes = findScopesOf(graph, n3);
 
             // Then
             assertThat(scopes.pop()).isEqualTo(choice2); // innermost is choice 2
@@ -659,7 +659,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice3.addToScope(n4);
 
             // When
-            Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesOf(graph, n4);
+            Stack<ScopedDrawable> scopes = findScopesOf(graph, n4);
 
             // Then
             assertThat(scopes.pop()).isEqualTo(choice3);
@@ -676,7 +676,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             graph.add(root, n1);
 
             // When
-            Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesOf(graph, n1);
+            Stack<ScopedDrawable> scopes = findScopesOf(graph, n1);
 
             // Then
             assertThat(scopes).isEmpty();
@@ -689,7 +689,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             graph.root(root);
 
             // When
-            Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesOf(graph, root);
+            Stack<ScopedDrawable> scopes = findScopesOf(graph, root);
 
             // Then
             assertThat(scopes).isEmpty();
@@ -712,7 +712,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice1.addToScope(n3);
 
             // When
-            Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesOf(graph, n3);
+            Stack<ScopedDrawable> scopes = findScopesOf(graph, n3);
 
             // Then
             assertThat(scopes.pop()).isEqualTo(choice1); // scope is only choice 1
@@ -727,7 +727,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             graph.add(root, choice1);
 
             // When
-            Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesOf(graph, choice1);
+            Stack<ScopedDrawable> scopes = findScopesOf(graph, choice1);
 
             // Then
             assertThat(scopes.pop()).isEqualTo(choice1);
@@ -744,7 +744,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice1.addToScope(n1);
 
             // When
-            Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesOf(graph, n1);
+            Stack<ScopedDrawable> scopes = findScopesOf(graph, n1);
 
             // Then
             assertThat(scopes.pop()).isEqualTo(choice1);
@@ -801,7 +801,7 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice5.addToScope(n10);
 
             // When
-            Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesOf(graph, n10);
+            Stack<ScopedDrawable> scopes = findScopesOf(graph, n10);
 
             // Then
             assertThat(scopes.pop()).isEqualTo(choice5);
@@ -822,10 +822,83 @@ class ScopeUtilitiesTest extends AbstractGraphTest {
             choice1.addToScope(n1);
 
             // When
-            Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesOf(graph, n2);
+            Stack<ScopedDrawable> scopes = findScopesOf(graph, n2);
 
             // Then
             assertThat(scopes).isEmpty();
         }
+    }
+
+    @Nested
+    @DisplayName("Is last scope before node tests")
+    class IsLastScopeBeforeNode {
+
+        @Test
+        void shouldIsLastScopeBeforeNodeReturnTrueWhenLastScope() {
+            // Given
+            FlowGraph graph = new FlowGraphImpl();
+            graph.root(root);
+            graph.add(root, choice1);
+            graph.add(choice1, n1);
+            graph.add(choice1, n2);
+            graph.add(n1, n3);
+            graph.add(n2, n3);
+
+            choice1.addToScope(n1);
+            choice1.addToScope(n2);
+
+            // When
+            boolean isLastScope = isLastScopeBeforeNode(graph, choice1, n3);
+
+            // Then
+            assertThat(isLastScope).isTrue();
+        }
+
+        @Test
+        void shouldIsLastScopeBeforeNodeReturnTrueWhenNestedScope() {
+            // Given
+            FlowGraph graph = new FlowGraphImpl();
+            graph.root(root);
+            graph.add(root, choice1);
+            graph.add(choice1, n1);
+            graph.add(n1, choice2);
+            graph.add(choice2, n2);
+            graph.add(n2, n3);
+
+            choice1.addToScope(n1);
+            choice1.addToScope(choice2);
+
+            choice2.addToScope(n2);
+
+            // When
+            boolean isLastScope = isLastScopeBeforeNode(graph, choice1, n3);
+
+            // Then
+            assertThat(isLastScope).isTrue();
+        }
+
+        @Test
+        void shouldIsLastScopeBeforeNodeReturnFalseWhenInnermostNestedScope() {
+            // Given
+            FlowGraph graph = new FlowGraphImpl();
+            graph.root(root);
+            graph.add(root, choice1);
+            graph.add(choice1, n1);
+            graph.add(n1, choice2);
+            graph.add(choice2, n2);
+            graph.add(n2, n3);
+
+            choice1.addToScope(n1);
+            choice1.addToScope(choice2);
+
+            choice2.addToScope(n2);
+
+            // When
+            boolean isLastScope = isLastScopeBeforeNode(graph, choice2, n3);
+
+            // Then
+            assertThat(isLastScope).isFalse();
+        }
+
     }
 }
