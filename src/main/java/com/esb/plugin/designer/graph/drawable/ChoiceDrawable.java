@@ -3,6 +3,7 @@ package com.esb.plugin.designer.graph.drawable;
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.ScopeUtilities;
 import com.esb.plugin.designer.graph.drawable.decorators.Arrow;
 import com.esb.plugin.designer.graph.drawable.decorators.ScopeBoundariesDrawable;
 import com.esb.plugin.designer.graph.drawable.decorators.VerticalDivider;
@@ -58,6 +59,8 @@ public class ChoiceDrawable extends AbstractDrawable implements ScopedDrawable {
             Arrow arrow = new Arrow(sourceBaryCenter, target);
             arrow.draw(graphics);
         }
+
+        drawEndOfScopeArrow(graph, graphics);
     }
 
     @Override
@@ -73,6 +76,35 @@ public class ChoiceDrawable extends AbstractDrawable implements ScopedDrawable {
     @Override
     public Collection<Drawable> getScope() {
         return Collections.unmodifiableSet(scope);
+    }
+
+    // We also need to draw a connection between the end of scope to the next successor.
+    // We draw this arrow only if the last drawables of this scope connect
+    // arrows in the next scope
+    private void drawEndOfScopeArrow(FlowGraph graph, Graphics2D graphics) {
+        ScopeUtilities.getFirstNodeOutsideScope(graph, this)
+                .ifPresent(firstNodeOutsideScope -> {
+                    if (isLastScopeBeforeNode(graph, ChoiceDrawable.this, firstNodeOutsideScope)) {
+                        Point barycenter = firstNodeOutsideScope.getBarycenter(graphics);
+
+                        ScopeBoundaries boundaries = scopeBoundariesDrawable.getBoundaries(graph, graphics);
+                        Point source = new Point(boundaries.getX() + boundaries.getWidth(),
+                                barycenter.y);
+                        Point target = new Point(barycenter.x - Math.floorDiv(Tile.WIDTH, 2) + 15,
+                                barycenter.y);
+
+                        Arrow arrow = new Arrow(source, target);
+
+                        arrow.draw(graphics);
+                    }
+                });
+    }
+
+    static boolean isLastScopeBeforeNode(FlowGraph graph, ScopedDrawable scope, Drawable firstNodeOutsideScope) {
+        Optional<ScopedDrawable> possibleScope = ScopeUtilities.findScopeOf(graph, firstNodeOutsideScope);
+        return possibleScope
+                .map(s -> s.scopeContains(scope))
+                .orElseGet(() -> !ScopeUtilities.findScopeOf(graph, scope).isPresent());
     }
 
 }

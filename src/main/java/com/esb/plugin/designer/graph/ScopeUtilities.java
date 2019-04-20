@@ -75,8 +75,8 @@ public class ScopeUtilities {
      * element of the stack is the innermost scope this target belongs to. The last element
      * of the stack is the outermost scope this target belongs to.
      *
-     * @param graph
-     * @param target
+     * @param graph the graph where the target node belongs to
+     * @param target the target node for which we want to find all the scopes containing it
      * @return Stack containing all the scopes the target node belongs to.
      */
     public static Stack<ScopedDrawable> findScopesOf(@NotNull FlowGraph graph, @NotNull Drawable target) {
@@ -236,4 +236,5 @@ public class ScopeUtilities {
         }
         return Optional.empty();
     }
+
 }

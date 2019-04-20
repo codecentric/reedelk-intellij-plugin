@@ -3,10 +3,12 @@ package com.esb.plugin.designer.graph.drawable;
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.ScopeUtilities;
 import com.esb.plugin.designer.graph.drawable.decorators.*;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
+import java.util.Optional;
 
 public abstract class AbstractDrawable implements Drawable {
 
@@ -199,7 +201,16 @@ public abstract class AbstractDrawable implements Drawable {
         return new Point(x(), centerIconY);
     }
 
+    // TODO: refine this
     protected void drawConnections(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+        // If this is the last of the scope, don't draw anything.
+        Optional<ScopedDrawable> wrappingScope = ScopeUtilities.findScopeOf(graph, this);
+        if (wrappingScope.isPresent()) {
+            if (ScopeUtilities.listLastDrawablesOfScope(graph, wrappingScope.get()).contains(this)) {
+                // do nothing
+                return;
+            }
+        }
         arrowsDrawable.draw(graph, graphics, observer);
     }
 }
