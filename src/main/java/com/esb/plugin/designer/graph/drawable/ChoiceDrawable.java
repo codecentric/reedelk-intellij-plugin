@@ -83,19 +83,18 @@ public class ChoiceDrawable extends AbstractDrawable implements ScopedDrawable {
     // We draw this arrow only if the last drawables of this scope connect
     // arrows in the next scope
     private void drawEndOfScopeArrow(FlowGraph graph, Graphics2D graphics) {
-        getFirstNodeOutsideScope(graph, this)
-                .ifPresent(firstNodeOutsideScope -> {
-                    if (isLastScopeBeforeNode(graph, ChoiceDrawable.this, firstNodeOutsideScope)) {
+        getFirstNodeOutsideScope(graph, this).ifPresent(firstNodeOutsideScope -> {
+            if (isLastScopeBeforeNode(graph, ChoiceDrawable.this, firstNodeOutsideScope)) {
+                ScopeBoundaries boundaries = scopeBoundariesDrawable.getBoundaries(graph, graphics);
 
-                        Point barycenter = firstNodeOutsideScope.getBarycenter(graphics);
-                        ScopeBoundaries boundaries = scopeBoundariesDrawable.getBoundaries(graph, graphics);
-                        Point source = new Point(boundaries.getX() + boundaries.getWidth(), barycenter.y);
-                        Point target = getTarget(graphics, firstNodeOutsideScope);
+                Point barycenter = firstNodeOutsideScope.getBarycenter(graphics);
+                Point source = new Point(boundaries.getX() + boundaries.getWidth(), barycenter.y);
+                Point target = getTarget(graphics, firstNodeOutsideScope);
 
-                        Arrow arrow = new Arrow(source, target);
-                        arrow.draw(graphics);
-                    }
-                });
+                Arrow arrow = new Arrow(source, target);
+                arrow.draw(graphics);
+            }
+        });
     }
 
     private Point getTarget(Graphics2D graphics, Drawable drawable) {
