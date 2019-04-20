@@ -1,6 +1,5 @@
 package com.esb.plugin.designer.graph.drawable;
 
-import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.decorators.Arrow;
@@ -53,11 +52,11 @@ public class ChoiceDrawable extends AbstractDrawable implements ScopedDrawable {
 
         List<Drawable> successors = graph.successors(this);
         for (Drawable successor : successors) {
+
             Point targetBaryCenter = successor.getBarycenter(graphics);
             Point sourceBaryCenter = new Point(verticalX, targetBaryCenter.y);
-            Point target = new Point(
-                    targetBaryCenter.x - Math.floorDiv(Tile.WIDTH, 2) + 15,
-                    targetBaryCenter.y);
+            Point target = getTarget(graphics, successor);
+
             Arrow arrow = new Arrow(sourceBaryCenter, target);
             arrow.draw(graphics);
         }
@@ -87,19 +86,22 @@ public class ChoiceDrawable extends AbstractDrawable implements ScopedDrawable {
         getFirstNodeOutsideScope(graph, this)
                 .ifPresent(firstNodeOutsideScope -> {
                     if (isLastScopeBeforeNode(graph, ChoiceDrawable.this, firstNodeOutsideScope)) {
-                        Point barycenter = firstNodeOutsideScope.getBarycenter(graphics);
 
+                        Point barycenter = firstNodeOutsideScope.getBarycenter(graphics);
                         ScopeBoundaries boundaries = scopeBoundariesDrawable.getBoundaries(graph, graphics);
-                        Point source = new Point(boundaries.getX() + boundaries.getWidth(),
-                                barycenter.y);
-                        Point target = new Point(barycenter.x - Math.floorDiv(Tile.WIDTH, 2) + 15,
-                                barycenter.y);
+                        Point source = new Point(boundaries.getX() + boundaries.getWidth(), barycenter.y);
+                        Point target = getTarget(graphics, firstNodeOutsideScope);
 
                         Arrow arrow = new Arrow(source, target);
-
                         arrow.draw(graphics);
                     }
                 });
     }
 
+    private Point getTarget(Graphics2D graphics, Drawable drawable) {
+        Point barycenter = drawable.getBarycenter(graphics);
+        return new Point(
+                barycenter.x - Math.floorDiv(drawable.width(graphics), 2) + 15,
+                barycenter.y);
+    }
 }
