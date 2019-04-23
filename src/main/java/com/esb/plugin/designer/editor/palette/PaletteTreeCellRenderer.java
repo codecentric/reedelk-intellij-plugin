@@ -2,7 +2,7 @@ package com.esb.plugin.designer.editor.palette;
 
 
 import com.esb.plugin.commons.Icons;
-import com.intellij.openapi.util.Pair;
+import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -16,13 +16,12 @@ public class PaletteTreeCellRenderer extends DefaultTreeCellRenderer {
         super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
-        Object userObject = node.getUserObject();
-        if (userObject instanceof Pair) {
-            Pair<String, String> displayAndFullyQualifiedName = (Pair<String, String>) userObject;
-            setText(displayAndFullyQualifiedName.first);
-            setIcon(Icons.forComponentAsIcon(displayAndFullyQualifiedName.second));
+        Object componentDescriptor = node.getUserObject();
+        if (componentDescriptor instanceof ComponentDescriptor) {
+            ComponentDescriptor descriptor = (ComponentDescriptor) componentDescriptor;
+            setText(descriptor.getDisplayName());
+            setIcon(Icons.forComponentAsIcon(descriptor.getDisplayName()));
         }
-
         return this;
     }
 }

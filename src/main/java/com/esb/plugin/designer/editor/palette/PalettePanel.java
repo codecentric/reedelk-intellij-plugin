@@ -1,12 +1,12 @@
 package com.esb.plugin.designer.editor.palette;
 
 import com.esb.plugin.commons.Icons;
-import com.esb.plugin.commons.SystemComponents;
-import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 import com.esb.plugin.designer.editor.component.ComponentTransferHandler;
-import com.esb.plugin.reflection.ImplementorScanner;
+import com.esb.plugin.service.module.ComponentService;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleServiceManager;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
@@ -15,7 +15,8 @@ import com.intellij.ui.treeStructure.Tree;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
-import java.util.List;
+
+import static com.google.common.base.Preconditions.checkState;
 
 public class PalettePanel extends JBPanel {
 
@@ -45,30 +46,21 @@ public class PalettePanel extends JBPanel {
 
         add(componentsTreeScrollPanel, BorderLayout.CENTER);
 
-        fetchAllComponentsInClasspath(project, file, components);
+        fetchAllComponents(project, file, components);
     }
 
-    private void fetchAllComponentsInClasspath(Project project, VirtualFile file, DefaultMutableTreeNode components) {
-        new Thread(() -> {
-            ImplementorScanner scanner = new ImplementorScanner();
-            List<ComponentDescriptor> descriptors = scanner.listComponents(project, file);
-            SwingUtilities.invokeLater(() -> {
-                components.removeAllChildren();
-                for (ComponentDescriptor descriptor : descriptors) {
-                    components.add(new DefaultMutableTreeNode(descriptor));
-                }
-                expandRows(tree);
-            });
-        }).start();
-    }
+    private void fetchAllComponents(Project project, VirtualFile file, DefaultMutableTreeNode components) {
+        Module module = ModuleUtil.findModuleForFile(file, project);
+        checkState(module != null, "Module must not be null");
 
+        ComponentService componentService = ModuleServiceManager.getService(module, ComponentService.class);
+        checkState(componentService != null, "Component Service must not be null");
 
-    private DefaultMutableTreeNode commons() {
-        DefaultMutableTreeNode commonsNode = new DefaultMutableTreeNode("Commons");
-        commonsNode.add(new DefaultMutableTreeNode(new Pair<>("Fork", SystemComponents.FORK.qualifiedName())));
-        commonsNode.add(new DefaultMutableTreeNode(new Pair<>("Choice", SystemComponents.CHOICE.qualifiedName())));
-        commonsNode.add(new DefaultMutableTreeNode(new Pair<>("Flow Reference", SystemComponents.FLOW_REFERENCE.qualifiedName())));
-        return commonsNode;
+        componentService.findAllComponents(descriptors -> SwingUtilities.invokeLater(() -> {
+            components.removeAllChildren();
+            descriptors.forEach(descriptor -> components.add(new DefaultMutableTreeNode(descriptor)));
+            expandRows(tree);
+        }));
     }
 
     private void expandRows(Tree tree) {

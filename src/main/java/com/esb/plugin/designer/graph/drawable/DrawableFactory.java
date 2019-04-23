@@ -21,7 +21,7 @@ public class DrawableFactory {
         String componentFullyQualifiedName = descriptor.getFullyQualifiedName();
         Class componentDrawableClazz = COMPONENT_DRAWABLE_MAP.getOrDefault(componentFullyQualifiedName, DEFAULT);
         try {
-            return (T) componentDrawableClazz.getConstructor(ComponentDescriptor.class).newInstance(componentFullyQualifiedName);
+            return (T) componentDrawableClazz.getConstructor(ComponentDescriptor.class).newInstance(descriptor);
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }

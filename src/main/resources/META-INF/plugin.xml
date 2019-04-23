@@ -36,14 +36,17 @@
         <moduleBuilder builderClass="com.esb.plugin.module.builder.ESBModuleBuilder" id="ESB_MODULE_BUILDER" order="first"/>
 
         <!-- Services -->
+        <applicationService serviceInterface="com.esb.plugin.service.application.http.ESBHttpService"
+                            serviceImplementation="com.esb.plugin.service.application.http.impl.ESBHttpServiceImpl"/>
+
         <projectService serviceInterface="com.esb.plugin.service.project.sourcechange.SourceChangeService"
                         serviceImplementation="com.esb.plugin.service.project.sourcechange.impl.SourceChangeServiceImpl"/>
 
         <projectService serviceInterface="com.esb.plugin.service.project.toolwindow.ESBToolWindowService"
                         serviceImplementation="com.esb.plugin.service.project.toolwindow.impl.ESBToolWindowServiceImpl"/>
 
-        <applicationService serviceInterface="com.esb.plugin.service.application.http.ESBHttpService"
-                            serviceImplementation="com.esb.plugin.service.application.http.impl.ESBHttpServiceImpl"/>
+        <moduleService serviceInterface="com.esb.plugin.service.module.ComponentService"
+                       serviceImplementation="com.esb.plugin.service.module.impl.ComponentServiceImpl"/>
 
         <!-- Program Runner and Executors -->
         <programRunner implementation="com.esb.plugin.runconfig.module.runner.ESBDeploymentRunner" order="first"/>
