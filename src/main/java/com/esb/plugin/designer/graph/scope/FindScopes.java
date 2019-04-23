@@ -6,8 +6,6 @@ import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.Stack;
 
 public class FindScopes {
@@ -22,48 +20,29 @@ public class FindScopes {
      * @return Stack containing all the scopes the target node belongs to.
      */
     public static Stack<ScopedDrawable> of(@NotNull FlowGraph graph, @NotNull Drawable target) {
-        boolean targetBelongsToScope = graph.nodes()
-                .stream()
-                .filter(drawable -> drawable instanceof ScopedDrawable)
-                .map(drawable -> (ScopedDrawable) drawable)
-                .anyMatch(scopedDrawable -> scopedDrawable.scopeContains(target));
-
-        if (!targetBelongsToScope) {
-            if (target instanceof ScopedDrawable) {
-                Stack<ScopedDrawable> singleElement = new Stack();
-                singleElement.push((ScopedDrawable) target);
-                return singleElement;
-            }
-            return new Stack<>();
+        Stack<ScopedDrawable> toReturn = new Stack<>();
+        if (target instanceof ScopedDrawable) {
+            toReturn.push((ScopedDrawable) target);
         }
-
-        return findScopes(graph, graph.root(), target, new Stack<>()).orElseGet(Stack::new);
+        Stack<ScopedDrawable> scopedDrawables = _of(graph, target);
+        while (!scopedDrawables.isEmpty()) {
+            toReturn.push(scopedDrawables.pop());
+        }
+        return toReturn;
     }
 
-    private static Optional<Stack<ScopedDrawable>> findScopes(@NotNull FlowGraph graph, @NotNull Drawable parent, @NotNull Drawable target, @NotNull Stack<ScopedDrawable> scopesStack) {
-        List<Drawable> successors = graph.successors(parent);
-        for (Drawable successor : successors) {
-            if (successor instanceof ScopedDrawable) {
-                scopesStack.push((ScopedDrawable) successor);
+    private static Stack<ScopedDrawable> _of(@NotNull FlowGraph graph, @NotNull Drawable target) {
+        Stack<ScopedDrawable> toReturn = new Stack<>();
+        FindScope.of(graph, target).ifPresent(scopedDrawable -> {
+            toReturn.push(scopedDrawable);
+
+            Stack<ScopedDrawable> scopedDrawables = _of(graph, scopedDrawable);
+            StackUtils.reverse(scopedDrawables);
+            while (!scopedDrawables.isEmpty()) {
+                toReturn.push(scopedDrawables.pop());
             }
-            if (successor == target) {
-                return Optional.of(scopesStack);
-            }
-            if (successor instanceof ScopedDrawable) {
-                if (((ScopedDrawable) successor).scopeContains(target)) {
-                    return Optional.of(scopesStack);
-                }
-            }
-            Optional<Stack<ScopedDrawable>> scopeFound = findScopes(graph, successor, target, new Stack<>());
-            if (scopeFound.isPresent()) {
-                StackUtils.reverse(scopeFound.get());
-                while (!scopeFound.get().isEmpty()) {
-                    scopesStack.push(scopeFound.get().pop());
-                }
-                return Optional.of(scopesStack);
-            }
-        }
-        return Optional.empty();
+        });
+        return toReturn;
     }
 
 }
