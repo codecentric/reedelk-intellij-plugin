@@ -29,11 +29,11 @@ public class FlowGraphImpl implements FlowGraph {
     }
 
     @Override
-    public void root(@NotNull Drawable n1) {
+    public void root(@NotNull Drawable root) {
         if (graph == null) {
-            graph = new DirectedGraph<>(n1);
+            graph = new DirectedGraph<>(root);
         } else {
-            graph.root(n1);
+            graph.root(root);
         }
     }
 
