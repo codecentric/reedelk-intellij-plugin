@@ -267,6 +267,5 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
             assertThat(actual).isEqualTo(130 + 5 + 5);
         }
 
-
     }
 }
