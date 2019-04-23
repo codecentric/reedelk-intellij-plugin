@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class FindScopeTests extends AbstractGraphTest {
+class FindScopeTest extends AbstractGraphTest {
 
     @Test
     void shouldReturnCorrectScope() {
