@@ -1,10 +1,11 @@
 package com.esb.plugin.designer.graph.action.strategy;
 
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.ScopeUtilities;
 import com.esb.plugin.designer.graph.connector.Connector;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
+import com.esb.plugin.designer.graph.scope.FindScopes;
+import com.esb.plugin.designer.graph.scope.ListLastNodeOfScope;
 
 import java.awt.*;
 import java.util.Stack;
@@ -29,7 +30,7 @@ public class PrecedingDrawableWithoutSuccessor extends AbstractAddStrategy {
     @Override
     public void execute(Drawable closestPrecedingDrawable) {
 
-        Stack<ScopedDrawable> scopes = ScopeUtilities.findScopesOf(graph, closestPrecedingDrawable);
+        Stack<ScopedDrawable> scopes = FindScopes.of(graph, closestPrecedingDrawable);
 
         if (scopes.isEmpty()) {
             connector.addPredecessor(closestPrecedingDrawable);
@@ -43,7 +44,7 @@ public class PrecedingDrawableWithoutSuccessor extends AbstractAddStrategy {
 
             currentScope = scopes.pop();
 
-            int maxXBound = ScopeUtilities.getScopeMaxXBound(graph, currentScope, graphics);
+            int maxXBound = getScopeMaxXBound(graph, currentScope, graphics);
 
             if (dropPoint.x <= maxXBound) break;
 
@@ -55,8 +56,7 @@ public class PrecedingDrawableWithoutSuccessor extends AbstractAddStrategy {
         }
 
         if (lastInnerMostScope != null) {
-            ScopeUtilities
-                    .listLastDrawablesOfScope(graph, lastInnerMostScope)
+            ListLastNodeOfScope.from(graph, lastInnerMostScope)
                     .forEach(connector::addPredecessor);
 
         } else {

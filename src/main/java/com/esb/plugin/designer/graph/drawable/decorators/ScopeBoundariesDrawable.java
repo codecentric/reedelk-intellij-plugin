@@ -1,11 +1,13 @@
 package com.esb.plugin.designer.graph.drawable.decorators;
 
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.ScopeUtilities;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopeBoundaries;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 import com.esb.plugin.designer.graph.layout.FlowGraphLayoutUtils;
+import com.esb.plugin.designer.graph.scope.CountScopesBetween;
+import com.esb.plugin.designer.graph.scope.FindFirstNodeOutsideScope;
+import com.esb.plugin.designer.graph.scope.ListLastNodeOfScope;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 
@@ -109,9 +111,9 @@ public class ScopeBoundariesDrawable implements Drawable {
 
     private int getMaxScopes(FlowGraph graph) {
         int max = 0;
-        Collection<Drawable> allTerminalDrawables = ScopeUtilities.listLastDrawablesOfScope(graph, scopedDrawable);
+        Collection<Drawable> allTerminalDrawables = ListLastNodeOfScope.from(graph, scopedDrawable);
         for (Drawable drawable : allTerminalDrawables) {
-            Optional<Integer> scopesBetween = ScopeUtilities.scopesBetween(scopedDrawable, drawable);
+            Optional<Integer> scopesBetween = CountScopesBetween.them(scopedDrawable, drawable);
             if (scopesBetween.isPresent()) {
                 max = scopesBetween.get() > max ? scopesBetween.get() : max;
             }
@@ -120,7 +122,7 @@ public class ScopeBoundariesDrawable implements Drawable {
     }
 
     public ScopeBoundaries getBoundaries(FlowGraph graph, Graphics2D graphics) {
-        Collection<Drawable> drawables = ScopeUtilities.listLastDrawablesOfScope(graph, scopedDrawable);
+        Collection<Drawable> drawables = ListLastNodeOfScope.from(graph, scopedDrawable);
 
         Drawable drawableWithMaxX = scopedDrawable;
         Drawable drawableWithMinX = scopedDrawable;
@@ -148,8 +150,7 @@ public class ScopeBoundariesDrawable implements Drawable {
             }
         }
 
-        Optional<Drawable> optionalFirstNodeOutsideScope = ScopeUtilities.getFirstNodeOutsideScope(graph, scopedDrawable);
-        Drawable firstNodeOutsideScope = optionalFirstNodeOutsideScope.orElse(null);
+        Drawable firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedDrawable).orElse(null);
 
         int subTreeHeight = FlowGraphLayoutUtils.computeMaxHeight(graph, graphics, scopedDrawable, firstNodeOutsideScope);
 

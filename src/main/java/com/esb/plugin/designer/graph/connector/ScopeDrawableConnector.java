@@ -1,9 +1,9 @@
 package com.esb.plugin.designer.graph.connector;
 
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.ScopeUtilities;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
+import com.esb.plugin.designer.graph.scope.ListLastNodeOfScope;
 
 import java.util.Collection;
 
@@ -22,8 +22,7 @@ public class ScopeDrawableConnector implements Connector {
     @Override
     public void addSuccessor(Drawable successor) {
         addScopeGraphIfNeeded();
-        Collection<Drawable> drawables = ScopeUtilities
-                .listLastDrawablesOfScope(graph, (ScopedDrawable) scopeGraph.root());
+        Collection<Drawable> drawables = ListLastNodeOfScope.from(graph, (ScopedDrawable) scopeGraph.root());
         drawables.forEach(drawable -> graph.add(drawable, successor));
     }
 

@@ -1,13 +1,16 @@
 package com.esb.plugin.designer.graph.layout;
 
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.ScopeUtilities;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
+import com.esb.plugin.designer.graph.scope.CountNestedScopes;
+import com.esb.plugin.designer.graph.scope.FindFirstNodeOutsideScope;
 
 import java.awt.*;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
-import java.util.*;
+import java.util.Set;
 
 import static com.esb.plugin.designer.graph.drawable.ScopedDrawable.HORIZONTAL_PADDING;
 import static com.esb.plugin.designer.graph.drawable.ScopedDrawable.VERTICAL_PADDING;
@@ -48,8 +51,8 @@ public class FlowGraphLayoutUtils {
 
     private static int computeMaxHeight(Graphics2D graphics, FlowGraph graph, ScopedDrawable scopedDrawable, Drawable end, int currentMax) {
         List<Drawable> successors = graph.successors(scopedDrawable);
-        Optional<Drawable> optionalFirstNodeOutsideScope = ScopeUtilities.getFirstNodeOutsideScope(graph, scopedDrawable);
-        Drawable firstNodeOutsideScope = optionalFirstNodeOutsideScope.orElse(null);
+
+        Drawable firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedDrawable).orElse(null);
 
         int sum = VERTICAL_PADDING + VERTICAL_PADDING;
         for (Drawable successor : successors) {
@@ -103,7 +106,7 @@ public class FlowGraphLayoutUtils {
     private static int maxLayerWidth(FlowGraph graph, Graphics2D graphics, List<Drawable> layerDrawables) {
         int max = 0;
         for (Drawable layerDrawable : layerDrawables) {
-            int nestedScopes = ScopeUtilities.countNumberOfNestedScopes(graph, layerDrawable);
+            int nestedScopes = CountNestedScopes.of(graph, layerDrawable);
             int total = layerDrawable.width(graphics) + nestedScopes * HORIZONTAL_PADDING;
             if (total > max) max = total;
         }

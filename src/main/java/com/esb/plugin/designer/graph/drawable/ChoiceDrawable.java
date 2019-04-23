@@ -5,14 +5,13 @@ import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.decorators.Arrow;
 import com.esb.plugin.designer.graph.drawable.decorators.ScopeBoundariesDrawable;
 import com.esb.plugin.designer.graph.drawable.decorators.VerticalDivider;
+import com.esb.plugin.designer.graph.scope.FindFirstNodeOutsideScope;
+import com.esb.plugin.designer.graph.scope.IsLastScopeBeforeNode;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
 import java.util.List;
 import java.util.*;
-
-import static com.esb.plugin.designer.graph.ScopeUtilities.getFirstNodeOutsideScope;
-import static com.esb.plugin.designer.graph.ScopeUtilities.isLastScopeBeforeNode;
 
 public class ChoiceDrawable extends AbstractDrawable implements ScopedDrawable {
 
@@ -83,8 +82,8 @@ public class ChoiceDrawable extends AbstractDrawable implements ScopedDrawable {
     // We draw this arrow only if the last drawables of this scope connect
     // arrows in the next scope
     private void drawEndOfScopeArrow(FlowGraph graph, Graphics2D graphics) {
-        getFirstNodeOutsideScope(graph, this).ifPresent(firstNodeOutsideScope -> {
-            if (isLastScopeBeforeNode(graph, ChoiceDrawable.this, firstNodeOutsideScope)) {
+        FindFirstNodeOutsideScope.of(graph, this).ifPresent(firstNodeOutsideScope -> {
+            if (IsLastScopeBeforeNode.of(graph, ChoiceDrawable.this, firstNodeOutsideScope)) {
                 ScopeBoundaries boundaries = scopeBoundariesDrawable.getBoundaries(graph, graphics);
 
                 Point barycenter = firstNodeOutsideScope.getBarycenter(graphics);

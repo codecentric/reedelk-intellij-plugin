@@ -2,19 +2,20 @@ package com.esb.plugin.designer.graph.layout;
 
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.ScopeUtilities;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopeBoundaries;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
+import com.esb.plugin.designer.graph.scope.FindFirstNodeOutsideScope;
+import com.esb.plugin.designer.graph.scope.FindJoiningScope;
 
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static com.esb.plugin.designer.graph.ScopeUtilities.getFirstNodeOutsideScope;
 import static com.esb.plugin.designer.graph.drawable.ScopedDrawable.VERTICAL_PADDING;
 import static com.esb.plugin.designer.graph.layout.FlowGraphLayoutUtils.*;
+import static com.google.common.base.Preconditions.checkState;
 
 public class FlowGraphLayout {
 
@@ -59,7 +60,7 @@ public class FlowGraphLayout {
                 // this node is joining from.
 
                 // Otherwise take min and max.
-                Optional<ScopedDrawable> scopeItIsJoining = ScopeUtilities.getScopeItIsJoining(graph, drawable);
+                Optional<ScopedDrawable> scopeItIsJoining = FindJoiningScope.of(graph, drawable);
 
                 int min = predecessors.stream().mapToInt(Drawable::y).min().getAsInt();
                 int max = predecessors.stream().mapToInt(Drawable::y).max().getAsInt();
@@ -90,8 +91,11 @@ public class FlowGraphLayout {
             // Layer with multiple nodes.
             // Center them all in their respective subtrees.
             // Successors can be > 1 only when predecessor is ScopedDrawable
-            Drawable commonParent = findCommonParent(graph, drawables);
-            Optional<Drawable> optionalFirstDrawableOutsideScope = getFirstNodeOutsideScope(graph, (ScopedDrawable) commonParent);
+            Drawable commonParent = findCommonParent(graph, drawables); // common parent must be (scoped drawable)
+
+            checkState(commonParent instanceof ScopedDrawable);
+
+            Optional<Drawable> optionalFirstDrawableOutsideScope = FindFirstNodeOutsideScope.of(graph, (ScopedDrawable) commonParent);
             Drawable firstDrawableOutsideScope = optionalFirstDrawableOutsideScope.orElse(null);
 
             int maxSubTreeHeight = FlowGraphLayoutUtils.computeMaxHeight(graph, graphics, commonParent, firstDrawableOutsideScope);

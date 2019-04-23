@@ -3,8 +3,9 @@ package com.esb.plugin.designer.graph.drawable;
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.ScopeUtilities;
 import com.esb.plugin.designer.graph.drawable.decorators.*;
+import com.esb.plugin.designer.graph.scope.FindScope;
+import com.esb.plugin.designer.graph.scope.ListLastNodeOfScope;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
@@ -204,9 +205,9 @@ public abstract class AbstractDrawable implements Drawable {
     // TODO: refine this
     protected void drawConnections(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         // If this is the last of the scope, don't draw anything.
-        Optional<ScopedDrawable> wrappingScope = ScopeUtilities.findScopeOf(graph, this);
+        Optional<ScopedDrawable> wrappingScope = FindScope.of(graph, this);
         if (wrappingScope.isPresent()) {
-            if (ScopeUtilities.listLastDrawablesOfScope(graph, wrappingScope.get()).contains(this)) {
+            if (ListLastNodeOfScope.from(graph, wrappingScope.get()).contains(this)) {
                 // do nothing
                 return;
             }

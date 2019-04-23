@@ -3,11 +3,11 @@ package com.esb.plugin.designer.editor.designer;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.FlowGraphChangeAware;
 import com.esb.plugin.designer.graph.FlowGraphImpl;
-import com.esb.plugin.designer.graph.ScopeUtilities;
 import com.esb.plugin.designer.graph.action.RemoveDrawableFromGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 import com.esb.plugin.designer.graph.drawable.decorators.NothingSelectedDrawable;
+import com.esb.plugin.designer.graph.scope.FindScope;
 
 import java.awt.*;
 import java.util.Optional;
@@ -57,7 +57,7 @@ class MoveActionHandler extends AbstractActionHandler {
         componentRemover.remove();
 
         // 3. Remove the dropped node from any scope it might belong to
-        Optional<ScopedDrawable> selectedScope = ScopeUtilities.findScopeOf(copy, selected);
+        Optional<ScopedDrawable> selectedScope = FindScope.of(copy, selected);
         selectedScope.ifPresent(scopedDrawable -> scopedDrawable.removeFromScope(selected));
 
         // 4. Add the dropped component back to the graph to the dropped position.

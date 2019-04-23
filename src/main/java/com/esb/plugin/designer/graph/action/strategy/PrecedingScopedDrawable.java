@@ -2,10 +2,10 @@ package com.esb.plugin.designer.graph.action.strategy;
 
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.ScopeUtilities;
 import com.esb.plugin.designer.graph.connector.Connector;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
+import com.esb.plugin.designer.graph.scope.FindFirstNodeOutsideScope;
 
 import java.awt.*;
 import java.util.List;
@@ -50,8 +50,7 @@ public class PrecedingScopedDrawable extends AbstractAddStrategy {
     }
 
     private void connectCommonSuccessorsOf(ScopedDrawable closestPrecedingNode) {
-        ScopeUtilities
-                .getFirstNodeOutsideScope(graph, closestPrecedingNode)
+        FindFirstNodeOutsideScope.of(graph, closestPrecedingNode)
                 .ifPresent(connector::addSuccessor);
     }
 

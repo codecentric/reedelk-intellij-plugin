@@ -5,12 +5,14 @@ import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.connector.Connector;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
+import com.esb.plugin.designer.graph.scope.BelongToSameScope;
+import com.esb.plugin.designer.graph.scope.FindScopes;
+import com.esb.plugin.designer.graph.scope.ListLastNodeOfScope;
 
 import java.awt.*;
 import java.util.List;
 import java.util.Stack;
 
-import static com.esb.plugin.designer.graph.ScopeUtilities.*;
 import static com.google.common.base.Preconditions.checkState;
 
 public class PrecedingDrawableWithOneSuccessor extends AbstractAddStrategy {
@@ -27,7 +29,7 @@ public class PrecedingDrawableWithOneSuccessor extends AbstractAddStrategy {
 
         Drawable successorOfClosestPrecedingNode = successors.get(0);
 
-        if (belongToSameScope(graph, closestPrecedingDrawable, successorOfClosestPrecedingNode)) {
+        if (BelongToSameScope.from(graph, closestPrecedingDrawable, successorOfClosestPrecedingNode)) {
             if (withinYBounds(dropPoint.y, closestPrecedingDrawable)) {
                 connector.addPredecessor(closestPrecedingDrawable);
                 connector.addSuccessor(successorOfClosestPrecedingNode);
@@ -42,7 +44,7 @@ public class PrecedingDrawableWithOneSuccessor extends AbstractAddStrategy {
 
     private void handleDifferentScopes(Drawable closestPrecedingDrawable, Drawable successorOfClosestPrecedingNode) {
 
-        Stack<ScopedDrawable> scopes = findScopesOf(graph, closestPrecedingDrawable);
+        Stack<ScopedDrawable> scopes = FindScopes.of(graph, closestPrecedingDrawable);
         if (scopes.isEmpty()) {
             connector.addPredecessor(closestPrecedingDrawable);
             connector.addSuccessor(successorOfClosestPrecedingNode);
@@ -69,7 +71,7 @@ public class PrecedingDrawableWithOneSuccessor extends AbstractAddStrategy {
         }
 
         if (lastInnerMostScope != null) {
-            listLastDrawablesOfScope(graph, lastInnerMostScope)
+            ListLastNodeOfScope.from(graph, lastInnerMostScope)
                     .forEach(drawable -> {
                         connector.addPredecessor(drawable);
                         graph.remove(drawable, successorOfClosestPrecedingNode);
