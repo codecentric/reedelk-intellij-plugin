@@ -2,9 +2,9 @@ package com.esb.plugin.designer.editor.palette;
 
 import com.esb.plugin.commons.Icons;
 import com.esb.plugin.commons.SystemComponents;
+import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 import com.esb.plugin.designer.editor.component.ComponentTransferHandler;
 import com.esb.plugin.reflection.ImplementorScanner;
-import com.esb.plugin.reflection.ImplementorScanner.ComponentDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -26,16 +26,8 @@ public class PalettePanel extends JBPanel {
 
         //create the root node
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
-
-
         DefaultMutableTreeNode components = new DefaultMutableTreeNode("Components");
         root.add(components);
-
-
-        //add the child nodes to the root node
-        //root.add(commons());
-        //root.add(rest());
-        //root.add(jms());
 
         PaletteTreeCellRenderer renderer = new PaletteTreeCellRenderer();
         renderer.setOpenIcon(Icons.ModuleDeploy);
@@ -60,42 +52,23 @@ public class PalettePanel extends JBPanel {
         new Thread(() -> {
             ImplementorScanner scanner = new ImplementorScanner();
             List<ComponentDescriptor> descriptors = scanner.listComponents(project, file);
-
             SwingUtilities.invokeLater(() -> {
                 components.removeAllChildren();
                 for (ComponentDescriptor descriptor : descriptors) {
-                    Pair<String, String> pair = new Pair<>(descriptor.getComponentDisplayName(), descriptor.getComponentFullyQualifiedName());
-                    components.add(new DefaultMutableTreeNode(pair));
+                    components.add(new DefaultMutableTreeNode(descriptor));
                 }
                 expandRows(tree);
             });
         }).start();
     }
 
-    // TODO: These components are only temporary. They will be dinamically loaded
-    // TODO: by the framework.
-    // The following tree nodes should be dynamically built.
-    private DefaultMutableTreeNode rest() {
-        DefaultMutableTreeNode restNode = new DefaultMutableTreeNode("REST");
-        restNode.add(new DefaultMutableTreeNode(new Pair<>("REST Listener", "default")));
-        restNode.add(new DefaultMutableTreeNode(new Pair<>("REST Request", "default")));
-        return restNode;
-    }
 
     private DefaultMutableTreeNode commons() {
         DefaultMutableTreeNode commonsNode = new DefaultMutableTreeNode("Commons");
-        commonsNode.add(new DefaultMutableTreeNode(new Pair<>("Set Payload", "com.esb.core.component.SetPayload")));
         commonsNode.add(new DefaultMutableTreeNode(new Pair<>("Fork", SystemComponents.FORK.qualifiedName())));
         commonsNode.add(new DefaultMutableTreeNode(new Pair<>("Choice", SystemComponents.CHOICE.qualifiedName())));
         commonsNode.add(new DefaultMutableTreeNode(new Pair<>("Flow Reference", SystemComponents.FLOW_REFERENCE.qualifiedName())));
         return commonsNode;
-    }
-
-    private DefaultMutableTreeNode jms() {
-        DefaultMutableTreeNode jmsNode = new DefaultMutableTreeNode("JMS");
-        jmsNode.add(new DefaultMutableTreeNode(new Pair<>("Queue Listener", "default")));
-        jmsNode.add(new DefaultMutableTreeNode(new Pair<>("Queue Message", "default")));
-        return jmsNode;
     }
 
     private void expandRows(Tree tree) {

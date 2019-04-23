@@ -1,6 +1,6 @@
 package com.esb.plugin.designer.graph.layout;
 
-import com.esb.plugin.designer.editor.component.Component;
+import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.FlowGraphImpl;
 import com.esb.plugin.designer.graph.drawable.ChoiceDrawable;
@@ -10,22 +10,22 @@ import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 
 public class GraphSamples {
 
-    private Drawable root = new GenericComponentDrawable(new Component("Root"));
-    private ScopedDrawable c1 = new ChoiceDrawable(new Component("c1"));
-    private ScopedDrawable c2 = new ChoiceDrawable(new Component("c2"));
-    private ScopedDrawable c3 = new ChoiceDrawable(new Component("c3"));
-    private ScopedDrawable c4 = new ChoiceDrawable(new Component("c4"));
-    private Drawable n1 = new GenericComponentDrawable(new Component("n1"));
-    private Drawable n2 = new GenericComponentDrawable(new Component("n2"));
-    private Drawable n3 = new GenericComponentDrawable(new Component("n3"));
-    private Drawable n4 = new GenericComponentDrawable(new Component("n4"));
-    private Drawable n5 = new GenericComponentDrawable(new Component("n5"));
-    private Drawable n6 = new GenericComponentDrawable(new Component("n6"));
-    private Drawable n7 = new GenericComponentDrawable(new Component("n7"));
-    private Drawable n8 = new GenericComponentDrawable(new Component("n8"));
-    private Drawable n9 = new GenericComponentDrawable(new Component("n9"));
-    private Drawable n10 = new GenericComponentDrawable(new Component("n10"));
-    private Drawable n11 = new GenericComponentDrawable(new Component("n11"));
+    private Drawable root = new GenericComponentDrawable(new ComponentDescriptor("Root"));
+    private ScopedDrawable c1 = new ChoiceDrawable(new ComponentDescriptor("c1"));
+    private ScopedDrawable c2 = new ChoiceDrawable(new ComponentDescriptor("c2"));
+    private ScopedDrawable c3 = new ChoiceDrawable(new ComponentDescriptor("c3"));
+    private ScopedDrawable c4 = new ChoiceDrawable(new ComponentDescriptor("c4"));
+    private Drawable n1 = new GenericComponentDrawable(new ComponentDescriptor("n1"));
+    private Drawable n2 = new GenericComponentDrawable(new ComponentDescriptor("n2"));
+    private Drawable n3 = new GenericComponentDrawable(new ComponentDescriptor("n3"));
+    private Drawable n4 = new GenericComponentDrawable(new ComponentDescriptor("n4"));
+    private Drawable n5 = new GenericComponentDrawable(new ComponentDescriptor("n5"));
+    private Drawable n6 = new GenericComponentDrawable(new ComponentDescriptor("n6"));
+    private Drawable n7 = new GenericComponentDrawable(new ComponentDescriptor("n7"));
+    private Drawable n8 = new GenericComponentDrawable(new ComponentDescriptor("n8"));
+    private Drawable n9 = new GenericComponentDrawable(new ComponentDescriptor("n9"));
+    private Drawable n10 = new GenericComponentDrawable(new ComponentDescriptor("n10"));
+    private Drawable n11 = new GenericComponentDrawable(new ComponentDescriptor("n11"));
 
     public static FlowGraph graph1() {
         return new GraphSamples().buildGraph1();

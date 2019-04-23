@@ -251,7 +251,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     private void debugGraphNodesPosition() {
         System.out.println("------- Graph Updated --------");
         graph.breadthFirstTraversal(drawable ->
-                System.out.println("Name: " + drawable.component().getName() + ", x: " + drawable.x() + ", y: " + drawable.y()));
+                System.out.println("Name: " + drawable.component().getDisplayName() + ", x: " + drawable.x() + ", y: " + drawable.y()));
     }
 
 }

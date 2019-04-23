@@ -5,16 +5,14 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.IOException;
 
 public class TransferableComponent implements Transferable {
 
-    private final DataFlavor[] flavors;
-    private String componentFullyQualifiedName;
+    private static final DataFlavor[] flavors = new DataFlavor[]{ComponentDescriptor.FLAVOR};
+    private final ComponentDescriptor descriptor;
 
-    public TransferableComponent(String componentFullyQualifiedName) {
-        this.flavors = new DataFlavor[]{DataFlavor.stringFlavor};
-        this.componentFullyQualifiedName = componentFullyQualifiedName;
+    public TransferableComponent(ComponentDescriptor descriptor) {
+        this.descriptor = descriptor;
     }
 
     @Override
@@ -24,13 +22,16 @@ public class TransferableComponent implements Transferable {
 
     @Override
     public boolean isDataFlavorSupported(DataFlavor flavor) {
-        return DataFlavor.stringFlavor.equals(flavor);
+        return ComponentDescriptor.FLAVOR.equals(flavor);
     }
 
     @Override
     @NotNull
-    public String getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
-        return componentFullyQualifiedName;
+    public ComponentDescriptor getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
+        if (ComponentDescriptor.FLAVOR.equals(flavor)) {
+            return descriptor;
+        }
+        throw new UnsupportedFlavorException(flavor);
     }
 
 }

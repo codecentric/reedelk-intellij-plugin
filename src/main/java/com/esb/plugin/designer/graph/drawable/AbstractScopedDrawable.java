@@ -1,6 +1,6 @@
 package com.esb.plugin.designer.graph.drawable;
 
-import com.esb.plugin.designer.editor.component.Component;
+import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.decorators.Arrow;
 import com.esb.plugin.designer.graph.drawable.decorators.ScopeBoundariesDrawable;
@@ -20,7 +20,7 @@ abstract class AbstractScopedDrawable extends AbstractDrawable implements Scoped
 
     private Set<Drawable> scope = new HashSet<>();
 
-    AbstractScopedDrawable(Component component) {
+    AbstractScopedDrawable(ComponentDescriptor component) {
         super(component);
         this.verticalDivider = new VerticalDivider(this);
         this.scopeBoundariesDrawable = new ScopeBoundariesDrawable(this);

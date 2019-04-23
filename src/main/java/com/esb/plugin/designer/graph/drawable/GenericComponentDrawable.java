@@ -1,10 +1,10 @@
 package com.esb.plugin.designer.graph.drawable;
 
-import com.esb.plugin.designer.editor.component.Component;
+import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 
 public class GenericComponentDrawable extends AbstractDrawable {
 
-    public GenericComponentDrawable(Component component) {
+    public GenericComponentDrawable(ComponentDescriptor component) {
         super(component);
     }
 

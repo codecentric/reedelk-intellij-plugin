@@ -1,6 +1,6 @@
 package com.esb.plugin.designer.graph;
 
-import com.esb.plugin.designer.editor.component.Component;
+import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 import com.esb.plugin.designer.graph.drawable.ChoiceDrawable;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.GenericComponentDrawable;
@@ -38,24 +38,24 @@ public abstract class AbstractGraphTest {
 
     @BeforeEach
     protected void setUp() {
-        root = new GenericComponentDrawable(new Component("root"));
-        n1 = new GenericComponentDrawable(new Component("n1"));
-        n2 = new GenericComponentDrawable(new Component("n2"));
-        n3 = new GenericComponentDrawable(new Component("n3"));
-        n4 = new GenericComponentDrawable(new Component("n4"));
-        n5 = new GenericComponentDrawable(new Component("n5"));
-        n6 = new GenericComponentDrawable(new Component("n6"));
-        n7 = new GenericComponentDrawable(new Component("n7"));
-        n8 = new GenericComponentDrawable(new Component("n8"));
-        n9 = new GenericComponentDrawable(new Component("n9"));
-        n10 = new GenericComponentDrawable(new Component("n10"));
-        n11 = new GenericComponentDrawable(new Component("n11"));
+        root = new GenericComponentDrawable(new ComponentDescriptor("root"));
+        n1 = new GenericComponentDrawable(new ComponentDescriptor("n1"));
+        n2 = new GenericComponentDrawable(new ComponentDescriptor("n2"));
+        n3 = new GenericComponentDrawable(new ComponentDescriptor("n3"));
+        n4 = new GenericComponentDrawable(new ComponentDescriptor("n4"));
+        n5 = new GenericComponentDrawable(new ComponentDescriptor("n5"));
+        n6 = new GenericComponentDrawable(new ComponentDescriptor("n6"));
+        n7 = new GenericComponentDrawable(new ComponentDescriptor("n7"));
+        n8 = new GenericComponentDrawable(new ComponentDescriptor("n8"));
+        n9 = new GenericComponentDrawable(new ComponentDescriptor("n9"));
+        n10 = new GenericComponentDrawable(new ComponentDescriptor("n10"));
+        n11 = new GenericComponentDrawable(new ComponentDescriptor("n11"));
 
-        choice1 = new ChoiceDrawable(new Component("choice1"));
-        choice2 = new ChoiceDrawable(new Component("choice2"));
-        choice3 = new ChoiceDrawable(new Component("choice3"));
-        choice4 = new ChoiceDrawable(new Component("choice4"));
-        choice5 = new ChoiceDrawable(new Component("choice5"));
+        choice1 = new ChoiceDrawable(new ComponentDescriptor("choice1"));
+        choice2 = new ChoiceDrawable(new ComponentDescriptor("choice2"));
+        choice3 = new ChoiceDrawable(new ComponentDescriptor("choice3"));
+        choice4 = new ChoiceDrawable(new ComponentDescriptor("choice4"));
+        choice5 = new ChoiceDrawable(new ComponentDescriptor("choice5"));
     }
 
     protected void assertThatRootIs(FlowGraph graph, Drawable root) {

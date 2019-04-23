@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.graph.builder;
 
 import com.esb.internal.commons.JsonParser;
-import com.esb.plugin.designer.editor.component.Component;
+import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.ChoiceDrawable;
 import com.esb.plugin.designer.graph.drawable.Drawable;
@@ -23,7 +23,7 @@ public class ChoiceDrawableBuilder implements Builder {
 
         String name = JsonParser.Implementor.name(componentDefinition);
 
-        Component component = new Component(name);
+        ComponentDescriptor component = new ComponentDescriptor(name);
 
         ChoiceDrawable choiceDrawable = new ChoiceDrawable(component);
 

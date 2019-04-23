@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.graph.builder;
 
 import com.esb.internal.commons.JsonParser;
-import com.esb.plugin.designer.editor.component.Component;
+import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ForkJoinDrawable;
@@ -18,7 +18,7 @@ public class ForkJoinDrawableBuilder implements Builder {
 
         String name = JsonParser.Implementor.name(componentDefinition);
 
-        Component forkComponent = new Component(name);
+        ComponentDescriptor forkComponent = new ComponentDescriptor(name);
 
         ForkJoinDrawable forkJoinDrawable = new ForkJoinDrawable(forkComponent);
 

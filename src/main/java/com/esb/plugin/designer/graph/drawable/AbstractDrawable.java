@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.graph.drawable;
 
 import com.esb.plugin.designer.Tile;
-import com.esb.plugin.designer.editor.component.Component;
+import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.decorators.*;
 import com.esb.plugin.designer.graph.scope.FindScope;
@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public abstract class AbstractDrawable implements Drawable {
 
-    private final Component component;
+    private final ComponentDescriptor component;
 
     private final Drawable iconDrawable;
     private final Drawable arrowsDrawable;
@@ -32,9 +32,9 @@ public abstract class AbstractDrawable implements Drawable {
     private boolean dragging;
     private boolean selected;
 
-    public AbstractDrawable(Component component) {
+    public AbstractDrawable(ComponentDescriptor component) {
         this.component = component;
-        this.iconDrawable = new IconDrawable(component.getName());
+        this.iconDrawable = new IconDrawable(component.getDisplayName());
         this.componentTitleDrawable = new ComponentTitleDrawable(displayName());
         this.componentDescriptionDrawable = new ComponentDescriptionDrawable("A description");
 
@@ -178,14 +178,13 @@ public abstract class AbstractDrawable implements Drawable {
     }
 
     @Override
-    public Component component() {
+    public ComponentDescriptor component() {
         return component;
     }
 
     @Override
     public String displayName() {
-        String[] segments = component.getName().split("\\.");
-        return segments[segments.length - 1];
+        return component.getDisplayName();
     }
 
     @Override

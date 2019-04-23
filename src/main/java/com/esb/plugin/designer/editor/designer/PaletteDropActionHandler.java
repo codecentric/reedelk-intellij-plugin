@@ -1,5 +1,6 @@
 package com.esb.plugin.designer.editor.designer;
 
+import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.FlowGraphChangeAware;
 import com.esb.plugin.designer.graph.FlowGraphImpl;
@@ -15,7 +16,6 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.io.IOException;
 import java.util.Optional;
 
-import static java.awt.datatransfer.DataFlavor.stringFlavor;
 import static java.awt.dnd.DnDConstants.ACTION_COPY_OR_MOVE;
 import static java.util.Arrays.asList;
 
@@ -34,19 +34,19 @@ class PaletteDropActionHandler extends AbstractActionHandler {
     }
 
     Optional<FlowGraph> handle() {
-        Optional<String> optionalComponentName = extractComponentName(dropEvent);
-        if (!optionalComponentName.isPresent()) {
+        Optional<ComponentDescriptor> optionalDescriptor = extractComponentName(dropEvent);
+        if (!optionalDescriptor.isPresent()) {
             dropEvent.rejectDrop();
             return Optional.empty();
         }
 
         Point dropPoint = dropEvent.getLocation();
-        String componentName = optionalComponentName.get();
+        ComponentDescriptor descriptor = optionalDescriptor.get();
 
         FlowGraph copy = graph == null ? new FlowGraphImpl() : graph.copy();
 
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
-        Drawable componentToAdd = DrawableFactory.get(componentName);
+        Drawable componentToAdd = DrawableFactory.get(descriptor);
         addDrawableToGraph(modifiableGraph, componentToAdd, dropPoint, graphics);
 
         if (modifiableGraph.isChanged()) {
@@ -59,13 +59,13 @@ class PaletteDropActionHandler extends AbstractActionHandler {
         return Optional.empty();
     }
 
-    private Optional<String> extractComponentName(DropTargetDropEvent dropEvent) {
+    private Optional<ComponentDescriptor> extractComponentName(DropTargetDropEvent dropEvent) {
         Transferable transferable = dropEvent.getTransferable();
         DataFlavor[] transferDataFlavor = transferable.getTransferDataFlavors();
-        if (asList(transferDataFlavor).contains(stringFlavor)) {
+        if (asList(transferDataFlavor).contains(ComponentDescriptor.FLAVOR)) {
             try {
-                String componentName = (String) transferable.getTransferData(stringFlavor);
-                return Optional.of(componentName);
+                ComponentDescriptor descriptor = (ComponentDescriptor) transferable.getTransferData(ComponentDescriptor.FLAVOR);
+                return Optional.of(descriptor);
             } catch (UnsupportedFlavorException | IOException e) {
                 LOG.error("Could not extract dropped component name", e);
             }

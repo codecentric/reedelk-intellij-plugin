@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.graph.builder;
 
 import com.esb.internal.commons.FileUtils;
-import com.esb.plugin.designer.editor.component.Component;
+import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.TestJson;
 import com.esb.plugin.designer.graph.drawable.Drawable;
@@ -51,7 +51,7 @@ abstract class AbstractBuilderTest {
 
     Drawable getDrawableWithComponentName(Collection<Drawable> drawableCollection, String componentName) {
         for (Drawable successor : drawableCollection) {
-            Component component = successor.component();
+            ComponentDescriptor component = successor.component();
             if (componentName.equals(component.getName())) {
                 return successor;
             }
@@ -61,7 +61,7 @@ abstract class AbstractBuilderTest {
 
     void assertThatComponentHasName(Drawable target, String expectedName) {
         assertThat(target).isNotNull();
-        Component component = target.component();
+        ComponentDescriptor component = target.component();
         assertThat(component).isNotNull();
         assertThat(component.getName()).isEqualTo(expectedName);
     }
