@@ -18,7 +18,11 @@ public class Icons {
     public static final Icon FileTypeFlowConfig = IconLoader.getIcon("/icons/icon-flow-config-file-16x.png");
 
     public static Icon forComponentAsIcon(String componentName) {
-        return IconLoader.getIcon("/icons/component/" + componentName + "-icon.png");
+        try {
+            return IconLoader.getIcon("/icons/component/" + componentName + "-icon.png");
+        } catch (Exception e) {
+            return IconLoader.getIcon("/icons/component/default-icon.png");
+        }
     }
 
     public static Image forComponentAsImage(String componentName) {

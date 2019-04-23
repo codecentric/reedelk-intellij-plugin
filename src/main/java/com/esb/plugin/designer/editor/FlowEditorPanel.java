@@ -4,11 +4,12 @@ import com.esb.plugin.designer.editor.designer.DesignerPanel;
 import com.esb.plugin.designer.editor.designer.ScrollableDesignerPanel;
 import com.esb.plugin.designer.editor.palette.PalettePanel;
 import com.esb.plugin.designer.editor.properties.PropertiesPanel;
-import com.esb.plugin.designer.graph.DropListener;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.FlowGraphChangeListener;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
+import com.intellij.openapi.vfs.VirtualFile;
 
 import java.awt.dnd.DropTarget;
 import java.util.TooManyListenersException;
@@ -30,7 +31,7 @@ public class FlowEditorPanel extends ThreeComponentsSplitter implements FlowGrap
     private PalettePanel palette;
     private DesignerPanel designer;
 
-    FlowEditorPanel() {
+    FlowEditorPanel(Project project, VirtualFile file) {
         super(VERTICAL);
 
         this.propertiesPanel = new PropertiesPanel();
@@ -38,7 +39,7 @@ public class FlowEditorPanel extends ThreeComponentsSplitter implements FlowGrap
         registerDropTargetListener(this.designer);
         this.designer.addSelectListener(propertiesPanel);
 
-        this.palette = new PalettePanel();
+        this.palette = new PalettePanel(project, file);
 
 
         ScrollableDesignerPanel designerScrollable = new ScrollableDesignerPanel(designer);

@@ -3,28 +3,39 @@ package com.esb.plugin.designer.editor.palette;
 import com.esb.plugin.commons.Icons;
 import com.esb.plugin.commons.SystemComponents;
 import com.esb.plugin.designer.editor.component.ComponentTransferHandler;
+import com.esb.plugin.reflection.ImplementorScanner;
+import com.esb.plugin.reflection.ImplementorScanner.ComponentDescriptor;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.treeStructure.Tree;
 
+import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
+import java.util.List;
 
 public class PalettePanel extends JBPanel {
 
     private Tree tree;
 
-    public PalettePanel() {
+    public PalettePanel(Project project, VirtualFile file) {
         super(new BorderLayout());
 
         //create the root node
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
 
+
+        DefaultMutableTreeNode components = new DefaultMutableTreeNode("Components");
+        root.add(components);
+
+
         //add the child nodes to the root node
-        root.add(commons());
-        root.add(rest());
-        root.add(jms());
+        //root.add(commons());
+        //root.add(rest());
+        //root.add(jms());
 
         PaletteTreeCellRenderer renderer = new PaletteTreeCellRenderer();
         renderer.setOpenIcon(Icons.ModuleDeploy);
@@ -36,12 +47,29 @@ public class PalettePanel extends JBPanel {
         tree.setRootVisible(false);
         tree.setDragEnabled(true);
         tree.setTransferHandler(new ComponentTransferHandler());
-        expandRows(tree);
+
 
         JBScrollPane componentsTreeScrollPanel = new JBScrollPane(tree);
 
         add(componentsTreeScrollPanel, BorderLayout.CENTER);
 
+        fetchAllComponentsInClasspath(project, file, components);
+    }
+
+    private void fetchAllComponentsInClasspath(Project project, VirtualFile file, DefaultMutableTreeNode components) {
+        new Thread(() -> {
+            ImplementorScanner scanner = new ImplementorScanner();
+            List<ComponentDescriptor> descriptors = scanner.listComponents(project, file);
+
+            SwingUtilities.invokeLater(() -> {
+                components.removeAllChildren();
+                for (ComponentDescriptor descriptor : descriptors) {
+                    Pair<String, String> pair = new Pair<>(descriptor.getComponentDisplayName(), descriptor.getComponentFullyQualifiedName());
+                    components.add(new DefaultMutableTreeNode(pair));
+                }
+                expandRows(tree);
+            });
+        }).start();
     }
 
     // TODO: These components are only temporary. They will be dinamically loaded
