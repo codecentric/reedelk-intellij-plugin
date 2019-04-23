@@ -21,7 +21,7 @@ public class NetworkUtils {
             ss.bind(socketAddress);
             ss.setReuseAddress(true);
             return true;
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         } finally {
             if (ss != null) {
                 try {

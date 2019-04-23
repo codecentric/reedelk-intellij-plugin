@@ -1,11 +1,9 @@
 package com.esb.plugin.designer.graph.manager;
 
 import com.esb.internal.commons.FileUtils;
-import com.esb.plugin.designer.graph.DropListener;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.FlowGraphChangeListener;
 import com.esb.plugin.designer.graph.builder.FlowGraphBuilder;
-import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentEvent;
@@ -31,7 +29,7 @@ import static java.util.Arrays.stream;
  * - The text editor associated with the flow designer (the user manually updates the JSON)
  * - The Canvas updates (drag and drop and moving around components)
  */
-public class GraphManager implements DropListener, FileEditorManagerListener, DocumentListener, Disposable {
+public class GraphManager implements FileEditorManagerListener, DocumentListener, Disposable {
 
     private FlowGraph graph;
     private FlowGraphChangeListener listener;
@@ -70,16 +68,6 @@ public class GraphManager implements DropListener, FileEditorManagerListener, Do
     @Override
     public void dispose() {
         this.busConnection.disconnect();
-    }
-
-
-
-    /**
-     * Called when we drop a drawable into the canvas from a move operation.
-     */
-    @Override
-    public void drop(int x, int y, Drawable dropped) {
-        // TODO: Fill me up
     }
 
     public void addGraphChangeListener(FlowGraphChangeListener listener) {

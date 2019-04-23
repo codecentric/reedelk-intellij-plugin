@@ -30,7 +30,7 @@ public class FlowEditorPanel extends ThreeComponentsSplitter implements FlowGrap
     private PalettePanel palette;
     private DesignerPanel designer;
 
-    FlowEditorPanel(DropListener dropListener) {
+    FlowEditorPanel() {
         super(VERTICAL);
 
         this.propertiesPanel = new PropertiesPanel();
