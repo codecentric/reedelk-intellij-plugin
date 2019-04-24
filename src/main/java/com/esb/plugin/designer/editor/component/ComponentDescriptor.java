@@ -1,8 +1,12 @@
 package com.esb.plugin.designer.editor.component;
 
 import io.github.classgraph.ClassInfo;
+import io.github.classgraph.MethodInfo;
+import io.github.classgraph.MethodInfoList;
 
 import java.awt.datatransfer.DataFlavor;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ComponentDescriptor {
 
@@ -27,6 +31,17 @@ public class ComponentDescriptor {
             return "default";
         }
         return classInfo.getSimpleName();
+    }
+
+    public List<MethodInfo> getProperties() {
+        MethodInfoList methodInfos = classInfo.getMethodInfo();
+        List<MethodInfo> properties = new ArrayList<>();
+        for (MethodInfo methodInfo : methodInfos) {
+            if (methodInfo.getName().startsWith("set")) {
+                properties.add(methodInfo);
+            }
+        }
+        return properties;
     }
 
 }

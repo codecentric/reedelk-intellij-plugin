@@ -12,6 +12,7 @@ import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.components.JBScrollPane;
 
 import java.awt.dnd.DropTarget;
 import java.util.TooManyListenersException;
@@ -39,13 +40,16 @@ public class FlowEditorPanel extends ThreeComponentsSplitter implements FlowGrap
         Module module = ModuleUtil.findModuleForFile(file, project);
 
         this.propertiesPanel = new PropertiesPanel();
+        JBScrollPane propertiesPanelScrollable = new JBScrollPane(this.propertiesPanel);
+        propertiesPanelScrollable.createVerticalScrollBar();
+        propertiesPanelScrollable.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_AS_NEEDED);
+
         this.designer = new DesignerPanel(module);
         registerDropTargetListener(this.designer);
-        this.designer.addSelectListener(propertiesPanel);
 
         this.palette = new PalettePanel(project, file);
 
-
+        this.designer.addSelectListener(propertiesPanel);
         ScrollableDesignerPanel designerScrollable = new ScrollableDesignerPanel(designer);
         designerScrollable.setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_AS_NEEDED);
         designerScrollable.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -57,7 +61,7 @@ public class FlowEditorPanel extends ThreeComponentsSplitter implements FlowGrap
         paletteAndDesigner.setLastSize(PALETTE_SIZE);
 
         setInnerComponent(paletteAndDesigner);
-        setLastComponent(this.propertiesPanel);
+        setLastComponent(propertiesPanelScrollable);
         setLastSize(PROPERTIES_PANEL_SIZE);
     }
 
