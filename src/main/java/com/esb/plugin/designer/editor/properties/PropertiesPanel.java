@@ -37,6 +37,7 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
         List<MethodInfo> properties = component.getProperties();
         for (MethodInfo property : properties) {
             JPanel panel = new JPanel();
+
             panel.setBorder(new EmptyBorder(5, 5, 0, 0));
             panel.setBackground(new Color(0, 0, 0, 0));
             panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));

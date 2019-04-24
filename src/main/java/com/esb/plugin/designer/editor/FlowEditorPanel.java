@@ -27,7 +27,7 @@ public class FlowEditorPanel extends ThreeComponentsSplitter implements FlowGrap
 
     private static final int DIVIDER_WIDTH = 2;
     private static final int PALETTE_SIZE = 210;
-    private static final int PROPERTIES_PANEL_SIZE = 100;
+    private static final int PROPERTIES_PANEL_SIZE = 150;
 
     private static final boolean VERTICAL = true;
     private final PropertiesPanel propertiesPanel;
