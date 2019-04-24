@@ -12,6 +12,8 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.fileEditor.TextEditor;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBusConnection;
@@ -34,12 +36,14 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
     private FlowGraph graph;
     private FlowGraphChangeListener listener;
     private MessageBusConnection busConnection;
+    private Module module;
 
     public GraphManager(Project project, VirtualFile managedGraphFile) {
         this.busConnection = project.getMessageBus().connect();
         this.busConnection.subscribe(FILE_EDITOR_MANAGER, this);
 
-        buildFlowGraph(managedGraphFile)
+        module = ModuleUtil.findModuleForFile(managedGraphFile, project);
+        buildFlowGraph(module, managedGraphFile)
                 .ifPresent(((Consumer<FlowGraph>) fromFileGraph -> graph = fromFileGraph)
                         .andThen(graph -> notifyGraphUpdated()));
     }
@@ -48,7 +52,7 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
     public void documentChanged(@NotNull DocumentEvent event) {
         Document document = event.getDocument();
         String json = document.getText();
-        buildFlowGraph(json)
+        buildFlowGraph(module, json)
                 .ifPresent(((Consumer<FlowGraph>) fromFileGraph -> graph = fromFileGraph)
                         .andThen(graph -> notifyGraphUpdated()));
     }
@@ -77,19 +81,19 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
         }
     }
 
-    private Optional<FlowGraph> buildFlowGraph(VirtualFile file) {
+    private Optional<FlowGraph> buildFlowGraph(Module module, VirtualFile file) {
         try {
             String json = FileUtils.readFrom(new URL(file.getUrl()));
-            return buildFlowGraph(json);
+            return buildFlowGraph(module, json);
         } catch (MalformedURLException e) {
             return Optional.empty();
         }
     }
 
-    private Optional<FlowGraph> buildFlowGraph(String json) {
+    private Optional<FlowGraph> buildFlowGraph(Module module, String json) {
         try {
             FlowGraphBuilder builder = new FlowGraphBuilder(json);
-            return Optional.of(builder.graph());
+            return Optional.of(builder.graph(module));
         } catch (Exception e) {
             return Optional.empty();
         }

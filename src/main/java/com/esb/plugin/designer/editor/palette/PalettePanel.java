@@ -1,10 +1,10 @@
 package com.esb.plugin.designer.editor.palette;
 
 import com.esb.plugin.commons.Icons;
+import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 import com.esb.plugin.designer.editor.component.ComponentTransferHandler;
 import com.esb.plugin.service.module.ComponentService;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleServiceManager;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -15,6 +15,7 @@ import com.intellij.ui.treeStructure.Tree;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
+import java.util.Collection;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -34,7 +35,6 @@ public class PalettePanel extends JBPanel {
         renderer.setOpenIcon(Icons.ModuleDeploy);
         renderer.setClosedIcon(Icons.ModuleUnDeploy);
 
-
         tree = new Tree(root);
         tree.setCellRenderer(renderer);
         tree.setRootVisible(false);
@@ -52,18 +52,12 @@ public class PalettePanel extends JBPanel {
     private void fetchAllComponents(Project project, VirtualFile file, DefaultMutableTreeNode components) {
         Module module = ModuleUtil.findModuleForFile(file, project);
         checkState(module != null, "Module must not be null");
-
-        ComponentService componentService = ModuleServiceManager.getService(module, ComponentService.class);
-        checkState(componentService != null, "Component Service must not be null");
-
-        componentService.findAllComponents(descriptors -> SwingUtilities.invokeLater(() -> {
-            components.removeAllChildren();
-            descriptors.forEach(descriptor -> components.add(new DefaultMutableTreeNode(descriptor)));
-            expandRows(tree);
-        }));
+        ComponentService
+                .getInstance(module)
+                .asyncFindAllComponents(descriptors -> updatePaletteComponentsList(components, descriptors));
     }
 
-    private void expandRows(Tree tree) {
+    private void expandRows() {
         int j = tree.getRowCount();
         int i = 0;
         while (i < j) {
@@ -71,5 +65,13 @@ public class PalettePanel extends JBPanel {
             i += 1;
             j = tree.getRowCount();
         }
+    }
+
+    private void updatePaletteComponentsList(DefaultMutableTreeNode components, Collection<ComponentDescriptor> descriptors) {
+        SwingUtilities.invokeLater(() -> {
+            components.removeAllChildren();
+            descriptors.forEach(descriptor -> components.add(new DefaultMutableTreeNode(descriptor)));
+            expandRows();
+        });
     }
 }

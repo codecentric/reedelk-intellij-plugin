@@ -4,6 +4,7 @@ import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.FlowGraphImpl;
 import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.intellij.openapi.module.Module;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -20,7 +21,7 @@ public class FlowGraphBuilder {
         this.flowDefinition = JsonParser.from(json);
     }
 
-    public FlowGraph graph() {
+    public FlowGraph graph(Module module) {
         JSONArray flow = JsonParser.Flow.getFlow(flowDefinition);
 
         Drawable current = null;
@@ -28,7 +29,7 @@ public class FlowGraphBuilder {
             JSONObject implementorDefinition = (JSONObject) flow.get(i);
             current = BuilderFactory
                     .get(implementorDefinition)
-                    .build(current, implementorDefinition, graph);
+                    .build(module, current, implementorDefinition, graph);
         }
 
         return RemoveStopDrawables.from(graph);

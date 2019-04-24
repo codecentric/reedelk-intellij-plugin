@@ -9,10 +9,13 @@ import java.util.Collection;
 import java.util.function.Consumer;
 
 public interface ComponentService {
+
     static ComponentService getInstance(@NotNull Module module) {
         return ModuleServiceManager.getService(module, ComponentService.class);
     }
 
-    void findAllComponents(Consumer<Collection<ComponentDescriptor>> callback);
+    void asyncFindAllComponents(Consumer<Collection<ComponentDescriptor>> callback);
+
+    ComponentDescriptor componentDescriptorByName(String componentFullyQualifiedName);
 
 }

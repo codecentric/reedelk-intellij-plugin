@@ -5,7 +5,8 @@ import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 public class StopDrawable extends AbstractDrawable {
 
     public StopDrawable() {
-        super(new ComponentDescriptor("Stop"));
+        // TODO: Fix this.
+        super(new ComponentDescriptor(null));
     }
 
 }
