@@ -16,10 +16,16 @@ public class ComponentDescriptor {
     }
 
     public String getFullyQualifiedName() {
+        if (classInfo == null) {
+            return "default";
+        }
         return classInfo.getName();
     }
 
     public String getDisplayName() {
+        if (classInfo == null) {
+            return "default";
+        }
         return classInfo.getSimpleName();
     }
 

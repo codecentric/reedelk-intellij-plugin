@@ -8,6 +8,7 @@ import com.esb.plugin.designer.graph.FlowGraphChangeListener;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.decorators.NothingSelectedDrawable;
 import com.esb.plugin.designer.graph.layout.FlowGraphLayout;
+import com.intellij.openapi.module.Module;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +33,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     private final JBColor BACKGROUND_COLOR = JBColor.WHITE;
     private final Drawable NOTHING_SELECTED = new NothingSelectedDrawable();
+    private final Module module;
 
     private FlowGraph graph;
     private Drawable selected = NOTHING_SELECTED;
@@ -43,10 +45,11 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     private boolean dragging;
 
 
-    public DesignerPanel() {
+    public DesignerPanel(Module module) {
         setBackground(BACKGROUND_COLOR);
         addMouseListener(this);
         addMouseMotionListener(this);
+        this.module = module;
     }
 
     public void addSelectListener(SelectListener listener) {
@@ -156,7 +159,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
             Point movePoint = new Point(dragX, dragY);
 
-            MoveActionHandler delegate = new MoveActionHandler(graph, getGraphics2D(), selected, movePoint);
+            MoveActionHandler delegate = new MoveActionHandler(module, graph, getGraphics2D(), selected, movePoint);
             delegate.handle().ifPresent(this::updated);
 
             repaint();
@@ -180,7 +183,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     @Override
     public void drop(DropTargetDropEvent dropEvent) {
-        PaletteDropActionHandler delegate = new PaletteDropActionHandler(graph, getGraphics2D(), dropEvent);
+        PaletteDropActionHandler delegate = new PaletteDropActionHandler(module, graph, getGraphics2D(), dropEvent);
         Optional<FlowGraph> updatedGraph = delegate.handle();
         updatedGraph.ifPresent(this::updated);
     }

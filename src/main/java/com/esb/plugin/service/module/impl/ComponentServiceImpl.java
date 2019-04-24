@@ -61,6 +61,8 @@ public class ComponentServiceImpl implements ComponentService {
     }
 
     private void populateComponents() {
+        populateSystemComponents();
+
         String[] classPathEntries = ModuleRootManager.getInstance(module).orderEntries().withoutSdk().classes().getUrls();
         Iterable<String> pathElements = asList(classPathEntries);
         ScanResult scanResult = new ClassGraph().overrideClasspath(pathElements)
@@ -68,6 +70,18 @@ public class ComponentServiceImpl implements ComponentService {
                 .enableAllInfo()
                 .scan();
 
+        addComponents(scanResult);
+    }
+
+    private void populateSystemComponents() {
+        ScanResult scanResult = new ClassGraph()
+                .whitelistPackages("com.esb.component")
+                .enableAllInfo()
+                .scan();
+        addComponents(scanResult);
+    }
+
+    private void addComponents(ScanResult scanResult) {
         ClassInfoList components = scanResult.getClassesWithAnnotation(COMPONENT_ANNOTATION_NAME);
         for (ClassInfo component : components) {
             if (implementsComponentSuperclazz(component)) {

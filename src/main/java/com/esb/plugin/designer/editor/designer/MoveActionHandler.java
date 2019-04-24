@@ -8,6 +8,7 @@ import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 import com.esb.plugin.designer.graph.drawable.decorators.NothingSelectedDrawable;
 import com.esb.plugin.designer.graph.scope.FindScope;
+import com.intellij.openapi.module.Module;
 
 import java.awt.*;
 import java.util.Optional;
@@ -19,7 +20,8 @@ class MoveActionHandler extends AbstractActionHandler {
     private final Drawable selected;
     private final Graphics2D graphics;
 
-    MoveActionHandler(FlowGraph graph, Graphics2D graphics, Drawable selected, Point movePoint) {
+    MoveActionHandler(Module module, FlowGraph graph, Graphics2D graphics, Drawable selected, Point movePoint) {
+        super(module);
         this.graph = graph;
         this.graphics = graphics;
         this.movePoint = movePoint;

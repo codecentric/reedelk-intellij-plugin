@@ -34,7 +34,7 @@ public abstract class AbstractDrawable implements Drawable {
 
     public AbstractDrawable(ComponentDescriptor component) {
         this.component = component;
-        this.iconDrawable = new IconDrawable(component.getDisplayName());
+        this.iconDrawable = new IconDrawable(component.getFullyQualifiedName());
         this.componentTitleDrawable = new ComponentTitleDrawable(displayName());
         this.componentDescriptionDrawable = new ComponentDescriptionDrawable("A description");
 

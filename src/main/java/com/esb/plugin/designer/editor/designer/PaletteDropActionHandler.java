@@ -7,6 +7,7 @@ import com.esb.plugin.designer.graph.FlowGraphImpl;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.DrawableFactory;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.module.Module;
 
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -27,7 +28,8 @@ class PaletteDropActionHandler extends AbstractActionHandler {
     private final Graphics2D graphics;
     private final DropTargetDropEvent dropEvent;
 
-    PaletteDropActionHandler(FlowGraph graph, Graphics2D graphics, DropTargetDropEvent dropEvent) {
+    PaletteDropActionHandler(Module module, FlowGraph graph, Graphics2D graphics, DropTargetDropEvent dropEvent) {
+        super(module);
         this.graph = graph;
         this.graphics = graphics;
         this.dropEvent = dropEvent;

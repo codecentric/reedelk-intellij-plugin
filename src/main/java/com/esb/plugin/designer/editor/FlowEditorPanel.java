@@ -7,6 +7,8 @@ import com.esb.plugin.designer.editor.properties.PropertiesPanel;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.FlowGraphChangeListener;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -34,8 +36,10 @@ public class FlowEditorPanel extends ThreeComponentsSplitter implements FlowGrap
     FlowEditorPanel(Project project, VirtualFile file) {
         super(VERTICAL);
 
+        Module module = ModuleUtil.findModuleForFile(file, project);
+
         this.propertiesPanel = new PropertiesPanel();
-        this.designer = new DesignerPanel();
+        this.designer = new DesignerPanel(module);
         registerDropTargetListener(this.designer);
         this.designer.addSelectListener(propertiesPanel);
 

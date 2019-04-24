@@ -20,7 +20,7 @@ public class PaletteTreeCellRenderer extends DefaultTreeCellRenderer {
         if (componentDescriptor instanceof ComponentDescriptor) {
             ComponentDescriptor descriptor = (ComponentDescriptor) componentDescriptor;
             setText(descriptor.getDisplayName());
-            setIcon(Icons.forComponentAsIcon(descriptor.getDisplayName()));
+            setIcon(Icons.forComponentAsIcon(descriptor.getFullyQualifiedName()));
         }
         return this;
     }
