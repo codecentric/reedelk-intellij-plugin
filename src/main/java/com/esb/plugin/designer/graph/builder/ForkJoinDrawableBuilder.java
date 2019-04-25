@@ -6,21 +6,23 @@ import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ForkJoinDrawable;
 import com.esb.plugin.designer.graph.drawable.StopDrawable;
-import com.esb.plugin.service.module.ComponentService;
-import com.intellij.openapi.module.Module;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class ForkJoinDrawableBuilder implements Builder {
+public class ForkJoinDrawableBuilder extends AbstractBuilder {
+
+    ForkJoinDrawableBuilder(FlowGraph graph, BuilderContext context) {
+        super(graph, context);
+    }
 
     @Override
-    public Drawable build(Module module, Drawable parent, JSONObject componentDefinition, FlowGraph graph) {
+    public Drawable build(Drawable parent, JSONObject componentDefinition) {
 
         StopDrawable stopDrawable = new StopDrawable();
 
         String name = JsonParser.Implementor.name(componentDefinition);
 
-        ComponentDescriptor forkComponent = ComponentService.getInstance(module).componentDescriptorByName(name);
+        ComponentDescriptor forkComponent = context.instantiateComponent(name);
 
         ForkJoinDrawable forkJoinDrawable = new ForkJoinDrawable(forkComponent);
 
@@ -37,8 +39,12 @@ public class ForkJoinDrawableBuilder implements Builder {
 
             for (int j = 0; j < nextComponents.length(); j++) {
                 JSONObject currentComponentDefinition = nextComponents.getJSONObject(j);
-                currentDrawable = BuilderFactory.get(currentComponentDefinition)
-                        .build(module, currentDrawable, currentComponentDefinition, graph);
+                currentDrawable = DrawableBuilder.get()
+                        .componentDefinition(currentComponentDefinition)
+                        .context(context)
+                        .graph(graph)
+                        .parent(currentDrawable)
+                        .build();
             }
 
             graph.add(currentDrawable, stopDrawable);
@@ -46,7 +52,12 @@ public class ForkJoinDrawableBuilder implements Builder {
         }
 
         JSONObject joinComponent = JsonParser.ForkJoin.getJoin(componentDefinition);
-        return BuilderFactory.get(joinComponent).build(module, stopDrawable, joinComponent, graph);
+        return DrawableBuilder.get()
+                .componentDefinition(joinComponent)
+                .parent(stopDrawable)
+                .context(context)
+                .graph(graph)
+                .build();
     }
 
 }

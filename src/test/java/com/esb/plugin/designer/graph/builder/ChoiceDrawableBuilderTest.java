@@ -1,5 +1,6 @@
 package com.esb.plugin.designer.graph.builder;
 
+import com.esb.component.Choice;
 import com.esb.plugin.designer.graph.FlowGraphImpl;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.StopDrawable;
@@ -9,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import static com.esb.plugin.commons.SystemComponents.CHOICE;
 import static com.esb.plugin.designer.graph.builder.ComponentDefinitionBuilder.createNextComponentsArray;
 import static com.esb.plugin.designer.graph.builder.ComponentDefinitionBuilder.forComponent;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,6 +23,8 @@ class ChoiceDrawableBuilderTest extends AbstractBuilderTest {
 
     @Mock
     private Drawable root;
+    @Mock
+    private BuilderContext context;
 
     private FlowGraphImpl graph;
     private ChoiceDrawableBuilder builder;
@@ -30,8 +32,8 @@ class ChoiceDrawableBuilderTest extends AbstractBuilderTest {
     @BeforeEach
     void setUp() {
         this.graph = new FlowGraphImpl();
-        this.graph.add(null, this.root);
-        this.builder = new ChoiceDrawableBuilder();
+        this.graph.root(root);
+        this.builder = new ChoiceDrawableBuilder(graph, context);
     }
 
     @Test
@@ -43,13 +45,13 @@ class ChoiceDrawableBuilderTest extends AbstractBuilderTest {
 
         JSONArray otherwiseComponents = createNextComponentsArray(COMPONENT_4_NAME, COMPONENT_3_NAME);
 
-        JSONObject componentDefinition = forComponent(CHOICE.qualifiedName())
+        JSONObject componentDefinition = forComponent(Choice.class.getName())
                 .with("when", whenArray)
                 .with("otherwise", otherwiseComponents)
                 .build();
 
         // When
-        Drawable stopDrawable = builder.build(root, componentDefinition, graph);
+        Drawable stopDrawable = builder.build(root, componentDefinition);
 
         // Then: last node must be a stop drawable
         assertThat(stopDrawable).isInstanceOf(StopDrawable.class);

@@ -12,8 +12,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 public class FlowGraphBuilder {
 
-    private final JSONObject flowDefinition;
     private final FlowGraph graph;
+    private final JSONObject flowDefinition;
 
     public FlowGraphBuilder(String json) {
         checkArgument(json != null, "JSON must not be null");
@@ -22,14 +22,19 @@ public class FlowGraphBuilder {
     }
 
     public FlowGraph graph(Module module) {
+        BuilderContext context = new BuilderContext(module);
+
         JSONArray flow = JsonParser.Flow.getFlow(flowDefinition);
 
         Drawable current = null;
         for (int i = 0; i < flow.length(); i++) {
             JSONObject implementorDefinition = (JSONObject) flow.get(i);
-            current = BuilderFactory
-                    .get(implementorDefinition)
-                    .build(module, current, implementorDefinition, graph);
+            current = DrawableBuilder.get()
+                    .graph(graph)
+                    .parent(current)
+                    .context(context)
+                    .componentDefinition(implementorDefinition)
+                    .build();
         }
 
         return RemoveStopDrawables.from(graph);

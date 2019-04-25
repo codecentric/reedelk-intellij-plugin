@@ -5,18 +5,20 @@ import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.GenericComponentDrawable;
-import com.esb.plugin.service.module.ComponentService;
-import com.intellij.openapi.module.Module;
 import org.json.JSONObject;
 
-public class GenericDrawableBuilder implements Builder {
+public class GenericDrawableBuilder extends AbstractBuilder {
+
+    GenericDrawableBuilder(FlowGraph graph, BuilderContext context) {
+        super(graph, context);
+    }
 
     @Override
-    public Drawable build(Module module, Drawable parent, JSONObject componentDefinition, FlowGraph graph) {
+    public Drawable build(Drawable parent, JSONObject componentDefinition) {
 
         String name = JsonParser.Implementor.name(componentDefinition);
 
-        ComponentDescriptor component = ComponentService.getInstance(module).componentDescriptorByName(name);
+        ComponentDescriptor component = context.instantiateComponent(name);
 
         GenericComponentDrawable genericComponentDrawable = new GenericComponentDrawable(component);
 
@@ -24,4 +26,5 @@ public class GenericDrawableBuilder implements Builder {
 
         return genericComponentDrawable;
     }
+
 }
