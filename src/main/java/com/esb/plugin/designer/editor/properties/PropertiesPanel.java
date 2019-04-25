@@ -22,19 +22,17 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
     @Override
     public void onSelect(Drawable drawable) {
         ComponentDescriptor component = drawable.component();
-        if (component == null) return;
+        if (component == null) {
+            return;
+        }
 
         removeAll();
 
-        JLabel titleLabel = new JLabel(component.getDisplayName());
-        titleLabel.setBorder(JBUI.Borders.empty(5, 5, 0, 0));
-        add(titleLabel);
-
+        add(createTitleLabel(component.getDisplayName()));
         component.getPropertiesNames()
                 .forEach(propertyName -> {
                     PropertyBox panel = new PropertyBox(propertyName);
-                    panel.addListener(newText ->
-                            component.setPropertyValue(propertyName, newText));
+                    panel.addListener(newText -> component.setPropertyValue(propertyName, newText));
                     add(panel);
                 });
 
@@ -48,6 +46,12 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
         removeAll();
         revalidate();
         repaint();
+    }
+
+    private JLabel createTitleLabel(String title) {
+        JLabel titleLabel = new JLabel(title);
+        titleLabel.setBorder(JBUI.Borders.empty(5, 5, 0, 0));
+        return titleLabel;
     }
 
 }
