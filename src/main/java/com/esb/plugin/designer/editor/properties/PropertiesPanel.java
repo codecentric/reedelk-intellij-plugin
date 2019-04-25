@@ -30,9 +30,13 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
         titleLabel.setBorder(JBUI.Borders.empty(5, 5, 0, 0));
         add(titleLabel);
 
-        component
-                .getPropertiesNames()
-                .forEach(propertyName -> addPropertyInput(component, propertyName));
+        component.getPropertiesNames()
+                .forEach(propertyName -> {
+                    PropertyBox panel = new PropertyBox(propertyName);
+                    panel.addListener(newText ->
+                            component.setPropertyValue(propertyName, newText));
+                    add(panel);
+                });
 
         add(Box.createVerticalGlue());
         revalidate();
@@ -44,13 +48,6 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
         removeAll();
         revalidate();
         repaint();
-    }
-
-    private void addPropertyInput(ComponentDescriptor descriptor, String propertyName) {
-        PropertyBox panel = new PropertyBox(propertyName);
-        panel.addListener(newText ->
-                descriptor.setPropertyValue(propertyName, newText));
-        add(panel);
     }
 
 }
