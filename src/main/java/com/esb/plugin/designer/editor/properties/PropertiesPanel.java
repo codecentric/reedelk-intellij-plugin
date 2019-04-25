@@ -5,13 +5,10 @@ import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
-import io.github.classgraph.MethodInfo;
+import com.intellij.util.ui.JBUI;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
-import java.awt.*;
-import java.util.List;
 
 public class PropertiesPanel extends JBPanel implements SelectListener {
 
@@ -27,32 +24,15 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
         ComponentDescriptor component = drawable.component();
         if (component == null) return;
 
-
         removeAll();
 
         JLabel titleLabel = new JLabel(component.getDisplayName());
-        titleLabel.setBorder(new EmptyBorder(5, 5, 0, 0));
+        titleLabel.setBorder(JBUI.Borders.empty(5, 5, 0, 0));
         add(titleLabel);
 
-        List<MethodInfo> properties = component.getProperties();
-        for (MethodInfo property : properties) {
-            JPanel panel = new JPanel();
-
-            panel.setBorder(new EmptyBorder(5, 5, 0, 0));
-            panel.setBackground(new Color(0, 0, 0, 0));
-            panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
-
-            JLabel label = new JLabel(property.getName().substring(3));
-            label.setAlignmentX(Component.LEFT_ALIGNMENT);
-            label.setBorder(new EmptyBorder(0, 0, 0, 5));
-            JTextField input = new JTextField();
-            input.setMaximumSize(new Dimension(300, 50));
-            input.setAlignmentX(Component.LEFT_ALIGNMENT);
-            panel.add(label, BorderLayout.WEST);
-            panel.add(input, BorderLayout.CENTER);
-            panel.setAlignmentX(Component.LEFT_ALIGNMENT);
-            add(panel);
-        }
+        component
+                .getPropertiesNames()
+                .forEach(propertyName -> addPropertyInput(component, propertyName));
 
         add(Box.createVerticalGlue());
         revalidate();
@@ -66,5 +46,11 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
         repaint();
     }
 
+    private void addPropertyInput(ComponentDescriptor descriptor, String propertyName) {
+        PropertyBox panel = new PropertyBox(propertyName);
+        panel.addListener(newText ->
+                descriptor.setPropertyValue(propertyName, newText));
+        add(panel);
+    }
 
 }

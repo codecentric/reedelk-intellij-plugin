@@ -6,9 +6,13 @@ import io.github.classgraph.MethodInfoList;
 
 import java.awt.datatransfer.DataFlavor;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ComponentDescriptor {
+
+    private Map<String, Object> componentData = new HashMap<>();
 
     public static final DataFlavor FLAVOR = new DataFlavor(ComponentDescriptor.class,
             "Descriptor of Component");
@@ -33,16 +37,19 @@ public class ComponentDescriptor {
         return classInfo.getSimpleName();
     }
 
-    public List<MethodInfo> getProperties() {
+    public List<String> getPropertiesNames() {
         MethodInfoList methodInfos = classInfo.getMethodInfo();
-        List<MethodInfo> properties = new ArrayList<>();
+        List<String> propertiesNames = new ArrayList<>();
         for (MethodInfo methodInfo : methodInfos) {
             if (methodInfo.getName().startsWith("set")) {
-                properties.add(methodInfo);
+                propertiesNames.add(methodInfo.getName().substring(3));
             }
         }
-        return properties;
+        return propertiesNames;
     }
 
+    public void setPropertyValue(String propertyName, Object propertyValue) {
+        this.componentData.put(propertyName, propertyValue);
+    }
 }
 
