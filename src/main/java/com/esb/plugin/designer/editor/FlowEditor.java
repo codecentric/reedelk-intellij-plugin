@@ -7,6 +7,8 @@ import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorLocation;
 import com.intellij.openapi.fileEditor.FileEditorState;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.PossiblyDumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolderBase;
@@ -17,15 +19,18 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
 
+import static com.google.common.base.Preconditions.checkState;
+
 public class FlowEditor extends UserDataHolderBase implements FileEditor, PossiblyDumbAware, DocumentListener {
 
     private FlowEditorPanel editor;
     private GraphManager manager;
 
     FlowEditor(Project project, VirtualFile file) {
-        this.manager = new GraphManager(project, file);
-        this.editor = new FlowEditorPanel(project, file);
-        manager.addGraphChangeListener(this.editor);
+        Module module = ModuleUtil.findModuleForFile(file, project);
+        checkState(module != null, "Module must not be null");
+        editor = new FlowEditorPanel(module, file);
+        manager = new GraphManager(module, file);
     }
 
     @NotNull

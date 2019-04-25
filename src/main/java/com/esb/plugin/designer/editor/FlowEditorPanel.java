@@ -4,12 +4,8 @@ import com.esb.plugin.designer.editor.designer.DesignerPanel;
 import com.esb.plugin.designer.editor.designer.ScrollableDesignerPanel;
 import com.esb.plugin.designer.editor.palette.PalettePanel;
 import com.esb.plugin.designer.editor.properties.PropertiesPanel;
-import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.FlowGraphChangeListener;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBScrollPane;
@@ -21,7 +17,7 @@ import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 
 
-public class FlowEditorPanel extends ThreeComponentsSplitter implements FlowGraphChangeListener {
+public class FlowEditorPanel extends ThreeComponentsSplitter {
 
     private static final Logger LOG = Logger.getInstance(FlowEditorPanel.class);
 
@@ -30,24 +26,23 @@ public class FlowEditorPanel extends ThreeComponentsSplitter implements FlowGrap
     private static final int PROPERTIES_PANEL_SIZE = 150;
 
     private static final boolean VERTICAL = true;
+
     private final PropertiesPanel propertiesPanel;
     private PalettePanel palette;
     private DesignerPanel designer;
 
-    FlowEditorPanel(Project project, VirtualFile file) {
+    FlowEditorPanel(Module module, VirtualFile file) {
         super(VERTICAL);
-
-        Module module = ModuleUtil.findModuleForFile(file, project);
 
         this.propertiesPanel = new PropertiesPanel();
         JBScrollPane propertiesPanelScrollable = new JBScrollPane(this.propertiesPanel);
         propertiesPanelScrollable.createVerticalScrollBar();
         propertiesPanelScrollable.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_AS_NEEDED);
 
-        this.designer = new DesignerPanel(module);
+        this.designer = new DesignerPanel(module, file);
         registerDropTargetListener(this.designer);
 
-        this.palette = new PalettePanel(project, file);
+        this.palette = new PalettePanel(module, file);
 
         this.designer.addSelectListener(propertiesPanel);
         ScrollableDesignerPanel designerScrollable = new ScrollableDesignerPanel(designer);
@@ -63,14 +58,6 @@ public class FlowEditorPanel extends ThreeComponentsSplitter implements FlowGrap
         setInnerComponent(paletteAndDesigner);
         setLastComponent(propertiesPanelScrollable);
         setLastSize(PROPERTIES_PANEL_SIZE);
-    }
-
-    @Override
-    public void updated(FlowGraph graph) {
-        // TODO: Should not be like this.
-        //  Designer Panel should be argument of this class and
-        //  set listener *BEFORE* during construction
-        this.designer.updated(graph);
     }
 
     private void registerDropTargetListener(DesignerPanel designer) {

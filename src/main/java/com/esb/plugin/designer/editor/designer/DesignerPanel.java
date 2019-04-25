@@ -4,11 +4,12 @@ import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.editor.SelectListener;
 import com.esb.plugin.designer.graph.DropListener;
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.FlowGraphChangeListener;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.decorators.NothingSelectedDrawable;
 import com.esb.plugin.designer.graph.layout.FlowGraphLayout;
+import com.esb.plugin.designer.graph.manager.JsonChangeNotifier;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
 import org.jetbrains.annotations.NotNull;
@@ -29,13 +30,14 @@ import static com.google.common.base.Preconditions.checkState;
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
-public class DesignerPanel extends JBPanel implements MouseMotionListener, MouseListener, FlowGraphChangeListener, DropTargetListener {
+public class DesignerPanel extends JBPanel implements MouseMotionListener, MouseListener, DropTargetListener, JsonChangeNotifier {
 
     private final JBColor BACKGROUND_COLOR = JBColor.WHITE;
     private final Drawable NOTHING_SELECTED = new NothingSelectedDrawable();
     private final Module module;
 
     private FlowGraph graph;
+    private VirtualFile relatedFile;
     private Drawable selected = NOTHING_SELECTED;
     private SelectListener selectListener;
 
@@ -45,11 +47,15 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     private boolean dragging;
 
 
-    public DesignerPanel(Module module) {
+    public DesignerPanel(Module module, VirtualFile relatedFile) {
         setBackground(BACKGROUND_COLOR);
         addMouseListener(this);
         addMouseMotionListener(this);
+
         this.module = module;
+        this.module.getMessageBus().connect().subscribe(JsonChangeNotifier.TOPIC, this);
+
+        this.relatedFile = relatedFile;
     }
 
     public void addSelectListener(SelectListener listener) {
@@ -68,7 +74,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         // We compute again the graph layout if and only if it was updated.
         if (updated) {
             FlowGraphLayout.compute(graph, g2);
-            debugGraphNodesPosition(); // TODO: debug only
+            DebugGraphNodesPosition.debug(graph);// TODO: debug only
             adjustWindowSize();
             updated = false;
         }
@@ -92,14 +98,13 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     }
 
     @Override
-    public void updated(FlowGraph updatedGraph) {
+    public void onChange(FlowGraph updatedGraph, VirtualFile relatedFile) {
         checkState(updatedGraph != null, "Updated graph must not be null");
-        SwingUtilities.invokeLater(() -> {
-            graph = updatedGraph;
-            updated = true;
-            invalidate();
-            repaint();
-        });
+        checkState(relatedFile != null, "Related file must not be null");
+
+        if (this.relatedFile.equals(relatedFile)) {
+            updateGraph(updatedGraph);
+        }
     }
 
     @Override
@@ -160,10 +165,17 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
             Point movePoint = new Point(dragX, dragY);
 
             MoveActionHandler delegate = new MoveActionHandler(module, graph, getGraphics2D(), selected, movePoint);
-            delegate.handle().ifPresent(this::updated);
+            delegate.handle().ifPresent(this::updateGraph);
 
             repaint();
         }
+    }
+
+    @Override
+    public void drop(DropTargetDropEvent dropEvent) {
+        PaletteDropActionHandler delegate = new PaletteDropActionHandler(module, graph, getGraphics2D(), dropEvent);
+        Optional<FlowGraph> updatedGraph = delegate.handle();
+        updatedGraph.ifPresent(this::updateGraph);
     }
 
     @Override
@@ -179,13 +191,6 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     @Override
     public void mouseExited(MouseEvent e) {
         // nothing to do
-    }
-
-    @Override
-    public void drop(DropTargetDropEvent dropEvent) {
-        PaletteDropActionHandler delegate = new PaletteDropActionHandler(module, graph, getGraphics2D(), dropEvent);
-        Optional<FlowGraph> updatedGraph = delegate.handle();
-        updatedGraph.ifPresent(this::updated);
     }
 
     @Override
@@ -251,10 +256,13 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         return (Graphics2D) getGraphics();
     }
 
-    private void debugGraphNodesPosition() {
-        System.out.println("------- Graph Updated --------");
-        graph.breadthFirstTraversal(drawable ->
-                System.out.println("Name: " + drawable.component().getDisplayName() + ", x: " + drawable.x() + ", y: " + drawable.y()));
+    private void updateGraph(FlowGraph updatedGraph) {
+        SwingUtilities.invokeLater(() -> {
+            graph = updatedGraph;
+            updated = true;
+            invalidate();
+            repaint();
+        });
     }
 
 }

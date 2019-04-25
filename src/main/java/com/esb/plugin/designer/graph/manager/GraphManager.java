@@ -2,7 +2,6 @@ package com.esb.plugin.designer.graph.manager;
 
 import com.esb.internal.commons.FileUtils;
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.FlowGraphChangeListener;
 import com.esb.plugin.designer.graph.builder.FlowGraphBuilder;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Document;
@@ -13,8 +12,6 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NotNull;
@@ -29,30 +26,41 @@ import static java.util.Arrays.stream;
 /**
  * Centralizes updates of the graph coming from the following sources:
  * - The text editor associated with the flow designer (the user manually updates the JSON)
- * - The Canvas updates (drag and drop and moving around components)
+ * - Designer updates:
+ *      - drag and drop and moving around components
+ * - Properties updates:
+ *      - component's property changed
  */
-public class GraphManager implements FileEditorManagerListener, DocumentListener, Disposable {
+public class GraphManager implements FileEditorManagerListener, DocumentListener, GraphChangeNotifier, Disposable {
 
-    private FlowGraph graph;
-    private FlowGraphChangeListener listener;
-    private MessageBusConnection busConnection;
     private Module module;
+    private FlowGraph graph;
+    private VirtualFile jsonGraphFile;
+    private MessageBusConnection busConnection;
 
-    public GraphManager(Project project, VirtualFile managedGraphFile) {
-        this.busConnection = project.getMessageBus().connect();
-        this.busConnection.subscribe(FILE_EDITOR_MANAGER, this);
+    public GraphManager(Module module, VirtualFile jsonGraphFile) {
+        this.module = module;
+        this.jsonGraphFile = jsonGraphFile;
+        this.busConnection = module.getMessageBus().connect();
+        this.busConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
+        this.busConnection.subscribe(GraphChangeNotifier.TOPIC, this);
 
-        module = ModuleUtil.findModuleForFile(managedGraphFile, project);
-        buildFlowGraph(module, managedGraphFile)
+        buildGraph(module, jsonGraphFile)
                 .ifPresent(((Consumer<FlowGraph>) fromFileGraph -> graph = fromFileGraph)
                         .andThen(graph -> notifyGraphUpdated()));
     }
 
+    /**
+     * The JSON representing the graph was manually changed by the user.
+     * The graph must be re-built.
+     *
+     * @param event the change object triggering this callback.
+     */
     @Override
     public void documentChanged(@NotNull DocumentEvent event) {
         Document document = event.getDocument();
-        String json = document.getText();
-        buildFlowGraph(module, json)
+        String graphAsJson = document.getText();
+        buildGraph(module, graphAsJson)
                 .ifPresent(((Consumer<FlowGraph>) fromFileGraph -> graph = fromFileGraph)
                         .andThen(graph -> notifyGraphUpdated()));
     }
@@ -70,39 +78,37 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
     }
 
     @Override
+    public void onChange(FlowGraph graph, VirtualFile file) {
+        // Serialize the graph to json
+    }
+
+    @Override
     public void dispose() {
-        this.busConnection.disconnect();
+        busConnection.disconnect();
     }
 
-    public void addGraphChangeListener(FlowGraphChangeListener listener) {
-        this.listener = listener;
-        if (graph != null) {
-            this.listener.updated(graph);
-        }
-    }
-
-    private Optional<FlowGraph> buildFlowGraph(Module module, VirtualFile file) {
+    private Optional<FlowGraph> buildGraph(Module module, VirtualFile file) {
         try {
             String json = FileUtils.readFrom(new URL(file.getUrl()));
-            return buildFlowGraph(module, json);
+            return buildGraph(module, json);
         } catch (MalformedURLException e) {
             return Optional.empty();
         }
     }
 
-    private Optional<FlowGraph> buildFlowGraph(Module module, String json) {
+    private Optional<FlowGraph> buildGraph(Module module, String json) {
         try {
             FlowGraphBuilder builder = new FlowGraphBuilder(json);
-            return Optional.of(builder.graph(module));
+            FlowGraph graph = builder.graph(module);
+            return Optional.of(graph);
         } catch (Exception e) {
             return Optional.empty();
         }
     }
 
     private void notifyGraphUpdated() {
-        if (listener != null) {
-            listener.updated(graph);
-        }
+        JsonChangeNotifier notifier = module.getMessageBus().syncPublisher(JsonChangeNotifier.TOPIC);
+        notifier.onChange(graph, jsonGraphFile);
     }
 
     /**
