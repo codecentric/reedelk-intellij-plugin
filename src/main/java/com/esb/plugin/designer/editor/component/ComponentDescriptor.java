@@ -1,10 +1,7 @@
 package com.esb.plugin.designer.editor.component;
 
 import java.awt.datatransfer.DataFlavor;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ComponentDescriptor {
 
@@ -17,6 +14,10 @@ public class ComponentDescriptor {
     private Map<String, Object> componentData = new HashMap<>();
 
     private ComponentDescriptor() {
+    }
+
+    public Set<String> componentDataKeys() {
+        return componentData.keySet();
     }
 
     public String getFullyQualifiedName() {

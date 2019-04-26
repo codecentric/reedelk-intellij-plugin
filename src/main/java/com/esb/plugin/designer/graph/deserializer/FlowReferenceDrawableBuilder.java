@@ -1,15 +1,15 @@
-package com.esb.plugin.designer.graph.builder;
+package com.esb.plugin.designer.graph.deserializer;
 
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
-import com.esb.plugin.designer.graph.drawable.GenericComponentDrawable;
+import com.esb.plugin.designer.graph.drawable.FlowReferenceDrawable;
 import org.json.JSONObject;
 
-public class GenericDrawableBuilder extends AbstractBuilder {
+public class FlowReferenceDrawableBuilder extends AbstractBuilder {
 
-    GenericDrawableBuilder(FlowGraph graph, BuilderContext context) {
+    FlowReferenceDrawableBuilder(FlowGraph graph, BuilderContext context) {
         super(graph, context);
     }
 
@@ -20,11 +20,10 @@ public class GenericDrawableBuilder extends AbstractBuilder {
 
         ComponentDescriptor component = context.instantiateComponent(name);
 
-        GenericComponentDrawable drawable = new GenericComponentDrawable(component);
+        FlowReferenceDrawable drawable = new FlowReferenceDrawable(component);
 
         graph.add(parent, drawable);
 
         return drawable;
     }
-
 }

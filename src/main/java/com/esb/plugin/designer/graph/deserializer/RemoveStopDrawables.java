@@ -1,4 +1,4 @@
-package com.esb.plugin.designer.graph.builder;
+package com.esb.plugin.designer.graph.deserializer;
 
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;

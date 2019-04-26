@@ -1,9 +1,8 @@
 package com.esb.plugin.designer.graph.manager;
 
-import com.esb.internal.commons.FileUtils;
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.builder.BuilderContext;
-import com.esb.plugin.designer.graph.builder.FlowGraphBuilder;
+import com.esb.plugin.designer.graph.deserializer.GraphDeserializer;
+import com.esb.plugin.designer.graph.serializer.GraphSerializer;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentEvent;
@@ -17,8 +16,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NotNull;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -42,11 +40,12 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
     public GraphManager(Module module, VirtualFile jsonGraphFile) {
         this.module = module;
         this.jsonGraphFile = jsonGraphFile;
-        this.busConnection = module.getMessageBus().connect();
-        this.busConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
-        this.busConnection.subscribe(GraphChangeNotifier.TOPIC, this);
 
-        buildGraph(module, jsonGraphFile)
+        busConnection = module.getMessageBus().connect();
+        busConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
+        busConnection.subscribe(GraphChangeNotifier.TOPIC, this);
+
+        GraphDeserializer.deserialize(module, jsonGraphFile)
                 .ifPresent(((Consumer<FlowGraph>) fromFileGraph -> graph = fromFileGraph)
                         .andThen(graph -> notifyGraphUpdated()));
     }
@@ -61,7 +60,7 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
     public void documentChanged(@NotNull DocumentEvent event) {
         Document document = event.getDocument();
         String graphAsJson = document.getText();
-        buildGraph(module, graphAsJson)
+        GraphDeserializer.deserialize(module, graphAsJson)
                 .ifPresent(((Consumer<FlowGraph>) fromFileGraph -> graph = fromFileGraph)
                         .andThen(graph -> notifyGraphUpdated()));
     }
@@ -81,31 +80,17 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
     @Override
     public void onChange(FlowGraph graph, VirtualFile file) {
         // Serialize the graph to json
+        String json = GraphSerializer.serialize(graph);
+        try {
+            file.setBinaryContent(json.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void dispose() {
         busConnection.disconnect();
-    }
-
-    private Optional<FlowGraph> buildGraph(Module module, VirtualFile file) {
-        try {
-            String json = FileUtils.readFrom(new URL(file.getUrl()));
-            return buildGraph(module, json);
-        } catch (MalformedURLException e) {
-            return Optional.empty();
-        }
-    }
-
-    private Optional<FlowGraph> buildGraph(Module module, String json) {
-        try {
-            BuilderContext context = new BuilderContext(module);
-            FlowGraphBuilder builder = new FlowGraphBuilder(json, context);
-            FlowGraph graph = builder.graph();
-            return Optional.of(graph);
-        } catch (Exception e) {
-            return Optional.empty();
-        }
     }
 
     private void notifyGraphUpdated() {

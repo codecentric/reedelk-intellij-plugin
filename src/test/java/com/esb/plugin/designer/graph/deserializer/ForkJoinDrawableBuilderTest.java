@@ -1,4 +1,4 @@
-package com.esb.plugin.designer.graph.builder;
+package com.esb.plugin.designer.graph.deserializer;
 
 import com.esb.component.Fork;
 import com.esb.component.Stop;
@@ -8,8 +8,8 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static com.esb.plugin.designer.graph.builder.ComponentDefinitionBuilder.createNextComponentsArray;
-import static com.esb.plugin.designer.graph.builder.ComponentDefinitionBuilder.forComponent;
+import static com.esb.plugin.designer.graph.deserializer.ComponentDefinitionBuilder.createNextComponentsArray;
+import static com.esb.plugin.designer.graph.deserializer.ComponentDefinitionBuilder.forComponent;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ForkJoinDrawableBuilderTest extends AbstractBuilderTest {
