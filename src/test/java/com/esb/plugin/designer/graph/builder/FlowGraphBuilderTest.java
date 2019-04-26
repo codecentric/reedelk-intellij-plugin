@@ -3,12 +3,17 @@ package com.esb.plugin.designer.graph.builder;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.TestJson;
 import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.intellij.openapi.module.Module;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 
 class FlowGraphBuilderTest extends AbstractBuilderTest {
+
+    @Mock
+    private Module module;
 
     @Test
     void shouldBuildFlowWithChoiceCorrectly() {
@@ -17,7 +22,7 @@ class FlowGraphBuilderTest extends AbstractBuilderTest {
         FlowGraphBuilder builder = new FlowGraphBuilder(json);
 
         // When
-        FlowGraph graph = builder.graph();
+        FlowGraph graph = builder.graph(module);
 
         // Then
         assertThat(graph).isNotNull();

@@ -20,11 +20,11 @@ public class GenericDrawableBuilder extends AbstractBuilder {
 
         ComponentDescriptor component = context.instantiateComponent(name);
 
-        GenericComponentDrawable genericComponentDrawable = new GenericComponentDrawable(component);
+        GenericComponentDrawable drawable = new GenericComponentDrawable(component);
 
-        graph.add(parent, genericComponentDrawable);
+        graph.add(parent, drawable);
 
-        return genericComponentDrawable;
+        return drawable;
     }
 
 }

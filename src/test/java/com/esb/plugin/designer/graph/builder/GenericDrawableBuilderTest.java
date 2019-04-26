@@ -16,15 +16,17 @@ class GenericDrawableBuilderTest extends AbstractBuilderTest {
 
     @Mock
     private Drawable root;
+    @Mock
+    private BuilderContext context;
 
     private FlowGraphImpl graph;
     private GenericDrawableBuilder builder;
 
     @BeforeEach
     void setUp() {
-        this.graph = new FlowGraphImpl();
-        this.graph.add(null, this.root);
-        this.builder = new GenericDrawableBuilder();
+        graph = new FlowGraphImpl();
+        graph.root(root);
+        builder = new GenericDrawableBuilder(graph, context);
     }
 
     @Test
@@ -34,14 +36,14 @@ class GenericDrawableBuilderTest extends AbstractBuilderTest {
                 .build();
 
         // When
-        Drawable genericDrawable = builder.build(root, componentDefinition, graph);
+        Drawable genericDrawable = builder.build(root, componentDefinition);
 
         // Then
         assertThat(graph.nodesCount()).isEqualTo(2);
 
         ComponentDescriptor component = genericDrawable.component();
         assertThat(component).isNotNull();
-        assertThat(component.getName()).isEqualTo(GENERIC_COMPONENT_NAME);
+        assertThat(component.getFullyQualifiedName()).isEqualTo(GENERIC_COMPONENT_NAME);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.esb.plugin.designer.graph.builder;
 
+import com.esb.component.FlowReference;
 import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 import com.esb.plugin.designer.graph.FlowGraphImpl;
 import com.esb.plugin.designer.graph.drawable.Drawable;
@@ -8,13 +9,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import static com.esb.plugin.commons.SystemComponents.FLOW_REFERENCE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class FlowReferenceDrawableBuilderTest extends AbstractBuilderTest {
 
     @Mock
     private Drawable root;
+    @Mock
+    private BuilderContext context;
 
     private FlowGraphImpl graph;
     private FlowReferenceDrawableBuilder builder;
@@ -22,24 +24,24 @@ class FlowReferenceDrawableBuilderTest extends AbstractBuilderTest {
     @BeforeEach
     void setUp() {
         this.graph = new FlowGraphImpl();
-        this.graph.add(null, this.root);
-        this.builder = new FlowReferenceDrawableBuilder();
+        this.graph.root(root);
+        this.builder = new FlowReferenceDrawableBuilder(graph, context);
     }
 
     @Test
     void shouldBuildFlowReferenceCorrectly() {
         // Given
-        JSONObject componentDefinition = ComponentDefinitionBuilder.forComponent(FLOW_REFERENCE.qualifiedName())
+        JSONObject componentDefinition = ComponentDefinitionBuilder.forComponent(FlowReference.class.getName())
                 .with("ref", "aabbccdd11223344")
                 .build();
 
         // When
-        Drawable flowReference = builder.build(root, componentDefinition, graph);
+        Drawable flowReference = builder.build(root, componentDefinition);
 
         // Then
         assertThat(graph.nodesCount()).isEqualTo(2);
 
         ComponentDescriptor component = flowReference.component();
-        assertThat(component.getName()).isEqualTo(FLOW_REFERENCE.qualifiedName());
+        assertThat(component.getFullyQualifiedName()).isEqualTo(FlowReference.class.getName());
     }
 }

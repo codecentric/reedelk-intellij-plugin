@@ -1,5 +1,6 @@
 package com.esb.plugin.designer.graph.builder;
 
+import com.esb.component.Fork;
 import com.esb.plugin.designer.graph.FlowGraphImpl;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import org.json.JSONArray;
@@ -8,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import static com.esb.plugin.commons.SystemComponents.FORK;
 import static com.esb.plugin.designer.graph.builder.ComponentDefinitionBuilder.createNextComponentsArray;
 import static com.esb.plugin.designer.graph.builder.ComponentDefinitionBuilder.forComponent;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,6 +25,8 @@ class ForkJoinDrawableBuilderTest extends AbstractBuilderTest {
 
     @Mock
     private Drawable root;
+    @Mock
+    private BuilderContext context;
 
     private FlowGraphImpl graph;
     private ForkJoinDrawableBuilder builder;
@@ -32,8 +34,8 @@ class ForkJoinDrawableBuilderTest extends AbstractBuilderTest {
     @BeforeEach
     void setUp() {
         this.graph = new FlowGraphImpl();
-        this.graph.add(null, root);
-        this.builder = new ForkJoinDrawableBuilder();
+        this.graph.root(root);
+        this.builder = new ForkJoinDrawableBuilder(graph, context);
     }
 
     @Test
@@ -43,7 +45,7 @@ class ForkJoinDrawableBuilderTest extends AbstractBuilderTest {
         forkArray.put(createNextObject(COMPONENT_3_NAME, COMPONENT_2_NAME));
         forkArray.put(createNextObject(COMPONENT_1_NAME, COMPONENT_4_NAME));
 
-        JSONObject componentDefinition = forComponent(FORK.qualifiedName())
+        JSONObject componentDefinition = forComponent(Fork.class.getName())
                 .with("threadPoolSize", 3)
                 .with("fork", forkArray)
                 .with("join", forComponent(JOIN_COMPONENT_NAME)
@@ -53,10 +55,10 @@ class ForkJoinDrawableBuilderTest extends AbstractBuilderTest {
                 .build();
 
         // When
-        Drawable joinDrawable = builder.build(root, componentDefinition, graph);
+        Drawable joinDrawable = builder.build(root, componentDefinition);
 
         // Then: last node must be a join drawable
-        assertThat(joinDrawable.component().getName()).isEqualTo(JOIN_COMPONENT_NAME);
+        assertThat(joinDrawable.component().getFullyQualifiedName()).isEqualTo(JOIN_COMPONENT_NAME);
 
         // Then: check successors of fork
         Drawable fork = firstSuccessorOf(graph, root);

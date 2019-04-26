@@ -10,22 +10,42 @@ import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 
 public class GraphSamples {
 
-    private Drawable root = new GenericComponentDrawable(new ComponentDescriptor("Root"));
-    private ScopedDrawable c1 = new ChoiceDrawable(new ComponentDescriptor("c1"));
-    private ScopedDrawable c2 = new ChoiceDrawable(new ComponentDescriptor("c2"));
-    private ScopedDrawable c3 = new ChoiceDrawable(new ComponentDescriptor("c3"));
-    private ScopedDrawable c4 = new ChoiceDrawable(new ComponentDescriptor("c4"));
-    private Drawable n1 = new GenericComponentDrawable(new ComponentDescriptor("n1"));
-    private Drawable n2 = new GenericComponentDrawable(new ComponentDescriptor("n2"));
-    private Drawable n3 = new GenericComponentDrawable(new ComponentDescriptor("n3"));
-    private Drawable n4 = new GenericComponentDrawable(new ComponentDescriptor("n4"));
-    private Drawable n5 = new GenericComponentDrawable(new ComponentDescriptor("n5"));
-    private Drawable n6 = new GenericComponentDrawable(new ComponentDescriptor("n6"));
-    private Drawable n7 = new GenericComponentDrawable(new ComponentDescriptor("n7"));
-    private Drawable n8 = new GenericComponentDrawable(new ComponentDescriptor("n8"));
-    private Drawable n9 = new GenericComponentDrawable(new ComponentDescriptor("n9"));
-    private Drawable n10 = new GenericComponentDrawable(new ComponentDescriptor("n10"));
-    private Drawable n11 = new GenericComponentDrawable(new ComponentDescriptor("n11"));
+    ComponentDescriptor cRoot = ComponentDescriptor.create().fullyQualifiedName("root").displayName("root").build();
+    ComponentDescriptor cn1 = ComponentDescriptor.create().fullyQualifiedName("n1").displayName("n1").build();
+    ComponentDescriptor cn2 = ComponentDescriptor.create().fullyQualifiedName("n2").displayName("n2").build();
+    ComponentDescriptor cn3 = ComponentDescriptor.create().fullyQualifiedName("n3").displayName("n3").build();
+    ComponentDescriptor cn4 = ComponentDescriptor.create().fullyQualifiedName("n4").displayName("n4").build();
+    ComponentDescriptor cn5 = ComponentDescriptor.create().fullyQualifiedName("n5").displayName("n5").build();
+    ComponentDescriptor cn6 = ComponentDescriptor.create().fullyQualifiedName("n6").displayName("n6").build();
+    ComponentDescriptor cn7 = ComponentDescriptor.create().fullyQualifiedName("n7").displayName("n7").build();
+    ComponentDescriptor cn8 = ComponentDescriptor.create().fullyQualifiedName("n8").displayName("n8").build();
+    ComponentDescriptor cn9 = ComponentDescriptor.create().fullyQualifiedName("n9").displayName("n9").build();
+    ComponentDescriptor cn10 = ComponentDescriptor.create().fullyQualifiedName("n10").displayName("n10").build();
+    ComponentDescriptor cn11 = ComponentDescriptor.create().fullyQualifiedName("n11").displayName("n11").build();
+    ComponentDescriptor cc1 = ComponentDescriptor.create().fullyQualifiedName("c1").displayName("c1").build();
+    ComponentDescriptor cc2 = ComponentDescriptor.create().fullyQualifiedName("c2").displayName("c2").build();
+    ComponentDescriptor cc3 = ComponentDescriptor.create().fullyQualifiedName("c3").displayName("c3").build();
+    ComponentDescriptor cc4 = ComponentDescriptor.create().fullyQualifiedName("c4").displayName("c4").build();
+    ComponentDescriptor cc5 = ComponentDescriptor.create().fullyQualifiedName("c5").displayName("c5").build();
+
+    Drawable root = new GenericComponentDrawable(cRoot);
+    Drawable n1 = new GenericComponentDrawable(cn1);
+    Drawable n2 = new GenericComponentDrawable(cn2);
+    Drawable n3 = new GenericComponentDrawable(cn3);
+    Drawable n4 = new GenericComponentDrawable(cn4);
+    Drawable n5 = new GenericComponentDrawable(cn5);
+    Drawable n6 = new GenericComponentDrawable(cn6);
+    Drawable n7 = new GenericComponentDrawable(cn7);
+    Drawable n8 = new GenericComponentDrawable(cn8);
+    Drawable n9 = new GenericComponentDrawable(cn9);
+    Drawable n10 = new GenericComponentDrawable(cn10);
+    Drawable n11 = new GenericComponentDrawable(cn11);
+
+    ScopedDrawable c1 = new ChoiceDrawable(cc1);
+    ScopedDrawable c2 = new ChoiceDrawable(cc2);
+    ScopedDrawable c3 = new ChoiceDrawable(cc3);
+    ScopedDrawable c4 = new ChoiceDrawable(cc4);
+
 
     public static FlowGraph graph1() {
         return new GraphSamples().buildGraph1();

@@ -17,6 +17,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public abstract class AbstractGraphTest {
 
+    private ComponentDescriptor cRoot;
+    private ComponentDescriptor cn1;
+    private ComponentDescriptor cn2;
+    private ComponentDescriptor cn3;
+    private ComponentDescriptor cn4;
+    private ComponentDescriptor cn5;
+    private ComponentDescriptor cn6;
+    private ComponentDescriptor cn7;
+    private ComponentDescriptor cn8;
+    private ComponentDescriptor cn9;
+    private ComponentDescriptor cn10;
+    private ComponentDescriptor cn11;
+    private ComponentDescriptor cc1;
+    private ComponentDescriptor cc2;
+    private ComponentDescriptor cc3;
+    private ComponentDescriptor cc4;
+    private ComponentDescriptor cc5;
+
     protected Drawable root;
     protected Drawable n1;
     protected Drawable n2;
@@ -38,24 +56,42 @@ public abstract class AbstractGraphTest {
 
     @BeforeEach
     protected void setUp() {
-        root = new GenericComponentDrawable(new ComponentDescriptor("root"));
-        n1 = new GenericComponentDrawable(new ComponentDescriptor("n1"));
-        n2 = new GenericComponentDrawable(new ComponentDescriptor("n2"));
-        n3 = new GenericComponentDrawable(new ComponentDescriptor("n3"));
-        n4 = new GenericComponentDrawable(new ComponentDescriptor("n4"));
-        n5 = new GenericComponentDrawable(new ComponentDescriptor("n5"));
-        n6 = new GenericComponentDrawable(new ComponentDescriptor("n6"));
-        n7 = new GenericComponentDrawable(new ComponentDescriptor("n7"));
-        n8 = new GenericComponentDrawable(new ComponentDescriptor("n8"));
-        n9 = new GenericComponentDrawable(new ComponentDescriptor("n9"));
-        n10 = new GenericComponentDrawable(new ComponentDescriptor("n10"));
-        n11 = new GenericComponentDrawable(new ComponentDescriptor("n11"));
+        cRoot = ComponentDescriptor.create().fullyQualifiedName("root").displayName("root").build();
+        cn1 = ComponentDescriptor.create().fullyQualifiedName("n1").displayName("n1").build();
+        cn2 = ComponentDescriptor.create().fullyQualifiedName("n2").displayName("n2").build();
+        cn3 = ComponentDescriptor.create().fullyQualifiedName("n3").displayName("n3").build();
+        cn4 = ComponentDescriptor.create().fullyQualifiedName("n4").displayName("n4").build();
+        cn5 = ComponentDescriptor.create().fullyQualifiedName("n5").displayName("n5").build();
+        cn6 = ComponentDescriptor.create().fullyQualifiedName("n6").displayName("n6").build();
+        cn7 = ComponentDescriptor.create().fullyQualifiedName("n7").displayName("n7").build();
+        cn8 = ComponentDescriptor.create().fullyQualifiedName("n8").displayName("n8").build();
+        cn9 = ComponentDescriptor.create().fullyQualifiedName("n9").displayName("n9").build();
+        cn10 = ComponentDescriptor.create().fullyQualifiedName("n10").displayName("n10").build();
+        cn11 = ComponentDescriptor.create().fullyQualifiedName("n11").displayName("n11").build();
+        cc1 = ComponentDescriptor.create().fullyQualifiedName("c1").displayName("c1").build();
+        cc2 = ComponentDescriptor.create().fullyQualifiedName("c2").displayName("c2").build();
+        cc3 = ComponentDescriptor.create().fullyQualifiedName("c3").displayName("c3").build();
+        cc4 = ComponentDescriptor.create().fullyQualifiedName("c4").displayName("c4").build();
+        cc5 = ComponentDescriptor.create().fullyQualifiedName("c5").displayName("c5").build();
 
-        choice1 = new ChoiceDrawable(new ComponentDescriptor("choice1"));
-        choice2 = new ChoiceDrawable(new ComponentDescriptor("choice2"));
-        choice3 = new ChoiceDrawable(new ComponentDescriptor("choice3"));
-        choice4 = new ChoiceDrawable(new ComponentDescriptor("choice4"));
-        choice5 = new ChoiceDrawable(new ComponentDescriptor("choice5"));
+        root = new GenericComponentDrawable(cRoot);
+        n1 = new GenericComponentDrawable(cn1);
+        n2 = new GenericComponentDrawable(cn2);
+        n3 = new GenericComponentDrawable(cn3);
+        n4 = new GenericComponentDrawable(cn4);
+        n5 = new GenericComponentDrawable(cn5);
+        n6 = new GenericComponentDrawable(cn6);
+        n7 = new GenericComponentDrawable(cn7);
+        n8 = new GenericComponentDrawable(cn8);
+        n9 = new GenericComponentDrawable(cn9);
+        n10 = new GenericComponentDrawable(cn10);
+        n11 = new GenericComponentDrawable(cn11);
+
+        choice1 = new ChoiceDrawable(cc1);
+        choice2 = new ChoiceDrawable(cc2);
+        choice3 = new ChoiceDrawable(cc3);
+        choice4 = new ChoiceDrawable(cc4);
+        choice5 = new ChoiceDrawable(cc5);
     }
 
     protected void assertThatRootIs(FlowGraph graph, Drawable root) {

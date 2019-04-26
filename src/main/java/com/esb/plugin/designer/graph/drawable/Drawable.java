@@ -35,8 +35,8 @@ public interface Drawable extends ComponentAware {
 
     /*
      * It is the graphical center of the Drawable. For instance,
-     * A component might have an icon + text below. The bary center is however
-     * the center of the Icon.
+     * A component might have an icon + text below. The bary center
+     * in this case might be the center of the icon.
      */
     Point getBarycenter(Graphics2D graphics);
 

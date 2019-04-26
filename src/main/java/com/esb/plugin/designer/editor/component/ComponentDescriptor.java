@@ -1,9 +1,5 @@
 package com.esb.plugin.designer.editor.component;
 
-import io.github.classgraph.ClassInfo;
-import io.github.classgraph.MethodInfo;
-import io.github.classgraph.MethodInfoList;
-
 import java.awt.datatransfer.DataFlavor;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,44 +8,67 @@ import java.util.Map;
 
 public class ComponentDescriptor {
 
+    public static final DataFlavor FLAVOR = new DataFlavor(ComponentDescriptor.class, "Descriptor of Component");
+
+    private String fullyQualifiedName;
+    private String displayName;
+
+    private List<String> propertiesNames = new ArrayList<>();
     private Map<String, Object> componentData = new HashMap<>();
 
-    public static final DataFlavor FLAVOR = new DataFlavor(ComponentDescriptor.class,
-            "Descriptor of Component");
-
-    private final ClassInfo classInfo;
-
-    public ComponentDescriptor(ClassInfo classInfo) {
-        this.classInfo = classInfo;
+    private ComponentDescriptor() {
     }
 
     public String getFullyQualifiedName() {
-        if (classInfo == null) {
-            return "default";
-        }
-        return classInfo.getName();
+        return fullyQualifiedName;
     }
 
     public String getDisplayName() {
-        if (classInfo == null) {
-            return "default";
-        }
-        return classInfo.getSimpleName();
+        return displayName;
     }
 
     public List<String> getPropertiesNames() {
-        MethodInfoList methodInfos = classInfo.getMethodInfo();
-        List<String> propertiesNames = new ArrayList<>();
-        for (MethodInfo methodInfo : methodInfos) {
-            if (methodInfo.getName().startsWith("set")) {
-                propertiesNames.add(methodInfo.getName().substring(3));
-            }
-        }
         return propertiesNames;
     }
 
     public void setPropertyValue(String propertyName, Object propertyValue) {
         this.componentData.put(propertyName, propertyValue);
+    }
+
+    public static Builder create() {
+        return new Builder();
+    }
+
+    public static class Builder {
+
+        private String displayName;
+        private String fullyQualifiedName;
+        private List<String> propertiesNames = new ArrayList<>();
+
+
+        public Builder propertiesNames(List<String> propertiesNames) {
+            this.propertiesNames.addAll(propertiesNames);
+            return this;
+        }
+
+        public Builder fullyQualifiedName(String fullyQualifiedName) {
+            this.fullyQualifiedName = fullyQualifiedName;
+            return this;
+        }
+
+        public Builder displayName(String displayName) {
+            this.displayName = displayName;
+            return this;
+        }
+
+        public ComponentDescriptor build() {
+            ComponentDescriptor descriptor = new ComponentDescriptor();
+            descriptor.displayName = displayName;
+            descriptor.fullyQualifiedName = fullyQualifiedName;
+            descriptor.propertiesNames.addAll(propertiesNames);
+            return descriptor;
+        }
+
     }
 }
 

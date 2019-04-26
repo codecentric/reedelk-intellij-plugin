@@ -11,11 +11,9 @@ import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
 import org.apache.commons.collections.set.UnmodifiableSet;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 
@@ -83,9 +81,9 @@ public class ComponentServiceImpl implements ComponentService {
 
     private void addComponents(ScanResult scanResult) {
         ClassInfoList components = scanResult.getClassesWithAnnotation(COMPONENT_ANNOTATION_NAME);
-        for (ClassInfo component : components) {
-            if (implementsComponentSuperclazz(component)) {
-                ComponentDescriptor descriptor = new ComponentDescriptor(component);
+        for (ClassInfo componentClassInfo : components) {
+            if (implementsComponentSuperclazz(componentClassInfo)) {
+                ComponentDescriptor descriptor = buildDescriptorFromClassInfo(componentClassInfo);
                 componentDescriptors.add(descriptor);
             }
         }
@@ -99,6 +97,21 @@ public class ComponentServiceImpl implements ComponentService {
             }
         }
         return false;
+    }
+
+    private ComponentDescriptor buildDescriptorFromClassInfo(ClassInfo classInfo) {
+        return ComponentDescriptor.create()
+                .fullyQualifiedName(classInfo.getName())
+                .displayName(classInfo.getSimpleName())
+                .propertiesNames(extractPropertiesNames(classInfo))
+                .build();
+    }
+
+    private List<String> extractPropertiesNames(ClassInfo classInfo) {
+        return classInfo.getMethodInfo().stream()
+                .filter(methodInfo -> methodInfo.getName().startsWith("set"))
+                .map(methodInfo -> methodInfo.getName().substring(3))
+                .collect(Collectors.toList());
     }
 
 }

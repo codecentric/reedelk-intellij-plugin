@@ -30,7 +30,7 @@ abstract class AbstractBuilderTest {
         assertThat(successors).hasSize(numberOfSuccessors);
         Collection<String> toBeFound = new ArrayList<>(Arrays.asList(successorsComponentNames));
         for (Drawable successor : successors) {
-            String componentName = successor.component().getName();
+            String componentName = successor.component().getFullyQualifiedName();
             toBeFound.remove(componentName);
         }
         assertThat(toBeFound).isEmpty();
@@ -43,7 +43,7 @@ abstract class AbstractBuilderTest {
         assertThat(predecessors).hasSize(numberOfPredecessors);
         Collection<String> toBeFound = new ArrayList<>(Arrays.asList(predecessorsComponentsNames));
         for (Drawable successor : predecessors) {
-            String componentName = successor.component().getName();
+            String componentName = successor.component().getFullyQualifiedName();
             toBeFound.remove(componentName);
         }
         assertThat(toBeFound).isEmpty();
@@ -52,7 +52,7 @@ abstract class AbstractBuilderTest {
     Drawable getDrawableWithComponentName(Collection<Drawable> drawableCollection, String componentName) {
         for (Drawable successor : drawableCollection) {
             ComponentDescriptor component = successor.component();
-            if (componentName.equals(component.getName())) {
+            if (componentName.equals(component.getFullyQualifiedName())) {
                 return successor;
             }
         }
@@ -63,7 +63,7 @@ abstract class AbstractBuilderTest {
         assertThat(target).isNotNull();
         ComponentDescriptor component = target.component();
         assertThat(component).isNotNull();
-        assertThat(component.getName()).isEqualTo(expectedName);
+        assertThat(component.getFullyQualifiedName()).isEqualTo(expectedName);
     }
 
     String readJson(TestJson testJson) {

@@ -20,10 +20,10 @@ public class FlowReferenceDrawableBuilder extends AbstractBuilder {
 
         ComponentDescriptor component = context.instantiateComponent(name);
 
-        FlowReferenceDrawable flowReferenceDrawable = new FlowReferenceDrawable(component);
+        FlowReferenceDrawable drawable = new FlowReferenceDrawable(component);
 
-        graph.add(parent, flowReferenceDrawable);
+        graph.add(parent, drawable);
 
-        return flowReferenceDrawable;
+        return drawable;
     }
 }
