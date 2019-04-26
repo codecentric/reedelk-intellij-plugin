@@ -1,14 +1,29 @@
 package com.esb.plugin.designer.graph.builder;
 
+import com.esb.component.Choice;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.TestJson;
 import com.esb.plugin.designer.graph.drawable.Drawable;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 
 class FlowGraphBuilderTest extends AbstractBuilderTest {
+
+    @BeforeEach
+    protected void setUp() {
+        super.setUp();
+        mockComponentDescriptor("com.esb.rest.component.RestListener");
+        mockComponentDescriptor("com.esb.core.component.SetPayload1");
+        mockComponentDescriptor("com.esb.core.component.SetPayload2");
+        mockComponentDescriptor("com.esb.core.component.SetPayload3");
+        mockComponentDescriptor("com.esb.rest.component.SetHeader");
+        mockComponentDescriptor("com.esb.rest.component.SetStatus");
+        mockComponentDescriptor("com.esb.logger.component.LogComponent");
+        mockComponentDescriptor(Choice.class.getName());
+    }
 
     @Test
     void shouldBuildFlowWithChoiceCorrectly() {
@@ -50,51 +65,6 @@ class FlowGraphBuilderTest extends AbstractBuilderTest {
 
         Drawable logComponentDrawable = firstSuccessorOf(graph, setStatusDrawable);
         assertThat(graph.successors(logComponentDrawable)).isEmpty();
-    }
-
-    @Test
-    void shouldBuildFlowWithForkJoinCorrectly() {
-        // Given
-
-        // When
-
-        // Then
-    }
-
-    @Test
-    void shouldBuildFlowWithGenericComponentCorrectly() {
-        // Given
-
-        // When
-
-        // Then
-    }
-
-    @Test
-    void shouldBuildFlowWithFlowReferenceCorrectly() {
-        // Given
-
-        // When
-
-        // Then
-    }
-
-    @Test
-    void shouldBuildEmptyFlowCorrectly() {
-        // Given
-
-        // When
-
-        // Then
-    }
-
-    @Test
-    void shouldThrowExceptionWhenJsonIsNotParsable() {
-        // Given
-
-        // When
-
-        // Then
     }
 
 }

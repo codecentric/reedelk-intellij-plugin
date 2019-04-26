@@ -1,6 +1,7 @@
 package com.esb.plugin.designer.graph.builder;
 
 import com.esb.component.Fork;
+import com.esb.component.Stop;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,7 +14,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ForkJoinDrawableBuilderTest extends AbstractBuilderTest {
 
-    private final String STOP_COMPONENT_NAME = "Stop";
     private final String JOIN_COMPONENT_NAME = "com.esb.component.JoinString";
 
     private final String COMPONENT_1_NAME = "com.esb.component.Name1";
@@ -33,6 +33,7 @@ class ForkJoinDrawableBuilderTest extends AbstractBuilderTest {
         mockComponentDescriptor(COMPONENT_3_NAME);
         mockComponentDescriptor(COMPONENT_4_NAME);
         mockComponentDescriptor(JOIN_COMPONENT_NAME);
+        mockComponentDescriptor(Fork.class.getName());
     }
 
     @Test
@@ -65,15 +66,15 @@ class ForkJoinDrawableBuilderTest extends AbstractBuilderTest {
         assertSuccessorsAre(graph, component3Drawable, COMPONENT_2_NAME);
 
         Drawable component2Drawable = getDrawableWithComponentName(graph.successors(component3Drawable), COMPONENT_2_NAME);
-        assertSuccessorsAre(graph, component2Drawable, STOP_COMPONENT_NAME);
+        assertSuccessorsAre(graph, component2Drawable, Stop.class.getName());
 
         Drawable component1Drawable = getDrawableWithComponentName(graph.successors(fork), COMPONENT_1_NAME);
         assertSuccessorsAre(graph, component1Drawable, COMPONENT_4_NAME);
 
         Drawable component4Drawable = getDrawableWithComponentName(graph.successors(component1Drawable), COMPONENT_4_NAME);
-        assertSuccessorsAre(graph, component4Drawable, STOP_COMPONENT_NAME);
+        assertSuccessorsAre(graph, component4Drawable, Stop.class.getName());
 
-        Drawable stopDrawable = getDrawableWithComponentName(graph.successors(component4Drawable), STOP_COMPONENT_NAME);
+        Drawable stopDrawable = getDrawableWithComponentName(graph.successors(component4Drawable), Stop.class.getName());
         Drawable stopSuccessor = graph.successors(stopDrawable).get(0);
         assertThat(joinDrawable).isEqualTo(stopSuccessor);
 
