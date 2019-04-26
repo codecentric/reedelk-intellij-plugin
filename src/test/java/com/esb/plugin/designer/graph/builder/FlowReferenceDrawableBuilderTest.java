@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doReturn;
 
 class FlowReferenceDrawableBuilderTest extends AbstractBuilderTest {
 
@@ -23,14 +24,22 @@ class FlowReferenceDrawableBuilderTest extends AbstractBuilderTest {
 
     @BeforeEach
     void setUp() {
-        this.graph = new FlowGraphImpl();
-        this.graph.root(root);
-        this.builder = new FlowReferenceDrawableBuilder(graph, context);
+        graph = new FlowGraphImpl();
+        graph.root(root);
+        builder = new FlowReferenceDrawableBuilder(graph, context);
     }
 
     @Test
     void shouldBuildFlowReferenceCorrectly() {
         // Given
+        ComponentDescriptor flowReferenceComponent = ComponentDescriptor.create()
+                .fullyQualifiedName(FlowReference.class.getName())
+                .build();
+
+        doReturn(flowReferenceComponent)
+                .when(context)
+                .instantiateComponent(FlowReference.class.getName());
+
         JSONObject componentDefinition = ComponentDefinitionBuilder.forComponent(FlowReference.class.getName())
                 .with("ref", "aabbccdd11223344")
                 .build();
@@ -42,6 +51,6 @@ class FlowReferenceDrawableBuilderTest extends AbstractBuilderTest {
         assertThat(graph.nodesCount()).isEqualTo(2);
 
         ComponentDescriptor component = flowReference.component();
-        assertThat(component.getFullyQualifiedName()).isEqualTo(FlowReference.class.getName());
+        assertThat(component).isEqualTo(flowReferenceComponent);
     }
 }

@@ -45,7 +45,6 @@ public class ComponentDescriptor {
         private String fullyQualifiedName;
         private List<String> propertiesNames = new ArrayList<>();
 
-
         public Builder propertiesNames(List<String> propertiesNames) {
             this.propertiesNames.addAll(propertiesNames);
             return this;
