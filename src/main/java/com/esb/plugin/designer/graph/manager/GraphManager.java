@@ -4,6 +4,7 @@ import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.deserializer.GraphDeserializer;
 import com.esb.plugin.designer.graph.serializer.GraphSerializer;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
@@ -12,7 +13,9 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,11 +37,13 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
 
     private Module module;
     private FlowGraph graph;
+    private final Project project;
     private VirtualFile jsonGraphFile;
     private MessageBusConnection busConnection;
 
-    public GraphManager(Module module, VirtualFile jsonGraphFile) {
+    public GraphManager(Project project, Module module, VirtualFile jsonGraphFile) {
         this.module = module;
+        this.project = project;
         this.jsonGraphFile = jsonGraphFile;
 
         busConnection = module.getMessageBus().connect();
@@ -78,14 +83,22 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
     }
 
     @Override
-    public void onChange(FlowGraph graph, VirtualFile file) {
+    public void onChange(FlowGraph graph) {
         // Serialize the graph to json
         String json = GraphSerializer.serialize(graph);
+
         try {
-            file.setBinaryContent(json.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
+            WriteCommandAction.writeCommandAction(project).run((ThrowableRunnable<Throwable>) () -> {
+                try {
+                    jsonGraphFile.setBinaryContent(json.getBytes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
         }
+
     }
 
     @Override

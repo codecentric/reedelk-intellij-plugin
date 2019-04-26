@@ -34,7 +34,7 @@ public class FlowEditorPanel extends ThreeComponentsSplitter {
     FlowEditorPanel(Module module, VirtualFile file) {
         super(VERTICAL);
 
-        this.propertiesPanel = new PropertiesPanel();
+        this.propertiesPanel = new PropertiesPanel(module);
         JBScrollPane propertiesPanelScrollable = new JBScrollPane(this.propertiesPanel);
         propertiesPanelScrollable.createVerticalScrollBar();
         propertiesPanelScrollable.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_AS_NEEDED);

@@ -16,8 +16,12 @@ public class ComponentDescriptor {
     private ComponentDescriptor() {
     }
 
-    public Set<String> componentDataKeys() {
-        return componentData.keySet();
+    public List<String> componentDataKeys() {
+        return Collections.unmodifiableList(propertiesNames);
+    }
+
+    public Object getData(String key) {
+        return componentData.get(key);
     }
 
     public String getFullyQualifiedName() {

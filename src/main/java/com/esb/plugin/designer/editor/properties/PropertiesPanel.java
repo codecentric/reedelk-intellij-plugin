@@ -2,7 +2,10 @@ package com.esb.plugin.designer.editor.properties;
 
 import com.esb.plugin.designer.editor.SelectListener;
 import com.esb.plugin.designer.editor.component.ComponentDescriptor;
+import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.manager.GraphChangeNotifier;
+import com.intellij.openapi.module.Module;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.util.ui.JBUI;
@@ -12,15 +15,18 @@ import javax.swing.border.MatteBorder;
 
 public class PropertiesPanel extends JBPanel implements SelectListener {
 
-    public PropertiesPanel() {
+    private final Module module;
+
+    public PropertiesPanel(Module module) {
         MatteBorder matteBorder = BorderFactory.createMatteBorder(0, 10, 0, 0, getBackground());
         setBorder(matteBorder);
         setBackground(JBColor.WHITE);
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        this.module = module;
     }
 
     @Override
-    public void onSelect(Drawable drawable) {
+    public void onSelect(FlowGraph graph, Drawable drawable) {
         ComponentDescriptor component = drawable.component();
         if (component == null) {
             return;
@@ -32,7 +38,11 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
         component.getPropertiesNames()
                 .forEach(propertyName -> {
                     PropertyBox panel = new PropertyBox(propertyName);
-                    panel.addListener(newText -> component.setPropertyValue(propertyName, newText));
+                    panel.addListener(newText -> {
+                        component.setPropertyValue(propertyName, newText);
+                        GraphChangeNotifier notifier = module.getMessageBus().syncPublisher(GraphChangeNotifier.TOPIC);
+                        notifier.onChange(graph);
+                    });
                     add(panel);
                 });
 
@@ -42,7 +52,7 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
     }
 
     @Override
-    public void onUnselect(Drawable drawable) {
+    public void onUnselect(FlowGraph graph, Drawable drawable) {
         removeAll();
         revalidate();
         repaint();

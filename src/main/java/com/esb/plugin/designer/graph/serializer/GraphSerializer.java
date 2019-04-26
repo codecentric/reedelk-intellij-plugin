@@ -1,10 +1,12 @@
 package com.esb.plugin.designer.graph.serializer;
 
+import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 import com.esb.plugin.designer.graph.FlowGraph;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.UUID;
 
 public class GraphSerializer {
@@ -24,6 +26,14 @@ public class GraphSerializer {
 
     private static JSONObject serialize(ComponentDescriptor descriptor) {
         JSONObject componentAsJson = new JSONObject();
-        descriptor.componentDataKeys()
+        JsonParser.Implementor.name(descriptor.getFullyQualifiedName(), componentAsJson);
+
+        List<String> keys = descriptor.componentDataKeys();
+        keys.forEach(propertyName -> {
+            Object data = descriptor.getData(propertyName);
+            componentAsJson.put(propertyName, data);
+        });
+
+        return componentAsJson;
     }
 }

@@ -30,7 +30,7 @@ public class FlowEditor extends UserDataHolderBase implements FileEditor, Possib
         Module module = ModuleUtil.findModuleForFile(file, project);
         checkState(module != null, "Module must not be null");
         editor = new FlowEditorPanel(module, file);
-        manager = new GraphManager(module, file);
+        manager = new GraphManager(project, module, file);
     }
 
     @NotNull
