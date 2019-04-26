@@ -2,6 +2,7 @@ package com.esb.plugin.designer.graph.manager;
 
 import com.esb.internal.commons.FileUtils;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.builder.BuilderContext;
 import com.esb.plugin.designer.graph.builder.FlowGraphBuilder;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Document;
@@ -98,8 +99,9 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
 
     private Optional<FlowGraph> buildGraph(Module module, String json) {
         try {
-            FlowGraphBuilder builder = new FlowGraphBuilder(json);
-            FlowGraph graph = builder.graph(module);
+            BuilderContext context = new BuilderContext(module);
+            FlowGraphBuilder builder = new FlowGraphBuilder(json, context);
+            FlowGraph graph = builder.graph();
             return Optional.of(graph);
         } catch (Exception e) {
             return Optional.empty();

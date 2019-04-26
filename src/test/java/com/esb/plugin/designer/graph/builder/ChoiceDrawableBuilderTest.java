@@ -1,14 +1,12 @@
 package com.esb.plugin.designer.graph.builder;
 
 import com.esb.component.Choice;
-import com.esb.plugin.designer.graph.FlowGraphImpl;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.StopDrawable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import static com.esb.plugin.designer.graph.builder.ComponentDefinitionBuilder.createNextComponentsArray;
 import static com.esb.plugin.designer.graph.builder.ComponentDefinitionBuilder.forComponent;
@@ -21,24 +19,24 @@ class ChoiceDrawableBuilderTest extends AbstractBuilderTest {
     private final String COMPONENT_3_NAME = "com.esb.component.Name3";
     private final String COMPONENT_4_NAME = "com.esb.component.Name4";
 
-    @Mock
-    private Drawable root;
-    @Mock
-    private BuilderContext context;
-
-    private FlowGraphImpl graph;
     private ChoiceDrawableBuilder builder;
 
     @BeforeEach
-    void setUp() {
-        this.graph = new FlowGraphImpl();
-        this.graph.root(root);
-        this.builder = new ChoiceDrawableBuilder(graph, context);
+    protected void setUp() {
+        super.setUp();
+        builder = new ChoiceDrawableBuilder(graph, context);
+
+        mockComponentDescriptor(COMPONENT_1_NAME);
+        mockComponentDescriptor(COMPONENT_2_NAME);
+        mockComponentDescriptor(COMPONENT_3_NAME);
+        mockComponentDescriptor(COMPONENT_4_NAME);
     }
 
     @Test
     void shouldBuildChoiceCorrectly() {
         // Given
+        mockComponentDescriptor(Choice.class.getName());
+
         JSONArray whenArray = new JSONArray();
         whenArray.put(conditionalBranch("1 == 1", COMPONENT_3_NAME, COMPONENT_1_NAME));
         whenArray.put(conditionalBranch("'hello' == 'hello1'", COMPONENT_2_NAME, COMPONENT_4_NAME));

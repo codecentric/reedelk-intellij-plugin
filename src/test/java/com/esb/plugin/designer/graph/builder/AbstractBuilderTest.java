@@ -3,9 +3,12 @@ package com.esb.plugin.designer.graph.builder;
 import com.esb.internal.commons.FileUtils;
 import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.FlowGraphImpl;
 import com.esb.plugin.designer.graph.TestJson;
 import com.esb.plugin.designer.graph.drawable.Drawable;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.net.URL;
@@ -15,9 +18,23 @@ import java.util.Collection;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
 abstract class AbstractBuilderTest {
+
+    @Mock
+    protected Drawable root;
+    @Mock
+    protected BuilderContext context;
+
+    protected FlowGraphImpl graph;
+
+    @BeforeEach
+    protected void setUp() {
+        graph = new FlowGraphImpl();
+        graph.root(root);
+    }
 
     Drawable firstSuccessorOf(FlowGraph graph, Drawable target) {
         return graph.successors(target).stream().findFirst().get();
@@ -69,5 +86,15 @@ abstract class AbstractBuilderTest {
     String readJson(TestJson testJson) {
         URL url = testJson.url();
         return FileUtils.readFrom(url);
+    }
+
+    ComponentDescriptor mockComponentDescriptor(String fullyQualifiedName) {
+        ComponentDescriptor componentDescriptor = ComponentDescriptor.create()
+                .fullyQualifiedName(fullyQualifiedName)
+                .build();
+        doReturn(componentDescriptor)
+                .when(context)
+                .instantiateComponent(fullyQualifiedName);
+        return componentDescriptor;
     }
 }

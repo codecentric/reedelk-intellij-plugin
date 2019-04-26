@@ -1,13 +1,11 @@
 package com.esb.plugin.designer.graph.builder;
 
 import com.esb.component.Fork;
-import com.esb.plugin.designer.graph.FlowGraphImpl;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import static com.esb.plugin.designer.graph.builder.ComponentDefinitionBuilder.createNextComponentsArray;
 import static com.esb.plugin.designer.graph.builder.ComponentDefinitionBuilder.forComponent;
@@ -23,19 +21,18 @@ class ForkJoinDrawableBuilderTest extends AbstractBuilderTest {
     private final String COMPONENT_3_NAME = "com.esb.component.Name3";
     private final String COMPONENT_4_NAME = "com.esb.component.Name4";
 
-    @Mock
-    private Drawable root;
-    @Mock
-    private BuilderContext context;
-
-    private FlowGraphImpl graph;
     private ForkJoinDrawableBuilder builder;
 
     @BeforeEach
-    void setUp() {
-        this.graph = new FlowGraphImpl();
-        this.graph.root(root);
-        this.builder = new ForkJoinDrawableBuilder(graph, context);
+    protected void setUp() {
+        super.setUp();
+        builder = new ForkJoinDrawableBuilder(graph, context);
+
+        mockComponentDescriptor(COMPONENT_1_NAME);
+        mockComponentDescriptor(COMPONENT_2_NAME);
+        mockComponentDescriptor(COMPONENT_3_NAME);
+        mockComponentDescriptor(COMPONENT_4_NAME);
+        mockComponentDescriptor(JOIN_COMPONENT_NAME);
     }
 
     @Test
