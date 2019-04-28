@@ -27,4 +27,8 @@ public class PropertyBox extends JPanel {
     public void addListener(InputChangeListener listener) {
         this.input.addListener(listener);
     }
+
+    public void setText(String data) {
+        this.input.setText(data);
+    }
 }

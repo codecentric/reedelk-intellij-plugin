@@ -20,6 +20,12 @@ public class GenericDrawableBuilder extends AbstractBuilder {
 
         ComponentDescriptor component = context.instantiateComponent(name);
 
+        // fill up data from component definition
+        component
+                .componentDataKeys()
+                .forEach(propertyName ->
+                        component.setPropertyValue(propertyName, componentDefinition.get(propertyName)));
+
         GenericComponentDrawable drawable = new GenericComponentDrawable(component);
 
         graph.add(parent, drawable);

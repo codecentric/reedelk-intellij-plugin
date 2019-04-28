@@ -6,35 +6,38 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 
-public class PropertyInput extends JBTextField {
+public class PropertyInput extends JBTextField implements DocumentListener {
 
     private InputChangeListener changeListener;
 
     PropertyInput() {
         setMaximumSize(new Dimension(300, 50));
-        setAlignmentX(Component.LEFT_ALIGNMENT);
-        getDocument().addDocumentListener(new PropertyInputDocumentListener());
+        setAlignmentX(LEFT_ALIGNMENT);
+        getDocument().addDocumentListener(this);
+    }
+
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        if (changeListener != null) {
+            changeListener.onChange(PropertyInput.this.getText());
+        }
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+        if (changeListener != null) {
+            changeListener.onChange(PropertyInput.this.getText());
+        }
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+        if (changeListener != null) {
+            changeListener.onChange(PropertyInput.this.getText());
+        }
     }
 
     public void addListener(InputChangeListener changeListener) {
         this.changeListener = changeListener;
-    }
-
-    class PropertyInputDocumentListener implements DocumentListener {
-
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            changeListener.onChange(PropertyInput.this.getText());
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            changeListener.onChange(PropertyInput.this.getText());
-        }
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            changeListener.onChange(PropertyInput.this.getText());
-        }
     }
 }

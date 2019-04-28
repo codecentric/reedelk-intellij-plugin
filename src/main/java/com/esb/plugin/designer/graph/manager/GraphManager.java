@@ -83,14 +83,15 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
     }
 
     @Override
-    public void onChange(FlowGraph graph) {
+    public void onChange(FlowGraph graph, VirtualFile virtualFile) {
+        if (!virtualFile.equals(jsonGraphFile)) return;
+
         // Serialize the graph to json
         String json = GraphSerializer.serialize(graph);
-
         try {
             WriteCommandAction.writeCommandAction(project).run((ThrowableRunnable<Throwable>) () -> {
                 try {
-                    jsonGraphFile.setBinaryContent(json.getBytes());
+                    virtualFile.setBinaryContent(json.getBytes());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
