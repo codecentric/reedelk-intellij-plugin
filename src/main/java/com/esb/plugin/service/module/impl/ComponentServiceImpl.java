@@ -2,7 +2,7 @@ package com.esb.plugin.service.module.impl;
 
 import com.esb.api.component.Component;
 import com.esb.component.SystemComponent;
-import com.esb.plugin.designer.editor.component.ComponentDescriptor;
+import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.service.module.ComponentService;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModuleRootManager;

@@ -1,6 +1,6 @@
 package com.esb.plugin.service.module;
 
-import com.esb.plugin.designer.editor.component.ComponentDescriptor;
+import com.esb.plugin.component.ComponentDescriptor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleServiceManager;
 import org.jetbrains.annotations.NotNull;

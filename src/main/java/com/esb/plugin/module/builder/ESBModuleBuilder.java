@@ -1,7 +1,7 @@
 package com.esb.plugin.module.builder;
 
-import com.esb.plugin.commons.ESBLabel;
 import com.esb.plugin.commons.Icons;
+import com.esb.plugin.commons.Label;
 import com.esb.plugin.runconfig.module.ESBModuleRunConfigurationBuilder;
 import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfigurationBuilder;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
@@ -81,17 +81,17 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
 
     @Override
     public String getName() {
-        return ESBLabel.MODULE_BUILDER_NAME.get();
+        return Label.MODULE_BUILDER_NAME.get();
     }
 
     @Override
     public String getPresentableName() {
-        return ESBLabel.MODULE_BUILDER_NAME.get();
+        return Label.MODULE_BUILDER_NAME.get();
     }
 
     @Override
     public String getDescription() {
-        return ESBLabel.MODULE_BUILDER_DESCRIPTION.get();
+        return Label.MODULE_BUILDER_DESCRIPTION.get();
     }
 
     @Nullable
@@ -115,9 +115,9 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
 
     private MavenId defaultMavenId() {
         return new MavenId(
-                ESBLabel.DEFAULT_GROUP_ID.get(),
-                ESBLabel.DEFAULT_ARTIFACT_ID.get(),
-                ESBLabel.DEFAULT_VERSION.get());
+                Label.DEFAULT_GROUP_ID.get(),
+                Label.DEFAULT_ARTIFACT_ID.get(),
+                Label.DEFAULT_VERSION.get());
     }
 
     public void setRuntimeConfigName(String runtimeConfigName) {
