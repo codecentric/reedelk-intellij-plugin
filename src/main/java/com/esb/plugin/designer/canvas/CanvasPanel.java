@@ -5,7 +5,7 @@ import com.esb.plugin.designer.Tile;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.GraphNode;
 import com.esb.plugin.graph.drawable.Drawable;
-import com.esb.plugin.graph.drawable.decorators.NothingSelectedDrawable;
+import com.esb.plugin.graph.drawable.decorators.NothingSelectedNode;
 import com.esb.plugin.graph.layout.FlowGraphLayout;
 import com.esb.plugin.graph.manager.JsonChangeNotifier;
 import com.intellij.openapi.module.Module;
@@ -32,7 +32,7 @@ import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseListener, DropTargetListener, JsonChangeNotifier {
 
     private final JBColor BACKGROUND_COLOR = JBColor.WHITE;
-    private final GraphNode NOTHING_SELECTED = new NothingSelectedDrawable();
+    private final GraphNode NOTHING_SELECTED = new NothingSelectedNode();
     private final Module module;
 
     private FlowGraph graph;

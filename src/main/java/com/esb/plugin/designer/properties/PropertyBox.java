@@ -11,7 +11,7 @@ public class PropertyBox extends JPanel {
     private PropertyLabel label;
     private PropertyInput input;
 
-    PropertyBox(String propertyName) {
+    public PropertyBox(String propertyName) {
         setBorder(JBUI.Borders.empty(5, 5, 0, 0));
         setBackground(new JBColor(new Color(20, 20, 0, 0), new Color(20, 10, 0, 0)));
         setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));

@@ -6,7 +6,7 @@ import com.esb.plugin.graph.FlowGraphImpl;
 import com.esb.plugin.graph.GraphNode;
 import com.esb.plugin.graph.action.RemoveNodeAction;
 import com.esb.plugin.graph.drawable.ScopedDrawable;
-import com.esb.plugin.graph.drawable.decorators.NothingSelectedDrawable;
+import com.esb.plugin.graph.drawable.decorators.NothingSelectedNode;
 import com.esb.plugin.graph.scope.FindScope;
 import com.intellij.openapi.module.Module;
 
@@ -47,7 +47,7 @@ public class MoveActionHandler extends AbstractActionHandler {
             return Optional.empty();
         }
 
-        if (selected instanceof NothingSelectedDrawable) {
+        if (selected instanceof NothingSelectedNode) {
             return Optional.empty();
         }
 

@@ -10,6 +10,7 @@ import com.esb.plugin.graph.scope.ListLastNodeOfScope;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
+import java.util.List;
 import java.util.Optional;
 
 public abstract class AbstractDrawable implements GraphNode {
@@ -197,13 +198,16 @@ public abstract class AbstractDrawable implements GraphNode {
         return new Point(x(), centerIconY);
     }
 
-    // TODO: refine this
+    /**
+     * Draws connections between this drawable and the next one. If this is the last
+     * node of the scope, don't draw any outgoing arrow.
+     */
     protected void drawConnections(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-        // If this is the last of the scope, don't draw anything.
         Optional<ScopedDrawable> wrappingScope = FindScope.of(graph, this);
         if (wrappingScope.isPresent()) {
-            if (ListLastNodeOfScope.from(graph, wrappingScope.get()).contains(this)) {
-                // do nothing
+            List<GraphNode> nodesBelongingWrappingScope = ListLastNodeOfScope.from(graph, wrappingScope.get());
+            if (nodesBelongingWrappingScope.contains(this)) {
+                // last node of the scope. Don't draw any outgoing arrow.
                 return;
             }
         }

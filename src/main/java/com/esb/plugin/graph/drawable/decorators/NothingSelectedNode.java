@@ -7,7 +7,7 @@ import com.esb.plugin.graph.GraphNode;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
-public class NothingSelectedDrawable extends AbstractDrawable implements GraphNode {
+public class NothingSelectedNode extends AbstractDrawable implements GraphNode {
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {

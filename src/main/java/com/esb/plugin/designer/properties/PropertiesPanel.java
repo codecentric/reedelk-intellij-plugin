@@ -1,10 +1,11 @@
 package com.esb.plugin.designer.properties;
 
 import com.esb.plugin.component.Component;
+import com.esb.plugin.component.generic.GenericPropertyRenderer;
 import com.esb.plugin.designer.SelectListener;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.GraphNode;
-import com.esb.plugin.graph.manager.GraphChangeNotifier;
+import com.esb.plugin.graph.drawable.decorators.NothingSelectedNode;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBColor;
@@ -30,27 +31,20 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
 
     @Override
     public void onSelect(FlowGraph graph, GraphNode node) {
+        if (node instanceof NothingSelectedNode) return;
+
         Component component = node.component();
-        if (component == null) {
-            return;
-        }
 
         removeAll();
 
         add(createTitleLabel(component.getDisplayName()));
-        component.getPropertiesNames()
-                .forEach(propertyName -> {
-                    PropertyBox panel = new PropertyBox(propertyName);
-                    panel.setText((String) component.getData(propertyName));
-                    panel.addListener(newText -> {
-                        component.setPropertyValue(propertyName, newText);
-                        GraphChangeNotifier notifier = module.getMessageBus().syncPublisher(GraphChangeNotifier.TOPIC);
-                        notifier.onChange(graph, file);
-                    });
-                    add(panel);
-                });
 
+        PropertyRenderer renderer = new GenericPropertyRenderer(module, graph, file);
+        renderer.render(this, component);
+
+        // Add spacer
         add(Box.createVerticalGlue());
+
         revalidate();
         repaint();
     }
