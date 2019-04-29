@@ -41,10 +41,10 @@ public class PalettePanel extends JBPanel {
 
         add(componentsTreeScrollPanel, BorderLayout.CENTER);
 
-        fetchAllComponents(module, file, components);
+        fetchAllComponents(module, components);
     }
 
-    private void fetchAllComponents(Module module, VirtualFile file, DefaultMutableTreeNode components) {
+    private void fetchAllComponents(Module module, DefaultMutableTreeNode components) {
         ComponentService
                 .getInstance(module)
                 .asyncFindAllComponents(descriptors -> updatePaletteComponentsList(components, descriptors));
@@ -60,10 +60,10 @@ public class PalettePanel extends JBPanel {
         }
     }
 
-    private void updatePaletteComponentsList(DefaultMutableTreeNode components, Collection<ComponentDescriptor> descriptors) {
+    private void updatePaletteComponentsList(DefaultMutableTreeNode componentsTreeNode, Collection<ComponentDescriptor> descriptors) {
         SwingUtilities.invokeLater(() -> {
-            components.removeAllChildren();
-            descriptors.forEach(descriptor -> components.add(new DefaultMutableTreeNode(descriptor)));
+            componentsTreeNode.removeAllChildren();
+            descriptors.forEach(descriptor -> componentsTreeNode.add(new DefaultMutableTreeNode(descriptor)));
             expandRows();
         });
     }

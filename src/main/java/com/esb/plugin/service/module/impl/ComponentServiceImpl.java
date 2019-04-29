@@ -1,6 +1,7 @@
 package com.esb.plugin.service.module.impl;
 
 import com.esb.api.component.Component;
+import com.esb.component.SystemComponent;
 import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 import com.esb.plugin.service.module.ComponentService;
 import com.intellij.openapi.module.Module;
@@ -68,7 +69,8 @@ public class ComponentServiceImpl implements ComponentService {
                 .enableAllInfo()
                 .scan();
 
-        addComponents(scanResult);
+        ClassInfoList components = scanResult.getClassesWithAnnotation(COMPONENT_ANNOTATION_NAME);
+        addComponents(components);
     }
 
     private void populateSystemComponents() {
@@ -76,11 +78,11 @@ public class ComponentServiceImpl implements ComponentService {
                 .whitelistPackages("com.esb.component")
                 .enableAllInfo()
                 .scan();
-        addComponents(scanResult);
+        ClassInfoList classesWithAnnotation = scanResult.getClassesWithAnnotation(SystemComponent.class.getName());
+        addComponents(classesWithAnnotation);
     }
 
-    private void addComponents(ScanResult scanResult) {
-        ClassInfoList components = scanResult.getClassesWithAnnotation(COMPONENT_ANNOTATION_NAME);
+    private void addComponents(ClassInfoList components) {
         for (ClassInfo componentClassInfo : components) {
             if (implementsComponentSuperclazz(componentClassInfo)) {
                 ComponentDescriptor descriptor = buildDescriptorFromClassInfo(componentClassInfo);

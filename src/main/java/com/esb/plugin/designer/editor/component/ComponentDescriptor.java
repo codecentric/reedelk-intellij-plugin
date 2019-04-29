@@ -4,6 +4,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * An object describing the component to be added to the graph.
@@ -34,6 +35,20 @@ public class ComponentDescriptor {
 
     public List<String> getPropertiesNames() {
         return propertiesNames;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ComponentDescriptor that = (ComponentDescriptor) o;
+        return fullyQualifiedName.equals(that.fullyQualifiedName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fullyQualifiedName);
     }
 
     public static Builder create() {
@@ -68,7 +83,8 @@ public class ComponentDescriptor {
             descriptor.propertiesNames.addAll(propertiesNames);
             return descriptor;
         }
-
     }
+
+
 }
 

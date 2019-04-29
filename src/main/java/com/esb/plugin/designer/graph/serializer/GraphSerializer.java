@@ -33,7 +33,7 @@ public class GraphSerializer {
         List<String> keys = component.componentDataKeys();
         keys.forEach(propertyName -> {
             Object data = component.getData(propertyName);
-            componentAsJson.put(propertyName, data);
+            componentAsJson.put(propertyName.toLowerCase(), data);
         });
 
         return componentAsJson;

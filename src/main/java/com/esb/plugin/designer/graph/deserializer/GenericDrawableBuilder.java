@@ -22,8 +22,10 @@ public class GenericDrawableBuilder extends AbstractBuilder {
 
         // fill up data from component definition
         component.componentDataKeys()
-                .forEach(propertyName ->
-                        component.setPropertyValue(propertyName, componentDefinition.get(propertyName)));
+                .forEach(propertyName -> {
+                    Object propertyValue = componentDefinition.get(propertyName.toLowerCase());
+                    component.setPropertyValue(propertyName, propertyValue);
+                });
 
         GenericComponentDrawable drawable = new GenericComponentDrawable(component);
 
