@@ -5,8 +5,11 @@ import com.esb.plugin.designer.graph.FlowGraph;
 public class DebugGraphNodesPosition {
 
     public static void debug(FlowGraph graph) {
-        System.out.println("------- Graph Updated --------");
+        System.out.println("\n------- Graph Updated --------");
         graph.breadthFirstTraversal(drawable ->
-                System.out.println("Name: " + drawable.component().getDisplayName() + ", x: " + drawable.x() + ", y: " + drawable.y()));
+                System.out.println("Name: " +
+                        drawable.component().getDisplayName() + ", x: " +
+                        drawable.x() + ", y: " +
+                        drawable.y()));
     }
 }
