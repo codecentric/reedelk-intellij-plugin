@@ -2,7 +2,6 @@ package com.esb.plugin.designer.canvas;
 
 import com.esb.plugin.designer.SelectListener;
 import com.esb.plugin.designer.Tile;
-import com.esb.plugin.graph.DropListener;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.GraphNode;
 import com.esb.plugin.graph.drawable.Drawable;
@@ -13,7 +12,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -212,11 +210,6 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
     @Override
     public void dragExit(DropTargetEvent dte) {
         System.out.println("Drag exit");
-    }
-
-    public void setDropListener(@NotNull DropListener dropListener) {
-        // TODO: Do something about this.
-        //  this.dropListener = dropListener;
     }
 
     /**
