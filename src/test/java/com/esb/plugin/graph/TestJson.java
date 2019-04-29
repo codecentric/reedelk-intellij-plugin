@@ -7,7 +7,7 @@ public enum TestJson {
     FLOW_WITH_CHOICE {
         @Override
         String path() {
-            return "/com/esb/plugin/designer/graph/flow_with_choice.flow";
+            return "/com/esb/plugin/graph/flow_with_choice.flow";
         }
     },
 
