@@ -14,7 +14,7 @@ import static com.esb.plugin.designer.graph.layout.FlowGraphLayoutUtils.computeM
 import static java.awt.BasicStroke.CAP_ROUND;
 import static java.awt.BasicStroke.JOIN_ROUND;
 
-public class VerticalDivider implements Drawable {
+public class VerticalDivider extends AbstractDrawable {
 
     private final Stroke STROKE = new BasicStroke(1.3f, CAP_ROUND, JOIN_ROUND);
     private final JBColor VERTICAL_DIVIDER_COLOR = new JBColor(Gray._200, Gray._30);
@@ -46,71 +46,6 @@ public class VerticalDivider implements Drawable {
         int verticalSeparatorMaxY = scopedDrawable.y() + halfScopeHeight;
 
         graphics.drawLine(verticalX, verticalSeparatorMinY, verticalX, verticalSeparatorMaxY);
-    }
-
-    @Override
-    public void drag(int x, int y) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void dragging() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void drop() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int y() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int x() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void setPosition(int x, int y) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean contains(ImageObserver observer, int x, int y) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int height(Graphics2D graphics) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int width(Graphics2D graphics) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean isSelected() {
-        return false;
-    }
-
-    @Override
-    public void selected() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void unselected() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Point getBarycenter(Graphics2D graphics) {
-        throw new UnsupportedOperationException();
     }
 
 }

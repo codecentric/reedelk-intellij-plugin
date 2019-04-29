@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.graph.deserializer;
 
 import com.esb.internal.commons.JsonParser;
-import com.esb.plugin.designer.editor.component.ComponentDescriptor;
+import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.ChoiceDrawable;
 import com.esb.plugin.designer.graph.drawable.Drawable;
@@ -27,7 +27,7 @@ public class ChoiceDrawableBuilder extends AbstractBuilder {
 
         String name = JsonParser.Implementor.name(componentDefinition);
 
-        ComponentDescriptor component = context.instantiateComponent(name);
+        Component component = context.instantiateComponent(name);
 
         ChoiceDrawable choiceDrawable = new ChoiceDrawable(component);
 

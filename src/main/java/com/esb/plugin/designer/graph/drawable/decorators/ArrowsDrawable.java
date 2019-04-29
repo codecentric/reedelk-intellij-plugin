@@ -7,7 +7,7 @@ import com.esb.plugin.designer.graph.drawable.Drawable;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
-public class ArrowsDrawable implements Drawable {
+public class ArrowsDrawable extends AbstractDrawable {
 
     private final Drawable parent;
     private int x;
@@ -38,18 +38,6 @@ public class ArrowsDrawable implements Drawable {
     }
 
     @Override
-    public void drag(int x, int y) {
-    }
-
-    @Override
-    public void dragging() {
-    }
-
-    @Override
-    public void drop() {
-    }
-
-    @Override
     public int y() {
         return y;
     }
@@ -64,40 +52,6 @@ public class ArrowsDrawable implements Drawable {
         this.x = x;
         this.y = y;
     }
-
-    @Override
-    public boolean contains(ImageObserver observer, int x, int y) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int height(Graphics2D graphics) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int width(Graphics2D graphics) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean isSelected() {
-        return false;
-    }
-
-    @Override
-    public void selected() {
-    }
-
-    @Override
-    public void unselected() {
-    }
-
-    @Override
-    public Point getBarycenter(Graphics2D graphics) {
-        throw new UnsupportedOperationException();
-    }
-
 }
 
 

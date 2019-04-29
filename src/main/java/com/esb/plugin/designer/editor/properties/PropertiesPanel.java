@@ -1,8 +1,9 @@
 package com.esb.plugin.designer.editor.properties;
 
 import com.esb.plugin.designer.editor.SelectListener;
-import com.esb.plugin.designer.editor.component.ComponentDescriptor;
+import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.drawable.ComponentAware;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.manager.GraphChangeNotifier;
 import com.intellij.openapi.module.Module;
@@ -30,7 +31,8 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
 
     @Override
     public void onSelect(FlowGraph graph, Drawable drawable) {
-        ComponentDescriptor component = drawable.component();
+        // TODO: Fix this cast
+        Component component = ((ComponentAware) drawable).component();
         if (component == null) {
             return;
         }

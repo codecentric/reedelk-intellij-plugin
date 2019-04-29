@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public class ScopeBoundariesDrawable implements Drawable {
+public class ScopeBoundariesDrawable extends AbstractDrawable {
 
     private final Stroke STROKE = new BasicStroke(1f);
     private final JBColor BOUNDARIES_COLOR = new JBColor(Gray._235, Gray._30);
@@ -42,71 +42,6 @@ public class ScopeBoundariesDrawable implements Drawable {
         graphics.drawLine(x + boundaries.getWidth(), y, x + boundaries.getWidth(), y + boundaries.getHeight());
         graphics.drawLine(x + boundaries.getWidth(), y + boundaries.getHeight(), x, y + boundaries.getHeight());
         graphics.drawLine(x, y + boundaries.getHeight(), x, y);
-    }
-
-    @Override
-    public void drag(int x, int y) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void dragging() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void drop() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int y() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int x() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void setPosition(int x, int y) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean contains(ImageObserver observer, int x, int y) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int height(Graphics2D graphics) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int width(Graphics2D graphics) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean isSelected() {
-        return false;
-    }
-
-    @Override
-    public void selected() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void unselected() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Point getBarycenter(Graphics2D graphics) {
-        throw new UnsupportedOperationException();
     }
 
     private int getMaxScopes(FlowGraph graph) {

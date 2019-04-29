@@ -1,7 +1,6 @@
-package com.esb.plugin.designer.editor.designer;
+package com.esb.plugin.designer.editor.component;
 
 import com.esb.component.FlowReference;
-import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.FlowGraphChangeAware;
 import com.esb.plugin.designer.graph.FlowGraphImpl;
@@ -36,13 +35,16 @@ abstract class AbstractActionHandler {
     }
 
     protected Connector createComponentConnector(Drawable componentToAdd, FlowGraph graph) {
-        // TODO: fix this
+        // TODO: fix this - create a builder for this
+
+        ComponentDescriptor descriptor = ComponentService.getInstance(module).componentDescriptorByName(FlowReference.class.getName());
+        Component component = new Component(descriptor);
+
         if (componentToAdd instanceof ChoiceDrawable) {
             FlowGraph choiceGraph = new FlowGraphImpl();
             choiceGraph.root(componentToAdd);
 
-            ComponentDescriptor flowReference = ComponentService.getInstance(module).componentDescriptorByName(FlowReference.class.getName());
-            FlowReferenceDrawable placeholderDrawable = new FlowReferenceDrawable(flowReference);
+            FlowReferenceDrawable placeholderDrawable = new FlowReferenceDrawable(component);
             choiceGraph.add(componentToAdd, placeholderDrawable);
             ((ChoiceDrawable) componentToAdd).addToScope(placeholderDrawable);
             return new ScopeDrawableConnector(graph, choiceGraph);
@@ -51,8 +53,8 @@ abstract class AbstractActionHandler {
             FlowGraph forkJoinGraph = new FlowGraphImpl();
             forkJoinGraph.root(componentToAdd);
 
-            ComponentDescriptor flowReference = ComponentService.getInstance(module).componentDescriptorByName(FlowReference.class.getName());
-            FlowReferenceDrawable placeholderDrawable = new FlowReferenceDrawable(flowReference);
+
+            FlowReferenceDrawable placeholderDrawable = new FlowReferenceDrawable(component);
             forkJoinGraph.add(componentToAdd, placeholderDrawable);
             ((ForkJoinDrawable) componentToAdd).addToScope(placeholderDrawable);
             return new ScopeDrawableConnector(graph, forkJoinGraph);

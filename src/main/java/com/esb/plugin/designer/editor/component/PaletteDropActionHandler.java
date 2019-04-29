@@ -1,6 +1,5 @@
-package com.esb.plugin.designer.editor.designer;
+package com.esb.plugin.designer.editor.component;
 
-import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.FlowGraphChangeAware;
 import com.esb.plugin.designer.graph.FlowGraphImpl;
@@ -20,7 +19,7 @@ import java.util.Optional;
 import static java.awt.dnd.DnDConstants.ACTION_COPY_OR_MOVE;
 import static java.util.Arrays.asList;
 
-class PaletteDropActionHandler extends AbstractActionHandler {
+public class PaletteDropActionHandler extends AbstractActionHandler {
 
     private static final Logger LOG = Logger.getInstance(PaletteDropActionHandler.class);
 
@@ -28,14 +27,14 @@ class PaletteDropActionHandler extends AbstractActionHandler {
     private final Graphics2D graphics;
     private final DropTargetDropEvent dropEvent;
 
-    PaletteDropActionHandler(Module module, FlowGraph graph, Graphics2D graphics, DropTargetDropEvent dropEvent) {
+    public PaletteDropActionHandler(Module module, FlowGraph graph, Graphics2D graphics, DropTargetDropEvent dropEvent) {
         super(module);
         this.graph = graph;
         this.graphics = graphics;
         this.dropEvent = dropEvent;
     }
 
-    Optional<FlowGraph> handle() {
+    public Optional<FlowGraph> handle() {
         Optional<ComponentDescriptor> optionalDescriptor = extractComponentName(dropEvent);
         if (!optionalDescriptor.isPresent()) {
             dropEvent.rejectDrop();
@@ -44,11 +43,14 @@ class PaletteDropActionHandler extends AbstractActionHandler {
 
         Point dropPoint = dropEvent.getLocation();
         ComponentDescriptor descriptor = optionalDescriptor.get();
+        Component component = new Component(descriptor);
 
         FlowGraph copy = graph == null ? new FlowGraphImpl() : graph.copy();
 
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
-        Drawable componentToAdd = DrawableFactory.get(descriptor);
+
+        Drawable componentToAdd = DrawableFactory.get(component);
+
         addDrawableToGraph(modifiableGraph, componentToAdd, dropPoint, graphics);
 
         if (modifiableGraph.isChanged()) {

@@ -1,4 +1,4 @@
-package com.esb.plugin.designer.editor.designer;
+package com.esb.plugin.designer.editor.component;
 
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.FlowGraphChangeAware;
@@ -13,14 +13,14 @@ import com.intellij.openapi.module.Module;
 import java.awt.*;
 import java.util.Optional;
 
-class MoveActionHandler extends AbstractActionHandler {
+public class MoveActionHandler extends AbstractActionHandler {
 
     private final FlowGraph graph;
     private final Point movePoint;
     private final Drawable selected;
     private final Graphics2D graphics;
 
-    MoveActionHandler(Module module, FlowGraph graph, Graphics2D graphics, Drawable selected, Point movePoint) {
+    public MoveActionHandler(Module module, FlowGraph graph, Graphics2D graphics, Drawable selected, Point movePoint) {
         super(module);
         this.graph = graph;
         this.graphics = graphics;
@@ -28,7 +28,7 @@ class MoveActionHandler extends AbstractActionHandler {
         this.selected = selected;
     }
 
-    Optional<FlowGraph> handle() {
+    public Optional<FlowGraph> handle() {
         int dragX = movePoint.x;
         int dragY = movePoint.y;
 

@@ -1,14 +1,9 @@
 package com.esb.plugin.designer.graph.drawable;
 
-import com.esb.plugin.designer.editor.component.ComponentDescriptor;
+import com.esb.plugin.designer.editor.component.Component;
 
 public interface ComponentAware {
 
-    default ComponentDescriptor component() {
-        return null;
-    }
+    Component component();
 
-    default String displayName() {
-        return null;
-    }
 }

@@ -10,17 +10,16 @@ import java.awt.image.ImageObserver;
 import static java.awt.BasicStroke.CAP_ROUND;
 import static java.awt.BasicStroke.JOIN_ROUND;
 
-public class SelectedItemDrawable implements Drawable {
+public class SelectedItemDrawable extends AbstractDrawable {
 
     private static final int INNER_PADDING = 3;
     private final Stroke DOTTED_STROKE = new BasicStroke(0.7f, CAP_ROUND, JOIN_ROUND, 0, new float[]{3}, 0);
 
     private final Drawable parent;
 
-
-    private boolean selected;
     private int x;
     private int y;
+    private boolean selected;
 
     public SelectedItemDrawable(Drawable parent) {
         this.parent = parent;
@@ -67,23 +66,6 @@ public class SelectedItemDrawable implements Drawable {
     }
 
     @Override
-    public void drag(int x, int y) {
-    }
-
-    @Override
-    public void dragging() {
-    }
-
-    @Override
-    public void drop() {
-    }
-
-    @Override
-    public boolean contains(ImageObserver observer, int x, int y) {
-        return false;
-    }
-
-    @Override
     public int height(Graphics2D graphics) {
         return parent.height(graphics);
     }
@@ -95,22 +77,17 @@ public class SelectedItemDrawable implements Drawable {
 
     @Override
     public boolean isSelected() {
-        return false;
+        return selected;
     }
 
     @Override
     public void selected() {
-        this.selected = true;
+        selected = true;
     }
 
     @Override
     public void unselected() {
-        this.selected = false;
-    }
-
-    @Override
-    public Point getBarycenter(Graphics2D graphics) {
-        throw new UnsupportedOperationException();
+        selected = false;
     }
 
 }

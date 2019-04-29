@@ -1,14 +1,13 @@
 package com.esb.plugin.designer.graph.drawable.decorators;
 
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.intellij.ui.JBColor;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ImageObserver;
 
-public abstract class TextDrawable implements Drawable {
+public abstract class TextDrawable extends AbstractDrawable {
 
     private final JBColor color;
 
@@ -71,19 +70,6 @@ public abstract class TextDrawable implements Drawable {
     }
 
     @Override
-    public boolean isSelected() {
-        return false;
-    }
-
-    @Override
-    public void selected() {
-    }
-
-    @Override
-    public void unselected() {
-    }
-
-    @Override
     public void drop() {
         this.dragging = false;
     }
@@ -97,16 +83,6 @@ public abstract class TextDrawable implements Drawable {
     public void drag(int x, int y) {
         this.draggedX = x;
         this.draggedY = y;
-    }
-
-    @Override
-    public boolean contains(ImageObserver observer, int x, int y) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Point getBarycenter(Graphics2D graphics) {
-        throw new UnsupportedOperationException();
     }
 
 }

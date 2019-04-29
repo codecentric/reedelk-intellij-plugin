@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.graph.deserializer;
 
 import com.esb.internal.commons.JsonParser;
-import com.esb.plugin.designer.editor.component.ComponentDescriptor;
+import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.FlowReferenceDrawable;
@@ -18,7 +18,7 @@ public class FlowReferenceDrawableBuilder extends AbstractBuilder {
 
         String name = JsonParser.Implementor.name(componentDefinition);
 
-        ComponentDescriptor component = context.instantiateComponent(name);
+        Component component = context.instantiateComponent(name);
 
         FlowReferenceDrawable drawable = new FlowReferenceDrawable(component);
 

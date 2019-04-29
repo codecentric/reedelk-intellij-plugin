@@ -5,7 +5,7 @@ import com.esb.plugin.designer.graph.FlowGraph;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
-public interface Drawable extends ComponentAware {
+public interface Drawable {
 
     void drag(int x, int y);
 

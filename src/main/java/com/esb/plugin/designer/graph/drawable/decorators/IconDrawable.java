@@ -2,12 +2,11 @@ package com.esb.plugin.designer.graph.drawable.decorators;
 
 import com.esb.plugin.commons.Icons;
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.drawable.Drawable;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
-public class IconDrawable implements Drawable {
+public class IconDrawable extends AbstractDrawable {
 
     private static final int WIDTH = 60;
     private static final int HEIGHT = 60;
@@ -61,11 +60,6 @@ public class IconDrawable implements Drawable {
     }
 
     @Override
-    public boolean isSelected() {
-        return false;
-    }
-
-    @Override
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
@@ -100,19 +94,6 @@ public class IconDrawable implements Drawable {
     @Override
     public void drop() {
         this.dragging = false;
-    }
-
-    @Override
-    public void selected() {
-    }
-
-    @Override
-    public void unselected() {
-    }
-
-    @Override
-    public Point getBarycenter(Graphics2D graphics) {
-        throw new UnsupportedOperationException();
     }
 
 }

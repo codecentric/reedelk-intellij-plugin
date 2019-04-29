@@ -1,8 +1,9 @@
 package com.esb.plugin.designer.graph.serializer;
 
 import com.esb.internal.commons.JsonParser;
-import com.esb.plugin.designer.editor.component.ComponentDescriptor;
+import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.drawable.ComponentAware;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -14,7 +15,8 @@ public class GraphSerializer {
     public static String serialize(FlowGraph graph) {
         JSONArray flow = new JSONArray();
         graph.breadthFirstTraversal(drawable -> {
-            JSONObject component = serialize(drawable.component());
+            // TODO: Fix this component aware cast
+            JSONObject component = serialize(((ComponentAware) drawable).component());
             flow.put(component);
         });
 
@@ -24,13 +26,13 @@ public class GraphSerializer {
         return flowObject.toString(4);
     }
 
-    private static JSONObject serialize(ComponentDescriptor descriptor) {
+    private static JSONObject serialize(Component component) {
         JSONObject componentAsJson = new JSONObject();
-        JsonParser.Implementor.name(descriptor.getFullyQualifiedName(), componentAsJson);
+        JsonParser.Implementor.name(component.getFullyQualifiedName(), componentAsJson);
 
-        List<String> keys = descriptor.componentDataKeys();
+        List<String> keys = component.componentDataKeys();
         keys.forEach(propertyName -> {
-            Object data = descriptor.getData(propertyName);
+            Object data = component.getData(propertyName);
             componentAsJson.put(propertyName, data);
         });
 

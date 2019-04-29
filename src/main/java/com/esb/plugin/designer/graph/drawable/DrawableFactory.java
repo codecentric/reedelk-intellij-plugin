@@ -3,7 +3,7 @@ package com.esb.plugin.designer.graph.drawable;
 import com.esb.component.Choice;
 import com.esb.component.FlowReference;
 import com.esb.component.Fork;
-import com.esb.plugin.designer.editor.component.ComponentDescriptor;
+import com.esb.plugin.designer.editor.component.Component;
 import com.google.common.collect.ImmutableMap;
 
 import java.lang.reflect.InvocationTargetException;
@@ -18,11 +18,11 @@ public class DrawableFactory {
             FlowReference.class.getName(), FlowReferenceDrawable.class);
 
 
-    public static <T extends Drawable> T get(ComponentDescriptor descriptor) {
+    public static <T extends Drawable> T get(Component descriptor) {
         String componentFullyQualifiedName = descriptor.getFullyQualifiedName();
         Class componentDrawableClazz = COMPONENT_DRAWABLE_MAP.getOrDefault(componentFullyQualifiedName, DEFAULT);
         try {
-            return (T) componentDrawableClazz.getConstructor(ComponentDescriptor.class).newInstance(descriptor);
+            return (T) componentDrawableClazz.getConstructor(Component.class).newInstance(descriptor);
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }

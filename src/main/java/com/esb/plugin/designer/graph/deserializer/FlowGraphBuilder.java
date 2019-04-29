@@ -15,7 +15,7 @@ public class FlowGraphBuilder {
     private final BuilderContext context;
     private final JSONObject flowDefinition;
 
-    public FlowGraphBuilder(String json, BuilderContext context) {
+    FlowGraphBuilder(String json, BuilderContext context) {
         checkArgument(json != null, "JSON");
         checkArgument(context != null, "BuilderContext");
 

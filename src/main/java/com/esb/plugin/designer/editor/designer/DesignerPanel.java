@@ -2,6 +2,8 @@ package com.esb.plugin.designer.editor.designer;
 
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.editor.SelectListener;
+import com.esb.plugin.designer.editor.component.MoveActionHandler;
+import com.esb.plugin.designer.editor.component.PaletteDropActionHandler;
 import com.esb.plugin.designer.graph.DropListener;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.Drawable;

@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.graph.drawable;
 
 import com.esb.plugin.designer.Tile;
-import com.esb.plugin.designer.editor.component.ComponentDescriptor;
+import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.drawable.decorators.*;
 import com.esb.plugin.designer.graph.scope.FindScope;
@@ -11,9 +11,9 @@ import java.awt.*;
 import java.awt.image.ImageObserver;
 import java.util.Optional;
 
-public abstract class AbstractDrawable implements Drawable {
+public abstract class AbstractDrawable implements Drawable, ComponentAware {
 
-    private final ComponentDescriptor component;
+    private final Component component;
 
     private final Drawable iconDrawable;
     private final Drawable arrowsDrawable;
@@ -32,10 +32,10 @@ public abstract class AbstractDrawable implements Drawable {
     private boolean dragging;
     private boolean selected;
 
-    public AbstractDrawable(ComponentDescriptor component) {
+    public AbstractDrawable(Component component) {
         this.component = component;
         this.iconDrawable = new IconDrawable(component.getFullyQualifiedName());
-        this.componentTitleDrawable = new ComponentTitleDrawable(displayName());
+        this.componentTitleDrawable = new ComponentTitleDrawable(component.getDisplayName());
         this.componentDescriptionDrawable = new ComponentDescriptionDrawable("A description");
 
         this.arrowsDrawable = new ArrowsDrawable(this);
@@ -178,13 +178,8 @@ public abstract class AbstractDrawable implements Drawable {
     }
 
     @Override
-    public ComponentDescriptor component() {
+    public Component component() {
         return component;
-    }
-
-    @Override
-    public String displayName() {
-        return component.getDisplayName();
     }
 
     @Override

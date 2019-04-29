@@ -1,10 +1,10 @@
 package com.esb.plugin.designer.graph.drawable;
 
-import com.esb.plugin.designer.editor.component.ComponentDescriptor;
+import com.esb.plugin.designer.editor.component.Component;
 
 public class ChoiceDrawable extends AbstractScopedDrawable {
 
-    public ChoiceDrawable(ComponentDescriptor component) {
+    public ChoiceDrawable(Component component) {
         super(component);
     }
 }

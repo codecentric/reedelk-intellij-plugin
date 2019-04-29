@@ -9,6 +9,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 public class TransferableComponent implements Transferable {
 
     private static final DataFlavor[] flavors = new DataFlavor[]{ComponentDescriptor.FLAVOR};
+
     private final ComponentDescriptor descriptor;
 
     public TransferableComponent(ComponentDescriptor descriptor) {

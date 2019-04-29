@@ -1,8 +1,13 @@
 package com.esb.plugin.designer.editor.component;
 
 import java.awt.datatransfer.DataFlavor;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
+/**
+ * An object describing the component to be added to the graph.
+ */
 public class ComponentDescriptor {
 
     public static final DataFlavor FLAVOR = new DataFlavor(ComponentDescriptor.class, "Descriptor of Component");
@@ -11,17 +16,12 @@ public class ComponentDescriptor {
     private String displayName;
 
     private List<String> propertiesNames = new ArrayList<>();
-    private Map<String, Object> componentData = new HashMap<>();
 
     private ComponentDescriptor() {
     }
 
     public List<String> componentDataKeys() {
         return Collections.unmodifiableList(propertiesNames);
-    }
-
-    public Object getData(String key) {
-        return componentData.get(key);
     }
 
     public String getFullyQualifiedName() {
@@ -34,10 +34,6 @@ public class ComponentDescriptor {
 
     public List<String> getPropertiesNames() {
         return propertiesNames;
-    }
-
-    public void setPropertyValue(String propertyName, Object propertyValue) {
-        this.componentData.put(propertyName, propertyValue);
     }
 
     public static Builder create() {
