@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.graph.layout;
 
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 import com.esb.plugin.designer.graph.scope.CountNestedScopes;
 import com.esb.plugin.designer.graph.scope.FindFirstNodeOutsideScope;
@@ -18,15 +18,15 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class FlowGraphLayoutUtils {
 
-    static int computeMaxHeight(FlowGraph graph, Graphics2D graphics, Drawable start) {
+    static int computeMaxHeight(FlowGraph graph, Graphics2D graphics, GraphNode start) {
         return computeMaxHeight(graph, graphics, start, null);
     }
 
-    public static int computeMaxHeight(FlowGraph graph, Graphics2D graphics, Drawable start, Drawable end) {
+    public static int computeMaxHeight(FlowGraph graph, Graphics2D graphics, GraphNode start, GraphNode end) {
         return computeMaxHeight(graphics, graph, start, end, 0);
     }
 
-    private static int computeMaxHeight(Graphics2D graphics, FlowGraph graph, Drawable start, Drawable end, int currentMax) {
+    private static int computeMaxHeight(Graphics2D graphics, FlowGraph graph, GraphNode start, GraphNode end, int currentMax) {
         if (start == end) {
             return currentMax;
 
@@ -36,7 +36,7 @@ public class FlowGraphLayoutUtils {
         } else {
 
             int newMax = currentMax > start.height(graphics) ? currentMax : start.height(graphics);
-            List<Drawable> successors = graph.successors(start);
+            List<GraphNode> successors = graph.successors(start);
             checkState(successors.size() == 1 || successors.isEmpty(),
                     "Zero or at most one successors expected");
 
@@ -44,18 +44,18 @@ public class FlowGraphLayoutUtils {
                 return newMax;
             }
 
-            Drawable successor = successors.get(0);
+            GraphNode successor = successors.get(0);
             return computeMaxHeight(graphics, graph, successor, end, newMax);
         }
     }
 
-    private static int computeMaxHeight(Graphics2D graphics, FlowGraph graph, ScopedDrawable scopedDrawable, Drawable end, int currentMax) {
-        List<Drawable> successors = graph.successors(scopedDrawable);
+    private static int computeMaxHeight(Graphics2D graphics, FlowGraph graph, ScopedDrawable scopedDrawable, GraphNode end, int currentMax) {
+        List<GraphNode> successors = graph.successors(scopedDrawable);
 
-        Drawable firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedDrawable).orElse(null);
+        GraphNode firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedDrawable).orElse(null);
 
         int sum = VERTICAL_PADDING + VERTICAL_PADDING;
-        for (Drawable successor : successors) {
+        for (GraphNode successor : successors) {
             // We are looking for the max in the subtree starting from this successor.
             // Therefore the current max starts again from 0.
             sum += computeMaxHeight(graphics, graph, successor, firstNodeOutsideScope, 0);
@@ -78,7 +78,7 @@ public class FlowGraphLayoutUtils {
     }
 
 
-    static int findContainingLayer(List<List<Drawable>> layers, Drawable current) {
+    static int findContainingLayer(List<List<GraphNode>> layers, GraphNode current) {
         for (int i = 0; i < layers.size(); i++) {
             if (layers.get(i).contains(current)) {
                 return i;
@@ -87,25 +87,25 @@ public class FlowGraphLayoutUtils {
         throw new RuntimeException("Could not find containing layer for node " + current);
     }
 
-    static int layerWidthSumPreceding(FlowGraph graph, Graphics2D graphics, List<List<Drawable>> layers, int precedingLayerIndex) {
+    static int layerWidthSumPreceding(FlowGraph graph, Graphics2D graphics, List<List<GraphNode>> layers, int precedingLayerIndex) {
         int sum = 0;
         for (int i = 0; i < precedingLayerIndex; i++) {
-            List<Drawable> layerDrawables = layers.get(i);
+            List<GraphNode> layerDrawables = layers.get(i);
             sum += maxLayerWidth(graph, graphics, layerDrawables);
         }
         return sum;
     }
 
-    static Drawable findCommonParent(FlowGraph graph, Collection<Drawable> drawables) {
-        Set<Drawable> commonParents = new HashSet<>();
+    static GraphNode findCommonParent(FlowGraph graph, Collection<GraphNode> drawables) {
+        Set<GraphNode> commonParents = new HashSet<>();
         drawables.forEach(drawable -> commonParents.addAll(graph.predecessors(drawable)));
         checkState(commonParents.size() == 1, "Common parent must be one");
         return commonParents.stream().findFirst().get();
     }
 
-    private static int maxLayerWidth(FlowGraph graph, Graphics2D graphics, List<Drawable> layerDrawables) {
+    private static int maxLayerWidth(FlowGraph graph, Graphics2D graphics, List<GraphNode> layerDrawables) {
         int max = 0;
-        for (Drawable layerDrawable : layerDrawables) {
+        for (GraphNode layerDrawable : layerDrawables) {
             int nestedScopes = CountNestedScopes.of(graph, layerDrawable);
             int total = layerDrawable.width(graphics) + nestedScopes * HORIZONTAL_PADDING;
             if (total > max) max = total;

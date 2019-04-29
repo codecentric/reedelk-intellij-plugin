@@ -3,6 +3,7 @@ package com.esb.plugin.designer.graph.drawable;
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.drawable.decorators.*;
 import com.esb.plugin.designer.graph.scope.FindScope;
 import com.esb.plugin.designer.graph.scope.ListLastNodeOfScope;
@@ -11,7 +12,7 @@ import java.awt.*;
 import java.awt.image.ImageObserver;
 import java.util.Optional;
 
-public abstract class AbstractDrawable implements Drawable, ComponentAware {
+public abstract class AbstractDrawable implements GraphNode {
 
     private final Component component;
 

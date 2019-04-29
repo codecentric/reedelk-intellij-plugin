@@ -2,6 +2,7 @@ package com.esb.plugin.designer.graph.action.strategy;
 
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.connector.Connector;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
@@ -23,11 +24,11 @@ public class PrecedingDrawableWithOneSuccessor extends AbstractAddStrategy {
     }
 
     @Override
-    public void execute(Drawable closestPrecedingDrawable) {
-        List<Drawable> successors = graph.successors(closestPrecedingDrawable);
+    public void execute(GraphNode closestPrecedingDrawable) {
+        List<GraphNode> successors = graph.successors(closestPrecedingDrawable);
         checkState(successors.size() == 1, "Successors size MUST be 1, otherwise it is a Scoped Drawable");
 
-        Drawable successorOfClosestPrecedingNode = successors.get(0);
+        GraphNode successorOfClosestPrecedingNode = successors.get(0);
 
         if (BelongToSameScope.from(graph, closestPrecedingDrawable, successorOfClosestPrecedingNode)) {
             if (withinYBounds(dropPoint.y, closestPrecedingDrawable)) {
@@ -42,7 +43,7 @@ public class PrecedingDrawableWithOneSuccessor extends AbstractAddStrategy {
         }
     }
 
-    private void handleDifferentScopes(Drawable closestPrecedingDrawable, Drawable successorOfClosestPrecedingNode) {
+    private void handleDifferentScopes(GraphNode closestPrecedingDrawable, GraphNode successorOfClosestPrecedingNode) {
 
         Stack<ScopedDrawable> scopes = FindScopes.of(graph, closestPrecedingDrawable);
         if (scopes.isEmpty()) {

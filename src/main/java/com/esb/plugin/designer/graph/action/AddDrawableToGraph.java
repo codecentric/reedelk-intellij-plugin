@@ -3,12 +3,12 @@ package com.esb.plugin.designer.graph.action;
 
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.action.strategy.AddStrategy;
 import com.esb.plugin.designer.graph.action.strategy.PrecedingDrawableWithOneSuccessor;
 import com.esb.plugin.designer.graph.action.strategy.PrecedingDrawableWithoutSuccessor;
 import com.esb.plugin.designer.graph.action.strategy.PrecedingScopedDrawable;
 import com.esb.plugin.designer.graph.connector.Connector;
-import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 
 import java.awt.*;
@@ -50,9 +50,9 @@ public class AddDrawableToGraph {
 
         } else {
 
-            Optional<Drawable> optionalPrecedingNode = findClosestPrecedingDrawable(graph, dropPoint);
+            Optional<GraphNode> optionalPrecedingNode = findClosestPrecedingDrawable(graph, dropPoint);
             if (optionalPrecedingNode.isPresent()) {
-                Drawable closestPrecedingDrawable = optionalPrecedingNode.get();
+                GraphNode closestPrecedingDrawable = optionalPrecedingNode.get();
                 AddStrategy strategy;
 
                 if (closestPrecedingDrawable instanceof ScopedDrawable) {
@@ -74,8 +74,8 @@ public class AddDrawableToGraph {
     }
 
 
-    private static Optional<Drawable> findClosestPrecedingDrawable(FlowGraph graph, Point dropPoint) {
-        List<Drawable> precedingNodes = graph
+    private static Optional<GraphNode> findClosestPrecedingDrawable(FlowGraph graph, Point dropPoint) {
+        List<GraphNode> precedingNodes = graph
                 .nodes()
                 .stream()
                 .filter(byPrecedingNodesOnX(graph, dropPoint.x))
@@ -84,11 +84,11 @@ public class AddDrawableToGraph {
     }
 
     // If there are two on the same Y we pick the closest on X
-    private static Optional<Drawable> findClosestOnYAxis(List<Drawable> precedingNodes, int dropY, int dropX) {
+    private static Optional<GraphNode> findClosestOnYAxis(List<GraphNode> precedingNodes, int dropY, int dropX) {
         int minY = Integer.MAX_VALUE;
         int minX = Integer.MAX_VALUE;
-        Drawable closestPrecedingNode = null;
-        for (Drawable precedingNode : precedingNodes) {
+        GraphNode closestPrecedingNode = null;
+        for (GraphNode precedingNode : precedingNodes) {
             int delta = Math.abs(precedingNode.y() - dropY);
             if (delta < minY) {
                 closestPrecedingNode = precedingNode;
@@ -104,7 +104,7 @@ public class AddDrawableToGraph {
         return Optional.ofNullable(closestPrecedingNode);
     }
 
-    private static Predicate<Drawable> byPrecedingNodesOnX(FlowGraph graph, int dropX) {
+    private static Predicate<GraphNode> byPrecedingNodesOnX(FlowGraph graph, int dropX) {
         return preceding -> {
             // The drop point is before/after the center of the node or the center + next node position.
             if (dropX <= preceding.x() || dropX >= preceding.x() + Tile.WIDTH + Tile.HALF_WIDTH) {
@@ -113,7 +113,7 @@ public class AddDrawableToGraph {
             // If exists a successor of the current preceding preceding in the preceding + 1 position,
             // then we restrict the drop position so that we consider valid if and only if its x
             // coordinates are between preceding x and successor x.
-            for (Drawable successor : graph.successors(preceding)) {
+            for (GraphNode successor : graph.successors(preceding)) {
                 if (successor.x() == preceding.x() + Tile.WIDTH) {
                     return dropX > preceding.x() && dropX < successor.x();
                 }

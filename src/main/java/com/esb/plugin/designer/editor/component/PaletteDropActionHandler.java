@@ -3,7 +3,7 @@ package com.esb.plugin.designer.editor.component;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.FlowGraphChangeAware;
 import com.esb.plugin.designer.graph.FlowGraphImpl;
-import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.drawable.DrawableFactory;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
@@ -49,13 +49,14 @@ public class PaletteDropActionHandler extends AbstractActionHandler {
 
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
 
-        Drawable componentToAdd = DrawableFactory.get(component);
+        GraphNode componentToAdd = DrawableFactory.get(component);
 
         addDrawableToGraph(modifiableGraph, componentToAdd, dropPoint, graphics);
 
         if (modifiableGraph.isChanged()) {
             dropEvent.acceptDrop(ACTION_COPY_OR_MOVE);
             return Optional.of(modifiableGraph);
+
         } else {
             dropEvent.rejectDrop();
         }

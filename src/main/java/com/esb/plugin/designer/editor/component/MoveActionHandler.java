@@ -3,8 +3,8 @@ package com.esb.plugin.designer.editor.component;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.FlowGraphChangeAware;
 import com.esb.plugin.designer.graph.FlowGraphImpl;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.action.RemoveDrawableFromGraph;
-import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 import com.esb.plugin.designer.graph.drawable.decorators.NothingSelectedDrawable;
 import com.esb.plugin.designer.graph.scope.FindScope;
@@ -17,10 +17,10 @@ public class MoveActionHandler extends AbstractActionHandler {
 
     private final FlowGraph graph;
     private final Point movePoint;
-    private final Drawable selected;
+    private final GraphNode selected;
     private final Graphics2D graphics;
 
-    public MoveActionHandler(Module module, FlowGraph graph, Graphics2D graphics, Drawable selected, Point movePoint) {
+    public MoveActionHandler(Module module, FlowGraph graph, Graphics2D graphics, GraphNode selected, Point movePoint) {
         super(module);
         this.graph = graph;
         this.graphics = graphics;

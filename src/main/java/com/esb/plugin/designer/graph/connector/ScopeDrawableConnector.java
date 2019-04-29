@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.graph.connector;
 
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 import com.esb.plugin.designer.graph.scope.ListLastNodeOfScope;
 
@@ -20,14 +20,14 @@ public class ScopeDrawableConnector implements Connector {
     }
 
     @Override
-    public void addSuccessor(Drawable successor) {
+    public void addSuccessor(GraphNode successor) {
         addScopeGraphIfNeeded();
-        Collection<Drawable> drawables = ListLastNodeOfScope.from(graph, (ScopedDrawable) scopeGraph.root());
+        Collection<GraphNode> drawables = ListLastNodeOfScope.from(graph, (ScopedDrawable) scopeGraph.root());
         drawables.forEach(drawable -> graph.add(drawable, successor));
     }
 
     @Override
-    public void addPredecessor(Drawable predecessor) {
+    public void addPredecessor(GraphNode predecessor) {
         addScopeGraphIfNeeded();
         graph.add(predecessor, scopeGraph.root());
     }
@@ -55,7 +55,7 @@ public class ScopeDrawableConnector implements Connector {
     }
 
     private void addScopeGraphIfNeeded() {
-        Drawable rootOfScope = scopeGraph.root();
+        GraphNode rootOfScope = scopeGraph.root();
         boolean isAlreadyAdded = graph.nodes().contains(rootOfScope);
         if (!isAlreadyAdded) {
             graph.add(rootOfScope);
@@ -63,7 +63,7 @@ public class ScopeDrawableConnector implements Connector {
         }
     }
 
-    private void addSubGraph(Drawable parent) {
+    private void addSubGraph(GraphNode parent) {
         scopeGraph.successors(parent).forEach(successor -> {
             graph.add(parent, successor);
             addSubGraph(successor);

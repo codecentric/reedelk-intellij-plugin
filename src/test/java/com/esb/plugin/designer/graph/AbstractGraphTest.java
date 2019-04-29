@@ -1,8 +1,8 @@
 package com.esb.plugin.designer.graph;
 
+import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 import com.esb.plugin.designer.graph.drawable.ChoiceDrawable;
-import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.GenericComponentDrawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,36 +17,36 @@ import static org.assertj.core.api.Assertions.assertThat;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public abstract class AbstractGraphTest {
 
-    private ComponentDescriptor cRoot;
-    private ComponentDescriptor cn1;
-    private ComponentDescriptor cn2;
-    private ComponentDescriptor cn3;
-    private ComponentDescriptor cn4;
-    private ComponentDescriptor cn5;
-    private ComponentDescriptor cn6;
-    private ComponentDescriptor cn7;
-    private ComponentDescriptor cn8;
-    private ComponentDescriptor cn9;
-    private ComponentDescriptor cn10;
-    private ComponentDescriptor cn11;
-    private ComponentDescriptor cc1;
-    private ComponentDescriptor cc2;
-    private ComponentDescriptor cc3;
-    private ComponentDescriptor cc4;
-    private ComponentDescriptor cc5;
+    private Component cRoot;
+    private Component cn1;
+    private Component cn2;
+    private Component cn3;
+    private Component cn4;
+    private Component cn5;
+    private Component cn6;
+    private Component cn7;
+    private Component cn8;
+    private Component cn9;
+    private Component cn10;
+    private Component cn11;
+    private Component cc1;
+    private Component cc2;
+    private Component cc3;
+    private Component cc4;
+    private Component cc5;
 
-    protected Drawable root;
-    protected Drawable n1;
-    protected Drawable n2;
-    protected Drawable n3;
-    protected Drawable n4;
-    protected Drawable n5;
-    protected Drawable n6;
-    protected Drawable n7;
-    protected Drawable n8;
-    protected Drawable n9;
-    protected Drawable n10;
-    protected Drawable n11;
+    protected GraphNode root;
+    protected GraphNode n1;
+    protected GraphNode n2;
+    protected GraphNode n3;
+    protected GraphNode n4;
+    protected GraphNode n5;
+    protected GraphNode n6;
+    protected GraphNode n7;
+    protected GraphNode n8;
+    protected GraphNode n9;
+    protected GraphNode n10;
+    protected GraphNode n11;
 
     protected ScopedDrawable choice1;
     protected ScopedDrawable choice2;
@@ -56,23 +56,23 @@ public abstract class AbstractGraphTest {
 
     @BeforeEach
     protected void setUp() {
-        cRoot = ComponentDescriptor.create().fullyQualifiedName("root").displayName("root").build();
-        cn1 = ComponentDescriptor.create().fullyQualifiedName("n1").displayName("n1").build();
-        cn2 = ComponentDescriptor.create().fullyQualifiedName("n2").displayName("n2").build();
-        cn3 = ComponentDescriptor.create().fullyQualifiedName("n3").displayName("n3").build();
-        cn4 = ComponentDescriptor.create().fullyQualifiedName("n4").displayName("n4").build();
-        cn5 = ComponentDescriptor.create().fullyQualifiedName("n5").displayName("n5").build();
-        cn6 = ComponentDescriptor.create().fullyQualifiedName("n6").displayName("n6").build();
-        cn7 = ComponentDescriptor.create().fullyQualifiedName("n7").displayName("n7").build();
-        cn8 = ComponentDescriptor.create().fullyQualifiedName("n8").displayName("n8").build();
-        cn9 = ComponentDescriptor.create().fullyQualifiedName("n9").displayName("n9").build();
-        cn10 = ComponentDescriptor.create().fullyQualifiedName("n10").displayName("n10").build();
-        cn11 = ComponentDescriptor.create().fullyQualifiedName("n11").displayName("n11").build();
-        cc1 = ComponentDescriptor.create().fullyQualifiedName("c1").displayName("c1").build();
-        cc2 = ComponentDescriptor.create().fullyQualifiedName("c2").displayName("c2").build();
-        cc3 = ComponentDescriptor.create().fullyQualifiedName("c3").displayName("c3").build();
-        cc4 = ComponentDescriptor.create().fullyQualifiedName("c4").displayName("c4").build();
-        cc5 = ComponentDescriptor.create().fullyQualifiedName("c5").displayName("c5").build();
+        cRoot = createComponent("root");
+        cn1 = createComponent("n1");
+        cn2 = createComponent("n2");
+        cn3 = createComponent("n3");
+        cn4 = createComponent("n4");
+        cn5 = createComponent("n5");
+        cn6 = createComponent("n6");
+        cn7 = createComponent("n7");
+        cn8 = createComponent("n8");
+        cn9 = createComponent("n9");
+        cn10 = createComponent("n10");
+        cn11 = createComponent("n11");
+        cc1 = createComponent("c1");
+        cc2 = createComponent("c2");
+        cc3 = createComponent("c3");
+        cc4 = createComponent("c4");
+        cc5 = createComponent("c5");
 
         root = new GenericComponentDrawable(cRoot);
         n1 = new GenericComponentDrawable(cn1);
@@ -94,11 +94,18 @@ public abstract class AbstractGraphTest {
         choice5 = new ChoiceDrawable(cc5);
     }
 
-    protected void assertThatRootIs(FlowGraph graph, Drawable root) {
+    private Component createComponent(String name) {
+        return new Component(ComponentDescriptor.create()
+                .fullyQualifiedName(name)
+                .displayName(name)
+                .build());
+    }
+
+    protected void assertThatRootIs(FlowGraph graph, GraphNode root) {
         assertThat(graph.root()).isEqualTo(root);
     }
 
-    protected void assertThatSuccessorsAreExactly(FlowGraph graph, Drawable target, Drawable... successors) {
+    protected void assertThatSuccessorsAreExactly(FlowGraph graph, GraphNode target, GraphNode... successors) {
         if (successors.length == 0) {
             assertThat(graph.successors(target)).isEmpty();
         } else {

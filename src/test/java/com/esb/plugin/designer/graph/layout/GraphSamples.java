@@ -1,45 +1,46 @@
 package com.esb.plugin.designer.graph.layout;
 
+import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.FlowGraphImpl;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.drawable.ChoiceDrawable;
-import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.GenericComponentDrawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 
 public class GraphSamples {
 
-    ComponentDescriptor cRoot = ComponentDescriptor.create().fullyQualifiedName("root").displayName("root").build();
-    ComponentDescriptor cn1 = ComponentDescriptor.create().fullyQualifiedName("n1").displayName("n1").build();
-    ComponentDescriptor cn2 = ComponentDescriptor.create().fullyQualifiedName("n2").displayName("n2").build();
-    ComponentDescriptor cn3 = ComponentDescriptor.create().fullyQualifiedName("n3").displayName("n3").build();
-    ComponentDescriptor cn4 = ComponentDescriptor.create().fullyQualifiedName("n4").displayName("n4").build();
-    ComponentDescriptor cn5 = ComponentDescriptor.create().fullyQualifiedName("n5").displayName("n5").build();
-    ComponentDescriptor cn6 = ComponentDescriptor.create().fullyQualifiedName("n6").displayName("n6").build();
-    ComponentDescriptor cn7 = ComponentDescriptor.create().fullyQualifiedName("n7").displayName("n7").build();
-    ComponentDescriptor cn8 = ComponentDescriptor.create().fullyQualifiedName("n8").displayName("n8").build();
-    ComponentDescriptor cn9 = ComponentDescriptor.create().fullyQualifiedName("n9").displayName("n9").build();
-    ComponentDescriptor cn10 = ComponentDescriptor.create().fullyQualifiedName("n10").displayName("n10").build();
-    ComponentDescriptor cn11 = ComponentDescriptor.create().fullyQualifiedName("n11").displayName("n11").build();
-    ComponentDescriptor cc1 = ComponentDescriptor.create().fullyQualifiedName("c1").displayName("c1").build();
-    ComponentDescriptor cc2 = ComponentDescriptor.create().fullyQualifiedName("c2").displayName("c2").build();
-    ComponentDescriptor cc3 = ComponentDescriptor.create().fullyQualifiedName("c3").displayName("c3").build();
-    ComponentDescriptor cc4 = ComponentDescriptor.create().fullyQualifiedName("c4").displayName("c4").build();
-    ComponentDescriptor cc5 = ComponentDescriptor.create().fullyQualifiedName("c5").displayName("c5").build();
+    Component cRoot = createComponent("root");
+    Component cn1 = createComponent("n1");
+    Component cn2 = createComponent("n2");
+    Component cn3 = createComponent("n3");
+    Component cn4 = createComponent("n4");
+    Component cn5 = createComponent("n5");
+    Component cn6 = createComponent("n6");
+    Component cn7 = createComponent("n7");
+    Component cn8 = createComponent("n8");
+    Component cn9 = createComponent("n9");
+    Component cn10 = createComponent("n10");
+    Component cn11 = createComponent("n11");
+    Component cc1 = createComponent("c1");
+    Component cc2 = createComponent("c2");
+    Component cc3 = createComponent("c3");
+    Component cc4 = createComponent("c4");
+    Component cc5 = createComponent("c5");
 
-    Drawable root = new GenericComponentDrawable(cRoot);
-    Drawable n1 = new GenericComponentDrawable(cn1);
-    Drawable n2 = new GenericComponentDrawable(cn2);
-    Drawable n3 = new GenericComponentDrawable(cn3);
-    Drawable n4 = new GenericComponentDrawable(cn4);
-    Drawable n5 = new GenericComponentDrawable(cn5);
-    Drawable n6 = new GenericComponentDrawable(cn6);
-    Drawable n7 = new GenericComponentDrawable(cn7);
-    Drawable n8 = new GenericComponentDrawable(cn8);
-    Drawable n9 = new GenericComponentDrawable(cn9);
-    Drawable n10 = new GenericComponentDrawable(cn10);
-    Drawable n11 = new GenericComponentDrawable(cn11);
+    GraphNode root = new GenericComponentDrawable(cRoot);
+    GraphNode n1 = new GenericComponentDrawable(cn1);
+    GraphNode n2 = new GenericComponentDrawable(cn2);
+    GraphNode n3 = new GenericComponentDrawable(cn3);
+    GraphNode n4 = new GenericComponentDrawable(cn4);
+    GraphNode n5 = new GenericComponentDrawable(cn5);
+    GraphNode n6 = new GenericComponentDrawable(cn6);
+    GraphNode n7 = new GenericComponentDrawable(cn7);
+    GraphNode n8 = new GenericComponentDrawable(cn8);
+    GraphNode n9 = new GenericComponentDrawable(cn9);
+    GraphNode n10 = new GenericComponentDrawable(cn10);
+    GraphNode n11 = new GenericComponentDrawable(cn11);
 
     ScopedDrawable c1 = new ChoiceDrawable(cc1);
     ScopedDrawable c2 = new ChoiceDrawable(cc2);
@@ -356,5 +357,12 @@ public class GraphSamples {
         c3.addToScope(n7);
 
         return graph;
+    }
+
+    private Component createComponent(String name) {
+        return new Component(ComponentDescriptor.create()
+                .fullyQualifiedName(name)
+                .displayName(name)
+                .build());
     }
 }

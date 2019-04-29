@@ -2,18 +2,18 @@ package com.esb.plugin.designer.graph.drawable.decorators;
 
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.GraphNode;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
 public class ArrowsDrawable extends AbstractDrawable {
 
-    private final Drawable parent;
     private int x;
     private int y;
+    private final GraphNode parent;
 
-    public ArrowsDrawable(Drawable parent) {
+    public ArrowsDrawable(GraphNode parent) {
         this.parent = parent;
     }
 

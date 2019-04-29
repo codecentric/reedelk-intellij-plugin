@@ -2,6 +2,7 @@ package com.esb.plugin.designer.graph.drawable;
 
 import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.drawable.decorators.Arrow;
 import com.esb.plugin.designer.graph.drawable.decorators.ScopeBoundariesDrawable;
 import com.esb.plugin.designer.graph.drawable.decorators.VerticalDivider;
@@ -18,16 +19,16 @@ abstract class AbstractScopedDrawable extends AbstractDrawable implements Scoped
     private final Drawable verticalDivider;
     private final ScopeBoundariesDrawable scopeBoundariesDrawable;
 
-    private Set<Drawable> scope = new HashSet<>();
+    private Set<GraphNode> scope = new HashSet<>();
 
     AbstractScopedDrawable(Component component) {
         super(component);
-        this.verticalDivider = new VerticalDivider(this);
-        this.scopeBoundariesDrawable = new ScopeBoundariesDrawable(this);
+        verticalDivider = new VerticalDivider(this);
+        scopeBoundariesDrawable = new ScopeBoundariesDrawable(this);
     }
 
     @Override
-    public boolean scopeContains(Drawable drawable) {
+    public boolean scopeContains(GraphNode drawable) {
         return scope.contains(drawable);
     }
 
@@ -49,7 +50,7 @@ abstract class AbstractScopedDrawable extends AbstractDrawable implements Scoped
         int halfWidth = Math.floorDiv(width(graphics), 2);
         int verticalX = x() + halfWidth - 6;
 
-        List<Drawable> successors = graph.successors(this);
+        List<GraphNode> successors = graph.successors(this);
         for (Drawable successor : successors) {
 
             Point targetBaryCenter = successor.getBarycenter(graphics);
@@ -64,17 +65,17 @@ abstract class AbstractScopedDrawable extends AbstractDrawable implements Scoped
     }
 
     @Override
-    public void addToScope(Drawable drawable) {
+    public void addToScope(GraphNode drawable) {
         this.scope.add(drawable);
     }
 
     @Override
-    public void removeFromScope(Drawable drawable) {
+    public void removeFromScope(GraphNode drawable) {
         this.scope.remove(drawable);
     }
 
     @Override
-    public Collection<Drawable> getScope() {
+    public Collection<GraphNode> getScope() {
         return Collections.unmodifiableSet(scope);
     }
 

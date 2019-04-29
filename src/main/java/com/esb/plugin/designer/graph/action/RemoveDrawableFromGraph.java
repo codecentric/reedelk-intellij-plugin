@@ -1,29 +1,29 @@
 package com.esb.plugin.designer.graph.action;
 
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 
 import java.util.List;
 
 public class RemoveDrawableFromGraph {
 
-    private final Drawable dropped;
+    private final GraphNode dropped;
     private final FlowGraph graph;
 
-    public RemoveDrawableFromGraph(final FlowGraph copy, final Drawable dropped) {
+    public RemoveDrawableFromGraph(final FlowGraph copy, final GraphNode dropped) {
         this.graph = copy;
         this.dropped = dropped;
     }
 
     public void remove() {
-        List<Drawable> predecessors = graph.predecessors(dropped);
-        List<Drawable> successors = graph.successors(dropped);
+        List<GraphNode> predecessors = graph.predecessors(dropped);
+        List<GraphNode> successors = graph.successors(dropped);
         if (predecessors.isEmpty()) {
             graph.root(successors.get(0));
         } else {
-            for (Drawable predecessor : predecessors) {
-                for (Drawable successor : successors) {
+            for (GraphNode predecessor : predecessors) {
+                for (GraphNode successor : successors) {
                     if (predecessor instanceof ScopedDrawable) {
                         // We need to check if successor is in the scope.
                         ScopedDrawable scope = (ScopedDrawable) predecessor;

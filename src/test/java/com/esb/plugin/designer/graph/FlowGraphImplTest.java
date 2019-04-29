@@ -1,6 +1,5 @@
 package com.esb.plugin.designer.graph;
 
-import com.esb.plugin.designer.graph.drawable.Drawable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -48,7 +47,7 @@ class FlowGraphImplTest extends AbstractGraphTest {
         graph.add(n1, n2);
 
         // When
-        Collection<Drawable> nodes = graph.nodes();
+        Collection<GraphNode> nodes = graph.nodes();
 
         // Then
         assertThat(nodes).containsExactlyInAnyOrder(root, n1, n2);
@@ -65,7 +64,7 @@ class FlowGraphImplTest extends AbstractGraphTest {
         graph.add(n2, n3);
 
         // When
-        List<Drawable> predecessors = graph.predecessors(n3);
+        List<GraphNode> predecessors = graph.predecessors(n3);
 
         // Then
         assertThat(predecessors).containsExactlyInAnyOrder(n1, n2);
@@ -80,7 +79,7 @@ class FlowGraphImplTest extends AbstractGraphTest {
         graph.add(choice1, n2);
 
         // When
-        List<Drawable> successors = graph.successors(choice1);
+        List<GraphNode> successors = graph.successors(choice1);
 
         // Then
         assertThat(successors).containsExactlyInAnyOrder(n1, n2);

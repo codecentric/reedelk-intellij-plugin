@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.graph.deserializer;
 
-import com.esb.plugin.designer.editor.component.ComponentDescriptor;
-import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.editor.component.Component;
+import com.esb.plugin.designer.graph.GraphNode;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,19 +23,20 @@ class GenericDrawableBuilderTest extends AbstractBuilderTest {
     @Test
     void shouldBuildGenericDrawableCorrectly() {
         // Given
-        ComponentDescriptor componentDescriptor = mockComponentDescriptor(GENERIC_COMPONENT_NAME);
+        Component givenComponent = mockComponent(GENERIC_COMPONENT_NAME);
 
-        JSONObject componentDefinition = ComponentDefinitionBuilder.forComponent(GENERIC_COMPONENT_NAME)
+        JSONObject componentDefinition = ComponentDefinitionBuilder
+                .forComponent(GENERIC_COMPONENT_NAME)
                 .build();
 
         // When
-        Drawable genericDrawable = builder.build(root, componentDefinition);
+        GraphNode genericDrawable = builder.build(root, componentDefinition);
 
         // Then
         assertThat(graph.nodesCount()).isEqualTo(2);
 
-        ComponentDescriptor component = genericDrawable.component();
-        assertThat(componentDescriptor).isEqualTo(component);
+        Component actualComponent = genericDrawable.component();
+        assertThat(actualComponent).isEqualTo(givenComponent);
     }
 
 }

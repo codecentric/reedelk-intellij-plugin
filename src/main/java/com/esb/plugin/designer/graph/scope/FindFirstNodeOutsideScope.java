@@ -1,10 +1,13 @@
 package com.esb.plugin.designer.graph.scope;
 
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -14,16 +17,19 @@ import static com.google.common.base.Preconditions.checkState;
  */
 public class FindFirstNodeOutsideScope {
 
-    public static Optional<Drawable> of(FlowGraph graph, ScopedDrawable scope) {
-        Collection<Drawable> lastDrawablesOfScope = ListLastNodeOfScope.from(graph, scope);
-        Set<Drawable> firstDrawablesOutsideScope = new HashSet<>();
-        lastDrawablesOfScope.forEach(lastDrawableOfScope -> {
-            List<Drawable> successors = graph.successors(lastDrawableOfScope);
-            firstDrawablesOutsideScope.addAll(successors);
-        });
+    public static Optional<GraphNode> of(FlowGraph graph, ScopedDrawable scope) {
+        Set<GraphNode> firstDrawablesOutsideScope = new HashSet<>();
+
+        ListLastNodeOfScope.from(graph, scope)
+                .forEach(lastDrawableOfScope -> {
+                    List<GraphNode> successors = graph.successors(lastDrawableOfScope);
+                    firstDrawablesOutsideScope.addAll(successors);
+                });
+
         checkState(firstDrawablesOutsideScope.isEmpty() ||
                         firstDrawablesOutsideScope.size() == 1,
                 "First node outside scope must be asent or at most one");
+
         return firstDrawablesOutsideScope.stream().findFirst();
     }
 }

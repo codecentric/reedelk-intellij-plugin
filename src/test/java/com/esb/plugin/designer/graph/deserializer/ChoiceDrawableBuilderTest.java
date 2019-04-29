@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.graph.deserializer;
 
 import com.esb.component.Choice;
-import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.drawable.StopDrawable;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -26,16 +26,16 @@ class ChoiceDrawableBuilderTest extends AbstractBuilderTest {
         super.setUp();
         builder = new ChoiceDrawableBuilder(graph, context);
 
-        mockComponentDescriptor(COMPONENT_1_NAME);
-        mockComponentDescriptor(COMPONENT_2_NAME);
-        mockComponentDescriptor(COMPONENT_3_NAME);
-        mockComponentDescriptor(COMPONENT_4_NAME);
+        mockComponent(COMPONENT_1_NAME);
+        mockComponent(COMPONENT_2_NAME);
+        mockComponent(COMPONENT_3_NAME);
+        mockComponent(COMPONENT_4_NAME);
     }
 
     @Test
     void shouldBuildChoiceCorrectly() {
         // Given
-        mockComponentDescriptor(Choice.class.getName());
+        mockComponent(Choice.class.getName());
 
         JSONArray whenArray = new JSONArray();
         whenArray.put(conditionalBranch("1 == 1", COMPONENT_3_NAME, COMPONENT_1_NAME));
@@ -49,22 +49,22 @@ class ChoiceDrawableBuilderTest extends AbstractBuilderTest {
                 .build();
 
         // When
-        Drawable stopDrawable = builder.build(root, componentDefinition);
+        GraphNode stopDrawable = builder.build(root, componentDefinition);
 
         // Then: last node must be a stop drawable
         assertThat(stopDrawable).isInstanceOf(StopDrawable.class);
 
         // Then: check successors of choice
-        Drawable choice = firstSuccessorOf(graph, root);
+        GraphNode choice = firstSuccessorOf(graph, root);
         assertSuccessorsAre(graph, choice, COMPONENT_3_NAME, COMPONENT_2_NAME, COMPONENT_4_NAME);
 
-        Drawable component3Drawable = getDrawableWithComponentName(graph.successors(choice), COMPONENT_3_NAME);
+        GraphNode component3Drawable = getNodeHavingComponentName(graph.successors(choice), COMPONENT_3_NAME);
         assertSuccessorsAre(graph, component3Drawable, COMPONENT_1_NAME);
 
-        Drawable component2Drawable = getDrawableWithComponentName(graph.successors(choice), COMPONENT_2_NAME);
+        GraphNode component2Drawable = getNodeHavingComponentName(graph.successors(choice), COMPONENT_2_NAME);
         assertSuccessorsAre(graph, component2Drawable, COMPONENT_4_NAME);
 
-        Drawable component4Drawable = getDrawableWithComponentName(graph.successors(choice), COMPONENT_4_NAME);
+        GraphNode component4Drawable = getNodeHavingComponentName(graph.successors(choice), COMPONENT_4_NAME);
         assertSuccessorsAre(graph, component4Drawable, COMPONENT_3_NAME);
 
         // Then: check predecessors of last stop node

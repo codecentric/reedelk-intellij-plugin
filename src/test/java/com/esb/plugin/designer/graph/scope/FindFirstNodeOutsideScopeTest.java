@@ -3,7 +3,7 @@ package com.esb.plugin.designer.graph.scope;
 import com.esb.plugin.designer.graph.AbstractGraphTest;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.FlowGraphImpl;
-import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.GraphNode;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -30,7 +30,7 @@ class FindFirstNodeOutsideScopeTest extends AbstractGraphTest {
         choice2.addToScope(n2);
 
         // When
-        Optional<Drawable> firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, choice1);
+        Optional<GraphNode> firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, choice1);
 
         // Then
         assertThat(firstNodeOutsideScope.isPresent()).isFalse();
@@ -51,7 +51,7 @@ class FindFirstNodeOutsideScopeTest extends AbstractGraphTest {
         choice1.addToScope(n2);
 
         // When
-        Optional<Drawable> drawables = FindFirstNodeOutsideScope.of(graph, choice1);
+        Optional<GraphNode> drawables = FindFirstNodeOutsideScope.of(graph, choice1);
 
         // Then
         assertThat(drawables.get()).isEqualTo(n3);

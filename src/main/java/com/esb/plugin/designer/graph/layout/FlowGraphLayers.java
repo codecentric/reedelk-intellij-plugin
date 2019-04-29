@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.graph.layout;
 
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.GraphNode;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,10 +21,10 @@ class FlowGraphLayers {
         this.graph = graph.copy();
     }
 
-    List<List<Drawable>> compute() {
-        List<List<Drawable>> sorted = new ArrayList<>();
+    List<List<GraphNode>> compute() {
+        List<List<GraphNode>> sorted = new ArrayList<>();
 
-        List<Drawable> noIncomingEdgesDrawables = getNodesWithoutIncomingEdges();
+        List<GraphNode> noIncomingEdgesDrawables = getNodesWithoutIncomingEdges();
 
         while (!noIncomingEdgesDrawables.isEmpty()) {
             sorted.add(noIncomingEdgesDrawables);
@@ -42,8 +42,8 @@ class FlowGraphLayers {
         return sorted;
     }
 
-    private List<Drawable> getNodesWithoutIncomingEdges() {
-        List<Drawable> collect = graph
+    private List<GraphNode> getNodesWithoutIncomingEdges() {
+        List<GraphNode> collect = graph
                 .nodes()
                 .stream()
                 .filter(node -> graph.predecessors(node).isEmpty())

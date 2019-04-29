@@ -5,8 +5,8 @@ import com.esb.component.Choice;
 import com.esb.component.FlowReference;
 import com.esb.component.Fork;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.drawable.ComponentAware;
-import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.intellij.openapi.module.Module;
 
 import java.lang.reflect.InvocationTargetException;
@@ -18,7 +18,7 @@ public class ConnectorFactory {
 
     private Module module;
     private FlowGraph graph;
-    private Drawable componentToAdd;
+    private GraphNode componentToAdd;
 
     private static final Class<? extends ConnectorBuilder> GENERIC_BUILDER = GenericComponentConnectorBuilder.class;
 
@@ -35,7 +35,7 @@ public class ConnectorFactory {
     private ConnectorFactory() {
     }
 
-    public ConnectorFactory componentToAdd(Drawable componentToAdd) {
+    public ConnectorFactory componentToAdd(GraphNode componentToAdd) {
         this.componentToAdd = componentToAdd;
         return this;
     }

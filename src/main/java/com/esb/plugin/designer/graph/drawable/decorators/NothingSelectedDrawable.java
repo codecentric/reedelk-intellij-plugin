@@ -2,12 +2,12 @@ package com.esb.plugin.designer.graph.drawable.decorators;
 
 import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.drawable.ComponentAware;
+import com.esb.plugin.designer.graph.GraphNode;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
-public class NothingSelectedDrawable extends AbstractDrawable implements ComponentAware {
+public class NothingSelectedDrawable extends AbstractDrawable implements GraphNode {
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {

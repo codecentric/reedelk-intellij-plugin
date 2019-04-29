@@ -3,7 +3,7 @@ package com.esb.plugin.designer.graph.deserializer;
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.drawable.ForkJoinDrawable;
 import com.esb.plugin.designer.graph.drawable.StopDrawable;
 import org.json.JSONArray;
@@ -16,7 +16,7 @@ public class ForkJoinDrawableBuilder extends AbstractBuilder {
     }
 
     @Override
-    public Drawable build(Drawable parent, JSONObject componentDefinition) {
+    public GraphNode build(GraphNode parent, JSONObject componentDefinition) {
 
         StopDrawable stopDrawable = new StopDrawable();
 
@@ -35,7 +35,7 @@ public class ForkJoinDrawableBuilder extends AbstractBuilder {
             JSONObject next = fork.getJSONObject(i);
             JSONArray nextComponents = JsonParser.ForkJoin.getNext(next);
 
-            Drawable currentDrawable = forkJoinDrawable;
+            GraphNode currentDrawable = forkJoinDrawable;
 
             for (int j = 0; j < nextComponents.length(); j++) {
                 JSONObject currentComponentDefinition = nextComponents.getJSONObject(j);

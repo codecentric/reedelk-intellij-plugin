@@ -5,8 +5,8 @@ import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.FlowGraphImpl;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.drawable.ChoiceDrawable;
-import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.FlowReferenceDrawable;
 import com.esb.plugin.service.module.ComponentService;
 import com.intellij.openapi.module.Module;
@@ -14,7 +14,7 @@ import com.intellij.openapi.module.Module;
 public class ChoiceDrawableConnectorBuilder implements ConnectorBuilder {
 
     @Override
-    public Connector build(Module module, FlowGraph graph, Drawable componentToAdd) {
+    public Connector build(Module module, FlowGraph graph, GraphNode componentToAdd) {
         FlowGraph choiceGraph = new FlowGraphImpl();
         choiceGraph.root(componentToAdd);
 

@@ -1,11 +1,12 @@
 package com.esb.plugin.designer.graph.deserializer;
 
 import com.esb.internal.commons.FileUtils;
+import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.editor.component.ComponentDescriptor;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.FlowGraphImpl;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.TestJson;
-import com.esb.plugin.designer.graph.drawable.Drawable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -24,7 +25,7 @@ import static org.mockito.Mockito.doReturn;
 abstract class AbstractBuilderTest {
 
     @Mock
-    protected Drawable root;
+    protected GraphNode root;
     @Mock
     protected BuilderContext context;
 
@@ -36,65 +37,70 @@ abstract class AbstractBuilderTest {
         graph.root(root);
     }
 
-    Drawable firstSuccessorOf(FlowGraph graph, Drawable target) {
+    void assertSuccessorsAre(FlowGraph graph, GraphNode target, String... successorsComponentNames) {
+        int numberOfSuccessors = successorsComponentNames.length;
+        List<GraphNode> successors = graph.successors(target);
+        assertThat(successors).isNotNull().hasSize(numberOfSuccessors);
+
+        Collection<String> toBeFound = new ArrayList<>(Arrays.asList(successorsComponentNames));
+        successors.forEach(successor -> {
+            String componentName = successor.component().getFullyQualifiedName();
+            toBeFound.remove(componentName);
+        });
+
+        assertThat(toBeFound).isEmpty();
+    }
+
+    void assertPredecessorsAre(FlowGraph graph, GraphNode target, String... predecessorsComponentsNames) {
+        int numberOfPredecessors = predecessorsComponentsNames.length;
+
+        List<GraphNode> predecessors = graph.predecessors(target);
+        assertThat(predecessors).isNotNull().hasSize(numberOfPredecessors);
+
+        Collection<String> toBeFound = new ArrayList<>(Arrays.asList(predecessorsComponentsNames));
+        predecessors.forEach(predecessor -> {
+            String componentName = predecessor.component().getFullyQualifiedName();
+            toBeFound.remove(componentName);
+        });
+
+        assertThat(toBeFound).isEmpty();
+    }
+
+    void assertThatComponentHasName(GraphNode target, String expectedName) {
+        assertThat(target).isNotNull();
+        Component component = target.component();
+        assertThat(component).isNotNull();
+        assertThat(component.getFullyQualifiedName()).isEqualTo(expectedName);
+    }
+
+    GraphNode firstSuccessorOf(FlowGraph graph, GraphNode target) {
         return graph.successors(target).stream().findFirst().get();
     }
 
-    void assertSuccessorsAre(FlowGraph graph, Drawable target, String... successorsComponentNames) {
-        int numberOfSuccessors = successorsComponentNames.length;
-        List<Drawable> successors = graph.successors(target);
-        assertThat(successors).isNotNull();
-        assertThat(successors).hasSize(numberOfSuccessors);
-        Collection<String> toBeFound = new ArrayList<>(Arrays.asList(successorsComponentNames));
-        for (Drawable successor : successors) {
-            String componentName = successor.component().getFullyQualifiedName();
-            toBeFound.remove(componentName);
-        }
-        assertThat(toBeFound).isEmpty();
-    }
-
-    void assertPredecessorsAre(FlowGraph graph, Drawable target, String... predecessorsComponentsNames) {
-        int numberOfPredecessors = predecessorsComponentsNames.length;
-        List<Drawable> predecessors = graph.predecessors(target);
-        assertThat(predecessors).isNotNull();
-        assertThat(predecessors).hasSize(numberOfPredecessors);
-        Collection<String> toBeFound = new ArrayList<>(Arrays.asList(predecessorsComponentsNames));
-        for (Drawable successor : predecessors) {
-            String componentName = successor.component().getFullyQualifiedName();
-            toBeFound.remove(componentName);
-        }
-        assertThat(toBeFound).isEmpty();
-    }
-
-    Drawable getDrawableWithComponentName(Collection<Drawable> drawableCollection, String componentName) {
-        for (Drawable successor : drawableCollection) {
-            ComponentDescriptor component = successor.component();
+    GraphNode getNodeHavingComponentName(Collection<GraphNode> drawables, String componentName) {
+        for (GraphNode drawable : drawables) {
+            Component component = drawable.component();
             if (componentName.equals(component.getFullyQualifiedName())) {
-                return successor;
+                return drawable;
             }
         }
         throw new RuntimeException("Could not find: " + componentName);
     }
 
-    void assertThatComponentHasName(Drawable target, String expectedName) {
-        assertThat(target).isNotNull();
-        ComponentDescriptor component = target.component();
-        assertThat(component).isNotNull();
-        assertThat(component.getFullyQualifiedName()).isEqualTo(expectedName);
+    Component mockComponent(String fullyQualifiedName) {
+        Component component = new Component(ComponentDescriptor.create()
+                .fullyQualifiedName(fullyQualifiedName)
+                .build());
+
+        doReturn(component)
+                .when(context)
+                .instantiateComponent(fullyQualifiedName);
+
+        return component;
     }
 
     String readJson(TestJson testJson) {
         URL url = testJson.url();
         return FileUtils.readFrom(url);
-    }
-
-    ComponentDescriptor mockComponentDescriptor(String fullyQualifiedName) {
-        ComponentDescriptor componentDescriptor = ComponentDescriptor.create()
-                .fullyQualifiedName(fullyQualifiedName)
-                .build();
-        doReturn(componentDescriptor)
-                .when(context)
-                .instantiateComponent(fullyQualifiedName);
-        return componentDescriptor;
     }
 }

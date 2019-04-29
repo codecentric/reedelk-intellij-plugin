@@ -3,7 +3,7 @@ package com.esb.plugin.designer.graph.deserializer;
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.drawable.FlowReferenceDrawable;
 import org.json.JSONObject;
 
@@ -14,7 +14,7 @@ public class FlowReferenceDrawableBuilder extends AbstractBuilder {
     }
 
     @Override
-    public Drawable build(Drawable parent, JSONObject componentDefinition) {
+    public GraphNode build(GraphNode parent, JSONObject componentDefinition) {
 
         String name = JsonParser.Implementor.name(componentDefinition);
 

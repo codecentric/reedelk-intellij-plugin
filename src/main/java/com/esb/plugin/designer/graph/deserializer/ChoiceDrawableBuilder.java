@@ -3,8 +3,8 @@ package com.esb.plugin.designer.graph.deserializer;
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.drawable.ChoiceDrawable;
-import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.StopDrawable;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -21,7 +21,7 @@ public class ChoiceDrawableBuilder extends AbstractBuilder {
     }
 
     @Override
-    public Drawable build(Drawable parent, JSONObject componentDefinition) {
+    public GraphNode build(GraphNode parent, JSONObject componentDefinition) {
 
         StopDrawable stopDrawable = new StopDrawable();
 
@@ -38,7 +38,7 @@ public class ChoiceDrawableBuilder extends AbstractBuilder {
         for (int i = 0; i < when.length(); i++) {
             JSONObject whenComponent = when.getJSONObject(i);
 
-            Drawable currentDrawable = choiceDrawable;
+            GraphNode currentDrawable = choiceDrawable;
 
             JSONArray next = JsonParser.Choice.getNext(whenComponent);
             currentDrawable = buildArrayOfComponents(graph, currentDrawable, next);
@@ -48,7 +48,7 @@ public class ChoiceDrawableBuilder extends AbstractBuilder {
         }
 
         // Otherwise
-        Drawable currentDrawable = choiceDrawable;
+        GraphNode currentDrawable = choiceDrawable;
 
         JSONArray otherwise = JsonParser.Choice.getOtherwise(componentDefinition);
         currentDrawable = buildArrayOfComponents(graph, currentDrawable, otherwise);
@@ -62,7 +62,7 @@ public class ChoiceDrawableBuilder extends AbstractBuilder {
         return stopDrawable;
     }
 
-    private Drawable buildArrayOfComponents(FlowGraph graph, Drawable currentDrawable, JSONArray next) {
+    private GraphNode buildArrayOfComponents(FlowGraph graph, GraphNode currentDrawable, JSONArray next) {
         for (int j = 0; j < next.length(); j++) {
             JSONObject currentComponentDef = next.getJSONObject(j);
             currentDrawable = DrawableBuilder.get()
@@ -75,10 +75,10 @@ public class ChoiceDrawableBuilder extends AbstractBuilder {
         return currentDrawable;
     }
 
-    private Collection<Drawable> collectNodesBetween(FlowGraph graph, Drawable n1, Drawable n2) {
-        Set<Drawable> accumulator = new HashSet<>();
-        List<Drawable> successors = graph.successors(n1);
-        for (Drawable successor : successors) {
+    private Collection<GraphNode> collectNodesBetween(FlowGraph graph, GraphNode n1, GraphNode n2) {
+        Set<GraphNode> accumulator = new HashSet<>();
+        List<GraphNode> successors = graph.successors(n1);
+        for (GraphNode successor : successors) {
             if (successor != n2) {
                 accumulator.add(successor);
             }

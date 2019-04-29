@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.graph.scope;
 
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 
 import java.util.List;
@@ -11,11 +11,11 @@ import static java.util.stream.Collectors.toList;
 
 public class FindJoiningScope {
 
-    public static Optional<ScopedDrawable> of(FlowGraph graph, Drawable target) {
+    public static Optional<ScopedDrawable> of(FlowGraph graph, GraphNode target) {
         List<ScopedDrawable> scopedDrawables = ListAllScopes.of(graph);
         List<ScopedDrawable> scopesWithTargetAsFirstOutsideNode = scopedDrawables.stream()
                 .filter(scopedDrawable -> {
-                    Optional<Drawable> firstNode = FindFirstNodeOutsideScope.of(graph, scopedDrawable);
+                    Optional<GraphNode> firstNode = FindFirstNodeOutsideScope.of(graph, scopedDrawable);
                     return firstNode.filter(firstNodeOutsideScope -> firstNodeOutsideScope == target).isPresent();
                 }).collect(toList());
 

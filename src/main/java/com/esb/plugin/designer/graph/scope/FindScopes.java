@@ -2,7 +2,7 @@ package com.esb.plugin.designer.graph.scope;
 
 import com.esb.plugin.commons.StackUtils;
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,20 +19,23 @@ public class FindScopes {
      * @param target the target node for which we want to find all the scopes containing it
      * @return Stack containing all the scopes the target node belongs to.
      */
-    public static Stack<ScopedDrawable> of(@NotNull FlowGraph graph, @NotNull Drawable target) {
+    public static Stack<ScopedDrawable> of(@NotNull FlowGraph graph, @NotNull GraphNode target) {
         Stack<ScopedDrawable> toReturn = new Stack<>();
         if (target instanceof ScopedDrawable) {
             toReturn.push((ScopedDrawable) target);
         }
+
         Stack<ScopedDrawable> scopedDrawables = _of(graph, target);
         while (!scopedDrawables.isEmpty()) {
             toReturn.push(scopedDrawables.pop());
         }
+
         return toReturn;
     }
 
-    private static Stack<ScopedDrawable> _of(@NotNull FlowGraph graph, @NotNull Drawable target) {
+    private static Stack<ScopedDrawable> _of(@NotNull FlowGraph graph, @NotNull GraphNode target) {
         Stack<ScopedDrawable> toReturn = new Stack<>();
+
         FindScope.of(graph, target).ifPresent(scopedDrawable -> {
             toReturn.push(scopedDrawable);
 

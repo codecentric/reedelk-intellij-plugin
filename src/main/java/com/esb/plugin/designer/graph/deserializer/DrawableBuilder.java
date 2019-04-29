@@ -6,7 +6,7 @@ import com.esb.component.FlowReference;
 import com.esb.component.Fork;
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.GraphNode;
 import org.json.JSONObject;
 
 import java.lang.reflect.InvocationTargetException;
@@ -17,7 +17,7 @@ import java.util.Map;
 public class DrawableBuilder {
 
     private FlowGraph graph;
-    private Drawable parent;
+    private GraphNode parent;
     private BuilderContext context;
     private JSONObject componentDefinition;
 
@@ -51,7 +51,7 @@ public class DrawableBuilder {
         }
     }
 
-    public DrawableBuilder parent(Drawable parent) {
+    public DrawableBuilder parent(GraphNode parent) {
         this.parent = parent;
         return this;
     }
@@ -65,7 +65,7 @@ public class DrawableBuilder {
         return new DrawableBuilder();
     }
 
-    public Drawable build() {
+    public GraphNode build() {
         String componentName = JsonParser.Implementor.name(componentDefinition);
         Class<? extends Builder> builderClazz = COMPONENT_NAME_HANDLER.getOrDefault(componentName, GENERIC_HANDLER);
 

@@ -1,6 +1,5 @@
 package com.esb.plugin.designer.graph;
 
-import com.esb.plugin.designer.graph.drawable.Drawable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,54 +17,54 @@ public class FlowGraphChangeAware implements FlowGraph {
     }
 
     @Override
-    public void root(@NotNull Drawable n1) {
+    public void root(@NotNull GraphNode n1) {
         wrapped.root(n1);
         changed = true;
     }
 
     @Override
-    public void add(@NotNull Drawable n1) {
+    public void add(@NotNull GraphNode n1) {
         wrapped.add(n1);
         changed = true;
     }
 
     @Override
-    public void add(@Nullable Drawable n1, @NotNull Drawable n2) {
+    public void add(@Nullable GraphNode n1, @NotNull GraphNode n2) {
         wrapped.add(n1, n2);
         changed = true;
     }
 
     @Override
-    public void add(@NotNull Drawable n1, @NotNull Drawable n2, int index) {
+    public void add(@NotNull GraphNode n1, @NotNull GraphNode n2, int index) {
         wrapped.add(n1, n2, index);
         changed = true;
     }
 
     @Override
-    public void remove(Drawable n1) {
+    public void remove(GraphNode n1) {
         wrapped.remove(n1);
         changed = true;
     }
 
     @Override
-    public void remove(Drawable n1, Drawable n2) {
+    public void remove(GraphNode n1, GraphNode n2) {
         wrapped.remove(n1, n2);
         changed = true;
     }
 
     @Override
-    public void removeEdgesStartingFrom(Drawable n1) {
+    public void removeEdgesStartingFrom(GraphNode n1) {
         wrapped.removeEdgesStartingFrom(n1);
         changed = true;
     }
 
     @Override
-    public List<Drawable> successors(@NotNull Drawable n1) {
+    public List<GraphNode> successors(@NotNull GraphNode n1) {
         return wrapped.successors(n1);
     }
 
     @Override
-    public List<Drawable> predecessors(@NotNull Drawable n1) {
+    public List<GraphNode> predecessors(@NotNull GraphNode n1) {
         return wrapped.predecessors(n1);
     }
 
@@ -75,7 +74,7 @@ public class FlowGraphChangeAware implements FlowGraph {
     }
 
     @Override
-    public Collection<Drawable> nodes() {
+    public Collection<GraphNode> nodes() {
         return wrapped.nodes();
     }
 
@@ -85,12 +84,12 @@ public class FlowGraphChangeAware implements FlowGraph {
     }
 
     @Override
-    public void breadthFirstTraversal(@NotNull Consumer<Drawable> consumer) {
+    public void breadthFirstTraversal(@NotNull Consumer<GraphNode> consumer) {
         wrapped.breadthFirstTraversal(consumer);
     }
 
     @Override
-    public Drawable root() {
+    public GraphNode root() {
         return wrapped.root();
     }
 

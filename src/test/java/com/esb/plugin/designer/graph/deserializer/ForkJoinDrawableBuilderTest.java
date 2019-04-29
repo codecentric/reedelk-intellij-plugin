@@ -2,7 +2,7 @@ package com.esb.plugin.designer.graph.deserializer;
 
 import com.esb.component.Fork;
 import com.esb.component.Stop;
-import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.GraphNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,12 +28,12 @@ class ForkJoinDrawableBuilderTest extends AbstractBuilderTest {
         super.setUp();
         builder = new ForkJoinDrawableBuilder(graph, context);
 
-        mockComponentDescriptor(COMPONENT_1_NAME);
-        mockComponentDescriptor(COMPONENT_2_NAME);
-        mockComponentDescriptor(COMPONENT_3_NAME);
-        mockComponentDescriptor(COMPONENT_4_NAME);
-        mockComponentDescriptor(JOIN_COMPONENT_NAME);
-        mockComponentDescriptor(Fork.class.getName());
+        mockComponent(COMPONENT_1_NAME);
+        mockComponent(COMPONENT_2_NAME);
+        mockComponent(COMPONENT_3_NAME);
+        mockComponent(COMPONENT_4_NAME);
+        mockComponent(JOIN_COMPONENT_NAME);
+        mockComponent(Fork.class.getName());
     }
 
     @Test
@@ -53,29 +53,29 @@ class ForkJoinDrawableBuilderTest extends AbstractBuilderTest {
                 .build();
 
         // When
-        Drawable joinDrawable = builder.build(root, componentDefinition);
+        GraphNode joinDrawable = builder.build(root, componentDefinition);
 
         // Then: last node must be a join drawable
         assertThat(joinDrawable.component().getFullyQualifiedName()).isEqualTo(JOIN_COMPONENT_NAME);
 
         // Then: check successors of fork
-        Drawable fork = firstSuccessorOf(graph, root);
+        GraphNode fork = firstSuccessorOf(graph, root);
         assertSuccessorsAre(graph, fork, COMPONENT_3_NAME, COMPONENT_1_NAME);
 
-        Drawable component3Drawable = getDrawableWithComponentName(graph.successors(fork), COMPONENT_3_NAME);
+        GraphNode component3Drawable = getNodeHavingComponentName(graph.successors(fork), COMPONENT_3_NAME);
         assertSuccessorsAre(graph, component3Drawable, COMPONENT_2_NAME);
 
-        Drawable component2Drawable = getDrawableWithComponentName(graph.successors(component3Drawable), COMPONENT_2_NAME);
+        GraphNode component2Drawable = getNodeHavingComponentName(graph.successors(component3Drawable), COMPONENT_2_NAME);
         assertSuccessorsAre(graph, component2Drawable, Stop.class.getName());
 
-        Drawable component1Drawable = getDrawableWithComponentName(graph.successors(fork), COMPONENT_1_NAME);
+        GraphNode component1Drawable = getNodeHavingComponentName(graph.successors(fork), COMPONENT_1_NAME);
         assertSuccessorsAre(graph, component1Drawable, COMPONENT_4_NAME);
 
-        Drawable component4Drawable = getDrawableWithComponentName(graph.successors(component1Drawable), COMPONENT_4_NAME);
+        GraphNode component4Drawable = getNodeHavingComponentName(graph.successors(component1Drawable), COMPONENT_4_NAME);
         assertSuccessorsAre(graph, component4Drawable, Stop.class.getName());
 
-        Drawable stopDrawable = getDrawableWithComponentName(graph.successors(component4Drawable), Stop.class.getName());
-        Drawable stopSuccessor = graph.successors(stopDrawable).get(0);
+        GraphNode stopDrawable = getNodeHavingComponentName(graph.successors(component4Drawable), Stop.class.getName());
+        GraphNode stopSuccessor = graph.successors(stopDrawable).get(0);
         assertThat(joinDrawable).isEqualTo(stopSuccessor);
 
         // Then: check that the number of nodes in the graph is correct

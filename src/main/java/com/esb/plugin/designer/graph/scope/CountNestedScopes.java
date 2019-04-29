@@ -1,12 +1,12 @@
 package com.esb.plugin.designer.graph.scope;
 
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 
 public class CountNestedScopes {
 
-    public static int of(FlowGraph graph, Drawable target) {
+    public static int of(FlowGraph graph, GraphNode target) {
         if (target instanceof ScopedDrawable) {
             ScopedDrawable scopedDrawable = (ScopedDrawable) target;
             if (scopedDrawable.getScope().isEmpty()) {

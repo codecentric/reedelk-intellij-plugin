@@ -2,6 +2,7 @@ package com.esb.plugin.designer.graph.action.strategy;
 
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.connector.Connector;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
@@ -20,12 +21,12 @@ public class PrecedingScopedDrawable extends AbstractAddStrategy {
 
     // It is the only type of node with potentially many successors.
     @Override
-    public void execute(Drawable input) {
+    public void execute(GraphNode input) {
         checkState(input instanceof ScopedDrawable, "Strategy only accepts ScopedDrawable");
 
         ScopedDrawable closestPrecedingDrawable = (ScopedDrawable) input;
 
-        List<Drawable> successors = graph.successors(closestPrecedingDrawable);
+        List<GraphNode> successors = graph.successors(closestPrecedingDrawable);
 
         for (int successorIndex = 0; successorIndex < successors.size(); successorIndex++) {
             // We search the node on which the drop point lies on the Y axis.

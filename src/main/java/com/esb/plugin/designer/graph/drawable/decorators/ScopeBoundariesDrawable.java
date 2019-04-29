@@ -1,6 +1,7 @@
 package com.esb.plugin.designer.graph.drawable.decorators;
 
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopeBoundaries;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
@@ -46,8 +47,8 @@ public class ScopeBoundariesDrawable extends AbstractDrawable {
 
     private int getMaxScopes(FlowGraph graph) {
         int max = 0;
-        Collection<Drawable> allTerminalDrawables = ListLastNodeOfScope.from(graph, scopedDrawable);
-        for (Drawable drawable : allTerminalDrawables) {
+        Collection<GraphNode> allTerminalDrawables = ListLastNodeOfScope.from(graph, scopedDrawable);
+        for (GraphNode drawable : allTerminalDrawables) {
             Optional<Integer> scopesBetween = CountScopesBetween.them(scopedDrawable, drawable);
             if (scopesBetween.isPresent()) {
                 max = scopesBetween.get() > max ? scopesBetween.get() : max;
@@ -57,7 +58,7 @@ public class ScopeBoundariesDrawable extends AbstractDrawable {
     }
 
     public ScopeBoundaries getBoundaries(FlowGraph graph, Graphics2D graphics) {
-        Collection<Drawable> drawables = ListLastNodeOfScope.from(graph, scopedDrawable);
+        Collection<GraphNode> drawables = ListLastNodeOfScope.from(graph, scopedDrawable);
 
         Drawable drawableWithMaxX = scopedDrawable;
         Drawable drawableWithMinX = scopedDrawable;
@@ -85,7 +86,7 @@ public class ScopeBoundariesDrawable extends AbstractDrawable {
             }
         }
 
-        Drawable firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedDrawable).orElse(null);
+        GraphNode firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedDrawable).orElse(null);
 
         int subTreeHeight = FlowGraphLayoutUtils.computeMaxHeight(graph, graphics, scopedDrawable, firstNodeOutsideScope);
 

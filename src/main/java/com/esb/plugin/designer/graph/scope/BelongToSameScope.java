@@ -1,14 +1,14 @@
 package com.esb.plugin.designer.graph.scope;
 
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 
 import java.util.Optional;
 
 public class BelongToSameScope {
 
-    public static boolean from(FlowGraph graph, Drawable drawable1, Drawable drawable2) {
+    public static boolean from(FlowGraph graph, GraphNode drawable1, GraphNode drawable2) {
         Optional<ScopedDrawable> scope1 = FindScope.of(graph, drawable1);
         Optional<ScopedDrawable> scope2 = FindScope.of(graph, drawable2);
         if (!scope1.isPresent() && !scope2.isPresent()) {

@@ -1,9 +1,9 @@
 package com.esb.plugin.designer.graph.action.strategy;
 
-import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.GraphNode;
 
 public interface AddStrategy {
 
-    void execute(Drawable closestPrecedingDrawable);
+    void execute(GraphNode closestPrecedingDrawable);
 
 }

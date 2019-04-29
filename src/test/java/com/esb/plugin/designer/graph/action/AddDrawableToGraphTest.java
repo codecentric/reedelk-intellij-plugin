@@ -1,12 +1,8 @@
 package com.esb.plugin.designer.graph.action;
 
-import com.esb.plugin.designer.graph.AbstractGraphTest;
-import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.FlowGraphChangeAware;
-import com.esb.plugin.designer.graph.FlowGraphImpl;
+import com.esb.plugin.designer.graph.*;
 import com.esb.plugin.designer.graph.connector.Connector;
 import com.esb.plugin.designer.graph.connector.DrawableConnector;
-import com.esb.plugin.designer.graph.drawable.Drawable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -55,7 +51,7 @@ class AddDrawableToGraphTest extends AbstractGraphTest {
             // Then
             assertIsChangedWithNodesCount(modifiableGraph, 2);
 
-            Drawable newRoot = graph.root();
+            GraphNode newRoot = graph.root();
             assertThat(newRoot).isEqualTo(n1);
             // Old root has been replaced by n1, therefore successor of n1 is root.
             assertThat(graph.successors(newRoot)).containsExactly(root);
@@ -81,10 +77,10 @@ class AddDrawableToGraphTest extends AbstractGraphTest {
             // Then
             assertIsChangedWithNodesCount(modifiableGraph, 2);
 
-            Drawable root = graph.root();
+            GraphNode root = graph.root();
             assertThat(root).isEqualTo(root);
 
-            java.util.List<Drawable> successorOfRoot = graph.successors(root);
+            List<GraphNode> successorOfRoot = graph.successors(root);
             assertThat(successorOfRoot).containsExactly(n1);
         }
 
@@ -107,11 +103,11 @@ class AddDrawableToGraphTest extends AbstractGraphTest {
             // Then
             assertIsChangedWithNodesCount(modifiableGraph, 3);
 
-            Drawable root = graph.root();
-            java.util.List<Drawable> successorOfRoot = graph.successors(root);
+            GraphNode root = graph.root();
+            java.util.List<GraphNode> successorOfRoot = graph.successors(root);
             assertThat(successorOfRoot).containsExactly(n1);
 
-            List<Drawable> successorsOfN1 = graph.successors(n1);
+            List<GraphNode> successorsOfN1 = graph.successors(n1);
             assertThat(successorsOfN1).containsExactly(n2);
         }
     }
@@ -603,7 +599,7 @@ class AddDrawableToGraphTest extends AbstractGraphTest {
 
     }
 
-    private FlowGraphChangeAware addDrawableToGraph(FlowGraph graph, Drawable dropped, Point dropPoint) {
+    private FlowGraphChangeAware addDrawableToGraph(FlowGraph graph, GraphNode dropped, Point dropPoint) {
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
         Connector connector = new DrawableConnector(modifiableGraph, dropped);
         AddDrawableToGraph action = new AddDrawableToGraph(modifiableGraph, dropPoint, connector, graphics);

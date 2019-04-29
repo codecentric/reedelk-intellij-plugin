@@ -1,8 +1,8 @@
 package com.esb.plugin.designer.graph.action.strategy;
 
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.connector.Connector;
-import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 import com.esb.plugin.designer.graph.scope.FindScopes;
 import com.esb.plugin.designer.graph.scope.ListLastNodeOfScope;
@@ -28,7 +28,7 @@ public class PrecedingDrawableWithoutSuccessor extends AbstractAddStrategy {
     }
 
     @Override
-    public void execute(Drawable closestPrecedingDrawable) {
+    public void execute(GraphNode closestPrecedingDrawable) {
 
         Stack<ScopedDrawable> scopes = FindScopes.of(graph, closestPrecedingDrawable);
 

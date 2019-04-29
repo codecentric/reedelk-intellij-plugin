@@ -6,6 +6,7 @@ import com.esb.plugin.designer.editor.component.MoveActionHandler;
 import com.esb.plugin.designer.editor.component.PaletteDropActionHandler;
 import com.esb.plugin.designer.graph.DropListener;
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.decorators.NothingSelectedDrawable;
 import com.esb.plugin.designer.graph.layout.FlowGraphLayout;
@@ -35,12 +36,12 @@ import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 public class DesignerPanel extends JBPanel implements MouseMotionListener, MouseListener, DropTargetListener, JsonChangeNotifier {
 
     private final JBColor BACKGROUND_COLOR = JBColor.WHITE;
-    private final Drawable NOTHING_SELECTED = new NothingSelectedDrawable();
+    private final GraphNode NOTHING_SELECTED = new NothingSelectedDrawable();
     private final Module module;
 
     private FlowGraph graph;
     private VirtualFile relatedFile;
-    private Drawable selected = NOTHING_SELECTED;
+    private GraphNode selected = NOTHING_SELECTED;
     private SelectListener selectListener;
 
     private int offsetx;
@@ -81,10 +82,10 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
             updated = false;
         }
 
-        Collection<Drawable> graphNodes = graph.nodes();
+        Collection<GraphNode> nodes = graph.nodes();
 
         // Draw each node of the graph (except the current selected Drawable - see below)
-        graphNodes.forEach(drawable -> {
+        nodes.forEach(drawable -> {
             if (!drawable.isSelected()) {
                 drawable.draw(graph, g2, DesignerPanel.this);
             }
@@ -92,8 +93,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
         // The selected drawable must be drawn LAST so
         // that it is on top of all the other drawables.
-        graphNodes
-                .stream()
+        nodes.stream()
                 .filter(Drawable::isSelected)
                 .findFirst()
                 .ifPresent(drawable -> drawable.draw(graph, g2, DesignerPanel.this));
@@ -122,7 +122,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         int x = event.getX();
         int y = event.getY();
 
-        Optional<Drawable> drawableWithinCoordinates = getDrawableWithinCoordinates(x, y);
+        Optional<GraphNode> drawableWithinCoordinates = getDrawableWithinCoordinates(x, y);
         if (drawableWithinCoordinates.isPresent()) {
             setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         } else {
@@ -137,7 +137,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
         unselect();
 
-        Optional<Drawable> drawableWithinCoordinates = getDrawableWithinCoordinates(x, y);
+        Optional<GraphNode> drawableWithinCoordinates = getDrawableWithinCoordinates(x, y);
         if (drawableWithinCoordinates.isPresent()) {
             // Unselect the previous one
             select(drawableWithinCoordinates.get());
@@ -233,7 +233,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         setPreferredSize(new Dimension(newSizeX, newSizeY));
     }
 
-    private Optional<Drawable> getDrawableWithinCoordinates(int x, int y) {
+    private Optional<GraphNode> getDrawableWithinCoordinates(int x, int y) {
         //TODO: Graph should never be null.
         return graph == null ? Optional.empty() :
                 graph.nodes()
@@ -248,7 +248,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         select(NOTHING_SELECTED);
     }
 
-    private void select(Drawable drawable) {
+    private void select(GraphNode drawable) {
         selected = drawable;
         selected.selected();
         selectListener.onSelect(graph, selected);

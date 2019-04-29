@@ -2,10 +2,10 @@ package com.esb.plugin.designer.editor.component;
 
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.FlowGraphChangeAware;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.action.AddDrawableToGraph;
 import com.esb.plugin.designer.graph.connector.Connector;
 import com.esb.plugin.designer.graph.connector.ConnectorFactory;
-import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.intellij.openapi.module.Module;
 
 import java.awt.*;
@@ -18,7 +18,7 @@ abstract class AbstractActionHandler {
         this.module = module;
     }
 
-    FlowGraphChangeAware addDrawableToGraph(FlowGraph graph, Drawable dropped, Point dropPoint, Graphics2D graphics) {
+    FlowGraphChangeAware addDrawableToGraph(FlowGraph graph, GraphNode dropped, Point dropPoint, Graphics2D graphics) {
 
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
 

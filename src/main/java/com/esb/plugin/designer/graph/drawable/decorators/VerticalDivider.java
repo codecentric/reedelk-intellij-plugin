@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.graph.drawable.decorators;
 
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 import com.esb.plugin.designer.graph.scope.FindFirstNodeOutsideScope;
 import com.intellij.ui.Gray;
@@ -32,7 +32,7 @@ public class VerticalDivider extends AbstractDrawable {
 
         int padding = (ScopedDrawable.VERTICAL_PADDING * 4) * 2;
 
-        Drawable firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedDrawable).orElse(null);
+        GraphNode firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedDrawable).orElse(null);
 
         int scopeHeight = computeMaxHeight(graph, graphics, scopedDrawable, firstNodeOutsideScope);
         scopeHeight -= padding;

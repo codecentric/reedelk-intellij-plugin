@@ -1,6 +1,5 @@
 package com.esb.plugin.designer.graph;
 
-import com.esb.plugin.designer.graph.drawable.Drawable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,22 +13,22 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class FlowGraphImpl implements FlowGraph {
 
-    private DirectedGraph<Drawable> graph;
+    private DirectedGraph<GraphNode> graph;
 
     public FlowGraphImpl() {
     }
 
-    private FlowGraphImpl(DirectedGraph<Drawable> graph) {
+    private FlowGraphImpl(DirectedGraph<GraphNode> graph) {
         this.graph = graph;
     }
 
     @Override
-    public void add(@NotNull Drawable n1) {
+    public void add(@NotNull GraphNode n1) {
         graph.addNode(n1);
     }
 
     @Override
-    public void root(@NotNull Drawable root) {
+    public void root(@NotNull GraphNode root) {
         if (graph == null) {
             graph = new DirectedGraph<>(root);
         } else {
@@ -38,7 +37,7 @@ public class FlowGraphImpl implements FlowGraph {
     }
 
     @Override
-    public void add(@Nullable Drawable n1, @NotNull Drawable n2) {
+    public void add(@Nullable GraphNode n1, @NotNull GraphNode n2) {
         if (n1 == null) {
             checkState(graph == null, "Root was not null");
             graph = new DirectedGraph<>(n2);
@@ -48,29 +47,29 @@ public class FlowGraphImpl implements FlowGraph {
     }
 
     @Override
-    public void add(@NotNull Drawable n1, @NotNull Drawable n2, int index) {
+    public void add(@NotNull GraphNode n1, @NotNull GraphNode n2, int index) {
         graph.putEdge(n1, n2, index);
     }
 
     @Override
-    public void remove(Drawable n1) {
+    public void remove(GraphNode n1) {
         graph.removeNode(n1);
     }
 
     @Override
-    public void remove(Drawable n1, Drawable n2) {
+    public void remove(GraphNode n1, GraphNode n2) {
         checkArgument(n1 != null, "n1");
         checkArgument(n2 != null, "n2");
         graph.removeEdge(n1, n2);
     }
 
     @Override
-    public List<Drawable> successors(@NotNull Drawable n1) {
+    public List<GraphNode> successors(@NotNull GraphNode n1) {
         return graph.successors(n1);
     }
 
     @Override
-    public List<Drawable> predecessors(@NotNull Drawable n1) {
+    public List<GraphNode> predecessors(@NotNull GraphNode n1) {
         return graph.predecessors(n1);
     }
 
@@ -80,7 +79,7 @@ public class FlowGraphImpl implements FlowGraph {
     }
 
     @Override
-    public Collection<Drawable> nodes() {
+    public Collection<GraphNode> nodes() {
         return graph != null ?
                 graph.nodes() :
                 Collections.emptyList();
@@ -92,12 +91,12 @@ public class FlowGraphImpl implements FlowGraph {
     }
 
     @Override
-    public void breadthFirstTraversal(@NotNull Consumer<Drawable> consumer) {
+    public void breadthFirstTraversal(@NotNull Consumer<GraphNode> consumer) {
         graph.breadthFirstTraversal(graph.root(), consumer);
     }
 
     @Override
-    public Drawable root() {
+    public GraphNode root() {
         return graph.root();
     }
 
@@ -111,7 +110,7 @@ public class FlowGraphImpl implements FlowGraph {
     }
 
     @Override
-    public void removeEdgesStartingFrom(Drawable drawable) {
+    public void removeEdgesStartingFrom(GraphNode drawable) {
         graph.removeEdgesStartingFrom(drawable);
     }
 

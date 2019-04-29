@@ -1,6 +1,5 @@
 package com.esb.plugin.designer.graph;
 
-import com.esb.plugin.designer.graph.drawable.Drawable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,33 +9,33 @@ import java.util.function.Consumer;
 
 public interface FlowGraph {
 
-    void root(@NotNull Drawable n1);
+    void root(@NotNull GraphNode n1);
 
-    void add(@NotNull Drawable n1);
+    void add(@NotNull GraphNode n1);
 
-    void add(@Nullable Drawable n1, @NotNull Drawable n2);
+    void add(@Nullable GraphNode n1, @NotNull GraphNode n2);
 
-    void add(@NotNull Drawable n1, @NotNull Drawable n2, int index);
+    void add(@NotNull GraphNode n1, @NotNull GraphNode n2, int index);
 
-    void remove(Drawable n1);
+    void remove(GraphNode n1);
 
-    void remove(Drawable n1, Drawable n2);
+    void remove(GraphNode n1, GraphNode n2);
 
-    List<Drawable> successors(@NotNull Drawable n1);
+    List<GraphNode> successors(@NotNull GraphNode n1);
 
-    List<Drawable> predecessors(@NotNull Drawable n1);
+    List<GraphNode> predecessors(@NotNull GraphNode n1);
 
     int nodesCount();
 
-    Collection<Drawable> nodes();
+    Collection<GraphNode> nodes();
 
     boolean isEmpty();
 
-    void breadthFirstTraversal(@NotNull Consumer<Drawable> consumer);
+    void breadthFirstTraversal(@NotNull Consumer<GraphNode> consumer);
 
-    Drawable root();
+    GraphNode root();
 
     FlowGraph copy();
 
-    void removeEdgesStartingFrom(Drawable drawable);
+    void removeEdgesStartingFrom(GraphNode drawable);
 }

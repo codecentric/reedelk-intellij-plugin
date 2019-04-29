@@ -1,8 +1,8 @@
 package com.esb.plugin.designer.graph.action.strategy;
 
 import com.esb.plugin.designer.graph.FlowGraph;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.connector.Connector;
-import com.esb.plugin.designer.graph.drawable.Drawable;
 import com.esb.plugin.designer.graph.drawable.ScopeBoundaries;
 import com.esb.plugin.designer.graph.drawable.ScopedDrawable;
 import com.esb.plugin.designer.graph.scope.FindScopes;
@@ -25,7 +25,7 @@ abstract class AbstractAddStrategy implements AddStrategy {
         this.connector = connector;
     }
 
-    protected void addToScopeIfNeeded(Drawable closestPrecedingNode) {
+    protected void addToScopeIfNeeded(GraphNode closestPrecedingNode) {
         if (closestPrecedingNode instanceof ScopedDrawable) {
             ScopedDrawable scopedDrawable = (ScopedDrawable) closestPrecedingNode;
             connector.addToScope(scopedDrawable);
