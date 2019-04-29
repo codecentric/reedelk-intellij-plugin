@@ -3,7 +3,6 @@ package com.esb.plugin.designer.graph.serializer;
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.drawable.ComponentAware;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -15,8 +14,7 @@ public class GraphSerializer {
     public static String serialize(FlowGraph graph) {
         JSONArray flow = new JSONArray();
         graph.breadthFirstTraversal(drawable -> {
-            // TODO: Fix this component aware cast
-            JSONObject component = serialize(((ComponentAware) drawable).component());
+            JSONObject component = serialize(drawable.component());
             flow.put(component);
         });
 

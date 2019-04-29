@@ -3,8 +3,7 @@ package com.esb.plugin.designer.editor.properties;
 import com.esb.plugin.designer.editor.SelectListener;
 import com.esb.plugin.designer.editor.component.Component;
 import com.esb.plugin.designer.graph.FlowGraph;
-import com.esb.plugin.designer.graph.drawable.ComponentAware;
-import com.esb.plugin.designer.graph.drawable.Drawable;
+import com.esb.plugin.designer.graph.GraphNode;
 import com.esb.plugin.designer.graph.manager.GraphChangeNotifier;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -30,9 +29,8 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
     }
 
     @Override
-    public void onSelect(FlowGraph graph, Drawable drawable) {
-        // TODO: Fix this cast
-        Component component = ((ComponentAware) drawable).component();
+    public void onSelect(FlowGraph graph, GraphNode drawable) {
+        Component component = drawable.component();
         if (component == null) {
             return;
         }
@@ -58,7 +56,7 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
     }
 
     @Override
-    public void onUnselect(FlowGraph graph, Drawable drawable) {
+    public void onUnselect(FlowGraph graph, GraphNode drawable) {
         removeAll();
         revalidate();
         repaint();

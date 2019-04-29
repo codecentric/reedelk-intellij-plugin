@@ -6,7 +6,6 @@ import com.esb.component.FlowReference;
 import com.esb.component.Fork;
 import com.esb.plugin.designer.graph.FlowGraph;
 import com.esb.plugin.designer.graph.GraphNode;
-import com.esb.plugin.designer.graph.drawable.ComponentAware;
 import com.intellij.openapi.module.Module;
 
 import java.lang.reflect.InvocationTargetException;
@@ -45,7 +44,7 @@ public class ConnectorFactory {
     }
 
     public Connector build() {
-        String fullyQualifiedName = ((ComponentAware) componentToAdd).component().getFullyQualifiedName();
+        String fullyQualifiedName = componentToAdd.component().getFullyQualifiedName();
         Class<? extends ConnectorBuilder> builderClazz = CONNECTOR_BUILDER.getOrDefault(fullyQualifiedName, GENERIC_BUILDER);
         return instantiateBuilder(builderClazz).build(module, graph, componentToAdd);
     }
