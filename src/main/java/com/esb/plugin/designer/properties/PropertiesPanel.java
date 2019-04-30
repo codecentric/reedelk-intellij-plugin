@@ -8,7 +8,6 @@ import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.NothingSelectedNode;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.util.ui.JBUI;
@@ -24,7 +23,6 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
     public PropertiesPanel(Module module, VirtualFile file) {
         MatteBorder matteBorder = BorderFactory.createMatteBorder(0, 10, 0, 0, getBackground());
         setBorder(matteBorder);
-        setBackground(JBColor.YELLOW);
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.module = module;
         this.file = file;
@@ -37,7 +35,6 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
         Component component = node.component();
 
         removeAll();
-
 
         JBPanel propertiesPanel = PropertyRendererFactory.get()
                 .component(component)

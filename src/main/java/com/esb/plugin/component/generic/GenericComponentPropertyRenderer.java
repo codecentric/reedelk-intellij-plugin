@@ -11,6 +11,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBPanel;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
+
 public class GenericComponentPropertyRenderer extends AbstractPropertyRenderer {
 
     public GenericComponentPropertyRenderer(Module module, FlowGraph graph, VirtualFile file) {
@@ -22,11 +24,14 @@ public class GenericComponentPropertyRenderer extends AbstractPropertyRenderer {
         Component component = node.component();
 
         JBPanel propertiesBoxContainer = new JBPanel();
+        propertiesBoxContainer.setLayout(new BoxLayout(propertiesBoxContainer, BoxLayout.PAGE_AXIS));
+
         component.getPropertiesNames().forEach(propertyName -> {
             PropertyBox propertyBox = createPropertyBox(component, propertyName);
             propertiesBoxContainer.add(propertyBox);
         });
 
+        propertiesBoxContainer.add(Box.createVerticalGlue());
         return propertiesBoxContainer;
     }
 

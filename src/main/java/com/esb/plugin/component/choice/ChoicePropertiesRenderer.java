@@ -41,6 +41,7 @@ public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
 
         //Add the scroll pane to this panel.
         JBPanel panel = new JBPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
         panel.add(scrollPane);
         return panel;
     }
