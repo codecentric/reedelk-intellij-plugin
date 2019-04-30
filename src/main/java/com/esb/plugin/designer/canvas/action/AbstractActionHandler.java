@@ -1,4 +1,4 @@
-package com.esb.plugin.designer.canvas;
+package com.esb.plugin.designer.canvas.action;
 
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;

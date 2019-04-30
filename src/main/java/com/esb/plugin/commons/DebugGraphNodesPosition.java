@@ -1,10 +1,10 @@
-package com.esb.plugin.designer.canvas;
+package com.esb.plugin.commons;
 
 import com.esb.plugin.graph.FlowGraph;
 
-class DebugGraphNodesPosition {
+public class DebugGraphNodesPosition {
 
-    static void debug(FlowGraph graph) {
+    public static void debug(FlowGraph graph) {
         System.out.println("\n------- Graph Updated --------");
         graph.breadthFirstTraversal(drawable ->
                 System.out.println("Name: " +

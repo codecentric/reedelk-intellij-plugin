@@ -1,4 +1,4 @@
-package com.esb.plugin.designer.canvas;
+package com.esb.plugin.designer.canvas.action;
 
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.graph.FlowGraph;
@@ -20,7 +20,7 @@ import java.util.Optional;
 import static java.awt.dnd.DnDConstants.ACTION_COPY_OR_MOVE;
 import static java.util.Arrays.asList;
 
-class DropActionHandler extends AbstractActionHandler {
+public class DropActionHandler extends AbstractActionHandler {
 
     private static final Logger LOG = Logger.getInstance(DropActionHandler.class);
 
@@ -28,14 +28,14 @@ class DropActionHandler extends AbstractActionHandler {
     private final Graphics2D graphics;
     private final DropTargetDropEvent dropEvent;
 
-    DropActionHandler(Module module, FlowGraph graph, Graphics2D graphics, DropTargetDropEvent dropEvent) {
+    public DropActionHandler(Module module, FlowGraph graph, Graphics2D graphics, DropTargetDropEvent dropEvent) {
         super(module);
         this.graph = graph;
         this.graphics = graphics;
         this.dropEvent = dropEvent;
     }
 
-    Optional<FlowGraph> handle() {
+    public Optional<FlowGraph> handle() {
         Optional<ComponentDescriptor> optionalDescriptor = extractComponentName(dropEvent);
         if (!optionalDescriptor.isPresent()) {
             dropEvent.rejectDrop();
