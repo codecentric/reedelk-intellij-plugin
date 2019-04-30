@@ -19,16 +19,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class ConnectorFactory {
 
-    private Module module;
-    private FlowGraph graph;
-    private GraphNode componentToAdd;
-
     private static final Class<? extends ConnectorBuilder> GENERIC_BUILDER = GenericComponentConnectorBuilder.class;
-
     private static final Map<String, Class<? extends ConnectorBuilder>> CONNECTOR_BUILDER;
-
     static {
         Map<String, Class<? extends ConnectorBuilder>> tmp = new HashMap<>();
         tmp.put(Stop.class.getName(), StopConnectionBuilder.class);
@@ -37,6 +33,10 @@ public class ConnectorFactory {
         tmp.put(FlowReference.class.getName(), FlowReferenceConnectorBuilder.class);
         CONNECTOR_BUILDER = Collections.unmodifiableMap(tmp);
     }
+
+    private Module module;
+    private FlowGraph graph;
+    private GraphNode componentToAdd;
 
     private ConnectorFactory() {
     }
@@ -61,6 +61,10 @@ public class ConnectorFactory {
     }
 
     public Connector build() {
+        checkNotNull(graph, "graph");
+        checkNotNull(module, "module");
+        checkNotNull(componentToAdd, "componentToAdd");
+
         String fullyQualifiedName = componentToAdd.component().getFullyQualifiedName();
         Class<? extends ConnectorBuilder> builderClazz = CONNECTOR_BUILDER.getOrDefault(fullyQualifiedName, GENERIC_BUILDER);
         return instantiateBuilder(builderClazz).build(module, graph, componentToAdd);
