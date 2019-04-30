@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ImageObserver;
 
-public abstract class TextDrawable implements Drawable {
+public abstract class AbstractText implements Drawable {
 
     private final JBColor color;
 
@@ -20,7 +20,7 @@ public abstract class TextDrawable implements Drawable {
     private int draggedY;
     private boolean dragging;
 
-    public TextDrawable(String text, JBColor color) {
+    public AbstractText(String text, JBColor color) {
         this.text = text;
         this.color = color;
     }

@@ -8,13 +8,13 @@ import com.esb.plugin.graph.node.GraphNode;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
-public class ArrowsDrawable implements Drawable {
+public class Arrows implements Drawable {
 
     private int x;
     private int y;
     private final GraphNode parent;
 
-    public ArrowsDrawable(GraphNode parent) {
+    public Arrows(GraphNode parent) {
         this.parent = parent;
     }
 

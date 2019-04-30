@@ -37,12 +37,12 @@ public abstract class AbstractGraphNode implements GraphNode {
 
     public AbstractGraphNode(Component component) {
         this.component = component;
-        icon = new IconDrawable(component.getFullyQualifiedName());
-        componentTitle = new ComponentTitleDrawable(component.getDisplayName());
-        componentDescription = new ComponentDescriptionDrawable("A description");
+        icon = new Icon(component.getFullyQualifiedName());
+        componentTitle = new ComponentTitle(component.getDisplayName());
+        componentDescription = new ComponentDescription("A description");
 
-        arrows = new ArrowsDrawable(this);
-        selectedItemBox = new SelectedItemDrawable(this);
+        arrows = new Arrows(this);
+        selectedItemBox = new SelectedItem(this);
     }
 
     @Override

@@ -7,7 +7,7 @@ import com.esb.plugin.graph.node.Drawable;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
-public class IconDrawable implements Drawable {
+public class Icon implements Drawable {
 
     private static final int WIDTH = 60;
     private static final int HEIGHT = 60;
@@ -21,7 +21,7 @@ public class IconDrawable implements Drawable {
     private int draggedY;
     private boolean dragging;
 
-    public IconDrawable(String componentName) {
+    public Icon(String componentName) {
         this.image = Icons.forComponentAsImage(componentName);
     }
 

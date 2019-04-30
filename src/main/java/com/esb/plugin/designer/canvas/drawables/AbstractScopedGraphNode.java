@@ -17,14 +17,14 @@ import java.util.*;
 public abstract class AbstractScopedGraphNode extends AbstractGraphNode implements ScopedDrawable {
 
     private final Drawable verticalDivider;
-    private final ScopeBoundariesDrawable scopeBoundariesDrawable;
+    private final ScopeBox scopeBox;
 
     private Set<GraphNode> scope = new HashSet<>();
 
     public AbstractScopedGraphNode(Component component) {
         super(component);
         verticalDivider = new VerticalDivider(this);
-        scopeBoundariesDrawable = new ScopeBoundariesDrawable(this);
+        scopeBox = new ScopeBox(this);
     }
 
     @Override
@@ -34,14 +34,14 @@ public abstract class AbstractScopedGraphNode extends AbstractGraphNode implemen
 
     @Override
     public ScopeBoundaries getScopeBoundaries(FlowGraph graph, Graphics2D graphics) {
-        return scopeBoundariesDrawable.getBoundaries(graph, graphics);
+        return scopeBox.getBoundaries(graph, graphics);
     }
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         super.draw(graph, graphics, observer);
         verticalDivider.draw(graph, graphics, observer);
-        scopeBoundariesDrawable.draw(graph, graphics, observer);
+        scopeBox.draw(graph, graphics, observer);
     }
 
     @Override
@@ -85,7 +85,7 @@ public abstract class AbstractScopedGraphNode extends AbstractGraphNode implemen
     private void drawEndOfScopeArrow(FlowGraph graph, Graphics2D graphics) {
         FindFirstNodeOutsideScope.of(graph, this).ifPresent(firstNodeOutsideScope -> {
             if (IsLastScopeBeforeNode.of(graph, AbstractScopedGraphNode.this, firstNodeOutsideScope)) {
-                ScopeBoundaries boundaries = scopeBoundariesDrawable.getBoundaries(graph, graphics);
+                ScopeBoundaries boundaries = scopeBox.getBoundaries(graph, graphics);
 
                 Point barycenter = firstNodeOutsideScope.getBarycenter(graphics);
                 Point source = new Point(boundaries.getX() + boundaries.getWidth(), barycenter.y);

@@ -2,9 +2,9 @@ package com.esb.plugin.designer.canvas.drawables;
 
 import com.intellij.ui.JBColor;
 
-public class ComponentDescriptionDrawable extends TextDrawable {
+public class ComponentDescription extends AbstractText {
 
-    public ComponentDescriptionDrawable(String text) {
+    public ComponentDescription(String text) {
         super(text, JBColor.LIGHT_GRAY);
     }
 

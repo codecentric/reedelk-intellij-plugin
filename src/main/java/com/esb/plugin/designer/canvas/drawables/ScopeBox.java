@@ -19,14 +19,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public class ScopeBoundariesDrawable implements Drawable {
+public class ScopeBox implements Drawable {
 
     private final Stroke STROKE = new BasicStroke(1f);
     private final JBColor BOUNDARIES_COLOR = new JBColor(Gray._235, Gray._30);
 
     private final ScopedDrawable scopedDrawable;
 
-    public ScopeBoundariesDrawable(ScopedDrawable scopedDrawable) {
+    public ScopeBox(ScopedDrawable scopedDrawable) {
         this.scopedDrawable = scopedDrawable;
     }
 
