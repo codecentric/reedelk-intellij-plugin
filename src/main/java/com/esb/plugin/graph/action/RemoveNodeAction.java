@@ -1,8 +1,8 @@
 package com.esb.plugin.graph.action;
 
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.GraphNode;
-import com.esb.plugin.graph.drawable.ScopedDrawable;
+import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.node.ScopedDrawable;
 
 import java.util.List;
 

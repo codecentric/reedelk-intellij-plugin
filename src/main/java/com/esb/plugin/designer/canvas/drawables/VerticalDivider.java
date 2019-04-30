@@ -1,9 +1,9 @@
-package com.esb.plugin.graph.drawable.decorators;
+package com.esb.plugin.designer.canvas.drawables;
 
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.GraphNode;
-import com.esb.plugin.graph.drawable.Drawable;
-import com.esb.plugin.graph.drawable.ScopedDrawable;
+import com.esb.plugin.graph.node.Drawable;
+import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.node.ScopedDrawable;
 import com.esb.plugin.graph.scope.FindFirstNodeOutsideScope;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
@@ -11,7 +11,7 @@ import com.intellij.ui.JBColor;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
-import static com.esb.plugin.graph.layout.FlowGraphLayoutUtils.computeMaxHeight;
+import static com.esb.plugin.graph.layout.FlowGraphLayoutUtils.maxHeight;
 import static java.awt.BasicStroke.CAP_ROUND;
 import static java.awt.BasicStroke.JOIN_ROUND;
 
@@ -35,7 +35,7 @@ public class VerticalDivider implements Drawable {
 
         GraphNode firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedDrawable).orElse(null);
 
-        int scopeHeight = computeMaxHeight(graph, graphics, scopedDrawable, firstNodeOutsideScope);
+        int scopeHeight = maxHeight(graph, graphics, scopedDrawable, firstNodeOutsideScope);
         scopeHeight -= padding;
 
         int halfScopeHeight = Math.floorDiv(scopeHeight, 2);

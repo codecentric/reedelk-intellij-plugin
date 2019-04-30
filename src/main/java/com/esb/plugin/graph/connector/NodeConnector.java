@@ -1,15 +1,15 @@
 package com.esb.plugin.graph.connector;
 
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.GraphNode;
-import com.esb.plugin.graph.drawable.ScopedDrawable;
+import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.node.ScopedDrawable;
 
-public class DrawableConnector implements Connector {
+public class NodeConnector implements Connector {
 
     private final GraphNode node;
     private final FlowGraph graph;
 
-    public DrawableConnector(final FlowGraph graph, final GraphNode node) {
+    public NodeConnector(final FlowGraph graph, final GraphNode node) {
         this.graph = graph;
         this.node = node;
     }

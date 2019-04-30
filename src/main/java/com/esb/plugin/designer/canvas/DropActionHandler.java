@@ -4,8 +4,8 @@ import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
 import com.esb.plugin.graph.FlowGraphImpl;
-import com.esb.plugin.graph.GraphNode;
-import com.esb.plugin.graph.drawable.GraphNodeFactory;
+import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.node.GraphNodeFactory;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 
@@ -20,7 +20,7 @@ import java.util.Optional;
 import static java.awt.dnd.DnDConstants.ACTION_COPY_OR_MOVE;
 import static java.util.Arrays.asList;
 
-public class DropActionHandler extends AbstractActionHandler {
+class DropActionHandler extends AbstractActionHandler {
 
     private static final Logger LOG = Logger.getInstance(DropActionHandler.class);
 
@@ -28,14 +28,14 @@ public class DropActionHandler extends AbstractActionHandler {
     private final Graphics2D graphics;
     private final DropTargetDropEvent dropEvent;
 
-    public DropActionHandler(Module module, FlowGraph graph, Graphics2D graphics, DropTargetDropEvent dropEvent) {
+    DropActionHandler(Module module, FlowGraph graph, Graphics2D graphics, DropTargetDropEvent dropEvent) {
         super(module);
         this.graph = graph;
         this.graphics = graphics;
         this.dropEvent = dropEvent;
     }
 
-    public Optional<FlowGraph> handle() {
+    Optional<FlowGraph> handle() {
         Optional<ComponentDescriptor> optionalDescriptor = extractComponentName(dropEvent);
         if (!optionalDescriptor.isPresent()) {
             dropEvent.rejectDrop();

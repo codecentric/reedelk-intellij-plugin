@@ -1,7 +1,7 @@
-package com.esb.plugin.graph.drawable.decorators;
+package com.esb.plugin.designer.canvas.drawables;
 
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.drawable.Drawable;
+import com.esb.plugin.graph.node.Drawable;
 import com.intellij.ui.JBColor;
 
 import java.awt.*;
@@ -43,26 +43,26 @@ public class SelectedItemDrawable implements Drawable {
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-        if (selected) {
-            graphics.setStroke(DOTTED_STROKE);
-            graphics.setColor(JBColor.lightGray);
+        if (!selected) return;
 
-            int halfWidth = Math.floorDiv(width(graphics), 2);
-            int halfHeight = Math.floorDiv(height(graphics), 2);
-            int x1 = x() - halfWidth + INNER_PADDING;
-            int y1 = y() - halfHeight + INNER_PADDING;
-            int x2 = x() + halfWidth - INNER_PADDING;
-            int y2 = y() - halfHeight + INNER_PADDING;
-            int x3 = x() - halfWidth + INNER_PADDING;
-            int y3 = y() + halfHeight - INNER_PADDING;
-            int x4 = x() + halfWidth - INNER_PADDING;
-            int y4 = y() + halfHeight - INNER_PADDING;
+        graphics.setStroke(DOTTED_STROKE);
+        graphics.setColor(JBColor.lightGray);
 
-            graphics.drawLine(x1, y1, x2, y2);
-            graphics.drawLine(x2, y2, x4, y4);
-            graphics.drawLine(x4, y4, x3, y3);
-            graphics.drawLine(x3, y3, x1, y1);
-        }
+        int halfWidth = Math.floorDiv(width(graphics), 2);
+        int halfHeight = Math.floorDiv(height(graphics), 2);
+        int x1 = x() - halfWidth + INNER_PADDING;
+        int y1 = y() - halfHeight + INNER_PADDING;
+        int x2 = x() + halfWidth - INNER_PADDING;
+        int y2 = y() - halfHeight + INNER_PADDING;
+        int x3 = x() - halfWidth + INNER_PADDING;
+        int y3 = y() + halfHeight - INNER_PADDING;
+        int x4 = x() + halfWidth - INNER_PADDING;
+        int y4 = y() + halfHeight - INNER_PADDING;
+
+        graphics.drawLine(x1, y1, x2, y2);
+        graphics.drawLine(x2, y2, x4, y4);
+        graphics.drawLine(x4, y4, x3, y3);
+        graphics.drawLine(x3, y3, x1, y1);
     }
 
     @Override

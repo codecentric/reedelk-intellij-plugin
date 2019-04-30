@@ -10,7 +10,7 @@ import com.esb.plugin.component.flowreference.FlowReferenceGraphNodeBuilder;
 import com.esb.plugin.component.forkjoin.ForkJoinGraphNodeBuilder;
 import com.esb.plugin.component.generic.GenericGraphNodeBuilder;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.GraphNode;
+import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONObject;
 
 import java.lang.reflect.InvocationTargetException;

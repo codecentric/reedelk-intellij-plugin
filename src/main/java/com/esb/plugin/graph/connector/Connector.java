@@ -1,7 +1,7 @@
 package com.esb.plugin.graph.connector;
 
-import com.esb.plugin.graph.GraphNode;
-import com.esb.plugin.graph.drawable.ScopedDrawable;
+import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.node.ScopedDrawable;
 
 public interface Connector {
 

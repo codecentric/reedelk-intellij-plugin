@@ -3,7 +3,7 @@ package com.esb.plugin.graph.deserializer;
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphImpl;
-import com.esb.plugin.graph.GraphNode;
+import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

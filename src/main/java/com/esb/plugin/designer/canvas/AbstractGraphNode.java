@@ -1,10 +1,12 @@
-package com.esb.plugin.graph.drawable;
+package com.esb.plugin.designer.canvas;
 
 import com.esb.plugin.component.Component;
 import com.esb.plugin.designer.Tile;
+import com.esb.plugin.designer.canvas.drawables.*;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.GraphNode;
-import com.esb.plugin.graph.drawable.decorators.*;
+import com.esb.plugin.graph.node.Drawable;
+import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.node.ScopedDrawable;
 import com.esb.plugin.graph.scope.FindScope;
 import com.esb.plugin.graph.scope.ListLastNodeOfScope;
 
@@ -27,7 +29,7 @@ public abstract class AbstractGraphNode implements GraphNode {
     private int x;
     private int y;
 
-    // represent the coordinates of the dragged drawable
+    // represent the coordinates of the dragged node
     private int draggedX;
     private int draggedY;
 
@@ -199,7 +201,7 @@ public abstract class AbstractGraphNode implements GraphNode {
     }
 
     /**
-     * Draws connections between this drawable and the next one. If this is the last
+     * Draws connections between this node and the next one. If this is the last
      * node of the scope, don't draw any outgoing arrow.
      */
     protected void drawConnections(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {

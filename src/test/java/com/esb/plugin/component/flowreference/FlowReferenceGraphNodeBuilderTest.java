@@ -2,9 +2,9 @@ package com.esb.plugin.component.flowreference;
 
 import com.esb.component.FlowReference;
 import com.esb.plugin.component.Component;
-import com.esb.plugin.graph.GraphNode;
 import com.esb.plugin.graph.deserializer.AbstractBuilderTest;
 import com.esb.plugin.graph.deserializer.ComponentDefinitionBuilder;
+import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

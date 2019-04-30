@@ -1,9 +1,9 @@
-package com.esb.plugin.graph.drawable.decorators;
+package com.esb.plugin.designer.canvas.drawables;
 
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.GraphNode;
-import com.esb.plugin.graph.drawable.Drawable;
+import com.esb.plugin.graph.node.Drawable;
+import com.esb.plugin.graph.node.GraphNode;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
@@ -34,7 +34,6 @@ public class ArrowsDrawable implements Drawable {
 
             Arrow arrow = new Arrow(source, target);
             arrow.draw(graphics);
-
         });
     }
 

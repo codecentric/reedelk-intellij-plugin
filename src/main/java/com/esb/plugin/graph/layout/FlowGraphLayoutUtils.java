@@ -1,8 +1,8 @@
 package com.esb.plugin.graph.layout;
 
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.GraphNode;
-import com.esb.plugin.graph.drawable.ScopedDrawable;
+import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.node.ScopedDrawable;
 import com.esb.plugin.graph.scope.CountNestedScopes;
 import com.esb.plugin.graph.scope.FindFirstNodeOutsideScope;
 
@@ -12,26 +12,26 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.esb.plugin.graph.drawable.ScopedDrawable.HORIZONTAL_PADDING;
-import static com.esb.plugin.graph.drawable.ScopedDrawable.VERTICAL_PADDING;
+import static com.esb.plugin.graph.node.ScopedDrawable.HORIZONTAL_PADDING;
+import static com.esb.plugin.graph.node.ScopedDrawable.VERTICAL_PADDING;
 import static com.google.common.base.Preconditions.checkState;
 
 public class FlowGraphLayoutUtils {
 
-    static int computeMaxHeight(FlowGraph graph, Graphics2D graphics, GraphNode start) {
-        return computeMaxHeight(graph, graphics, start, null);
+    static int maxHeight(FlowGraph graph, Graphics2D graphics, GraphNode start) {
+        return maxHeight(graph, graphics, start, null);
     }
 
-    public static int computeMaxHeight(FlowGraph graph, Graphics2D graphics, GraphNode start, GraphNode end) {
-        return computeMaxHeight(graphics, graph, start, end, 0);
+    public static int maxHeight(FlowGraph graph, Graphics2D graphics, GraphNode start, GraphNode end) {
+        return maxHeight(graphics, graph, start, end, 0);
     }
 
-    private static int computeMaxHeight(Graphics2D graphics, FlowGraph graph, GraphNode start, GraphNode end, int currentMax) {
+    private static int maxHeight(Graphics2D graphics, FlowGraph graph, GraphNode start, GraphNode end, int currentMax) {
         if (start == end) {
             return currentMax;
 
         } else if (start instanceof ScopedDrawable) {
-            return computeMaxHeight(graphics, graph, (ScopedDrawable) start, end, currentMax);
+            return maxHeight(graphics, graph, (ScopedDrawable) start, end, currentMax);
 
         } else {
 
@@ -45,11 +45,11 @@ public class FlowGraphLayoutUtils {
             }
 
             GraphNode successor = successors.get(0);
-            return computeMaxHeight(graphics, graph, successor, end, newMax);
+            return maxHeight(graphics, graph, successor, end, newMax);
         }
     }
 
-    private static int computeMaxHeight(Graphics2D graphics, FlowGraph graph, ScopedDrawable scopedDrawable, GraphNode end, int currentMax) {
+    private static int maxHeight(Graphics2D graphics, FlowGraph graph, ScopedDrawable scopedDrawable, GraphNode end, int currentMax) {
         List<GraphNode> successors = graph.successors(scopedDrawable);
 
         GraphNode firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedDrawable).orElse(null);
@@ -58,7 +58,7 @@ public class FlowGraphLayoutUtils {
         for (GraphNode successor : successors) {
             // We are looking for the max in the subtree starting from this successor.
             // Therefore the current max starts again from 0.
-            sum += computeMaxHeight(graphics, graph, successor, firstNodeOutsideScope, 0);
+            sum += maxHeight(graphics, graph, successor, firstNodeOutsideScope, 0);
         }
 
         // If this scope does not have successors, the sum is its height.
@@ -68,7 +68,7 @@ public class FlowGraphLayoutUtils {
 
         int followingMax = 0;
         if (firstNodeOutsideScope != end && firstNodeOutsideScope != null) {
-            followingMax = computeMaxHeight(graphics, graph, firstNodeOutsideScope, null, 0);
+            followingMax = maxHeight(graphics, graph, firstNodeOutsideScope, null, 0);
         }
 
 

@@ -1,9 +1,9 @@
 package com.esb.plugin.graph.action.strategy;
 
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.GraphNode;
 import com.esb.plugin.graph.connector.Connector;
-import com.esb.plugin.graph.drawable.ScopedDrawable;
+import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.node.ScopedDrawable;
 import com.esb.plugin.graph.scope.FindScopes;
 import com.esb.plugin.graph.scope.ListLastNodeOfScope;
 

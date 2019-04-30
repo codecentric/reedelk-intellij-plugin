@@ -3,9 +3,9 @@ package com.esb.plugin.component.flowreference;
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.component.Component;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.GraphNode;
 import com.esb.plugin.graph.deserializer.AbstractBuilder;
 import com.esb.plugin.graph.deserializer.BuilderContext;
+import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONObject;
 
 public class FlowReferenceGraphNodeBuilder extends AbstractBuilder {

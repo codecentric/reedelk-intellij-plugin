@@ -1,8 +1,12 @@
 package com.esb.plugin.graph.action;
 
-import com.esb.plugin.graph.*;
+import com.esb.plugin.graph.AbstractGraphTest;
+import com.esb.plugin.graph.FlowGraph;
+import com.esb.plugin.graph.FlowGraphChangeAware;
+import com.esb.plugin.graph.FlowGraphImpl;
 import com.esb.plugin.graph.connector.Connector;
-import com.esb.plugin.graph.connector.DrawableConnector;
+import com.esb.plugin.graph.connector.NodeConnector;
+import com.esb.plugin.graph.node.GraphNode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -129,7 +133,7 @@ class AddNodeActionTest extends AbstractGraphTest {
             root.setPosition(50, 100);
             choice1.setPosition(100, 100);
             n1.setPosition(150, 50);
-            n3.setPosition(200, 100); // not in choice1 drawable's scope
+            n3.setPosition(200, 100); // not in choice1 node's scope
 
             Point dropPoint = new Point(170, 55); // n2 gets moved next to n1
 
@@ -400,7 +404,7 @@ class AddNodeActionTest extends AbstractGraphTest {
         }
 
         @Nested
-        @DisplayName("Preceding drawable with one successor")
+        @DisplayName("Preceding node with one successor")
         class PrecedingDrawableWithOneSuccessor {
 
             @Test
@@ -555,7 +559,7 @@ class AddNodeActionTest extends AbstractGraphTest {
         }
 
         @Nested
-        @DisplayName("Preceding drawable without successor")
+        @DisplayName("Preceding node without successor")
         class PrecedingDrawableWithoutSuccessor {
 
             @Test
@@ -601,7 +605,7 @@ class AddNodeActionTest extends AbstractGraphTest {
 
     private FlowGraphChangeAware addDrawableToGraph(FlowGraph graph, GraphNode dropped, Point dropPoint) {
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
-        Connector connector = new DrawableConnector(modifiableGraph, dropped);
+        Connector connector = new NodeConnector(modifiableGraph, dropped);
         AddNodeAction action = new AddNodeAction(modifiableGraph, dropPoint, connector, graphics);
         action.add();
         return modifiableGraph;

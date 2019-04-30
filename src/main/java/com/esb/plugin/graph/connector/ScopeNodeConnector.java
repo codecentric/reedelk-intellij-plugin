@@ -1,20 +1,20 @@
 package com.esb.plugin.graph.connector;
 
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.GraphNode;
-import com.esb.plugin.graph.drawable.ScopedDrawable;
+import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.node.ScopedDrawable;
 import com.esb.plugin.graph.scope.ListLastNodeOfScope;
 
 import java.util.Collection;
 
 import static com.google.common.base.Preconditions.checkState;
 
-public class ScopeDrawableConnector implements Connector {
+public class ScopeNodeConnector implements Connector {
 
     private final FlowGraph graph;
     private final FlowGraph scopeInitialSubtree;
 
-    public ScopeDrawableConnector(final FlowGraph graph, final FlowGraph scopeInitialSubtree) {
+    public ScopeNodeConnector(final FlowGraph graph, final FlowGraph scopeInitialSubtree) {
         this.graph = graph;
         this.scopeInitialSubtree = scopeInitialSubtree;
     }

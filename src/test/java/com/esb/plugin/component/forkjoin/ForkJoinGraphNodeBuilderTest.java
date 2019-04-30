@@ -2,8 +2,8 @@ package com.esb.plugin.component.forkjoin;
 
 import com.esb.component.Fork;
 import com.esb.component.Stop;
-import com.esb.plugin.graph.GraphNode;
 import com.esb.plugin.graph.deserializer.AbstractBuilderTest;
+import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,7 +56,7 @@ class ForkJoinGraphNodeBuilderTest extends AbstractBuilderTest {
         // When
         GraphNode joinDrawable = builder.build(root, componentDefinition);
 
-        // Then: last node must be a join drawable
+        // Then: last node must be a join node
         assertThat(joinDrawable.component().getFullyQualifiedName()).isEqualTo(JOIN_COMPONENT_NAME);
 
         // Then: check successors of fork

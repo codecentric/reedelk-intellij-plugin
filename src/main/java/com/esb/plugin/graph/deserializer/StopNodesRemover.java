@@ -1,8 +1,8 @@
 package com.esb.plugin.graph.deserializer;
 
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.GraphNode;
-import com.esb.plugin.graph.drawable.StopGraphNode;
+import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.node.StopGraphNode;
 
 import java.util.List;
 
@@ -35,10 +35,10 @@ class StopNodesRemover {
 
                 GraphNode successorOfStop = successorsOfStop.get(0);
 
-                // Connect current drawable with the next node after stop
+                // Connect current node with the next node after stop
                 copy.add(currentDrawable, successorOfStop);
 
-                // Remove edge between current drawable and stop
+                // Remove edge between current node and stop
                 copy.remove(currentDrawable, stop);
             }
         });

@@ -3,7 +3,7 @@ package com.esb.plugin.graph.scope;
 import com.esb.plugin.graph.AbstractGraphTest;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphImpl;
-import com.esb.plugin.graph.drawable.ScopedDrawable;
+import com.esb.plugin.graph.node.ScopedDrawable;
 import org.junit.jupiter.api.Test;
 
 import java.util.Stack;

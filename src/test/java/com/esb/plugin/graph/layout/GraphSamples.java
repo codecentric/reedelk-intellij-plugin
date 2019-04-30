@@ -6,8 +6,8 @@ import com.esb.plugin.component.choice.ChoiceGraphNode;
 import com.esb.plugin.component.generic.GenericComponentGraphNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphImpl;
-import com.esb.plugin.graph.GraphNode;
-import com.esb.plugin.graph.drawable.ScopedDrawable;
+import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.node.ScopedDrawable;
 
 public class GraphSamples {
 

@@ -1,11 +1,14 @@
-package com.esb.plugin.graph.drawable;
+package com.esb.plugin.designer.canvas;
 
 import com.esb.plugin.component.Component;
+import com.esb.plugin.designer.canvas.drawables.Arrow;
+import com.esb.plugin.designer.canvas.drawables.ScopeBoundariesDrawable;
+import com.esb.plugin.designer.canvas.drawables.VerticalDivider;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.GraphNode;
-import com.esb.plugin.graph.drawable.decorators.Arrow;
-import com.esb.plugin.graph.drawable.decorators.ScopeBoundariesDrawable;
-import com.esb.plugin.graph.drawable.decorators.VerticalDivider;
+import com.esb.plugin.graph.node.Drawable;
+import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.node.ScopeBoundaries;
+import com.esb.plugin.graph.node.ScopedDrawable;
 import com.esb.plugin.graph.scope.FindFirstNodeOutsideScope;
 import com.esb.plugin.graph.scope.IsLastScopeBeforeNode;
 

@@ -3,24 +3,24 @@ package com.esb.plugin.designer.canvas;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
 import com.esb.plugin.graph.FlowGraphImpl;
-import com.esb.plugin.graph.GraphNode;
 import com.esb.plugin.graph.action.RemoveNodeAction;
-import com.esb.plugin.graph.drawable.NothingSelectedNode;
-import com.esb.plugin.graph.drawable.ScopedDrawable;
+import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.node.NothingSelectedNode;
+import com.esb.plugin.graph.node.ScopedDrawable;
 import com.esb.plugin.graph.scope.FindScope;
 import com.intellij.openapi.module.Module;
 
 import java.awt.*;
 import java.util.Optional;
 
-public class MoveActionHandler extends AbstractActionHandler {
+class MoveActionHandler extends AbstractActionHandler {
 
     private final FlowGraph graph;
     private final Point movePoint;
     private final GraphNode selected;
     private final Graphics2D graphics;
 
-    public MoveActionHandler(Module module, FlowGraph graph, Graphics2D graphics, GraphNode selected, Point movePoint) {
+    MoveActionHandler(Module module, FlowGraph graph, Graphics2D graphics, GraphNode selected, Point movePoint) {
         super(module);
         this.graph = graph;
         this.graphics = graphics;
@@ -28,7 +28,7 @@ public class MoveActionHandler extends AbstractActionHandler {
         this.selected = selected;
     }
 
-    public Optional<FlowGraph> handle() {
+    Optional<FlowGraph> handle() {
         int dragX = movePoint.x;
         int dragY = movePoint.y;
 

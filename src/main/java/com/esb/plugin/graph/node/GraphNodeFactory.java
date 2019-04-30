@@ -1,4 +1,4 @@
-package com.esb.plugin.graph.drawable;
+package com.esb.plugin.graph.node;
 
 import com.esb.component.Choice;
 import com.esb.component.FlowReference;
@@ -16,19 +16,24 @@ import java.util.Map;
 
 public class GraphNodeFactory {
 
-    private static final Class DEFAULT = GenericComponentGraphNode.class;
-    private static final Map<String, Class<? extends Drawable>> COMPONENT_DRAWABLE_MAP = ImmutableMap.of(
+    private static final Class<? extends GraphNode> DEFAULT = GenericComponentGraphNode.class;
+
+    private static final Map<String, Class<? extends GraphNode>> COMPONENT_DRAWABLE_MAP = ImmutableMap.of(
             Choice.class.getName(), ChoiceGraphNode.class,
             Fork.class.getName(), ForkJoinGraphNode.class,
             FlowReference.class.getName(), FlowReferenceGraphNode.class);
 
 
-    public static <T extends Drawable> T get(ComponentDescriptor descriptor) {
+    public static GraphNode get(ComponentDescriptor descriptor) {
+
         Component component = new Component(descriptor);
+
         String componentFullyQualifiedName = component.getFullyQualifiedName();
-        Class componentDrawableClazz = COMPONENT_DRAWABLE_MAP.getOrDefault(componentFullyQualifiedName, DEFAULT);
+
+        Class<? extends GraphNode> componentDrawableClazz = COMPONENT_DRAWABLE_MAP.getOrDefault(componentFullyQualifiedName, DEFAULT);
+
         try {
-            return (T) componentDrawableClazz.getConstructor(Component.class).newInstance(component);
+            return componentDrawableClazz.getConstructor(Component.class).newInstance(component);
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }

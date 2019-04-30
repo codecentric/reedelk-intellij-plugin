@@ -1,7 +1,7 @@
 package com.esb.plugin.graph.scope;
 
-import com.esb.plugin.graph.drawable.Drawable;
-import com.esb.plugin.graph.drawable.ScopedDrawable;
+import com.esb.plugin.graph.node.Drawable;
+import com.esb.plugin.graph.node.ScopedDrawable;
 
 import java.util.Optional;
 

@@ -2,10 +2,10 @@ package com.esb.plugin.graph.layout;
 
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.GraphNode;
-import com.esb.plugin.graph.drawable.Drawable;
-import com.esb.plugin.graph.drawable.ScopeBoundaries;
-import com.esb.plugin.graph.drawable.ScopedDrawable;
+import com.esb.plugin.graph.node.Drawable;
+import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.node.ScopeBoundaries;
+import com.esb.plugin.graph.node.ScopedDrawable;
 import com.esb.plugin.graph.scope.FindFirstNodeOutsideScope;
 import com.esb.plugin.graph.scope.FindJoiningScope;
 
@@ -14,8 +14,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static com.esb.plugin.graph.drawable.ScopedDrawable.VERTICAL_PADDING;
 import static com.esb.plugin.graph.layout.FlowGraphLayoutUtils.*;
+import static com.esb.plugin.graph.node.ScopedDrawable.VERTICAL_PADDING;
 import static com.google.common.base.Preconditions.checkState;
 
 public class FlowGraphLayout {
@@ -36,11 +36,11 @@ public class FlowGraphLayout {
             // Root
             if (predecessors.isEmpty()) {
 
-                // Find layer containing this drawable
+                // Find layer containing this node
                 int containingLayerIndex = findContainingLayer(layers, node);
 
                 // Center in subtree
-                int maxSubtreeHeight = FlowGraphLayoutUtils.computeMaxHeight(graph, graphics, node);
+                int maxSubtreeHeight = FlowGraphLayoutUtils.maxHeight(graph, graphics, node);
 
                 int tmpX = X_LEFT_PADDING + layerWidthSumPreceding(graph, graphics, layers, containingLayerIndex);
                 int tmpY = top + Math.floorDiv(maxSubtreeHeight, 2);
@@ -52,7 +52,7 @@ public class FlowGraphLayout {
                 // Single node with one or more predecessor/s
             } else {
 
-                // Find layer containing this drawable
+                // Find layer containing this node
                 int containingLayerIndex = findContainingLayer(layers, node);
 
                 int tmpX = X_LEFT_PADDING + layerWidthSumPreceding(graph, graphics, layers, containingLayerIndex);
@@ -92,21 +92,21 @@ public class FlowGraphLayout {
             // Layer with multiple nodes.
             // Center them all in their respective subtrees.
             // Successors can be > 1 only when predecessor is ScopedDrawable
-            GraphNode commonParent = findCommonParent(graph, nodes); // common parent must be (scoped drawable)
+            GraphNode commonParent = findCommonParent(graph, nodes); // common parent must be (scoped node)
 
             checkState(commonParent instanceof ScopedDrawable);
 
             Optional<GraphNode> optionalFirstDrawableOutsideScope = FindFirstNodeOutsideScope.of(graph, (ScopedDrawable) commonParent);
             GraphNode firstDrawableOutsideScope = optionalFirstDrawableOutsideScope.orElse(null);
 
-            int maxSubTreeHeight = FlowGraphLayoutUtils.computeMaxHeight(graph, graphics, commonParent, firstDrawableOutsideScope);
+            int maxSubTreeHeight = FlowGraphLayoutUtils.maxHeight(graph, graphics, commonParent, firstDrawableOutsideScope);
 
             top = VERTICAL_PADDING + commonParent.y() - Math.floorDiv(maxSubTreeHeight, 2);
 
 
             for (GraphNode node : nodes) {
 
-                // Find layer containing this drawable
+                // Find layer containing this node
                 int containingLayerIndex = findContainingLayer(layers, node);
 
                 // Center in subtree
@@ -116,7 +116,7 @@ public class FlowGraphLayout {
 
                 int tmpX = X_LEFT_PADDING + layerWidthSumPreceding(graph, graphics, layers, containingLayerIndex);
 
-                int maxSubtreeHeight = FlowGraphLayoutUtils.computeMaxHeight(graph, graphics, node, firstDrawableOutsideScope);
+                int maxSubtreeHeight = FlowGraphLayoutUtils.maxHeight(graph, graphics, node, firstDrawableOutsideScope);
 
                 // We must subtract the current padding since it
                 // was added while computing max subtree height as well.

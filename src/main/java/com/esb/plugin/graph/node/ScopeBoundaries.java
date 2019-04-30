@@ -1,4 +1,4 @@
-package com.esb.plugin.graph.drawable;
+package com.esb.plugin.graph.node;
 
 public class ScopeBoundaries {
 

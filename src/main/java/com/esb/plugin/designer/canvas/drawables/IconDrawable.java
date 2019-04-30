@@ -1,8 +1,8 @@
-package com.esb.plugin.graph.drawable.decorators;
+package com.esb.plugin.designer.canvas.drawables;
 
 import com.esb.plugin.commons.Icons;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.drawable.Drawable;
+import com.esb.plugin.graph.node.Drawable;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;

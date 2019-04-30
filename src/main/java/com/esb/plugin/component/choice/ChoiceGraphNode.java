@@ -1,7 +1,7 @@
 package com.esb.plugin.component.choice;
 
 import com.esb.plugin.component.Component;
-import com.esb.plugin.graph.drawable.AbstractScopedGraphNode;
+import com.esb.plugin.designer.canvas.AbstractScopedGraphNode;
 
 public class ChoiceGraphNode extends AbstractScopedGraphNode {
 

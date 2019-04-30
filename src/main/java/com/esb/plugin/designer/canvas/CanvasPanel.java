@@ -3,11 +3,11 @@ package com.esb.plugin.designer.canvas;
 import com.esb.plugin.designer.SelectListener;
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.GraphNode;
-import com.esb.plugin.graph.drawable.Drawable;
-import com.esb.plugin.graph.drawable.NothingSelectedNode;
 import com.esb.plugin.graph.layout.FlowGraphLayout;
 import com.esb.plugin.graph.manager.JsonChangeNotifier;
+import com.esb.plugin.graph.node.Drawable;
+import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.node.NothingSelectedNode;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBColor;
@@ -87,7 +87,7 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
             }
         });
 
-        // The selected drawable must be drawn LAST so
+        // The selected node must be drawn LAST so
         // that it is on top of all the other drawables.
         nodes.stream()
                 .filter(Drawable::isSelected)

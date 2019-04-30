@@ -1,8 +1,9 @@
-package com.esb.plugin.graph.drawable;
+package com.esb.plugin.graph.node;
 
 import com.esb.component.Stop;
 import com.esb.plugin.component.Component;
 import com.esb.plugin.component.ComponentDescriptor;
+import com.esb.plugin.designer.canvas.AbstractGraphNode;
 
 public class StopGraphNode extends AbstractGraphNode {
 

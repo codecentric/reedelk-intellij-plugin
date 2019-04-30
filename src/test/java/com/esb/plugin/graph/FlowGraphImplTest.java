@@ -1,5 +1,6 @@
 package com.esb.plugin.graph;
 
+import com.esb.plugin.graph.node.GraphNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

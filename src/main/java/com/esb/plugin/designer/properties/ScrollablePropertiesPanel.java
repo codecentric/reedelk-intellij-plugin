@@ -2,7 +2,7 @@ package com.esb.plugin.designer.properties;
 
 import com.esb.plugin.designer.SelectListener;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.GraphNode;
+import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.ui.components.JBScrollPane;
 
 public class ScrollablePropertiesPanel extends JBScrollPane implements SelectListener {

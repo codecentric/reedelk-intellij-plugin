@@ -1,11 +1,11 @@
-package com.esb.plugin.graph.drawable.decorators;
+package com.esb.plugin.designer.canvas.drawables;
 
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.GraphNode;
-import com.esb.plugin.graph.drawable.Drawable;
-import com.esb.plugin.graph.drawable.ScopeBoundaries;
-import com.esb.plugin.graph.drawable.ScopedDrawable;
 import com.esb.plugin.graph.layout.FlowGraphLayoutUtils;
+import com.esb.plugin.graph.node.Drawable;
+import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.node.ScopeBoundaries;
+import com.esb.plugin.graph.node.ScopedDrawable;
 import com.esb.plugin.graph.scope.CountScopesBetween;
 import com.esb.plugin.graph.scope.FindFirstNodeOutsideScope;
 import com.esb.plugin.graph.scope.ListLastNodeOfScope;
@@ -88,7 +88,7 @@ public class ScopeBoundariesDrawable implements Drawable {
 
         GraphNode firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedDrawable).orElse(null);
 
-        int subTreeHeight = FlowGraphLayoutUtils.computeMaxHeight(graph, graphics, scopedDrawable, firstNodeOutsideScope);
+        int subTreeHeight = FlowGraphLayoutUtils.maxHeight(graph, graphics, scopedDrawable, firstNodeOutsideScope);
 
         int minY = scopedDrawable.y() - Math.floorDiv(subTreeHeight, 2) + ScopedDrawable.VERTICAL_PADDING;
         int maxY = scopedDrawable.y() + Math.floorDiv(subTreeHeight, 2) - ScopedDrawable.VERTICAL_PADDING;

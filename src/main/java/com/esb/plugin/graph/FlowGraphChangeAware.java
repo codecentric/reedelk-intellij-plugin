@@ -1,5 +1,6 @@
 package com.esb.plugin.graph;
 
+import com.esb.plugin.graph.node.GraphNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

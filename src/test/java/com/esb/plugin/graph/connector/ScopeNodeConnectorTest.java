@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ScopeDrawableConnectorTest extends AbstractGraphTest {
+class ScopeNodeConnectorTest extends AbstractGraphTest {
 
     private FlowGraphChangeAware modifiableGraph;
 
@@ -31,7 +31,7 @@ class ScopeDrawableConnectorTest extends AbstractGraphTest {
         choice1.addToScope(n2);
 
         // When
-        new ScopeDrawableConnector(modifiableGraph, scopeGraph);
+        new ScopeNodeConnector(modifiableGraph, scopeGraph);
 
         // Then
         assertThat(modifiableGraph.isChanged()).isFalse();
@@ -46,7 +46,7 @@ class ScopeDrawableConnectorTest extends AbstractGraphTest {
         choice1.addToScope(n2);
 
         // When
-        Connector connector = new ScopeDrawableConnector(modifiableGraph, scopeGraph);
+        Connector connector = new ScopeNodeConnector(modifiableGraph, scopeGraph);
         connector.addPredecessor(n1);
 
         // Then
@@ -67,7 +67,7 @@ class ScopeDrawableConnectorTest extends AbstractGraphTest {
         choice1.addToScope(n2);
 
         // When
-        Connector connector = new ScopeDrawableConnector(modifiableGraph, scopeGraph);
+        Connector connector = new ScopeNodeConnector(modifiableGraph, scopeGraph);
         connector.addSuccessor(n1);
 
         // Then
@@ -85,7 +85,7 @@ class ScopeDrawableConnectorTest extends AbstractGraphTest {
         choice1.addToScope(n2);
 
         // When
-        Connector connector = new ScopeDrawableConnector(modifiableGraph, scopeGraph);
+        Connector connector = new ScopeNodeConnector(modifiableGraph, scopeGraph);
         connector.addPredecessor(n1);
         connector.addToScope(choice3);
 
@@ -102,7 +102,7 @@ class ScopeDrawableConnectorTest extends AbstractGraphTest {
         choice1.addToScope(n2);
 
         // When
-        Connector connector = new ScopeDrawableConnector(modifiableGraph, scopeGraph);
+        Connector connector = new ScopeNodeConnector(modifiableGraph, scopeGraph);
         connector.add();
 
         // Then

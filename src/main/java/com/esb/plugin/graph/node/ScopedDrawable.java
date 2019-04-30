@@ -1,7 +1,6 @@
-package com.esb.plugin.graph.drawable;
+package com.esb.plugin.graph.node;
 
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.GraphNode;
 
 import java.awt.*;
 import java.util.Collection;

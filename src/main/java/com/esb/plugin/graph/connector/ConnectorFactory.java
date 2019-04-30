@@ -9,7 +9,7 @@ import com.esb.plugin.component.flowreference.FlowReferenceConnectorBuilder;
 import com.esb.plugin.component.forkjoin.ForkJoinDrawableConnectorBuilder;
 import com.esb.plugin.component.generic.GenericComponentConnectorBuilder;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.GraphNode;
+import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.openapi.module.Module;
 
 import java.lang.reflect.InvocationTargetException;

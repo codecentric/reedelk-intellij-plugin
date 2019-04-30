@@ -2,10 +2,10 @@ package com.esb.plugin.designer.canvas;
 
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
-import com.esb.plugin.graph.GraphNode;
 import com.esb.plugin.graph.action.AddNodeAction;
 import com.esb.plugin.graph.connector.Connector;
 import com.esb.plugin.graph.connector.ConnectorFactory;
+import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.openapi.module.Module;
 
 import java.awt.*;

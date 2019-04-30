@@ -3,13 +3,13 @@ package com.esb.plugin.graph.action;
 
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.GraphNode;
 import com.esb.plugin.graph.action.strategy.AddStrategy;
 import com.esb.plugin.graph.action.strategy.PrecedingDrawableWithOneSuccessor;
 import com.esb.plugin.graph.action.strategy.PrecedingDrawableWithoutSuccessor;
 import com.esb.plugin.graph.action.strategy.PrecedingScopedDrawable;
 import com.esb.plugin.graph.connector.Connector;
-import com.esb.plugin.graph.drawable.ScopedDrawable;
+import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.node.ScopedDrawable;
 
 import java.awt.*;
 import java.util.List;

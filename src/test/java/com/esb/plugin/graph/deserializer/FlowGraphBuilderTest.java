@@ -2,8 +2,8 @@ package com.esb.plugin.graph.deserializer;
 
 import com.esb.component.Choice;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.GraphNode;
 import com.esb.plugin.graph.TestJson;
+import com.esb.plugin.graph.node.GraphNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

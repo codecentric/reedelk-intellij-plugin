@@ -1,7 +1,7 @@
 package com.esb.plugin.graph.layout;
 
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.GraphNode;
+import com.esb.plugin.graph.node.GraphNode;
 
 import java.util.ArrayList;
 import java.util.Collections;
