@@ -3,7 +3,7 @@ package com.esb.plugin.component.choice;
 import com.esb.component.Choice;
 import com.esb.plugin.graph.GraphNode;
 import com.esb.plugin.graph.deserializer.AbstractBuilderTest;
-import com.esb.plugin.graph.drawable.StopDrawable;
+import com.esb.plugin.graph.drawable.StopGraphNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,7 +53,7 @@ class ChoiceGraphNodeBuilderTest extends AbstractBuilderTest {
         GraphNode stopDrawable = builder.build(root, componentDefinition);
 
         // Then: last node must be a stop drawable
-        assertThat(stopDrawable).isInstanceOf(StopDrawable.class);
+        assertThat(stopDrawable).isInstanceOf(StopGraphNode.class);
 
         // Then: check successors of choice
         GraphNode choice = firstSuccessorOf(graph, root);

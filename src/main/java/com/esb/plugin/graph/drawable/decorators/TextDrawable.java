@@ -1,13 +1,14 @@
 package com.esb.plugin.graph.drawable.decorators;
 
 import com.esb.plugin.graph.FlowGraph;
+import com.esb.plugin.graph.drawable.Drawable;
 import com.intellij.ui.JBColor;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ImageObserver;
 
-public abstract class TextDrawable extends AbstractDrawable {
+public abstract class TextDrawable implements Drawable {
 
     private final JBColor color;
 

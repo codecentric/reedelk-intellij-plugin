@@ -2,6 +2,7 @@ package com.esb.plugin.graph.drawable.decorators;
 
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.GraphNode;
+import com.esb.plugin.graph.drawable.Drawable;
 import com.esb.plugin.graph.drawable.ScopedDrawable;
 import com.esb.plugin.graph.scope.FindFirstNodeOutsideScope;
 import com.intellij.ui.Gray;
@@ -14,7 +15,7 @@ import static com.esb.plugin.graph.layout.FlowGraphLayoutUtils.computeMaxHeight;
 import static java.awt.BasicStroke.CAP_ROUND;
 import static java.awt.BasicStroke.JOIN_ROUND;
 
-public class VerticalDivider extends AbstractDrawable {
+public class VerticalDivider implements Drawable {
 
     private final Stroke STROKE = new BasicStroke(1.3f, CAP_ROUND, JOIN_ROUND);
     private final JBColor VERTICAL_DIVIDER_COLOR = new JBColor(Gray._200, Gray._30);

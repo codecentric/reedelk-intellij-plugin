@@ -7,37 +7,58 @@ import java.awt.image.ImageObserver;
 
 public interface Drawable {
 
-    void drag(int x, int y);
+    default void drag(int x, int y) {
+    }
 
-    void dragging();
+    default void dragging() {
+    }
 
-    void drop();
+    default void drop() {
+    }
 
-    void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer);
+    default int x() {
+        throw new UnsupportedOperationException();
+    }
 
-    int y();
+    default int y() {
+        throw new UnsupportedOperationException();
+    }
 
-    int x();
+    default void setPosition(int x, int y) {
 
-    void setPosition(int x, int y);
+    }
 
-    int height(Graphics2D graphics);
+    default int height(Graphics2D graphics) {
+        throw new UnsupportedOperationException();
+    }
 
-    int width(Graphics2D graphics);
+    default int width(Graphics2D graphics) {
+        throw new UnsupportedOperationException();
+    }
 
-    boolean contains(ImageObserver observer, int x, int y);
+    default boolean contains(ImageObserver observer, int x, int y) {
+        throw new UnsupportedOperationException();
+    }
 
-    void selected();
+    default void selected() {
+    }
 
-    void unselected();
+    default void unselected() {
+    }
 
-    boolean isSelected();
+    default boolean isSelected() {
+        return false;
+    }
 
     /*
      * It is the graphical center of the Drawable. For instance,
      * A component might have an icon + text below. The bary center
      * in this case might be the center of the icon.
      */
-    Point getBarycenter(Graphics2D graphics);
+    default Point getBarycenter(Graphics2D graphics) {
+        throw new UnsupportedOperationException();
+    }
+
+    void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer);
 
 }

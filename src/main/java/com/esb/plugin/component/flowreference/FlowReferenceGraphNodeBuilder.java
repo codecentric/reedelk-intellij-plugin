@@ -21,7 +21,7 @@ public class FlowReferenceGraphNodeBuilder extends AbstractBuilder {
 
         Component component = context.instantiateComponent(name);
 
-        FlowReferenceDrawable drawable = new FlowReferenceDrawable(component);
+        FlowReferenceGraphNode drawable = new FlowReferenceGraphNode(component);
 
         graph.add(parent, drawable);
 

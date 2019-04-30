@@ -3,11 +3,12 @@ package com.esb.plugin.graph.drawable.decorators;
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.GraphNode;
+import com.esb.plugin.graph.drawable.Drawable;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
-public class ArrowsDrawable extends AbstractDrawable {
+public class ArrowsDrawable implements Drawable {
 
     private int x;
     private int y;

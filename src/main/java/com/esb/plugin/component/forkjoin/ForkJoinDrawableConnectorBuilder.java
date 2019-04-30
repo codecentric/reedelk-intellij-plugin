@@ -3,7 +3,7 @@ package com.esb.plugin.component.forkjoin;
 import com.esb.component.FlowReference;
 import com.esb.plugin.component.Component;
 import com.esb.plugin.component.ComponentDescriptor;
-import com.esb.plugin.component.flowreference.FlowReferenceDrawable;
+import com.esb.plugin.component.flowreference.FlowReferenceGraphNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphImpl;
 import com.esb.plugin.graph.GraphNode;
@@ -25,10 +25,10 @@ public class ForkJoinDrawableConnectorBuilder implements ConnectorBuilder {
                 .componentDescriptorByName(FlowReference.class.getName());
         Component component = new Component(descriptor);
 
-        FlowReferenceDrawable placeholderDrawable = new FlowReferenceDrawable(component);
+        FlowReferenceGraphNode placeholderDrawable = new FlowReferenceGraphNode(component);
         forkJoinGraph.add(componentToAdd, placeholderDrawable);
 
-        ((ForkJoinDrawable) componentToAdd).addToScope(placeholderDrawable);
+        ((ForkJoinGraphNode) componentToAdd).addToScope(placeholderDrawable);
 
         return new ScopeDrawableConnector(graph, forkJoinGraph);
     }

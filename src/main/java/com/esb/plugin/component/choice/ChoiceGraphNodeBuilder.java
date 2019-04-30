@@ -7,7 +7,7 @@ import com.esb.plugin.graph.GraphNode;
 import com.esb.plugin.graph.deserializer.AbstractBuilder;
 import com.esb.plugin.graph.deserializer.BuilderContext;
 import com.esb.plugin.graph.deserializer.DrawableBuilder;
-import com.esb.plugin.graph.drawable.StopDrawable;
+import com.esb.plugin.graph.drawable.StopGraphNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -25,13 +25,13 @@ public class ChoiceGraphNodeBuilder extends AbstractBuilder {
     @Override
     public GraphNode build(GraphNode parent, JSONObject componentDefinition) {
 
-        StopDrawable stopDrawable = new StopDrawable();
+        StopGraphNode stopDrawable = new StopGraphNode();
 
         String name = JsonParser.Implementor.name(componentDefinition);
 
         Component component = context.instantiateComponent(name);
 
-        ChoiceDrawable choiceDrawable = new ChoiceDrawable(component);
+        ChoiceGraphNode choiceDrawable = new ChoiceGraphNode(component);
 
         graph.add(parent, choiceDrawable);
 

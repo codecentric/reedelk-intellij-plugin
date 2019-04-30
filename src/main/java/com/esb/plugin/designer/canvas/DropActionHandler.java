@@ -1,12 +1,11 @@
 package com.esb.plugin.designer.canvas;
 
-import com.esb.plugin.component.Component;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
 import com.esb.plugin.graph.FlowGraphImpl;
 import com.esb.plugin.graph.GraphNode;
-import com.esb.plugin.graph.drawable.DrawableFactory;
+import com.esb.plugin.graph.drawable.GraphNodeFactory;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 
@@ -45,13 +44,12 @@ public class DropActionHandler extends AbstractActionHandler {
 
         Point dropPoint = dropEvent.getLocation();
         ComponentDescriptor descriptor = optionalDescriptor.get();
-        com.esb.plugin.component.Component component = new Component(descriptor);
 
         FlowGraph copy = graph == null ? new FlowGraphImpl() : graph.copy();
 
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
 
-        GraphNode componentToAdd = DrawableFactory.get(component);
+        GraphNode componentToAdd = GraphNodeFactory.get(descriptor);
 
         addDrawableToGraph(modifiableGraph, componentToAdd, dropPoint, graphics);
 

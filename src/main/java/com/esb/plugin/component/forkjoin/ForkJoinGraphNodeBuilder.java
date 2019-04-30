@@ -7,7 +7,7 @@ import com.esb.plugin.graph.GraphNode;
 import com.esb.plugin.graph.deserializer.AbstractBuilder;
 import com.esb.plugin.graph.deserializer.BuilderContext;
 import com.esb.plugin.graph.deserializer.DrawableBuilder;
-import com.esb.plugin.graph.drawable.StopDrawable;
+import com.esb.plugin.graph.drawable.StopGraphNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -20,13 +20,13 @@ public class ForkJoinGraphNodeBuilder extends AbstractBuilder {
     @Override
     public GraphNode build(GraphNode parent, JSONObject componentDefinition) {
 
-        StopDrawable stopDrawable = new StopDrawable();
+        StopGraphNode stopDrawable = new StopGraphNode();
 
         String name = JsonParser.Implementor.name(componentDefinition);
 
         Component forkComponent = context.instantiateComponent(name);
 
-        ForkJoinDrawable forkJoinDrawable = new ForkJoinDrawable(forkComponent);
+        ForkJoinGraphNode forkJoinDrawable = new ForkJoinGraphNode(forkComponent);
 
         graph.add(parent, forkJoinDrawable);
 

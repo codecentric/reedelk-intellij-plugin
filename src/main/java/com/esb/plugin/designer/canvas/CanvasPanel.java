@@ -5,7 +5,7 @@ import com.esb.plugin.designer.Tile;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.GraphNode;
 import com.esb.plugin.graph.drawable.Drawable;
-import com.esb.plugin.graph.drawable.decorators.NothingSelectedNode;
+import com.esb.plugin.graph.drawable.NothingSelectedNode;
 import com.esb.plugin.graph.layout.FlowGraphLayout;
 import com.esb.plugin.graph.manager.JsonChangeNotifier;
 import com.intellij.openapi.module.Module;

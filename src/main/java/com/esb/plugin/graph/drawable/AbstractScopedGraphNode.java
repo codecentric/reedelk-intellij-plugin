@@ -14,14 +14,14 @@ import java.awt.image.ImageObserver;
 import java.util.List;
 import java.util.*;
 
-public abstract class AbstractScopedDrawable extends AbstractDrawable implements ScopedDrawable {
+public abstract class AbstractScopedGraphNode extends AbstractGraphNode implements ScopedDrawable {
 
     private final Drawable verticalDivider;
     private final ScopeBoundariesDrawable scopeBoundariesDrawable;
 
     private Set<GraphNode> scope = new HashSet<>();
 
-    public AbstractScopedDrawable(Component component) {
+    public AbstractScopedGraphNode(Component component) {
         super(component);
         verticalDivider = new VerticalDivider(this);
         scopeBoundariesDrawable = new ScopeBoundariesDrawable(this);
@@ -84,7 +84,7 @@ public abstract class AbstractScopedDrawable extends AbstractDrawable implements
     // arrows in the next scope
     private void drawEndOfScopeArrow(FlowGraph graph, Graphics2D graphics) {
         FindFirstNodeOutsideScope.of(graph, this).ifPresent(firstNodeOutsideScope -> {
-            if (IsLastScopeBeforeNode.of(graph, AbstractScopedDrawable.this, firstNodeOutsideScope)) {
+            if (IsLastScopeBeforeNode.of(graph, AbstractScopedGraphNode.this, firstNodeOutsideScope)) {
                 ScopeBoundaries boundaries = scopeBoundariesDrawable.getBoundaries(graph, graphics);
 
                 Point barycenter = firstNodeOutsideScope.getBarycenter(graphics);

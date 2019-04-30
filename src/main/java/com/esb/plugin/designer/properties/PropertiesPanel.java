@@ -5,7 +5,7 @@ import com.esb.plugin.component.generic.GenericPropertyRenderer;
 import com.esb.plugin.designer.SelectListener;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.GraphNode;
-import com.esb.plugin.graph.drawable.decorators.NothingSelectedNode;
+import com.esb.plugin.graph.drawable.NothingSelectedNode;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBColor;

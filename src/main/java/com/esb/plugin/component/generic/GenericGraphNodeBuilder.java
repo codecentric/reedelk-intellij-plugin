@@ -28,7 +28,7 @@ public class GenericGraphNodeBuilder extends AbstractBuilder {
                     component.setPropertyValue(propertyName, propertyValue);
                 });
 
-        GenericComponentDrawable drawable = new GenericComponentDrawable(component);
+        GenericComponentGraphNode drawable = new GenericComponentGraphNode(component);
 
         graph.add(parent, drawable);
 

@@ -13,17 +13,17 @@ import java.awt.image.ImageObserver;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class AbstractDrawable implements GraphNode {
+public abstract class AbstractGraphNode implements GraphNode {
 
     private final Component component;
 
-    private final Drawable iconDrawable;
-    private final Drawable arrowsDrawable;
-    private final Drawable selectedItemDrawable;
-    private final Drawable componentTitleDrawable;
-    private final Drawable componentDescriptionDrawable;
+    private final Drawable icon;
+    private final Drawable arrows;
+    private final Drawable componentTitle;
+    private final Drawable selectedItemBox;
+    private final Drawable componentDescription;
 
-    // x and y represent the center position os this Drawable.
+    // x and y represent the center position of this Drawable.
     private int x;
     private int y;
 
@@ -34,25 +34,25 @@ public abstract class AbstractDrawable implements GraphNode {
     private boolean dragging;
     private boolean selected;
 
-    public AbstractDrawable(Component component) {
+    public AbstractGraphNode(Component component) {
         this.component = component;
-        this.iconDrawable = new IconDrawable(component.getFullyQualifiedName());
-        this.componentTitleDrawable = new ComponentTitleDrawable(component.getDisplayName());
-        this.componentDescriptionDrawable = new ComponentDescriptionDrawable("A description");
+        icon = new IconDrawable(component.getFullyQualifiedName());
+        componentTitle = new ComponentTitleDrawable(component.getDisplayName());
+        componentDescription = new ComponentDescriptionDrawable("A description");
 
-        this.arrowsDrawable = new ArrowsDrawable(this);
-        this.selectedItemDrawable = new SelectedItemDrawable(this);
+        arrows = new ArrowsDrawable(this);
+        selectedItemBox = new SelectedItemDrawable(this);
     }
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-        int iconDrawableHeight = iconDrawable.height(graphics);
+        int iconDrawableHeight = icon.height(graphics);
         int halfIconDrawableHeight = Math.floorDiv(iconDrawableHeight, 2);
 
-        int componentTitleHeight = componentTitleDrawable.height(graphics);
+        int componentTitleHeight = componentTitle.height(graphics);
         int halfComponentTitleHeight = Math.floorDiv(componentTitleHeight, 2);
 
-        int componentDescriptionHeight = componentDescriptionDrawable.height(graphics);
+        int componentDescriptionHeight = componentDescription.height(graphics);
         int halfComponentDescriptionHeight = Math.floorDiv(componentDescriptionHeight, 2);
 
         int totalHeight = iconDrawableHeight + componentTitleHeight + componentDescriptionHeight;
@@ -60,38 +60,38 @@ public abstract class AbstractDrawable implements GraphNode {
 
         // Center icon
         int centerIconY = y() - halfTotalHeight + halfIconDrawableHeight;
-        iconDrawable.setPosition(x(), centerIconY);
+        icon.setPosition(x(), centerIconY);
 
         // Center title below icon
         int centerTitleY = y() - halfTotalHeight + iconDrawableHeight + halfComponentTitleHeight;
-        componentTitleDrawable.setPosition(x(), centerTitleY);
+        componentTitle.setPosition(x(), centerTitleY);
 
         // Center description below title
         int centerDescriptionY = y() - halfTotalHeight + iconDrawableHeight + componentTitleHeight + halfComponentDescriptionHeight;
-        componentDescriptionDrawable.setPosition(x(), centerDescriptionY);
+        componentDescription.setPosition(x(), centerDescriptionY);
 
         // Center selected box
-        selectedItemDrawable.setPosition(x(), y());
+        selectedItemBox.setPosition(x(), y());
 
         if (dragging) {
             // Dragging positions we need to center again
             centerIconY = draggedY - halfTotalHeight + halfIconDrawableHeight;
-            iconDrawable.drag(draggedX, centerIconY);
+            icon.drag(draggedX, centerIconY);
 
             centerTitleY = draggedY - halfTotalHeight + iconDrawableHeight + halfComponentTitleHeight;
-            componentTitleDrawable.drag(draggedX, centerTitleY);
+            componentTitle.drag(draggedX, centerTitleY);
 
             centerDescriptionY = draggedY - halfTotalHeight + iconDrawableHeight + componentTitleHeight + halfComponentDescriptionHeight;
-            componentDescriptionDrawable.drag(draggedX, centerDescriptionY);
+            componentDescription.drag(draggedX, centerDescriptionY);
         }
 
 
         drawConnections(graph, graphics, observer);
 
-        iconDrawable.draw(graph, graphics, observer);
-        componentTitleDrawable.draw(graph, graphics, observer);
-        componentDescriptionDrawable.draw(graph, graphics, observer);
-        selectedItemDrawable.draw(graph, graphics, observer);
+        icon.draw(graph, graphics, observer);
+        componentTitle.draw(graph, graphics, observer);
+        componentDescription.draw(graph, graphics, observer);
+        selectedItemBox.draw(graph, graphics, observer);
     }
 
     @Override
@@ -122,7 +122,7 @@ public abstract class AbstractDrawable implements GraphNode {
 
     @Override
     public boolean contains(ImageObserver observer, int x, int y) {
-        return iconDrawable.contains(observer, x, y);
+        return icon.contains(observer, x, y);
     }
 
     @Override
@@ -133,19 +133,19 @@ public abstract class AbstractDrawable implements GraphNode {
     @Override
     public void selected() {
         selected = true;
-        iconDrawable.selected();
-        selectedItemDrawable.selected();
-        componentTitleDrawable.selected();
-        componentDescriptionDrawable.selected();
+        icon.selected();
+        selectedItemBox.selected();
+        componentTitle.selected();
+        componentDescription.selected();
     }
 
     @Override
     public void unselected() {
         selected = false;
-        iconDrawable.unselected();
-        selectedItemDrawable.unselected();
-        componentTitleDrawable.unselected();
-        componentDescriptionDrawable.unselected();
+        icon.unselected();
+        selectedItemBox.unselected();
+        componentTitle.unselected();
+        componentDescription.unselected();
     }
 
     @Override
@@ -153,30 +153,30 @@ public abstract class AbstractDrawable implements GraphNode {
         draggedX = x;
         draggedY = y;
 
-        iconDrawable.drag(x, y);
-        selectedItemDrawable.drag(x, y);
-        componentTitleDrawable.drag(x, y);
-        componentDescriptionDrawable.drag(x, y);
+        icon.drag(x, y);
+        selectedItemBox.drag(x, y);
+        componentTitle.drag(x, y);
+        componentDescription.drag(x, y);
     }
 
     @Override
     public void dragging() {
         dragging = true;
 
-        iconDrawable.dragging();
-        selectedItemDrawable.dragging();
-        componentTitleDrawable.dragging();
-        componentDescriptionDrawable.dragging();
+        icon.dragging();
+        selectedItemBox.dragging();
+        componentTitle.dragging();
+        componentDescription.dragging();
     }
 
     @Override
     public void drop() {
         dragging = false;
 
-        iconDrawable.drop();
-        selectedItemDrawable.drop();
-        componentTitleDrawable.drop();
-        componentDescriptionDrawable.drop();
+        icon.drop();
+        selectedItemBox.drop();
+        componentTitle.drop();
+        componentDescription.drop();
     }
 
     @Override
@@ -187,9 +187,9 @@ public abstract class AbstractDrawable implements GraphNode {
     @Override
     public Point getBarycenter(Graphics2D graphics) {
         // It it is the center of the Icon.
-        int iconDrawableHeight = iconDrawable.height(graphics);
-        int componentTitleHeight = componentTitleDrawable.height(graphics);
-        int componentDescriptionHeight = componentDescriptionDrawable.height(graphics);
+        int iconDrawableHeight = icon.height(graphics);
+        int componentTitleHeight = componentTitle.height(graphics);
+        int componentDescriptionHeight = componentDescription.height(graphics);
 
         int totalHeight = iconDrawableHeight + componentTitleHeight + componentDescriptionHeight;
 
@@ -211,6 +211,6 @@ public abstract class AbstractDrawable implements GraphNode {
                 return;
             }
         }
-        arrowsDrawable.draw(graph, graphics, observer);
+        arrows.draw(graph, graphics, observer);
     }
 }

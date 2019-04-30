@@ -2,7 +2,7 @@ package com.esb.plugin.graph.deserializer;
 
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.GraphNode;
-import com.esb.plugin.graph.drawable.StopDrawable;
+import com.esb.plugin.graph.drawable.StopGraphNode;
 
 import java.util.List;
 
@@ -10,8 +10,8 @@ import static com.google.common.base.Preconditions.checkState;
 
 /*
  * This class removes from a given flow graph all the nodes having
- * type 'StopDrawable' and bridges the incoming node to the successor
- * of the 'StopDrawable' node.
+ * type 'StopGraphNode' and bridges the incoming node to the successor
+ * of the 'StopGraphNode' node.
  *
  * The graph does not display to the user 'Stop' nodes since they
  * are only used to build the graph.
@@ -46,7 +46,7 @@ class StopNodesRemover {
         // Remove all nodes of type stop:
         // all inbound/outbound edges have been removed above
         originalGraph.breadthFirstTraversal(drawable -> {
-            if (drawable instanceof StopDrawable) {
+            if (drawable instanceof StopGraphNode) {
                 copy.remove(drawable);
             }
         });
@@ -58,7 +58,7 @@ class StopNodesRemover {
         if (graph.successors(drawable).size() == 1) {
             return graph.successors(drawable)
                     .stream()
-                    .anyMatch(drawable1 -> drawable1 instanceof StopDrawable);
+                    .anyMatch(drawable1 -> drawable1 instanceof StopGraphNode);
         }
         return false;
     }

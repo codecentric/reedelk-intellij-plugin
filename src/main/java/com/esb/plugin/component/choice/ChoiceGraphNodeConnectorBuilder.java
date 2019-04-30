@@ -3,7 +3,7 @@ package com.esb.plugin.component.choice;
 import com.esb.component.FlowReference;
 import com.esb.plugin.component.Component;
 import com.esb.plugin.component.ComponentDescriptor;
-import com.esb.plugin.component.flowreference.FlowReferenceDrawable;
+import com.esb.plugin.component.flowreference.FlowReferenceGraphNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphImpl;
 import com.esb.plugin.graph.GraphNode;
@@ -24,10 +24,10 @@ public class ChoiceGraphNodeConnectorBuilder implements ConnectorBuilder {
                 .componentDescriptorByName(FlowReference.class.getName());
         Component component = new Component(componentDescriptor);
 
-        FlowReferenceDrawable placeholderDrawable = new FlowReferenceDrawable(component);
+        FlowReferenceGraphNode placeholderDrawable = new FlowReferenceGraphNode(component);
         choiceGraph.add(componentToAdd, placeholderDrawable);
 
-        ((ChoiceDrawable) componentToAdd).addToScope(placeholderDrawable);
+        ((ChoiceGraphNode) componentToAdd).addToScope(placeholderDrawable);
 
         return new ScopeDrawableConnector(graph, choiceGraph);
     }

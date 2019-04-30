@@ -2,11 +2,12 @@ package com.esb.plugin.graph.drawable.decorators;
 
 import com.esb.plugin.commons.Icons;
 import com.esb.plugin.graph.FlowGraph;
+import com.esb.plugin.graph.drawable.Drawable;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
-public class IconDrawable extends AbstractDrawable {
+public class IconDrawable implements Drawable {
 
     private static final int WIDTH = 60;
     private static final int HEIGHT = 60;

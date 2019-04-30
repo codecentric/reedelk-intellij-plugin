@@ -5,8 +5,8 @@ import com.esb.plugin.graph.FlowGraphChangeAware;
 import com.esb.plugin.graph.FlowGraphImpl;
 import com.esb.plugin.graph.GraphNode;
 import com.esb.plugin.graph.action.RemoveNodeAction;
+import com.esb.plugin.graph.drawable.NothingSelectedNode;
 import com.esb.plugin.graph.drawable.ScopedDrawable;
-import com.esb.plugin.graph.drawable.decorators.NothingSelectedNode;
 import com.esb.plugin.graph.scope.FindScope;
 import com.intellij.openapi.module.Module;
 

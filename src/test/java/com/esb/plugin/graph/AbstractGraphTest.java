@@ -2,8 +2,8 @@ package com.esb.plugin.graph;
 
 import com.esb.plugin.component.Component;
 import com.esb.plugin.component.ComponentDescriptor;
-import com.esb.plugin.component.choice.ChoiceDrawable;
-import com.esb.plugin.component.generic.GenericComponentDrawable;
+import com.esb.plugin.component.choice.ChoiceGraphNode;
+import com.esb.plugin.component.generic.GenericComponentGraphNode;
 import com.esb.plugin.graph.drawable.ScopedDrawable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -74,24 +74,24 @@ public abstract class AbstractGraphTest {
         cc4 = createComponent("c4");
         cc5 = createComponent("c5");
 
-        root = new GenericComponentDrawable(cRoot);
-        n1 = new GenericComponentDrawable(cn1);
-        n2 = new GenericComponentDrawable(cn2);
-        n3 = new GenericComponentDrawable(cn3);
-        n4 = new GenericComponentDrawable(cn4);
-        n5 = new GenericComponentDrawable(cn5);
-        n6 = new GenericComponentDrawable(cn6);
-        n7 = new GenericComponentDrawable(cn7);
-        n8 = new GenericComponentDrawable(cn8);
-        n9 = new GenericComponentDrawable(cn9);
-        n10 = new GenericComponentDrawable(cn10);
-        n11 = new GenericComponentDrawable(cn11);
+        root = new GenericComponentGraphNode(cRoot);
+        n1 = new GenericComponentGraphNode(cn1);
+        n2 = new GenericComponentGraphNode(cn2);
+        n3 = new GenericComponentGraphNode(cn3);
+        n4 = new GenericComponentGraphNode(cn4);
+        n5 = new GenericComponentGraphNode(cn5);
+        n6 = new GenericComponentGraphNode(cn6);
+        n7 = new GenericComponentGraphNode(cn7);
+        n8 = new GenericComponentGraphNode(cn8);
+        n9 = new GenericComponentGraphNode(cn9);
+        n10 = new GenericComponentGraphNode(cn10);
+        n11 = new GenericComponentGraphNode(cn11);
 
-        choice1 = new ChoiceDrawable(cc1);
-        choice2 = new ChoiceDrawable(cc2);
-        choice3 = new ChoiceDrawable(cc3);
-        choice4 = new ChoiceDrawable(cc4);
-        choice5 = new ChoiceDrawable(cc5);
+        choice1 = new ChoiceGraphNode(cc1);
+        choice2 = new ChoiceGraphNode(cc2);
+        choice3 = new ChoiceGraphNode(cc3);
+        choice4 = new ChoiceGraphNode(cc4);
+        choice5 = new ChoiceGraphNode(cc5);
     }
 
     private Component createComponent(String name) {

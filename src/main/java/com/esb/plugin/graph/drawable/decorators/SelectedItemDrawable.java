@@ -10,7 +10,7 @@ import java.awt.image.ImageObserver;
 import static java.awt.BasicStroke.CAP_ROUND;
 import static java.awt.BasicStroke.JOIN_ROUND;
 
-public class SelectedItemDrawable extends AbstractDrawable {
+public class SelectedItemDrawable implements Drawable {
 
     private static final int INNER_PADDING = 3;
     private final Stroke DOTTED_STROKE = new BasicStroke(0.7f, CAP_ROUND, JOIN_ROUND, 0, new float[]{3}, 0);
