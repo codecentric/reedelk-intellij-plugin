@@ -3,7 +3,6 @@ package com.esb.plugin.graph.action.strategy;
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.connector.Connector;
-import com.esb.plugin.graph.node.Drawable;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedDrawable;
 import com.esb.plugin.graph.scope.FindFirstNodeOutsideScope;
@@ -31,7 +30,7 @@ public class PrecedingScopedDrawable extends AbstractAddStrategy {
         for (int successorIndex = 0; successorIndex < successors.size(); successorIndex++) {
             // We search the node on which the drop point lies on the Y axis.
             // If one is found, we stop.
-            Drawable successor = successors.get(successorIndex);
+            GraphNode successor = successors.get(successorIndex);
             int yTopBound = successor.y() - Tile.HALF_HEIGHT + Math.floorDiv(Tile.HEIGHT, 4);
             int yBottomBound = successor.y() - Tile.HALF_HEIGHT - Math.floorDiv(Tile.HEIGHT, 4);
 

@@ -3,7 +3,6 @@ package com.esb.plugin.graph.action.strategy;
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.connector.Connector;
-import com.esb.plugin.graph.node.Drawable;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedDrawable;
 import com.esb.plugin.graph.scope.BelongToSameScope;
@@ -90,7 +89,7 @@ public class PrecedingDrawableWithOneSuccessor extends AbstractAddStrategy {
 
     }
 
-    private boolean withinYBounds(int dropY, Drawable node) {
+    private boolean withinYBounds(int dropY, GraphNode node) {
         return dropY > node.y() - Tile.HALF_HEIGHT &&
                 dropY < node.y() + Tile.HALF_HEIGHT;
     }

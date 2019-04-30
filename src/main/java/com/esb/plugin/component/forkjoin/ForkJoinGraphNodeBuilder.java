@@ -1,13 +1,13 @@
 package com.esb.plugin.component.forkjoin;
 
+import com.esb.component.Stop;
 import com.esb.internal.commons.JsonParser;
-import com.esb.plugin.component.Component;
+import com.esb.plugin.component.stop.StopGraphNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.deserializer.AbstractBuilder;
 import com.esb.plugin.graph.deserializer.BuilderContext;
-import com.esb.plugin.graph.deserializer.DrawableBuilder;
+import com.esb.plugin.graph.deserializer.GraphNodeBuilder;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.StopGraphNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -20,13 +20,11 @@ public class ForkJoinGraphNodeBuilder extends AbstractBuilder {
     @Override
     public GraphNode build(GraphNode parent, JSONObject componentDefinition) {
 
-        StopGraphNode stopDrawable = new StopGraphNode();
+        StopGraphNode stopDrawable = context.instantiateGraphNode(Stop.class.getName());
 
         String name = JsonParser.Implementor.name(componentDefinition);
 
-        Component forkComponent = context.instantiateComponent(name);
-
-        ForkJoinGraphNode forkJoinDrawable = new ForkJoinGraphNode(forkComponent);
+        ForkJoinGraphNode forkJoinDrawable = context.instantiateGraphNode(name);
 
         graph.add(parent, forkJoinDrawable);
 
@@ -41,7 +39,7 @@ public class ForkJoinGraphNodeBuilder extends AbstractBuilder {
 
             for (int j = 0; j < nextComponents.length(); j++) {
                 JSONObject currentComponentDefinition = nextComponents.getJSONObject(j);
-                currentDrawable = DrawableBuilder.get()
+                currentDrawable = GraphNodeBuilder.get()
                         .componentDefinition(currentComponentDefinition)
                         .context(context)
                         .graph(graph)
@@ -54,7 +52,7 @@ public class ForkJoinGraphNodeBuilder extends AbstractBuilder {
         }
 
         JSONObject joinComponent = JsonParser.ForkJoin.getJoin(componentDefinition);
-        return DrawableBuilder.get()
+        return GraphNodeBuilder.get()
                 .componentDefinition(joinComponent)
                 .parent(stopDrawable)
                 .context(context)

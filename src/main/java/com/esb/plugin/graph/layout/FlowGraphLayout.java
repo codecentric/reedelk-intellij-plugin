@@ -2,7 +2,6 @@ package com.esb.plugin.graph.layout;
 
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.node.Drawable;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopeBoundaries;
 import com.esb.plugin.graph.node.ScopedDrawable;
@@ -63,8 +62,8 @@ public class FlowGraphLayout {
                 // Otherwise take min and max.
                 Optional<ScopedDrawable> scopeItIsJoining = FindJoiningScope.of(graph, node);
 
-                int min = predecessors.stream().mapToInt(Drawable::y).min().getAsInt();
-                int max = predecessors.stream().mapToInt(Drawable::y).max().getAsInt();
+                int min = predecessors.stream().mapToInt(GraphNode::y).min().getAsInt();
+                int max = predecessors.stream().mapToInt(GraphNode::y).max().getAsInt();
 
                 // TODO: Test this logic properly and optimize the code.
                 // If this node is joining a scope, then we place it in the

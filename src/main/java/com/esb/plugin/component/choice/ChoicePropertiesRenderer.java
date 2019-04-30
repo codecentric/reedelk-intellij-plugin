@@ -6,7 +6,6 @@ import com.intellij.ui.components.JBPanel;
 
 public class ChoicePropertiesRenderer implements PropertyRenderer {
 
-
     @Override
     public void render(JBPanel panel, Component component) {
 

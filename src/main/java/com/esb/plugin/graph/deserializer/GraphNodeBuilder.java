@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DrawableBuilder {
+public class GraphNodeBuilder {
 
     private FlowGraph graph;
     private GraphNode parent;
@@ -37,10 +37,10 @@ public class DrawableBuilder {
         COMPONENT_NAME_HANDLER = Collections.unmodifiableMap(tmp);
     }
 
-    private DrawableBuilder() {
+    private GraphNodeBuilder() {
     }
 
-    public DrawableBuilder context(BuilderContext context) {
+    public GraphNodeBuilder context(BuilderContext context) {
         this.context = context;
         return this;
     }
@@ -55,18 +55,18 @@ public class DrawableBuilder {
         }
     }
 
-    public DrawableBuilder parent(GraphNode parent) {
+    public GraphNodeBuilder parent(GraphNode parent) {
         this.parent = parent;
         return this;
     }
 
-    public DrawableBuilder componentDefinition(JSONObject componentDefinition) {
+    public GraphNodeBuilder componentDefinition(JSONObject componentDefinition) {
         this.componentDefinition = componentDefinition;
         return this;
     }
 
-    public static DrawableBuilder get() {
-        return new DrawableBuilder();
+    public static GraphNodeBuilder get() {
+        return new GraphNodeBuilder();
     }
 
     public GraphNode build() {
@@ -75,7 +75,7 @@ public class DrawableBuilder {
         return instantiateBuilder(graph, context, builderClazz).build(parent, componentDefinition);
     }
 
-    public DrawableBuilder graph(FlowGraph graph) {
+    public GraphNodeBuilder graph(FlowGraph graph) {
         this.graph = graph;
         return this;
     }

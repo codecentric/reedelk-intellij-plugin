@@ -19,7 +19,9 @@ public class GenericGraphNodeBuilder extends AbstractBuilder {
 
         String name = JsonParser.Implementor.name(componentDefinition);
 
-        Component component = context.instantiateComponent(name);
+        GenericComponentGraphNode node = context.instantiateGraphNode(name);
+
+        Component component = node.component();
 
         // fill up data from component definition
         component.componentDataKeys()
@@ -28,11 +30,9 @@ public class GenericGraphNodeBuilder extends AbstractBuilder {
                     component.setPropertyValue(propertyName, propertyValue);
                 });
 
-        GenericComponentGraphNode drawable = new GenericComponentGraphNode(component);
+        graph.add(parent, node);
 
-        graph.add(parent, drawable);
-
-        return drawable;
+        return node;
     }
 
 }

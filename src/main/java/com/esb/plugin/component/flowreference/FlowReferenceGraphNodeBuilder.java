@@ -1,7 +1,6 @@
 package com.esb.plugin.component.flowreference;
 
 import com.esb.internal.commons.JsonParser;
-import com.esb.plugin.component.Component;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.deserializer.AbstractBuilder;
 import com.esb.plugin.graph.deserializer.BuilderContext;
@@ -19,9 +18,7 @@ public class FlowReferenceGraphNodeBuilder extends AbstractBuilder {
 
         String name = JsonParser.Implementor.name(componentDefinition);
 
-        Component component = context.instantiateComponent(name);
-
-        FlowReferenceGraphNode drawable = new FlowReferenceGraphNode(component);
+        FlowReferenceGraphNode drawable = context.instantiateGraphNode(name);
 
         graph.add(parent, drawable);
 

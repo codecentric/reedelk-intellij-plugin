@@ -94,7 +94,7 @@ public abstract class AbstractBuilderTest {
 
         doReturn(component)
                 .when(context)
-                .instantiateComponent(fullyQualifiedName);
+                .instantiateGraphNode(fullyQualifiedName);
 
         return component;
     }

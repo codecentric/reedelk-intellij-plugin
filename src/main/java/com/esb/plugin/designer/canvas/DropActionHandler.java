@@ -56,11 +56,9 @@ class DropActionHandler extends AbstractActionHandler {
         if (modifiableGraph.isChanged()) {
             dropEvent.acceptDrop(ACTION_COPY_OR_MOVE);
             return Optional.of(modifiableGraph);
-
-        } else {
-            dropEvent.rejectDrop();
         }
 
+        dropEvent.rejectDrop();
         return Optional.empty();
     }
 

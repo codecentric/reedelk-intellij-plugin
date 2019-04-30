@@ -1,7 +1,8 @@
 package com.esb.plugin.graph.deserializer;
 
-import com.esb.plugin.component.Component;
 import com.esb.plugin.component.ComponentDescriptor;
+import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.node.GraphNodeFactory;
 import com.esb.plugin.service.module.ComponentService;
 import com.intellij.openapi.module.Module;
 
@@ -13,9 +14,9 @@ public class BuilderContext {
         this.module = module;
     }
 
-    public Component instantiateComponent(String componentName) {
-        ComponentDescriptor descriptor = ComponentService.getInstance(module)
+    public <T extends GraphNode> T instantiateGraphNode(String componentName) {
+        ComponentDescriptor componentDescriptor = ComponentService.getInstance(module)
                 .componentDescriptorByName(componentName);
-        return new Component(descriptor);
+        return GraphNodeFactory.get(componentDescriptor);
     }
 }

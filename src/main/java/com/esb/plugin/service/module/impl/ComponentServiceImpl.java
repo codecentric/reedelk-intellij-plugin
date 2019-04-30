@@ -23,6 +23,7 @@ public class ComponentServiceImpl implements ComponentService {
     // TODO: This should not be hardcoded here.
     private static final String COMPONENT_ANNOTATION_NAME = "org.osgi.service.component.annotations.Component";
     private static final String COMPONENT_SUPERCLASS = Component.class.getName();
+
     private final Module module;
     private Set<ComponentDescriptor> componentDescriptors = new HashSet<>();
 

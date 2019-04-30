@@ -33,7 +33,7 @@ public class FlowGraphBuilder {
 
             JSONObject implementorDefinition = (JSONObject) flow.get(i);
 
-            current = DrawableBuilder.get()
+            current = GraphNodeBuilder.get()
                     .graph(graph)
                     .parent(current)
                     .context(context)

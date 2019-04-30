@@ -1,9 +1,9 @@
 package com.esb.plugin.component.choice;
 
 import com.esb.component.Choice;
+import com.esb.plugin.component.stop.StopGraphNode;
 import com.esb.plugin.graph.deserializer.AbstractBuilderTest;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.StopGraphNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;

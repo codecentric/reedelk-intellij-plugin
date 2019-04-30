@@ -1,8 +1,8 @@
 package com.esb.plugin.graph.deserializer;
 
+import com.esb.plugin.component.stop.StopGraphNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.StopGraphNode;
 
 import java.util.List;
 
