@@ -1,5 +1,6 @@
 package com.esb.plugin.designer.properties;
 
+import com.esb.plugin.commons.Icons;
 import com.esb.plugin.component.Component;
 import com.esb.plugin.designer.SelectListener;
 import com.esb.plugin.graph.FlowGraph;
@@ -9,6 +10,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
+import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.util.ui.JBUI;
 
 import javax.swing.*;
@@ -22,7 +24,7 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
     public PropertiesPanel(Module module, VirtualFile file) {
         MatteBorder matteBorder = BorderFactory.createMatteBorder(0, 10, 0, 0, getBackground());
         setBorder(matteBorder);
-        setBackground(JBColor.WHITE);
+        setBackground(JBColor.YELLOW);
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.module = module;
         this.file = file;
@@ -36,15 +38,19 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
 
         removeAll();
 
-        add(createTitleLabel(component.getDisplayName()));
 
-        PropertyRendererFactory.get()
+        JBPanel propertiesPanel = PropertyRendererFactory.get()
                 .component(component)
                 .module(module)
                 .graph(graph)
                 .file(file)
                 .build()
-                .render(this, node);
+                .render(node);
+
+        JBTabbedPane tabbedPane = new JBTabbedPane();
+        Icon icon = Icons.forComponentAsIcon(component.getFullyQualifiedName());
+        tabbedPane.addTab(component.getDisplayName(), icon, propertiesPanel, component.getDisplayName() + " properties");
+        add(tabbedPane);
 
         // Add spacer
         add(Box.createVerticalGlue());

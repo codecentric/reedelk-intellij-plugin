@@ -18,13 +18,16 @@ public class GenericComponentPropertyRenderer extends AbstractPropertyRenderer {
     }
 
     @Override
-    public void render(JBPanel panel, GraphNode node) {
+    public JBPanel render(GraphNode node) {
         Component component = node.component();
 
+        JBPanel propertiesBoxContainer = new JBPanel();
         component.getPropertiesNames().forEach(propertyName -> {
             PropertyBox propertyBox = createPropertyBox(component, propertyName);
-            panel.add(propertyBox);
+            propertiesBoxContainer.add(propertyBox);
         });
+
+        return propertiesBoxContainer;
     }
 
     @NotNull

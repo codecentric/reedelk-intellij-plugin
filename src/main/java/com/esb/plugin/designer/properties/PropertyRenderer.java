@@ -5,6 +5,6 @@ import com.intellij.ui.components.JBPanel;
 
 public interface PropertyRenderer {
 
-    void render(JBPanel panel, GraphNode node);
+    JBPanel render(GraphNode node);
 
 }

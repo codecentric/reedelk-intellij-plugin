@@ -14,7 +14,7 @@ public class StopPropertyRenderer extends AbstractPropertyRenderer {
     }
 
     @Override
-    public void render(JBPanel panel, GraphNode node) {
+    public JBPanel render(GraphNode node) {
         throw new UnsupportedOperationException();
     }
 }

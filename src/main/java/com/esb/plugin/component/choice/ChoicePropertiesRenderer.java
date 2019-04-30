@@ -4,6 +4,7 @@ import com.esb.plugin.designer.properties.AbstractPropertyRenderer;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
@@ -11,8 +12,8 @@ import com.intellij.ui.table.JBTable;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
-import java.awt.*;
 
 public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
 
@@ -21,18 +22,27 @@ public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
     }
 
     @Override
-    public void render(JBPanel panel, GraphNode node) {
+    public JBPanel render(GraphNode node) {
         TableModel model = new MyTableModel();
 
         final JBTable table = new JBTable(model);
-        table.setPreferredScrollableViewportSize(new Dimension(500, 70));
-        table.setFillsViewportHeight(true);
+
+        JComboBox<String> routeCombo = new ComboBox<>();
+        routeCombo.addItem("Route1");
+        routeCombo.addItem("Route2");
+        routeCombo.addItem("Route3");
+        routeCombo.addItem("Route4");
+
+        TableColumn column = table.getColumnModel().getColumn(1);
+        column.setCellEditor(new DefaultCellEditor(routeCombo));
 
         //Create the scroll pane and add the table to it.
         JScrollPane scrollPane = new JBScrollPane(table);
 
         //Add the scroll pane to this panel.
+        JBPanel panel = new JBPanel();
         panel.add(scrollPane);
+        return panel;
     }
 
     class MyTableModel extends AbstractTableModel {
