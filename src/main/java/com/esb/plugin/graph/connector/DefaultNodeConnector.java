@@ -2,14 +2,14 @@ package com.esb.plugin.graph.connector;
 
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.ScopedDrawable;
+import com.esb.plugin.graph.node.ScopedNode;
 
-public class NodeConnector implements Connector {
+public class DefaultNodeConnector implements Connector {
 
     private final GraphNode node;
     private final FlowGraph graph;
 
-    public NodeConnector(final FlowGraph graph, final GraphNode node) {
+    public DefaultNodeConnector(final FlowGraph graph, final GraphNode node) {
         this.graph = graph;
         this.node = node;
     }
@@ -35,12 +35,12 @@ public class NodeConnector implements Connector {
     }
 
     @Override
-    public void addToScope(ScopedDrawable scope) {
+    public void addToScope(ScopedNode scope) {
         scope.addToScope(node);
     }
 
     @Override
-    public void addPredecessor(ScopedDrawable predecessor, int index) {
+    public void addPredecessor(ScopedNode predecessor, int index) {
         graph.add(predecessor, node, index);
     }
 }

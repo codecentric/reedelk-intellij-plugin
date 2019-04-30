@@ -9,13 +9,13 @@ import org.json.JSONObject;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-public class FlowGraphBuilder {
+public class GraphBuilder {
 
     private final FlowGraph graph;
     private final BuilderContext context;
     private final JSONObject flowDefinition;
 
-    FlowGraphBuilder(String json, BuilderContext context) {
+    GraphBuilder(String json, BuilderContext context) {
         checkArgument(json != null, "JSON");
         checkArgument(context != null, "BuilderContext");
 
@@ -24,7 +24,7 @@ public class FlowGraphBuilder {
         this.flowDefinition = JsonParser.from(json);
     }
 
-    public FlowGraph graph() {
+    public FlowGraph deserialize() {
         JSONArray flow = JsonParser.Flow.getFlow(flowDefinition);
 
         GraphNode current = null;

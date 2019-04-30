@@ -6,7 +6,7 @@ import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphImpl;
 import com.esb.plugin.graph.connector.Connector;
 import com.esb.plugin.graph.connector.ConnectorBuilder;
-import com.esb.plugin.graph.connector.ScopeNodeConnector;
+import com.esb.plugin.graph.connector.ScopedNodeConnector;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.GraphNodeFactory;
 import com.intellij.openapi.module.Module;
@@ -24,6 +24,6 @@ public class ForkJoinConnectorBuilder implements ConnectorBuilder {
 
         ((ForkJoinNode) componentToAdd).addToScope(placeholderDrawable);
 
-        return new ScopeNodeConnector(graph, forkJoinGraph);
+        return new ScopedNodeConnector(graph, forkJoinGraph);
     }
 }

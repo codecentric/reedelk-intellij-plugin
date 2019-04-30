@@ -41,19 +41,13 @@ public class ConnectorFactory {
     private ConnectorFactory() {
     }
 
-    public ConnectorFactory componentToAdd(GraphNode componentToAdd) {
-        this.componentToAdd = componentToAdd;
-        return this;
-    }
-
     public static ConnectorFactory get() {
         return new ConnectorFactory();
     }
 
-    public Connector build() {
-        String fullyQualifiedName = componentToAdd.component().getFullyQualifiedName();
-        Class<? extends ConnectorBuilder> builderClazz = CONNECTOR_BUILDER.getOrDefault(fullyQualifiedName, GENERIC_BUILDER);
-        return instantiateBuilder(builderClazz).build(module, graph, componentToAdd);
+    public ConnectorFactory componentToAdd(GraphNode componentToAdd) {
+        this.componentToAdd = componentToAdd;
+        return this;
     }
 
     public ConnectorFactory graph(FlowGraph graph) {
@@ -64,6 +58,12 @@ public class ConnectorFactory {
     public ConnectorFactory module(Module module) {
         this.module = module;
         return this;
+    }
+
+    public Connector build() {
+        String fullyQualifiedName = componentToAdd.component().getFullyQualifiedName();
+        Class<? extends ConnectorBuilder> builderClazz = CONNECTOR_BUILDER.getOrDefault(fullyQualifiedName, GENERIC_BUILDER);
+        return instantiateBuilder(builderClazz).build(module, graph, componentToAdd);
     }
 
     private static ConnectorBuilder instantiateBuilder(Class<? extends ConnectorBuilder> builderClazz) {

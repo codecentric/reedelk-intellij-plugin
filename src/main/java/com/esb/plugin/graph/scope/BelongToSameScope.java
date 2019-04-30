@@ -2,15 +2,15 @@ package com.esb.plugin.graph.scope;
 
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.ScopedDrawable;
+import com.esb.plugin.graph.node.ScopedNode;
 
 import java.util.Optional;
 
 public class BelongToSameScope {
 
     public static boolean from(FlowGraph graph, GraphNode drawable1, GraphNode drawable2) {
-        Optional<ScopedDrawable> scope1 = FindScope.of(graph, drawable1);
-        Optional<ScopedDrawable> scope2 = FindScope.of(graph, drawable2);
+        Optional<ScopedNode> scope1 = FindScope.of(graph, drawable1);
+        Optional<ScopedNode> scope2 = FindScope.of(graph, drawable2);
         if (!scope1.isPresent() && !scope2.isPresent()) {
             // they both don't belong to ANY scope.
             return true;

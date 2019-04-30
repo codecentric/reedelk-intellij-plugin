@@ -6,7 +6,7 @@ import com.esb.plugin.graph.FlowGraphImpl;
 import com.esb.plugin.graph.action.RemoveNodeAction;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.NothingSelectedNode;
-import com.esb.plugin.graph.node.ScopedDrawable;
+import com.esb.plugin.graph.node.ScopedNode;
 import com.esb.plugin.graph.scope.FindScope;
 import com.intellij.openapi.module.Module;
 
@@ -59,7 +59,7 @@ public class MoveActionHandler extends AbstractActionHandler {
         componentRemover.remove();
 
         // 3. Remove the dropped node from any scope it might belong to
-        Optional<ScopedDrawable> selectedScope = FindScope.of(copy, selected);
+        Optional<ScopedNode> selectedScope = FindScope.of(copy, selected);
         selectedScope.ifPresent(scopedDrawable -> scopedDrawable.removeFromScope(selected));
 
         // 4. Add the dropped component back to the graph to the dropped position.

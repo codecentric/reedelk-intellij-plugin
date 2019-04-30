@@ -3,7 +3,7 @@ package com.esb.plugin.graph.scope;
 import com.esb.plugin.graph.AbstractGraphTest;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphImpl;
-import com.esb.plugin.graph.node.ScopedDrawable;
+import com.esb.plugin.graph.node.ScopedNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +30,7 @@ class FindJoiningScopeTest extends AbstractGraphTest {
         choice1.addToScope(n1);
 
         // When
-        Optional<ScopedDrawable> joiningScope = FindJoiningScope.of(graph, n2);
+        Optional<ScopedNode> joiningScope = FindJoiningScope.of(graph, n2);
 
         // Then
         assertThat(joiningScope.isPresent()).isTrue();
@@ -56,7 +56,7 @@ class FindJoiningScopeTest extends AbstractGraphTest {
         choice2.setPosition(25, 90);
 
         // When
-        Optional<ScopedDrawable> joiningScope = FindJoiningScope.of(graph, n3);
+        Optional<ScopedNode> joiningScope = FindJoiningScope.of(graph, n3);
 
         // Then
         assertThat(joiningScope.isPresent()).isTrue();
@@ -80,7 +80,7 @@ class FindJoiningScopeTest extends AbstractGraphTest {
         choice2.addToScope(n2);
 
         // When
-        Optional<ScopedDrawable> joiningScope = FindJoiningScope.of(graph, n3);
+        Optional<ScopedNode> joiningScope = FindJoiningScope.of(graph, n3);
 
         // Then
         assertThat(joiningScope.isPresent()).isTrue();

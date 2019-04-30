@@ -3,7 +3,7 @@ package com.esb.plugin.graph.scope;
 import com.esb.plugin.graph.AbstractGraphTest;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphImpl;
-import com.esb.plugin.graph.node.ScopedDrawable;
+import com.esb.plugin.graph.node.ScopedNode;
 import org.junit.jupiter.api.Test;
 
 import java.util.Stack;
@@ -27,7 +27,7 @@ class FindScopesTest extends AbstractGraphTest {
         choice2.addToScope(n3);
 
         // When
-        Stack<ScopedDrawable> scopes = FindScopes.of(graph, n3);
+        Stack<ScopedNode> scopes = FindScopes.of(graph, n3);
 
         // Then
         assertThat(scopes.pop()).isEqualTo(choice2); // innermost is choice 2
@@ -56,7 +56,7 @@ class FindScopesTest extends AbstractGraphTest {
         choice3.addToScope(n4);
 
         // When
-        Stack<ScopedDrawable> scopes = FindScopes.of(graph, n4);
+        Stack<ScopedNode> scopes = FindScopes.of(graph, n4);
 
         // Then
         assertThat(scopes.pop()).isEqualTo(choice3);
@@ -73,7 +73,7 @@ class FindScopesTest extends AbstractGraphTest {
         graph.add(root, n1);
 
         // When
-        Stack<ScopedDrawable> scopes = FindScopes.of(graph, n1);
+        Stack<ScopedNode> scopes = FindScopes.of(graph, n1);
 
         // Then
         assertThat(scopes).isEmpty();
@@ -86,7 +86,7 @@ class FindScopesTest extends AbstractGraphTest {
         graph.root(root);
 
         // When
-        Stack<ScopedDrawable> scopes = FindScopes.of(graph, root);
+        Stack<ScopedNode> scopes = FindScopes.of(graph, root);
 
         // Then
         assertThat(scopes).isEmpty();
@@ -109,7 +109,7 @@ class FindScopesTest extends AbstractGraphTest {
         choice1.addToScope(n3);
 
         // When
-        Stack<ScopedDrawable> scopes = FindScopes.of(graph, n3);
+        Stack<ScopedNode> scopes = FindScopes.of(graph, n3);
 
         // Then
         assertThat(scopes.pop()).isEqualTo(choice1); // scope is only choice 1
@@ -124,7 +124,7 @@ class FindScopesTest extends AbstractGraphTest {
         graph.add(root, choice1);
 
         // When
-        Stack<ScopedDrawable> scopes = FindScopes.of(graph, choice1);
+        Stack<ScopedNode> scopes = FindScopes.of(graph, choice1);
 
         // Then
         assertThat(scopes.pop()).isEqualTo(choice1);
@@ -141,7 +141,7 @@ class FindScopesTest extends AbstractGraphTest {
         choice1.addToScope(n1);
 
         // When
-        Stack<ScopedDrawable> scopes = FindScopes.of(graph, n1);
+        Stack<ScopedNode> scopes = FindScopes.of(graph, n1);
 
         // Then
         assertThat(scopes.pop()).isEqualTo(choice1);
@@ -198,7 +198,7 @@ class FindScopesTest extends AbstractGraphTest {
         choice5.addToScope(n10);
 
         // When
-        Stack<ScopedDrawable> scopes = FindScopes.of(graph, n10);
+        Stack<ScopedNode> scopes = FindScopes.of(graph, n10);
 
         // Then
         assertThat(scopes.pop()).isEqualTo(choice5);
@@ -219,7 +219,7 @@ class FindScopesTest extends AbstractGraphTest {
         choice1.addToScope(n1);
 
         // When
-        Stack<ScopedDrawable> scopes = FindScopes.of(graph, n2);
+        Stack<ScopedNode> scopes = FindScopes.of(graph, n2);
 
         // Then
         assertThat(scopes).isEmpty();
@@ -239,7 +239,7 @@ class FindScopesTest extends AbstractGraphTest {
         choice2.addToScope(n2);
 
         // When
-        Stack<ScopedDrawable> scopes = FindScopes.of(graph, n2);
+        Stack<ScopedNode> scopes = FindScopes.of(graph, n2);
 
         // Then
         assertThat(scopes).containsExactly(choice2);

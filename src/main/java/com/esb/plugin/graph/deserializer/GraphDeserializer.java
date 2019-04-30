@@ -23,8 +23,8 @@ public class GraphDeserializer {
     public static Optional<FlowGraph> deserialize(Module module, String json) {
         try {
             BuilderContext context = new BuilderContext(module);
-            FlowGraphBuilder builder = new FlowGraphBuilder(json, context);
-            FlowGraph graph = builder.graph();
+            GraphBuilder builder = new GraphBuilder(json, context);
+            FlowGraph graph = builder.deserialize();
             return Optional.of(graph);
         } catch (Exception e) {
             return Optional.empty();

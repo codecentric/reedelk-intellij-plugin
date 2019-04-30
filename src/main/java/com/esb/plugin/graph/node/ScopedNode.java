@@ -5,7 +5,7 @@ import com.esb.plugin.graph.FlowGraph;
 import java.awt.*;
 import java.util.Collection;
 
-public interface ScopedDrawable extends GraphNode {
+public interface ScopedNode extends GraphNode {
 
     int VERTICAL_PADDING = 5;
     int HORIZONTAL_PADDING = 5;

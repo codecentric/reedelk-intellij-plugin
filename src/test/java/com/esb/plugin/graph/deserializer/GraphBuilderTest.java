@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-class FlowGraphBuilderTest extends AbstractBuilderTest {
+class GraphBuilderTest extends AbstractBuilderTest {
 
     @BeforeEach
     protected void setUp() {
@@ -34,10 +34,10 @@ class FlowGraphBuilderTest extends AbstractBuilderTest {
     void shouldBuildFlowWithChoiceCorrectly() {
         // Given
         String json = readJson(TestJson.FLOW_WITH_CHOICE);
-        FlowGraphBuilder builder = new FlowGraphBuilder(json, context);
+        GraphBuilder builder = new GraphBuilder(json, context);
 
         // When
-        FlowGraph graph = builder.graph();
+        FlowGraph graph = builder.deserialize();
 
         // Then
         assertThat(graph).isNotNull();

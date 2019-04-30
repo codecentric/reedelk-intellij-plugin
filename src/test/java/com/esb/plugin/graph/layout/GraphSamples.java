@@ -7,7 +7,7 @@ import com.esb.plugin.component.generic.GenericComponentNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphImpl;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.ScopedDrawable;
+import com.esb.plugin.graph.node.ScopedNode;
 
 public class GraphSamples {
 
@@ -42,10 +42,10 @@ public class GraphSamples {
     GraphNode n10 = new GenericComponentNode(cn10);
     GraphNode n11 = new GenericComponentNode(cn11);
 
-    ScopedDrawable c1 = new ChoiceNode(cc1);
-    ScopedDrawable c2 = new ChoiceNode(cc2);
-    ScopedDrawable c3 = new ChoiceNode(cc3);
-    ScopedDrawable c4 = new ChoiceNode(cc4);
+    ScopedNode c1 = new ChoiceNode(cc1);
+    ScopedNode c2 = new ChoiceNode(cc2);
+    ScopedNode c3 = new ChoiceNode(cc3);
+    ScopedNode c4 = new ChoiceNode(cc4);
 
 
     public static FlowGraph graph1() {

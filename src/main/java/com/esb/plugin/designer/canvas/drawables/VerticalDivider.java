@@ -3,7 +3,7 @@ package com.esb.plugin.designer.canvas.drawables;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.Drawable;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.ScopedDrawable;
+import com.esb.plugin.graph.node.ScopedNode;
 import com.esb.plugin.graph.scope.FindFirstNodeOutsideScope;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
@@ -20,10 +20,10 @@ public class VerticalDivider implements Drawable {
     private final Stroke STROKE = new BasicStroke(1.3f, CAP_ROUND, JOIN_ROUND);
     private final JBColor VERTICAL_DIVIDER_COLOR = new JBColor(Gray._200, Gray._30);
 
-    private final ScopedDrawable scopedDrawable;
+    private final ScopedNode scopedNode;
 
-    public VerticalDivider(ScopedDrawable scopedDrawable) {
-        this.scopedDrawable = scopedDrawable;
+    public VerticalDivider(ScopedNode scopedNode) {
+        this.scopedNode = scopedNode;
     }
 
     @Override
@@ -31,20 +31,20 @@ public class VerticalDivider implements Drawable {
         graphics.setStroke(STROKE);
         graphics.setColor(VERTICAL_DIVIDER_COLOR);
 
-        int padding = (ScopedDrawable.VERTICAL_PADDING * 4) * 2;
+        int padding = (ScopedNode.VERTICAL_PADDING * 4) * 2;
 
-        GraphNode firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedDrawable).orElse(null);
+        GraphNode firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedNode).orElse(null);
 
-        int scopeHeight = maxHeight(graph, graphics, scopedDrawable, firstNodeOutsideScope);
+        int scopeHeight = maxHeight(graph, graphics, scopedNode, firstNodeOutsideScope);
         scopeHeight -= padding;
 
         int halfScopeHeight = Math.floorDiv(scopeHeight, 2);
 
-        int halfWidth = Math.floorDiv(scopedDrawable.width(graphics), 2);
+        int halfWidth = Math.floorDiv(scopedNode.width(graphics), 2);
 
-        int verticalX = scopedDrawable.x() + halfWidth - 6;
-        int verticalSeparatorMinY = scopedDrawable.y() - halfScopeHeight;
-        int verticalSeparatorMaxY = scopedDrawable.y() + halfScopeHeight;
+        int verticalX = scopedNode.x() + halfWidth - 6;
+        int verticalSeparatorMinY = scopedNode.y() - halfScopeHeight;
+        int verticalSeparatorMaxY = scopedNode.y() + halfScopeHeight;
 
         graphics.drawLine(verticalX, verticalSeparatorMinY, verticalX, verticalSeparatorMaxY);
     }

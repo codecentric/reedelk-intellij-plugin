@@ -4,7 +4,7 @@ import com.esb.plugin.designer.Tile;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.connector.Connector;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.ScopedDrawable;
+import com.esb.plugin.graph.node.ScopedNode;
 import com.esb.plugin.graph.scope.BelongToSameScope;
 import com.esb.plugin.graph.scope.FindScopes;
 import com.esb.plugin.graph.scope.ListLastNodeOfScope;
@@ -44,7 +44,7 @@ public class PrecedingDrawableWithOneSuccessor extends AbstractAddStrategy {
 
     private void handleDifferentScopes(GraphNode closestPrecedingDrawable, GraphNode successorOfClosestPrecedingNode) {
 
-        Stack<ScopedDrawable> scopes = FindScopes.of(graph, closestPrecedingDrawable);
+        Stack<ScopedNode> scopes = FindScopes.of(graph, closestPrecedingDrawable);
         if (scopes.isEmpty()) {
             connector.addPredecessor(closestPrecedingDrawable);
             connector.addSuccessor(successorOfClosestPrecedingNode);
@@ -52,8 +52,8 @@ public class PrecedingDrawableWithOneSuccessor extends AbstractAddStrategy {
             return;
         }
 
-        ScopedDrawable currentScope = null;
-        ScopedDrawable lastInnerMostScope = null;
+        ScopedNode currentScope = null;
+        ScopedNode lastInnerMostScope = null;
 
         while (!scopes.isEmpty()) {
 

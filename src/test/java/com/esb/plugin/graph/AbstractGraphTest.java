@@ -5,7 +5,7 @@ import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.component.choice.ChoiceNode;
 import com.esb.plugin.component.generic.GenericComponentNode;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.ScopedDrawable;
+import com.esb.plugin.graph.node.ScopedNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -49,11 +49,11 @@ public abstract class AbstractGraphTest {
     protected GraphNode n10;
     protected GraphNode n11;
 
-    protected ScopedDrawable choice1;
-    protected ScopedDrawable choice2;
-    protected ScopedDrawable choice3;
-    protected ScopedDrawable choice4;
-    protected ScopedDrawable choice5;
+    protected ScopedNode choice1;
+    protected ScopedNode choice2;
+    protected ScopedNode choice3;
+    protected ScopedNode choice4;
+    protected ScopedNode choice5;
 
     @BeforeEach
     protected void setUp() {
