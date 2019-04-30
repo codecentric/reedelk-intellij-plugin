@@ -16,28 +16,7 @@ public interface Drawable {
     default void drop() {
     }
 
-    default int x() {
-        throw new UnsupportedOperationException();
-    }
-
-    default int y() {
-        throw new UnsupportedOperationException();
-    }
-
     default void setPosition(int x, int y) {
-
-    }
-
-    default int height(Graphics2D graphics) {
-        throw new UnsupportedOperationException();
-    }
-
-    default int width(Graphics2D graphics) {
-        throw new UnsupportedOperationException();
-    }
-
-    default boolean contains(ImageObserver observer, int x, int y) {
-        throw new UnsupportedOperationException();
     }
 
     default void selected() {
@@ -50,12 +29,35 @@ public interface Drawable {
         return false;
     }
 
-    /*
+    default int x() {
+        throw new UnsupportedOperationException();
+    }
+
+    default int y() {
+        throw new UnsupportedOperationException();
+    }
+
+    default int height(Graphics2D graphics) {
+        throw new UnsupportedOperationException();
+    }
+
+    default int width(Graphics2D graphics) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
      * It is the graphical center of the Drawable. For instance,
      * A component might have an icon + text below. The bary center
      * in this case might be the center of the icon.
+     *
+     * @param graphics the graphics used to draw the canvas.
+     * @return the barycenter point of this drawable.
      */
     default Point getBarycenter(Graphics2D graphics) {
+        throw new UnsupportedOperationException();
+    }
+
+    default boolean contains(ImageObserver observer, int x, int y) {
         throw new UnsupportedOperationException();
     }
 
