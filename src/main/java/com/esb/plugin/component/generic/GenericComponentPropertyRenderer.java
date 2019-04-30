@@ -9,13 +9,13 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBPanel;
 
-public class GenericPropertyRenderer implements PropertyRenderer {
+public class GenericComponentPropertyRenderer implements PropertyRenderer {
 
     private final Module module;
     private final FlowGraph graph;
     private final VirtualFile file;
 
-    public GenericPropertyRenderer(final Module module, final FlowGraph graph, final VirtualFile file) {
+    public GenericComponentPropertyRenderer(final Module module, final FlowGraph graph, final VirtualFile file) {
         this.graph = graph;
         this.module = module;
         this.file = file;

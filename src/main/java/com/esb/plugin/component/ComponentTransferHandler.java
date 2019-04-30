@@ -16,7 +16,7 @@ public class ComponentTransferHandler extends TransferHandler {
         if (node == null) return null;
 
         ComponentDescriptor descriptor = (ComponentDescriptor) node.getUserObject();
-        return new TransferableComponent(descriptor);
+        return new ComponentTransferable(descriptor);
     }
 
 }

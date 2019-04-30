@@ -6,11 +6,11 @@ import com.esb.component.Fork;
 import com.esb.component.Stop;
 import com.esb.plugin.component.Component;
 import com.esb.plugin.component.ComponentDescriptor;
-import com.esb.plugin.component.choice.ChoiceGraphNode;
-import com.esb.plugin.component.flowreference.FlowReferenceGraphNode;
-import com.esb.plugin.component.forkjoin.ForkJoinGraphNode;
-import com.esb.plugin.component.generic.GenericComponentGraphNode;
-import com.esb.plugin.component.stop.StopGraphNode;
+import com.esb.plugin.component.choice.ChoiceNode;
+import com.esb.plugin.component.flowreference.FlowReferenceNode;
+import com.esb.plugin.component.forkjoin.ForkJoinNode;
+import com.esb.plugin.component.generic.GenericComponentNode;
+import com.esb.plugin.component.stop.StopNode;
 import com.esb.plugin.service.module.ComponentService;
 import com.google.common.collect.ImmutableMap;
 import com.intellij.openapi.module.Module;
@@ -20,13 +20,13 @@ import java.util.Map;
 
 public class GraphNodeFactory {
 
-    private static final Class<? extends GraphNode> DEFAULT = GenericComponentGraphNode.class;
+    private static final Class<? extends GraphNode> DEFAULT = GenericComponentNode.class;
 
     private static final Map<String, Class<? extends GraphNode>> COMPONENT_DRAWABLE_MAP = ImmutableMap.of(
-            Stop.class.getName(), StopGraphNode.class,
-            Choice.class.getName(), ChoiceGraphNode.class,
-            Fork.class.getName(), ForkJoinGraphNode.class,
-            FlowReference.class.getName(), FlowReferenceGraphNode.class);
+            Stop.class.getName(), StopNode.class,
+            Choice.class.getName(), ChoiceNode.class,
+            Fork.class.getName(), ForkJoinNode.class,
+            FlowReference.class.getName(), FlowReferenceNode.class);
 
 
     public static <T extends GraphNode> T get(Module module, String componentName) {

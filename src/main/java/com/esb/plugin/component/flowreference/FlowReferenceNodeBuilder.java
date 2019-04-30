@@ -7,9 +7,9 @@ import com.esb.plugin.graph.deserializer.BuilderContext;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONObject;
 
-public class FlowReferenceGraphNodeBuilder extends AbstractBuilder {
+public class FlowReferenceNodeBuilder extends AbstractBuilder {
 
-    public FlowReferenceGraphNodeBuilder(FlowGraph graph, BuilderContext context) {
+    public FlowReferenceNodeBuilder(FlowGraph graph, BuilderContext context) {
         super(graph, context);
     }
 
@@ -18,7 +18,7 @@ public class FlowReferenceGraphNodeBuilder extends AbstractBuilder {
 
         String name = JsonParser.Implementor.name(componentDefinition);
 
-        FlowReferenceGraphNode drawable = context.instantiateGraphNode(name);
+        FlowReferenceNode drawable = context.instantiateGraphNode(name);
 
         graph.add(parent, drawable);
 

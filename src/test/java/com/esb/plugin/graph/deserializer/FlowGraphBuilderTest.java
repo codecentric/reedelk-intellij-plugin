@@ -2,9 +2,9 @@ package com.esb.plugin.graph.deserializer;
 
 import com.esb.component.Choice;
 import com.esb.component.Stop;
-import com.esb.plugin.component.choice.ChoiceGraphNode;
-import com.esb.plugin.component.generic.GenericComponentGraphNode;
-import com.esb.plugin.component.stop.StopGraphNode;
+import com.esb.plugin.component.choice.ChoiceNode;
+import com.esb.plugin.component.generic.GenericComponentNode;
+import com.esb.plugin.component.stop.StopNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.TestJson;
 import com.esb.plugin.graph.node.GraphNode;
@@ -19,15 +19,15 @@ class FlowGraphBuilderTest extends AbstractBuilderTest {
     @BeforeEach
     protected void setUp() {
         super.setUp();
-        mockComponent("com.esb.rest.component.RestListener", GenericComponentGraphNode.class);
-        mockComponent("com.esb.core.component.SetPayload1", GenericComponentGraphNode.class);
-        mockComponent("com.esb.core.component.SetPayload2", GenericComponentGraphNode.class);
-        mockComponent("com.esb.core.component.SetPayload3", GenericComponentGraphNode.class);
-        mockComponent("com.esb.rest.component.SetHeader", GenericComponentGraphNode.class);
-        mockComponent("com.esb.rest.component.SetStatus", GenericComponentGraphNode.class);
-        mockComponent("com.esb.logger.component.LogComponent", GenericComponentGraphNode.class);
-        mockComponent(Choice.class.getName(), ChoiceGraphNode.class);
-        mockComponent(Stop.class.getName(), StopGraphNode.class);
+        mockComponent("com.esb.rest.component.RestListener", GenericComponentNode.class);
+        mockComponent("com.esb.core.component.SetPayload1", GenericComponentNode.class);
+        mockComponent("com.esb.core.component.SetPayload2", GenericComponentNode.class);
+        mockComponent("com.esb.core.component.SetPayload3", GenericComponentNode.class);
+        mockComponent("com.esb.rest.component.SetHeader", GenericComponentNode.class);
+        mockComponent("com.esb.rest.component.SetStatus", GenericComponentNode.class);
+        mockComponent("com.esb.logger.component.LogComponent", GenericComponentNode.class);
+        mockComponent(Choice.class.getName(), ChoiceNode.class);
+        mockComponent(Stop.class.getName(), StopNode.class);
     }
 
     @Test

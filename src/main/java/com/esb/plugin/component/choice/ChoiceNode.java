@@ -3,9 +3,9 @@ package com.esb.plugin.component.choice;
 import com.esb.plugin.component.Component;
 import com.esb.plugin.designer.canvas.drawables.AbstractScopedGraphNode;
 
-public class ChoiceGraphNode extends AbstractScopedGraphNode {
+public class ChoiceNode extends AbstractScopedGraphNode {
 
-    public ChoiceGraphNode(Component component) {
+    public ChoiceNode(Component component) {
         super(component);
     }
 

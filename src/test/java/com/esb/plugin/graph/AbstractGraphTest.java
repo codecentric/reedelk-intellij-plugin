@@ -2,8 +2,8 @@ package com.esb.plugin.graph;
 
 import com.esb.plugin.component.Component;
 import com.esb.plugin.component.ComponentDescriptor;
-import com.esb.plugin.component.choice.ChoiceGraphNode;
-import com.esb.plugin.component.generic.GenericComponentGraphNode;
+import com.esb.plugin.component.choice.ChoiceNode;
+import com.esb.plugin.component.generic.GenericComponentNode;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedDrawable;
 import org.junit.jupiter.api.BeforeEach;
@@ -75,24 +75,24 @@ public abstract class AbstractGraphTest {
         cc4 = createComponent("c4");
         cc5 = createComponent("c5");
 
-        root = new GenericComponentGraphNode(cRoot);
-        n1 = new GenericComponentGraphNode(cn1);
-        n2 = new GenericComponentGraphNode(cn2);
-        n3 = new GenericComponentGraphNode(cn3);
-        n4 = new GenericComponentGraphNode(cn4);
-        n5 = new GenericComponentGraphNode(cn5);
-        n6 = new GenericComponentGraphNode(cn6);
-        n7 = new GenericComponentGraphNode(cn7);
-        n8 = new GenericComponentGraphNode(cn8);
-        n9 = new GenericComponentGraphNode(cn9);
-        n10 = new GenericComponentGraphNode(cn10);
-        n11 = new GenericComponentGraphNode(cn11);
+        root = new GenericComponentNode(cRoot);
+        n1 = new GenericComponentNode(cn1);
+        n2 = new GenericComponentNode(cn2);
+        n3 = new GenericComponentNode(cn3);
+        n4 = new GenericComponentNode(cn4);
+        n5 = new GenericComponentNode(cn5);
+        n6 = new GenericComponentNode(cn6);
+        n7 = new GenericComponentNode(cn7);
+        n8 = new GenericComponentNode(cn8);
+        n9 = new GenericComponentNode(cn9);
+        n10 = new GenericComponentNode(cn10);
+        n11 = new GenericComponentNode(cn11);
 
-        choice1 = new ChoiceGraphNode(cc1);
-        choice2 = new ChoiceGraphNode(cc2);
-        choice3 = new ChoiceGraphNode(cc3);
-        choice4 = new ChoiceGraphNode(cc4);
-        choice5 = new ChoiceGraphNode(cc5);
+        choice1 = new ChoiceNode(cc1);
+        choice2 = new ChoiceNode(cc2);
+        choice3 = new ChoiceNode(cc3);
+        choice4 = new ChoiceNode(cc4);
+        choice5 = new ChoiceNode(cc5);
     }
 
     private Component createComponent(String name) {

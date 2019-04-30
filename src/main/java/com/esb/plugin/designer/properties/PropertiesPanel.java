@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.properties;
 
 import com.esb.plugin.component.Component;
-import com.esb.plugin.component.generic.GenericPropertyRenderer;
+import com.esb.plugin.component.generic.GenericComponentPropertyRenderer;
 import com.esb.plugin.designer.SelectListener;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
@@ -39,7 +39,7 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
 
         add(createTitleLabel(component.getDisplayName()));
 
-        PropertyRenderer renderer = new GenericPropertyRenderer(module, graph, file);
+        PropertyRenderer renderer = new GenericComponentPropertyRenderer(module, graph, file);
         renderer.render(this, component);
 
         // Add spacer

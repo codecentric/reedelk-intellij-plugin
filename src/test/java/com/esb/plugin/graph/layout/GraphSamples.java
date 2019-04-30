@@ -2,8 +2,8 @@ package com.esb.plugin.graph.layout;
 
 import com.esb.plugin.component.Component;
 import com.esb.plugin.component.ComponentDescriptor;
-import com.esb.plugin.component.choice.ChoiceGraphNode;
-import com.esb.plugin.component.generic.GenericComponentGraphNode;
+import com.esb.plugin.component.choice.ChoiceNode;
+import com.esb.plugin.component.generic.GenericComponentNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphImpl;
 import com.esb.plugin.graph.node.GraphNode;
@@ -29,23 +29,23 @@ public class GraphSamples {
     Component cc4 = createComponent("c4");
     Component cc5 = createComponent("c5");
 
-    GraphNode root = new GenericComponentGraphNode(cRoot);
-    GraphNode n1 = new GenericComponentGraphNode(cn1);
-    GraphNode n2 = new GenericComponentGraphNode(cn2);
-    GraphNode n3 = new GenericComponentGraphNode(cn3);
-    GraphNode n4 = new GenericComponentGraphNode(cn4);
-    GraphNode n5 = new GenericComponentGraphNode(cn5);
-    GraphNode n6 = new GenericComponentGraphNode(cn6);
-    GraphNode n7 = new GenericComponentGraphNode(cn7);
-    GraphNode n8 = new GenericComponentGraphNode(cn8);
-    GraphNode n9 = new GenericComponentGraphNode(cn9);
-    GraphNode n10 = new GenericComponentGraphNode(cn10);
-    GraphNode n11 = new GenericComponentGraphNode(cn11);
+    GraphNode root = new GenericComponentNode(cRoot);
+    GraphNode n1 = new GenericComponentNode(cn1);
+    GraphNode n2 = new GenericComponentNode(cn2);
+    GraphNode n3 = new GenericComponentNode(cn3);
+    GraphNode n4 = new GenericComponentNode(cn4);
+    GraphNode n5 = new GenericComponentNode(cn5);
+    GraphNode n6 = new GenericComponentNode(cn6);
+    GraphNode n7 = new GenericComponentNode(cn7);
+    GraphNode n8 = new GenericComponentNode(cn8);
+    GraphNode n9 = new GenericComponentNode(cn9);
+    GraphNode n10 = new GenericComponentNode(cn10);
+    GraphNode n11 = new GenericComponentNode(cn11);
 
-    ScopedDrawable c1 = new ChoiceGraphNode(cc1);
-    ScopedDrawable c2 = new ChoiceGraphNode(cc2);
-    ScopedDrawable c3 = new ChoiceGraphNode(cc3);
-    ScopedDrawable c4 = new ChoiceGraphNode(cc4);
+    ScopedDrawable c1 = new ChoiceNode(cc1);
+    ScopedDrawable c2 = new ChoiceNode(cc2);
+    ScopedDrawable c3 = new ChoiceNode(cc3);
+    ScopedDrawable c4 = new ChoiceNode(cc4);
 
 
     public static FlowGraph graph1() {

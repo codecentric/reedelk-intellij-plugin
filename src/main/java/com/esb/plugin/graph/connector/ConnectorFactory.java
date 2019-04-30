@@ -4,10 +4,12 @@ import com.esb.api.exception.ESBException;
 import com.esb.component.Choice;
 import com.esb.component.FlowReference;
 import com.esb.component.Fork;
-import com.esb.plugin.component.choice.ChoiceGraphNodeConnectorBuilder;
+import com.esb.component.Stop;
+import com.esb.plugin.component.choice.ChoiceConnectorBuilder;
 import com.esb.plugin.component.flowreference.FlowReferenceConnectorBuilder;
-import com.esb.plugin.component.forkjoin.ForkJoinDrawableConnectorBuilder;
+import com.esb.plugin.component.forkjoin.ForkJoinConnectorBuilder;
 import com.esb.plugin.component.generic.GenericComponentConnectorBuilder;
+import com.esb.plugin.component.stop.StopConnectionBuilder;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.openapi.module.Module;
@@ -29,8 +31,9 @@ public class ConnectorFactory {
 
     static {
         Map<String, Class<? extends ConnectorBuilder>> tmp = new HashMap<>();
-        tmp.put(Fork.class.getName(), ForkJoinDrawableConnectorBuilder.class);
-        tmp.put(Choice.class.getName(), ChoiceGraphNodeConnectorBuilder.class);
+        tmp.put(Stop.class.getName(), StopConnectionBuilder.class);
+        tmp.put(Fork.class.getName(), ForkJoinConnectorBuilder.class);
+        tmp.put(Choice.class.getName(), ChoiceConnectorBuilder.class);
         tmp.put(FlowReference.class.getName(), FlowReferenceConnectorBuilder.class);
         CONNECTOR_BUILDER = Collections.unmodifiableMap(tmp);
     }

@@ -2,7 +2,7 @@ package com.esb.plugin.component.choice;
 
 import com.esb.component.Stop;
 import com.esb.internal.commons.JsonParser;
-import com.esb.plugin.component.stop.StopGraphNode;
+import com.esb.plugin.component.stop.StopNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.deserializer.AbstractBuilder;
 import com.esb.plugin.graph.deserializer.BuilderContext;
@@ -16,20 +16,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ChoiceGraphNodeBuilder extends AbstractBuilder {
+public class ChoiceNodeBuilder extends AbstractBuilder {
 
-    public ChoiceGraphNodeBuilder(FlowGraph graph, BuilderContext context) {
+    public ChoiceNodeBuilder(FlowGraph graph, BuilderContext context) {
         super(graph, context);
     }
 
     @Override
     public GraphNode build(GraphNode parent, JSONObject componentDefinition) {
 
-        StopGraphNode stopNode = context.instantiateGraphNode(Stop.class.getName());
+        StopNode stopNode = context.instantiateGraphNode(Stop.class.getName());
 
         String name = JsonParser.Implementor.name(componentDefinition);
 
-        ChoiceGraphNode choiceNode = context.instantiateGraphNode(name);
+        ChoiceNode choiceNode = context.instantiateGraphNode(name);
 
         graph.add(parent, choiceNode);
 

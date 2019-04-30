@@ -13,20 +13,20 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class FlowReferenceGraphNodeBuilderTest extends AbstractBuilderTest {
+class FlowReferenceNodeBuilderTest extends AbstractBuilderTest {
 
-    private FlowReferenceGraphNodeBuilder builder;
+    private FlowReferenceNodeBuilder builder;
 
     @BeforeEach
     protected void setUp() {
         super.setUp();
-        builder = new FlowReferenceGraphNodeBuilder(graph, context);
+        builder = new FlowReferenceNodeBuilder(graph, context);
     }
 
     @Test
     void shouldBuildFlowReferenceCorrectly() {
         // Given
-        Component givenComponent = mockComponent(FlowReference.class.getName(), FlowReferenceGraphNode.class);
+        Component givenComponent = mockComponent(FlowReference.class.getName(), FlowReferenceNode.class);
 
         JSONObject componentDefinition = ComponentDefinitionBuilder.forComponent(FlowReference.class.getName())
                 .with("ref", UUID.randomUUID().toString())

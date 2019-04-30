@@ -8,9 +8,9 @@ import com.esb.plugin.graph.deserializer.BuilderContext;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONObject;
 
-public class GenericGraphNodeBuilder extends AbstractBuilder {
+public class GenericComponentNodeBuilder extends AbstractBuilder {
 
-    public GenericGraphNodeBuilder(FlowGraph graph, BuilderContext context) {
+    public GenericComponentNodeBuilder(FlowGraph graph, BuilderContext context) {
         super(graph, context);
     }
 
@@ -19,7 +19,7 @@ public class GenericGraphNodeBuilder extends AbstractBuilder {
 
         String name = JsonParser.Implementor.name(componentDefinition);
 
-        GenericComponentGraphNode node = context.instantiateGraphNode(name);
+        GenericComponentNode node = context.instantiateGraphNode(name);
 
         Component component = node.component();
 

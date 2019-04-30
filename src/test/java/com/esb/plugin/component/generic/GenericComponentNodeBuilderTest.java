@@ -10,22 +10,22 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class GenericGraphNodeBuilderTest extends AbstractBuilderTest {
+class GenericComponentNodeBuilderTest extends AbstractBuilderTest {
 
     private static final String GENERIC_COMPONENT_NAME = "com.esb.component.GenericComponent";
 
-    private GenericGraphNodeBuilder builder;
+    private GenericComponentNodeBuilder builder;
 
     @BeforeEach
     protected void setUp() {
         super.setUp();
-        builder = new GenericGraphNodeBuilder(graph, context);
+        builder = new GenericComponentNodeBuilder(graph, context);
     }
 
     @Test
     void shouldBuildGenericDrawableCorrectly() {
         // Given
-        Component givenComponent = mockComponent(GENERIC_COMPONENT_NAME, GenericComponentGraphNode.class);
+        Component givenComponent = mockComponent(GENERIC_COMPONENT_NAME, GenericComponentNode.class);
 
         JSONObject componentDefinition = ComponentDefinitionBuilder
                 .forComponent(GENERIC_COMPONENT_NAME)

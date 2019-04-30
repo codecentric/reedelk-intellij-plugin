@@ -6,13 +6,13 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 
-public class TransferableComponent implements Transferable {
+public class ComponentTransferable implements Transferable {
 
     private static final DataFlavor[] flavors = new DataFlavor[]{ComponentDescriptor.FLAVOR};
 
     private final ComponentDescriptor descriptor;
 
-    public TransferableComponent(ComponentDescriptor descriptor) {
+    public ComponentTransferable(ComponentDescriptor descriptor) {
         this.descriptor = descriptor;
     }
 
