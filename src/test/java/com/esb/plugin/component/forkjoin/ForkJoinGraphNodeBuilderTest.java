@@ -2,6 +2,8 @@ package com.esb.plugin.component.forkjoin;
 
 import com.esb.component.Fork;
 import com.esb.component.Stop;
+import com.esb.plugin.component.generic.GenericComponentGraphNode;
+import com.esb.plugin.component.stop.StopGraphNode;
 import com.esb.plugin.graph.deserializer.AbstractBuilderTest;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONArray;
@@ -29,12 +31,13 @@ class ForkJoinGraphNodeBuilderTest extends AbstractBuilderTest {
         super.setUp();
         builder = new ForkJoinGraphNodeBuilder(graph, context);
 
-        mockComponent(COMPONENT_1_NAME);
-        mockComponent(COMPONENT_2_NAME);
-        mockComponent(COMPONENT_3_NAME);
-        mockComponent(COMPONENT_4_NAME);
-        mockComponent(JOIN_COMPONENT_NAME);
-        mockComponent(Fork.class.getName());
+        mockComponent(COMPONENT_1_NAME, GenericComponentGraphNode.class);
+        mockComponent(COMPONENT_2_NAME, GenericComponentGraphNode.class);
+        mockComponent(COMPONENT_3_NAME, GenericComponentGraphNode.class);
+        mockComponent(COMPONENT_4_NAME, GenericComponentGraphNode.class);
+        mockComponent(JOIN_COMPONENT_NAME, GenericComponentGraphNode.class);
+        mockComponent(Fork.class.getName(), ForkJoinGraphNode.class);
+        mockComponent(Stop.class.getName(), StopGraphNode.class);
     }
 
     @Test

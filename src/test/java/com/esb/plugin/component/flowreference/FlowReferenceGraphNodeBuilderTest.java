@@ -26,7 +26,7 @@ class FlowReferenceGraphNodeBuilderTest extends AbstractBuilderTest {
     @Test
     void shouldBuildFlowReferenceCorrectly() {
         // Given
-        Component givenComponent = mockComponent(FlowReference.class.getName());
+        Component givenComponent = mockComponent(FlowReference.class.getName(), FlowReferenceGraphNode.class);
 
         JSONObject componentDefinition = ComponentDefinitionBuilder.forComponent(FlowReference.class.getName())
                 .with("ref", UUID.randomUUID().toString())

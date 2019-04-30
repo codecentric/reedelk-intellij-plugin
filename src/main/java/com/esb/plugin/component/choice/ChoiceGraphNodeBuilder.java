@@ -25,41 +25,41 @@ public class ChoiceGraphNodeBuilder extends AbstractBuilder {
     @Override
     public GraphNode build(GraphNode parent, JSONObject componentDefinition) {
 
-        StopGraphNode stopDrawable = context.instantiateGraphNode(Stop.class.getName());
+        StopGraphNode stopNode = context.instantiateGraphNode(Stop.class.getName());
 
         String name = JsonParser.Implementor.name(componentDefinition);
 
-        ChoiceGraphNode choiceDrawable = context.instantiateGraphNode(name);
+        ChoiceGraphNode choiceNode = context.instantiateGraphNode(name);
 
-        graph.add(parent, choiceDrawable);
+        graph.add(parent, choiceNode);
 
         // When
         JSONArray when = JsonParser.Choice.getWhen(componentDefinition);
         for (int i = 0; i < when.length(); i++) {
             JSONObject whenComponent = when.getJSONObject(i);
 
-            GraphNode currentDrawable = choiceDrawable;
+            GraphNode currentDrawable = choiceNode;
 
             JSONArray next = JsonParser.Choice.getNext(whenComponent);
             currentDrawable = buildArrayOfComponents(graph, currentDrawable, next);
 
             // Last node is connected to stop node.
-            graph.add(currentDrawable, stopDrawable);
+            graph.add(currentDrawable, stopNode);
         }
 
         // Otherwise
-        GraphNode currentDrawable = choiceDrawable;
+        GraphNode currentDrawable = choiceNode;
 
         JSONArray otherwise = JsonParser.Choice.getOtherwise(componentDefinition);
         currentDrawable = buildArrayOfComponents(graph, currentDrawable, otherwise);
 
         // Last node is stop node.
-        graph.add(currentDrawable, stopDrawable);
+        graph.add(currentDrawable, stopNode);
 
-        collectNodesBetween(graph, choiceDrawable, stopDrawable)
-                .forEach(choiceDrawable::addToScope);
+        collectNodesBetween(graph, choiceNode, stopNode)
+                .forEach(choiceNode::addToScope);
 
-        return stopDrawable;
+        return stopNode;
     }
 
     private GraphNode buildArrayOfComponents(FlowGraph graph, GraphNode currentDrawable, JSONArray next) {

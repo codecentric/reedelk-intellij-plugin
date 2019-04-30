@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -87,16 +88,19 @@ public abstract class AbstractBuilderTest {
         throw new RuntimeException("Could not find: " + componentName);
     }
 
-    public Component mockComponent(String fullyQualifiedName) {
+    public Component mockComponent(String fullyQualifiedName, Class<? extends GraphNode> nodeClazz) {
         Component component = new Component(ComponentDescriptor.create()
                 .fullyQualifiedName(fullyQualifiedName)
                 .build());
-
-        doReturn(component)
-                .when(context)
-                .instantiateGraphNode(fullyQualifiedName);
-
-        return component;
+        try {
+            GraphNode node = nodeClazz.getConstructor(Component.class).newInstance(component);
+            doReturn(node)
+                    .when(context)
+                    .instantiateGraphNode(fullyQualifiedName);
+            return component;
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     String readJson(TestJson testJson) {

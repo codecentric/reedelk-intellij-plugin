@@ -25,19 +25,19 @@ class GenericGraphNodeBuilderTest extends AbstractBuilderTest {
     @Test
     void shouldBuildGenericDrawableCorrectly() {
         // Given
-        Component givenComponent = mockComponent(GENERIC_COMPONENT_NAME);
+        Component givenComponent = mockComponent(GENERIC_COMPONENT_NAME, GenericComponentGraphNode.class);
 
         JSONObject componentDefinition = ComponentDefinitionBuilder
                 .forComponent(GENERIC_COMPONENT_NAME)
                 .build();
 
         // When
-        GraphNode genericDrawable = builder.build(root, componentDefinition);
+        GraphNode node = builder.build(root, componentDefinition);
 
         // Then
         assertThat(graph.nodesCount()).isEqualTo(2);
 
-        Component actualComponent = genericDrawable.component();
+        Component actualComponent = node.component();
         assertThat(actualComponent).isEqualTo(givenComponent);
     }
 

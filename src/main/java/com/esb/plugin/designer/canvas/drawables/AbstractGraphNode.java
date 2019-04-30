@@ -214,4 +214,9 @@ public abstract class AbstractGraphNode implements GraphNode {
         }
         arrows.draw(graph, graphics, observer);
     }
+
+    @Override
+    public String toString() {
+        return component.getFullyQualifiedName();
+    }
 }

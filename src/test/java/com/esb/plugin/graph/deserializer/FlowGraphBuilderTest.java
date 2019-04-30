@@ -1,6 +1,10 @@
 package com.esb.plugin.graph.deserializer;
 
 import com.esb.component.Choice;
+import com.esb.component.Stop;
+import com.esb.plugin.component.choice.ChoiceGraphNode;
+import com.esb.plugin.component.generic.GenericComponentGraphNode;
+import com.esb.plugin.component.stop.StopGraphNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.TestJson;
 import com.esb.plugin.graph.node.GraphNode;
@@ -15,14 +19,15 @@ class FlowGraphBuilderTest extends AbstractBuilderTest {
     @BeforeEach
     protected void setUp() {
         super.setUp();
-        mockComponent("com.esb.rest.component.RestListener");
-        mockComponent("com.esb.core.component.SetPayload1");
-        mockComponent("com.esb.core.component.SetPayload2");
-        mockComponent("com.esb.core.component.SetPayload3");
-        mockComponent("com.esb.rest.component.SetHeader");
-        mockComponent("com.esb.rest.component.SetStatus");
-        mockComponent("com.esb.logger.component.LogComponent");
-        mockComponent(Choice.class.getName());
+        mockComponent("com.esb.rest.component.RestListener", GenericComponentGraphNode.class);
+        mockComponent("com.esb.core.component.SetPayload1", GenericComponentGraphNode.class);
+        mockComponent("com.esb.core.component.SetPayload2", GenericComponentGraphNode.class);
+        mockComponent("com.esb.core.component.SetPayload3", GenericComponentGraphNode.class);
+        mockComponent("com.esb.rest.component.SetHeader", GenericComponentGraphNode.class);
+        mockComponent("com.esb.rest.component.SetStatus", GenericComponentGraphNode.class);
+        mockComponent("com.esb.logger.component.LogComponent", GenericComponentGraphNode.class);
+        mockComponent(Choice.class.getName(), ChoiceGraphNode.class);
+        mockComponent(Stop.class.getName(), StopGraphNode.class);
     }
 
     @Test
