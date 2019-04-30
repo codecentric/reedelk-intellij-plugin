@@ -1,8 +1,8 @@
 package com.esb.plugin.component.choice;
 
-import com.esb.plugin.component.Component;
 import com.esb.plugin.designer.properties.AbstractPropertyRenderer;
 import com.esb.plugin.graph.FlowGraph;
+import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBPanel;
@@ -21,7 +21,7 @@ public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
     }
 
     @Override
-    public void render(JBPanel panel, Component component) {
+    public void render(JBPanel panel, GraphNode node) {
         TableModel model = new MyTableModel();
 
         final JBTable table = new JBTable(model);
@@ -42,7 +42,6 @@ public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
                 {"payload.name == 'Anton'", "route2"},
         };
 
-
         @Override
         public int getRowCount() {
             return data.length;
@@ -62,5 +61,22 @@ public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
         public Object getValueAt(int rowIndex, int columnIndex) {
             return data[rowIndex][columnIndex];
         }
+
+        @Override
+        public Class getColumnClass(int columnIndex) {
+            return getValueAt(0, columnIndex).getClass();
+        }
+
+        @Override
+        public boolean isCellEditable(int row, int col) {
+            return true;
+        }
+
+        @Override
+        public void setValueAt(Object value, int row, int col) {
+            data[row][col] = value;
+            fireTableCellUpdated(row, col);
+        }
+
     }
 }

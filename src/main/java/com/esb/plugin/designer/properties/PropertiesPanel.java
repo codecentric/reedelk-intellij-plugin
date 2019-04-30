@@ -44,7 +44,7 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
                 .graph(graph)
                 .file(file)
                 .build()
-                .render(this, component);
+                .render(this, node);
 
         // Add spacer
         add(Box.createVerticalGlue());

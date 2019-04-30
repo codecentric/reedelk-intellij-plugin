@@ -5,9 +5,11 @@ import com.esb.plugin.designer.properties.AbstractPropertyRenderer;
 import com.esb.plugin.designer.properties.PropertyBox;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.manager.GraphChangeNotifier;
+import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBPanel;
+import org.jetbrains.annotations.NotNull;
 
 public class GenericComponentPropertyRenderer extends AbstractPropertyRenderer {
 
@@ -16,18 +18,24 @@ public class GenericComponentPropertyRenderer extends AbstractPropertyRenderer {
     }
 
     @Override
-    public void render(JBPanel panel, Component component) {
+    public void render(JBPanel panel, GraphNode node) {
+        Component component = node.component();
+
         component.getPropertiesNames().forEach(propertyName -> {
-
-            PropertyBox propertyBox = new PropertyBox(propertyName);
-            propertyBox.setText((String) component.getData(propertyName));
-            propertyBox.addListener(newText -> {
-                component.setPropertyValue(propertyName, newText);
-                GraphChangeNotifier notifier = module.getMessageBus().syncPublisher(GraphChangeNotifier.TOPIC);
-                notifier.onChange(graph, file);
-            });
-
+            PropertyBox propertyBox = createPropertyBox(component, propertyName);
             panel.add(propertyBox);
         });
+    }
+
+    @NotNull
+    private PropertyBox createPropertyBox(Component component, String propertyName) {
+        PropertyBox propertyBox = new PropertyBox(propertyName);
+        propertyBox.setText((String) component.getData(propertyName));
+        propertyBox.addListener(newText -> {
+            component.setPropertyValue(propertyName, newText);
+            GraphChangeNotifier notifier = module.getMessageBus().syncPublisher(GraphChangeNotifier.TOPIC);
+            notifier.onChange(graph, file);
+        });
+        return propertyBox;
     }
 }
