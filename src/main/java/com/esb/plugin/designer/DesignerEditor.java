@@ -21,15 +21,15 @@ import java.beans.PropertyChangeListener;
 
 import static com.google.common.base.Preconditions.checkState;
 
-public class FlowEditor extends UserDataHolderBase implements FileEditor, PossiblyDumbAware, DocumentListener {
+public class DesignerEditor extends UserDataHolderBase implements FileEditor, PossiblyDumbAware, DocumentListener {
 
-    private EditorPanel editor;
+    private DesignerEditorPanel editor;
     private GraphManager manager;
 
-    FlowEditor(Project project, VirtualFile file) {
+    DesignerEditor(Project project, VirtualFile file) {
         Module module = ModuleUtil.findModuleForFile(file, project);
         checkState(module != null, "Module must not be null");
-        editor = new EditorPanel(module, file);
+        editor = new DesignerEditorPanel(module, file);
         manager = new GraphManager(project, module, file);
     }
 
@@ -111,7 +111,7 @@ public class FlowEditor extends UserDataHolderBase implements FileEditor, Possib
             @NotNull
             @Override
             public FileEditor getEditor() {
-                return FlowEditor.this;
+                return DesignerEditor.this;
             }
 
             @Override

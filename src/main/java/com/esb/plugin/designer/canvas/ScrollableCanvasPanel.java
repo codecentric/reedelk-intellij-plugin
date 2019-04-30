@@ -1,6 +1,6 @@
 package com.esb.plugin.designer.canvas;
 
-import com.esb.plugin.designer.EditorPanel;
+import com.esb.plugin.designer.DesignerEditorPanel;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.ui.components.JBScrollPane;
 
@@ -9,7 +9,7 @@ import java.util.TooManyListenersException;
 
 public class ScrollableCanvasPanel extends JBScrollPane {
 
-    private static final Logger LOG = Logger.getInstance(EditorPanel.class);
+    private static final Logger LOG = Logger.getInstance(DesignerEditorPanel.class);
 
     public ScrollableCanvasPanel(CanvasPanel canvasPanel) {
         super(canvasPanel);

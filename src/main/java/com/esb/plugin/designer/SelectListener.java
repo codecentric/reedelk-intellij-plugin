@@ -8,4 +8,5 @@ public interface SelectListener {
     void onSelect(FlowGraph graph, GraphNode node);
 
     void onUnselect(FlowGraph graph, GraphNode node);
+
 }

@@ -6,7 +6,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import com.intellij.openapi.vfs.VirtualFile;
 
-public class EditorPanel extends ThreeComponentsSplitter {
+public class DesignerEditorPanel extends ThreeComponentsSplitter {
 
     private static final int PROPERTIES_PANEL_SIZE = 150;
 
@@ -14,7 +14,7 @@ public class EditorPanel extends ThreeComponentsSplitter {
 
     private final ScrollablePropertiesPanel properties;
 
-    EditorPanel(Module module, VirtualFile file) {
+    DesignerEditorPanel(Module module, VirtualFile file) {
         super(VERTICAL);
 
         properties = createProperties(module, file);
