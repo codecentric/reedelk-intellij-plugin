@@ -83,17 +83,16 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
 
         Collection<GraphNode> nodes = graph.nodes();
 
-        // Draw each node of the graph (except the current selected Drawable - see below)
-        nodes.forEach(drawable -> {
-            if (!drawable.isSelected()) {
-                drawable.draw(graph, g2, CanvasPanel.this);
-            }
-        });
+        // Draw each node of the graph
+        // (except the current selected Drawable - see below)
+        nodes.stream()
+                .filter(node -> !node.isSelected())
+                .forEach(node -> node.draw(graph, g2, CanvasPanel.this));
 
         // The selected node must be drawn LAST so
         // that it is on top of all the other drawables.
         nodes.stream()
-                .filter(Drawable::isSelected)
+                .filter(GraphNode::isSelected)
                 .findFirst()
                 .ifPresent(drawable -> drawable.draw(graph, g2, CanvasPanel.this));
     }
@@ -154,22 +153,22 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (dragging) {
-            dragging = false;
+        if (!dragging) return;
 
-            int dragX = e.getX();
-            int dragY = e.getY();
+        dragging = false;
 
-            selected.drag(dragX, dragY);
-            selected.drop();
+        int dragX = e.getX();
+        int dragY = e.getY();
 
-            Point movePoint = new Point(dragX, dragY);
+        selected.drag(dragX, dragY);
+        selected.drop();
 
-            MoveActionHandler delegate = new MoveActionHandler(module, graph, getGraphics2D(), selected, movePoint);
-            delegate.handle().ifPresent(this::updateGraph);
+        Point dragPoint = new Point(dragX, dragY);
 
-            repaint();
-        }
+        MoveActionHandler delegate = new MoveActionHandler(module, graph, getGraphics2D(), selected, dragPoint);
+        delegate.handle().ifPresent(this::updateGraph);
+
+        repaint();
     }
 
     @Override
@@ -223,8 +222,9 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
         int maxY = graph.nodes().stream().mapToInt(Drawable::y).max().getAsInt();
         int newSizeX = maxX + Tile.WIDTH;
         int newSizeY = maxY + Tile.HEIGHT;
-        setSize(new Dimension(newSizeX, newSizeY));
-        setPreferredSize(new Dimension(newSizeX, newSizeY));
+        Dimension newDimension = new Dimension(newSizeX, newSizeY);
+        setSize(newDimension);
+        setPreferredSize(newDimension);
     }
 
     private Optional<GraphNode> getDrawableWithinCoordinates(int x, int y) {

@@ -2,7 +2,7 @@ package com.esb.plugin.component.generic;
 
 import com.esb.plugin.component.Component;
 import com.esb.plugin.designer.properties.AbstractPropertyRenderer;
-import com.esb.plugin.designer.properties.PropertyBox;
+import com.esb.plugin.designer.properties.widget.PropertyBox;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.manager.GraphChangeNotifier;
 import com.esb.plugin.graph.node.GraphNode;

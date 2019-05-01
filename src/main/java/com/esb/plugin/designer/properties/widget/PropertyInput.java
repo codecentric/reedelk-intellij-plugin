@@ -1,5 +1,6 @@
-package com.esb.plugin.designer.properties;
+package com.esb.plugin.designer.properties.widget;
 
+import com.esb.plugin.designer.properties.InputChangeListener;
 import com.intellij.ui.components.JBTextField;
 
 import javax.swing.event.DocumentEvent;

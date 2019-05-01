@@ -1,11 +1,13 @@
-package com.esb.plugin.designer.properties;
+package com.esb.plugin.designer.properties.widget;
 
+import com.esb.plugin.designer.properties.InputChangeListener;
+import com.intellij.ui.components.JBPanel;
 import com.intellij.util.ui.JBUI;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class PropertyBox extends JPanel {
+public class PropertyBox extends JBPanel {
 
     private PropertyLabel label;
     private PropertyInput input;

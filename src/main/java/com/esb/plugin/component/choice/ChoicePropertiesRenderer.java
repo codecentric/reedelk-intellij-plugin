@@ -1,6 +1,7 @@
 package com.esb.plugin.component.choice;
 
 import com.esb.plugin.designer.properties.AbstractPropertyRenderer;
+import com.esb.plugin.designer.properties.widget.PropertyBox;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.openapi.module.Module;
@@ -23,6 +24,8 @@ public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
 
     @Override
     public JBPanel render(GraphNode node) {
+
+
         TableModel model = new MyTableModel();
 
         final JBTable table = new JBTable(model);
@@ -42,7 +45,26 @@ public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
         //Add the scroll pane to this panel.
         JBPanel panel = new JBPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+
+        JBPanel addConditionPanel = createAddConditionPanel();
+        panel.add(addConditionPanel);
         panel.add(scrollPane);
+        return panel;
+    }
+
+    private JBPanel createAddConditionPanel() {
+        JBPanel panel = new JBPanel();
+        //panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+        PropertyBox conditionInput = new PropertyBox("Condition");
+        panel.add(conditionInput);
+
+        JComboBox<String> routeCombo = new ComboBox<>();
+        routeCombo.addItem("Route1");
+        routeCombo.addItem("Route2");
+        routeCombo.addItem("Route3");
+        routeCombo.addItem("Route4");
+        panel.add(routeCombo);
+
         return panel;
     }
 

@@ -1,4 +1,4 @@
-package com.esb.plugin.designer.properties;
+package com.esb.plugin.designer.properties.widget;
 
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBUI;
