@@ -45,12 +45,10 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
                 .render(node);
 
         JBTabbedPane tabbedPane = new JBTabbedPane();
+
         Icon icon = Icons.forComponentAsIcon(component.getFullyQualifiedName());
         tabbedPane.addTab(component.getDisplayName(), icon, propertiesPanel, component.getDisplayName() + " properties");
         add(tabbedPane);
-
-        // Add spacer
-        add(Box.createVerticalGlue());
 
         revalidate();
         repaint();

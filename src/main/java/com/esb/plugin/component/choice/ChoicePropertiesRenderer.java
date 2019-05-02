@@ -29,45 +29,38 @@ public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
         TableModel model = new MyTableModel();
 
         final JBTable table = new JBTable(model);
-        //table.setSize(new Dimension(200, 90));
-        JComboBox<String> routeCombo = new ComboBox<>();
-        routeCombo.addItem("Route1");
-        routeCombo.addItem("Route2");
-        routeCombo.addItem("Route3");
-        routeCombo.addItem("Route4");
 
         TableColumn column = table.getColumnModel().getColumn(1);
-        column.setCellEditor(new DefaultCellEditor(routeCombo));
+        column.setCellEditor(new DefaultCellEditor(ROUTES));
 
         //Create the scroll pane and add the table to it.
         JScrollPane tableScrollPane = new JBScrollPane(table);
-        tableScrollPane.setPreferredSize(new Dimension(100, 120));
+        tableScrollPane.setPreferredSize(new Dimension(0, 110));
 
-        //Add the scroll pane to this panel.
-        JBPanel panel = new JBPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+        JPanel wrapper = new JPanel();
+        wrapper.setLayout(new BorderLayout());
+        wrapper.add(tableScrollPane, BorderLayout.NORTH);
+        wrapper.add(Box.createVerticalGlue(), BorderLayout.CENTER);
+
 
         JBPanel addConditionPanel = createAddConditionPanel();
-        panel.add(addConditionPanel);
-        panel.add(tableScrollPane);
-        panel.add(Box.createVerticalGlue());
+
+        JBPanel panel = new JBPanel();
+        panel.setBackground(Color.cyan);
+        panel.setLayout(new BorderLayout());
+        panel.add(addConditionPanel, BorderLayout.NORTH);
+        panel.add(wrapper, BorderLayout.CENTER);
         return panel;
     }
 
     private JBPanel createAddConditionPanel() {
         JBPanel addConditionBox = new JBPanel();
+        addConditionBox.setBackground(Color.GREEN);
         addConditionBox.setLayout(new GridBagLayout());
 
         FormUtility formUtility = new FormUtility();
         formUtility.addLabel("Condition:", addConditionBox);
         formUtility.addMiddleField(new JBTextField(), addConditionBox);
-
-        JComboBox<String> routeCombo = new ComboBox<>();
-        routeCombo.setSize(new Dimension(100, 20));
-        routeCombo.addItem("Route1");
-        routeCombo.addItem("Route2");
-        routeCombo.addItem("Route3");
-        routeCombo.addItem("Route4");
 
         JButton btnAddCondition = new JButton("Add");
         btnAddCondition.setSize(new Dimension(50, 20));
@@ -76,11 +69,10 @@ public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
         selectRouteBox.setLayout(new GridBagLayout());
 
         formUtility.addLabel("Route:", selectRouteBox);
-        formUtility.addMiddleField(routeCombo, selectRouteBox);
+        formUtility.addMiddleField(ROUTES, selectRouteBox);
         formUtility.addLabel(btnAddCondition, selectRouteBox);
-
         formUtility.addLastField(selectRouteBox, addConditionBox);
-        addConditionBox.add(Box.createVerticalGlue());
+
         return addConditionBox;
     }
 
@@ -127,5 +119,14 @@ public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
             fireTableCellUpdated(row, col);
         }
 
+    }
+
+    private static final JComboBox<String> ROUTES = new ComboBox<>();
+
+    static {
+        ROUTES.addItem("Route1");
+        ROUTES.addItem("Route2");
+        ROUTES.addItem("Route3");
+        ROUTES.addItem("Route4");
     }
 }

@@ -43,8 +43,7 @@ public class FormUtility {
 
         // And finally the "label" constrains, typically to be
         // used for the first component on each row
-        labelConstraints =
-                (GridBagConstraints) lastConstraints.clone();
+        labelConstraints = (GridBagConstraints) lastConstraints.clone();
 
         // Give these as little space as necessary
         labelConstraints.weightx = 0.0;

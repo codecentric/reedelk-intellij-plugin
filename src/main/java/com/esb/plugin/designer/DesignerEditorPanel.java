@@ -8,7 +8,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 
 public class DesignerEditorPanel extends ThreeComponentsSplitter {
 
-    private static final int PROPERTIES_PANEL_SIZE = 150;
+    private static final int PROPERTIES_PANEL_SIZE = 190;
 
     private static final boolean VERTICAL = true;
 
