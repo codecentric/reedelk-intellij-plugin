@@ -22,7 +22,7 @@ public class FormUtility {
 
         // Components that are too short or narrow for their space
         // Should be pinned to the northwest (upper left) corner
-        lastConstraints.anchor = GridBagConstraints.NORTHWEST;
+        lastConstraints.anchor = GridBagConstraints.CENTER;
 
         // Give the "last" component as much space as possible
         lastConstraints.weightx = 1.0;
