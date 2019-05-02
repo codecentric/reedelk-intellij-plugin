@@ -5,9 +5,7 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
 
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 
 import static java.awt.BorderLayout.CENTER;
@@ -18,11 +16,9 @@ public class ChoiceRouteTable extends JBPanel {
     private final Dimension tableScrollPaneDimension = new Dimension(0, 110);
 
     public ChoiceRouteTable(JComboBox routesComboBox) {
-        final TableModel model = new MyTableModel();
-        final JBTable table = new JBTable(model);
-
-        final TableColumn column = table.getColumnModel().getColumn(1);
-        column.setCellEditor(new DefaultCellEditor(routesComboBox));
+        final ConditionRouteTableModel tableModel = new ConditionRouteTableModel();
+        final TableColumnModel tableColumnModel = new ConditionRouteTableColumnModel(routesComboBox);
+        final JBTable table = new JBTable(tableModel, tableColumnModel);
 
 
         JScrollPane tableScrollPane = new JBScrollPane(table);
@@ -31,50 +27,9 @@ public class ChoiceRouteTable extends JBPanel {
         setLayout(new BorderLayout());
         add(tableScrollPane, NORTH);
         add(Box.createVerticalGlue(), CENTER);
+
+        tableModel.addConditionRoutePair("default", "FlowReference");
     }
 
-    class MyTableModel extends AbstractTableModel {
-        String[] columnNames = {"Condition", "Route"};
-        Object[][] data = {
-                {"payload.name == 'Mark'", "route1"},
-                {"payload.name == 'Anton'", "route2"},
-        };
 
-        @Override
-        public int getRowCount() {
-            return data.length;
-        }
-
-        @Override
-        public int getColumnCount() {
-            return columnNames.length;
-        }
-
-        @Override
-        public String getColumnName(int col) {
-            return columnNames[col];
-        }
-
-        @Override
-        public Object getValueAt(int rowIndex, int columnIndex) {
-            return data[rowIndex][columnIndex];
-        }
-
-        @Override
-        public Class getColumnClass(int columnIndex) {
-            return getValueAt(0, columnIndex).getClass();
-        }
-
-        @Override
-        public boolean isCellEditable(int row, int col) {
-            return true;
-        }
-
-        @Override
-        public void setValueAt(Object value, int row, int col) {
-            data[row][col] = value;
-            fireTableCellUpdated(row, col);
-        }
-
-    }
 }
