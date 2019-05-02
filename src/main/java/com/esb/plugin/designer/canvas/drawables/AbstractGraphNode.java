@@ -2,6 +2,7 @@ package com.esb.plugin.designer.canvas.drawables;
 
 import com.esb.plugin.component.Component;
 import com.esb.plugin.designer.Tile;
+import com.esb.plugin.designer.properties.PropertyTracker;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.Drawable;
 import com.esb.plugin.graph.node.GraphNode;
@@ -38,8 +39,11 @@ public abstract class AbstractGraphNode implements GraphNode {
     public AbstractGraphNode(Component component) {
         this.component = component;
         icon = new Icon(component.getFullyQualifiedName());
+
         componentTitle = new ComponentTitle(component.getDisplayName());
-        componentDescription = new ComponentDescription("A description");
+
+        PropertyTracker tracker = new PropertyTracker(component, ComponentDescription.DESCRIPTION_PROPERTY_NAME);
+        componentDescription = new ComponentDescription(tracker);
 
         arrows = new Arrows(this);
         selectedItemBox = new SelectedItem(this);

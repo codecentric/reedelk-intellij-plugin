@@ -2,9 +2,9 @@ package com.esb.plugin.component.generic;
 
 import com.esb.plugin.component.Component;
 import com.esb.plugin.designer.properties.AbstractPropertyRenderer;
+import com.esb.plugin.designer.properties.PropertyTracker;
 import com.esb.plugin.designer.properties.widget.PropertyBox;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.manager.GraphChangeNotifier;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -37,13 +37,12 @@ public class GenericComponentPropertyRenderer extends AbstractPropertyRenderer {
 
     @NotNull
     private PropertyBox createPropertyBox(Component component, String propertyName) {
+        PropertyTracker tracker = new PropertyTracker(component, propertyName);
+
         PropertyBox propertyBox = new PropertyBox(propertyName);
-        propertyBox.setText((String) component.getData(propertyName));
-        propertyBox.addListener(newText -> {
-            component.setPropertyValue(propertyName, newText);
-            GraphChangeNotifier notifier = module.getMessageBus().syncPublisher(GraphChangeNotifier.TOPIC);
-            notifier.onChange(graph, file);
-        });
+        propertyBox.setText(tracker.getValueAsString());
+        propertyBox.addListener(newText -> tracker.onPropertyChange(module, graph, file, newText));
         return propertyBox;
     }
+
 }

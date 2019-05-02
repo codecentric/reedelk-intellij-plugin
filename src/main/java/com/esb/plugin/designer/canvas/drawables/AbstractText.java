@@ -2,7 +2,6 @@ package com.esb.plugin.designer.canvas.drawables;
 
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.Drawable;
-import com.intellij.ui.JBColor;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -10,35 +9,32 @@ import java.awt.image.ImageObserver;
 
 public abstract class AbstractText implements Drawable {
 
-    private final JBColor color;
-
     private int x;
     private int y;
-    private String text;
 
     private int draggedX;
     private int draggedY;
     private boolean dragging;
 
-    public AbstractText(String text, JBColor color) {
-        this.text = text;
-        this.color = color;
-    }
+
+    protected abstract String getText();
+
+    protected abstract Color getColor();
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-        graphics.setColor(color);
+        graphics.setColor(getColor());
 
         int halfWidth = Math.floorDiv(width(graphics), 2);
         int halfHeight = Math.floorDiv(height(graphics), 2);
         int startX = x() - halfWidth;
         int startY = y() + halfHeight;
-        graphics.drawString(text, startX, startY);
+        graphics.drawString(getText(), startX, startY);
 
         if (dragging) {
             startX = draggedX - halfWidth;
             startY = draggedY + halfHeight;
-            graphics.drawString(text, startX, startY);
+            graphics.drawString(getText(), startX, startY);
         }
     }
 
@@ -60,13 +56,13 @@ public abstract class AbstractText implements Drawable {
 
     @Override
     public int height(Graphics2D graphics) {
-        Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(text, graphics);
+        Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(getText(), graphics);
         return (int) stringBounds.getHeight();
     }
 
     @Override
     public int width(Graphics2D graphics) {
-        Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(text, graphics);
+        Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(getText(), graphics);
         return (int) stringBounds.getWidth();
     }
 

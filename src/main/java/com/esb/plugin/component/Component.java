@@ -1,5 +1,7 @@
 package com.esb.plugin.component;
 
+import com.esb.plugin.designer.canvas.drawables.ComponentDescription;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +14,7 @@ public class Component {
 
     public Component(final ComponentDescriptor descriptor) {
         this.descriptor = descriptor;
+        this.componentData.put(ComponentDescription.DESCRIPTION_PROPERTY_NAME, descriptor.getDisplayName());
     }
 
     public Object getData(String key) {
@@ -28,14 +31,6 @@ public class Component {
 
     public String getDisplayName() {
         return descriptor.getDisplayName();
-    }
-
-    public String getDescription() {
-        if (componentData.containsKey("description")) {
-            return (String) componentData.get("description");
-        } else {
-            return getDisplayName();
-        }
     }
 
     public List<String> componentDataKeys() {
