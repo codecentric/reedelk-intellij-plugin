@@ -30,6 +30,13 @@ public class Component {
         return descriptor.getDisplayName();
     }
 
+    public String getDescription() {
+        if (componentData.containsKey("description")) {
+            return (String) componentData.get("description");
+        } else {
+            return getDisplayName();
+        }
+    }
 
     public List<String> componentDataKeys() {
         return descriptor.componentDataKeys();

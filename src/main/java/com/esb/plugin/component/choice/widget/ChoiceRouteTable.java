@@ -1,6 +1,5 @@
 package com.esb.plugin.component.choice.widget;
 
-import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
@@ -18,12 +17,12 @@ public class ChoiceRouteTable extends JBPanel {
 
     private final Dimension tableScrollPaneDimension = new Dimension(0, 110);
 
-    public ChoiceRouteTable() {
+    public ChoiceRouteTable(JComboBox routesComboBox) {
         final TableModel model = new MyTableModel();
         final JBTable table = new JBTable(model);
 
         final TableColumn column = table.getColumnModel().getColumn(1);
-        column.setCellEditor(new DefaultCellEditor(ROUTES));
+        column.setCellEditor(new DefaultCellEditor(routesComboBox));
 
 
         JScrollPane tableScrollPane = new JBScrollPane(table);
@@ -77,14 +76,5 @@ public class ChoiceRouteTable extends JBPanel {
             fireTableCellUpdated(row, col);
         }
 
-    }
-
-    private static final JComboBox<String> ROUTES = new ComboBox<>();
-
-    static {
-        ROUTES.addItem("Route1");
-        ROUTES.addItem("Route2");
-        ROUTES.addItem("Route3");
-        ROUTES.addItem("Route4");
     }
 }

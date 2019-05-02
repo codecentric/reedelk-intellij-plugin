@@ -1,5 +1,7 @@
 package com.esb.plugin.designer.properties.widget;
 
+import com.intellij.util.ui.JBUI;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -31,7 +33,7 @@ public class FormUtility {
         lastConstraints.gridwidth = GridBagConstraints.REMAINDER;
 
         // Add a little padding
-        lastConstraints.insets = new Insets(1, 1, 1, 1);
+        lastConstraints.insets = JBUI.insets(1, 1, 1, 1);
 
         // Now for the "middle" field components
         middleConstraints =

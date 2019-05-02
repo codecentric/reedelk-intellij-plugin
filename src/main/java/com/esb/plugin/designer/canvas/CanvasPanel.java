@@ -102,6 +102,8 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
         checkState(updatedGraph != null, "Updated graph must not be null");
         checkState(relatedFile != null, "Related file must not be null");
 
+        // We update the graph only if the change was related to the
+        // file managed by this canvas.
         if (this.relatedFile.equals(relatedFile)) {
             updateGraph(updatedGraph);
         }

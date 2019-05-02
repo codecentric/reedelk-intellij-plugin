@@ -1,7 +1,6 @@
 package com.esb.plugin.component.choice.widget;
 
 import com.esb.plugin.designer.properties.widget.FormUtility;
-import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBTextField;
 
@@ -10,7 +9,7 @@ import java.awt.*;
 
 public class AddRouteCondition extends JBPanel {
 
-    public AddRouteCondition() {
+    public AddRouteCondition(JComboBox routesCombo) {
         setLayout(new GridBagLayout());
 
         FormUtility formUtility = new FormUtility();
@@ -24,17 +23,9 @@ public class AddRouteCondition extends JBPanel {
         selectRouteBox.setLayout(new GridBagLayout());
 
         formUtility.addLabel("Route:", selectRouteBox);
-        formUtility.addMiddleField(ROUTES, selectRouteBox);
+        formUtility.addMiddleField(routesCombo, selectRouteBox);
         formUtility.addLabel(btnAddCondition, selectRouteBox);
         formUtility.addLastField(selectRouteBox, this);
     }
 
-    private static final JComboBox<String> ROUTES = new ComboBox<>();
-
-    static {
-        ROUTES.addItem("Route1");
-        ROUTES.addItem("Route2");
-        ROUTES.addItem("Route3");
-        ROUTES.addItem("Route4");
-    }
 }

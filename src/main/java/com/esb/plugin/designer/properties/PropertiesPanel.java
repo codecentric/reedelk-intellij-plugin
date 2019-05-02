@@ -10,19 +10,19 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBTabbedPane;
-import com.intellij.util.ui.JBUI;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 
 public class PropertiesPanel extends JBPanel implements SelectListener {
 
+    private final MatteBorder border = BorderFactory.createMatteBorder(0, 10, 0, 0, getBackground());
+
     private final Module module;
     private final VirtualFile file;
 
     public PropertiesPanel(Module module, VirtualFile file) {
-        MatteBorder matteBorder = BorderFactory.createMatteBorder(0, 10, 0, 0, getBackground());
-        setBorder(matteBorder);
+        setBorder(border);
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.module = module;
         this.file = file;
@@ -47,7 +47,12 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
         JBTabbedPane tabbedPane = new JBTabbedPane();
 
         Icon icon = Icons.forComponentAsIcon(component.getFullyQualifiedName());
-        tabbedPane.addTab(component.getDisplayName(), icon, propertiesPanel, component.getDisplayName() + " properties");
+        tabbedPane.addTab(
+                component.getDisplayName(),
+                icon,
+                propertiesPanel,
+                component.getDisplayName() + " properties");
+
         add(tabbedPane);
 
         revalidate();
@@ -59,12 +64,6 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
         removeAll();
         revalidate();
         repaint();
-    }
-
-    private JLabel createTitleLabel(String title) {
-        JLabel titleLabel = new JLabel(title);
-        titleLabel.setBorder(JBUI.Borders.empty(5, 5, 0, 0));
-        return titleLabel;
     }
 
 }
