@@ -2,7 +2,6 @@ package com.esb.plugin.component.choice;
 
 import com.esb.plugin.component.choice.widget.AddConditionRoute;
 import com.esb.plugin.component.choice.widget.ChoiceRouteTable;
-import com.esb.plugin.designer.canvas.drawables.ComponentDescription;
 import com.esb.plugin.designer.properties.AbstractPropertyRenderer;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
@@ -14,6 +13,7 @@ import com.intellij.ui.components.JBPanel;
 import javax.swing.*;
 import java.awt.*;
 
+import static com.esb.plugin.designer.canvas.drawables.ComponentDescription.DESCRIPTION_PROPERTY_NAME;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 
@@ -40,7 +40,7 @@ public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
         JComboBox<String> routesCombo = new ComboBox<>();
         graph.successors(node)
                 .stream()
-                .map(successor -> (String) successor.component().getData(ComponentDescription.DESCRIPTION_PROPERTY_NAME))
+                .map(successor -> (String) successor.component().getData(DESCRIPTION_PROPERTY_NAME))
                 .forEach(routesCombo::addItem);
         return routesCombo;
     }
