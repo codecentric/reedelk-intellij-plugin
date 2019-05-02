@@ -37,20 +37,6 @@ public class ComponentDescriptor {
         return propertiesNames;
     }
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ComponentDescriptor that = (ComponentDescriptor) o;
-        return fullyQualifiedName.equals(that.fullyQualifiedName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(fullyQualifiedName);
-    }
-
     public static Builder create() {
         return new Builder();
     }
@@ -85,6 +71,18 @@ public class ComponentDescriptor {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ComponentDescriptor that = (ComponentDescriptor) o;
+        return fullyQualifiedName.equals(that.fullyQualifiedName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fullyQualifiedName);
+    }
 
 }
 
