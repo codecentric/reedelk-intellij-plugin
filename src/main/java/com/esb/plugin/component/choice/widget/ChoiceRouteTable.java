@@ -11,15 +11,16 @@ import java.awt.*;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 
-public class ChoiceRouteTable extends JBPanel {
+public class ChoiceRouteTable extends JBPanel implements AddConditionRouteListener {
 
     private final Dimension tableScrollPaneDimension = new Dimension(0, 110);
 
-    public ChoiceRouteTable(JComboBox routesComboBox) {
-        final ConditionRouteTableModel tableModel = new ConditionRouteTableModel();
-        final TableColumnModel tableColumnModel = new ConditionRouteTableColumnModel(routesComboBox);
-        final JBTable table = new JBTable(tableModel, tableColumnModel);
+    private final ConditionRouteTableModel tableModel;
 
+    public ChoiceRouteTable(JComboBox routesComboBox) {
+        tableModel = new ConditionRouteTableModel();
+        final TableColumnModel tableColumnModel = new ConditionRouteTableColumnModel(routesComboBox);
+        JBTable table = new JBTable(tableModel, tableColumnModel);
 
         JScrollPane tableScrollPane = new JBScrollPane(table);
         tableScrollPane.setPreferredSize(tableScrollPaneDimension);
@@ -28,8 +29,12 @@ public class ChoiceRouteTable extends JBPanel {
         add(tableScrollPane, NORTH);
         add(Box.createVerticalGlue(), CENTER);
 
-        tableModel.addConditionRoutePair("default", "FlowReference");
+        tableModel.addConditionRoutePair(new ConditionRoutePair("default", "FlowReference"));
     }
 
 
+    @Override
+    public void addRouteCondition(ConditionRoutePair conditionRoute) {
+        tableModel.addConditionRoutePair(conditionRoute);
+    }
 }

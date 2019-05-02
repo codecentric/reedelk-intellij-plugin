@@ -62,8 +62,10 @@ public class ConditionRouteTableModel extends AbstractTableModel {
         }
     }
 
-    void addConditionRoutePair(String condition, String route) {
-        this.conditionRouteList.add(new ConditionRoutePair(condition, route));
+    void addConditionRoutePair(ConditionRoutePair pair) {
+        conditionRouteList.add(pair);
+        int rowChanged = conditionRouteList.size();
+        fireTableRowsInserted(rowChanged, rowChanged);
     }
 
 }

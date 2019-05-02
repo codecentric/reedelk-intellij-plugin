@@ -5,13 +5,13 @@ import com.intellij.util.ui.JBUI;
 import javax.swing.*;
 import java.awt.*;
 
-public class FormUtility {
+public class FormBuilder {
 
     private GridBagConstraints lastConstraints = null;
     private GridBagConstraints labelConstraints = null;
     private GridBagConstraints middleConstraints = null;
 
-    public FormUtility() {
+    private FormBuilder() {
         // Set up the constraints for the "last" field in each
         // row first, then copy and modify those constraints.
 
@@ -52,15 +52,20 @@ public class FormUtility {
         labelConstraints.gridwidth = 1;
     }
 
+    public static FormBuilder get() {
+        return new FormBuilder();
+    }
+
     /**
      * Adds a field component. Any component may be used. The
      * component will be stretched to take the remainder of
      * the current row.
      */
-    public void addLastField(Component c, Container parent) {
+    public FormBuilder addLastField(Component c, Container parent) {
         GridBagLayout gbl = (GridBagLayout) parent.getLayout();
         gbl.setConstraints(c, lastConstraints);
         parent.add(c);
+        return this;
     }
 
     /**
@@ -69,19 +74,20 @@ public class FormUtility {
      * to the minimum width of the widest component on the
      * form.
      */
-    public void addLabel(Component c, Container parent) {
+    public FormBuilder addLabel(Component c, Container parent) {
         GridBagLayout gbl = (GridBagLayout) parent.getLayout();
         gbl.setConstraints(c, labelConstraints);
         parent.add(c);
+        return this;
     }
 
     /**
      * Adds a JLabel with the given string to the label column
      */
-    public JLabel addLabel(String s, Container parent) {
+    public FormBuilder addLabel(String s, Container parent) {
         JLabel c = new JLabel(s);
         addLabel(c, parent);
-        return c;
+        return this;
     }
 
     /**
@@ -90,10 +96,11 @@ public class FormUtility {
      * the space between the label and the "last" field. All
      * "middle" fields in the layout will be the same width.
      */
-    public void addMiddleField(Component c, Container parent) {
+    public FormBuilder addMiddleField(Component c, Container parent) {
         GridBagLayout gbl = (GridBagLayout) parent.getLayout();
         gbl.setConstraints(c, middleConstraints);
         parent.add(c);
+        return this;
     }
 
 }

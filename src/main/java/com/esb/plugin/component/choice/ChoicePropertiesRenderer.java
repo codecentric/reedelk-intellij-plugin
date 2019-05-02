@@ -1,6 +1,6 @@
 package com.esb.plugin.component.choice;
 
-import com.esb.plugin.component.choice.widget.AddRouteCondition;
+import com.esb.plugin.component.choice.widget.AddConditionRoute;
 import com.esb.plugin.component.choice.widget.ChoiceRouteTable;
 import com.esb.plugin.designer.canvas.drawables.ComponentDescription;
 import com.esb.plugin.designer.properties.AbstractPropertyRenderer;
@@ -25,12 +25,13 @@ public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
 
     @Override
     public JBPanel render(GraphNode choiceNode) {
-        AddRouteCondition addRouteCondition = new AddRouteCondition(createRoutesCombo(choiceNode));
+        AddConditionRoute addConditionRoute = new AddConditionRoute(createRoutesCombo(choiceNode));
         ChoiceRouteTable choiceRouteTable = new ChoiceRouteTable(createRoutesCombo(choiceNode));
+        addConditionRoute.addListener(choiceRouteTable);
 
         JBPanel panel = new JBPanel();
         panel.setLayout(new BorderLayout());
-        panel.add(addRouteCondition, NORTH);
+        panel.add(addConditionRoute, NORTH);
         panel.add(choiceRouteTable, CENTER);
         return panel;
     }
@@ -39,7 +40,7 @@ public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
         JComboBox<String> routesCombo = new ComboBox<>();
         graph.successors(node)
                 .stream()
-                .map(n -> (String) n.component().getData(ComponentDescription.DESCRIPTION_PROPERTY_NAME))
+                .map(successor -> (String) successor.component().getData(ComponentDescription.DESCRIPTION_PROPERTY_NAME))
                 .forEach(routesCombo::addItem);
         return routesCombo;
     }
