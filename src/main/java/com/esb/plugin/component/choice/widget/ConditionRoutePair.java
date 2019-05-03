@@ -11,5 +11,4 @@ class ConditionRoutePair {
         this.condition = condition;
         this.node = node;
     }
-
 }
