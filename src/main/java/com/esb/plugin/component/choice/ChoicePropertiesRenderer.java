@@ -1,5 +1,6 @@
 package com.esb.plugin.component.choice;
 
+import com.esb.plugin.component.Component;
 import com.esb.plugin.component.choice.widget.AddConditionRoute;
 import com.esb.plugin.component.choice.widget.ChoiceRouteTable;
 import com.esb.plugin.designer.properties.AbstractPropertyRenderer;
@@ -25,6 +26,9 @@ public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
 
     @Override
     public JBPanel render(GraphNode choiceNode) {
+        Component component = choiceNode.component();
+        //component.getData();
+
         AddConditionRoute addConditionRoute = new AddConditionRoute(createRoutesCombo(choiceNode));
         ChoiceRouteTable choiceRouteTable = new ChoiceRouteTable(createRoutesCombo(choiceNode));
         addConditionRoute.addListener(choiceRouteTable);
