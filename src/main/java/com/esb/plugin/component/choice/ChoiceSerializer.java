@@ -1,9 +1,15 @@
 package com.esb.plugin.component.choice;
 
+import com.esb.plugin.component.Component;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.serializer.AbstractSerializer;
 import com.esb.plugin.graph.serializer.SerializerUtilities;
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.List;
+
+import static com.esb.internal.commons.JsonParser.Implementor;
 
 public class ChoiceSerializer extends AbstractSerializer {
     /**
@@ -39,9 +45,18 @@ public class ChoiceSerializer extends AbstractSerializer {
      */
     @Override
     public JSONObject serialize(GraphNode node) {
+        Component component = node.component();
+
         JSONObject choice = SerializerUtilities.newJSONObject();
 
+        Implementor.name(component.getFullyQualifiedName(), choice);
 
+        List<GraphNode> when = (List<GraphNode>) component.getData("when");
+
+        JSONArray whenArray = new JSONArray();
+
+
+        choice.put("when", whenArray);
 
         return choice;
     }

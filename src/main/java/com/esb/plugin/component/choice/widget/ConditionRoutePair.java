@@ -1,13 +1,15 @@
 package com.esb.plugin.component.choice.widget;
 
+import com.esb.plugin.graph.node.GraphNode;
+
 class ConditionRoutePair {
 
     String condition;
-    String route;
+    GraphNode node;
 
-    ConditionRoutePair(String condition, String route) {
+    ConditionRoutePair(String condition, GraphNode node) {
         this.condition = condition;
-        this.route = route;
+        this.node = node;
     }
 
 }

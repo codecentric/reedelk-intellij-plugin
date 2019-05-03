@@ -1,5 +1,7 @@
 package com.esb.plugin.component.choice.widget;
 
+import com.esb.plugin.graph.node.GraphNode;
+
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +45,7 @@ public class ConditionRouteTableModel extends AbstractTableModel {
                 returnValue = conditionRoute.condition;
                 break;
             case 1:
-                returnValue = conditionRoute.route;
+                returnValue = conditionRoute.node;
                 break;
         }
         return returnValue;
@@ -57,7 +59,7 @@ public class ConditionRouteTableModel extends AbstractTableModel {
                 conditionRoute.condition = (String) value;
                 break;
             case 1:
-                conditionRoute.route = (String) value;
+                conditionRoute.node = (GraphNode) value;
                 break;
         }
     }

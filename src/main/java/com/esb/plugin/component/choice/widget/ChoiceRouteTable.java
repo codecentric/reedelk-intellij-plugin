@@ -28,8 +28,6 @@ public class ChoiceRouteTable extends JBPanel implements AddConditionRouteListen
         setLayout(new BorderLayout());
         add(tableScrollPane, NORTH);
         add(Box.createVerticalGlue(), CENTER);
-
-        tableModel.addConditionRoutePair(new ConditionRoutePair("default", "FlowReference"));
     }
 
 

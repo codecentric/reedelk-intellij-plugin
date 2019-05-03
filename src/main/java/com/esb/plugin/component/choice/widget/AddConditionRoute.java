@@ -1,6 +1,7 @@
 package com.esb.plugin.component.choice.widget;
 
 import com.esb.plugin.designer.properties.widget.FormBuilder;
+import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBTextField;
 
@@ -14,10 +15,10 @@ public class AddConditionRoute extends JBPanel implements ActionListener {
     private JBPanel selectRouteBox;
     private JButton btnAddCondition;
     private JTextField conditionInput;
-    private JComboBox<String> routesCombo;
+    private JComboBox<GraphNode> routesCombo;
     private AddConditionRouteListener listener;
 
-    public AddConditionRoute(JComboBox<String> routesCombo) {
+    public AddConditionRoute(JComboBox<GraphNode> routesCombo) {
         setLayout(new GridBagLayout());
 
         this.routesCombo = routesCombo;
@@ -45,8 +46,8 @@ public class AddConditionRoute extends JBPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (listener != null) {
             ConditionRoutePair pair = new ConditionRoutePair(
-                    conditionInput.getText(), (String)
-                    routesCombo.getSelectedItem());
+                    conditionInput.getText(),
+                    (GraphNode) routesCombo.getSelectedItem());
             listener.addRouteCondition(pair);
         }
     }
