@@ -57,7 +57,7 @@ public class ScopeBox implements Drawable {
         return max;
     }
 
-    public ScopeBoundaries getBoundaries(FlowGraph graph, Graphics2D graphics) {
+    ScopeBoundaries getBoundaries(FlowGraph graph, Graphics2D graphics) {
         Collection<GraphNode> drawables = ListLastNodeOfScope.from(graph, scopedNode);
 
         Drawable drawableWithMaxX = scopedNode;

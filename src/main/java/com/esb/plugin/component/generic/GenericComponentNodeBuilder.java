@@ -27,6 +27,10 @@ public class GenericComponentNodeBuilder extends AbstractBuilder {
         component.componentDataKeys()
                 .forEach(propertyName -> {
                     Object propertyValue = componentDefinition.get(propertyName.toLowerCase());
+                    // Explicitly map JSON Library NULL value to java's null.
+                    if (propertyValue == JSONObject.NULL) {
+                        propertyValue = null;
+                    }
                     component.setPropertyValue(propertyName, propertyValue);
                 });
 

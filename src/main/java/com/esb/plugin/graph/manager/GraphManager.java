@@ -19,7 +19,6 @@ import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -29,9 +28,9 @@ import static java.util.Arrays.stream;
  * Centralizes updates of the graph coming from the following sources:
  * - The text editor associated with the flow designer (the user manually updates the JSON)
  * - Designer updates:
- *      - drag and drop and moving around components
+ * - drag and drop and moving around components
  * - Properties updates:
- *      - component's property changed
+ * - component's property changed
  */
 public class GraphManager implements FileEditorManagerListener, DocumentListener, GraphChangeNotifier, Disposable {
 
@@ -86,20 +85,16 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
     public void onChange(FlowGraph graph, VirtualFile virtualFile) {
         if (!virtualFile.equals(jsonGraphFile)) return;
 
-        // Serialize the graph to json
+        // Serialize the graph to json and write it into the file
         String json = GraphSerializer.serialize(graph);
         try {
-            WriteCommandAction.writeCommandAction(project).run((ThrowableRunnable<Throwable>) () -> {
-                try {
-                    virtualFile.setBinaryContent(json.getBytes());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
+            WriteCommandAction
+                    .writeCommandAction(project)
+                    .run((ThrowableRunnable<Throwable>) () ->
+                            jsonGraphFile.setBinaryContent(json.getBytes()));
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
-
     }
 
     @Override

@@ -9,6 +9,7 @@ import com.esb.plugin.graph.node.NothingSelectedNode;
 import com.esb.plugin.graph.node.ScopedNode;
 import com.esb.plugin.graph.scope.FindScope;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.vfs.VirtualFile;
 
 import java.awt.*;
 import java.util.Optional;
@@ -20,8 +21,8 @@ public class MoveActionHandler extends AbstractActionHandler {
     private final GraphNode selected;
     private final Graphics2D graphics;
 
-    public MoveActionHandler(Module module, FlowGraph graph, Graphics2D graphics, GraphNode selected, Point movePoint) {
-        super(module);
+    public MoveActionHandler(Module module, FlowGraph graph, Graphics2D graphics, GraphNode selected, Point movePoint, VirtualFile relatedFile) {
+        super(module, relatedFile);
         this.graph = graph;
         this.graphics = graphics;
         this.movePoint = movePoint;
@@ -68,13 +69,12 @@ public class MoveActionHandler extends AbstractActionHandler {
 
         // 5. If the copy of the graph was changed, then update the graph
         if (updatedGraph.isChanged()) {
+            notifyGraphChanged(updatedGraph);
             return Optional.of(updatedGraph);
-
-        } else {
-            // 6. Add back the node to the scope if the original graph was not changed.
-            selectedScope.ifPresent(scopedDrawable -> scopedDrawable.addToScope(selected));
         }
 
+        // 6. Add back the node to the scope if the original graph was not changed.
+        selectedScope.ifPresent(scopedDrawable -> scopedDrawable.addToScope(selected));
         return Optional.empty();
     }
 }

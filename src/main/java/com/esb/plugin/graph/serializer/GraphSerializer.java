@@ -6,6 +6,7 @@ import com.esb.plugin.graph.FlowGraph;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,15 +26,19 @@ public class GraphSerializer {
     }
 
     private static JSONObject serialize(Component component) {
-        JSONObject componentAsJson = new JSONObject();
+        LinkedHashMap<String, String> jsonOrderedMap = new LinkedHashMap<>();
+
+        JSONObject componentAsJson = new JSONObject(jsonOrderedMap);
         JsonParser.Implementor.name(component.getFullyQualifiedName(), componentAsJson);
 
-        List<String> keys = component.componentDataKeys();
+        List<String> keys = component.getPropertiesNames();
         keys.forEach(propertyName -> {
             Object data = component.getData(propertyName);
+            if (data == null) {
+                data = JSONObject.NULL;
+            }
             componentAsJson.put(propertyName.toLowerCase(), data);
         });
-
         return componentAsJson;
     }
 }

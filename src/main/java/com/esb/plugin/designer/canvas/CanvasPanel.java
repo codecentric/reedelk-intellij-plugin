@@ -167,7 +167,7 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
 
         Point dragPoint = new Point(dragX, dragY);
 
-        MoveActionHandler delegate = new MoveActionHandler(module, graph, getGraphics2D(), selected, dragPoint);
+        MoveActionHandler delegate = new MoveActionHandler(module, graph, getGraphics2D(), selected, dragPoint, relatedFile);
         delegate.handle().ifPresent(this::updateGraph);
 
         repaint();
@@ -175,7 +175,7 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
 
     @Override
     public void drop(DropTargetDropEvent dropEvent) {
-        DropActionHandler delegate = new DropActionHandler(module, graph, getGraphics2D(), dropEvent);
+        DropActionHandler delegate = new DropActionHandler(module, graph, getGraphics2D(), dropEvent, relatedFile);
         Optional<FlowGraph> updatedGraph = delegate.handle();
         updatedGraph.ifPresent(this::updateGraph);
     }
