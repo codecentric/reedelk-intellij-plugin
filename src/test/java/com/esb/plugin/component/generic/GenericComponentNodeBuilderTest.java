@@ -14,12 +14,12 @@ class GenericComponentNodeBuilderTest extends AbstractBuilderTest {
 
     private static final String GENERIC_COMPONENT_NAME = "com.esb.component.GenericComponent";
 
-    private GenericComponentNodeBuilder builder;
+    private GenericComponentDeserializer builder;
 
     @BeforeEach
     protected void setUp() {
         super.setUp();
-        builder = new GenericComponentNodeBuilder(graph, context);
+        builder = new GenericComponentDeserializer(graph, context);
     }
 
     @Test
@@ -32,7 +32,7 @@ class GenericComponentNodeBuilderTest extends AbstractBuilderTest {
                 .build();
 
         // When
-        GraphNode node = builder.build(root, componentDefinition);
+        GraphNode node = builder.deserialize(root, componentDefinition);
 
         // Then
         assertThat(graph.nodesCount()).isEqualTo(2);

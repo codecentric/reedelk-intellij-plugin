@@ -4,21 +4,21 @@ import com.esb.component.Stop;
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.component.stop.StopNode;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.deserializer.AbstractBuilder;
-import com.esb.plugin.graph.deserializer.BuilderContext;
-import com.esb.plugin.graph.deserializer.GraphNodeBuilder;
+import com.esb.plugin.graph.deserializer.AbstractDeserializer;
+import com.esb.plugin.graph.deserializer.DeserializerContext;
+import com.esb.plugin.graph.deserializer.GraphNodeDeserializerFactory;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class ForkJoinNodeBuilder extends AbstractBuilder {
+public class ForkJoinDeserializer extends AbstractDeserializer {
 
-    public ForkJoinNodeBuilder(FlowGraph graph, BuilderContext context) {
+    public ForkJoinDeserializer(FlowGraph graph, DeserializerContext context) {
         super(graph, context);
     }
 
     @Override
-    public GraphNode build(GraphNode parent, JSONObject componentDefinition) {
+    public GraphNode deserialize(GraphNode parent, JSONObject componentDefinition) {
 
         StopNode stopDrawable = context.instantiateGraphNode(Stop.class.getName());
 
@@ -39,7 +39,7 @@ public class ForkJoinNodeBuilder extends AbstractBuilder {
 
             for (int j = 0; j < nextComponents.length(); j++) {
                 JSONObject currentComponentDefinition = nextComponents.getJSONObject(j);
-                currentDrawable = GraphNodeBuilder.get()
+                currentDrawable = GraphNodeDeserializerFactory.get()
                         .componentDefinition(currentComponentDefinition)
                         .context(context)
                         .graph(graph)
@@ -52,7 +52,7 @@ public class ForkJoinNodeBuilder extends AbstractBuilder {
         }
 
         JSONObject joinComponent = JsonParser.ForkJoin.getJoin(componentDefinition);
-        return GraphNodeBuilder.get()
+        return GraphNodeDeserializerFactory.get()
                 .componentDefinition(joinComponent)
                 .parent(stopDrawable)
                 .context(context)

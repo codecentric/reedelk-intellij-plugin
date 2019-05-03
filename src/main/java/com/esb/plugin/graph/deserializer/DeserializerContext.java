@@ -6,11 +6,11 @@ import com.esb.plugin.graph.node.GraphNodeFactory;
 import com.esb.plugin.service.module.ComponentService;
 import com.intellij.openapi.module.Module;
 
-public class BuilderContext {
+public class DeserializerContext {
 
     private final Module module;
 
-    public BuilderContext(Module module) {
+    public DeserializerContext(Module module) {
         this.module = module;
     }
 

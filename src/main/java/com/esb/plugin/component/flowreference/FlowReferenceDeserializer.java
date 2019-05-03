@@ -2,19 +2,19 @@ package com.esb.plugin.component.flowreference;
 
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.deserializer.AbstractBuilder;
-import com.esb.plugin.graph.deserializer.BuilderContext;
+import com.esb.plugin.graph.deserializer.AbstractDeserializer;
+import com.esb.plugin.graph.deserializer.DeserializerContext;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONObject;
 
-public class FlowReferenceNodeBuilder extends AbstractBuilder {
+public class FlowReferenceDeserializer extends AbstractDeserializer {
 
-    public FlowReferenceNodeBuilder(FlowGraph graph, BuilderContext context) {
+    public FlowReferenceDeserializer(FlowGraph graph, DeserializerContext context) {
         super(graph, context);
     }
 
     @Override
-    public GraphNode build(GraphNode parent, JSONObject componentDefinition) {
+    public GraphNode deserialize(GraphNode parent, JSONObject componentDefinition) {
 
         String name = JsonParser.Implementor.name(componentDefinition);
 

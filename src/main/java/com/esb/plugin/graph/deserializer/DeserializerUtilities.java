@@ -8,22 +8,26 @@ import java.util.List;
 
 import static com.google.common.base.Preconditions.checkState;
 
-/*
- * This class removes from a given flow graph all the nodes having
- * type 'StopNode' and bridges the incoming node to the successor
- * of the 'StopNode' node.
- *
- * The graph does not display to the user 'Stop' nodes since they
- * are only used to build the graph.
- */
-class StopNodesRemover {
+class DeserializerUtilities {
 
-    static FlowGraph from(FlowGraph originalGraph) {
-        FlowGraph copy = originalGraph.copy();
+    /**
+     * This class removes from a given flow graph all the nodes having
+     * type 'StopNode' and bridges the incoming node to the successor
+     * of the 'StopNode' node.
+     * <p>
+     * The graph does not display to the user 'Stop' nodes since they
+     * are only used to build the graph.
+     *
+     * @param graph the graph from which we want to remove stop nodes.
+     * @return the original graph without stop nodes. Preceding nodes of stop nodes
+     * are connected to the successors of the removed stop nodes.
+     */
+    static FlowGraph removeStopNodesFrom(FlowGraph graph) {
+        FlowGraph copy = graph.copy();
 
-        originalGraph.breadthFirstTraversal(currentDrawable -> {
+        graph.breadthFirstTraversal(currentDrawable -> {
 
-            if (successorHasTypeStopDrawable(originalGraph, currentDrawable)) {
+            if (successorHasTypeStopDrawable(graph, currentDrawable)) {
 
                 List<GraphNode> successorsOfCurrent = copy.successors(currentDrawable);
                 checkState(successorsOfCurrent.size() == 1, "Expected only one successor");
@@ -45,7 +49,7 @@ class StopNodesRemover {
 
         // Remove all nodes of type stop:
         // all inbound/outbound edges have been removed above
-        originalGraph.breadthFirstTraversal(drawable -> {
+        graph.breadthFirstTraversal(drawable -> {
             if (drawable instanceof StopNode) {
                 copy.remove(drawable);
             }

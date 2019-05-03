@@ -4,9 +4,9 @@ import com.esb.component.Stop;
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.component.stop.StopNode;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.deserializer.AbstractBuilder;
-import com.esb.plugin.graph.deserializer.BuilderContext;
-import com.esb.plugin.graph.deserializer.GraphNodeBuilder;
+import com.esb.plugin.graph.deserializer.AbstractDeserializer;
+import com.esb.plugin.graph.deserializer.DeserializerContext;
+import com.esb.plugin.graph.deserializer.GraphNodeDeserializerFactory;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,14 +16,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ChoiceNodeBuilder extends AbstractBuilder {
+public class ChoiceDeserializer extends AbstractDeserializer {
 
-    public ChoiceNodeBuilder(FlowGraph graph, BuilderContext context) {
+    public ChoiceDeserializer(FlowGraph graph, DeserializerContext context) {
         super(graph, context);
     }
 
     @Override
-    public GraphNode build(GraphNode parent, JSONObject componentDefinition) {
+    public GraphNode deserialize(GraphNode parent, JSONObject componentDefinition) {
 
         StopNode stopNode = context.instantiateGraphNode(Stop.class.getName());
 
@@ -65,7 +65,7 @@ public class ChoiceNodeBuilder extends AbstractBuilder {
     private GraphNode buildArrayOfComponents(FlowGraph graph, GraphNode currentDrawable, JSONArray next) {
         for (int j = 0; j < next.length(); j++) {
             JSONObject currentComponentDef = next.getJSONObject(j);
-            currentDrawable = GraphNodeBuilder.get()
+            currentDrawable = GraphNodeDeserializerFactory.get()
                     .componentDefinition(currentComponentDef)
                     .graph(graph)
                     .context(context)

@@ -1,15 +1,55 @@
 package com.esb.plugin.graph.deserializer;
 
 import com.esb.internal.commons.FileUtils;
+import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.graph.FlowGraph;
+import com.esb.plugin.graph.FlowGraphImpl;
+import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Optional;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 public class GraphDeserializer {
+
+    private final FlowGraph graph;
+    private final DeserializerContext context;
+    private final JSONObject flowDefinition;
+
+    GraphDeserializer(String json, DeserializerContext context) {
+        checkArgument(json != null, "JSON");
+        checkArgument(context != null, "DeserializerContext");
+
+        this.context = context;
+        this.graph = new FlowGraphImpl();
+        this.flowDefinition = JsonParser.from(json);
+    }
+
+    private FlowGraph deserialize() {
+        JSONArray flow = JsonParser.Flow.getFlow(flowDefinition);
+
+        GraphNode current = null;
+
+        for (int i = 0; i < flow.length(); i++) {
+
+            JSONObject implementorDefinition = (JSONObject) flow.get(i);
+
+            current = GraphNodeDeserializerFactory.get()
+                    .graph(graph)
+                    .parent(current)
+                    .context(context)
+                    .componentDefinition(implementorDefinition)
+                    .build();
+        }
+
+        return DeserializerUtilities.removeStopNodesFrom(graph);
+    }
 
     public static Optional<FlowGraph> deserialize(Module module, VirtualFile file) {
         try {
@@ -22,13 +62,12 @@ public class GraphDeserializer {
 
     public static Optional<FlowGraph> deserialize(Module module, String json) {
         try {
-            BuilderContext context = new BuilderContext(module);
-            GraphBuilder builder = new GraphBuilder(json, context);
+            DeserializerContext context = new DeserializerContext(module);
+            GraphDeserializer builder = new GraphDeserializer(json, context);
             FlowGraph graph = builder.deserialize();
             return Optional.of(graph);
         } catch (Exception e) {
             return Optional.empty();
         }
     }
-
 }

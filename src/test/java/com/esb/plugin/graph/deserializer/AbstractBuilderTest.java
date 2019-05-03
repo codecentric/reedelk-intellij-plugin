@@ -28,7 +28,7 @@ public abstract class AbstractBuilderTest {
     @Mock
     protected GraphNode root;
     @Mock
-    protected BuilderContext context;
+    protected DeserializerContext context;
 
     protected FlowGraphImpl graph;
 

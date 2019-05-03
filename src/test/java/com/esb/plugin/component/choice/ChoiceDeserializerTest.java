@@ -15,7 +15,7 @@ import static com.esb.plugin.graph.deserializer.ComponentDefinitionBuilder.creat
 import static com.esb.plugin.graph.deserializer.ComponentDefinitionBuilder.forComponent;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ChoiceNodeBuilderTest extends AbstractBuilderTest {
+class ChoiceDeserializerTest extends AbstractBuilderTest {
 
     private final String COMPONENT_1_NAME = "com.esb.component.Name1";
     private final String COMPONENT_2_NAME = "com.esb.component.Name2";
@@ -24,12 +24,12 @@ class ChoiceNodeBuilderTest extends AbstractBuilderTest {
     private final String COMPONENT_5_NAME = "com.esb.component.Name5";
     private final String COMPONENT_6_NAME = "com.esb.component.Name6";
 
-    private ChoiceNodeBuilder builder;
+    private ChoiceDeserializer builder;
 
     @BeforeEach
     protected void setUp() {
         super.setUp();
-        builder = new ChoiceNodeBuilder(graph, context);
+        builder = new ChoiceDeserializer(graph, context);
 
         mockComponent(COMPONENT_1_NAME, GenericComponentNode.class);
         mockComponent(COMPONENT_2_NAME, GenericComponentNode.class);
@@ -56,7 +56,7 @@ class ChoiceNodeBuilderTest extends AbstractBuilderTest {
                 .build();
 
         // When
-        GraphNode stopDrawable = builder.build(root, componentDefinition);
+        GraphNode stopDrawable = builder.deserialize(root, componentDefinition);
 
         // Then: last node must be a stop node
         assertThat(stopDrawable).isInstanceOf(StopNode.class);

@@ -3,19 +3,19 @@ package com.esb.plugin.component.generic;
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.component.Component;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.deserializer.AbstractBuilder;
-import com.esb.plugin.graph.deserializer.BuilderContext;
+import com.esb.plugin.graph.deserializer.AbstractDeserializer;
+import com.esb.plugin.graph.deserializer.DeserializerContext;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONObject;
 
-public class GenericComponentNodeBuilder extends AbstractBuilder {
+public class GenericComponentDeserializer extends AbstractDeserializer {
 
-    public GenericComponentNodeBuilder(FlowGraph graph, BuilderContext context) {
+    public GenericComponentDeserializer(FlowGraph graph, DeserializerContext context) {
         super(graph, context);
     }
 
     @Override
-    public GraphNode build(GraphNode parent, JSONObject componentDefinition) {
+    public GraphNode deserialize(GraphNode parent, JSONObject componentDefinition) {
 
         String name = JsonParser.Implementor.name(componentDefinition);
 

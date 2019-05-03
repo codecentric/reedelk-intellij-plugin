@@ -15,7 +15,7 @@ import static com.esb.plugin.graph.deserializer.ComponentDefinitionBuilder.creat
 import static com.esb.plugin.graph.deserializer.ComponentDefinitionBuilder.forComponent;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ForkJoinNodeBuilderTest extends AbstractBuilderTest {
+class ForkJoinDeserializerTest extends AbstractBuilderTest {
 
     private final String JOIN_COMPONENT_NAME = "com.esb.component.JoinString";
 
@@ -24,12 +24,12 @@ class ForkJoinNodeBuilderTest extends AbstractBuilderTest {
     private final String COMPONENT_3_NAME = "com.esb.component.Name3";
     private final String COMPONENT_4_NAME = "com.esb.component.Name4";
 
-    private ForkJoinNodeBuilder builder;
+    private ForkJoinDeserializer builder;
 
     @BeforeEach
     protected void setUp() {
         super.setUp();
-        builder = new ForkJoinNodeBuilder(graph, context);
+        builder = new ForkJoinDeserializer(graph, context);
 
         mockComponent(COMPONENT_1_NAME, GenericComponentNode.class);
         mockComponent(COMPONENT_2_NAME, GenericComponentNode.class);
@@ -57,7 +57,7 @@ class ForkJoinNodeBuilderTest extends AbstractBuilderTest {
                 .build();
 
         // When
-        GraphNode joinDrawable = builder.build(root, componentDefinition);
+        GraphNode joinDrawable = builder.deserialize(root, componentDefinition);
 
         // Then: last node must be a join node
         assertThat(joinDrawable.component().getFullyQualifiedName()).isEqualTo(JOIN_COMPONENT_NAME);
