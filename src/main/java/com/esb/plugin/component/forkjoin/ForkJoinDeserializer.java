@@ -6,7 +6,7 @@ import com.esb.plugin.component.stop.StopNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.deserializer.AbstractDeserializer;
 import com.esb.plugin.graph.deserializer.DeserializerContext;
-import com.esb.plugin.graph.deserializer.GraphNodeDeserializerFactory;
+import com.esb.plugin.graph.deserializer.GraphDeserializerFactory;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -39,7 +39,7 @@ public class ForkJoinDeserializer extends AbstractDeserializer {
 
             for (int j = 0; j < nextComponents.length(); j++) {
                 JSONObject currentComponentDefinition = nextComponents.getJSONObject(j);
-                currentDrawable = GraphNodeDeserializerFactory.get()
+                currentDrawable = GraphDeserializerFactory.get()
                         .componentDefinition(currentComponentDefinition)
                         .context(context)
                         .graph(graph)
@@ -52,7 +52,7 @@ public class ForkJoinDeserializer extends AbstractDeserializer {
         }
 
         JSONObject joinComponent = JsonParser.ForkJoin.getJoin(componentDefinition);
-        return GraphNodeDeserializerFactory.get()
+        return GraphDeserializerFactory.get()
                 .componentDefinition(joinComponent)
                 .parent(stopDrawable)
                 .context(context)

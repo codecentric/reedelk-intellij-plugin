@@ -6,7 +6,7 @@ import com.esb.plugin.component.stop.StopNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.deserializer.AbstractDeserializer;
 import com.esb.plugin.graph.deserializer.DeserializerContext;
-import com.esb.plugin.graph.deserializer.GraphNodeDeserializerFactory;
+import com.esb.plugin.graph.deserializer.GraphDeserializerFactory;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -65,7 +65,7 @@ public class ChoiceDeserializer extends AbstractDeserializer {
     private GraphNode buildArrayOfComponents(FlowGraph graph, GraphNode currentDrawable, JSONArray next) {
         for (int j = 0; j < next.length(); j++) {
             JSONObject currentComponentDef = next.getJSONObject(j);
-            currentDrawable = GraphNodeDeserializerFactory.get()
+            currentDrawable = GraphDeserializerFactory.get()
                     .componentDefinition(currentComponentDef)
                     .graph(graph)
                     .context(context)

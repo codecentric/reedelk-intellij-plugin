@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GraphNodeDeserializerFactory {
+public class GraphDeserializerFactory {
 
     private FlowGraph graph;
     private GraphNode parent;
@@ -40,10 +40,10 @@ public class GraphNodeDeserializerFactory {
         COMPONENT_NAME_HANDLER = Collections.unmodifiableMap(tmp);
     }
 
-    private GraphNodeDeserializerFactory() {
+    private GraphDeserializerFactory() {
     }
 
-    public GraphNodeDeserializerFactory context(DeserializerContext context) {
+    public GraphDeserializerFactory context(DeserializerContext context) {
         this.context = context;
         return this;
     }
@@ -58,18 +58,18 @@ public class GraphNodeDeserializerFactory {
         }
     }
 
-    public GraphNodeDeserializerFactory parent(GraphNode parent) {
+    public GraphDeserializerFactory parent(GraphNode parent) {
         this.parent = parent;
         return this;
     }
 
-    public GraphNodeDeserializerFactory componentDefinition(JSONObject componentDefinition) {
+    public GraphDeserializerFactory componentDefinition(JSONObject componentDefinition) {
         this.componentDefinition = componentDefinition;
         return this;
     }
 
-    public static GraphNodeDeserializerFactory get() {
-        return new GraphNodeDeserializerFactory();
+    public static GraphDeserializerFactory get() {
+        return new GraphDeserializerFactory();
     }
 
     public GraphNode build() {
@@ -78,7 +78,7 @@ public class GraphNodeDeserializerFactory {
         return instantiateBuilder(graph, context, builderClazz).deserialize(parent, componentDefinition);
     }
 
-    public GraphNodeDeserializerFactory graph(FlowGraph graph) {
+    public GraphDeserializerFactory graph(FlowGraph graph) {
         this.graph = graph;
         return this;
     }

@@ -23,8 +23,8 @@ public class GraphDeserializer {
     private final JSONObject flowDefinition;
 
     GraphDeserializer(String json, DeserializerContext context) {
-        checkArgument(json != null, "JSON");
-        checkArgument(context != null, "DeserializerContext");
+        checkArgument(json != null, "json");
+        checkArgument(context != null, "context");
 
         this.context = context;
         this.graph = new FlowGraphImpl();
@@ -40,7 +40,7 @@ public class GraphDeserializer {
 
             JSONObject implementorDefinition = (JSONObject) flow.get(i);
 
-            current = GraphNodeDeserializerFactory.get()
+            current = GraphDeserializerFactory.get()
                     .graph(graph)
                     .parent(current)
                     .context(context)
