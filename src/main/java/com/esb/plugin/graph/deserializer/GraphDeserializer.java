@@ -31,7 +31,7 @@ public class GraphDeserializer {
         this.flowDefinition = JsonParser.from(json);
     }
 
-    private FlowGraph deserialize() {
+    protected FlowGraph deserialize() {
         JSONArray flow = JsonParser.Flow.getFlow(flowDefinition);
 
         GraphNode current = null;
