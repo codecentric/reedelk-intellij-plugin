@@ -35,17 +35,15 @@ public class GraphDeserializer {
         JSONArray flow = JsonParser.Flow.getFlow(flowDefinition);
 
         GraphNode current = null;
-
         for (int i = 0; i < flow.length(); i++) {
-
             JSONObject implementorDefinition = (JSONObject) flow.get(i);
 
             current = GraphDeserializerFactory.get()
-                    .graph(graph)
-                    .parent(current)
-                    .context(context)
                     .componentDefinition(implementorDefinition)
-                    .build();
+                    .context(context)
+                    .graph(graph)
+                    .build()
+                    .deserialize(current, implementorDefinition);
         }
 
         return DeserializerUtilities.removeStopNodesFrom(graph);

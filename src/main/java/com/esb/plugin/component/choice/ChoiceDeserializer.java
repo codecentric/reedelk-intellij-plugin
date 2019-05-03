@@ -67,10 +67,10 @@ public class ChoiceDeserializer extends AbstractDeserializer {
             JSONObject currentComponentDef = next.getJSONObject(j);
             currentDrawable = GraphDeserializerFactory.get()
                     .componentDefinition(currentComponentDef)
-                    .graph(graph)
                     .context(context)
-                    .parent(currentDrawable)
-                    .build();
+                    .graph(graph)
+                    .build()
+                    .deserialize(currentDrawable, currentComponentDef);
         }
         return currentDrawable;
     }

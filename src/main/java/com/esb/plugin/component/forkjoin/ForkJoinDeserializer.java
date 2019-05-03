@@ -1,7 +1,6 @@
 package com.esb.plugin.component.forkjoin;
 
 import com.esb.component.Stop;
-import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.component.stop.StopNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.deserializer.AbstractDeserializer;
@@ -10,6 +9,9 @@ import com.esb.plugin.graph.deserializer.GraphDeserializerFactory;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import static com.esb.internal.commons.JsonParser.ForkJoin;
+import static com.esb.internal.commons.JsonParser.Implementor;
 
 public class ForkJoinDeserializer extends AbstractDeserializer {
 
@@ -22,18 +24,18 @@ public class ForkJoinDeserializer extends AbstractDeserializer {
 
         StopNode stopDrawable = context.instantiateGraphNode(Stop.class.getName());
 
-        String name = JsonParser.Implementor.name(componentDefinition);
+        String name = Implementor.name(componentDefinition);
 
         ForkJoinNode forkJoinDrawable = context.instantiateGraphNode(name);
 
         graph.add(parent, forkJoinDrawable);
 
-        JSONArray fork = JsonParser.ForkJoin.getFork(componentDefinition);
+        JSONArray fork = ForkJoin.getFork(componentDefinition);
 
         for (int i = 0; i < fork.length(); i++) {
 
             JSONObject next = fork.getJSONObject(i);
-            JSONArray nextComponents = JsonParser.ForkJoin.getNext(next);
+            JSONArray nextComponents = ForkJoin.getNext(next);
 
             GraphNode currentDrawable = forkJoinDrawable;
 
@@ -43,21 +45,23 @@ public class ForkJoinDeserializer extends AbstractDeserializer {
                         .componentDefinition(currentComponentDefinition)
                         .context(context)
                         .graph(graph)
-                        .parent(currentDrawable)
-                        .build();
+                        .build()
+                        .deserialize(currentDrawable, currentComponentDefinition);
+
             }
 
             graph.add(currentDrawable, stopDrawable);
 
         }
 
-        JSONObject joinComponent = JsonParser.ForkJoin.getJoin(componentDefinition);
+        JSONObject joinComponent = ForkJoin.getJoin(componentDefinition);
         return GraphDeserializerFactory.get()
                 .componentDefinition(joinComponent)
-                .parent(stopDrawable)
                 .context(context)
                 .graph(graph)
-                .build();
+                .build()
+                .deserialize(stopDrawable, joinComponent);
+
     }
 
 }

@@ -12,7 +12,6 @@ import com.esb.plugin.component.forkjoin.ForkJoinDeserializer;
 import com.esb.plugin.component.generic.GenericComponentDeserializer;
 import com.esb.plugin.component.stop.StopDeserializer;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONObject;
 
 import java.lang.reflect.InvocationTargetException;
@@ -20,24 +19,23 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.esb.internal.commons.Preconditions.checkState;
+
 public class GraphDeserializerFactory {
 
     private FlowGraph graph;
-    private GraphNode parent;
     private DeserializerContext context;
     private JSONObject componentDefinition;
 
-    private static final Class<? extends Deserializer> GENERIC_HANDLER = GenericComponentDeserializer.class;
-
-    private static final Map<String, Class<? extends Deserializer>> COMPONENT_NAME_HANDLER;
-
+    private static final Class<? extends Deserializer> GENERIC_DESERIALIZER = GenericComponentDeserializer.class;
+    private static final Map<String, Class<? extends Deserializer>> COMPONENT_DESERIALIZER_MAP;
     static {
         Map<String, Class<? extends Deserializer>> tmp = new HashMap<>();
         tmp.put(Stop.class.getName(), StopDeserializer.class);
         tmp.put(Fork.class.getName(), ForkJoinDeserializer.class);
         tmp.put(Choice.class.getName(), ChoiceDeserializer.class);
         tmp.put(FlowReference.class.getName(), FlowReferenceDeserializer.class);
-        COMPONENT_NAME_HANDLER = Collections.unmodifiableMap(tmp);
+        COMPONENT_DESERIALIZER_MAP = Collections.unmodifiableMap(tmp);
     }
 
     private GraphDeserializerFactory() {
@@ -45,21 +43,6 @@ public class GraphDeserializerFactory {
 
     public GraphDeserializerFactory context(DeserializerContext context) {
         this.context = context;
-        return this;
-    }
-
-    private static Deserializer instantiateBuilder(FlowGraph graph, DeserializerContext context, Class<? extends Deserializer> builderClazz) {
-        try {
-            return builderClazz
-                    .getDeclaredConstructor(FlowGraph.class, DeserializerContext.class)
-                    .newInstance(graph, context);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            throw new ESBException(e);
-        }
-    }
-
-    public GraphDeserializerFactory parent(GraphNode parent) {
-        this.parent = parent;
         return this;
     }
 
@@ -72,15 +55,29 @@ public class GraphDeserializerFactory {
         return new GraphDeserializerFactory();
     }
 
-    public GraphNode build() {
+    public Deserializer build() {
+        checkState(graph != null, "graph must not be null");
+        checkState(context != null, "context must not be null");
+        checkState(componentDefinition != null, "component definition must not be null");
+
         String componentName = JsonParser.Implementor.name(componentDefinition);
-        Class<? extends Deserializer> builderClazz = COMPONENT_NAME_HANDLER.getOrDefault(componentName, GENERIC_HANDLER);
-        return instantiateBuilder(graph, context, builderClazz).deserialize(parent, componentDefinition);
+        Class<? extends Deserializer> builderClazz = COMPONENT_DESERIALIZER_MAP.getOrDefault(componentName, GENERIC_DESERIALIZER);
+        return instantiate(builderClazz);
     }
 
     public GraphDeserializerFactory graph(FlowGraph graph) {
         this.graph = graph;
         return this;
+    }
+
+    private Deserializer instantiate(Class<? extends Deserializer> deserializerClazz) {
+        try {
+            return deserializerClazz
+                    .getDeclaredConstructor(FlowGraph.class, DeserializerContext.class)
+                    .newInstance(graph, context);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new ESBException(e);
+        }
     }
 
 }
