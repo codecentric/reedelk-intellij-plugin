@@ -1,7 +1,7 @@
 package com.esb.plugin.graph.connector;
 
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.ScopedNode;
+import com.esb.plugin.graph.node.ScopedGraphNode;
 
 public interface Connector {
 
@@ -9,12 +9,12 @@ public interface Connector {
 
     void root();
 
-    void addToScope(ScopedNode scope);
+    void addToScope(ScopedGraphNode scope);
 
     void addSuccessor(GraphNode successor);
 
     void addPredecessor(GraphNode predecessor);
 
-    void addPredecessor(ScopedNode predecessor, int index);
+    void addPredecessor(ScopedGraphNode predecessor, int index);
 
 }

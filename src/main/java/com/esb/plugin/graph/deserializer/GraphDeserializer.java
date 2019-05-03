@@ -1,7 +1,6 @@
 package com.esb.plugin.graph.deserializer;
 
 import com.esb.internal.commons.FileUtils;
-import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphImpl;
 import com.esb.plugin.graph.node.GraphNode;
@@ -14,6 +13,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Optional;
 
+import static com.esb.internal.commons.JsonParser.Flow;
+import static com.esb.internal.commons.JsonParser.from;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class GraphDeserializer {
@@ -28,11 +29,11 @@ public class GraphDeserializer {
 
         this.context = context;
         this.graph = new FlowGraphImpl();
-        this.flowDefinition = JsonParser.from(json);
+        this.flowDefinition = from(json);
     }
 
     protected FlowGraph deserialize() {
-        JSONArray flow = JsonParser.Flow.getFlow(flowDefinition);
+        JSONArray flow = Flow.getFlow(flowDefinition);
 
         GraphNode current = null;
         for (int i = 0; i < flow.length(); i++) {

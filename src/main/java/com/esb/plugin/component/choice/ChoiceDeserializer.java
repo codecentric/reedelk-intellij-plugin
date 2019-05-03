@@ -1,7 +1,6 @@
 package com.esb.plugin.component.choice;
 
 import com.esb.component.Stop;
-import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.component.stop.StopNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.deserializer.AbstractDeserializer;
@@ -16,6 +15,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.esb.internal.commons.JsonParser.Choice;
+import static com.esb.internal.commons.JsonParser.Implementor;
+
 public class ChoiceDeserializer extends AbstractDeserializer {
 
     public ChoiceDeserializer(FlowGraph graph, DeserializerContext context) {
@@ -27,20 +29,20 @@ public class ChoiceDeserializer extends AbstractDeserializer {
 
         StopNode stopNode = context.instantiateGraphNode(Stop.class.getName());
 
-        String name = JsonParser.Implementor.name(componentDefinition);
+        String name = Implementor.name(componentDefinition);
 
         ChoiceNode choiceNode = context.instantiateGraphNode(name);
 
         graph.add(parent, choiceNode);
 
         // When
-        JSONArray when = JsonParser.Choice.getWhen(componentDefinition);
+        JSONArray when = Choice.getWhen(componentDefinition);
         for (int i = 0; i < when.length(); i++) {
             JSONObject whenComponent = when.getJSONObject(i);
 
             GraphNode currentDrawable = choiceNode;
 
-            JSONArray next = JsonParser.Choice.getNext(whenComponent);
+            JSONArray next = Choice.getNext(whenComponent);
             currentDrawable = buildArrayOfComponents(graph, currentDrawable, next);
 
             // Last node is connected to stop node.
@@ -50,7 +52,7 @@ public class ChoiceDeserializer extends AbstractDeserializer {
         // Otherwise
         GraphNode currentDrawable = choiceNode;
 
-        JSONArray otherwise = JsonParser.Choice.getOtherwise(componentDefinition);
+        JSONArray otherwise = Choice.getOtherwise(componentDefinition);
         currentDrawable = buildArrayOfComponents(graph, currentDrawable, otherwise);
 
         // Last node is stop node.

@@ -2,7 +2,7 @@ package com.esb.plugin.graph.connector;
 
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.ScopedNode;
+import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.scope.ListLastNodeOfScope;
 
 import java.util.Collection;
@@ -22,7 +22,7 @@ public class ScopedNodeConnector implements Connector {
     @Override
     public void addSuccessor(GraphNode successor) {
         addScopeGraphIfNeeded();
-        Collection<GraphNode> drawables = ListLastNodeOfScope.from(graph, (ScopedNode) scopeInitialSubtree.root());
+        Collection<GraphNode> drawables = ListLastNodeOfScope.from(graph, (ScopedGraphNode) scopeInitialSubtree.root());
         drawables.forEach(drawable -> graph.add(drawable, successor));
     }
 
@@ -38,13 +38,13 @@ public class ScopedNodeConnector implements Connector {
     }
 
     @Override
-    public void addPredecessor(ScopedNode predecessor, int index) {
+    public void addPredecessor(ScopedGraphNode predecessor, int index) {
         addScopeGraphIfNeeded();
         graph.add(predecessor, scopeInitialSubtree.root(), index);
     }
 
     @Override
-    public void addToScope(ScopedNode scope) {
+    public void addToScope(ScopedGraphNode scope) {
         checkState(graph.nodes().contains(scopeInitialSubtree.root()));
         scope.addToScope(scopeInitialSubtree.root());
     }

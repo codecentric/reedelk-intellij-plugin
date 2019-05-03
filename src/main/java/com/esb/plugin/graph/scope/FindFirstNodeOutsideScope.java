@@ -2,7 +2,7 @@ package com.esb.plugin.graph.scope;
 
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.ScopedNode;
+import com.esb.plugin.graph.node.ScopedGraphNode;
 
 import java.util.HashSet;
 import java.util.List;
@@ -12,12 +12,12 @@ import java.util.Set;
 import static com.google.common.base.Preconditions.checkState;
 
 /**
- * It finds the first node outside the given ScopedNode.
+ * It finds the first node outside the given ScopedGraphNode.
  * By definition a scope block must be followed only by one node.
  */
 public class FindFirstNodeOutsideScope {
 
-    public static Optional<GraphNode> of(FlowGraph graph, ScopedNode scope) {
+    public static Optional<GraphNode> of(FlowGraph graph, ScopedGraphNode scope) {
         Set<GraphNode> firstDrawablesOutsideScope = new HashSet<>();
 
         ListLastNodeOfScope.from(graph, scope)

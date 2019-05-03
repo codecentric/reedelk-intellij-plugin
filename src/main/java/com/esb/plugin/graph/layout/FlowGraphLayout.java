@@ -4,7 +4,7 @@ import com.esb.plugin.designer.Tile;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopeBoundaries;
-import com.esb.plugin.graph.node.ScopedNode;
+import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.scope.FindFirstNodeOutsideScope;
 import com.esb.plugin.graph.scope.FindJoiningScope;
 
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.esb.plugin.graph.layout.FlowGraphLayoutUtils.*;
-import static com.esb.plugin.graph.node.ScopedNode.VERTICAL_PADDING;
+import static com.esb.plugin.graph.node.ScopedGraphNode.VERTICAL_PADDING;
 import static com.google.common.base.Preconditions.checkState;
 
 public class FlowGraphLayout {
@@ -60,7 +60,7 @@ public class FlowGraphLayout {
                 // this node is joining from.
 
                 // Otherwise take min and max.
-                Optional<ScopedNode> scopeItIsJoining = FindJoiningScope.of(graph, node);
+                Optional<ScopedGraphNode> scopeItIsJoining = FindJoiningScope.of(graph, node);
 
                 int min = predecessors.stream().mapToInt(GraphNode::y).min().getAsInt();
                 int max = predecessors.stream().mapToInt(GraphNode::y).max().getAsInt();
@@ -69,7 +69,7 @@ public class FlowGraphLayout {
                 // If this node is joining a scope, then we place it in the
                 // center of the scope this node is joining to.
                 if (scopeItIsJoining.isPresent()) {
-                    ScopedNode scope = scopeItIsJoining.get();
+                    ScopedGraphNode scope = scopeItIsJoining.get();
                     ScopeBoundaries scopeBoundaries = scope.getScopeBoundaries(graph, graphics);
                     min = scope.y() - Math.floorDiv(scopeBoundaries.getHeight(), 2);
                     max = scope.y() + Math.floorDiv(scopeBoundaries.getHeight(), 2);
@@ -79,7 +79,7 @@ public class FlowGraphLayout {
 
                 node.setPosition(tmpX, tmpY);
 
-                if (node instanceof ScopedNode) {
+                if (node instanceof ScopedGraphNode) {
                     top += VERTICAL_PADDING; // top padding
                 }
 
@@ -90,12 +90,12 @@ public class FlowGraphLayout {
         } else if (nodes.size() > 1) {
             // Layer with multiple nodes.
             // Center them all in their respective subtrees.
-            // Successors can be > 1 only when predecessor is ScopedNode
+            // Successors can be > 1 only when predecessor is ScopedGraphNode
             GraphNode commonParent = findCommonParent(graph, nodes); // common parent must be (scoped node)
 
-            checkState(commonParent instanceof ScopedNode);
+            checkState(commonParent instanceof ScopedGraphNode);
 
-            Optional<GraphNode> optionalFirstDrawableOutsideScope = FindFirstNodeOutsideScope.of(graph, (ScopedNode) commonParent);
+            Optional<GraphNode> optionalFirstDrawableOutsideScope = FindFirstNodeOutsideScope.of(graph, (ScopedGraphNode) commonParent);
             GraphNode firstDrawableOutsideScope = optionalFirstDrawableOutsideScope.orElse(null);
 
             int maxSubTreeHeight = FlowGraphLayoutUtils.maxHeight(graph, graphics, commonParent, firstDrawableOutsideScope);
@@ -109,7 +109,7 @@ public class FlowGraphLayout {
                 int containingLayerIndex = findContainingLayer(layers, node);
 
                 // Center in subtree
-                if (node instanceof ScopedNode) {
+                if (node instanceof ScopedGraphNode) {
                     top += VERTICAL_PADDING; // top padding
                 }
 
@@ -119,7 +119,7 @@ public class FlowGraphLayout {
 
                 // We must subtract the current padding since it
                 // was added while computing max subtree height as well.
-                if (node instanceof ScopedNode) {
+                if (node instanceof ScopedGraphNode) {
                     maxSubtreeHeight -= (VERTICAL_PADDING + VERTICAL_PADDING); // top and bottom
                 }
 
@@ -128,7 +128,7 @@ public class FlowGraphLayout {
 
                 compute(top, graph, graphics, graph.successors(node), layers);
 
-                if (node instanceof ScopedNode) {
+                if (node instanceof ScopedGraphNode) {
                     top += VERTICAL_PADDING; // bottom padding
                 }
 

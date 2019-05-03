@@ -4,7 +4,7 @@ import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.connector.Connector;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopeBoundaries;
-import com.esb.plugin.graph.node.ScopedNode;
+import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.scope.FindScopes;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,17 +26,17 @@ abstract class AbstractAddStrategy implements AddStrategy {
     }
 
     protected void addToScopeIfNeeded(GraphNode closestPrecedingNode) {
-        if (closestPrecedingNode instanceof ScopedNode) {
-            ScopedNode scopedNode = (ScopedNode) closestPrecedingNode;
-            connector.addToScope(scopedNode);
+        if (closestPrecedingNode instanceof ScopedGraphNode) {
+            ScopedGraphNode scopedGraphNode = (ScopedGraphNode) closestPrecedingNode;
+            connector.addToScope(scopedGraphNode);
         } else {
-            List<ScopedNode> scopedNodeObjects = FindScopes.of(graph, closestPrecedingNode);
-            scopedNodeObjects.forEach(connector::addToScope);
+            List<ScopedGraphNode> scopedGraphNodeObjects = FindScopes.of(graph, closestPrecedingNode);
+            scopedGraphNodeObjects.forEach(connector::addToScope);
         }
     }
 
-    static int getScopeMaxXBound(@NotNull FlowGraph graph, @NotNull ScopedNode scopedNode, @NotNull Graphics2D graphics) {
-        ScopeBoundaries scopeBoundaries = scopedNode.getScopeBoundaries(graph, graphics);
+    static int getScopeMaxXBound(@NotNull FlowGraph graph, @NotNull ScopedGraphNode scopedGraphNode, @NotNull Graphics2D graphics) {
+        ScopeBoundaries scopeBoundaries = scopedGraphNode.getScopeBoundaries(graph, graphics);
         return scopeBoundaries.getX() + scopeBoundaries.getWidth();
     }
 }

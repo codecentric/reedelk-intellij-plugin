@@ -2,7 +2,7 @@ package com.esb.plugin.graph.scope;
 
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.ScopedNode;
+import com.esb.plugin.graph.node.ScopedGraphNode;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -13,8 +13,8 @@ import static java.util.stream.Collectors.toList;
 
 public class ListLastNodeOfScope {
 
-    public static List<GraphNode> from(FlowGraph graph, ScopedNode scopedNode) {
-        Collection<GraphNode> allDrawablesInScopeAndNestedScope = collectAllDrawablesInsideScopesFrom(scopedNode);
+    public static List<GraphNode> from(FlowGraph graph, ScopedGraphNode scopedGraphNode) {
+        Collection<GraphNode> allDrawablesInScopeAndNestedScope = collectAllDrawablesInsideScopesFrom(scopedGraphNode);
         return allDrawablesInScopeAndNestedScope.stream().filter(drawable -> {
             List<GraphNode> successors = graph.successors(drawable);
             if (successors.isEmpty()) return true;
@@ -24,17 +24,17 @@ public class ListLastNodeOfScope {
     }
 
 
-    private static Collection<GraphNode> collectAllDrawablesInsideScopesFrom(ScopedNode scopedNode) {
-        Collection<GraphNode> scope = scopedNode.getScope();
+    private static Collection<GraphNode> collectAllDrawablesInsideScopesFrom(ScopedGraphNode scopedGraphNode) {
+        Collection<GraphNode> scope = scopedGraphNode.getScope();
         Set<GraphNode> allElements = new HashSet<>(scope);
         Set<GraphNode> nested = new HashSet<>();
         allElements.forEach(drawable -> {
-            if (drawable instanceof ScopedNode) {
-                nested.addAll(collectAllDrawablesInsideScopesFrom((ScopedNode) drawable));
+            if (drawable instanceof ScopedGraphNode) {
+                nested.addAll(collectAllDrawablesInsideScopesFrom((ScopedGraphNode) drawable));
             }
         });
         allElements.addAll(nested);
-        allElements.add(scopedNode);
+        allElements.add(scopedGraphNode);
         return allElements;
     }
 }

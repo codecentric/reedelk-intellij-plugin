@@ -3,7 +3,7 @@ package com.esb.plugin.graph.scope;
 import com.esb.plugin.commons.StackUtils;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.ScopedNode;
+import com.esb.plugin.graph.node.ScopedGraphNode;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Stack;
@@ -19,30 +19,30 @@ public class FindScopes {
      * @param target the target node for which we want to find all the scopes containing it
      * @return Stack containing all the scopes the target node belongs to.
      */
-    public static Stack<ScopedNode> of(@NotNull FlowGraph graph, @NotNull GraphNode target) {
-        Stack<ScopedNode> toReturn = new Stack<>();
-        if (target instanceof ScopedNode) {
-            toReturn.push((ScopedNode) target);
+    public static Stack<ScopedGraphNode> of(@NotNull FlowGraph graph, @NotNull GraphNode target) {
+        Stack<ScopedGraphNode> toReturn = new Stack<>();
+        if (target instanceof ScopedGraphNode) {
+            toReturn.push((ScopedGraphNode) target);
         }
 
-        Stack<ScopedNode> scopedNodes = _of(graph, target);
-        while (!scopedNodes.isEmpty()) {
-            toReturn.push(scopedNodes.pop());
+        Stack<ScopedGraphNode> scopedGraphNodes = _of(graph, target);
+        while (!scopedGraphNodes.isEmpty()) {
+            toReturn.push(scopedGraphNodes.pop());
         }
 
         return toReturn;
     }
 
-    private static Stack<ScopedNode> _of(@NotNull FlowGraph graph, @NotNull GraphNode target) {
-        Stack<ScopedNode> toReturn = new Stack<>();
+    private static Stack<ScopedGraphNode> _of(@NotNull FlowGraph graph, @NotNull GraphNode target) {
+        Stack<ScopedGraphNode> toReturn = new Stack<>();
 
         FindScope.of(graph, target).ifPresent(scopedDrawable -> {
             toReturn.push(scopedDrawable);
 
-            Stack<ScopedNode> scopedNodes = _of(graph, scopedDrawable);
-            StackUtils.reverse(scopedNodes);
-            while (!scopedNodes.isEmpty()) {
-                toReturn.push(scopedNodes.pop());
+            Stack<ScopedGraphNode> scopedGraphNodes = _of(graph, scopedDrawable);
+            StackUtils.reverse(scopedGraphNodes);
+            while (!scopedGraphNodes.isEmpty()) {
+                toReturn.push(scopedGraphNodes.pop());
             }
         });
         return toReturn;

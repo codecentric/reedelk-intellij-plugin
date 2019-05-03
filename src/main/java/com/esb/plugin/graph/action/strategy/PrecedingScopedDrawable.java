@@ -4,7 +4,7 @@ import com.esb.plugin.designer.Tile;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.connector.Connector;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.ScopedNode;
+import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.scope.FindFirstNodeOutsideScope;
 
 import java.awt.*;
@@ -21,9 +21,9 @@ public class PrecedingScopedDrawable extends AbstractAddStrategy {
     // It is the only type of node with potentially many successors.
     @Override
     public void execute(GraphNode input) {
-        checkState(input instanceof ScopedNode, "Strategy only accepts ScopedNode");
+        checkState(input instanceof ScopedGraphNode, "Strategy only accepts ScopedGraphNode");
 
-        ScopedNode closestPrecedingDrawable = (ScopedNode) input;
+        ScopedGraphNode closestPrecedingDrawable = (ScopedGraphNode) input;
 
         List<GraphNode> successors = graph.successors(closestPrecedingDrawable);
 
@@ -49,7 +49,7 @@ public class PrecedingScopedDrawable extends AbstractAddStrategy {
         connectCommonSuccessorsOf(closestPrecedingDrawable);
     }
 
-    private void connectCommonSuccessorsOf(ScopedNode closestPrecedingNode) {
+    private void connectCommonSuccessorsOf(ScopedGraphNode closestPrecedingNode) {
         FindFirstNodeOutsideScope.of(graph, closestPrecedingNode)
                 .ifPresent(connector::addSuccessor);
     }

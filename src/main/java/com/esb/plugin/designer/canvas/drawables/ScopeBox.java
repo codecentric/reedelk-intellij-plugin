@@ -5,7 +5,7 @@ import com.esb.plugin.graph.layout.FlowGraphLayoutUtils;
 import com.esb.plugin.graph.node.Drawable;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopeBoundaries;
-import com.esb.plugin.graph.node.ScopedNode;
+import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.scope.CountScopesBetween;
 import com.esb.plugin.graph.scope.FindFirstNodeOutsideScope;
 import com.esb.plugin.graph.scope.ListLastNodeOfScope;
@@ -24,10 +24,10 @@ public class ScopeBox implements Drawable {
     private final Stroke STROKE = new BasicStroke(1f);
     private final JBColor BOUNDARIES_COLOR = new JBColor(Gray._235, Gray._30);
 
-    private final ScopedNode scopedNode;
+    private final ScopedGraphNode scopedGraphNode;
 
-    public ScopeBox(ScopedNode scopedNode) {
-        this.scopedNode = scopedNode;
+    public ScopeBox(ScopedGraphNode scopedGraphNode) {
+        this.scopedGraphNode = scopedGraphNode;
     }
 
     @Override
@@ -47,9 +47,9 @@ public class ScopeBox implements Drawable {
 
     private int getMaxScopes(FlowGraph graph) {
         int max = 0;
-        Collection<GraphNode> allTerminalDrawables = ListLastNodeOfScope.from(graph, scopedNode);
+        Collection<GraphNode> allTerminalDrawables = ListLastNodeOfScope.from(graph, scopedGraphNode);
         for (GraphNode drawable : allTerminalDrawables) {
-            Optional<Integer> scopesBetween = CountScopesBetween.them(scopedNode, drawable);
+            Optional<Integer> scopesBetween = CountScopesBetween.them(scopedGraphNode, drawable);
             if (scopesBetween.isPresent()) {
                 max = scopesBetween.get() > max ? scopesBetween.get() : max;
             }
@@ -58,16 +58,16 @@ public class ScopeBox implements Drawable {
     }
 
     ScopeBoundaries getBoundaries(FlowGraph graph, Graphics2D graphics) {
-        Collection<GraphNode> drawables = ListLastNodeOfScope.from(graph, scopedNode);
+        Collection<GraphNode> drawables = ListLastNodeOfScope.from(graph, scopedGraphNode);
 
-        Drawable drawableWithMaxX = scopedNode;
-        Drawable drawableWithMinX = scopedNode;
-        Drawable drawableWithMaxY = scopedNode;
-        Drawable drawableWithMinY = scopedNode;
+        Drawable drawableWithMaxX = scopedGraphNode;
+        Drawable drawableWithMinX = scopedGraphNode;
+        Drawable drawableWithMaxY = scopedGraphNode;
+        Drawable drawableWithMinY = scopedGraphNode;
 
         if (!drawables.isEmpty()) {
             List<Drawable> allDrawables = new ArrayList<>(drawables);
-            allDrawables.add(scopedNode);
+            allDrawables.add(scopedGraphNode);
 
             // We need to find min x, max x, min y and max y
             for (Drawable drawable : allDrawables) {
@@ -86,12 +86,12 @@ public class ScopeBox implements Drawable {
             }
         }
 
-        GraphNode firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedNode).orElse(null);
+        GraphNode firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedGraphNode).orElse(null);
 
-        int subTreeHeight = FlowGraphLayoutUtils.maxHeight(graph, graphics, scopedNode, firstNodeOutsideScope);
+        int subTreeHeight = FlowGraphLayoutUtils.maxHeight(graph, graphics, scopedGraphNode, firstNodeOutsideScope);
 
-        int minY = scopedNode.y() - Math.floorDiv(subTreeHeight, 2) + ScopedNode.VERTICAL_PADDING;
-        int maxY = scopedNode.y() + Math.floorDiv(subTreeHeight, 2) - ScopedNode.VERTICAL_PADDING;
+        int minY = scopedGraphNode.y() - Math.floorDiv(subTreeHeight, 2) + ScopedGraphNode.VERTICAL_PADDING;
+        int maxY = scopedGraphNode.y() + Math.floorDiv(subTreeHeight, 2) - ScopedGraphNode.VERTICAL_PADDING;
 
         // Draw Scope Boundaries we need to compute the maximum number of scopes
         int maxScopes = getMaxScopes(graph);

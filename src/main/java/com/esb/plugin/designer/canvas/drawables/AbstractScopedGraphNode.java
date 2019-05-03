@@ -5,7 +5,7 @@ import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.Drawable;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopeBoundaries;
-import com.esb.plugin.graph.node.ScopedNode;
+import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.scope.FindFirstNodeOutsideScope;
 import com.esb.plugin.graph.scope.IsLastScopeBeforeNode;
 
@@ -14,7 +14,7 @@ import java.awt.image.ImageObserver;
 import java.util.List;
 import java.util.*;
 
-public abstract class AbstractScopedGraphNode extends AbstractGraphNode implements ScopedNode {
+public abstract class AbstractScopedGraphNode extends AbstractGraphNode implements ScopedGraphNode {
 
     private final Drawable verticalDivider;
     private final ScopeBox scopeBox;

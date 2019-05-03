@@ -2,7 +2,7 @@ package com.esb.plugin.graph.action;
 
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.ScopedNode;
+import com.esb.plugin.graph.node.ScopedGraphNode;
 
 import java.util.List;
 
@@ -24,9 +24,9 @@ public class RemoveNodeAction {
         } else {
             for (GraphNode predecessor : predecessors) {
                 for (GraphNode successor : successors) {
-                    if (predecessor instanceof ScopedNode) {
+                    if (predecessor instanceof ScopedGraphNode) {
                         // We need to check if successor is in the scope.
-                        ScopedNode scope = (ScopedNode) predecessor;
+                        ScopedGraphNode scope = (ScopedGraphNode) predecessor;
                         if (scope.scopeContains(successor)) {
                             // then we can connect it because it is part of the same scope
                             graph.add(predecessor, successor);

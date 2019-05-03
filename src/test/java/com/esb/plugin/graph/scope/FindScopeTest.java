@@ -3,7 +3,7 @@ package com.esb.plugin.graph.scope;
 import com.esb.plugin.graph.AbstractGraphTest;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphImpl;
-import com.esb.plugin.graph.node.ScopedNode;
+import com.esb.plugin.graph.node.ScopedGraphNode;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -25,7 +25,7 @@ class FindScopeTest extends AbstractGraphTest {
         choice2.addToScope(n1);
 
         // When
-        Optional<ScopedNode> actualScope = FindScope.of(graph, n1);
+        Optional<ScopedGraphNode> actualScope = FindScope.of(graph, n1);
 
         // Then
         assertThat(actualScope.isPresent()).isTrue();

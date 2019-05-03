@@ -2,7 +2,7 @@ package com.esb.plugin.graph.layout;
 
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.ScopedNode;
+import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.scope.CountNestedScopes;
 import com.esb.plugin.graph.scope.FindFirstNodeOutsideScope;
 
@@ -12,8 +12,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.esb.plugin.graph.node.ScopedNode.HORIZONTAL_PADDING;
-import static com.esb.plugin.graph.node.ScopedNode.VERTICAL_PADDING;
+import static com.esb.plugin.graph.node.ScopedGraphNode.HORIZONTAL_PADDING;
+import static com.esb.plugin.graph.node.ScopedGraphNode.VERTICAL_PADDING;
 import static com.google.common.base.Preconditions.checkState;
 
 public class FlowGraphLayoutUtils {
@@ -30,8 +30,8 @@ public class FlowGraphLayoutUtils {
         if (start == end) {
             return currentMax;
 
-        } else if (start instanceof ScopedNode) {
-            return maxHeight(graphics, graph, (ScopedNode) start, end, currentMax);
+        } else if (start instanceof ScopedGraphNode) {
+            return maxHeight(graphics, graph, (ScopedGraphNode) start, end, currentMax);
 
         } else {
 
@@ -49,10 +49,10 @@ public class FlowGraphLayoutUtils {
         }
     }
 
-    private static int maxHeight(Graphics2D graphics, FlowGraph graph, ScopedNode scopedNode, GraphNode end, int currentMax) {
-        List<GraphNode> successors = graph.successors(scopedNode);
+    private static int maxHeight(Graphics2D graphics, FlowGraph graph, ScopedGraphNode scopedGraphNode, GraphNode end, int currentMax) {
+        List<GraphNode> successors = graph.successors(scopedGraphNode);
 
-        GraphNode firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedNode).orElse(null);
+        GraphNode firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedGraphNode).orElse(null);
 
         int sum = VERTICAL_PADDING + VERTICAL_PADDING;
         for (GraphNode successor : successors) {
@@ -63,7 +63,7 @@ public class FlowGraphLayoutUtils {
 
         // If this scope does not have successors, the sum is its height.
         if (successors.isEmpty()) {
-            sum += scopedNode.height(graphics);
+            sum += scopedGraphNode.height(graphics);
         }
 
         int followingMax = 0;

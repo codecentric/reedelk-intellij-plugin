@@ -1,21 +1,22 @@
 package com.esb.plugin.component.generic;
 
-import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.component.Component;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.serializer.AbstractSerializer;
+import com.esb.plugin.graph.serializer.SerializerUtilities;
 import org.json.JSONObject;
 
-import java.util.LinkedHashMap;
+import static com.esb.internal.commons.JsonParser.Implementor;
 
 public class GenericComponentSerializer extends AbstractSerializer {
+
     @Override
     public JSONObject serialize(GraphNode node) {
         Component component = node.component();
 
-        LinkedHashMap<String, String> jsonOrderedMap = new LinkedHashMap<>();
-        JSONObject componentAsJson = new JSONObject(jsonOrderedMap);
-        JsonParser.Implementor.name(component.getFullyQualifiedName(), componentAsJson);
+        JSONObject componentAsJson = SerializerUtilities.newJSONObject();
+
+        Implementor.name(component.getFullyQualifiedName(), componentAsJson);
 
         component.getPropertiesNames().forEach(propertyName -> {
             Object data = component.getData(propertyName);

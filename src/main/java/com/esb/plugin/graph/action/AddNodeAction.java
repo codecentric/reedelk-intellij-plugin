@@ -9,7 +9,7 @@ import com.esb.plugin.graph.action.strategy.PrecedingDrawableWithoutSuccessor;
 import com.esb.plugin.graph.action.strategy.PrecedingScopedDrawable;
 import com.esb.plugin.graph.connector.Connector;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.ScopedNode;
+import com.esb.plugin.graph.node.ScopedGraphNode;
 
 import java.awt.*;
 import java.util.List;
@@ -55,14 +55,14 @@ public class AddNodeAction {
                 GraphNode closestPrecedingDrawable = optionalPrecedingNode.get();
                 AddStrategy strategy;
 
-                if (closestPrecedingDrawable instanceof ScopedNode) {
+                if (closestPrecedingDrawable instanceof ScopedGraphNode) {
                     strategy = new PrecedingScopedDrawable(graph, dropPoint, connector, graphics);
 
                 } else if (graph.successors(closestPrecedingDrawable).isEmpty()) {
                     strategy = new PrecedingDrawableWithoutSuccessor(graph, dropPoint, connector, graphics);
 
                 } else {
-                    // Only ScopedNode nodes might have multiple successors. In all other cases
+                    // Only ScopedGraphNode nodes might have multiple successors. In all other cases
                     // a node in the flow must have at most one successor.
                     checkState(graph.successors(closestPrecedingDrawable).size() == 1,
                             "Successors size MUST be 1, otherwise it must be a Scoped Drawable");

@@ -3,7 +3,7 @@ package com.esb.plugin.graph.scope;
 import com.esb.plugin.graph.AbstractGraphTest;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphImpl;
-import com.esb.plugin.graph.node.ScopedNode;
+import com.esb.plugin.graph.node.ScopedGraphNode;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -22,7 +22,7 @@ class ListAllScopesTest extends AbstractGraphTest {
         graph.add(n2, n3);
 
         // When
-        List<ScopedNode> allScopes = ListAllScopes.of(graph);
+        List<ScopedGraphNode> allScopes = ListAllScopes.of(graph);
 
         // Then
         assertThat(allScopes).isEmpty();
@@ -43,7 +43,7 @@ class ListAllScopesTest extends AbstractGraphTest {
         choice2.addToScope(n2);
 
         // When
-        List<ScopedNode> allScopes = ListAllScopes.of(graph);
+        List<ScopedGraphNode> allScopes = ListAllScopes.of(graph);
 
         // Then
         assertThat(allScopes).containsExactlyInAnyOrder(choice1, choice2);
@@ -71,7 +71,7 @@ class ListAllScopesTest extends AbstractGraphTest {
         choice3.addToScope(n3);
 
         // When
-        List<ScopedNode> allScopes = ListAllScopes.of(graph);
+        List<ScopedGraphNode> allScopes = ListAllScopes.of(graph);
 
         // Then
         assertThat(allScopes).containsExactlyInAnyOrder(choice1, choice2, choice3);

@@ -2,7 +2,7 @@ package com.esb.plugin.graph.scope;
 
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.ScopedNode;
+import com.esb.plugin.graph.node.ScopedGraphNode;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,9 +11,9 @@ import static java.util.stream.Collectors.toList;
 
 public class FindJoiningScope {
 
-    public static Optional<ScopedNode> of(FlowGraph graph, GraphNode target) {
-        List<ScopedNode> scopedNodes = ListAllScopes.of(graph);
-        List<ScopedNode> scopesWithTargetAsFirstOutsideNode = scopedNodes.stream()
+    public static Optional<ScopedGraphNode> of(FlowGraph graph, GraphNode target) {
+        List<ScopedGraphNode> scopedGraphNodes = ListAllScopes.of(graph);
+        List<ScopedGraphNode> scopesWithTargetAsFirstOutsideNode = scopedGraphNodes.stream()
                 .filter(scopedDrawable -> {
                     Optional<GraphNode> firstNode = FindFirstNodeOutsideScope.of(graph, scopedDrawable);
                     return firstNode.filter(firstNodeOutsideScope -> firstNodeOutsideScope == target).isPresent();
@@ -24,9 +24,9 @@ public class FindJoiningScope {
 
     // We must to return the outermost amongst all the scopes.
     // The outermost is the one with the lowest X coordinate.
-    private static Optional<ScopedNode> filterOutermostScope(List<ScopedNode> scopes) {
-        ScopedNode outermost = null;
-        for (ScopedNode scope : scopes) {
+    private static Optional<ScopedGraphNode> filterOutermostScope(List<ScopedGraphNode> scopes) {
+        ScopedGraphNode outermost = null;
+        for (ScopedGraphNode scope : scopes) {
             if (outermost == null) {
                 outermost = scope;
                 continue;
