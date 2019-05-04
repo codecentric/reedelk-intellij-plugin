@@ -1,6 +1,6 @@
 package com.esb.plugin.component.generic;
 
-import com.esb.plugin.component.Component;
+import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.graph.deserializer.AbstractBuilderTest;
 import com.esb.plugin.graph.deserializer.ComponentDefinitionBuilder;
 import com.esb.plugin.graph.node.GraphNode;
@@ -25,7 +25,7 @@ class GenericComponentNodeBuilderTest extends AbstractBuilderTest {
     @Test
     void shouldBuildGenericDrawableCorrectly() {
         // Given
-        Component givenComponent = mockComponent(GENERIC_COMPONENT_NAME, GenericComponentNode.class);
+        ComponentData givenComponentData = mockComponent(GENERIC_COMPONENT_NAME, GenericComponentNode.class);
 
         JSONObject componentDefinition = ComponentDefinitionBuilder
                 .forComponent(GENERIC_COMPONENT_NAME)
@@ -37,8 +37,8 @@ class GenericComponentNodeBuilderTest extends AbstractBuilderTest {
         // Then
         assertThat(graph.nodesCount()).isEqualTo(2);
 
-        Component actualComponent = node.component();
-        assertThat(actualComponent).isEqualTo(givenComponent);
+        ComponentData actualComponentData = node.component();
+        assertThat(actualComponentData).isEqualTo(givenComponentData);
     }
 
 }

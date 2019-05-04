@@ -4,7 +4,7 @@ import com.esb.component.Choice;
 import com.esb.component.FlowReference;
 import com.esb.component.Fork;
 import com.esb.component.Stop;
-import com.esb.plugin.component.Component;
+import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.component.choice.ChoiceNode;
 import com.esb.plugin.component.flowreference.FlowReferenceNode;
@@ -36,14 +36,14 @@ public class GraphNodeFactory {
     }
 
     public static <T extends GraphNode> T get(ComponentDescriptor descriptor) {
-        Component component = new Component(descriptor);
-        String componentFullyQualifiedName = component.getFullyQualifiedName();
+        ComponentData componentData = new ComponentData(descriptor);
+        String componentFullyQualifiedName = componentData.getFullyQualifiedName();
 
         Class<? extends GraphNode> componentDrawableClazz = COMPONENT_DRAWABLE_MAP
                 .getOrDefault(componentFullyQualifiedName, DEFAULT);
         try {
-            return (T) componentDrawableClazz.getConstructor(Component.class)
-                    .newInstance(component);
+            return (T) componentDrawableClazz.getConstructor(ComponentData.class)
+                    .newInstance(componentData);
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }

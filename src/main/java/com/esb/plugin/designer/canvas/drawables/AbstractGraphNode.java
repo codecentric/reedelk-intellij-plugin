@@ -1,6 +1,6 @@
 package com.esb.plugin.designer.canvas.drawables;
 
-import com.esb.plugin.component.Component;
+import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.properties.PropertyTracker;
 import com.esb.plugin.graph.FlowGraph;
@@ -17,7 +17,7 @@ import java.util.Optional;
 
 public abstract class AbstractGraphNode implements GraphNode {
 
-    private final Component component;
+    private final ComponentData componentData;
 
     private final Drawable icon;
     private final Drawable arrows;
@@ -36,13 +36,13 @@ public abstract class AbstractGraphNode implements GraphNode {
     private boolean dragging;
     private boolean selected;
 
-    public AbstractGraphNode(Component component) {
-        this.component = component;
-        icon = new Icon(component.getFullyQualifiedName());
+    public AbstractGraphNode(ComponentData componentData) {
+        this.componentData = componentData;
+        icon = new Icon(componentData.getFullyQualifiedName());
 
-        componentTitle = new ComponentTitle(component.getDisplayName());
+        componentTitle = new ComponentTitle(componentData.getDisplayName());
 
-        PropertyTracker tracker = new PropertyTracker(component, ComponentDescription.DESCRIPTION_PROPERTY_NAME);
+        PropertyTracker tracker = new PropertyTracker(componentData, ComponentDescription.DESCRIPTION_PROPERTY_NAME);
         componentDescription = new ComponentDescription(tracker);
 
         arrows = new Arrows(this);
@@ -185,8 +185,8 @@ public abstract class AbstractGraphNode implements GraphNode {
     }
 
     @Override
-    public Component component() {
-        return component;
+    public ComponentData component() {
+        return componentData;
     }
 
     @Override
@@ -221,6 +221,6 @@ public abstract class AbstractGraphNode implements GraphNode {
 
     @Override
     public String toString() {
-        return component.getFullyQualifiedName();
+        return componentData.getFullyQualifiedName();
     }
 }

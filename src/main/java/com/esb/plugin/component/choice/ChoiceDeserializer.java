@@ -1,6 +1,7 @@
 package com.esb.plugin.component.choice;
 
 import com.esb.component.Stop;
+import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.stop.StopNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.deserializer.AbstractDeserializer;
@@ -10,10 +11,7 @@ import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.esb.internal.commons.JsonParser.Choice;
 import static com.esb.internal.commons.JsonParser.Implementor;
@@ -33,6 +31,10 @@ public class ChoiceDeserializer extends AbstractDeserializer {
 
         ChoiceNode choiceNode = context.instantiateGraphNode(name);
 
+        ComponentData choiceNodeComponentData = choiceNode.component();
+        List<ChoiceConditionRoutePair> conditionRouteList = new ArrayList<>();
+        choiceNodeComponentData.setPropertyValue("when", conditionRouteList);
+
         graph.add(parent, choiceNode);
 
         // When
@@ -40,20 +42,46 @@ public class ChoiceDeserializer extends AbstractDeserializer {
         for (int i = 0; i < when.length(); i++) {
             JSONObject whenComponent = when.getJSONObject(i);
 
-            GraphNode currentDrawable = choiceNode;
+            GraphNode currentNode = choiceNode;
 
             JSONArray next = Choice.getNext(whenComponent);
-            currentDrawable = buildArrayOfComponents(graph, currentDrawable, next);
+
+            for (int j = 0; j < next.length(); j++) {
+
+                JSONObject currentComponentDef = next.getJSONObject(j);
+                currentNode = GraphDeserializerFactory.get()
+                        .componentDefinition(currentComponentDef)
+                        .context(context)
+                        .graph(graph)
+                        .build()
+                        .deserialize(currentNode, currentComponentDef);
+
+                // First node we must apply condition
+                if (j == 0) {
+                    String condition = Choice.getCondition(whenComponent);
+                    conditionRouteList.add(new ChoiceConditionRoutePair(condition, currentNode));
+                }
+            }
 
             // Last node is connected to stop node.
-            graph.add(currentDrawable, stopNode);
+            graph.add(currentNode, stopNode);
         }
 
         // Otherwise
         GraphNode currentDrawable = choiceNode;
 
         JSONArray otherwise = Choice.getOtherwise(componentDefinition);
-        currentDrawable = buildArrayOfComponents(graph, currentDrawable, otherwise);
+
+        for (int j = 0; j < otherwise.length(); j++) {
+            JSONObject currentComponentDef = otherwise.getJSONObject(j);
+            currentDrawable = GraphDeserializerFactory.get()
+                    .componentDefinition(currentComponentDef)
+                    .context(context)
+                    .graph(graph)
+                    .build()
+                    .deserialize(currentDrawable, currentComponentDef);
+        }
+
 
         // Last node is stop node.
         graph.add(currentDrawable, stopNode);
@@ -62,19 +90,6 @@ public class ChoiceDeserializer extends AbstractDeserializer {
                 .forEach(choiceNode::addToScope);
 
         return stopNode;
-    }
-
-    private GraphNode buildArrayOfComponents(FlowGraph graph, GraphNode currentDrawable, JSONArray next) {
-        for (int j = 0; j < next.length(); j++) {
-            JSONObject currentComponentDef = next.getJSONObject(j);
-            currentDrawable = GraphDeserializerFactory.get()
-                    .componentDefinition(currentComponentDef)
-                    .context(context)
-                    .graph(graph)
-                    .build()
-                    .deserialize(currentDrawable, currentComponentDef);
-        }
-        return currentDrawable;
     }
 
     private Collection<GraphNode> collectNodesBetween(FlowGraph graph, GraphNode n1, GraphNode n2) {

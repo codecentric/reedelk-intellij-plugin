@@ -1,5 +1,6 @@
 package com.esb.plugin.component.choice.widget;
 
+import com.esb.plugin.component.choice.ChoiceConditionRoutePair;
 import com.esb.plugin.designer.properties.widget.FormBuilder;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.ui.components.JBPanel;
@@ -45,7 +46,7 @@ public class AddConditionRoute extends JBPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (listener != null) {
-            ConditionRoutePair pair = new ConditionRoutePair(
+            ChoiceConditionRoutePair pair = new ChoiceConditionRoutePair(
                     conditionInput.getText(),
                     (GraphNode) routesCombo.getSelectedItem());
             listener.addRouteCondition(pair);

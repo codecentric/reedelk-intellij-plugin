@@ -1,5 +1,6 @@
 package com.esb.plugin.component.choice.widget;
 
+import com.esb.plugin.component.choice.ChoiceConditionRoutePair;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
@@ -32,7 +33,7 @@ public class ChoiceRouteTable extends JBPanel implements AddConditionRouteListen
 
 
     @Override
-    public void addRouteCondition(ConditionRoutePair conditionRoute) {
+    public void addRouteCondition(ChoiceConditionRoutePair conditionRoute) {
         tableModel.addConditionRoutePair(conditionRoute);
     }
 }

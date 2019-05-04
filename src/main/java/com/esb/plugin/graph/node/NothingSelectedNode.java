@@ -1,6 +1,6 @@
 package com.esb.plugin.graph.node;
 
-import com.esb.plugin.component.Component;
+import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.graph.FlowGraph;
 
 import java.awt.*;
@@ -19,7 +19,7 @@ public class NothingSelectedNode implements GraphNode {
     }
 
     @Override
-    public Component component() {
+    public ComponentData component() {
         return null;
     }
 }

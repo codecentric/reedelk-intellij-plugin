@@ -6,13 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Component {
+public class ComponentData {
 
     private final ComponentDescriptor descriptor;
 
     private Map<String, Object> componentData = new HashMap<>();
 
-    public Component(final ComponentDescriptor descriptor) {
+    public ComponentData(final ComponentDescriptor descriptor) {
         this.descriptor = descriptor;
         this.componentData.put(ComponentDescription.DESCRIPTION_PROPERTY_NAME, descriptor.getDisplayName());
     }

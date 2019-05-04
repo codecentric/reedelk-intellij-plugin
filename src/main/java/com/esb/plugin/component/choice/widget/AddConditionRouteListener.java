@@ -1,7 +1,9 @@
 package com.esb.plugin.component.choice.widget;
 
+import com.esb.plugin.component.choice.ChoiceConditionRoutePair;
+
 public interface AddConditionRouteListener {
 
-    void addRouteCondition(ConditionRoutePair conditionRoute);
+    void addRouteCondition(ChoiceConditionRoutePair conditionRoute);
 
 }

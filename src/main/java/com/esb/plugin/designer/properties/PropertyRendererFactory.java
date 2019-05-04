@@ -5,7 +5,7 @@ import com.esb.component.Choice;
 import com.esb.component.FlowReference;
 import com.esb.component.Fork;
 import com.esb.component.Stop;
-import com.esb.plugin.component.Component;
+import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.choice.ChoicePropertiesRenderer;
 import com.esb.plugin.component.flowreference.FlowReferencePropertyRenderer;
 import com.esb.plugin.component.forkjoin.ForkJoinPropertyRenderer;
@@ -38,7 +38,7 @@ public class PropertyRendererFactory {
     private Module module;
     private FlowGraph graph;
     private VirtualFile file;
-    private Component component;
+    private ComponentData componentData;
 
     private PropertyRendererFactory() {
     }
@@ -62,8 +62,8 @@ public class PropertyRendererFactory {
         return this;
     }
 
-    public PropertyRendererFactory component(Component component) {
-        this.component = component;
+    public PropertyRendererFactory component(ComponentData componentData) {
+        this.componentData = componentData;
         return this;
     }
 
@@ -71,9 +71,9 @@ public class PropertyRendererFactory {
         checkNotNull(file, "file");
         checkNotNull(graph, "graph");
         checkNotNull(module, "module");
-        checkNotNull(component, "component");
+        checkNotNull(componentData, "componentData");
 
-        String fullyQualifiedName = component.getFullyQualifiedName();
+        String fullyQualifiedName = componentData.getFullyQualifiedName();
         Class<? extends PropertyRenderer> rendererClazz = RENDERER.getOrDefault(fullyQualifiedName, GENERIC_RENDERER);
         return instantiateRenderer(rendererClazz);
     }

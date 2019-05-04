@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.properties;
 
 import com.esb.plugin.commons.Icons;
-import com.esb.plugin.component.Component;
+import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.designer.SelectListener;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
@@ -32,12 +32,12 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
     public void onSelect(FlowGraph graph, GraphNode node) {
         if (node instanceof NothingSelectedNode) return;
 
-        Component component = node.component();
+        ComponentData componentData = node.component();
 
         removeAll();
 
         JBPanel propertiesPanel = PropertyRendererFactory.get()
-                .component(component)
+                .component(componentData)
                 .module(module)
                 .graph(graph)
                 .file(file)
@@ -46,12 +46,12 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
 
         JBTabbedPane tabbedPane = new JBTabbedPane();
 
-        Icon icon = Icons.forComponentAsIcon(component.getFullyQualifiedName());
+        Icon icon = Icons.forComponentAsIcon(componentData.getFullyQualifiedName());
         tabbedPane.addTab(
-                component.getDisplayName(),
+                componentData.getDisplayName(),
                 icon,
                 propertiesPanel,
-                component.getDisplayName() + " properties");
+                componentData.getDisplayName() + " properties");
 
         add(tabbedPane);
 

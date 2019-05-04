@@ -1,9 +1,9 @@
 package com.esb.plugin.graph.node;
 
-import com.esb.plugin.component.Component;
+import com.esb.plugin.component.ComponentData;
 
 public interface ComponentAware {
 
-    Component component();
+    ComponentData component();
 
 }

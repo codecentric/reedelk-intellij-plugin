@@ -14,6 +14,8 @@ import static com.esb.internal.commons.Preconditions.checkState;
 
 public class GraphSerializer {
 
+    // TODO: Fix JSON parser to include setters of the following
+    // properties
     public static String serialize(FlowGraph graph) {
         JSONArray flow = new JSONArray();
 
@@ -21,12 +23,13 @@ public class GraphSerializer {
         doSerialize(graph, flow, root);
 
         JSONObject flowObject = SerializerUtilities.newJSONObject();
+
         flowObject.put("id", UUID.randomUUID().toString());
         flowObject.put("flow", flow);
         return flowObject.toString(4);
     }
 
-    private static void doSerialize(FlowGraph graph, JSONArray array, GraphNode graphNode) {
+    public static void doSerialize(FlowGraph graph, JSONArray array, GraphNode graphNode) {
         if (graphNode instanceof ScopedGraphNode) {
             serialize(graph, array, (ScopedGraphNode) graphNode);
         } else {
@@ -39,7 +42,7 @@ public class GraphSerializer {
                 .node(scopedGraphNode)
                 .build();
 
-        JSONObject serializedObject = serializer.serialize(scopedGraphNode);
+        JSONObject serializedObject = serializer.serialize(graph, scopedGraphNode);
         array.put(serializedObject);
         FindFirstNodeOutsideScope.of(graph, scopedGraphNode)
                 .ifPresent(node -> doSerialize(graph, array, node));
@@ -50,7 +53,7 @@ public class GraphSerializer {
                 .node(node)
                 .build();
 
-        JSONObject serializedObject = serializer.serialize(node);
+        JSONObject serializedObject = serializer.serialize(graph, node);
         array.put(serializedObject);
         List<GraphNode> successors = graph.successors(node);
         checkState(successors.size() <= 1,
@@ -59,12 +62,5 @@ public class GraphSerializer {
         if (!successors.isEmpty()) {
             doSerialize(graph, array, successors.get(0));
         }
-    }
-
-    private static JSONObject serialize(GraphNode node) {
-        return GraphSerializerFactory.get()
-                .node(node)
-                .build()
-                .serialize(node);
     }
 }

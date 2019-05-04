@@ -1,6 +1,6 @@
 package com.esb.plugin.component.generic;
 
-import com.esb.plugin.component.Component;
+import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.designer.properties.AbstractPropertyRenderer;
 import com.esb.plugin.designer.properties.PropertyTracker;
 import com.esb.plugin.designer.properties.widget.PropertyBox;
@@ -21,13 +21,13 @@ public class GenericComponentPropertyRenderer extends AbstractPropertyRenderer {
 
     @Override
     public JBPanel render(GraphNode node) {
-        Component component = node.component();
+        ComponentData componentData = node.component();
 
         JBPanel propertiesBoxContainer = new JBPanel();
         propertiesBoxContainer.setLayout(new BoxLayout(propertiesBoxContainer, BoxLayout.PAGE_AXIS));
 
-        component.getPropertiesNames().forEach(propertyName -> {
-            PropertyBox propertyBox = createPropertyBox(component, propertyName);
+        componentData.getPropertiesNames().forEach(propertyName -> {
+            PropertyBox propertyBox = createPropertyBox(componentData, propertyName);
             propertiesBoxContainer.add(propertyBox);
         });
 
@@ -36,8 +36,8 @@ public class GenericComponentPropertyRenderer extends AbstractPropertyRenderer {
     }
 
     @NotNull
-    private PropertyBox createPropertyBox(Component component, String propertyName) {
-        PropertyTracker tracker = new PropertyTracker(component, propertyName);
+    private PropertyBox createPropertyBox(ComponentData componentData, String propertyName) {
+        PropertyTracker tracker = new PropertyTracker(componentData, propertyName);
 
         PropertyBox propertyBox = new PropertyBox(propertyName);
         propertyBox.setText(tracker.getValueAsString());

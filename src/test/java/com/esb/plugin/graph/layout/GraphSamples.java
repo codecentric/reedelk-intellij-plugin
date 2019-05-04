@@ -1,6 +1,6 @@
 package com.esb.plugin.graph.layout;
 
-import com.esb.plugin.component.Component;
+import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.component.choice.ChoiceNode;
 import com.esb.plugin.component.generic.GenericComponentNode;
@@ -11,23 +11,23 @@ import com.esb.plugin.graph.node.ScopedGraphNode;
 
 public class GraphSamples {
 
-    Component cRoot = createComponent("root");
-    Component cn1 = createComponent("n1");
-    Component cn2 = createComponent("n2");
-    Component cn3 = createComponent("n3");
-    Component cn4 = createComponent("n4");
-    Component cn5 = createComponent("n5");
-    Component cn6 = createComponent("n6");
-    Component cn7 = createComponent("n7");
-    Component cn8 = createComponent("n8");
-    Component cn9 = createComponent("n9");
-    Component cn10 = createComponent("n10");
-    Component cn11 = createComponent("n11");
-    Component cc1 = createComponent("c1");
-    Component cc2 = createComponent("c2");
-    Component cc3 = createComponent("c3");
-    Component cc4 = createComponent("c4");
-    Component cc5 = createComponent("c5");
+    ComponentData cRoot = createComponent("root");
+    ComponentData cn1 = createComponent("n1");
+    ComponentData cn2 = createComponent("n2");
+    ComponentData cn3 = createComponent("n3");
+    ComponentData cn4 = createComponent("n4");
+    ComponentData cn5 = createComponent("n5");
+    ComponentData cn6 = createComponent("n6");
+    ComponentData cn7 = createComponent("n7");
+    ComponentData cn8 = createComponent("n8");
+    ComponentData cn9 = createComponent("n9");
+    ComponentData cn10 = createComponent("n10");
+    ComponentData cn11 = createComponent("n11");
+    ComponentData cc1 = createComponent("c1");
+    ComponentData cc2 = createComponent("c2");
+    ComponentData cc3 = createComponent("c3");
+    ComponentData cc4 = createComponent("c4");
+    ComponentData cc5 = createComponent("c5");
 
     GraphNode root = new GenericComponentNode(cRoot);
     GraphNode n1 = new GenericComponentNode(cn1);
@@ -359,8 +359,8 @@ public class GraphSamples {
         return graph;
     }
 
-    private Component createComponent(String name) {
-        return new Component(ComponentDescriptor.create()
+    private ComponentData createComponent(String name) {
+        return new ComponentData(ComponentDescriptor.create()
                 .fullyQualifiedName(name)
                 .displayName(name)
                 .build());

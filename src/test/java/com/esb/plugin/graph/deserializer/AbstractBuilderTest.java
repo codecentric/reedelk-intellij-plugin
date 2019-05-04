@@ -1,7 +1,7 @@
 package com.esb.plugin.graph.deserializer;
 
 import com.esb.internal.commons.FileUtils;
-import com.esb.plugin.component.Component;
+import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphImpl;
@@ -69,9 +69,9 @@ public abstract class AbstractBuilderTest {
 
     public void assertThatComponentHasName(GraphNode target, String expectedName) {
         assertThat(target).isNotNull();
-        Component component = target.component();
-        assertThat(component).isNotNull();
-        assertThat(component.getFullyQualifiedName()).isEqualTo(expectedName);
+        ComponentData componentData = target.component();
+        assertThat(componentData).isNotNull();
+        assertThat(componentData.getFullyQualifiedName()).isEqualTo(expectedName);
     }
 
     public GraphNode firstSuccessorOf(FlowGraph graph, GraphNode target) {
@@ -80,24 +80,24 @@ public abstract class AbstractBuilderTest {
 
     public GraphNode getNodeHavingComponentName(Collection<GraphNode> drawables, String componentName) {
         for (GraphNode drawable : drawables) {
-            Component component = drawable.component();
-            if (componentName.equals(component.getFullyQualifiedName())) {
+            ComponentData componentData = drawable.component();
+            if (componentName.equals(componentData.getFullyQualifiedName())) {
                 return drawable;
             }
         }
         throw new RuntimeException("Could not find: " + componentName);
     }
 
-    public Component mockComponent(String fullyQualifiedName, Class<? extends GraphNode> nodeClazz) {
-        Component component = new Component(ComponentDescriptor.create()
+    public ComponentData mockComponent(String fullyQualifiedName, Class<? extends GraphNode> nodeClazz) {
+        ComponentData componentData = new ComponentData(ComponentDescriptor.create()
                 .fullyQualifiedName(fullyQualifiedName)
                 .build());
         try {
-            GraphNode node = nodeClazz.getConstructor(Component.class).newInstance(component);
+            GraphNode node = nodeClazz.getConstructor(ComponentData.class).newInstance(componentData);
             doReturn(node)
                     .when(context)
                     .instantiateGraphNode(fullyQualifiedName);
-            return component;
+            return componentData;
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new RuntimeException(e);
         }

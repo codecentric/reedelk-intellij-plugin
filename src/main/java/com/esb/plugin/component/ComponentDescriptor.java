@@ -11,7 +11,7 @@ import java.util.Objects;
  */
 public class ComponentDescriptor {
 
-    public static final DataFlavor FLAVOR = new DataFlavor(ComponentDescriptor.class, "Descriptor of Component");
+    public static final DataFlavor FLAVOR = new DataFlavor(ComponentDescriptor.class, "Descriptor of ComponentData");
 
     private String fullyQualifiedName;
     private String displayName;

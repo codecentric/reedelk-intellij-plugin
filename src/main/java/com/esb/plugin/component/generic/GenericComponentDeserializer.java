@@ -1,7 +1,7 @@
 package com.esb.plugin.component.generic;
 
 import com.esb.internal.commons.JsonParser;
-import com.esb.plugin.component.Component;
+import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.deserializer.AbstractDeserializer;
 import com.esb.plugin.graph.deserializer.DeserializerContext;
@@ -21,17 +21,17 @@ public class GenericComponentDeserializer extends AbstractDeserializer {
 
         GenericComponentNode node = context.instantiateGraphNode(name);
 
-        Component component = node.component();
+        ComponentData componentData = node.component();
 
-        // fill up data from component definition
-        component.componentDataKeys()
+        // fill up data from componentData definition
+        componentData.componentDataKeys()
                 .forEach(propertyName -> {
                     Object propertyValue = componentDefinition.get(propertyName.toLowerCase());
                     // Explicitly map JSON Library NULL value to java's null.
                     if (propertyValue == JSONObject.NULL) {
                         propertyValue = null;
                     }
-                    component.setPropertyValue(propertyName, propertyValue);
+                    componentData.setPropertyValue(propertyName, propertyValue);
                 });
 
         graph.add(parent, node);

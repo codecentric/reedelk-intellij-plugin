@@ -1,5 +1,6 @@
 package com.esb.plugin.component.choice.widget;
 
+import com.esb.plugin.component.choice.ChoiceConditionRoutePair;
 import com.esb.plugin.graph.node.GraphNode;
 
 import javax.swing.table.AbstractTableModel;
@@ -8,7 +9,7 @@ import java.util.List;
 
 public class ConditionRouteTableModel extends AbstractTableModel {
 
-    private List<ConditionRoutePair> conditionRouteList = new ArrayList<>();
+    private List<ChoiceConditionRoutePair> conditionRouteList = new ArrayList<>();
 
     @Override
     public int getRowCount() {
@@ -39,13 +40,13 @@ public class ConditionRouteTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Object returnValue = null;
-        ConditionRoutePair conditionRoute = conditionRouteList.get(rowIndex);
+        ChoiceConditionRoutePair conditionRoute = conditionRouteList.get(rowIndex);
         switch (columnIndex) {
             case 0:
-                returnValue = conditionRoute.condition;
+                returnValue = conditionRoute.getCondition();
                 break;
             case 1:
-                returnValue = conditionRoute.node;
+                returnValue = conditionRoute.getNext();
                 break;
         }
         return returnValue;
@@ -53,18 +54,18 @@ public class ConditionRouteTableModel extends AbstractTableModel {
 
     @Override
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
-        ConditionRoutePair conditionRoute = conditionRouteList.get(rowIndex);
+        ChoiceConditionRoutePair conditionRoute = conditionRouteList.get(rowIndex);
         switch (columnIndex) {
             case 0:
-                conditionRoute.condition = (String) value;
+                conditionRoute.setCondition((String) value);
                 break;
             case 1:
-                conditionRoute.node = (GraphNode) value;
+                conditionRoute.setNext((GraphNode) value);
                 break;
         }
     }
 
-    void addConditionRoutePair(ConditionRoutePair pair) {
+    void addConditionRoutePair(ChoiceConditionRoutePair pair) {
         conditionRouteList.add(pair);
         int rowChanged = conditionRouteList.size();
         fireTableRowsInserted(rowChanged, rowChanged);

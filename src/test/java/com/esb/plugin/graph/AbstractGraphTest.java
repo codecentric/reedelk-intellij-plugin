@@ -1,6 +1,6 @@
 package com.esb.plugin.graph;
 
-import com.esb.plugin.component.Component;
+import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.component.choice.ChoiceNode;
 import com.esb.plugin.component.generic.GenericComponentNode;
@@ -18,23 +18,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public abstract class AbstractGraphTest {
 
-    private Component cRoot;
-    private Component cn1;
-    private Component cn2;
-    private Component cn3;
-    private Component cn4;
-    private Component cn5;
-    private Component cn6;
-    private Component cn7;
-    private Component cn8;
-    private Component cn9;
-    private Component cn10;
-    private Component cn11;
-    private Component cc1;
-    private Component cc2;
-    private Component cc3;
-    private Component cc4;
-    private Component cc5;
+    private ComponentData cRoot;
+    private ComponentData cn1;
+    private ComponentData cn2;
+    private ComponentData cn3;
+    private ComponentData cn4;
+    private ComponentData cn5;
+    private ComponentData cn6;
+    private ComponentData cn7;
+    private ComponentData cn8;
+    private ComponentData cn9;
+    private ComponentData cn10;
+    private ComponentData cn11;
+    private ComponentData cc1;
+    private ComponentData cc2;
+    private ComponentData cc3;
+    private ComponentData cc4;
+    private ComponentData cc5;
 
     protected GraphNode root;
     protected GraphNode n1;
@@ -95,8 +95,8 @@ public abstract class AbstractGraphTest {
         choice5 = new ChoiceNode(cc5);
     }
 
-    private Component createComponent(String name) {
-        return new Component(ComponentDescriptor.create()
+    private ComponentData createComponent(String name) {
+        return new ComponentData(ComponentDescriptor.create()
                 .fullyQualifiedName(name)
                 .displayName(name)
                 .build());

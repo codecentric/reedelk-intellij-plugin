@@ -1,7 +1,7 @@
 package com.esb.plugin.component.flowreference;
 
 import com.esb.component.FlowReference;
-import com.esb.plugin.component.Component;
+import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.graph.deserializer.AbstractBuilderTest;
 import com.esb.plugin.graph.deserializer.ComponentDefinitionBuilder;
 import com.esb.plugin.graph.node.GraphNode;
@@ -26,7 +26,7 @@ class FlowReferenceDeserializerTest extends AbstractBuilderTest {
     @Test
     void shouldBuildFlowReferenceCorrectly() {
         // Given
-        Component givenComponent = mockComponent(FlowReference.class.getName(), FlowReferenceNode.class);
+        ComponentData givenComponentData = mockComponent(FlowReference.class.getName(), FlowReferenceNode.class);
 
         JSONObject componentDefinition = ComponentDefinitionBuilder.forComponent(FlowReference.class.getName())
                 .with("ref", UUID.randomUUID().toString())
@@ -38,7 +38,7 @@ class FlowReferenceDeserializerTest extends AbstractBuilderTest {
         // Then
         assertThat(graph.nodesCount()).isEqualTo(2);
 
-        Component actualComponent = flowReference.component();
-        assertThat(actualComponent).isEqualTo(givenComponent);
+        ComponentData actualComponentData = flowReference.component();
+        assertThat(actualComponentData).isEqualTo(givenComponentData);
     }
 }
