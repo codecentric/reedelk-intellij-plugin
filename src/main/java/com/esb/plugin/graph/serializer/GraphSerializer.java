@@ -15,7 +15,7 @@ import static com.esb.internal.commons.Preconditions.checkState;
 public class GraphSerializer {
 
     // TODO: Fix JSON parser to include setters of the following
-    // properties
+    // TODO: properties
     public static String serialize(FlowGraph graph) {
         JSONArray flow = new JSONArray();
 

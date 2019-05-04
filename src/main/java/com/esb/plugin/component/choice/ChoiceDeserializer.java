@@ -56,7 +56,7 @@ public class ChoiceDeserializer extends AbstractDeserializer {
                         .build()
                         .deserialize(currentNode, currentComponentDef);
 
-                // First node we must apply condition
+                // First node we must keep track of the condition -> node pair
                 if (j == 0) {
                     String condition = Choice.getCondition(whenComponent);
                     conditionRouteList.add(new ChoiceConditionRoutePair(condition, currentNode));
@@ -80,8 +80,12 @@ public class ChoiceDeserializer extends AbstractDeserializer {
                     .graph(graph)
                     .build()
                     .deserialize(currentDrawable, currentComponentDef);
-        }
 
+            // First node we must keep track of the otherwise -> node condition
+            if (j == 0) {
+                choiceNodeComponentData.setPropertyValue("otherwise", currentDrawable);
+            }
+        }
 
         // Last node is stop node.
         graph.add(currentDrawable, stopNode);

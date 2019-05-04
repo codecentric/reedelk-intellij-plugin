@@ -14,37 +14,7 @@ import java.util.List;
 import static com.esb.internal.commons.JsonParser.Implementor;
 
 public class ChoiceSerializer extends AbstractSerializer {
-    /**
-     * {
-     * "implementor.name": "com.esb.component.Choice",
-     * "when": [
-     * {
-     * "condition": "payload.name == 35",
-     * "next": [
-     * {
-     * "implementor.name": "com.esb.core.component.SetPayload1",
-     * "payload": "{\"result\":\"Payload contains 35\"}"
-     * }
-     * ]
-     * },
-     * {
-     * "condition": "payload.name == 'Mark'",
-     * "next": [
-     * {
-     * "implementor.name": "com.esb.core.component.SetPayload2",
-     * "payload": "{\"result\":\"Choice2\"}"
-     * }
-     * ]
-     * }
-     * ],
-     * "otherwise": [
-     * {
-     * "implementor.name": "com.esb.core.component.SetPayload3",
-     * "payload": "{\"result\":\"Otherwise\"}"
-     * }
-     * ]
-     * }
-     */
+
     @Override
     public JSONObject serialize(FlowGraph graph, GraphNode node) {
         ComponentData componentData = node.component();
@@ -56,14 +26,17 @@ public class ChoiceSerializer extends AbstractSerializer {
         JSONArray whenArray = new JSONArray();
 
         List<ChoiceConditionRoutePair> when = (List<ChoiceConditionRoutePair>) componentData.getData("when");
+
         for (ChoiceConditionRoutePair pair : when) {
 
             JSONObject conditionRoutePair = SerializerUtilities.newJSONObject();
+
             conditionRoutePair.put("condition", pair.getCondition());
 
             JSONArray nextArray = new JSONArray();
 
             GraphNode nextNode = pair.getNext();
+
             GraphSerializer.doSerialize(graph, nextArray, nextNode);
 
             conditionRoutePair.put("next", nextArray);
@@ -71,9 +44,16 @@ public class ChoiceSerializer extends AbstractSerializer {
             whenArray.put(conditionRoutePair);
         }
 
-        GraphNode otherwise = (GraphNode) componentData.getData("otherwise");
-
         choice.put("when", whenArray);
+
+        GraphNode otherwiseNode = (GraphNode) componentData.getData("otherwise");
+
+        JSONArray otherwiseArray = new JSONArray();
+
+        GraphSerializer.doSerialize(graph, otherwiseArray, otherwiseNode);
+
+        choice.put("otherwise", otherwiseArray);
+
         return choice;
     }
 }
