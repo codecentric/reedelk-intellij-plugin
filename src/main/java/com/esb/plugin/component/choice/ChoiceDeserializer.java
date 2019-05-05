@@ -52,7 +52,7 @@ public class ChoiceDeserializer extends AbstractDeserializer {
 
             GraphNode currentNode = deserializeWithActionOnFirst(next, choiceNode, node -> {
                 String condition = Choice.getCondition(whenComponent);
-                conditionAndRoutes.add(new ChoiceConditionRoutePair(condition, choiceNode));
+                conditionAndRoutes.add(new ChoiceConditionRoutePair(condition, node));
             });
 
             // Last node is connected to stop node.

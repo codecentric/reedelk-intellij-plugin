@@ -5,6 +5,7 @@ import com.esb.plugin.graph.deserializer.GraphDeserializer;
 import com.esb.plugin.graph.serializer.GraphSerializer;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
@@ -33,6 +34,8 @@ import static java.util.Arrays.stream;
  * - component's property changed
  */
 public class GraphManager implements FileEditorManagerListener, DocumentListener, GraphChangeNotifier, Disposable {
+
+    private static final Logger LOG = Logger.getInstance(GraphManager.class);
 
     private Module module;
     private FlowGraph graph;
@@ -93,7 +96,7 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
                     .run((ThrowableRunnable<Throwable>) () ->
                             jsonGraphFile.setBinaryContent(json.getBytes()));
         } catch (Throwable throwable) {
-            throwable.printStackTrace();
+            LOG.error("Could not write Graph's JSON data", throwable);
         }
     }
 

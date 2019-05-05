@@ -4,6 +4,7 @@ import com.esb.internal.commons.FileUtils;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphImpl;
 import com.esb.plugin.graph.node.GraphNode;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.json.JSONArray;
@@ -18,6 +19,8 @@ import static com.esb.internal.commons.JsonParser.from;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class GraphDeserializer {
+
+    private static final Logger LOG = Logger.getInstance(GraphDeserializer.class);
 
     private final FlowGraph graph;
     private final DeserializerContext context;
@@ -66,6 +69,7 @@ public class GraphDeserializer {
             FlowGraph graph = builder.deserialize();
             return Optional.of(graph);
         } catch (Exception e) {
+            LOG.error("Deserialization error", e);
             return Optional.empty();
         }
     }

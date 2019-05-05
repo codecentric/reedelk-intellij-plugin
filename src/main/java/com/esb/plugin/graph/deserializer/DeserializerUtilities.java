@@ -35,15 +35,18 @@ class DeserializerUtilities {
                 GraphNode stop = successorsOfCurrent.get(0); // stop must have only one successor.
 
                 List<GraphNode> successorsOfStop = copy.successors(stop);
-                checkState(successorsOfStop.size() == 1, "Expected only one successor");
+                checkState(successorsOfStop.isEmpty() || successorsOfStop.size() == 1,
+                        "Expected only zero or one successor");
 
-                GraphNode successorOfStop = successorsOfStop.get(0);
+                if (!successorsOfStop.isEmpty()) {
+                    GraphNode successorOfStop = successorsOfStop.get(0);
 
-                // Connect current node with the next node after stop
-                copy.add(currentDrawable, successorOfStop);
+                    // Connect current node with the next node after stop
+                    copy.add(currentDrawable, successorOfStop);
 
-                // Remove edge between current node and stop
-                copy.remove(currentDrawable, stop);
+                    // Remove edge between current node and stop
+                    copy.remove(currentDrawable, stop);
+                }
             }
         });
 
