@@ -17,9 +17,11 @@ public class ForkJoinConnectorBuilder implements ConnectorBuilder {
     public Connector build(Module module, FlowGraph graph, GraphNode componentToAdd) {
 
         FlowGraph forkJoinGraph = new FlowGraphImpl();
+
         forkJoinGraph.root(componentToAdd);
 
         FlowReferenceNode placeholderDrawable = GraphNodeFactory.get(module, FlowReference.class.getName());
+
         forkJoinGraph.add(componentToAdd, placeholderDrawable);
 
         ((ForkJoinNode) componentToAdd).addToScope(placeholderDrawable);
