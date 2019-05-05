@@ -1,5 +1,6 @@
 package com.esb.plugin.graph.serializer;
 
+import com.intellij.openapi.diagnostic.Logger;
 import org.json.JSONObject;
 
 import java.lang.reflect.Field;
@@ -7,14 +8,15 @@ import java.util.LinkedHashMap;
 
 public class JSONObjectFactory {
 
-    static Field jsonObjectMapField;
+    private static final Logger LOG = Logger.getInstance(JSONObjectFactory.class);
 
+    private static Field jsonObjectMapField;
     static {
         try {
             jsonObjectMapField = JSONObject.class.getDeclaredField("map");
             jsonObjectMapField.setAccessible(true);
         } catch (NoSuchFieldException e) {
-            // TODO: Log this
+            LOG.error("Could not find JSON Object field 'map'", e);
         }
     }
 
@@ -32,7 +34,7 @@ public class JSONObjectFactory {
             try {
                 jsonObjectMapField.set(result, new LinkedHashMap<>());
             } catch (IllegalAccessException e) {
-                // TODO: Log this
+                LOG.error("Could not configure ordered map to JSONObject", e);
             }
         }
         return result;
