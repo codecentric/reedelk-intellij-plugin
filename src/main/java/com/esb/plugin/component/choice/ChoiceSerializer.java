@@ -5,7 +5,7 @@ import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.serializer.AbstractSerializer;
 import com.esb.plugin.graph.serializer.GraphSerializer;
-import com.esb.plugin.graph.serializer.SerializerUtilities;
+import com.esb.plugin.graph.serializer.JSONObjectFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -20,7 +20,7 @@ public class ChoiceSerializer extends AbstractSerializer {
 
         ComponentData componentData = node.component();
 
-        JSONObject choiceObject = SerializerUtilities.newJSONObject();
+        JSONObject choiceObject = JSONObjectFactory.newJSONObject();
 
         Implementor.name(componentData.getFullyQualifiedName(), choiceObject);
 
@@ -30,7 +30,7 @@ public class ChoiceSerializer extends AbstractSerializer {
 
         for (ChoiceConditionRoutePair pair : when) {
 
-            JSONObject conditionAndRouteObject = SerializerUtilities.newJSONObject();
+            JSONObject conditionAndRouteObject = JSONObjectFactory.newJSONObject();
 
             String condition = pair.getCondition();
 

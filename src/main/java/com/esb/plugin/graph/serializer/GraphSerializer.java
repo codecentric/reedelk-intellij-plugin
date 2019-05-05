@@ -22,11 +22,10 @@ public class GraphSerializer {
         GraphNode root = graph.root();
         doSerialize(graph, flow, root);
 
-        JSONObject flowObject = SerializerUtilities.newJSONObject();
-
+        JSONObject flowObject = JSONObjectFactory.newJSONObject();
         flowObject.put("id", UUID.randomUUID().toString());
         flowObject.put("flow", flow);
-        return flowObject.toString(4);
+        return flowObject.toString(2);
     }
 
     public static void doSerialize(FlowGraph graph, JSONArray array, GraphNode graphNode) {
