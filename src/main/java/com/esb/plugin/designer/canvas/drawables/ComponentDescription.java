@@ -7,8 +7,6 @@ import java.awt.*;
 
 public class ComponentDescription extends AbstractText {
 
-    public static final String DESCRIPTION_PROPERTY_NAME = "description";
-
     private final PropertyTracker tracker;
 
     public ComponentDescription(PropertyTracker tracker) {

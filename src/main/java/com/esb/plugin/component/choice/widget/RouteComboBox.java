@@ -6,7 +6,8 @@ import com.intellij.ui.ListCellRendererWrapper;
 
 import javax.swing.*;
 
-import static com.esb.plugin.designer.canvas.drawables.ComponentDescription.DESCRIPTION_PROPERTY_NAME;
+import static com.esb.plugin.component.ComponentData.DESCRIPTION_PROPERTY_NAME;
+
 
 public class RouteComboBox extends ComboBox<GraphNode> {
 

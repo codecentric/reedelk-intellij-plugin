@@ -13,6 +13,7 @@ public class GenericComponentSerializer extends AbstractSerializer {
 
     @Override
     public JSONObject serialize(FlowGraph graph, GraphNode node) {
+
         ComponentData componentData = node.component();
 
         JSONObject componentAsJson = SerializerUtilities.newJSONObject();
@@ -20,10 +21,9 @@ public class GenericComponentSerializer extends AbstractSerializer {
         Implementor.name(componentData.getFullyQualifiedName(), componentAsJson);
 
         componentData.descriptorProperties().forEach(propertyName -> {
-            Object data = componentData.get(propertyName);
-            if (data == null) {
-                data = JSONObject.NULL;
-            }
+
+            Object data = componentData.getOrDefault(propertyName, JSONObject.NULL);
+
             componentAsJson.put(propertyName.toLowerCase(), data);
         });
 

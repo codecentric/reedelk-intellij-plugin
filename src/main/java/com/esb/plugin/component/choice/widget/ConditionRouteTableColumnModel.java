@@ -7,7 +7,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 
-import static com.esb.plugin.designer.canvas.drawables.ComponentDescription.DESCRIPTION_PROPERTY_NAME;
+import static com.esb.plugin.component.ComponentData.DESCRIPTION_PROPERTY_NAME;
 
 class ConditionRouteTableColumnModel extends DefaultTableColumnModel {
 

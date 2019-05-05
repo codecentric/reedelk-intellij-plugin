@@ -15,6 +15,8 @@ import java.awt.image.ImageObserver;
 import java.util.List;
 import java.util.Optional;
 
+import static com.esb.plugin.component.ComponentData.DESCRIPTION_PROPERTY_NAME;
+
 public abstract class AbstractGraphNode implements GraphNode {
 
     private final ComponentData componentData;
@@ -42,7 +44,7 @@ public abstract class AbstractGraphNode implements GraphNode {
 
         componentTitle = new ComponentTitle(componentData.getDisplayName());
 
-        PropertyTracker tracker = new PropertyTracker(componentData, ComponentDescription.DESCRIPTION_PROPERTY_NAME);
+        PropertyTracker tracker = new PropertyTracker(componentData, DESCRIPTION_PROPERTY_NAME);
         componentDescription = new ComponentDescription(tracker);
 
         arrows = new Arrows(this);

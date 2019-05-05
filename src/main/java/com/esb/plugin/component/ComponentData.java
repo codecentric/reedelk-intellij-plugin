@@ -1,12 +1,12 @@
 package com.esb.plugin.component;
 
-import com.esb.plugin.designer.canvas.drawables.ComponentDescription;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ComponentData {
+
+    public static final String DESCRIPTION_PROPERTY_NAME = "description";
 
     private final ComponentDescriptor descriptor;
 
@@ -14,15 +14,20 @@ public class ComponentData {
 
     public ComponentData(final ComponentDescriptor descriptor) {
         this.descriptor = descriptor;
-        this.componentData.put(ComponentDescription.DESCRIPTION_PROPERTY_NAME, descriptor.getDisplayName());
+        this.componentData.put(DESCRIPTION_PROPERTY_NAME, descriptor.getDisplayName());
     }
 
     public Object get(String key) {
         return componentData.get(key);
     }
 
+    public Object getOrDefault(String key, Object defaultValue) {
+        Object value = componentData.get(key);
+        return value == null ? defaultValue : value;
+    }
+
     public void set(String propertyName, Object propertyValue) {
-        this.componentData.put(propertyName, propertyValue);
+        componentData.put(propertyName, propertyValue);
     }
 
     public String getFullyQualifiedName() {
