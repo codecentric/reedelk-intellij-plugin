@@ -6,8 +6,8 @@ import com.esb.plugin.graph.node.Drawable;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopeBoundaries;
 import com.esb.plugin.graph.node.ScopedGraphNode;
-import com.esb.plugin.graph.scope.FindFirstNodeOutsideScope;
-import com.esb.plugin.graph.scope.IsLastScopeBeforeNode;
+import com.esb.plugin.graph.utils.FindFirstNodeOutsideScope;
+import com.esb.plugin.graph.utils.IsLastScopeBeforeNode;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;

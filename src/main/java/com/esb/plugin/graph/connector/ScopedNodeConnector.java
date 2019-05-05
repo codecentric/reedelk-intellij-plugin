@@ -3,7 +3,7 @@ package com.esb.plugin.graph.connector;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
-import com.esb.plugin.graph.scope.ListLastNodeOfScope;
+import com.esb.plugin.graph.utils.ListLastNodeOfScope;
 
 import java.util.Collection;
 

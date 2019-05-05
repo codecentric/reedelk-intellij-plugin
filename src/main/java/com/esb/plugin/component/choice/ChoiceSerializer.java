@@ -25,7 +25,7 @@ public class ChoiceSerializer extends AbstractSerializer {
 
         JSONArray whenArray = new JSONArray();
 
-        List<ChoiceConditionRoutePair> when = (List<ChoiceConditionRoutePair>) componentData.getData("when");
+        List<ChoiceConditionRoutePair> when = (List<ChoiceConditionRoutePair>) componentData.get("when");
 
         for (ChoiceConditionRoutePair pair : when) {
 
@@ -46,7 +46,7 @@ public class ChoiceSerializer extends AbstractSerializer {
 
         choice.put("when", whenArray);
 
-        GraphNode otherwiseNode = (GraphNode) componentData.getData("otherwise");
+        GraphNode otherwiseNode = (GraphNode) componentData.get("otherwise");
 
         JSONArray otherwiseArray = new JSONArray();
 

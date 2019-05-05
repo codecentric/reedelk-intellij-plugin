@@ -3,7 +3,7 @@ package com.esb.plugin.graph.serializer;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
-import com.esb.plugin.graph.scope.FindFirstNodeOutsideScope;
+import com.esb.plugin.graph.utils.FindFirstNodeOutsideScope;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -55,6 +55,7 @@ public class GraphSerializer {
 
         JSONObject serializedObject = serializer.serialize(graph, node);
         array.put(serializedObject);
+
         List<GraphNode> successors = graph.successors(node);
         checkState(successors.size() <= 1,
                 "Only scoped nodes might have more than one successors");

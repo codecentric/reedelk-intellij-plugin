@@ -26,7 +26,7 @@ public class GenericComponentPropertyRenderer extends AbstractPropertyRenderer {
         JBPanel propertiesBoxContainer = new JBPanel();
         propertiesBoxContainer.setLayout(new BoxLayout(propertiesBoxContainer, BoxLayout.PAGE_AXIS));
 
-        componentData.getPropertiesNames().forEach(propertyName -> {
+        componentData.descriptorProperties().forEach(propertyName -> {
             PropertyBox propertyBox = createPropertyBox(componentData, propertyName);
             propertiesBoxContainer.add(propertyBox);
         });

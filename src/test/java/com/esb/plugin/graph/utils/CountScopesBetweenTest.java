@@ -1,4 +1,4 @@
-package com.esb.plugin.graph.scope;
+package com.esb.plugin.graph.utils;
 
 import com.esb.plugin.graph.AbstractGraphTest;
 import org.junit.jupiter.api.Test;

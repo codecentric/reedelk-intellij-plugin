@@ -17,7 +17,7 @@ public class RouteComboBox extends ComboBox<GraphNode> {
     class RouteComboBoxRenderer extends ListCellRendererWrapper<GraphNode> {
         @Override
         public void customize(JList list, GraphNode node, int index, boolean selected, boolean hasFocus) {
-            String description = (String) node.component().getData(DESCRIPTION_PROPERTY_NAME);
+            String description = (String) node.component().get(DESCRIPTION_PROPERTY_NAME);
             setText(description);
         }
     }

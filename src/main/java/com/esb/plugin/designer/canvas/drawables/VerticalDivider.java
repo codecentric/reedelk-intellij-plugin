@@ -4,7 +4,7 @@ import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.Drawable;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
-import com.esb.plugin.graph.scope.FindFirstNodeOutsideScope;
+import com.esb.plugin.graph.utils.FindFirstNodeOutsideScope;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 

@@ -6,9 +6,9 @@ import com.esb.plugin.graph.node.Drawable;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopeBoundaries;
 import com.esb.plugin.graph.node.ScopedGraphNode;
-import com.esb.plugin.graph.scope.CountScopesBetween;
-import com.esb.plugin.graph.scope.FindFirstNodeOutsideScope;
-import com.esb.plugin.graph.scope.ListLastNodeOfScope;
+import com.esb.plugin.graph.utils.CountScopesBetween;
+import com.esb.plugin.graph.utils.FindFirstNodeOutsideScope;
+import com.esb.plugin.graph.utils.ListLastNodeOfScope;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 

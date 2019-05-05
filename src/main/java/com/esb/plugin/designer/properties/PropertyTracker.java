@@ -17,13 +17,13 @@ public class PropertyTracker {
     }
 
     public void onPropertyChange(Module module, FlowGraph graph, VirtualFile file, Object newValue) {
-        componentData.setPropertyValue(propertyName, newValue);
+        componentData.set(propertyName, newValue);
         GraphChangeNotifier notifier = module.getMessageBus().syncPublisher(GraphChangeNotifier.TOPIC);
         notifier.onChange(graph, file);
     }
 
     public String getValueAsString() {
-        return (String) componentData.getData(propertyName);
+        return (String) componentData.get(propertyName);
     }
 
 }

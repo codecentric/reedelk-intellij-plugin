@@ -17,11 +17,11 @@ public class ComponentData {
         this.componentData.put(ComponentDescription.DESCRIPTION_PROPERTY_NAME, descriptor.getDisplayName());
     }
 
-    public Object getData(String key) {
+    public Object get(String key) {
         return componentData.get(key);
     }
 
-    public void setPropertyValue(String propertyName, Object propertyValue) {
+    public void set(String propertyName, Object propertyValue) {
         this.componentData.put(propertyName, propertyValue);
     }
 
@@ -33,11 +33,7 @@ public class ComponentData {
         return descriptor.getDisplayName();
     }
 
-    public List<String> componentDataKeys() {
-        return descriptor.componentDataKeys();
-    }
-
-    public List<String> getPropertiesNames() {
+    public List<String> descriptorProperties() {
         return descriptor.getPropertiesNames();
     }
 }

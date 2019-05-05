@@ -7,7 +7,7 @@ import com.esb.plugin.graph.action.RemoveNodeAction;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.NothingSelectedNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
-import com.esb.plugin.graph.scope.FindScope;
+import com.esb.plugin.graph.utils.FindScope;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 

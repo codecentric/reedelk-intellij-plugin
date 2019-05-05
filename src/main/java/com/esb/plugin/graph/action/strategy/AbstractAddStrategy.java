@@ -5,7 +5,7 @@ import com.esb.plugin.graph.connector.Connector;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopeBoundaries;
 import com.esb.plugin.graph.node.ScopedGraphNode;
-import com.esb.plugin.graph.scope.FindScopes;
+import com.esb.plugin.graph.utils.FindScopes;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;

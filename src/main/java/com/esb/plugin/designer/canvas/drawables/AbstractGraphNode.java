@@ -7,8 +7,8 @@ import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.Drawable;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
-import com.esb.plugin.graph.scope.FindScope;
-import com.esb.plugin.graph.scope.ListLastNodeOfScope;
+import com.esb.plugin.graph.utils.FindScope;
+import com.esb.plugin.graph.utils.ListLastNodeOfScope;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;

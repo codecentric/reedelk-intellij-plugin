@@ -5,8 +5,8 @@ import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopeBoundaries;
 import com.esb.plugin.graph.node.ScopedGraphNode;
-import com.esb.plugin.graph.scope.FindFirstNodeOutsideScope;
-import com.esb.plugin.graph.scope.FindJoiningScope;
+import com.esb.plugin.graph.utils.FindFirstNodeOutsideScope;
+import com.esb.plugin.graph.utils.FindJoiningScope;
 
 import java.awt.*;
 import java.util.Collections;

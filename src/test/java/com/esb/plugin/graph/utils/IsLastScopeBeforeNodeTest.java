@@ -1,44 +1,37 @@
-package com.esb.plugin.graph.scope;
+package com.esb.plugin.graph.utils;
 
 import com.esb.plugin.graph.AbstractGraphTest;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphImpl;
-import com.esb.plugin.graph.node.ScopedGraphNode;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class FindJoiningScopeTest extends AbstractGraphTest {
-
-    @BeforeEach
-    protected void setUp() {
-        super.setUp();
-    }
+class IsLastScopeBeforeNodeTest extends AbstractGraphTest {
 
     @Test
-    void shouldReturnCorrectJoiningScope() {
+    void shouldIsLastScopeBeforeNodeReturnTrueWhenLastScope() {
         // Given
         FlowGraph graph = new FlowGraphImpl();
         graph.root(root);
         graph.add(root, choice1);
         graph.add(choice1, n1);
-        graph.add(n1, n2);
+        graph.add(choice1, n2);
+        graph.add(n1, n3);
+        graph.add(n2, n3);
 
         choice1.addToScope(n1);
+        choice1.addToScope(n2);
 
         // When
-        Optional<ScopedGraphNode> joiningScope = FindJoiningScope.of(graph, n2);
+        boolean isLastScope = IsLastScopeBeforeNode.of(graph, choice1, n3);
 
         // Then
-        assertThat(joiningScope.isPresent()).isTrue();
-        assertThat(joiningScope.get()).isEqualTo(choice1);
+        assertThat(isLastScope).isTrue();
     }
 
     @Test
-    void shouldReturnCorrectOuterJoiningScopeWhenTwoNestedScopes() {
+    void shouldIsLastScopeBeforeNodeReturnTrueWhenNestedScope() {
         // Given
         FlowGraph graph = new FlowGraphImpl();
         graph.root(root);
@@ -50,21 +43,18 @@ class FindJoiningScopeTest extends AbstractGraphTest {
 
         choice1.addToScope(n1);
         choice1.addToScope(choice2);
-        choice1.setPosition(20, 90); // the outermost is the one with lowest X
 
         choice2.addToScope(n2);
-        choice2.setPosition(25, 90);
 
         // When
-        Optional<ScopedGraphNode> joiningScope = FindJoiningScope.of(graph, n3);
+        boolean isLastScope = IsLastScopeBeforeNode.of(graph, choice1, n3);
 
         // Then
-        assertThat(joiningScope.isPresent()).isTrue();
-        assertThat(joiningScope.get()).isEqualTo(choice1);
+        assertThat(isLastScope).isTrue();
     }
 
     @Test
-    void shouldReturnCorrectScopeWhenInBetweenTwoScopes() {
+    void shouldIsLastScopeBeforeNodeReturnFalseWhenInnermostNestedScope() {
         // Given
         FlowGraph graph = new FlowGraphImpl();
         graph.root(root);
@@ -76,16 +66,14 @@ class FindJoiningScopeTest extends AbstractGraphTest {
 
         choice1.addToScope(n1);
         choice1.addToScope(choice2);
-        choice1.addToScope(n3);
+
         choice2.addToScope(n2);
 
         // When
-        Optional<ScopedGraphNode> joiningScope = FindJoiningScope.of(graph, n3);
+        boolean isLastScope = IsLastScopeBeforeNode.of(graph, choice2, n3);
 
         // Then
-        assertThat(joiningScope.isPresent()).isTrue();
-        assertThat(joiningScope.get()).isEqualTo(choice2);
+        assertThat(isLastScope).isFalse();
     }
-
 
 }
