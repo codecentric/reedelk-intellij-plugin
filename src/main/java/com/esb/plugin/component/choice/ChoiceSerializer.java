@@ -17,34 +17,37 @@ public class ChoiceSerializer extends AbstractSerializer {
 
     @Override
     public JSONObject serialize(FlowGraph graph, GraphNode node) {
+
         ComponentData componentData = node.component();
 
-        JSONObject choice = SerializerUtilities.newJSONObject();
+        JSONObject choiceObject = SerializerUtilities.newJSONObject();
 
-        Implementor.name(componentData.getFullyQualifiedName(), choice);
-
-        JSONArray whenArray = new JSONArray();
+        Implementor.name(componentData.getFullyQualifiedName(), choiceObject);
 
         List<ChoiceConditionRoutePair> when = (List<ChoiceConditionRoutePair>) componentData.get("when");
 
+        JSONArray whenArrayObject = new JSONArray();
+
         for (ChoiceConditionRoutePair pair : when) {
 
-            JSONObject conditionRoutePair = SerializerUtilities.newJSONObject();
+            JSONObject conditionAndRouteObject = SerializerUtilities.newJSONObject();
 
-            conditionRoutePair.put("condition", pair.getCondition());
+            String condition = pair.getCondition();
 
-            JSONArray nextArray = new JSONArray();
+            conditionAndRouteObject.put("condition", condition);
+
+            JSONArray nextArrayObject = new JSONArray();
 
             GraphNode nextNode = pair.getNext();
 
-            GraphSerializer.doSerialize(graph, nextArray, nextNode);
+            GraphSerializer.doSerialize(graph, nextArrayObject, nextNode);
 
-            conditionRoutePair.put("next", nextArray);
+            conditionAndRouteObject.put("next", nextArrayObject);
 
-            whenArray.put(conditionRoutePair);
+            whenArrayObject.put(conditionAndRouteObject);
         }
 
-        choice.put("when", whenArray);
+        choiceObject.put("when", whenArrayObject);
 
         GraphNode otherwiseNode = (GraphNode) componentData.get("otherwise");
 
@@ -52,8 +55,8 @@ public class ChoiceSerializer extends AbstractSerializer {
 
         GraphSerializer.doSerialize(graph, otherwiseArray, otherwiseNode);
 
-        choice.put("otherwise", otherwiseArray);
+        choiceObject.put("otherwise", otherwiseArray);
 
-        return choice;
+        return choiceObject;
     }
 }
