@@ -71,4 +71,8 @@ public class ConditionRouteTableModel extends AbstractTableModel {
         fireTableRowsInserted(rowChanged, rowChanged);
     }
 
+    List<ChoiceConditionRoutePair> getData() {
+        return conditionRouteList;
+    }
+
 }
