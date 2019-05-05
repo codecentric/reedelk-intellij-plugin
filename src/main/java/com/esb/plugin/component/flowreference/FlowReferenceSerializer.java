@@ -7,6 +7,8 @@ import com.esb.plugin.graph.serializer.AbstractSerializer;
 import com.esb.plugin.graph.serializer.JSONObjectFactory;
 import org.json.JSONObject;
 
+import java.util.UUID;
+
 import static com.esb.internal.commons.JsonParser.Implementor;
 
 public class FlowReferenceSerializer extends AbstractSerializer {
@@ -19,6 +21,8 @@ public class FlowReferenceSerializer extends AbstractSerializer {
         JSONObject componentAsJson = JSONObjectFactory.newJSONObject();
 
         Implementor.name(componentData.getFullyQualifiedName(), componentAsJson);
+
+        componentAsJson.put("ref", UUID.randomUUID().toString());
 
         return componentAsJson;
     }
