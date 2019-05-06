@@ -64,7 +64,7 @@ public class GraphManager extends AncestorListenerAdapter implements FileEditorM
         try {
             graphAsJson = FileUtils.readFrom(new URL(graphFile.getUrl()));
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            LOG.error(String.format("Could not read file %s", graphFile.getUrl()), e);
         }
     }
 
@@ -119,6 +119,11 @@ public class GraphManager extends AncestorListenerAdapter implements FileEditorM
         }
     }
 
+    /**
+     * Writes the json into the document.
+     *
+     * @param json the json string to be written in the document.
+     */
     private void writeOnFile(String json) {
         try {
             WriteCommandAction.writeCommandAction(project)
