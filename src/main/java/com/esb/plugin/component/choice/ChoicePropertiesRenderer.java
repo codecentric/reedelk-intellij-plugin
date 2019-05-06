@@ -1,11 +1,11 @@
 package com.esb.plugin.component.choice;
 
 import com.esb.plugin.component.ComponentData;
-import com.esb.plugin.component.choice.widget.AddConditionRoute;
 import com.esb.plugin.component.choice.widget.ChoiceRouteTable;
 import com.esb.plugin.component.choice.widget.ConditionRouteTableModel;
 import com.esb.plugin.component.choice.widget.RouteComboBox;
 import com.esb.plugin.designer.properties.AbstractPropertyRenderer;
+import com.esb.plugin.designer.properties.widget.PropertyBox;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.ui.components.JBPanel;
@@ -36,16 +36,15 @@ public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
 
 
         ConditionRouteTableModel model = new ConditionRouteTableModel(conditionRoutePairList, choiceNode, snapshot);
-        AddConditionRoute addConditionRoute = new AddConditionRoute(createRoutesCombo(choiceNode));
-
         ChoiceRouteTable choiceRouteTable = new ChoiceRouteTable(createRoutesCombo(choiceNode), model);
-        addConditionRoute.addListener(choiceRouteTable);
+
+        // TODO: Fix this
+        PropertyBox descriptionProperty = createPropertyBox(componentData, "Description");
 
         JBPanel choicePropertiesPanel = new JBPanel();
         choicePropertiesPanel.setLayout(new BorderLayout());
-        choicePropertiesPanel.add(addConditionRoute, NORTH);
+        choicePropertiesPanel.add(descriptionProperty, NORTH);
         choicePropertiesPanel.add(choiceRouteTable, CENTER);
-
         return choicePropertiesPanel;
     }
 
