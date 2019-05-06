@@ -18,6 +18,7 @@ import com.intellij.ui.components.JBPanel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
@@ -47,10 +48,11 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
     private boolean updated;
     private boolean dragging;
 
-    public CanvasPanel(Module module, GraphSnapshot snapshot) {
+    public CanvasPanel(Module module, GraphSnapshot snapshot, AncestorListener listener) {
         setBackground(BACKGROUND_COLOR);
         addMouseListener(this);
         addMouseMotionListener(this);
+        addAncestorListener(listener);
 
         this.module = module;
         this.snapshot = snapshot;
@@ -193,6 +195,7 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
 
     @Override
     public void onStructureChange(@NotNull FlowGraph graph) {
+        unselect();
         SwingUtilities.invokeLater(() -> {
             updated = true;
             invalidate();

@@ -35,9 +35,9 @@ public class GenericComponentPropertyRenderer extends AbstractPropertyRenderer {
     @NotNull
     private PropertyBox createPropertyBox(ComponentData componentData, String propertyName) {
         PropertyBox propertyBox = new PropertyBox(propertyName);
-        propertyBox.setText((String) componentData.get(propertyName));
+        propertyBox.setText((String) componentData.get(propertyName.toLowerCase()));
         propertyBox.addListener(newText -> {
-            componentData.set(propertyName, newText);
+            componentData.set(propertyName.toLowerCase(), newText);
             snapshot.onDataChange();
         });
         return propertyBox;

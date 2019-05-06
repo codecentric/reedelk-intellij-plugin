@@ -7,6 +7,8 @@ import com.esb.plugin.graph.GraphSnapshot;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 
+import javax.swing.event.AncestorListener;
+
 class CanvasAndPalettePanel extends ThreeComponentsSplitter {
 
     private static final int DIVIDER_WIDTH = 2;
@@ -15,8 +17,8 @@ class CanvasAndPalettePanel extends ThreeComponentsSplitter {
     private final PalettePanel palette;
     private final CanvasPanel canvas;
 
-    CanvasAndPalettePanel(Module module, GraphSnapshot snapshot, SelectListener selectListener) {
-        canvas = new CanvasPanel(module, snapshot);
+    CanvasAndPalettePanel(Module module, GraphSnapshot snapshot, SelectListener selectListener, AncestorListener listener) {
+        canvas = new CanvasPanel(module, snapshot, listener);
         canvas.addListener(selectListener);
         ScrollableCanvasPanel canvasPanel = new ScrollableCanvasPanel(canvas);
 

@@ -32,8 +32,9 @@ public class DesignerEditor extends UserDataHolderBase implements FileEditor, Po
         checkState(module != null, "Module must not be null");
 
         GraphSnapshot snapshot = new GraphSnapshot();
-        editor = new DesignerEditorPanel(module, snapshot);
+
         manager = new GraphManager(project, module, file, snapshot);
+        editor = new DesignerEditorPanel(module, snapshot, manager);
     }
 
     @NotNull

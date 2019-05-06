@@ -19,9 +19,10 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThrowableRunnable;
-import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import java.util.Optional;
 
 import static java.util.Arrays.stream;
@@ -34,7 +35,7 @@ import static java.util.Arrays.stream;
  * - Properties updates:
  * - component's property changed
  */
-public class GraphManager implements FileEditorManagerListener, DocumentListener, SnapshotListener, Disposable {
+public class GraphManager implements FileEditorManagerListener, DocumentListener, SnapshotListener, Disposable, AncestorListener {
 
     private static final Logger LOG = Logger.getInstance(GraphManager.class);
 
@@ -42,7 +43,6 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
     private final Project project;
     private final VirtualFile graphFile;
     private final GraphSnapshot snapshot;
-    private final MessageBusConnection bus;
 
     public GraphManager(@NotNull Project project, @NotNull Module module, @NotNull VirtualFile graphFile, @NotNull GraphSnapshot snapshot) {
         this.module = module;
@@ -50,12 +50,6 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
         this.snapshot = snapshot;
         this.graphFile = graphFile;
         this.snapshot.addListener(this);
-
-        bus = project.getMessageBus().connect();
-        bus.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
-
-        GraphDeserializer.deserialize(module, graphFile)
-                .ifPresent(updatedGraph -> snapshot.updateSnapshot(this, updatedGraph));
     }
 
     /**
@@ -90,7 +84,7 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
 
     @Override
     public void dispose() {
-        bus.disconnect();
+
     }
 
     @Override
@@ -126,4 +120,19 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
                 .map(textEditor -> textEditor.getEditor().getDocument());
     }
 
+    @Override
+    public void ancestorAdded(AncestorEvent event) {
+        GraphDeserializer.deserialize(module, graphFile)
+                .ifPresent(updatedGraph -> snapshot.updateSnapshot(this, updatedGraph));
+    }
+
+    @Override
+    public void ancestorRemoved(AncestorEvent event) {
+
+    }
+
+    @Override
+    public void ancestorMoved(AncestorEvent event) {
+
+    }
 }

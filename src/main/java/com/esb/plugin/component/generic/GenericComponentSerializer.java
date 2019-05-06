@@ -22,7 +22,7 @@ public class GenericComponentSerializer extends AbstractSerializer {
 
         componentData.descriptorProperties().forEach(propertyName -> {
 
-            Object data = componentData.getOrDefault(propertyName, JSONObject.NULL);
+            Object data = componentData.getOrDefault(propertyName.toLowerCase(), JSONObject.NULL);
 
             componentAsJson.put(propertyName.toLowerCase(), data);
         });

@@ -31,7 +31,7 @@ public class GenericComponentDeserializer extends AbstractDeserializer {
                     if (propertyValue == JSONObject.NULL) {
                         propertyValue = null;
                     }
-                    componentData.set(propertyName, propertyValue);
+                    componentData.set(propertyName.toLowerCase(), propertyValue);
                 });
 
         graph.add(parent, node);
