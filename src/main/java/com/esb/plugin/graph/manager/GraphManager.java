@@ -1,11 +1,11 @@
 package com.esb.plugin.graph.manager;
 
+import com.esb.internal.commons.FileUtils;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.SnapshotListener;
 import com.esb.plugin.graph.deserializer.GraphDeserializer;
 import com.esb.plugin.graph.serializer.GraphSerializer;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
@@ -18,11 +18,14 @@ import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.util.ThrowableRunnable;
+import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Optional;
 
 import static java.util.Arrays.stream;
@@ -35,7 +38,7 @@ import static java.util.Arrays.stream;
  * - Properties updates:
  * - component's property changed
  */
-public class GraphManager implements FileEditorManagerListener, DocumentListener, SnapshotListener, Disposable, AncestorListener {
+public class GraphManager extends AncestorListenerAdapter implements FileEditorManagerListener, DocumentListener, SnapshotListener {
 
     private static final Logger LOG = Logger.getInstance(GraphManager.class);
 
@@ -44,12 +47,44 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
     private final VirtualFile graphFile;
     private final GraphSnapshot snapshot;
 
+    private String graphAsJson;
+
+    private Document document;
+
     public GraphManager(@NotNull Project project, @NotNull Module module, @NotNull VirtualFile graphFile, @NotNull GraphSnapshot snapshot) {
         this.module = module;
         this.project = project;
         this.snapshot = snapshot;
         this.graphFile = graphFile;
         this.snapshot.addListener(this);
+
+        MessageBusConnection busConnection = project.getMessageBus().connect();
+        busConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
+
+        try {
+            graphAsJson = FileUtils.readFrom(new URL(graphFile.getUrl()));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+        if (file.equals(graphFile)) {
+            findRelatedEditorDocument(source, file)
+                    .ifPresent(document -> {
+                        this.document = document;
+                        this.document.addDocumentListener(GraphManager.this);
+                    });
+        }
+    }
+
+    @Override
+    public void fileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+        if (file.equals(graphFile)) {
+            this.document.removeDocumentListener(this);
+            this.document = null;
+        }
     }
 
     /**
@@ -61,49 +96,33 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
     @Override
     public void documentChanged(@NotNull DocumentEvent event) {
         Document document = event.getDocument();
-        String graphAsJson = document.getText();
-        GraphDeserializer.deserialize(module, graphAsJson)
-                .ifPresent(updatedGraph -> snapshot.updateSnapshot(this, updatedGraph));
-    }
-
-    @Override
-    public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
-        if (file.equals(graphFile)) {
-            findRelatedEditorDocument(source, file)
-                    .ifPresent(document -> document.addDocumentListener(GraphManager.this));
-        }
-    }
-
-    @Override
-    public void fileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
-        if (file.equals(graphFile)) {
-            findRelatedEditorDocument(source, file)
-                    .ifPresent(document -> document.removeDocumentListener(GraphManager.this));
-        }
-    }
-
-    @Override
-    public void dispose() {
-
+        this.graphAsJson = document.getText();
     }
 
     @Override
     public void onDataChange(@NotNull FlowGraph graph) {
-        serialize(graph);
+        String json = GraphSerializer.serialize(graph);
+        writeOnFile(json);
     }
 
     @Override
     public void onStructureChange(@NotNull FlowGraph graph) {
-        serialize(graph);
+        String json = GraphSerializer.serialize(graph);
+        writeOnFile(json);
     }
 
-    private void serialize(FlowGraph graph) {
-        // Serialize the graph to json and write it into the file
-        String json = GraphSerializer.serialize(graph);
+    @Override
+    public void ancestorAdded(AncestorEvent event) {
+        if (graphAsJson != null) {
+            GraphDeserializer.deserialize(module, graphAsJson)
+                    .ifPresent(updatedGraph -> snapshot.updateSnapshot(this, updatedGraph));
+        }
+    }
+
+    private void writeOnFile(String json) {
         try {
             WriteCommandAction.writeCommandAction(project)
-                    .run((ThrowableRunnable<Throwable>) () ->
-                            graphFile.setBinaryContent(json.getBytes()));
+                    .run((ThrowableRunnable<Throwable>) () -> document.setText(json));
         } catch (Throwable throwable) {
             LOG.error("Could not write Graph's JSON data", throwable);
         }
@@ -118,21 +137,5 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
                 .findFirst()
                 .map(fileEditor -> (TextEditor) fileEditor)
                 .map(textEditor -> textEditor.getEditor().getDocument());
-    }
-
-    @Override
-    public void ancestorAdded(AncestorEvent event) {
-        GraphDeserializer.deserialize(module, graphFile)
-                .ifPresent(updatedGraph -> snapshot.updateSnapshot(this, updatedGraph));
-    }
-
-    @Override
-    public void ancestorRemoved(AncestorEvent event) {
-
-    }
-
-    @Override
-    public void ancestorMoved(AncestorEvent event) {
-
     }
 }

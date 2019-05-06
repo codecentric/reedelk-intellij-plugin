@@ -25,15 +25,13 @@ import static com.google.common.base.Preconditions.checkState;
 public class DesignerEditor extends UserDataHolderBase implements FileEditor, PossiblyDumbAware, DocumentListener {
 
     private DesignerEditorPanel editor;
-    private GraphManager manager;
 
     DesignerEditor(Project project, VirtualFile file) {
         Module module = ModuleUtil.findModuleForFile(file, project);
         checkState(module != null, "Module must not be null");
 
         GraphSnapshot snapshot = new GraphSnapshot();
-
-        manager = new GraphManager(project, module, file, snapshot);
+        GraphManager manager = new GraphManager(project, module, file, snapshot);
         editor = new DesignerEditorPanel(module, snapshot, manager);
     }
 
@@ -127,7 +125,6 @@ public class DesignerEditor extends UserDataHolderBase implements FileEditor, Po
 
     @Override
     public void dispose() {
-        this.manager.dispose();
     }
 
 }
