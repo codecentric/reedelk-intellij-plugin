@@ -1,21 +1,23 @@
 package com.esb.plugin.designer.canvas.drawables;
 
-import com.esb.plugin.designer.properties.PropertyTracker;
+import com.esb.plugin.component.ComponentData;
 import com.intellij.ui.JBColor;
 
 import java.awt.*;
 
+import static com.esb.plugin.component.ComponentData.DESCRIPTION_PROPERTY_NAME;
+
 public class ComponentDescription extends AbstractText {
 
-    private final PropertyTracker tracker;
+    private ComponentData componentData;
 
-    public ComponentDescription(PropertyTracker tracker) {
-        this.tracker = tracker;
+    public ComponentDescription(ComponentData componentData) {
+        this.componentData = componentData;
     }
 
     @Override
     protected String getText() {
-        return tracker.getValueAsString();
+        return (String) componentData.get(DESCRIPTION_PROPERTY_NAME);
     }
 
     @Override

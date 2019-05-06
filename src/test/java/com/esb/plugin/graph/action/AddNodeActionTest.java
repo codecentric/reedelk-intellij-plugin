@@ -607,7 +607,7 @@ class AddNodeActionTest extends AbstractGraphTest {
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
         Connector connector = new DefaultNodeConnector(modifiableGraph, dropped);
         AddNodeAction action = new AddNodeAction(modifiableGraph, dropPoint, connector, graphics);
-        action.add();
+        action.execute();
         return modifiableGraph;
     }
 

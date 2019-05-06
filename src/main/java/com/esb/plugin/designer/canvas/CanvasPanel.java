@@ -7,14 +7,14 @@ import com.esb.plugin.designer.canvas.action.DropActionHandler;
 import com.esb.plugin.designer.canvas.action.MoveActionHandler;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.layout.FlowGraphLayout;
-import com.esb.plugin.graph.manager.JsonChangeNotifier;
+import com.esb.plugin.graph.manager.GraphChangeListener;
 import com.esb.plugin.graph.node.Drawable;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.NothingSelectedNode;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,40 +28,31 @@ import java.awt.event.MouseMotionListener;
 import java.util.Collection;
 import java.util.Optional;
 
-import static com.google.common.base.Preconditions.checkState;
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
-public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseListener, DropTargetListener, JsonChangeNotifier {
+public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseListener, DropTargetListener, GraphChangeListener {
 
     private final JBColor BACKGROUND_COLOR = JBColor.WHITE;
     private final GraphNode NOTHING_SELECTED = new NothingSelectedNode();
     private final Module module;
 
     private FlowGraph graph;
-    private VirtualFile relatedFile;
     private GraphNode selected = NOTHING_SELECTED;
     private SelectListener selectListener;
+    private GraphChangeListener graphChangeListener;
 
     private int offsetx;
     private int offsety;
     private boolean updated;
     private boolean dragging;
 
-
-    public CanvasPanel(Module module, VirtualFile relatedFile) {
+    public CanvasPanel(Module module) {
         setBackground(BACKGROUND_COLOR);
         addMouseListener(this);
         addMouseMotionListener(this);
 
         this.module = module;
-        this.module.getMessageBus().connect().subscribe(JsonChangeNotifier.TOPIC, this);
-
-        this.relatedFile = relatedFile;
-    }
-
-    public void addSelectListener(SelectListener listener) {
-        this.selectListener = listener;
     }
 
     @Override
@@ -98,15 +89,8 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
     }
 
     @Override
-    public void onChange(FlowGraph updatedGraph, VirtualFile relatedFile) {
-        checkState(updatedGraph != null, "Updated graph must not be null");
-        checkState(relatedFile != null, "Related file must not be null");
-
-        // We update the graph only if the change was related to the
-        // file managed by this canvas.
-        if (this.relatedFile.equals(relatedFile)) {
-            updateGraph(updatedGraph);
-        }
+    public void onGraphChanged(@NotNull FlowGraph updatedGraph) {
+        onGraphUpdated(updatedGraph);
     }
 
     @Override
@@ -167,17 +151,16 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
 
         Point dragPoint = new Point(dragX, dragY);
 
-        MoveActionHandler delegate = new MoveActionHandler(module, graph, getGraphics2D(), selected, dragPoint, relatedFile);
-        delegate.handle().ifPresent(this::updateGraph);
+        MoveActionHandler delegate = new MoveActionHandler(module, graph, getGraphics2D(), selected, dragPoint);
+        delegate.handle().ifPresent(this::onGraphUpdated);
 
         repaint();
     }
 
     @Override
     public void drop(DropTargetDropEvent dropEvent) {
-        DropActionHandler delegate = new DropActionHandler(module, graph, getGraphics2D(), dropEvent, relatedFile);
-        Optional<FlowGraph> updatedGraph = delegate.handle();
-        updatedGraph.ifPresent(this::updateGraph);
+        DropActionHandler delegate = new DropActionHandler(module, graph, getGraphics2D(), dropEvent);
+        delegate.handle().ifPresent(this::onGraphUpdated);
     }
 
     @Override
@@ -216,6 +199,15 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
         System.out.println("Drag exit");
     }
 
+
+    public void addSelectListener(SelectListener listener) {
+        this.selectListener = listener;
+    }
+
+    public void addGraphChangeListener(GraphChangeListener graphChangeListener) {
+        this.graphChangeListener = graphChangeListener;
+    }
+
     /**
      * If the graph has grown beyond the current window size, we must adapt-it.
      */
@@ -230,7 +222,6 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
     }
 
     private Optional<GraphNode> getDrawableWithinCoordinates(int x, int y) {
-        //TODO: Graph should never be null.
         return graph == null ? Optional.empty() :
                 graph.nodes()
                         .stream()
@@ -240,21 +231,26 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
 
     private void unselect() {
         selected.unselected();
-        selectListener.onUnselect(graph, selected);
+        selectListener.onUnselect();
         select(NOTHING_SELECTED);
     }
 
     private void select(GraphNode drawable) {
         selected = drawable;
         selected.selected();
-        selectListener.onSelect(graph, selected);
+        selectListener.onSelect(graph, selected, graphChangeListener);
     }
 
     private Graphics2D getGraphics2D() {
         return (Graphics2D) getGraphics();
     }
 
-    private void updateGraph(FlowGraph updatedGraph) {
+    private void onGraphUpdated(FlowGraph updatedGraph) {
+
+        if (graphChangeListener != null) {
+            graphChangeListener.onGraphChanged(graph);
+        }
+
         SwingUtilities.invokeLater(() -> {
             graph = updatedGraph;
             updated = true;

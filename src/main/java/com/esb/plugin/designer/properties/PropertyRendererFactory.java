@@ -12,8 +12,7 @@ import com.esb.plugin.component.forkjoin.ForkJoinPropertyRenderer;
 import com.esb.plugin.component.generic.GenericComponentPropertyRenderer;
 import com.esb.plugin.component.stop.StopPropertyRenderer;
 import com.esb.plugin.graph.FlowGraph;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.esb.plugin.graph.manager.GraphChangeListener;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
@@ -35,10 +34,9 @@ public class PropertyRendererFactory {
         RENDERER = Collections.unmodifiableMap(tmp);
     }
 
-    private Module module;
     private FlowGraph graph;
-    private VirtualFile file;
     private ComponentData componentData;
+    private GraphChangeListener listener;
 
     private PropertyRendererFactory() {
     }
@@ -52,25 +50,19 @@ public class PropertyRendererFactory {
         return this;
     }
 
-    public PropertyRendererFactory module(Module module) {
-        this.module = module;
-        return this;
-    }
-
-    public PropertyRendererFactory file(VirtualFile file) {
-        this.file = file;
-        return this;
-    }
-
     public PropertyRendererFactory component(ComponentData componentData) {
         this.componentData = componentData;
         return this;
     }
 
+    public PropertyRendererFactory listener(GraphChangeListener listener) {
+        this.listener = listener;
+        return this;
+    }
+
     public PropertyRenderer build() {
-        checkNotNull(file, "file");
         checkNotNull(graph, "graph");
-        checkNotNull(module, "module");
+        checkNotNull(listener, "listener");
         checkNotNull(componentData, "componentData");
 
         String fullyQualifiedName = componentData.getFullyQualifiedName();
@@ -81,8 +73,8 @@ public class PropertyRendererFactory {
     private PropertyRenderer instantiateRenderer(Class<? extends PropertyRenderer> rendererClazz) {
         try {
             return rendererClazz
-                    .getConstructor(Module.class, FlowGraph.class, VirtualFile.class)
-                    .newInstance(module, graph, file);
+                    .getConstructor(FlowGraph.class, GraphChangeListener.class)
+                    .newInstance(graph, listener);
         } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
             throw new ESBException(e);
         }

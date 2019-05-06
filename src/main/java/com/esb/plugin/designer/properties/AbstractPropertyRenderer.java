@@ -1,19 +1,15 @@
 package com.esb.plugin.designer.properties;
 
 import com.esb.plugin.graph.FlowGraph;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.esb.plugin.graph.manager.GraphChangeListener;
 
 public abstract class AbstractPropertyRenderer implements PropertyRenderer {
 
-    protected final Module module;
     protected final FlowGraph graph;
-    protected final VirtualFile file;
+    protected final GraphChangeListener listener;
 
-    public AbstractPropertyRenderer(final Module module, final FlowGraph graph, final VirtualFile file) {
-        this.file = file;
+    public AbstractPropertyRenderer(FlowGraph graph, GraphChangeListener listener) {
         this.graph = graph;
-        this.module = module;
+        this.listener = listener;
     }
-
 }

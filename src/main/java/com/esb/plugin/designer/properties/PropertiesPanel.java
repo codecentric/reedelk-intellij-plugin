@@ -4,10 +4,9 @@ import com.esb.plugin.commons.Icons;
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.designer.SelectListener;
 import com.esb.plugin.graph.FlowGraph;
+import com.esb.plugin.graph.manager.GraphChangeListener;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.NothingSelectedNode;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBTabbedPane;
 
@@ -18,18 +17,14 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
 
     private final MatteBorder border = BorderFactory.createMatteBorder(0, 10, 0, 0, getBackground());
 
-    private final Module module;
-    private final VirtualFile file;
 
-    public PropertiesPanel(Module module, VirtualFile file) {
+    public PropertiesPanel() {
         setBorder(border);
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        this.module = module;
-        this.file = file;
     }
 
     @Override
-    public void onSelect(FlowGraph graph, GraphNode node) {
+    public void onSelect(FlowGraph graph, GraphNode node, GraphChangeListener listener) {
         if (node instanceof NothingSelectedNode) return;
 
         ComponentData componentData = node.component();
@@ -38,9 +33,8 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
 
         JBPanel propertiesPanel = PropertyRendererFactory.get()
                 .component(componentData)
-                .module(module)
+                .listener(listener)
                 .graph(graph)
-                .file(file)
                 .build()
                 .render(node);
 
@@ -60,7 +54,7 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
     }
 
     @Override
-    public void onUnselect(FlowGraph graph, GraphNode node) {
+    public void onUnselect() {
         removeAll();
         revalidate();
         repaint();

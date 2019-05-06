@@ -29,8 +29,9 @@ public class DesignerEditor extends UserDataHolderBase implements FileEditor, Po
     DesignerEditor(Project project, VirtualFile file) {
         Module module = ModuleUtil.findModuleForFile(file, project);
         checkState(module != null, "Module must not be null");
-        editor = new DesignerEditorPanel(module, file);
-        manager = new GraphManager(project, module, file);
+        editor = new DesignerEditorPanel(module);
+        manager = new GraphManager(project, module, file, editor);
+        editor.addGraphChangeListener(manager);
     }
 
     @NotNull

@@ -2,12 +2,12 @@ package com.esb.plugin.component.generic;
 
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.designer.properties.AbstractPropertyRenderer;
+import com.esb.plugin.designer.properties.DefaultPropertyTracker;
 import com.esb.plugin.designer.properties.PropertyTracker;
 import com.esb.plugin.designer.properties.widget.PropertyBox;
 import com.esb.plugin.graph.FlowGraph;
+import com.esb.plugin.graph.manager.GraphChangeListener;
 import com.esb.plugin.graph.node.GraphNode;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBPanel;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,8 +15,8 @@ import javax.swing.*;
 
 public class GenericComponentPropertyRenderer extends AbstractPropertyRenderer {
 
-    public GenericComponentPropertyRenderer(Module module, FlowGraph graph, VirtualFile file) {
-        super(module, graph, file);
+    public GenericComponentPropertyRenderer(FlowGraph graph, GraphChangeListener listener) {
+        super(graph, listener);
     }
 
     @Override
@@ -37,11 +37,11 @@ public class GenericComponentPropertyRenderer extends AbstractPropertyRenderer {
 
     @NotNull
     private PropertyBox createPropertyBox(ComponentData componentData, String propertyName) {
-        PropertyTracker tracker = new PropertyTracker(componentData, propertyName);
+        PropertyTracker tracker = new DefaultPropertyTracker(componentData, propertyName, graph, listener);
 
         PropertyBox propertyBox = new PropertyBox(propertyName);
         propertyBox.setText(tracker.getValueAsString());
-        propertyBox.addListener(newText -> tracker.onPropertyChange(module, graph, file, newText));
+        propertyBox.addListener(newText -> tracker.onPropertyChange(newText));
         return propertyBox;
     }
 

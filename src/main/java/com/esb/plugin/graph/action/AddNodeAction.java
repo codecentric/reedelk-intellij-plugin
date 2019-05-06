@@ -37,7 +37,7 @@ public class AddNodeAction {
         this.connector = connector;
     }
 
-    public void add() {
+    public void execute() {
         // First Drawable added to the canvas (it is root)
         if (graph.isEmpty()) {
             connector.addPredecessor(null);

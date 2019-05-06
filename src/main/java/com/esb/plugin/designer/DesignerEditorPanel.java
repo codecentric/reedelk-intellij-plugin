@@ -2,11 +2,12 @@ package com.esb.plugin.designer;
 
 import com.esb.plugin.designer.properties.PropertiesPanel;
 import com.esb.plugin.designer.properties.ScrollablePropertiesPanel;
+import com.esb.plugin.graph.FlowGraph;
+import com.esb.plugin.graph.manager.GraphChangeListener;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
-import com.intellij.openapi.vfs.VirtualFile;
 
-public class DesignerEditorPanel extends ThreeComponentsSplitter {
+public class DesignerEditorPanel extends ThreeComponentsSplitter implements GraphChangeListener {
 
     private static final int PROPERTIES_PANEL_SIZE = 190;
 
@@ -14,21 +15,27 @@ public class DesignerEditorPanel extends ThreeComponentsSplitter {
 
     private final ScrollablePropertiesPanel properties;
 
-    DesignerEditorPanel(Module module, VirtualFile file) {
+    private CanvasAndPalettePanel canvasAndPalettePanel;
+
+    DesignerEditorPanel(Module module) {
         super(VERTICAL);
 
-        properties = createProperties(module, file);
+        PropertiesPanel panel = new PropertiesPanel();
+        properties = new ScrollablePropertiesPanel(panel);
 
-        CanvasAndPalettePanel canvasAndPalettePanel = new CanvasAndPalettePanel(module, file, properties);
+        canvasAndPalettePanel = new CanvasAndPalettePanel(module, properties);
 
         setInnerComponent(canvasAndPalettePanel);
         setLastComponent(properties);
         setLastSize(PROPERTIES_PANEL_SIZE);
     }
 
-    private ScrollablePropertiesPanel createProperties(Module module, VirtualFile file) {
-        PropertiesPanel properties = new PropertiesPanel(module, file);
-        return new ScrollablePropertiesPanel(properties);
+    @Override
+    public void onGraphChanged(FlowGraph updatedGraph) {
+        canvasAndPalettePanel.onGraphChanged(updatedGraph);
     }
 
+    public void addGraphChangeListener(GraphChangeListener listener) {
+        canvasAndPalettePanel.addGraphChangeListener(listener);
+    }
 }

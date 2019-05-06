@@ -7,7 +7,6 @@ import com.esb.plugin.graph.FlowGraphImpl;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.GraphNodeFactory;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
 
 import java.awt.*;
 import java.awt.dnd.DropTargetDropEvent;
@@ -21,8 +20,8 @@ public class DropActionHandler extends AbstractActionHandler {
     private final Graphics2D graphics;
     private final DropTargetDropEvent dropEvent;
 
-    public DropActionHandler(Module module, FlowGraph graph, Graphics2D graphics, DropTargetDropEvent dropEvent, VirtualFile relatedFile) {
-        super(module, relatedFile);
+    public DropActionHandler(Module module, FlowGraph graph, Graphics2D graphics, DropTargetDropEvent dropEvent) {
+        super(module);
         this.graph = graph;
         this.graphics = graphics;
         this.dropEvent = dropEvent;
@@ -46,18 +45,19 @@ public class DropActionHandler extends AbstractActionHandler {
 
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
 
-        GraphNode componentToAdd = GraphNodeFactory.get(descriptor);
+        GraphNode nodeToAdd = GraphNodeFactory.get(descriptor);
 
-        addDrawableToGraph(modifiableGraph, componentToAdd, dropPoint, graphics);
+        addNodeToGraph(modifiableGraph, nodeToAdd, dropPoint, graphics);
+
 
         if (modifiableGraph.isChanged()) {
             dropEvent.acceptDrop(ACTION_COPY_OR_MOVE);
-            notifyGraphChanged(modifiableGraph);
             return Optional.of(modifiableGraph);
-        }
 
-        dropEvent.rejectDrop();
-        return Optional.empty();
+        } else {
+            dropEvent.rejectDrop();
+            return Optional.empty();
+        }
     }
 
 }

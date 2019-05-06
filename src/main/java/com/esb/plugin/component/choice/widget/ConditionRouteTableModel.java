@@ -11,6 +11,10 @@ public class ConditionRouteTableModel extends AbstractTableModel {
 
     private List<ChoiceConditionRoutePair> conditionRouteList = new ArrayList<>();
 
+    public ConditionRouteTableModel() {
+
+    }
+
     @Override
     public int getRowCount() {
         return conditionRouteList.size();
@@ -69,10 +73,31 @@ public class ConditionRouteTableModel extends AbstractTableModel {
         conditionRouteList.add(pair);
         int rowChanged = conditionRouteList.size();
         fireTableRowsInserted(rowChanged, rowChanged);
+
+        /**
+
+         ComponentData component = node.component();
+
+         List<ChoiceConditionRoutePair> data = conditionRouteList;
+         Optional<ChoiceConditionRoutePair> otherwise = data
+         .stream()
+         .filter(choiceConditionRoutePair ->
+         choiceConditionRoutePair.getCondition().equals("otherwise"))
+         .findAny();
+         otherwise.ifPresent(choiceConditionRoutePair ->
+         component.set("otherwise", choiceConditionRoutePair.getNext()));
+
+         List<ChoiceConditionRoutePair> whenConditions = data
+         .stream()
+         .filter(choiceConditionRoutePair ->
+         !choiceConditionRoutePair.getCondition().equals("otherwise"))
+         .collect(toList());
+         component.set("when", whenConditions);
+
+         GraphChangeListener notifier = module.getMessageBus().syncPublisher(GraphChangeListener.TOPIC);
+         notifier.onGraphChanged(graph, file);
+         */
     }
 
-    List<ChoiceConditionRoutePair> getData() {
-        return conditionRouteList;
-    }
 
 }

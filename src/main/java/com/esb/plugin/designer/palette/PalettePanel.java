@@ -5,7 +5,6 @@ import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.component.ComponentTransferHandler;
 import com.esb.plugin.service.module.ComponentService;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.treeStructure.Tree;
@@ -19,7 +18,7 @@ public class PalettePanel extends JBPanel {
 
     private Tree tree;
 
-    public PalettePanel(Module module, VirtualFile file) {
+    public PalettePanel(Module module) {
         super(new BorderLayout());
 
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");

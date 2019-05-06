@@ -33,28 +33,29 @@ import static java.util.Arrays.stream;
  * - Properties updates:
  * - component's property changed
  */
-public class GraphManager implements FileEditorManagerListener, DocumentListener, GraphChangeNotifier, Disposable {
+public class GraphManager implements FileEditorManagerListener, DocumentListener, GraphChangeListener, Disposable {
 
     private static final Logger LOG = Logger.getInstance(GraphManager.class);
 
-    private Module module;
-    private FlowGraph graph;
+    private final Module module;
     private final Project project;
-    private VirtualFile jsonGraphFile;
-    private MessageBusConnection busConnection;
+    private final VirtualFile jsonGraphFile;
+    private final MessageBusConnection busConnection;
+    private final GraphChangeListener graphChangeListener;
 
-    public GraphManager(Project project, Module module, VirtualFile jsonGraphFile) {
+    private FlowGraph graph;
+
+    public GraphManager(Project project, Module module, VirtualFile jsonGraphFile, GraphChangeListener graphChangeListener) {
         this.module = module;
         this.project = project;
         this.jsonGraphFile = jsonGraphFile;
+        this.graphChangeListener = graphChangeListener;
 
         busConnection = module.getMessageBus().connect();
         busConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
-        busConnection.subscribe(GraphChangeNotifier.TOPIC, this);
 
         GraphDeserializer.deserialize(module, jsonGraphFile)
-                .ifPresent(((Consumer<FlowGraph>) fromFileGraph -> graph = fromFileGraph)
-                        .andThen(graph -> notifyGraphUpdated()));
+                .ifPresent(new UpdatedGraphConsumer());
     }
 
     /**
@@ -68,8 +69,7 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
         Document document = event.getDocument();
         String graphAsJson = document.getText();
         GraphDeserializer.deserialize(module, graphAsJson)
-                .ifPresent(((Consumer<FlowGraph>) fromFileGraph -> graph = fromFileGraph)
-                        .andThen(graph -> notifyGraphUpdated()));
+                .ifPresent(new UpdatedGraphConsumer());
     }
 
     @Override
@@ -84,17 +84,23 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
                 .ifPresent(document -> document.removeDocumentListener(GraphManager.this));
     }
 
+    /**
+     * Serializes the graph and writes it into the file managed by this Object.
+     *
+     * @param updatedGraph the graph
+     */
     @Override
-    public void onChange(FlowGraph graph, VirtualFile virtualFile) {
-        if (!virtualFile.equals(jsonGraphFile)) return;
-
+    public void onGraphChanged(FlowGraph updatedGraph) {
         // Serialize the graph to json and write it into the file
-        String json = GraphSerializer.serialize(graph);
+        String json = GraphSerializer.serialize(updatedGraph);
         try {
             WriteCommandAction
                     .writeCommandAction(project)
                     .run((ThrowableRunnable<Throwable>) () ->
                             jsonGraphFile.setBinaryContent(json.getBytes()));
+
+            this.graph = updatedGraph;
+
         } catch (Throwable throwable) {
             LOG.error("Could not write Graph's JSON data", throwable);
         }
@@ -103,11 +109,6 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
     @Override
     public void dispose() {
         busConnection.disconnect();
-    }
-
-    private void notifyGraphUpdated() {
-        JsonChangeNotifier notifier = module.getMessageBus().syncPublisher(JsonChangeNotifier.TOPIC);
-        notifier.onChange(graph, jsonGraphFile);
     }
 
     /**
@@ -119,6 +120,14 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
                 .findFirst()
                 .map(fileEditor -> (TextEditor) fileEditor)
                 .map(textEditor -> textEditor.getEditor().getDocument());
+    }
+
+    private class UpdatedGraphConsumer implements Consumer<FlowGraph> {
+        @Override
+        public void accept(FlowGraph updatedGraph) {
+            graph = updatedGraph;
+            graphChangeListener.onGraphChanged(graph);
+        }
     }
 
 }
