@@ -17,10 +17,10 @@ public class ChoiceRouteTable extends JBPanel implements AddConditionRouteListen
     private final Dimension tableScrollPaneDimension = new Dimension(0, 110);
     private final ConditionRouteTableModel model;
 
-    public ChoiceRouteTable(JComboBox routesComboBox, ConditionRouteTableModel model) {
+    public ChoiceRouteTable(ConditionRouteTableModel model) {
         this.model = model;
 
-        final TableColumnModel tableColumnModel = new ConditionRouteTableColumnModel(routesComboBox);
+        final TableColumnModel tableColumnModel = new ConditionRouteTableColumnModel();
         JBTable table = new JBTable(model, tableColumnModel);
         JScrollPane tableScrollPane = new JBScrollPane(table);
         tableScrollPane.setPreferredSize(tableScrollPaneDimension);

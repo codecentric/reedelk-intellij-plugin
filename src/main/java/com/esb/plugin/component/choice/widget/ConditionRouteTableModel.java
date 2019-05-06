@@ -46,7 +46,7 @@ public class ConditionRouteTableModel extends AbstractTableModel {
     @Override
     public boolean isCellEditable(int row, int col) {
         // row 0 and column 0 is not editable (this is the default route)
-        return row != 0 || col != 0;
+        return row != conditionRouteList.size() - 1 && col != 1;
     }
 
     @Override
