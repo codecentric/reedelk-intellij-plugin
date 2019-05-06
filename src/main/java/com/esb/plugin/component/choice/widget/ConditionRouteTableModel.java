@@ -1,18 +1,26 @@
 package com.esb.plugin.component.choice.widget;
 
+import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.choice.ChoiceConditionRoutePair;
+import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import static java.util.stream.Collectors.toList;
 
 public class ConditionRouteTableModel extends AbstractTableModel {
 
+    private final GraphNode node;
+    private final GraphSnapshot snapshot;
     private List<ChoiceConditionRoutePair> conditionRouteList = new ArrayList<>();
 
-    public ConditionRouteTableModel() {
-
+    public ConditionRouteTableModel(GraphNode node, GraphSnapshot snapshot) {
+        this.snapshot = snapshot;
+        this.node = node;
     }
 
     @Override
@@ -67,36 +75,36 @@ public class ConditionRouteTableModel extends AbstractTableModel {
                 conditionRoute.setNext((GraphNode) value);
                 break;
         }
+        snapshot.onDataChange();
     }
 
     void addConditionRoutePair(ChoiceConditionRoutePair pair) {
         conditionRouteList.add(pair);
+
         int rowChanged = conditionRouteList.size();
         fireTableRowsInserted(rowChanged, rowChanged);
 
-        /**
 
-         ComponentData component = node.component();
+        ComponentData component = node.component();
 
-         List<ChoiceConditionRoutePair> data = conditionRouteList;
-         Optional<ChoiceConditionRoutePair> otherwise = data
-         .stream()
-         .filter(choiceConditionRoutePair ->
-         choiceConditionRoutePair.getCondition().equals("otherwise"))
-         .findAny();
-         otherwise.ifPresent(choiceConditionRoutePair ->
-         component.set("otherwise", choiceConditionRoutePair.getNext()));
+        List<ChoiceConditionRoutePair> data = conditionRouteList;
+        Optional<ChoiceConditionRoutePair> otherwise = data
+                .stream()
+                .filter(choiceConditionRoutePair ->
+                        choiceConditionRoutePair.getCondition().equals("otherwise"))
+                .findAny();
+        otherwise.ifPresent(choiceConditionRoutePair ->
+                component.set("otherwise", choiceConditionRoutePair.getNext()));
 
-         List<ChoiceConditionRoutePair> whenConditions = data
-         .stream()
-         .filter(choiceConditionRoutePair ->
-         !choiceConditionRoutePair.getCondition().equals("otherwise"))
-         .collect(toList());
-         component.set("when", whenConditions);
+        List<ChoiceConditionRoutePair> whenConditions = data
+                .stream()
+                .filter(choiceConditionRoutePair ->
+                        !choiceConditionRoutePair.getCondition().equals("otherwise"))
+                .collect(toList());
 
-         GraphChangeListener notifier = module.getMessageBus().syncPublisher(GraphChangeListener.TOPIC);
-         notifier.onGraphChanged(graph, file);
-         */
+        component.set("when", whenConditions);
+
+        snapshot.onDataChange();
     }
 
 

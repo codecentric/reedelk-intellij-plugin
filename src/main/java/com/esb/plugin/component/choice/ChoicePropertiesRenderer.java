@@ -25,7 +25,7 @@ public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
     @Override
     public JBPanel render(GraphNode choiceNode) {
         AddConditionRoute addConditionRoute = new AddConditionRoute(createRoutesCombo(choiceNode));
-        ChoiceRouteTable choiceRouteTable = new ChoiceRouteTable(createRoutesCombo(choiceNode));
+        ChoiceRouteTable choiceRouteTable = new ChoiceRouteTable(createRoutesCombo(choiceNode), choiceNode, snapshot);
         addConditionRoute.addListener(choiceRouteTable);
 
         JBPanel choicePropertiesPanel = new JBPanel();

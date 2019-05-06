@@ -1,6 +1,8 @@
 package com.esb.plugin.component.choice.widget;
 
 import com.esb.plugin.component.choice.ChoiceConditionRoutePair;
+import com.esb.plugin.graph.GraphSnapshot;
+import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
@@ -15,14 +17,13 @@ import static java.awt.BorderLayout.NORTH;
 public class ChoiceRouteTable extends JBPanel implements AddConditionRouteListener {
 
     private final Dimension tableScrollPaneDimension = new Dimension(0, 110);
+    private final ConditionRouteTableModel model;
 
-    private final ConditionRouteTableModel tableModel;
+    public ChoiceRouteTable(JComboBox routesComboBox, GraphNode choiceNode, GraphSnapshot snapshot) {
+        this.model = new ConditionRouteTableModel(choiceNode, snapshot);
 
-    public ChoiceRouteTable(JComboBox routesComboBox) {
-        tableModel = new ConditionRouteTableModel();
         final TableColumnModel tableColumnModel = new ConditionRouteTableColumnModel(routesComboBox);
-        JBTable table = new JBTable(tableModel, tableColumnModel);
-
+        JBTable table = new JBTable(model, tableColumnModel);
         JScrollPane tableScrollPane = new JBScrollPane(table);
         tableScrollPane.setPreferredSize(tableScrollPaneDimension);
 
@@ -31,9 +32,8 @@ public class ChoiceRouteTable extends JBPanel implements AddConditionRouteListen
         add(Box.createVerticalGlue(), CENTER);
     }
 
-
     @Override
     public void addRouteCondition(ChoiceConditionRoutePair conditionRoute) {
-        tableModel.addConditionRoutePair(conditionRoute);
+        model.addConditionRoutePair(conditionRoute);
     }
 }
