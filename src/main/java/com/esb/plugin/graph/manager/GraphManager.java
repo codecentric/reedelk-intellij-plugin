@@ -76,13 +76,13 @@ public class GraphManager extends AncestorListenerAdapter implements FileEditorM
     @Override
     public void onDataChange(@NotNull FlowGraph graph) {
         String json = GraphSerializer.serialize(graph);
-        writeOnFile(json);
+        write(json);
     }
 
     @Override
     public void onStructureChange(@NotNull FlowGraph graph) {
         String json = GraphSerializer.serialize(graph);
-        writeOnFile(json);
+        write(json);
     }
 
     @Override
@@ -98,7 +98,7 @@ public class GraphManager extends AncestorListenerAdapter implements FileEditorM
      *
      * @param json the json string to be written in the document.
      */
-    private void writeOnFile(String json) {
+    private void write(String json) {
         try {
             WriteCommandAction.writeCommandAction(project)
                     .run((ThrowableRunnable<Throwable>) () -> document.setText(json));
