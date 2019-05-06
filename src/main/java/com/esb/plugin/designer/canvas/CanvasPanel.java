@@ -42,8 +42,8 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
     private SelectListener selectListener;
     private GraphNode selected = NOTHING_SELECTED;
 
-    private int offsetx;
-    private int offsety;
+    private int offsetX;
+    private int offsetY;
     private boolean updated;
     private boolean dragging;
 
@@ -60,9 +60,10 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
-        if (snapshot.getGraph() == null) return;
 
         FlowGraph graph = snapshot.getGraph();
+
+        if (snapshot.getGraph() == null) return;
 
         // Set Antialiasing
         Graphics2D g2 = (Graphics2D) graphics;
@@ -99,7 +100,7 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
     @Override
     public void mouseDragged(MouseEvent event) {
         if (dragging) {
-            selected.drag(event.getX() - offsetx, event.getY() - offsety);
+            selected.drag(event.getX() - offsetX, event.getY() - offsetY);
             repaint();
         }
     }
@@ -130,9 +131,9 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
             select(drawableWithinCoordinates.get());
             selected.dragging();
 
-            offsetx = event.getX() - selected.x();
-            offsety = event.getY() - selected.y();
-            selected.drag(event.getX() - offsetx, event.getY() - offsety);
+            offsetX = event.getX() - selected.x();
+            offsetY = event.getY() - selected.y();
+            selected.drag(event.getX() - offsetX, event.getY() - offsetY);
 
             dragging = true;
         }
@@ -176,6 +177,30 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
     }
 
     @Override
+    public void dragEnter(DropTargetDragEvent dtde) {
+        unselect();
+        repaint();
+    }
+
+    @Override
+    public void onDataChange(@NotNull FlowGraph graph) {
+        SwingUtilities.invokeLater(() -> {
+            updated = true;
+            invalidate();
+            repaint();
+        });
+    }
+
+    @Override
+    public void onStructureChange(@NotNull FlowGraph graph) {
+        SwingUtilities.invokeLater(() -> {
+            updated = true;
+            invalidate();
+            repaint();
+        });
+    }
+
+    @Override
     public void mouseClicked(MouseEvent e) {
         // nothing to do
     }
@@ -191,28 +216,21 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
     }
 
     @Override
-    public void dragEnter(DropTargetDragEvent dtde) {
-        unselect();
-        repaint();
-    }
-
-    @Override
     public void dragOver(DropTargetDragEvent dtde) {
-        // TODO: Might be useful
+        // nothing to do
     }
 
     @Override
     public void dropActionChanged(DropTargetDragEvent dtde) {
-        // TODO: Might be useful
+        // nothing to do
     }
 
     @Override
     public void dragExit(DropTargetEvent dte) {
-        System.out.println("Drag exit");
+        // nothing to do
     }
 
-
-    public void addSelectListener(SelectListener listener) {
+    public void addListener(SelectListener listener) {
         this.selectListener = listener;
     }
 
@@ -253,18 +271,4 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
         return (Graphics2D) getGraphics();
     }
 
-
-    @Override
-    public void onDataChange(@NotNull FlowGraph graph) {
-        // A property was changed
-    }
-
-    @Override
-    public void onStructureChange(@NotNull FlowGraph graph) {
-        SwingUtilities.invokeLater(() -> {
-            updated = true;
-            invalidate();
-            repaint();
-        });
-    }
 }

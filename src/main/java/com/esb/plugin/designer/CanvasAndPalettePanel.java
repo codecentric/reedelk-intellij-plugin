@@ -17,7 +17,7 @@ class CanvasAndPalettePanel extends ThreeComponentsSplitter {
 
     CanvasAndPalettePanel(Module module, GraphSnapshot snapshot, SelectListener selectListener) {
         canvas = new CanvasPanel(module, snapshot);
-        canvas.addSelectListener(selectListener);
+        canvas.addListener(selectListener);
         ScrollableCanvasPanel canvasPanel = new ScrollableCanvasPanel(canvas);
 
         palette = new PalettePanel(module);
