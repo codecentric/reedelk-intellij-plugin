@@ -42,16 +42,16 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
     private final Project project;
     private final VirtualFile graphFile;
     private final GraphSnapshot snapshot;
-    private final MessageBusConnection busConnection;
+    private final MessageBusConnection bus;
 
-    public GraphManager(Project project, Module module, VirtualFile graphFile, GraphSnapshot snapshot) {
+    public GraphManager(@NotNull Project project, @NotNull Module module, @NotNull VirtualFile graphFile, @NotNull GraphSnapshot snapshot) {
         this.module = module;
         this.project = project;
         this.snapshot = snapshot;
         this.graphFile = graphFile;
 
-        busConnection = module.getMessageBus().connect();
-        busConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
+        bus = project.getMessageBus().connect();
+        bus.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
 
         this.snapshot.addListener(this);
 
@@ -75,19 +75,23 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
 
     @Override
     public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
-        findRelatedEditorDocument(source, file)
-                .ifPresent(document -> document.addDocumentListener(GraphManager.this));
+        if (file.equals(graphFile)) {
+            findRelatedEditorDocument(source, file)
+                    .ifPresent(document -> document.addDocumentListener(GraphManager.this));
+        }
     }
 
     @Override
     public void fileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
-        findRelatedEditorDocument(source, file)
-                .ifPresent(document -> document.removeDocumentListener(GraphManager.this));
+        if (file.equals(graphFile)) {
+            findRelatedEditorDocument(source, file)
+                    .ifPresent(document -> document.removeDocumentListener(GraphManager.this));
+        }
     }
 
     @Override
     public void dispose() {
-        busConnection.disconnect();
+        bus.disconnect();
     }
 
     @Override
