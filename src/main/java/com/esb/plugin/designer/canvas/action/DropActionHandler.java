@@ -53,7 +53,7 @@ public class DropActionHandler extends AbstractActionHandler {
 
         if (modifiableGraph.isChanged()) {
             dropEvent.acceptDrop(ACTION_COPY_OR_MOVE);
-            snapshot.updateSnapshot(modifiableGraph);
+            snapshot.updateSnapshot(this, modifiableGraph);
         } else {
             dropEvent.rejectDrop();
         }

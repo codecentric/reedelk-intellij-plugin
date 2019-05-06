@@ -65,7 +65,7 @@ public class MoveActionHandler extends AbstractActionHandler {
 
         // 5. If the copy of the graph was changed, then update the graph
         if (updatedGraph.isChanged()) {
-            snapshot.updateSnapshot(updatedGraph);
+            snapshot.updateSnapshot(this, updatedGraph);
 
         } else {
             // 6. Add back the node to the scope if the original graph was not changed.

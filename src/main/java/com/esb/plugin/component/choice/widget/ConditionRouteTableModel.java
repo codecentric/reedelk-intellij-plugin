@@ -6,7 +6,6 @@ import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 
 import javax.swing.table.AbstractTableModel;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,9 +15,10 @@ public class ConditionRouteTableModel extends AbstractTableModel {
 
     private final GraphNode node;
     private final GraphSnapshot snapshot;
-    private List<ChoiceConditionRoutePair> conditionRouteList = new ArrayList<>();
+    private final List<ChoiceConditionRoutePair> conditionRouteList;
 
-    public ConditionRouteTableModel(GraphNode node, GraphSnapshot snapshot) {
+    public ConditionRouteTableModel(List<ChoiceConditionRoutePair> conditionRouteList, GraphNode node, GraphSnapshot snapshot) {
+        this.conditionRouteList = conditionRouteList;
         this.snapshot = snapshot;
         this.node = node;
     }

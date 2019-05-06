@@ -49,14 +49,13 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
         this.project = project;
         this.snapshot = snapshot;
         this.graphFile = graphFile;
+        this.snapshot.addListener(this);
 
         bus = project.getMessageBus().connect();
         bus.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
 
-        this.snapshot.addListener(this);
-
         GraphDeserializer.deserialize(module, graphFile)
-                .ifPresent(snapshot::updateSnapshot);
+                .ifPresent(updatedGraph -> snapshot.updateSnapshot(this, updatedGraph));
     }
 
     /**
@@ -70,7 +69,7 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
         Document document = event.getDocument();
         String graphAsJson = document.getText();
         GraphDeserializer.deserialize(module, graphAsJson)
-                .ifPresent(snapshot::updateSnapshot);
+                .ifPresent(updatedGraph -> snapshot.updateSnapshot(this, updatedGraph));
     }
 
     @Override

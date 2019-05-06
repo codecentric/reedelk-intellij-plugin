@@ -10,10 +10,12 @@ public class GraphSnapshot {
     private FlowGraph graph;
     private List<SnapshotListener> listeners = new ArrayList<>();
 
-    public void updateSnapshot(@NotNull FlowGraph graph) {
+    public void updateSnapshot(Object notifier, @NotNull FlowGraph graph) {
         this.graph = graph;
         for (SnapshotListener listener : listeners) {
-            listener.onStructureChange(graph);
+            if (listener != notifier) {
+                listener.onStructureChange(graph);
+            }
         }
     }
 
