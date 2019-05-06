@@ -1,6 +1,8 @@
 package com.esb.plugin.graph.manager;
 
 import com.esb.plugin.graph.FlowGraph;
+import com.esb.plugin.graph.GraphSnapshot;
+import com.esb.plugin.graph.SnapshotListener;
 import com.esb.plugin.graph.deserializer.GraphDeserializer;
 import com.esb.plugin.graph.serializer.GraphSerializer;
 import com.intellij.openapi.Disposable;
@@ -21,7 +23,6 @@ import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 
 import static java.util.Arrays.stream;
 
@@ -33,29 +34,29 @@ import static java.util.Arrays.stream;
  * - Properties updates:
  * - component's property changed
  */
-public class GraphManager implements FileEditorManagerListener, DocumentListener, GraphChangeListener, Disposable {
+public class GraphManager implements FileEditorManagerListener, DocumentListener, SnapshotListener, Disposable {
 
     private static final Logger LOG = Logger.getInstance(GraphManager.class);
 
     private final Module module;
     private final Project project;
-    private final VirtualFile jsonGraphFile;
+    private final VirtualFile graphFile;
+    private final GraphSnapshot snapshot;
     private final MessageBusConnection busConnection;
-    private final GraphChangeListener graphChangeListener;
 
-    private FlowGraph graph;
-
-    public GraphManager(Project project, Module module, VirtualFile jsonGraphFile, GraphChangeListener graphChangeListener) {
+    public GraphManager(Project project, Module module, VirtualFile graphFile, GraphSnapshot snapshot) {
         this.module = module;
         this.project = project;
-        this.jsonGraphFile = jsonGraphFile;
-        this.graphChangeListener = graphChangeListener;
+        this.snapshot = snapshot;
+        this.graphFile = graphFile;
 
         busConnection = module.getMessageBus().connect();
         busConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
 
-        GraphDeserializer.deserialize(module, jsonGraphFile)
-                .ifPresent(new UpdatedGraphConsumer());
+        this.snapshot.addListener(this);
+
+        GraphDeserializer.deserialize(module, graphFile)
+                .ifPresent(snapshot::updateSnapshot);
     }
 
     /**
@@ -69,7 +70,7 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
         Document document = event.getDocument();
         String graphAsJson = document.getText();
         GraphDeserializer.deserialize(module, graphAsJson)
-                .ifPresent(new UpdatedGraphConsumer());
+                .ifPresent(snapshot::updateSnapshot);
     }
 
     @Override
@@ -84,31 +85,31 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
                 .ifPresent(document -> document.removeDocumentListener(GraphManager.this));
     }
 
-    /**
-     * Serializes the graph and writes it into the file managed by this Object.
-     *
-     * @param updatedGraph the graph
-     */
-    @Override
-    public void onGraphChanged(FlowGraph updatedGraph) {
-        // Serialize the graph to json and write it into the file
-        String json = GraphSerializer.serialize(updatedGraph);
-        try {
-            WriteCommandAction
-                    .writeCommandAction(project)
-                    .run((ThrowableRunnable<Throwable>) () ->
-                            jsonGraphFile.setBinaryContent(json.getBytes()));
-
-            this.graph = updatedGraph;
-
-        } catch (Throwable throwable) {
-            LOG.error("Could not write Graph's JSON data", throwable);
-        }
-    }
-
     @Override
     public void dispose() {
         busConnection.disconnect();
+    }
+
+    @Override
+    public void onDataChange(@NotNull FlowGraph graph) {
+        serialize(graph);
+    }
+
+    @Override
+    public void onStructureChange(@NotNull FlowGraph graph) {
+        serialize(graph);
+    }
+
+    private void serialize(FlowGraph graph) {
+        // Serialize the graph to json and write it into the file
+        String json = GraphSerializer.serialize(graph);
+        try {
+            WriteCommandAction.writeCommandAction(project)
+                    .run((ThrowableRunnable<Throwable>) () ->
+                            graphFile.setBinaryContent(json.getBytes()));
+        } catch (Throwable throwable) {
+            LOG.error("Could not write Graph's JSON data", throwable);
+        }
     }
 
     /**
@@ -120,14 +121,6 @@ public class GraphManager implements FileEditorManagerListener, DocumentListener
                 .findFirst()
                 .map(fileEditor -> (TextEditor) fileEditor)
                 .map(textEditor -> textEditor.getEditor().getDocument());
-    }
-
-    private class UpdatedGraphConsumer implements Consumer<FlowGraph> {
-        @Override
-        public void accept(FlowGraph updatedGraph) {
-            graph = updatedGraph;
-            graphChangeListener.onGraphChanged(graph);
-        }
     }
 
 }

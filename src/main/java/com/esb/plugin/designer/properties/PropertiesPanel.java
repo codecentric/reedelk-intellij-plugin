@@ -3,8 +3,7 @@ package com.esb.plugin.designer.properties;
 import com.esb.plugin.commons.Icons;
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.designer.SelectListener;
-import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.manager.GraphChangeListener;
+import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.NothingSelectedNode;
 import com.intellij.ui.components.JBPanel;
@@ -24,7 +23,7 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
     }
 
     @Override
-    public void onSelect(FlowGraph graph, GraphNode node, GraphChangeListener listener) {
+    public void onSelect(GraphSnapshot snapshot, GraphNode node) {
         if (node instanceof NothingSelectedNode) return;
 
         ComponentData componentData = node.component();
@@ -33,8 +32,7 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
 
         JBPanel propertiesPanel = PropertyRendererFactory.get()
                 .component(componentData)
-                .listener(listener)
-                .graph(graph)
+                .snapshot(snapshot)
                 .build()
                 .render(node);
 

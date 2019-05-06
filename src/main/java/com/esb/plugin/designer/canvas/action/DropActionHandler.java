@@ -4,6 +4,7 @@ import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
 import com.esb.plugin.graph.FlowGraphImpl;
+import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.GraphNodeFactory;
 import com.intellij.openapi.module.Module;
@@ -16,32 +17,32 @@ import static java.awt.dnd.DnDConstants.ACTION_COPY_OR_MOVE;
 
 public class DropActionHandler extends AbstractActionHandler {
 
-    private final FlowGraph graph;
     private final Graphics2D graphics;
+    private final GraphSnapshot snapshot;
     private final DropTargetDropEvent dropEvent;
 
-    public DropActionHandler(Module module, FlowGraph graph, Graphics2D graphics, DropTargetDropEvent dropEvent) {
+    public DropActionHandler(Module module, GraphSnapshot snapshot, Graphics2D graphics, DropTargetDropEvent dropEvent) {
         super(module);
-        this.graph = graph;
+        this.snapshot = snapshot;
         this.graphics = graphics;
         this.dropEvent = dropEvent;
     }
 
-    public Optional<FlowGraph> handle() {
+    public void handle() {
 
         Optional<ComponentDescriptor> optionalDescriptor =
                 DropActionHandlerUtils.getComponentDescriptorFrom(dropEvent);
 
         if (!optionalDescriptor.isPresent()) {
             dropEvent.rejectDrop();
-            return Optional.empty();
+            return;
         }
 
         Point dropPoint = dropEvent.getLocation();
 
         ComponentDescriptor descriptor = optionalDescriptor.get();
 
-        FlowGraph copy = graph == null ? new FlowGraphImpl() : graph.copy();
+        FlowGraph copy = snapshot.getGraph() == null ? new FlowGraphImpl() : snapshot.getGraph().copy();
 
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
 
@@ -52,11 +53,9 @@ public class DropActionHandler extends AbstractActionHandler {
 
         if (modifiableGraph.isChanged()) {
             dropEvent.acceptDrop(ACTION_COPY_OR_MOVE);
-            return Optional.of(modifiableGraph);
-
+            snapshot.updateSnapshot(modifiableGraph);
         } else {
             dropEvent.rejectDrop();
-            return Optional.empty();
         }
     }
 

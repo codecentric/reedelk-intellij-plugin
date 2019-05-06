@@ -1,15 +1,12 @@
 package com.esb.plugin.designer.properties;
 
-import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.manager.GraphChangeListener;
+import com.esb.plugin.graph.GraphSnapshot;
 
 public abstract class AbstractPropertyRenderer implements PropertyRenderer {
 
-    protected final FlowGraph graph;
-    protected final GraphChangeListener listener;
+    protected final GraphSnapshot snapshot;
 
-    public AbstractPropertyRenderer(FlowGraph graph, GraphChangeListener listener) {
-        this.graph = graph;
-        this.listener = listener;
+    public AbstractPropertyRenderer(GraphSnapshot snapshot) {
+        this.snapshot = snapshot;
     }
 }

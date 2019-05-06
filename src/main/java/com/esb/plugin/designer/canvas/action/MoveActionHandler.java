@@ -3,6 +3,7 @@ package com.esb.plugin.designer.canvas.action;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
 import com.esb.plugin.graph.FlowGraphImpl;
+import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.action.RemoveNodeAction;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.NothingSelectedNode;
@@ -15,20 +16,20 @@ import java.util.Optional;
 
 public class MoveActionHandler extends AbstractActionHandler {
 
-    private final FlowGraph graph;
+    private final GraphSnapshot snapshot;
     private final Point movePoint;
     private final GraphNode selected;
     private final Graphics2D graphics;
 
-    public MoveActionHandler(Module module, FlowGraph graph, Graphics2D graphics, GraphNode selected, Point movePoint) {
+    public MoveActionHandler(Module module, GraphSnapshot snapshot, Graphics2D graphics, GraphNode selected, Point movePoint) {
         super(module);
-        this.graph = graph;
+        this.snapshot = snapshot;
         this.graphics = graphics;
         this.movePoint = movePoint;
         this.selected = selected;
     }
 
-    public Optional<FlowGraph> handle() {
+    public void handle() {
         int dragX = movePoint.x;
         int dragY = movePoint.y;
 
@@ -43,16 +44,12 @@ public class MoveActionHandler extends AbstractActionHandler {
                 dragY > selected.y() - Math.floorDiv(selected.height(graphics), 2) &&
                         dragY < selected.y() + Math.floorDiv(selected.height(graphics), 2);
 
-        if (withinX && withinY) {
-            return Optional.empty();
-        }
+        if (withinX && withinY) return;
 
-        if (selected instanceof NothingSelectedNode) {
-            return Optional.empty();
-        }
+        if (selected instanceof NothingSelectedNode) return;
 
         // 1. Copy the original graph
-        FlowGraph copy = graph == null ? new FlowGraphImpl() : graph.copy();
+        FlowGraph copy = snapshot.getGraph() == null ? new FlowGraphImpl() : snapshot.getGraph().copy();
 
         // 2. Remove the dropped node from the copy graph
         RemoveNodeAction componentRemover = new RemoveNodeAction(copy, selected);
@@ -68,12 +65,11 @@ public class MoveActionHandler extends AbstractActionHandler {
 
         // 5. If the copy of the graph was changed, then update the graph
         if (updatedGraph.isChanged()) {
-            return Optional.of(updatedGraph);
+            snapshot.updateSnapshot(updatedGraph);
 
         } else {
             // 6. Add back the node to the scope if the original graph was not changed.
             selectedScope.ifPresent(scopedDrawable -> scopedDrawable.addToScope(selected));
-            return Optional.empty();
         }
     }
 }

@@ -11,8 +11,7 @@ import com.esb.plugin.component.flowreference.FlowReferencePropertyRenderer;
 import com.esb.plugin.component.forkjoin.ForkJoinPropertyRenderer;
 import com.esb.plugin.component.generic.GenericComponentPropertyRenderer;
 import com.esb.plugin.component.stop.StopPropertyRenderer;
-import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.manager.GraphChangeListener;
+import com.esb.plugin.graph.GraphSnapshot;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
@@ -34,9 +33,8 @@ public class PropertyRendererFactory {
         RENDERER = Collections.unmodifiableMap(tmp);
     }
 
-    private FlowGraph graph;
+    private GraphSnapshot snapshot;
     private ComponentData componentData;
-    private GraphChangeListener listener;
 
     private PropertyRendererFactory() {
     }
@@ -45,8 +43,8 @@ public class PropertyRendererFactory {
         return new PropertyRendererFactory();
     }
 
-    public PropertyRendererFactory graph(FlowGraph graph) {
-        this.graph = graph;
+    public PropertyRendererFactory snapshot(GraphSnapshot snapshot) {
+        this.snapshot = snapshot;
         return this;
     }
 
@@ -55,14 +53,8 @@ public class PropertyRendererFactory {
         return this;
     }
 
-    public PropertyRendererFactory listener(GraphChangeListener listener) {
-        this.listener = listener;
-        return this;
-    }
-
     public PropertyRenderer build() {
-        checkNotNull(graph, "graph");
-        checkNotNull(listener, "listener");
+        checkNotNull(snapshot, "snapshot");
         checkNotNull(componentData, "componentData");
 
         String fullyQualifiedName = componentData.getFullyQualifiedName();
@@ -73,8 +65,8 @@ public class PropertyRendererFactory {
     private PropertyRenderer instantiateRenderer(Class<? extends PropertyRenderer> rendererClazz) {
         try {
             return rendererClazz
-                    .getConstructor(FlowGraph.class, GraphChangeListener.class)
-                    .newInstance(graph, listener);
+                    .getConstructor(GraphSnapshot.class)
+                    .newInstance(snapshot);
         } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
             throw new ESBException(e);
         }

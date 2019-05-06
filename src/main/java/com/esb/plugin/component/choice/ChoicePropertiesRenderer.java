@@ -5,8 +5,7 @@ import com.esb.plugin.component.choice.widget.AddConditionRoute;
 import com.esb.plugin.component.choice.widget.ChoiceRouteTable;
 import com.esb.plugin.component.choice.widget.RouteComboBox;
 import com.esb.plugin.designer.properties.AbstractPropertyRenderer;
-import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.manager.GraphChangeListener;
+import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.ui.components.JBPanel;
 
@@ -19,8 +18,8 @@ import static java.awt.BorderLayout.NORTH;
 
 public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
 
-    public ChoicePropertiesRenderer(FlowGraph graph, GraphChangeListener listener) {
-        super(graph, listener);
+    public ChoicePropertiesRenderer(GraphSnapshot snapshot) {
+        super(snapshot);
     }
 
     @Override
@@ -47,7 +46,7 @@ public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
 
     private JComboBox<GraphNode> createRoutesCombo(GraphNode node) {
         JComboBox<GraphNode> routesCombo = new RouteComboBox();
-        graph.successors(node).forEach(routesCombo::addItem);
+        snapshot.getGraph().successors(node).forEach(routesCombo::addItem);
         return routesCombo;
     }
 

@@ -6,8 +6,9 @@ import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.canvas.action.DropActionHandler;
 import com.esb.plugin.designer.canvas.action.MoveActionHandler;
 import com.esb.plugin.graph.FlowGraph;
+import com.esb.plugin.graph.GraphSnapshot;
+import com.esb.plugin.graph.SnapshotListener;
 import com.esb.plugin.graph.layout.FlowGraphLayout;
-import com.esb.plugin.graph.manager.GraphChangeListener;
 import com.esb.plugin.graph.node.Drawable;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.NothingSelectedNode;
@@ -31,34 +32,37 @@ import java.util.Optional;
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
-public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseListener, DropTargetListener, GraphChangeListener {
+public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseListener, DropTargetListener, SnapshotListener {
 
     private final JBColor BACKGROUND_COLOR = JBColor.WHITE;
     private final GraphNode NOTHING_SELECTED = new NothingSelectedNode();
     private final Module module;
 
-    private FlowGraph graph;
-    private GraphNode selected = NOTHING_SELECTED;
+    private GraphSnapshot snapshot;
     private SelectListener selectListener;
-    private GraphChangeListener graphChangeListener;
+    private GraphNode selected = NOTHING_SELECTED;
 
     private int offsetx;
     private int offsety;
     private boolean updated;
     private boolean dragging;
 
-    public CanvasPanel(Module module) {
+    public CanvasPanel(Module module, GraphSnapshot snapshot) {
         setBackground(BACKGROUND_COLOR);
         addMouseListener(this);
         addMouseMotionListener(this);
 
         this.module = module;
+        this.snapshot = snapshot;
+        this.snapshot.addListener(this);
     }
 
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
-        if (graph == null) return;
+        if (snapshot.getGraph() == null) return;
+
+        FlowGraph graph = snapshot.getGraph();
 
         // Set Antialiasing
         Graphics2D g2 = (Graphics2D) graphics;
@@ -66,9 +70,13 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
 
         // We compute again the graph layout if and only if it was updated.
         if (updated) {
+
             FlowGraphLayout.compute(graph, g2);
+
             DebugGraphNodesPosition.debug(graph);// TODO: debug only
+
             adjustWindowSize();
+
             updated = false;
         }
 
@@ -86,11 +94,6 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
                 .filter(GraphNode::isSelected)
                 .findFirst()
                 .ifPresent(drawable -> drawable.draw(graph, g2, CanvasPanel.this));
-    }
-
-    @Override
-    public void onGraphChanged(@NotNull FlowGraph updatedGraph) {
-        onGraphUpdated(updatedGraph);
     }
 
     @Override
@@ -151,16 +154,25 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
 
         Point dragPoint = new Point(dragX, dragY);
 
-        MoveActionHandler delegate = new MoveActionHandler(module, graph, getGraphics2D(), selected, dragPoint);
-        delegate.handle().ifPresent(this::onGraphUpdated);
+        new MoveActionHandler(
+                module,
+                snapshot,
+                getGraphics2D(),
+                selected,
+                dragPoint)
+                .handle();
 
         repaint();
     }
 
     @Override
     public void drop(DropTargetDropEvent dropEvent) {
-        DropActionHandler delegate = new DropActionHandler(module, graph, getGraphics2D(), dropEvent);
-        delegate.handle().ifPresent(this::onGraphUpdated);
+        new DropActionHandler(
+                module,
+                snapshot,
+                getGraphics2D(),
+                dropEvent)
+                .handle();
     }
 
     @Override
@@ -204,16 +216,12 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
         this.selectListener = listener;
     }
 
-    public void addGraphChangeListener(GraphChangeListener graphChangeListener) {
-        this.graphChangeListener = graphChangeListener;
-    }
-
     /**
-     * If the graph has grown beyond the current window size, we must adapt-it.
+     * If the graph has grown beyond the current window size, we must adapt it.
      */
     private void adjustWindowSize() {
-        int maxX = graph.nodes().stream().mapToInt(Drawable::x).max().getAsInt();
-        int maxY = graph.nodes().stream().mapToInt(Drawable::y).max().getAsInt();
+        int maxX = snapshot.getGraph().nodes().stream().mapToInt(Drawable::x).max().getAsInt();
+        int maxY = snapshot.getGraph().nodes().stream().mapToInt(Drawable::y).max().getAsInt();
         int newSizeX = maxX + Tile.WIDTH;
         int newSizeY = maxY + Tile.HEIGHT;
         Dimension newDimension = new Dimension(newSizeX, newSizeY);
@@ -222,8 +230,8 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
     }
 
     private Optional<GraphNode> getDrawableWithinCoordinates(int x, int y) {
-        return graph == null ? Optional.empty() :
-                graph.nodes()
+        return snapshot.getGraph() == null ? Optional.empty() :
+                snapshot.getGraph().nodes()
                         .stream()
                         .filter(drawable -> drawable.contains(this, x, y))
                         .findFirst();
@@ -238,25 +246,25 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
     private void select(GraphNode drawable) {
         selected = drawable;
         selected.selected();
-        selectListener.onSelect(graph, selected, graphChangeListener);
+        selectListener.onSelect(snapshot, selected);
     }
 
     private Graphics2D getGraphics2D() {
         return (Graphics2D) getGraphics();
     }
 
-    private void onGraphUpdated(FlowGraph updatedGraph) {
 
-        if (graphChangeListener != null) {
-            graphChangeListener.onGraphChanged(graph);
-        }
+    @Override
+    public void onDataChange(@NotNull FlowGraph graph) {
+        // A property was changed
+    }
 
+    @Override
+    public void onStructureChange(@NotNull FlowGraph graph) {
         SwingUtilities.invokeLater(() -> {
-            graph = updatedGraph;
             updated = true;
             invalidate();
             repaint();
         });
     }
-
 }
