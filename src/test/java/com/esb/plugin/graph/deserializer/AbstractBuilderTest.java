@@ -35,7 +35,14 @@ public abstract class AbstractBuilderTest {
         graph.root(root);
     }
 
-    public void assertSuccessorsAre(FlowGraph graph, GraphNode target, String... successorsComponentNames) {
+    protected void assertThatComponentHasName(GraphNode target, String expectedName) {
+        assertThat(target).isNotNull();
+        ComponentData componentData = target.component();
+        assertThat(componentData).isNotNull();
+        assertThat(componentData.getFullyQualifiedName()).isEqualTo(expectedName);
+    }
+
+    protected void assertSuccessorsAre(FlowGraph graph, GraphNode target, String... successorsComponentNames) {
         int numberOfSuccessors = successorsComponentNames.length;
         List<GraphNode> successors = graph.successors(target);
         assertThat(successors).isNotNull().hasSize(numberOfSuccessors);
@@ -49,7 +56,7 @@ public abstract class AbstractBuilderTest {
         assertThat(toBeFound).isEmpty();
     }
 
-    public void assertPredecessorsAre(FlowGraph graph, GraphNode target, String... predecessorsComponentsNames) {
+    protected void assertPredecessorsAre(FlowGraph graph, GraphNode target, String... predecessorsComponentsNames) {
         int numberOfPredecessors = predecessorsComponentsNames.length;
 
         List<GraphNode> predecessors = graph.predecessors(target);
@@ -64,18 +71,11 @@ public abstract class AbstractBuilderTest {
         assertThat(toBeFound).isEmpty();
     }
 
-    public void assertThatComponentHasName(GraphNode target, String expectedName) {
-        assertThat(target).isNotNull();
-        ComponentData componentData = target.component();
-        assertThat(componentData).isNotNull();
-        assertThat(componentData.getFullyQualifiedName()).isEqualTo(expectedName);
-    }
-
-    public GraphNode firstSuccessorOf(FlowGraph graph, GraphNode target) {
+    protected GraphNode firstSuccessorOf(FlowGraph graph, GraphNode target) {
         return graph.successors(target).stream().findFirst().get();
     }
 
-    public GraphNode getNodeHavingComponentName(Collection<GraphNode> drawables, String componentName) {
+    protected GraphNode getNodeHavingComponentName(Collection<GraphNode> drawables, String componentName) {
         for (GraphNode drawable : drawables) {
             ComponentData componentData = drawable.component();
             if (componentName.equals(componentData.getFullyQualifiedName())) {
@@ -85,7 +85,7 @@ public abstract class AbstractBuilderTest {
         throw new RuntimeException("Could not find: " + componentName);
     }
 
-    public ComponentData mockComponent(String fullyQualifiedName, Class<? extends GraphNode> nodeClazz) {
+    protected ComponentData mockComponent(String fullyQualifiedName, Class<? extends GraphNode> nodeClazz) {
         ComponentData componentData = new ComponentData(ComponentDescriptor.create()
                 .fullyQualifiedName(fullyQualifiedName)
                 .build());
