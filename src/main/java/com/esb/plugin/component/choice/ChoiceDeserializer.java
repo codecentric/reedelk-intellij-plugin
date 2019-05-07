@@ -12,8 +12,8 @@ import com.esb.plugin.graph.utils.CollectNodesBetween;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.esb.internal.commons.JsonParser.Choice;
 import static com.esb.internal.commons.JsonParser.Implementor;
@@ -33,11 +33,7 @@ public class ChoiceDeserializer extends AbstractDeserializer {
 
         ChoiceNode choiceNode = context.instantiateGraphNode(name);
 
-        ComponentData choiceNodeComponentData = choiceNode.component();
-
-        List<ChoiceConditionRoutePair> conditionAndRoutes = new ArrayList<>();
-
-        choiceNodeComponentData.set("when", conditionAndRoutes);
+        Map<GraphNode, String> preNodeConditionMap = new HashMap<>();
 
         graph.add(parent, choiceNode);
 
@@ -50,9 +46,9 @@ public class ChoiceDeserializer extends AbstractDeserializer {
 
             JSONArray next = Choice.getNext(whenComponent);
 
-            GraphNode currentNode = deserializeWithActionOnFirst(next, choiceNode, node -> {
+            GraphNode currentNode = deserialize(next, choiceNode, node -> {
                 String condition = Choice.getCondition(whenComponent);
-                conditionAndRoutes.add(new ChoiceConditionRoutePair(condition, node));
+                preNodeConditionMap.put(node, condition);
             });
 
             // Last node is connected to stop node.
@@ -62,13 +58,23 @@ public class ChoiceDeserializer extends AbstractDeserializer {
         // Otherwise
         JSONArray otherwise = Choice.getOtherwise(componentDefinition);
 
-        GraphNode currentNode = deserializeWithActionOnFirst(otherwise, choiceNode,
-                node -> choiceNodeComponentData.set("otherwise", node));
+        GraphNode currentNode = deserialize(otherwise, choiceNode, node ->
+                preNodeConditionMap.put(node, "otherwise"));
 
         // Last node is connected to stop node.
         graph.add(currentNode, stopNode);
 
-        CollectNodesBetween.them(graph, choiceNode, stopNode).forEach(choiceNode::addToScope);
+        CollectNodesBetween.them(graph, choiceNode, stopNode)
+                .forEach(choiceNode::addToScope);
+
+        ComponentData choiceData = choiceNode.component();
+        Map<GraphNode, String> nodeConditionMap = (Map<GraphNode, String>) choiceData.get("nodeConditionMap");
+
+        for (Map.Entry<GraphNode, String> entry : preNodeConditionMap.entrySet()) {
+            GraphNode node = entry.getKey();
+            String condition = entry.getValue();
+            nodeConditionMap.replace(node, condition);
+        }
 
         return stopNode;
     }
@@ -77,7 +83,7 @@ public class ChoiceDeserializer extends AbstractDeserializer {
         void perform(GraphNode node);
     }
 
-    private GraphNode deserializeWithActionOnFirst(JSONArray arrayToDeserialize, GraphNode parent, Action actionOnFirst) {
+    private GraphNode deserialize(JSONArray arrayToDeserialize, GraphNode parent, Action actionOnFirst) {
         GraphNode currentNode = parent;
         for (int i = 0; i < arrayToDeserialize.length(); i++) {
             JSONObject currentComponentDef = arrayToDeserialize.getJSONObject(i);

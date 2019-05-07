@@ -44,12 +44,14 @@ public class FlowGraphImpl implements FlowGraph {
             graph = new DirectedGraph<>(n2);
         } else {
             graph.putEdge(n1, n2);
+            n1.onSuccessorAdded(n2);
         }
     }
 
     @Override
     public void add(@NotNull GraphNode n1, @NotNull GraphNode n2, int index) {
         graph.putEdge(n1, n2, index);
+        n1.onSuccessorAdded(n2);
     }
 
     @Override
@@ -62,6 +64,7 @@ public class FlowGraphImpl implements FlowGraph {
         checkArgument(n1 != null, "n1");
         checkArgument(n2 != null, "n2");
         graph.removeEdge(n1, n2);
+        n1.onSuccessorRemoved(n2);
     }
 
     @Override

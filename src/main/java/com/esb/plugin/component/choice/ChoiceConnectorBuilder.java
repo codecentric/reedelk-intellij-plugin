@@ -12,28 +12,26 @@ import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.GraphNodeFactory;
 import com.intellij.openapi.module.Module;
 
-import java.util.Collections;
+import java.util.Map;
 
 public class ChoiceConnectorBuilder implements ConnectorBuilder {
 
     @Override
     public Connector build(Module module, FlowGraph graph, GraphNode componentToAdd) {
 
-        FlowGraph choiceGraph = new FlowGraphImpl();
-
-        choiceGraph.root(componentToAdd);
-
         FlowReferenceNode placeholder = GraphNodeFactory.get(module, FlowReference.class.getName());
 
-        choiceGraph.add(componentToAdd, placeholder);
+        ChoiceNode choice = (ChoiceNode) componentToAdd;
+        choice.addToScope(placeholder);
 
-        ((ChoiceNode) componentToAdd).addToScope(placeholder);
+        FlowGraph subGraph = new FlowGraphImpl();
+        subGraph.root(choice);
+        subGraph.add(componentToAdd, placeholder);
 
-        ComponentData component = componentToAdd.component();
-        component.set("when", Collections.emptyList());
-        component.set("otherwise", placeholder);
+        ComponentData componentData = componentToAdd.component();
+        Map<GraphNode, String> nodeConditionMap = (Map<GraphNode, String>) componentData.get("nodeConditionMap");
+        nodeConditionMap.replace(placeholder, "otherwise");
 
-
-        return new ScopedNodeConnector(graph, choiceGraph);
+        return new ScopedNodeConnector(graph, subGraph);
     }
 }
