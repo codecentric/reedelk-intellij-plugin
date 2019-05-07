@@ -10,16 +10,16 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class GenericComponentNodeBuilderTest extends AbstractBuilderTest {
+class GenericComponentDeserializerTest extends AbstractBuilderTest {
 
     private static final String GENERIC_COMPONENT_NAME = "com.esb.component.GenericComponent";
 
-    private GenericComponentDeserializer builder;
+    private GenericComponentDeserializer deserializer;
 
     @BeforeEach
     protected void setUp() {
         super.setUp();
-        builder = new GenericComponentDeserializer(graph, context);
+        deserializer = new GenericComponentDeserializer(graph, context);
     }
 
     @Test
@@ -32,7 +32,7 @@ class GenericComponentNodeBuilderTest extends AbstractBuilderTest {
                 .build();
 
         // When
-        GraphNode node = builder.deserialize(root, componentDefinition);
+        GraphNode node = deserializer.deserialize(root, componentDefinition);
 
         // Then
         assertThat(graph.nodesCount()).isEqualTo(2);

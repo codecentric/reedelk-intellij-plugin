@@ -24,12 +24,12 @@ class ChoiceDeserializerTest extends AbstractBuilderTest {
     private final String COMPONENT_5_NAME = "com.esb.component.Name5";
     private final String COMPONENT_6_NAME = "com.esb.component.Name6";
 
-    private ChoiceDeserializer builder;
+    private ChoiceDeserializer deserializer;
 
     @BeforeEach
     protected void setUp() {
         super.setUp();
-        builder = new ChoiceDeserializer(graph, context);
+        deserializer = new ChoiceDeserializer(graph, context);
 
         mockComponent(COMPONENT_1_NAME, GenericComponentNode.class);
         mockComponent(COMPONENT_2_NAME, GenericComponentNode.class);
@@ -56,7 +56,7 @@ class ChoiceDeserializerTest extends AbstractBuilderTest {
                 .build();
 
         // When
-        GraphNode stopDrawable = builder.deserialize(root, componentDefinition);
+        GraphNode stopDrawable = deserializer.deserialize(root, componentDefinition);
 
         // Then: last node must be a stop node
         assertThat(stopDrawable).isInstanceOf(StopNode.class);

@@ -15,12 +15,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class FlowReferenceDeserializerTest extends AbstractBuilderTest {
 
-    private FlowReferenceDeserializer builder;
+    private FlowReferenceDeserializer deserializer;
 
     @BeforeEach
     protected void setUp() {
         super.setUp();
-        builder = new FlowReferenceDeserializer(graph, context);
+        deserializer = new FlowReferenceDeserializer(graph, context);
     }
 
     @Test
@@ -33,7 +33,7 @@ class FlowReferenceDeserializerTest extends AbstractBuilderTest {
                 .build();
 
         // When
-        GraphNode flowReference = builder.deserialize(root, componentDefinition);
+        GraphNode flowReference = deserializer.deserialize(root, componentDefinition);
 
         // Then
         assertThat(graph.nodesCount()).isEqualTo(2);

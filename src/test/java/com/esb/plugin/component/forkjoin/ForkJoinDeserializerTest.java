@@ -24,12 +24,12 @@ class ForkJoinDeserializerTest extends AbstractBuilderTest {
     private final String COMPONENT_3_NAME = "com.esb.component.Name3";
     private final String COMPONENT_4_NAME = "com.esb.component.Name4";
 
-    private ForkJoinDeserializer builder;
+    private ForkJoinDeserializer deserializer;
 
     @BeforeEach
     protected void setUp() {
         super.setUp();
-        builder = new ForkJoinDeserializer(graph, context);
+        deserializer = new ForkJoinDeserializer(graph, context);
 
         mockComponent(COMPONENT_1_NAME, GenericComponentNode.class);
         mockComponent(COMPONENT_2_NAME, GenericComponentNode.class);
@@ -57,7 +57,7 @@ class ForkJoinDeserializerTest extends AbstractBuilderTest {
                 .build();
 
         // When
-        GraphNode joinDrawable = builder.deserialize(root, componentDefinition);
+        GraphNode joinDrawable = deserializer.deserialize(root, componentDefinition);
 
         // Then: last node must be a join node
         assertThat(joinDrawable.component().getFullyQualifiedName()).isEqualTo(JOIN_COMPONENT_NAME);
