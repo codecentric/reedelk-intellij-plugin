@@ -12,7 +12,7 @@ import static com.esb.internal.commons.JsonParser.Implementor;
 public class GenericComponentSerializer extends AbstractSerializer {
 
     @Override
-    public JSONObject serialize(FlowGraph graph, GraphNode node) {
+    public JSONObject serialize(FlowGraph graph, GraphNode node, GraphNode stop) {
 
         ComponentData componentData = node.component();
 
@@ -25,6 +25,7 @@ public class GenericComponentSerializer extends AbstractSerializer {
             Object data = componentData.getOrDefault(propertyName.toLowerCase(), JSONObject.NULL);
 
             componentAsJson.put(propertyName.toLowerCase(), data);
+
         });
 
         return componentAsJson;

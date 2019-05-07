@@ -9,6 +9,7 @@ import java.util.List;
 
 public class ChoiceNode extends AbstractScopedGraphNode {
 
+    public static final String DEFAULT_CONDITION_NAME = "otherwise";
     public static final String DATA_CONDITION_ROUTE_PAIRS = "conditionRoutePairs";
 
     private static final String EMPTY_CONDITION = "";
@@ -52,7 +53,8 @@ public class ChoiceNode extends AbstractScopedGraphNode {
 
     private List<ChoiceConditionRoutePair> listConditionRoutePairs() {
         ComponentData component = component();
-        List<ChoiceConditionRoutePair> conditionRoutePair = (List<ChoiceConditionRoutePair>) component.get(DATA_CONDITION_ROUTE_PAIRS);
+        List<ChoiceConditionRoutePair> conditionRoutePair =
+                (List<ChoiceConditionRoutePair>) component.get(DATA_CONDITION_ROUTE_PAIRS);
         if (conditionRoutePair == null) {
             conditionRoutePair = new LinkedList<>();
             component.set(DATA_CONDITION_ROUTE_PAIRS, conditionRoutePair);

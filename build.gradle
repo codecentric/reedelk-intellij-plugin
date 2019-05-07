@@ -21,11 +21,11 @@ dependencies {
     compile group: 'com.esb', name: 'api', version: '1.0.0-SNAPSHOT'
     compile group: 'com.esb', name: 'internal-system-components', version: '1.0.0-SNAPSHOT'
     compile group: 'com.esb', name: 'internal-rest-api', version: '1.0.0-SNAPSHOT'
-
-
+    
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
     testCompile group: 'org.assertj', name: 'assertj-core', version: '3.12.2'
+    testCompile group: 'org.skyscreamer', name: 'jsonassert', version: '1.5.0'
     testCompile group: 'org.mockito', name: 'mockito-junit-jupiter', version: '2.25.1'
 }
 

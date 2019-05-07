@@ -14,6 +14,9 @@ import com.intellij.openapi.module.Module;
 
 import java.util.List;
 
+import static com.esb.plugin.component.choice.ChoiceNode.DATA_CONDITION_ROUTE_PAIRS;
+import static com.esb.plugin.component.choice.ChoiceNode.DEFAULT_CONDITION_NAME;
+
 public class ChoiceConnectorBuilder implements ConnectorBuilder {
 
     @Override
@@ -29,14 +32,15 @@ public class ChoiceConnectorBuilder implements ConnectorBuilder {
         subGraph.add(componentToAdd, placeholder);
 
         ComponentData componentData = componentToAdd.component();
-        List<ChoiceConditionRoutePair> nodeConditionMap = (List<ChoiceConditionRoutePair>) componentData.get(ChoiceNode.DATA_CONDITION_ROUTE_PAIRS);
+        List<ChoiceConditionRoutePair> nodeConditionMap =
+                (List<ChoiceConditionRoutePair>) componentData.get(DATA_CONDITION_ROUTE_PAIRS);
 
         // TODO: This is duplicated code
         nodeConditionMap
                 .stream()
                 .filter(choiceConditionRoutePair -> choiceConditionRoutePair.getNext() == placeholder)
                 .findFirst()
-                .ifPresent(choiceConditionRoutePair -> choiceConditionRoutePair.setCondition("otherwise"));
+                .ifPresent(choiceConditionRoutePair -> choiceConditionRoutePair.setCondition(DEFAULT_CONDITION_NAME));
 
         return new ScopedNodeConnector(graph, subGraph);
     }

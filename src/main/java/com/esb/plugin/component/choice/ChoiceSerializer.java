@@ -12,12 +12,13 @@ import org.json.JSONObject;
 import java.util.List;
 
 import static com.esb.internal.commons.JsonParser.Implementor;
+import static com.esb.plugin.component.choice.ChoiceNode.DEFAULT_CONDITION_NAME;
 import static java.util.stream.Collectors.toList;
 
 public class ChoiceSerializer extends AbstractSerializer {
 
     @Override
-    public JSONObject serialize(FlowGraph graph, GraphNode node) {
+    public JSONObject serialize(FlowGraph graph, GraphNode node, GraphNode stop) {
 
         ComponentData componentData = node.component();
 
@@ -28,7 +29,7 @@ public class ChoiceSerializer extends AbstractSerializer {
         List<ChoiceConditionRoutePair> choiceConditionRoutePairList = (List<ChoiceConditionRoutePair>) componentData.get(ChoiceNode.DATA_CONDITION_ROUTE_PAIRS);
 
         List<ChoiceConditionRoutePair> when = choiceConditionRoutePairList.stream()
-                .filter(choiceConditionRoutePair -> !choiceConditionRoutePair.getCondition().equals("otherwise"))
+                .filter(choiceConditionRoutePair -> !choiceConditionRoutePair.getCondition().equals(DEFAULT_CONDITION_NAME))
                 .collect(toList());
 
         JSONArray whenArrayObject = new JSONArray();
@@ -45,7 +46,7 @@ public class ChoiceSerializer extends AbstractSerializer {
 
             GraphNode nextNode = pair.getNext();
 
-            GraphSerializer.doSerialize(graph, nextArrayObject, nextNode);
+            GraphSerializer.doSerialize(graph, nextArrayObject, nextNode, stop);
 
             conditionAndRouteObject.put("next", nextArrayObject);
 
@@ -55,17 +56,18 @@ public class ChoiceSerializer extends AbstractSerializer {
         choiceObject.put("when", whenArrayObject);
 
         GraphNode otherwiseNode = choiceConditionRoutePairList.stream()
-                .filter(choiceConditionRoutePair -> choiceConditionRoutePair.getCondition().equals("otherwise"))
+                .filter(choiceConditionRoutePair -> choiceConditionRoutePair.getCondition().equals(DEFAULT_CONDITION_NAME))
                 .findFirst()
                 .get()
                 .getNext();
 
         JSONArray otherwiseArray = new JSONArray();
 
-        GraphSerializer.doSerialize(graph, otherwiseArray, otherwiseNode);
+        GraphSerializer.doSerialize(graph, otherwiseArray, otherwiseNode, stop);
 
-        choiceObject.put("otherwise", otherwiseArray);
+        choiceObject.put(DEFAULT_CONDITION_NAME, otherwiseArray);
 
         return choiceObject;
     }
+
 }

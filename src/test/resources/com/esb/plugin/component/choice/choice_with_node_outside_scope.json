@@ -1,0 +1,18 @@
+{
+  "implementor.name": "c1",
+  "when": [
+    {
+      "condition": "payload != null",
+      "next": [
+        {
+          "implementor.name": "n2"
+        }
+      ]
+    }
+  ],
+  "otherwise": [
+    {
+      "implementor.name": "n1"
+    }
+  ]
+}

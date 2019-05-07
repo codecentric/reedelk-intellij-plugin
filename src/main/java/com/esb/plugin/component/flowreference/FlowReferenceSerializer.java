@@ -14,7 +14,7 @@ import static com.esb.internal.commons.JsonParser.Implementor;
 public class FlowReferenceSerializer extends AbstractSerializer {
 
     @Override
-    public JSONObject serialize(FlowGraph graph, GraphNode node) {
+    public JSONObject serialize(FlowGraph graph, GraphNode node, GraphNode stop) {
 
         ComponentData componentData = node.component();
 

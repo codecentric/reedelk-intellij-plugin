@@ -2,11 +2,11 @@ package com.esb.plugin.graph.deserializer;
 
 import com.esb.component.Choice;
 import com.esb.component.Stop;
+import com.esb.plugin.TestJson;
 import com.esb.plugin.component.choice.ChoiceNode;
 import com.esb.plugin.component.generic.GenericComponentNode;
 import com.esb.plugin.component.stop.StopNode;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.TestJson;
 import com.esb.plugin.graph.node.GraphNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,7 @@ class GraphDeserializerTest extends AbstractBuilderTest {
     @Test
     void shouldBuildFlowWithChoiceCorrectly() {
         // Given
-        String json = readJson(TestJson.FLOW_WITH_CHOICE);
+        String json = TestJson.FLOW_WITH_CHOICE.asJson();
         GraphDeserializer builder = new GraphDeserializer(json, context);
 
         // When

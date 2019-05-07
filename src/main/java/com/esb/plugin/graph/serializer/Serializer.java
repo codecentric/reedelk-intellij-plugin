@@ -6,6 +6,6 @@ import org.json.JSONObject;
 
 public interface Serializer {
 
-    JSONObject serialize(FlowGraph graph, GraphNode node);
+    JSONObject serialize(FlowGraph graph, GraphNode node, GraphNode stop);
 
 }

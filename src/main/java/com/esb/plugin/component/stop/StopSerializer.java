@@ -8,7 +8,7 @@ import org.json.JSONObject;
 public class StopSerializer extends AbstractSerializer {
 
     @Override
-    public JSONObject serialize(FlowGraph graph, GraphNode node) {
+    public JSONObject serialize(FlowGraph graph, GraphNode node, GraphNode stop) {
         throw new UnsupportedOperationException();
     }
 }

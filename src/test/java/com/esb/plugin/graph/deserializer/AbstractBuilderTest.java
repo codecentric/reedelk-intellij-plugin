@@ -1,11 +1,9 @@
 package com.esb.plugin.graph.deserializer;
 
-import com.esb.internal.commons.FileUtils;
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphImpl;
-import com.esb.plugin.graph.TestJson;
 import com.esb.plugin.graph.node.GraphNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -103,8 +100,4 @@ public abstract class AbstractBuilderTest {
         }
     }
 
-    String readJson(TestJson testJson) {
-        URL url = testJson.url();
-        return FileUtils.readFrom(url);
-    }
 }
