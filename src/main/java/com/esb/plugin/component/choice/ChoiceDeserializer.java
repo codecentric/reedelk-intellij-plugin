@@ -41,16 +41,16 @@ public class ChoiceDeserializer extends AbstractDeserializer {
         graph.add(parent, choiceNode);
 
         // When
-        JSONArray when = Choice.getWhen(componentDefinition);
+        JSONArray when = Choice.when(componentDefinition);
 
         for (int i = 0; i < when.length(); i++) {
 
             JSONObject whenComponent = when.getJSONObject(i);
 
-            JSONArray next = Choice.getNext(whenComponent);
+            JSONArray next = Choice.next(whenComponent);
 
             GraphNode currentNode = deserialize(next, choiceNode, node -> {
-                String condition = Choice.getCondition(whenComponent);
+                String condition = Choice.condition(whenComponent);
                 preNodeConditionMap.put(node, condition);
             });
 
@@ -59,7 +59,7 @@ public class ChoiceDeserializer extends AbstractDeserializer {
         }
 
         // Otherwise
-        JSONArray otherwise = Choice.getOtherwise(componentDefinition);
+        JSONArray otherwise = Choice.otherwise(componentDefinition);
 
         GraphNode currentNode = deserialize(otherwise, choiceNode, node ->
                 preNodeConditionMap.put(node, DEFAULT_CONDITION_NAME));

@@ -30,12 +30,12 @@ public class ForkJoinDeserializer extends AbstractDeserializer {
 
         graph.add(parent, forkJoinDrawable);
 
-        JSONArray fork = ForkJoin.getFork(componentDefinition);
+        JSONArray fork = ForkJoin.fork(componentDefinition);
 
         for (int i = 0; i < fork.length(); i++) {
 
             JSONObject next = fork.getJSONObject(i);
-            JSONArray nextComponents = ForkJoin.getNext(next);
+            JSONArray nextComponents = ForkJoin.next(next);
 
             GraphNode currentDrawable = forkJoinDrawable;
 
@@ -54,7 +54,7 @@ public class ForkJoinDeserializer extends AbstractDeserializer {
 
         }
 
-        JSONObject joinComponent = ForkJoin.getJoin(componentDefinition);
+        JSONObject joinComponent = ForkJoin.join(componentDefinition);
         return GraphDeserializerFactory.get()
                 .componentDefinition(joinComponent)
                 .context(context)

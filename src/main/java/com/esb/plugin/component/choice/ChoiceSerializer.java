@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import static com.esb.internal.commons.JsonParser.Choice;
 import static com.esb.internal.commons.JsonParser.Implementor;
 import static com.esb.plugin.component.choice.ChoiceNode.DEFAULT_CONDITION_NAME;
 import static java.util.stream.Collectors.toList;
@@ -40,7 +41,7 @@ public class ChoiceSerializer extends AbstractSerializer {
 
             String condition = pair.getCondition();
 
-            conditionAndRouteObject.put("condition", condition);
+            Choice.condition(condition, conditionAndRouteObject);
 
             JSONArray nextArrayObject = new JSONArray();
 
@@ -48,12 +49,12 @@ public class ChoiceSerializer extends AbstractSerializer {
 
             GraphSerializer.doSerialize(graph, nextArrayObject, nextNode, stop);
 
-            conditionAndRouteObject.put("next", nextArrayObject);
+            Choice.next(nextArrayObject, conditionAndRouteObject);
 
             whenArrayObject.put(conditionAndRouteObject);
         }
 
-        choiceObject.put("when", whenArrayObject);
+        Choice.when(whenArrayObject, choiceObject);
 
         GraphNode otherwiseNode = choiceConditionRoutePairList.stream()
                 .filter(choiceConditionRoutePair -> choiceConditionRoutePair.getCondition().equals(DEFAULT_CONDITION_NAME))

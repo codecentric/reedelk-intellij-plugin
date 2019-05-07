@@ -11,12 +11,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.esb.internal.commons.JsonParser.Flow;
 import static com.esb.internal.commons.Preconditions.checkState;
 
 public class GraphSerializer {
 
-    // TODO: Fix JSON parser to include setters of the following
-    // TODO: properties
     public static String serialize(FlowGraph graph) {
         JSONArray flow = new JSONArray();
 
@@ -24,8 +23,8 @@ public class GraphSerializer {
         doSerialize(graph, flow, root, null);
 
         JSONObject flowObject = JSONObjectFactory.newJSONObject();
-        flowObject.put("id", UUID.randomUUID().toString());
-        flowObject.put("flow", flow);
+        Flow.id(UUID.randomUUID().toString(), flowObject);
+        Flow.flow(flow, flowObject);
         return flowObject.toString(2);
     }
 

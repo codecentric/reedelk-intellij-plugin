@@ -36,7 +36,7 @@ public class GraphDeserializer {
     }
 
     protected FlowGraph deserialize() {
-        JSONArray flow = Flow.getFlow(flowDefinition);
+        JSONArray flow = Flow.flow(flowDefinition);
 
         GraphNode current = null;
         for (int i = 0; i < flow.length(); i++) {
