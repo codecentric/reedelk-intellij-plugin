@@ -56,7 +56,9 @@ public class ChoiceSerializer extends AbstractSerializer {
 
         GraphNode otherwiseNode = choiceConditionRoutePairList.stream()
                 .filter(choiceConditionRoutePair -> choiceConditionRoutePair.getCondition().equals("otherwise"))
-                .findFirst().get().getNext();
+                .findFirst()
+                .get()
+                .getNext();
 
         JSONArray otherwiseArray = new JSONArray();
 
