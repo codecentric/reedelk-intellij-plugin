@@ -1,15 +1,11 @@
 package com.esb.plugin.component.choice.widget;
 
-import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.choice.ChoiceConditionRoutePair;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
-import java.util.Optional;
-
-import static java.util.stream.Collectors.toList;
 
 public class ConditionRouteTableModel extends AbstractTableModel {
 
@@ -77,35 +73,5 @@ public class ConditionRouteTableModel extends AbstractTableModel {
         }
         snapshot.onDataChange();
     }
-
-    void addConditionRoutePair(ChoiceConditionRoutePair pair) {
-        conditionRouteList.add(pair);
-
-        int rowChanged = conditionRouteList.size();
-        fireTableRowsInserted(rowChanged, rowChanged);
-
-
-        ComponentData component = node.component();
-
-        List<ChoiceConditionRoutePair> data = conditionRouteList;
-        Optional<ChoiceConditionRoutePair> otherwise = data
-                .stream()
-                .filter(choiceConditionRoutePair ->
-                        choiceConditionRoutePair.getCondition().equals("otherwise"))
-                .findAny();
-        otherwise.ifPresent(choiceConditionRoutePair ->
-                component.set("otherwise", choiceConditionRoutePair.getNext()));
-
-        List<ChoiceConditionRoutePair> whenConditions = data
-                .stream()
-                .filter(choiceConditionRoutePair ->
-                        !choiceConditionRoutePair.getCondition().equals("otherwise"))
-                .collect(toList());
-
-        component.set("when", whenConditions);
-
-        snapshot.onDataChange();
-    }
-
 
 }

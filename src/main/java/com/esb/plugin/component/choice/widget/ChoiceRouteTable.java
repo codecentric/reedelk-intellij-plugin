@@ -1,6 +1,5 @@
 package com.esb.plugin.component.choice.widget;
 
-import com.esb.plugin.component.choice.ChoiceConditionRoutePair;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
@@ -12,7 +11,7 @@ import java.awt.*;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 
-public class ChoiceRouteTable extends JBPanel implements AddConditionRouteListener {
+public class ChoiceRouteTable extends JBPanel {
 
     private final Dimension tableScrollPaneDimension = new Dimension(0, 110);
     private final ConditionRouteTableModel model;
@@ -30,8 +29,4 @@ public class ChoiceRouteTable extends JBPanel implements AddConditionRouteListen
         add(Box.createVerticalGlue(), CENTER);
     }
 
-    @Override
-    public void addRouteCondition(ChoiceConditionRoutePair conditionRoute) {
-        model.addConditionRoutePair(conditionRoute);
-    }
 }
