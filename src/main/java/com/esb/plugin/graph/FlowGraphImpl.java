@@ -51,7 +51,7 @@ public class FlowGraphImpl implements FlowGraph {
     @Override
     public void add(@NotNull GraphNode n1, @NotNull GraphNode n2, int index) {
         graph.putEdge(n1, n2, index);
-        n1.onSuccessorAdded(n2);
+        n1.onSuccessorAdded(n2, index);
     }
 
     @Override

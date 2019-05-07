@@ -9,14 +9,12 @@ import java.util.List;
 
 public class ConditionRouteTableModel extends AbstractTableModel {
 
-    private final GraphNode node;
     private final GraphSnapshot snapshot;
     private final List<ChoiceConditionRoutePair> conditionRouteList;
 
-    public ConditionRouteTableModel(List<ChoiceConditionRoutePair> conditionRouteList, GraphNode node, GraphSnapshot snapshot) {
+    public ConditionRouteTableModel(List<ChoiceConditionRoutePair> conditionRouteList, GraphSnapshot snapshot) {
         this.conditionRouteList = conditionRouteList;
         this.snapshot = snapshot;
-        this.node = node;
     }
 
     @Override

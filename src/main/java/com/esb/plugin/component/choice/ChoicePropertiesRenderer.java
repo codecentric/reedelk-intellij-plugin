@@ -26,7 +26,7 @@ public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
         ComponentData componentData = choiceNode.component();
         List<ChoiceConditionRoutePair> conditionRoutePairList = (List<ChoiceConditionRoutePair>) componentData.get(ChoiceNode.DATA_CONDITION_ROUTE_PAIRS);
 
-        ConditionRouteTableModel model = new ConditionRouteTableModel(conditionRoutePairList, choiceNode, snapshot);
+        ConditionRouteTableModel model = new ConditionRouteTableModel(conditionRoutePairList, snapshot);
         ChoiceRouteTable choiceRouteTable = new ChoiceRouteTable(model);
 
         // TODO: Fix this

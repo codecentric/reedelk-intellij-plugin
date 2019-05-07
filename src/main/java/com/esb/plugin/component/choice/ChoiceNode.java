@@ -19,13 +19,14 @@ public class ChoiceNode extends AbstractScopedGraphNode {
 
     @Override
     public void onSuccessorAdded(GraphNode successor) {
-        List<ChoiceConditionRoutePair> conditionRoutePairList = listConditionRoutePairs();
-        boolean isAlreadyPresent = conditionRoutePairList
-                .stream()
-                .anyMatch(choiceConditionRoutePair -> choiceConditionRoutePair.getNext() == successor);
-        if (!isAlreadyPresent) {
-            conditionRoutePairList.add(new ChoiceConditionRoutePair(EMPTY_CONDITION, successor));
-        }
+        executeIfRouteToNodeNotPresent(successor, conditionRoutePairs ->
+                conditionRoutePairs.add(new ChoiceConditionRoutePair(EMPTY_CONDITION, successor)));
+    }
+
+    @Override
+    public void onSuccessorAdded(GraphNode successor, int index) {
+        executeIfRouteToNodeNotPresent(successor, conditionRoutePairs ->
+                conditionRoutePairs.add(index, new ChoiceConditionRoutePair(EMPTY_CONDITION, successor)));
     }
 
     @Override
@@ -33,6 +34,20 @@ public class ChoiceNode extends AbstractScopedGraphNode {
         listConditionRoutePairs()
                 .removeIf(choiceConditionRoutePair ->
                         choiceConditionRoutePair.getNext() == successor);
+    }
+
+    interface Action {
+        void execute(List<ChoiceConditionRoutePair> conditionRoutePairs);
+    }
+
+    private void executeIfRouteToNodeNotPresent(GraphNode target, Action action) {
+        List<ChoiceConditionRoutePair> conditionRoutePairList = listConditionRoutePairs();
+        boolean isPresent = conditionRoutePairList.stream()
+                .anyMatch(choiceConditionRoutePair ->
+                        choiceConditionRoutePair.getNext() == target);
+        if (!isPresent) {
+            action.execute(conditionRoutePairList);
+        }
     }
 
     private List<ChoiceConditionRoutePair> listConditionRoutePairs() {

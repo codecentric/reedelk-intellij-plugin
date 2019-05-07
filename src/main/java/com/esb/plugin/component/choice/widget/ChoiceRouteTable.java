@@ -14,10 +14,8 @@ import static java.awt.BorderLayout.NORTH;
 public class ChoiceRouteTable extends JBPanel {
 
     private final Dimension tableScrollPaneDimension = new Dimension(0, 110);
-    private final ConditionRouteTableModel model;
 
     public ChoiceRouteTable(ConditionRouteTableModel model) {
-        this.model = model;
 
         final TableColumnModel tableColumnModel = new ConditionRouteTableColumnModel();
         JBTable table = new JBTable(model, tableColumnModel);

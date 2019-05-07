@@ -5,6 +5,9 @@ public interface GraphNode extends Drawable, ComponentAware {
     default void onSuccessorAdded(GraphNode successor) {
     }
 
+    default void onSuccessorAdded(GraphNode successor, int index) {
+    }
+
     default void onSuccessorRemoved(GraphNode successor) {
     }
 
