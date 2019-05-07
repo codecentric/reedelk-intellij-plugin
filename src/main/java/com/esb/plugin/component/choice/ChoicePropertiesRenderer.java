@@ -10,9 +10,7 @@ import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.ui.components.JBPanel;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
@@ -26,14 +24,9 @@ public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
     @Override
     public JBPanel render(GraphNode choiceNode) {
         ComponentData componentData = choiceNode.component();
-        Map<GraphNode, String> nodeConditionMap = (Map<GraphNode, String>) componentData.get("nodeConditionMap");
+        List<ChoiceConditionRoutePair> conditionRoutePairList = (List<ChoiceConditionRoutePair>) componentData.get(ChoiceNode.DATA_CONDITION_ROUTE_PAIRS);
 
-        List<ChoiceConditionRoutePair> pairs = new ArrayList<>();
-
-
-        nodeConditionMap.forEach((node, condition) -> pairs.add(new ChoiceConditionRoutePair(condition, node)));
-
-        ConditionRouteTableModel model = new ConditionRouteTableModel(pairs, choiceNode, snapshot);
+        ConditionRouteTableModel model = new ConditionRouteTableModel(conditionRoutePairList, choiceNode, snapshot);
         ChoiceRouteTable choiceRouteTable = new ChoiceRouteTable(model);
 
         // TODO: Fix this

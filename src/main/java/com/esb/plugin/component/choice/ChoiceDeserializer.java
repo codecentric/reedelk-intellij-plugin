@@ -12,7 +12,8 @@ import com.esb.plugin.graph.utils.CollectNodesBetween;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.esb.internal.commons.JsonParser.Choice;
@@ -33,7 +34,7 @@ public class ChoiceDeserializer extends AbstractDeserializer {
 
         ChoiceNode choiceNode = context.instantiateGraphNode(name);
 
-        Map<GraphNode, String> preNodeConditionMap = new HashMap<>();
+        Map<GraphNode, String> preNodeConditionMap = new LinkedHashMap<>();
 
         graph.add(parent, choiceNode);
 
@@ -68,12 +69,17 @@ public class ChoiceDeserializer extends AbstractDeserializer {
                 .forEach(choiceNode::addToScope);
 
         ComponentData choiceData = choiceNode.component();
-        Map<GraphNode, String> nodeConditionMap = (Map<GraphNode, String>) choiceData.get("nodeConditionMap");
+        List<ChoiceConditionRoutePair> choiceConditionRoutePairList =
+                (List<ChoiceConditionRoutePair>) choiceData.get(ChoiceNode.DATA_CONDITION_ROUTE_PAIRS);
+
 
         for (Map.Entry<GraphNode, String> entry : preNodeConditionMap.entrySet()) {
-            GraphNode node = entry.getKey();
-            String condition = entry.getValue();
-            nodeConditionMap.replace(node, condition);
+
+            // TODO: this is duplicated code
+            choiceConditionRoutePairList.stream()
+                    .filter(choiceConditionRoutePair -> choiceConditionRoutePair.getNext() == entry.getKey())
+                    .findFirst()
+                    .ifPresent(choiceConditionRoutePair -> choiceConditionRoutePair.setCondition(entry.getValue()));
         }
 
         return stopNode;

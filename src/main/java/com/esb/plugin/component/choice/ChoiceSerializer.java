@@ -9,9 +9,7 @@ import com.esb.plugin.graph.serializer.JSONObjectFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static com.esb.internal.commons.JsonParser.Implementor;
 import static java.util.stream.Collectors.toList;
@@ -28,17 +26,11 @@ public class ChoiceSerializer extends AbstractSerializer {
         Implementor.name(componentData.getFullyQualifiedName(), choiceObject);
 
 
-        Map<GraphNode, String> nodeConditionMap = (Map<GraphNode, String>) componentData.get("nodeConditionMap");
+        List<ChoiceConditionRoutePair> choiceConditionRoutePairList = (List<ChoiceConditionRoutePair>) componentData.get(ChoiceNode.DATA_CONDITION_ROUTE_PAIRS);
 
-        List<ChoiceConditionRoutePair> pairs = new ArrayList<>();
-
-        nodeConditionMap.forEach((n, condition) -> pairs.add(new ChoiceConditionRoutePair(condition, n)));
-
-        List<ChoiceConditionRoutePair> when = pairs.stream()
+        List<ChoiceConditionRoutePair> when = choiceConditionRoutePairList.stream()
                 .filter(choiceConditionRoutePair -> !choiceConditionRoutePair.getCondition().equals("otherwise"))
                 .collect(toList());
-
-
 
         JSONArray whenArrayObject = new JSONArray();
 
@@ -63,7 +55,7 @@ public class ChoiceSerializer extends AbstractSerializer {
 
         choiceObject.put("when", whenArrayObject);
 
-        GraphNode otherwiseNode = pairs.stream()
+        GraphNode otherwiseNode = choiceConditionRoutePairList.stream()
                 .filter(choiceConditionRoutePair -> choiceConditionRoutePair.getCondition().equals("otherwise"))
                 .findFirst().get().getNext();
 

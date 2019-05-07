@@ -4,10 +4,12 @@ import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.designer.canvas.drawables.AbstractScopedGraphNode;
 import com.esb.plugin.graph.node.GraphNode;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ChoiceNode extends AbstractScopedGraphNode {
+
+    public static final String DATA_CONDITION_ROUTE_PAIRS = "conditionRoutePairs";
 
     private static final String EMPTY_CONDITION = "";
 
@@ -17,25 +19,29 @@ public class ChoiceNode extends AbstractScopedGraphNode {
 
     @Override
     public void onSuccessorAdded(GraphNode successor) {
-        Map<GraphNode, String> nodeConditionMap = getConditionNodeMap();
-        if (!nodeConditionMap.containsKey(successor)) {
-            nodeConditionMap.put(successor, EMPTY_CONDITION);
+        List<ChoiceConditionRoutePair> conditionRoutePairList = listConditionRoutePairs();
+        boolean isAlreadyPresent = conditionRoutePairList
+                .stream()
+                .anyMatch(choiceConditionRoutePair -> choiceConditionRoutePair.getNext() == successor);
+        if (!isAlreadyPresent) {
+            conditionRoutePairList.add(new ChoiceConditionRoutePair(EMPTY_CONDITION, successor));
         }
     }
 
     @Override
     public void onSuccessorRemoved(GraphNode successor) {
-        Map<GraphNode, String> nodeConditionMap = getConditionNodeMap();
-        nodeConditionMap.remove(successor);
+        listConditionRoutePairs()
+                .removeIf(choiceConditionRoutePair ->
+                        choiceConditionRoutePair.getNext() == successor);
     }
 
-    private Map<GraphNode, String> getConditionNodeMap() {
+    private List<ChoiceConditionRoutePair> listConditionRoutePairs() {
         ComponentData component = component();
-        Map<GraphNode, String> nodeConditionMap = (HashMap<GraphNode, String>) component.get("nodeConditionMap");
-        if (nodeConditionMap == null) {
-            nodeConditionMap = new HashMap<>();
-            component.set("nodeConditionMap", nodeConditionMap);
+        List<ChoiceConditionRoutePair> conditionRoutePair = (List<ChoiceConditionRoutePair>) component.get(DATA_CONDITION_ROUTE_PAIRS);
+        if (conditionRoutePair == null) {
+            conditionRoutePair = new LinkedList<>();
+            component.set(DATA_CONDITION_ROUTE_PAIRS, conditionRoutePair);
         }
-        return nodeConditionMap;
+        return conditionRoutePair;
     }
 }

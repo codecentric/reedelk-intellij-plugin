@@ -12,7 +12,7 @@ import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.GraphNodeFactory;
 import com.intellij.openapi.module.Module;
 
-import java.util.Map;
+import java.util.List;
 
 public class ChoiceConnectorBuilder implements ConnectorBuilder {
 
@@ -29,8 +29,14 @@ public class ChoiceConnectorBuilder implements ConnectorBuilder {
         subGraph.add(componentToAdd, placeholder);
 
         ComponentData componentData = componentToAdd.component();
-        Map<GraphNode, String> nodeConditionMap = (Map<GraphNode, String>) componentData.get("nodeConditionMap");
-        nodeConditionMap.replace(placeholder, "otherwise");
+        List<ChoiceConditionRoutePair> nodeConditionMap = (List<ChoiceConditionRoutePair>) componentData.get(ChoiceNode.DATA_CONDITION_ROUTE_PAIRS);
+
+        // TODO: This is duplicated code
+        nodeConditionMap
+                .stream()
+                .filter(choiceConditionRoutePair -> choiceConditionRoutePair.getNext() == placeholder)
+                .findFirst()
+                .ifPresent(choiceConditionRoutePair -> choiceConditionRoutePair.setCondition("otherwise"));
 
         return new ScopedNodeConnector(graph, subGraph);
     }
