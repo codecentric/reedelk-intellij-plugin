@@ -598,7 +598,6 @@ class AddNodeActionTest extends AbstractGraphTest {
                 assertThat(choice1.getScope()).containsExactlyInAnyOrder(n1, choice2, n3);
                 assertThat(choice2.getScope()).containsExactlyInAnyOrder(n2);
             }
-
         }
 
     }
