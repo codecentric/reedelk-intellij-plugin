@@ -25,7 +25,6 @@ public class ChoiceSerializer extends AbstractSerializer {
 
         Implementor.name(componentData.getFullyQualifiedName(), choiceObject);
 
-
         List<ChoiceConditionRoutePair> choiceConditionRoutePairList = (List<ChoiceConditionRoutePair>) componentData.get(ChoiceNode.DATA_CONDITION_ROUTE_PAIRS);
 
         List<ChoiceConditionRoutePair> when = choiceConditionRoutePairList.stream()
