@@ -21,10 +21,6 @@ public class ComponentDescriptor {
     private ComponentDescriptor() {
     }
 
-    public List<String> componentDataKeys() {
-        return Collections.unmodifiableList(propertiesNames);
-    }
-
     public String getFullyQualifiedName() {
         return fullyQualifiedName;
     }
@@ -34,12 +30,26 @@ public class ComponentDescriptor {
     }
 
     public List<String> getPropertiesNames() {
-        return propertiesNames;
+        return Collections.unmodifiableList(propertiesNames);
     }
 
     public static Builder create() {
         return new Builder();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ComponentDescriptor that = (ComponentDescriptor) o;
+        return fullyQualifiedName.equals(that.fullyQualifiedName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fullyQualifiedName);
+    }
+
 
     public static class Builder {
 
@@ -69,19 +79,6 @@ public class ComponentDescriptor {
             descriptor.propertiesNames.addAll(propertiesNames);
             return descriptor;
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ComponentDescriptor that = (ComponentDescriptor) o;
-        return fullyQualifiedName.equals(that.fullyQualifiedName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(fullyQualifiedName);
     }
 
 }
