@@ -14,9 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import java.awt.*;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class ActionNodeAddTest extends AbstractGraphTest {
 
@@ -37,8 +34,11 @@ class ActionNodeAddTest extends AbstractGraphTest {
             FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, root, dropPoint);
 
             // Then
-            assertIsChangedWithNodesCount(modifiableGraph, 1);
-            assertThat(graph.root()).isEqualTo(root);
+            PluginAssertion.assertThat(modifiableGraph)
+                    .isChanged()
+                    .nodesCountIs(1)
+                    .root().is(root)
+                    .and().successorsOf(root).isEmpty();
         }
 
         @Test
@@ -54,12 +54,11 @@ class ActionNodeAddTest extends AbstractGraphTest {
             FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, n1, dropPoint);
 
             // Then
-            assertIsChangedWithNodesCount(modifiableGraph, 2);
-
-            GraphNode newRoot = graph.root();
-            assertThat(newRoot).isEqualTo(n1);
-            // Old root has been replaced by n1, therefore successor of n1 is root.
-            assertThat(graph.successors(newRoot)).containsExactly(root);
+            PluginAssertion.assertThat(modifiableGraph)
+                    .isChanged()
+                    .nodesCountIs(2)
+                    .root().is(n1)
+                    .and().successorsOf(n1).isExactly(root);
         }
     }
 
@@ -80,13 +79,11 @@ class ActionNodeAddTest extends AbstractGraphTest {
             FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, n1, dropPoint);
 
             // Then
-            assertIsChangedWithNodesCount(modifiableGraph, 2);
-
-            GraphNode root = graph.root();
-            assertThat(root).isEqualTo(root);
-
-            List<GraphNode> successorOfRoot = graph.successors(root);
-            assertThat(successorOfRoot).containsExactly(n1);
+            PluginAssertion.assertThat(modifiableGraph)
+                    .isChanged()
+                    .nodesCountIs(2)
+                    .root().is(root)
+                    .and().successorsOf(root).isExactly(n1);
         }
 
         @Test
@@ -106,14 +103,13 @@ class ActionNodeAddTest extends AbstractGraphTest {
             FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, n1, dropPoint);
 
             // Then
-            assertIsChangedWithNodesCount(modifiableGraph, 3);
-
-            GraphNode root = graph.root();
-            java.util.List<GraphNode> successorOfRoot = graph.successors(root);
-            assertThat(successorOfRoot).containsExactly(n1);
-
-            List<GraphNode> successorsOfN1 = graph.successors(n1);
-            assertThat(successorsOfN1).containsExactly(n2);
+            PluginAssertion.assertThat(modifiableGraph)
+                    .isChanged()
+                    .nodesCountIs(3)
+                    .root().is(root)
+                    .and().successorsOf(root).isExactly(n1)
+                    .and().successorsOf(n1).isExactly(n2)
+                    .and().successorsOf(n2).isEmpty();
         }
     }
 
@@ -142,16 +138,17 @@ class ActionNodeAddTest extends AbstractGraphTest {
             FlowGraph updatedGraph = addDrawableToGraph(graph, n2, dropPoint);
 
             // Then
-            assertNodeCountIs(updatedGraph, 5);
 
             // We verify that the choice does not get connected to the successor
             // of the moved element because it is outside the scope.
             // By definition a Choice component cannot connect drawables outside the scope.
-            assertThat(updatedGraph.successors(choice1)).containsExactly(n1);
-            assertThat(updatedGraph.successors(n1)).containsExactly(n2);
-            assertThat(updatedGraph.successors(n2)).containsExactly(n3);
-
-            assertThat(choice1.getScope()).containsExactlyInAnyOrder(n1, n2);
+            PluginAssertion.assertThat(updatedGraph)
+                    .nodesCountIs(5)
+                    .successorsOf(choice1).isExactly(n1)
+                    .and().successorsOf(n1).isExactly(n2)
+                    .and().successorsOf(n2).isExactly(n3)
+                    .and().successorsOf(n3).isEmpty()
+                    .and().node(choice1).scopeContainsExactly(n1, n2);
         }
 
         @Test
@@ -181,35 +178,15 @@ class ActionNodeAddTest extends AbstractGraphTest {
 
             // Then
             PluginAssertion.assertThat(updatedGraph)
-                    .root()
-                    .is(root)
-
-                    .and()
-                    .successorsOf(root)
-                    .areExactly(choice1)
-
-                    .and()
-                    .successorsOf(choice1)
-                    .areExactly(n1, n3)
-
-                    .and()
-                    .successorsOf(n1)
-                    .areExactly(choice2)
-
-                    .and()
-                    .successorsOf(choice2)
-                    .areExactly(n2)
-
-                    .and()
-                    .successorsOf(n3)
-                    .isEmpty()
-
-                    .and()
-                    .successorsOf(n2)
-                    .isEmpty();
-
-            assertThat(choice1.getScope()).containsExactlyInAnyOrder(n1, n3, choice2);
-            assertThat(choice2.getScope()).containsExactly(n2);
+                    .root().is(root)
+                    .and().successorsOf(root).areExactly(choice1)
+                    .and().successorsOf(choice1).areExactly(n1, n3)
+                    .and().successorsOf(n1).areExactly(choice2)
+                    .and().successorsOf(choice2).areExactly(n2)
+                    .and().successorsOf(n3).isEmpty()
+                    .and().successorsOf(n2).isEmpty()
+                    .and().node(choice1).scopeContainsExactly(n1, n3, choice2)
+                    .and().node(choice2).scopeContainsExactly(n2);
         }
 
         @Test
@@ -244,17 +221,18 @@ class ActionNodeAddTest extends AbstractGraphTest {
             FlowGraph updatedGraph = addDrawableToGraph(graph, n5, dropPoint);
 
             // Then
-            assertThatRootIs(updatedGraph, root);
-            assertThatSuccessorsAreExactly(updatedGraph, root, choice1);
-            assertThatSuccessorsAreExactly(updatedGraph, choice1, n1, n3);
-            assertThatSuccessorsAreExactly(updatedGraph, n3, n4);
-            assertThatSuccessorsAreExactly(updatedGraph, n4, n5);
-            assertThatSuccessorsAreExactly(updatedGraph, n5);
-            assertThatSuccessorsAreExactly(updatedGraph, n1, choice2);
-            assertThatSuccessorsAreExactly(updatedGraph, choice2, n2);
-
-            assertThat(choice1.getScope()).containsExactlyInAnyOrder(n1, n3, n4, n5, choice2);
-            assertThat(choice2.getScope()).containsExactly(n2);
+            PluginAssertion.assertThat(updatedGraph)
+                    .root().is(root)
+                    .and().successorsOf(root).isExactly(choice1)
+                    .and().successorsOf(choice1).areExactly(n1, n3)
+                    .and().successorsOf(n3).isExactly(n4)
+                    .and().successorsOf(n4).isExactly(n5)
+                    .and().successorsOf(n5).isEmpty()
+                    .and().successorsOf(n1).isExactly(choice2)
+                    .and().successorsOf(choice2).isExactly(n2)
+                    .and().successorsOf(n2).isEmpty()
+                    .and().node(choice1).scopeContainsExactly(n1, n3, n4, n5, choice2)
+                    .and().node(choice2).scopeContainsExactly(n2);
         }
 
 
@@ -297,18 +275,18 @@ class ActionNodeAddTest extends AbstractGraphTest {
             FlowGraph updatedGraph = addDrawableToGraph(graph, n7, dropPoint);
 
             // Then
-            assertThatRootIs(updatedGraph, root);
-            assertThatSuccessorsAreExactly(updatedGraph, root, choice1);
-            assertThatSuccessorsAreExactly(updatedGraph, choice1, n1, n3);
-            assertThatSuccessorsAreExactly(updatedGraph, n1, choice2);
-            assertThatSuccessorsAreExactly(updatedGraph, choice2, n2);
-            assertThatSuccessorsAreExactly(updatedGraph, n2, n7);
-            assertThatSuccessorsAreExactly(updatedGraph, n3, n4);
-            assertThatSuccessorsAreExactly(updatedGraph, n4, n5);
-            assertThatSuccessorsAreExactly(updatedGraph, n5, n6);
-
-            assertThat(choice2.getScope()).containsExactly(n2);
-            assertThat(choice1.getScope()).containsExactlyInAnyOrder(n1, n3, n4, n5, n6, n7, choice2);
+            PluginAssertion.assertThat(updatedGraph)
+                    .root().is(root)
+                    .and().successorsOf(root).isExactly(choice1)
+                    .and().successorsOf(choice1).areExactly(n1, n3)
+                    .and().successorsOf(n1).isExactly(choice2)
+                    .and().successorsOf(choice2).isExactly(n2)
+                    .and().successorsOf(n2).isExactly(n7)
+                    .and().successorsOf(n3).isExactly(n4)
+                    .and().successorsOf(n4).isExactly(n5)
+                    .and().successorsOf(n5).isExactly(n6)
+                    .and().node(choice1).scopeContainsExactly(n1, n3, n4, n5, n6, n7, choice2)
+                    .and().node(choice2).scopeContainsExactly(n2);
         }
 
         @Test
@@ -351,19 +329,19 @@ class ActionNodeAddTest extends AbstractGraphTest {
             // When
             FlowGraph updatedGraph = addDrawableToGraph(graph, n8, dropPoint);
 
-            assertThatRootIs(updatedGraph, root);
-            assertThatSuccessorsAreExactly(updatedGraph, root, choice1);
-            assertThatSuccessorsAreExactly(updatedGraph, choice1, n1, n3);
-            assertThatSuccessorsAreExactly(updatedGraph, n1, choice2);
-            assertThatSuccessorsAreExactly(updatedGraph, choice2, n2);
-            assertThatSuccessorsAreExactly(updatedGraph, n2, n7);
-            assertThatSuccessorsAreExactly(updatedGraph, n7, n8);
-            assertThatSuccessorsAreExactly(updatedGraph, n3, n4);
-            assertThatSuccessorsAreExactly(updatedGraph, n4, n5);
-            assertThatSuccessorsAreExactly(updatedGraph, n5, n6);
-
-            assertThat(choice2.getScope()).containsExactly(n2);
-            assertThat(choice1.getScope()).containsExactlyInAnyOrder(n1, n3, n4, n5, n6, n7, n8, choice2);
+            PluginAssertion.assertThat(updatedGraph)
+                    .root().is(root)
+                    .and().successorsOf(root).isExactly(choice1)
+                    .and().successorsOf(choice1).areExactly(n1, n3)
+                    .and().successorsOf(n1).isExactly(choice2)
+                    .and().successorsOf(choice2).isExactly(n2)
+                    .and().successorsOf(n2).isExactly(n7)
+                    .and().successorsOf(n7).isExactly(n8)
+                    .and().successorsOf(n3).isExactly(n4)
+                    .and().successorsOf(n4).isExactly(n5)
+                    .and().successorsOf(n5).isExactly(n6)
+                    .and().node(choice2).scopeContainsExactly(n2)
+                    .and().node(choice1).scopeContainsExactly(n1, n3, n4, n5, n6, n7, n8, choice2);
         }
 
         @Test
@@ -385,13 +363,13 @@ class ActionNodeAddTest extends AbstractGraphTest {
             FlowGraph updatedGraph = addDrawableToGraph(graph, n2, dropPoint);
 
             // Then
-            assertThatRootIs(updatedGraph, root);
-            assertThatSuccessorsAreExactly(updatedGraph, root, choice1);
-            assertThatSuccessorsAreExactly(updatedGraph, choice1, n1);
-            assertThatSuccessorsAreExactly(updatedGraph, n1, n2);
-            assertThatSuccessorsAreExactly(updatedGraph, n2);
-
-            assertThat(choice1.getScope()).containsExactly(n1);
+            PluginAssertion.assertThat(updatedGraph)
+                    .root().is(root)
+                    .and().successorsOf(root).isExactly(choice1)
+                    .and().successorsOf(choice1).isExactly(n1)
+                    .and().successorsOf(n1).isExactly(n2)
+                    .and().successorsOf(n2).isEmpty()
+                    .and().node(choice1).scopeContainsExactly(n1);
         }
 
         @Test
@@ -415,13 +393,14 @@ class ActionNodeAddTest extends AbstractGraphTest {
             FlowGraph updatedGraph = addDrawableToGraph(graph, n3, dropPoint);
 
             // Then
-            assertThatRootIs(updatedGraph, root);
-            assertThatSuccessorsAreExactly(updatedGraph, root, choice1);
-            assertThatSuccessorsAreExactly(updatedGraph, choice1, n1);
-            assertThatSuccessorsAreExactly(updatedGraph, n1, n2);
-            assertThatSuccessorsAreExactly(updatedGraph, n2, n3);
-
-            assertThat(choice1.getScope()).containsExactly(n1);
+            PluginAssertion.assertThat(updatedGraph)
+                    .root().is(root)
+                    .and().successorsOf(root).isExactly(choice1)
+                    .and().successorsOf(choice1).isExactly(n1)
+                    .and().successorsOf(n1).isExactly(n2)
+                    .and().successorsOf(n2).isExactly(n3)
+                    .and().successorsOf(n3).isEmpty()
+                    .and().node(choice1).scopeContainsExactly(n1);
         }
 
         @Nested
@@ -447,11 +426,13 @@ class ActionNodeAddTest extends AbstractGraphTest {
                 FlowGraph updatedGraph = addDrawableToGraph(graph, n2, dropPoint);
 
                 // Then
-                assertThatRootIs(updatedGraph, root);
-                assertThatSuccessorsAreExactly(updatedGraph, root, n2);
-                assertThatSuccessorsAreExactly(updatedGraph, n2, choice1);
-                assertThatSuccessorsAreExactly(updatedGraph, choice1, n1);
-                assertThat(choice1.getScope()).containsExactly(n1);
+                PluginAssertion.assertThat(updatedGraph)
+                        .root().is(root)
+                        .and().successorsOf(root).isExactly(n2)
+                        .and().successorsOf(n2).isExactly(choice1)
+                        .and().successorsOf(choice1).isExactly(n1)
+                        .and().successorsOf(n1).isEmpty()
+                        .and().node(choice1).scopeContainsExactly(n1);
             }
 
             @Test
@@ -478,14 +459,16 @@ class ActionNodeAddTest extends AbstractGraphTest {
                 FlowGraph updatedGraph = addDrawableToGraph(graph, n3, dropPoint);
 
                 // Then
-                assertThatRootIs(updatedGraph, root);
-                assertThatSuccessorsAreExactly(updatedGraph, root, choice1);
-                assertThatSuccessorsAreExactly(updatedGraph, choice1, n1);
-                assertThatSuccessorsAreExactly(updatedGraph, n1, n3);
-                assertThatSuccessorsAreExactly(updatedGraph, n3, choice2);
-                assertThatSuccessorsAreExactly(updatedGraph, choice2, n2);
-                assertThat(choice1.getScope()).containsExactly(n1);
-                assertThat(choice2.getScope()).containsExactly(n2);
+                PluginAssertion.assertThat(updatedGraph)
+                        .root().is(root)
+                        .and().successorsOf(root).isExactly(choice1)
+                        .and().successorsOf(choice1).isExactly(n1)
+                        .and().successorsOf(n1).isExactly(n3)
+                        .and().successorsOf(n3).isExactly(choice2)
+                        .and().successorsOf(choice2).isExactly(n2)
+                        .and().successorsOf(n2).isEmpty()
+                        .and().node(choice1).scopeContainsExactly(n1)
+                        .and().node(choice2).scopeContainsExactly(n2);
             }
 
             @Test
@@ -510,12 +493,14 @@ class ActionNodeAddTest extends AbstractGraphTest {
                 FlowGraph updatedGraph = addDrawableToGraph(graph, n3, dropPoint);
 
                 // Then
-                assertThatRootIs(updatedGraph, root);
-                assertThatSuccessorsAreExactly(updatedGraph, root, choice1);
-                assertThatSuccessorsAreExactly(updatedGraph, choice1, n1);
-                assertThatSuccessorsAreExactly(updatedGraph, n1, n3);
-                assertThatSuccessorsAreExactly(updatedGraph, n3, n2);
-                assertThat(choice1.getScope()).containsExactly(n1);
+                PluginAssertion.assertThat(updatedGraph)
+                        .root().is(root)
+                        .and().successorsOf(root).isExactly(choice1)
+                        .and().successorsOf(choice1).isExactly(n1)
+                        .and().successorsOf(n1).isExactly(n3)
+                        .and().successorsOf(n3).isExactly(n2)
+                        .and().successorsOf(n2).isEmpty()
+                        .and().node(choice1).scopeContainsExactly(n1);
             }
 
             @Test
@@ -534,9 +519,10 @@ class ActionNodeAddTest extends AbstractGraphTest {
                 FlowGraph updatedGraph = addDrawableToGraph(graph, n2, dropPoint);
 
                 // Then
-                assertThatRootIs(updatedGraph, root);
-                assertThatSuccessorsAreExactly(updatedGraph, root, n2);
-                assertThatSuccessorsAreExactly(updatedGraph, n2, n1);
+                PluginAssertion.assertThat(updatedGraph)
+                        .root().is(root)
+                        .and().successorsOf(root).isExactly(n2)
+                        .and().successorsOf(n2).isExactly(n1);
             }
 
             @Test
@@ -567,15 +553,16 @@ class ActionNodeAddTest extends AbstractGraphTest {
                 FlowGraph updatedGraph = addDrawableToGraph(graph, n4, dropPoint);
 
                 // Then
-                assertThatRootIs(updatedGraph, root);
-                assertThatSuccessorsAreExactly(updatedGraph, root, choice1);
-                assertThatSuccessorsAreExactly(updatedGraph, choice1, n1);
-                assertThatSuccessorsAreExactly(updatedGraph, n1, choice2);
-                assertThatSuccessorsAreExactly(updatedGraph, choice2, n2);
-                assertThatSuccessorsAreExactly(updatedGraph, n2, n4);
-                assertThatSuccessorsAreExactly(updatedGraph, n4, n3);
-                assertThat(choice1.getScope()).containsExactlyInAnyOrder(n1, choice2);
-                assertThat(choice2.getScope()).containsExactly(n2);
+                PluginAssertion.assertThat(updatedGraph)
+                        .root().is(root)
+                        .and().successorsOf(root).isExactly(choice1)
+                        .and().successorsOf(choice1).isExactly(n1)
+                        .and().successorsOf(n1).isExactly(choice2)
+                        .and().successorsOf(choice2).isExactly(n2)
+                        .and().successorsOf(n2).isExactly(n4)
+                        .and().successorsOf(n4).isExactly(n3)
+                        .and().node(choice1).scopeContainsExactly(n1, choice2)
+                        .and().node(choice2).scopeContainsExactly(n2);
             }
         }
 
@@ -609,18 +596,17 @@ class ActionNodeAddTest extends AbstractGraphTest {
                 FlowGraph updatedGraph = addDrawableToGraph(graph, n3, dropPoint);
 
                 // Then
-                assertThatRootIs(updatedGraph, root);
-                assertThatSuccessorsAreExactly(updatedGraph, root, choice1);
-                assertThatSuccessorsAreExactly(updatedGraph, choice1, n1);
-                assertThatSuccessorsAreExactly(updatedGraph, n1, choice2);
-                assertThatSuccessorsAreExactly(updatedGraph, choice2, n2);
-                assertThatSuccessorsAreExactly(updatedGraph, n2, n3);
-
-                assertThat(choice1.getScope()).containsExactlyInAnyOrder(n1, choice2, n3);
-                assertThat(choice2.getScope()).containsExactlyInAnyOrder(n2);
+                PluginAssertion.assertThat(updatedGraph)
+                        .root().is(root)
+                        .and().successorsOf(root).isExactly(choice1)
+                        .and().successorsOf(choice1).isExactly(n1)
+                        .and().successorsOf(n1).isExactly(choice2)
+                        .and().successorsOf(choice2).isExactly(n2)
+                        .and().successorsOf(n2).isExactly(n3)
+                        .and().node(choice1).scopeContainsExactly(n1, choice2, n3)
+                        .and().node(choice2).scopeContainsExactly(n2);
             }
         }
-
     }
 
     private FlowGraphChangeAware addDrawableToGraph(FlowGraph graph, GraphNode dropped, Point dropPoint) {
@@ -629,15 +615,6 @@ class ActionNodeAddTest extends AbstractGraphTest {
         ActionNodeAdd action = new ActionNodeAdd(modifiableGraph, dropPoint, connector, graphics);
         action.execute();
         return modifiableGraph;
-    }
-
-    private void assertNodeCountIs(FlowGraph flowGraph, int expectedCount) {
-        assertThat(flowGraph.nodesCount()).isEqualTo(expectedCount);
-    }
-
-    private void assertIsChangedWithNodesCount(FlowGraphChangeAware graph, int nodesCount) {
-        assertThat(graph.isChanged()).isTrue();
-        assertThat(graph.nodesCount()).isEqualTo(nodesCount);
     }
 
 }

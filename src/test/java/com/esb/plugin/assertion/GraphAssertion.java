@@ -39,4 +39,9 @@ public class GraphAssertion {
         return this;
     }
 
+    public GraphAssertion contains(GraphNode node) {
+        assertThat(graph.nodes()).contains(node);
+        return this;
+    }
+
 }

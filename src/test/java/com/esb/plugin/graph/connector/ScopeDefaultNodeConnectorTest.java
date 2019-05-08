@@ -1,13 +1,12 @@
 package com.esb.plugin.graph.connector;
 
 import com.esb.plugin.AbstractGraphTest;
+import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
 import com.esb.plugin.graph.FlowGraphImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class ScopeDefaultNodeConnectorTest extends AbstractGraphTest {
 
@@ -34,7 +33,8 @@ class ScopeDefaultNodeConnectorTest extends AbstractGraphTest {
         new ScopedNodeConnector(modifiableGraph, scopeGraph);
 
         // Then
-        assertThat(modifiableGraph.isChanged()).isFalse();
+        PluginAssertion.assertThat(modifiableGraph)
+                .isNotChanged();
     }
 
     @Test
@@ -50,12 +50,13 @@ class ScopeDefaultNodeConnectorTest extends AbstractGraphTest {
         connector.addPredecessor(n1);
 
         // Then
-        assertThat(modifiableGraph.isChanged()).isTrue();
-        assertThatRootIs(modifiableGraph, root);
-        assertThatSuccessorsAreExactly(modifiableGraph, root, n1);
-        assertThatSuccessorsAreExactly(modifiableGraph, n1, choice1);
-        assertThatSuccessorsAreExactly(modifiableGraph, choice1, n2);
-        assertThatSuccessorsAreExactly(modifiableGraph, n2);
+        PluginAssertion.assertThat(modifiableGraph)
+                .isChanged()
+                .root().is(root)
+                .and().successorsOf(root).isExactly(n1)
+                .and().successorsOf(n1).isExactly(choice1)
+                .and().successorsOf(choice1).isExactly(n2)
+                .and().successorsOf(n2).isEmpty();
     }
 
     @Test
@@ -71,9 +72,10 @@ class ScopeDefaultNodeConnectorTest extends AbstractGraphTest {
         connector.addSuccessor(n1);
 
         // Then
-        assertThatRootIs(modifiableGraph, root);
-        assertThatSuccessorsAreExactly(modifiableGraph, n2, n1);
-        assertThatSuccessorsAreExactly(modifiableGraph, n1);
+        PluginAssertion.assertThat(modifiableGraph)
+                .root().is(root)
+                .and().successorsOf(n2).isExactly(n1)
+                .and().successorsOf(n1).isEmpty();
     }
 
     @Test
@@ -90,7 +92,8 @@ class ScopeDefaultNodeConnectorTest extends AbstractGraphTest {
         connector.addToScope(choice3);
 
         // Then
-        assertThat(choice3.getScope()).containsExactly(choice1);
+        PluginAssertion.assertThat(modifiableGraph)
+                .node(choice3).scopeContainsExactly(choice1);
     }
 
     @Test
@@ -106,10 +109,11 @@ class ScopeDefaultNodeConnectorTest extends AbstractGraphTest {
         connector.add();
 
         // Then
-        assertThat(modifiableGraph.isChanged()).isTrue();
-        assertThat(modifiableGraph.nodes()).contains(choice1);
-        assertThat(modifiableGraph.nodes()).contains(n2);
-        assertThatSuccessorsAreExactly(modifiableGraph, choice1, n2);
-        assertThatSuccessorsAreExactly(modifiableGraph, n2);
+        PluginAssertion.assertThat(modifiableGraph)
+                .isChanged()
+                .contains(choice1)
+                .contains(n2)
+                .successorsOf(choice1).isExactly(n2)
+                .and().successorsOf(n2).isEmpty();
     }
 }

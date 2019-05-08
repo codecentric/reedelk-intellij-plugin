@@ -4,7 +4,6 @@ import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.component.choice.ChoiceNode;
 import com.esb.plugin.component.generic.GenericComponentNode;
-import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,8 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -103,17 +100,5 @@ public abstract class AbstractGraphTest {
                 .build());
     }
 
-    protected void assertThatRootIs(FlowGraph graph, GraphNode root) {
-        assertThat(graph.root()).isEqualTo(root);
-    }
-
-    // TODO: Replace this with new assertions
-    protected void assertThatSuccessorsAreExactly(FlowGraph graph, GraphNode target, GraphNode... successors) {
-        if (successors.length == 0) {
-            assertThat(graph.successors(target)).isEmpty();
-        } else {
-            assertThat(graph.successors(target)).containsExactly(successors);
-        }
-    }
 
 }
