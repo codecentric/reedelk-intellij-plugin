@@ -2,17 +2,16 @@ package com.esb.plugin.graph.deserializer;
 
 import com.esb.plugin.AbstractDeserializerTest;
 import com.esb.plugin.assertion.PluginAssertion;
+import com.esb.plugin.fixture.Json;
 import com.esb.plugin.graph.FlowGraph;
 import org.junit.jupiter.api.Test;
-
-import static com.esb.plugin.SampleJson.FLOW_WITH_ALL_COMPONENTS;
 
 class GraphDeserializerTest extends AbstractDeserializerTest {
 
     @Test
     void shouldDeserializeFlowWithAllDefaultComponentsCorrectly() {
         // Given
-        String json = FLOW_WITH_ALL_COMPONENTS.asJson();
+        String json = Json.CompleteFlow.Sample.json();
         GraphDeserializer deserializer = new GraphDeserializer(json, context);
 
         // When

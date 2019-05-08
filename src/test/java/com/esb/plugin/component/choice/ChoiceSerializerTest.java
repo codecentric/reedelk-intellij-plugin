@@ -1,7 +1,7 @@
 package com.esb.plugin.component.choice;
 
-import com.esb.plugin.SampleJson;
 import com.esb.plugin.component.ComponentData;
+import com.esb.plugin.fixture.Json;
 import com.esb.plugin.graph.AbstractGraphTest;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphImpl;
@@ -65,7 +65,7 @@ public class ChoiceSerializerTest extends AbstractGraphTest {
 
         // Then
         String actualJson = serializedObject.toString(2);
-        String expectedJson = SampleJson.CHOICE_WITH_NODE_OUTSIDE_SCOPE.asJson();
+        String expectedJson = Json.Choice.WithNodeOutsideScope.json();
         JSONAssert.assertEquals(expectedJson, actualJson, true);
     }
 
