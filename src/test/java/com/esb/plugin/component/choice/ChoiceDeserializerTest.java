@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static com.esb.plugin.fixture.Json.Choice;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ChoiceDeserializerTest extends AbstractDeserializerTest {
@@ -43,7 +44,7 @@ class ChoiceDeserializerTest extends AbstractDeserializerTest {
     @Test
     void shouldDeserializeChoiceDefinitionCorrectly() {
         // Given
-        JSONObject choiceDefinition = new JSONObject(Json.Choice.Sample.asJson());
+        JSONObject choiceDefinition = new JSONObject(Choice.Sample.asJson());
 
         // When
         GraphNode lastNode = deserializer.deserialize(root, choiceDefinition);
@@ -77,8 +78,8 @@ class ChoiceDeserializerTest extends AbstractDeserializerTest {
                 .predecessorOf(lastNode)
                 .containsExactly(componentNode1, componentNode4, componentNode6)
 
+                // total nodes include: root, stop node and all the nodes belonging to this choice
                 .and()
                 .nodesCountIs(9);
     }
-
 }
