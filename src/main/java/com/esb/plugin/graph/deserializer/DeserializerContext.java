@@ -15,8 +15,11 @@ public class DeserializerContext {
     }
 
     public <T extends GraphNode> T instantiateGraphNode(String componentName) {
-        ComponentDescriptor componentDescriptor = ComponentService.getInstance(module)
-                .componentDescriptorByName(componentName);
+        ComponentDescriptor componentDescriptor =
+                ComponentService
+                        .getInstance(module)
+                        .componentDescriptorByName(componentName);
+
         return GraphNodeFactory.get(componentDescriptor);
     }
 }

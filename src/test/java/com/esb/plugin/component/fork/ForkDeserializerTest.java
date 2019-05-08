@@ -24,7 +24,7 @@ class ForkDeserializerTest extends AbstractDeserializerTest {
     @Test
     void shouldDeserializeForkDefinitionCorrectly() {
          // Given
-        JSONObject forkDefinition = new JSONObject(Json.Fork.Sample.asJson());
+        JSONObject forkDefinition = new JSONObject(Json.Fork.Sample.json());
 
          // When
         GraphNode lastNode = deserializer.deserialize(root, forkDefinition);

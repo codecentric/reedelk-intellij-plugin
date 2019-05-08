@@ -25,7 +25,7 @@ class ChoiceDeserializerTest extends AbstractDeserializerTest {
     @Test
     void shouldDeserializeChoiceDefinitionCorrectly() {
         // Given
-        JSONObject choiceDefinition = new JSONObject(Choice.Sample.asJson());
+        JSONObject choiceDefinition = new JSONObject(Choice.Sample.json());
 
         // When
         GraphNode lastNode = deserializer.deserialize(root, choiceDefinition);

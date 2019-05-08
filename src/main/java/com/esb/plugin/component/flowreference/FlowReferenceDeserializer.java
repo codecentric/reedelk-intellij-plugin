@@ -1,11 +1,13 @@
 package com.esb.plugin.component.flowreference;
 
+import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.deserializer.AbstractDeserializer;
 import com.esb.plugin.graph.deserializer.DeserializerContext;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONObject;
 
+import static com.esb.internal.commons.JsonParser.FlowReference;
 import static com.esb.internal.commons.JsonParser.Implementor;
 
 public class FlowReferenceDeserializer extends AbstractDeserializer {
@@ -19,10 +21,16 @@ public class FlowReferenceDeserializer extends AbstractDeserializer {
 
         String name = Implementor.name(componentDefinition);
 
-        FlowReferenceNode drawable = context.instantiateGraphNode(name);
+        FlowReferenceNode node = context.instantiateGraphNode(name);
 
-        graph.add(parent, drawable);
+        ComponentData componentData = node.component();
 
-        return drawable;
+        String reference = FlowReference.ref(componentDefinition);
+
+        componentData.set(FlowReference.ref(), reference);
+
+        graph.add(parent, node);
+
+        return node;
     }
 }

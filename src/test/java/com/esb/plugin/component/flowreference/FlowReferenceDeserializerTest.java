@@ -1,19 +1,19 @@
 package com.esb.plugin.component.flowreference;
 
-import com.esb.component.FlowReference;
 import com.esb.plugin.AbstractDeserializerTest;
 import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.component.ComponentData;
-import com.esb.plugin.graph.deserializer.ComponentDefinitionBuilder;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-import java.util.UUID;
-
+import static com.esb.plugin.fixture.Json.FlowReference;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@MockitoSettings(strictness = Strictness.LENIENT)
 class FlowReferenceDeserializerTest extends AbstractDeserializerTest {
 
     private FlowReferenceDeserializer deserializer;
@@ -25,31 +25,28 @@ class FlowReferenceDeserializerTest extends AbstractDeserializerTest {
     }
 
     @Test
-    void shouldBuildFlowReferenceCorrectly() {
+    void shouldDeserializeFlowReferenceDefinitionCorrectly() {
         // Given
-        String givenRef = UUID.randomUUID().toString();
+        String expectedFlowReference = "11a2ce60-5c9d-1111-82a7-f1fa1111f333";
 
-        FlowReferenceNode flowReferenceNode = mockFlowReferenceNode();
-
-        JSONObject componentDefinition = ComponentDefinitionBuilder.forComponent(FlowReference.class.getName())
-                .with("ref", givenRef)
-                .build();
+        JSONObject flowReferenceDefinition = new JSONObject(FlowReference.Sample.json());
 
         // When
-        GraphNode lastNode = deserializer.deserialize(root, componentDefinition);
+        GraphNode lastNode = deserializer.deserialize(root, flowReferenceDefinition);
 
         // Then
         assertThat(lastNode).isEqualTo(flowReferenceNode);
 
         PluginAssertion.assertThat(graph)
-                .successorOf(root)
-                .containsExactly(flowReferenceNode)
+
+                .node(lastNode)
+                .is(flowReferenceNode)
+
                 .and()
                 .nodesCountIs(2);
 
-
         ComponentData actualComponentData = flowReferenceNode.component();
-        assertThat(actualComponentData.get("ref")).isEqualTo(givenRef);
+        assertThat(actualComponentData.get("ref")).isEqualTo(expectedFlowReference);
     }
 
 }
