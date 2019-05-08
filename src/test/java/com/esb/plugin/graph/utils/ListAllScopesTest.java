@@ -1,6 +1,6 @@
 package com.esb.plugin.graph.utils;
 
-import com.esb.plugin.graph.AbstractGraphTest;
+import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphImpl;
 import com.esb.plugin.graph.node.ScopedGraphNode;

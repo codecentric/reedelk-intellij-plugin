@@ -1,6 +1,6 @@
 package com.esb.plugin.graph.utils;
 
-import com.esb.plugin.graph.AbstractGraphTest;
+import com.esb.plugin.AbstractGraphTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;

@@ -24,36 +24,36 @@ class GraphDeserializerTest extends AbstractDeserializerTest {
                 .is(componentNode1)
 
                 .and()
-                .successorOf(componentNode1)
-                .containsExactly(choiceNode)
+                .successorsOf(componentNode1)
+                .areExactly(choiceNode)
 
                 .and()
-                .successorOf(choiceNode)
-                .containsExactly(componentNode2, flowReferenceNode, forkNode)
+                .successorsOf(choiceNode)
+                .areExactly(componentNode2, flowReferenceNode, forkNode)
 
                 .and()
-                .successorOf(componentNode2)
-                .containsExactly(componentNode6)
+                .successorsOf(componentNode2)
+                .areExactly(componentNode6)
 
                 .and()
-                .successorOf(flowReferenceNode)
-                .containsExactly(componentNode6)
+                .successorsOf(flowReferenceNode)
+                .areExactly(componentNode6)
 
                 .and()
-                .successorOf(forkNode)
-                .containsExactly(componentNode3, componentNode4)
+                .successorsOf(forkNode)
+                .areExactly(componentNode3, componentNode4)
 
                 .and()
-                .successorOf(componentNode3)
-                .containsExactly(componentNode5)
+                .successorsOf(componentNode3)
+                .areExactly(componentNode5)
 
                 .and()
-                .successorOf(componentNode4)
-                .containsExactly(componentNode5)
+                .successorsOf(componentNode4)
+                .areExactly(componentNode5)
 
                 .and()
-                .successorOf(componentNode5)
-                .containsExactly(componentNode6);
+                .successorsOf(componentNode5)
+                .areExactly(componentNode6);
     }
 
 }

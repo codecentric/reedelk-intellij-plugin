@@ -36,28 +36,28 @@ class ForkDeserializerTest extends AbstractDeserializerTest {
                 .is(componentNode5)
 
                 .and()
-                .successorOf(forkNode)
-                .containsExactly(componentNode3, componentNode1)
+                .successorsOf(forkNode)
+                .areExactly(componentNode3, componentNode1)
 
                 .and()
-                .successorOf(componentNode3)
-                .containsExactly(componentNode2)
+                .successorsOf(componentNode3)
+                .areExactly(componentNode2)
 
                 .and()
-                .successorOf(componentNode1)
-                .containsExactly(componentNode4)
+                .successorsOf(componentNode1)
+                .areExactly(componentNode4)
 
                 .and()
-                .successorOf(componentNode2)
-                .containsExactly(stopNode1)
+                .successorsOf(componentNode2)
+                .areExactly(stopNode1)
 
                 .and()
-                .successorOf(componentNode4)
-                .containsExactly(stopNode1)
+                .successorsOf(componentNode4)
+                .areExactly(stopNode1)
 
                 .and()
-                .successorOf(stopNode1)
-                .containsExactly(componentNode5)
+                .successorsOf(stopNode1)
+                .areExactly(componentNode5)
 
                 .and()
                 .nodesCountIs(8);

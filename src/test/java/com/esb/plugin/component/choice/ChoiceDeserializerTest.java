@@ -37,20 +37,20 @@ class ChoiceDeserializerTest extends AbstractDeserializerTest {
                 .is(stopNode1)
 
                 .and()
-                .successorOf(choiceNode)
-                .containsExactly(componentNode3, componentNode2, componentNode5)
+                .successorsOf(choiceNode)
+                .areExactly(componentNode3, componentNode2, componentNode5)
 
                 .and()
-                .successorOf(componentNode3)
-                .containsExactly(componentNode1)
+                .successorsOf(componentNode3)
+                .areExactly(componentNode1)
 
                 .and()
-                .successorOf(componentNode2)
-                .containsExactly(componentNode4)
+                .successorsOf(componentNode2)
+                .areExactly(componentNode4)
 
                 .and()
-                .successorOf(componentNode5)
-                .containsExactly(componentNode6)
+                .successorsOf(componentNode5)
+                .areExactly(componentNode6)
 
                 .and()
                 .predecessorOf(lastNode)

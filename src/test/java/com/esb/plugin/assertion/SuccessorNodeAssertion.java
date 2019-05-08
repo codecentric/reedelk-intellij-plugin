@@ -19,9 +19,15 @@ public class SuccessorNodeAssertion {
         this.node = node;
     }
 
-    public SuccessorNodeAssertion containsExactly(GraphNode... expectedNodes) {
+    public SuccessorNodeAssertion areExactly(GraphNode... expectedNodes) {
         List<GraphNode> successors = graph.successors(node);
         assertThat(successors).containsExactlyInAnyOrder(expectedNodes);
+        return this;
+    }
+
+    public SuccessorNodeAssertion isEmpty() {
+        List<GraphNode> successors = graph.successors(node);
+        assertThat(successors).isEmpty();
         return this;
     }
 

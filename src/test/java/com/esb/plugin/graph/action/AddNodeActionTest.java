@@ -1,6 +1,7 @@
 package com.esb.plugin.graph.action;
 
-import com.esb.plugin.graph.AbstractGraphTest;
+import com.esb.plugin.AbstractGraphTest;
+import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
 import com.esb.plugin.graph.FlowGraphImpl;
@@ -179,13 +180,33 @@ class AddNodeActionTest extends AbstractGraphTest {
             FlowGraph updatedGraph = addDrawableToGraph(graph, n3, dropPoint);
 
             // Then
-            assertThatRootIs(updatedGraph, root);
-            assertThatSuccessorsAreExactly(updatedGraph, root, choice1);
-            assertThatSuccessorsAreExactly(updatedGraph, choice1, n1, n3);
-            assertThatSuccessorsAreExactly(updatedGraph, n1, choice2);
-            assertThatSuccessorsAreExactly(updatedGraph, choice2, n2);
-            assertThatSuccessorsAreExactly(updatedGraph, n3);
-            assertThatSuccessorsAreExactly(updatedGraph, n2);
+            PluginAssertion.assertThat(updatedGraph)
+                    .root()
+                    .is(root)
+
+                    .and()
+                    .successorsOf(root)
+                    .areExactly(choice1)
+
+                    .and()
+                    .successorsOf(choice1)
+                    .areExactly(n1, n3)
+
+                    .and()
+                    .successorsOf(n1)
+                    .areExactly(choice2)
+
+                    .and()
+                    .successorsOf(choice2)
+                    .areExactly(n2)
+
+                    .and()
+                    .successorsOf(n3)
+                    .isEmpty()
+
+                    .and()
+                    .successorsOf(n2)
+                    .isEmpty();
 
             assertThat(choice1.getScope()).containsExactlyInAnyOrder(n1, n3, choice2);
             assertThat(choice2.getScope()).containsExactly(n2);

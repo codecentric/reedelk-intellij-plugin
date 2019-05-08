@@ -1,6 +1,6 @@
 package com.esb.plugin.graph.connector;
 
-import com.esb.plugin.graph.AbstractGraphTest;
+import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
 import com.esb.plugin.graph.FlowGraphImpl;

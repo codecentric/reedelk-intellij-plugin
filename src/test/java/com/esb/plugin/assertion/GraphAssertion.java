@@ -13,12 +13,16 @@ public class GraphAssertion {
         this.graph = graph;
     }
 
-    public SuccessorNodeAssertion successorOf(GraphNode node) {
+    public SuccessorNodeAssertion successorsOf(GraphNode node) {
         return new SuccessorNodeAssertion(graph, node, this);
     }
 
     public PredecessorNodeAssertion predecessorOf(GraphNode node) {
         return new PredecessorNodeAssertion(graph, node, this);
+    }
+
+    public RootAssertion root() {
+        return new RootAssertion(graph, this);
     }
 
     public NodeAssertion node(GraphNode node) {

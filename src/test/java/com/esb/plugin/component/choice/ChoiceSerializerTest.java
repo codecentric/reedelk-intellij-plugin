@@ -1,8 +1,8 @@
 package com.esb.plugin.component.choice;
 
+import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.fixture.Json;
-import com.esb.plugin.graph.AbstractGraphTest;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphImpl;
 import org.json.JSONObject;
