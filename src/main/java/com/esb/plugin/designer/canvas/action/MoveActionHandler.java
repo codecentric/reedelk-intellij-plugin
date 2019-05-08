@@ -4,7 +4,7 @@ import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
 import com.esb.plugin.graph.FlowGraphImpl;
 import com.esb.plugin.graph.GraphSnapshot;
-import com.esb.plugin.graph.action.RemoveNodeAction;
+import com.esb.plugin.graph.action.ActionNodeRemove;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.NothingSelectedNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
@@ -52,7 +52,7 @@ public class MoveActionHandler extends AbstractActionHandler {
         FlowGraph copy = snapshot.getGraph() == null ? new FlowGraphImpl() : snapshot.getGraph().copy();
 
         // 2. Remove the dropped node from the copy graph
-        RemoveNodeAction componentRemover = new RemoveNodeAction(copy, selected);
+        ActionNodeRemove componentRemover = new ActionNodeRemove(copy, selected);
         componentRemover.remove();
 
         // 3. Remove the dropped node from any scope it might belong to

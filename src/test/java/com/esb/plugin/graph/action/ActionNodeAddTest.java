@@ -18,7 +18,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class AddNodeActionTest extends AbstractGraphTest {
+class ActionNodeAddTest extends AbstractGraphTest {
 
     @Mock
     private Graphics2D graphics;
@@ -65,7 +65,7 @@ class AddNodeActionTest extends AbstractGraphTest {
 
     @Nested
     @DisplayName("Adding a component after root")
-    class AddNodeActionAfterRoot {
+    class ActionNodeAddAfterRoot {
 
         @Test
         void shouldAddComponentAfterRootAsLast() {
@@ -626,7 +626,7 @@ class AddNodeActionTest extends AbstractGraphTest {
     private FlowGraphChangeAware addDrawableToGraph(FlowGraph graph, GraphNode dropped, Point dropPoint) {
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
         Connector connector = new DefaultNodeConnector(modifiableGraph, dropped);
-        AddNodeAction action = new AddNodeAction(modifiableGraph, dropPoint, connector, graphics);
+        ActionNodeAdd action = new ActionNodeAdd(modifiableGraph, dropPoint, connector, graphics);
         action.execute();
         return modifiableGraph;
     }

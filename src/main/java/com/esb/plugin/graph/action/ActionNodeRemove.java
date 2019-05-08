@@ -6,12 +6,12 @@ import com.esb.plugin.graph.node.ScopedGraphNode;
 
 import java.util.List;
 
-public class RemoveNodeAction {
+public class ActionNodeRemove {
 
     private final GraphNode dropped;
     private final FlowGraph graph;
 
-    public RemoveNodeAction(final FlowGraph copy, final GraphNode dropped) {
+    public ActionNodeRemove(final FlowGraph copy, final GraphNode dropped) {
         this.graph = copy;
         this.dropped = dropped;
     }

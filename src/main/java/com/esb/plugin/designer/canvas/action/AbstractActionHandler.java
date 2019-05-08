@@ -2,7 +2,7 @@ package com.esb.plugin.designer.canvas.action;
 
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
-import com.esb.plugin.graph.action.AddNodeAction;
+import com.esb.plugin.graph.action.ActionNodeAdd;
 import com.esb.plugin.graph.connector.Connector;
 import com.esb.plugin.graph.connector.ConnectorFactory;
 import com.esb.plugin.graph.node.GraphNode;
@@ -28,8 +28,8 @@ abstract class AbstractActionHandler {
                 .module(module)
                 .build();
 
-        AddNodeAction addNodeAction = new AddNodeAction(modifiableGraph, dropPoint, connector, graphics);
-        addNodeAction.execute();
+        ActionNodeAdd actionNodeAdd = new ActionNodeAdd(modifiableGraph, dropPoint, connector, graphics);
+        actionNodeAdd.execute();
 
         return modifiableGraph;
     }

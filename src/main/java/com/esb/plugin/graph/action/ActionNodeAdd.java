@@ -23,14 +23,14 @@ import static java.util.stream.Collectors.toList;
  * Adds to the graph a new node representing the Component Name to the given location.
  * This class find the best position where to place the node in the Graph given the drop point location.
  */
-public class AddNodeAction {
+public class ActionNodeAdd {
 
     private final FlowGraph graph;
     private final Point dropPoint;
     private final Connector connector;
     private final Graphics2D graphics;
 
-    public AddNodeAction(FlowGraph graph, Point dropPoint, Connector connector, Graphics2D graphics) {
+    public ActionNodeAdd(FlowGraph graph, Point dropPoint, Connector connector, Graphics2D graphics) {
         this.graph = graph;
         this.graphics = graphics;
         this.dropPoint = dropPoint;
