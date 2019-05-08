@@ -200,6 +200,11 @@ public abstract class AbstractGraphNode implements GraphNode {
         return new Point(x(), centerIconY);
     }
 
+    @Override
+    public String toString() {
+        return componentData.getFullyQualifiedName();
+    }
+
     /**
      * Draws connections between this node and the next one. If this is the last
      * node of the scope, don't draw any outgoing arrow.
@@ -214,10 +219,5 @@ public abstract class AbstractGraphNode implements GraphNode {
             }
         }
         arrows.draw(graph, graphics, observer);
-    }
-
-    @Override
-    public String toString() {
-        return componentData.getFullyQualifiedName();
     }
 }
