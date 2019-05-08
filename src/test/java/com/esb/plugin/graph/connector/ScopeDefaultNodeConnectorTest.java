@@ -53,9 +53,9 @@ class ScopeDefaultNodeConnectorTest extends AbstractGraphTest {
         PluginAssertion.assertThat(modifiableGraph)
                 .isChanged()
                 .root().is(root)
-                .and().successorsOf(root).isExactly(n1)
-                .and().successorsOf(n1).isExactly(choice1)
-                .and().successorsOf(choice1).isExactly(n2)
+                .and().successorsOf(root).isOnly(n1)
+                .and().successorsOf(n1).isOnly(choice1)
+                .and().successorsOf(choice1).isOnly(n2)
                 .and().successorsOf(n2).isEmpty();
     }
 
@@ -74,7 +74,7 @@ class ScopeDefaultNodeConnectorTest extends AbstractGraphTest {
         // Then
         PluginAssertion.assertThat(modifiableGraph)
                 .root().is(root)
-                .and().successorsOf(n2).isExactly(n1)
+                .and().successorsOf(n2).isOnly(n1)
                 .and().successorsOf(n1).isEmpty();
     }
 
@@ -113,7 +113,7 @@ class ScopeDefaultNodeConnectorTest extends AbstractGraphTest {
                 .isChanged()
                 .contains(choice1)
                 .contains(n2)
-                .successorsOf(choice1).isExactly(n2)
+                .successorsOf(choice1).isOnly(n2)
                 .and().successorsOf(n2).isEmpty();
     }
 }

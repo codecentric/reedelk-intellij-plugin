@@ -58,7 +58,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
                     .isChanged()
                     .nodesCountIs(2)
                     .root().is(n1)
-                    .and().successorsOf(n1).isExactly(root);
+                    .and().successorsOf(n1).isOnly(root);
         }
     }
 
@@ -83,7 +83,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
                     .isChanged()
                     .nodesCountIs(2)
                     .root().is(root)
-                    .and().successorsOf(root).isExactly(n1);
+                    .and().successorsOf(root).isOnly(n1);
         }
 
         @Test
@@ -107,8 +107,8 @@ class ActionNodeAddTest extends AbstractGraphTest {
                     .isChanged()
                     .nodesCountIs(3)
                     .root().is(root)
-                    .and().successorsOf(root).isExactly(n1)
-                    .and().successorsOf(n1).isExactly(n2)
+                    .and().successorsOf(root).isOnly(n1)
+                    .and().successorsOf(n1).isOnly(n2)
                     .and().successorsOf(n2).isEmpty();
         }
     }
@@ -144,9 +144,9 @@ class ActionNodeAddTest extends AbstractGraphTest {
             // By definition a Choice component cannot connect drawables outside the scope.
             PluginAssertion.assertThat(updatedGraph)
                     .nodesCountIs(5)
-                    .successorsOf(choice1).isExactly(n1)
-                    .and().successorsOf(n1).isExactly(n2)
-                    .and().successorsOf(n2).isExactly(n3)
+                    .successorsOf(choice1).isOnly(n1)
+                    .and().successorsOf(n1).isOnly(n2)
+                    .and().successorsOf(n2).isOnly(n3)
                     .and().successorsOf(n3).isEmpty()
                     .and().node(choice1).scopeContainsExactly(n1, n2);
         }
@@ -223,13 +223,13 @@ class ActionNodeAddTest extends AbstractGraphTest {
             // Then
             PluginAssertion.assertThat(updatedGraph)
                     .root().is(root)
-                    .and().successorsOf(root).isExactly(choice1)
+                    .and().successorsOf(root).isOnly(choice1)
                     .and().successorsOf(choice1).areExactly(n1, n3)
-                    .and().successorsOf(n3).isExactly(n4)
-                    .and().successorsOf(n4).isExactly(n5)
+                    .and().successorsOf(n3).isOnly(n4)
+                    .and().successorsOf(n4).isOnly(n5)
                     .and().successorsOf(n5).isEmpty()
-                    .and().successorsOf(n1).isExactly(choice2)
-                    .and().successorsOf(choice2).isExactly(n2)
+                    .and().successorsOf(n1).isOnly(choice2)
+                    .and().successorsOf(choice2).isOnly(n2)
                     .and().successorsOf(n2).isEmpty()
                     .and().node(choice1).scopeContainsExactly(n1, n3, n4, n5, choice2)
                     .and().node(choice2).scopeContainsExactly(n2);
@@ -277,14 +277,14 @@ class ActionNodeAddTest extends AbstractGraphTest {
             // Then
             PluginAssertion.assertThat(updatedGraph)
                     .root().is(root)
-                    .and().successorsOf(root).isExactly(choice1)
+                    .and().successorsOf(root).isOnly(choice1)
                     .and().successorsOf(choice1).areExactly(n1, n3)
-                    .and().successorsOf(n1).isExactly(choice2)
-                    .and().successorsOf(choice2).isExactly(n2)
-                    .and().successorsOf(n2).isExactly(n7)
-                    .and().successorsOf(n3).isExactly(n4)
-                    .and().successorsOf(n4).isExactly(n5)
-                    .and().successorsOf(n5).isExactly(n6)
+                    .and().successorsOf(n1).isOnly(choice2)
+                    .and().successorsOf(choice2).isOnly(n2)
+                    .and().successorsOf(n2).isOnly(n7)
+                    .and().successorsOf(n3).isOnly(n4)
+                    .and().successorsOf(n4).isOnly(n5)
+                    .and().successorsOf(n5).isOnly(n6)
                     .and().node(choice1).scopeContainsExactly(n1, n3, n4, n5, n6, n7, choice2)
                     .and().node(choice2).scopeContainsExactly(n2);
         }
@@ -331,15 +331,15 @@ class ActionNodeAddTest extends AbstractGraphTest {
 
             PluginAssertion.assertThat(updatedGraph)
                     .root().is(root)
-                    .and().successorsOf(root).isExactly(choice1)
+                    .and().successorsOf(root).isOnly(choice1)
                     .and().successorsOf(choice1).areExactly(n1, n3)
-                    .and().successorsOf(n1).isExactly(choice2)
-                    .and().successorsOf(choice2).isExactly(n2)
-                    .and().successorsOf(n2).isExactly(n7)
-                    .and().successorsOf(n7).isExactly(n8)
-                    .and().successorsOf(n3).isExactly(n4)
-                    .and().successorsOf(n4).isExactly(n5)
-                    .and().successorsOf(n5).isExactly(n6)
+                    .and().successorsOf(n1).isOnly(choice2)
+                    .and().successorsOf(choice2).isOnly(n2)
+                    .and().successorsOf(n2).isOnly(n7)
+                    .and().successorsOf(n7).isOnly(n8)
+                    .and().successorsOf(n3).isOnly(n4)
+                    .and().successorsOf(n4).isOnly(n5)
+                    .and().successorsOf(n5).isOnly(n6)
                     .and().node(choice2).scopeContainsExactly(n2)
                     .and().node(choice1).scopeContainsExactly(n1, n3, n4, n5, n6, n7, n8, choice2);
         }
@@ -365,9 +365,9 @@ class ActionNodeAddTest extends AbstractGraphTest {
             // Then
             PluginAssertion.assertThat(updatedGraph)
                     .root().is(root)
-                    .and().successorsOf(root).isExactly(choice1)
-                    .and().successorsOf(choice1).isExactly(n1)
-                    .and().successorsOf(n1).isExactly(n2)
+                    .and().successorsOf(root).isOnly(choice1)
+                    .and().successorsOf(choice1).isOnly(n1)
+                    .and().successorsOf(n1).isOnly(n2)
                     .and().successorsOf(n2).isEmpty()
                     .and().node(choice1).scopeContainsExactly(n1);
         }
@@ -395,10 +395,10 @@ class ActionNodeAddTest extends AbstractGraphTest {
             // Then
             PluginAssertion.assertThat(updatedGraph)
                     .root().is(root)
-                    .and().successorsOf(root).isExactly(choice1)
-                    .and().successorsOf(choice1).isExactly(n1)
-                    .and().successorsOf(n1).isExactly(n2)
-                    .and().successorsOf(n2).isExactly(n3)
+                    .and().successorsOf(root).isOnly(choice1)
+                    .and().successorsOf(choice1).isOnly(n1)
+                    .and().successorsOf(n1).isOnly(n2)
+                    .and().successorsOf(n2).isOnly(n3)
                     .and().successorsOf(n3).isEmpty()
                     .and().node(choice1).scopeContainsExactly(n1);
         }
@@ -428,9 +428,9 @@ class ActionNodeAddTest extends AbstractGraphTest {
                 // Then
                 PluginAssertion.assertThat(updatedGraph)
                         .root().is(root)
-                        .and().successorsOf(root).isExactly(n2)
-                        .and().successorsOf(n2).isExactly(choice1)
-                        .and().successorsOf(choice1).isExactly(n1)
+                        .and().successorsOf(root).isOnly(n2)
+                        .and().successorsOf(n2).isOnly(choice1)
+                        .and().successorsOf(choice1).isOnly(n1)
                         .and().successorsOf(n1).isEmpty()
                         .and().node(choice1).scopeContainsExactly(n1);
             }
@@ -461,11 +461,11 @@ class ActionNodeAddTest extends AbstractGraphTest {
                 // Then
                 PluginAssertion.assertThat(updatedGraph)
                         .root().is(root)
-                        .and().successorsOf(root).isExactly(choice1)
-                        .and().successorsOf(choice1).isExactly(n1)
-                        .and().successorsOf(n1).isExactly(n3)
-                        .and().successorsOf(n3).isExactly(choice2)
-                        .and().successorsOf(choice2).isExactly(n2)
+                        .and().successorsOf(root).isOnly(choice1)
+                        .and().successorsOf(choice1).isOnly(n1)
+                        .and().successorsOf(n1).isOnly(n3)
+                        .and().successorsOf(n3).isOnly(choice2)
+                        .and().successorsOf(choice2).isOnly(n2)
                         .and().successorsOf(n2).isEmpty()
                         .and().node(choice1).scopeContainsExactly(n1)
                         .and().node(choice2).scopeContainsExactly(n2);
@@ -495,10 +495,10 @@ class ActionNodeAddTest extends AbstractGraphTest {
                 // Then
                 PluginAssertion.assertThat(updatedGraph)
                         .root().is(root)
-                        .and().successorsOf(root).isExactly(choice1)
-                        .and().successorsOf(choice1).isExactly(n1)
-                        .and().successorsOf(n1).isExactly(n3)
-                        .and().successorsOf(n3).isExactly(n2)
+                        .and().successorsOf(root).isOnly(choice1)
+                        .and().successorsOf(choice1).isOnly(n1)
+                        .and().successorsOf(n1).isOnly(n3)
+                        .and().successorsOf(n3).isOnly(n2)
                         .and().successorsOf(n2).isEmpty()
                         .and().node(choice1).scopeContainsExactly(n1);
             }
@@ -521,8 +521,8 @@ class ActionNodeAddTest extends AbstractGraphTest {
                 // Then
                 PluginAssertion.assertThat(updatedGraph)
                         .root().is(root)
-                        .and().successorsOf(root).isExactly(n2)
-                        .and().successorsOf(n2).isExactly(n1);
+                        .and().successorsOf(root).isOnly(n2)
+                        .and().successorsOf(n2).isOnly(n1);
             }
 
             @Test
@@ -555,12 +555,12 @@ class ActionNodeAddTest extends AbstractGraphTest {
                 // Then
                 PluginAssertion.assertThat(updatedGraph)
                         .root().is(root)
-                        .and().successorsOf(root).isExactly(choice1)
-                        .and().successorsOf(choice1).isExactly(n1)
-                        .and().successorsOf(n1).isExactly(choice2)
-                        .and().successorsOf(choice2).isExactly(n2)
-                        .and().successorsOf(n2).isExactly(n4)
-                        .and().successorsOf(n4).isExactly(n3)
+                        .and().successorsOf(root).isOnly(choice1)
+                        .and().successorsOf(choice1).isOnly(n1)
+                        .and().successorsOf(n1).isOnly(choice2)
+                        .and().successorsOf(choice2).isOnly(n2)
+                        .and().successorsOf(n2).isOnly(n4)
+                        .and().successorsOf(n4).isOnly(n3)
                         .and().node(choice1).scopeContainsExactly(n1, choice2)
                         .and().node(choice2).scopeContainsExactly(n2);
             }
@@ -598,11 +598,11 @@ class ActionNodeAddTest extends AbstractGraphTest {
                 // Then
                 PluginAssertion.assertThat(updatedGraph)
                         .root().is(root)
-                        .and().successorsOf(root).isExactly(choice1)
-                        .and().successorsOf(choice1).isExactly(n1)
-                        .and().successorsOf(n1).isExactly(choice2)
-                        .and().successorsOf(choice2).isExactly(n2)
-                        .and().successorsOf(n2).isExactly(n3)
+                        .and().successorsOf(root).isOnly(choice1)
+                        .and().successorsOf(choice1).isOnly(n1)
+                        .and().successorsOf(n1).isOnly(choice2)
+                        .and().successorsOf(choice2).isOnly(n2)
+                        .and().successorsOf(n2).isOnly(n3)
                         .and().node(choice1).scopeContainsExactly(n1, choice2, n3)
                         .and().node(choice2).scopeContainsExactly(n2);
             }

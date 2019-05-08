@@ -29,7 +29,7 @@ class GraphDeserializerTest extends AbstractDeserializerTest {
 
                 .and()
                 .successorsOf(componentNode1)
-                .isExactly(choiceNode1)
+                .isOnly(choiceNode1)
 
                 .and()
                 .successorsOf(choiceNode1)
@@ -37,11 +37,11 @@ class GraphDeserializerTest extends AbstractDeserializerTest {
 
                 .and()
                 .successorsOf(componentNode2)
-                .isExactly(componentNode6)
+                .isOnly(componentNode6)
 
                 .and()
                 .successorsOf(flowReferenceNode1)
-                .isExactly(componentNode6)
+                .isOnly(componentNode6)
 
                 .and()
                 .successorsOf(forkNode)
@@ -49,15 +49,15 @@ class GraphDeserializerTest extends AbstractDeserializerTest {
 
                 .and()
                 .successorsOf(componentNode3)
-                .isExactly(componentNode5)
+                .isOnly(componentNode5)
 
                 .and()
                 .successorsOf(componentNode4)
-                .isExactly(componentNode5)
+                .isOnly(componentNode5)
 
                 .and()
                 .successorsOf(componentNode5)
-                .isExactly(componentNode6)
+                .isOnly(componentNode6)
 
                 .and()
                 .successorsOf(componentNode6)
@@ -81,19 +81,19 @@ class GraphDeserializerTest extends AbstractDeserializerTest {
 
                 .and()
                 .successorsOf(componentNode1)
-                .isExactly(choiceNode1)
+                .isOnly(choiceNode1)
 
                 .and()
                 .successorsOf(choiceNode1)
-                .isExactly(flowReferenceNode1)
+                .isOnly(flowReferenceNode1)
 
                 .and()
                 .successorsOf(flowReferenceNode1)
-                .isExactly(choiceNode2)
+                .isOnly(choiceNode2)
 
                 .and()
                 .successorsOf(choiceNode2)
-                .isExactly(flowReferenceNode2)
+                .isOnly(flowReferenceNode2)
 
                 .and()
                 .successorsOf(flowReferenceNode2)
