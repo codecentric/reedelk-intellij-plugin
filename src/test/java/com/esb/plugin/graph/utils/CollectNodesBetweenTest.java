@@ -10,7 +10,7 @@ import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CollectNodesBetweenTest extends AbstractGraphTest {
+class CollectNodesBetweenTest extends AbstractGraphTest {
 
     @Test
     void shouldCorrectlyCollectAllElementsBetweenNodes() {
