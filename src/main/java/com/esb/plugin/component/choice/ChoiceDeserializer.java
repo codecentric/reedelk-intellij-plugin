@@ -12,6 +12,7 @@ import com.esb.plugin.graph.utils.CollectNodesBetween;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,11 +68,11 @@ public class ChoiceDeserializer extends AbstractDeserializer {
         // Last node is connected to stop node.
         graph.add(currentNode, stopNode);
 
-        CollectNodesBetween
-                .them(graph, choiceNode, stopNode)
-                .forEach(choiceNode::addToScope);
+        Collection<GraphNode> nodesBelongingToScope = CollectNodesBetween.them(graph, choiceNode, stopNode);
+        nodesBelongingToScope.forEach(choiceNode::addToScope);
 
         ComponentData choiceData = choiceNode.component();
+        // TODO: Fix this! Cast here is very wrong
         List<ChoiceConditionRoutePair> choiceConditionRoutePairList =
                 (List<ChoiceConditionRoutePair>) choiceData.get(DATA_CONDITION_ROUTE_PAIRS);
 

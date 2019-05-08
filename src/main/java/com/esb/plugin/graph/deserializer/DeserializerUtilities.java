@@ -3,10 +3,13 @@ package com.esb.plugin.graph.deserializer;
 import com.esb.plugin.component.stop.StopNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.node.ScopedGraphNode;
+import com.google.common.base.Predicate;
 
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkState;
+import static java.util.stream.Collectors.toList;
 
 class DeserializerUtilities {
 
@@ -57,6 +60,17 @@ class DeserializerUtilities {
                 copy.remove(drawable);
             }
         });
+
+        graph.nodes()
+                .stream()
+                .filter(node -> node instanceof ScopedGraphNode)
+                .map(node -> (ScopedGraphNode) node)
+                .forEach(scopedGraphNode -> scopedGraphNode
+                        .getScope()
+                        .stream()
+                        .filter((Predicate<GraphNode>) node -> node instanceof StopNode)
+                        .collect(toList())
+                        .forEach(scopedGraphNode::removeFromScope));
 
         return copy;
     }

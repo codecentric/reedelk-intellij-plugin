@@ -24,9 +24,11 @@ public class CollectNodesBetween {
                         .of(graph, (ScopedGraphNode) successor)
                         .ifPresent(node -> {
                             if (node != n2) accumulator.add(node);
+                            accumulator.addAll(CollectNodesBetween.them(graph, node, n2));
                         });
+            } else {
+                accumulator.addAll(CollectNodesBetween.them(graph, successor, n2));
             }
-            accumulator.addAll(CollectNodesBetween.them(graph, successor, n2));
         }
         return accumulator;
     }
