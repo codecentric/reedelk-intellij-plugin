@@ -3,6 +3,8 @@ package com.esb.plugin.component.fork;
 import com.esb.component.Fork;
 import com.esb.component.Stop;
 import com.esb.plugin.AbstractDeserializerTest;
+import com.esb.plugin.component.stop.StopNode;
+import com.esb.plugin.fixture.*;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -15,39 +17,42 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ForkDeserializerTest extends AbstractDeserializerTest {
 
-    private final String JOIN_COMPONENT_NAME = "com.esb.component.JoinString";
-
-    private final String COMPONENT_1_NAME = "com.esb.component.Name1";
-    private final String COMPONENT_2_NAME = "com.esb.component.Name2";
-    private final String COMPONENT_3_NAME = "com.esb.component.Name3";
-    private final String COMPONENT_4_NAME = "com.esb.component.Name4";
-
     private ForkDeserializer deserializer;
+
+    private ForkNode forkNode;
+    private StopNode stopNode;
+
+    private GraphNode componentNode1;
+    private GraphNode componentNode2;
+    private GraphNode componentNode3;
+    private GraphNode componentNode4;
+    private GraphNode componentNode5;
+    private GraphNode componentNode6;
 
     @BeforeEach
     protected void setUp() {
         super.setUp();
         deserializer = new ForkDeserializer(graph, context);
 
-        /**
-         mockGenericComponentNode(COMPONENT_1_NAME, GenericComponentNode.class);
-         mockGenericComponentNode(COMPONENT_2_NAME, GenericComponentNode.class);
-         mockGenericComponentNode(COMPONENT_3_NAME, GenericComponentNode.class);
-         mockGenericComponentNode(COMPONENT_4_NAME, GenericComponentNode.class);
-         mockGenericComponentNode(JOIN_COMPONENT_NAME, GenericComponentNode.class);
-         mockGenericComponentNode(Fork.class.getName(), ForkNode.class);
-         mockGenericComponentNode(Stop.class.getName(), StopNode.class);
-         */
+        componentNode1 = mockGenericComponentNode(ComponentNode1.class);
+        componentNode2 = mockGenericComponentNode(ComponentNode2.class);
+        componentNode3 = mockGenericComponentNode(ComponentNode3.class);
+        componentNode4 = mockGenericComponentNode(ComponentNode4.class);
+        componentNode5 = mockGenericComponentNode(ComponentNode5.class);
+        componentNode6 = mockGenericComponentNode(ComponentNode6.class);
+
+        forkNode = mockForkNode();
+        stopNode = mockStopNode();
     }
 
     @Test
-    void shouldBuildForkJoinCorrectly() {
+    void shouldDeserializeForkDefinitionCorrectly() {
         // Given
         JSONArray forkArray = new JSONArray();
         forkArray.put(createNextObject(COMPONENT_3_NAME, COMPONENT_2_NAME));
         forkArray.put(createNextObject(COMPONENT_1_NAME, COMPONENT_4_NAME));
 
-        JSONObject componentDefinition = forComponent(Fork.class.getName())
+        JSONObject forkDefinition = forComponent(Fork.class.getName())
                 .with("threadPoolSize", 3)
                 .with("fork", forkArray)
                 .with("join", forComponent(JOIN_COMPONENT_NAME)
@@ -57,7 +62,7 @@ class ForkDeserializerTest extends AbstractDeserializerTest {
                 .build();
 
         // When
-        GraphNode joinDrawable = deserializer.deserialize(root, componentDefinition);
+        GraphNode joinDrawable = deserializer.deserialize(root, forkDefinition);
 
         // Then: last node must be a join node
         assertThat(joinDrawable.component().getFullyQualifiedName()).isEqualTo(JOIN_COMPONENT_NAME);

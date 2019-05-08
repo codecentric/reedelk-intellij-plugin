@@ -51,7 +51,7 @@ class ChoiceDeserializerTest extends AbstractDeserializerTest {
     }
 
     @Test
-    void shouldBuildChoiceCorrectly() {
+    void shouldDeserializeChoiceDefinitionCorrectly() {
         // Given
         JSONArray when = new JSONArray();
         when.put(conditionalBranch("1 == 1", ComponentNode3.class, ComponentNode1.class));
@@ -98,8 +98,6 @@ class ChoiceDeserializerTest extends AbstractDeserializerTest {
 
                 .and()
                 .nodesCountIs(9);
-
-
     }
 
     @SafeVarargs
