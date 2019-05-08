@@ -1,12 +1,23 @@
 package com.esb.plugin.component.generic;
 
 import com.esb.plugin.AbstractDeserializerTest;
+import com.esb.plugin.assertion.PluginAssertion;
+import com.esb.plugin.component.ComponentData;
+import com.esb.plugin.component.ComponentDescriptor;
+import com.esb.plugin.fixture.ComponentNode1;
+import com.esb.plugin.graph.node.GraphNode;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
+import static com.esb.plugin.fixture.Json.GenericComponent;
+import static java.util.Arrays.asList;
+import static org.mockito.Mockito.doReturn;
+
+@MockitoSettings(strictness = Strictness.LENIENT)
 class GenericComponentDeserializerTest extends AbstractDeserializerTest {
-
-    private static final String GENERIC_COMPONENT_NAME = "com.esb.component.GenericComponent";
 
     private GenericComponentDeserializer deserializer;
 
@@ -17,24 +28,36 @@ class GenericComponentDeserializerTest extends AbstractDeserializerTest {
     }
 
     @Test
-    void shouldBuildGenericDrawableCorrectly() {
-        /**
-         // Given
-         ComponentData givenComponentData = mockGenericComponentNode(GENERIC_COMPONENT_NAME, GenericComponentNode.class);
+    void shouldDeserializeGenericComponentCorrectly() {
+        // Given
+        ComponentDescriptor descriptor = ComponentDescriptor.create()
+                .displayName("Test Component")
+                .fullyQualifiedName(ComponentNode1.class.getName())
+                .propertiesNames(asList("property1", "property2", "property3"))
+                .build();
+        ComponentData component = new ComponentData(descriptor);
 
-         JSONObject componentDefinition = ComponentDefinitionBuilder
-         .forComponent(GENERIC_COMPONENT_NAME)
-         .build();
+        GenericComponentNode node = new GenericComponentNode(component);
 
-         // When
-         GraphNode node = deserializer.deserialize(root, componentDefinition);
+        doReturn(node)
+                .when(context)
+                .instantiateGraphNode(ComponentNode1.class.getName());
 
-         // Then
-         assertThat(graph.nodesCount()).isEqualTo(2);
+        JSONObject genericComponentDefinition = new JSONObject(GenericComponent.Sample.json());
 
-         ComponentData actualComponentData = node.component();
-         assertThat(actualComponentData).isEqualTo(givenComponentData);
-         */
+        // When
+        GraphNode lastNode = deserializer.deserialize(root, genericComponentDefinition);
+
+        // Then
+        PluginAssertion.assertThat(graph)
+                .node(lastNode)
+                .is(node)
+                .hasDataWithValue("property1", "first property")
+                .hasDataWithValue("property2", "second property")
+                .hasDataWithValue("property3", "third property")
+
+                .and()
+                .nodesCountIs(2);
     }
 
 }
