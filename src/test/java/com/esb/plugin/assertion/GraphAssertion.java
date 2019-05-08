@@ -2,6 +2,7 @@ package com.esb.plugin.assertion;
 
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.node.ScopedGraphNode;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,6 +28,10 @@ public class GraphAssertion {
 
     public NodeAssertion node(GraphNode node) {
         return new NodeAssertion(node, this);
+    }
+
+    public ScopedNodeAssertion node(ScopedGraphNode node) {
+        return new ScopedNodeAssertion(node, this);
     }
 
     public GraphAssertion nodesCountIs(int expectedCount) {

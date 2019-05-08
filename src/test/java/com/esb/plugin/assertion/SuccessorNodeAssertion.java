@@ -25,6 +25,12 @@ public class SuccessorNodeAssertion {
         return this;
     }
 
+    public SuccessorNodeAssertion isExactly(GraphNode expectedNode) {
+        List<GraphNode> successors = graph.successors(node);
+        assertThat(successors).containsExactly(expectedNode);
+        return this;
+    }
+
     public SuccessorNodeAssertion isEmpty() {
         List<GraphNode> successors = graph.successors(node);
         assertThat(successors).isEmpty();
