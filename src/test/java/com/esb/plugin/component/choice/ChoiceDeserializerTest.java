@@ -37,7 +37,7 @@ class ChoiceDeserializerTest extends AbstractDeserializerTest {
                 .is(stopNode1)
 
                 .and()
-                .successorsOf(choiceNode)
+                .successorsOf(choiceNode1)
                 .areExactly(componentNode3, componentNode2, componentNode5)
 
                 .and()

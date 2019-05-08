@@ -7,6 +7,7 @@ import com.esb.plugin.graph.deserializer.AbstractDeserializer;
 import com.esb.plugin.graph.deserializer.DeserializerContext;
 import com.esb.plugin.graph.deserializer.GraphDeserializerFactory;
 import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.utils.CollectNodesBetween;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -22,13 +23,13 @@ public class ForkDeserializer extends AbstractDeserializer {
     @Override
     public GraphNode deserialize(GraphNode parent, JSONObject componentDefinition) {
 
-        StopNode stopDrawable = context.instantiateGraphNode(Stop.class.getName());
+        StopNode stopNode = context.instantiateGraphNode(Stop.class.getName());
 
         String name = Implementor.name(componentDefinition);
 
-        ForkNode forkJoinDrawable = context.instantiateGraphNode(name);
+        ForkNode forkNode = context.instantiateGraphNode(name);
 
-        graph.add(parent, forkJoinDrawable);
+        graph.add(parent, forkNode);
 
         JSONArray fork = ForkJoin.fork(componentDefinition);
 
@@ -37,7 +38,7 @@ public class ForkDeserializer extends AbstractDeserializer {
             JSONObject next = fork.getJSONObject(i);
             JSONArray nextComponents = ForkJoin.next(next);
 
-            GraphNode currentDrawable = forkJoinDrawable;
+            GraphNode currentDrawable = forkNode;
 
             for (int j = 0; j < nextComponents.length(); j++) {
                 JSONObject currentComponentDefinition = nextComponents.getJSONObject(j);
@@ -50,9 +51,13 @@ public class ForkDeserializer extends AbstractDeserializer {
 
             }
 
-            graph.add(currentDrawable, stopDrawable);
+            graph.add(currentDrawable, stopNode);
 
         }
+
+        CollectNodesBetween
+                .them(graph, forkNode, stopNode)
+                .forEach(forkNode::addToScope);
 
         JSONObject joinComponent = ForkJoin.join(componentDefinition);
         return GraphDeserializerFactory.get()
@@ -60,7 +65,7 @@ public class ForkDeserializer extends AbstractDeserializer {
                 .context(context)
                 .graph(graph)
                 .build()
-                .deserialize(stopDrawable, joinComponent);
+                .deserialize(stopNode, joinComponent);
 
     }
 

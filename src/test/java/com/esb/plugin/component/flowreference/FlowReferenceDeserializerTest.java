@@ -35,17 +35,17 @@ class FlowReferenceDeserializerTest extends AbstractDeserializerTest {
         GraphNode lastNode = deserializer.deserialize(root, flowReferenceDefinition);
 
         // Then
-        assertThat(lastNode).isEqualTo(flowReferenceNode);
+        assertThat(lastNode).isEqualTo(flowReferenceNode1);
 
         PluginAssertion.assertThat(graph)
 
                 .node(lastNode)
-                .is(flowReferenceNode)
+                .is(flowReferenceNode1)
 
                 .and()
                 .nodesCountIs(2);
 
-        ComponentData actualComponentData = flowReferenceNode.component();
+        ComponentData actualComponentData = flowReferenceNode1.component();
         assertThat(actualComponentData.get("ref")).isEqualTo(expectedFlowReference);
     }
 

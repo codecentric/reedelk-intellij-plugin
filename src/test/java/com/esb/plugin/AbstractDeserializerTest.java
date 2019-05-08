@@ -37,8 +37,12 @@ public abstract class AbstractDeserializerTest {
     protected StopNode stopNode2;
 
     protected ForkNode forkNode;
-    protected ChoiceNode choiceNode;
-    protected FlowReferenceNode flowReferenceNode;
+
+    protected ChoiceNode choiceNode1;
+    protected ChoiceNode choiceNode2;
+
+    protected FlowReferenceNode flowReferenceNode1;
+    protected FlowReferenceNode flowReferenceNode2;
 
     protected GraphNode componentNode1;
     protected GraphNode componentNode2;
@@ -55,9 +59,10 @@ public abstract class AbstractDeserializerTest {
         graph.root(root);
 
         mockStopNodes();
+        mockChoiceNodes();
+        mockFlowReferenceNodes();
+
         forkNode = mockForkNode();
-        choiceNode = mockChoiceNode();
-        flowReferenceNode = mockFlowReferenceNode();
         componentNode1 = mockGenericComponentNode(ComponentNode1.class);
         componentNode2 = mockGenericComponentNode(ComponentNode2.class);
         componentNode3 = mockGenericComponentNode(ComponentNode3.class);
@@ -81,16 +86,41 @@ public abstract class AbstractDeserializerTest {
                 .build());
         this.stopNode2 = createInstance(StopNode.class, componentData2);
 
-        doReturn(stopNode1, stopNode2).when(context)
+        doReturn(stopNode1, stopNode2)
+                .when(context)
                 .instantiateGraphNode(Stop.class.getName());
     }
 
-    protected ChoiceNode mockChoiceNode() {
-        return mockComponentGraphNode(Choice.class, ChoiceNode.class);
+    protected void mockChoiceNodes() {
+        ComponentData componentData1 = new ComponentData(ComponentDescriptor.create()
+                .fullyQualifiedName(Choice.class.getName())
+                .build());
+        this.choiceNode1 = createInstance(ChoiceNode.class, componentData1);
+
+        ComponentData componentData2 = new ComponentData(ComponentDescriptor.create()
+                .fullyQualifiedName(Choice.class.getName())
+                .build());
+        this.choiceNode2 = createInstance(ChoiceNode.class, componentData2);
+
+        doReturn(choiceNode1, choiceNode2)
+                .when(context)
+                .instantiateGraphNode(Choice.class.getName());
     }
 
-    protected FlowReferenceNode mockFlowReferenceNode() {
-        return mockComponentGraphNode(FlowReference.class, FlowReferenceNode.class);
+    protected void mockFlowReferenceNodes() {
+        ComponentData componentData1 = new ComponentData(ComponentDescriptor.create()
+                .fullyQualifiedName(FlowReference.class.getName())
+                .build());
+        this.flowReferenceNode1 = createInstance(FlowReferenceNode.class, componentData1);
+
+        ComponentData componentData2 = new ComponentData(ComponentDescriptor.create()
+                .fullyQualifiedName(FlowReference.class.getName())
+                .build());
+        this.flowReferenceNode2 = createInstance(FlowReferenceNode.class, componentData2);
+
+        doReturn(flowReferenceNode1, flowReferenceNode2)
+                .when(context)
+                .instantiateGraphNode(FlowReference.class.getName());
     }
 
     protected GraphNode mockGenericComponentNode(Class<? extends Component> componentClazz) {

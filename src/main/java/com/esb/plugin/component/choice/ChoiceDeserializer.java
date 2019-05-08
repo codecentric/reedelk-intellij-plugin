@@ -67,7 +67,8 @@ public class ChoiceDeserializer extends AbstractDeserializer {
         // Last node is connected to stop node.
         graph.add(currentNode, stopNode);
 
-        CollectNodesBetween.them(graph, choiceNode, stopNode)
+        CollectNodesBetween
+                .them(graph, choiceNode, stopNode)
                 .forEach(choiceNode::addToScope);
 
         ComponentData choiceData = choiceNode.component();

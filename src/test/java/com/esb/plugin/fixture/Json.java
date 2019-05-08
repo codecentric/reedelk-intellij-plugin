@@ -21,6 +21,12 @@ public class Json {
             public String path() {
                 return "/com/esb/plugin/fixture/complete_flow_sample.json";
             }
+        },
+        NestedChoice() {
+            @Override
+            public String path() {
+                return "/com/esb/plugin/fixture/complete_flow_with_nested_choice.json";
+            }
         }
     }
 

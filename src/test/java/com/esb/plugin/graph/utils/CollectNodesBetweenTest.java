@@ -34,4 +34,28 @@ class CollectNodesBetweenTest extends AbstractGraphTest {
         assertThat(nodes).containsExactlyInAnyOrder(n1, n2, n3, n4);
     }
 
+    @Test
+    void shouldCollectAllElementsBetweenNodesExcludingTheOnesInNestedScope() {
+        // Given
+        FlowGraph graph = new FlowGraphImpl();
+        graph.root(root);
+        graph.add(root, choice1);
+        graph.add(choice1, n1);
+        graph.add(n1, choice2);
+        graph.add(choice2, n2);
+        graph.add(n2, n3);
+        graph.add(n3, n4);
+
+        choice1.addToScope(n1);
+        choice1.addToScope(choice2);
+
+        choice2.addToScope(n2);
+
+        // When
+        Collection<GraphNode> nodes = CollectNodesBetween.them(graph, choice1, n4);
+
+        // Then
+        assertThat(nodes).containsExactlyInAnyOrder(n1, choice2, n3);
+    }
+
 }
