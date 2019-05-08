@@ -32,32 +32,12 @@ class ChoiceDeserializerTest extends AbstractDeserializerTest {
 
         // Then
         PluginAssertion.assertThat(graph)
-
-                .node(lastNode)
-                .is(stopNode1)
-
-                .and()
-                .successorsOf(choiceNode1)
-                .areExactly(componentNode3, componentNode2, componentNode5)
-
-                .and()
-                .successorsOf(componentNode3)
-                .areExactly(componentNode1)
-
-                .and()
-                .successorsOf(componentNode2)
-                .areExactly(componentNode4)
-
-                .and()
-                .successorsOf(componentNode5)
-                .areExactly(componentNode6)
-
-                .and()
-                .predecessorOf(lastNode)
-                .containsExactly(componentNode1, componentNode4, componentNode6)
-
-                // total nodes include: root, stop node and all the nodes belonging to this choice
-                .and()
-                .nodesCountIs(9);
+                .node(lastNode).is(stopNode1)
+                .and().successorsOf(choiceNode1).areExactly(componentNode3, componentNode2, componentNode5)
+                .and().successorsOf(componentNode3).areExactly(componentNode1)
+                .and().successorsOf(componentNode2).areExactly(componentNode4)
+                .and().successorsOf(componentNode5).areExactly(componentNode6)
+                .and().predecessorOf(lastNode).containsExactly(componentNode1, componentNode4, componentNode6)
+                .and().nodesCountIs(9); // total nodes include: root, stop node and all the nodes belonging to this choice
     }
 }

@@ -45,14 +45,11 @@ class GenericComponentDeserializerTest extends AbstractDeserializerTest {
 
         // Then
         PluginAssertion.assertThat(graph)
-                .node(lastNode)
-                .is(node)
+                .node(lastNode).is(node)
                 .hasDataWithValue("property1", "first property")
                 .hasDataWithValue("property2", "second property")
                 .hasDataWithValue("property3", "third property")
-
-                .and()
-                .nodesCountIs(2);
+                .and().nodesCountIs(2);
     }
 
 }
