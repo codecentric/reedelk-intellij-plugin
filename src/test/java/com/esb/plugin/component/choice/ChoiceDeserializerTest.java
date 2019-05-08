@@ -1,24 +1,14 @@
 package com.esb.plugin.component.choice;
 
-import com.esb.api.component.Component;
-import com.esb.component.Choice;
 import com.esb.plugin.AbstractDeserializerTest;
 import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.component.stop.StopNode;
 import com.esb.plugin.fixture.*;
 import com.esb.plugin.graph.node.GraphNode;
-import com.google.common.collect.Iterables;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
-import static com.esb.plugin.graph.deserializer.ComponentDefinitionBuilder.createNextComponentsArray;
-import static com.esb.plugin.graph.deserializer.ComponentDefinitionBuilder.forComponent;
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ChoiceDeserializerTest extends AbstractDeserializerTest {
@@ -53,16 +43,7 @@ class ChoiceDeserializerTest extends AbstractDeserializerTest {
     @Test
     void shouldDeserializeChoiceDefinitionCorrectly() {
         // Given
-        JSONArray when = new JSONArray();
-        when.put(conditionalBranch("1 == 1", ComponentNode3.class, ComponentNode1.class));
-        when.put(conditionalBranch("1 != 0", ComponentNode2.class, ComponentNode4.class));
-
-        JSONArray otherwise = createNextComponentsArray(ComponentNode5.class.getName(), ComponentNode6.class.getName());
-
-        JSONObject choiceDefinition = forComponent(Choice.class.getName())
-                .with("when", when)
-                .with("otherwise", otherwise)
-                .build();
+        JSONObject choiceDefinition = new JSONObject(Json.Choice.Sample.asJson());
 
         // When
         GraphNode lastNode = deserializer.deserialize(root, choiceDefinition);
@@ -98,23 +79,6 @@ class ChoiceDeserializerTest extends AbstractDeserializerTest {
 
                 .and()
                 .nodesCountIs(9);
-    }
-
-    @SafeVarargs
-    private static JSONObject conditionalBranch(String condition, Class<? extends Component>... componentNodesClasses) {
-        String[] fullyQualifiedNames = fullyQualifiedNamesOf(componentNodesClasses);
-        JSONObject object = new JSONObject();
-        object.put("condition", condition);
-        object.put("next", createNextComponentsArray(fullyQualifiedNames));
-        return object;
-    }
-
-    @SafeVarargs
-    private static String[] fullyQualifiedNamesOf(Class<? extends Component>... componentNodesClasses) {
-        List<String> componentNodesList = stream(componentNodesClasses)
-                .map(Class::getName)
-                .collect(toList());
-        return Iterables.toArray(componentNodesList, String.class);
     }
 
 }
