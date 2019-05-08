@@ -1,92 +1,122 @@
 package com.esb.plugin.component.choice;
 
+import com.esb.api.component.Component;
 import com.esb.component.Choice;
-import com.esb.component.Stop;
-import com.esb.plugin.component.generic.GenericComponentNode;
+import com.esb.plugin.AbstractDeserializerTest;
+import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.component.stop.StopNode;
-import com.esb.plugin.graph.deserializer.AbstractBuilderTest;
+import com.esb.plugin.fixture.*;
 import com.esb.plugin.graph.node.GraphNode;
+import com.google.common.collect.Iterables;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static com.esb.plugin.graph.deserializer.ComponentDefinitionBuilder.createNextComponentsArray;
 import static com.esb.plugin.graph.deserializer.ComponentDefinitionBuilder.forComponent;
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ChoiceDeserializerTest extends AbstractBuilderTest {
-
-    private final String COMPONENT_1_NAME = "com.esb.component.Name1";
-    private final String COMPONENT_2_NAME = "com.esb.component.Name2";
-    private final String COMPONENT_3_NAME = "com.esb.component.Name3";
-    private final String COMPONENT_4_NAME = "com.esb.component.Name4";
-    private final String COMPONENT_5_NAME = "com.esb.component.Name5";
-    private final String COMPONENT_6_NAME = "com.esb.component.Name6";
+class ChoiceDeserializerTest extends AbstractDeserializerTest {
 
     private ChoiceDeserializer deserializer;
+
+    private StopNode stopNode;
+    private ChoiceNode choiceNode;
+
+    private GraphNode componentNode1;
+    private GraphNode componentNode2;
+    private GraphNode componentNode3;
+    private GraphNode componentNode4;
+    private GraphNode componentNode5;
+    private GraphNode componentNode6;
 
     @BeforeEach
     protected void setUp() {
         super.setUp();
         deserializer = new ChoiceDeserializer(graph, context);
 
-        mockComponent(COMPONENT_1_NAME, GenericComponentNode.class);
-        mockComponent(COMPONENT_2_NAME, GenericComponentNode.class);
-        mockComponent(COMPONENT_3_NAME, GenericComponentNode.class);
-        mockComponent(COMPONENT_4_NAME, GenericComponentNode.class);
-        mockComponent(COMPONENT_5_NAME, GenericComponentNode.class);
-        mockComponent(COMPONENT_6_NAME, GenericComponentNode.class);
-        mockComponent(Choice.class.getName(), ChoiceNode.class);
-        mockComponent(Stop.class.getName(), StopNode.class);
+        stopNode = mockStopNode();
+        choiceNode = mockChoiceNode();
+        componentNode1 = mockGenericComponentNode(ComponentNode1.class);
+        componentNode2 = mockGenericComponentNode(ComponentNode2.class);
+        componentNode3 = mockGenericComponentNode(ComponentNode3.class);
+        componentNode4 = mockGenericComponentNode(ComponentNode4.class);
+        componentNode5 = mockGenericComponentNode(ComponentNode5.class);
+        componentNode6 = mockGenericComponentNode(ComponentNode6.class);
     }
 
     @Test
     void shouldBuildChoiceCorrectly() {
         // Given
-        JSONArray whenArray = new JSONArray();
-        whenArray.put(conditionalBranch("1 == 1", COMPONENT_3_NAME, COMPONENT_1_NAME));
-        whenArray.put(conditionalBranch("'hello' == 'hello1'", COMPONENT_2_NAME, COMPONENT_4_NAME));
+        JSONArray when = new JSONArray();
+        when.put(conditionalBranch("1 == 1", ComponentNode3.class, ComponentNode1.class));
+        when.put(conditionalBranch("1 != 0", ComponentNode2.class, ComponentNode4.class));
 
-        JSONArray otherwiseComponents = createNextComponentsArray(COMPONENT_5_NAME, COMPONENT_6_NAME);
+        JSONArray otherwise = createNextComponentsArray(ComponentNode5.class.getName(), ComponentNode6.class.getName());
 
-        JSONObject componentDefinition = forComponent(Choice.class.getName())
-                .with("when", whenArray)
-                .with("otherwise", otherwiseComponents)
+        JSONObject choiceDefinition = forComponent(Choice.class.getName())
+                .with("when", when)
+                .with("otherwise", otherwise)
                 .build();
 
         // When
-        GraphNode stopDrawable = deserializer.deserialize(root, componentDefinition);
+        GraphNode lastNode = deserializer.deserialize(root, choiceDefinition);
 
         // Then: last node must be a stop node
-        assertThat(stopDrawable).isInstanceOf(StopNode.class);
+        assertThat(lastNode).isEqualTo(stopNode);
 
         // Then: check successors of choice
-        GraphNode choice = firstSuccessorOf(graph, root);
-        assertSuccessorsAre(graph, choice, COMPONENT_3_NAME, COMPONENT_2_NAME, COMPONENT_5_NAME);
+        PluginAssertion.assertThat(graph)
 
-        GraphNode component3Drawable = getNodeHavingComponentName(graph.successors(choice), COMPONENT_3_NAME);
-        assertSuccessorsAre(graph, component3Drawable, COMPONENT_1_NAME);
+                .node(lastNode)
+                .isEqualTo(stopNode)
 
-        GraphNode component2Drawable = getNodeHavingComponentName(graph.successors(choice), COMPONENT_2_NAME);
-        assertSuccessorsAre(graph, component2Drawable, COMPONENT_4_NAME);
+                .and()
+                .successorOf(choiceNode)
+                .containsExactly(componentNode3, componentNode2, componentNode5)
 
-        GraphNode component5Drawable = getNodeHavingComponentName(graph.successors(choice), COMPONENT_5_NAME);
-        assertSuccessorsAre(graph, component5Drawable, COMPONENT_6_NAME);
+                .and()
+                .successorOf(componentNode3)
+                .containsExactly(componentNode1)
 
-        // Then: check predecessors of last stop node
-        assertPredecessorsAre(graph, stopDrawable, COMPONENT_1_NAME, COMPONENT_4_NAME, COMPONENT_6_NAME);
+                .and()
+                .successorOf(componentNode2)
+                .containsExactly(componentNode4)
 
-        // Then: check that the number of nodes in the graph is correct
-        int expectedNodes = 9;
-        assertThat(graph.nodesCount()).isEqualTo(expectedNodes);
+                .and()
+                .successorOf(componentNode5)
+                .containsExactly(componentNode6)
+
+                .and()
+                .predecessorOf(lastNode)
+                .containsExactly(componentNode1, componentNode4, componentNode6)
+
+                .and()
+                .nodesCountIs(9);
+
+
     }
 
-    private static JSONObject conditionalBranch(String condition, String... componentsNames) {
+    @SafeVarargs
+    private static JSONObject conditionalBranch(String condition, Class<? extends Component>... componentNodesClasses) {
+        String[] fullyQualifiedNames = fullyQualifiedNamesOf(componentNodesClasses);
         JSONObject object = new JSONObject();
         object.put("condition", condition);
-        object.put("next", createNextComponentsArray(componentsNames));
+        object.put("next", createNextComponentsArray(fullyQualifiedNames));
         return object;
+    }
+
+    @SafeVarargs
+    private static String[] fullyQualifiedNamesOf(Class<? extends Component>... componentNodesClasses) {
+        List<String> componentNodesList = stream(componentNodesClasses)
+                .map(Class::getName)
+                .collect(toList());
+        return Iterables.toArray(componentNodesList, String.class);
     }
 
 }

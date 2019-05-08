@@ -1,4 +1,4 @@
-package com.esb.plugin.component.forkjoin;
+package com.esb.plugin.component.fork;
 
 import com.esb.component.Stop;
 import com.esb.plugin.component.stop.StopNode;
@@ -13,9 +13,9 @@ import org.json.JSONObject;
 import static com.esb.internal.commons.JsonParser.ForkJoin;
 import static com.esb.internal.commons.JsonParser.Implementor;
 
-public class ForkJoinDeserializer extends AbstractDeserializer {
+public class ForkDeserializer extends AbstractDeserializer {
 
-    public ForkJoinDeserializer(FlowGraph graph, DeserializerContext context) {
+    public ForkDeserializer(FlowGraph graph, DeserializerContext context) {
         super(graph, context);
     }
 
@@ -26,7 +26,7 @@ public class ForkJoinDeserializer extends AbstractDeserializer {
 
         String name = Implementor.name(componentDefinition);
 
-        ForkJoinNode forkJoinDrawable = context.instantiateGraphNode(name);
+        ForkNode forkJoinDrawable = context.instantiateGraphNode(name);
 
         graph.add(parent, forkJoinDrawable);
 

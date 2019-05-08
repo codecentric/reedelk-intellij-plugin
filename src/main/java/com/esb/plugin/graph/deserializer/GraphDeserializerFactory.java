@@ -8,7 +8,7 @@ import com.esb.component.Stop;
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.component.choice.ChoiceDeserializer;
 import com.esb.plugin.component.flowreference.FlowReferenceDeserializer;
-import com.esb.plugin.component.forkjoin.ForkJoinDeserializer;
+import com.esb.plugin.component.fork.ForkDeserializer;
 import com.esb.plugin.component.generic.GenericComponentDeserializer;
 import com.esb.plugin.component.stop.StopDeserializer;
 import com.esb.plugin.graph.FlowGraph;
@@ -32,7 +32,7 @@ public class GraphDeserializerFactory {
     static {
         Map<String, Class<? extends Deserializer>> tmp = new HashMap<>();
         tmp.put(Stop.class.getName(), StopDeserializer.class);
-        tmp.put(Fork.class.getName(), ForkJoinDeserializer.class);
+        tmp.put(Fork.class.getName(), ForkDeserializer.class);
         tmp.put(Choice.class.getName(), ChoiceDeserializer.class);
         tmp.put(FlowReference.class.getName(), FlowReferenceDeserializer.class);
         COMPONENT_DESERIALIZER_MAP = Collections.unmodifiableMap(tmp);

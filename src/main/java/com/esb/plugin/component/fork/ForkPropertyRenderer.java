@@ -1,13 +1,13 @@
-package com.esb.plugin.component.forkjoin;
+package com.esb.plugin.component.fork;
 
 import com.esb.plugin.designer.properties.AbstractPropertyRenderer;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.ui.components.JBPanel;
 
-public class ForkJoinPropertyRenderer extends AbstractPropertyRenderer {
+public class ForkPropertyRenderer extends AbstractPropertyRenderer {
 
-    public ForkJoinPropertyRenderer(GraphSnapshot snapshot) {
+    public ForkPropertyRenderer(GraphSnapshot snapshot) {
         super(snapshot);
     }
 

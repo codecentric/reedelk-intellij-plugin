@@ -4,7 +4,7 @@ import com.esb.internal.commons.FileUtils;
 
 import java.net.URL;
 
-public enum TestJson {
+public enum SampleJson {
 
     CHOICE_WITH_NODE_OUTSIDE_SCOPE {
         @Override
@@ -12,12 +12,14 @@ public enum TestJson {
             return "/com/esb/plugin/component/choice/choice_with_node_outside_scope.json";
         }
     },
-    FLOW_WITH_CHOICE {
+
+    FLOW_WITH_ALL_COMPONENTS {
         @Override
         String path() {
-            return "/com/esb/plugin/graph/flow_with_choice.flow";
+            return "/com/esb/plugin/graph/deserializer/flow_with_all_components.flow";
         }
     },
+
     FLOW_WITH_FORK {
         @Override
         String path() {
@@ -26,7 +28,7 @@ public enum TestJson {
     };
 
     public String asJson() {
-        URL url = TestJson.class.getResource(path());
+        URL url = SampleJson.class.getResource(path());
         return FileUtils.readFrom(url);
     }
 

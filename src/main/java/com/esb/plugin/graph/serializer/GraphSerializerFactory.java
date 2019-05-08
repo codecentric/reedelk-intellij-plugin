@@ -7,7 +7,7 @@ import com.esb.component.Fork;
 import com.esb.component.Stop;
 import com.esb.plugin.component.choice.ChoiceSerializer;
 import com.esb.plugin.component.flowreference.FlowReferenceSerializer;
-import com.esb.plugin.component.forkjoin.ForkJoinSerializer;
+import com.esb.plugin.component.fork.ForkSerializer;
 import com.esb.plugin.component.generic.GenericComponentSerializer;
 import com.esb.plugin.component.stop.StopSerializer;
 import com.esb.plugin.graph.node.GraphNode;
@@ -27,7 +27,7 @@ public class GraphSerializerFactory {
     static {
         Map<String, Class<? extends Serializer>> tmp = new HashMap<>();
         tmp.put(Stop.class.getName(), StopSerializer.class);
-        tmp.put(Fork.class.getName(), ForkJoinSerializer.class);
+        tmp.put(Fork.class.getName(), ForkSerializer.class);
         tmp.put(Choice.class.getName(), ChoiceSerializer.class);
         tmp.put(FlowReference.class.getName(), FlowReferenceSerializer.class);
         COMPONENT_SERIALIZER_MAP = Collections.unmodifiableMap(tmp);

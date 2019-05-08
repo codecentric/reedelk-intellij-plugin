@@ -8,7 +8,7 @@ import com.esb.component.Stop;
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.choice.ChoicePropertiesRenderer;
 import com.esb.plugin.component.flowreference.FlowReferencePropertyRenderer;
-import com.esb.plugin.component.forkjoin.ForkJoinPropertyRenderer;
+import com.esb.plugin.component.fork.ForkPropertyRenderer;
 import com.esb.plugin.component.generic.GenericComponentPropertyRenderer;
 import com.esb.plugin.component.stop.StopPropertyRenderer;
 import com.esb.plugin.graph.GraphSnapshot;
@@ -27,7 +27,7 @@ public class PropertyRendererFactory {
     static {
         Map<String, Class<? extends PropertyRenderer>> tmp = new HashMap<>();
         tmp.put(Stop.class.getName(), StopPropertyRenderer.class);
-        tmp.put(Fork.class.getName(), ForkJoinPropertyRenderer.class);
+        tmp.put(Fork.class.getName(), ForkPropertyRenderer.class);
         tmp.put(Choice.class.getName(), ChoicePropertiesRenderer.class);
         tmp.put(FlowReference.class.getName(), FlowReferencePropertyRenderer.class);
         RENDERER = Collections.unmodifiableMap(tmp);

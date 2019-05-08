@@ -8,7 +8,7 @@ import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.component.choice.ChoiceNode;
 import com.esb.plugin.component.flowreference.FlowReferenceNode;
-import com.esb.plugin.component.forkjoin.ForkJoinNode;
+import com.esb.plugin.component.fork.ForkNode;
 import com.esb.plugin.component.generic.GenericComponentNode;
 import com.esb.plugin.component.stop.StopNode;
 import com.esb.plugin.service.module.ComponentService;
@@ -25,7 +25,7 @@ public class GraphNodeFactory {
     private static final Map<String, Class<? extends GraphNode>> COMPONENT_DRAWABLE_MAP = ImmutableMap.of(
             Stop.class.getName(), StopNode.class,
             Choice.class.getName(), ChoiceNode.class,
-            Fork.class.getName(), ForkJoinNode.class,
+            Fork.class.getName(), ForkNode.class,
             FlowReference.class.getName(), FlowReferenceNode.class);
 
 

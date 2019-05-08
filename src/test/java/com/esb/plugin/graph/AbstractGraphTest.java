@@ -106,6 +106,7 @@ public abstract class AbstractGraphTest {
         assertThat(graph.root()).isEqualTo(root);
     }
 
+    // TODO: Replace this with new assertions
     protected void assertThatSuccessorsAreExactly(FlowGraph graph, GraphNode target, GraphNode... successors) {
         if (successors.length == 0) {
             assertThat(graph.successors(target)).isEmpty();

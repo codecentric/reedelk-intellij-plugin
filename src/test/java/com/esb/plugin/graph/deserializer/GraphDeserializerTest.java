@@ -1,75 +1,101 @@
 package com.esb.plugin.graph.deserializer;
 
-import com.esb.component.Choice;
-import com.esb.component.Stop;
-import com.esb.plugin.TestJson;
+import com.esb.plugin.AbstractDeserializerTest;
+import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.component.choice.ChoiceNode;
-import com.esb.plugin.component.generic.GenericComponentNode;
+import com.esb.plugin.component.flowreference.FlowReferenceNode;
+import com.esb.plugin.component.fork.ForkNode;
 import com.esb.plugin.component.stop.StopNode;
+import com.esb.plugin.fixture.*;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static com.esb.plugin.SampleJson.FLOW_WITH_ALL_COMPONENTS;
 import static org.assertj.core.api.Assertions.assertThat;
 
+class GraphDeserializerTest extends AbstractDeserializerTest {
 
-class GraphDeserializerTest extends AbstractBuilderTest {
+    private GraphNode componentNode1;
+    private GraphNode componentNode2;
+    private GraphNode componentNode3;
+    private GraphNode componentNode4;
+    private GraphNode componentNode5;
+    private GraphNode componentNode6;
+
+    private StopNode stopNode;
+    private ForkNode forkNode;
+    private ChoiceNode choiceNode;
+    private FlowReferenceNode flowReferenceNode;
 
     @BeforeEach
     protected void setUp() {
         super.setUp();
-        mockComponent("com.esb.rest.component.RestListener", GenericComponentNode.class);
-        mockComponent("com.esb.core.component.SetPayload1", GenericComponentNode.class);
-        mockComponent("com.esb.core.component.SetPayload2", GenericComponentNode.class);
-        mockComponent("com.esb.core.component.SetPayload3", GenericComponentNode.class);
-        mockComponent("com.esb.rest.component.SetHeader", GenericComponentNode.class);
-        mockComponent("com.esb.rest.component.SetStatus", GenericComponentNode.class);
-        mockComponent("com.esb.logger.component.LogComponent", GenericComponentNode.class);
-        mockComponent(Choice.class.getName(), ChoiceNode.class);
-        mockComponent(Stop.class.getName(), StopNode.class);
+
+        componentNode1 = mockGenericComponentNode(ComponentNode1.class);
+        componentNode2 = mockGenericComponentNode(ComponentNode2.class);
+        componentNode3 = mockGenericComponentNode(ComponentNode3.class);
+        componentNode4 = mockGenericComponentNode(ComponentNode4.class);
+        componentNode5 = mockGenericComponentNode(ComponentNode5.class);
+        componentNode6 = mockGenericComponentNode(ComponentNode6.class);
+
+        stopNode = mockStopNode();
+        forkNode = mockForkNode();
+        choiceNode = mockChoiceNode();
+        flowReferenceNode = mockFlowReferenceNode();
     }
 
     @Test
     void shouldBuildFlowWithChoiceCorrectly() {
         // Given
-        String json = TestJson.FLOW_WITH_CHOICE.asJson();
-        GraphDeserializer builder = new GraphDeserializer(json, context);
+        String json = FLOW_WITH_ALL_COMPONENTS.asJson();
+        GraphDeserializer deserializer = new GraphDeserializer(json, context);
 
         // When
-        FlowGraph graph = builder.deserialize();
+        FlowGraph graph = deserializer.deserialize();
 
         // Then
         assertThat(graph).isNotNull();
 
-        GraphNode root = graph.root();
-        assertThatComponentHasName(root, "com.esb.rest.component.RestListener");
-        assertSuccessorsAre(graph, root, "com.esb.component.Choice");
+        GraphNode rootNode = graph.root();
 
-        GraphNode choice = firstSuccessorOf(graph, root);
-        assertSuccessorsAre(graph, choice,
-                "com.esb.core.component.SetPayload1",
-                "com.esb.core.component.SetPayload2",
-                "com.esb.core.component.SetPayload3");
+        PluginAssertion.assertThat(graph)
 
+                .node(rootNode)
+                .isEqualTo(componentNode1)
 
-        GraphNode setPayload1 = getNodeHavingComponentName(graph.successors(choice), "com.esb.core.component.SetPayload1");
-        assertSuccessorsAre(graph, setPayload1, "com.esb.rest.component.SetHeader");
+                .and()
+                .successorOf(componentNode1)
+                .containsExactly(choiceNode)
 
-        GraphNode setPayload2 = getNodeHavingComponentName(graph.successors(choice), "com.esb.core.component.SetPayload2");
-        assertSuccessorsAre(graph, setPayload2, "com.esb.rest.component.SetHeader");
+                .and()
+                .successorOf(choiceNode)
+                .containsExactly(componentNode2, flowReferenceNode, forkNode)
 
-        GraphNode setPayload3 = getNodeHavingComponentName(graph.successors(choice), "com.esb.core.component.SetPayload3");
-        assertSuccessorsAre(graph, setPayload3, "com.esb.rest.component.SetHeader");
+                .and()
+                .successorOf(componentNode2)
+                .containsExactly(componentNode6)
 
-        GraphNode setHeaderDrawable = getNodeHavingComponentName(graph.successors(setPayload1), "com.esb.rest.component.SetHeader");
-        assertSuccessorsAre(graph, setHeaderDrawable, "com.esb.rest.component.SetStatus");
+                .and()
+                .successorOf(flowReferenceNode)
+                .containsExactly(componentNode6)
 
-        GraphNode setStatusDrawable = firstSuccessorOf(graph, setHeaderDrawable);
-        assertSuccessorsAre(graph, setStatusDrawable, "com.esb.logger.component.LogComponent");
+                .and()
+                .successorOf(forkNode)
+                .containsExactly(componentNode3, componentNode4)
 
-        GraphNode logComponentDrawable = firstSuccessorOf(graph, setStatusDrawable);
-        assertThat(graph.successors(logComponentDrawable)).isEmpty();
+                .and()
+                .successorOf(componentNode3)
+                .containsExactly(componentNode5)
+
+                .and()
+                .successorOf(componentNode4)
+                .containsExactly(componentNode5)
+
+                .and()
+                .successorOf(componentNode5)
+                .containsExactly(componentNode6);
     }
 
 }

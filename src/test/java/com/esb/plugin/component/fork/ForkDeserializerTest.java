@@ -1,10 +1,8 @@
-package com.esb.plugin.component.forkjoin;
+package com.esb.plugin.component.fork;
 
 import com.esb.component.Fork;
 import com.esb.component.Stop;
-import com.esb.plugin.component.generic.GenericComponentNode;
-import com.esb.plugin.component.stop.StopNode;
-import com.esb.plugin.graph.deserializer.AbstractBuilderTest;
+import com.esb.plugin.AbstractDeserializerTest;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -15,7 +13,7 @@ import static com.esb.plugin.graph.deserializer.ComponentDefinitionBuilder.creat
 import static com.esb.plugin.graph.deserializer.ComponentDefinitionBuilder.forComponent;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ForkJoinDeserializerTest extends AbstractBuilderTest {
+class ForkDeserializerTest extends AbstractDeserializerTest {
 
     private final String JOIN_COMPONENT_NAME = "com.esb.component.JoinString";
 
@@ -24,20 +22,22 @@ class ForkJoinDeserializerTest extends AbstractBuilderTest {
     private final String COMPONENT_3_NAME = "com.esb.component.Name3";
     private final String COMPONENT_4_NAME = "com.esb.component.Name4";
 
-    private ForkJoinDeserializer deserializer;
+    private ForkDeserializer deserializer;
 
     @BeforeEach
     protected void setUp() {
         super.setUp();
-        deserializer = new ForkJoinDeserializer(graph, context);
+        deserializer = new ForkDeserializer(graph, context);
 
-        mockComponent(COMPONENT_1_NAME, GenericComponentNode.class);
-        mockComponent(COMPONENT_2_NAME, GenericComponentNode.class);
-        mockComponent(COMPONENT_3_NAME, GenericComponentNode.class);
-        mockComponent(COMPONENT_4_NAME, GenericComponentNode.class);
-        mockComponent(JOIN_COMPONENT_NAME, GenericComponentNode.class);
-        mockComponent(Fork.class.getName(), ForkJoinNode.class);
-        mockComponent(Stop.class.getName(), StopNode.class);
+        /**
+         mockGenericComponentNode(COMPONENT_1_NAME, GenericComponentNode.class);
+         mockGenericComponentNode(COMPONENT_2_NAME, GenericComponentNode.class);
+         mockGenericComponentNode(COMPONENT_3_NAME, GenericComponentNode.class);
+         mockGenericComponentNode(COMPONENT_4_NAME, GenericComponentNode.class);
+         mockGenericComponentNode(JOIN_COMPONENT_NAME, GenericComponentNode.class);
+         mockGenericComponentNode(Fork.class.getName(), ForkNode.class);
+         mockGenericComponentNode(Stop.class.getName(), StopNode.class);
+         */
     }
 
     @Test

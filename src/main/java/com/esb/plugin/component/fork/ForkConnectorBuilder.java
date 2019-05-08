@@ -1,4 +1,4 @@
-package com.esb.plugin.component.forkjoin;
+package com.esb.plugin.component.fork;
 
 import com.esb.component.FlowReference;
 import com.esb.plugin.component.flowreference.FlowReferenceNode;
@@ -11,7 +11,7 @@ import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.GraphNodeFactory;
 import com.intellij.openapi.module.Module;
 
-public class ForkJoinConnectorBuilder implements ConnectorBuilder {
+public class ForkConnectorBuilder implements ConnectorBuilder {
 
     @Override
     public Connector build(Module module, FlowGraph graph, GraphNode componentToAdd) {
@@ -24,7 +24,7 @@ public class ForkJoinConnectorBuilder implements ConnectorBuilder {
 
         forkJoinGraph.add(componentToAdd, placeholderDrawable);
 
-        ((ForkJoinNode) componentToAdd).addToScope(placeholderDrawable);
+        ((ForkNode) componentToAdd).addToScope(placeholderDrawable);
 
         return new ScopedNodeConnector(graph, forkJoinGraph);
     }

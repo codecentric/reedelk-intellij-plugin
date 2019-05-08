@@ -1,11 +1,11 @@
-package com.esb.plugin.component.forkjoin;
+package com.esb.plugin.component.fork;
 
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.designer.canvas.drawables.AbstractScopedGraphNode;
 
-public class ForkJoinNode extends AbstractScopedGraphNode {
+public class ForkNode extends AbstractScopedGraphNode {
 
-    public ForkJoinNode(ComponentData componentData) {
+    public ForkNode(ComponentData componentData) {
         super(componentData);
     }
 }
