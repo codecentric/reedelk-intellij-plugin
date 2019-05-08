@@ -4,8 +4,8 @@ import com.esb.plugin.component.stop.StopNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
-import com.google.common.base.Predicate;
 
+import java.util.Collection;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkState;
@@ -53,24 +53,22 @@ class DeserializerUtilities {
             }
         });
 
+        Collection<GraphNode> stopNodes = graph
+                .nodes()
+                .stream()
+                .filter(node -> node instanceof StopNode)
+                .collect(toList());
+
         // Remove all nodes of type stop:
         // all inbound/outbound edges have been removed above
-        graph.breadthFirstTraversal(drawable -> {
-            if (drawable instanceof StopNode) {
-                copy.remove(drawable);
-            }
-        });
+        stopNodes.forEach(copy::remove);
+
 
         graph.nodes()
                 .stream()
                 .filter(node -> node instanceof ScopedGraphNode)
                 .map(node -> (ScopedGraphNode) node)
-                .forEach(scopedGraphNode -> scopedGraphNode
-                        .getScope()
-                        .stream()
-                        .filter((Predicate<GraphNode>) node -> node instanceof StopNode)
-                        .collect(toList())
-                        .forEach(scopedGraphNode::removeFromScope));
+                .forEach(scopedGraphNode -> stopNodes.forEach(scopedGraphNode::removeFromScope));
 
         return copy;
     }
