@@ -47,7 +47,6 @@ public abstract class AbstractDeserializerTest {
     protected GraphNode componentNode5;
     protected GraphNode componentNode6;
 
-
     protected FlowGraphImpl graph;
 
     @BeforeEach
@@ -72,10 +71,14 @@ public abstract class AbstractDeserializerTest {
     }
 
     protected void mockStopNodes() {
-        ComponentData componentData1 = componentDataFrom(Stop.class);
+        ComponentData componentData1 = new ComponentData(ComponentDescriptor.create()
+                .fullyQualifiedName(Stop.class.getName())
+                .build());
         this.stopNode1 = createInstance(StopNode.class, componentData1);
 
-        ComponentData componentData2 = componentDataFrom(Stop.class);
+        ComponentData componentData2 = new ComponentData(ComponentDescriptor.create()
+                .fullyQualifiedName(Stop.class.getName())
+                .build());
         this.stopNode2 = createInstance(StopNode.class, componentData2);
 
         doReturn(stopNode1, stopNode2).when(context)
@@ -94,27 +97,31 @@ public abstract class AbstractDeserializerTest {
         return mockComponentGraphNode(componentClazz, GenericComponentNode.class);
     }
 
-    private <T extends GraphNode> T mockComponentGraphNode(Class componentClazz, Class<T> graphNodeClazz) {
-        ComponentData componentData = componentDataFrom(componentClazz);
+    protected <T extends GraphNode> T mockComponentGraphNode(Class componentClazz, Class<T> graphNodeClazz, ComponentDescriptor descriptor) {
+        ComponentData componentData = new ComponentData(descriptor);
         T node = createInstance(graphNodeClazz, componentData);
-        doReturn(node).when(context)
-                .instantiateGraphNode(componentClazz.getName());
+        mockInstantiateComponent(node, componentClazz);
         return node;
+    }
+
+    private <T extends GraphNode> T mockComponentGraphNode(Class componentClazz, Class<T> graphNodeClazz) {
+        ComponentDescriptor descriptor = ComponentDescriptor.create()
+                .fullyQualifiedName(componentClazz.getName())
+                .build();
+        return mockComponentGraphNode(componentClazz, graphNodeClazz, descriptor);
     }
 
     private <T extends GraphNode> T createInstance(Class<T> graphNodeClazz, ComponentData componentData) {
         try {
-            return graphNodeClazz.getConstructor(ComponentData.class)
-                    .newInstance(componentData);
+            return graphNodeClazz.getConstructor(ComponentData.class).newInstance(componentData);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private ComponentData componentDataFrom(Class componentNodeClazz) {
-        return new ComponentData(ComponentDescriptor.create()
-                .fullyQualifiedName(componentNodeClazz.getName())
-                .build());
+    private <T extends GraphNode> void mockInstantiateComponent(T graphNode, Class componentClazz) {
+        doReturn(graphNode).when(context)
+                .instantiateGraphNode(componentClazz.getName());
     }
 
 }

@@ -2,7 +2,6 @@ package com.esb.plugin.component.generic;
 
 import com.esb.plugin.AbstractDeserializerTest;
 import com.esb.plugin.assertion.PluginAssertion;
-import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.fixture.ComponentNode1;
 import com.esb.plugin.graph.node.GraphNode;
@@ -14,7 +13,6 @@ import org.mockito.quality.Strictness;
 
 import static com.esb.plugin.fixture.Json.GenericComponent;
 import static java.util.Arrays.asList;
-import static org.mockito.Mockito.doReturn;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
 class GenericComponentDeserializerTest extends AbstractDeserializerTest {
@@ -35,13 +33,10 @@ class GenericComponentDeserializerTest extends AbstractDeserializerTest {
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .propertiesNames(asList("property1", "property2", "property3"))
                 .build();
-        ComponentData component = new ComponentData(descriptor);
 
-        GenericComponentNode node = new GenericComponentNode(component);
+        GenericComponentNode node =
+                mockComponentGraphNode(ComponentNode1.class, GenericComponentNode.class, descriptor);
 
-        doReturn(node)
-                .when(context)
-                .instantiateGraphNode(ComponentNode1.class.getName());
 
         JSONObject genericComponentDefinition = new JSONObject(GenericComponent.Sample.json());
 
