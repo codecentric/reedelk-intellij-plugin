@@ -22,7 +22,7 @@ public class GraphSerializer {
         GraphNode root = graph.root();
         doSerialize(graph, flow, root, null);
 
-        JSONObject flowObject = JsonObjectFactory1.newJSONObject();
+        JSONObject flowObject = JsonObjectFactory.newJSONObject();
         Flow.id(UUID.randomUUID().toString(), flowObject);
         Flow.flow(flow, flowObject);
         return flowObject.toString(2);

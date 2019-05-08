@@ -6,9 +6,9 @@ import org.json.JSONObject;
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 
-public class JsonObjectFactory1 {
+public class JsonObjectFactory {
 
-    private static final Logger LOG = Logger.getInstance(JsonObjectFactory1.class);
+    private static final Logger LOG = Logger.getInstance(JsonObjectFactory.class);
 
     private static Field jsonObjectMapField;
     static {
