@@ -33,11 +33,11 @@ class ForkDeserializerTest extends AbstractDeserializerTest {
         PluginAssertion.assertThat(graph)
                 .node(lastNode).is(componentNode5)
                 .and().successorsOf(forkNode).areExactly(componentNode3, componentNode1)
-                .and().successorsOf(componentNode3).areExactly(componentNode2)
-                .and().successorsOf(componentNode1).areExactly(componentNode4)
-                .and().successorsOf(componentNode2).areExactly(stopNode1)
-                .and().successorsOf(componentNode4).areExactly(stopNode1)
-                .and().successorsOf(stopNode1).areExactly(componentNode5)
+                .and().successorsOf(componentNode3).isExactly(componentNode2)
+                .and().successorsOf(componentNode1).isExactly(componentNode4)
+                .and().successorsOf(componentNode2).isExactly(stopNode1)
+                .and().successorsOf(componentNode4).isExactly(stopNode1)
+                .and().successorsOf(stopNode1).isExactly(componentNode5)
                 .and().nodesCountIs(8);
     }
 
