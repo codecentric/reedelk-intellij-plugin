@@ -22,7 +22,7 @@ public class GraphAssertion {
     }
 
     public NodeAssertion node(GraphNode node) {
-        return new NodeAssertion(graph, node, this);
+        return new NodeAssertion(node, this);
     }
 
     public GraphAssertion nodesCountIs(int expectedCount) {

@@ -2,43 +2,24 @@ package com.esb.plugin.component.choice;
 
 import com.esb.plugin.AbstractDeserializerTest;
 import com.esb.plugin.assertion.PluginAssertion;
-import com.esb.plugin.component.stop.StopNode;
-import com.esb.plugin.fixture.*;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import static com.esb.plugin.fixture.Json.Choice;
-import static org.assertj.core.api.Assertions.assertThat;
 
+@MockitoSettings(strictness = Strictness.LENIENT)
 class ChoiceDeserializerTest extends AbstractDeserializerTest {
 
     private ChoiceDeserializer deserializer;
-
-    private StopNode stopNode;
-    private ChoiceNode choiceNode;
-
-    private GraphNode componentNode1;
-    private GraphNode componentNode2;
-    private GraphNode componentNode3;
-    private GraphNode componentNode4;
-    private GraphNode componentNode5;
-    private GraphNode componentNode6;
 
     @BeforeEach
     protected void setUp() {
         super.setUp();
         deserializer = new ChoiceDeserializer(graph, context);
-
-        stopNode = mockStopNode();
-        choiceNode = mockChoiceNode();
-        componentNode1 = mockGenericComponentNode(ComponentNode1.class);
-        componentNode2 = mockGenericComponentNode(ComponentNode2.class);
-        componentNode3 = mockGenericComponentNode(ComponentNode3.class);
-        componentNode4 = mockGenericComponentNode(ComponentNode4.class);
-        componentNode5 = mockGenericComponentNode(ComponentNode5.class);
-        componentNode6 = mockGenericComponentNode(ComponentNode6.class);
     }
 
     @Test
@@ -49,14 +30,11 @@ class ChoiceDeserializerTest extends AbstractDeserializerTest {
         // When
         GraphNode lastNode = deserializer.deserialize(root, choiceDefinition);
 
-        // Then: last node must be a stop node
-        assertThat(lastNode).isEqualTo(stopNode);
-
-        // Then: check successors of choice
+        // Then
         PluginAssertion.assertThat(graph)
 
                 .node(lastNode)
-                .isEqualTo(stopNode)
+                .is(stopNode1)
 
                 .and()
                 .successorOf(choiceNode)

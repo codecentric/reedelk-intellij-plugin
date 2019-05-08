@@ -1,0 +1,29 @@
+{
+  "implementor.name": "com.esb.component.Fork",
+  "threadPoolSize": 3,
+  "fork": [
+    {
+      "next": [
+        {
+          "implementor.name": "com.esb.plugin.fixture.ComponentNode3"
+        },
+        {
+          "implementor.name": "com.esb.plugin.fixture.ComponentNode2"
+        }
+      ]
+    },
+    {
+      "next": [
+        {
+          "implementor.name": "com.esb.plugin.fixture.ComponentNode1"
+        },
+        {
+          "implementor.name": "com.esb.plugin.fixture.ComponentNode4"
+        }
+      ]
+    }
+  ],
+  "join": {
+    "implementor.name": "com.esb.plugin.fixture.ComponentNode5"
+  }
+}

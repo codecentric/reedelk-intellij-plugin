@@ -7,21 +7,31 @@ import java.net.URL;
 
 public class Json {
 
-    public enum Choice {
+    interface DataProvider {
+        String path();
 
-        Sample() {
-            @Override
-            String path() {
-                return "/com/esb/plugin/fixture/choice_sample.json";
-            }
-        };
-
-        public String asJson() {
+        default String asJson() {
             URL url = SampleJson.class.getResource(path());
             return FileUtils.readFrom(url);
         }
-
-        abstract String path();
-
     }
+
+    public enum Choice implements DataProvider {
+        Sample() {
+            @Override
+            public String path() {
+                return "/com/esb/plugin/fixture/choice_sample.json";
+            }
+        }
+    }
+
+    public enum Fork implements DataProvider {
+        Sample() {
+            @Override
+            public String path() {
+                return "/com/esb/plugin/fixture/fork_sample.json";
+            }
+        }
+    }
+
 }
