@@ -29,7 +29,7 @@ public class ForkSerializer extends AbstractSerializer {
 
         if (threadPoolSize == null) {
             // TODO: This is wrong, here we should use default value.
-            Fork.threadPoolSize(0, forkObject);
+            Fork.threadPoolSize(3, forkObject);
         } else {
             Fork.threadPoolSize(threadPoolSize, forkObject);
         }

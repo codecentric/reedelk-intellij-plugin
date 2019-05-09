@@ -53,9 +53,9 @@ public class ChoiceSerializerTest extends AbstractGraphTest {
         choiceNode1.addToScope(componentNode6);
 
         List<ChoiceConditionRoutePair> choiceRoute = new ArrayList<>();
-        choiceRoute.add(new ChoiceConditionRoutePair(DEFAULT_CONDITION_NAME, componentNode5));
         choiceRoute.add(new ChoiceConditionRoutePair("1 == 1", componentNode3));
         choiceRoute.add(new ChoiceConditionRoutePair("1 != 0", componentNode2));
+        choiceRoute.add(new ChoiceConditionRoutePair(DEFAULT_CONDITION_NAME, componentNode5));
 
         ComponentData component = choiceNode1.componentData();
         component.set(DATA_CONDITION_ROUTE_PAIRS, choiceRoute);
@@ -93,9 +93,9 @@ public class ChoiceSerializerTest extends AbstractGraphTest {
         choiceNode1.addToScope(componentNode6);
 
         List<ChoiceConditionRoutePair> choiceRoute = new ArrayList<>();
-        choiceRoute.add(new ChoiceConditionRoutePair(DEFAULT_CONDITION_NAME, componentNode5));
         choiceRoute.add(new ChoiceConditionRoutePair("1 == 1", componentNode3));
         choiceRoute.add(new ChoiceConditionRoutePair("1 != 0", componentNode2));
+        choiceRoute.add(new ChoiceConditionRoutePair(DEFAULT_CONDITION_NAME, componentNode5));
 
         ComponentData component = choiceNode1.componentData();
         component.set(DATA_CONDITION_ROUTE_PAIRS, choiceRoute);

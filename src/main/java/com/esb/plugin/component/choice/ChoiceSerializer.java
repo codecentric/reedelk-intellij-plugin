@@ -13,8 +13,6 @@ import java.util.List;
 
 import static com.esb.internal.commons.JsonParser.Choice;
 import static com.esb.internal.commons.JsonParser.Implementor;
-import static com.esb.plugin.component.choice.ChoiceNode.DEFAULT_CONDITION_NAME;
-import static java.util.stream.Collectors.toList;
 
 public class ChoiceSerializer extends AbstractSerializer {
 
@@ -27,11 +25,8 @@ public class ChoiceSerializer extends AbstractSerializer {
 
         Implementor.name(componentData.getFullyQualifiedName(), choiceObject);
 
-        List<ChoiceConditionRoutePair> choiceConditionRoutePairList = (List<ChoiceConditionRoutePair>) componentData.get(ChoiceNode.DATA_CONDITION_ROUTE_PAIRS);
-
-        List<ChoiceConditionRoutePair> when = choiceConditionRoutePairList.stream()
-                .filter(choiceConditionRoutePair -> !choiceConditionRoutePair.getCondition().equals(DEFAULT_CONDITION_NAME))
-                .collect(toList());
+        List<ChoiceConditionRoutePair> when =
+                (List<ChoiceConditionRoutePair>) componentData.get(ChoiceNode.DATA_CONDITION_ROUTE_PAIRS);
 
         JSONArray whenArrayObject = new JSONArray();
 
@@ -56,19 +51,6 @@ public class ChoiceSerializer extends AbstractSerializer {
         }
 
         Choice.when(whenArrayObject, choiceObject);
-
-        // TODO: This has to be checked, understand what to do if get() does not exists!
-        GraphNode otherwiseNode = choiceConditionRoutePairList.stream()
-                .filter(choiceConditionRoutePair -> choiceConditionRoutePair.getCondition().equals(DEFAULT_CONDITION_NAME))
-                .findFirst()
-                .get()
-                .getNext();
-
-        JSONArray otherwiseArray = new JSONArray();
-
-        GraphSerializer.doSerialize(graph, otherwiseArray, otherwiseNode, stop);
-
-        choiceObject.put(DEFAULT_CONDITION_NAME, otherwiseArray);
 
         return choiceObject;
     }

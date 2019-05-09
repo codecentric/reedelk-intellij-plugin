@@ -22,14 +22,17 @@
           "implementor": "com.esb.plugin.fixture.ComponentNode4"
         }
       ]
-    }
-  ],
-  "otherwise": [
-    {
-      "implementor": "com.esb.plugin.fixture.ComponentNode5"
     },
     {
-      "implementor": "com.esb.plugin.fixture.ComponentNode6"
+      "condition": "otherwise",
+      "next": [
+        {
+          "implementor": "com.esb.plugin.fixture.ComponentNode5"
+        },
+        {
+          "implementor": "com.esb.plugin.fixture.ComponentNode6"
+        }
+      ]
     }
   ]
 }

@@ -6,19 +6,27 @@
     },
     {
       "implementor": "com.esb.component.Choice",
-      "when": [],
-      "otherwise": [
+      "when": [
         {
-          "implementor": "com.esb.component.FlowReference",
-          "ref": "dee1d69e-e749-4cd5-9134-8f8615be1d40"
-        },
-        {
-          "implementor": "com.esb.component.Choice",
-          "when": [],
-          "otherwise": [
+          "condition": "otherwise",
+          "next": [
             {
               "implementor": "com.esb.component.FlowReference",
-              "ref": "e2a81295-c2eb-48b2-a2b1-6b1e740cdd24"
+              "ref": "dee1d69e-e749-4cd5-9134-8f8615be1d40"
+            },
+            {
+              "implementor": "com.esb.component.Choice",
+              "when": [
+                {
+                  "condition": "otherwise",
+                  "next": [
+                    {
+                      "implementor": "com.esb.component.FlowReference",
+                      "ref": "e2a81295-c2eb-48b2-a2b1-6b1e740cdd24"
+                    }
+                  ]
+                }
+              ]
             }
           ]
         }

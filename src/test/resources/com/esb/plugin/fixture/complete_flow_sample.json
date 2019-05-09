@@ -6,7 +6,7 @@
     },
     {
       "implementor": "com.esb.component.Choice",
-      "choice": [
+      "when": [
         {
           "condition": "payload.name == 'Mark'",
           "next": [
