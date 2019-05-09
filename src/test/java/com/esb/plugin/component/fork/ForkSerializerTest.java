@@ -36,6 +36,8 @@ public class ForkSerializerTest extends AbstractGraphTest {
         graph.add(componentNode2, componentNode5);
         graph.add(componentNode4, componentNode5);
 
+        forkNode1.componentData().set("threadPoolSize", 3);
+
         // When
         JSONObject serializedObject = serializer.serialize(graph, forkNode1, componentNode5);
 

@@ -22,8 +22,5 @@
         }
       ]
     }
-  ],
-  "join": {
-    "implementor.name": "com.esb.plugin.fixture.ComponentNode5"
-  }
+  ]
 }

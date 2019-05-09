@@ -19,9 +19,9 @@ import static java.util.stream.Collectors.toList;
 public class ChoiceSerializer extends AbstractSerializer {
 
     @Override
-    public JSONObject serialize(FlowGraph graph, GraphNode node, GraphNode stop) {
+    public JSONObject serialize(FlowGraph graph, GraphNode choiceNode, GraphNode stop) {
 
-        ComponentData componentData = node.componentData();
+        ComponentData componentData = choiceNode.componentData();
 
         JSONObject choiceObject = JsonObjectFactory.newJSONObject();
 
@@ -35,6 +35,7 @@ public class ChoiceSerializer extends AbstractSerializer {
 
         JSONArray whenArrayObject = new JSONArray();
 
+        // Invert, we should first get the successors of the choice and then find the matching PAIR
         for (ChoiceConditionRoutePair pair : when) {
 
             JSONObject conditionAndRouteObject = JsonObjectFactory.newJSONObject();
