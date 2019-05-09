@@ -1,0 +1,35 @@
+{
+  "implementor.name": "c1",
+  "when": [
+    {
+      "condition": "payload == 'Mark'",
+      "next": [
+        {
+          "implementor.name": "n3"
+        },
+        {
+          "implementor.name": "n4"
+        }
+      ]
+    },
+    {
+      "condition": "payload == 'John'",
+      "next": [
+        {
+          "implementor.name": "n5"
+        },
+        {
+          "implementor.name": "n6"
+        }
+      ]
+    }
+  ],
+  "otherwise": [
+    {
+      "implementor.name": "n1"
+    },
+    {
+      "implementor.name": "n2"
+    }
+  ]
+}

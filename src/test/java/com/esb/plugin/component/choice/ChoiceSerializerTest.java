@@ -2,7 +2,6 @@ package com.esb.plugin.component.choice;
 
 import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.component.ComponentData;
-import com.esb.plugin.fixture.Json;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphImpl;
 import org.json.JSONObject;
@@ -15,6 +14,7 @@ import java.util.List;
 
 import static com.esb.plugin.component.choice.ChoiceNode.DATA_CONDITION_ROUTE_PAIRS;
 import static com.esb.plugin.component.choice.ChoiceNode.DEFAULT_CONDITION_NAME;
+import static com.esb.plugin.fixture.Json.Choice;
 
 public class ChoiceSerializerTest extends AbstractGraphTest {
 
@@ -65,8 +65,17 @@ public class ChoiceSerializerTest extends AbstractGraphTest {
 
         // Then
         String actualJson = serializedObject.toString(2);
-        String expectedJson = Json.Choice.WithNodeOutsideScope.json();
+        String expectedJson = Choice.WithNodeOutsideScope.json();
         JSONAssert.assertEquals(expectedJson, actualJson, true);
+    }
+
+    @Test
+    void shouldCorrectlySerializeChoiceWithoutNodeOutsideScope() {
+        // Given
+
+        // When
+
+        // Then
     }
 
 }

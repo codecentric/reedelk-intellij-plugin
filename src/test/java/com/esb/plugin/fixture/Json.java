@@ -61,6 +61,13 @@ public class Json {
             public String path() {
                 return "/com/esb/plugin/fixture/choice_with_node_outside_scope.json";
             }
+        },
+
+        WithoutNodeOutsideScope() {
+            @Override
+            public String path() {
+                return "/com/esb/plugin/fixture/choice_without_node_outside_scope.json";
+            }
         }
     }
 

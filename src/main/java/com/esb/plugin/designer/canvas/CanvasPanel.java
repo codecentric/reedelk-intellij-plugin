@@ -1,6 +1,6 @@
 package com.esb.plugin.designer.canvas;
 
-import com.esb.plugin.commons.DebugGraphNodesPosition;
+import com.esb.plugin.commons.PrintFlowInfo;
 import com.esb.plugin.designer.SelectListener;
 import com.esb.plugin.designer.Tile;
 import com.esb.plugin.designer.canvas.action.DropActionHandler;
@@ -76,7 +76,7 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
 
             FlowGraphLayout.compute(graph, g2);
 
-            DebugGraphNodesPosition.debug(graph);// TODO: debug only
+            PrintFlowInfo.debug(graph);// TODO: debug only
 
             adjustWindowSize();
 
