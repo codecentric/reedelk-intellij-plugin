@@ -7,13 +7,14 @@ import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ScopedNodeAssertion {
+public class ScopedNodeAssertion extends NodeAssertion {
 
 
     private final ScopedGraphNode node;
     private final GraphAssertion parent;
 
     public ScopedNodeAssertion(ScopedGraphNode node, GraphAssertion parent) {
+        super(node, parent);
         this.parent = parent;
         this.node = node;
     }

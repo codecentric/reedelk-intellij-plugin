@@ -2,7 +2,6 @@ package com.esb.plugin.component.flowreference;
 
 import com.esb.plugin.AbstractDeserializerTest;
 import com.esb.plugin.assertion.PluginAssertion;
-import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +10,6 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import static com.esb.plugin.fixture.Json.FlowReference;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
 class FlowReferenceDeserializerTest extends AbstractDeserializerTest {
@@ -35,14 +33,10 @@ class FlowReferenceDeserializerTest extends AbstractDeserializerTest {
         GraphNode lastNode = deserializer.deserialize(root, flowReferenceDefinition);
 
         // Then
-        assertThat(lastNode).isEqualTo(flowReferenceNode1);
-
         PluginAssertion.assertThat(graph)
                 .node(lastNode).is(flowReferenceNode1)
+                .hasDataWithValue("ref", expectedFlowReference)
                 .and().nodesCountIs(2);
-
-        ComponentData actualComponentData = flowReferenceNode1.componentData();
-        assertThat(actualComponentData.get("ref")).isEqualTo(expectedFlowReference);
     }
 
 }

@@ -11,7 +11,7 @@ import com.esb.plugin.graph.utils.CollectNodesBetween;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import static com.esb.internal.commons.JsonParser.ForkJoin;
+import static com.esb.internal.commons.JsonParser.Fork;
 import static com.esb.internal.commons.JsonParser.Implementor;
 
 public class ForkDeserializer extends AbstractDeserializer {
@@ -29,14 +29,17 @@ public class ForkDeserializer extends AbstractDeserializer {
 
         ForkNode forkNode = context.instantiateGraphNode(name);
 
+        int threadPoolSize = Fork.threadPoolSize(componentDefinition);
+        forkNode.componentData().set(Fork.threadPoolSize(), threadPoolSize);
+
         graph.add(parent, forkNode);
 
-        JSONArray fork = ForkJoin.fork(componentDefinition);
+        JSONArray fork = Fork.fork(componentDefinition);
 
         for (int i = 0; i < fork.length(); i++) {
 
             JSONObject next = fork.getJSONObject(i);
-            JSONArray nextComponents = ForkJoin.next(next);
+            JSONArray nextComponents = Fork.next(next);
 
             GraphNode currentDrawable = forkNode;
 
@@ -59,7 +62,7 @@ public class ForkDeserializer extends AbstractDeserializer {
                 .them(graph, forkNode, stopNode)
                 .forEach(forkNode::addToScope);
 
-        JSONObject joinComponent = ForkJoin.join(componentDefinition);
+        JSONObject joinComponent = Fork.join(componentDefinition);
         return GraphDeserializerFactory.get()
                 .componentDefinition(joinComponent)
                 .context(context)
