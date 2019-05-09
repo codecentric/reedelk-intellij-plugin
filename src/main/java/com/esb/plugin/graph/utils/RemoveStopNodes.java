@@ -3,13 +3,14 @@ package com.esb.plugin.graph.utils;
 import com.esb.plugin.component.stop.StopNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.ScopedGraphNode;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
+import static com.esb.plugin.graph.utils.GraphNodeFilters.ScopedGraphNodes;
+import static com.esb.plugin.graph.utils.GraphNodeFilters.StopNodes;
 import static com.google.common.base.Preconditions.checkState;
-import static java.util.stream.Collectors.toList;
 
 public class RemoveStopNodes {
 
@@ -28,67 +29,48 @@ public class RemoveStopNodes {
     public static FlowGraph from(FlowGraph graph) {
         FlowGraph copy = graph.copy();
 
-        graph.breadthFirstTraversal(currentNode -> {
+        graph.breadthFirstTraversal(currentNode ->
 
-            if (isSuccessorStopNode(graph, currentNode)) {
+                getSuccessorStopNode(graph, currentNode).ifPresent(stopNode ->
 
-                List<GraphNode> successorsOfCurrent = copy.successors(currentNode);
-                checkState(successorsOfCurrent.size() == 1, "Expected only one successor");
+                        getFirstNonStopSuccessor(copy, stopNode).ifPresent(nonStopSuccessor -> {
 
-                GraphNode stop = successorsOfCurrent.get(0); // stop must have only one successor.
+                            // Connect current node with the next node after stop
+                            copy.add(currentNode, nonStopSuccessor);
 
-                GraphNode successorOfStop = findFirstNonStopSuccessor(copy, (StopNode) stop);
+                            // Remove edge between current node and stop
+                            copy.remove(currentNode, stopNode);
 
-                if (successorOfStop != null) {
-                    // Connect current node with the next node after stop
-                    copy.add(currentNode, successorOfStop);
+                        })));
 
-                    // Remove edge between current node and stop
-                    copy.remove(currentNode, stop);
-                }
-            }
-        });
-
-        Collection<GraphNode> stopNodes = graph
-                .nodes()
-                .stream()
-                .filter(node -> node instanceof StopNode)
-                .collect(toList());
+        Collection<StopNode> stopNodes = StopNodes.from(graph.nodes());
 
         // Remove all nodes of type stop:
         // all inbound/outbound edges have been removed above
         stopNodes.forEach(copy::remove);
 
-
-        graph.nodes()
-                .stream()
-                .filter(node -> node instanceof ScopedGraphNode)
-                .map(node -> (ScopedGraphNode) node)
-                .forEach(scopedGraphNode -> stopNodes.forEach(scopedGraphNode::removeFromScope));
+        ScopedGraphNodes.from(graph.nodes())
+                .forEach(scopedGraphNode ->
+                        stopNodes.forEach(scopedGraphNode::removeFromScope));
 
         return copy;
     }
 
-    private static boolean isSuccessorStopNode(FlowGraph graph, GraphNode node) {
-        if (graph.successors(node).size() == 1) {
-            return graph.successors(node)
-                    .stream()
-                    .anyMatch(n -> n instanceof StopNode);
-        }
-        return false;
-    }
-
-    private static GraphNode findFirstNonStopSuccessor(FlowGraph graph, StopNode stop) {
+    private static Optional<GraphNode> getFirstNonStopSuccessor(FlowGraph graph, StopNode stop) {
         List<GraphNode> successors = graph.successors(stop);
-        checkState(successors.isEmpty() || successors.size() == 1,
-                "Expected only zero or one successor");
-        if (successors.isEmpty()) return null;
-
-        GraphNode successor = successors.get(0);
-        if (successor instanceof StopNode) {
-            return findFirstNonStopSuccessor(graph, (StopNode) successor);
+        checkState(successors.isEmpty() || successors.size() == 1, "Expected only zero or one successor");
+        if (successors.isEmpty()) {
+            return Optional.empty();
         } else {
-            return successor;
+            GraphNode successor = successors.get(0);
+            return successor instanceof StopNode ?
+                    getFirstNonStopSuccessor(graph, (StopNode) successor) :
+                    Optional.of(successor);
         }
     }
+
+    private static Optional<StopNode> getSuccessorStopNode(FlowGraph graph, GraphNode node) {
+        return StopNodes.from(graph.successors(node)).stream().findFirst();
+    }
+
 }
