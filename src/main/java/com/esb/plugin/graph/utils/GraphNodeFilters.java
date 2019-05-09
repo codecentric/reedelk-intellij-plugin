@@ -5,7 +5,8 @@ import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 public class GraphNodeFilters {
 
@@ -14,7 +15,7 @@ public class GraphNodeFilters {
             return nodes.stream()
                     .filter(n -> n instanceof StopNode)
                     .map(n -> (StopNode) n)
-                    .collect(Collectors.toList());
+                    .collect(toList());
         }
     }
 
@@ -23,7 +24,7 @@ public class GraphNodeFilters {
             return nodes.stream()
                     .filter(n -> n instanceof ScopedGraphNode)
                     .map(n -> (ScopedGraphNode) n)
-                    .collect(Collectors.toList());
+                    .collect(toList());
         }
     }
 
