@@ -9,6 +9,7 @@ public class ForkSerializer extends AbstractSerializer {
 
     @Override
     public JSONObject serialize(FlowGraph graph, GraphNode node, GraphNode stop) {
+
         return null;
     }
 }

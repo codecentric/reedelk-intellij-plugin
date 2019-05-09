@@ -34,12 +34,11 @@ public class ChoiceSerializerTest extends AbstractGraphTest {
         graph.add(root, choiceNode1);
 
         graph.add(choiceNode1, componentNode3);
-        graph.add(componentNode3, componentNode1);
-
         graph.add(choiceNode1, componentNode2);
-        graph.add(componentNode2, componentNode4);
-
         graph.add(choiceNode1, componentNode5);
+
+        graph.add(componentNode3, componentNode1);
+        graph.add(componentNode2, componentNode4);
         graph.add(componentNode5, componentNode6);
 
         graph.add(componentNode1, componentNode7);
