@@ -7,6 +7,7 @@ import java.net.URL;
 public class Json {
 
     interface DataProvider {
+
         String path();
 
         default String json() {
@@ -53,20 +54,6 @@ public class Json {
             @Override
             public String path() {
                 return "/com/esb/plugin/fixture/choice_sample.json";
-            }
-        },
-
-        WithNodeOutsideScope() {
-            @Override
-            public String path() {
-                return "/com/esb/plugin/fixture/choice_with_node_outside_scope.json";
-            }
-        },
-
-        WithoutNodeOutsideScope() {
-            @Override
-            public String path() {
-                return "/com/esb/plugin/fixture/choice_without_node_outside_scope.json";
             }
         }
     }
