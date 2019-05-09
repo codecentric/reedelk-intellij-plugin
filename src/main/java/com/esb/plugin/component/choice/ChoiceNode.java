@@ -53,6 +53,7 @@ public class ChoiceNode extends AbstractScopedGraphNode {
 
     private List<ChoiceConditionRoutePair> listConditionRoutePairs() {
         ComponentData component = componentData();
+        // TODO: this cast should be fixed
         List<ChoiceConditionRoutePair> conditionRoutePair =
                 (List<ChoiceConditionRoutePair>) component.get(DATA_CONDITION_ROUTE_PAIRS);
         if (conditionRoutePair == null) {

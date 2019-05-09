@@ -25,9 +25,14 @@ public class ForkSerializer extends AbstractSerializer {
 
         Implementor.name(componentData.getFullyQualifiedName(), forkObject);
 
-        int threadPoolSize = (int) componentData.get(Fork.threadPoolSize());
+        Integer threadPoolSize = (Integer) componentData.get(Fork.threadPoolSize());
 
-        Fork.threadPoolSize(threadPoolSize, forkObject);
+        if (threadPoolSize == null) {
+            // TODO: This is wrong, here we should use default value.
+            Fork.threadPoolSize(0, forkObject);
+        } else {
+            Fork.threadPoolSize(threadPoolSize, forkObject);
+        }
 
         List<GraphNode> successorsOfFork = graph.successors(node);
 

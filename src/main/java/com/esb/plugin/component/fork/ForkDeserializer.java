@@ -51,7 +51,6 @@ public class ForkDeserializer extends AbstractDeserializer {
                         .graph(graph)
                         .build()
                         .deserialize(currentDrawable, currentComponentDefinition);
-
             }
 
             graph.add(currentDrawable, stopNode);
@@ -62,13 +61,7 @@ public class ForkDeserializer extends AbstractDeserializer {
                 .them(graph, forkNode, stopNode)
                 .forEach(forkNode::addToScope);
 
-        JSONObject joinComponent = Fork.join(componentDefinition);
-        return GraphDeserializerFactory.get()
-                .componentDefinition(joinComponent)
-                .context(context)
-                .graph(graph)
-                .build()
-                .deserialize(stopNode, joinComponent);
+        return stopNode;
 
     }
 
