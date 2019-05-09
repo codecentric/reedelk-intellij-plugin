@@ -35,6 +35,8 @@ public class RemoveStopNodes {
 
                         getFirstNonStopSuccessor(copy, stopNode).ifPresent(nonStopSuccessor -> {
 
+                            // Remove all inbound/outbound edges from/to stop nodes
+
                             // Connect current node with the next node after stop
                             copy.add(currentNode, nonStopSuccessor);
 
@@ -45,13 +47,13 @@ public class RemoveStopNodes {
 
         Collection<StopNode> stopNodes = StopNodes.from(graph.nodes());
 
-        // Remove all nodes of type stop:
-        // all inbound/outbound edges have been removed above
+        // Remove all stop nodes from the graph
         stopNodes.forEach(copy::remove);
 
+        // Remove from any scoped node the stop nodes
         ScopedGraphNodes.from(graph.nodes())
-                .forEach(scopedGraphNode ->
-                        stopNodes.forEach(scopedGraphNode::removeFromScope));
+                .forEach(scopedNode ->
+                        stopNodes.forEach(scopedNode::removeFromScope));
 
         return copy;
     }
