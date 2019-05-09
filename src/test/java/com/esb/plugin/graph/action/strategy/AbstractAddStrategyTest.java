@@ -20,26 +20,26 @@ class AbstractAddStrategyTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = new FlowGraphImpl();
         graph.root(root);
-        graph.add(root, choice1);
-        graph.add(choice1, n1);
-        graph.add(n1, choice2);
-        graph.add(choice2, n2);
-        graph.add(choice1, n3);
+        graph.add(root, choiceNode1);
+        graph.add(choiceNode1, componentNode1);
+        graph.add(componentNode1, choiceNode2);
+        graph.add(choiceNode2, componentNode2);
+        graph.add(choiceNode1, componentNode3);
 
-        choice1.addToScope(n1);
-        choice1.addToScope(n3);
-        choice1.addToScope(choice2);
-        choice2.addToScope(n2);
+        choiceNode1.addToScope(componentNode1);
+        choiceNode1.addToScope(componentNode3);
+        choiceNode1.addToScope(choiceNode2);
+        choiceNode2.addToScope(componentNode2);
 
         root.setPosition(55, 140);
-        choice1.setPosition(165, 140);
-        choice2.setPosition(390, 75);
-        n1.setPosition(275, 75);
-        n2.setPosition(505, 75);
-        n3.setPosition(275, 210);
+        choiceNode1.setPosition(165, 140);
+        choiceNode2.setPosition(390, 75);
+        componentNode1.setPosition(275, 75);
+        componentNode2.setPosition(505, 75);
+        componentNode3.setPosition(275, 210);
 
         // When
-        int maxScopeXBound = AbstractAddStrategy.getScopeMaxXBound(graph, choice1, graphics);
+        int maxScopeXBound = AbstractAddStrategy.getScopeMaxXBound(graph, choiceNode1, graphics);
 
         // Then
         assertThat(maxScopeXBound).isEqualTo(565);
@@ -50,13 +50,13 @@ class AbstractAddStrategyTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = new FlowGraphImpl();
         graph.root(root);
-        graph.add(root, choice1);
+        graph.add(root, choiceNode1);
 
         root.setPosition(55, 140);
-        choice1.setPosition(165, 140);
+        choiceNode1.setPosition(165, 140);
 
         // When
-        int maxScopeXBound = AbstractAddStrategy.getScopeMaxXBound(graph, choice1, graphics);
+        int maxScopeXBound = AbstractAddStrategy.getScopeMaxXBound(graph, choiceNode1, graphics);
 
         // Then
         assertThat(maxScopeXBound).isEqualTo(220);
@@ -67,17 +67,17 @@ class AbstractAddStrategyTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = new FlowGraphImpl();
         graph.root(root);
-        graph.add(root, choice1);
-        graph.add(choice1, n1);
+        graph.add(root, choiceNode1);
+        graph.add(choiceNode1, componentNode1);
 
         root.setPosition(55, 140);
-        choice1.setPosition(165, 140);
-        n1.setPosition(275, 140);
+        choiceNode1.setPosition(165, 140);
+        componentNode1.setPosition(275, 140);
 
-        choice1.addToScope(n1);
+        choiceNode1.addToScope(componentNode1);
 
         // When
-        int maxScopeXBound = AbstractAddStrategy.getScopeMaxXBound(graph, choice1, graphics);
+        int maxScopeXBound = AbstractAddStrategy.getScopeMaxXBound(graph, choiceNode1, graphics);
 
         // Then
         assertThat(maxScopeXBound).isEqualTo(330);

@@ -14,10 +14,10 @@ class CountNestedScopesTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = new FlowGraphImpl();
         graph.add(null, root);
-        graph.add(root, n1);
+        graph.add(root, componentNode1);
 
         // When
-        int scopesCount = CountNestedScopes.of(graph, n1);
+        int scopesCount = CountNestedScopes.of(graph, componentNode1);
 
         // Then
         assertThat(scopesCount).isEqualTo(0);
@@ -28,13 +28,13 @@ class CountNestedScopesTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = new FlowGraphImpl();
         graph.add(null, root);
-        graph.add(root, choice1);
-        graph.add(choice1, n1);
+        graph.add(root, choiceNode1);
+        graph.add(choiceNode1, componentNode1);
 
-        choice1.addToScope(n1);
+        choiceNode1.addToScope(componentNode1);
 
         // When
-        int scopesCount = CountNestedScopes.of(graph, n1);
+        int scopesCount = CountNestedScopes.of(graph, componentNode1);
 
         // Then
         assertThat(scopesCount).isEqualTo(1);
@@ -45,15 +45,15 @@ class CountNestedScopesTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = new FlowGraphImpl();
         graph.add(null, root);
-        graph.add(root, choice1);
-        graph.add(choice1, choice2);
-        graph.add(choice2, n1);
+        graph.add(root, choiceNode1);
+        graph.add(choiceNode1, choiceNode2);
+        graph.add(choiceNode2, componentNode1);
 
-        choice1.addToScope(choice2);
-        choice2.addToScope(n1);
+        choiceNode1.addToScope(choiceNode2);
+        choiceNode2.addToScope(componentNode1);
 
         // When
-        int scopesCount = CountNestedScopes.of(graph, n1);
+        int scopesCount = CountNestedScopes.of(graph, componentNode1);
 
         // Then
         assertThat(scopesCount).isEqualTo(2);
@@ -64,10 +64,10 @@ class CountNestedScopesTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = new FlowGraphImpl();
         graph.add(null, root);
-        graph.add(root, choice1);
+        graph.add(root, choiceNode1);
 
         // When
-        int scopesCount = CountNestedScopes.of(graph, choice1);
+        int scopesCount = CountNestedScopes.of(graph, choiceNode1);
 
         // Then
         assertThat(scopesCount).isEqualTo(1);
@@ -78,12 +78,12 @@ class CountNestedScopesTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = new FlowGraphImpl();
         graph.add(null, root);
-        graph.add(root, choice1);
-        graph.add(choice1, choice2);
-        choice1.addToScope(choice2);
+        graph.add(root, choiceNode1);
+        graph.add(choiceNode1, choiceNode2);
+        choiceNode1.addToScope(choiceNode2);
 
         // When
-        int scopesCount = CountNestedScopes.of(graph, choice2);
+        int scopesCount = CountNestedScopes.of(graph, choiceNode2);
 
         // Then
         assertThat(scopesCount).isEqualTo(2);
@@ -94,15 +94,15 @@ class CountNestedScopesTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = new FlowGraphImpl();
         graph.add(null, root);
-        graph.add(root, choice1);
-        graph.add(choice1, choice2);
-        graph.add(choice2, choice3);
+        graph.add(root, choiceNode1);
+        graph.add(choiceNode1, choiceNode2);
+        graph.add(choiceNode2, choiceNode3);
 
-        choice1.addToScope(choice2);
-        choice2.addToScope(choice3);
+        choiceNode1.addToScope(choiceNode2);
+        choiceNode2.addToScope(choiceNode3);
 
         // When
-        int scopesCount = CountNestedScopes.of(graph, choice3);
+        int scopesCount = CountNestedScopes.of(graph, choiceNode3);
 
         // Then
         assertThat(scopesCount).isEqualTo(3);
@@ -113,17 +113,17 @@ class CountNestedScopesTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = new FlowGraphImpl();
         graph.add(null, root);
-        graph.add(root, choice1);
-        graph.add(choice1, choice2);
-        graph.add(choice2, choice3);
-        graph.add(choice3, n1);
+        graph.add(root, choiceNode1);
+        graph.add(choiceNode1, choiceNode2);
+        graph.add(choiceNode2, choiceNode3);
+        graph.add(choiceNode3, componentNode1);
 
-        choice1.addToScope(choice2);
-        choice2.addToScope(choice3);
-        choice2.addToScope(n1);
+        choiceNode1.addToScope(choiceNode2);
+        choiceNode2.addToScope(choiceNode3);
+        choiceNode2.addToScope(componentNode1);
 
         // When
-        int scopesCount = CountNestedScopes.of(graph, n1);
+        int scopesCount = CountNestedScopes.of(graph, componentNode1);
 
         // Then
         assertThat(scopesCount).isEqualTo(2);

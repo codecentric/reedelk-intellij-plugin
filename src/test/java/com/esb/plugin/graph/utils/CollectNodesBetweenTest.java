@@ -17,21 +17,21 @@ class CollectNodesBetweenTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = new FlowGraphImpl();
         graph.root(root);
-        graph.add(root, choice1);
-        graph.add(choice1, n1);
-        graph.add(choice1, n2);
-        graph.add(choice1, n3);
-        graph.add(n1, n4);
-        graph.add(n4, n5);
-        graph.add(n2, n5);
-        graph.add(n3, n5);
-        graph.add(n5, n6);
+        graph.add(root, choiceNode1);
+        graph.add(choiceNode1, componentNode1);
+        graph.add(choiceNode1, componentNode2);
+        graph.add(choiceNode1, componentNode3);
+        graph.add(componentNode1, componentNode4);
+        graph.add(componentNode4, componentNode5);
+        graph.add(componentNode2, componentNode5);
+        graph.add(componentNode3, componentNode5);
+        graph.add(componentNode5, componentNode6);
 
         // When
-        Collection<GraphNode> nodes = CollectNodesBetween.them(graph, choice1, n5);
+        Collection<GraphNode> nodes = CollectNodesBetween.them(graph, choiceNode1, componentNode5);
 
         // Then
-        assertThat(nodes).containsExactlyInAnyOrder(n1, n2, n3, n4);
+        assertThat(nodes).containsExactlyInAnyOrder(componentNode1, componentNode2, componentNode3, componentNode4);
     }
 
     @Test
@@ -39,23 +39,23 @@ class CollectNodesBetweenTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = new FlowGraphImpl();
         graph.root(root);
-        graph.add(root, choice1);
-        graph.add(choice1, n1);
-        graph.add(n1, choice2);
-        graph.add(choice2, n2);
-        graph.add(n2, n3);
-        graph.add(n3, n4);
+        graph.add(root, choiceNode1);
+        graph.add(choiceNode1, componentNode1);
+        graph.add(componentNode1, choiceNode2);
+        graph.add(choiceNode2, componentNode2);
+        graph.add(componentNode2, componentNode3);
+        graph.add(componentNode3, componentNode4);
 
-        choice1.addToScope(n1);
-        choice1.addToScope(choice2);
+        choiceNode1.addToScope(componentNode1);
+        choiceNode1.addToScope(choiceNode2);
 
-        choice2.addToScope(n2);
+        choiceNode2.addToScope(componentNode2);
 
         // When
-        Collection<GraphNode> nodes = CollectNodesBetween.them(graph, choice1, n4);
+        Collection<GraphNode> nodes = CollectNodesBetween.them(graph, choiceNode1, componentNode4);
 
         // Then
-        assertThat(nodes).containsExactlyInAnyOrder(n1, choice2, n3);
+        assertThat(nodes).containsExactlyInAnyOrder(componentNode1, choiceNode2, componentNode3);
     }
 
 }

@@ -39,7 +39,7 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
             // Given
             FlowGraph graph = new FlowGraphImpl();
             graph.root(root);
-            graph.add(root, n1);
+            graph.add(root, componentNode1);
 
             // When
             int actual = FlowGraphLayoutUtils.maxHeight(graph, graphics, root);
@@ -52,14 +52,14 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         void shouldComputeMaxHeightCorrectlyForChoiceSubtree() {
             // Given
             FlowGraph graph = new FlowGraphImpl();
-            graph.root(choice1);
-            graph.add(choice1, n1);
-            graph.add(choice1, n2);
-            choice1.addToScope(n1);
-            choice1.addToScope(n2);
+            graph.root(choiceNode1);
+            graph.add(choiceNode1, componentNode1);
+            graph.add(choiceNode1, componentNode2);
+            choiceNode1.addToScope(componentNode1);
+            choiceNode1.addToScope(componentNode2);
 
             // When
-            int actual = FlowGraphLayoutUtils.maxHeight(graph, graphics, choice1);
+            int actual = FlowGraphLayoutUtils.maxHeight(graph, graphics, choiceNode1);
 
             // Then
             assertThat(actual).isEqualTo(130 + 130 + 5 + 5);
@@ -69,12 +69,12 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         void shouldComputeMaxHeightCorrectlyForChoice() {
             // Given
             FlowGraph graph = new FlowGraphImpl();
-            graph.root(choice1);
-            graph.add(choice1, n1);
-            choice1.addToScope(n1);
+            graph.root(choiceNode1);
+            graph.add(choiceNode1, componentNode1);
+            choiceNode1.addToScope(componentNode1);
 
             // When
-            int actual = FlowGraphLayoutUtils.maxHeight(graph, graphics, choice1);
+            int actual = FlowGraphLayoutUtils.maxHeight(graph, graphics, choiceNode1);
 
             // Then
             assertThat(actual).isEqualTo(140);
@@ -84,17 +84,17 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         void shouldComputeMaxHeightCorrectlyForNestedChoice() {
             // Given
             FlowGraph graph = new FlowGraphImpl();
-            graph.root(choice1);
-            graph.add(choice1, n1);
-            graph.add(n1, choice2);
-            graph.add(choice2, n2);
+            graph.root(choiceNode1);
+            graph.add(choiceNode1, componentNode1);
+            graph.add(componentNode1, choiceNode2);
+            graph.add(choiceNode2, componentNode2);
 
-            choice1.addToScope(n1);
-            choice1.addToScope(choice2);
-            choice2.addToScope(n2);
+            choiceNode1.addToScope(componentNode1);
+            choiceNode1.addToScope(choiceNode2);
+            choiceNode2.addToScope(componentNode2);
 
             // When
-            int actual = FlowGraphLayoutUtils.maxHeight(graph, graphics, choice1);
+            int actual = FlowGraphLayoutUtils.maxHeight(graph, graphics, choiceNode1);
 
             // Then
             assertThat(actual).isEqualTo(150);
@@ -105,28 +105,28 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
             // Given
             FlowGraph graph = new FlowGraphImpl();
             graph.root(root);
-            graph.add(root, choice1);
-            graph.add(choice1, n1);
-            graph.add(choice1, n2);
-            graph.add(n1, n3);
-            graph.add(n2, n3);
-            graph.add(n3, choice2);
-            graph.add(choice2, n4);
-            graph.add(choice2, n5);
-            graph.add(choice2, n6);
-            graph.add(n4, n7);
-            graph.add(n5, n7);
-            graph.add(n6, n7);
+            graph.add(root, choiceNode1);
+            graph.add(choiceNode1, componentNode1);
+            graph.add(choiceNode1, componentNode2);
+            graph.add(componentNode1, componentNode3);
+            graph.add(componentNode2, componentNode3);
+            graph.add(componentNode3, choiceNode2);
+            graph.add(choiceNode2, componentNode4);
+            graph.add(choiceNode2, componentNode5);
+            graph.add(choiceNode2, componentNode6);
+            graph.add(componentNode4, componentNode7);
+            graph.add(componentNode5, componentNode7);
+            graph.add(componentNode6, componentNode7);
 
-            choice1.addToScope(n1);
-            choice1.addToScope(n2);
+            choiceNode1.addToScope(componentNode1);
+            choiceNode1.addToScope(componentNode2);
 
-            choice2.addToScope(n4);
-            choice2.addToScope(n5);
-            choice2.addToScope(n6);
+            choiceNode2.addToScope(componentNode4);
+            choiceNode2.addToScope(componentNode5);
+            choiceNode2.addToScope(componentNode6);
 
             // When
-            int actual = FlowGraphLayoutUtils.maxHeight(graph, graphics, choice1);
+            int actual = FlowGraphLayoutUtils.maxHeight(graph, graphics, choiceNode1);
 
             // Then
             assertThat(actual).isEqualTo(130 + 130 + 130 + 5 + 5);
@@ -136,10 +136,10 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         void shouldComputeSubTreeHeightForGenericRootCorrectly() {
             // Given
             FlowGraphImpl graph = new FlowGraphImpl();
-            graph.root(n1);
+            graph.root(componentNode1);
 
             // When
-            int actual = FlowGraphLayoutUtils.maxHeight(graph, graphics, n1);
+            int actual = FlowGraphLayoutUtils.maxHeight(graph, graphics, componentNode1);
 
             // Then
             assertThat(actual).isEqualTo(130);
@@ -149,10 +149,10 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         void shouldComputeSubTreeHeightForScopedDrawableCorrectly() {
             // Given
             FlowGraphImpl graph = new FlowGraphImpl();
-            graph.root(choice1);
+            graph.root(choiceNode1);
 
             // When
-            int actual = FlowGraphLayoutUtils.maxHeight(graph, graphics, choice1);
+            int actual = FlowGraphLayoutUtils.maxHeight(graph, graphics, choiceNode1);
 
             // Then
             assertThat(actual).isEqualTo(130 + 5 + 5);
@@ -163,10 +163,10 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
             // Given
             FlowGraphImpl graph = new FlowGraphImpl();
             graph.root(root);
-            graph.add(root, choice1);
-            graph.add(choice1, choice2);
+            graph.add(root, choiceNode1);
+            graph.add(choiceNode1, choiceNode2);
 
-            choice1.addToScope(choice2);
+            choiceNode1.addToScope(choiceNode2);
 
             // When
             int actual = FlowGraphLayoutUtils.maxHeight(graph, graphics, root);
@@ -180,12 +180,12 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
             // Given
             FlowGraphImpl graph = new FlowGraphImpl();
             graph.root(root);
-            graph.add(root, choice1);
-            graph.add(choice1, choice2);
-            graph.add(choice1, choice3);
+            graph.add(root, choiceNode1);
+            graph.add(choiceNode1, choiceNode2);
+            graph.add(choiceNode1, choiceNode3);
 
-            choice1.addToScope(choice2);
-            choice1.addToScope(choice3);
+            choiceNode1.addToScope(choiceNode2);
+            choiceNode1.addToScope(choiceNode3);
 
             // When
             int actual = FlowGraphLayoutUtils.maxHeight(graph, graphics, root);
@@ -199,30 +199,30 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
             // Given
             FlowGraph graph = new FlowGraphImpl();
             graph.root(root);
-            graph.add(root, choice1);
-            graph.add(choice1, n1);
-            graph.add(choice1, n2);
-            graph.add(n1, n3);
-            graph.add(n2, n3);
-            graph.add(n3, choice2);
-            graph.add(choice2, n4);
-            graph.add(choice2, n5);
-            graph.add(choice2, n6);
-            graph.add(n4, n7);
-            graph.add(n5, n7);
-            graph.add(n6, n7);
+            graph.add(root, choiceNode1);
+            graph.add(choiceNode1, componentNode1);
+            graph.add(choiceNode1, componentNode2);
+            graph.add(componentNode1, componentNode3);
+            graph.add(componentNode2, componentNode3);
+            graph.add(componentNode3, choiceNode2);
+            graph.add(choiceNode2, componentNode4);
+            graph.add(choiceNode2, componentNode5);
+            graph.add(choiceNode2, componentNode6);
+            graph.add(componentNode4, componentNode7);
+            graph.add(componentNode5, componentNode7);
+            graph.add(componentNode6, componentNode7);
 
-            choice1.addToScope(n1);
-            choice1.addToScope(n2);
-            choice2.addToScope(n4);
-            choice2.addToScope(n5);
-            choice2.addToScope(n6);
+            choiceNode1.addToScope(componentNode1);
+            choiceNode1.addToScope(componentNode2);
+            choiceNode2.addToScope(componentNode4);
+            choiceNode2.addToScope(componentNode5);
+            choiceNode2.addToScope(componentNode6);
 
             // When
             int actual = FlowGraphLayoutUtils.maxHeight(graph, graphics, root);
 
             // Then
-            // n4, n5, n6
+            // componentNode4, componentNode5, componentNode6
             assertThat(actual).isEqualTo(130 + 130 + 130 + 5 + 5);
         }
 
@@ -231,14 +231,14 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
             // Given
             FlowGraph graph = new FlowGraphImpl();
             graph.root(root);
-            graph.add(root, choice1);
-            graph.add(choice1, n1);
-            graph.add(n1, n2);
-            graph.add(n2, choice2);
-            graph.add(choice2, n3);
+            graph.add(root, choiceNode1);
+            graph.add(choiceNode1, componentNode1);
+            graph.add(componentNode1, componentNode2);
+            graph.add(componentNode2, choiceNode2);
+            graph.add(choiceNode2, componentNode3);
 
-            choice1.addToScope(n1);
-            choice2.addToScope(n3);
+            choiceNode1.addToScope(componentNode1);
+            choiceNode2.addToScope(componentNode3);
 
             // When
             int actual = FlowGraphLayoutUtils.maxHeight(graph, graphics, root);
@@ -252,13 +252,13 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
             // Given
             FlowGraph graph = new FlowGraphImpl();
             graph.root(root);
-            graph.add(root, choice1);
-            graph.add(choice1, n1);
-            graph.add(n1, choice2);
-            graph.add(choice2, n2);
+            graph.add(root, choiceNode1);
+            graph.add(choiceNode1, componentNode1);
+            graph.add(componentNode1, choiceNode2);
+            graph.add(choiceNode2, componentNode2);
 
-            choice1.addToScope(n1);
-            choice2.addToScope(n2);
+            choiceNode1.addToScope(componentNode1);
+            choiceNode2.addToScope(componentNode2);
 
             // When
             int actual = FlowGraphLayoutUtils.maxHeight(graph, graphics, root);

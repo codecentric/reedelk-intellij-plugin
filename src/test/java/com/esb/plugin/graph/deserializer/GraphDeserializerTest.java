@@ -33,7 +33,7 @@ class GraphDeserializerTest extends AbstractDeserializerTest {
 
                 .and()
                 .successorsOf(choiceNode1)
-                .areExactly(componentNode2, flowReferenceNode1, forkNode)
+                .areExactly(componentNode2, flowReferenceNode1, forkNode1)
 
                 .and()
                 .successorsOf(componentNode2)
@@ -44,7 +44,7 @@ class GraphDeserializerTest extends AbstractDeserializerTest {
                 .isOnly(componentNode6)
 
                 .and()
-                .successorsOf(forkNode)
+                .successorsOf(forkNode1)
                 .areExactly(componentNode3, componentNode4)
 
                 .and()

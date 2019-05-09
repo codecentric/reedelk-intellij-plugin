@@ -1,103 +1,110 @@
 package com.esb.plugin;
 
+import com.esb.component.Choice;
+import com.esb.component.FlowReference;
+import com.esb.component.Fork;
+import com.esb.component.Stop;
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.component.choice.ChoiceNode;
+import com.esb.plugin.component.flowreference.FlowReferenceNode;
+import com.esb.plugin.component.fork.ForkNode;
 import com.esb.plugin.component.generic.GenericComponentNode;
+import com.esb.plugin.component.stop.StopNode;
+import com.esb.plugin.fixture.*;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.ScopedGraphNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
+
+import java.lang.reflect.InvocationTargetException;
 
 @ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
 public abstract class AbstractGraphTest {
 
-    private ComponentData cRoot;
-    private ComponentData cn1;
-    private ComponentData cn2;
-    private ComponentData cn3;
-    private ComponentData cn4;
-    private ComponentData cn5;
-    private ComponentData cn6;
-    private ComponentData cn7;
-    private ComponentData cn8;
-    private ComponentData cn9;
-    private ComponentData cn10;
-    private ComponentData cn11;
-    private ComponentData cc1;
-    private ComponentData cc2;
-    private ComponentData cc3;
-    private ComponentData cc4;
-    private ComponentData cc5;
-
     protected GraphNode root;
-    protected GraphNode n1;
-    protected GraphNode n2;
-    protected GraphNode n3;
-    protected GraphNode n4;
-    protected GraphNode n5;
-    protected GraphNode n6;
-    protected GraphNode n7;
-    protected GraphNode n8;
-    protected GraphNode n9;
-    protected GraphNode n10;
-    protected GraphNode n11;
+    protected GraphNode componentNode1;
+    protected GraphNode componentNode2;
+    protected GraphNode componentNode3;
+    protected GraphNode componentNode4;
+    protected GraphNode componentNode5;
+    protected GraphNode componentNode6;
+    protected GraphNode componentNode7;
+    protected GraphNode componentNode8;
+    protected GraphNode componentNode9;
+    protected GraphNode componentNode10;
+    protected GraphNode componentNode11;
 
-    protected ScopedGraphNode choice1;
-    protected ScopedGraphNode choice2;
-    protected ScopedGraphNode choice3;
-    protected ScopedGraphNode choice4;
-    protected ScopedGraphNode choice5;
+    // Stop
+    protected StopNode stopNode1;
+    protected StopNode stopNode2;
+
+    // Fork
+    protected ForkNode forkNode1;
+    protected ForkNode forkNode2;
+
+    // Choice
+    protected ChoiceNode choiceNode1;
+    protected ChoiceNode choiceNode2;
+    protected ChoiceNode choiceNode3;
+    protected ChoiceNode choiceNode4;
+    protected ChoiceNode choiceNode5;
+
+    // Flow Reference
+    protected FlowReferenceNode flowReferenceNode1;
+    protected FlowReferenceNode flowReferenceNode2;
+
 
     @BeforeEach
     protected void setUp() {
-        cRoot = createComponent("root");
-        cn1 = createComponent("n1");
-        cn2 = createComponent("n2");
-        cn3 = createComponent("n3");
-        cn4 = createComponent("n4");
-        cn5 = createComponent("n5");
-        cn6 = createComponent("n6");
-        cn7 = createComponent("n7");
-        cn8 = createComponent("n8");
-        cn9 = createComponent("n9");
-        cn10 = createComponent("n10");
-        cn11 = createComponent("n11");
-        cc1 = createComponent("c1");
-        cc2 = createComponent("c2");
-        cc3 = createComponent("c3");
-        cc4 = createComponent("c4");
-        cc5 = createComponent("c5");
+        root = createGraphNodeInstance(ComponentRoot.class, GenericComponentNode.class);
 
-        root = new GenericComponentNode(cRoot);
-        n1 = new GenericComponentNode(cn1);
-        n2 = new GenericComponentNode(cn2);
-        n3 = new GenericComponentNode(cn3);
-        n4 = new GenericComponentNode(cn4);
-        n5 = new GenericComponentNode(cn5);
-        n6 = new GenericComponentNode(cn6);
-        n7 = new GenericComponentNode(cn7);
-        n8 = new GenericComponentNode(cn8);
-        n9 = new GenericComponentNode(cn9);
-        n10 = new GenericComponentNode(cn10);
-        n11 = new GenericComponentNode(cn11);
+        componentNode1 = createGraphNodeInstance(ComponentNode1.class, GenericComponentNode.class);
+        componentNode2 = createGraphNodeInstance(ComponentNode2.class, GenericComponentNode.class);
+        componentNode3 = createGraphNodeInstance(ComponentNode3.class, GenericComponentNode.class);
+        componentNode4 = createGraphNodeInstance(ComponentNode4.class, GenericComponentNode.class);
+        componentNode5 = createGraphNodeInstance(ComponentNode5.class, GenericComponentNode.class);
+        componentNode6 = createGraphNodeInstance(ComponentNode6.class, GenericComponentNode.class);
+        componentNode7 = createGraphNodeInstance(ComponentNode7.class, GenericComponentNode.class);
+        componentNode8 = createGraphNodeInstance(ComponentNode8.class, GenericComponentNode.class);
+        componentNode9 = createGraphNodeInstance(ComponentNode9.class, GenericComponentNode.class);
+        componentNode10 = createGraphNodeInstance(ComponentNode10.class, GenericComponentNode.class);
+        componentNode11 = createGraphNodeInstance(ComponentNode11.class, GenericComponentNode.class);
 
-        choice1 = new ChoiceNode(cc1);
-        choice2 = new ChoiceNode(cc2);
-        choice3 = new ChoiceNode(cc3);
-        choice4 = new ChoiceNode(cc4);
-        choice5 = new ChoiceNode(cc5);
+        stopNode1 = createGraphNodeInstance(Stop.class, StopNode.class);
+        stopNode2 = createGraphNodeInstance(Stop.class, StopNode.class);
+
+        forkNode1 = createGraphNodeInstance(Fork.class, ForkNode.class);
+        forkNode2 = createGraphNodeInstance(Fork.class, ForkNode.class);
+
+        choiceNode1 = createGraphNodeInstance(Choice.class, ChoiceNode.class);
+        choiceNode2 = createGraphNodeInstance(Choice.class, ChoiceNode.class);
+        choiceNode3 = createGraphNodeInstance(Choice.class, ChoiceNode.class);
+        choiceNode4 = createGraphNodeInstance(Choice.class, ChoiceNode.class);
+        choiceNode5 = createGraphNodeInstance(Choice.class, ChoiceNode.class);
+
+        flowReferenceNode1 = createGraphNodeInstance(FlowReference.class, FlowReferenceNode.class);
+        flowReferenceNode2 = createGraphNodeInstance(FlowReference.class, FlowReferenceNode.class);
     }
 
-    private ComponentData createComponent(String name) {
-        return new ComponentData(ComponentDescriptor.create()
-                .fullyQualifiedName(name)
-                .displayName(name)
-                .build());
+    protected static <T extends GraphNode> T createGraphNodeInstance(Class<T> graphNodeClazz, ComponentDescriptor descriptor) {
+        ComponentData componentData = new ComponentData(descriptor);
+        return createGraphNodeInstance(graphNodeClazz, componentData);
+    }
+
+    private static <T extends GraphNode> T createGraphNodeInstance(Class componentClazz, Class<T> graphNodeClazz) {
+        ComponentDescriptor descriptor = ComponentDescriptor.create()
+                .fullyQualifiedName(componentClazz.getName())
+                .build();
+        return createGraphNodeInstance(graphNodeClazz, descriptor);
+    }
+
+    private static <T extends GraphNode> T createGraphNodeInstance(Class<T> graphNodeClazz, ComponentData componentData) {
+        try {
+            return graphNodeClazz.getConstructor(ComponentData.class).newInstance(componentData);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

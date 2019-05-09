@@ -17,18 +17,18 @@ class FindScopeTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = new FlowGraphImpl();
         graph.add(null, root);
-        graph.add(root, choice1);
-        graph.add(choice1, choice2);
-        graph.add(choice1, n1);
+        graph.add(root, choiceNode1);
+        graph.add(choiceNode1, choiceNode2);
+        graph.add(choiceNode1, componentNode1);
 
-        choice1.addToScope(choice2);
-        choice2.addToScope(n1);
+        choiceNode1.addToScope(choiceNode2);
+        choiceNode2.addToScope(componentNode1);
 
         // When
-        Optional<ScopedGraphNode> actualScope = FindScope.of(graph, n1);
+        Optional<ScopedGraphNode> actualScope = FindScope.of(graph, componentNode1);
 
         // Then
         assertThat(actualScope.isPresent()).isTrue();
-        assertThat(actualScope.get()).isEqualTo(choice2);
+        assertThat(actualScope.get()).isEqualTo(choiceNode2);
     }
 }

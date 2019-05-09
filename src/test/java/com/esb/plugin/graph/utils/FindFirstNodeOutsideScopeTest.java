@@ -17,20 +17,20 @@ class FindFirstNodeOutsideScopeTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = new FlowGraphImpl();
         graph.root(root);
-        graph.add(root, choice1);
-        graph.add(choice1, n1);
-        graph.add(n1, choice2);
-        graph.add(choice2, n2);
-        graph.add(choice1, n3);
+        graph.add(root, choiceNode1);
+        graph.add(choiceNode1, componentNode1);
+        graph.add(componentNode1, choiceNode2);
+        graph.add(choiceNode2, componentNode2);
+        graph.add(choiceNode1, componentNode3);
 
-        choice1.addToScope(n1);
-        choice1.addToScope(n3);
-        choice1.addToScope(choice2);
+        choiceNode1.addToScope(componentNode1);
+        choiceNode1.addToScope(componentNode3);
+        choiceNode1.addToScope(choiceNode2);
 
-        choice2.addToScope(n2);
+        choiceNode2.addToScope(componentNode2);
 
         // When
-        Optional<GraphNode> firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, choice1);
+        Optional<GraphNode> firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, choiceNode1);
 
         // Then
         assertThat(firstNodeOutsideScope.isPresent()).isFalse();
@@ -41,20 +41,20 @@ class FindFirstNodeOutsideScopeTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = new FlowGraphImpl();
         graph.root(root);
-        graph.add(root, choice1);
-        graph.add(choice1, n1);
-        graph.add(choice1, n2);
-        graph.add(n1, n3);
-        graph.add(n2, n3);
+        graph.add(root, choiceNode1);
+        graph.add(choiceNode1, componentNode1);
+        graph.add(choiceNode1, componentNode2);
+        graph.add(componentNode1, componentNode3);
+        graph.add(componentNode2, componentNode3);
 
-        choice1.addToScope(n1);
-        choice1.addToScope(n2);
+        choiceNode1.addToScope(componentNode1);
+        choiceNode1.addToScope(componentNode2);
 
         // When
-        Optional<GraphNode> drawables = FindFirstNodeOutsideScope.of(graph, choice1);
+        Optional<GraphNode> drawables = FindFirstNodeOutsideScope.of(graph, choiceNode1);
 
         // Then
-        assertThat(drawables.get()).isEqualTo(n3);
+        assertThat(drawables.get()).isEqualTo(componentNode3);
     }
 
 }

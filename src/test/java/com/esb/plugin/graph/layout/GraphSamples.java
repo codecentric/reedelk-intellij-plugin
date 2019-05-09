@@ -12,17 +12,17 @@ import com.esb.plugin.graph.node.ScopedGraphNode;
 public class GraphSamples {
 
     ComponentData cRoot = createComponent("root");
-    ComponentData cn1 = createComponent("n1");
-    ComponentData cn2 = createComponent("n2");
-    ComponentData cn3 = createComponent("n3");
-    ComponentData cn4 = createComponent("n4");
-    ComponentData cn5 = createComponent("n5");
-    ComponentData cn6 = createComponent("n6");
-    ComponentData cn7 = createComponent("n7");
-    ComponentData cn8 = createComponent("n8");
-    ComponentData cn9 = createComponent("n9");
-    ComponentData cn10 = createComponent("n10");
-    ComponentData cn11 = createComponent("n11");
+    ComponentData ccomponentNode1 = createComponent("componentNode1");
+    ComponentData ccomponentNode2 = createComponent("componentNode2");
+    ComponentData ccomponentNode3 = createComponent("componentNode3");
+    ComponentData ccomponentNode4 = createComponent("componentNode4");
+    ComponentData ccomponentNode5 = createComponent("componentNode5");
+    ComponentData ccomponentNode6 = createComponent("componentNode6");
+    ComponentData ccomponentNode7 = createComponent("componentNode7");
+    ComponentData ccomponentNode8 = createComponent("componentNode8");
+    ComponentData ccomponentNode9 = createComponent("componentNode9");
+    ComponentData ccomponentNode10 = createComponent("componentNode10");
+    ComponentData ccomponentNode11 = createComponent("componentNode11");
     ComponentData cc1 = createComponent("c1");
     ComponentData cc2 = createComponent("c2");
     ComponentData cc3 = createComponent("c3");
@@ -30,17 +30,17 @@ public class GraphSamples {
     ComponentData cc5 = createComponent("c5");
 
     GraphNode root = new GenericComponentNode(cRoot);
-    GraphNode n1 = new GenericComponentNode(cn1);
-    GraphNode n2 = new GenericComponentNode(cn2);
-    GraphNode n3 = new GenericComponentNode(cn3);
-    GraphNode n4 = new GenericComponentNode(cn4);
-    GraphNode n5 = new GenericComponentNode(cn5);
-    GraphNode n6 = new GenericComponentNode(cn6);
-    GraphNode n7 = new GenericComponentNode(cn7);
-    GraphNode n8 = new GenericComponentNode(cn8);
-    GraphNode n9 = new GenericComponentNode(cn9);
-    GraphNode n10 = new GenericComponentNode(cn10);
-    GraphNode n11 = new GenericComponentNode(cn11);
+    GraphNode componentNode1 = new GenericComponentNode(ccomponentNode1);
+    GraphNode componentNode2 = new GenericComponentNode(ccomponentNode2);
+    GraphNode componentNode3 = new GenericComponentNode(ccomponentNode3);
+    GraphNode componentNode4 = new GenericComponentNode(ccomponentNode4);
+    GraphNode componentNode5 = new GenericComponentNode(ccomponentNode5);
+    GraphNode componentNode6 = new GenericComponentNode(ccomponentNode6);
+    GraphNode componentNode7 = new GenericComponentNode(ccomponentNode7);
+    GraphNode componentNode8 = new GenericComponentNode(ccomponentNode8);
+    GraphNode componentNode9 = new GenericComponentNode(ccomponentNode9);
+    GraphNode componentNode10 = new GenericComponentNode(ccomponentNode10);
+    GraphNode componentNode11 = new GenericComponentNode(ccomponentNode11);
 
     ScopedGraphNode c1 = new ChoiceNode(cc1);
     ScopedGraphNode c2 = new ChoiceNode(cc2);
@@ -92,12 +92,12 @@ public class GraphSamples {
         FlowGraph graph = new FlowGraphImpl();
         graph.root(root);
         graph.add(root, c1);
-        graph.add(c1, n1);
-        graph.add(n1, c2);
-        graph.add(c2, n2);
+        graph.add(c1, componentNode1);
+        graph.add(componentNode1, c2);
+        graph.add(c2, componentNode2);
 
-        c1.addToScope(n1);
-        c2.addToScope(n2);
+        c1.addToScope(componentNode1);
+        c2.addToScope(componentNode2);
 
         return graph;
     }
@@ -108,13 +108,13 @@ public class GraphSamples {
         graph.add(root, c1);
         graph.add(c1, c2);
         graph.add(c1, c3);
-        graph.add(c2, n1);
-        graph.add(c3, n2);
+        graph.add(c2, componentNode1);
+        graph.add(c3, componentNode2);
 
         c1.addToScope(c2);
         c1.addToScope(c3);
-        c2.addToScope(n1);
-        c3.addToScope(n2);
+        c2.addToScope(componentNode1);
+        c3.addToScope(componentNode2);
 
 
         return graph;
@@ -126,19 +126,19 @@ public class GraphSamples {
         graph.add(root, c1);
         graph.add(c1, c2);
         graph.add(c1, c3);
-        graph.add(c2, n2);
-        graph.add(c2, n3);
-        graph.add(c3, n4);
-        graph.add(c3, n5);
+        graph.add(c2, componentNode2);
+        graph.add(c2, componentNode3);
+        graph.add(c3, componentNode4);
+        graph.add(c3, componentNode5);
 
         c1.addToScope(c2);
         c1.addToScope(c3);
 
-        c2.addToScope(n2);
-        c2.addToScope(n3);
+        c2.addToScope(componentNode2);
+        c2.addToScope(componentNode3);
 
-        c3.addToScope(n4);
-        c3.addToScope(n5);
+        c3.addToScope(componentNode4);
+        c3.addToScope(componentNode5);
 
         return graph;
     }
@@ -147,21 +147,21 @@ public class GraphSamples {
         FlowGraph graph = new FlowGraphImpl();
         graph.root(root);
         graph.add(root, c1);
-        graph.add(c1, n1);
-        graph.add(c1, n2);
-        graph.add(n1, n3);
-        graph.add(n2, n3);
-        graph.add(n3, c2);
-        graph.add(c2, n4);
-        graph.add(c2, n5);
-        graph.add(n4, n6);
-        graph.add(n5, n6);
+        graph.add(c1, componentNode1);
+        graph.add(c1, componentNode2);
+        graph.add(componentNode1, componentNode3);
+        graph.add(componentNode2, componentNode3);
+        graph.add(componentNode3, c2);
+        graph.add(c2, componentNode4);
+        graph.add(c2, componentNode5);
+        graph.add(componentNode4, componentNode6);
+        graph.add(componentNode5, componentNode6);
 
-        c1.addToScope(n1);
-        c1.addToScope(n2);
+        c1.addToScope(componentNode1);
+        c1.addToScope(componentNode2);
 
-        c2.addToScope(n4);
-        c2.addToScope(n5);
+        c2.addToScope(componentNode4);
+        c2.addToScope(componentNode5);
         return graph;
     }
 
@@ -169,27 +169,27 @@ public class GraphSamples {
         FlowGraph graph = new FlowGraphImpl();
         graph.root(root);
         graph.add(root, c1);
-        graph.add(c1, n1);
-        graph.add(c1, n2);
-        graph.add(n1, n3);
-        graph.add(n2, n3);
-        graph.add(n3, c2);
-        graph.add(c2, n4);
-        graph.add(c2, n5);
+        graph.add(c1, componentNode1);
+        graph.add(c1, componentNode2);
+        graph.add(componentNode1, componentNode3);
+        graph.add(componentNode2, componentNode3);
+        graph.add(componentNode3, c2);
+        graph.add(c2, componentNode4);
+        graph.add(c2, componentNode5);
         graph.add(c2, c3);
-        graph.add(n4, n6);
-        graph.add(n5, n6);
-        graph.add(c3, n7);
-        graph.add(n7, n6);
+        graph.add(componentNode4, componentNode6);
+        graph.add(componentNode5, componentNode6);
+        graph.add(c3, componentNode7);
+        graph.add(componentNode7, componentNode6);
 
-        c1.addToScope(n1);
-        c1.addToScope(n2);
+        c1.addToScope(componentNode1);
+        c1.addToScope(componentNode2);
 
-        c2.addToScope(n4);
-        c2.addToScope(n5);
+        c2.addToScope(componentNode4);
+        c2.addToScope(componentNode5);
         c2.addToScope(c3);
 
-        c3.addToScope(n7);
+        c3.addToScope(componentNode7);
         return graph;
     }
 
@@ -197,20 +197,20 @@ public class GraphSamples {
         FlowGraph graph = new FlowGraphImpl();
         graph.root(root);
         graph.add(root, c1);
-        graph.add(c1, n1);
-        graph.add(c1, n2);
+        graph.add(c1, componentNode1);
+        graph.add(c1, componentNode2);
         graph.add(c1, c3);
-        graph.add(c3, n3);
+        graph.add(c3, componentNode3);
 
-        graph.add(n1, n4);
-        graph.add(n2, n4);
-        graph.add(n3, n4);
+        graph.add(componentNode1, componentNode4);
+        graph.add(componentNode2, componentNode4);
+        graph.add(componentNode3, componentNode4);
 
-        c1.addToScope(n1);
-        c1.addToScope(n2);
+        c1.addToScope(componentNode1);
+        c1.addToScope(componentNode2);
         c1.addToScope(c3);
 
-        c3.addToScope(n3);
+        c3.addToScope(componentNode3);
 
         return graph;
     }
@@ -219,24 +219,24 @@ public class GraphSamples {
         FlowGraph graph = new FlowGraphImpl();
         graph.root(root);
         graph.add(root, c1);
-        graph.add(c1, n1);
-        graph.add(c1, n2);
-        graph.add(n1, n3);
-        graph.add(n2, n3);
-        graph.add(n3, c2);
-        graph.add(c2, n4);
-        graph.add(c2, n5);
-        graph.add(c2, n6);
-        graph.add(n4, n7);
-        graph.add(n5, n7);
-        graph.add(n6, n7);
+        graph.add(c1, componentNode1);
+        graph.add(c1, componentNode2);
+        graph.add(componentNode1, componentNode3);
+        graph.add(componentNode2, componentNode3);
+        graph.add(componentNode3, c2);
+        graph.add(c2, componentNode4);
+        graph.add(c2, componentNode5);
+        graph.add(c2, componentNode6);
+        graph.add(componentNode4, componentNode7);
+        graph.add(componentNode5, componentNode7);
+        graph.add(componentNode6, componentNode7);
 
-        c1.addToScope(n1);
-        c1.addToScope(n2);
+        c1.addToScope(componentNode1);
+        c1.addToScope(componentNode2);
 
-        c2.addToScope(n4);
-        c2.addToScope(n5);
-        c2.addToScope(n6);
+        c2.addToScope(componentNode4);
+        c2.addToScope(componentNode5);
+        c2.addToScope(componentNode6);
         return graph;
     }
 
@@ -244,43 +244,43 @@ public class GraphSamples {
         FlowGraph graph = new FlowGraphImpl();
         graph.root(root);
         graph.add(root, c1);
-        graph.add(c1, n1);
+        graph.add(c1, componentNode1);
         graph.add(c1, c3);
-        graph.add(n1, c2);
-        graph.add(c2, n4);
-        graph.add(c2, n5);
-        graph.add(n4, n6);
-        graph.add(n5, n6);
-        graph.add(n6, n9);
-        graph.add(c3, n2);
-        graph.add(c3, n3);
-        graph.add(n2, n7);
-        graph.add(n3, n8);
-        graph.add(n8, n9);
+        graph.add(componentNode1, c2);
+        graph.add(c2, componentNode4);
+        graph.add(c2, componentNode5);
+        graph.add(componentNode4, componentNode6);
+        graph.add(componentNode5, componentNode6);
+        graph.add(componentNode6, componentNode9);
+        graph.add(c3, componentNode2);
+        graph.add(c3, componentNode3);
+        graph.add(componentNode2, componentNode7);
+        graph.add(componentNode3, componentNode8);
+        graph.add(componentNode8, componentNode9);
 
-        graph.add(n7, c4);
-        graph.add(c4, n10);
-        graph.add(c4, n11);
-        graph.add(n10, n8);
-        graph.add(n11, n8);
+        graph.add(componentNode7, c4);
+        graph.add(c4, componentNode10);
+        graph.add(c4, componentNode11);
+        graph.add(componentNode10, componentNode8);
+        graph.add(componentNode11, componentNode8);
 
 
-        c1.addToScope(n1);
+        c1.addToScope(componentNode1);
         c1.addToScope(c2);
-        c1.addToScope(n6);
+        c1.addToScope(componentNode6);
         c1.addToScope(c3);
-        c1.addToScope(n8);
+        c1.addToScope(componentNode8);
 
-        c2.addToScope(n4);
-        c2.addToScope(n5);
+        c2.addToScope(componentNode4);
+        c2.addToScope(componentNode5);
 
-        c3.addToScope(n2);
-        c3.addToScope(n7);
-        c3.addToScope(n3);
+        c3.addToScope(componentNode2);
+        c3.addToScope(componentNode7);
+        c3.addToScope(componentNode3);
         c3.addToScope(c4);
 
-        c4.addToScope(n10);
-        c4.addToScope(n11);
+        c4.addToScope(componentNode10);
+        c4.addToScope(componentNode11);
 
         return graph;
     }
@@ -289,38 +289,38 @@ public class GraphSamples {
         FlowGraph graph = new FlowGraphImpl();
         graph.root(root);
         graph.add(root, c1);
-        graph.add(c1, n1);
-        graph.add(c1, n2);
-        graph.add(n1, c2);
-        graph.add(c2, n3);
-        graph.add(c2, n4);
+        graph.add(c1, componentNode1);
+        graph.add(c1, componentNode2);
+        graph.add(componentNode1, c2);
+        graph.add(c2, componentNode3);
+        graph.add(c2, componentNode4);
 
-        graph.add(n3, n5);
-        graph.add(n4, n5);
-        graph.add(n2, n5);
+        graph.add(componentNode3, componentNode5);
+        graph.add(componentNode4, componentNode5);
+        graph.add(componentNode2, componentNode5);
 
-        graph.add(n5, c3);
-        graph.add(c3, n6);
-        graph.add(c3, n7);
-        graph.add(c3, n8);
-        graph.add(c3, n9);
+        graph.add(componentNode5, c3);
+        graph.add(c3, componentNode6);
+        graph.add(c3, componentNode7);
+        graph.add(c3, componentNode8);
+        graph.add(c3, componentNode9);
 
-        graph.add(n6, n10);
-        graph.add(n7, n10);
-        graph.add(n8, n10);
-        graph.add(n9, n10);
+        graph.add(componentNode6, componentNode10);
+        graph.add(componentNode7, componentNode10);
+        graph.add(componentNode8, componentNode10);
+        graph.add(componentNode9, componentNode10);
 
-        c1.addToScope(n1);
+        c1.addToScope(componentNode1);
         c1.addToScope(c2);
-        c1.addToScope(n2);
+        c1.addToScope(componentNode2);
 
-        c2.addToScope(n3);
-        c2.addToScope(n4);
+        c2.addToScope(componentNode3);
+        c2.addToScope(componentNode4);
 
-        c3.addToScope(n6);
-        c3.addToScope(n7);
-        c3.addToScope(n8);
-        c3.addToScope(n9);
+        c3.addToScope(componentNode6);
+        c3.addToScope(componentNode7);
+        c3.addToScope(componentNode8);
+        c3.addToScope(componentNode9);
 
         return graph;
     }
@@ -329,32 +329,32 @@ public class GraphSamples {
         FlowGraph graph = new FlowGraphImpl();
         graph.root(root);
         graph.add(root, c1);
-        graph.add(c1, n1);
-        graph.add(c1, n2);
-        graph.add(n1, c2);
-        graph.add(c2, n3);
-        graph.add(c2, n4);
+        graph.add(c1, componentNode1);
+        graph.add(c1, componentNode2);
+        graph.add(componentNode1, c2);
+        graph.add(c2, componentNode3);
+        graph.add(c2, componentNode4);
 
-        graph.add(n3, n5);
-        graph.add(n4, n5);
-        graph.add(n2, n5);
+        graph.add(componentNode3, componentNode5);
+        graph.add(componentNode4, componentNode5);
+        graph.add(componentNode2, componentNode5);
 
-        graph.add(n5, c3);
-        graph.add(c3, n6);
-        graph.add(c3, n7);
+        graph.add(componentNode5, c3);
+        graph.add(c3, componentNode6);
+        graph.add(c3, componentNode7);
 
-        graph.add(n6, n10);
-        graph.add(n7, n10);
+        graph.add(componentNode6, componentNode10);
+        graph.add(componentNode7, componentNode10);
 
-        c1.addToScope(n1);
+        c1.addToScope(componentNode1);
         c1.addToScope(c2);
-        c1.addToScope(n2);
+        c1.addToScope(componentNode2);
 
-        c2.addToScope(n3);
-        c2.addToScope(n4);
+        c2.addToScope(componentNode3);
+        c2.addToScope(componentNode4);
 
-        c3.addToScope(n6);
-        c3.addToScope(n7);
+        c3.addToScope(componentNode6);
+        c3.addToScope(componentNode7);
 
         return graph;
     }

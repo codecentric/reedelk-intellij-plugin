@@ -23,18 +23,18 @@ class FindJoiningScopeTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = new FlowGraphImpl();
         graph.root(root);
-        graph.add(root, choice1);
-        graph.add(choice1, n1);
-        graph.add(n1, n2);
+        graph.add(root, choiceNode1);
+        graph.add(choiceNode1, componentNode1);
+        graph.add(componentNode1, componentNode2);
 
-        choice1.addToScope(n1);
+        choiceNode1.addToScope(componentNode1);
 
         // When
-        Optional<ScopedGraphNode> joiningScope = FindJoiningScope.of(graph, n2);
+        Optional<ScopedGraphNode> joiningScope = FindJoiningScope.of(graph, componentNode2);
 
         // Then
         assertThat(joiningScope.isPresent()).isTrue();
-        assertThat(joiningScope.get()).isEqualTo(choice1);
+        assertThat(joiningScope.get()).isEqualTo(choiceNode1);
     }
 
     @Test
@@ -42,25 +42,25 @@ class FindJoiningScopeTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = new FlowGraphImpl();
         graph.root(root);
-        graph.add(root, choice1);
-        graph.add(choice1, n1);
-        graph.add(n1, choice2);
-        graph.add(choice2, n2);
-        graph.add(n2, n3);
+        graph.add(root, choiceNode1);
+        graph.add(choiceNode1, componentNode1);
+        graph.add(componentNode1, choiceNode2);
+        graph.add(choiceNode2, componentNode2);
+        graph.add(componentNode2, componentNode3);
 
-        choice1.addToScope(n1);
-        choice1.addToScope(choice2);
-        choice1.setPosition(20, 90); // the outermost is the one with lowest X
+        choiceNode1.addToScope(componentNode1);
+        choiceNode1.addToScope(choiceNode2);
+        choiceNode1.setPosition(20, 90); // the outermost is the one with lowest X
 
-        choice2.addToScope(n2);
-        choice2.setPosition(25, 90);
+        choiceNode2.addToScope(componentNode2);
+        choiceNode2.setPosition(25, 90);
 
         // When
-        Optional<ScopedGraphNode> joiningScope = FindJoiningScope.of(graph, n3);
+        Optional<ScopedGraphNode> joiningScope = FindJoiningScope.of(graph, componentNode3);
 
         // Then
         assertThat(joiningScope.isPresent()).isTrue();
-        assertThat(joiningScope.get()).isEqualTo(choice1);
+        assertThat(joiningScope.get()).isEqualTo(choiceNode1);
     }
 
     @Test
@@ -68,23 +68,23 @@ class FindJoiningScopeTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = new FlowGraphImpl();
         graph.root(root);
-        graph.add(root, choice1);
-        graph.add(choice1, n1);
-        graph.add(n1, choice2);
-        graph.add(choice2, n2);
-        graph.add(n2, n3);
+        graph.add(root, choiceNode1);
+        graph.add(choiceNode1, componentNode1);
+        graph.add(componentNode1, choiceNode2);
+        graph.add(choiceNode2, componentNode2);
+        graph.add(componentNode2, componentNode3);
 
-        choice1.addToScope(n1);
-        choice1.addToScope(choice2);
-        choice1.addToScope(n3);
-        choice2.addToScope(n2);
+        choiceNode1.addToScope(componentNode1);
+        choiceNode1.addToScope(choiceNode2);
+        choiceNode1.addToScope(componentNode3);
+        choiceNode2.addToScope(componentNode2);
 
         // When
-        Optional<ScopedGraphNode> joiningScope = FindJoiningScope.of(graph, n3);
+        Optional<ScopedGraphNode> joiningScope = FindJoiningScope.of(graph, componentNode3);
 
         // Then
         assertThat(joiningScope.isPresent()).isTrue();
-        assertThat(joiningScope.get()).isEqualTo(choice2);
+        assertThat(joiningScope.get()).isEqualTo(choiceNode2);
     }
 
 

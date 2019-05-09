@@ -35,80 +35,80 @@ class FlowGraphImplTest extends AbstractGraphTest {
         graph.root(root);
 
         // When
-        graph.root(n1);
+        graph.root(componentNode1);
 
         // Then
-        assertThat(graph.root()).isEqualTo(n1);
+        assertThat(graph.root()).isEqualTo(componentNode1);
     }
 
     @Test
     void shouldReturnAllNodes() {
         // Given
         graph.root(root);
-        graph.add(root, n1);
-        graph.add(n1, n2);
+        graph.add(root, componentNode1);
+        graph.add(componentNode1, componentNode2);
 
         // When
         Collection<GraphNode> nodes = graph.nodes();
 
         // Then
-        assertThat(nodes).containsExactlyInAnyOrder(root, n1, n2);
+        assertThat(nodes).containsExactlyInAnyOrder(root, componentNode1, componentNode2);
     }
 
     @Test
     void shouldReturnCorrectPredecessors() {
         // Given
         graph.root(root);
-        graph.add(root, choice1);
-        graph.add(choice1, n1);
-        graph.add(choice1, n2);
-        graph.add(n1, n3);
-        graph.add(n2, n3);
+        graph.add(root, choiceNode1);
+        graph.add(choiceNode1, componentNode1);
+        graph.add(choiceNode1, componentNode2);
+        graph.add(componentNode1, componentNode3);
+        graph.add(componentNode2, componentNode3);
 
         // When
-        List<GraphNode> predecessors = graph.predecessors(n3);
+        List<GraphNode> predecessors = graph.predecessors(componentNode3);
 
         // Then
-        assertThat(predecessors).containsExactlyInAnyOrder(n1, n2);
+        assertThat(predecessors).containsExactlyInAnyOrder(componentNode1, componentNode2);
     }
 
     @Test
     void shouldReturnCorrectSuccessors() {
         // Given
         graph.root(root);
-        graph.add(root, choice1);
-        graph.add(choice1, n1);
-        graph.add(choice1, n2);
+        graph.add(root, choiceNode1);
+        graph.add(choiceNode1, componentNode1);
+        graph.add(choiceNode1, componentNode2);
 
         // When
-        List<GraphNode> successors = graph.successors(choice1);
+        List<GraphNode> successors = graph.successors(choiceNode1);
 
         // Then
-        assertThat(successors).containsExactlyInAnyOrder(n1, n2);
+        assertThat(successors).containsExactlyInAnyOrder(componentNode1, componentNode2);
     }
 
     @Test
     void shouldCopyGraphCorrectly() {
         // Given
         graph.root(root);
-        graph.add(root, n1);
-        graph.add(n1, n2);
+        graph.add(root, componentNode1);
+        graph.add(componentNode1, componentNode2);
 
         // When
         FlowGraph copy = graph.copy();
 
         // Then
         assertThat(copy).isNotEqualTo(graph);
-        assertThat(copy.successors(root)).containsExactly(n1);
-        assertThat(copy.successors(n1)).containsExactly(n2);
+        assertThat(copy.successors(root)).containsExactly(componentNode1);
+        assertThat(copy.successors(componentNode1)).containsExactly(componentNode2);
     }
 
     @Test
     void shouldCountNodesCorrectly() {
         // Given
         graph.root(root);
-        graph.add(root, n1);
-        graph.add(n1, n2);
+        graph.add(root, componentNode1);
+        graph.add(componentNode1, componentNode2);
 
         // When
         int nodesCount = graph.nodesCount();
@@ -136,12 +136,12 @@ class FlowGraphImplTest extends AbstractGraphTest {
     void shouldCorrectlyRemoveEdge() {
         // Given
         graph.root(root);
-        graph.add(root, n1);
+        graph.add(root, componentNode1);
 
-        assertThat(graph.successors(root)).containsExactly(n1);
+        assertThat(graph.successors(root)).containsExactly(componentNode1);
 
         // When
-        graph.remove(root, n1);
+        graph.remove(root, componentNode1);
 
         // Then
         assertThat(graph.successors(root)).isEmpty();

@@ -34,8 +34,8 @@ class GenericComponentDeserializerTest extends AbstractDeserializerTest {
                 .propertiesNames(asList("property1", "property2", "property3"))
                 .build();
 
-        GenericComponentNode node =
-                mockComponentGraphNode(ComponentNode1.class, GenericComponentNode.class, descriptor);
+        GenericComponentNode node = createGraphNodeInstance(GenericComponentNode.class, descriptor);
+        mockContextInstantiateGraphNode(node);
 
 
         JSONObject genericComponentDefinition = new JSONObject(GenericComponent.Sample.json());

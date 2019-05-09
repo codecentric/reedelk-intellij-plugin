@@ -31,41 +31,41 @@ public class ChoiceSerializerTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = new FlowGraphImpl();
         graph.root(root);
-        graph.add(root, choice1);
+        graph.add(root, choiceNode1);
 
-        graph.add(choice1, n1);
-        graph.add(n1, n2);
+        graph.add(choiceNode1, componentNode1);
+        graph.add(componentNode1, componentNode2);
 
-        graph.add(choice1, n3);
-        graph.add(n3, n4);
+        graph.add(choiceNode1, componentNode3);
+        graph.add(componentNode3, componentNode4);
 
-        graph.add(choice1, n5);
-        graph.add(n5, n6);
+        graph.add(choiceNode1, componentNode5);
+        graph.add(componentNode5, componentNode6);
 
-        graph.add(n2, n7);
-        graph.add(n4, n7);
-        graph.add(n6, n7);
+        graph.add(componentNode2, componentNode7);
+        graph.add(componentNode4, componentNode7);
+        graph.add(componentNode6, componentNode7);
 
-        choice1.addToScope(n1);
-        choice1.addToScope(n2);
-        choice1.addToScope(n3);
-        choice1.addToScope(n4);
-        choice1.addToScope(n5);
-        choice1.addToScope(n6);
+        choiceNode1.addToScope(componentNode1);
+        choiceNode1.addToScope(componentNode2);
+        choiceNode1.addToScope(componentNode3);
+        choiceNode1.addToScope(componentNode4);
+        choiceNode1.addToScope(componentNode5);
+        choiceNode1.addToScope(componentNode6);
 
-        ComponentData component = choice1.componentData();
+        ComponentData component = choiceNode1.componentData();
         List<ChoiceConditionRoutePair> choiceRoute = new ArrayList<>();
-        choiceRoute.add(new ChoiceConditionRoutePair(DEFAULT_CONDITION_NAME, n1));
-        choiceRoute.add(new ChoiceConditionRoutePair("payload == 'Mark'", n3));
-        choiceRoute.add(new ChoiceConditionRoutePair("payload == 'John'", n5));
+        choiceRoute.add(new ChoiceConditionRoutePair(DEFAULT_CONDITION_NAME, componentNode1));
+        choiceRoute.add(new ChoiceConditionRoutePair("1 == 1", componentNode3));
+        choiceRoute.add(new ChoiceConditionRoutePair("1 != 0", componentNode5));
         component.set(DATA_CONDITION_ROUTE_PAIRS, choiceRoute);
 
         // When
-        JSONObject serializedObject = serializer.serialize(graph, choice1, n7);
+        JSONObject serializedObject = serializer.serialize(graph, choiceNode1, componentNode7);
 
         // Then
         String actualJson = serializedObject.toString(2);
-        String expectedJson = Choice.WithNodeOutsideScope.json();
+        String expectedJson = Choice.Sample.json();
         JSONAssert.assertEquals(expectedJson, actualJson, true);
     }
 

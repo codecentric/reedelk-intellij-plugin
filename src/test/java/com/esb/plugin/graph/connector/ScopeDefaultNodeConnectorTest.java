@@ -17,7 +17,7 @@ class ScopeDefaultNodeConnectorTest extends AbstractGraphTest {
         super.setUp();
         FlowGraph graph = new FlowGraphImpl();
         graph.root(root);
-        graph.add(root, n1);
+        graph.add(root, componentNode1);
         modifiableGraph = new FlowGraphChangeAware(graph);
     }
 
@@ -25,9 +25,9 @@ class ScopeDefaultNodeConnectorTest extends AbstractGraphTest {
     void shouldNotAddScopeGraphIfNoModificationsAreMade() {
         // Given
         FlowGraph scopeGraph = new FlowGraphImpl();
-        scopeGraph.root(choice1);
-        scopeGraph.add(choice1, n2);
-        choice1.addToScope(n2);
+        scopeGraph.root(choiceNode1);
+        scopeGraph.add(choiceNode1, componentNode2);
+        choiceNode1.addToScope(componentNode2);
 
         // When
         new ScopedNodeConnector(modifiableGraph, scopeGraph);
@@ -41,68 +41,68 @@ class ScopeDefaultNodeConnectorTest extends AbstractGraphTest {
     void shouldAddPredecessorCorrectly() {
         // Given
         FlowGraph scopeGraph = new FlowGraphImpl();
-        scopeGraph.root(choice1);
-        scopeGraph.add(choice1, n2);
-        choice1.addToScope(n2);
+        scopeGraph.root(choiceNode1);
+        scopeGraph.add(choiceNode1, componentNode2);
+        choiceNode1.addToScope(componentNode2);
 
         // When
         Connector connector = new ScopedNodeConnector(modifiableGraph, scopeGraph);
-        connector.addPredecessor(n1);
+        connector.addPredecessor(componentNode1);
 
         // Then
         PluginAssertion.assertThat(modifiableGraph)
                 .isChanged()
                 .root().is(root)
-                .and().successorsOf(root).isOnly(n1)
-                .and().successorsOf(n1).isOnly(choice1)
-                .and().successorsOf(choice1).isOnly(n2)
-                .and().successorsOf(n2).isEmpty();
+                .and().successorsOf(root).isOnly(componentNode1)
+                .and().successorsOf(componentNode1).isOnly(choiceNode1)
+                .and().successorsOf(choiceNode1).isOnly(componentNode2)
+                .and().successorsOf(componentNode2).isEmpty();
     }
 
     @Test
     void shouldAddSuccessorCorrectly() {
         // Given
         FlowGraph scopeGraph = new FlowGraphImpl();
-        scopeGraph.root(choice1);
-        scopeGraph.add(choice1, n2);
-        choice1.addToScope(n2);
+        scopeGraph.root(choiceNode1);
+        scopeGraph.add(choiceNode1, componentNode2);
+        choiceNode1.addToScope(componentNode2);
 
         // When
         Connector connector = new ScopedNodeConnector(modifiableGraph, scopeGraph);
-        connector.addSuccessor(n1);
+        connector.addSuccessor(componentNode1);
 
         // Then
         PluginAssertion.assertThat(modifiableGraph)
                 .root().is(root)
-                .and().successorsOf(n2).isOnly(n1)
-                .and().successorsOf(n1).isEmpty();
+                .and().successorsOf(componentNode2).isOnly(componentNode1)
+                .and().successorsOf(componentNode1).isEmpty();
     }
 
     @Test
     void shouldCorrectlyAddToScope() {
         // Given
         FlowGraph scopeGraph = new FlowGraphImpl();
-        scopeGraph.root(choice1);
-        scopeGraph.add(choice1, n2);
-        choice1.addToScope(n2);
+        scopeGraph.root(choiceNode1);
+        scopeGraph.add(choiceNode1, componentNode2);
+        choiceNode1.addToScope(componentNode2);
 
         // When
         Connector connector = new ScopedNodeConnector(modifiableGraph, scopeGraph);
-        connector.addPredecessor(n1);
-        connector.addToScope(choice3);
+        connector.addPredecessor(componentNode1);
+        connector.addToScope(choiceNode3);
 
         // Then
         PluginAssertion.assertThat(modifiableGraph)
-                .node(choice3).scopeContainsExactly(choice1);
+                .node(choiceNode3).scopeContainsExactly(choiceNode1);
     }
 
     @Test
     void shouldAddScopeGraphCorrectly() {
         // Given
         FlowGraph scopeGraph = new FlowGraphImpl();
-        scopeGraph.root(choice1);
-        scopeGraph.add(choice1, n2);
-        choice1.addToScope(n2);
+        scopeGraph.root(choiceNode1);
+        scopeGraph.add(choiceNode1, componentNode2);
+        choiceNode1.addToScope(componentNode2);
 
         // When
         Connector connector = new ScopedNodeConnector(modifiableGraph, scopeGraph);
@@ -111,9 +111,9 @@ class ScopeDefaultNodeConnectorTest extends AbstractGraphTest {
         // Then
         PluginAssertion.assertThat(modifiableGraph)
                 .isChanged()
-                .contains(choice1)
-                .contains(n2)
-                .successorsOf(choice1).isOnly(n2)
-                .and().successorsOf(n2).isEmpty();
+                .contains(choiceNode1)
+                .contains(componentNode2)
+                .successorsOf(choiceNode1).isOnly(componentNode2)
+                .and().successorsOf(componentNode2).isEmpty();
     }
 }
