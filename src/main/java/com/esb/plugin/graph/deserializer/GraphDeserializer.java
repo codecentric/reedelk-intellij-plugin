@@ -4,6 +4,7 @@ import com.esb.internal.commons.FileUtils;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphImpl;
 import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.utils.RemoveStopNodes;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -50,7 +51,7 @@ public class GraphDeserializer {
                     .deserialize(current, implementorDefinition);
         }
 
-        return DeserializerUtilities.removeStopNodesFrom(graph);
+        return RemoveStopNodes.from(graph);
     }
 
     public static Optional<FlowGraph> deserialize(Module module, VirtualFile file) {

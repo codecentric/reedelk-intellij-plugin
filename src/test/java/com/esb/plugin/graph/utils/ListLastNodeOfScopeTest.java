@@ -16,7 +16,7 @@ class ListLastNodeOfScopeTest extends AbstractGraphTest {
     void shouldReturnCorrectlyLastDrawablesFromInnerScope() {
         // Given
         FlowGraph graph = new FlowGraphImpl();
-        graph.add(null, root);
+        graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, choiceNode2);
         graph.add(choiceNode2, componentNode1);

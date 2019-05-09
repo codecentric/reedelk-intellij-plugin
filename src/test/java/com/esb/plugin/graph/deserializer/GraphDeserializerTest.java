@@ -37,11 +37,11 @@ class GraphDeserializerTest extends AbstractDeserializerTest {
 
                 .and()
                 .successorsOf(componentNode2)
-                .isOnly(componentNode6)
+                .isOnly(componentNode5)
 
                 .and()
                 .successorsOf(flowReferenceNode1)
-                .isOnly(componentNode6)
+                .isOnly(componentNode5)
 
                 .and()
                 .successorsOf(forkNode1)
@@ -49,19 +49,11 @@ class GraphDeserializerTest extends AbstractDeserializerTest {
 
                 .and()
                 .successorsOf(componentNode3)
-                .isEmpty()
-
-                .and()
-                .successorsOf(componentNode4)
                 .isOnly(componentNode5)
 
                 .and()
-                .successorsOf(componentNode5)
-                .isOnly(componentNode6)
-
-                .and()
-                .successorsOf(componentNode6)
-                .isEmpty();
+                .successorsOf(componentNode4)
+                .isOnly(componentNode5);
     }
 
     @Test
