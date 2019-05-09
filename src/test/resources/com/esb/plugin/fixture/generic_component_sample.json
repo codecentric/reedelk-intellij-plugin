@@ -1,5 +1,5 @@
 {
-  "implementor.name": "com.esb.plugin.fixture.ComponentNode1",
+  "implementor": "com.esb.plugin.fixture.ComponentNode1",
   "property1": "first property",
   "property2": "second property",
   "property3": "third property"

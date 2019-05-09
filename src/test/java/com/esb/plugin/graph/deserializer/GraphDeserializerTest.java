@@ -49,7 +49,7 @@ class GraphDeserializerTest extends AbstractDeserializerTest {
 
                 .and()
                 .successorsOf(componentNode3)
-                .isOnly(componentNode5)
+                .isEmpty()
 
                 .and()
                 .successorsOf(componentNode4)

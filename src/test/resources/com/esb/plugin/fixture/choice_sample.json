@@ -1,14 +1,14 @@
 {
-  "implementor.name": "com.esb.component.Choice",
+  "implementor": "com.esb.component.Choice",
   "when": [
     {
       "condition": "1 == 1",
       "next": [
         {
-          "implementor.name": "com.esb.plugin.fixture.ComponentNode3"
+          "implementor": "com.esb.plugin.fixture.ComponentNode3"
         },
         {
-          "implementor.name": "com.esb.plugin.fixture.ComponentNode1"
+          "implementor": "com.esb.plugin.fixture.ComponentNode1"
         }
       ]
     },
@@ -16,20 +16,20 @@
       "condition": "1 != 0",
       "next": [
         {
-          "implementor.name": "com.esb.plugin.fixture.ComponentNode2"
+          "implementor": "com.esb.plugin.fixture.ComponentNode2"
         },
         {
-          "implementor.name": "com.esb.plugin.fixture.ComponentNode4"
+          "implementor": "com.esb.plugin.fixture.ComponentNode4"
         }
       ]
     }
   ],
   "otherwise": [
     {
-      "implementor.name": "com.esb.plugin.fixture.ComponentNode5"
+      "implementor": "com.esb.plugin.fixture.ComponentNode5"
     },
     {
-      "implementor.name": "com.esb.plugin.fixture.ComponentNode6"
+      "implementor": "com.esb.plugin.fixture.ComponentNode6"
     }
   ]
 }

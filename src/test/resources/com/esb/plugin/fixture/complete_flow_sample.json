@@ -2,16 +2,16 @@
   "id": "45a5ce60-5c9d-4075-82a7-d3fa9284f22a",
   "flow": [
     {
-      "implementor.name": "com.esb.plugin.fixture.ComponentNode1"
+      "implementor": "com.esb.plugin.fixture.ComponentNode1"
     },
     {
-      "implementor.name": "com.esb.component.Choice",
-      "when": [
+      "implementor": "com.esb.component.Choice",
+      "choice": [
         {
           "condition": "payload.name == 'Mark'",
           "next": [
             {
-              "implementor.name": "com.esb.plugin.fixture.ComponentNode2"
+              "implementor": "com.esb.plugin.fixture.ComponentNode2"
             }
           ]
         },
@@ -19,40 +19,40 @@
           "condition": "payload.name == 'John'",
           "next": [
             {
-              "implementor.name": "com.esb.component.FlowReference",
+              "implementor": "com.esb.component.FlowReference",
               "ref": "11a2ce60-5c9d-4075-82a7-f1fa1111f999"
             }
           ]
-        }
-      ],
-      "otherwise": [
+        },
         {
-          "implementor.name": "com.esb.component.Fork",
-          "threadPoolSize": 3,
-          "fork": [
+          "condition": "otherwise",
+          "next": [
             {
-              "next": [
+              "implementor": "com.esb.component.Fork",
+              "threadPoolSize": 3,
+              "fork": [
                 {
-                  "implementor.name": "com.esb.plugin.fixture.ComponentNode3"
-                }
-              ]
-            },
-            {
-              "next": [
+                  "next": [
+                    {
+                      "implementor": "com.esb.plugin.fixture.ComponentNode3"
+                    }
+                  ]
+                },
                 {
-                  "implementor.name": "com.esb.plugin.fixture.ComponentNode4"
+                  "next": [
+                    {
+                      "implementor": "com.esb.plugin.fixture.ComponentNode4"
+                    }
+                  ]
                 }
               ]
             }
-          ],
-          "join": {
-            "implementor.name": "com.esb.plugin.fixture.ComponentNode5"
-          }
+          ]
         }
       ]
     },
     {
-      "implementor.name": "com.esb.plugin.fixture.ComponentNode6"
+      "implementor": "com.esb.plugin.fixture.ComponentNode6"
     }
   ]
 }

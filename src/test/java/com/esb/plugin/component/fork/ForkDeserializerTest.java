@@ -32,14 +32,14 @@ class ForkDeserializerTest extends AbstractDeserializerTest {
 
         // Then
         PluginAssertion.assertThat(graph)
-                .node(lastNode).is(componentNode5)
+                .node(lastNode).is(stopNode1)
+                .and().successorsOf(stopNode1).isEmpty()
                 .and().successorsOf(forkNode1).areExactly(componentNode3, componentNode1)
                 .and().successorsOf(componentNode3).isOnly(componentNode2)
                 .and().successorsOf(componentNode1).isOnly(componentNode4)
                 .and().successorsOf(componentNode2).isOnly(stopNode1)
                 .and().successorsOf(componentNode4).isOnly(stopNode1)
-                .and().successorsOf(stopNode1).isOnly(componentNode5)
-                .and().nodesCountIs(8)
+                .and().nodesCountIs(7)
                 .node(forkNode1).hasDataWithValue("threadPoolSize", 3);
     }
 
