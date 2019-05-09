@@ -1,9 +1,12 @@
 package com.esb.plugin.graph.serializer;
 
+import com.esb.plugin.component.ComponentData;
+import com.esb.plugin.component.ComponentDescriptor;
+import com.esb.plugin.component.stop.StopNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
-import com.esb.plugin.graph.utils.FindFirstNodeOutsideScope;
+import com.esb.plugin.graph.utils.FindFirstNodeOutsideCurrentScope;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -20,7 +23,7 @@ public class GraphSerializer {
         JSONArray flow = new JSONArray();
 
         GraphNode root = graph.root();
-        doSerialize(graph, flow, root, null);
+        doSerialize(graph, flow, root, new Continue());
 
         JSONObject flowObject = JsonObjectFactory.newJSONObject();
         Flow.id(UUID.randomUUID().toString(), flowObject);
@@ -41,14 +44,22 @@ public class GraphSerializer {
                 .node(scopedGraphNode)
                 .build();
 
-        Optional<GraphNode> firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedGraphNode);
+
+        Optional<GraphNode> firstNodeOutsideScope = FindFirstNodeOutsideCurrentScope.of(graph, scopedGraphNode);
         GraphNode stop = firstNodeOutsideScope.orElse(null);
 
         JSONObject serializedObject = serializer.serialize(graph, scopedGraphNode, stop);
         array.put(serializedObject);
 
-        firstNodeOutsideScope.ifPresent(node -> doSerialize(graph, array, node, null));
+        firstNodeOutsideScope.ifPresent(node -> doSerialize(graph, array, node, stop));
     }
+
+    static class Continue extends StopNode {
+        public Continue() {
+            super(new ComponentData(ComponentDescriptor.create().build()));
+        }
+    }
+
 
     private static void serialize(FlowGraph graph, JSONArray array, GraphNode node, GraphNode stop) {
         Serializer serializer = GraphSerializerFactory.get()
@@ -65,7 +76,11 @@ public class GraphSerializer {
 
         if (!successors.isEmpty()) {
             GraphNode successorNode = successors.get(0);
-            if (stop != successorNode) {
+            if (stop == null) {
+                // stop
+            } else if (stop instanceof Continue) {
+                doSerialize(graph, array, successorNode, stop);
+            } else if (stop != successorNode) {
                 doSerialize(graph, array, successorNode, stop);
             }
         }

@@ -20,11 +20,13 @@ public class ForkConnectorBuilder implements ConnectorBuilder {
 
         forkJoinGraph.root(componentToAdd);
 
-        FlowReferenceNode placeholderDrawable = GraphNodeFactory.get(module, FlowReference.class.getName());
+        // TODO: Fixme
+        FlowReferenceNode placeholder = GraphNodeFactory.get(module, FlowReference.class.getName());
+        placeholder.componentData().set("ref", "123");
 
-        forkJoinGraph.add(componentToAdd, placeholderDrawable);
+        forkJoinGraph.add(componentToAdd, placeholder);
 
-        ((ForkNode) componentToAdd).addToScope(placeholderDrawable);
+        ((ForkNode) componentToAdd).addToScope(placeholder);
 
         return new ScopedNodeConnector(graph, forkJoinGraph);
     }

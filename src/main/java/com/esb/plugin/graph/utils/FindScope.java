@@ -11,9 +11,9 @@ public class FindScope {
     public static Optional<ScopedGraphNode> of(FlowGraph graph, GraphNode target) {
         return graph.nodes()
                 .stream()
-                .filter(drawable -> drawable instanceof ScopedGraphNode)
-                .map(drawable -> (ScopedGraphNode) drawable)
-                .filter(scopedDrawable -> scopedDrawable.scopeContains(target))
+                .filter(node -> node instanceof ScopedGraphNode)
+                .map(node -> (ScopedGraphNode) node)
+                .filter(scopedNode -> scopedNode.scopeContains(target))
                 .findFirst();
     }
 }

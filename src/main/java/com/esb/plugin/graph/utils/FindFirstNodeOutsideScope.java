@@ -13,23 +13,27 @@ import static com.google.common.base.Preconditions.checkState;
 
 /**
  * It finds the first node outside the given ScopedGraphNode.
- * By definition a scope block must be followed only by one node.
+ * The node found might also belong to any next wrapping scope
+ * containing the current scope.
+ *
+ * Please not that by definition a scope must be followed by
+ * zero or at most one node.
  */
 public class FindFirstNodeOutsideScope {
 
     public static Optional<GraphNode> of(FlowGraph graph, ScopedGraphNode scope) {
-        Set<GraphNode> firstDrawablesOutsideScope = new HashSet<>();
+        Set<GraphNode> firstNodesOutsideScope = new HashSet<>();
 
         ListLastNodeOfScope.from(graph, scope)
                 .forEach(lastDrawableOfScope -> {
                     List<GraphNode> successors = graph.successors(lastDrawableOfScope);
-                    firstDrawablesOutsideScope.addAll(successors);
+                    firstNodesOutsideScope.addAll(successors);
                 });
 
-        checkState(firstDrawablesOutsideScope.isEmpty() ||
-                        firstDrawablesOutsideScope.size() == 1,
-                "First node outside scope must be asent or at most one");
+        checkState(firstNodesOutsideScope.isEmpty() ||
+                        firstNodesOutsideScope.size() == 1,
+                "First node outside scope must be absent or at most one");
 
-        return firstDrawablesOutsideScope.stream().findFirst();
+        return firstNodesOutsideScope.stream().findFirst();
     }
 }
