@@ -20,7 +20,6 @@ import java.util.Map;
 import static com.esb.internal.commons.JsonParser.Choice;
 import static com.esb.internal.commons.JsonParser.Implementor;
 import static com.esb.plugin.component.choice.ChoiceNode.DATA_CONDITION_ROUTE_PAIRS;
-import static com.esb.plugin.component.choice.ChoiceNode.DEFAULT_CONDITION_NAME;
 
 public class ChoiceDeserializer extends AbstractDeserializer {
 
@@ -60,14 +59,6 @@ public class ChoiceDeserializer extends AbstractDeserializer {
         }
 
         // Otherwise
-        JSONArray otherwise = Choice.otherwise(componentDefinition);
-
-        GraphNode currentNode = deserialize(otherwise, choiceNode, node ->
-                preNodeConditionMap.put(node, DEFAULT_CONDITION_NAME));
-
-        // Last node is connected to stop node.
-        graph.add(currentNode, stopNode);
-
         Collection<GraphNode> nodesBelongingToScope = CollectNodesBetween.them(graph, choiceNode, stopNode);
         nodesBelongingToScope.forEach(choiceNode::addToScope);
 
@@ -76,9 +67,7 @@ public class ChoiceDeserializer extends AbstractDeserializer {
         List<ChoiceConditionRoutePair> choiceConditionRoutePairList =
                 (List<ChoiceConditionRoutePair>) choiceData.get(DATA_CONDITION_ROUTE_PAIRS);
 
-
         for (Map.Entry<GraphNode, String> entry : preNodeConditionMap.entrySet()) {
-
             // TODO: this is duplicated code
             choiceConditionRoutePairList.stream()
                     .filter(choiceConditionRoutePair -> choiceConditionRoutePair.getNext() == entry.getKey())
