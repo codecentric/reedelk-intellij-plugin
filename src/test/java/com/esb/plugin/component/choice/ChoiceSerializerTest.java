@@ -102,7 +102,7 @@ public class ChoiceSerializerTest extends AbstractGraphTest {
         component.set(DATA_CONDITION_ROUTE_PAIRS, choiceRoute);
 
         // When
-        JSONObject serializedObject = serializer.serialize(graph, choiceNode1, componentNode7);
+        JSONObject serializedObject = serializer.serialize(graph, choiceNode1, null);
 
         // Then
         String actualJson = serializedObject.toString(2);
