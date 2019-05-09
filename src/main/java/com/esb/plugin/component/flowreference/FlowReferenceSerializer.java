@@ -16,7 +16,7 @@ public class FlowReferenceSerializer extends AbstractSerializer {
     @Override
     public JSONObject serialize(FlowGraph graph, GraphNode node, GraphNode stop) {
 
-        ComponentData componentData = node.component();
+        ComponentData componentData = node.componentData();
 
         JSONObject componentAsJson = JsonObjectFactory.newJSONObject();
 

@@ -21,7 +21,7 @@ public class ChoiceSerializer extends AbstractSerializer {
     @Override
     public JSONObject serialize(FlowGraph graph, GraphNode node, GraphNode stop) {
 
-        ComponentData componentData = node.component();
+        ComponentData componentData = node.componentData();
 
         JSONObject choiceObject = JsonObjectFactory.newJSONObject();
 
@@ -56,6 +56,7 @@ public class ChoiceSerializer extends AbstractSerializer {
 
         Choice.when(whenArrayObject, choiceObject);
 
+        // TODO: This has to be checked, understand what to do if get() does not exists!
         GraphNode otherwiseNode = choiceConditionRoutePairList.stream()
                 .filter(choiceConditionRoutePair -> choiceConditionRoutePair.getCondition().equals(DEFAULT_CONDITION_NAME))
                 .findFirst()

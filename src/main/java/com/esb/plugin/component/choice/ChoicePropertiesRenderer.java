@@ -23,7 +23,7 @@ public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
 
     @Override
     public JBPanel render(GraphNode choiceNode) {
-        ComponentData componentData = choiceNode.component();
+        ComponentData componentData = choiceNode.componentData();
         List<ChoiceConditionRoutePair> conditionRoutePairList = (List<ChoiceConditionRoutePair>) componentData.get(ChoiceNode.DATA_CONDITION_ROUTE_PAIRS);
 
         ConditionRouteTableModel model = new ConditionRouteTableModel(conditionRoutePairList, snapshot);

@@ -71,7 +71,7 @@ public class ChoiceDeserializer extends AbstractDeserializer {
         Collection<GraphNode> nodesBelongingToScope = CollectNodesBetween.them(graph, choiceNode, stopNode);
         nodesBelongingToScope.forEach(choiceNode::addToScope);
 
-        ComponentData choiceData = choiceNode.component();
+        ComponentData choiceData = choiceNode.componentData();
         // TODO: Fix this! Cast here is very wrong
         List<ChoiceConditionRoutePair> choiceConditionRoutePairList =
                 (List<ChoiceConditionRoutePair>) choiceData.get(DATA_CONDITION_ROUTE_PAIRS);

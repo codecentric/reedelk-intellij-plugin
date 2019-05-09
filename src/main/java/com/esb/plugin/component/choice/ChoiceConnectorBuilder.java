@@ -31,7 +31,7 @@ public class ChoiceConnectorBuilder implements ConnectorBuilder {
         subGraph.root(choice);
         subGraph.add(componentToAdd, placeholder);
 
-        ComponentData componentData = componentToAdd.component();
+        ComponentData componentData = componentToAdd.componentData();
         List<ChoiceConditionRoutePair> nodeConditionMap =
                 (List<ChoiceConditionRoutePair>) componentData.get(DATA_CONDITION_ROUTE_PAIRS);
 

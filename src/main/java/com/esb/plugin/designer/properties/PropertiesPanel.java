@@ -26,7 +26,7 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
     public void onSelect(GraphSnapshot snapshot, GraphNode node) {
         if (node instanceof NothingSelectedNode) return;
 
-        ComponentData componentData = node.component();
+        ComponentData componentData = node.componentData();
 
         removeAll();
 

@@ -17,7 +17,7 @@ public class GenericComponentPropertyRenderer extends AbstractPropertyRenderer {
 
     @Override
     public JBPanel render(GraphNode node) {
-        ComponentData componentData = node.component();
+        ComponentData componentData = node.componentData();
 
         JBPanel propertiesBoxContainer = new JBPanel();
         propertiesBoxContainer.setLayout(new BoxLayout(propertiesBoxContainer, BoxLayout.PAGE_AXIS));

@@ -65,7 +65,7 @@ public class ConnectorFactory {
         checkNotNull(module, "module");
         checkNotNull(componentToAdd, "componentToAdd");
 
-        String fullyQualifiedName = componentToAdd.component().getFullyQualifiedName();
+        String fullyQualifiedName = componentToAdd.componentData().getFullyQualifiedName();
         Class<? extends ConnectorBuilder> builderClazz = CONNECTOR_BUILDER.getOrDefault(fullyQualifiedName, GENERIC_BUILDER);
         return instantiateBuilder(builderClazz).build(module, graph, componentToAdd);
     }

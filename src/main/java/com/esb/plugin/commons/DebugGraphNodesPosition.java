@@ -11,7 +11,7 @@ public class DebugGraphNodesPosition {
         LOG.info("------- Graph Updated --------");
         graph.breadthFirstTraversal(drawable ->
                 LOG.info("Name: " +
-                        drawable.component().getDisplayName() + ", x: " +
+                        drawable.componentData().getDisplayName() + ", x: " +
                         drawable.x() + ", y: " +
                         drawable.y()));
     }

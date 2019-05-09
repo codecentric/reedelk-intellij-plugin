@@ -4,6 +4,6 @@ import com.esb.plugin.component.ComponentData;
 
 public interface ComponentAware {
 
-    ComponentData component();
+    ComponentData componentData();
 
 }

@@ -21,7 +21,7 @@ public class GenericComponentDeserializer extends AbstractDeserializer {
 
         GenericComponentNode node = context.instantiateGraphNode(name);
 
-        ComponentData componentData = node.component();
+        ComponentData componentData = node.componentData();
 
         // fill up data from componentData definition
         componentData.descriptorProperties()

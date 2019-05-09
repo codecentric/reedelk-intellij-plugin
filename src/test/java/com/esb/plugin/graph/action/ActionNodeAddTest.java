@@ -63,7 +63,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
     }
 
     @Nested
-    @DisplayName("Adding a component after root")
+    @DisplayName("Adding a node after root")
     class ActionNodeAddAfterRoot {
 
         @Test
@@ -141,7 +141,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
 
             // We verify that the choice does not get connected to the successor
             // of the moved element because it is outside the scope.
-            // By definition a Choice component cannot connect drawables outside the scope.
+            // By definition a Choice node cannot connect other nodes outside the scope.
             PluginAssertion.assertThat(updatedGraph)
                     .nodesCountIs(5)
                     .successorsOf(choice1).isOnly(n1)

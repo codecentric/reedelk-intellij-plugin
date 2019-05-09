@@ -50,7 +50,7 @@ public class GraphSerializerFactory {
     public Serializer build() {
         checkState(node != null, "node must not be null");
 
-        String fullyQualifiedName = node.component().getFullyQualifiedName();
+        String fullyQualifiedName = node.componentData().getFullyQualifiedName();
         Class<? extends Serializer> serializerClazz = COMPONENT_SERIALIZER_MAP
                 .getOrDefault(fullyQualifiedName, GENERIC_SERIALIZER);
         return instantiate(serializerClazz);

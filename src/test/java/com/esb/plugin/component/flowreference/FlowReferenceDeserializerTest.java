@@ -41,7 +41,7 @@ class FlowReferenceDeserializerTest extends AbstractDeserializerTest {
                 .node(lastNode).is(flowReferenceNode1)
                 .and().nodesCountIs(2);
 
-        ComponentData actualComponentData = flowReferenceNode1.component();
+        ComponentData actualComponentData = flowReferenceNode1.componentData();
         assertThat(actualComponentData.get("ref")).isEqualTo(expectedFlowReference);
     }
 

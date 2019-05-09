@@ -19,7 +19,7 @@ public class NothingSelectedNode implements GraphNode {
     }
 
     @Override
-    public ComponentData component() {
+    public ComponentData componentData() {
         return null;
     }
 }

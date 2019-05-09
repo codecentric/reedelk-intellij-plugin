@@ -53,7 +53,7 @@ public class ChoiceSerializerTest extends AbstractGraphTest {
         choice1.addToScope(n5);
         choice1.addToScope(n6);
 
-        ComponentData component = choice1.component();
+        ComponentData component = choice1.componentData();
         List<ChoiceConditionRoutePair> choiceRoute = new ArrayList<>();
         choiceRoute.add(new ChoiceConditionRoutePair(DEFAULT_CONDITION_NAME, n1));
         choiceRoute.add(new ChoiceConditionRoutePair("payload == 'Mark'", n3));

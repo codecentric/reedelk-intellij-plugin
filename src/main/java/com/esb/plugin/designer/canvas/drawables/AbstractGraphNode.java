@@ -182,7 +182,7 @@ public abstract class AbstractGraphNode implements GraphNode {
     }
 
     @Override
-    public ComponentData component() {
+    public ComponentData componentData() {
         return componentData;
     }
 
