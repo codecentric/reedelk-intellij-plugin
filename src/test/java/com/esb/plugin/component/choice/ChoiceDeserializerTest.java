@@ -44,21 +44,17 @@ class ChoiceDeserializerTest extends AbstractDeserializerTest {
                 .and().predecessorOf(lastNode).containsExactly(componentNode1, componentNode4, componentNode6)
                 .and().nodesCountIs(9); // total nodes include: root, stop node and all the nodes belonging to this choice
 
-        ComponentData componentData = choiceNode1.componentData();
+        assertExistsConditionMatching("1 == 1", choiceNode1);
+        assertExistsConditionMatching("1 != 0", choiceNode1);
+        assertExistsConditionMatching("otherwise", choiceNode1);
+    }
 
+    private void assertExistsConditionMatching(String expectedCondition, ChoiceNode targetNode) {
         // TODO: Fix this cast!
+        ComponentData componentData = targetNode.componentData();
         List<ChoiceConditionRoutePair> when = (List<ChoiceConditionRoutePair>) componentData.get("conditionRoutePairs");
-
         boolean matchesCondition = when.stream().anyMatch(choiceConditionRoutePair ->
-                choiceConditionRoutePair.getCondition().equals("1 == 1"));
-        assertThat(matchesCondition).isTrue();
-
-        matchesCondition = when.stream().anyMatch(choiceConditionRoutePair ->
-                choiceConditionRoutePair.getCondition().equals("1 != 0"));
-        assertThat(matchesCondition).isTrue();
-
-        matchesCondition = when.stream().anyMatch(choiceConditionRoutePair ->
-                choiceConditionRoutePair.getCondition().equals("otherwise"));
+                choiceConditionRoutePair.getCondition().equals(expectedCondition));
         assertThat(matchesCondition).isTrue();
     }
 }
