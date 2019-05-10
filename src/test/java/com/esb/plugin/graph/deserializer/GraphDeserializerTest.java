@@ -89,7 +89,7 @@ class GraphDeserializerTest extends AbstractDeserializerTest {
 
                 .and()
                 .successorsOf(flowReferenceNode2)
-                .isEmpty()
+                .isOnly(componentNode2)
 
                 .and()
                 .node(choiceNode1)

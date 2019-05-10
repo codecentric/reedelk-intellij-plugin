@@ -6,12 +6,14 @@ import java.net.URL;
 
 public class Json {
 
+    private static final String FIXTURE_BASE_PATH = "/com/esb/plugin/fixture/";
+
     interface DataProvider {
 
         String path();
 
         default String json() {
-            URL url = Json.class.getResource(path());
+            URL url = Json.class.getResource(FIXTURE_BASE_PATH + path());
             return FileUtils.readFrom(url);
         }
     }
@@ -20,13 +22,14 @@ public class Json {
         Sample() {
             @Override
             public String path() {
-                return "/com/esb/plugin/fixture/complete_flow_sample.json";
+                return "complete_flow_sample.json";
             }
         },
+
         NestedChoice() {
             @Override
             public String path() {
-                return "/com/esb/plugin/fixture/complete_flow_with_nested_choice.json";
+                return "complete_flow_with_nested_choice.json";
             }
         }
     }
@@ -35,7 +38,7 @@ public class Json {
         Sample() {
             @Override
             public String path() {
-                return "/com/esb/plugin/fixture/generic_component_sample.json";
+                return "generic_component_sample.json";
             }
         }
     }
@@ -44,7 +47,7 @@ public class Json {
         Sample() {
             @Override
             public String path() {
-                return "/com/esb/plugin/fixture/fork_sample.json";
+                return "fork_sample.json";
             }
         }
     }
@@ -53,7 +56,7 @@ public class Json {
         Sample() {
             @Override
             public String path() {
-                return "/com/esb/plugin/fixture/choice_sample.json";
+                return "choice_sample.json";
             }
         }
     }
@@ -62,7 +65,7 @@ public class Json {
         Sample() {
             @Override
             public String path() {
-                return "/com/esb/plugin/fixture/flow_reference_sample.json";
+                return "flow_reference_sample.json";
             }
         }
     }
