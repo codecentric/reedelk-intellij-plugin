@@ -4,7 +4,7 @@ import com.esb.component.FlowReference;
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.flowreference.FlowReferenceNode;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.FlowGraphImpl;
+import com.esb.plugin.graph.FlowSubGraph;
 import com.esb.plugin.graph.connector.Connector;
 import com.esb.plugin.graph.connector.ConnectorBuilder;
 import com.esb.plugin.graph.connector.ScopedNodeConnector;
@@ -28,9 +28,9 @@ public class ChoiceConnectorBuilder implements ConnectorBuilder {
         ChoiceNode choice = (ChoiceNode) componentToAdd;
         choice.addToScope(placeholder);
 
-        FlowGraph subGraph = new FlowGraphImpl();
-        subGraph.root(choice);
-        subGraph.add(componentToAdd, placeholder);
+        FlowSubGraph scopeInitialSubgraph = new FlowSubGraph();
+        scopeInitialSubgraph.root(choice);
+        scopeInitialSubgraph.add(componentToAdd, placeholder);
 
         ComponentData componentData = componentToAdd.componentData();
         List<ChoiceConditionRoutePair> nodeConditionMap =
@@ -43,6 +43,6 @@ public class ChoiceConnectorBuilder implements ConnectorBuilder {
                 .findFirst()
                 .ifPresent(choiceConditionRoutePair -> choiceConditionRoutePair.setCondition(DEFAULT_CONDITION_NAME));
 
-        return new ScopedNodeConnector(graph, subGraph);
+        return new ScopedNodeConnector(graph, scopeInitialSubgraph);
     }
 }

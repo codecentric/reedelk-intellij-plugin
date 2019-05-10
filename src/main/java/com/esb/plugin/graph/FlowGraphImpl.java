@@ -14,13 +14,23 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class FlowGraphImpl implements FlowGraph {
 
+    private final String id;
+
     private DirectedGraph<GraphNode> graph;
 
-    public FlowGraphImpl() {
+    public FlowGraphImpl(String id) {
+        checkArgument(id != null, "id");
+        this.id = id;
     }
 
-    private FlowGraphImpl(DirectedGraph<GraphNode> graph) {
+    private FlowGraphImpl(DirectedGraph<GraphNode> graph, String id) {
+        this(id);
         this.graph = graph;
+    }
+
+    @Override
+    public String id() {
+        return id;
     }
 
     @Override
@@ -107,15 +117,15 @@ public class FlowGraphImpl implements FlowGraph {
     @Override
     public FlowGraph copy() {
         if (graph == null) {
-            return new FlowGraphImpl();
+            return new FlowGraphImpl(id);
         } else {
-            return new FlowGraphImpl(graph.copy());
+            return new FlowGraphImpl(graph.copy(), id);
         }
     }
 
     @Override
-    public void removeEdgesStartingFrom(GraphNode drawable) {
-        graph.removeEdgesStartingFrom(drawable);
+    public void removeEdgesStartingFrom(GraphNode node) {
+        graph.removeEdgesStartingFrom(node);
     }
 
 }

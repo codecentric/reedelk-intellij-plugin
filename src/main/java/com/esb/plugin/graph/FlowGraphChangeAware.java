@@ -18,6 +18,11 @@ public class FlowGraphChangeAware implements FlowGraph {
     }
 
     @Override
+    public String id() {
+        return wrapped.id();
+    }
+
+    @Override
     public void root(@NotNull GraphNode n1) {
         wrapped.root(n1);
         changed = true;
@@ -54,8 +59,8 @@ public class FlowGraphChangeAware implements FlowGraph {
     }
 
     @Override
-    public void removeEdgesStartingFrom(GraphNode n1) {
-        wrapped.removeEdgesStartingFrom(n1);
+    public void removeEdgesStartingFrom(GraphNode node) {
+        wrapped.removeEdgesStartingFrom(node);
         changed = true;
     }
 

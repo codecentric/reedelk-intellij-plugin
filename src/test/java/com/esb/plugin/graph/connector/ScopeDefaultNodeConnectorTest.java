@@ -4,7 +4,7 @@ import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
-import com.esb.plugin.graph.FlowGraphImpl;
+import com.esb.plugin.graph.FlowSubGraph;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +15,7 @@ class ScopeDefaultNodeConnectorTest extends AbstractGraphTest {
     @BeforeEach
     protected void setUp() {
         super.setUp();
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, componentNode1);
         modifiableGraph = new FlowGraphChangeAware(graph);
@@ -24,13 +24,13 @@ class ScopeDefaultNodeConnectorTest extends AbstractGraphTest {
     @Test
     void shouldNotAddScopeGraphIfNoModificationsAreMade() {
         // Given
-        FlowGraph scopeGraph = new FlowGraphImpl();
-        scopeGraph.root(choiceNode1);
-        scopeGraph.add(choiceNode1, componentNode2);
+        FlowSubGraph scopeSubGraph = new FlowSubGraph();
+        scopeSubGraph.root(choiceNode1);
+        scopeSubGraph.add(choiceNode1, componentNode2);
         choiceNode1.addToScope(componentNode2);
 
         // When
-        new ScopedNodeConnector(modifiableGraph, scopeGraph);
+        new ScopedNodeConnector(modifiableGraph, scopeSubGraph);
 
         // Then
         PluginAssertion.assertThat(modifiableGraph)
@@ -40,13 +40,13 @@ class ScopeDefaultNodeConnectorTest extends AbstractGraphTest {
     @Test
     void shouldAddPredecessorCorrectly() {
         // Given
-        FlowGraph scopeGraph = new FlowGraphImpl();
-        scopeGraph.root(choiceNode1);
-        scopeGraph.add(choiceNode1, componentNode2);
+        FlowSubGraph scopeSubGraph = new FlowSubGraph();
+        scopeSubGraph.root(choiceNode1);
+        scopeSubGraph.add(choiceNode1, componentNode2);
         choiceNode1.addToScope(componentNode2);
 
         // When
-        Connector connector = new ScopedNodeConnector(modifiableGraph, scopeGraph);
+        Connector connector = new ScopedNodeConnector(modifiableGraph, scopeSubGraph);
         connector.addPredecessor(componentNode1);
 
         // Then
@@ -62,13 +62,13 @@ class ScopeDefaultNodeConnectorTest extends AbstractGraphTest {
     @Test
     void shouldAddSuccessorCorrectly() {
         // Given
-        FlowGraph scopeGraph = new FlowGraphImpl();
-        scopeGraph.root(choiceNode1);
-        scopeGraph.add(choiceNode1, componentNode2);
+        FlowSubGraph scopeSubGraph = new FlowSubGraph();
+        scopeSubGraph.root(choiceNode1);
+        scopeSubGraph.add(choiceNode1, componentNode2);
         choiceNode1.addToScope(componentNode2);
 
         // When
-        Connector connector = new ScopedNodeConnector(modifiableGraph, scopeGraph);
+        Connector connector = new ScopedNodeConnector(modifiableGraph, scopeSubGraph);
         connector.addSuccessor(componentNode1);
 
         // Then
@@ -81,13 +81,13 @@ class ScopeDefaultNodeConnectorTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlyAddToScope() {
         // Given
-        FlowGraph scopeGraph = new FlowGraphImpl();
-        scopeGraph.root(choiceNode1);
-        scopeGraph.add(choiceNode1, componentNode2);
+        FlowSubGraph scopeSubGraph = new FlowSubGraph();
+        scopeSubGraph.root(choiceNode1);
+        scopeSubGraph.add(choiceNode1, componentNode2);
         choiceNode1.addToScope(componentNode2);
 
         // When
-        Connector connector = new ScopedNodeConnector(modifiableGraph, scopeGraph);
+        Connector connector = new ScopedNodeConnector(modifiableGraph, scopeSubGraph);
         connector.addPredecessor(componentNode1);
         connector.addToScope(choiceNode3);
 
@@ -99,13 +99,13 @@ class ScopeDefaultNodeConnectorTest extends AbstractGraphTest {
     @Test
     void shouldAddScopeGraphCorrectly() {
         // Given
-        FlowGraph scopeGraph = new FlowGraphImpl();
-        scopeGraph.root(choiceNode1);
-        scopeGraph.add(choiceNode1, componentNode2);
+        FlowSubGraph scopeSubGraph = new FlowSubGraph();
+        scopeSubGraph.root(choiceNode1);
+        scopeSubGraph.add(choiceNode1, componentNode2);
         choiceNode1.addToScope(componentNode2);
 
         // When
-        Connector connector = new ScopedNodeConnector(modifiableGraph, scopeGraph);
+        Connector connector = new ScopedNodeConnector(modifiableGraph, scopeSubGraph);
         connector.add();
 
         // Then

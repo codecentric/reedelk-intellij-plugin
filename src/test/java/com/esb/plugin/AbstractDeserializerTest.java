@@ -1,6 +1,6 @@
 package com.esb.plugin;
 
-import com.esb.plugin.graph.FlowGraphImpl;
+import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.deserializer.DeserializerContext;
 import com.esb.plugin.graph.node.GraphNode;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +14,7 @@ public abstract class AbstractDeserializerTest extends AbstractGraphTest {
     @Mock
     protected DeserializerContext context;
 
-    protected FlowGraphImpl graph;
+    protected FlowGraph graph;
 
     @BeforeEach
     protected void setUp() {
@@ -38,7 +38,7 @@ public abstract class AbstractDeserializerTest extends AbstractGraphTest {
         mockContextInstantiateGraphNode(choiceNode1, choiceNode2);
         mockContextInstantiateGraphNode(flowReferenceNode1, flowReferenceNode2);
 
-        graph = new FlowGraphImpl();
+        graph = graphProvider.createGraph();
         graph.root(root);
     }
 

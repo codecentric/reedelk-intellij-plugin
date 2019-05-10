@@ -2,7 +2,6 @@ package com.esb.plugin.component.flowreference;
 
 import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.FlowGraphImpl;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +24,7 @@ public class FlowReferenceSerializerTest extends AbstractGraphTest {
         // Given
         String expectedReference = "11a2ce60-5c9d-1111-82a7-f1fa1111f333";
 
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, flowReferenceNode1);
 

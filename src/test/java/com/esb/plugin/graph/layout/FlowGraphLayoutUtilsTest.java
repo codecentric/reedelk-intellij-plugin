@@ -2,7 +2,6 @@ package com.esb.plugin.graph.layout;
 
 import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.FlowGraphImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,7 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         @Test
         void shouldComputeMaxHeightCorrectlyForRoot() {
             // Given
-            FlowGraph graph = new FlowGraphImpl();
+            FlowGraph graph = graphProvider.createGraph();
             graph.root(root);
 
             // When
@@ -37,7 +36,7 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         @Test
         void shouldComputeMaxHeightCorrectlyForRootFollowedByOneNode() {
             // Given
-            FlowGraph graph = new FlowGraphImpl();
+            FlowGraph graph = graphProvider.createGraph();
             graph.root(root);
             graph.add(root, componentNode1);
 
@@ -51,7 +50,7 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         @Test
         void shouldComputeMaxHeightCorrectlyForChoiceSubtree() {
             // Given
-            FlowGraph graph = new FlowGraphImpl();
+            FlowGraph graph = graphProvider.createGraph();
             graph.root(choiceNode1);
             graph.add(choiceNode1, componentNode1);
             graph.add(choiceNode1, componentNode2);
@@ -68,7 +67,7 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         @Test
         void shouldComputeMaxHeightCorrectlyForChoice() {
             // Given
-            FlowGraph graph = new FlowGraphImpl();
+            FlowGraph graph = graphProvider.createGraph();
             graph.root(choiceNode1);
             graph.add(choiceNode1, componentNode1);
             choiceNode1.addToScope(componentNode1);
@@ -83,7 +82,7 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         @Test
         void shouldComputeMaxHeightCorrectlyForNestedChoice() {
             // Given
-            FlowGraph graph = new FlowGraphImpl();
+            FlowGraph graph = graphProvider.createGraph();
             graph.root(choiceNode1);
             graph.add(choiceNode1, componentNode1);
             graph.add(componentNode1, choiceNode2);
@@ -103,7 +102,7 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         @Test
         void shouldComputeMaxHeightCorrectlyForDisjointSubsequentChoice() {
             // Given
-            FlowGraph graph = new FlowGraphImpl();
+            FlowGraph graph = graphProvider.createGraph();
             graph.root(root);
             graph.add(root, choiceNode1);
             graph.add(choiceNode1, componentNode1);
@@ -135,7 +134,7 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         @Test
         void shouldComputeSubTreeHeightForGenericRootCorrectly() {
             // Given
-            FlowGraphImpl graph = new FlowGraphImpl();
+            FlowGraph graph = graphProvider.createGraph();
             graph.root(componentNode1);
 
             // When
@@ -148,7 +147,7 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         @Test
         void shouldComputeSubTreeHeightForScopedDrawableCorrectly() {
             // Given
-            FlowGraphImpl graph = new FlowGraphImpl();
+            FlowGraph graph = graphProvider.createGraph();
             graph.root(choiceNode1);
 
             // When
@@ -161,7 +160,7 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         @Test
         void shouldComputeSubTreeHeightForNestedChoiceCorrectly() {
             // Given
-            FlowGraphImpl graph = new FlowGraphImpl();
+            FlowGraph graph = graphProvider.createGraph();
             graph.root(root);
             graph.add(root, choiceNode1);
             graph.add(choiceNode1, choiceNode2);
@@ -178,7 +177,7 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         @Test
         void shouldComputeSubTreeHeightForMultipleNextedChoices() {
             // Given
-            FlowGraphImpl graph = new FlowGraphImpl();
+            FlowGraph graph = graphProvider.createGraph();
             graph.root(root);
             graph.add(root, choiceNode1);
             graph.add(choiceNode1, choiceNode2);
@@ -197,7 +196,7 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         @Test
         void shouldComputeSubTreeHeightForDisjointChoicesOnSameLevel() {
             // Given
-            FlowGraph graph = new FlowGraphImpl();
+            FlowGraph graph = graphProvider.createGraph();
             graph.root(root);
             graph.add(root, choiceNode1);
             graph.add(choiceNode1, componentNode1);
@@ -229,7 +228,7 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         @Test
         void shouldComputeSubTreeHeightCorrectlyForFollowingChoicesWithOneSuccessor() {
             // Given
-            FlowGraph graph = new FlowGraphImpl();
+            FlowGraph graph = graphProvider.createGraph();
             graph.root(root);
             graph.add(root, choiceNode1);
             graph.add(choiceNode1, componentNode1);
@@ -250,7 +249,7 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         @Test
         void shouldComputeSubTreeHeightCorrectlyForChoiceFollowedByChoice() {
             // Given
-            FlowGraph graph = new FlowGraphImpl();
+            FlowGraph graph = graphProvider.createGraph();
             graph.root(root);
             graph.add(root, choiceNode1);
             graph.add(choiceNode1, componentNode1);

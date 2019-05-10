@@ -2,7 +2,6 @@ package com.esb.plugin.graph.utils;
 
 import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.FlowGraphImpl;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -12,7 +11,7 @@ class IsLastScopeBeforeNodeTest extends AbstractGraphTest {
     @Test
     void shouldIsLastScopeBeforeNodeReturnTrueWhenLastScope() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -33,7 +32,7 @@ class IsLastScopeBeforeNodeTest extends AbstractGraphTest {
     @Test
     void shouldIsLastScopeBeforeNodeReturnTrueWhenNestedScope() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -56,7 +55,7 @@ class IsLastScopeBeforeNodeTest extends AbstractGraphTest {
     @Test
     void shouldIsLastScopeBeforeNodeReturnFalseWhenInnermostNestedScope() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);

@@ -2,6 +2,7 @@ package com.esb.plugin.graph.manager;
 
 import com.esb.plugin.commons.FlowIdGenerator;
 import com.esb.plugin.graph.FlowGraph;
+import com.esb.plugin.graph.FlowGraphProvider;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.SnapshotListener;
 import com.esb.plugin.graph.deserializer.GraphDeserializer;
@@ -42,15 +43,17 @@ public class GraphManager extends AncestorListenerAdapter implements FileEditorM
     private final Project project;
     private final VirtualFile graphFile;
     private final GraphSnapshot snapshot;
+    private final FlowGraphProvider graphProvider;
 
     private Document document;
 
-    public GraphManager(@NotNull Project project, @NotNull Module module, @NotNull VirtualFile graphFile, @NotNull GraphSnapshot snapshot) {
+    public GraphManager(@NotNull Project project, @NotNull Module module, @NotNull VirtualFile graphFile, @NotNull GraphSnapshot snapshot, @NotNull FlowGraphProvider graphProvider) {
         this.module = module;
         this.project = project;
         this.snapshot = snapshot;
         this.graphFile = graphFile;
         this.snapshot.addListener(this);
+        this.graphProvider = graphProvider;
 
         MessageBusConnection busConnection = project.getMessageBus().connect();
         busConnection.subscribe(FILE_EDITOR_MANAGER, this);
@@ -61,7 +64,7 @@ public class GraphManager extends AncestorListenerAdapter implements FileEditorM
         if (file.equals(graphFile)) {
             findRelatedEditorDocument(source, file).ifPresent(document -> {
                         this.document = document;
-                        GraphDeserializer.deserialize(module, document.getText())
+                GraphDeserializer.deserialize(module, document.getText(), graphProvider)
                                 .ifPresent(updatedGraph -> snapshot.updateSnapshot(this, updatedGraph));
                     });
         }
@@ -91,7 +94,7 @@ public class GraphManager extends AncestorListenerAdapter implements FileEditorM
     @Override
     public void ancestorAdded(AncestorEvent event) {
         if (document != null) {
-            GraphDeserializer.deserialize(module, document.getText())
+            GraphDeserializer.deserialize(module, document.getText(), graphProvider)
                     .ifPresent(updatedGraph -> snapshot.updateSnapshot(this, updatedGraph));
         }
     }

@@ -5,7 +5,6 @@ import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.fixture.ComponentNode1;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.FlowGraphImpl;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +36,7 @@ public class GenericComponentSerializerTest extends AbstractGraphTest {
         componentData.set("property2", "second property");
         componentData.set("property3", "third property");
 
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, genericComponent);
 

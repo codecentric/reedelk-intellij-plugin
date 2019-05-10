@@ -2,7 +2,6 @@ package com.esb.plugin.graph.utils;
 
 import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.FlowGraphImpl;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +14,7 @@ class FindScopesTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlyReturnStackForTwoNestedScopes() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -38,7 +37,7 @@ class FindScopesTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlyReturnStackForThreeNestedScopes() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -68,7 +67,7 @@ class FindScopesTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlyReturnEmptyStack() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, componentNode1);
 
@@ -82,7 +81,7 @@ class FindScopesTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlyReturnEmptyStackForRoot() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
 
         // When
@@ -95,7 +94,7 @@ class FindScopesTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlyReturnScopeWhenElementRightOutsideInnermostScope() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -119,7 +118,7 @@ class FindScopesTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlyReturnScopeWhenChoiceIsRootWithoutElementsInTheScope() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
 
@@ -134,7 +133,7 @@ class FindScopesTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlyReturnScopeWhenChoiceContainsSingleScopeElement() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -151,7 +150,7 @@ class FindScopesTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlyReturnScopeWhenMultipleDisjointNestedScopes() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
 
@@ -211,7 +210,7 @@ class FindScopesTest extends AbstractGraphTest {
     @Test
     void shouldReturnEmptyScopeWhenNodeRightAfterScope() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -228,7 +227,7 @@ class FindScopesTest extends AbstractGraphTest {
     @Test
     void shouldReturnCorrectScopeWhenTwoAdjacentScopes() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);

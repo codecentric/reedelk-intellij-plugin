@@ -3,7 +3,6 @@ package com.esb.plugin.component.choice;
 import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.FlowGraphImpl;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +28,7 @@ public class ChoiceSerializerTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlySerializeChoiceNode() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
 

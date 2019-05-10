@@ -1,18 +1,14 @@
 package com.esb.plugin.graph.deserializer;
 
-import com.esb.internal.commons.FileUtils;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.FlowGraphImpl;
+import com.esb.plugin.graph.FlowGraphProvider;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.utils.RemoveStopNodes;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Optional;
 
 import static com.esb.internal.commons.JsonParser.Flow;
@@ -23,21 +19,34 @@ public class GraphDeserializer {
 
     private static final Logger LOG = Logger.getInstance(GraphDeserializer.class);
 
-    private final FlowGraph graph;
-    private final DeserializerContext context;
     private final JSONObject flowDefinition;
+    private final DeserializerContext context;
+    private final FlowGraphProvider graphProvider;
 
-    GraphDeserializer(String json, DeserializerContext context) {
-        checkArgument(json != null, "json");
-        checkArgument(context != null, "context");
+    public static Optional<FlowGraph> deserialize(Module module, String json, FlowGraphProvider graphProvider) {
+        try {
+            DeserializerContext context = new DeserializerContext(module);
+            GraphDeserializer deserializer = new GraphDeserializer(json, context, graphProvider);
+            return Optional.of(deserializer.deserialize());
 
-        this.context = context;
-        this.graph = new FlowGraphImpl();
-        this.flowDefinition = from(json);
+        } catch (Exception e) {
+            LOG.error("Deserialization error", e);
+            return Optional.empty();
+        }
     }
 
-    protected FlowGraph deserialize() {
+    GraphDeserializer(String json, DeserializerContext context, FlowGraphProvider graphProvider) {
+        checkArgument(json != null, "json");
+        checkArgument(context != null, "context");
+        checkArgument(graphProvider != null, "graph provider");
+        this.context = context;
+        this.flowDefinition = from(json);
+        this.graphProvider = graphProvider;
+    }
+
+    FlowGraph deserialize() {
         JSONArray flow = Flow.flow(flowDefinition);
+        FlowGraph graph = graphProvider.createGraph(Flow.id(flowDefinition));
 
         GraphNode current = null;
         for (int i = 0; i < flow.length(); i++) {
@@ -54,24 +63,4 @@ public class GraphDeserializer {
         return RemoveStopNodes.from(graph);
     }
 
-    public static Optional<FlowGraph> deserialize(Module module, VirtualFile file) {
-        try {
-            String json = FileUtils.readFrom(new URL(file.getUrl()));
-            return deserialize(module, json);
-        } catch (MalformedURLException e) {
-            return Optional.empty();
-        }
-    }
-
-    public static Optional<FlowGraph> deserialize(Module module, String json) {
-        try {
-            DeserializerContext context = new DeserializerContext(module);
-            GraphDeserializer builder = new GraphDeserializer(json, context);
-            FlowGraph graph = builder.deserialize();
-            return Optional.of(graph);
-        } catch (Exception e) {
-            LOG.error("Deserialization error", e);
-            return Optional.empty();
-        }
-    }
 }

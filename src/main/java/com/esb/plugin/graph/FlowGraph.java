@@ -10,7 +10,19 @@ import java.util.function.Consumer;
 
 public interface FlowGraph {
 
+    String id();
+
+    boolean isEmpty();
+
+    FlowGraph copy();
+
+    GraphNode root();
+
     void root(@NotNull GraphNode n1);
+
+    int nodesCount();
+
+    Collection<GraphNode> nodes();
 
     void add(@NotNull GraphNode n1);
 
@@ -26,17 +38,7 @@ public interface FlowGraph {
 
     List<GraphNode> predecessors(@NotNull GraphNode n1);
 
-    int nodesCount();
-
-    Collection<GraphNode> nodes();
-
-    boolean isEmpty();
+    void removeEdgesStartingFrom(GraphNode node);
 
     void breadthFirstTraversal(@NotNull Consumer<GraphNode> consumer);
-
-    GraphNode root();
-
-    FlowGraph copy();
-
-    void removeEdgesStartingFrom(GraphNode drawable);
 }

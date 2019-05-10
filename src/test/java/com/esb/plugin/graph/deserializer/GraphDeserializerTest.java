@@ -16,7 +16,7 @@ class GraphDeserializerTest extends AbstractDeserializerTest {
     void shouldDeserializeFlowWithAllDefaultComponentsCorrectly() {
         // Given
         String json = CompleteFlow.Sample.json();
-        GraphDeserializer deserializer = new GraphDeserializer(json, context);
+        GraphDeserializer deserializer = new GraphDeserializer(json, context, graphProvider);
 
         // When
         FlowGraph graph = deserializer.deserialize();
@@ -60,7 +60,7 @@ class GraphDeserializerTest extends AbstractDeserializerTest {
     void shouldDeserializeFlowWithNestedChoiceCorrectly() {
         // Given
         String json = CompleteFlow.NestedChoice.json();
-        GraphDeserializer deserializer = new GraphDeserializer(json, context);
+        GraphDeserializer deserializer = new GraphDeserializer(json, context, graphProvider);
 
         // When
         FlowGraph graph = deserializer.deserialize();

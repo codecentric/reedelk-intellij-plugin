@@ -2,7 +2,6 @@ package com.esb.plugin.graph.action.strategy;
 
 import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.FlowGraphImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
@@ -18,7 +17,7 @@ class AbstractAddStrategyTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlyReturnMaxScopeBoundWhenNestedScopes() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -48,7 +47,7 @@ class AbstractAddStrategyTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlyReturnMaxScopeBoundWhenScopeDoesNotContainAnyDrawable() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
 
@@ -65,7 +64,7 @@ class AbstractAddStrategyTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlyReturnMaxScopeBoundWhenScopeContainsOnlyOneElement() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);

@@ -2,7 +2,6 @@ package com.esb.plugin.graph.utils;
 
 import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.FlowGraphImpl;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +20,7 @@ class FindJoiningScopeTest extends AbstractGraphTest {
     @Test
     void shouldReturnCorrectJoiningScope() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -40,7 +39,7 @@ class FindJoiningScopeTest extends AbstractGraphTest {
     @Test
     void shouldReturnCorrectOuterJoiningScopeWhenTwoNestedScopes() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -66,7 +65,7 @@ class FindJoiningScopeTest extends AbstractGraphTest {
     @Test
     void shouldReturnCorrectScopeWhenInBetweenTwoScopes() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);

@@ -1,5 +1,6 @@
 package com.esb.plugin.designer;
 
+import com.esb.plugin.graph.FlowGraphProvider;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.manager.GraphManager;
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
@@ -30,8 +31,9 @@ public class DesignerEditor extends UserDataHolderBase implements FileEditor, Po
         Module module = ModuleUtil.findModuleForFile(file, project);
         checkState(module != null, "Module must not be null");
 
-        GraphSnapshot snapshot = new GraphSnapshot();
-        GraphManager manager = new GraphManager(project, module, file, snapshot);
+        FlowGraphProvider graphProvider = new FlowGraphProvider();
+        GraphSnapshot snapshot = new GraphSnapshot(graphProvider);
+        GraphManager manager = new GraphManager(project, module, file, snapshot, graphProvider);
         editor = new DesignerEditorPanel(module, snapshot, manager);
     }
 

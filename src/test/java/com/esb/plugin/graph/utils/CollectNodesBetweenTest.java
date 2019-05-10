@@ -2,7 +2,6 @@ package com.esb.plugin.graph.utils;
 
 import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.FlowGraphImpl;
 import com.esb.plugin.graph.node.GraphNode;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +14,7 @@ class CollectNodesBetweenTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlyCollectAllElementsBetweenNodes() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -37,7 +36,7 @@ class CollectNodesBetweenTest extends AbstractGraphTest {
     @Test
     void shouldCollectAllElementsBetweenNodesExcludingTheOnesInNestedScope() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);

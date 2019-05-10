@@ -2,7 +2,6 @@ package com.esb.plugin.designer.canvas.action;
 
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
-import com.esb.plugin.graph.FlowGraphImpl;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.action.ActionNodeRemove;
 import com.esb.plugin.graph.node.GraphNode;
@@ -14,19 +13,25 @@ import com.intellij.openapi.module.Module;
 import java.awt.*;
 import java.util.Optional;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 public class MoveActionHandler extends AbstractActionHandler {
 
-    private final GraphSnapshot snapshot;
     private final Point movePoint;
     private final GraphNode selected;
     private final Graphics2D graphics;
+    private final GraphSnapshot snapshot;
 
-    public MoveActionHandler(Module module, GraphSnapshot snapshot, Graphics2D graphics, GraphNode selected, Point movePoint) {
+    public MoveActionHandler(Module module, GraphSnapshot snapshot, Graphics2D graphics, GraphNode selectedNode, Point movePoint) {
         super(module);
+        checkArgument(snapshot != null, "snapshot");
+        checkArgument(graphics != null, "graphics");
+        checkArgument(selectedNode != null, "selected node");
+
         this.snapshot = snapshot;
         this.graphics = graphics;
+        this.selected = selectedNode;
         this.movePoint = movePoint;
-        this.selected = selected;
     }
 
     public void handle() {
@@ -49,7 +54,7 @@ public class MoveActionHandler extends AbstractActionHandler {
         if (selected instanceof NothingSelectedNode) return;
 
         // 1. Copy the original graph
-        FlowGraph copy = snapshot.getGraph() == null ? new FlowGraphImpl() : snapshot.getGraph().copy();
+        FlowGraph copy = snapshot.getGraph().copy();
 
         // 2. Remove the dropped node from the copy graph
         ActionNodeRemove componentRemover = new ActionNodeRemove(copy, selected);

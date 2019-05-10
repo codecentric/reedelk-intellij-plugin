@@ -3,7 +3,6 @@ package com.esb.plugin.graph.utils;
 import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.FlowGraphImpl;
 import org.junit.jupiter.api.Test;
 
 class RemoveStopNodesTest extends AbstractGraphTest {
@@ -11,7 +10,7 @@ class RemoveStopNodesTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlyRemoveStopNodesWhenTwoNestedScopeNodes() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(componentNode1);
         graph.add(componentNode1, choiceNode1);
         graph.add(choiceNode1, componentNode2);

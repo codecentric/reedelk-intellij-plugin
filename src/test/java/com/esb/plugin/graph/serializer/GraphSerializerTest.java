@@ -5,7 +5,6 @@ import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.component.choice.ChoiceConditionRoutePair;
 import com.esb.plugin.component.choice.ChoiceNode;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.FlowGraphImpl;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
@@ -19,7 +18,7 @@ class GraphSerializerTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlySerializeGraphWithNestedChoice() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(componentNode1);
         graph.add(componentNode1, choiceNode1);
         graph.add(choiceNode1, flowReferenceNode1);
@@ -52,7 +51,7 @@ class GraphSerializerTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlySerializeGraphWithNodesBetweenScopes() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(componentNode1);
         graph.add(componentNode1, choiceNode1);
         graph.add(choiceNode1, flowReferenceNode1);

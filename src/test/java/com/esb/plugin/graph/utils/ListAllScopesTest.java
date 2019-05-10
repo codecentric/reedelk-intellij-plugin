@@ -2,7 +2,6 @@ package com.esb.plugin.graph.utils;
 
 import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.FlowGraphImpl;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +14,7 @@ class ListAllScopesTest extends AbstractGraphTest {
     @Test
     void shouldListBeEmpty() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, componentNode1);
         graph.add(componentNode1, componentNode2);
@@ -31,7 +30,7 @@ class ListAllScopesTest extends AbstractGraphTest {
     @Test
     void shouldListContainTwoScopesWhenScopesAreDisjoint() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -52,7 +51,7 @@ class ListAllScopesTest extends AbstractGraphTest {
     @Test
     void shouldListContainThreeScopesWhenScopesAreNested() {
         // Given
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);

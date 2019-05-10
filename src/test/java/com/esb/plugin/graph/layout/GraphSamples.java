@@ -5,47 +5,48 @@ import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.component.choice.ChoiceNode;
 import com.esb.plugin.component.generic.GenericComponentNode;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.FlowGraphImpl;
+import com.esb.plugin.graph.FlowGraphProvider;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 
 public class GraphSamples {
 
-    ComponentData cRoot = createComponent("root");
-    ComponentData ccomponentNode1 = createComponent("componentNode1");
-    ComponentData ccomponentNode2 = createComponent("componentNode2");
-    ComponentData ccomponentNode3 = createComponent("componentNode3");
-    ComponentData ccomponentNode4 = createComponent("componentNode4");
-    ComponentData ccomponentNode5 = createComponent("componentNode5");
-    ComponentData ccomponentNode6 = createComponent("componentNode6");
-    ComponentData ccomponentNode7 = createComponent("componentNode7");
-    ComponentData ccomponentNode8 = createComponent("componentNode8");
-    ComponentData ccomponentNode9 = createComponent("componentNode9");
-    ComponentData ccomponentNode10 = createComponent("componentNode10");
-    ComponentData ccomponentNode11 = createComponent("componentNode11");
-    ComponentData cc1 = createComponent("c1");
-    ComponentData cc2 = createComponent("c2");
-    ComponentData cc3 = createComponent("c3");
-    ComponentData cc4 = createComponent("c4");
-    ComponentData cc5 = createComponent("c5");
+    private ComponentData cRoot = createComponent("root");
+    private ComponentData ccomponentNode1 = createComponent("componentNode1");
+    private ComponentData ccomponentNode2 = createComponent("componentNode2");
+    private ComponentData ccomponentNode3 = createComponent("componentNode3");
+    private ComponentData ccomponentNode4 = createComponent("componentNode4");
+    private ComponentData ccomponentNode5 = createComponent("componentNode5");
+    private ComponentData ccomponentNode6 = createComponent("componentNode6");
+    private ComponentData ccomponentNode7 = createComponent("componentNode7");
+    private ComponentData ccomponentNode8 = createComponent("componentNode8");
+    private ComponentData ccomponentNode9 = createComponent("componentNode9");
+    private ComponentData ccomponentNode10 = createComponent("componentNode10");
+    private ComponentData ccomponentNode11 = createComponent("componentNode11");
+    private ComponentData cc1 = createComponent("c1");
+    private ComponentData cc2 = createComponent("c2");
+    private ComponentData cc3 = createComponent("c3");
+    private ComponentData cc4 = createComponent("c4");
 
-    GraphNode root = new GenericComponentNode(cRoot);
-    GraphNode componentNode1 = new GenericComponentNode(ccomponentNode1);
-    GraphNode componentNode2 = new GenericComponentNode(ccomponentNode2);
-    GraphNode componentNode3 = new GenericComponentNode(ccomponentNode3);
-    GraphNode componentNode4 = new GenericComponentNode(ccomponentNode4);
-    GraphNode componentNode5 = new GenericComponentNode(ccomponentNode5);
-    GraphNode componentNode6 = new GenericComponentNode(ccomponentNode6);
-    GraphNode componentNode7 = new GenericComponentNode(ccomponentNode7);
-    GraphNode componentNode8 = new GenericComponentNode(ccomponentNode8);
-    GraphNode componentNode9 = new GenericComponentNode(ccomponentNode9);
-    GraphNode componentNode10 = new GenericComponentNode(ccomponentNode10);
-    GraphNode componentNode11 = new GenericComponentNode(ccomponentNode11);
+    private GraphNode root = new GenericComponentNode(cRoot);
+    private GraphNode componentNode1 = new GenericComponentNode(ccomponentNode1);
+    private GraphNode componentNode2 = new GenericComponentNode(ccomponentNode2);
+    private GraphNode componentNode3 = new GenericComponentNode(ccomponentNode3);
+    private GraphNode componentNode4 = new GenericComponentNode(ccomponentNode4);
+    private GraphNode componentNode5 = new GenericComponentNode(ccomponentNode5);
+    private GraphNode componentNode6 = new GenericComponentNode(ccomponentNode6);
+    private GraphNode componentNode7 = new GenericComponentNode(ccomponentNode7);
+    private GraphNode componentNode8 = new GenericComponentNode(ccomponentNode8);
+    private GraphNode componentNode9 = new GenericComponentNode(ccomponentNode9);
+    private GraphNode componentNode10 = new GenericComponentNode(ccomponentNode10);
+    private GraphNode componentNode11 = new GenericComponentNode(ccomponentNode11);
 
-    ScopedGraphNode c1 = new ChoiceNode(cc1);
-    ScopedGraphNode c2 = new ChoiceNode(cc2);
-    ScopedGraphNode c3 = new ChoiceNode(cc3);
-    ScopedGraphNode c4 = new ChoiceNode(cc4);
+    private ScopedGraphNode c1 = new ChoiceNode(cc1);
+    private ScopedGraphNode c2 = new ChoiceNode(cc2);
+    private ScopedGraphNode c3 = new ChoiceNode(cc3);
+    private ScopedGraphNode c4 = new ChoiceNode(cc4);
+
+    private FlowGraphProvider graphProvider = new FlowGraphProvider();
 
 
     public static FlowGraph graph1() {
@@ -89,7 +90,7 @@ public class GraphSamples {
     }
 
     private FlowGraph buildGraph8() {
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, c1);
         graph.add(c1, componentNode1);
@@ -103,7 +104,7 @@ public class GraphSamples {
     }
 
     private FlowGraph buildGraph7() {
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, c1);
         graph.add(c1, c2);
@@ -116,12 +117,11 @@ public class GraphSamples {
         c2.addToScope(componentNode1);
         c3.addToScope(componentNode2);
 
-
         return graph;
     }
 
     private FlowGraph buildGraph6() {
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, c1);
         graph.add(c1, c2);
@@ -144,7 +144,7 @@ public class GraphSamples {
     }
 
     private FlowGraph buildGraph1() {
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, c1);
         graph.add(c1, componentNode1);
@@ -166,7 +166,7 @@ public class GraphSamples {
     }
 
     private FlowGraph buildGraph1a() {
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, c1);
         graph.add(c1, componentNode1);
@@ -194,7 +194,7 @@ public class GraphSamples {
     }
 
     private FlowGraph buildGraph1b() {
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, c1);
         graph.add(c1, componentNode1);
@@ -216,7 +216,7 @@ public class GraphSamples {
     }
 
     private FlowGraph buildGraph2() {
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, c1);
         graph.add(c1, componentNode1);
@@ -241,7 +241,7 @@ public class GraphSamples {
     }
 
     private FlowGraph buildGraph3() {
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, c1);
         graph.add(c1, componentNode1);
@@ -286,7 +286,7 @@ public class GraphSamples {
     }
 
     private FlowGraph buildGraph4() {
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, c1);
         graph.add(c1, componentNode1);
@@ -326,7 +326,7 @@ public class GraphSamples {
     }
 
     private FlowGraph buildGraph5() {
-        FlowGraph graph = new FlowGraphImpl();
+        FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, c1);
         graph.add(c1, componentNode1);

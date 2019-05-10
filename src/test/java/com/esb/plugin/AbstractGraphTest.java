@@ -12,6 +12,7 @@ import com.esb.plugin.component.fork.ForkNode;
 import com.esb.plugin.component.generic.GenericComponentNode;
 import com.esb.plugin.component.stop.StopNode;
 import com.esb.plugin.fixture.*;
+import com.esb.plugin.graph.FlowGraphProvider;
 import com.esb.plugin.graph.node.GraphNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,9 +55,13 @@ public abstract class AbstractGraphTest {
     protected FlowReferenceNode flowReferenceNode1;
     protected FlowReferenceNode flowReferenceNode2;
 
+    protected FlowGraphProvider graphProvider;
+
 
     @BeforeEach
     protected void setUp() {
+        graphProvider = new FlowGraphProvider();
+
         root = createGraphNodeInstance(ComponentRoot.class, GenericComponentNode.class);
 
         componentNode1 = createGraphNodeInstance(ComponentNode1.class, GenericComponentNode.class);

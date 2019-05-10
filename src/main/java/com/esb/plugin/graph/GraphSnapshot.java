@@ -8,7 +8,13 @@ import java.util.List;
 public class GraphSnapshot {
 
     private FlowGraph graph;
-    private List<SnapshotListener> listeners = new ArrayList<>();
+
+    private final FlowGraphProvider graphProvider;
+    private final List<SnapshotListener> listeners = new ArrayList<>();
+
+    public GraphSnapshot(FlowGraphProvider graphProvider) {
+        this.graphProvider = graphProvider;
+    }
 
     public void updateSnapshot(Object notifier, @NotNull FlowGraph graph) {
         this.graph = graph;
@@ -29,7 +35,10 @@ public class GraphSnapshot {
         this.listeners.add(listener);
     }
 
+    @NotNull
     public FlowGraph getGraph() {
-        return graph;
+        return graph != null ?
+                graph :
+                graphProvider.createGraph();
     }
 }
