@@ -18,14 +18,14 @@ import static com.esb.internal.commons.Preconditions.checkState;
 
 public class GraphSerializer {
 
-    public static String serialize(FlowGraph graph, String flowId) {
+    public static String serialize(FlowGraph graph) {
         JSONArray flow = new JSONArray();
 
         GraphNode root = graph.root();
         doSerialize(graph, flow, root, new UntilNoSuccessors());
 
         JSONObject flowObject = JsonObjectFactory.newJSONObject();
-        Flow.id(flowId, flowObject);
+        Flow.id(graph.id(), flowObject);
         Flow.flow(flow, flowObject);
         return flowObject.toString(2);
     }

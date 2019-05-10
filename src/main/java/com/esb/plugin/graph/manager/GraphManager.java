@@ -1,6 +1,5 @@
 package com.esb.plugin.graph.manager;
 
-import com.esb.plugin.commons.FlowIdGenerator;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphProvider;
 import com.esb.plugin.graph.GraphSnapshot;
@@ -79,15 +78,13 @@ public class GraphManager extends AncestorListenerAdapter implements FileEditorM
 
     @Override
     public void onDataChange(@NotNull FlowGraph graph) {
-        String flowId = FlowIdGenerator.next();
-        String json = GraphSerializer.serialize(graph, flowId);
+        String json = GraphSerializer.serialize(graph);
         write(json);
     }
 
     @Override
     public void onStructureChange(@NotNull FlowGraph graph) {
-        String flowId = FlowIdGenerator.next();
-        String json = GraphSerializer.serialize(graph, flowId);
+        String json = GraphSerializer.serialize(graph);
         write(json);
     }
 
