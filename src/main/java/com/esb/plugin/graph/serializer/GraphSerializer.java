@@ -7,7 +7,6 @@ import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.FindFirstNodeOutsideCurrentScope;
-import com.esb.plugin.graph.utils.FindFirstNodeOutsideScope;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -33,26 +32,25 @@ public class GraphSerializer {
 
     public static void doSerialize(FlowGraph graph, JSONArray array, GraphNode graphNode, GraphNode stop) {
         if (graphNode instanceof ScopedGraphNode) {
-            serialize(graph, array, (ScopedGraphNode) graphNode);
+            serialize(graph, array, (ScopedGraphNode) graphNode, stop);
         } else {
             serialize(graph, array, graphNode, stop);
         }
     }
 
-    private static void serialize(FlowGraph graph, JSONArray array, ScopedGraphNode scopedGraphNode) {
+    private static void serialize(FlowGraph graph, JSONArray array, ScopedGraphNode scopedGraphNode, GraphNode stop) {
         Serializer serializer = GraphSerializerFactory.get()
                 .node(scopedGraphNode)
                 .build();
 
-        Optional<GraphNode> firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedGraphNode);
-        GraphNode stop = firstNodeOutsideScope.orElse(new UntilNoSuccessors());
+        Optional<GraphNode> firstNodeOutsideScope = FindFirstNodeOutsideCurrentScope.of(graph, scopedGraphNode);
+        GraphNode firstStop = firstNodeOutsideScope.orElse(stop);
 
-        JSONObject serializedObject = serializer.serialize(graph, scopedGraphNode, stop);
+        JSONObject serializedObject = serializer.serialize(graph, scopedGraphNode, firstStop);
         array.put(serializedObject);
 
-        Optional<GraphNode> currentStop = FindFirstNodeOutsideCurrentScope.of(graph, scopedGraphNode);
-        currentStop.ifPresent(graphNode ->
-                firstNodeOutsideScope.ifPresent(node -> doSerialize(graph, array, node, graphNode)));
+        firstNodeOutsideScope
+                .ifPresent(node -> doSerialize(graph, array, node, stop));
     }
 
     private static void serialize(FlowGraph graph, JSONArray array, GraphNode node, GraphNode stop) {

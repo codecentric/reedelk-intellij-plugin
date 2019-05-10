@@ -25,13 +25,17 @@ public class ChoiceSerializer extends AbstractSerializer {
 
         Implementor.name(componentData.getFullyQualifiedName(), choiceObject);
 
-        List<ChoiceConditionRoutePair> when =
+        List<ChoiceConditionRoutePair> conditionRoutePairs =
                 (List<ChoiceConditionRoutePair>) componentData.get(ChoiceNode.DATA_CONDITION_ROUTE_PAIRS);
 
         JSONArray whenArrayObject = new JSONArray();
 
+        List<GraphNode> choiceSuccessors = graph.successors(choiceNode);
+
         // Invert, we should first get the successors of the choice and then find the matching PAIR
-        for (ChoiceConditionRoutePair pair : when) {
+        for (GraphNode choiceSuccessor : choiceSuccessors) {
+
+            ChoiceConditionRoutePair pair = findPairFor(choiceSuccessor, conditionRoutePairs);
 
             JSONObject conditionAndRouteObject = JsonObjectFactory.newJSONObject();
 
@@ -53,6 +57,14 @@ public class ChoiceSerializer extends AbstractSerializer {
         Choice.when(whenArrayObject, choiceObject);
 
         return choiceObject;
+    }
+
+    private ChoiceConditionRoutePair findPairFor(GraphNode choiceSuccessor, List<ChoiceConditionRoutePair> conditionRoutePairs) {
+        return conditionRoutePairs.stream()
+                .filter(choiceConditionRoutePair ->
+                        choiceConditionRoutePair.getNext() == choiceSuccessor)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Choice condition route pair must be present."));
     }
 
 }

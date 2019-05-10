@@ -31,6 +31,13 @@ public class Json {
             public String path() {
                 return "complete_flow_with_nested_choice.json";
             }
+        },
+
+        NodesBetweenScopes() {
+            @Override
+            public String path() {
+                return "complete_flow_with_nodes_between_scopes.json";
+            }
         }
     }
 
