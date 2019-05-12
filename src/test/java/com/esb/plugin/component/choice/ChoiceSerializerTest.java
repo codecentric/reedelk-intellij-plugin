@@ -3,6 +3,7 @@ package com.esb.plugin.component.choice;
 import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.graph.FlowGraph;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,8 @@ public class ChoiceSerializerTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlySerializeChoiceNode() {
         // Given
+        JSONArray sequence = new JSONArray();
+
         FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
@@ -60,9 +63,11 @@ public class ChoiceSerializerTest extends AbstractGraphTest {
         component.set(DATA_CONDITION_ROUTE_PAIRS, choiceRoute);
 
         // When
-        JSONObject serializedObject = serializer.serialize(graph, choiceNode1, componentNode7);
+        serializer.serialize(graph, sequence, choiceNode1, componentNode7);
 
         // Then
+        JSONObject serializedObject = sequence.getJSONObject(0);
+
         String actualJson = serializedObject.toString(2);
         String expectedJson = Choice.Sample.json();
         JSONAssert.assertEquals(expectedJson, actualJson, true);

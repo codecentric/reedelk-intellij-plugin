@@ -6,6 +6,7 @@ import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.fixture.ComponentNode1;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,7 @@ public class GenericComponentSerializerTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlySerializeGenericComponent() {
         // Given
+        JSONArray sequence = new JSONArray();
         ComponentData componentData = new ComponentData(ComponentDescriptor.create()
                 .propertiesNames(asList("property1", "property2", "property3"))
                 .fullyQualifiedName(ComponentNode1.class.getName())
@@ -41,9 +43,11 @@ public class GenericComponentSerializerTest extends AbstractGraphTest {
         graph.add(root, genericComponent);
 
         // When
-        JSONObject serializedObject = serializer.serialize(graph, genericComponent, null);
+        serializer.serialize(graph, sequence, genericComponent, null);
 
         // Then
+        JSONObject serializedObject = sequence.getJSONObject(0);
+
         String actualJson = serializedObject.toString(2);
         String expectedJson = GenericComponent.Sample.json();
         JSONAssert.assertEquals(expectedJson, actualJson, true);

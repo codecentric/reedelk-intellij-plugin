@@ -2,10 +2,10 @@ package com.esb.plugin.graph.serializer;
 
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
-import org.json.JSONObject;
+import org.json.JSONArray;
 
 public interface Serializer {
 
-    JSONObject serialize(FlowGraph graph, GraphNode node, GraphNode stop);
+    void serialize(FlowGraph graph, JSONArray sequence, GraphNode node, GraphNode stop);
 
 }

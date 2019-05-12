@@ -2,13 +2,12 @@ package com.esb.plugin.component.stop;
 
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.serializer.AbstractSerializer;
-import org.json.JSONObject;
+import com.esb.plugin.graph.serializer.Serializer;
+import org.json.JSONArray;
 
-public class StopSerializer extends AbstractSerializer {
-
+public class StopSerializer implements Serializer {
     @Override
-    public JSONObject serialize(FlowGraph graph, GraphNode node, GraphNode stop) {
+    public void serialize(FlowGraph graph, JSONArray sequence, GraphNode node, GraphNode stop) {
         throw new UnsupportedOperationException();
     }
 }

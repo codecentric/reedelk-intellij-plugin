@@ -3,8 +3,9 @@ package com.esb.plugin.component.choice;
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.serializer.AbstractSerializer;
-import com.esb.plugin.graph.serializer.GraphSerializer;
+import com.esb.plugin.graph.node.ScopedGraphNode;
+import com.esb.plugin.graph.serializer.AbstractScopedNodeSerializer;
+import com.esb.plugin.graph.serializer.GraphSerializerFactory;
 import com.esb.plugin.graph.serializer.JsonObjectFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,11 +15,10 @@ import java.util.List;
 import static com.esb.internal.commons.JsonParser.Choice;
 import static com.esb.internal.commons.JsonParser.Implementor;
 
-public class ChoiceSerializer extends AbstractSerializer {
+public class ChoiceSerializer extends AbstractScopedNodeSerializer {
 
     @Override
-    public JSONObject serialize(FlowGraph graph, GraphNode choiceNode, GraphNode stop) {
-
+    protected JSONObject serializeScopedNode(FlowGraph graph, ScopedGraphNode choiceNode, GraphNode stop) {
         ComponentData componentData = choiceNode.componentData();
 
         JSONObject choiceObject = JsonObjectFactory.newJSONObject();
@@ -47,7 +47,10 @@ public class ChoiceSerializer extends AbstractSerializer {
 
             GraphNode nextNode = pair.getNext();
 
-            GraphSerializer.doSerialize(graph, nextArrayObject, nextNode, stop);
+            GraphSerializerFactory.get()
+                    .node(nextNode)
+                    .build()
+                    .serialize(graph, nextArrayObject, nextNode, stop);
 
             Choice.next(nextArrayObject, conditionAndRouteObject);
 

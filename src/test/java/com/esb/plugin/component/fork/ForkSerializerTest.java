@@ -2,6 +2,7 @@ package com.esb.plugin.component.fork;
 
 import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.graph.FlowGraph;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,8 @@ public class ForkSerializerTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlySerializeFork() {
         // Given
+        JSONArray sequence = new JSONArray();
+
         FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, forkNode1);
@@ -35,12 +38,19 @@ public class ForkSerializerTest extends AbstractGraphTest {
         graph.add(componentNode2, componentNode5);
         graph.add(componentNode4, componentNode5);
 
+        forkNode1.addToScope(componentNode1);
+        forkNode1.addToScope(componentNode2);
+        forkNode1.addToScope(componentNode3);
+        forkNode1.addToScope(componentNode4);
+
         forkNode1.componentData().set("threadPoolSize", 3);
 
         // When
-        JSONObject serializedObject = serializer.serialize(graph, forkNode1, componentNode5);
+        serializer.serialize(graph, sequence, forkNode1, componentNode5);
 
         // Then
+        JSONObject serializedObject = sequence.getJSONObject(0);
+
         String actualJson = serializedObject.toString(2);
         String expectedJson = Fork.Sample.json();
         JSONAssert.assertEquals(expectedJson, actualJson, true);

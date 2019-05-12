@@ -2,6 +2,7 @@ package com.esb.plugin.component.flowreference;
 
 import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.graph.FlowGraph;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,8 @@ public class FlowReferenceSerializerTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlySerializeFlowReference() {
         // Given
+        JSONArray sequence = new JSONArray();
+
         String expectedReference = "11a2ce60-5c9d-1111-82a7-f1fa1111f333";
 
         FlowGraph graph = graphProvider.createGraph();
@@ -31,9 +34,11 @@ public class FlowReferenceSerializerTest extends AbstractGraphTest {
         flowReferenceNode1.componentData().set("ref", expectedReference);
 
         // When
-        JSONObject serializedObject = serializer.serialize(graph, flowReferenceNode1, null);
+        serializer.serialize(graph, sequence, flowReferenceNode1, null);
 
         // Then
+        JSONObject serializedObject = sequence.getJSONObject(0);
+
         String actualJson = serializedObject.toString(2);
         String expectedJson = FlowReference.Sample.json();
         JSONAssert.assertEquals(expectedJson, actualJson, true);

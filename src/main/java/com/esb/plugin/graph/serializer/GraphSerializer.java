@@ -5,74 +5,40 @@ import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.component.stop.StopNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.ScopedGraphNode;
-import com.esb.plugin.graph.utils.FindFirstNodeOutsideCurrentScope;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.List;
-import java.util.Optional;
-
 import static com.esb.internal.commons.JsonParser.Flow;
-import static com.esb.internal.commons.Preconditions.checkState;
+import static com.esb.internal.commons.Preconditions.checkArgument;
 
 public class GraphSerializer {
 
+    private final FlowGraph graph;
+
     public static String serialize(FlowGraph graph) {
+        GraphSerializer serializer = new GraphSerializer(graph);
+        return serializer.serialize();
+    }
+
+    private GraphSerializer(FlowGraph graph) {
+        checkArgument(graph != null, "graph");
+        this.graph = graph;
+    }
+
+    private String serialize() {
         JSONArray flow = new JSONArray();
 
         GraphNode root = graph.root();
-        doSerialize(graph, flow, root, new UntilNoSuccessors());
+        GraphSerializerFactory.get()
+                .node(root)
+                .build()
+                .serialize(graph, flow, root, new UntilNoSuccessors());
+
 
         JSONObject flowObject = JsonObjectFactory.newJSONObject();
         Flow.id(graph.id(), flowObject);
         Flow.flow(flow, flowObject);
         return flowObject.toString(2);
-    }
-
-    public static void doSerialize(FlowGraph graph, JSONArray array, GraphNode graphNode, GraphNode stop) {
-        if (graphNode instanceof ScopedGraphNode) {
-            serialize(graph, array, (ScopedGraphNode) graphNode, stop);
-        } else {
-            serialize(graph, array, graphNode, stop);
-        }
-    }
-
-    private static void serialize(FlowGraph graph, JSONArray array, ScopedGraphNode scopedGraphNode, GraphNode stop) {
-        Serializer serializer = GraphSerializerFactory.get()
-                .node(scopedGraphNode)
-                .build();
-
-        Optional<GraphNode> firstNodeOutsideScope = FindFirstNodeOutsideCurrentScope.of(graph, scopedGraphNode);
-        GraphNode firstStop = firstNodeOutsideScope.orElse(stop);
-
-        JSONObject serializedObject = serializer.serialize(graph, scopedGraphNode, firstStop);
-        array.put(serializedObject);
-
-        firstNodeOutsideScope
-                .ifPresent(node -> doSerialize(graph, array, node, stop));
-    }
-
-    private static void serialize(FlowGraph graph, JSONArray array, GraphNode node, GraphNode stop) {
-        Serializer serializer = GraphSerializerFactory.get()
-                .node(node)
-                .build();
-
-        JSONObject serializedObject = serializer.serialize(graph, node, stop);
-        array.put(serializedObject);
-
-        List<GraphNode> successors = graph.successors(node);
-        checkState(successors.size() <= 1,
-                "Only scoped nodes might have more than one successors");
-
-        if (!successors.isEmpty()) {
-            GraphNode successorNode = successors.get(0);
-            if (stop instanceof UntilNoSuccessors) {
-                doSerialize(graph, array, successorNode, stop);
-            } else if (stop != successorNode) {
-                doSerialize(graph, array, successorNode, stop);
-            }
-        }
     }
 
     static class UntilNoSuccessors extends StopNode {

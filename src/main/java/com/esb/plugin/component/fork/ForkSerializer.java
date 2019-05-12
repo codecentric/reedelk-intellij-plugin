@@ -3,8 +3,9 @@ package com.esb.plugin.component.fork;
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.serializer.AbstractSerializer;
-import com.esb.plugin.graph.serializer.GraphSerializer;
+import com.esb.plugin.graph.node.ScopedGraphNode;
+import com.esb.plugin.graph.serializer.AbstractScopedNodeSerializer;
+import com.esb.plugin.graph.serializer.GraphSerializerFactory;
 import com.esb.plugin.graph.serializer.JsonObjectFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,12 +15,11 @@ import java.util.List;
 import static com.esb.internal.commons.JsonParser.Fork;
 import static com.esb.internal.commons.JsonParser.Implementor;
 
-public class ForkSerializer extends AbstractSerializer {
+public class ForkSerializer extends AbstractScopedNodeSerializer {
 
     @Override
-    public JSONObject serialize(FlowGraph graph, GraphNode node, GraphNode stop) {
-
-        ComponentData componentData = node.componentData();
+    protected JSONObject serializeScopedNode(FlowGraph graph, ScopedGraphNode forkNode, GraphNode stop) {
+        ComponentData componentData = forkNode.componentData();
 
         JSONObject forkObject = JsonObjectFactory.newJSONObject();
 
@@ -34,7 +34,7 @@ public class ForkSerializer extends AbstractSerializer {
             Fork.threadPoolSize(threadPoolSize, forkObject);
         }
 
-        List<GraphNode> successorsOfFork = graph.successors(node);
+        List<GraphNode> successorsOfFork = graph.successors(forkNode);
 
         JSONArray forkArrayObject = new JSONArray();
 
@@ -44,12 +44,13 @@ public class ForkSerializer extends AbstractSerializer {
 
             JSONArray nextArrayObject = new JSONArray();
 
-            GraphSerializer.doSerialize(graph, nextArrayObject, successor, stop);
+            GraphSerializerFactory.get().node(successor)
+                    .build()
+                    .serialize(graph, nextArrayObject, successor, stop);
 
             Fork.next(nextArrayObject, nextObject);
 
             forkArrayObject.put(nextObject);
-
         }
 
         Fork.fork(forkArrayObject, forkObject);

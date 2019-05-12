@@ -24,11 +24,10 @@ public class GraphDeserializer {
     private final FlowGraphProvider graphProvider;
 
     public static Optional<FlowGraph> deserialize(Module module, String json, FlowGraphProvider graphProvider) {
+        DeserializerContext context = new DeserializerContext(module);
+        GraphDeserializer deserializer = new GraphDeserializer(json, context, graphProvider);
         try {
-            DeserializerContext context = new DeserializerContext(module);
-            GraphDeserializer deserializer = new GraphDeserializer(json, context, graphProvider);
             return Optional.of(deserializer.deserialize());
-
         } catch (Exception e) {
             LOG.error("Deserialization error", e);
             return Optional.empty();
