@@ -26,13 +26,15 @@ public class GenericComponentPropertyRenderer extends AbstractPropertyRenderer {
         propertiesListPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
         propertiesListPanel.setLayout(new GridBagLayout());
 
+        JTextField descriptionTextField = new JTextField();
         FormBuilder formBuilder = FormBuilder.get()
                 .addLabel("Description", propertiesListPanel)
-                .addLastField(new JTextField(), propertiesListPanel);
+                .addLastField(descriptionTextField, propertiesListPanel);
 
 
         componentData.descriptorProperties().forEach(propertyName -> {
             PropertyInput input = new PropertyInput();
+            input.setText((String) componentData.get(propertyName.toLowerCase()));
             input.addListener(newText -> {
                 componentData.set(propertyName.toLowerCase(), newText);
                 snapshot.onDataChange();
