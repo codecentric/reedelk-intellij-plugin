@@ -2,12 +2,15 @@ package com.esb.plugin.component.generic;
 
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.designer.properties.AbstractPropertyRenderer;
-import com.esb.plugin.designer.properties.widget.PropertyBox;
+import com.esb.plugin.designer.properties.widget.FormBuilder;
+import com.esb.plugin.designer.properties.widget.PropertyInput;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.ui.components.JBPanel;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class GenericComponentPropertyRenderer extends AbstractPropertyRenderer {
 
@@ -19,19 +22,26 @@ public class GenericComponentPropertyRenderer extends AbstractPropertyRenderer {
     public JBPanel render(GraphNode node) {
         ComponentData componentData = node.componentData();
 
-        JBPanel propertiesBoxContainer = new JBPanel();
-        propertiesBoxContainer.setLayout(new BoxLayout(propertiesBoxContainer, BoxLayout.PAGE_AXIS));
+        JBPanel propertiesListPanel = new JBPanel();
+        propertiesListPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
+        propertiesListPanel.setLayout(new GridBagLayout());
 
-        // TODO: Fix this
-        propertiesBoxContainer.add(createPropertyBox(componentData, "Description"));
+        FormBuilder formBuilder = FormBuilder.get()
+                .addLabel("Description", propertiesListPanel)
+                .addLastField(new JTextField(), propertiesListPanel);
+
 
         componentData.descriptorProperties().forEach(propertyName -> {
-            PropertyBox propertyBox = createPropertyBox(componentData, propertyName);
-            propertiesBoxContainer.add(propertyBox);
+            PropertyInput input = new PropertyInput();
+            input.addListener(newText -> {
+                componentData.set(propertyName.toLowerCase(), newText);
+                snapshot.onDataChange();
+            });
+            formBuilder.addLabel(StringUtils.capitalize(propertyName), propertiesListPanel)
+                    .addLastField(input, propertiesListPanel);
         });
 
-        propertiesBoxContainer.add(Box.createVerticalGlue());
-        return propertiesBoxContainer;
+        return propertiesListPanel;
     }
 
 }

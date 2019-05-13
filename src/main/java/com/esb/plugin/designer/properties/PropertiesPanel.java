@@ -6,16 +6,20 @@ import com.esb.plugin.designer.SelectListener;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.NothingSelectedNode;
+import com.intellij.ui.JBColor;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBTabbedPane;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
+import java.awt.*;
+
+import static java.awt.BorderLayout.*;
 
 public class PropertiesPanel extends JBPanel implements SelectListener {
 
     private final MatteBorder border = BorderFactory.createMatteBorder(0, 10, 0, 0, getBackground());
-
 
     public PropertiesPanel() {
         setBorder(border);
@@ -30,11 +34,7 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
 
         removeAll();
 
-        JBPanel propertiesPanel = PropertyRendererFactory.get()
-                .component(componentData)
-                .snapshot(snapshot)
-                .build()
-                .render(node);
+        JBPanel propertiesPanel = createPropertiesPanel(componentData, snapshot, node);
 
         JBTabbedPane tabbedPane = new JBTabbedPane();
 
@@ -56,6 +56,46 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
         removeAll();
         revalidate();
         repaint();
+    }
+
+    private JBPanel createPropertiesPanel(ComponentData componentData, GraphSnapshot snapshot, GraphNode node) {
+        JBPanel propertiesPanel = PropertyRendererFactory.get()
+                .component(componentData)
+                .snapshot(snapshot)
+                .build()
+                .render(node);
+
+        JBPanel propertiesBoxContainer = createPropertiesBoxPanel(propertiesPanel);
+        JBPanel inputOutputPanel = createInputOutputPanel();
+        return createPropertiesHolder(propertiesBoxContainer, inputOutputPanel);
+    }
+
+    private JBPanel createPropertiesHolder(JBPanel propertiesBoxContainer, JBPanel inputOutputPanel) {
+        JBPanel propertiesHolder = new JBPanel();
+        propertiesHolder.setLayout(new BorderLayout());
+        propertiesHolder.add(propertiesBoxContainer, CENTER);
+        propertiesHolder.add(inputOutputPanel, EAST);
+        return propertiesHolder;
+    }
+
+    private JBPanel createInputOutputPanel() {
+        JBLabel inputOutputLabel = new JBLabel("input/output");
+        JBPanel inputOutputPanel = new JBPanel();
+        inputOutputPanel.setPreferredSize(new Dimension(300, 100));
+        inputOutputPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, JBColor.LIGHT_GRAY));
+        inputOutputPanel.add(inputOutputLabel, CENTER);
+        return inputOutputPanel;
+    }
+
+    private JBPanel createPropertiesBoxPanel(JBPanel propertiesListPanel) {
+        JBPanel fillerPanel = new JBPanel();
+        fillerPanel.add(Box.createGlue());
+
+        JBPanel propertiesBoxContainer = new JBPanel();
+        propertiesBoxContainer.setLayout(new BorderLayout());
+        propertiesBoxContainer.add(propertiesListPanel, NORTH);
+        propertiesBoxContainer.add(fillerPanel, CENTER);
+        return propertiesBoxContainer;
     }
 
 }
