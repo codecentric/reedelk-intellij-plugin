@@ -1,7 +1,7 @@
 package com.esb.plugin.component.generic;
 
 import com.esb.plugin.component.ComponentData;
-import com.esb.plugin.designer.properties.PropertyRenderer;
+import com.esb.plugin.designer.properties.AbstractPropertyRenderer;
 import com.esb.plugin.designer.properties.widget.DefaultPropertiesPanel;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
@@ -9,12 +9,10 @@ import com.intellij.ui.components.JBPanel;
 
 import static org.apache.commons.lang3.StringUtils.capitalize;
 
-public class GenericComponentPropertyRenderer implements PropertyRenderer {
-
-    private GraphSnapshot snapshot;
+public class GenericComponentPropertyRenderer extends AbstractPropertyRenderer {
 
     public GenericComponentPropertyRenderer(GraphSnapshot snapshot) {
-        this.snapshot = snapshot;
+        super(snapshot);
     }
 
     @Override
