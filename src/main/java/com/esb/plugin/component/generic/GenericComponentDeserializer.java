@@ -24,14 +24,31 @@ public class GenericComponentDeserializer extends AbstractDeserializer {
         ComponentData componentData = node.componentData();
 
         // fill up data from componentData definition
-        componentData.descriptorProperties()
-                .forEach(propertyName -> {
-                    Object propertyValue = componentDefinition.get(propertyName.toLowerCase());
-                    // Explicitly map JSON Library NULL value to java's null.
-                    if (propertyValue == JSONObject.NULL) {
-                        propertyValue = null;
+        componentData.descriptorProperties().forEach(propertyName -> {
+            propertyName = propertyName.toLowerCase();
+
+            // TODO: we should say if mandatory or not with annotations
+            if (componentDefinition.has(propertyName)) {
+
+                Class<?> propertyType = componentData.getPropertyType(propertyName);
+
+                Object propertyValue;
+                if (propertyType == String.class) {
+                    propertyValue = componentDefinition.getString(propertyName);
+                } else if (propertyType == Integer.class || int.class == propertyType) {
+                    propertyValue = componentDefinition.getInt(propertyName);
+                } else if (propertyType == Long.class || long.class == propertyType) {
+                    propertyValue = componentDefinition.getLong(propertyName);
+                } else {
+                    propertyValue = componentDefinition.get(propertyName);
+                }
+
+                // Explicitly map JSON Library NULL value to java's null.
+                if (propertyValue == JSONObject.NULL) {
+                    propertyValue = null;
+                }
+                componentData.set(propertyName, propertyValue);
                     }
-                    componentData.set(propertyName.toLowerCase(), propertyValue);
                 });
 
         graph.add(parent, node);

@@ -41,4 +41,8 @@ public class ComponentData {
     public List<String> descriptorProperties() {
         return descriptor.getPropertiesNames();
     }
+
+    public Class<?> getPropertyType(String propertyName) {
+        return descriptor.getPropertyType(propertyName);
+    }
 }

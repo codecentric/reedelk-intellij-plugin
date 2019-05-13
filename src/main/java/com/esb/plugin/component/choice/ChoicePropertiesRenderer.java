@@ -15,6 +15,7 @@ import java.util.List;
 import static com.esb.plugin.component.choice.ChoiceNode.DATA_CONDITION_ROUTE_PAIRS;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
+import static org.apache.commons.lang3.StringUtils.capitalize;
 
 public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
 
@@ -32,6 +33,11 @@ public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
         ChoiceRouteTable choiceRouteTable = new ChoiceRouteTable(model);
 
         DefaultPropertiesPanel propertiesListPanel = new DefaultPropertiesPanel(snapshot, componentData);
+
+        componentData.descriptorProperties().forEach(propertyName ->
+                propertiesListPanel.addPropertyField(
+                        capitalize(propertyName),
+                        propertyName.toLowerCase()));
 
         JBPanel container = new JBPanel();
         container.setLayout(new BorderLayout());

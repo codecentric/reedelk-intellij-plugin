@@ -5,6 +5,7 @@ import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.fixture.ComponentNode1;
 import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.service.module.impl.PropertyDefinition;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,10 @@ class GenericComponentDeserializerTest extends AbstractDeserializerTest {
         ComponentDescriptor descriptor = ComponentDescriptor.create()
                 .displayName("Test Component")
                 .fullyQualifiedName(ComponentNode1.class.getName())
-                .propertiesNames(asList("property1", "property2", "property3"))
+                .propertyDefinitions(asList(
+                        new PropertyDefinition("property1", String.class),
+                        new PropertyDefinition("property2", String.class),
+                        new PropertyDefinition("property3", String.class)))
                 .build();
 
         GenericComponentNode node = createGraphNodeInstance(GenericComponentNode.class, descriptor);

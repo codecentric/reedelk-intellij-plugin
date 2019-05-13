@@ -14,13 +14,16 @@ import org.apache.commons.collections.set.UnmodifiableSet;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 
 public class ComponentServiceImpl implements ComponentService {
 
+    private SetterPropertyDefinitionMapper mapper = new SetterPropertyDefinitionMapper();
+
     // TODO: This should not be hardcoded here.
+    public static final String SYSTEM_COMPONENTS_BASE_PACKAGE = "com.esb.component";
     private static final String COMPONENT_ANNOTATION_NAME = "org.osgi.service.component.annotations.Component";
     private static final String COMPONENT_SUPERCLASS = Component.class.getName();
 
@@ -76,7 +79,7 @@ public class ComponentServiceImpl implements ComponentService {
 
     private void populateSystemComponents() {
         ScanResult scanResult = new ClassGraph()
-                .whitelistPackages("com.esb.component")
+                .whitelistPackages(SYSTEM_COMPONENTS_BASE_PACKAGE)
                 .enableAllInfo()
                 .scan();
         ClassInfoList classesWithAnnotation = scanResult.getClassesWithAnnotation(SystemComponent.class.getName());
@@ -106,15 +109,15 @@ public class ComponentServiceImpl implements ComponentService {
         return ComponentDescriptor.create()
                 .fullyQualifiedName(classInfo.getName())
                 .displayName(classInfo.getSimpleName())
-                .propertiesNames(extractPropertiesNames(classInfo))
+                .propertyDefinitions(mapPropertyDefinitions(classInfo))
                 .build();
     }
 
-    private List<String> extractPropertiesNames(ClassInfo classInfo) {
+    private List<PropertyDefinition> mapPropertyDefinitions(ClassInfo classInfo) {
         return classInfo.getMethodInfo().stream()
                 .filter(methodInfo -> methodInfo.getName().startsWith("set"))
-                .map(methodInfo -> methodInfo.getName().substring(3))
-                .collect(Collectors.toList());
+                .map(methodInfo -> mapper.map(methodInfo))
+                .collect(toList());
     }
 
 }

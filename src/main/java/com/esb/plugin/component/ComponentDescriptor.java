@@ -1,10 +1,13 @@
 package com.esb.plugin.component;
 
+import com.esb.plugin.service.module.impl.PropertyDefinition;
+
 import java.awt.datatransfer.DataFlavor;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * An object describing the component to be added to the graph.
@@ -16,9 +19,10 @@ public class ComponentDescriptor {
     private String fullyQualifiedName;
     private String displayName;
 
-    private List<String> propertiesNames = new ArrayList<>();
+    private List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
     private ComponentDescriptor() {
+        propertyDefinitions.add(new PropertyDefinition("description", String.class));
     }
 
     public String getFullyQualifiedName() {
@@ -30,7 +34,9 @@ public class ComponentDescriptor {
     }
 
     public List<String> getPropertiesNames() {
-        return Collections.unmodifiableList(propertiesNames);
+        return propertyDefinitions.stream()
+                .map(PropertyDefinition::getPropertyName)
+                .collect(toList());
     }
 
     public static Builder create() {
@@ -50,15 +56,24 @@ public class ComponentDescriptor {
         return Objects.hash(fullyQualifiedName);
     }
 
+    public Class<?> getPropertyType(String propertyName) {
+        return propertyDefinitions.stream()
+                .filter(propertyDefinition -> propertyDefinition.getPropertyName().equals(propertyName))
+                .findFirst()
+                .orElseThrow(() -> {
+                    throw new IllegalStateException("Property not found");
+                }).getPropertyType();
+    }
+
 
     public static class Builder {
 
         private String displayName;
         private String fullyQualifiedName;
-        private List<String> propertiesNames = new ArrayList<>();
+        private List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
-        public Builder propertiesNames(List<String> propertiesNames) {
-            this.propertiesNames.addAll(propertiesNames);
+        public Builder propertyDefinitions(List<PropertyDefinition> propertyDefinitions) {
+            this.propertyDefinitions.addAll(propertyDefinitions);
             return this;
         }
 
@@ -76,7 +91,7 @@ public class ComponentDescriptor {
             ComponentDescriptor descriptor = new ComponentDescriptor();
             descriptor.displayName = displayName;
             descriptor.fullyQualifiedName = fullyQualifiedName;
-            descriptor.propertiesNames.addAll(propertiesNames);
+            descriptor.propertyDefinitions.addAll(propertyDefinitions);
             return descriptor;
         }
     }

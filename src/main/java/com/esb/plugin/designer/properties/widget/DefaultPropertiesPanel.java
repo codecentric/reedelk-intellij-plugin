@@ -1,6 +1,8 @@
 package com.esb.plugin.designer.properties.widget;
 
 import com.esb.plugin.component.ComponentData;
+import com.esb.plugin.converter.PropertyValueConverter;
+import com.esb.plugin.converter.PropertyValueConverterFactory;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.intellij.ui.components.JBPanel;
 
@@ -17,15 +19,20 @@ public class DefaultPropertiesPanel extends JBPanel {
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
         this.componentData = componentData;
         this.snapshot = snapshot;
-
-        addPropertyField("Description", "description");
     }
 
     public void addPropertyField(String displayName, String propertyName) {
         PropertyInput input = new PropertyInput();
-        input.setText((String) componentData.get(propertyName));
+
+        Class<?> propertyType = componentData.getPropertyType(propertyName);
+        PropertyValueConverter<?> converter = PropertyValueConverterFactory.forType(propertyType);
+
+        Object propertyValue = componentData.get(propertyName);
+        String valueAsString = converter.to(propertyValue);
+
+        input.setText(valueAsString);
         input.addListener(newText -> {
-            componentData.set(propertyName, newText);
+            componentData.set(propertyName, converter.from(newText));
             snapshot.onDataChange();
         });
 
@@ -33,4 +40,5 @@ public class DefaultPropertiesPanel extends JBPanel {
                 .addLabel(displayName, this)
                 .addLastField(input, this);
     }
+
 }

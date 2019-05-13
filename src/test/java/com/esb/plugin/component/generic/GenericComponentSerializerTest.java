@@ -6,6 +6,7 @@ import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.fixture.ComponentNode1;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.service.module.impl.PropertyDefinition;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +31,10 @@ public class GenericComponentSerializerTest extends AbstractGraphTest {
         // Given
         JSONArray sequence = new JSONArray();
         ComponentData componentData = new ComponentData(ComponentDescriptor.create()
-                .propertiesNames(asList("property1", "property2", "property3"))
+                .propertyDefinitions(asList(
+                        new PropertyDefinition("property1", String.class),
+                        new PropertyDefinition("property2", String.class),
+                        new PropertyDefinition("property3", String.class)))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build());
         GraphNode genericComponent = new GenericComponentNode(componentData);
