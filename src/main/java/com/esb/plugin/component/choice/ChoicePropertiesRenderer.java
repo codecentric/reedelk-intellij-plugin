@@ -4,11 +4,12 @@ import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.choice.widget.ChoiceRouteTable;
 import com.esb.plugin.component.choice.widget.ConditionRouteTableModel;
 import com.esb.plugin.designer.properties.AbstractPropertyRenderer;
-import com.esb.plugin.designer.properties.widget.PropertyBox;
+import com.esb.plugin.designer.properties.widget.FormBuilder;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.ui.components.JBPanel;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
@@ -30,13 +31,20 @@ public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
         ChoiceRouteTable choiceRouteTable = new ChoiceRouteTable(model);
 
         // TODO: Fix this
-        PropertyBox descriptionProperty = createPropertyBox(componentData, "Description");
+        JBPanel descriptionProperty = new JBPanel();
+        descriptionProperty.setLayout(new GridBagLayout());
+        descriptionProperty.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
+        FormBuilder.get()
+                .addLabel("Description", descriptionProperty)
+                .addLastField(new JTextField(), descriptionProperty);
 
-        JBPanel choicePropertiesPanel = new JBPanel();
-        choicePropertiesPanel.setLayout(new BorderLayout());
-        choicePropertiesPanel.add(descriptionProperty, NORTH);
-        choicePropertiesPanel.add(choiceRouteTable, CENTER);
-        return choicePropertiesPanel;
+
+        JBPanel container = new JBPanel();
+        container.setLayout(new BorderLayout());
+        container.add(descriptionProperty, NORTH);
+        container.add(choiceRouteTable, CENTER);
+
+        return container;
     }
 
 }

@@ -17,12 +17,15 @@ public class ChoiceRouteTable extends JBPanel {
 
     public ChoiceRouteTable(ConditionRouteTableModel model) {
 
+
         final TableColumnModel tableColumnModel = new ConditionRouteTableColumnModel();
         JBTable table = new JBTable(model, tableColumnModel);
         JScrollPane tableScrollPane = new JBScrollPane(table);
         tableScrollPane.setPreferredSize(tableScrollPaneDimension);
 
         setLayout(new BorderLayout());
+        setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
+
         add(tableScrollPane, NORTH);
         add(Box.createVerticalGlue(), CENTER);
     }

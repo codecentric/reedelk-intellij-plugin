@@ -7,9 +7,9 @@ import java.awt.*;
 
 public class FormBuilder {
 
-    private GridBagConstraints lastConstraints = null;
-    private GridBagConstraints labelConstraints = null;
-    private GridBagConstraints middleConstraints = null;
+    private GridBagConstraints lastConstraints;
+    private GridBagConstraints labelConstraints;
+    private GridBagConstraints middleConstraints;
 
     private FormBuilder() {
         // Set up the constraints for the "last" field in each
