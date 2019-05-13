@@ -12,6 +12,7 @@ import com.intellij.ui.components.JBPanel;
 import java.awt.*;
 import java.util.List;
 
+import static com.esb.plugin.component.choice.ChoiceNode.DATA_CONDITION_ROUTE_PAIRS;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 
@@ -24,13 +25,13 @@ public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
     @Override
     public JBPanel render(GraphNode choiceNode) {
         ComponentData componentData = choiceNode.componentData();
-        List<ChoiceConditionRoutePair> conditionRoutePairList = (List<ChoiceConditionRoutePair>) componentData.get(ChoiceNode.DATA_CONDITION_ROUTE_PAIRS);
+        List<ChoiceConditionRoutePair> conditionRoutePairList =
+                (List<ChoiceConditionRoutePair>) componentData.get(DATA_CONDITION_ROUTE_PAIRS);
 
         ConditionRouteTableModel model = new ConditionRouteTableModel(conditionRoutePairList, snapshot);
         ChoiceRouteTable choiceRouteTable = new ChoiceRouteTable(model);
 
-        JBPanel propertiesListPanel = new DefaultPropertiesPanel();
-        addPropertyField(componentData, "Description", propertiesListPanel);
+        DefaultPropertiesPanel propertiesListPanel = new DefaultPropertiesPanel(snapshot, componentData);
 
         JBPanel container = new JBPanel();
         container.setLayout(new BorderLayout());
