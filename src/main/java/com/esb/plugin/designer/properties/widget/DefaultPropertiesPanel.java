@@ -28,6 +28,7 @@ public class DefaultPropertiesPanel extends JBPanel {
             componentData.set(propertyName, newText);
             snapshot.onDataChange();
         });
+
         FormBuilder.get()
                 .addLabel(displayName, this)
                 .addLastField(input, this);
