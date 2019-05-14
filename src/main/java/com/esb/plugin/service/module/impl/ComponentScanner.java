@@ -19,7 +19,7 @@ public class ComponentScanner {
 
             ScanResult scanResult = new ClassGraph().overrideClasspath(classPath)
                     .enableSystemJarsAndModules()
-                    .enableAllInfo()
+                    .enableAllInfo() // TODO: Enable all info must be fixed
                     .scan();
 
             processScanResult(callback, scanResult);
@@ -33,7 +33,7 @@ public class ComponentScanner {
 
             ScanResult scanResult = new ClassGraph()
                     .whitelistPackages(packages)
-                    .enableAllInfo()
+                    .enableAllInfo() // TODO: Enable all info must be fixed
                     .scan();
 
             processScanResult(callback, scanResult);
