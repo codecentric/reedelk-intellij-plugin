@@ -14,7 +14,7 @@ public class PropertyValueConverterFactory {
         Map<Class<?>, PropertyValueConverter<?>> tmp = new HashMap<>();
         tmp.put(String.class, new StringConverter());
         tmp.put(Integer.class, new IntConverter());
-        tmp.put(int.class, new LongConverter());
+        tmp.put(int.class, new IntConverter());
         tmp.put(Long.class, new LongConverter());
         tmp.put(long.class, new LongConverter());
         CONVERTER = Collections.unmodifiableMap(tmp);
