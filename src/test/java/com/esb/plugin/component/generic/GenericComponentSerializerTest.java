@@ -59,6 +59,6 @@ public class GenericComponentSerializerTest extends AbstractGraphTest {
 
     // Fixme
     private PropertyDefinition createPropertyDefinition(String propertyName, Class<?> propertyClass) {
-        return new PropertyDefinition(propertyName, propertyClass, true, "", "");
+        return new PropertyDefinition(propertyName, "", propertyClass, true, "");
     }
 }

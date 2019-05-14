@@ -12,10 +12,10 @@ public class PropertyDefinition {
 
     public PropertyDefinition(
             final String propertyName,
+            final String displayName,
             final Class<?> propertyType,
             final boolean required,
-            final Object defaultValue,
-            final String displayName) {
+            final Object defaultValue) {
 
         checkState(propertyName != null, "propertyName");
         checkState(propertyType != null, "propertyType");

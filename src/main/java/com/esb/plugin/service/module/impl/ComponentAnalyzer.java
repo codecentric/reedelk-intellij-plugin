@@ -7,14 +7,13 @@ import io.github.classgraph.AnnotationParameterValueList;
 import io.github.classgraph.ClassInfo;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
 public class ComponentAnalyzer {
 
     private PropertyDefinitionAnalyzer propertyAnalyzer = new PropertyDefinitionAnalyzer();
-
-    private SetterPropertyDefinitionMapper mapper = new SetterPropertyDefinitionMapper();
 
     public ComponentDescriptor analyze(ClassInfo classInfo) {
         String displayName = getComponentDisplayName(classInfo);
@@ -27,10 +26,11 @@ public class ComponentAnalyzer {
 
     private List<PropertyDefinition> mapPropertyDefinitions(ClassInfo classInfo) {
         return classInfo
-                .getMethodInfo()
+                .getFieldInfo()
                 .stream()
-                .filter(methodInfo -> methodInfo.getName().startsWith("set"))
-                .map(methodInfo -> mapper.map(methodInfo))
+                .map(fieldInfo -> propertyAnalyzer.analyze(fieldInfo))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(toList());
     }
 

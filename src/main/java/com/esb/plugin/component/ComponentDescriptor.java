@@ -6,6 +6,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -30,6 +31,13 @@ public class ComponentDescriptor {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public Optional<PropertyDefinition> getPropertyDefinition(String propertyName) {
+        return propertyDefinitions
+                .stream()
+                .filter(propertyDefinition -> propertyDefinition.getPropertyName().equals(propertyName))
+                .findFirst();
     }
 
     public List<String> getPropertiesNames() {

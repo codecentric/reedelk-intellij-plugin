@@ -9,6 +9,8 @@ import io.github.classgraph.ScanResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ComponentAnalyzerTest {
@@ -38,6 +40,11 @@ public class ComponentAnalyzerTest {
         // Then
         String displayName = descriptor.getDisplayName();
         assertThat(displayName).isEqualTo("Test Component");
+
+        assertThat(descriptor.getPropertiesNames()).containsExactlyInAnyOrder("property1", "property2");
+        Optional<PropertyDefinition> property1Definition = descriptor.getPropertyDefinition("property1");
+
+        descriptor.getPropertyDefinition("property2");
 
     }
 }
