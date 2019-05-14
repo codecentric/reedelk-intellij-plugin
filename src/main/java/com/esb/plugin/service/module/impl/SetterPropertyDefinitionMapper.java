@@ -16,11 +16,13 @@ public class SetterPropertyDefinitionMapper {
 
         if (typeDescriptor instanceof BaseTypeSignature) {
 
-            BaseTypeSignature baseTYpe = (BaseTypeSignature) typeDescriptor;
+            BaseTypeSignature baseType = (BaseTypeSignature) typeDescriptor;
 
-            Class<?> actualType = baseTYpe.getType();
+            Class<?> actualType = baseType.getType();
 
-            return new PropertyDefinition(propertyName.toLowerCase(), actualType);
+            return new PropertyDefinition(
+                    propertyName.toLowerCase(),
+                    actualType, true, "", "Sadsf");
 
         } else if (typeDescriptor instanceof ClassRefTypeSignature) {
 
@@ -31,13 +33,19 @@ public class SetterPropertyDefinitionMapper {
             // ignore method (but consider List<> of type and so on...
             try {
 
-                return new PropertyDefinition(propertyName.toLowerCase(), Class.forName(baseClassName));
+                return new PropertyDefinition(
+                        propertyName.toLowerCase(),
+                        Class.forName(baseClassName),
+                        true, "", "dafdf");
 
             } catch (ClassNotFoundException e) {
 
                 e.printStackTrace();
 
-                return new PropertyDefinition(propertyName.toLowerCase(), String.class);
+                return new PropertyDefinition(
+                        propertyName.toLowerCase(),
+                        String.class,
+                        true, "", "asdfdsf");
             }
         }
 

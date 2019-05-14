@@ -18,6 +18,8 @@ public class ClassGraphTest {
 
         // Then
         ClassInfo forkClassInfo = classesWithAnnotation.get("com.esb.component.Fork");
+        FieldInfoList declaredFieldInfo = forkClassInfo.getDeclaredFieldInfo();
+
         MethodInfoList setThreadPoolSize = forkClassInfo.getMethodInfo("setThreadPoolSize");
         MethodInfo setThreadPoolMethod = setThreadPoolSize.getSingleMethod("setThreadPoolSize");
         MethodParameterInfo[] parameterInfo = setThreadPoolMethod.getParameterInfo();

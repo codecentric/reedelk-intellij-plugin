@@ -5,8 +5,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleServiceManager;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.function.Consumer;
+import java.util.Set;
 
 public interface ComponentService {
 
@@ -14,8 +13,10 @@ public interface ComponentService {
         return ModuleServiceManager.getService(module, ComponentService.class);
     }
 
-    void asyncFindAllComponents(Consumer<Collection<ComponentDescriptor>> callback);
+    void syncScanComponents();
 
     ComponentDescriptor componentDescriptorByName(String componentFullyQualifiedName);
+
+    Set<ComponentDescriptor> listComponents();
 
 }

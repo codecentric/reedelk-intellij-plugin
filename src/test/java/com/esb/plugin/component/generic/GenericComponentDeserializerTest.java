@@ -33,9 +33,9 @@ class GenericComponentDeserializerTest extends AbstractDeserializerTest {
                 .displayName("Test Component")
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .propertyDefinitions(asList(
-                        new PropertyDefinition("property1", String.class),
-                        new PropertyDefinition("property2", String.class),
-                        new PropertyDefinition("property3", String.class)))
+                        createPropertyDefinition("property1", String.class),
+                        createPropertyDefinition("property2", String.class),
+                        createPropertyDefinition("property3", String.class)))
                 .build();
 
         GenericComponentNode node = createGraphNodeInstance(GenericComponentNode.class, descriptor);
@@ -54,6 +54,11 @@ class GenericComponentDeserializerTest extends AbstractDeserializerTest {
                 .hasDataWithValue("property2", "second property")
                 .hasDataWithValue("property3", "third property")
                 .and().nodesCountIs(2);
+    }
+
+    // Fixme
+    private PropertyDefinition createPropertyDefinition(String propertyName, Class<?> propertyClass) {
+        return new PropertyDefinition(propertyName, propertyClass, true, "", "");
     }
 
 }

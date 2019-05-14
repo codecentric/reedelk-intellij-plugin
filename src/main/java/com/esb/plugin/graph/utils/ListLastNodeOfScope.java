@@ -15,12 +15,18 @@ public class ListLastNodeOfScope {
 
     public static List<GraphNode> from(FlowGraph graph, ScopedGraphNode scopedGraphNode) {
         Collection<GraphNode> allDrawablesInScopeAndNestedScope = collectAllDrawablesInsideScopesFrom(scopedGraphNode);
-        return allDrawablesInScopeAndNestedScope.stream().filter(drawable -> {
-            List<GraphNode> successors = graph.successors(drawable);
-            if (successors.isEmpty()) return true;
-            // If exists at least one
-            return !allDrawablesInScopeAndNestedScope.containsAll(successors);
-        }).collect(toList());
+        return allDrawablesInScopeAndNestedScope
+                .stream()
+                .filter(drawable -> {
+
+                    List<GraphNode> successors = graph.successors(drawable);
+
+                    if (successors.isEmpty()) return true;
+
+                    // If exists at least one
+                    return !allDrawablesInScopeAndNestedScope.containsAll(successors);
+
+                }).collect(toList());
     }
 
 
@@ -28,13 +34,16 @@ public class ListLastNodeOfScope {
         Collection<GraphNode> scope = scopedGraphNode.getScope();
         Set<GraphNode> allElements = new HashSet<>(scope);
         Set<GraphNode> nested = new HashSet<>();
+
         allElements.forEach(drawable -> {
             if (drawable instanceof ScopedGraphNode) {
                 nested.addAll(collectAllDrawablesInsideScopesFrom((ScopedGraphNode) drawable));
             }
         });
+
         allElements.addAll(nested);
         allElements.add(scopedGraphNode);
+
         return allElements;
     }
 }

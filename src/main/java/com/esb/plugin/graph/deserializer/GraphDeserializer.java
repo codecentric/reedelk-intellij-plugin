@@ -38,6 +38,7 @@ public class GraphDeserializer {
         checkArgument(json != null, "json");
         checkArgument(context != null, "context");
         checkArgument(graphProvider != null, "graph provider");
+
         this.context = context;
         this.flowDefinition = from(json);
         this.graphProvider = graphProvider;

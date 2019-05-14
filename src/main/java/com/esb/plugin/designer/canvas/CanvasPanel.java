@@ -241,6 +241,7 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
      * If the graph has grown beyond the current window size, we must adapt it.
      */
     private void adjustWindowSize() {
+        // TODO: not efficient at all...
         int maxX = snapshot.getGraph().nodes().stream().mapToInt(Drawable::x).max().getAsInt();
         int maxY = snapshot.getGraph().nodes().stream().mapToInt(Drawable::y).max().getAsInt();
         int newSizeX = maxX + Tile.WIDTH;

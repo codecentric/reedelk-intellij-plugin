@@ -22,7 +22,6 @@ public class ComponentDescriptor {
     private List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
     private ComponentDescriptor() {
-        propertyDefinitions.add(new PropertyDefinition("description", String.class));
     }
 
     public String getFullyQualifiedName() {

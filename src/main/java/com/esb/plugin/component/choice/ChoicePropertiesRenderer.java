@@ -35,9 +35,7 @@ public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
         DefaultPropertiesPanel propertiesListPanel = new DefaultPropertiesPanel(snapshot, componentData);
 
         componentData.descriptorProperties().forEach(propertyName ->
-                propertiesListPanel.addPropertyField(
-                        capitalize(propertyName),
-                        propertyName.toLowerCase()));
+                propertiesListPanel.addPropertyField(capitalize(propertyName), propertyName.toLowerCase()));
 
         JBPanel container = new JBPanel();
         container.setLayout(new BorderLayout());

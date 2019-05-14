@@ -32,9 +32,9 @@ public class GenericComponentSerializerTest extends AbstractGraphTest {
         JSONArray sequence = new JSONArray();
         ComponentData componentData = new ComponentData(ComponentDescriptor.create()
                 .propertyDefinitions(asList(
-                        new PropertyDefinition("property1", String.class),
-                        new PropertyDefinition("property2", String.class),
-                        new PropertyDefinition("property3", String.class)))
+                        createPropertyDefinition("property1", String.class),
+                        createPropertyDefinition("property2", String.class),
+                        createPropertyDefinition("property3", String.class)))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build());
         GraphNode genericComponent = new GenericComponentNode(componentData);
@@ -55,5 +55,10 @@ public class GenericComponentSerializerTest extends AbstractGraphTest {
         String actualJson = serializedObject.toString(2);
         String expectedJson = GenericComponent.Sample.json();
         JSONAssert.assertEquals(expectedJson, actualJson, true);
+    }
+
+    // Fixme
+    private PropertyDefinition createPropertyDefinition(String propertyName, Class<?> propertyClass) {
+        return new PropertyDefinition(propertyName, propertyClass, true, "", "");
     }
 }

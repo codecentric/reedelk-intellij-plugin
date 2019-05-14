@@ -13,6 +13,7 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.util.Collection;
+import java.util.Set;
 
 public class PalettePanel extends JBPanel {
 
@@ -40,13 +41,8 @@ public class PalettePanel extends JBPanel {
 
         add(componentsTreeScrollPanel, BorderLayout.CENTER);
 
-        fetchAllComponents(module, components);
-    }
-
-    private void fetchAllComponents(Module module, DefaultMutableTreeNode components) {
-        ComponentService
-                .getInstance(module)
-                .asyncFindAllComponents(descriptors -> updatePaletteComponentsList(components, descriptors));
+        Set<ComponentDescriptor> componentDescriptors = ComponentService.getInstance(module).listComponents();
+        updatePaletteComponentsList(components, componentDescriptors);
     }
 
     private void expandRows() {
