@@ -23,23 +23,20 @@ class PropertyDefinitionAnalyzer {
     }
 
     Optional<ComponentPropertyDescriptor> analyze(FieldInfo fieldInfo) {
-        if (!fieldInfo.hasAnnotation(Property.class.getName())) {
-            return Optional.empty();
-        }
-
-        boolean required = fieldInfo.hasAnnotation(Required.class.getName());
-
-        String propertyName = fieldInfo.getName();
-        String displayName = getAnnotationValueOrDefault(fieldInfo, Property.class, fieldInfo.getName());
-
-        PropertyTypeDescriptor propertyType = getPropertyType(fieldInfo);
-        Object defaultValue = getAnnotationValueOrDefault(fieldInfo, Default.class, propertyType.defaultValue());
-
-        ComponentPropertyDescriptor definition =
-                new ComponentPropertyDescriptor(propertyName, displayName, required, defaultValue, propertyType);
-
-        return Optional.of(definition);
+        return fieldInfo.hasAnnotation(Property.class.getName()) ?
+                Optional.of(analyzeProperty(fieldInfo)) :
+                Optional.empty();
     }
+
+    private ComponentPropertyDescriptor analyzeProperty(FieldInfo propertyInfo) {
+        String propertyName = propertyInfo.getName();
+        String displayName = getAnnotationValueOrDefault(propertyInfo, Property.class, propertyInfo.getName());
+        PropertyTypeDescriptor propertyType = getPropertyType(propertyInfo);
+        Object defaultValue = getAnnotationValueOrDefault(propertyInfo, Default.class, propertyType.defaultValue());
+        boolean required = propertyInfo.hasAnnotation(Required.class.getName());
+        return new ComponentPropertyDescriptor(propertyName, displayName, required, defaultValue, propertyType);
+    }
+
 
     private PropertyTypeDescriptor getPropertyType(FieldInfo fieldInfo) {
         TypeSignature typeSignature = fieldInfo.getTypeDescriptor();
