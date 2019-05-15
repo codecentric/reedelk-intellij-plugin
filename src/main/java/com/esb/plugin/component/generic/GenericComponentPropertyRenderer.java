@@ -7,8 +7,6 @@ import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.ui.components.JBPanel;
 
-import static org.apache.commons.lang3.StringUtils.capitalize;
-
 public class GenericComponentPropertyRenderer extends AbstractPropertyRenderer {
 
     public GenericComponentPropertyRenderer(GraphSnapshot snapshot) {
@@ -21,10 +19,11 @@ public class GenericComponentPropertyRenderer extends AbstractPropertyRenderer {
 
         DefaultPropertiesPanel propertiesListPanel = new DefaultPropertiesPanel(snapshot, componentData);
 
-        componentData.descriptorProperties().forEach(propertyName ->
-                propertiesListPanel.addPropertyField(
-                        capitalize(propertyName),
-                        propertyName.toLowerCase()));
+        componentData.getPropertyDefinitions()
+                .forEach(propertyDefinition ->
+                        propertiesListPanel.addPropertyField(
+                                propertyDefinition.getDisplayName(),
+                                propertyDefinition.getPropertyName()));
 
         return propertiesListPanel;
     }

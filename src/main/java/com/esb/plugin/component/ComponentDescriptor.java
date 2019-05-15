@@ -3,10 +3,7 @@ package com.esb.plugin.component;
 import com.esb.plugin.service.module.impl.PropertyDefinition;
 
 import java.awt.datatransfer.DataFlavor;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
@@ -46,6 +43,10 @@ public class ComponentDescriptor {
                 .collect(toList());
     }
 
+    public List<PropertyDefinition> getPropertyDefinitions() {
+        return Collections.unmodifiableList(propertyDefinitions);
+    }
+
     public static Builder create() {
         return new Builder();
     }
@@ -69,7 +70,8 @@ public class ComponentDescriptor {
                 .findFirst()
                 .orElseThrow(() -> {
                     throw new IllegalStateException("Property not found");
-                }).getPropertyType();
+                })
+                .getPropertyType();
     }
 
 
