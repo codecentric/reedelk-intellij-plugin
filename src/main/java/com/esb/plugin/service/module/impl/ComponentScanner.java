@@ -1,6 +1,6 @@
 package com.esb.plugin.service.module.impl;
 
-import com.esb.api.annotation.EsbComponent;
+import com.esb.api.annotation.ESBComponent;
 import com.esb.plugin.component.ComponentDescriptor;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
@@ -17,13 +17,13 @@ public class ComponentScanner {
     public CompletableFuture<Void> scan(Consumer<List<ComponentDescriptor>> callback, String classPath) {
         return CompletableFuture.supplyAsync(() -> {
 
-            ScanResult scanResult = new ClassGraph().overrideClasspath(classPath)
+            ScanResult scanResult = new ClassGraph()
+                    .overrideClasspath(classPath)
                     .enableSystemJarsAndModules()
                     .enableAllInfo() // TODO: Enable all info must be fixed
                     .scan();
 
             processScanResult(callback, scanResult);
-
             return null;
         });
     }
@@ -37,18 +37,21 @@ public class ComponentScanner {
                     .scan();
 
             processScanResult(callback, scanResult);
-
             return null;
         });
     }
 
     private void processScanResult(Consumer<List<ComponentDescriptor>> callback, ScanResult scanResult) {
         List<ComponentDescriptor> componentDescriptors = new ArrayList<>();
-        ClassInfoList classInfoList = scanResult.getClassesWithAnnotation(EsbComponent.class.getName());
+        ClassInfoList classInfoList = scanResult.getClassesWithAnnotation(ESBComponent.class.getName());
         for (ClassInfo classInfo : classInfoList) {
-            ComponentAnalyzer componentAnalyzer = new ComponentAnalyzer();
-            ComponentDescriptor descriptor = componentAnalyzer.analyze(classInfo);
-            componentDescriptors.add(descriptor);
+            try {
+                ComponentAnalyzer componentAnalyzer = new ComponentAnalyzer();
+                ComponentDescriptor descriptor = componentAnalyzer.analyze(classInfo);
+                componentDescriptors.add(descriptor);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         callback.accept(componentDescriptors);
