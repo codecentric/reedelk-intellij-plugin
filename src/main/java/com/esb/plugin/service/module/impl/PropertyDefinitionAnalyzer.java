@@ -68,7 +68,6 @@ class PropertyDefinitionAnalyzer {
 
         } else if (isEnum(fullyQualifiedClassName)) {
             return processEnumType(typeSignature);
-
         } else {
             throw new UnsupportedType(fullyQualifiedClassName);
         }
