@@ -7,11 +7,12 @@ import com.esb.plugin.component.ComponentPropertyDescriptor;
 import com.esb.plugin.component.EnumTypeDescriptor;
 import com.esb.plugin.component.PrimitiveTypeDescriptor;
 import com.esb.plugin.component.PropertyTypeDescriptor;
-import com.esb.plugin.converter.PropertyValueConverterFactory;
 import io.github.classgraph.*;
 
 import java.util.Arrays;
 import java.util.Optional;
+
+import static com.esb.plugin.converter.PropertyValueConverterFactory.isKnownType;
 
 class PropertyDefinitionAnalyzer {
 
@@ -57,7 +58,7 @@ class PropertyDefinitionAnalyzer {
 
     private PropertyTypeDescriptor processClassRefType(ClassRefTypeSignature typeSignature) {
         String fullyQualifiedClassName = typeSignature.getFullyQualifiedClassName();
-        if (PropertyValueConverterFactory.isKnownType(fullyQualifiedClassName)) {
+        if (isKnownType(fullyQualifiedClassName)) {
             try {
                 return new PrimitiveTypeDescriptor(Class.forName(fullyQualifiedClassName));
             } catch (ClassNotFoundException e) {
@@ -65,7 +66,6 @@ class PropertyDefinitionAnalyzer {
                 // Otherwise the @PropertyValueConverterFactory class would not even compile.
                 throw new UnsupportedType(fullyQualifiedClassName);
             }
-
         } else if (isEnum(fullyQualifiedClassName)) {
             return processEnumType(typeSignature);
         } else {
@@ -74,6 +74,7 @@ class PropertyDefinitionAnalyzer {
     }
 
     private EnumTypeDescriptor processEnumType(ClassRefTypeSignature enumRefType) {
+        // TODO: Finish me!
         return new EnumTypeDescriptor(Arrays.asList("one", "two"), "one");
     }
 
