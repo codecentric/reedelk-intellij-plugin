@@ -12,15 +12,15 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
-public class ComponentAnalyzer {
+class ComponentAnalyzer {
 
     private final PropertyDefinitionAnalyzer propertyAnalyzer;
 
-    public ComponentAnalyzer(ComponentAnalyzerContext context) {
+    ComponentAnalyzer(ComponentAnalyzerContext context) {
         this.propertyAnalyzer = new PropertyDefinitionAnalyzer(context);
     }
 
-    public ComponentDescriptor analyze(ClassInfo classInfo) {
+    ComponentDescriptor analyze(ClassInfo classInfo) {
         String displayName = getComponentDisplayName(classInfo);
         return ComponentDescriptor.create()
                 .fullyQualifiedName(classInfo.getName())

@@ -10,15 +10,15 @@ import io.github.classgraph.*;
 
 import java.util.Optional;
 
-public class PropertyDefinitionAnalyzer {
+class PropertyDefinitionAnalyzer {
 
     private final ComponentAnalyzerContext context;
 
-    public PropertyDefinitionAnalyzer(ComponentAnalyzerContext context) {
+    PropertyDefinitionAnalyzer(ComponentAnalyzerContext context) {
         this.context = context;
     }
 
-    public Optional<PropertyDescriptor> analyze(FieldInfo fieldInfo) {
+    Optional<PropertyDescriptor> analyze(FieldInfo fieldInfo) {
         if (!isComponentProperty(fieldInfo)) return Optional.empty();
 
         Class<?> propertyType = getPropertyType(fieldInfo);

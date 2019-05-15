@@ -15,11 +15,11 @@ import java.util.function.Consumer;
 
 import static java.lang.String.format;
 
-public class ComponentScanner {
+class ComponentScanner {
 
     private static final Logger LOG = Logger.getInstance(ComponentScanner.class);
 
-    public CompletableFuture<Void> scan(Consumer<List<ComponentDescriptor>> callback, String classPath) {
+    CompletableFuture<Void> scan(Consumer<List<ComponentDescriptor>> callback, String classPath) {
         return CompletableFuture.supplyAsync(() -> {
             ScanResult scanResult = new ClassGraph()
                     .overrideClasspath(classPath)
@@ -31,7 +31,7 @@ public class ComponentScanner {
         });
     }
 
-    public CompletableFuture<Void> scanPackages(Consumer<List<ComponentDescriptor>> callback, String... packages) {
+    CompletableFuture<Void> scanPackages(Consumer<List<ComponentDescriptor>> callback, String... packages) {
         return CompletableFuture.supplyAsync(() -> {
             ScanResult scanResult = new ClassGraph()
                     .whitelistPackages(packages)

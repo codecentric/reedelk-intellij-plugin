@@ -11,15 +11,12 @@ import java.util.concurrent.ExecutionException;
 
 public class ComponentServiceImpl implements ComponentService {
 
-    private ComponentScanner componentScanner = new ComponentScanner();
-
-    // TODO: This should not be hardcoded here.
-    public static final String SYSTEM_COMPONENTS_BASE_PACKAGE = "com.esb.component";
+    private static final String SYSTEM_COMPONENTS_BASE_PACKAGE = "com.esb.component";
 
     private final Module module;
-    private Set<ComponentDescriptor> componentDescriptors = new HashSet<>();
 
-    // TODO: each path should scan stuff...
+    private ComponentScanner componentScanner = new ComponentScanner();
+    private Set<ComponentDescriptor> componentDescriptors = new HashSet<>();
 
     public ComponentServiceImpl(Module module) {
         this.module = module;
