@@ -9,6 +9,6 @@ public class EnumTypePropertyRenderer implements PropertyRenderer {
 
     @Override
     public void render(ComponentPropertyDescriptor descriptor, ComponentData componentData, DefaultPropertiesPanel parent, GraphSnapshot snapshot) {
-
+        // This should be rendered as a dropdown.
     }
 }

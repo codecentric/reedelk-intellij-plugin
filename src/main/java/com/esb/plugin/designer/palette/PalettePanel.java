@@ -2,7 +2,7 @@ package com.esb.plugin.designer.palette;
 
 import com.esb.plugin.commons.Icons;
 import com.esb.plugin.component.ComponentDescriptor;
-import com.esb.plugin.component.ComponentTransferHandler;
+import com.esb.plugin.component.ComponentTransferableHandler;
 import com.esb.plugin.service.module.ComponentService;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBPanel;
@@ -34,7 +34,7 @@ public class PalettePanel extends JBPanel {
         tree.setCellRenderer(renderer);
         tree.setRootVisible(false);
         tree.setDragEnabled(true);
-        tree.setTransferHandler(new ComponentTransferHandler());
+        tree.setTransferHandler(new ComponentTransferableHandler());
 
 
         JBScrollPane componentsTreeScrollPanel = new JBScrollPane(tree);

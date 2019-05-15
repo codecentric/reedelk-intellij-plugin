@@ -4,4 +4,5 @@ public interface PropertyTypeDescriptor {
 
     Class<?> type();
 
+    Object defaultValue();
 }

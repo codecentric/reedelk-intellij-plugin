@@ -2,7 +2,7 @@ package com.esb.plugin.component.generic;
 
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.component.ComponentData;
-import com.esb.plugin.component.PrimitiveTypeDescriptor;
+import com.esb.plugin.component.PropertyTypeDescriptor;
 import com.esb.plugin.converter.PropertyValueConverterFactory;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.deserializer.AbstractDeserializer;
@@ -32,11 +32,9 @@ public class GenericComponentDeserializer extends AbstractDeserializer {
             // TODO: we should say if mandatory or not with annotations
             if (componentDefinition.has(propertyName)) {
 
-                PrimitiveTypeDescriptor propertyTypeDescriptor = componentData.getPropertyType(propertyName);
+                PropertyTypeDescriptor propertyType = componentData.getPropertyType(propertyName);
 
-                Object propertyValue;
-                propertyValue = PropertyValueConverterFactory
-                        .forType(propertyTypeDescriptor)
+                Object propertyValue = PropertyValueConverterFactory.forType(propertyType)
                         .from(propertyName, componentDefinition);
 
                 // TODO: Should this be in the converter!?!?
@@ -50,7 +48,6 @@ public class GenericComponentDeserializer extends AbstractDeserializer {
         });
 
         graph.add(parent, node);
-
         return node;
     }
 

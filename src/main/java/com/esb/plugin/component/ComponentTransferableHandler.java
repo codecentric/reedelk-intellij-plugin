@@ -4,7 +4,7 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.datatransfer.Transferable;
 
-public class ComponentTransferHandler extends TransferHandler {
+public class ComponentTransferableHandler extends TransferHandler {
 
     public int getSourceActions(JComponent Source) {
         return COPY_OR_MOVE;
