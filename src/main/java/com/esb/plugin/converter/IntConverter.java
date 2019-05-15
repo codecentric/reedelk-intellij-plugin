@@ -1,5 +1,7 @@
 package com.esb.plugin.converter;
 
+import org.json.JSONObject;
+
 public class IntConverter implements PropertyValueConverter<Integer> {
 
     @Override
@@ -16,4 +18,10 @@ public class IntConverter implements PropertyValueConverter<Integer> {
             return 0;
         }
     }
+
+    @Override
+    public Integer from(String key, JSONObject object) {
+        return object.getInt(key);
+    }
+
 }

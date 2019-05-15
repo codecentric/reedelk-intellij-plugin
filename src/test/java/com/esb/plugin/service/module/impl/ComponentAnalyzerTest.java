@@ -48,6 +48,24 @@ public class ComponentAnalyzerTest {
         assertExistsPropertyDefinition(descriptor, "property2", "Property 2", null, String.class, false);
     }
 
+    @Test
+    void shouldCorrectlyAnalyzeEnum() {
+        // Given
+        ScanResult scanResult = new ClassGraph()
+                .whitelistPackages("com.esb.plugin.service.module.impl")
+                .enableSystemJarsAndModules()
+                .enableAllInfo()
+                .scan();
+
+        // When
+        ClassInfoList classesWithAnnotation = scanResult.getClassesWithAnnotation(ESBComponent.class.getName());
+        ClassInfo testComponentClassInfo = classesWithAnnotation.get(0);
+
+
+        // Then
+        System.out.println("te");
+    }
+
     private void assertExistsPropertyDefinition(ComponentDescriptor descriptor,
                                                 String expectedPropertyName,
                                                 String expectedDisplayName,

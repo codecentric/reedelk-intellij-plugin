@@ -79,13 +79,12 @@ public class ComponentServiceImpl implements ComponentService {
     }
 
     private void scanClassPathEntries(String[] classPathEntries, List<CompletableFuture<Void>> futures) {
-        Arrays.stream(classPathEntries)
-                .forEach(classPathEntry -> {
-                    CompletableFuture<Void> componentFuture = componentScanner.scan(componentDescriptors ->
-                                    ComponentServiceImpl.this.componentDescriptors.addAll(componentDescriptors),
-                            classPathEntry);
-                    futures.add(componentFuture);
-                });
+        Arrays.stream(classPathEntries).forEach(classPathEntry -> {
+            CompletableFuture<Void> componentFuture = componentScanner.scan(componentDescriptors ->
+                            ComponentServiceImpl.this.componentDescriptors.addAll(componentDescriptors),
+                    classPathEntry);
+            futures.add(componentFuture);
+        });
     }
 
 }

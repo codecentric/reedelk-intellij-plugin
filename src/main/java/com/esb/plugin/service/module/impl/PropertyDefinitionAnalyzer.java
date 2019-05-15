@@ -78,7 +78,9 @@ public class PropertyDefinitionAnalyzer {
                 throw new IllegalStateException("Unsupported type", e);
             }
         }
+
         throw new IllegalStateException("Unsupported type");
     }
+
 
 }
