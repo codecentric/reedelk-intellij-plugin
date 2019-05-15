@@ -16,7 +16,6 @@ public class ComponentServiceImpl implements ComponentService {
     // TODO: This should not be hardcoded here.
     public static final String SYSTEM_COMPONENTS_BASE_PACKAGE = "com.esb.component";
 
-
     private final Module module;
     private Set<ComponentDescriptor> componentDescriptors = new HashSet<>();
 
@@ -41,32 +40,22 @@ public class ComponentServiceImpl implements ComponentService {
                 .librariesOnly()
                 .classes()
                 .getUrls();
-        for (String classPathEntry : classPathEntries) {
-            CompletableFuture<Void> componentFuture = componentScanner.scan(componentDescriptors ->
-                            ComponentServiceImpl.this.componentDescriptors.addAll(componentDescriptors),
-                    classPathEntry);
-            futures.add(componentFuture);
-        }
+        scanClassPathEntries(classPathEntries, futures);
 
-        String[] localProject = ModuleRootManager.getInstance(module)
+
+        String[] currentProjectClassPathEntries = ModuleRootManager.getInstance(module)
                 .orderEntries()
                 .withoutSdk()
                 .withoutLibraries()
                 .classes()
                 .getUrls();
-        for (String localClassPathEntry : localProject) {
-            CompletableFuture<Void> componentFuture = componentScanner.scan(componentDescriptors ->
-                            ComponentServiceImpl.this.componentDescriptors.addAll(componentDescriptors),
-                    localClassPathEntry);
-            futures.add(componentFuture);
-        }
+        scanClassPathEntries(currentProjectClassPathEntries, futures);
 
         try {
             CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-        System.out.println("End");
     }
 
     @Override
@@ -87,6 +76,16 @@ public class ComponentServiceImpl implements ComponentService {
     @Override
     public Set<ComponentDescriptor> listComponents() {
         return Collections.unmodifiableSet(componentDescriptors);
+    }
+
+    private void scanClassPathEntries(String[] classPathEntries, List<CompletableFuture<Void>> futures) {
+        Arrays.stream(classPathEntries)
+                .forEach(classPathEntry -> {
+                    CompletableFuture<Void> componentFuture = componentScanner.scan(componentDescriptors ->
+                                    ComponentServiceImpl.this.componentDescriptors.addAll(componentDescriptors),
+                            classPathEntry);
+                    futures.add(componentFuture);
+                });
     }
 
 }
