@@ -3,7 +3,7 @@ package com.esb.plugin.service.module.impl;
 import com.esb.api.annotation.Default;
 import com.esb.api.annotation.Property;
 import com.esb.api.annotation.Required;
-import com.esb.plugin.component.PropertyDescriptor;
+import com.esb.plugin.component.ComponentPropertyDescriptor;
 import com.esb.plugin.converter.PropertyValueConverterFactory;
 import com.google.common.base.Defaults;
 import io.github.classgraph.*;
@@ -18,7 +18,7 @@ class PropertyDefinitionAnalyzer {
         this.context = context;
     }
 
-    Optional<PropertyDescriptor> analyze(FieldInfo fieldInfo) {
+    Optional<ComponentPropertyDescriptor> analyze(FieldInfo fieldInfo) {
         if (!isComponentProperty(fieldInfo)) return Optional.empty();
 
         Class<?> propertyType = getPropertyType(fieldInfo);
@@ -28,7 +28,7 @@ class PropertyDefinitionAnalyzer {
         boolean required = isRequired(fieldInfo);
 
 
-        PropertyDescriptor definition = new PropertyDescriptor(
+        ComponentPropertyDescriptor definition = new ComponentPropertyDescriptor(
                 propertyName,
                 displayName,
                 propertyType,

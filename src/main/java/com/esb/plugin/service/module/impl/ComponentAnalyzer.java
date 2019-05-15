@@ -2,7 +2,7 @@ package com.esb.plugin.service.module.impl;
 
 import com.esb.api.annotation.ESBComponent;
 import com.esb.plugin.component.ComponentDescriptor;
-import com.esb.plugin.component.PropertyDescriptor;
+import com.esb.plugin.component.ComponentPropertyDescriptor;
 import io.github.classgraph.AnnotationInfo;
 import io.github.classgraph.AnnotationParameterValueList;
 import io.github.classgraph.ClassInfo;
@@ -29,7 +29,7 @@ class ComponentAnalyzer {
                 .build();
     }
 
-    private List<PropertyDescriptor> mapPropertyDefinitions(ClassInfo classInfo) {
+    private List<ComponentPropertyDescriptor> mapPropertyDefinitions(ClassInfo classInfo) {
         return classInfo
                 .getFieldInfo()
                 .stream()

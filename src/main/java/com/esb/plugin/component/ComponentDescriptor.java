@@ -15,7 +15,7 @@ public class ComponentDescriptor {
     private String fullyQualifiedName;
     private String displayName;
 
-    private List<PropertyDescriptor> propertyDescriptors = new ArrayList<>();
+    private List<ComponentPropertyDescriptor> componentPropertyDescriptors = new ArrayList<>();
 
     private ComponentDescriptor() {
     }
@@ -28,21 +28,21 @@ public class ComponentDescriptor {
         return displayName;
     }
 
-    public Optional<PropertyDescriptor> getPropertyDefinition(String propertyName) {
-        return propertyDescriptors
+    public Optional<ComponentPropertyDescriptor> getPropertyDefinition(String propertyName) {
+        return componentPropertyDescriptors
                 .stream()
                 .filter(propertyDefinition -> propertyDefinition.getPropertyName().equals(propertyName))
                 .findFirst();
     }
 
     public List<String> getPropertiesNames() {
-        return propertyDescriptors.stream()
-                .map(PropertyDescriptor::getPropertyName)
+        return componentPropertyDescriptors.stream()
+                .map(ComponentPropertyDescriptor::getPropertyName)
                 .collect(toList());
     }
 
-    public List<PropertyDescriptor> getPropertyDescriptors() {
-        return Collections.unmodifiableList(propertyDescriptors);
+    public List<ComponentPropertyDescriptor> getComponentPropertyDescriptors() {
+        return Collections.unmodifiableList(componentPropertyDescriptors);
     }
 
     public static Builder create() {
@@ -63,7 +63,7 @@ public class ComponentDescriptor {
     }
 
     public Class<?> getPropertyType(String propertyName) {
-        return propertyDescriptors.stream()
+        return componentPropertyDescriptors.stream()
                 .filter(propertyDefinition -> propertyDefinition.getPropertyName().equals(propertyName))
                 .findFirst()
                 .orElseThrow(() -> {
@@ -77,10 +77,10 @@ public class ComponentDescriptor {
 
         private String displayName;
         private String fullyQualifiedName;
-        private List<PropertyDescriptor> propertyDescriptors = new ArrayList<>();
+        private List<ComponentPropertyDescriptor> componentPropertyDescriptors = new ArrayList<>();
 
-        public Builder propertyDefinitions(List<PropertyDescriptor> propertyDescriptors) {
-            this.propertyDescriptors.addAll(propertyDescriptors);
+        public Builder propertyDefinitions(List<ComponentPropertyDescriptor> componentPropertyDescriptors) {
+            this.componentPropertyDescriptors.addAll(componentPropertyDescriptors);
             return this;
         }
 
@@ -98,7 +98,7 @@ public class ComponentDescriptor {
             ComponentDescriptor descriptor = new ComponentDescriptor();
             descriptor.displayName = displayName;
             descriptor.fullyQualifiedName = fullyQualifiedName;
-            descriptor.propertyDescriptors.addAll(propertyDescriptors);
+            descriptor.componentPropertyDescriptors.addAll(componentPropertyDescriptors);
             return descriptor;
         }
     }
