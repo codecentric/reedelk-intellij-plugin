@@ -22,23 +22,22 @@ class PropertyDefinitionAnalyzer {
     }
 
     Optional<ComponentPropertyDescriptor> analyze(FieldInfo fieldInfo) {
-        if (fieldInfo.hasAnnotation(Property.class.getName())) {
-            String propertyName = fieldInfo.getName();
-            boolean required = fieldInfo.hasAnnotation(Required.class.getName());
-            String displayName = getAnnotationValueOrDefault(fieldInfo, Property.class, fieldInfo.getName());
-
-            PropertyTypeDescriptor propertyType = getPropertyType(fieldInfo);
-            Object defaultValue = getAnnotationValueOrDefault(fieldInfo, Default.class, propertyType.defaultValue());
-
-            ComponentPropertyDescriptor definition =
-                    new ComponentPropertyDescriptor(propertyName, displayName, required, defaultValue, propertyType);
-
-            return Optional.of(definition);
-
-        } else {
+        if (!fieldInfo.hasAnnotation(Property.class.getName())) {
             return Optional.empty();
         }
 
+        boolean required = fieldInfo.hasAnnotation(Required.class.getName());
+
+        String propertyName = fieldInfo.getName();
+        String displayName = getAnnotationValueOrDefault(fieldInfo, Property.class, fieldInfo.getName());
+
+        PropertyTypeDescriptor propertyType = getPropertyType(fieldInfo);
+        Object defaultValue = getAnnotationValueOrDefault(fieldInfo, Default.class, propertyType.defaultValue());
+
+        ComponentPropertyDescriptor definition =
+                new ComponentPropertyDescriptor(propertyName, displayName, required, defaultValue, propertyType);
+
+        return Optional.of(definition);
     }
 
     private PropertyTypeDescriptor getPropertyType(FieldInfo fieldInfo) {
@@ -48,7 +47,7 @@ class PropertyDefinitionAnalyzer {
         } else if (typeSignature instanceof ClassRefTypeSignature) {
             return processClassRefType((ClassRefTypeSignature) typeSignature);
         } else {
-            throw new IllegalStateException("Unsupported type");
+            throw new UnsupportedType(typeSignature.getClass());
         }
     }
 
@@ -60,17 +59,18 @@ class PropertyDefinitionAnalyzer {
         String fullyQualifiedClassName = typeSignature.getFullyQualifiedClassName();
         if (PropertyValueConverterFactory.isKnownType(fullyQualifiedClassName)) {
             try {
-                return new PrimitiveTypeDescriptor(Class.forName(typeSignature.getFullyQualifiedClassName()));
+                return new PrimitiveTypeDescriptor(Class.forName(fullyQualifiedClassName));
             } catch (ClassNotFoundException e) {
                 // if it is a known type, then the class must be resolvable.
-                // Otherwise the @PropertyValueConverterFactory class would not even
-                // compile.
-                throw new IllegalStateException("Unsupported Type");
+                // Otherwise the @PropertyValueConverterFactory class would not even compile.
+                throw new UnsupportedType(fullyQualifiedClassName);
             }
+
         } else if (isEnum(fullyQualifiedClassName)) {
             return processEnumType(typeSignature);
+
         } else {
-            throw new IllegalStateException("Unsupported Type");
+            throw new UnsupportedType(fullyQualifiedClassName);
         }
     }
 
@@ -88,13 +88,12 @@ class PropertyDefinitionAnalyzer {
 
     @SuppressWarnings("unchecked")
     private <T> T getAnnotationValueOrDefault(FieldInfo fieldInfo, Class<?> annotationClazz, T defaultValue) {
-        if (fieldInfo.hasAnnotation(annotationClazz.getName())) {
-            AnnotationInfo annotationInfo = fieldInfo.getAnnotationInfo(annotationClazz.getName());
-            AnnotationParameterValueList parameterValues = annotationInfo.getParameterValues();
-            return (T) parameterValues.getValue("value");
-        } else {
+        if (!fieldInfo.hasAnnotation(annotationClazz.getName())) {
             return defaultValue;
         }
+        AnnotationInfo annotationInfo = fieldInfo.getAnnotationInfo(annotationClazz.getName());
+        AnnotationParameterValueList parameterValues = annotationInfo.getParameterValues();
+        return (T) parameterValues.getValue("value");
     }
 
 }
