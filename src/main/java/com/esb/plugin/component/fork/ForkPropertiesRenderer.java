@@ -1,7 +1,7 @@
 package com.esb.plugin.component.fork;
 
 import com.esb.plugin.component.ComponentData;
-import com.esb.plugin.designer.properties.AbstractPropertiesRenderer;
+import com.esb.plugin.designer.properties.renderer.AbstractPropertiesRenderer;
 import com.esb.plugin.designer.properties.widget.DefaultPropertiesPanel;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;

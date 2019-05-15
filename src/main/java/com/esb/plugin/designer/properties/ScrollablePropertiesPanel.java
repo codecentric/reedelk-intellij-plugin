@@ -9,9 +9,10 @@ public class ScrollablePropertiesPanel extends JBScrollPane implements SelectLis
 
     private PropertiesPanel propertiesPanel;
 
-    public ScrollablePropertiesPanel(PropertiesPanel propertiesPanel) {
-        super(propertiesPanel);
-        this.propertiesPanel = propertiesPanel;
+    public ScrollablePropertiesPanel() {
+        super();
+        this.propertiesPanel = new PropertiesPanel();
+        setViewportView(propertiesPanel);
         createVerticalScrollBar();
         setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_AS_NEEDED);
     }

@@ -1,4 +1,4 @@
-package com.esb.plugin.designer.properties;
+package com.esb.plugin.designer.properties.renderer;
 
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.ComponentPropertyDescriptor;

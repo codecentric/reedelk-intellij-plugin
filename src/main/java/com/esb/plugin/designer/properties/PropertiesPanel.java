@@ -3,6 +3,7 @@ package com.esb.plugin.designer.properties;
 import com.esb.plugin.commons.Icons;
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.designer.SelectListener;
+import com.esb.plugin.designer.properties.renderer.PropertiesRendererFactory;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.NothingSelectedNode;

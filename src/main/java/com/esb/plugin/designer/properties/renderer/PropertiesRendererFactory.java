@@ -1,4 +1,4 @@
-package com.esb.plugin.designer.properties;
+package com.esb.plugin.designer.properties.renderer;
 
 import com.esb.api.exception.ESBException;
 import com.esb.component.Choice;

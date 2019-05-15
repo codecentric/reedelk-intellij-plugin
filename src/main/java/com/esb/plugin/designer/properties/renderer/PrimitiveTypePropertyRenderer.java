@@ -1,7 +1,8 @@
-package com.esb.plugin.designer.properties;
+package com.esb.plugin.designer.properties.renderer;
 
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.ComponentPropertyDescriptor;
+import com.esb.plugin.component.PrimitiveTypeDescriptor;
 import com.esb.plugin.converter.PropertyValueConverter;
 import com.esb.plugin.converter.PropertyValueConverterFactory;
 import com.esb.plugin.designer.properties.widget.DefaultPropertiesPanel;
@@ -18,7 +19,7 @@ public class PrimitiveTypePropertyRenderer implements PropertyRenderer {
 
         PropertyInput input = new PropertyInput();
 
-        Class<?> propertyType = componentData.getPropertyType(propertyName);
+        PrimitiveTypeDescriptor propertyType = componentData.getPropertyType(propertyName);
         PropertyValueConverter<?> converter = PropertyValueConverterFactory.forType(propertyType);
 
         Object propertyValue = componentData.get(propertyName);
