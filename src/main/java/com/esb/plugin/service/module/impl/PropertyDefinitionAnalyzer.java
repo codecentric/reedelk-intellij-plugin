@@ -22,51 +22,23 @@ class PropertyDefinitionAnalyzer {
     }
 
     Optional<ComponentPropertyDescriptor> analyze(FieldInfo fieldInfo) {
-        if (!hasPropertyAnnotation(fieldInfo)) return Optional.empty();
+        if (fieldInfo.hasAnnotation(Property.class.getName())) {
+            String propertyName = fieldInfo.getName();
+            boolean required = fieldInfo.hasAnnotation(Required.class.getName());
+            String displayName = getAnnotationValueOrDefault(fieldInfo, Property.class, fieldInfo.getName());
 
-        boolean required = isRequired(fieldInfo);
-        String displayName = getDisplayName(fieldInfo);
-        String propertyName = getPropertyName(fieldInfo);
-        PropertyTypeDescriptor propertyType = getPropertyType(fieldInfo);
-        Object defaultValue = getDefaultValue(fieldInfo, propertyType);
+            PropertyTypeDescriptor propertyType = getPropertyType(fieldInfo);
+            Object defaultValue = getAnnotationValueOrDefault(fieldInfo, Default.class, propertyType.defaultValue());
 
-        ComponentPropertyDescriptor definition =
-                new ComponentPropertyDescriptor(propertyName, displayName, required, defaultValue, propertyType);
+            ComponentPropertyDescriptor definition =
+                    new ComponentPropertyDescriptor(propertyName, displayName, required, defaultValue, propertyType);
 
-        return Optional.of(definition);
-    }
+            return Optional.of(definition);
 
-    private boolean hasPropertyAnnotation(FieldInfo fieldInfo) {
-        return fieldInfo.hasAnnotation(Property.class.getName());
-    }
-
-    private boolean isRequired(FieldInfo fieldInfo) {
-        return fieldInfo.hasAnnotation(Required.class.getName());
-    }
-
-    private String getPropertyName(FieldInfo fieldInfo) {
-        return fieldInfo.getName();
-    }
-
-    private String getDisplayName(FieldInfo fieldInfo) {
-        AnnotationInfo propertyAnnotationInfo = fieldInfo.getAnnotationInfo(Property.class.getName());
-        if (propertyAnnotationInfo != null) {
-            AnnotationParameterValueList parameterValues = propertyAnnotationInfo.getParameterValues();
-            return (String) parameterValues.getValue("value");
         } else {
-            return fieldInfo.getName();
+            return Optional.empty();
         }
-    }
 
-    private Object getDefaultValue(FieldInfo fieldInfo, PropertyTypeDescriptor expectedType) {
-        boolean hasDefault = fieldInfo.hasAnnotation(Default.class.getName());
-        if (hasDefault) {
-            AnnotationInfo defaultAnnotationInfo = fieldInfo.getAnnotationInfo(Default.class.getName());
-            AnnotationParameterValueList defaultAnnotationParameterValueList = defaultAnnotationInfo.getParameterValues();
-            String value = (String) defaultAnnotationParameterValueList.getValue("value");
-            return PropertyValueConverterFactory.forType(expectedType).from(value);
-        }
-        return expectedType.defaultValue();
     }
 
     private PropertyTypeDescriptor getPropertyType(FieldInfo fieldInfo) {
@@ -112,6 +84,17 @@ class PropertyDefinitionAnalyzer {
                 .getSuperclasses()
                 .stream()
                 .anyMatch(info -> info.getName().equals(Enum.class.getName()));
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> T getAnnotationValueOrDefault(FieldInfo fieldInfo, Class<?> annotationClazz, T defaultValue) {
+        if (fieldInfo.hasAnnotation(annotationClazz.getName())) {
+            AnnotationInfo annotationInfo = fieldInfo.getAnnotationInfo(annotationClazz.getName());
+            AnnotationParameterValueList parameterValues = annotationInfo.getParameterValues();
+            return (T) parameterValues.getValue("value");
+        } else {
+            return defaultValue;
+        }
     }
 
 }
