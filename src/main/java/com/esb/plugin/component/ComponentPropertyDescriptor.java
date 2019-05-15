@@ -8,30 +8,30 @@ public class ComponentPropertyDescriptor {
     private final String displayName;
     private final String propertyName;
     private final Object defaultValue;
-    private final PropertyPrimitiveTypeDescriptor propertyTypeDescriptor;
+    private final PropertyTypeDescriptor propertyType;
 
     public ComponentPropertyDescriptor(
             final String propertyName,
             final String displayName,
             final boolean required,
             final Object defaultValue,
-            final PropertyPrimitiveTypeDescriptor propertyTypeDescriptor) {
+            final PropertyTypeDescriptor propertyType) {
 
         checkState(propertyName != null, "property name");
-        checkState(propertyTypeDescriptor != null, "property type descriptor");
+        checkState(propertyType != null, "property type");
         this.required = required;
         this.displayName = displayName;
         this.propertyName = propertyName;
         this.defaultValue = defaultValue;
-        this.propertyTypeDescriptor = propertyTypeDescriptor;
+        this.propertyType = propertyType;
     }
 
     public String getPropertyName() {
         return propertyName;
     }
 
-    public PropertyPrimitiveTypeDescriptor getPropertyType() {
-        return propertyTypeDescriptor;
+    public PropertyTypeDescriptor getPropertyType() {
+        return propertyType;
     }
 
     public boolean isRequired() {

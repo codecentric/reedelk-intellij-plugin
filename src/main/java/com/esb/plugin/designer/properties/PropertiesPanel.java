@@ -59,7 +59,7 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
     }
 
     private JBPanel createPropertiesPanel(ComponentData componentData, GraphSnapshot snapshot, GraphNode node) {
-        JBPanel propertiesPanel = PropertyRendererFactory.get()
+        JBPanel propertiesPanel = PropertiesRendererFactory.get()
                 .component(componentData)
                 .snapshot(snapshot)
                 .build()

@@ -3,7 +3,7 @@ package com.esb.plugin.component.choice;
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.choice.widget.ChoiceRouteTable;
 import com.esb.plugin.component.choice.widget.ConditionRouteTableModel;
-import com.esb.plugin.designer.properties.AbstractPropertyRenderer;
+import com.esb.plugin.designer.properties.AbstractPropertiesRenderer;
 import com.esb.plugin.designer.properties.widget.DefaultPropertiesPanel;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
@@ -17,7 +17,7 @@ import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 import static org.apache.commons.lang3.StringUtils.capitalize;
 
-public class ChoicePropertiesRenderer extends AbstractPropertyRenderer {
+public class ChoicePropertiesRenderer extends AbstractPropertiesRenderer {
 
     public ChoicePropertiesRenderer(GraphSnapshot snapshot) {
         super(snapshot);

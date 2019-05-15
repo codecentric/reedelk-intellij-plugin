@@ -7,10 +7,10 @@ import com.esb.component.Fork;
 import com.esb.component.Stop;
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.choice.ChoicePropertiesRenderer;
-import com.esb.plugin.component.flowreference.FlowReferencePropertyRenderer;
-import com.esb.plugin.component.fork.ForkPropertyRenderer;
-import com.esb.plugin.component.generic.GenericComponentPropertyRenderer;
-import com.esb.plugin.component.stop.StopPropertyRenderer;
+import com.esb.plugin.component.flowreference.FlowReferencePropertiesRenderer;
+import com.esb.plugin.component.fork.ForkPropertiesRenderer;
+import com.esb.plugin.component.generic.GenericComponentPropertiesRenderer;
+import com.esb.plugin.component.stop.StopPropertiesRenderer;
 import com.esb.plugin.graph.GraphSnapshot;
 
 import java.lang.reflect.InvocationTargetException;
@@ -20,49 +20,49 @@ import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class PropertyRendererFactory {
+public class PropertiesRendererFactory {
 
-    private static final Class<? extends PropertyRenderer> GENERIC_RENDERER = GenericComponentPropertyRenderer.class;
-    private static final Map<String, Class<? extends PropertyRenderer>> RENDERER;
+    private static final Class<? extends PropertiesRenderer> GENERIC_RENDERER = GenericComponentPropertiesRenderer.class;
+    private static final Map<String, Class<? extends PropertiesRenderer>> RENDERER;
     static {
-        Map<String, Class<? extends PropertyRenderer>> tmp = new HashMap<>();
-        tmp.put(Stop.class.getName(), StopPropertyRenderer.class);
-        tmp.put(Fork.class.getName(), ForkPropertyRenderer.class);
+        Map<String, Class<? extends PropertiesRenderer>> tmp = new HashMap<>();
+        tmp.put(Stop.class.getName(), StopPropertiesRenderer.class);
+        tmp.put(Fork.class.getName(), ForkPropertiesRenderer.class);
         tmp.put(Choice.class.getName(), ChoicePropertiesRenderer.class);
-        tmp.put(FlowReference.class.getName(), FlowReferencePropertyRenderer.class);
+        tmp.put(FlowReference.class.getName(), FlowReferencePropertiesRenderer.class);
         RENDERER = Collections.unmodifiableMap(tmp);
     }
 
     private GraphSnapshot snapshot;
     private ComponentData componentData;
 
-    private PropertyRendererFactory() {
+    private PropertiesRendererFactory() {
     }
 
-    public static PropertyRendererFactory get() {
-        return new PropertyRendererFactory();
+    public static PropertiesRendererFactory get() {
+        return new PropertiesRendererFactory();
     }
 
-    public PropertyRendererFactory snapshot(GraphSnapshot snapshot) {
+    public PropertiesRendererFactory snapshot(GraphSnapshot snapshot) {
         this.snapshot = snapshot;
         return this;
     }
 
-    public PropertyRendererFactory component(ComponentData componentData) {
+    public PropertiesRendererFactory component(ComponentData componentData) {
         this.componentData = componentData;
         return this;
     }
 
-    public PropertyRenderer build() {
+    public PropertiesRenderer build() {
         checkNotNull(snapshot, "snapshot");
         checkNotNull(componentData, "componentData");
 
         String fullyQualifiedName = componentData.getFullyQualifiedName();
-        Class<? extends PropertyRenderer> rendererClazz = RENDERER.getOrDefault(fullyQualifiedName, GENERIC_RENDERER);
+        Class<? extends PropertiesRenderer> rendererClazz = RENDERER.getOrDefault(fullyQualifiedName, GENERIC_RENDERER);
         return instantiateRenderer(rendererClazz);
     }
 
-    private PropertyRenderer instantiateRenderer(Class<? extends PropertyRenderer> rendererClazz) {
+    private PropertiesRenderer instantiateRenderer(Class<? extends PropertiesRenderer> rendererClazz) {
         try {
             return rendererClazz
                     .getConstructor(GraphSnapshot.class)

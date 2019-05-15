@@ -62,7 +62,7 @@ public class ComponentDescriptor {
         return Objects.hash(fullyQualifiedName);
     }
 
-    public Class<?> getPropertyType(String propertyName) {
+    public PrimitiveTypeDescriptor getPropertyType(String propertyName) {
         return componentPropertyDescriptors.stream()
                 .filter(propertyDefinition -> propertyDefinition.getPropertyName().equals(propertyName))
                 .findFirst()

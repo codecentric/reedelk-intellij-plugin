@@ -42,11 +42,11 @@ public class ComponentData {
         return descriptor.getPropertiesNames();
     }
 
-    public List<ComponentPropertyDescriptor> getPropertyDefinitions() {
+    public List<ComponentPropertyDescriptor> getComponentPropertyDescriptors() {
         return descriptor.getComponentPropertyDescriptors();
     }
 
-    public Class<?> getPropertyType(String propertyName) {
+    public PrimitiveTypeDescriptor getPropertyType(String propertyName) {
         return descriptor.getPropertyType(propertyName);
     }
 }

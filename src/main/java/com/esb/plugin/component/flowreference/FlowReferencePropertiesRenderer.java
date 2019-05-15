@@ -1,13 +1,13 @@
 package com.esb.plugin.component.flowreference;
 
-import com.esb.plugin.designer.properties.AbstractPropertyRenderer;
+import com.esb.plugin.designer.properties.AbstractPropertiesRenderer;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.ui.components.JBPanel;
 
-public class FlowReferencePropertyRenderer extends AbstractPropertyRenderer {
+public class FlowReferencePropertiesRenderer extends AbstractPropertiesRenderer {
 
-    public FlowReferencePropertyRenderer(GraphSnapshot snapshot) {
+    public FlowReferencePropertiesRenderer(GraphSnapshot snapshot) {
         super(snapshot);
     }
 

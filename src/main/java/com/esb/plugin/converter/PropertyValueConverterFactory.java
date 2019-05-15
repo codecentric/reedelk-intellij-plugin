@@ -1,5 +1,7 @@
 package com.esb.plugin.converter;
 
+import com.esb.plugin.component.PropertyTypeDescriptor;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collections;
@@ -35,13 +37,13 @@ public class PropertyValueConverterFactory {
         CONVERTER = Collections.unmodifiableMap(tmp);
     }
 
-    public static PropertyValueConverter<?> forType(Class<?> inputType) {
-        if (CONVERTER.containsKey(inputType)) {
-            return CONVERTER.get(inputType);
+    public static PropertyValueConverter<?> forType(PropertyTypeDescriptor typeDescriptor) {
+        if (CONVERTER.containsKey(typeDescriptor.type())) {
+            return CONVERTER.get(typeDescriptor.type());
         }
         throw new IllegalStateException(
                 format("Input Type '%s' does not have suitable converter",
-                        inputType.getName()));
+                        typeDescriptor.type().getName()));
     }
 
     public static boolean isKnownType(String clazzFullyQualifiedName) {
