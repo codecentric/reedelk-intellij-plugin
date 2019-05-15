@@ -2,6 +2,7 @@ package com.esb.plugin.component.generic;
 
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.component.ComponentData;
+import com.esb.plugin.converter.PropertyValueConverterFactory;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.deserializer.AbstractDeserializer;
 import com.esb.plugin.graph.deserializer.DeserializerContext;
@@ -33,23 +34,19 @@ public class GenericComponentDeserializer extends AbstractDeserializer {
                 Class<?> propertyType = componentData.getPropertyType(propertyName);
 
                 Object propertyValue;
-                if (propertyType == String.class) {
-                    propertyValue = componentDefinition.getString(propertyName);
-                } else if (propertyType == Integer.class || int.class == propertyType) {
-                    propertyValue = componentDefinition.getInt(propertyName);
-                } else if (propertyType == Long.class || long.class == propertyType) {
-                    propertyValue = componentDefinition.getLong(propertyName);
-                } else {
-                    propertyValue = componentDefinition.get(propertyName);
-                }
+                propertyValue = PropertyValueConverterFactory
+                        .forType(propertyType)
+                        .from(propertyName, componentDefinition);
 
+                // TODO: Should this be in the converter!?!?
                 // Explicitly map JSON Library NULL value to java's null.
                 if (propertyValue == JSONObject.NULL) {
                     propertyValue = null;
                 }
+
                 componentData.set(propertyName, propertyValue);
-                    }
-                });
+            }
+        });
 
         graph.add(parent, node);
 
