@@ -2,6 +2,7 @@ package com.esb.plugin.service.module.impl;
 
 import com.esb.api.annotation.ESBComponent;
 import com.esb.plugin.component.ComponentDescriptor;
+import com.esb.plugin.component.PropertyDescriptor;
 import io.github.classgraph.AnnotationInfo;
 import io.github.classgraph.AnnotationParameterValueList;
 import io.github.classgraph.ClassInfo;
@@ -13,7 +14,11 @@ import static java.util.stream.Collectors.toList;
 
 public class ComponentAnalyzer {
 
-    private PropertyDefinitionAnalyzer propertyAnalyzer = new PropertyDefinitionAnalyzer();
+    private final PropertyDefinitionAnalyzer propertyAnalyzer;
+
+    public ComponentAnalyzer(ComponentAnalyzerContext context) {
+        this.propertyAnalyzer = new PropertyDefinitionAnalyzer(context);
+    }
 
     public ComponentDescriptor analyze(ClassInfo classInfo) {
         String displayName = getComponentDisplayName(classInfo);
@@ -24,11 +29,11 @@ public class ComponentAnalyzer {
                 .build();
     }
 
-    private List<PropertyDefinition> mapPropertyDefinitions(ClassInfo classInfo) {
+    private List<PropertyDescriptor> mapPropertyDefinitions(ClassInfo classInfo) {
         return classInfo
                 .getFieldInfo()
                 .stream()
-                .map(fieldInfo -> propertyAnalyzer.analyze(fieldInfo))
+                .map(propertyAnalyzer::analyze)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(toList());
@@ -43,6 +48,5 @@ public class ComponentAnalyzer {
             return componentClassInfo.getSimpleName();
         }
     }
-
 
 }

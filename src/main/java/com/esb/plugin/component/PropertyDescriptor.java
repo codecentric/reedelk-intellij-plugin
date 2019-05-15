@@ -1,8 +1,8 @@
-package com.esb.plugin.service.module.impl;
+package com.esb.plugin.component;
 
 import static com.google.common.base.Preconditions.checkState;
 
-public class PropertyDefinition {
+public class PropertyDescriptor {
 
     private final boolean required;
     private final String displayName;
@@ -10,7 +10,7 @@ public class PropertyDefinition {
     private final Class<?> propertyType;
     private final Object defaultValue;
 
-    public PropertyDefinition(
+    public PropertyDescriptor(
             final String propertyName,
             final String displayName,
             final Class<?> propertyType,

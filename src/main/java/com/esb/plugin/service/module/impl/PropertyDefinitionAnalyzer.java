@@ -3,6 +3,7 @@ package com.esb.plugin.service.module.impl;
 import com.esb.api.annotation.Default;
 import com.esb.api.annotation.Property;
 import com.esb.api.annotation.Required;
+import com.esb.plugin.component.PropertyDescriptor;
 import com.esb.plugin.converter.PropertyValueConverterFactory;
 import com.google.common.base.Defaults;
 import io.github.classgraph.*;
@@ -11,7 +12,13 @@ import java.util.Optional;
 
 public class PropertyDefinitionAnalyzer {
 
-    public Optional<PropertyDefinition> analyze(FieldInfo fieldInfo) {
+    private final ComponentAnalyzerContext context;
+
+    public PropertyDefinitionAnalyzer(ComponentAnalyzerContext context) {
+        this.context = context;
+    }
+
+    public Optional<PropertyDescriptor> analyze(FieldInfo fieldInfo) {
         if (!isComponentProperty(fieldInfo)) return Optional.empty();
 
         Class<?> propertyType = getPropertyType(fieldInfo);
@@ -21,7 +28,7 @@ public class PropertyDefinitionAnalyzer {
         boolean required = isRequired(fieldInfo);
 
 
-        PropertyDefinition definition = new PropertyDefinition(
+        PropertyDescriptor definition = new PropertyDescriptor(
                 propertyName,
                 displayName,
                 propertyType,
@@ -70,16 +77,31 @@ public class PropertyDefinitionAnalyzer {
             BaseTypeSignature baseType = (BaseTypeSignature) typeSignature;
             return baseType.getType();
         } else if (typeSignature instanceof ClassRefTypeSignature) {
+
             ClassRefTypeSignature classRefType = (ClassRefTypeSignature) typeSignature;
-            try {
-                return Class.forName(classRefType.getFullyQualifiedClassName());
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-                throw new IllegalStateException("Unsupported type", e);
+            String fullyQualifiedClassName = classRefType.getFullyQualifiedClassName();
+
+            if (PropertyValueConverterFactory.isKnownType(fullyQualifiedClassName)) {
+                try {
+                    return Class.forName(classRefType.getFullyQualifiedClassName());
+                } catch (ClassNotFoundException e) {
+                    // if it is a known type, then the class must be resolvable in the classpath.
+                }
+            } else if (isEnum(fullyQualifiedClassName)) {
+                return Enum.class;
             }
         }
 
         throw new IllegalStateException("Unsupported type");
+    }
+
+
+    private boolean isEnum(String fullyQualifiedClassName) {
+        ClassInfo classInfo = context.getClassInfo(fullyQualifiedClassName);
+        return classInfo
+                .getSuperclasses()
+                .stream()
+                .anyMatch(info -> info.getName().equals(Enum.class.getName()));
     }
 
 

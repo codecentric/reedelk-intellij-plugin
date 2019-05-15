@@ -3,9 +3,9 @@ package com.esb.plugin.component.generic;
 import com.esb.plugin.AbstractDeserializerTest;
 import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.component.ComponentDescriptor;
+import com.esb.plugin.component.PropertyDescriptor;
 import com.esb.plugin.fixture.ComponentNode1;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.service.module.impl.PropertyDefinition;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,8 +57,8 @@ class GenericComponentDeserializerTest extends AbstractDeserializerTest {
     }
 
     // Fixme
-    private PropertyDefinition createPropertyDefinition(String propertyName, Class<?> propertyClass) {
-        return new PropertyDefinition(propertyName, "", propertyClass, true, "");
+    private PropertyDescriptor createPropertyDefinition(String propertyName, Class<?> propertyClass) {
+        return new PropertyDescriptor(propertyName, "", propertyClass, true, "");
     }
 
 }

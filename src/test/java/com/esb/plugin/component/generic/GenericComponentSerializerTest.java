@@ -3,10 +3,10 @@ package com.esb.plugin.component.generic;
 import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.ComponentDescriptor;
+import com.esb.plugin.component.PropertyDescriptor;
 import com.esb.plugin.fixture.ComponentNode1;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.service.module.impl.PropertyDefinition;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,7 +58,7 @@ public class GenericComponentSerializerTest extends AbstractGraphTest {
     }
 
     // Fixme
-    private PropertyDefinition createPropertyDefinition(String propertyName, Class<?> propertyClass) {
-        return new PropertyDefinition(propertyName, "", propertyClass, true, "");
+    private PropertyDescriptor createPropertyDefinition(String propertyName, Class<?> propertyClass) {
+        return new PropertyDescriptor(propertyName, "", propertyClass, true, "");
     }
 }

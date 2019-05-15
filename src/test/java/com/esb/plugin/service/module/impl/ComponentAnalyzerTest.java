@@ -2,6 +2,7 @@ package com.esb.plugin.service.module.impl;
 
 import com.esb.api.annotation.ESBComponent;
 import com.esb.plugin.component.ComponentDescriptor;
+import com.esb.plugin.component.PropertyDescriptor;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
@@ -74,10 +75,10 @@ public class ComponentAnalyzerTest {
                                                 boolean expectedIsRequired) {
 
 
-        Optional<PropertyDefinition> property1Definition = descriptor.getPropertyDefinition(expectedPropertyName);
+        Optional<PropertyDescriptor> property1Definition = descriptor.getPropertyDefinition(expectedPropertyName);
         assertThat(property1Definition).isPresent();
 
-        PropertyDefinition definition = property1Definition.get();
+        PropertyDescriptor definition = property1Definition.get();
         assertThat(definition.getDisplayName()).isEqualTo(expectedDisplayName);
         assertThat(definition.getPropertyName()).isEqualTo(expectedPropertyName);
         assertThat(definition.getDefaultValue()).isEqualTo(expectedDefaultValue);

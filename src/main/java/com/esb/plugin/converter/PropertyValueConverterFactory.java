@@ -10,8 +10,8 @@ import static java.lang.String.format;
 
 public class PropertyValueConverterFactory {
 
-    private static final Map<Class<?>, PropertyValueConverter<?>> CONVERTER;
 
+    private static final Map<Class<?>, PropertyValueConverter<?>> CONVERTER;
     static {
         Map<Class<?>, PropertyValueConverter<?>> tmp = new HashMap<>();
 
@@ -43,4 +43,11 @@ public class PropertyValueConverterFactory {
                 format("Input Type '%s' does not have suitable converter",
                         inputType.getName()));
     }
+
+    public static boolean isKnownType(String clazzFullyQualifiedName) {
+        return CONVERTER.keySet()
+                .stream()
+                .anyMatch(aClass -> aClass.getName().equals(clazzFullyQualifiedName));
+    }
+
 }

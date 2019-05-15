@@ -1,7 +1,5 @@
 package com.esb.plugin.component;
 
-import com.esb.plugin.service.module.impl.PropertyDefinition;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,8 +42,8 @@ public class ComponentData {
         return descriptor.getPropertiesNames();
     }
 
-    public List<PropertyDefinition> getPropertyDefinitions() {
-        return descriptor.getPropertyDefinitions();
+    public List<PropertyDescriptor> getPropertyDefinitions() {
+        return descriptor.getPropertyDescriptors();
     }
 
     public Class<?> getPropertyType(String propertyName) {

@@ -2,6 +2,7 @@ package com.esb.plugin.service.module.impl;
 
 import com.esb.api.annotation.ESBComponent;
 import com.esb.plugin.component.ComponentDescriptor;
+import com.intellij.openapi.diagnostic.Logger;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
@@ -12,17 +13,19 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
+import static java.lang.String.format;
+
 public class ComponentScanner {
+
+    private static final Logger LOG = Logger.getInstance(ComponentScanner.class);
 
     public CompletableFuture<Void> scan(Consumer<List<ComponentDescriptor>> callback, String classPath) {
         return CompletableFuture.supplyAsync(() -> {
-
             ScanResult scanResult = new ClassGraph()
                     .overrideClasspath(classPath)
                     .enableSystemJarsAndModules()
                     .enableAllInfo() // TODO: Enable all info must be fixed
                     .scan();
-
             processScanResult(callback, scanResult);
             return null;
         });
@@ -30,12 +33,10 @@ public class ComponentScanner {
 
     public CompletableFuture<Void> scanPackages(Consumer<List<ComponentDescriptor>> callback, String... packages) {
         return CompletableFuture.supplyAsync(() -> {
-
             ScanResult scanResult = new ClassGraph()
                     .whitelistPackages(packages)
                     .enableAllInfo() // TODO: Enable all info must be fixed
                     .scan();
-
             processScanResult(callback, scanResult);
             return null;
         });
@@ -46,11 +47,13 @@ public class ComponentScanner {
         ClassInfoList classInfoList = scanResult.getClassesWithAnnotation(ESBComponent.class.getName());
         for (ClassInfo classInfo : classInfoList) {
             try {
-                ComponentAnalyzer componentAnalyzer = new ComponentAnalyzer();
+                ComponentAnalyzerContext context = new ComponentAnalyzerContext(scanResult);
+                ComponentAnalyzer componentAnalyzer = new ComponentAnalyzer(context);
                 ComponentDescriptor descriptor = componentAnalyzer.analyze(classInfo);
                 componentDescriptors.add(descriptor);
             } catch (Exception e) {
-                e.printStackTrace();
+                LOG.error(format("Error, while processing component " +
+                        "definition with qualified name '%s'", classInfo.getName()), e);
             }
         }
 
