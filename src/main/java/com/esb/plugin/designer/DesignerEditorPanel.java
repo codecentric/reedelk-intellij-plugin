@@ -9,7 +9,7 @@ import javax.swing.event.AncestorListener;
 
 public class DesignerEditorPanel extends ThreeComponentsSplitter {
 
-    private static final int PROPERTIES_PANEL_SIZE = 190;
+    private static final int PROPERTIES_PANEL_SIZE = 200;
     private static final boolean VERTICAL = true;
 
     DesignerEditorPanel(Module module, GraphSnapshot snapshot, AncestorListener listener) {
