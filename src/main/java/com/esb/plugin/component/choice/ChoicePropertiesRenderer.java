@@ -1,9 +1,11 @@
 package com.esb.plugin.component.choice;
 
 import com.esb.plugin.component.ComponentData;
+import com.esb.plugin.component.ComponentPropertyDescriptor;
 import com.esb.plugin.component.choice.widget.ChoiceRouteTable;
 import com.esb.plugin.component.choice.widget.ConditionRouteTableModel;
 import com.esb.plugin.designer.properties.renderer.AbstractPropertiesRenderer;
+import com.esb.plugin.designer.properties.renderer.PropertyRendererFactory;
 import com.esb.plugin.designer.properties.widget.DefaultPropertiesPanel;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
@@ -15,7 +17,6 @@ import java.util.List;
 import static com.esb.plugin.component.choice.ChoiceNode.DATA_CONDITION_ROUTE_PAIRS;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
-import static org.apache.commons.lang3.StringUtils.capitalize;
 
 public class ChoicePropertiesRenderer extends AbstractPropertiesRenderer {
 
@@ -32,16 +33,18 @@ public class ChoicePropertiesRenderer extends AbstractPropertiesRenderer {
         ConditionRouteTableModel model = new ConditionRouteTableModel(conditionRoutePairList, snapshot);
         ChoiceRouteTable choiceRouteTable = new ChoiceRouteTable(model);
 
-        DefaultPropertiesPanel propertiesListPanel = new DefaultPropertiesPanel(snapshot, componentData);
+        DefaultPropertiesPanel panel = new DefaultPropertiesPanel();
 
-        componentData.descriptorProperties().forEach(propertyName ->
-                propertiesListPanel.addPropertyField(capitalize(propertyName), propertyName.toLowerCase()));
+        List<ComponentPropertyDescriptor> componentProperties = componentData.getComponentPropertyDescriptors();
+        componentProperties.forEach(propertyDescriptor ->
+                PropertyRendererFactory.get()
+                        .from(propertyDescriptor.getPropertyType())
+                        .render(propertyDescriptor, componentData, panel, snapshot));
 
         JBPanel container = new JBPanel();
         container.setLayout(new BorderLayout());
-        container.add(propertiesListPanel, NORTH);
+        container.add(panel, NORTH);
         container.add(choiceRouteTable, CENTER);
-
         return container;
     }
 

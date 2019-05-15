@@ -32,19 +32,14 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
         if (node instanceof NothingSelectedNode) return;
 
         ComponentData componentData = node.componentData();
-
         removeAll();
 
         JBPanel propertiesPanel = createPropertiesPanel(componentData, snapshot, node);
 
-        JBTabbedPane tabbedPane = new JBTabbedPane();
-
         Icon icon = Icons.forComponentAsIcon(componentData.getFullyQualifiedName());
-        tabbedPane.addTab(
-                componentData.getDisplayName(),
-                icon,
-                propertiesPanel,
-                componentData.getDisplayName() + " properties");
+
+        JBTabbedPane tabbedPane = new JBTabbedPane();
+        tabbedPane.addTab(componentData.getDisplayName(), icon, propertiesPanel, componentData.getDisplayName() + " properties");
 
         add(tabbedPane);
 
@@ -71,14 +66,6 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
         return createPropertiesHolder(propertiesBoxContainer, inputOutputPanel);
     }
 
-    private JBPanel createPropertiesHolder(JBPanel propertiesBoxContainer, JBPanel inputOutputPanel) {
-        JBPanel propertiesHolder = new JBPanel();
-        propertiesHolder.setLayout(new BorderLayout());
-        propertiesHolder.add(propertiesBoxContainer, CENTER);
-        propertiesHolder.add(inputOutputPanel, EAST);
-        return propertiesHolder;
-    }
-
     private JBPanel createInputOutputPanel() {
         JBLabel inputOutputLabel = new JBLabel("input/output");
         JBPanel inputOutputPanel = new JBPanel();
@@ -86,6 +73,14 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
         inputOutputPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, JBColor.LIGHT_GRAY));
         inputOutputPanel.add(inputOutputLabel, CENTER);
         return inputOutputPanel;
+    }
+
+    private JBPanel createPropertiesHolder(JBPanel propertiesBoxContainer, JBPanel inputOutputPanel) {
+        JBPanel propertiesHolder = new JBPanel();
+        propertiesHolder.setLayout(new BorderLayout());
+        propertiesHolder.add(propertiesBoxContainer, CENTER);
+        propertiesHolder.add(inputOutputPanel, EAST);
+        return propertiesHolder;
     }
 
     private JBPanel createPropertiesBoxPanel(JBPanel propertiesListPanel) {

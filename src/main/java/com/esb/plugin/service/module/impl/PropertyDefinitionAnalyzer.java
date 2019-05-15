@@ -4,6 +4,7 @@ import com.esb.api.annotation.Default;
 import com.esb.api.annotation.Property;
 import com.esb.api.annotation.Required;
 import com.esb.plugin.component.ComponentPropertyDescriptor;
+import com.esb.plugin.component.PropertyTypeDescriptor;
 import com.esb.plugin.converter.PropertyValueConverterFactory;
 import com.google.common.base.Defaults;
 import io.github.classgraph.*;
@@ -19,26 +20,21 @@ class PropertyDefinitionAnalyzer {
     }
 
     Optional<ComponentPropertyDescriptor> analyze(FieldInfo fieldInfo) {
-        if (!isComponentProperty(fieldInfo)) return Optional.empty();
+        if (!hasPropertyAnnotation(fieldInfo)) return Optional.empty();
 
-        Class<?> propertyType = getPropertyType(fieldInfo);
+        PropertyTypeDescriptor propertyType = getPropertyType(fieldInfo);
         Object defaultValue = getDefaultValue(fieldInfo, propertyType);
         String propertyName = getPropertyName(fieldInfo);
         String displayName = getDisplayName(fieldInfo);
         boolean required = isRequired(fieldInfo);
 
-
-        ComponentPropertyDescriptor definition = new ComponentPropertyDescriptor(
-                propertyName,
-                displayName,
-                propertyType,
-                required,
-                defaultValue);
+        ComponentPropertyDescriptor definition =
+                new ComponentPropertyDescriptor(propertyName, displayName, required, defaultValue, propertyType);
 
         return Optional.of(definition);
     }
 
-    private boolean isComponentProperty(FieldInfo fieldInfo) {
+    private boolean hasPropertyAnnotation(FieldInfo fieldInfo) {
         return fieldInfo.hasAnnotation(Property.class.getName());
     }
 
@@ -71,7 +67,7 @@ class PropertyDefinitionAnalyzer {
         return Defaults.defaultValue(expectedType);
     }
 
-    private Class<?> getPropertyType(FieldInfo fieldInfo) {
+    private PropertyTypeDescriptor getPropertyType(FieldInfo fieldInfo) {
         TypeSignature typeSignature = fieldInfo.getTypeDescriptor();
         if (typeSignature instanceof BaseTypeSignature) {
             BaseTypeSignature baseType = (BaseTypeSignature) typeSignature;

@@ -13,6 +13,8 @@ public class FlowReferencePropertiesRenderer extends AbstractPropertiesRenderer 
 
     @Override
     public JBPanel render(GraphNode node) {
+
+
         return new JBPanel();
     }
 }

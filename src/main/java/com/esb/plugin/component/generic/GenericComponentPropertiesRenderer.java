@@ -3,7 +3,7 @@ package com.esb.plugin.component.generic;
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.ComponentPropertyDescriptor;
 import com.esb.plugin.designer.properties.renderer.AbstractPropertiesRenderer;
-import com.esb.plugin.designer.properties.renderer.PrimitiveTypePropertyRenderer;
+import com.esb.plugin.designer.properties.renderer.PropertyRendererFactory;
 import com.esb.plugin.designer.properties.widget.DefaultPropertiesPanel;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
@@ -23,10 +23,10 @@ public class GenericComponentPropertiesRenderer extends AbstractPropertiesRender
         DefaultPropertiesPanel panel = new DefaultPropertiesPanel();
 
         List<ComponentPropertyDescriptor> componentProperties = componentData.getComponentPropertyDescriptors();
-        componentProperties.forEach(propertyDescriptor -> {
-            PrimitiveTypePropertyRenderer renderer = new PrimitiveTypePropertyRenderer();
-            renderer.render(propertyDescriptor, componentData, panel, snapshot);
-        });
+        componentProperties.forEach(propertyDescriptor ->
+                PropertyRendererFactory.get()
+                        .from(propertyDescriptor.getPropertyType())
+                        .render(propertyDescriptor, componentData, panel, snapshot));
 
         return panel;
     }
