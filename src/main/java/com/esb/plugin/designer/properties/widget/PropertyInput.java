@@ -12,8 +12,8 @@ public class PropertyInput extends JBTextField implements DocumentListener {
     private InputChangeListener changeListener;
 
     public PropertyInput() {
-        setMaximumSize(new Dimension(300, 50));
-        setAlignmentX(LEFT_ALIGNMENT);
+        Dimension preferredSize = getPreferredSize();
+        setPreferredSize(new Dimension(400, preferredSize.height));
         getDocument().addDocumentListener(this);
     }
 

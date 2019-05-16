@@ -10,6 +10,9 @@ import com.esb.plugin.designer.properties.widget.FormBuilder;
 import com.esb.plugin.designer.properties.widget.PropertyInput;
 import com.esb.plugin.graph.GraphSnapshot;
 
+import javax.swing.*;
+import java.awt.*;
+
 public class PrimitiveTypePropertyRenderer implements PropertyRenderer {
 
     @Override
@@ -31,9 +34,14 @@ public class PrimitiveTypePropertyRenderer implements PropertyRenderer {
             snapshot.onDataChange();
         });
 
+        JPanel propertyInputContainer = new JPanel();
+        propertyInputContainer.setLayout(new BorderLayout());
+        propertyInputContainer.add(input, BorderLayout.WEST);
+        propertyInputContainer.add(Box.createHorizontalGlue(), BorderLayout.CENTER);
+
         FormBuilder.get()
                 .addLabel(displayName, parent)
-                .addLastField(input, parent);
+                .addLastField(propertyInputContainer, parent);
     }
 
 }

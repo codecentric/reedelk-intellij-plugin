@@ -10,6 +10,9 @@ import com.esb.plugin.designer.properties.widget.FormBuilder;
 import com.esb.plugin.designer.properties.widget.PropertyDropDown;
 import com.esb.plugin.graph.GraphSnapshot;
 
+import javax.swing.*;
+import java.awt.*;
+
 public class EnumTypePropertyRenderer implements PropertyRenderer {
 
     @Override
@@ -22,11 +25,19 @@ public class EnumTypePropertyRenderer implements PropertyRenderer {
         PropertyValueConverter<?> converter = PropertyValueConverterFactory.forType(propertyType);
 
         Object propertyValue = componentData.get(propertyName);
-        String propertyValueAsString = converter.to(propertyValue);
+        Object propertyValueAsString = converter.to(propertyValue);
+
 
         PropertyDropDown dropDown = new PropertyDropDown(propertyType.possibleValues());
+        dropDown.setSelectedItem(propertyValueAsString);
+
+        JPanel dropDownContainer = new JPanel();
+        dropDownContainer.setLayout(new BorderLayout());
+        dropDownContainer.add(dropDown, BorderLayout.WEST);
+        dropDownContainer.add(Box.createHorizontalGlue(), BorderLayout.CENTER);
+
         FormBuilder.get()
                 .addLabel(displayName, parent)
-                .addLastField(dropDown, parent);
+                .addLastField(dropDownContainer, parent);
     }
 }

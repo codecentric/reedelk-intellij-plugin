@@ -7,5 +7,6 @@ public class PropertyDropDown extends JComboBox<String> {
 
     public PropertyDropDown(List<String> values) {
         super(values.toArray(new String[0]));
+        getPreferredSize().width = 150;
     }
 }
