@@ -14,10 +14,10 @@ import static java.util.stream.Collectors.toList;
 
 class ComponentAnalyzer {
 
-    private final PropertyDefinitionAnalyzer propertyAnalyzer;
+    private final ComponentPropertyAnalyzer propertyAnalyzer;
 
     ComponentAnalyzer(ComponentAnalyzerContext context) {
-        this.propertyAnalyzer = new PropertyDefinitionAnalyzer(context);
+        this.propertyAnalyzer = new ComponentPropertyAnalyzer(context);
     }
 
     ComponentDescriptor analyze(ClassInfo classInfo) {

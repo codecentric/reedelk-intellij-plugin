@@ -14,24 +14,26 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ComponentAnalyzerTest {
+class ComponentAnalyzerTest {
 
-    private ComponentAnalyzer analyzer = new ComponentAnalyzer();
+    private ScanResult scanResult;
+    private ComponentAnalyzer analyzer;
 
     @BeforeEach
     void setUp() {
-        analyzer = new ComponentAnalyzer();
+        scanResult = new ClassGraph()
+                .whitelistPackages(ComponentAnalyzerTest.class.getPackage().getName())
+                .enableSystemJarsAndModules()
+                .enableAllInfo()
+                .scan();
+
+        ComponentAnalyzerContext context = new ComponentAnalyzerContext(scanResult);
+        analyzer = new ComponentAnalyzer(context);
     }
 
     @Test
     void shouldCorrectlyAnalyzeClassInfo() {
         // Given
-        ScanResult scanResult = new ClassGraph()
-                .whitelistClasses(TestComponent.class.getName())
-                .enableSystemJarsAndModules()
-                .enableAllInfo()
-                .scan();
-
         ClassInfoList classesWithAnnotation = scanResult.getClassesWithAnnotation(ESBComponent.class.getName());
         ClassInfo testComponentClassInfo = classesWithAnnotation.get(0);
 
@@ -41,30 +43,12 @@ public class ComponentAnalyzerTest {
         // Then
         String displayName = descriptor.getDisplayName();
         assertThat(displayName).isEqualTo("Test Component");
-        assertThat(descriptor.getPropertiesNames()).containsExactlyInAnyOrder("property1", "property2");
+        assertThat(descriptor.getPropertiesNames()).containsExactlyInAnyOrder("property1", "property2", "property3");
 
         assertExistsPropertyDefinition(descriptor, "property1", "Property 1", 3, int.class, true);
 
         // TODO: Check default value for String. Should it be empty or null !?
         assertExistsPropertyDefinition(descriptor, "property2", "Property 2", null, String.class, false);
-    }
-
-    @Test
-    void shouldCorrectlyAnalyzeEnum() {
-        // Given
-        ScanResult scanResult = new ClassGraph()
-                .whitelistPackages("com.esb.plugin.service.module.impl")
-                .enableSystemJarsAndModules()
-                .enableAllInfo()
-                .scan();
-
-        // When
-        ClassInfoList classesWithAnnotation = scanResult.getClassesWithAnnotation(ESBComponent.class.getName());
-        ClassInfo testComponentClassInfo = classesWithAnnotation.get(0);
-
-
-        // Then
-        System.out.println("te");
     }
 
     private void assertExistsPropertyDefinition(ComponentDescriptor descriptor,
@@ -73,8 +57,6 @@ public class ComponentAnalyzerTest {
                                                 Object expectedDefaultValue,
                                                 Class<?> expectedPropertyType,
                                                 boolean expectedIsRequired) {
-
-
         Optional<ComponentPropertyDescriptor> property1Definition = descriptor.getPropertyDefinition(expectedPropertyName);
         assertThat(property1Definition).isPresent();
 
@@ -84,7 +66,5 @@ public class ComponentAnalyzerTest {
         assertThat(definition.getDefaultValue()).isEqualTo(expectedDefaultValue);
         assertThat(definition.getPropertyType()).isEqualTo(expectedPropertyType);
         assertThat(definition.isRequired()).isEqualTo(expectedIsRequired);
-
-
     }
 }

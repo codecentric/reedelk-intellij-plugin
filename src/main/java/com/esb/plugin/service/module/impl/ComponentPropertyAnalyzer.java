@@ -14,11 +14,11 @@ import java.util.Optional;
 
 import static com.esb.plugin.converter.PropertyValueConverterFactory.isKnownType;
 
-class PropertyDefinitionAnalyzer {
+class ComponentPropertyAnalyzer {
 
     private final ComponentAnalyzerContext context;
 
-    PropertyDefinitionAnalyzer(ComponentAnalyzerContext context) {
+    ComponentPropertyAnalyzer(ComponentAnalyzerContext context) {
         this.context = context;
     }
 
@@ -36,7 +36,6 @@ class PropertyDefinitionAnalyzer {
         boolean required = propertyInfo.hasAnnotation(Required.class.getName());
         return new ComponentPropertyDescriptor(propertyName, displayName, required, defaultValue, propertyType);
     }
-
 
     private PropertyTypeDescriptor getPropertyType(FieldInfo fieldInfo) {
         TypeSignature typeSignature = fieldInfo.getTypeDescriptor();

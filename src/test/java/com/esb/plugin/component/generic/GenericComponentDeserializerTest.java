@@ -4,6 +4,7 @@ import com.esb.plugin.AbstractDeserializerTest;
 import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.component.ComponentPropertyDescriptor;
+import com.esb.plugin.component.PrimitiveTypeDescriptor;
 import com.esb.plugin.fixture.ComponentNode1;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONObject;
@@ -58,7 +59,12 @@ class GenericComponentDeserializerTest extends AbstractDeserializerTest {
 
     // Fixme
     private ComponentPropertyDescriptor createPropertyDefinition(String propertyName, Class<?> propertyClass) {
-        return new ComponentPropertyDescriptor(propertyName, "", propertyClass, true, "");
+        return new ComponentPropertyDescriptor(
+                propertyName,
+                "A property name",
+                true,
+                "",
+                new PrimitiveTypeDescriptor(propertyClass));
     }
 
 }

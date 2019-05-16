@@ -18,6 +18,12 @@ public class TestComponent implements Processor {
     @Property("Property 2")
     private String property2;
 
+    @Property("Enum Property")
+    private TestEnum property3;
+
+    private int notExposedProperty;
+
+
     @Override
     public Message apply(Message message) {
         return new Message();
@@ -29,5 +35,13 @@ public class TestComponent implements Processor {
 
     public void setProperty2(String property2) {
         this.property2 = property2;
+    }
+
+    public void setProperty3(TestEnum property3) {
+        this.property3 = property3;
+    }
+
+    public void setNotExposedProperty(int notExposedProperty) {
+        this.notExposedProperty = notExposedProperty;
     }
 }
