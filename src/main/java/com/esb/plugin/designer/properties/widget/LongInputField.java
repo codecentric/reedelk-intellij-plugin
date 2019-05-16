@@ -9,7 +9,7 @@ import javax.swing.text.*;
 
 public class LongInputField extends JTextField implements DocumentListener {
 
-    private static final int COLUMNS_NUMBER = 17;
+    private static final int COLUMNS_NUMBER = 16;
 
     private InputChangeListener listener;
 
