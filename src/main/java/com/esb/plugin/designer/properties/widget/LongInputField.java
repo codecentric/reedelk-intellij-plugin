@@ -66,15 +66,6 @@ public class LongInputField extends JTextField implements DocumentListener {
             }
         }
 
-        private boolean test(String text) {
-            try {
-                Long.parseLong(text);
-                return true;
-            } catch (NumberFormatException e) {
-                return false;
-            }
-        }
-
         @Override
         public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
 
@@ -114,7 +105,16 @@ public class LongInputField extends JTextField implements DocumentListener {
             } else {
                 // warn the user and don't allow the insert
             }
-
         }
+
+        private boolean test(String text) {
+            try {
+                Long.parseLong(text);
+                return true;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
+
     }
 }

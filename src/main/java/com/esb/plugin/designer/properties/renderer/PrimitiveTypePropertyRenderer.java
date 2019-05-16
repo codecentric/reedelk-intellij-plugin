@@ -25,7 +25,7 @@ public class PrimitiveTypePropertyRenderer implements PropertyRenderer {
         JComponent input = createInputComponent(propertyName, componentData, snapshot, descriptor);
 
         FormBuilder.get()
-                .addLabel(displayName, parent)
+                .addLabel(displayName + ":", parent)
                 .addLastField(input, parent);
     }
 

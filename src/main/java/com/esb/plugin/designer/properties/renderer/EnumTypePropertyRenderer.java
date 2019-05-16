@@ -39,7 +39,7 @@ public class EnumTypePropertyRenderer implements PropertyRenderer {
         dropDownContainer.add(Box.createHorizontalGlue(), BorderLayout.CENTER);
 
         FormBuilder.get()
-                .addLabel(displayName, parent)
+                .addLabel(displayName + ":", parent)
                 .addLastField(dropDownContainer, parent);
     }
 }
