@@ -28,8 +28,7 @@ public class EnumTypePropertyRenderer implements PropertyRenderer {
 
         PropertyDropDown dropDown = new PropertyDropDown(propertyType.possibleValues());
         dropDown.addListener(valueAsString -> {
-            Object valueAsTypedObject = converter.from(valueAsString);
-            componentData.set(propertyName, valueAsTypedObject);
+            componentData.set(propertyName, valueAsString);
             snapshot.onDataChange();
         });
         dropDown.setSelectedItem(propertyValueAsString);

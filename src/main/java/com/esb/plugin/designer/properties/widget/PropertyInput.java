@@ -8,7 +8,7 @@ import javax.swing.event.DocumentListener;
 
 public class PropertyInput extends JBTextField implements DocumentListener {
 
-    private InputChangeListener listener;
+    private InputChangeListener<String> listener;
 
     public PropertyInput() {
         getDocument().addDocumentListener(this);
@@ -35,7 +35,7 @@ public class PropertyInput extends JBTextField implements DocumentListener {
         }
     }
 
-    public void addListener(InputChangeListener changeListener) {
+    public void addListener(InputChangeListener<String> changeListener) {
         this.listener = changeListener;
     }
 }

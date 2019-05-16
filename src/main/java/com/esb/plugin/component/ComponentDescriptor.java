@@ -62,6 +62,7 @@ public class ComponentDescriptor {
         return Objects.hash(fullyQualifiedName);
     }
 
+    // TODO: Shouldn't this return Optional?
     public PropertyTypeDescriptor getPropertyType(String propertyName) {
         return componentPropertyDescriptors.stream()
                 .filter(propertyDefinition -> propertyDefinition.getPropertyName().equals(propertyName))
