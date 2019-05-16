@@ -9,7 +9,7 @@ import java.awt.*;
 
 public class PropertyInput extends JBTextField implements DocumentListener {
 
-    private InputChangeListener changeListener;
+    private InputChangeListener listener;
 
     public PropertyInput() {
         Dimension preferredSize = getPreferredSize();
@@ -19,26 +19,26 @@ public class PropertyInput extends JBTextField implements DocumentListener {
 
     @Override
     public void insertUpdate(DocumentEvent e) {
-        if (changeListener != null) {
-            changeListener.onChange(PropertyInput.this.getText());
+        if (listener != null) {
+            listener.onChange(PropertyInput.this.getText());
         }
     }
 
     @Override
     public void removeUpdate(DocumentEvent e) {
-        if (changeListener != null) {
-            changeListener.onChange(PropertyInput.this.getText());
+        if (listener != null) {
+            listener.onChange(PropertyInput.this.getText());
         }
     }
 
     @Override
     public void changedUpdate(DocumentEvent e) {
-        if (changeListener != null) {
-            changeListener.onChange(PropertyInput.this.getText());
+        if (listener != null) {
+            listener.onChange(PropertyInput.this.getText());
         }
     }
 
     public void addListener(InputChangeListener changeListener) {
-        this.changeListener = changeListener;
+        this.listener = changeListener;
     }
 }

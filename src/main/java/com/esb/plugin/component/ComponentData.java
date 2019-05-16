@@ -22,8 +22,7 @@ public class ComponentData {
     }
 
     public Object getOrDefault(String key, Object defaultValue) {
-        Object value = componentData.get(key);
-        return value == null ? defaultValue : value;
+        return componentData.getOrDefault(key, defaultValue);
     }
 
     public void set(String propertyName, Object propertyValue) {

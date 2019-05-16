@@ -17,18 +17,21 @@ public class EnumTypePropertyRenderer implements PropertyRenderer {
 
     @Override
     public void render(ComponentPropertyDescriptor descriptor, ComponentData componentData, DefaultPropertiesPanel parent, GraphSnapshot snapshot) {
-        // This should be rendered as a dropdown.
         String propertyName = descriptor.getPropertyName();
         String displayName = descriptor.getDisplayName();
 
         EnumTypeDescriptor propertyType = (EnumTypeDescriptor) descriptor.getPropertyType();
         PropertyValueConverter<?> converter = PropertyValueConverterFactory.forType(propertyType);
 
-        Object propertyValue = componentData.get(propertyName);
+        Object propertyValue = componentData.getOrDefault(propertyName, descriptor.getDefaultValue());
         Object propertyValueAsString = converter.to(propertyValue);
 
-
         PropertyDropDown dropDown = new PropertyDropDown(propertyType.possibleValues());
+        dropDown.addListener(valueAsString -> {
+            Object valueAsTypedObject = converter.from(valueAsString);
+            componentData.set(propertyName, valueAsTypedObject);
+            snapshot.onDataChange();
+        });
         dropDown.setSelectedItem(propertyValueAsString);
 
         JPanel dropDownContainer = new JPanel();
