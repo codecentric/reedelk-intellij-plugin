@@ -5,15 +5,12 @@ import com.intellij.ui.components.JBTextField;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.*;
 
 public class PropertyInput extends JBTextField implements DocumentListener {
 
     private InputChangeListener listener;
 
     public PropertyInput() {
-        Dimension preferredSize = getPreferredSize();
-        setPreferredSize(new Dimension(400, preferredSize.height));
         getDocument().addDocumentListener(this);
     }
 

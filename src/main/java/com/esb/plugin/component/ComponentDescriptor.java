@@ -17,7 +17,7 @@ public class ComponentDescriptor {
 
     private List<ComponentPropertyDescriptor> componentPropertyDescriptors = new ArrayList<>();
 
-    private ComponentDescriptor() {
+    protected ComponentDescriptor() {
     }
 
     public String getFullyQualifiedName() {

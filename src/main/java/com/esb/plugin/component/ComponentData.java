@@ -6,17 +6,12 @@ import java.util.Map;
 
 public class ComponentData {
 
-    public static final String DESCRIPTION_PROPERTY_NAME = "description";
-
     private final ComponentDescriptor descriptor;
 
     private Map<String, Object> componentData = new HashMap<>();
 
     public ComponentData(final ComponentDescriptor descriptor) {
         this.descriptor = descriptor;
-        // TODO: This is wrong here.... should be external, where this gets created.
-        // TODO: Also the description property should be added to the descriptor as well.
-        this.componentData.put(DESCRIPTION_PROPERTY_NAME, descriptor.getDisplayName());
     }
 
     public Object get(String key) {

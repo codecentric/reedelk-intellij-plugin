@@ -4,6 +4,7 @@ import com.esb.component.Choice;
 import com.esb.component.FlowReference;
 import com.esb.component.Fork;
 import com.esb.component.Stop;
+import com.esb.plugin.ComponentDescriptorDecorator;
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.component.choice.ChoiceNode;
@@ -37,7 +38,12 @@ public class GraphNodeFactory {
     }
 
     public static <T extends GraphNode> T get(ComponentDescriptor descriptor) {
-        ComponentData componentData = new ComponentData(descriptor);
+        ComponentDescriptorDecorator decorator = new ComponentDescriptorDecorator(descriptor);
+        ComponentData componentData = new ComponentData(decorator);
+
+        // TODO: this should be fixed by chosing default value when data does not exists...
+        componentData.set(ComponentDescriptorDecorator.DESCRIPTION_PROPERTY_NAME, descriptor.getDisplayName());
+
         String componentFullyQualifiedName = componentData.getFullyQualifiedName();
 
         Class<? extends GraphNode> componentDrawableClazz = COMPONENT_DRAWABLE_MAP
