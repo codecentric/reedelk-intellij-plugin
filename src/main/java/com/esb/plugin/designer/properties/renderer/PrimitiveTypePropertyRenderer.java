@@ -7,7 +7,7 @@ import com.esb.plugin.converter.PropertyValueConverter;
 import com.esb.plugin.converter.PropertyValueConverterFactory;
 import com.esb.plugin.designer.properties.widget.DefaultPropertiesPanel;
 import com.esb.plugin.designer.properties.widget.FormBuilder;
-import com.esb.plugin.designer.properties.widget.IntegerInputField;
+import com.esb.plugin.designer.properties.widget.LongInputField;
 import com.esb.plugin.designer.properties.widget.PropertyInput;
 import com.esb.plugin.graph.GraphSnapshot;
 
@@ -44,14 +44,14 @@ public class PrimitiveTypePropertyRenderer implements PropertyRenderer {
         if (propertyType.type().equals(long.class) || propertyType.type().equals(Long.class)) {
             JPanel panel = new JPanel();
             panel.setLayout(new BorderLayout());
-            IntegerInputField integerInputField = new IntegerInputField();
-            integerInputField.setText(converter.to(propertyValueAsString));
-            integerInputField.addListener(value -> {
+            LongInputField longInputField = new LongInputField();
+            longInputField.setText(propertyValueAsString);
+            longInputField.addListener(value -> {
                 Object objectValue = converter.from(value);
                 componentData.set(propertyName, objectValue);
                 snapshot.onDataChange();
             });
-            panel.add(integerInputField, BorderLayout.WEST);
+            panel.add(longInputField, BorderLayout.WEST);
             panel.add(Box.createHorizontalBox(), BorderLayout.CENTER);
             return panel;
 

@@ -7,16 +7,17 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
 
-public class IntegerInputField extends JTextField implements DocumentListener {
+public class LongInputField extends JTextField implements DocumentListener {
 
-    private static final int COLUMNS_NUMBER = 10;
+    private static final int COLUMNS_NUMBER = 17;
 
     private InputChangeListener listener;
 
-    public IntegerInputField() {
+    public LongInputField() {
         super(COLUMNS_NUMBER);
-        PlainDocument doc = (PlainDocument) getDocument();
-        doc.setDocumentFilter(new IntegerDocumentFilter());
+        PlainDocument document = (PlainDocument) getDocument();
+        document.setDocumentFilter(new IntegerDocumentFilter());
+        document.addDocumentListener(this);
     }
 
     @Override
@@ -40,7 +41,7 @@ public class IntegerInputField extends JTextField implements DocumentListener {
 
     private void notifyListener() {
         if (listener != null) {
-            listener.onChange(IntegerInputField.this.getText());
+            listener.onChange(LongInputField.this.getText());
         }
     }
 
@@ -67,7 +68,7 @@ public class IntegerInputField extends JTextField implements DocumentListener {
 
         private boolean test(String text) {
             try {
-                Integer.parseInt(text);
+                Long.parseLong(text);
                 return true;
             } catch (NumberFormatException e) {
                 return false;
