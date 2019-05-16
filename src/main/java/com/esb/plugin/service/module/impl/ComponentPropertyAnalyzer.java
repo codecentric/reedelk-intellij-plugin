@@ -7,6 +7,7 @@ import com.esb.plugin.component.ComponentPropertyDescriptor;
 import com.esb.plugin.component.EnumTypeDescriptor;
 import com.esb.plugin.component.PrimitiveTypeDescriptor;
 import com.esb.plugin.component.PropertyTypeDescriptor;
+import com.esb.plugin.converter.PropertyValueConverterFactory;
 import io.github.classgraph.*;
 
 import java.util.Arrays;
@@ -32,7 +33,17 @@ class ComponentPropertyAnalyzer {
         String propertyName = propertyInfo.getName();
         String displayName = getAnnotationValueOrDefault(propertyInfo, Property.class, propertyInfo.getName());
         PropertyTypeDescriptor propertyType = getPropertyType(propertyInfo);
-        Object defaultValue = getAnnotationValueOrDefault(propertyInfo, Default.class, propertyType.defaultValue());
+
+        Object defaultValue = propertyType.defaultValue();
+        if (propertyInfo.hasAnnotation(Default.class.getName())) {
+            String value = getAnnotationValueOrDefault(propertyInfo, Default.class, Default.USE_DEFAULT_VALUE);
+            if (defaultValue != Default.USE_DEFAULT_VALUE) {
+                defaultValue = PropertyValueConverterFactory
+                        .forType(propertyType)
+                        .from(value);
+            }
+        }
+
         boolean required = propertyInfo.hasAnnotation(Required.class.getName());
         return new ComponentPropertyDescriptor(propertyName, displayName, required, defaultValue, propertyType);
     }

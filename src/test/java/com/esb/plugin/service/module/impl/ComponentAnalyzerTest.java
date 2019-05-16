@@ -64,7 +64,7 @@ class ComponentAnalyzerTest {
         assertThat(definition.getDisplayName()).isEqualTo(expectedDisplayName);
         assertThat(definition.getPropertyName()).isEqualTo(expectedPropertyName);
         assertThat(definition.getDefaultValue()).isEqualTo(expectedDefaultValue);
-        assertThat(definition.getPropertyType()).isEqualTo(expectedPropertyType);
+        assertThat(definition.getPropertyType().type()).isEqualTo(expectedPropertyType);
         assertThat(definition.isRequired()).isEqualTo(expectedIsRequired);
     }
 }
