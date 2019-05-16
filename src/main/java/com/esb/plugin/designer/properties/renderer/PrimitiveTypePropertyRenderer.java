@@ -17,27 +17,23 @@ public class PrimitiveTypePropertyRenderer implements PropertyRenderer {
         String propertyName = descriptor.getPropertyName();
         String displayName = descriptor.getDisplayName();
 
-        PropertyInput input = new PropertyInput();
-
-        PropertyTypeDescriptor propertyType = componentData.getPropertyType(propertyName);
+        PropertyTypeDescriptor propertyType = descriptor.getPropertyType();
         PropertyValueConverter<?> converter = PropertyValueConverterFactory.forType(propertyType);
 
         Object propertyValue = componentData.get(propertyName);
         String propertyValueAsString = converter.to(propertyValue);
 
+        PropertyInput input = new PropertyInput();
         input.setText(propertyValueAsString);
-
         input.addListener(valueAsString -> {
             Object valueAsTypedObject = converter.from(valueAsString);
             componentData.set(propertyName, valueAsTypedObject);
             snapshot.onDataChange();
         });
 
-        FormBuilder
-                .get()
+        FormBuilder.get()
                 .addLabel(displayName, parent)
                 .addLastField(input, parent);
-
     }
 
 }

@@ -33,6 +33,7 @@ public class PropertyValueConverterFactory {
         tmp.put(BigDecimal.class, new BigDecimalConverter());
 
         // Enum
+        tmp.put(Enum.class, new StringConverter());
 
         CONVERTER = Collections.unmodifiableMap(tmp);
     }
