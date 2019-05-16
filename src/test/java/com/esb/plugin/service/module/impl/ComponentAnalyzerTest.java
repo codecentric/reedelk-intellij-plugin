@@ -46,8 +46,6 @@ class ComponentAnalyzerTest {
         assertThat(descriptor.getPropertiesNames()).containsExactlyInAnyOrder("property1", "property2", "property3");
 
         assertExistsPropertyDefinition(descriptor, "property1", "Property 1", 3, int.class, true);
-
-        // TODO: Check default value for String. Should it be empty or null !?
         assertExistsPropertyDefinition(descriptor, "property2", "Property 2", null, String.class, false);
     }
 

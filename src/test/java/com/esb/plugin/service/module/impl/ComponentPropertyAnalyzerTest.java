@@ -1,6 +1,8 @@
 package com.esb.plugin.service.module.impl;
 
 import com.esb.plugin.component.ComponentPropertyDescriptor;
+import com.esb.plugin.component.EnumTypeDescriptor;
+import com.esb.plugin.component.PropertyTypeDescriptor;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.FieldInfo;
@@ -32,13 +34,38 @@ class ComponentPropertyAnalyzerTest {
     @Test
     void shouldReturnEmptyDescriptorWhenPropertyAnnotationIsNotPresent() {
         // Given
-        ClassInfo testComponentInfo = scanResult.getClassInfo(TestComponent.class.getName());
-        FieldInfo notExposedPropertyInfo = testComponentInfo.getFieldInfo("notExposedProperty");
+        ClassInfo componentInfo = scanResult.getClassInfo(TestComponent.class.getName());
+        FieldInfo notExposedPropertyInfo = componentInfo.getFieldInfo("notExposedProperty");
 
         // When
-        Optional<ComponentPropertyDescriptor> optionalDescriptor = analyzer.analyze(notExposedPropertyInfo);
+        Optional<ComponentPropertyDescriptor> descriptor = analyzer.analyze(notExposedPropertyInfo);
 
         // Then
-        assertThat(optionalDescriptor).isEmpty();
+        assertThat(descriptor).isEmpty();
+    }
+
+    @Test
+    void shouldCorrectlyReturnPropertyDescriptorForEnumType() {
+        // Given
+        ClassInfo componentInfo = scanResult.getClassInfo(TestComponent.class.getName());
+        FieldInfo enumTypeProperty = componentInfo.getFieldInfo("property3");
+
+        // When
+        Optional<ComponentPropertyDescriptor> descriptor = analyzer.analyze(enumTypeProperty);
+
+        // Then
+        assertThat(descriptor).isPresent();
+
+        ComponentPropertyDescriptor enumDescriptor = descriptor.get();
+        assertThat(enumDescriptor.getPropertyName()).isEqualTo("property3");
+        assertThat(enumDescriptor.getDisplayName()).isEqualTo("Enum Property");
+        assertThat(enumDescriptor.isRequired()).isFalse();
+
+        PropertyTypeDescriptor propertyType = enumDescriptor.getPropertyType();
+        assertThat(propertyType).isInstanceOf(EnumTypeDescriptor.class);
+
+        EnumTypeDescriptor enumTypeDescriptor = (EnumTypeDescriptor) propertyType;
+        assertThat(enumTypeDescriptor.possibleValues()).containsExactly("VALUE1", "VALUE2", "VALUE3");
+        assertThat(enumTypeDescriptor.defaultValue()).isEqualTo("VALUE1");
     }
 }

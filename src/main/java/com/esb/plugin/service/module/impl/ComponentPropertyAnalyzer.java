@@ -10,12 +10,15 @@ import com.esb.plugin.component.PropertyTypeDescriptor;
 import com.esb.plugin.converter.PropertyValueConverterFactory;
 import io.github.classgraph.*;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.esb.plugin.converter.PropertyValueConverterFactory.isKnownType;
 
 class ComponentPropertyAnalyzer {
+
+    private static final String ANNOTATION_DEFAULT_PARAM_NAME = "value";
 
     private final ComponentAnalyzerContext context;
 
@@ -34,15 +37,7 @@ class ComponentPropertyAnalyzer {
         String displayName = getAnnotationValueOrDefault(propertyInfo, Property.class, propertyInfo.getName());
         PropertyTypeDescriptor propertyType = getPropertyType(propertyInfo);
 
-        Object defaultValue = propertyType.defaultValue();
-        if (propertyInfo.hasAnnotation(Default.class.getName())) {
-            String value = getAnnotationValueOrDefault(propertyInfo, Default.class, Default.USE_DEFAULT_VALUE);
-            if (defaultValue != Default.USE_DEFAULT_VALUE) {
-                defaultValue = PropertyValueConverterFactory
-                        .forType(propertyType)
-                        .from(value);
-            }
-        }
+        Object defaultValue = getDefaultValue(propertyInfo, propertyType);
 
         boolean required = propertyInfo.hasAnnotation(Required.class.getName());
         return new ComponentPropertyDescriptor(propertyName, displayName, required, defaultValue, propertyType);
@@ -73,24 +68,38 @@ class ComponentPropertyAnalyzer {
                 // Otherwise the @PropertyValueConverterFactory class would not even compile.
                 throw new UnsupportedType(fullyQualifiedClassName);
             }
-        } else if (isEnum(fullyQualifiedClassName)) {
+        } else if (isEnumeration(fullyQualifiedClassName)) {
             return processEnumType(typeSignature);
         } else {
             throw new UnsupportedType(fullyQualifiedClassName);
         }
     }
 
+    // TODO: Test corner cases like when there is an enum with no fields!
     private EnumTypeDescriptor processEnumType(ClassRefTypeSignature enumRefType) {
-        // TODO: Finish me!
-        return new EnumTypeDescriptor(Arrays.asList("one", "two"), "one");
+        ClassInfo enumClassInfo = context.getClassInfo(enumRefType.getFullyQualifiedClassName());
+        FieldInfoList declaredFieldInfo = enumClassInfo.getDeclaredFieldInfo();
+        List<String> enumNames = declaredFieldInfo
+                .stream()
+                .filter(fieldInfo -> fieldInfo.getTypeDescriptor() instanceof ClassRefTypeSignature)
+                .map(FieldInfo::getName)
+                .collect(Collectors.toList());
+        return new EnumTypeDescriptor(enumNames, enumNames.get(0));
     }
 
-    private boolean isEnum(String fullyQualifiedClassName) {
+    private boolean isEnumeration(String fullyQualifiedClassName) {
         ClassInfo classInfo = context.getClassInfo(fullyQualifiedClassName);
         return classInfo
                 .getSuperclasses()
                 .stream()
                 .anyMatch(info -> info.getName().equals(Enum.class.getName()));
+    }
+
+    private Object getDefaultValue(FieldInfo propertyInfo, PropertyTypeDescriptor propertyType) {
+        String stringValue = getAnnotationValueOrDefault(propertyInfo, Default.class, Default.USE_DEFAULT_VALUE);
+        return Default.USE_DEFAULT_VALUE.equals(stringValue) ?
+                propertyType.defaultValue() :
+                PropertyValueConverterFactory.forType(propertyType).from(stringValue);
     }
 
     @SuppressWarnings("unchecked")
@@ -100,7 +109,7 @@ class ComponentPropertyAnalyzer {
         }
         AnnotationInfo annotationInfo = fieldInfo.getAnnotationInfo(annotationClazz.getName());
         AnnotationParameterValueList parameterValues = annotationInfo.getParameterValues();
-        return (T) parameterValues.getValue("value");
+        return (T) parameterValues.getValue(ANNOTATION_DEFAULT_PARAM_NAME);
     }
 
 }

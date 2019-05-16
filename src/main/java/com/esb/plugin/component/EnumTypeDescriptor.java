@@ -1,6 +1,7 @@
 package com.esb.plugin.component;
 
 
+import java.util.Collections;
 import java.util.List;
 
 public class EnumTypeDescriptor implements PropertyTypeDescriptor {
@@ -21,5 +22,9 @@ public class EnumTypeDescriptor implements PropertyTypeDescriptor {
     @Override
     public Object defaultValue() {
         return defaultValue;
+    }
+
+    public List<String> possibleValues() {
+        return Collections.unmodifiableList(values);
     }
 }
