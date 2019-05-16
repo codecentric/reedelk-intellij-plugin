@@ -1,6 +1,6 @@
 package com.esb.plugin.designer.properties;
 
-public interface InputChangeListener<T> {
+public interface InputChangeListener {
 
-    void onChange(T value);
+    void onChange(String value);
 }

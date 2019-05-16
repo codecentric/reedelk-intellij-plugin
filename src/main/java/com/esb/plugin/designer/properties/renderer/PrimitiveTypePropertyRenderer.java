@@ -45,10 +45,10 @@ public class PrimitiveTypePropertyRenderer implements PropertyRenderer {
             JPanel panel = new JPanel();
             panel.setLayout(new BorderLayout());
             IntegerInputField integerInputField = new IntegerInputField();
-            integerInputField.setColumns(10);
-            integerInputField.setValue(converter.from(propertyValueAsString));
+            integerInputField.setText(converter.to(propertyValueAsString));
             integerInputField.addListener(value -> {
-                componentData.set(propertyName, value);
+                Object objectValue = converter.from(value);
+                componentData.set(propertyName, objectValue);
                 snapshot.onDataChange();
             });
             panel.add(integerInputField, BorderLayout.WEST);

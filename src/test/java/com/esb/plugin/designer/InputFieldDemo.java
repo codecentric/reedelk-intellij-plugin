@@ -1,47 +1,21 @@
-package com.esb.plugin.designer.properties.widget;
-
-import com.esb.plugin.designer.properties.InputChangeListener;
+package com.esb.plugin.designer;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
 
-public class IntegerInputField extends JTextField implements DocumentListener {
+public class InputFieldDemo {
 
-    private static final int COLUMNS_NUMBER = 10;
+    public static void main(String args[]) {
+        JTextField textField = new JTextField(10);
 
-    private InputChangeListener listener;
+        JPanel panel = new JPanel();
+        panel.add(textField);
 
-    public IntegerInputField() {
-        super(COLUMNS_NUMBER);
-        PlainDocument doc = (PlainDocument) getDocument();
+        PlainDocument doc = (PlainDocument) textField.getDocument();
         doc.setDocumentFilter(new IntegerDocumentFilter());
-    }
 
-    @Override
-    public void insertUpdate(DocumentEvent e) {
-        notifyListener();
-    }
 
-    @Override
-    public void removeUpdate(DocumentEvent e) {
-        notifyListener();
-    }
-
-    @Override
-    public void changedUpdate(DocumentEvent e) {
-        notifyListener();
-    }
-
-    public void addListener(InputChangeListener changeListener) {
-        this.listener = changeListener;
-    }
-
-    private void notifyListener() {
-        if (listener != null) {
-            listener.onChange(IntegerInputField.this.getText());
-        }
+        JOptionPane.showMessageDialog(null, panel);
     }
 
     static class IntegerDocumentFilter extends DocumentFilter {

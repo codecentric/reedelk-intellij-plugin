@@ -9,7 +9,7 @@ import java.util.List;
 
 public class PropertyDropDown extends JComboBox<String> implements ItemListener {
 
-    private InputChangeListener<String> listener;
+    private InputChangeListener listener;
 
     public PropertyDropDown(List<String> values) {
         super(values.toArray(new String[0]));
@@ -27,7 +27,7 @@ public class PropertyDropDown extends JComboBox<String> implements ItemListener 
         }
     }
 
-    public void addListener(InputChangeListener<String> changeListener) {
+    public void addListener(InputChangeListener changeListener) {
         this.listener = changeListener;
     }
 
