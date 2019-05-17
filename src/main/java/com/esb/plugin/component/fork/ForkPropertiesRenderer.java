@@ -3,7 +3,7 @@ package com.esb.plugin.component.fork;
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.ComponentPropertyDescriptor;
 import com.esb.plugin.designer.properties.renderer.node.AbstractNodePropertiesRenderer;
-import com.esb.plugin.designer.properties.renderer.property.TypeRendererFactory;
+import com.esb.plugin.designer.properties.renderer.type.TypeRendererFactory;
 import com.esb.plugin.designer.properties.widget.DefaultPropertiesPanel;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;

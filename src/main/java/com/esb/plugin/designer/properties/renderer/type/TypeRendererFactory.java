@@ -1,4 +1,4 @@
-package com.esb.plugin.designer.properties.renderer.property;
+package com.esb.plugin.designer.properties.renderer.type;
 
 import com.esb.api.exception.ESBException;
 import com.esb.plugin.component.PropertyTypeDescriptor;
