@@ -8,10 +8,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import static java.awt.BorderLayout.CENTER;
-import static java.awt.BorderLayout.WEST;
-
-public class BooleanCheckbox extends JPanel implements ActionListener {
+public class BooleanCheckbox extends JBCheckBox implements ActionListener {
 
     private JBCheckBox checkBox;
     private InputChangeListener<Boolean> listener;
@@ -19,8 +16,6 @@ public class BooleanCheckbox extends JPanel implements ActionListener {
 
     public BooleanCheckbox() {
         checkBox = new JBCheckBox();
-        add(checkBox, WEST);
-        add(Box.createHorizontalBox(), CENTER);
         checkBox.addActionListener(this);
         converter = ValueConverterFactory.forType(boolean.class);
     }
