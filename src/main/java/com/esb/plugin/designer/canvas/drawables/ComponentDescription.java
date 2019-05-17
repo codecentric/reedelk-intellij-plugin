@@ -5,7 +5,7 @@ import com.intellij.ui.JBColor;
 
 import java.awt.*;
 
-import static com.esb.plugin.ComponentDescriptorDecorator.DESCRIPTION_PROPERTY_NAME;
+import static com.esb.plugin.component.ComponentDescriptorDecorator.DESCRIPTION_PROPERTY_NAME;
 
 
 public class ComponentDescription extends AbstractText {

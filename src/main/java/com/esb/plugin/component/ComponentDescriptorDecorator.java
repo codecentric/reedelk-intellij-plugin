@@ -1,9 +1,4 @@
-package com.esb.plugin;
-
-import com.esb.plugin.component.ComponentDescriptor;
-import com.esb.plugin.component.ComponentPropertyDescriptor;
-import com.esb.plugin.component.PrimitiveTypeDescriptor;
-import com.esb.plugin.component.TypeDescriptor;
+package com.esb.plugin.component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +6,10 @@ import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 
+/**
+ * Decorator which adds as default the "Description"
+ * property to all registered components.
+ */
 public class ComponentDescriptorDecorator extends ComponentDescriptor {
 
     public static final String DESCRIPTION_PROPERTY_NAME = "description";
