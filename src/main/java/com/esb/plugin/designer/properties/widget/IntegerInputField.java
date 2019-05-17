@@ -16,21 +16,19 @@ public class IntegerInputField extends NumericInputField<Integer> {
 
     @Override
     protected DocumentFilter getDocumentFilter() {
-        return new NumericDocumentFilter(integerTester);
+        return new NumericDocumentFilter(value -> {
+            try {
+                Integer.parseInt(value);
+                return true;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        });
     }
 
     @Override
     protected int numberOfColumns() {
         return COLUMNS_NUMBER;
     }
-
-    private final NumericDocumentFilter.InputTest integerTester = value -> {
-        try {
-            Integer.parseInt(value);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    };
 
 }

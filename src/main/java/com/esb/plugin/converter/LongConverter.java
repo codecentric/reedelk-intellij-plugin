@@ -21,6 +21,7 @@ public class LongConverter implements ValueConverter<Long> {
 
     @Override
     public Long from(String key, JSONObject object) {
+        if (object.isNull(key)) return 0L;
         return object.getLong(key);
     }
 }
