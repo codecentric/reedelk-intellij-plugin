@@ -12,14 +12,14 @@ import java.awt.*;
 
 public abstract class InputField<T> extends JBPanel implements DocumentListener {
 
+    final JBTextField inputField;
+    final PlainDocument document;
+
+    private final ValueConverter<T> converter;
+
     private InputChangeListener<T> listener;
 
-    protected final JBTextField inputField;
-    private final ValueConverter<T> converter;
-    protected final PlainDocument document;
-
-
-    public InputField() {
+    InputField() {
         super(new BorderLayout());
         inputField = new JBTextField();
 
