@@ -27,7 +27,7 @@ public class ForkPropertiesRenderer extends AbstractNodePropertiesRenderer {
         componentProperties.forEach(propertyDescriptor ->
                 TypeRendererFactory.get()
                         .from(propertyDescriptor.getPropertyType())
-                        .render(propertyDescriptor, componentData, panel, snapshot));
+                        .render(propertyDescriptor, componentData, snapshot));
 
         return panel;
     }

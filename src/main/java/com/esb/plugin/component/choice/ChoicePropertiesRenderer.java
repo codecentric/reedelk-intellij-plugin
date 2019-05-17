@@ -39,7 +39,7 @@ public class ChoicePropertiesRenderer extends AbstractNodePropertiesRenderer {
         componentProperties.forEach(propertyDescriptor ->
                 TypeRendererFactory.get()
                         .from(propertyDescriptor.getPropertyType())
-                        .render(propertyDescriptor, componentData, panel, snapshot));
+                        .render(propertyDescriptor, componentData, snapshot));
 
         JBPanel container = new JBPanel();
         container.setLayout(new BorderLayout());
