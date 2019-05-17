@@ -22,9 +22,7 @@ public abstract class InputField<T> extends JBPanel implements DocumentListener 
     InputField() {
         super(new BorderLayout());
         inputField = new JBTextField();
-
         converter = getConverter();
-
         document = (PlainDocument) inputField.getDocument();
         document.addDocumentListener(this);
     }
@@ -44,23 +42,22 @@ public abstract class InputField<T> extends JBPanel implements DocumentListener 
         notifyListener();
     }
 
-    private void notifyListener() {
-        if (listener != null) {
-            T objectValue = converter.from(inputField.getText());
-            listener.onChange(objectValue);
-        }
+    public void setValue(Object value) {
+        String valueAsString = converter.toString(value);
+        inputField.setText(valueAsString);
     }
 
     public void addListener(InputChangeListener<T> changeListener) {
         this.listener = changeListener;
     }
 
-    public void setValue(Object value) {
-        String valueAsString = converter.toString(value);
-        inputField.setText(valueAsString);
-    }
-
-
     protected abstract ValueConverter<T> getConverter();
+
+    private void notifyListener() {
+        if (listener != null) {
+            T objectValue = converter.from(inputField.getText());
+            listener.onChange(objectValue);
+        }
+    }
 
 }

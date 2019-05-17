@@ -9,8 +9,7 @@ public class NumericDocumentFilter extends DocumentFilter {
 
     private final InputTest tester;
 
-    public NumericDocumentFilter(InputTest tester) {
-        super();
+    NumericDocumentFilter(InputTest tester) {
         this.tester = tester;
     }
 
