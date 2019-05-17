@@ -2,7 +2,7 @@ package com.esb.plugin.converter;
 
 import org.json.JSONObject;
 
-public class BooleanConverter implements PropertyValueConverter<Boolean> {
+public class BooleanConverter implements ValueConverter<Boolean> {
 
     @Override
     public String to(Object value) {

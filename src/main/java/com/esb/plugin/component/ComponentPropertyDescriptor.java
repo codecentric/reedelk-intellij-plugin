@@ -8,14 +8,14 @@ public class ComponentPropertyDescriptor {
     private final String displayName;
     private final String propertyName;
     private final Object defaultValue;
-    private final PropertyTypeDescriptor propertyType;
+    private final TypeDescriptor propertyType;
 
     public ComponentPropertyDescriptor(
             final String propertyName,
             final String displayName,
             final boolean required,
             final Object defaultValue,
-            final PropertyTypeDescriptor propertyType) {
+            final TypeDescriptor propertyType) {
 
         checkState(propertyName != null, "property name");
         checkState(propertyType != null, "property type");
@@ -30,7 +30,7 @@ public class ComponentPropertyDescriptor {
         return propertyName;
     }
 
-    public PropertyTypeDescriptor getPropertyType() {
+    public TypeDescriptor getPropertyType() {
         return propertyType;
     }
 

@@ -1,6 +1,6 @@
 package com.esb.plugin.converter;
 
-import com.esb.plugin.component.PropertyTypeDescriptor;
+import com.esb.plugin.component.TypeDescriptor;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -10,12 +10,12 @@ import java.util.Map;
 
 import static java.lang.String.format;
 
-public class PropertyValueConverterFactory {
+public class ValueConverterFactory {
 
 
-    private static final Map<Class<?>, PropertyValueConverter<?>> CONVERTER;
+    private static final Map<Class<?>, ValueConverter<?>> CONVERTER;
     static {
-        Map<Class<?>, PropertyValueConverter<?>> tmp = new HashMap<>();
+        Map<Class<?>, ValueConverter<?>> tmp = new HashMap<>();
 
         tmp.put(int.class, new IntConverter());
         tmp.put(Integer.class, new IntConverter());
@@ -38,7 +38,7 @@ public class PropertyValueConverterFactory {
         CONVERTER = Collections.unmodifiableMap(tmp);
     }
 
-    public static PropertyValueConverter<?> forType(PropertyTypeDescriptor typeDescriptor) {
+    public static ValueConverter<?> forType(TypeDescriptor typeDescriptor) {
         if (CONVERTER.containsKey(typeDescriptor.type())) {
             return CONVERTER.get(typeDescriptor.type());
         }

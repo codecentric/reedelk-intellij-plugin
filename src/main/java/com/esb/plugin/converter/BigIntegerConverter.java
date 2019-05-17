@@ -4,7 +4,7 @@ import org.json.JSONObject;
 
 import java.math.BigInteger;
 
-public class BigIntegerConverter implements PropertyValueConverter<BigInteger> {
+public class BigIntegerConverter implements ValueConverter<BigInteger> {
 
     @Override
     public String to(Object value) {

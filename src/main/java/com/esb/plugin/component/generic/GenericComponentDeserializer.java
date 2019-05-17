@@ -2,8 +2,8 @@ package com.esb.plugin.component.generic;
 
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.component.ComponentData;
-import com.esb.plugin.component.PropertyTypeDescriptor;
-import com.esb.plugin.converter.PropertyValueConverterFactory;
+import com.esb.plugin.component.TypeDescriptor;
+import com.esb.plugin.converter.ValueConverterFactory;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.deserializer.AbstractDeserializer;
 import com.esb.plugin.graph.deserializer.DeserializerContext;
@@ -32,9 +32,9 @@ public class GenericComponentDeserializer extends AbstractDeserializer {
             // TODO: we should say if mandatory or not with annotations
             if (componentDefinition.has(propertyName)) {
 
-                PropertyTypeDescriptor propertyType = componentData.getPropertyType(propertyName);
+                TypeDescriptor propertyType = componentData.getPropertyType(propertyName);
 
-                Object propertyValue = PropertyValueConverterFactory.forType(propertyType)
+                Object propertyValue = ValueConverterFactory.forType(propertyType)
                         .from(propertyName, componentDefinition);
 
                 // TODO: Should this be in the converter!?!?

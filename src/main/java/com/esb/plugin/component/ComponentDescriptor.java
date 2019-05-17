@@ -63,7 +63,7 @@ public class ComponentDescriptor {
     }
 
     // TODO: Shouldn't this return Optional?
-    public PropertyTypeDescriptor getPropertyType(String propertyName) {
+    public TypeDescriptor getPropertyType(String propertyName) {
         return componentPropertyDescriptors.stream()
                 .filter(propertyDefinition -> propertyDefinition.getPropertyName().equals(propertyName))
                 .findFirst()

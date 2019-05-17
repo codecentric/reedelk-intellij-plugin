@@ -1,6 +1,6 @@
 package com.esb.plugin.component;
 
-public interface PropertyTypeDescriptor {
+public interface TypeDescriptor {
 
     Class<?> type();
 

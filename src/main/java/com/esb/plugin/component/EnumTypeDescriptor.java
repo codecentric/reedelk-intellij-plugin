@@ -4,7 +4,7 @@ package com.esb.plugin.component;
 import java.util.Collections;
 import java.util.List;
 
-public class EnumTypeDescriptor implements PropertyTypeDescriptor {
+public class EnumTypeDescriptor implements TypeDescriptor {
 
     private final List<String> values;
     private final String defaultValue;

@@ -2,7 +2,7 @@ package com.esb.plugin.service.module.impl;
 
 import com.esb.plugin.component.ComponentPropertyDescriptor;
 import com.esb.plugin.component.EnumTypeDescriptor;
-import com.esb.plugin.component.PropertyTypeDescriptor;
+import com.esb.plugin.component.TypeDescriptor;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.FieldInfo;
@@ -61,7 +61,7 @@ class ComponentPropertyAnalyzerTest {
         assertThat(enumDescriptor.getDisplayName()).isEqualTo("Enum Property");
         assertThat(enumDescriptor.isRequired()).isFalse();
 
-        PropertyTypeDescriptor propertyType = enumDescriptor.getPropertyType();
+        TypeDescriptor propertyType = enumDescriptor.getPropertyType();
         assertThat(propertyType).isInstanceOf(EnumTypeDescriptor.class);
 
         EnumTypeDescriptor enumTypeDescriptor = (EnumTypeDescriptor) propertyType;

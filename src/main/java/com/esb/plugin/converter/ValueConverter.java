@@ -2,7 +2,7 @@ package com.esb.plugin.converter;
 
 import org.json.JSONObject;
 
-public interface PropertyValueConverter<ConvertedType> {
+public interface ValueConverter<ConvertedType> {
 
     String to(Object value);
 

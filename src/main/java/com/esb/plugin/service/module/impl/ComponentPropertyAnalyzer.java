@@ -6,15 +6,15 @@ import com.esb.api.annotation.Required;
 import com.esb.plugin.component.ComponentPropertyDescriptor;
 import com.esb.plugin.component.EnumTypeDescriptor;
 import com.esb.plugin.component.PrimitiveTypeDescriptor;
-import com.esb.plugin.component.PropertyTypeDescriptor;
-import com.esb.plugin.converter.PropertyValueConverterFactory;
+import com.esb.plugin.component.TypeDescriptor;
+import com.esb.plugin.converter.ValueConverterFactory;
 import io.github.classgraph.*;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.esb.plugin.converter.PropertyValueConverterFactory.isKnownType;
+import static com.esb.plugin.converter.ValueConverterFactory.isKnownType;
 
 class ComponentPropertyAnalyzer {
 
@@ -35,7 +35,7 @@ class ComponentPropertyAnalyzer {
     private ComponentPropertyDescriptor analyzeProperty(FieldInfo propertyInfo) {
         String propertyName = propertyInfo.getName();
         String displayName = getAnnotationValueOrDefault(propertyInfo, Property.class, propertyInfo.getName());
-        PropertyTypeDescriptor propertyType = getPropertyType(propertyInfo);
+        TypeDescriptor propertyType = getPropertyType(propertyInfo);
 
         Object defaultValue = getDefaultValue(propertyInfo, propertyType);
 
@@ -43,7 +43,7 @@ class ComponentPropertyAnalyzer {
         return new ComponentPropertyDescriptor(propertyName, displayName, required, defaultValue, propertyType);
     }
 
-    private PropertyTypeDescriptor getPropertyType(FieldInfo fieldInfo) {
+    private TypeDescriptor getPropertyType(FieldInfo fieldInfo) {
         TypeSignature typeSignature = fieldInfo.getTypeDescriptor();
         if (typeSignature instanceof BaseTypeSignature) {
             return processBaseType((BaseTypeSignature) typeSignature);
@@ -54,11 +54,11 @@ class ComponentPropertyAnalyzer {
         }
     }
 
-    private PropertyTypeDescriptor processBaseType(BaseTypeSignature typeSignature) {
+    private TypeDescriptor processBaseType(BaseTypeSignature typeSignature) {
         return new PrimitiveTypeDescriptor(typeSignature.getType());
     }
 
-    private PropertyTypeDescriptor processClassRefType(ClassRefTypeSignature typeSignature) {
+    private TypeDescriptor processClassRefType(ClassRefTypeSignature typeSignature) {
         String fullyQualifiedClassName = typeSignature.getFullyQualifiedClassName();
         if (isKnownType(fullyQualifiedClassName)) {
             try {
@@ -95,11 +95,11 @@ class ComponentPropertyAnalyzer {
                 .anyMatch(info -> info.getName().equals(Enum.class.getName()));
     }
 
-    private Object getDefaultValue(FieldInfo propertyInfo, PropertyTypeDescriptor propertyType) {
+    private Object getDefaultValue(FieldInfo propertyInfo, TypeDescriptor propertyType) {
         String stringValue = getAnnotationValueOrDefault(propertyInfo, Default.class, Default.USE_DEFAULT_VALUE);
         return Default.USE_DEFAULT_VALUE.equals(stringValue) ?
                 propertyType.defaultValue() :
-                PropertyValueConverterFactory.forType(propertyType).from(stringValue);
+                ValueConverterFactory.forType(propertyType).from(stringValue);
     }
 
     @SuppressWarnings("unchecked")

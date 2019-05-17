@@ -3,7 +3,7 @@ package com.esb.plugin;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.component.ComponentPropertyDescriptor;
 import com.esb.plugin.component.PrimitiveTypeDescriptor;
-import com.esb.plugin.component.PropertyTypeDescriptor;
+import com.esb.plugin.component.TypeDescriptor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +61,7 @@ public class ComponentDescriptorDecorator extends ComponentDescriptor {
     }
 
     @Override
-    public PropertyTypeDescriptor getPropertyType(String propertyName) {
+    public TypeDescriptor getPropertyType(String propertyName) {
         if (propertyName.equals(DESCRIPTION_PROPERTY_NAME)) {
             return descriptionDescriptor.getPropertyType();
         } else {

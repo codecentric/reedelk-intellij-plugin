@@ -2,7 +2,7 @@ package com.esb.plugin.component;
 
 import com.google.common.base.Defaults;
 
-public class PrimitiveTypeDescriptor implements PropertyTypeDescriptor {
+public class PrimitiveTypeDescriptor implements TypeDescriptor {
 
     private final Class<?> type;
 

@@ -2,9 +2,9 @@ package com.esb.plugin.designer.properties.renderer.type;
 
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.ComponentPropertyDescriptor;
-import com.esb.plugin.component.PropertyTypeDescriptor;
-import com.esb.plugin.converter.PropertyValueConverter;
-import com.esb.plugin.converter.PropertyValueConverterFactory;
+import com.esb.plugin.component.TypeDescriptor;
+import com.esb.plugin.converter.ValueConverter;
+import com.esb.plugin.converter.ValueConverterFactory;
 import com.esb.plugin.designer.properties.widget.DefaultPropertiesPanel;
 import com.esb.plugin.designer.properties.widget.FormBuilder;
 import com.esb.plugin.designer.properties.widget.LongInputField;
@@ -34,8 +34,8 @@ public class StringRenderer implements TypeRenderer {
                                             GraphSnapshot snapshot,
                                             ComponentPropertyDescriptor descriptor) {
 
-        PropertyTypeDescriptor propertyType = descriptor.getPropertyType();
-        PropertyValueConverter<?> converter = PropertyValueConverterFactory.forType(propertyType);
+        TypeDescriptor propertyType = descriptor.getPropertyType();
+        ValueConverter<?> converter = ValueConverterFactory.forType(propertyType);
 
 
         Object propertyValue = componentData.get(propertyName);

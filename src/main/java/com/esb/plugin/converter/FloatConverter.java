@@ -2,7 +2,7 @@ package com.esb.plugin.converter;
 
 import org.json.JSONObject;
 
-public class FloatConverter implements PropertyValueConverter<Float> {
+public class FloatConverter implements ValueConverter<Float> {
 
     @Override
     public String to(Object value) {

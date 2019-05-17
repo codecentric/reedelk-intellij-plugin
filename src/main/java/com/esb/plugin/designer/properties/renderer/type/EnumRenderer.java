@@ -3,8 +3,8 @@ package com.esb.plugin.designer.properties.renderer.type;
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.ComponentPropertyDescriptor;
 import com.esb.plugin.component.EnumTypeDescriptor;
-import com.esb.plugin.converter.PropertyValueConverter;
-import com.esb.plugin.converter.PropertyValueConverterFactory;
+import com.esb.plugin.converter.ValueConverter;
+import com.esb.plugin.converter.ValueConverterFactory;
 import com.esb.plugin.designer.properties.widget.DefaultPropertiesPanel;
 import com.esb.plugin.designer.properties.widget.FormBuilder;
 import com.esb.plugin.designer.properties.widget.PropertyDropDown;
@@ -21,7 +21,7 @@ public class EnumRenderer implements TypeRenderer {
         String displayName = descriptor.getDisplayName();
 
         EnumTypeDescriptor propertyType = (EnumTypeDescriptor) descriptor.getPropertyType();
-        PropertyValueConverter<?> converter = PropertyValueConverterFactory.forType(propertyType);
+        ValueConverter<?> converter = ValueConverterFactory.forType(propertyType);
 
         Object propertyValue = componentData.getOrDefault(propertyName, descriptor.getDefaultValue());
         Object propertyValueAsString = converter.to(propertyValue);

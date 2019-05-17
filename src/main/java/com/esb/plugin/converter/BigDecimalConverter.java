@@ -4,7 +4,7 @@ import org.json.JSONObject;
 
 import java.math.BigDecimal;
 
-public class BigDecimalConverter implements PropertyValueConverter<BigDecimal> {
+public class BigDecimalConverter implements ValueConverter<BigDecimal> {
 
     @Override
     public String to(Object value) {

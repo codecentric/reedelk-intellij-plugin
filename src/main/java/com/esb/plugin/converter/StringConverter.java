@@ -2,7 +2,7 @@ package com.esb.plugin.converter;
 
 import org.json.JSONObject;
 
-public class StringConverter implements PropertyValueConverter<String> {
+public class StringConverter implements ValueConverter<String> {
 
     @Override
     public String to(Object value) {
