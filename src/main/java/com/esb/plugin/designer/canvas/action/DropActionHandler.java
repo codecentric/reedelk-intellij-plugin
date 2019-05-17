@@ -46,14 +46,13 @@ public class DropActionHandler extends AbstractActionHandler {
 
         ComponentDescriptor descriptor = optionalDescriptor.get();
 
+        GraphNode nodeToAdd = GraphNodeFactory.get(descriptor);
+
         FlowGraph copy = snapshot.getGraph().copy();
 
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
 
-        GraphNode nodeToAdd = GraphNodeFactory.get(descriptor);
-
         addNodeToGraph(modifiableGraph, nodeToAdd, dropPoint, graphics);
-
 
         if (modifiableGraph.isChanged()) {
             dropEvent.acceptDrop(ACTION_COPY_OR_MOVE);

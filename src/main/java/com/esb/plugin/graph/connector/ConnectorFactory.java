@@ -36,7 +36,7 @@ public class ConnectorFactory {
 
     private Module module;
     private FlowGraph graph;
-    private GraphNode componentToAdd;
+    private GraphNode nodeToAdd;
 
     private ConnectorFactory() {
     }
@@ -45,8 +45,8 @@ public class ConnectorFactory {
         return new ConnectorFactory();
     }
 
-    public ConnectorFactory componentToAdd(GraphNode componentToAdd) {
-        this.componentToAdd = componentToAdd;
+    public ConnectorFactory nodeToAdd(GraphNode nodeToAdd) {
+        this.nodeToAdd = nodeToAdd;
         return this;
     }
 
@@ -63,11 +63,11 @@ public class ConnectorFactory {
     public Connector build() {
         checkNotNull(graph, "graph");
         checkNotNull(module, "module");
-        checkNotNull(componentToAdd, "componentToAdd");
+        checkNotNull(nodeToAdd, "nodeToAdd");
 
-        String fullyQualifiedName = componentToAdd.componentData().getFullyQualifiedName();
+        String fullyQualifiedName = nodeToAdd.componentData().getFullyQualifiedName();
         Class<? extends ConnectorBuilder> builderClazz = CONNECTOR_BUILDER.getOrDefault(fullyQualifiedName, GENERIC_BUILDER);
-        return instantiateBuilder(builderClazz).build(module, graph, componentToAdd);
+        return instantiateBuilder(builderClazz).build(module, graph, nodeToAdd);
     }
 
     private static ConnectorBuilder instantiateBuilder(Class<? extends ConnectorBuilder> builderClazz) {

@@ -23,7 +23,7 @@ abstract class AbstractActionHandler {
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
 
         Connector connector = ConnectorFactory.get()
-                .componentToAdd(dropped)
+                .nodeToAdd(dropped)
                 .graph(modifiableGraph)
                 .module(module)
                 .build();
