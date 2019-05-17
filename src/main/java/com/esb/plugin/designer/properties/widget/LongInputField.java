@@ -7,15 +7,8 @@ import javax.swing.text.DocumentFilter;
 
 public class LongInputField extends NumericInputField<Long> {
 
-    private static final int COLUMNS_NUMBER = 16;
-
     @Override
-    protected ValueConverter<Long> getConverter() {
-        return ValueConverterFactory.forType(Long.class);
-    }
-
-    @Override
-    protected DocumentFilter getDocumentFilter() {
+    protected DocumentFilter getInputFilter() {
         return new NumericDocumentFilter(value -> {
             try {
                 Long.parseLong(value);
@@ -27,8 +20,8 @@ public class LongInputField extends NumericInputField<Long> {
     }
 
     @Override
-    protected int numberOfColumns() {
-        return COLUMNS_NUMBER;
+    protected ValueConverter<Long> getConverter() {
+        return ValueConverterFactory.forType(Long.class);
     }
 
 }

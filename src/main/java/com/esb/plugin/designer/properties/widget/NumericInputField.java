@@ -8,16 +8,16 @@ import static java.awt.BorderLayout.WEST;
 
 public abstract class NumericInputField<T> extends InputField<T> {
 
+    private static final int COLUMNS_NUMBER = 16;
+
     NumericInputField() {
         super();
         add(inputField, WEST);
         add(Box.createHorizontalBox(), CENTER);
-        inputField.setColumns(numberOfColumns());
-        document.setDocumentFilter(getDocumentFilter());
+        inputField.setColumns(COLUMNS_NUMBER);
+        document.setDocumentFilter(getInputFilter());
     }
 
-    protected abstract int numberOfColumns();
-
-    protected abstract DocumentFilter getDocumentFilter();
+    protected abstract DocumentFilter getInputFilter();
 
 }

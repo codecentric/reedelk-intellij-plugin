@@ -1,4 +1,6 @@
 package com.esb.plugin.designer.properties.widget;
 
-public class BooleanCheckbox {
+import javax.swing.*;
+
+public class BooleanCheckbox extends JPanel {
 }
