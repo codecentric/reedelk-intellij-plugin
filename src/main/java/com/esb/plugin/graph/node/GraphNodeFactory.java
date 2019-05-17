@@ -31,28 +31,35 @@ public class GraphNodeFactory {
 
 
     public static <T extends GraphNode> T get(Module module, String componentName) {
-        ComponentDescriptor componentDescriptor = ComponentService
-                .getInstance(module)
-                .componentDescriptorByName(componentName);
+        ComponentDescriptor componentDescriptor =
+                ComponentService
+                        .getInstance(module)
+                        .componentDescriptorByName(componentName);
         return GraphNodeFactory.get(componentDescriptor);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T extends GraphNode> T get(ComponentDescriptor descriptor) {
         ComponentDescriptorDecorator decorator = new ComponentDescriptorDecorator(descriptor);
-        ComponentData componentData = new ComponentData(decorator);
+        ComponentData data = new ComponentData(decorator);
+        fillDefaultDescriptorValues(decorator, data);
 
-        // TODO: this should be fixed by chosing default value when data does not exists...
-        componentData.set(ComponentDescriptorDecorator.DESCRIPTION_PROPERTY_NAME, descriptor.getDisplayName());
+        String componentFullyQualifiedName = data.getFullyQualifiedName();
 
-        String componentFullyQualifiedName = componentData.getFullyQualifiedName();
-
-        Class<? extends GraphNode> componentDrawableClazz = COMPONENT_DRAWABLE_MAP
-                .getOrDefault(componentFullyQualifiedName, DEFAULT);
+        Class<? extends GraphNode> componentDrawableClazz =
+                COMPONENT_DRAWABLE_MAP.getOrDefault(componentFullyQualifiedName, DEFAULT);
         try {
-            return (T) componentDrawableClazz.getConstructor(ComponentData.class)
-                    .newInstance(componentData);
+            return (T) componentDrawableClazz.getConstructor(ComponentData.class).newInstance(data);
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static void fillDefaultDescriptorValues(ComponentDescriptor descriptor, ComponentData data) {
+        descriptor.getComponentPropertyDescriptors()
+                .forEach(propertyDescriptor -> {
+                    Object defaultValue = propertyDescriptor.getDefaultValue();
+                    data.set(propertyDescriptor.getPropertyName(), defaultValue);
+                });
     }
 }
