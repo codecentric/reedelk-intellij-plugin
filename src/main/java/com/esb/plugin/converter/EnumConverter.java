@@ -4,7 +4,7 @@ import org.json.JSONObject;
 
 public class EnumConverter implements ValueConverter<String> {
     @Override
-    public String to(Object value) {
+    public String toString(Object value) {
         return null;
     }
 

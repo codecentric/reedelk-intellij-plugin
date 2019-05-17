@@ -39,12 +39,17 @@ public class ValueConverterFactory {
     }
 
     public static ValueConverter<?> forType(TypeDescriptor typeDescriptor) {
-        if (CONVERTER.containsKey(typeDescriptor.type())) {
-            return CONVERTER.get(typeDescriptor.type());
+        return forType(typeDescriptor.type());
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> ValueConverter<T> forType(Class<T> typeClazz) {
+        if (CONVERTER.containsKey(typeClazz)) {
+            return (ValueConverter<T>) CONVERTER.get(typeClazz);
         }
         throw new IllegalStateException(
                 format("Input Type '%s' does not have suitable converter",
-                        typeDescriptor.type().getName()));
+                        typeClazz.getName()));
     }
 
     public static boolean isKnownType(String clazzFullyQualifiedName) {

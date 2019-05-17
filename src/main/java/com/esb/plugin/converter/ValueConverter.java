@@ -4,7 +4,7 @@ import org.json.JSONObject;
 
 public interface ValueConverter<ConvertedType> {
 
-    String to(Object value);
+    String toString(Object value);
 
     ConvertedType from(String value);
 

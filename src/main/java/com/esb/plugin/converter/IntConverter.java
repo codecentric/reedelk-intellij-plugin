@@ -5,7 +5,7 @@ import org.json.JSONObject;
 public class IntConverter implements ValueConverter<Integer> {
 
     @Override
-    public String to(Object value) {
+    public String toString(Object value) {
         Integer realValue = (Integer) value;
         return Integer.toString(realValue);
     }

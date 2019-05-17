@@ -1,15 +1,16 @@
 package com.esb.plugin.component.generic;
 
 import com.esb.plugin.component.ComponentData;
-import com.esb.plugin.component.ComponentPropertyDescriptor;
+import com.esb.plugin.component.TypeDescriptor;
 import com.esb.plugin.designer.properties.renderer.node.AbstractNodePropertiesRenderer;
 import com.esb.plugin.designer.properties.renderer.type.TypeRendererFactory;
 import com.esb.plugin.designer.properties.widget.DefaultPropertiesPanel;
+import com.esb.plugin.designer.properties.widget.FormBuilder;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.ui.components.JBPanel;
 
-import java.util.List;
+import javax.swing.*;
 
 public class GenericComponentPropertiesRenderer extends AbstractNodePropertiesRenderer {
 
@@ -22,11 +23,20 @@ public class GenericComponentPropertiesRenderer extends AbstractNodePropertiesRe
         ComponentData componentData = node.componentData();
         DefaultPropertiesPanel panel = new DefaultPropertiesPanel();
 
-        List<ComponentPropertyDescriptor> componentProperties = componentData.getComponentPropertyDescriptors();
-        componentProperties.forEach(propertyDescriptor ->
-                TypeRendererFactory.get()
-                        .from(propertyDescriptor.getPropertyType())
-                        .render(propertyDescriptor, componentData, panel, snapshot));
+        componentData.getComponentPropertyDescriptors().forEach(descriptor -> {
+
+            final String propertyName = descriptor.getPropertyName();
+            final String displayName = descriptor.getDisplayName();
+            final TypeDescriptor propertyType = descriptor.getPropertyType();
+            final JComponent renderedComponent =
+                    TypeRendererFactory.get()
+                            .from(propertyType)
+                            .render(componentData, snapshot, propertyName);
+
+            FormBuilder.get()
+                    .addLabel(displayName, panel)
+                    .addLastField(renderedComponent, panel);
+        });
 
         return panel;
     }

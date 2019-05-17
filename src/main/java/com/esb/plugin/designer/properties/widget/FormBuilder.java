@@ -85,7 +85,7 @@ public class FormBuilder {
      * Adds a JLabel with the given string to the label column
      */
     public FormBuilder addLabel(String s, Container parent) {
-        JLabel c = new JLabel(s);
+        JLabel c = new JLabel(s + ":");
         addLabel(c, parent);
         return this;
     }

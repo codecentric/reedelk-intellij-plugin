@@ -1,23 +1,38 @@
 package com.esb.plugin.designer.properties.widget;
 
+import com.esb.plugin.converter.ValueConverter;
+import com.esb.plugin.converter.ValueConverterFactory;
 import com.esb.plugin.designer.properties.InputChangeListener;
+import com.intellij.ui.components.JBPanel;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
+import java.awt.*;
 
-public class LongInputField extends JTextField implements DocumentListener {
+import static java.awt.BorderLayout.CENTER;
+import static java.awt.BorderLayout.WEST;
+
+public class LongInputField extends JBPanel implements DocumentListener {
 
     private static final int COLUMNS_NUMBER = 16;
 
-    private InputChangeListener listener;
+    private InputChangeListener<Long> listener;
+    private final JTextField inputField;
+    private final ValueConverter<Long> converter = ValueConverterFactory.forType(Long.class);
+
 
     public LongInputField() {
-        super(COLUMNS_NUMBER);
-        PlainDocument document = (PlainDocument) getDocument();
+        super(new BorderLayout());
+        inputField = new JTextField(COLUMNS_NUMBER);
+
+        PlainDocument document = (PlainDocument) inputField.getDocument();
         document.setDocumentFilter(new IntegerDocumentFilter());
         document.addDocumentListener(this);
+
+        add(inputField, WEST);
+        add(Box.createHorizontalBox(), CENTER);
     }
 
     @Override
@@ -35,14 +50,20 @@ public class LongInputField extends JTextField implements DocumentListener {
         notifyListener();
     }
 
-    public void addListener(InputChangeListener changeListener) {
+    public void addListener(InputChangeListener<Long> changeListener) {
         this.listener = changeListener;
     }
 
     private void notifyListener() {
         if (listener != null) {
-            listener.onChange(LongInputField.this.getText());
+            Long objectValue = converter.from(inputField.getText());
+            listener.onChange(objectValue);
         }
+    }
+
+    public void setValue(Object value) {
+        String valueAsString = converter.toString(value);
+        inputField.setText(valueAsString);
     }
 
     static class IntegerDocumentFilter extends DocumentFilter {

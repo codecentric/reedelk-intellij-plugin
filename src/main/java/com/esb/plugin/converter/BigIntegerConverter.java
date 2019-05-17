@@ -7,7 +7,7 @@ import java.math.BigInteger;
 public class BigIntegerConverter implements ValueConverter<BigInteger> {
 
     @Override
-    public String to(Object value) {
+    public String toString(Object value) {
         BigInteger realValue = (BigInteger) value;
         return realValue.toString();
     }

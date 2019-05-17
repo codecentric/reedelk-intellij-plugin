@@ -11,31 +11,31 @@ import java.util.Map;
 
 public class TypeRendererFactory {
 
-    private static final Map<Class<?>, Class<? extends TypeRenderer>> RENDERER;
+    private static final Map<Class<?>, Class<? extends TypePropertyRenderer>> RENDERER;
 
     static {
-        Map<Class<?>, Class<? extends TypeRenderer>> tmp = new HashMap<>();
+        Map<Class<?>, Class<? extends TypePropertyRenderer>> tmp = new HashMap<>();
 
-        tmp.put(int.class, IntegerRenderer.class);
-        tmp.put(Integer.class, IntegerRenderer.class);
+        tmp.put(int.class, IntegerPropertyRenderer.class);
+        tmp.put(Integer.class, IntegerPropertyRenderer.class);
 
-        tmp.put(long.class, LongRenderer.class);
-        tmp.put(Long.class, LongRenderer.class);
+        tmp.put(long.class, LongPropertyRenderer.class);
+        tmp.put(Long.class, LongPropertyRenderer.class);
 
-        tmp.put(float.class, FloatRenderer.class);
-        tmp.put(Float.class, FloatRenderer.class);
+        tmp.put(float.class, FloatPropertyRenderer.class);
+        tmp.put(Float.class, FloatPropertyRenderer.class);
 
-        tmp.put(double.class, DoubleRenderer.class);
-        tmp.put(Double.class, DoubleRenderer.class);
+        tmp.put(double.class, DoublePropertyRenderer.class);
+        tmp.put(Double.class, DoublePropertyRenderer.class);
 
-        tmp.put(boolean.class, BooleanRenderer.class);
-        tmp.put(Boolean.class, BooleanRenderer.class);
+        tmp.put(boolean.class, BooleanPropertyRenderer.class);
+        tmp.put(Boolean.class, BooleanPropertyRenderer.class);
 
-        tmp.put(String.class, StringRenderer.class);
-        tmp.put(BigInteger.class, BigIntegerRenderer.class);
-        tmp.put(BigDecimal.class, BigDecimalRenderer.class);
+        tmp.put(String.class, StringPropertyRenderer.class);
+        tmp.put(BigInteger.class, BigIntegerPropertyRenderer.class);
+        tmp.put(BigDecimal.class, BigDecimalPropertyRenderer.class);
 
-        tmp.put(Enum.class, EnumRenderer.class);
+        tmp.put(Enum.class, EnumPropertyRenderer.class);
 
         RENDERER = tmp;
     }
@@ -44,12 +44,12 @@ public class TypeRendererFactory {
         return new TypeRendererFactory();
     }
 
-    public TypeRenderer from(TypeDescriptor propertyType) {
-        Class<? extends TypeRenderer> rendererClazz = RENDERER.get(propertyType.type());
+    public TypePropertyRenderer from(TypeDescriptor propertyType) {
+        Class<? extends TypePropertyRenderer> rendererClazz = RENDERER.get(propertyType.type());
         return instantiateRenderer(rendererClazz);
     }
 
-    private TypeRenderer instantiateRenderer(Class<? extends TypeRenderer> rendererClazz) {
+    private TypePropertyRenderer instantiateRenderer(Class<? extends TypePropertyRenderer> rendererClazz) {
         try {
             return rendererClazz.getConstructor().newInstance();
         } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {

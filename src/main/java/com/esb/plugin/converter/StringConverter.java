@@ -5,7 +5,7 @@ import org.json.JSONObject;
 public class StringConverter implements ValueConverter<String> {
 
     @Override
-    public String to(Object value) {
+    public String toString(Object value) {
         return (String) value;
     }
 
