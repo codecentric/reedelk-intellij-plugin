@@ -7,11 +7,11 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.List;
 
-public class PropertyDropDown extends JComboBox<String> implements ItemListener {
+public class EnumDropDown extends JComboBox<String> implements ItemListener {
 
     private InputChangeListener<String> listener;
 
-    public PropertyDropDown(List<String> values) {
+    public EnumDropDown(List<String> values) {
         super(values.toArray(new String[0]));
         getPreferredSize().width = 150;
         addItemListener(this);

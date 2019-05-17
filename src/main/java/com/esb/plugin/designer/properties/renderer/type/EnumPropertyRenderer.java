@@ -5,7 +5,7 @@ import com.esb.plugin.component.ComponentPropertyDescriptor;
 import com.esb.plugin.component.EnumTypeDescriptor;
 import com.esb.plugin.converter.ValueConverter;
 import com.esb.plugin.converter.ValueConverterFactory;
-import com.esb.plugin.designer.properties.widget.PropertyDropDown;
+import com.esb.plugin.designer.properties.widget.EnumDropDown;
 import com.esb.plugin.graph.GraphSnapshot;
 
 import javax.swing.*;
@@ -23,7 +23,7 @@ public class EnumPropertyRenderer implements TypePropertyRenderer {
         Object propertyValue = componentData.getOrDefault(propertyName, descriptor.getDefaultValue());
         Object propertyValueAsString = converter.toString(propertyValue);
 
-        PropertyDropDown dropDown = new PropertyDropDown(propertyType.possibleValues());
+        EnumDropDown dropDown = new EnumDropDown(propertyType.possibleValues());
         dropDown.addListener(valueAsString -> {
             componentData.set(propertyName, valueAsString);
             snapshot.onDataChange();
