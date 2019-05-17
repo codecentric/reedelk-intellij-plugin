@@ -16,7 +16,7 @@ public class LongInputField extends NumericInputField<Long> {
 
     @Override
     protected DocumentFilter getDocumentFilter() {
-        return new LongDocumentFilter();
+        return new NumericDocumentFilter(longTester);
     }
 
     @Override
@@ -24,16 +24,13 @@ public class LongInputField extends NumericInputField<Long> {
         return COLUMNS_NUMBER;
     }
 
-    static class LongDocumentFilter extends NumericDocumentFilter {
-        @Override
-        protected boolean test(String text) {
-            try {
-                Long.parseLong(text);
-                return true;
-            } catch (NumberFormatException e) {
-                return false;
-            }
+    private final NumericDocumentFilter.InputTest longTester = value -> {
+        try {
+            Long.parseLong(value);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
         }
-    }
+    };
 
 }

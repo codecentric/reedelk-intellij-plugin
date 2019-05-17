@@ -5,7 +5,13 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.DocumentFilter;
 
-public abstract class NumericDocumentFilter extends DocumentFilter {
+public class NumericDocumentFilter extends DocumentFilter {
+
+    private final InputTest tester;
+
+    public NumericDocumentFilter(InputTest tester) {
+        this.tester = tester;
+    }
 
     @Override
     public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
@@ -20,7 +26,7 @@ public abstract class NumericDocumentFilter extends DocumentFilter {
             super.insertString(fb, offset, "+", attr);
         } else if (sb.length() == 0) {
             super.insertString(fb, offset, "0", attr);
-        } else if (test(sb.toString())) {
+        } else if (tester.test(sb.toString())) {
             super.insertString(fb, offset, string, attr);
         } else {
             // warn the user and don't allow the insert
@@ -41,7 +47,7 @@ public abstract class NumericDocumentFilter extends DocumentFilter {
             super.replace(fb, offset, length, text, attrs);
         } else if (sb.length() == 0) {
             super.replace(fb, offset, length, text, attrs);
-        } else if (test(sb.toString())) {
+        } else if (tester.test(sb.toString())) {
             super.replace(fb, offset, length, text, attrs);
         } else {
             // warn the user and don't allow the insert
@@ -61,12 +67,14 @@ public abstract class NumericDocumentFilter extends DocumentFilter {
             super.remove(fb, offset, length);
         } else if (sb.length() == 0) {
             super.remove(fb, offset, length);
-        } else if (test(sb.toString())) {
+        } else if (tester.test(sb.toString())) {
             super.remove(fb, offset, length);
         } else {
             // warn the user and don't allow the insert
         }
     }
 
-    protected abstract boolean test(String text);
+    interface InputTest {
+        boolean test(String value);
+    }
 }

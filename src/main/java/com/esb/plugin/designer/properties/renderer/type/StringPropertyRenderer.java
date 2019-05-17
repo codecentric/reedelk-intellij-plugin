@@ -24,7 +24,7 @@ public class StringPropertyRenderer implements TypePropertyRenderer {
 
 
         StringInputField input = new StringInputField();
-        input.setText(propertyValueAsString);
+        input.setValue(propertyValue);
         input.addListener(valueAsString -> {
             componentData.set(propertyName, valueAsString);
             snapshot.onDataChange();

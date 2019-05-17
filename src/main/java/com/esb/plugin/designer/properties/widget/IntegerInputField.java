@@ -16,7 +16,7 @@ public class IntegerInputField extends NumericInputField<Integer> {
 
     @Override
     protected DocumentFilter getDocumentFilter() {
-        return new IntegerDocumentFilter();
+        return new NumericDocumentFilter(integerTester);
     }
 
     @Override
@@ -24,16 +24,13 @@ public class IntegerInputField extends NumericInputField<Integer> {
         return COLUMNS_NUMBER;
     }
 
-    static class IntegerDocumentFilter extends NumericDocumentFilter {
-
-        @Override
-        protected boolean test(String text) {
-            try {
-                Integer.parseInt(text);
-                return true;
-            } catch (NumberFormatException e) {
-                return false;
-            }
+    private final NumericDocumentFilter.InputTest integerTester = value -> {
+        try {
+            Integer.parseInt(value);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
         }
-    }
+    };
+
 }

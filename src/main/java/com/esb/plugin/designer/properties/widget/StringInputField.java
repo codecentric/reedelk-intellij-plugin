@@ -1,42 +1,20 @@
 package com.esb.plugin.designer.properties.widget;
 
-import com.esb.plugin.designer.properties.InputChangeListener;
-import com.intellij.ui.components.JBTextField;
+import com.esb.plugin.converter.ValueConverter;
+import com.esb.plugin.converter.ValueConverterFactory;
 
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+import static java.awt.BorderLayout.CENTER;
 
-public class StringInputField extends JBTextField implements DocumentListener {
-
-    private InputChangeListener<String> listener;
+public class StringInputField extends InputField<String> {
 
     public StringInputField() {
-        getDocument().addDocumentListener(this);
+        super();
+        add(inputField, CENTER);
     }
 
     @Override
-    public void insertUpdate(DocumentEvent e) {
-        if (listener != null) {
-            listener.onChange(StringInputField.this.getText());
-        }
-    }
-
-    @Override
-    public void removeUpdate(DocumentEvent e) {
-        if (listener != null) {
-            listener.onChange(StringInputField.this.getText());
-        }
-    }
-
-    @Override
-    public void changedUpdate(DocumentEvent e) {
-        if (listener != null) {
-            listener.onChange(StringInputField.this.getText());
-        }
-    }
-
-    public void addListener(InputChangeListener<String> changeListener) {
-        this.listener = changeListener;
+    protected ValueConverter<String> getConverter() {
+        return ValueConverterFactory.forType(String.class);
     }
 
 }
