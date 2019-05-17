@@ -1,6 +1,4 @@
-package com.esb.plugin.designer.properties.widget;
-
-import com.esb.plugin.designer.properties.InputChangeListener;
+package com.esb.plugin.designer.properties.widget.input;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;

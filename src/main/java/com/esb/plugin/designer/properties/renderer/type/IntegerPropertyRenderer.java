@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.properties.renderer.type;
 
-import com.esb.plugin.designer.properties.widget.IntegerInputField;
-import com.esb.plugin.designer.properties.widget.NumericInputField;
+import com.esb.plugin.designer.properties.widget.input.IntegerInputField;
+import com.esb.plugin.designer.properties.widget.input.NumericInputField;
 
 public class IntegerPropertyRenderer extends AbstractPropertyRenderer<Integer> {
 

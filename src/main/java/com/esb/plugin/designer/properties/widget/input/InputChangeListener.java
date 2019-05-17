@@ -1,4 +1,4 @@
-package com.esb.plugin.designer.properties;
+package com.esb.plugin.designer.properties.widget.input;
 
 public interface InputChangeListener<T> {
 

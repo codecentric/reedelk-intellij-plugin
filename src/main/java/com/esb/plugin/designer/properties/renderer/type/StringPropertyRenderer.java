@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.properties.renderer.type;
 
-import com.esb.plugin.designer.properties.widget.InputField;
-import com.esb.plugin.designer.properties.widget.StringInputField;
+import com.esb.plugin.designer.properties.widget.input.InputField;
+import com.esb.plugin.designer.properties.widget.input.StringInputField;
 
 public class StringPropertyRenderer extends AbstractPropertyRenderer<String> {
 

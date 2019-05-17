@@ -1,17 +1,19 @@
-package com.esb.plugin.designer.properties.widget;
+package com.esb.plugin.designer.properties.widget.input;
 
 import com.esb.plugin.converter.ValueConverter;
 import com.esb.plugin.converter.ValueConverterFactory;
+import com.esb.plugin.designer.properties.widget.NumericDocumentFilter;
 
 import javax.swing.text.DocumentFilter;
+import java.math.BigDecimal;
 
-public class DoubleInputField extends NumericInputField<Double> {
+public class BigDecimalInputField extends NumericInputField<BigDecimal> {
 
     @Override
     protected DocumentFilter getInputFilter() {
         return new NumericDocumentFilter(value -> {
             try {
-                Double.parseDouble(value);
+                new BigDecimal(value);
                 return true;
             } catch (NumberFormatException e) {
                 return false;
@@ -20,7 +22,7 @@ public class DoubleInputField extends NumericInputField<Double> {
     }
 
     @Override
-    protected ValueConverter<Double> getConverter() {
-        return ValueConverterFactory.forType(Double.class);
+    protected ValueConverter<BigDecimal> getConverter() {
+        return ValueConverterFactory.forType(BigDecimal.class);
     }
 }

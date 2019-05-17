@@ -1,4 +1,4 @@
-package com.esb.plugin.designer.properties.widget;
+package com.esb.plugin.designer.properties.widget.input;
 
 import javax.swing.*;
 import javax.swing.text.DocumentFilter;

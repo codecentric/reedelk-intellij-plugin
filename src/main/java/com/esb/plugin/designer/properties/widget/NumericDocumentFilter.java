@@ -9,7 +9,7 @@ public class NumericDocumentFilter extends DocumentFilter {
 
     private final InputTest tester;
 
-    NumericDocumentFilter(InputTest tester) {
+    public NumericDocumentFilter(InputTest tester) {
         this.tester = tester;
     }
 
@@ -74,7 +74,7 @@ public class NumericDocumentFilter extends DocumentFilter {
         }
     }
 
-    interface InputTest {
+    public interface InputTest {
         boolean test(String value);
     }
 }

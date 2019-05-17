@@ -5,7 +5,7 @@ import com.esb.plugin.component.ComponentPropertyDescriptor;
 import com.esb.plugin.component.EnumTypeDescriptor;
 import com.esb.plugin.converter.ValueConverter;
 import com.esb.plugin.converter.ValueConverterFactory;
-import com.esb.plugin.designer.properties.widget.EnumDropDown;
+import com.esb.plugin.designer.properties.widget.input.EnumDropDown;
 import com.esb.plugin.graph.GraphSnapshot;
 
 import javax.swing.*;

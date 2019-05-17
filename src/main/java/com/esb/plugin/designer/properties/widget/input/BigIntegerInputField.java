@@ -1,17 +1,19 @@
-package com.esb.plugin.designer.properties.widget;
+package com.esb.plugin.designer.properties.widget.input;
 
 import com.esb.plugin.converter.ValueConverter;
 import com.esb.plugin.converter.ValueConverterFactory;
+import com.esb.plugin.designer.properties.widget.NumericDocumentFilter;
 
 import javax.swing.text.DocumentFilter;
+import java.math.BigInteger;
 
-public class LongInputField extends NumericInputField<Long> {
+public class BigIntegerInputField extends NumericInputField<BigInteger> {
 
     @Override
     protected DocumentFilter getInputFilter() {
         return new NumericDocumentFilter(value -> {
             try {
-                Long.parseLong(value);
+                new BigInteger(value);
                 return true;
             } catch (NumberFormatException e) {
                 return false;
@@ -20,8 +22,7 @@ public class LongInputField extends NumericInputField<Long> {
     }
 
     @Override
-    protected ValueConverter<Long> getConverter() {
-        return ValueConverterFactory.forType(Long.class);
+    protected ValueConverter<BigInteger> getConverter() {
+        return ValueConverterFactory.forType(BigInteger.class);
     }
-
 }
