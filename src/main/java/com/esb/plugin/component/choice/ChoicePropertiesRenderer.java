@@ -4,8 +4,8 @@ import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.ComponentPropertyDescriptor;
 import com.esb.plugin.component.choice.widget.ChoiceRouteTable;
 import com.esb.plugin.component.choice.widget.ConditionRouteTableModel;
-import com.esb.plugin.designer.properties.renderer.AbstractPropertiesRenderer;
-import com.esb.plugin.designer.properties.renderer.PropertyRendererFactory;
+import com.esb.plugin.designer.properties.renderer.node.AbstractNodePropertiesRenderer;
+import com.esb.plugin.designer.properties.renderer.property.TypeRendererFactory;
 import com.esb.plugin.designer.properties.widget.DefaultPropertiesPanel;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
@@ -18,7 +18,7 @@ import static com.esb.plugin.component.choice.ChoiceNode.DATA_CONDITION_ROUTE_PA
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 
-public class ChoicePropertiesRenderer extends AbstractPropertiesRenderer {
+public class ChoicePropertiesRenderer extends AbstractNodePropertiesRenderer {
 
     public ChoicePropertiesRenderer(GraphSnapshot snapshot) {
         super(snapshot);
@@ -37,7 +37,7 @@ public class ChoicePropertiesRenderer extends AbstractPropertiesRenderer {
 
         List<ComponentPropertyDescriptor> componentProperties = componentData.getComponentPropertyDescriptors();
         componentProperties.forEach(propertyDescriptor ->
-                PropertyRendererFactory.get()
+                TypeRendererFactory.get()
                         .from(propertyDescriptor.getPropertyType())
                         .render(propertyDescriptor, componentData, panel, snapshot));
 

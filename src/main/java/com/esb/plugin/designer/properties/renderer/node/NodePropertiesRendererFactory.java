@@ -1,4 +1,4 @@
-package com.esb.plugin.designer.properties.renderer;
+package com.esb.plugin.designer.properties.renderer.node;
 
 import com.esb.api.exception.ESBException;
 import com.esb.component.Choice;
@@ -20,12 +20,12 @@ import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class PropertiesRendererFactory {
+public class NodePropertiesRendererFactory {
 
-    private static final Class<? extends PropertiesRenderer> GENERIC_RENDERER = GenericComponentPropertiesRenderer.class;
-    private static final Map<String, Class<? extends PropertiesRenderer>> RENDERER;
+    private static final Class<? extends NodePropertiesRenderer> GENERIC_RENDERER = GenericComponentPropertiesRenderer.class;
+    private static final Map<String, Class<? extends NodePropertiesRenderer>> RENDERER;
     static {
-        Map<String, Class<? extends PropertiesRenderer>> tmp = new HashMap<>();
+        Map<String, Class<? extends NodePropertiesRenderer>> tmp = new HashMap<>();
         tmp.put(Stop.class.getName(), StopPropertiesRenderer.class);
         tmp.put(Fork.class.getName(), ForkPropertiesRenderer.class);
         tmp.put(Choice.class.getName(), ChoicePropertiesRenderer.class);
@@ -36,33 +36,33 @@ public class PropertiesRendererFactory {
     private GraphSnapshot snapshot;
     private ComponentData componentData;
 
-    private PropertiesRendererFactory() {
+    private NodePropertiesRendererFactory() {
     }
 
-    public static PropertiesRendererFactory get() {
-        return new PropertiesRendererFactory();
+    public static NodePropertiesRendererFactory get() {
+        return new NodePropertiesRendererFactory();
     }
 
-    public PropertiesRendererFactory snapshot(GraphSnapshot snapshot) {
+    public NodePropertiesRendererFactory snapshot(GraphSnapshot snapshot) {
         this.snapshot = snapshot;
         return this;
     }
 
-    public PropertiesRendererFactory component(ComponentData componentData) {
+    public NodePropertiesRendererFactory component(ComponentData componentData) {
         this.componentData = componentData;
         return this;
     }
 
-    public PropertiesRenderer build() {
+    public NodePropertiesRenderer build() {
         checkNotNull(snapshot, "snapshot");
         checkNotNull(componentData, "componentData");
 
         String fullyQualifiedName = componentData.getFullyQualifiedName();
-        Class<? extends PropertiesRenderer> rendererClazz = RENDERER.getOrDefault(fullyQualifiedName, GENERIC_RENDERER);
+        Class<? extends NodePropertiesRenderer> rendererClazz = RENDERER.getOrDefault(fullyQualifiedName, GENERIC_RENDERER);
         return instantiateRenderer(rendererClazz);
     }
 
-    private PropertiesRenderer instantiateRenderer(Class<? extends PropertiesRenderer> rendererClazz) {
+    private NodePropertiesRenderer instantiateRenderer(Class<? extends NodePropertiesRenderer> rendererClazz) {
         try {
             return rendererClazz
                     .getConstructor(GraphSnapshot.class)

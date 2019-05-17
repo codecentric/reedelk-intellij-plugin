@@ -3,7 +3,7 @@ package com.esb.plugin.designer.properties;
 import com.esb.plugin.commons.Icons;
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.designer.SelectListener;
-import com.esb.plugin.designer.properties.renderer.PropertiesRendererFactory;
+import com.esb.plugin.designer.properties.renderer.node.NodePropertiesRendererFactory;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.NothingSelectedNode;
@@ -55,7 +55,7 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
     }
 
     private JBPanel createPropertiesPanel(ComponentData componentData, GraphSnapshot snapshot, GraphNode node) {
-        JBPanel propertiesPanel = PropertiesRendererFactory.get()
+        JBPanel propertiesPanel = NodePropertiesRendererFactory.get()
                 .component(componentData)
                 .snapshot(snapshot)
                 .build()
