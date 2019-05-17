@@ -17,8 +17,8 @@ public class ValueConverterFactory {
     static {
         Map<Class<?>, ValueConverter<?>> tmp = new HashMap<>();
 
-        tmp.put(int.class, new IntConverter());
-        tmp.put(Integer.class, new IntConverter());
+        tmp.put(int.class, new IntegerConverter());
+        tmp.put(Integer.class, new IntegerConverter());
         tmp.put(long.class, new LongConverter());
         tmp.put(Long.class, new LongConverter());
         tmp.put(float.class, new FloatConverter());

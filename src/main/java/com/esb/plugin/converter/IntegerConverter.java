@@ -2,7 +2,7 @@ package com.esb.plugin.converter;
 
 import org.json.JSONObject;
 
-public class IntConverter implements ValueConverter<Integer> {
+public class IntegerConverter implements ValueConverter<Integer> {
 
     @Override
     public String toString(Object value) {
