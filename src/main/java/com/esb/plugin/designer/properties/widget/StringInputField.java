@@ -6,36 +6,37 @@ import com.intellij.ui.components.JBTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-public class PropertyInput extends JBTextField implements DocumentListener {
+public class StringInputField extends JBTextField implements DocumentListener {
 
-    private InputChangeListener listener;
+    private InputChangeListener<String> listener;
 
-    public PropertyInput() {
+    public StringInputField() {
         getDocument().addDocumentListener(this);
     }
 
     @Override
     public void insertUpdate(DocumentEvent e) {
         if (listener != null) {
-            listener.onChange(PropertyInput.this.getText());
+            listener.onChange(StringInputField.this.getText());
         }
     }
 
     @Override
     public void removeUpdate(DocumentEvent e) {
         if (listener != null) {
-            listener.onChange(PropertyInput.this.getText());
+            listener.onChange(StringInputField.this.getText());
         }
     }
 
     @Override
     public void changedUpdate(DocumentEvent e) {
         if (listener != null) {
-            listener.onChange(PropertyInput.this.getText());
+            listener.onChange(StringInputField.this.getText());
         }
     }
 
-    public void addListener(InputChangeListener changeListener) {
+    public void addListener(InputChangeListener<String> changeListener) {
         this.listener = changeListener;
     }
+
 }

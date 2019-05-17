@@ -5,7 +5,7 @@ import com.esb.plugin.component.ComponentPropertyDescriptor;
 import com.esb.plugin.component.TypeDescriptor;
 import com.esb.plugin.converter.ValueConverter;
 import com.esb.plugin.converter.ValueConverterFactory;
-import com.esb.plugin.designer.properties.widget.PropertyInput;
+import com.esb.plugin.designer.properties.widget.StringInputField;
 import com.esb.plugin.graph.GraphSnapshot;
 
 import javax.swing.*;
@@ -23,7 +23,7 @@ public class StringPropertyRenderer implements TypePropertyRenderer {
         String propertyValueAsString = converter.toString(propertyValue);
 
 
-        PropertyInput input = new PropertyInput();
+        StringInputField input = new StringInputField();
         input.setText(propertyValueAsString);
         input.addListener(valueAsString -> {
             componentData.set(propertyName, valueAsString);

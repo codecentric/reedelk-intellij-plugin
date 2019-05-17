@@ -15,14 +15,14 @@ import java.awt.*;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.WEST;
 
-public abstract class InputField<T> extends JBPanel implements DocumentListener {
+public abstract class NumericInputField<T> extends JBPanel implements DocumentListener {
 
     private final JBTextField inputField;
     private final ValueConverter<T> converter;
 
     private InputChangeListener<T> listener;
 
-    InputField() {
+    NumericInputField() {
         super(new BorderLayout());
         inputField = new JBTextField(numberOfColumns());
 
