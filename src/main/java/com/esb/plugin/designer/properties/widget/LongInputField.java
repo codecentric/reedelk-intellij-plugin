@@ -2,71 +2,32 @@ package com.esb.plugin.designer.properties.widget;
 
 import com.esb.plugin.converter.ValueConverter;
 import com.esb.plugin.converter.ValueConverterFactory;
-import com.esb.plugin.designer.properties.InputChangeListener;
-import com.intellij.ui.components.JBPanel;
 
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.*;
-import java.awt.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.DocumentFilter;
 
-import static java.awt.BorderLayout.CENTER;
-import static java.awt.BorderLayout.WEST;
-
-public class LongInputField extends JBPanel implements DocumentListener {
+public class LongInputField extends InputField<Long> {
 
     private static final int COLUMNS_NUMBER = 16;
 
-    private InputChangeListener<Long> listener;
-    private final JTextField inputField;
-    private final ValueConverter<Long> converter = ValueConverterFactory.forType(Long.class);
-
-
-    public LongInputField() {
-        super(new BorderLayout());
-        inputField = new JTextField(COLUMNS_NUMBER);
-
-        PlainDocument document = (PlainDocument) inputField.getDocument();
-        document.setDocumentFilter(new IntegerDocumentFilter());
-        document.addDocumentListener(this);
-
-        add(inputField, WEST);
-        add(Box.createHorizontalBox(), CENTER);
+    @Override
+    protected int numberOfColumns() {
+        return COLUMNS_NUMBER;
     }
 
     @Override
-    public void insertUpdate(DocumentEvent e) {
-        notifyListener();
+    protected ValueConverter<Long> getConverter() {
+        return ValueConverterFactory.forType(Long.class);
     }
 
     @Override
-    public void removeUpdate(DocumentEvent e) {
-        notifyListener();
+    protected DocumentFilter getDocumentFilter() {
+        return new LongDocumentFilter();
     }
 
-    @Override
-    public void changedUpdate(DocumentEvent e) {
-        notifyListener();
-    }
-
-    public void addListener(InputChangeListener<Long> changeListener) {
-        this.listener = changeListener;
-    }
-
-    private void notifyListener() {
-        if (listener != null) {
-            Long objectValue = converter.from(inputField.getText());
-            listener.onChange(objectValue);
-        }
-    }
-
-    public void setValue(Object value) {
-        String valueAsString = converter.toString(value);
-        inputField.setText(valueAsString);
-    }
-
-    static class IntegerDocumentFilter extends DocumentFilter {
+    static class LongDocumentFilter extends DocumentFilter {
         @Override
         public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
             Document doc = fb.getDocument();

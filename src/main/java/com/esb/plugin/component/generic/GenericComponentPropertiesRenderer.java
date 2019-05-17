@@ -25,13 +25,11 @@ public class GenericComponentPropertiesRenderer extends AbstractNodePropertiesRe
 
         componentData.getComponentPropertyDescriptors().forEach(descriptor -> {
 
-            final String propertyName = descriptor.getPropertyName();
             final String displayName = descriptor.getDisplayName();
             final TypeDescriptor propertyType = descriptor.getPropertyType();
             final JComponent renderedComponent =
-                    TypeRendererFactory.get()
-                            .from(propertyType)
-                            .render(componentData, snapshot, propertyName);
+                    TypeRendererFactory.get().from(propertyType)
+                            .render(descriptor, componentData, snapshot);
 
             FormBuilder.get()
                     .addLabel(displayName, panel)
