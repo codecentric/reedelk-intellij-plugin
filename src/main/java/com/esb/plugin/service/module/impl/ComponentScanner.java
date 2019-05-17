@@ -24,7 +24,10 @@ class ComponentScanner {
             ScanResult scanResult = new ClassGraph()
                     .overrideClasspath(classPath)
                     .enableSystemJarsAndModules()
-                    .enableAllInfo() // TODO: Enable all info must be fixed
+                    .enableClassInfo()
+                    .enableFieldInfo()
+                    .enableAnnotationInfo()
+                    .ignoreFieldVisibility()
                     .scan();
             processScanResult(callback, scanResult);
             return null;
@@ -35,7 +38,10 @@ class ComponentScanner {
         return CompletableFuture.supplyAsync(() -> {
             ScanResult scanResult = new ClassGraph()
                     .whitelistPackages(packages)
-                    .enableAllInfo() // TODO: Enable all info must be fixed
+                    .enableClassInfo()
+                    .enableFieldInfo()
+                    .enableAnnotationInfo()
+                    .ignoreFieldVisibility()
                     .scan();
             processScanResult(callback, scanResult);
             return null;
