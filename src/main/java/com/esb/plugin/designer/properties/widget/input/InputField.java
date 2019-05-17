@@ -42,7 +42,7 @@ public abstract class InputField<T> extends JBPanel implements DocumentListener 
     }
 
     public void setValue(Object value) {
-        String valueAsString = converter.toString(value);
+        String valueAsString = converter.asString(value);
         inputField.setText(valueAsString);
     }
 

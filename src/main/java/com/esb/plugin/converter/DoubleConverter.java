@@ -5,7 +5,7 @@ import org.json.JSONObject;
 public class DoubleConverter implements ValueConverter<Double> {
 
     @Override
-    public String toString(Object value) {
+    public String asString(Object value) {
         Double realValue = (Double) value;
         return String.valueOf(realValue);
     }
