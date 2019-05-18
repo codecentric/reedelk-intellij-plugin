@@ -14,7 +14,7 @@ class BigDecimalConverterTest {
     @Test
     void toTextWhenNumericValueIsGiven() {
         // Given
-        BigDecimal aValue = new BigDecimal(23.324234);
+        BigDecimal aValue = new BigDecimal("23.324234");
 
         // When
         String givenValue = converter.toText(aValue);
@@ -45,8 +45,8 @@ class BigDecimalConverterTest {
         BigDecimal actualValue = converter.from(aValue);
 
         // Then
-        String expectedValue = "98765.24";
-        assertThat(actualValue.toString()).isEqualTo(expectedValue);
+        BigDecimal expectedValue = new BigDecimal("98765.24");
+        assertThat(actualValue).isEqualTo(expectedValue);
     }
 
     @Test
@@ -77,7 +77,7 @@ class BigDecimalConverterTest {
     @Test
     void shouldReturnBigDecimalValueFromJsonObject() {
         // Given
-        BigDecimal aValue = new BigDecimal(234.1231);
+        BigDecimal aValue = new BigDecimal("234.1231");
         JSONObject object = new JSONObject();
         object.put("aNumber", aValue);
 
@@ -85,7 +85,7 @@ class BigDecimalConverterTest {
         BigDecimal actualValue = converter.from("aNumber", object);
 
         // Then
-        BigDecimal expectedValue = new BigDecimal(234.1231);
+        BigDecimal expectedValue = new BigDecimal("234.1231");
         assertThat(actualValue).isEqualTo(expectedValue);
     }
 

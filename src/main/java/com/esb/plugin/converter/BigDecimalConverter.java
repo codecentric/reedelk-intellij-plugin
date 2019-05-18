@@ -11,7 +11,7 @@ public class BigDecimalConverter implements ValueConverter<BigDecimal> {
         BigDecimal realValue = (BigDecimal) value;
         return realValue == null ?
                 null :
-                realValue.toString();
+                realValue.toPlainString();
     }
 
     @Override
