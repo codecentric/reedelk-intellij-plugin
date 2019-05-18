@@ -22,7 +22,7 @@ public class BigIntegerConverter implements ValueConverter<BigInteger> {
     }
 
     @Override
-    public BigInteger from(String key, JSONObject object) {
-        return object.getBigInteger(key);
+    public BigInteger from(String propertyName, JSONObject object) {
+        return object.getBigInteger(propertyName);
     }
 }

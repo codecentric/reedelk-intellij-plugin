@@ -8,6 +8,6 @@ public interface ValueConverter<ConvertedType> {
 
     ConvertedType from(String value);
 
-    ConvertedType from(String key, JSONObject object);
+    ConvertedType from(String propertyName, JSONObject object);
 
 }

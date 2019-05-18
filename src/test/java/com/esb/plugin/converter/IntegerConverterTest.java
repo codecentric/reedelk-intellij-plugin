@@ -89,4 +89,16 @@ class IntegerConverterTest {
         assertThat(actualValue).isEqualTo(expectedValue);
     }
 
+    @Test
+    void shouldReturnDefaultValueFromJsonObjectIfPropertyNotPresent() {
+        // Given
+        JSONObject object = new JSONObject();
+
+        // When
+        Integer actualValue = converter.from("aNumber", object);
+
+        // Then
+        assertThat(actualValue).isNull();
+    }
+
 }

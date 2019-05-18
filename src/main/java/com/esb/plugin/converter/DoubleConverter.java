@@ -20,7 +20,7 @@ public class DoubleConverter implements ValueConverter<Double> {
     }
 
     @Override
-    public Double from(String key, JSONObject object) {
-        return object.getDouble(key);
+    public Double from(String propertyName, JSONObject object) {
+        return object.getDouble(propertyName);
     }
 }

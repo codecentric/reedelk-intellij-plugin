@@ -16,8 +16,8 @@ public class BooleanConverter implements ValueConverter<Boolean> {
     }
 
     @Override
-    public Boolean from(String key, JSONObject object) {
-        return object.getBoolean(key);
+    public Boolean from(String propertyName, JSONObject object) {
+        return object.getBoolean(propertyName);
     }
 
 }

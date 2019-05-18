@@ -20,7 +20,7 @@ public class FloatConverter implements ValueConverter<Float> {
     }
 
     @Override
-    public Float from(String key, JSONObject object) {
-        return object.getFloat(key);
+    public Float from(String propertyName, JSONObject object) {
+        return object.getFloat(propertyName);
     }
 }

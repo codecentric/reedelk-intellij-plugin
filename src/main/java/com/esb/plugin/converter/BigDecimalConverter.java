@@ -22,7 +22,7 @@ public class BigDecimalConverter implements ValueConverter<BigDecimal> {
     }
 
     @Override
-    public BigDecimal from(String key, JSONObject object) {
-        return object.getBigDecimal(key);
+    public BigDecimal from(String propertyName, JSONObject object) {
+        return object.getBigDecimal(propertyName);
     }
 }

@@ -14,7 +14,7 @@ public class EnumConverter implements ValueConverter<String> {
     }
 
     @Override
-    public String from(String key, JSONObject object) {
+    public String from(String propertyName, JSONObject object) {
         return null;
     }
 }
