@@ -16,6 +16,8 @@ public class StringConverter implements ValueConverter<String> {
 
     @Override
     public String from(String propertyName, JSONObject object) {
-        return object.getString(propertyName);
+        return object.isNull(propertyName) ?
+                null :
+                object.getString(propertyName);
     }
 }
