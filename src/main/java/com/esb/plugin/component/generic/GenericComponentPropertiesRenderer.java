@@ -24,7 +24,6 @@ public class GenericComponentPropertiesRenderer extends AbstractNodePropertiesRe
         DefaultPropertiesPanel panel = new DefaultPropertiesPanel();
 
         componentData.getComponentPropertyDescriptors().forEach(descriptor -> {
-
             final String displayName = descriptor.getDisplayName();
             final TypeDescriptor propertyType = descriptor.getPropertyType();
             final JComponent renderedComponent =
