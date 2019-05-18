@@ -10,7 +10,7 @@ import java.util.List;
 
 public class EnumDropDown extends JComboBox<String> implements ItemListener {
 
-    private ValueConverter<Enum> converter = ValueConverterFactory.forType(Enum.class);
+    private ValueConverter<String> converter = ValueConverterFactory.forType(String.class);
 
     private InputChangeListener<String> listener;
 
@@ -25,7 +25,8 @@ public class EnumDropDown extends JComboBox<String> implements ItemListener {
         if (event.getStateChange() == ItemEvent.SELECTED) {
             String item = (String) event.getItem();
             if (listener != null) {
-                listener.onChange(item);
+                String objectValue = converter.from(item);
+                listener.onChange(objectValue);
             }
         }
     }
