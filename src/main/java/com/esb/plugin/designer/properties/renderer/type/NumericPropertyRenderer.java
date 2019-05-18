@@ -6,22 +6,30 @@ import com.esb.plugin.designer.properties.widget.input.InputField;
 import com.esb.plugin.graph.GraphSnapshot;
 
 import javax.swing.*;
+import java.awt.*;
 
-abstract class AbstractPropertyRenderer<T> implements TypePropertyRenderer {
+import static java.awt.BorderLayout.CENTER;
+import static java.awt.BorderLayout.WEST;
+
+public abstract class NumericPropertyRenderer<T> implements TypePropertyRenderer {
 
     @Override
     public JComponent render(ComponentPropertyDescriptor descriptor, ComponentData componentData, GraphSnapshot snapshot) {
         String propertyName = descriptor.getPropertyName();
         Object propertyValue = componentData.get(propertyName);
 
-        InputField<T> field = getInputField();
-        field.setValue(propertyValue);
-        field.addListener(value -> {
+        InputField<T> inputField = getInputField();
+        inputField.setValue(propertyValue);
+        inputField.addListener(value -> {
             componentData.set(propertyName, value);
             snapshot.onDataChange();
         });
 
-        return field;
+        JPanel inputFieldContainer = new JPanel();
+        inputFieldContainer.setLayout(new BorderLayout());
+        inputFieldContainer.add(inputField, WEST);
+        inputFieldContainer.add(Box.createHorizontalBox(), CENTER);
+        return inputFieldContainer;
     }
 
     protected abstract InputField<T> getInputField();

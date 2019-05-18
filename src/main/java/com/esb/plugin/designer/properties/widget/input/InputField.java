@@ -1,17 +1,14 @@
 package com.esb.plugin.designer.properties.widget.input;
 
 import com.esb.plugin.converter.ValueConverter;
-import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBTextField;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.PlainDocument;
-import java.awt.*;
 
-public abstract class InputField<T> extends JBPanel implements DocumentListener {
+public abstract class InputField<T> extends JBTextField implements DocumentListener {
 
-    final JBTextField inputField;
     final PlainDocument document;
 
     private final ValueConverter<T> converter;
@@ -19,10 +16,8 @@ public abstract class InputField<T> extends JBPanel implements DocumentListener 
     private InputChangeListener<T> listener;
 
     InputField() {
-        super(new BorderLayout());
-        inputField = new JBTextField();
         converter = getConverter();
-        document = (PlainDocument) inputField.getDocument();
+        document = (PlainDocument) getDocument();
         document.addDocumentListener(this);
     }
 
@@ -43,7 +38,7 @@ public abstract class InputField<T> extends JBPanel implements DocumentListener 
 
     public void setValue(Object value) {
         String valueAsString = converter.toText(value);
-        inputField.setText(valueAsString);
+        setText(valueAsString);
     }
 
     public void addListener(InputChangeListener<T> changeListener) {
@@ -54,7 +49,7 @@ public abstract class InputField<T> extends JBPanel implements DocumentListener 
 
     private void notifyListener() {
         if (listener != null) {
-            T objectValue = converter.from(inputField.getText());
+            T objectValue = converter.from(getText());
             listener.onChange(objectValue);
         }
     }

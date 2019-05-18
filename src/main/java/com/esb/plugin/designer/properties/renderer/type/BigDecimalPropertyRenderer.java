@@ -1,16 +1,14 @@
 package com.esb.plugin.designer.properties.renderer.type;
 
-import com.esb.plugin.component.ComponentData;
-import com.esb.plugin.component.ComponentPropertyDescriptor;
 import com.esb.plugin.designer.properties.widget.input.BigDecimalInputField;
-import com.esb.plugin.graph.GraphSnapshot;
+import com.esb.plugin.designer.properties.widget.input.InputField;
 
-import javax.swing.*;
+import java.math.BigDecimal;
 
-public class BigDecimalPropertyRenderer implements TypePropertyRenderer {
+public class BigDecimalPropertyRenderer extends NumericPropertyRenderer<BigDecimal> {
 
     @Override
-    public JComponent render(ComponentPropertyDescriptor descriptor, ComponentData componentData, GraphSnapshot snapshot) {
+    protected InputField<BigDecimal> getInputField() {
         return new BigDecimalInputField();
     }
 }

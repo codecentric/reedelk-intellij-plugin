@@ -1,16 +1,14 @@
 package com.esb.plugin.designer.properties.renderer.type;
 
-import com.esb.plugin.component.ComponentData;
-import com.esb.plugin.component.ComponentPropertyDescriptor;
 import com.esb.plugin.designer.properties.widget.input.BigIntegerInputField;
-import com.esb.plugin.graph.GraphSnapshot;
+import com.esb.plugin.designer.properties.widget.input.InputField;
 
-import javax.swing.*;
+import java.math.BigInteger;
 
-public class BigIntegerPropertyRenderer implements TypePropertyRenderer {
+public class BigIntegerPropertyRenderer extends NumericPropertyRenderer<BigInteger> {
 
     @Override
-    public JComponent render(ComponentPropertyDescriptor descriptor, ComponentData componentData, GraphSnapshot snapshot) {
+    protected InputField<BigInteger> getInputField() {
         return new BigIntegerInputField();
     }
 }
