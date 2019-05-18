@@ -5,7 +5,7 @@ import org.json.JSONObject;
 public class FloatConverter implements ValueConverter<Float> {
 
     @Override
-    public String asString(Object value) {
+    public String toText(Object value) {
         Float realValue = (Float) value;
         return String.valueOf(realValue);
     }

@@ -5,7 +5,7 @@ import org.json.JSONObject;
 public class BooleanConverter implements ValueConverter<Boolean> {
 
     @Override
-    public String asString(Object value) {
+    public String toText(Object value) {
         Boolean realValue = (Boolean) value;
         return Boolean.toString(realValue);
     }

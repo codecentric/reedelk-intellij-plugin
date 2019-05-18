@@ -1,13 +1,16 @@
 package com.esb.plugin.converter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 public class IntegerConverter implements ValueConverter<Integer> {
 
     @Override
-    public String asString(Object value) {
+    public String toText(Object value) {
         Integer realValue = (Integer) value;
-        return Integer.toString(realValue);
+        return realValue == null ?
+                StringUtils.EMPTY :
+                Integer.toString(realValue);
     }
 
     @Override

@@ -5,7 +5,7 @@ import org.json.JSONObject;
 public class LongConverter implements ValueConverter<Long> {
 
     @Override
-    public String asString(Object value) {
+    public String toText(Object value) {
         Long realValue = (Long) value;
         return String.valueOf(realValue);
     }

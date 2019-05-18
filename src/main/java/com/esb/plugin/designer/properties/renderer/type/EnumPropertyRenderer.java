@@ -21,7 +21,7 @@ public class EnumPropertyRenderer implements TypePropertyRenderer {
         ValueConverter<?> converter = ValueConverterFactory.forType(propertyType);
 
         Object propertyValue = componentData.getOrDefault(propertyName, descriptor.getDefaultValue());
-        Object propertyValueAsString = converter.asString(propertyValue);
+        Object propertyValueAsString = converter.toText(propertyValue);
 
         EnumDropDown dropDown = new EnumDropDown(propertyType.possibleValues());
         dropDown.addListener(valueAsString -> {
