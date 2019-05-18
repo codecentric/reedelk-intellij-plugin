@@ -9,7 +9,9 @@ public class BigIntegerConverter implements ValueConverter<BigInteger> {
     @Override
     public String toText(Object value) {
         BigInteger realValue = (BigInteger) value;
-        return realValue.toString();
+        return realValue == null ?
+                null :
+                realValue.toString();
     }
 
     @Override
@@ -17,12 +19,15 @@ public class BigIntegerConverter implements ValueConverter<BigInteger> {
         try {
             return new BigInteger(value);
         } catch (NumberFormatException e) {
-            return BigInteger.ZERO;
+            // Default value for BigInteger is null
+            return null;
         }
     }
 
     @Override
     public BigInteger from(String propertyName, JSONObject object) {
-        return object.getBigInteger(propertyName);
+        return object.isNull(propertyName) ?
+                null :
+                object.getBigInteger(propertyName);
     }
 }
