@@ -1,5 +1,6 @@
 package com.esb.plugin.converter;
 
+import com.google.common.base.Defaults;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
@@ -18,7 +19,7 @@ public class IntegerConverter implements ValueConverter<Integer> {
         try {
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {
-            return 0;
+            return Defaults.defaultValue(Integer.class);
         }
     }
 

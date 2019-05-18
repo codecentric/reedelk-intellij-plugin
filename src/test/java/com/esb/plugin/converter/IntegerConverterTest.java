@@ -28,11 +28,38 @@ class IntegerConverterTest {
         Integer aValue = null;
 
         // When
-        String givenValue = converter.toText(aValue);
+        String actualValue = converter.toText(aValue);
 
         // Then
         String expectedValue = StringUtils.EMPTY;
-        assertThat(givenValue).isEqualTo(expectedValue);
+        assertThat(actualValue).isEqualTo(expectedValue);
     }
+
+    @Test
+    void shouldCorrectlyReturnNumberFromStringValue() {
+        // Given
+        String aValue = "432";
+
+        // When
+        Integer actualValue = converter.from(aValue);
+
+        // Then
+        Integer expectedValue = 432;
+        assertThat(actualValue).isEqualTo(expectedValue);
+    }
+
+    @Test
+    void shouldReturnDefaultValueWhenStringIsNotParsable() {
+        // Given
+        String aValue = "aabbcc";
+
+        // When
+        Integer actualValue = converter.from(aValue);
+
+        // Then
+        Integer expectedValue = null;
+        assertThat(actualValue).isEqualTo(expectedValue);
+    }
+
 
 }
