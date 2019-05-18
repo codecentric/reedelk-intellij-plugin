@@ -1,5 +1,6 @@
 package com.esb.plugin.converter;
 
+import com.google.common.base.Defaults;
 import org.json.JSONObject;
 
 public class LongConverter implements ValueConverter<Long> {
@@ -18,13 +19,14 @@ public class LongConverter implements ValueConverter<Long> {
         try {
             return Long.parseLong(value);
         } catch (NumberFormatException e) {
-            return 0L;
+            return Defaults.defaultValue(Long.class);
         }
     }
 
     @Override
     public Long from(String propertyName, JSONObject object) {
-        if (object.isNull(propertyName)) return 0L;
-        return object.getLong(propertyName);
+        return object.isNull(propertyName) ?
+                null :
+                object.getLong(propertyName);
     }
 }

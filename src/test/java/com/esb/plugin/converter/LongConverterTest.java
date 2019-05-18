@@ -80,7 +80,7 @@ public class LongConverterTest {
         object.put("aNumber", aValue);
 
         // When
-        Long actualValue = converter.from("aNumber");
+        Long actualValue = converter.from("aNumber", object);
 
         // Then
         Long expectedValue = 234L;
