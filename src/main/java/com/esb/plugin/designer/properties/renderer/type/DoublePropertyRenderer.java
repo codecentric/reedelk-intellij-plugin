@@ -9,4 +9,5 @@ public class DoublePropertyRenderer extends NumericPropertyRenderer<Double> {
     protected InputField<Double> getInputField() {
         return new DoubleInputField();
     }
+
 }

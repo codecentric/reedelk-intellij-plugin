@@ -1,11 +1,16 @@
 package com.esb.plugin.designer.properties.widget.input;
 
+import com.esb.plugin.converter.ValueConverter;
+import com.esb.plugin.converter.ValueConverterFactory;
+
 import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.List;
 
 public class EnumDropDown extends JComboBox<String> implements ItemListener {
+
+    private ValueConverter<Enum> converter = ValueConverterFactory.forType(Enum.class);
 
     private InputChangeListener<String> listener;
 
@@ -29,4 +34,8 @@ public class EnumDropDown extends JComboBox<String> implements ItemListener {
         this.listener = changeListener;
     }
 
+    public void setValue(Object value) {
+        String valueAsString = converter.toText(value);
+        setSelectedItem(valueAsString);
+    }
 }

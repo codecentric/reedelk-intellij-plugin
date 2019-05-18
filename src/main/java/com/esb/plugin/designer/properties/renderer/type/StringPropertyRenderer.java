@@ -21,7 +21,6 @@ public class StringPropertyRenderer implements TypePropertyRenderer {
             componentData.set(propertyName, value);
             snapshot.onDataChange();
         });
-
         return field;
     }
 }
