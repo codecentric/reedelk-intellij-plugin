@@ -28,10 +28,10 @@ public class ValueConverterFactory {
         tmp.put(boolean.class, new BooleanConverter());
         tmp.put(Boolean.class, new BooleanConverter());
 
+        tmp.put(Enum.class, new EnumConverter());
         tmp.put(String.class, new StringConverter());
         tmp.put(BigInteger.class, new BigIntegerConverter());
         tmp.put(BigDecimal.class, new BigDecimalConverter());
-
         CONVERTER = Collections.unmodifiableMap(tmp);
     }
 

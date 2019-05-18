@@ -16,7 +16,7 @@ public class EnumTypeDescriptor implements TypeDescriptor {
 
     @Override
     public Class<?> type() {
-        return String.class;
+        return Enum.class;
     }
 
     @Override

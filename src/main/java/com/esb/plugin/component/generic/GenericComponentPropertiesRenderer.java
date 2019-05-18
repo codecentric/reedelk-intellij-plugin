@@ -1,6 +1,7 @@
 package com.esb.plugin.component.generic;
 
 import com.esb.plugin.component.ComponentData;
+import com.esb.plugin.component.ComponentPropertyDescriptor;
 import com.esb.plugin.component.TypeDescriptor;
 import com.esb.plugin.designer.properties.renderer.node.AbstractNodePropertiesRenderer;
 import com.esb.plugin.designer.properties.renderer.type.TypeRendererFactory;
@@ -11,6 +12,7 @@ import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.ui.components.JBPanel;
 
 import javax.swing.*;
+import java.util.List;
 
 public class GenericComponentPropertiesRenderer extends AbstractNodePropertiesRenderer {
 
@@ -21,21 +23,22 @@ public class GenericComponentPropertiesRenderer extends AbstractNodePropertiesRe
     @Override
     public JBPanel render(GraphNode node) {
         ComponentData componentData = node.componentData();
-        DefaultPropertiesPanel panel = new DefaultPropertiesPanel();
+        List<ComponentPropertyDescriptor> propertiesDescriptors = componentData.getComponentPropertyDescriptors();
+        return createPropertiesPanelFrom(propertiesDescriptors, componentData);
+    }
 
-        componentData.getComponentPropertyDescriptors().forEach(descriptor -> {
+    protected JBPanel createPropertiesPanelFrom(List<ComponentPropertyDescriptor> propertiesDescriptors, ComponentData data) {
+        DefaultPropertiesPanel propertiesPanel = new DefaultPropertiesPanel();
+        propertiesDescriptors.forEach(descriptor -> {
             final String displayName = descriptor.getDisplayName();
             final TypeDescriptor propertyType = descriptor.getPropertyType();
             final JComponent renderedComponent =
                     TypeRendererFactory.get().from(propertyType)
-                            .render(descriptor, componentData, snapshot);
-
+                            .render(descriptor, data, snapshot);
             FormBuilder.get()
-                    .addLabel(displayName, panel)
-                    .addLastField(renderedComponent, panel);
+                    .addLabel(displayName, propertiesPanel)
+                    .addLastField(renderedComponent, propertiesPanel);
         });
-
-        return panel;
+        return propertiesPanel;
     }
-
 }
