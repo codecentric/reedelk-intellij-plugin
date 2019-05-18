@@ -5,20 +5,20 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class IntegerConverterTest {
+public class LongConverterTest {
 
-    private ValueConverter<Integer> converter = new IntegerConverter();
+    private ValueConverter<Long> converter = new LongConverter();
 
     @Test
     void toTextWhenNumericValueIsGiven() {
         // Given
-        Integer aValue = 23;
+        Long aValue = 8723L;
 
         // When
         String givenValue = converter.toText(aValue);
 
         // Then
-        String expectedValue = "23";
+        String expectedValue = "8723";
         assertThat(givenValue).isEqualTo(expectedValue);
     }
 
@@ -35,25 +35,25 @@ class IntegerConverterTest {
     }
 
     @Test
-    void shouldCorrectlyReturnIntegerFromStringValue() {
+    void shouldCorrectlyReturnNumberFromStringValue() {
         // Given
-        String aValue = "432";
+        String aValue = "99832";
 
         // When
-        Integer actualValue = converter.from(aValue);
+        Long actualValue = converter.from(aValue);
 
         // Then
-        Integer expectedValue = 432;
+        Long expectedValue = 99832L;
         assertThat(actualValue).isEqualTo(expectedValue);
     }
 
     @Test
     void shouldReturnDefaultValueNullWhenStringIsNotParsable() {
         // Given
-        String aValue = "aabbcc";
+        String aValue = "ccddeeff";
 
         // When
-        Integer actualValue = converter.from(aValue);
+        Long actualValue = converter.from(aValue);
 
         // Then
         assertThat(actualValue).isNull();
@@ -66,24 +66,24 @@ class IntegerConverterTest {
         object.put("aNumber", JSONObject.NULL);
 
         // When
-        Integer actualValue = converter.from("aNumber", object);
+        Long actualValue = converter.from("aNumber");
 
         // Then
         assertThat(actualValue).isNull();
     }
 
     @Test
-    void shouldReturnIntegerValueFromJsonObject() {
+    void shouldReturnLongValueFromJsonObject() {
         // Given
-        Integer aValue = 234;
+        Long aValue = 234L;
         JSONObject object = new JSONObject();
         object.put("aNumber", aValue);
 
         // When
-        Integer actualValue = converter.from("aNumber", object);
+        Long actualValue = converter.from("aNumber");
 
         // Then
-        Integer expectedValue = 234;
+        Long expectedValue = 234L;
         assertThat(actualValue).isEqualTo(expectedValue);
     }
 
@@ -93,7 +93,7 @@ class IntegerConverterTest {
         JSONObject object = new JSONObject();
 
         // When
-        Integer actualValue = converter.from("aNumber", object);
+        Long actualValue = converter.from("aNumber");
 
         // Then
         assertThat(actualValue).isNull();

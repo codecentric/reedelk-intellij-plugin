@@ -7,7 +7,10 @@ public class LongConverter implements ValueConverter<Long> {
     @Override
     public String toText(Object value) {
         Long realValue = (Long) value;
-        return String.valueOf(realValue);
+        return realValue == null ?
+                null :
+                Long.toString(realValue);
+
     }
 
     @Override

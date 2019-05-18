@@ -1,7 +1,6 @@
 package com.esb.plugin.converter;
 
 import com.google.common.base.Defaults;
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 public class IntegerConverter implements ValueConverter<Integer> {
@@ -10,7 +9,7 @@ public class IntegerConverter implements ValueConverter<Integer> {
     public String toText(Object value) {
         Integer realValue = (Integer) value;
         return realValue == null ?
-                StringUtils.EMPTY :
+                null :
                 Integer.toString(realValue);
     }
 
