@@ -9,7 +9,9 @@ public class BigDecimalConverter implements ValueConverter<BigDecimal> {
     @Override
     public String toText(Object value) {
         BigDecimal realValue = (BigDecimal) value;
-        return realValue.toPlainString();
+        return realValue == null ?
+                null :
+                realValue.toString();
     }
 
     @Override
@@ -17,12 +19,16 @@ public class BigDecimalConverter implements ValueConverter<BigDecimal> {
         try {
             return new BigDecimal(value);
         } catch (NumberFormatException e) {
-            return BigDecimal.ZERO;
+            // Default value for BigDecimal is null
+            return null;
         }
     }
 
     @Override
     public BigDecimal from(String propertyName, JSONObject object) {
-        return object.getBigDecimal(propertyName);
+        return object.isNull(propertyName) ?
+                null :
+                object.getBigDecimal(propertyName);
     }
+
 }
