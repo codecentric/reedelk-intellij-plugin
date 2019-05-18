@@ -1,5 +1,6 @@
 package com.esb.plugin.converter;
 
+import com.google.common.base.Defaults;
 import org.json.JSONObject;
 
 public class FloatConverter implements ValueConverter<Float> {
@@ -7,7 +8,9 @@ public class FloatConverter implements ValueConverter<Float> {
     @Override
     public String toText(Object value) {
         Float realValue = (Float) value;
-        return String.valueOf(realValue);
+        return realValue == null ?
+                null :
+                Float.toString(realValue);
     }
 
     @Override
@@ -15,12 +18,14 @@ public class FloatConverter implements ValueConverter<Float> {
         try {
             return Float.parseFloat(value);
         } catch (NumberFormatException e) {
-            return 0.0f;
+            return Defaults.defaultValue(Float.class);
         }
     }
 
     @Override
     public Float from(String propertyName, JSONObject object) {
-        return object.getFloat(propertyName);
+        return object.isNull(propertyName) ?
+                null :
+                object.getFloat(propertyName);
     }
 }

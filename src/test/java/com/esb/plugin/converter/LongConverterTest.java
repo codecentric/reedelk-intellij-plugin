@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class LongConverterTest {
+class LongConverterTest {
 
     private ValueConverter<Long> converter = new LongConverter();
 
