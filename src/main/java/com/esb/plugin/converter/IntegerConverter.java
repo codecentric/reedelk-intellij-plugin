@@ -25,7 +25,11 @@ public class IntegerConverter implements ValueConverter<Integer> {
 
     @Override
     public Integer from(String key, JSONObject object) {
-        return object.getInt(key);
+        if (object.isNull(key)) {
+            return null;
+        } else {
+            return object.getInt(key);
+        }
     }
 
 }

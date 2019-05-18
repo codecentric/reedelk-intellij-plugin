@@ -1,6 +1,7 @@
 package com.esb.plugin.converter;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,7 +50,7 @@ class IntegerConverterTest {
     }
 
     @Test
-    void shouldReturnDefaultValueWhenStringIsNotParsable() {
+    void shouldReturnDefaultValueNullWhenStringIsNotParsable() {
         // Given
         String aValue = "aabbcc";
 
@@ -57,9 +58,35 @@ class IntegerConverterTest {
         Integer actualValue = converter.from(aValue);
 
         // Then
-        Integer expectedValue = null;
-        assertThat(actualValue).isEqualTo(expectedValue);
+        assertThat(actualValue).isNull();
     }
 
+    @Test
+    void shouldReturnNullValueFromJsonObject() {
+        // Given
+        JSONObject object = new JSONObject();
+        object.put("aNumber", JSONObject.NULL);
+
+        // When
+        Integer actualValue = converter.from("aNumber", object);
+
+        // Then
+        assertThat(actualValue).isNull();
+    }
+
+    @Test
+    void shouldReturnIntegerValueFromJsonObject() {
+        // Given
+        Integer aValue = 234;
+        JSONObject object = new JSONObject();
+        object.put("aNumber", aValue);
+
+        // When
+        Integer actualValue = converter.from("aNumber", object);
+
+        // Then
+        Integer expectedValue = 234;
+        assertThat(actualValue).isEqualTo(expectedValue);
+    }
 
 }
