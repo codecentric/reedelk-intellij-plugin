@@ -7,7 +7,9 @@ public class BooleanConverter implements ValueConverter<Boolean> {
     @Override
     public String toText(Object value) {
         Boolean realValue = (Boolean) value;
-        return Boolean.toString(realValue);
+        return realValue == null ?
+                Boolean.FALSE.toString() :
+                realValue.toString();
     }
 
     @Override
@@ -17,7 +19,9 @@ public class BooleanConverter implements ValueConverter<Boolean> {
 
     @Override
     public Boolean from(String propertyName, JSONObject object) {
-        return object.getBoolean(propertyName);
+        return object.isNull(propertyName) ?
+                Boolean.FALSE :
+                object.getBoolean(propertyName);
     }
 
 }

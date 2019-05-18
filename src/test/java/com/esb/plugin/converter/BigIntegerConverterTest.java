@@ -7,7 +7,7 @@ import java.math.BigInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BigIntegerConverterTest {
+class BigIntegerConverterTest {
 
     private ValueConverter<BigInteger> converter = new BigIntegerConverter();
 
