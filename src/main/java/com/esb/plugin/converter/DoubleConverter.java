@@ -1,5 +1,6 @@
 package com.esb.plugin.converter;
 
+import com.google.common.base.Defaults;
 import org.json.JSONObject;
 
 public class DoubleConverter implements ValueConverter<Double> {
@@ -7,7 +8,9 @@ public class DoubleConverter implements ValueConverter<Double> {
     @Override
     public String toText(Object value) {
         Double realValue = (Double) value;
-        return String.valueOf(realValue);
+        return realValue == null ?
+                null :
+                Double.toString(realValue);
     }
 
     @Override
@@ -15,12 +18,15 @@ public class DoubleConverter implements ValueConverter<Double> {
         try {
             return Double.parseDouble(value);
         } catch (NumberFormatException e) {
-            return 0.0d;
+            return Defaults.defaultValue(Double.class);
         }
     }
 
     @Override
     public Double from(String propertyName, JSONObject object) {
-        return object.getDouble(propertyName);
+        return object.isNull(propertyName) ?
+                null :
+                object.getDouble(propertyName);
     }
+
 }
