@@ -31,7 +31,7 @@ public class ComponentDescriptor {
     public Optional<ComponentPropertyDescriptor> getPropertyDefinition(String propertyName) {
         return componentPropertyDescriptors
                 .stream()
-                .filter(propertyDefinition -> propertyDefinition.getPropertyName().equals(propertyName))
+                .filter(descriptor -> descriptor.getPropertyName().equals(propertyName))
                 .findFirst();
     }
 
