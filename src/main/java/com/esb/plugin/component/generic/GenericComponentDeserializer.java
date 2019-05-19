@@ -17,9 +17,9 @@ public class GenericComponentDeserializer extends AbstractDeserializer {
     }
 
     @Override
-    public GraphNode deserialize(GraphNode parent, JSONObject componentDefinition) {
+    public GraphNode deserialize(GraphNode parent, JSONObject jsonDefinition) {
 
-        String name = JsonParser.Implementor.name(componentDefinition);
+        String name = JsonParser.Implementor.name(jsonDefinition);
 
         GenericComponentNode node = context.instantiateGraphNode(name);
 
@@ -30,12 +30,12 @@ public class GenericComponentDeserializer extends AbstractDeserializer {
             propertyName = propertyName.toLowerCase();
 
             // TODO: we should say if mandatory or not with annotations
-            if (componentDefinition.has(propertyName)) {
+            if (jsonDefinition.has(propertyName)) {
 
                 TypeDescriptor propertyType = componentData.getPropertyType(propertyName);
 
                 Object propertyValue = ValueConverterFactory.forType(propertyType)
-                        .from(propertyName, componentDefinition);
+                        .from(propertyName, jsonDefinition);
 
                 // TODO: Should this be in the converter!?!?
                 // Explicitly map JSON Library NULL value to java's null.
