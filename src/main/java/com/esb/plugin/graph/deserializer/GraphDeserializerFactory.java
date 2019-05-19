@@ -1,16 +1,14 @@
 package com.esb.plugin.graph.deserializer;
 
 import com.esb.api.exception.ESBException;
-import com.esb.component.Choice;
-import com.esb.component.FlowReference;
-import com.esb.component.Fork;
-import com.esb.component.Stop;
+import com.esb.component.*;
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.component.choice.ChoiceDeserializer;
 import com.esb.plugin.component.flowreference.FlowReferenceDeserializer;
 import com.esb.plugin.component.fork.ForkDeserializer;
 import com.esb.plugin.component.generic.GenericComponentDeserializer;
 import com.esb.plugin.component.stop.StopDeserializer;
+import com.esb.plugin.component.unknown.UnknownDeserializer;
 import com.esb.plugin.graph.FlowGraph;
 import org.json.JSONObject;
 
@@ -34,6 +32,7 @@ public class GraphDeserializerFactory {
         tmp.put(Stop.class.getName(), StopDeserializer.class);
         tmp.put(Fork.class.getName(), ForkDeserializer.class);
         tmp.put(Choice.class.getName(), ChoiceDeserializer.class);
+        tmp.put(Unknown.class.getName(), UnknownDeserializer.class);
         tmp.put(FlowReference.class.getName(), FlowReferenceDeserializer.class);
         COMPONENT_DESERIALIZER_MAP = Collections.unmodifiableMap(tmp);
     }

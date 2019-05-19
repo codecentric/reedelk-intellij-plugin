@@ -6,6 +6,8 @@ import org.json.JSONObject;
 
 public interface Deserializer {
 
-    GraphNode deserialize(GraphNode parent, JSONObject componentDefinition);
+    default GraphNode deserialize(GraphNode parent, JSONObject componentDefinition) {
+        throw new UnsupportedOperationException();
+    }
 
 }

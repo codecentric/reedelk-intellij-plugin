@@ -1,16 +1,14 @@
 package com.esb.plugin.designer.properties.renderer.node;
 
 import com.esb.api.exception.ESBException;
-import com.esb.component.Choice;
-import com.esb.component.FlowReference;
-import com.esb.component.Fork;
-import com.esb.component.Stop;
+import com.esb.component.*;
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.choice.ChoicePropertiesRenderer;
 import com.esb.plugin.component.flowreference.FlowReferencePropertiesRenderer;
 import com.esb.plugin.component.fork.ForkPropertiesRenderer;
 import com.esb.plugin.component.generic.GenericComponentPropertiesRenderer;
 import com.esb.plugin.component.stop.StopPropertiesRenderer;
+import com.esb.plugin.component.unknown.UnknownPropertiesRenderer;
 import com.esb.plugin.graph.GraphSnapshot;
 
 import java.lang.reflect.InvocationTargetException;
@@ -29,6 +27,7 @@ public class NodePropertiesRendererFactory {
         tmp.put(Stop.class.getName(), StopPropertiesRenderer.class);
         tmp.put(Fork.class.getName(), ForkPropertiesRenderer.class);
         tmp.put(Choice.class.getName(), ChoicePropertiesRenderer.class);
+        tmp.put(Unknown.class.getName(), UnknownPropertiesRenderer.class);
         tmp.put(FlowReference.class.getName(), FlowReferencePropertiesRenderer.class);
         RENDERER = Collections.unmodifiableMap(tmp);
     }

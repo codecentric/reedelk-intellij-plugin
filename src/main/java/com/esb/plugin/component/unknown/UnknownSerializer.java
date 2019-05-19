@@ -1,4 +1,7 @@
 package com.esb.plugin.component.unknown;
 
-public class UnknownSerializer {
+import com.esb.plugin.graph.serializer.Serializer;
+
+public class UnknownSerializer implements Serializer {
+
 }

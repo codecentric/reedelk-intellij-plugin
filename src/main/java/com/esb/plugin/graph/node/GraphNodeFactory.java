@@ -1,9 +1,6 @@
 package com.esb.plugin.graph.node;
 
-import com.esb.component.Choice;
-import com.esb.component.FlowReference;
-import com.esb.component.Fork;
-import com.esb.component.Stop;
+import com.esb.component.*;
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.component.ComponentDescriptorDecorator;
@@ -12,6 +9,7 @@ import com.esb.plugin.component.flowreference.FlowReferenceNode;
 import com.esb.plugin.component.fork.ForkNode;
 import com.esb.plugin.component.generic.GenericComponentNode;
 import com.esb.plugin.component.stop.StopNode;
+import com.esb.plugin.component.unknown.UnknownNode;
 import com.esb.plugin.service.module.ComponentService;
 import com.google.common.collect.ImmutableMap;
 import com.intellij.openapi.module.Module;
@@ -25,8 +23,9 @@ public class GraphNodeFactory {
 
     private static final Map<String, Class<? extends GraphNode>> COMPONENT_DRAWABLE_MAP = ImmutableMap.of(
             Stop.class.getName(), StopNode.class,
-            Choice.class.getName(), ChoiceNode.class,
             Fork.class.getName(), ForkNode.class,
+            Choice.class.getName(), ChoiceNode.class,
+            Unknown.class.getName(), UnknownNode.class,
             FlowReference.class.getName(), FlowReferenceNode.class);
 
 

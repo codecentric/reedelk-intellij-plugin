@@ -1,15 +1,13 @@
 package com.esb.plugin.graph.serializer;
 
 import com.esb.api.exception.ESBException;
-import com.esb.component.Choice;
-import com.esb.component.FlowReference;
-import com.esb.component.Fork;
-import com.esb.component.Stop;
+import com.esb.component.*;
 import com.esb.plugin.component.choice.ChoiceSerializer;
 import com.esb.plugin.component.flowreference.FlowReferenceSerializer;
 import com.esb.plugin.component.fork.ForkSerializer;
 import com.esb.plugin.component.generic.GenericComponentSerializer;
 import com.esb.plugin.component.stop.StopSerializer;
+import com.esb.plugin.component.unknown.UnknownSerializer;
 import com.esb.plugin.graph.node.GraphNode;
 
 import java.lang.reflect.InvocationTargetException;
@@ -29,6 +27,7 @@ public class GraphSerializerFactory {
         tmp.put(Stop.class.getName(), StopSerializer.class);
         tmp.put(Fork.class.getName(), ForkSerializer.class);
         tmp.put(Choice.class.getName(), ChoiceSerializer.class);
+        tmp.put(Unknown.class.getName(), UnknownSerializer.class);
         tmp.put(FlowReference.class.getName(), FlowReferenceSerializer.class);
         COMPONENT_SERIALIZER_MAP = Collections.unmodifiableMap(tmp);
     }

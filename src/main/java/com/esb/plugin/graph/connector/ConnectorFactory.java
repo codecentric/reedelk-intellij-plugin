@@ -1,15 +1,13 @@
 package com.esb.plugin.graph.connector;
 
 import com.esb.api.exception.ESBException;
-import com.esb.component.Choice;
-import com.esb.component.FlowReference;
-import com.esb.component.Fork;
-import com.esb.component.Stop;
+import com.esb.component.*;
 import com.esb.plugin.component.choice.ChoiceConnectorBuilder;
 import com.esb.plugin.component.flowreference.FlowReferenceConnectorBuilder;
 import com.esb.plugin.component.fork.ForkConnectorBuilder;
 import com.esb.plugin.component.generic.GenericComponentConnectorBuilder;
 import com.esb.plugin.component.stop.StopConnectionBuilder;
+import com.esb.plugin.component.unknown.UnknownConnectionBuilder;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.openapi.module.Module;
@@ -30,6 +28,7 @@ public class ConnectorFactory {
         tmp.put(Stop.class.getName(), StopConnectionBuilder.class);
         tmp.put(Fork.class.getName(), ForkConnectorBuilder.class);
         tmp.put(Choice.class.getName(), ChoiceConnectorBuilder.class);
+        tmp.put(Unknown.class.getName(), UnknownConnectionBuilder.class);
         tmp.put(FlowReference.class.getName(), FlowReferenceConnectorBuilder.class);
         CONNECTOR_BUILDER = Collections.unmodifiableMap(tmp);
     }

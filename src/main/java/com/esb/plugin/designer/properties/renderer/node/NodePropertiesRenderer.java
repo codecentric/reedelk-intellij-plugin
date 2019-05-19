@@ -5,6 +5,8 @@ import com.intellij.ui.components.JBPanel;
 
 public interface NodePropertiesRenderer {
 
-    JBPanel render(GraphNode node);
+    default JBPanel render(GraphNode node) {
+        throw new UnsupportedOperationException();
+    }
 
 }

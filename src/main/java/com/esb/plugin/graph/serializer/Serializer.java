@@ -6,6 +6,7 @@ import org.json.JSONArray;
 
 public interface Serializer {
 
-    void serialize(FlowGraph graph, JSONArray sequence, GraphNode node, GraphNode stop);
-
+    default void serialize(FlowGraph graph, JSONArray sequence, GraphNode node, GraphNode stop) {
+        throw new UnsupportedOperationException();
+    }
 }
