@@ -3,6 +3,7 @@ package com.esb.plugin.component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class ComponentData {
 
@@ -36,6 +37,10 @@ public class ComponentData {
 
     public List<String> descriptorProperties() {
         return descriptor.getPropertiesNames();
+    }
+
+    public Optional<ComponentPropertyDescriptor> getPropertyDefinition(String propertyName) {
+        return descriptor.getPropertyDefinition(propertyName);
     }
 
     public List<ComponentPropertyDescriptor> getComponentPropertyDescriptors() {
