@@ -20,7 +20,7 @@ public class ForkConnectorBuilder implements ConnectorBuilder {
 
         scopeSubGraph.root(componentToAdd);
 
-        // TODO: Fixme
+        // TODO: Fixme... this should not use flow reference and also should use the factory
         FlowReferenceNode placeholder = GraphNodeFactory.get(module, FlowReference.class.getName());
         placeholder.componentData().set("ref", "123");
 

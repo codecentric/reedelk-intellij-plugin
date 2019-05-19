@@ -21,7 +21,8 @@ public class ChoiceConnectorBuilder implements ConnectorBuilder {
 
     @Override
     public Connector build(Module module, FlowGraph graph, GraphNode componentToAdd) {
-//TODO: Replace with a placeholder
+
+        // TODO: Fixme... this should not use flow reference and also should use the factory
         FlowReferenceNode placeholder = GraphNodeFactory.get(module, FlowReference.class.getName());
         placeholder.componentData().set("ref", "123");
 
