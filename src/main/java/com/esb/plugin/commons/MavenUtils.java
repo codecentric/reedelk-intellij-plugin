@@ -18,7 +18,8 @@ public class MavenUtils {
        if (optionalPomXml.isPresent()) {
            VirtualFile file = LocalFileSystem.getInstance().findFileByPath(optionalPomXml.get());
            if (file != null) {
-               return Optional.ofNullable(MavenProjectsManager.getInstance(project).findProject(file));
+               MavenProject mavenProject = MavenProjectsManager.getInstance(project).findProject(file);
+               return Optional.ofNullable(mavenProject);
            }
        }
        return Optional.empty();

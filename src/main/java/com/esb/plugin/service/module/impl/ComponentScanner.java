@@ -21,13 +21,8 @@ class ComponentScanner {
 
     CompletableFuture<Void> scan(Consumer<List<ComponentDescriptor>> callback, String classPath) {
         return CompletableFuture.supplyAsync(() -> {
-            ScanResult scanResult = new ClassGraph()
+            ScanResult scanResult = instantiateScanner()
                     .overrideClasspath(classPath)
-                    .enableSystemJarsAndModules()
-                    .enableClassInfo()
-                    .enableFieldInfo()
-                    .enableAnnotationInfo()
-                    .ignoreFieldVisibility()
                     .scan();
             processScanResult(callback, scanResult);
             return null;
@@ -36,12 +31,8 @@ class ComponentScanner {
 
     CompletableFuture<Void> scanPackages(Consumer<List<ComponentDescriptor>> callback, String... packages) {
         return CompletableFuture.supplyAsync(() -> {
-            ScanResult scanResult = new ClassGraph()
+            ScanResult scanResult = instantiateScanner()
                     .whitelistPackages(packages)
-                    .enableClassInfo()
-                    .enableFieldInfo()
-                    .enableAnnotationInfo()
-                    .ignoreFieldVisibility()
                     .scan();
             processScanResult(callback, scanResult);
             return null;
@@ -62,8 +53,14 @@ class ComponentScanner {
                         "definition with qualified name '%s'", classInfo.getName()), e);
             }
         }
-
         callback.accept(componentDescriptors);
+    }
+
+    private ClassGraph instantiateScanner() {
+        return new ClassGraph()
+                .enableFieldInfo()
+                .enableAnnotationInfo()
+                .ignoreFieldVisibility();
     }
 
 }
