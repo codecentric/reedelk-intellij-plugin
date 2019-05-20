@@ -58,7 +58,7 @@ public class GraphNodeFactory {
 
     private static void fillDefaultDescriptorValues(ComponentData componentData) {
         componentData.getPropertiesDescriptors().forEach(descriptor -> {
-            Object defaultValue = descriptor.getPropertyType().defaultValue();
+            Object defaultValue = descriptor.getDefaultValue();
             componentData.set(descriptor.getPropertyName(), defaultValue);
         });
     }
