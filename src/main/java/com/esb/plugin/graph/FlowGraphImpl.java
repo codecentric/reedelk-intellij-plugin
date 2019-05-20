@@ -111,11 +111,7 @@ public class FlowGraphImpl implements FlowGraph {
 
     @Override
     public FlowGraph copy() {
-        if (graph == null) {
-            return new FlowGraphImpl(id);
-        } else {
-            return new FlowGraphImpl(graph.copy(), id);
-        }
+        return new FlowGraphImpl(graph.copy(), id);
     }
 
     @Override

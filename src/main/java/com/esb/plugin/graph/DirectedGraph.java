@@ -120,6 +120,7 @@ public class DirectedGraph<NodeType> {
         } else {
             copy = new DirectedGraph<>(root);
         }
+
         Map<NodeType, List<NodeType>> edges = edges();
         for (Map.Entry<NodeType, List<NodeType>> entry : edges.entrySet()) {
             NodeType n1 = entry.getKey();
