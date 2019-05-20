@@ -2,8 +2,8 @@ package com.esb.plugin.graph.node;
 
 import com.esb.component.*;
 import com.esb.plugin.component.ComponentData;
+import com.esb.plugin.component.ComponentDescriptionDecorator;
 import com.esb.plugin.component.ComponentDescriptor;
-import com.esb.plugin.component.ComponentDescriptorDecorator;
 import com.esb.plugin.component.choice.ChoiceNode;
 import com.esb.plugin.component.flowreference.FlowReferenceNode;
 import com.esb.plugin.component.fork.ForkNode;
@@ -39,26 +39,27 @@ public class GraphNodeFactory {
 
     @SuppressWarnings("unchecked")
     public static <T extends GraphNode> T get(ComponentDescriptor descriptor) {
-        ComponentDescriptorDecorator decorator = new ComponentDescriptorDecorator(descriptor);
-        ComponentData data = new ComponentData(decorator);
-        fillDefaultDescriptorValues(decorator, data);
+        ComponentDescriptionDecorator componentDescriptionDecorator = new ComponentDescriptionDecorator(descriptor);
 
-        String componentFullyQualifiedName = data.getFullyQualifiedName();
+        ComponentData componentData = new ComponentData(componentDescriptionDecorator);
+
+        fillDefaultDescriptorValues(componentData);
+
+        String componentFullyQualifiedName = componentData.getFullyQualifiedName();
 
         Class<? extends GraphNode> componentDrawableClazz =
                 COMPONENT_DRAWABLE_MAP.getOrDefault(componentFullyQualifiedName, DEFAULT);
         try {
-            return (T) componentDrawableClazz.getConstructor(ComponentData.class).newInstance(data);
+            return (T) componentDrawableClazz.getConstructor(ComponentData.class).newInstance(componentData);
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static void fillDefaultDescriptorValues(ComponentDescriptor componentDescriptor, ComponentData componentData) {
-        componentData.getDataProperties().forEach(propertyName ->
-                componentDescriptor.getPropertyDescriptor(propertyName).ifPresent(propertyDescriptor -> {
-                    Object defaultValue = propertyDescriptor.getPropertyType().defaultValue();
-                    componentData.set(propertyName, defaultValue);
-                }));
+    private static void fillDefaultDescriptorValues(ComponentData componentData) {
+        componentData.getPropertiesDescriptors().forEach(descriptor -> {
+            Object defaultValue = descriptor.getPropertyType().defaultValue();
+            componentData.set(descriptor.getPropertyName(), defaultValue);
+        });
     }
 }

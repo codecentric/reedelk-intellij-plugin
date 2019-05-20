@@ -9,14 +9,14 @@ import java.util.Optional;
  * Decorator which adds as default the "Description"
  * property to all registered components.
  */
-public class ComponentDescriptorDecorator extends ComponentDescriptor {
+public class ComponentDescriptionDecorator extends ComponentDescriptor {
 
     public static final String DESCRIPTION_PROPERTY_NAME = "description";
 
     private ComponentDescriptor wrapped;
     private final ComponentPropertyDescriptor descriptionDescriptor;
 
-    public ComponentDescriptorDecorator(ComponentDescriptor descriptor) {
+    public ComponentDescriptionDecorator(ComponentDescriptor descriptor) {
         this.wrapped = descriptor;
 
         PrimitiveTypeDescriptor typeDescriptor = new PrimitiveTypeDescriptor(String.class);

@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.awt.*;
 
-import static com.esb.plugin.component.ComponentDescriptorDecorator.DESCRIPTION_PROPERTY_NAME;
+import static com.esb.plugin.component.ComponentDescriptionDecorator.DESCRIPTION_PROPERTY_NAME;
 
 
 public class ComponentDescription extends AbstractText {
