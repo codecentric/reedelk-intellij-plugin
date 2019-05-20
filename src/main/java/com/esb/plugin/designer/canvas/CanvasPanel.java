@@ -85,9 +85,9 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
 
             updated = false;
 
-        } else {
-            LOG.info("Painting...");
         }
+        long start = System.currentTimeMillis();
+
 
         Collection<GraphNode> nodes = graph.nodes();
 
@@ -103,6 +103,9 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
                 .filter(GraphNode::isSelected)
                 .findFirst()
                 .ifPresent(drawable -> drawable.draw(graph, g2, CanvasPanel.this));
+
+        long end = System.currentTimeMillis() - start;
+        LOG.info("Painted... " + end);
     }
 
     @Override

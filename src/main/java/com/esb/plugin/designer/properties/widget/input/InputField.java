@@ -3,11 +3,11 @@ package com.esb.plugin.designer.properties.widget.input;
 import com.esb.plugin.converter.ValueConverter;
 import com.intellij.ui.components.JBTextField;
 
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.PlainDocument;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 
-public abstract class InputField<T> extends JBTextField implements FocusListener {
+public abstract class InputField<T> extends JBTextField implements DocumentListener {
 
     final PlainDocument document;
 
@@ -18,17 +18,22 @@ public abstract class InputField<T> extends JBTextField implements FocusListener
     InputField() {
         converter = getConverter();
         document = (PlainDocument) getDocument();
-        addFocusListener(this);
+        document.addDocumentListener(this);
     }
 
     @Override
-    public void focusLost(FocusEvent e) {
+    public void insertUpdate(DocumentEvent e) {
         notifyListener();
     }
 
     @Override
-    public void focusGained(FocusEvent e) {
+    public void removeUpdate(DocumentEvent e) {
+        notifyListener();
+    }
 
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+        notifyListener();
     }
 
     public void setValue(Object value) {
