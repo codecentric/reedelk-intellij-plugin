@@ -63,7 +63,6 @@ public class GraphManager extends AncestorListenerAdapter implements FileEditorM
         busConnection.subscribe(FILE_EDITOR_MANAGER, this);
     }
 
-
     @Override
     public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
         if (file.equals(graphFile)) {
