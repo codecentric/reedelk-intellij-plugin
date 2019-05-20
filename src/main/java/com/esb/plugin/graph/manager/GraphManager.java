@@ -66,8 +66,6 @@ public class GraphManager extends AncestorListenerAdapter implements FileEditorM
         if (file.equals(graphFile)) {
             findRelatedEditorDocument(source, file).ifPresent(document -> {
                 this.document = document;
-                GraphDeserializer.deserialize(module, document.getText(), graphProvider)
-                        .ifPresent(updatedGraph -> snapshot.updateSnapshot(this, updatedGraph));
             });
         }
     }

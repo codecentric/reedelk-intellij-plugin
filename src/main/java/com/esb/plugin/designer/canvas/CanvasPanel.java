@@ -12,6 +12,7 @@ import com.esb.plugin.graph.layout.FlowGraphLayout;
 import com.esb.plugin.graph.node.Drawable;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.NothingSelectedNode;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
@@ -35,6 +36,8 @@ import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
 public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseListener, DropTargetListener, SnapshotListener {
 
+    private static final Logger LOG = Logger.getInstance(CanvasPanel.class);
+
     private final JBColor BACKGROUND_COLOR = JBColor.WHITE;
     private final GraphNode NOTHING_SELECTED = new NothingSelectedNode();
     private final Module module;
@@ -45,7 +48,7 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
 
     private int offsetX;
     private int offsetY;
-    private boolean updated = true;
+    private boolean updated = false;
     private boolean dragging;
 
     public CanvasPanel(Module module, GraphSnapshot snapshot, AncestorListener listener) {
@@ -72,6 +75,8 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
         // We compute again the graph layout if and only if it was updated.
         if (updated) {
 
+            LOG.info("Painting...(updated)");
+
             FlowGraphLayout.compute(graph, g2);
 
             PrintFlowInfo.debug(graph);// TODO: debug only
@@ -79,6 +84,9 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
             adjustWindowSize();
 
             updated = false;
+
+        } else {
+            LOG.info("Painting...");
         }
 
         Collection<GraphNode> nodes = graph.nodes();

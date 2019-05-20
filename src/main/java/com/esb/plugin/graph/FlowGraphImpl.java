@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkState;
 
 public class FlowGraphImpl implements FlowGraph {
 
@@ -21,6 +20,7 @@ public class FlowGraphImpl implements FlowGraph {
     public FlowGraphImpl(String id) {
         checkArgument(id != null, "id");
         this.id = id;
+        this.graph = new DirectedGraph<>();
     }
 
     private FlowGraphImpl(DirectedGraph<GraphNode> graph, String id) {
@@ -40,18 +40,13 @@ public class FlowGraphImpl implements FlowGraph {
 
     @Override
     public void root(@NotNull GraphNode root) {
-        if (graph == null) {
-            graph = new DirectedGraph<>(root);
-        } else {
-            graph.root(root);
-        }
+        graph.root(root);
     }
 
     @Override
     public void add(@Nullable GraphNode n1, @NotNull GraphNode n2) {
         if (n1 == null) {
-            checkState(graph == null, "Root was not null");
-            graph = new DirectedGraph<>(n2);
+            graph.root(n2);
         } else {
             graph.putEdge(n1, n2);
             n1.onSuccessorAdded(n2);
@@ -101,7 +96,7 @@ public class FlowGraphImpl implements FlowGraph {
 
     @Override
     public boolean isEmpty() {
-        return graph == null || graph.nodes().isEmpty();
+        return graph.isEmpty();
     }
 
     @Override

@@ -11,6 +11,9 @@ public class DirectedGraph<NodeType> {
     private NodeType root;
     private Map<NodeType, List<NodeType>> adjacentNodesMap = new HashMap<>();
 
+    public DirectedGraph() {
+    }
+
     public DirectedGraph(NodeType root) {
         this.root = root;
         addNode(this.root);
@@ -20,8 +23,13 @@ public class DirectedGraph<NodeType> {
         return root;
     }
 
+    public boolean isEmpty() {
+        return this.adjacentNodesMap.isEmpty();
+    }
+
     public void root(NodeType root) {
         this.root = root;
+        addNode(root);
     }
 
     public Collection<NodeType> nodes() {
@@ -106,7 +114,12 @@ public class DirectedGraph<NodeType> {
     }
 
     public DirectedGraph<NodeType> copy() {
-        DirectedGraph<NodeType> copy = new DirectedGraph<>(root);
+        DirectedGraph<NodeType> copy;
+        if (isEmpty()) {
+            copy = new DirectedGraph<>();
+        } else {
+            copy = new DirectedGraph<>(root);
+        }
         Map<NodeType, List<NodeType>> edges = edges();
         for (Map.Entry<NodeType, List<NodeType>> entry : edges.entrySet()) {
             NodeType n1 = entry.getKey();

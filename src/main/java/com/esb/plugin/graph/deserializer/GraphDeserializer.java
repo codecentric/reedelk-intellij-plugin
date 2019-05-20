@@ -19,7 +19,7 @@ public class GraphDeserializer {
 
     private static final Logger LOG = Logger.getInstance(GraphDeserializer.class);
 
-    private final JSONObject flowDefinition;
+    private final String json;
     private final DeserializerContext context;
     private final FlowGraphProvider graphProvider;
 
@@ -38,13 +38,13 @@ public class GraphDeserializer {
         checkArgument(json != null, "json");
         checkArgument(context != null, "context");
         checkArgument(graphProvider != null, "graph provider");
-
+        this.json = json;
         this.context = context;
-        this.flowDefinition = from(json);
         this.graphProvider = graphProvider;
     }
 
     FlowGraph deserialize() {
+        JSONObject flowDefinition = from(json);
         JSONArray flow = Flow.flow(flowDefinition);
         FlowGraph graph = graphProvider.createGraph(Flow.id(flowDefinition));
 
