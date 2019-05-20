@@ -18,7 +18,7 @@ public class UnknownComponentDescriptor extends ComponentDescriptor {
 
     @Override
     public String getDisplayName() {
-        return "Unknown Component";
+        return "Unknown";
     }
 
     @Override
