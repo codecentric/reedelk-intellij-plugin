@@ -32,4 +32,5 @@ public class EnumDropDown extends JComboBox<String> implements ItemListener {
     public void setValue(Object value) {
         setSelectedItem(value);
     }
+
 }

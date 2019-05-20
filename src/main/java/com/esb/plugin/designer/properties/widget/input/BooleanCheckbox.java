@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.properties.widget.input;
 
+import com.esb.plugin.converter.BooleanConverter;
 import com.esb.plugin.converter.ValueConverter;
-import com.esb.plugin.converter.ValueConverterFactory;
 import com.intellij.ui.components.JBCheckBox;
 
 import javax.swing.*;
@@ -10,14 +10,14 @@ import java.awt.event.ActionListener;
 
 public class BooleanCheckbox extends JBCheckBox implements ActionListener {
 
-    private JBCheckBox checkBox;
+    private final JBCheckBox checkBox;
+    private final ValueConverter<Boolean> converter = new BooleanConverter();
+
     private InputChangeListener<Boolean> listener;
-    private ValueConverter<Boolean> converter;
 
     public BooleanCheckbox() {
         checkBox = new JBCheckBox();
         checkBox.addActionListener(this);
-        converter = ValueConverterFactory.forType(boolean.class);
     }
 
     @Override
@@ -38,4 +38,5 @@ public class BooleanCheckbox extends JBCheckBox implements ActionListener {
     public void addListener(InputChangeListener<Boolean> listener) {
         this.listener = listener;
     }
+
 }

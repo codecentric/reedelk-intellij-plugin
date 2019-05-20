@@ -18,25 +18,30 @@ public class GenericComponentDeserializer extends AbstractDeserializer {
 
     @Override
     public GraphNode deserialize(GraphNode parent, JSONObject jsonDefinition) {
-
         String name = JsonParser.Implementor.name(jsonDefinition);
 
-        // This one might be GenericComponent node OR Unknown Node.
+        // The following graph node instance, might be generic
+        // component or unknown node.
         GraphNode node = context.instantiateGraphNode(name);
 
         ComponentData componentData = node.componentData();
 
         jsonDefinition.keys().forEachRemaining(propertyName ->
+
                 componentData.getPropertyDescriptor(propertyName).ifPresent(descriptor -> {
 
-                    // Here this call should return Unknown Type for Unknown Component property.
                     TypeDescriptor propertyType = descriptor.getPropertyType();
-                    Object propertyValue =
-                            ValueConverterFactory.forType(propertyType).from(propertyName, jsonDefinition);
+
+                    Object propertyValue = ValueConverterFactory
+                            .forType(propertyType)
+                            .from(propertyName, jsonDefinition);
+
                     componentData.set(propertyName, propertyValue);
+
                 }));
 
         graph.add(parent, node);
+
         return node;
     }
 }

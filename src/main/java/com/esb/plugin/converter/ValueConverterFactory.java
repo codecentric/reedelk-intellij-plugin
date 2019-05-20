@@ -1,6 +1,7 @@
 package com.esb.plugin.converter;
 
 import com.esb.plugin.component.TypeDescriptor;
+import com.esb.plugin.component.unknown.UnknownPropertyType;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -12,6 +13,7 @@ import static java.lang.String.format;
 
 public class ValueConverterFactory {
 
+    private static final ValueConverter<Object> UNKNOWN_TYPE_CONVERTER = new UnknownTypeConverter();
 
     private static final Map<Class<?>, ValueConverter<?>> CONVERTER;
     static {
@@ -36,23 +38,26 @@ public class ValueConverterFactory {
     }
 
     public static ValueConverter<?> forType(TypeDescriptor typeDescriptor) {
-        return forType(typeDescriptor.type());
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> ValueConverter<T> forType(Class<T> typeClazz) {
-        if (CONVERTER.containsKey(typeClazz)) {
-            return (ValueConverter<T>) CONVERTER.get(typeClazz);
+        if (typeDescriptor instanceof UnknownPropertyType) {
+            return UNKNOWN_TYPE_CONVERTER;
+        } else {
+            return forType(typeDescriptor.type());
         }
-        throw new IllegalStateException(
-                format("Input Type '%s' does not have suitable converter",
-                        typeClazz.getName()));
     }
 
     public static boolean isKnownType(String clazzFullyQualifiedName) {
         return CONVERTER.keySet()
                 .stream()
                 .anyMatch(aClass -> aClass.getName().equals(clazzFullyQualifiedName));
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> ValueConverter<T> forType(Class<T> typeClazz) {
+        if (CONVERTER.containsKey(typeClazz)) {
+            return (ValueConverter<T>) CONVERTER.get(typeClazz);
+        }
+        throw new IllegalStateException(
+                format("Input Type '%s' does not have suitable converter", typeClazz.getName()));
     }
 
 }

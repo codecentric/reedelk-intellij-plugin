@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.properties.widget.input;
 
+import com.esb.plugin.converter.DoubleConverter;
 import com.esb.plugin.converter.ValueConverter;
-import com.esb.plugin.converter.ValueConverterFactory;
 import com.esb.plugin.designer.properties.widget.NumericDocumentFilter;
 
 import javax.swing.text.DocumentFilter;
@@ -22,6 +22,6 @@ public class DoubleInputField extends NumericInputField<Double> {
 
     @Override
     protected ValueConverter<Double> getConverter() {
-        return ValueConverterFactory.forType(Double.class);
+        return new DoubleConverter();
     }
 }

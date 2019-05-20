@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.properties.widget.input;
 
+import com.esb.plugin.converter.FloatConverter;
 import com.esb.plugin.converter.ValueConverter;
-import com.esb.plugin.converter.ValueConverterFactory;
 import com.esb.plugin.designer.properties.widget.NumericDocumentFilter;
 
 import javax.swing.text.DocumentFilter;
@@ -21,6 +21,6 @@ public class FloatInputField extends NumericInputField<Float> {
 
     @Override
     protected ValueConverter<Float> getConverter() {
-        return ValueConverterFactory.forType(Float.class);
+        return new FloatConverter();
     }
 }

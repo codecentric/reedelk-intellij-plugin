@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.properties.widget.input;
 
+import com.esb.plugin.converter.BigIntegerConverter;
 import com.esb.plugin.converter.ValueConverter;
-import com.esb.plugin.converter.ValueConverterFactory;
 import com.esb.plugin.designer.properties.widget.NumericDocumentFilter;
 
 import javax.swing.text.DocumentFilter;
@@ -23,6 +23,6 @@ public class BigIntegerInputField extends NumericInputField<BigInteger> {
 
     @Override
     protected ValueConverter<BigInteger> getConverter() {
-        return ValueConverterFactory.forType(BigInteger.class);
+        return new BigIntegerConverter();
     }
 }
