@@ -23,7 +23,7 @@ public class GenericComponentSerializer extends AbstractNodeSerializer {
 
             Object data = componentData.get(propertyName);
 
-            componentAsJson.put(propertyName.toLowerCase(), data);
+            componentAsJson.put(propertyName, data);
 
         });
 

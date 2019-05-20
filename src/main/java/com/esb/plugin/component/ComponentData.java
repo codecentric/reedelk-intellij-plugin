@@ -33,6 +33,7 @@ public class ComponentData {
         for (Map.Entry<String, Object> entry : componentData.entrySet()) {
             dataProperties.add(entry.getKey());
         }
+        Collections.reverse(dataProperties);
         return dataProperties;
     }
 
