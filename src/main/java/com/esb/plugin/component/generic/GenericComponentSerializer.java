@@ -19,9 +19,9 @@ public class GenericComponentSerializer extends AbstractNodeSerializer {
 
         Implementor.name(componentData.getFullyQualifiedName(), componentAsJson);
 
-        componentData.descriptorProperties().forEach(propertyName -> {
+        componentData.getDataProperties().forEach(propertyName -> {
 
-            Object data = componentData.getOrDefault(propertyName.toLowerCase(), JSONObject.NULL);
+            Object data = componentData.get(propertyName);
 
             componentAsJson.put(propertyName.toLowerCase(), data);
 

@@ -1,10 +1,6 @@
 package com.esb.plugin.component;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-
-import static java.util.Collections.singletonList;
 
 /**
  * Decorator which adds as default the "Description"
@@ -22,7 +18,7 @@ public class ComponentDescriptorDecorator extends ComponentDescriptor {
 
         PrimitiveTypeDescriptor typeDescriptor = new PrimitiveTypeDescriptor(String.class);
         descriptionDescriptor = new ComponentPropertyDescriptor(
-                DESCRIPTION_PROPERTY_NAME, "Description", false, wrapped.getDisplayName(), typeDescriptor);
+                DESCRIPTION_PROPERTY_NAME, typeDescriptor, "Description", wrapped.getDisplayName(), false);
     }
 
     @Override
@@ -36,35 +32,11 @@ public class ComponentDescriptorDecorator extends ComponentDescriptor {
     }
 
     @Override
-    public Optional<ComponentPropertyDescriptor> getPropertyDefinition(String propertyName) {
+    public Optional<ComponentPropertyDescriptor> getPropertyDescriptor(String propertyName) {
         if (propertyName.equals(DESCRIPTION_PROPERTY_NAME)) {
             return Optional.of(descriptionDescriptor);
         } else {
-            return wrapped.getPropertyDefinition(propertyName);
-        }
-    }
-
-    @Override
-    public List<String> getPropertiesNames() {
-        List<String> allProperties = new ArrayList<>(singletonList(DESCRIPTION_PROPERTY_NAME));
-        allProperties.addAll(wrapped.getPropertiesNames());
-        return allProperties;
-    }
-
-    @Override
-    public List<ComponentPropertyDescriptor> getComponentPropertyDescriptors() {
-        List<ComponentPropertyDescriptor> componentPropertyDescriptors =
-                new ArrayList<>(singletonList(descriptionDescriptor));
-        componentPropertyDescriptors.addAll(wrapped.getComponentPropertyDescriptors());
-        return componentPropertyDescriptors;
-    }
-
-    @Override
-    public TypeDescriptor getPropertyType(String propertyName) {
-        if (propertyName.equals(DESCRIPTION_PROPERTY_NAME)) {
-            return descriptionDescriptor.getPropertyType();
-        } else {
-            return wrapped.getPropertyType(propertyName);
+            return wrapped.getPropertyDescriptor(propertyName);
         }
     }
 

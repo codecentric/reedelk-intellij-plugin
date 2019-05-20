@@ -12,6 +12,7 @@ import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.ui.components.JBPanel;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GenericComponentPropertiesRenderer extends AbstractNodePropertiesRenderer {
@@ -23,13 +24,16 @@ public class GenericComponentPropertiesRenderer extends AbstractNodePropertiesRe
     @Override
     public JBPanel render(GraphNode node) {
         ComponentData componentData = node.componentData();
-        List<ComponentPropertyDescriptor> propertiesDescriptors = componentData.getComponentPropertyDescriptors();
-        return createPropertiesPanelFrom(propertiesDescriptors, componentData);
+        List<ComponentPropertyDescriptor> descriptors = new ArrayList<>();
+        componentData.getDataProperties().forEach(property ->
+                componentData.getPropertyDescriptor(property)
+                        .ifPresent(descriptors::add));
+        return createPropertiesPanelFrom(descriptors, componentData);
     }
 
-    protected JBPanel createPropertiesPanelFrom(List<ComponentPropertyDescriptor> descriptors, ComponentData data) {
+    protected JBPanel createPropertiesPanelFrom(List<ComponentPropertyDescriptor> propertyDescriptors, ComponentData data) {
         DefaultPropertiesPanel propertiesPanel = new DefaultPropertiesPanel();
-        descriptors.forEach(descriptor -> {
+        propertyDescriptors.forEach(descriptor -> {
             final String displayName = descriptor.getDisplayName();
             final TypeDescriptor propertyType = descriptor.getPropertyType();
             final JComponent renderedComponent =

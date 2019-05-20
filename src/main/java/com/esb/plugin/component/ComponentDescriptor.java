@@ -1,9 +1,10 @@
 package com.esb.plugin.component;
 
 import java.awt.datatransfer.DataFlavor;
-import java.util.*;
-
-import static java.util.stream.Collectors.toList;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * An object describing the component to be added to the graph.
@@ -12,9 +13,8 @@ public class ComponentDescriptor {
 
     public static final DataFlavor FLAVOR = new DataFlavor(ComponentDescriptor.class, "Descriptor of ComponentData");
 
-    private String fullyQualifiedName;
     private String displayName;
-
+    private String fullyQualifiedName;
     private List<ComponentPropertyDescriptor> componentPropertyDescriptors = new ArrayList<>();
 
     protected ComponentDescriptor() {
@@ -28,21 +28,11 @@ public class ComponentDescriptor {
         return displayName;
     }
 
-    public Optional<ComponentPropertyDescriptor> getPropertyDefinition(String propertyName) {
+    public Optional<ComponentPropertyDescriptor> getPropertyDescriptor(String propertyName) {
         return componentPropertyDescriptors
                 .stream()
                 .filter(descriptor -> descriptor.getPropertyName().equals(propertyName))
                 .findFirst();
-    }
-
-    public List<String> getPropertiesNames() {
-        return componentPropertyDescriptors.stream()
-                .map(ComponentPropertyDescriptor::getPropertyName)
-                .collect(toList());
-    }
-
-    public List<ComponentPropertyDescriptor> getComponentPropertyDescriptors() {
-        return Collections.unmodifiableList(componentPropertyDescriptors);
     }
 
     public static Builder create() {
@@ -61,18 +51,6 @@ public class ComponentDescriptor {
     public int hashCode() {
         return Objects.hash(fullyQualifiedName);
     }
-
-    // TODO: Shouldn't this return Optional?
-    public TypeDescriptor getPropertyType(String propertyName) {
-        return componentPropertyDescriptors.stream()
-                .filter(propertyDefinition -> propertyDefinition.getPropertyName().equals(propertyName))
-                .findFirst()
-                .orElseThrow(() -> {
-                    throw new IllegalStateException("Property not found");
-                })
-                .getPropertyType();
-    }
-
 
     public static class Builder {
 

@@ -55,7 +55,7 @@ class ComponentAnalyzerTest {
                                                 Object expectedDefaultValue,
                                                 Class<?> expectedPropertyType,
                                                 boolean expectedIsRequired) {
-        Optional<ComponentPropertyDescriptor> property1Definition = descriptor.getPropertyDefinition(expectedPropertyName);
+        Optional<ComponentPropertyDescriptor> property1Definition = descriptor.getPropertyDescriptor(expectedPropertyName);
         assertThat(property1Definition).isPresent();
 
         ComponentPropertyDescriptor definition = property1Definition.get();

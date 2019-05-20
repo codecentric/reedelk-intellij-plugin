@@ -45,7 +45,7 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
 
     private int offsetX;
     private int offsetY;
-    private boolean updated;
+    private boolean updated = true;
     private boolean dragging;
 
     public CanvasPanel(Module module, GraphSnapshot snapshot, AncestorListener listener) {
@@ -64,8 +64,6 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
         super.paintComponent(graphics);
 
         FlowGraph graph = snapshot.getGraph();
-
-        if (snapshot.getGraph() == null) return;
 
         // Set Antialiasing
         Graphics2D g2 = (Graphics2D) graphics;

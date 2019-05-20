@@ -1,15 +1,12 @@
 package com.esb.plugin.component;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class ComponentData {
 
     private final ComponentDescriptor descriptor;
 
-    private Map<String, Object> componentData = new HashMap<>();
+    private Map<String, Object> componentData = new LinkedHashMap<>();
 
     public ComponentData(final ComponentDescriptor descriptor) {
         this.descriptor = descriptor;
@@ -35,19 +32,16 @@ public class ComponentData {
         return descriptor.getDisplayName();
     }
 
-    public List<String> descriptorProperties() {
-        return descriptor.getPropertiesNames();
+    public List<String> getDataProperties() {
+        List<String> dataProperties = new ArrayList<>();
+        for (Map.Entry<String, Object> entry : componentData.entrySet()) {
+            dataProperties.add(entry.getKey());
+        }
+        return dataProperties;
     }
 
-    public Optional<ComponentPropertyDescriptor> getPropertyDefinition(String propertyName) {
-        return descriptor.getPropertyDefinition(propertyName);
+    public Optional<ComponentPropertyDescriptor> getPropertyDescriptor(String propertyName) {
+        return descriptor.getPropertyDescriptor(propertyName);
     }
 
-    public List<ComponentPropertyDescriptor> getComponentPropertyDescriptors() {
-        return descriptor.getComponentPropertyDescriptors();
-    }
-
-    public TypeDescriptor getPropertyType(String propertyName) {
-        return descriptor.getPropertyType(propertyName);
-    }
 }

@@ -12,10 +12,10 @@ public class ComponentPropertyDescriptor {
 
     public ComponentPropertyDescriptor(
             final String propertyName,
+            final TypeDescriptor propertyType,
             final String displayName,
-            final boolean required,
             final Object defaultValue,
-            final TypeDescriptor propertyType) {
+            final boolean required) {
 
         checkState(propertyName != null, "property name");
         checkState(propertyType != null, "property type");

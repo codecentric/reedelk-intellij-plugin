@@ -26,24 +26,17 @@ public class GenericComponentDeserializer extends AbstractDeserializer {
 
         ComponentData componentData = node.componentData();
 
-        jsonDefinition
-                .keys()
-                .forEachRemaining(propertyName ->
-                        componentData
-                                .getPropertyDefinition(propertyName)
-                                .ifPresent(descriptor -> {
-                                    // Here this call should return Unknown Type for Unknown Component property.
-                                    TypeDescriptor propertyType =
-                                            descriptor.getPropertyType();
-                                    Object propertyValue =
-                                            ValueConverterFactory
-                                                    .forType(propertyType)
-                                                    .from(propertyName, jsonDefinition);
-                                    componentData.set(propertyName, propertyValue);
-                                }));
+        jsonDefinition.keys().forEachRemaining(propertyName ->
+                componentData.getPropertyDescriptor(propertyName).ifPresent(descriptor -> {
+
+                    // Here this call should return Unknown Type for Unknown Component property.
+                    TypeDescriptor propertyType = descriptor.getPropertyType();
+                    Object propertyValue =
+                            ValueConverterFactory.forType(propertyType).from(propertyName, jsonDefinition);
+                    componentData.set(propertyName, propertyValue);
+                }));
 
         graph.add(parent, node);
         return node;
     }
-
 }

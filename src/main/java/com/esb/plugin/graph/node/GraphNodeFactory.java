@@ -54,11 +54,11 @@ public class GraphNodeFactory {
         }
     }
 
-    private static void fillDefaultDescriptorValues(ComponentDescriptor descriptor, ComponentData data) {
-        descriptor.getComponentPropertyDescriptors()
-                .forEach(propertyDescriptor -> {
-                    Object defaultValue = propertyDescriptor.getDefaultValue();
-                    data.set(propertyDescriptor.getPropertyName(), defaultValue);
-                });
+    private static void fillDefaultDescriptorValues(ComponentDescriptor componentDescriptor, ComponentData componentData) {
+        componentData.getDataProperties().forEach(propertyName ->
+                componentDescriptor.getPropertyDescriptor(propertyName).ifPresent(propertyDescriptor -> {
+                    Object defaultValue = propertyDescriptor.getPropertyType().defaultValue();
+                    componentData.set(propertyName, defaultValue);
+                }));
     }
 }

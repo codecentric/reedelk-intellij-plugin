@@ -8,8 +8,8 @@ import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.ui.components.JBPanel;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.esb.internal.commons.JsonParser.FlowReference;
 import static java.awt.BorderLayout.CENTER;
@@ -24,11 +24,17 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
     @Override
     public JBPanel render(GraphNode node) {
         ComponentData componentData = node.componentData();
-        List<ComponentPropertyDescriptor> componentPropertyDescriptors = componentData.getComponentPropertyDescriptors();
-        List<ComponentPropertyDescriptor> genericProperties = componentPropertyDescriptors
+
+        List<ComponentPropertyDescriptor> descriptors = new ArrayList<>();
+        componentData.getDataProperties()
                 .stream()
-                .filter(descriptor -> !descriptor.getPropertyName().equals(FlowReference.ref())).collect(Collectors.toList());
-        JBPanel genericPropertiesPanel = createPropertiesPanelFrom(genericProperties, componentData);
+                .filter(propertyName -> !propertyName.equals(FlowReference.ref()))
+                .forEach(property ->
+                        componentData.getPropertyDescriptor(property)
+                                .ifPresent(descriptors::add));
+
+
+        JBPanel genericPropertiesPanel = createPropertiesPanelFrom(descriptors, componentData);
 
         JBPanel selectSubFlowDropDown = new JBPanel();
 

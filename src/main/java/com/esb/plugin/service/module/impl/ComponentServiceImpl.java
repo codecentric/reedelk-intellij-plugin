@@ -1,8 +1,8 @@
 package com.esb.plugin.service.module.impl;
 
-import com.esb.component.Unknown;
 import com.esb.plugin.commons.ESBModuleInfo;
 import com.esb.plugin.component.ComponentDescriptor;
+import com.esb.plugin.component.unknown.UnknownComponentDescriptor;
 import com.esb.plugin.service.module.ComponentService;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModuleRootManager;
@@ -68,9 +68,7 @@ public class ComponentServiceImpl implements ComponentService {
         if (allDescriptors.containsKey(componentFullyQualifiedName)) {
             return allDescriptors.get(componentFullyQualifiedName);
         } else {
-            return ComponentDescriptor.create()
-                    .fullyQualifiedName(Unknown.class.getName())
-                    .build();
+            return new UnknownComponentDescriptor();
         }
     }
 

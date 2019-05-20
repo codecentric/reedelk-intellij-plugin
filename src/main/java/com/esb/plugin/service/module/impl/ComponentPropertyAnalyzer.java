@@ -40,7 +40,7 @@ class ComponentPropertyAnalyzer {
         Object defaultValue = getDefaultValue(propertyInfo, propertyType);
 
         boolean required = propertyInfo.hasAnnotation(Required.class.getName());
-        return new ComponentPropertyDescriptor(propertyName, displayName, required, defaultValue, propertyType);
+        return new ComponentPropertyDescriptor(propertyName, propertyType, displayName, defaultValue, required);
     }
 
     private TypeDescriptor getPropertyType(FieldInfo fieldInfo) {
