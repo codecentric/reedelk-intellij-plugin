@@ -7,6 +7,7 @@ import com.esb.plugin.graph.SnapshotListener;
 import com.esb.plugin.graph.deserializer.GraphDeserializer;
 import com.esb.plugin.graph.serializer.GraphSerializer;
 import com.esb.plugin.service.module.ComponentService;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
@@ -35,7 +36,7 @@ import static java.util.Arrays.stream;
  * - Properties updates:
  * - component's property changed
  */
-public class GraphManager extends AncestorListenerAdapter implements FileEditorManagerListener, SnapshotListener {
+public class GraphManager extends AncestorListenerAdapter implements FileEditorManagerListener, SnapshotListener, Disposable {
 
     private static final Logger LOG = Logger.getInstance(GraphManager.class);
 
@@ -44,6 +45,7 @@ public class GraphManager extends AncestorListenerAdapter implements FileEditorM
     private final VirtualFile graphFile;
     private final GraphSnapshot snapshot;
     private final FlowGraphProvider graphProvider;
+    private final MessageBusConnection busConnection;
 
     private Document document;
 
@@ -57,9 +59,10 @@ public class GraphManager extends AncestorListenerAdapter implements FileEditorM
 
         ComponentService.getInstance(module).syncScanComponents();
 
-        MessageBusConnection busConnection = project.getMessageBus().connect();
+        busConnection = project.getMessageBus().connect();
         busConnection.subscribe(FILE_EDITOR_MANAGER, this);
     }
+
 
     @Override
     public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
@@ -99,6 +102,11 @@ public class GraphManager extends AncestorListenerAdapter implements FileEditorM
         }
     }
 
+    @Override
+    public void dispose() {
+        busConnection.disconnect();
+    }
+
     /**
      * Writes the json into the document.
      *
@@ -123,4 +131,5 @@ public class GraphManager extends AncestorListenerAdapter implements FileEditorM
                 .map(fileEditor -> (TextEditor) fileEditor)
                 .map(textEditor -> textEditor.getEditor().getDocument());
     }
+
 }
