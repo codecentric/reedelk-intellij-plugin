@@ -5,6 +5,6 @@ import com.esb.plugin.component.ComponentPropertyDescriptor;
 public class UnknownComponentPropertyDescriptor extends ComponentPropertyDescriptor {
 
     public UnknownComponentPropertyDescriptor(String propertyName) {
-        super(propertyName, new UnknownPropertyType(), null, null, false);
+        super(propertyName, new UnknownPropertyType(), "Unknown", null, false);
     }
 }
