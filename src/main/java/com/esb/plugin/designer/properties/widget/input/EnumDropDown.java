@@ -7,11 +7,13 @@ import java.util.List;
 
 public class EnumDropDown extends JComboBox<String> implements ItemListener {
 
+    private static final int WIDTH = 150;
+
     private InputChangeListener<String> listener;
 
     public EnumDropDown(List<String> values) {
         super(values.toArray(new String[0]));
-        getPreferredSize().width = 150;
+        getPreferredSize().width = WIDTH;
         addItemListener(this);
     }
 
