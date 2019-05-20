@@ -16,10 +16,6 @@ public class ComponentData {
         return componentData.get(key);
     }
 
-    public Object getOrDefault(String key, Object defaultValue) {
-        return componentData.getOrDefault(key, defaultValue);
-    }
-
     public void set(String propertyName, Object propertyValue) {
         componentData.put(propertyName, propertyValue);
     }

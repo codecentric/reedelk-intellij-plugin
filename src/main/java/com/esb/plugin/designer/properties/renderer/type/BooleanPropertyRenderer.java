@@ -16,7 +16,7 @@ public class BooleanPropertyRenderer implements TypePropertyRenderer {
     @Override
     public JComponent render(ComponentPropertyDescriptor descriptor, ComponentData componentData, GraphSnapshot snapshot) {
         String propertyName = descriptor.getPropertyName();
-        Object propertyValue = componentData.getOrDefault(propertyName, descriptor.getDefaultValue());
+        Object propertyValue = componentData.get(propertyName);
 
         BooleanCheckbox checkbox = new BooleanCheckbox();
         checkbox.addListener(valueAsString -> {

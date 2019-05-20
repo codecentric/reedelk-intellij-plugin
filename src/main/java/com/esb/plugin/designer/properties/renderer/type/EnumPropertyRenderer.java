@@ -16,7 +16,7 @@ public class EnumPropertyRenderer implements TypePropertyRenderer {
         String propertyName = descriptor.getPropertyName();
 
         EnumTypeDescriptor propertyType = (EnumTypeDescriptor) descriptor.getPropertyType();
-        Object propertyValue = componentData.getOrDefault(propertyName, descriptor.getDefaultValue());
+        Object propertyValue = componentData.get(propertyName);
 
         EnumDropDown dropDown = new EnumDropDown(propertyType.possibleValues());
         dropDown.setValue(propertyValue);
