@@ -1,10 +1,7 @@
 package com.esb.plugin.component;
 
 import java.awt.datatransfer.DataFlavor;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * An object describing the component to be added to the graph.
@@ -33,6 +30,10 @@ public class ComponentDescriptor {
                 .stream()
                 .filter(descriptor -> descriptor.getPropertyName().equals(propertyName))
                 .findFirst();
+    }
+
+    public List<ComponentPropertyDescriptor> getPropertiesDescriptors() {
+        return Collections.unmodifiableList(componentPropertyDescriptors);
     }
 
     public static Builder create() {

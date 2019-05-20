@@ -40,6 +40,10 @@ public class ComponentData {
         return dataProperties;
     }
 
+    public List<ComponentPropertyDescriptor> getPropertiesDescriptors() {
+        return descriptor.getPropertiesDescriptors();
+    }
+
     public Optional<ComponentPropertyDescriptor> getPropertyDescriptor(String propertyName) {
         return descriptor.getPropertyDescriptor(propertyName);
     }
