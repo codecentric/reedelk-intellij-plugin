@@ -26,4 +26,10 @@ public class UnknownComponentDescriptor extends ComponentDescriptor {
         return Optional.of(new UnknownComponentPropertyDescriptor(propertyName));
     }
 
+    class UnknownComponentPropertyDescriptor extends ComponentPropertyDescriptor {
+        UnknownComponentPropertyDescriptor(String propertyName) {
+            super(propertyName, new UnknownPropertyType(), "Unknown", null, false);
+        }
+    }
+
 }
