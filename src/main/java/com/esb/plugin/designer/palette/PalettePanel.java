@@ -82,6 +82,7 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
                 root.add(moduleRoot);
             });
 
+
             DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
             model.reload();
             expandRows();

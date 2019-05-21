@@ -100,9 +100,10 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                 } else {
                     jarFilePathModuleDescriptorMap.put(jarFilePath, descriptor);
                 }
+                publisher.onComponentListUpdate();
             });
 
-            publisher.onComponentListUpdate();
+
             return null;
         });
 
