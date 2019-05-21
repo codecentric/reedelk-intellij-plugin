@@ -29,6 +29,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -259,9 +260,9 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
      * If the graph has grown beyond the current window size, we must adapt it.
      */
     private void adjustWindowSize() {
-        // TODO: not efficient at all...
-        int maxX = snapshot.getGraph().nodes().stream().mapToInt(Drawable::x).max().getAsInt();
-        int maxY = snapshot.getGraph().nodes().stream().mapToInt(Drawable::y).max().getAsInt();
+        Collection<GraphNode> nodes = graph.nodes();
+        int maxX = nodes.stream().mapToInt(Drawable::x).max().getAsInt();
+        int maxY = nodes.stream().mapToInt(Drawable::y).max().getAsInt();
         int newSizeX = maxX + Tile.WIDTH;
         int newSizeY = maxY + Tile.HEIGHT;
         Dimension newDimension = new Dimension(newSizeX, newSizeY);
@@ -270,8 +271,7 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
     }
 
     private Optional<GraphNode> getDrawableWithinCoordinates(int x, int y) {
-        return snapshot.getGraph() == null ? Optional.empty() :
-                snapshot.getGraph().nodes()
+        return graph.nodes()
                         .stream()
                         .filter(drawable -> drawable.contains(this, x, y))
                         .findFirst();
