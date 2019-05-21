@@ -61,7 +61,7 @@ public class GraphManager extends AncestorListenerAdapter implements FileEditorM
         busConnection = project.getMessageBus().connect();
         busConnection.subscribe(FILE_EDITOR_MANAGER, this);
         moduleBusConnection = module.getMessageBus().connect();
-        moduleBusConnection.subscribe(TOPIC, this);
+        moduleBusConnection.subscribe(COMPONENT_LIST_UPDATE_TOPIC, this);
     }
 
     @Override

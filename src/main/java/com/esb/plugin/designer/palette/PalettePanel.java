@@ -49,7 +49,7 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
         add(componentsTreeScrollPanel, BorderLayout.CENTER);
 
         MessageBusConnection connect = module.getMessageBus().connect();
-        connect.subscribe(ComponentListUpdateNotifier.TOPIC, this);
+        connect.subscribe(ComponentListUpdateNotifier.COMPONENT_LIST_UPDATE_TOPIC, this);
 
         updatePaletteComponentsList();
     }

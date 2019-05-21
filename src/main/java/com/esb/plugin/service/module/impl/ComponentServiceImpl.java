@@ -45,7 +45,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         List<ComponentDescriptor> coreComponents = ComponentScanner.getComponentsFromPackage(Stop.class.getPackage().getName());
         jarFilePathModuleDescriptorMap.put("core-components", new ModuleDescriptor("Core Components", coreComponents));
 
-        publisher = messageBus.syncPublisher(ComponentListUpdateNotifier.TOPIC);
+        publisher = messageBus.syncPublisher(ComponentListUpdateNotifier.COMPONENT_LIST_UPDATE_TOPIC);
         asyncScanClasspathComponents();
 
         project.getMessageBus().connect().subscribe(MavenImportListener.TOPIC, this);
