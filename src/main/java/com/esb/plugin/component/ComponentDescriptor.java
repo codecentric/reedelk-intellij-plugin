@@ -10,6 +10,7 @@ public class ComponentDescriptor {
 
     public static final DataFlavor FLAVOR = new DataFlavor(ComponentDescriptor.class, "Descriptor of ComponentData");
 
+    private boolean hidden;
     private String displayName;
     private String fullyQualifiedName;
     private List<ComponentPropertyDescriptor> componentPropertyDescriptors = new ArrayList<>();
@@ -17,12 +18,16 @@ public class ComponentDescriptor {
     protected ComponentDescriptor() {
     }
 
-    public String getFullyQualifiedName() {
-        return fullyQualifiedName;
+    public boolean isHidden() {
+        return hidden;
     }
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public String getFullyQualifiedName() {
+        return fullyQualifiedName;
     }
 
     public Optional<ComponentPropertyDescriptor> getPropertyDescriptor(String propertyName) {
@@ -55,6 +60,7 @@ public class ComponentDescriptor {
 
     public static class Builder {
 
+        private boolean hidden;
         private String displayName;
         private String fullyQualifiedName;
         private List<ComponentPropertyDescriptor> componentPropertyDescriptors = new ArrayList<>();
@@ -74,13 +80,20 @@ public class ComponentDescriptor {
             return this;
         }
 
+        public Builder hidden(boolean hidden) {
+            this.hidden = hidden;
+            return this;
+        }
+
         public ComponentDescriptor build() {
             ComponentDescriptor descriptor = new ComponentDescriptor();
+            descriptor.hidden = hidden;
             descriptor.displayName = displayName;
             descriptor.fullyQualifiedName = fullyQualifiedName;
             descriptor.componentPropertyDescriptors.addAll(componentPropertyDescriptors);
             return descriptor;
         }
+
     }
 
 }

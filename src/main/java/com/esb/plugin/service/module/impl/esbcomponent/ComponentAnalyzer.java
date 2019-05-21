@@ -1,6 +1,7 @@
 package com.esb.plugin.service.module.impl.esbcomponent;
 
 import com.esb.api.annotation.ESBComponent;
+import com.esb.api.annotation.Hidden;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.component.ComponentPropertyDescriptor;
 import io.github.classgraph.AnnotationInfo;
@@ -25,6 +26,7 @@ class ComponentAnalyzer {
         return ComponentDescriptor.create()
                 .fullyQualifiedName(classInfo.getName())
                 .displayName(displayName)
+                .hidden(isHidden(classInfo))
                 .propertyDefinitions(mapPropertyDefinitions(classInfo))
                 .build();
     }
@@ -47,6 +49,10 @@ class ComponentAnalyzer {
         } else {
             return componentClassInfo.getSimpleName();
         }
+    }
+
+    private boolean isHidden(ClassInfo componentClassInfo) {
+        return componentClassInfo.hasAnnotation(Hidden.class.getName());
     }
 
 }

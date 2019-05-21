@@ -77,8 +77,11 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
 
             descriptors.forEach(moduleDescriptor -> {
                 DefaultMutableTreeNode moduleRoot = new DefaultMutableTreeNode(moduleDescriptor.getName());
-                moduleDescriptor.getModuleComponents().forEach(descriptor ->
-                        moduleRoot.add(new DefaultMutableTreeNode(descriptor)));
+                moduleDescriptor.getModuleComponents().forEach(descriptor -> {
+                    if (!descriptor.isHidden()) {
+                        moduleRoot.add(new DefaultMutableTreeNode(descriptor));
+                    }
+                });
                 root.add(moduleRoot);
             });
 
