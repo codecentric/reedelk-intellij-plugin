@@ -103,7 +103,8 @@ public class GraphManager extends AncestorListenerAdapter implements FileEditorM
 
     @Override
     public void dispose() {
-        busConnection.disconnect();
+        this.document = null;
+        this.busConnection.disconnect();
     }
 
     /**
