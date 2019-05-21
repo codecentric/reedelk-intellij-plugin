@@ -28,7 +28,8 @@ import java.awt.dnd.DropTargetListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
@@ -51,6 +52,8 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
     private boolean updated = false;
     private boolean dragging;
 
+    private FlowGraph graph;
+
     public CanvasPanel(Module module, GraphSnapshot snapshot, AncestorListener listener) {
         setBackground(BACKGROUND_COLOR);
         addMouseListener(this);
@@ -60,13 +63,13 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
         this.module = module;
         this.snapshot = snapshot;
         this.snapshot.addListener(this);
+
+        graph = snapshot.getGraph();
     }
 
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
-
-        FlowGraph graph = snapshot.getGraph();
 
         // Set Antialiasing
         Graphics2D g2 = (Graphics2D) graphics;
@@ -77,6 +80,8 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
 
             LOG.info("Painting...(updated)");
 
+            graph = snapshot.getGraph();
+
             FlowGraphLayout.compute(graph, g2);
 
             PrintFlowInfo.debug(graph);// TODO: debug only
@@ -86,23 +91,27 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
             updated = false;
 
         }
+
         long start = System.currentTimeMillis();
 
 
-        Collection<GraphNode> nodes = graph.nodes();
-
         // Draw each node of the graph
         // (except the current selected Drawable - see below)
-        nodes.stream()
-                .filter(node -> !node.isSelected())
-                .forEach(node -> node.draw(graph, g2, CanvasPanel.this));
+        Optional<GraphNode> selectedNode = Optional.empty();
+        List<GraphNode> unselectedNodes = new ArrayList<>();
+        for (GraphNode node : graph.nodes()) {
+            if (node.isSelected()) {
+                selectedNode = Optional.of(node);
+            } else {
+                unselectedNodes.add(node);
+            }
+        }
+
+        unselectedNodes.forEach(node -> node.draw(graph, g2, CanvasPanel.this));
 
         // The selected node must be drawn LAST so
         // that it is on top of all the other drawables.
-        nodes.stream()
-                .filter(GraphNode::isSelected)
-                .findFirst()
-                .ifPresent(drawable -> drawable.draw(graph, g2, CanvasPanel.this));
+        selectedNode.ifPresent(drawable -> drawable.draw(graph, g2, CanvasPanel.this));
 
         long end = System.currentTimeMillis() - start;
         LOG.info("Painted... " + end);
