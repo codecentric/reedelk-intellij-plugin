@@ -82,6 +82,16 @@ public class GraphManager extends AncestorListenerAdapter implements FileEditorM
     }
 
     @Override
+    public void ancestorAdded(AncestorEvent event) {
+        deserializeDocument();
+    }
+
+    @Override
+    public void onComponentListUpdate() {
+        deserializeDocument();
+    }
+
+    @Override
     public void onDataChange(@NotNull FlowGraph graph) {
         String json = GraphSerializer.serialize(graph);
         write(json);
@@ -91,16 +101,6 @@ public class GraphManager extends AncestorListenerAdapter implements FileEditorM
     public void onStructureChange(@NotNull FlowGraph graph) {
         String json = GraphSerializer.serialize(graph);
         write(json);
-    }
-
-    @Override
-    public void ancestorAdded(AncestorEvent event) {
-        deserializeDocument();
-    }
-
-    @Override
-    public void onComponentListUpdate() {
-        deserializeDocument();
     }
 
     @Override
