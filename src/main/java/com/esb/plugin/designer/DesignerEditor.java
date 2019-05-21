@@ -35,7 +35,7 @@ public class DesignerEditor extends UserDataHolderBase implements FileEditor, Po
         FlowGraphProvider graphProvider = new FlowGraphProvider();
         GraphSnapshot snapshot = new GraphSnapshot(graphProvider);
         manager = new GraphManager(project, module, file, snapshot, graphProvider);
-        editor = new DesignerEditorPanel(project, module, snapshot, manager);
+        editor = new DesignerEditorPanel(module, snapshot, manager);
     }
 
     @NotNull

@@ -20,7 +20,6 @@ import java.util.Set;
 public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier {
 
     private final Tree tree;
-    private final DefaultMutableTreeNode root;
     private final Module module;
     private final DefaultMutableTreeNode componentsTreeNode;
 
@@ -29,7 +28,7 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
 
         this.module = module;
 
-        root = new DefaultMutableTreeNode("Root");
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
         componentsTreeNode = new DefaultMutableTreeNode("Components");
         root.add(componentsTreeNode);
 
