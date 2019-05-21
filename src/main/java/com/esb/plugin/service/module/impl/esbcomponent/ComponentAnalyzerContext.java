@@ -1,13 +1,13 @@
-package com.esb.plugin.service.module.impl;
+package com.esb.plugin.service.module.impl.esbcomponent;
 
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 
-class ComponentAnalyzerContext {
+public class ComponentAnalyzerContext {
 
     private final ScanResult scanResult;
 
-    ComponentAnalyzerContext(ScanResult scanResult) {
+    public ComponentAnalyzerContext(ScanResult scanResult) {
         this.scanResult = scanResult;
     }
 

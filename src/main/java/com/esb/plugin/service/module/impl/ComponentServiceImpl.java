@@ -3,22 +3,35 @@ package com.esb.plugin.service.module.impl;
 import com.esb.component.Stop;
 import com.esb.plugin.commons.ESBModuleInfo;
 import com.esb.plugin.component.ComponentDescriptor;
+import com.esb.plugin.component.ModuleDescriptor;
 import com.esb.plugin.component.unknown.UnknownComponentDescriptor;
 import com.esb.plugin.service.module.ComponentService;
+import com.esb.plugin.service.module.impl.esbcomponent.ComponentListUpdateNotifier;
+import com.esb.plugin.service.module.impl.esbcomponent.ComponentScanner;
+import com.esb.plugin.service.module.impl.esbmodule.ModuleAnalyzer;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.util.messages.MessageBus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.idea.maven.project.MavenImportListener;
+import org.jetbrains.idea.maven.project.MavenProject;
 
 import java.util.*;
-import java.util.function.Consumer;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
-public class ComponentServiceImpl implements ComponentService {
+public class ComponentServiceImpl implements ComponentService, MavenImportListener {
+
+    private static final Logger LOG = Logger.getInstance(ComponentServiceImpl.class);
 
     private final Module module;
 
     private final ComponentListUpdateNotifier publisher;
-    private ComponentScanner componentScanner = new ComponentScanner();
-    private Map<String, ComponentDescriptor> allDescriptors = new HashMap<>();
+
+    private Map<String, ModuleDescriptor> jarFilePathModuleDescriptorMap = new HashMap<>();
+
 
     /**
      * The constructor loads the system components. Synchronously.
@@ -26,68 +39,88 @@ public class ComponentServiceImpl implements ComponentService {
      *
      * @param module the module this service is referring to.
      */
-    public ComponentServiceImpl(Module module, MessageBus messageBus) {
+    public ComponentServiceImpl(Project project, Module module, MessageBus messageBus) {
         this.module = module;
-        componentScanner.getComponentsFromPackage(Stop.class.getPackage().getName())
-                .forEach(descriptor ->
-                        allDescriptors.put(descriptor.getFullyQualifiedName(), descriptor));
+
+        List<ComponentDescriptor> coreComponents = ComponentScanner.getComponentsFromPackage(Stop.class.getPackage().getName());
+        jarFilePathModuleDescriptorMap.put("core-components", new ModuleDescriptor("Core Components", coreComponents));
 
         publisher = messageBus.syncPublisher(ComponentListUpdateNotifier.TOPIC);
         asyncScanClasspathComponents();
+
+        project.getMessageBus().connect().subscribe(MavenImportListener.TOPIC, this);
     }
 
     @Override
     public ComponentDescriptor componentDescriptorByName(String componentFullyQualifiedName) {
-        if (allDescriptors.containsKey(componentFullyQualifiedName)) {
-            return allDescriptors.get(componentFullyQualifiedName);
-        } else {
-            return new UnknownComponentDescriptor();
+        Collection<ModuleDescriptor> values = jarFilePathModuleDescriptorMap.values();
+        for (ModuleDescriptor descriptor : values) {
+            Optional<ComponentDescriptor> moduleComponent = descriptor.getModuleComponent(componentFullyQualifiedName);
+            if (moduleComponent.isPresent()) return moduleComponent.get();
         }
+        return new UnknownComponentDescriptor();
+
     }
 
     @Override
-    public Set<ComponentDescriptor> listComponents() {
-        return Collections.unmodifiableSet(new HashSet<>(allDescriptors.values()));
+    public Collection<ModuleDescriptor> getModulesDescriptors() {
+        return jarFilePathModuleDescriptorMap.values();
     }
-
 
     private void asyncScanClasspathComponents() {
-        List<String> classPathEntries = ModuleRootManager.getInstance(module)
-                .orderEntries()
-                .withoutSdk()
-                .withoutDepModules()
-                .librariesOnly()
-                .classes()
-                .getPathsList()
-                .getPathList();
+        CompletableFuture.supplyAsync(() -> {
+
+            List<String> classPathEntries = ModuleRootManager.getInstance(module)
+                    .orderEntries()
+                    .withoutSdk()
+                    .withoutDepModules()
+                    .librariesOnly()
+                    .classes()
+                    .getPathsList()
+                    .getPathList();
+
+            List<String> jarFilePaths = classPathEntries.stream()
+                    .filter(ESBModuleInfo::IsESBModule)
+                    .collect(Collectors.toList());
 
 
-        scanClassPathEntries(classPathEntries.stream()
-                .filter(ESBModuleInfo::fromJarFilePath)
-                .toArray(String[]::new));
+            Set<String> oldJarFilePaths = jarFilePathModuleDescriptorMap.keySet();
+            Set<String> toRemove = new HashSet<>();
+            jarFilePaths.forEach(s -> {
+                if (!oldJarFilePaths.contains(s)) toRemove.add(s);
+            });
+
+            toRemove.forEach(s -> jarFilePathModuleDescriptorMap.remove(s));
+
+            ModuleAnalyzer moduleAnalyzer = new ModuleAnalyzer();
+            jarFilePaths.forEach(jarFilePath -> {
+                ModuleDescriptor descriptor = moduleAnalyzer.analyze(jarFilePath);
+                if (jarFilePathModuleDescriptorMap.containsKey(jarFilePath)) {
+                    jarFilePathModuleDescriptorMap.replace(jarFilePath, descriptor);
+                } else {
+                    jarFilePathModuleDescriptorMap.put(jarFilePath, descriptor);
+                }
+            });
+
+            publisher.onComponentListUpdate();
+            return null;
+        });
 
 
-        String[] currentProjectClassPathEntries = ModuleRootManager.getInstance(module)
-                .orderEntries()
-                .withoutSdk()
-                .withoutLibraries()
-                .classes()
-                .getUrls();
-        scanClassPathEntries(currentProjectClassPathEntries);
+        /**
+         scanClassPathEntries(jarFilePaths);
+
+         String[] currentProjectClassPathEntries = ModuleRootManager.getInstance(module)
+         .orderEntries()
+         .withoutSdk()
+         .withoutLibraries()
+         .classes()
+         .getUrls();
+         scanClassPathEntries(currentProjectClassPathEntries);*/
     }
 
-    private void scanClassPathEntries(String[] classPathEntries) {
-        Arrays.stream(classPathEntries)
-                .forEach(classPathEntry ->
-                        componentScanner.scan(
-                                consumer.andThen(componentDescriptors ->
-                                        publisher.onComponentListUpdate()), classPathEntry));
+    @Override
+    public void importFinished(@NotNull Collection<MavenProject> importedProjects, @NotNull List<Module> newModules) {
+        asyncScanClasspathComponents();
     }
-
-    private Consumer<List<ComponentDescriptor>> consumer =
-            componentDescriptors ->
-                    componentDescriptors.forEach(descriptor -> {
-                        allDescriptors.put(descriptor.getFullyQualifiedName(), descriptor);
-                    });
-
 }

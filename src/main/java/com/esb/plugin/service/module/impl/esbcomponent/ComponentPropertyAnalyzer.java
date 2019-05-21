@@ -1,4 +1,4 @@
-package com.esb.plugin.service.module.impl;
+package com.esb.plugin.service.module.impl.esbcomponent;
 
 import com.esb.api.annotation.Default;
 import com.esb.api.annotation.Property;
@@ -8,6 +8,7 @@ import com.esb.plugin.component.EnumTypeDescriptor;
 import com.esb.plugin.component.PrimitiveTypeDescriptor;
 import com.esb.plugin.component.TypeDescriptor;
 import com.esb.plugin.converter.ValueConverterFactory;
+import com.esb.plugin.service.module.impl.UnsupportedType;
 import io.github.classgraph.*;
 
 import java.util.List;

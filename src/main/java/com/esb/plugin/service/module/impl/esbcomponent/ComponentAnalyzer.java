@@ -1,4 +1,4 @@
-package com.esb.plugin.service.module.impl;
+package com.esb.plugin.service.module.impl.esbcomponent;
 
 import com.esb.api.annotation.ESBComponent;
 import com.esb.plugin.component.ComponentDescriptor;
@@ -16,7 +16,7 @@ class ComponentAnalyzer {
 
     private final ComponentPropertyAnalyzer propertyAnalyzer;
 
-    ComponentAnalyzer(ComponentAnalyzerContext context) {
+    public ComponentAnalyzer(ComponentAnalyzerContext context) {
         this.propertyAnalyzer = new ComponentPropertyAnalyzer(context);
     }
 

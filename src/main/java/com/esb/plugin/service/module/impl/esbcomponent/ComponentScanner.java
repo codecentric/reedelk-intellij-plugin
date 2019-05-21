@@ -1,4 +1,4 @@
-package com.esb.plugin.service.module.impl;
+package com.esb.plugin.service.module.impl.esbcomponent;
 
 import com.esb.api.annotation.ESBComponent;
 import com.esb.plugin.component.ComponentDescriptor;
@@ -10,35 +10,28 @@ import io.github.classgraph.ScanResult;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 
 import static java.lang.String.format;
 
-class ComponentScanner {
+public class ComponentScanner {
 
     private static final Logger LOG = Logger.getInstance(ComponentScanner.class);
 
-    CompletableFuture<Void> scan(Consumer<List<ComponentDescriptor>> callback, String classPath) {
-        return CompletableFuture.supplyAsync(() -> {
-            ScanResult scanResult = instantiateScanner()
-                    .overrideClasspath(classPath)
-                    .scan();
-            processScanResult(callback, scanResult);
-            return null;
-        });
+    public static List<ComponentDescriptor> scan(String moduleJarFilePath) {
+        ScanResult scanResult = instantiateScanner()
+                .overrideClasspath(moduleJarFilePath)
+                .scan();
+        return processScanResult(scanResult);
     }
 
-    public List<ComponentDescriptor> getComponentsFromPackage(String packageName) {
-        final List<ComponentDescriptor> descriptors = new ArrayList<>();
+    public static List<ComponentDescriptor> getComponentsFromPackage(String packageName) {
         ScanResult scanResult = instantiateScanner()
                 .whitelistPackages(packageName)
                 .scan();
-        processScanResult(descriptors::addAll, scanResult);
-        return descriptors;
+        return processScanResult(scanResult);
     }
 
-    private void processScanResult(Consumer<List<ComponentDescriptor>> callback, ScanResult scanResult) {
+    private static List<ComponentDescriptor> processScanResult(ScanResult scanResult) {
         List<ComponentDescriptor> componentDescriptors = new ArrayList<>();
         ClassInfoList classInfoList = scanResult.getClassesWithAnnotation(ESBComponent.class.getName());
         for (ClassInfo classInfo : classInfoList) {
@@ -52,10 +45,10 @@ class ComponentScanner {
                         "definition with qualified name '%s'", classInfo.getName()), e);
             }
         }
-        callback.accept(componentDescriptors);
+        return componentDescriptors;
     }
 
-    private ClassGraph instantiateScanner() {
+    private static ClassGraph instantiateScanner() {
         return new ClassGraph()
                 .enableFieldInfo()
                 .enableAnnotationInfo()

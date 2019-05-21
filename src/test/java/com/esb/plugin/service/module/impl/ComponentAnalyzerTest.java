@@ -3,6 +3,8 @@ package com.esb.plugin.service.module.impl;
 import com.esb.api.annotation.ESBComponent;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.component.ComponentPropertyDescriptor;
+import com.esb.plugin.service.module.impl.esbcomponent.ComponentAnalyzer;
+import com.esb.plugin.service.module.impl.esbcomponent.ComponentAnalyzerContext;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;

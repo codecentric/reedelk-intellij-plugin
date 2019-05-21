@@ -3,6 +3,8 @@ package com.esb.plugin.service.module.impl;
 import com.esb.plugin.component.ComponentPropertyDescriptor;
 import com.esb.plugin.component.EnumTypeDescriptor;
 import com.esb.plugin.component.TypeDescriptor;
+import com.esb.plugin.service.module.impl.esbcomponent.ComponentAnalyzerContext;
+import com.esb.plugin.service.module.impl.esbcomponent.ComponentPropertyAnalyzer;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.FieldInfo;

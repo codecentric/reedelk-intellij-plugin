@@ -1,10 +1,10 @@
 package com.esb.plugin.designer.palette;
 
 import com.esb.plugin.commons.Icons;
-import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.component.ComponentTransferableHandler;
+import com.esb.plugin.component.ModuleDescriptor;
 import com.esb.plugin.service.module.ComponentService;
-import com.esb.plugin.service.module.impl.ComponentListUpdateNotifier;
+import com.esb.plugin.service.module.impl.esbcomponent.ComponentListUpdateNotifier;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
@@ -15,20 +15,21 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
-import java.util.Set;
+import java.util.Collection;
 
 public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier {
 
     private final Tree tree;
     private final Module module;
     private final DefaultMutableTreeNode componentsTreeNode;
+    private DefaultMutableTreeNode root;
 
     public PalettePanel(Module module) {
         super(new BorderLayout());
 
         this.module = module;
 
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
+        root = new DefaultMutableTreeNode("Root");
         componentsTreeNode = new DefaultMutableTreeNode("Components");
         root.add(componentsTreeNode);
 
@@ -69,10 +70,18 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
     }
 
     private void updatePaletteComponentsList() {
-        Set<ComponentDescriptor> descriptors = ComponentService.getInstance(module).listComponents();
+
+        Collection<ModuleDescriptor> descriptors = ComponentService.getInstance(module).getModulesDescriptors();
         SwingUtilities.invokeLater(() -> {
-            componentsTreeNode.removeAllChildren();
-            descriptors.forEach(descriptor -> componentsTreeNode.add(new DefaultMutableTreeNode(descriptor)));
+            root.removeAllChildren();
+
+            descriptors.forEach(moduleDescriptor -> {
+                DefaultMutableTreeNode moduleRoot = new DefaultMutableTreeNode(moduleDescriptor.getName());
+                moduleDescriptor.getModuleComponents().forEach(descriptor ->
+                        moduleRoot.add(new DefaultMutableTreeNode(descriptor)));
+                root.add(moduleRoot);
+            });
+
             DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
             model.reload();
             expandRows();
