@@ -86,8 +86,8 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
             Set<String> oldJarFilePaths = jarFilePathModuleDescriptorMap.keySet();
             Set<String> toRemove = new HashSet<>();
-            jarFilePaths.forEach(s -> {
-                if (!oldJarFilePaths.contains(s)) toRemove.add(s);
+            oldJarFilePaths.forEach(s -> {
+                if (!jarFilePaths.contains(s) && !s.equals("core-components")) toRemove.add(s);
             });
 
             toRemove.forEach(s -> jarFilePathModuleDescriptorMap.remove(s));
