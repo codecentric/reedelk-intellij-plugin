@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Decorator which adds as default the "Description"
- * property to all registered components.
+ * Decorator which adds the default "Description" property to all registered components.
  */
 public class ComponentDescriptionDecorator extends ComponentDescriptor {
 

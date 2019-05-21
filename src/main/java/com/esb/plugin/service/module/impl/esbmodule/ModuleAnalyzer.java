@@ -2,10 +2,10 @@ package com.esb.plugin.service.module.impl.esbmodule;
 
 import com.esb.plugin.commons.ESBModuleInfo;
 import com.esb.plugin.component.ComponentDescriptor;
-import com.esb.plugin.component.ModuleDescriptor;
 import com.esb.plugin.service.module.impl.esbcomponent.ComponentScanner;
 
 import java.util.List;
+
 
 public class ModuleAnalyzer {
 

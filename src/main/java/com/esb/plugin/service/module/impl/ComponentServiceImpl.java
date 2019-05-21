@@ -2,12 +2,12 @@ package com.esb.plugin.service.module.impl;
 
 import com.esb.plugin.commons.ESBModuleInfo;
 import com.esb.plugin.component.ComponentDescriptor;
-import com.esb.plugin.component.ModuleDescriptor;
 import com.esb.plugin.component.unknown.UnknownComponentDescriptor;
 import com.esb.plugin.service.module.ComponentService;
 import com.esb.plugin.service.module.impl.esbcomponent.ComponentListUpdateNotifier;
 import com.esb.plugin.service.module.impl.esbcomponent.ComponentScanner;
 import com.esb.plugin.service.module.impl.esbmodule.ModuleAnalyzer;
+import com.esb.plugin.service.module.impl.esbmodule.ModuleDescriptor;
 import com.esb.system.component.Stop;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
@@ -26,6 +26,8 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
     private static final Logger LOG = Logger.getInstance(ComponentServiceImpl.class);
 
+    private static final String SYSTEM_JAR_PATH = "flow-control";
+
     private final Module module;
 
     private final ComponentListUpdateNotifier publisher;
@@ -43,7 +45,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         this.module = module;
 
         List<ComponentDescriptor> coreComponents = ComponentScanner.getComponentsFromPackage(Stop.class.getPackage().getName());
-        jarFilePathModuleDescriptorMap.put("core-components", new ModuleDescriptor("Core Components", coreComponents));
+        jarFilePathModuleDescriptorMap.put(SYSTEM_JAR_PATH, new ModuleDescriptor("Flow Control", coreComponents));
 
         publisher = messageBus.syncPublisher(ComponentListUpdateNotifier.COMPONENT_LIST_UPDATE_TOPIC);
         asyncScanClasspathComponents();
@@ -70,6 +72,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     private void asyncScanClasspathComponents() {
         CompletableFuture.supplyAsync(() -> {
 
+            // TODO: This method is craap!
             List<String> classPathEntries = ModuleRootManager.getInstance(module)
                     .orderEntries()
                     .withoutSdk()
@@ -87,7 +90,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
             Set<String> oldJarFilePaths = jarFilePathModuleDescriptorMap.keySet();
             Set<String> toRemove = new HashSet<>();
             oldJarFilePaths.forEach(s -> {
-                if (!jarFilePaths.contains(s) && !s.equals("core-components")) toRemove.add(s);
+                if (!jarFilePaths.contains(s) && !s.equals(SYSTEM_JAR_PATH)) toRemove.add(s);
             });
 
             toRemove.forEach(s -> jarFilePathModuleDescriptorMap.remove(s));

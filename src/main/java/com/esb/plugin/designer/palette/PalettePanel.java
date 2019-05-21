@@ -2,9 +2,9 @@ package com.esb.plugin.designer.palette;
 
 import com.esb.plugin.commons.Icons;
 import com.esb.plugin.component.ComponentTransferableHandler;
-import com.esb.plugin.component.ModuleDescriptor;
 import com.esb.plugin.service.module.ComponentService;
 import com.esb.plugin.service.module.impl.esbcomponent.ComponentListUpdateNotifier;
+import com.esb.plugin.service.module.impl.esbmodule.ModuleDescriptor;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;

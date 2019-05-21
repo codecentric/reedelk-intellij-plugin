@@ -1,4 +1,6 @@
-package com.esb.plugin.component;
+package com.esb.plugin.service.module.impl.esbmodule;
+
+import com.esb.plugin.component.ComponentDescriptor;
 
 import java.util.Collections;
 import java.util.List;
