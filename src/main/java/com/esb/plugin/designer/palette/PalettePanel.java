@@ -4,27 +4,34 @@ import com.esb.plugin.commons.Icons;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.component.ComponentTransferableHandler;
 import com.esb.plugin.service.module.ComponentService;
+import com.esb.plugin.service.module.impl.ComponentListUpdateNotifier;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.treeStructure.Tree;
+import com.intellij.util.messages.MessageBusConnection;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
-import java.util.Collection;
 import java.util.Set;
 
-public class PalettePanel extends JBPanel {
+public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier {
 
-    private Tree tree;
+    private final Tree tree;
+    private final DefaultMutableTreeNode root;
+    private final Module module;
+    private final DefaultMutableTreeNode componentsTreeNode;
 
     public PalettePanel(Module module) {
         super(new BorderLayout());
 
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
-        DefaultMutableTreeNode components = new DefaultMutableTreeNode("Components");
-        root.add(components);
+        this.module = module;
+
+        root = new DefaultMutableTreeNode("Root");
+        componentsTreeNode = new DefaultMutableTreeNode("Components");
+        root.add(componentsTreeNode);
 
         PaletteTreeCellRenderer renderer = new PaletteTreeCellRenderer();
         renderer.setOpenIcon(Icons.ModuleDeploy);
@@ -41,8 +48,15 @@ public class PalettePanel extends JBPanel {
 
         add(componentsTreeScrollPanel, BorderLayout.CENTER);
 
-        Set<ComponentDescriptor> componentDescriptors = ComponentService.getInstance(module).listComponents();
-        updatePaletteComponentsList(components, componentDescriptors);
+        MessageBusConnection connect = module.getMessageBus().connect();
+        connect.subscribe(ComponentListUpdateNotifier.TOPIC, this);
+
+        updatePaletteComponentsList();
+    }
+
+    @Override
+    public void onComponentListUpdate() {
+        updatePaletteComponentsList();
     }
 
     private void expandRows() {
@@ -55,11 +69,15 @@ public class PalettePanel extends JBPanel {
         }
     }
 
-    private void updatePaletteComponentsList(DefaultMutableTreeNode componentsTreeNode, Collection<ComponentDescriptor> descriptors) {
+    private void updatePaletteComponentsList() {
+        Set<ComponentDescriptor> descriptors = ComponentService.getInstance(module).listComponents();
         SwingUtilities.invokeLater(() -> {
             componentsTreeNode.removeAllChildren();
             descriptors.forEach(descriptor -> componentsTreeNode.add(new DefaultMutableTreeNode(descriptor)));
+            DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+            model.reload();
             expandRows();
         });
     }
+
 }

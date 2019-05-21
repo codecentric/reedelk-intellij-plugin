@@ -176,6 +176,7 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
 
         Point dragPoint = new Point(dragX, dragY);
 
+        // TODO: Create builder.
         new MoveActionHandler(
                 module,
                 snapshot,
@@ -189,6 +190,7 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
 
     @Override
     public void drop(DropTargetDropEvent dropEvent) {
+        // TODO: Create builder
         new DropActionHandler(
                 module,
                 snapshot,

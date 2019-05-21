@@ -13,8 +13,6 @@ public interface ComponentService {
         return ModuleServiceManager.getService(module, ComponentService.class);
     }
 
-    void syncScanComponents();
-
     ComponentDescriptor componentDescriptorByName(String componentFullyQualifiedName);
 
     Set<ComponentDescriptor> listComponents();
