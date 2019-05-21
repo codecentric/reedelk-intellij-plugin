@@ -1,6 +1,5 @@
 package com.esb.plugin.component.fork;
 
-import com.esb.component.Stop;
 import com.esb.plugin.component.stop.StopNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.deserializer.AbstractDeserializer;
@@ -8,6 +7,7 @@ import com.esb.plugin.graph.deserializer.DeserializerContext;
 import com.esb.plugin.graph.deserializer.GraphDeserializerFactory;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.utils.CollectNodesBetween;
+import com.esb.system.component.Stop;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

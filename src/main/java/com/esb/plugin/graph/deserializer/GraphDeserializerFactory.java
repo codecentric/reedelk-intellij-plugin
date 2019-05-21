@@ -1,7 +1,6 @@
 package com.esb.plugin.graph.deserializer;
 
 import com.esb.api.exception.ESBException;
-import com.esb.component.*;
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.component.choice.ChoiceDeserializer;
 import com.esb.plugin.component.flowreference.FlowReferenceDeserializer;
@@ -10,6 +9,7 @@ import com.esb.plugin.component.generic.GenericComponentDeserializer;
 import com.esb.plugin.component.stop.StopDeserializer;
 import com.esb.plugin.component.unknown.UnknownDeserializer;
 import com.esb.plugin.graph.FlowGraph;
+import com.esb.system.component.*;
 import org.json.JSONObject;
 
 import java.lang.reflect.InvocationTargetException;

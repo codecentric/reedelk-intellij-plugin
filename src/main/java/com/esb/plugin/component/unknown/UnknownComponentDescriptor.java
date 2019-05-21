@@ -1,8 +1,8 @@
 package com.esb.plugin.component.unknown;
 
-import com.esb.component.Unknown;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.component.ComponentPropertyDescriptor;
+import com.esb.system.component.Unknown;
 
 import java.util.Optional;
 

@@ -1,6 +1,5 @@
 package com.esb.plugin.service.module.impl;
 
-import com.esb.component.Stop;
 import com.esb.plugin.commons.ESBModuleInfo;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.component.ModuleDescriptor;
@@ -9,6 +8,7 @@ import com.esb.plugin.service.module.ComponentService;
 import com.esb.plugin.service.module.impl.esbcomponent.ComponentListUpdateNotifier;
 import com.esb.plugin.service.module.impl.esbcomponent.ComponentScanner;
 import com.esb.plugin.service.module.impl.esbmodule.ModuleAnalyzer;
+import com.esb.system.component.Stop;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;

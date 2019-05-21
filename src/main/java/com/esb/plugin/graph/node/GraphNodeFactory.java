@@ -1,6 +1,5 @@
 package com.esb.plugin.graph.node;
 
-import com.esb.component.*;
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.ComponentDescriptionDecorator;
 import com.esb.plugin.component.ComponentDescriptor;
@@ -11,6 +10,7 @@ import com.esb.plugin.component.generic.GenericComponentNode;
 import com.esb.plugin.component.stop.StopNode;
 import com.esb.plugin.component.unknown.UnknownNode;
 import com.esb.plugin.service.module.ComponentService;
+import com.esb.system.component.*;
 import com.google.common.collect.ImmutableMap;
 import com.intellij.openapi.module.Module;
 

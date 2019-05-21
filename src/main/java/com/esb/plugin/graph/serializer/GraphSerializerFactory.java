@@ -1,7 +1,6 @@
 package com.esb.plugin.graph.serializer;
 
 import com.esb.api.exception.ESBException;
-import com.esb.component.*;
 import com.esb.plugin.component.choice.ChoiceSerializer;
 import com.esb.plugin.component.flowreference.FlowReferenceSerializer;
 import com.esb.plugin.component.fork.ForkSerializer;
@@ -9,6 +8,7 @@ import com.esb.plugin.component.generic.GenericComponentSerializer;
 import com.esb.plugin.component.stop.StopSerializer;
 import com.esb.plugin.component.unknown.UnknownSerializer;
 import com.esb.plugin.graph.node.GraphNode;
+import com.esb.system.component.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;

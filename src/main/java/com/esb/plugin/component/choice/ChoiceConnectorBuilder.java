@@ -1,8 +1,6 @@
 package com.esb.plugin.component.choice;
 
-import com.esb.component.FlowReference;
 import com.esb.plugin.component.ComponentData;
-import com.esb.plugin.component.flowreference.FlowReferenceNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowSubGraph;
 import com.esb.plugin.graph.connector.Connector;
@@ -23,8 +21,8 @@ public class ChoiceConnectorBuilder implements ConnectorBuilder {
     public Connector build(Module module, FlowGraph graph, GraphNode componentToAdd) {
 
         // TODO: Fixme... this should not use flow reference and also should use the factory
-        FlowReferenceNode placeholder = GraphNodeFactory.get(module, FlowReference.class.getName());
-        placeholder.componentData().set("ref", "123");
+        GraphNode placeholder = GraphNodeFactory.get(module, "com.esb.system.component.payload.SetPayload");
+        placeholder.componentData().set("payload", "{\"name\":\"Mark\"}");
 
         ChoiceNode choice = (ChoiceNode) componentToAdd;
         choice.addToScope(placeholder);

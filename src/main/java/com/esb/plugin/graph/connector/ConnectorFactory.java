@@ -1,7 +1,6 @@
 package com.esb.plugin.graph.connector;
 
 import com.esb.api.exception.ESBException;
-import com.esb.component.*;
 import com.esb.plugin.component.choice.ChoiceConnectorBuilder;
 import com.esb.plugin.component.flowreference.FlowReferenceConnectorBuilder;
 import com.esb.plugin.component.fork.ForkConnectorBuilder;
@@ -10,6 +9,7 @@ import com.esb.plugin.component.stop.StopConnectionBuilder;
 import com.esb.plugin.component.unknown.UnknownConnectionBuilder;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
+import com.esb.system.component.*;
 import com.intellij.openapi.module.Module;
 
 import java.lang.reflect.InvocationTargetException;
