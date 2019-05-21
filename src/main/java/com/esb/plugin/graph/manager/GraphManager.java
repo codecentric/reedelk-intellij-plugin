@@ -6,6 +6,7 @@ import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.SnapshotListener;
 import com.esb.plugin.graph.deserializer.GraphDeserializer;
 import com.esb.plugin.graph.serializer.GraphSerializer;
+import com.esb.plugin.service.module.impl.esbcomponent.ComponentListUpdateNotifier;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
@@ -35,7 +36,7 @@ import static java.util.Arrays.stream;
  * - Properties updates:
  * - component's property changed
  */
-public class GraphManager extends AncestorListenerAdapter implements FileEditorManagerListener, SnapshotListener, Disposable {
+public class GraphManager extends AncestorListenerAdapter implements FileEditorManagerListener, SnapshotListener, Disposable, ComponentListUpdateNotifier {
 
     private static final Logger LOG = Logger.getInstance(GraphManager.class);
 
@@ -45,6 +46,7 @@ public class GraphManager extends AncestorListenerAdapter implements FileEditorM
     private final GraphSnapshot snapshot;
     private final FlowGraphProvider graphProvider;
     private final MessageBusConnection busConnection;
+    private final MessageBusConnection moduleBusConnection;
 
     private Document document;
 
@@ -58,6 +60,8 @@ public class GraphManager extends AncestorListenerAdapter implements FileEditorM
 
         busConnection = project.getMessageBus().connect();
         busConnection.subscribe(FILE_EDITOR_MANAGER, this);
+        moduleBusConnection = module.getMessageBus().connect();
+        moduleBusConnection.subscribe(TOPIC, this);
     }
 
     @Override
@@ -99,9 +103,16 @@ public class GraphManager extends AncestorListenerAdapter implements FileEditorM
     }
 
     @Override
+    public void onComponentListUpdate() {
+        GraphDeserializer.deserialize(module, document.getText(), graphProvider)
+                .ifPresent(updatedGraph -> snapshot.updateSnapshot(this, updatedGraph));
+    }
+
+    @Override
     public void dispose() {
         this.document = null;
         this.busConnection.disconnect();
+        this.moduleBusConnection.disconnect();
     }
 
     /**
