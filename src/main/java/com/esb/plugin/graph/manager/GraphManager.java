@@ -6,7 +6,6 @@ import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.SnapshotListener;
 import com.esb.plugin.graph.deserializer.GraphDeserializer;
 import com.esb.plugin.graph.serializer.GraphSerializer;
-import com.esb.plugin.service.module.ComponentService;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
@@ -56,8 +55,6 @@ public class GraphManager extends AncestorListenerAdapter implements FileEditorM
         this.graphFile = graphFile;
         this.snapshot.addListener(this);
         this.graphProvider = graphProvider;
-
-        ComponentService.getInstance(module).syncScanComponents();
 
         busConnection = project.getMessageBus().connect();
         busConnection.subscribe(FILE_EDITOR_MANAGER, this);

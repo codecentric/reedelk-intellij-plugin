@@ -1,5 +1,6 @@
 package com.esb.plugin.service.module.impl;
 
+import com.esb.component.Stop;
 import com.esb.plugin.commons.ESBModuleInfo;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.component.unknown.UnknownComponentDescriptor;
@@ -14,9 +15,6 @@ import java.util.function.Consumer;
 
 public class ComponentServiceImpl implements ComponentService {
 
-    // TODO: This is wrong.... should be removed
-    private static final String SYSTEM_COMPONENTS_BASE_PACKAGE = "com.esb.component";
-
     private final Module module;
 
     private ComponentScanner componentScanner = new ComponentScanner();
@@ -24,14 +22,14 @@ public class ComponentServiceImpl implements ComponentService {
 
     public ComponentServiceImpl(Module module) {
         this.module = module;
+        componentScanner.getComponentsFromPackage(Stop.class.getPackage().getName())
+                .forEach(descriptor ->
+                        allDescriptors.put(descriptor.getFullyQualifiedName(), descriptor));
     }
 
     @Override
     public void syncScanComponents() {
         List<CompletableFuture<Void>> futures = new ArrayList<>();
-        CompletableFuture<Void> systemComponents = componentScanner
-                .scanPackages(consumer, SYSTEM_COMPONENTS_BASE_PACKAGE);
-        futures.add(systemComponents);
 
         List<String> classPathEntries = ModuleRootManager.getInstance(module)
                 .orderEntries()

@@ -29,14 +29,13 @@ class ComponentScanner {
         });
     }
 
-    CompletableFuture<Void> scanPackages(Consumer<List<ComponentDescriptor>> callback, String... packages) {
-        return CompletableFuture.supplyAsync(() -> {
-            ScanResult scanResult = instantiateScanner()
-                    .whitelistPackages(packages)
-                    .scan();
-            processScanResult(callback, scanResult);
-            return null;
-        });
+    public List<ComponentDescriptor> getComponentsFromPackage(String packageName) {
+        final List<ComponentDescriptor> descriptors = new ArrayList<>();
+        ScanResult scanResult = instantiateScanner()
+                .whitelistPackages(packageName)
+                .scan();
+        processScanResult(descriptors::addAll, scanResult);
+        return descriptors;
     }
 
     private void processScanResult(Consumer<List<ComponentDescriptor>> callback, ScanResult scanResult) {
