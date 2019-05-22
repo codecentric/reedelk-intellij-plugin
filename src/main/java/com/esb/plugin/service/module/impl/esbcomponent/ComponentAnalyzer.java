@@ -13,7 +13,7 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
-class ComponentAnalyzer {
+public class ComponentAnalyzer {
 
     private final ComponentAnalyzerContext context;
     private final ComponentPropertyAnalyzer propertyAnalyzer;
@@ -23,7 +23,7 @@ class ComponentAnalyzer {
         this.context = context;
     }
 
-    ComponentDescriptor analyze(ClassInfo classInfo) {
+    public ComponentDescriptor analyze(ClassInfo classInfo) {
         String displayName = getComponentDisplayName(classInfo);
         return ComponentDescriptor.create()
                 .fullyQualifiedName(classInfo.getName())
