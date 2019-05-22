@@ -33,7 +33,7 @@ public class ComponentScanner {
     }
 
     private static List<ComponentDescriptor> processScanResult(ScanResult scanResult) {
-        IconsExtractor extractor = new IconsExtractor(scanResult);
+        ComponentIconsAnalyzer extractor = new ComponentIconsAnalyzer(scanResult);
 
         List<ComponentDescriptor> componentDescriptors = new ArrayList<>();
         ClassInfoList classInfoList = scanResult.getClassesWithAnnotation(ESBComponent.class.getName());

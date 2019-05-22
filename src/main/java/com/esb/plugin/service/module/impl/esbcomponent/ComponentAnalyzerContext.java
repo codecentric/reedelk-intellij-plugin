@@ -9,11 +9,11 @@ import java.awt.*;
 public class ComponentAnalyzerContext {
 
     private final ScanResult scanResult;
-    private final IconsExtractor iconsExtractor;
+    private final ComponentIconsAnalyzer componentIconsAnalyzer;
 
-    public ComponentAnalyzerContext(ScanResult scanResult, IconsExtractor iconsExtractor) {
+    public ComponentAnalyzerContext(ScanResult scanResult, ComponentIconsAnalyzer componentIconsAnalyzer) {
         this.scanResult = scanResult;
-        this.iconsExtractor = iconsExtractor;
+        this.componentIconsAnalyzer = componentIconsAnalyzer;
     }
 
     ClassInfo getClassInfo(String fullyQualifiedClassName) {
@@ -21,10 +21,10 @@ public class ComponentAnalyzerContext {
     }
 
     Image getImageByClassName(String fullyQualifiedClassName) {
-        return iconsExtractor.getImageByFullyQualifiedName(fullyQualifiedClassName);
+        return componentIconsAnalyzer.getImageByFullyQualifiedName(fullyQualifiedClassName);
     }
 
     public Icon getIconByClassName(String fullyQualifiedClassName) {
-        return iconsExtractor.getIconByFullyQualifiedName(fullyQualifiedClassName);
+        return componentIconsAnalyzer.getIconByFullyQualifiedName(fullyQualifiedClassName);
     }
 }

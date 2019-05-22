@@ -1,6 +1,7 @@
 package com.esb.plugin.service.module.impl.esbcomponent;
 
 import com.esb.plugin.commons.Icons;
+import com.intellij.openapi.diagnostic.Logger;
 import io.github.classgraph.Resource;
 import io.github.classgraph.ResourceList;
 import io.github.classgraph.ScanResult;
@@ -12,13 +13,17 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class IconsExtractor {
+import static java.lang.String.format;
+
+class ComponentIconsAnalyzer {
+
+    private static final Logger LOG = Logger.getInstance(ComponentIconsAnalyzer.class);
 
     private static final String ICONS_EXTENSION = "png";
 
     private Map<String, Image> nameMap = new HashMap<>();
 
-    public IconsExtractor(ScanResult scanResult) {
+    ComponentIconsAnalyzer(ScanResult scanResult) {
         ResourceList allImages = scanResult.getResourcesWithExtension(ICONS_EXTENSION);
         extract(allImages);
     }
@@ -35,17 +40,17 @@ public class IconsExtractor {
                 Image read = ImageIO.read(resource.open());
                 nameMap.put(key.substring(lastSlash + 1, key.length() - 4), read);
             } catch (IOException e) {
-                e.printStackTrace();
+                LOG.error(format("Could not read image for resource named %s", key), e);
             }
         }
     }
 
-    public Image getImageByFullyQualifiedName(String fullyQualifiedName) {
+    Image getImageByFullyQualifiedName(String fullyQualifiedName) {
         return nameMap.getOrDefault(fullyQualifiedName,
                 Icons.getDefaultComponentImage());
     }
 
-    public Icon getIconByFullyQualifiedName(String fullyQualifiedName) {
+    Icon getIconByFullyQualifiedName(String fullyQualifiedName) {
         if (nameMap.containsKey(fullyQualifiedName + "-icon")) {
             return new ImageIcon(nameMap.get(fullyQualifiedName + "-icon"));
         } else {

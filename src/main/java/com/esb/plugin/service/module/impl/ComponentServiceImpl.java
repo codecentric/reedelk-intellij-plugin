@@ -2,13 +2,14 @@ package com.esb.plugin.service.module.impl;
 
 import com.esb.plugin.commons.ESBModuleInfo;
 import com.esb.plugin.component.ComponentDescriptor;
-import com.esb.plugin.component.unknown.UnknownComponentDescriptor;
+import com.esb.plugin.component.unknown.UnknownComponentDescriptorWrapper;
 import com.esb.plugin.service.module.ComponentService;
 import com.esb.plugin.service.module.impl.esbcomponent.ComponentListUpdateNotifier;
 import com.esb.plugin.service.module.impl.esbcomponent.ComponentScanner;
 import com.esb.plugin.service.module.impl.esbmodule.ModuleAnalyzer;
 import com.esb.plugin.service.module.impl.esbmodule.ModuleDescriptor;
 import com.esb.system.component.Stop;
+import com.esb.system.component.Unknown;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -60,8 +61,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
             Optional<ComponentDescriptor> moduleComponent = descriptor.getModuleComponent(componentFullyQualifiedName);
             if (moduleComponent.isPresent()) return moduleComponent.get();
         }
-        return new UnknownComponentDescriptor();
-
+        return new UnknownComponentDescriptorWrapper(componentDescriptorByName(Unknown.class.getName()));
     }
 
     @Override
