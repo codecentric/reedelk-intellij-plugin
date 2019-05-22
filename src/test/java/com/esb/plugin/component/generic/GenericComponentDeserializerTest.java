@@ -61,10 +61,8 @@ class GenericComponentDeserializerTest extends AbstractDeserializerTest {
     private ComponentPropertyDescriptor createPropertyDefinition(String propertyName, Class<?> propertyClass) {
         return new ComponentPropertyDescriptor(
                 propertyName,
-                "A property name",
-                true,
-                "",
-                new PrimitiveTypeDescriptor(propertyClass));
+                new PrimitiveTypeDescriptor(propertyClass),
+                "A property name", "", true);
     }
 
 }

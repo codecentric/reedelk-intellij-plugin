@@ -1,10 +1,8 @@
-package com.esb.plugin.service.module.impl;
+package com.esb.plugin.service.module.impl.esbcomponent;
 
 import com.esb.api.annotation.ESBComponent;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.component.ComponentPropertyDescriptor;
-import com.esb.plugin.service.module.impl.esbcomponent.ComponentAnalyzer;
-import com.esb.plugin.service.module.impl.esbcomponent.ComponentAnalyzerContext;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
@@ -12,7 +10,9 @@ import io.github.classgraph.ScanResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,7 +25,7 @@ class ComponentAnalyzerTest {
     void setUp() {
         scanResult = new ClassGraph()
                 .whitelistPackages(ComponentAnalyzerTest.class.getPackage().getName())
-                .enableSystemJarsAndModules()
+                .whitelistPaths("/com/esb/system/component")
                 .enableAllInfo()
                 .scan();
 
@@ -45,7 +45,13 @@ class ComponentAnalyzerTest {
         // Then
         String displayName = descriptor.getDisplayName();
         assertThat(displayName).isEqualTo("Test Component");
-        assertThat(descriptor.getPropertiesNames()).containsExactlyInAnyOrder("property1", "property2", "property3");
+
+        List<String> propertyNames = descriptor
+                .getPropertiesDescriptors()
+                .stream()
+                .map(ComponentPropertyDescriptor::getPropertyName)
+                .collect(Collectors.toList());
+        assertThat(propertyNames).containsExactlyInAnyOrder("property1", "property2", "property3");
 
         assertExistsPropertyDefinition(descriptor, "property1", "Property 1", 3, int.class, true);
         assertExistsPropertyDefinition(descriptor, "property2", "Property 2", null, String.class, false);

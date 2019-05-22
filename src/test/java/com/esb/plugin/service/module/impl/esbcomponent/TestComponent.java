@@ -1,4 +1,4 @@
-package com.esb.plugin.service.module.impl;
+package com.esb.plugin.service.module.impl.esbcomponent;
 
 import com.esb.api.annotation.Default;
 import com.esb.api.annotation.ESBComponent;

@@ -21,14 +21,14 @@ public class Icons {
         try {
             return IconLoader.getIcon("/icons/component/" + componentName + "-icon.png");
         } catch (Exception e) {
-            return IconLoader.getIcon("/icons/component/default-icon.png");
+            return IconLoader.getIcon("/icons/default-component-icon.png");
         }
     }
 
     public static Image forComponentAsImage(String componentName) {
         URL resource = componentIconResource(componentName);
         if (resource == null) {
-            URL defaultResource = componentIconResource("default");
+            URL defaultResource = componentIconResource("default-component");
             return Toolkit.getDefaultToolkit().getImage(defaultResource);
         }
         return Toolkit.getDefaultToolkit().getImage(resource);

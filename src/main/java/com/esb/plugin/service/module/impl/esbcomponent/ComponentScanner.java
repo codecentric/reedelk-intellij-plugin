@@ -27,16 +27,19 @@ public class ComponentScanner {
     public static List<ComponentDescriptor> getComponentsFromPackage(String packageName) {
         ScanResult scanResult = instantiateScanner()
                 .whitelistPackages(packageName)
+                .whitelistPaths("/com/esb/system/component")
                 .scan();
         return processScanResult(scanResult);
     }
 
     private static List<ComponentDescriptor> processScanResult(ScanResult scanResult) {
+        IconsExtractor extractor = new IconsExtractor(scanResult);
+
         List<ComponentDescriptor> componentDescriptors = new ArrayList<>();
         ClassInfoList classInfoList = scanResult.getClassesWithAnnotation(ESBComponent.class.getName());
         for (ClassInfo classInfo : classInfoList) {
             try {
-                ComponentAnalyzerContext context = new ComponentAnalyzerContext(scanResult);
+                ComponentAnalyzerContext context = new ComponentAnalyzerContext(scanResult, extractor);
                 ComponentAnalyzer componentAnalyzer = new ComponentAnalyzer(context);
                 ComponentDescriptor descriptor = componentAnalyzer.analyze(classInfo);
                 componentDescriptors.add(descriptor);

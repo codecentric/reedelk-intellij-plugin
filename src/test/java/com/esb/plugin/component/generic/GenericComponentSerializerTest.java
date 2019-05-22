@@ -62,9 +62,9 @@ public class GenericComponentSerializerTest extends AbstractGraphTest {
     private ComponentPropertyDescriptor createPropertyDefinition(String propertyName, Class<?> propertyClass) {
         return new ComponentPropertyDescriptor(
                 propertyName,
+                new PrimitiveTypeDescriptor(propertyClass),
                 "A property name",
-                true,
                 "",
-                new PrimitiveTypeDescriptor(propertyClass));
+                true);
     }
 }
