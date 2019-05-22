@@ -121,8 +121,6 @@ public class ComponentDescriptor {
             descriptor.componentPropertyDescriptors.addAll(componentPropertyDescriptors);
             return descriptor;
         }
-
     }
-
 }
 
