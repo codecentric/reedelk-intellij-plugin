@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ComponentAnalyzerTest {
@@ -23,13 +23,17 @@ class ComponentAnalyzerTest {
 
     @BeforeEach
     void setUp() {
+        String whiteListPaths = "/" + ComponentAnalyzerTest.class.getPackage().getName().replace('.', '/');
         scanResult = new ClassGraph()
-                .whitelistPackages(ComponentAnalyzerTest.class.getPackage().getName())
-                .whitelistPaths("/com/esb/system/component")
-                .enableAllInfo()
+                .whitelistPaths(whiteListPaths)
+                .enableFieldInfo()
+                .enableAnnotationInfo()
+                .ignoreFieldVisibility()
                 .scan();
 
-        ComponentAnalyzerContext context = new ComponentAnalyzerContext(scanResult);
+        ComponentIconsAnalyzer iconsAnalyzer = new ComponentIconsAnalyzer(scanResult);
+
+        ComponentAnalyzerContext context = new ComponentAnalyzerContext(scanResult, iconsAnalyzer);
         analyzer = new ComponentAnalyzer(context);
     }
 
@@ -46,15 +50,18 @@ class ComponentAnalyzerTest {
         String displayName = descriptor.getDisplayName();
         assertThat(displayName).isEqualTo("Test Component");
 
-        List<String> propertyNames = descriptor
+        assertPropertiesNamesAreExactlyInAnyOrder(descriptor, "property1", "property2", "property3");
+        assertExistsPropertyDefinition(descriptor, "property1", "Property 1", 3, int.class, true);
+        assertExistsPropertyDefinition(descriptor, "property2", "Property 2", null, String.class, false);
+    }
+
+    private void assertPropertiesNamesAreExactlyInAnyOrder(ComponentDescriptor descriptor, String... expectedPropertyNames) {
+        List<String> actualPropertyNames = descriptor
                 .getPropertiesDescriptors()
                 .stream()
                 .map(ComponentPropertyDescriptor::getPropertyName)
-                .collect(Collectors.toList());
-        assertThat(propertyNames).containsExactlyInAnyOrder("property1", "property2", "property3");
-
-        assertExistsPropertyDefinition(descriptor, "property1", "Property 1", 3, int.class, true);
-        assertExistsPropertyDefinition(descriptor, "property2", "Property 2", null, String.class, false);
+                .collect(toList());
+        assertThat(actualPropertyNames).containsExactlyInAnyOrder(expectedPropertyNames);
     }
 
     private void assertExistsPropertyDefinition(ComponentDescriptor descriptor,
@@ -63,10 +70,10 @@ class ComponentAnalyzerTest {
                                                 Object expectedDefaultValue,
                                                 Class<?> expectedPropertyType,
                                                 boolean expectedIsRequired) {
-        Optional<ComponentPropertyDescriptor> property1Definition = descriptor.getPropertyDescriptor(expectedPropertyName);
-        assertThat(property1Definition).isPresent();
+        Optional<ComponentPropertyDescriptor> propertyDescriptor = descriptor.getPropertyDescriptor(expectedPropertyName);
+        assertThat(propertyDescriptor).isPresent();
+        ComponentPropertyDescriptor definition = propertyDescriptor.get();
 
-        ComponentPropertyDescriptor definition = property1Definition.get();
         assertThat(definition.getDisplayName()).isEqualTo(expectedDisplayName);
         assertThat(definition.getPropertyName()).isEqualTo(expectedPropertyName);
         assertThat(definition.getDefaultValue()).isEqualTo(expectedDefaultValue);

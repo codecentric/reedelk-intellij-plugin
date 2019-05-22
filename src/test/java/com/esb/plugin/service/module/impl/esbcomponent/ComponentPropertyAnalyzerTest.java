@@ -16,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ComponentPropertyAnalyzerTest {
 
+
     private ComponentPropertyAnalyzer analyzer;
     private ScanResult scanResult;
 
@@ -27,7 +28,9 @@ class ComponentPropertyAnalyzerTest {
                 .enableAllInfo()
                 .scan();
 
-        ComponentAnalyzerContext context = new ComponentAnalyzerContext(scanResult);
+        ComponentIconsAnalyzer iconsAnalyzer = new ComponentIconsAnalyzer(scanResult);
+
+        ComponentAnalyzerContext context = new ComponentAnalyzerContext(scanResult, iconsAnalyzer);
         analyzer = new ComponentPropertyAnalyzer(context);
     }
 

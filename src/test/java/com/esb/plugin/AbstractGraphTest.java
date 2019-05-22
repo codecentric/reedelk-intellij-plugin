@@ -1,9 +1,5 @@
 package com.esb.plugin;
 
-import com.esb.component.Choice;
-import com.esb.component.FlowReference;
-import com.esb.component.Fork;
-import com.esb.component.Stop;
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.component.choice.ChoiceNode;
@@ -14,6 +10,10 @@ import com.esb.plugin.component.stop.StopNode;
 import com.esb.plugin.fixture.*;
 import com.esb.plugin.graph.FlowGraphProvider;
 import com.esb.plugin.graph.node.GraphNode;
+import com.esb.system.component.Choice;
+import com.esb.system.component.FlowReference;
+import com.esb.system.component.Fork;
+import com.esb.system.component.Stop;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
