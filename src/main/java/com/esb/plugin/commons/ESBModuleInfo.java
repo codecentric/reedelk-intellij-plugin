@@ -33,6 +33,5 @@ public class ESBModuleInfo {
         JarFile jarFile = new JarFile(new File(jarFilePath));
         Manifest manifest = jarFile.getManifest();
         return manifest.getMainAttributes();
-
     }
 }

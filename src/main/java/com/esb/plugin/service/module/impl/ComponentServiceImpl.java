@@ -59,8 +59,11 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         Collection<ModuleDescriptor> values = jarFilePathModuleDescriptorMap.values();
         for (ModuleDescriptor descriptor : values) {
             Optional<ComponentDescriptor> moduleComponent = descriptor.getModuleComponent(componentFullyQualifiedName);
-            if (moduleComponent.isPresent()) return moduleComponent.get();
+            if (moduleComponent.isPresent()) {
+                return moduleComponent.get();
+            }
         }
+        // The component for the given fully qualified name is not known.
         return new UnknownComponentDescriptorWrapper(componentDescriptorByName(Unknown.class.getName()));
     }
 
@@ -107,20 +110,24 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
             });
 
 
+            /**
+             String[] currentProjectClassPathEntries = ModuleRootManager.getInstance(module)
+             .orderEntries()
+             .withoutSdk()
+             .withoutLibraries()
+             .sources()
+             .getUrls();
+             Arrays.stream(currentProjectClassPathEntries).forEach(new Consumer<String>() {
+            @Override public void accept(String s) {
+            List<ComponentDescriptor> componentDescriptor = ComponentScanner.scan(s);
+            System.out.println("yess");
+            }
+            });
+             */
+
             return null;
         });
 
-
-        /**
-         scanClassPathEntries(jarFilePaths);
-
-         String[] currentProjectClassPathEntries = ModuleRootManager.getInstance(module)
-         .orderEntries()
-         .withoutSdk()
-         .withoutLibraries()
-         .classes()
-         .getUrls();
-         scanClassPathEntries(currentProjectClassPathEntries);*/
     }
 
     @Override
