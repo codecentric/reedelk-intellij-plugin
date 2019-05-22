@@ -1,5 +1,7 @@
 package com.esb.plugin.component;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -54,6 +56,21 @@ public class ComponentDescriptionDecorator extends ComponentDescriptor {
     }
 
     @Override
+    public boolean isHidden() {
+        return wrapped.isHidden();
+    }
+
+    @Override
+    public Icon getIcon() {
+        return wrapped.getIcon();
+    }
+
+    @Override
+    public Image getImage() {
+        return wrapped.getImage();
+    }
+
+    @Override
     public boolean equals(Object o) {
         return wrapped.equals(o);
     }
@@ -62,4 +79,5 @@ public class ComponentDescriptionDecorator extends ComponentDescriptor {
     public int hashCode() {
         return wrapped.hashCode();
     }
+
 }

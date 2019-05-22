@@ -1,5 +1,8 @@
 package com.esb.plugin.component;
 
+import javax.swing.*;
+import java.awt.*;
+import java.util.List;
 import java.util.*;
 
 public class ComponentData {
@@ -43,6 +46,14 @@ public class ComponentData {
 
     public Optional<ComponentPropertyDescriptor> getPropertyDescriptor(String propertyName) {
         return descriptor.getPropertyDescriptor(propertyName);
+    }
+
+    public Image getComponentImage() {
+        return descriptor.getImage();
+    }
+
+    public Icon getComponentIcon() {
+        return descriptor.getIcon();
     }
 
 }

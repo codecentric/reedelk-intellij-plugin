@@ -1,7 +1,6 @@
 package com.esb.plugin.designer.palette;
 
 
-import com.esb.plugin.commons.Icons;
 import com.esb.plugin.component.ComponentDescriptor;
 
 import javax.swing.*;
@@ -20,7 +19,7 @@ public class PaletteTreeCellRenderer extends DefaultTreeCellRenderer {
         if (componentDescriptor instanceof ComponentDescriptor) {
             ComponentDescriptor descriptor = (ComponentDescriptor) componentDescriptor;
             setText(descriptor.getDisplayName());
-            setIcon(Icons.forComponentAsIcon(descriptor.getFullyQualifiedName()));
+            setIcon(descriptor.getIcon());
         }
         return this;
     }

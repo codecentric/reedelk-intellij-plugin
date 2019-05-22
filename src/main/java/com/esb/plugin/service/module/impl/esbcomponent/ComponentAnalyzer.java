@@ -15,10 +15,12 @@ import static java.util.stream.Collectors.toList;
 
 class ComponentAnalyzer {
 
+    private final ComponentAnalyzerContext context;
     private final ComponentPropertyAnalyzer propertyAnalyzer;
 
     public ComponentAnalyzer(ComponentAnalyzerContext context) {
         this.propertyAnalyzer = new ComponentPropertyAnalyzer(context);
+        this.context = context;
     }
 
     ComponentDescriptor analyze(ClassInfo classInfo) {
@@ -26,6 +28,8 @@ class ComponentAnalyzer {
         return ComponentDescriptor.create()
                 .fullyQualifiedName(classInfo.getName())
                 .displayName(displayName)
+                .paletteIcon(context.getIconByClassName(classInfo.getName()))
+                .icon(context.getImageByClassName(classInfo.getName()))
                 .hidden(isHidden(classInfo))
                 .propertyDefinitions(mapPropertyDefinitions(classInfo))
                 .build();

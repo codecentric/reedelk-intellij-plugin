@@ -1,6 +1,9 @@
 package com.esb.plugin.component;
 
+import javax.swing.*;
+import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
+import java.util.List;
 import java.util.*;
 
 /**
@@ -10,6 +13,8 @@ public class ComponentDescriptor {
 
     public static final DataFlavor FLAVOR = new DataFlavor(ComponentDescriptor.class, "Descriptor of ComponentData");
 
+    private Icon icon;
+    private Image image;
     private boolean hidden;
     private String displayName;
     private String fullyQualifiedName;
@@ -41,6 +46,14 @@ public class ComponentDescriptor {
         return Collections.unmodifiableList(componentPropertyDescriptors);
     }
 
+    public Icon getIcon() {
+        return icon;
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
     public static Builder create() {
         return new Builder();
     }
@@ -61,6 +74,9 @@ public class ComponentDescriptor {
     public static class Builder {
 
         private boolean hidden;
+
+        private Icon icon;
+        private Image image;
         private String displayName;
         private String fullyQualifiedName;
         private List<ComponentPropertyDescriptor> componentPropertyDescriptors = new ArrayList<>();
@@ -85,10 +101,22 @@ public class ComponentDescriptor {
             return this;
         }
 
+        public Builder paletteIcon(Icon icon) {
+            this.icon = icon;
+            return this;
+        }
+
+        public Builder icon(Image image) {
+            this.image = image;
+            return this;
+        }
+
         public ComponentDescriptor build() {
             ComponentDescriptor descriptor = new ComponentDescriptor();
             descriptor.hidden = hidden;
             descriptor.displayName = displayName;
+            descriptor.icon = icon;
+            descriptor.image = image;
             descriptor.fullyQualifiedName = fullyQualifiedName;
             descriptor.componentPropertyDescriptors.addAll(componentPropertyDescriptors);
             return descriptor;

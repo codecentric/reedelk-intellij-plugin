@@ -1,10 +1,12 @@
 package com.esb.plugin.service.module.impl.esbcomponent;
 
+import com.esb.plugin.commons.Icons;
 import io.github.classgraph.Resource;
 import io.github.classgraph.ResourceList;
 import io.github.classgraph.ScanResult;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.HashMap;
@@ -25,11 +27,13 @@ public class IconsExtractor {
         Map<String, ResourceList> resourceNameAndData = resources.asMap();
         for (Map.Entry<String, ResourceList> entry : resourceNameAndData.entrySet()) {
             String key = entry.getKey();
+            int lastSlash = key.lastIndexOf("/");
+
             ResourceList value = entry.getValue();
             Resource resource = value.get(0);
             try {
                 Image read = ImageIO.read(resource.open());
-                nameMap.put(key.substring(0, key.length() - 3), read);
+                nameMap.put(key.substring(lastSlash + 1, key.length() - 4), read);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -37,6 +41,15 @@ public class IconsExtractor {
     }
 
     public Image getImageByFullyQualifiedName(String fullyQualifiedName) {
-        return nameMap.get(fullyQualifiedName);
+        return nameMap.getOrDefault(fullyQualifiedName,
+                Icons.getDefaultComponentImage());
+    }
+
+    public Icon getIconByFullyQualifiedName(String fullyQualifiedName) {
+        if (nameMap.containsKey(fullyQualifiedName + "-icon")) {
+            return new ImageIcon(nameMap.get(fullyQualifiedName + "-icon"));
+        } else {
+            return Icons.getDefaultComponentIcon();
+        }
     }
 }

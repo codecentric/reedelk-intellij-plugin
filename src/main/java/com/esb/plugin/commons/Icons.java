@@ -17,25 +17,13 @@ public class Icons {
     public static final Icon FileTypeFlow = IconLoader.getIcon("/icons/icon-flow-file-16x.png");
     public static final Icon FileTypeFlowConfig = IconLoader.getIcon("/icons/icon-flow-config-file-16x.png");
 
-    public static Icon forComponentAsIcon(String componentName) {
-        try {
-            return IconLoader.getIcon("/icons/component/" + componentName + "-icon.png");
-        } catch (Exception e) {
-            return IconLoader.getIcon("/icons/default-component-icon.png");
-        }
+    public static Icon getDefaultComponentIcon() {
+        return IconLoader.getIcon("/icons/default-component-icon.png");
     }
 
-    public static Image forComponentAsImage(String componentName) {
-        URL resource = componentIconResource(componentName);
-        if (resource == null) {
-            URL defaultResource = componentIconResource("default-component");
-            return Toolkit.getDefaultToolkit().getImage(defaultResource);
-        }
-        return Toolkit.getDefaultToolkit().getImage(resource);
+    public static Image getDefaultComponentImage() {
+        URL defaultResource = Icons.class.getResource("/icons/default-component.png");
+        return Toolkit.getDefaultToolkit().getImage(defaultResource);
     }
 
-
-    private static URL componentIconResource(String componentName) {
-        return Icons.class.getResource("/icons/component/" + componentName + ".png");
-    }
 }

@@ -37,7 +37,7 @@ public abstract class AbstractGraphNode implements GraphNode {
 
     public AbstractGraphNode(ComponentData componentData) {
         this.componentData = componentData;
-        icon = new Icon(componentData.getFullyQualifiedName());
+        icon = new Icon(componentData.getComponentImage());
 
         componentTitle = new ComponentTitle(componentData);
         componentDescription = new ComponentDescription(componentData);

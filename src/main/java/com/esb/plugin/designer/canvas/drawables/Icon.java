@@ -1,6 +1,5 @@
 package com.esb.plugin.designer.canvas.drawables;
 
-import com.esb.plugin.commons.Icons;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.Drawable;
 
@@ -21,8 +20,8 @@ public class Icon implements Drawable {
     private int draggedY;
     private boolean dragging;
 
-    public Icon(String componentName) {
-        this.image = Icons.forComponentAsImage(componentName);
+    public Icon(Image image) {
+        this.image = image;
     }
 
     @Override

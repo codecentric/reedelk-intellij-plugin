@@ -1,6 +1,5 @@
 package com.esb.plugin.designer.properties;
 
-import com.esb.plugin.commons.Icons;
 import com.esb.plugin.component.ComponentData;
 import com.esb.plugin.designer.SelectListener;
 import com.esb.plugin.designer.properties.renderer.node.NodePropertiesRendererFactory;
@@ -36,7 +35,7 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
 
         JBPanel propertiesPanel = createPropertiesPanel(componentData, snapshot, node);
 
-        Icon icon = Icons.forComponentAsIcon(componentData.getFullyQualifiedName());
+        Icon icon = componentData.getComponentIcon();
 
         JBTabbedPane tabbedPane = new JBTabbedPane();
         tabbedPane.addTab(componentData.getDisplayName(), icon, propertiesPanel, componentData.getDisplayName() + " properties");
