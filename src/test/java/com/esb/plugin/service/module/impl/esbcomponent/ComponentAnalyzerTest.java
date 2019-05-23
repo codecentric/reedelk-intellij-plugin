@@ -1,6 +1,7 @@
 package com.esb.plugin.service.module.impl.esbcomponent;
 
 import com.esb.api.annotation.ESBComponent;
+import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.commons.PackageToPath;
 import com.esb.plugin.component.domain.ComponentDescriptor;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
@@ -51,6 +52,9 @@ class ComponentAnalyzerTest {
         ComponentDescriptor descriptor = analyzer.analyze(testComponentClassInfo);
 
         // Then
+        PluginAssertion.assertThat(descriptor)
+                .hasDisplayName("Test Component")
+                .hasProperty("property1");
         String displayName = descriptor.getDisplayName();
         assertThat(displayName).isEqualTo("Test Component");
 
