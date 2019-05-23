@@ -1,6 +1,7 @@
 package com.esb.plugin.service.module.impl;
 
 import com.esb.plugin.commons.ESBModuleInfo;
+import com.esb.plugin.commons.MavenUtils;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.component.unknown.UnknownComponentDescriptorWrapper;
 import com.esb.plugin.service.module.ComponentService;
@@ -36,6 +37,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     private final Module module;
 
     private final ComponentListUpdateNotifier publisher;
+    private final Project project;
 
     private Map<String, ModuleDescriptor> jarFilePathModuleDescriptorMap = new HashMap<>();
 
@@ -48,6 +50,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
      */
     public ComponentServiceImpl(Project project, Module module, MessageBus messageBus) {
         this.module = module;
+        this.project = project;
 
         List<ComponentDescriptor> coreComponents = ComponentScanner.getComponentsFromPackage(Stop.class.getPackage().getName());
         jarFilePathModuleDescriptorMap.put(SYSTEM_JAR_PATH, new ModuleDescriptor("Flow Control", coreComponents));
@@ -151,9 +154,12 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                 .getUrls();
 
 
-        ModuleAnalyzer moduleAnalyzer = new ModuleAnalyzer();
         Arrays.stream(moduleUrls).forEach(jarFilePath -> {
-            ModuleDescriptor descriptor = moduleAnalyzer.analyze(jarFilePath);
+
+            List<ComponentDescriptor> components = ComponentScanner.scan(jarFilePath);
+            String moduleName = MavenUtils.getMavenProject(project, module.getName()).get().getDisplayName();
+
+            ModuleDescriptor descriptor = new ModuleDescriptor(moduleName, components);
             if (jarFilePathModuleDescriptorMap.containsKey(jarFilePath)) {
                 jarFilePathModuleDescriptorMap.replace(jarFilePath, descriptor);
             } else {
