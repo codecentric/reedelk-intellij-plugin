@@ -10,6 +10,7 @@ import java.util.Optional;
 /**
  * Decorator which adds the default "Description" property to all registered components.
  */
+// TODO: Maybe Component Descriptor should be declared as interface instead.
 public class ComponentDescriptionDecorator extends ComponentDescriptor {
 
     public static final String DESCRIPTION_PROPERTY_NAME = "description";

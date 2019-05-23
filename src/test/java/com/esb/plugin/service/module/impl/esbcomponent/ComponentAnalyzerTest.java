@@ -6,7 +6,7 @@ import com.esb.plugin.component.domain.ComponentDescriptor;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.scanner.ComponentAnalyzer;
 import com.esb.plugin.component.scanner.ComponentAnalyzerContext;
-import com.esb.plugin.component.scanner.ComponentIconsAnalyzer;
+import com.esb.plugin.component.scanner.ComponentIconAndImageLoader;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
@@ -35,7 +35,7 @@ class ComponentAnalyzerTest {
                 .ignoreFieldVisibility()
                 .scan();
 
-        ComponentIconsAnalyzer iconsAnalyzer = new ComponentIconsAnalyzer(scanResult);
+        ComponentIconAndImageLoader iconsAnalyzer = new ComponentIconAndImageLoader(scanResult);
 
         ComponentAnalyzerContext context = new ComponentAnalyzerContext(scanResult, iconsAnalyzer);
         analyzer = new ComponentAnalyzer(context);

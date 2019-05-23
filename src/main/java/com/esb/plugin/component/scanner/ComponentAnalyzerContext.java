@@ -1,5 +1,7 @@
 package com.esb.plugin.component.scanner;
 
+import com.esb.plugin.commons.Icons;
+import com.esb.plugin.commons.Images;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 
@@ -9,11 +11,9 @@ import java.awt.*;
 public class ComponentAnalyzerContext {
 
     private final ScanResult scanResult;
-    private final ComponentIconsAnalyzer componentIconsAnalyzer;
 
-    public ComponentAnalyzerContext(ScanResult scanResult, ComponentIconsAnalyzer componentIconsAnalyzer) {
+    public ComponentAnalyzerContext(ScanResult scanResult, ComponentIconAndImageLoader componentIconAndImageLoader) {
         this.scanResult = scanResult;
-        this.componentIconsAnalyzer = componentIconsAnalyzer;
     }
 
     ClassInfo getClassInfo(String fullyQualifiedClassName) {
@@ -21,10 +21,10 @@ public class ComponentAnalyzerContext {
     }
 
     Image getImageByClassName(String fullyQualifiedClassName) {
-        return componentIconsAnalyzer.getImageByFullyQualifiedName(fullyQualifiedClassName);
+        return Images.Component.get(fullyQualifiedClassName);
     }
 
-    public Icon getIconByClassName(String fullyQualifiedClassName) {
-        return componentIconsAnalyzer.getIconByFullyQualifiedName(fullyQualifiedClassName);
+    Icon getIconByClassName(String fullyQualifiedClassName) {
+        return Icons.Component.get(fullyQualifiedClassName);
     }
 }
