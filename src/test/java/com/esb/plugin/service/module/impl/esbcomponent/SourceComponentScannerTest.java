@@ -13,7 +13,7 @@ class SourceComponentScannerTest {
     @Test
     void shouldTestSomething() {
         // Given
-        String path = "/Users/lorenzo/Desktop/esb-project/esb-intellij-plugin/src/test/java/com/esb/plugin/service/module/impl/esbcomponent";
+        String path = "/Users/lorenzo/Desktop/esb-project/esb-intellij-plugin/src/test/java/com/esb/plugin/service/module/impl/esbcomponent/TestComponent.java";
         SourceComponentScanner analyzer = new SourceComponentScanner(path);
 
         // When

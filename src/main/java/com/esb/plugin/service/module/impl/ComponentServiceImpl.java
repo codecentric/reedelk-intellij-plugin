@@ -110,13 +110,14 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
             });
 
 
-            /**
              String[] currentProjectClassPathEntries = ModuleRootManager.getInstance(module)
              .orderEntries()
              .withoutSdk()
              .withoutLibraries()
              .sources()
              .getUrls();
+
+            /**
              Arrays.stream(currentProjectClassPathEntries).forEach(new Consumer<String>() {
             @Override public void accept(String s) {
             List<ComponentDescriptor> componentDescriptor = ComponentScanner.scan(s);
@@ -124,7 +125,6 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
             }
             });
              */
-
             return null;
         });
 

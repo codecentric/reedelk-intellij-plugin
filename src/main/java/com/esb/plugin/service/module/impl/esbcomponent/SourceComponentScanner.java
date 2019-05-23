@@ -16,14 +16,16 @@ import java.util.stream.Collectors;
 
 public class SourceComponentScanner {
 
-    private SpoonAPI spoon = new Launcher();
 
+    private final String sourcePath;
 
     public SourceComponentScanner(final String sourcePath) {
-        spoon.addInputResource(sourcePath);
+        this.sourcePath = sourcePath;
     }
 
     public List<ComponentDescriptor> analyze() {
+        SpoonAPI spoon = new Launcher();
+        spoon.addInputResource(sourcePath);
         CtModel classModel = spoon.buildModel();
         return classModel.getAllTypes()
                 .stream()
