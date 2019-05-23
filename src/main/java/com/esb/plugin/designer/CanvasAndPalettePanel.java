@@ -15,7 +15,7 @@ class CanvasAndPalettePanel extends ThreeComponentsSplitter {
     private static final int PALETTE_SIZE = 210;
 
     CanvasAndPalettePanel(Module module, GraphSnapshot snapshot, SelectListener selectListener, AncestorListener listener) {
-        CanvasPanel canvas = new CanvasPanel(module, snapshot, listener);
+        CanvasPanel canvas = new CanvasPanel(module, snapshot);
         canvas.addListener(selectListener);
         ScrollableCanvasPanel canvasPanel = new ScrollableCanvasPanel(canvas);
 
@@ -25,5 +25,7 @@ class CanvasAndPalettePanel extends ThreeComponentsSplitter {
         setInnerComponent(canvasPanel);
         setLastComponent(palette);
         setLastSize(PALETTE_SIZE);
+
+        addAncestorListener(listener);
     }
 }

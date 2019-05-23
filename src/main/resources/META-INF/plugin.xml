@@ -60,10 +60,19 @@
 
         <fileEditorProvider implementation="com.esb.plugin.designer.DesignerEditorProvider"/>
 
+
     </extensions>
 
     <actions>
 
     </actions>
+
+    <project-components>
+        <component>
+            <interface-class>com.esb.plugin.service.project.sourcechange.SourceChangeService</interface-class>
+            <implementation-class>com.esb.plugin.service.project.sourcechange.impl.SourceChangeServiceImpl
+            </implementation-class>
+        </component>
+    </project-components>
 
 </idea-plugin>

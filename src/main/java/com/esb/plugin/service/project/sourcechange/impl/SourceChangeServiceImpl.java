@@ -27,7 +27,7 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
     private static final Boolean CHANGED = true;
     private static final Boolean UNCHANGED = false;
 
-    private Map<String,String> moduleNameRootPathMap = new HashMap<>();
+    private Map<String, String> moduleNameRootPathMap = new HashMap<>();
     private Map<BiKey, Boolean> moduleNameChangedMap = new HashMap<>();
 
     public SourceChangeServiceImpl(Project project, Application application) {
@@ -80,11 +80,13 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
 
     @Override
     public void after(@NotNull List<? extends VFileEvent> events) {
-        events.forEach(vFileEvent -> {
-            if(isJavaSource(vFileEvent.getFile())) {
-                isModuleSourceChange(vFileEvent.getFile()).ifPresent(this::setToChangedMatching);
-            }
-        });
+        events.stream()
+                .map(VFileEvent::getFile)
+                .forEach(file -> {
+                    if (isJavaSource(file)) {
+                        isModuleSourceChange(file).ifPresent(this::setToChangedMatching);
+                    }
+                });
     }
 
     @Override
@@ -108,7 +110,7 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
     }
 
     private Optional<String> isModuleSourceChange(VirtualFile virtualFile) {
-        for (Map.Entry<String,String> entry : moduleNameRootPathMap.entrySet()) {
+        for (Map.Entry<String, String> entry : moduleNameRootPathMap.entrySet()) {
             if (virtualFile.getPath().startsWith(entry.getValue())) {
                 return Optional.of(entry.getKey());
             }
@@ -116,14 +118,14 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
         return Optional.empty();
     }
 
-    private boolean isJavaSource(VirtualFile virtualFile) {
-        if (virtualFile != null) {
-            String extension = virtualFile.getExtension();
-            if (extension != null) {
-                return extension.equals(JAVA_SOURCE_EXTENSION);
-            }
-        }
-        return false;
+    private boolean isJavaSource(VirtualFile file) {
+        return hasExtension(file, JAVA_SOURCE_EXTENSION);
+    }
+
+    private static boolean hasExtension(VirtualFile file, String extensionToTest) {
+        return file != null &&
+                file.getExtension() != null &&
+                file.getExtension().equals(extensionToTest);
     }
 
     private void setToChangedMatching(String moduleName) {

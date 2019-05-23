@@ -19,7 +19,6 @@ import com.intellij.ui.components.JBPanel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
@@ -55,11 +54,10 @@ public class CanvasPanel extends JBPanel implements MouseMotionListener, MouseLi
 
     private FlowGraph graph;
 
-    public CanvasPanel(Module module, GraphSnapshot snapshot, AncestorListener listener) {
+    public CanvasPanel(Module module, GraphSnapshot snapshot) {
         setBackground(BACKGROUND_COLOR);
         addMouseListener(this);
         addMouseMotionListener(this);
-        addAncestorListener(listener);
 
         this.module = module;
         this.snapshot = snapshot;
