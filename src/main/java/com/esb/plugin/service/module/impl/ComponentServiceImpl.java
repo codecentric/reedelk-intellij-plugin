@@ -10,11 +10,15 @@ import com.esb.plugin.service.module.impl.esbmodule.ModuleAnalyzer;
 import com.esb.plugin.service.module.impl.esbmodule.ModuleDescriptor;
 import com.esb.system.component.Stop;
 import com.esb.system.component.Unknown;
+import com.intellij.openapi.compiler.CompilationStatusListener;
+import com.intellij.openapi.compiler.CompileContext;
+import com.intellij.openapi.compiler.CompilerTopics;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.util.messages.MessageBus;
+import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.project.MavenImportListener;
 import org.jetbrains.idea.maven.project.MavenProject;
@@ -23,7 +27,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-public class ComponentServiceImpl implements ComponentService, MavenImportListener {
+public class ComponentServiceImpl implements ComponentService, MavenImportListener, CompilationStatusListener {
 
     private static final Logger LOG = Logger.getInstance(ComponentServiceImpl.class);
 
@@ -51,7 +55,9 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         publisher = messageBus.syncPublisher(ComponentListUpdateNotifier.COMPONENT_LIST_UPDATE_TOPIC);
         asyncScanClasspathComponents();
 
-        project.getMessageBus().connect().subscribe(MavenImportListener.TOPIC, this);
+        MessageBusConnection connection = project.getMessageBus().connect();
+        connection.subscribe(MavenImportListener.TOPIC, this);
+        connection.subscribe(CompilerTopics.COMPILATION_STATUS, this);
     }
 
     @Override
@@ -110,21 +116,11 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
             });
 
 
-             String[] currentProjectClassPathEntries = ModuleRootManager.getInstance(module)
-             .orderEntries()
-             .withoutSdk()
-             .withoutLibraries()
-             .sources()
-             .getUrls();
+            return null;
+        });
 
-            /**
-             Arrays.stream(currentProjectClassPathEntries).forEach(new Consumer<String>() {
-            @Override public void accept(String s) {
-            List<ComponentDescriptor> componentDescriptor = ComponentScanner.scan(s);
-            System.out.println("yess");
-            }
-            });
-             */
+        CompletableFuture.supplyAsync(() -> {
+            asyncUpdateModuleComponents();
             return null;
         });
 
@@ -133,5 +129,38 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     @Override
     public void importFinished(@NotNull Collection<MavenProject> importedProjects, @NotNull List<Module> newModules) {
         asyncScanClasspathComponents();
+    }
+
+    @Override
+    public void compilationFinished(boolean aborted, int errors, int warnings, @NotNull CompileContext compileContext) {
+        if (!aborted && errors == 0) {
+            CompletableFuture.supplyAsync(() -> {
+                asyncUpdateModuleComponents();
+                return null;
+            });
+        }
+    }
+
+    private void asyncUpdateModuleComponents() {
+        String[] moduleUrls = ModuleRootManager.getInstance(module)
+                .orderEntries()
+                .withoutSdk()
+                .withoutLibraries()
+                .productionOnly()
+                .classes()
+                .getUrls();
+
+
+        ModuleAnalyzer moduleAnalyzer = new ModuleAnalyzer();
+        Arrays.stream(moduleUrls).forEach(jarFilePath -> {
+            ModuleDescriptor descriptor = moduleAnalyzer.analyze(jarFilePath);
+            if (jarFilePathModuleDescriptorMap.containsKey(jarFilePath)) {
+                jarFilePathModuleDescriptorMap.replace(jarFilePath, descriptor);
+            } else {
+                jarFilePathModuleDescriptorMap.put(jarFilePath, descriptor);
+            }
+            publisher.onComponentListUpdate();
+        });
+
     }
 }
