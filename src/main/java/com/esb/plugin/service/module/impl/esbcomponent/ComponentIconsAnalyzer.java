@@ -46,22 +46,15 @@ class ComponentIconsAnalyzer {
     }
 
     Image getImageByFullyQualifiedName(String fullyQualifiedName) {
-        return nameMap.getOrDefault(fullyQualifiedName, getDefaultComponentImage());
+        return nameMap.getOrDefault(fullyQualifiedName, Icons.DefaultComponentImage);
     }
 
     Icon getIconByFullyQualifiedName(String fullyQualifiedName) {
         if (nameMap.containsKey(fullyQualifiedName + "-icon")) {
             return new ImageIcon(nameMap.get(fullyQualifiedName + "-icon"));
         } else {
-            return getDefaultComponentIcon();
+            return Icons.DefaultComponentIcon;
         }
     }
 
-    private static Icon getDefaultComponentIcon() {
-        return Icons.DEFAULT_COMPONENT_ICON.get();
-    }
-
-    private static Image getDefaultComponentImage() {
-        return Icons.DEFAULT_COMPONENT_IMAGE.get();
-    }
 }
