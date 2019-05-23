@@ -15,7 +15,7 @@ import java.util.Map;
 
 import static java.lang.String.format;
 
-class ComponentIconsAnalyzer {
+public class ComponentIconsAnalyzer {
 
     private static final Logger LOG = Logger.getInstance(ComponentIconsAnalyzer.class);
 
@@ -23,7 +23,7 @@ class ComponentIconsAnalyzer {
 
     private Map<String, Image> nameMap = new HashMap<>();
 
-    ComponentIconsAnalyzer(ScanResult scanResult) {
+    public ComponentIconsAnalyzer(ScanResult scanResult) {
         ResourceList allImages = scanResult.getResourcesWithExtension(ICONS_EXTENSION);
         extract(allImages);
     }

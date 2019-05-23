@@ -16,17 +16,17 @@ import java.util.stream.Collectors;
 
 import static com.esb.plugin.converter.ValueConverterFactory.isKnownType;
 
-class ComponentPropertyAnalyzer {
+public class ComponentPropertyAnalyzer {
 
     private static final String ANNOTATION_DEFAULT_PARAM_NAME = "value";
 
     private final ComponentAnalyzerContext context;
 
-    ComponentPropertyAnalyzer(ComponentAnalyzerContext context) {
+    public ComponentPropertyAnalyzer(ComponentAnalyzerContext context) {
         this.context = context;
     }
 
-    Optional<ComponentPropertyDescriptor> analyze(FieldInfo fieldInfo) {
+    public Optional<ComponentPropertyDescriptor> analyze(FieldInfo fieldInfo) {
         return fieldInfo.hasAnnotation(Property.class.getName()) ?
                 Optional.of(analyzeProperty(fieldInfo)) :
                 Optional.empty();
