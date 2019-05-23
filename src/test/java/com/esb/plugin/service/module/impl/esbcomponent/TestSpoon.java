@@ -10,14 +10,13 @@ import spoon.reflect.declaration.CtType;
 
 import java.util.Collection;
 
-@ESBComponent("HelloTest Spoon")
 public class TestSpoon {
 
     @Test
     void shouldDoSomething() {
         // Given
         SpoonAPI spoon = new Launcher();
-        spoon.addInputResource("/Users/lorenzo/Desktop/esb-project/esb-intellij-plugin/src/test/java/com/esb/plugin/service/module/impl/esbcomponent/TestSpoon.java");
+        spoon.addInputResource("/Users/lorenzo/Desktop/esb-project/esb-intellij-plugin/src/test/java/com/esb/plugin/service/module/impl/esbcomponent");
 
         CtModel ctModel = spoon.buildModel();
 

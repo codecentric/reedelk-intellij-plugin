@@ -1,6 +1,7 @@
 package com.esb.plugin.service.module.impl.esbcomponent;
 
 import com.esb.api.annotation.ESBComponent;
+import com.esb.plugin.commons.PackageToPath;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.intellij.openapi.diagnostic.Logger;
 import io.github.classgraph.ClassGraph;
@@ -27,7 +28,7 @@ public class ComponentScanner {
     public static List<ComponentDescriptor> getComponentsFromPackage(String packageName) {
         ScanResult scanResult = instantiateScanner()
                 .whitelistPackages(packageName)
-                .whitelistPaths("/com/esb/system/component")
+                .whitelistPaths(PackageToPath.convert(packageName))
                 .scan();
         return processScanResult(scanResult);
     }

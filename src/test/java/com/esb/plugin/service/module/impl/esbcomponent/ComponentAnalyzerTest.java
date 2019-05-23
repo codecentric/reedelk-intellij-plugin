@@ -1,6 +1,7 @@
 package com.esb.plugin.service.module.impl.esbcomponent;
 
 import com.esb.api.annotation.ESBComponent;
+import com.esb.plugin.commons.PackageToPath;
 import com.esb.plugin.component.ComponentDescriptor;
 import com.esb.plugin.component.ComponentPropertyDescriptor;
 import io.github.classgraph.ClassGraph;
@@ -23,7 +24,7 @@ class ComponentAnalyzerTest {
 
     @BeforeEach
     void setUp() {
-        String whiteListPaths = "/" + ComponentAnalyzerTest.class.getPackage().getName().replace('.', '/');
+        String whiteListPaths = PackageToPath.convert(ComponentAnalyzerTest.class.getPackage().getName());
         scanResult = new ClassGraph()
                 .whitelistPaths(whiteListPaths)
                 .enableFieldInfo()
