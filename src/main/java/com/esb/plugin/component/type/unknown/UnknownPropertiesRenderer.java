@@ -2,9 +2,9 @@ package com.esb.plugin.component.type.unknown;
 
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.component.domain.ComponentData;
-import com.esb.plugin.designer.properties.renderer.node.AbstractNodePropertiesRenderer;
-import com.esb.plugin.designer.properties.widget.DefaultPropertiesPanel;
-import com.esb.plugin.designer.properties.widget.FormBuilder;
+import com.esb.plugin.editor.properties.renderer.node.AbstractNodePropertiesRenderer;
+import com.esb.plugin.editor.properties.widget.DefaultPropertiesPanel;
+import com.esb.plugin.editor.properties.widget.FormBuilder;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.ui.components.JBLabel;

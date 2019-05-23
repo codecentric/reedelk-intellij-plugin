@@ -1,6 +1,6 @@
 package com.esb.plugin.graph.layout;
 
-import com.esb.plugin.designer.Tile;
+import com.esb.plugin.editor.Tile;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopeBoundaries;

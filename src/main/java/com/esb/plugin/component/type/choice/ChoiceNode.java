@@ -1,7 +1,7 @@
 package com.esb.plugin.component.type.choice;
 
 import com.esb.plugin.component.domain.ComponentData;
-import com.esb.plugin.designer.canvas.drawables.AbstractScopedGraphNode;
+import com.esb.plugin.editor.designer.drawables.AbstractScopedGraphNode;
 import com.esb.plugin.graph.node.GraphNode;
 
 import java.util.LinkedList;
