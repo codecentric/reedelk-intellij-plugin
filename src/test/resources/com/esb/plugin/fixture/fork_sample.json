@@ -1,5 +1,5 @@
 {
-  "implementor": "com.esb.component.Fork",
+  "implementor": "com.esb.system.component.Fork",
   "threadPoolSize": 3,
   "fork": [
     {

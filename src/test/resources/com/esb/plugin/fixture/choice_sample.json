@@ -1,5 +1,5 @@
 {
-  "implementor": "com.esb.component.Choice",
+  "implementor": "com.esb.system.component.Choice",
   "when": [
     {
       "condition": "1 == 1",
