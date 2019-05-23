@@ -1,6 +1,6 @@
 package com.esb.plugin.graph.utils;
 
-import com.esb.plugin.component.stop.StopNode;
+import com.esb.plugin.component.type.stop.StopNode;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 

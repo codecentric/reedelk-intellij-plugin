@@ -1,8 +1,8 @@
 package com.esb.plugin.graph.serializer;
 
-import com.esb.plugin.component.ComponentData;
-import com.esb.plugin.component.ComponentDescriptor;
-import com.esb.plugin.component.stop.StopNode;
+import com.esb.plugin.component.domain.ComponentData;
+import com.esb.plugin.component.domain.ComponentDescriptor;
+import com.esb.plugin.component.type.stop.StopNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONArray;

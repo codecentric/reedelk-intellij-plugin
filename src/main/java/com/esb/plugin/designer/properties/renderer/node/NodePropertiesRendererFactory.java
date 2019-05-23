@@ -1,13 +1,13 @@
 package com.esb.plugin.designer.properties.renderer.node;
 
 import com.esb.api.exception.ESBException;
-import com.esb.plugin.component.ComponentData;
-import com.esb.plugin.component.choice.ChoicePropertiesRenderer;
-import com.esb.plugin.component.flowreference.FlowReferencePropertiesRenderer;
-import com.esb.plugin.component.fork.ForkPropertiesRenderer;
-import com.esb.plugin.component.generic.GenericComponentPropertiesRenderer;
-import com.esb.plugin.component.stop.StopPropertiesRenderer;
-import com.esb.plugin.component.unknown.UnknownPropertiesRenderer;
+import com.esb.plugin.component.domain.ComponentData;
+import com.esb.plugin.component.type.choice.ChoicePropertiesRenderer;
+import com.esb.plugin.component.type.flowreference.FlowReferencePropertiesRenderer;
+import com.esb.plugin.component.type.fork.ForkPropertiesRenderer;
+import com.esb.plugin.component.type.generic.GenericComponentPropertiesRenderer;
+import com.esb.plugin.component.type.stop.StopPropertiesRenderer;
+import com.esb.plugin.component.type.unknown.UnknownPropertiesRenderer;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.system.component.*;
 

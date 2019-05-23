@@ -2,13 +2,13 @@ package com.esb.plugin.service.module.impl;
 
 import com.esb.plugin.commons.ESBModuleInfo;
 import com.esb.plugin.commons.MavenUtils;
-import com.esb.plugin.component.ComponentDescriptor;
-import com.esb.plugin.component.unknown.UnknownComponentDescriptorWrapper;
+import com.esb.plugin.component.domain.ComponentDescriptor;
+import com.esb.plugin.component.domain.ComponentsDescriptor;
+import com.esb.plugin.component.scanner.ComponentListUpdateNotifier;
+import com.esb.plugin.component.scanner.ComponentScanner;
+import com.esb.plugin.component.scanner.ComponentsScanner;
+import com.esb.plugin.component.type.unknown.UnknownComponentDescriptorWrapper;
 import com.esb.plugin.service.module.ComponentService;
-import com.esb.plugin.service.module.impl.esbcomponent.ComponentListUpdateNotifier;
-import com.esb.plugin.service.module.impl.esbcomponent.ComponentScanner;
-import com.esb.plugin.service.module.impl.esbmodule.ModuleAnalyzer;
-import com.esb.plugin.service.module.impl.esbmodule.ModuleDescriptor;
 import com.esb.system.component.Stop;
 import com.esb.system.component.Unknown;
 import com.intellij.openapi.compiler.CompilationStatusListener;
@@ -39,7 +39,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     private final ComponentListUpdateNotifier publisher;
     private final Project project;
 
-    private Map<String, ModuleDescriptor> jarFilePathModuleDescriptorMap = new HashMap<>();
+    private Map<String, ComponentsDescriptor> jarFilePathModuleDescriptorMap = new HashMap<>();
 
 
     /**
@@ -53,7 +53,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         this.project = project;
 
         List<ComponentDescriptor> coreComponents = ComponentScanner.getComponentsFromPackage(Stop.class.getPackage().getName());
-        jarFilePathModuleDescriptorMap.put(SYSTEM_JAR_PATH, new ModuleDescriptor("Flow Control", coreComponents));
+        jarFilePathModuleDescriptorMap.put(SYSTEM_JAR_PATH, new ComponentsDescriptor("Flow Control", coreComponents));
 
         publisher = messageBus.syncPublisher(ComponentListUpdateNotifier.COMPONENT_LIST_UPDATE_TOPIC);
         asyncScanClasspathComponents();
@@ -65,8 +65,8 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
     @Override
     public ComponentDescriptor componentDescriptorByName(String componentFullyQualifiedName) {
-        Collection<ModuleDescriptor> values = jarFilePathModuleDescriptorMap.values();
-        for (ModuleDescriptor descriptor : values) {
+        Collection<ComponentsDescriptor> values = jarFilePathModuleDescriptorMap.values();
+        for (ComponentsDescriptor descriptor : values) {
             Optional<ComponentDescriptor> moduleComponent = descriptor.getModuleComponent(componentFullyQualifiedName);
             if (moduleComponent.isPresent()) {
                 return moduleComponent.get();
@@ -77,7 +77,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     }
 
     @Override
-    public Collection<ModuleDescriptor> getModulesDescriptors() {
+    public Collection<ComponentsDescriptor> getModulesDescriptors() {
         return jarFilePathModuleDescriptorMap.values();
     }
 
@@ -107,9 +107,9 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
             toRemove.forEach(s -> jarFilePathModuleDescriptorMap.remove(s));
 
-            ModuleAnalyzer moduleAnalyzer = new ModuleAnalyzer();
+            ComponentsScanner componentsScanner = new ComponentsScanner();
             jarFilePaths.forEach(jarFilePath -> {
-                ModuleDescriptor descriptor = moduleAnalyzer.analyze(jarFilePath);
+                ComponentsDescriptor descriptor = componentsScanner.analyze(jarFilePath);
                 if (jarFilePathModuleDescriptorMap.containsKey(jarFilePath)) {
                     jarFilePathModuleDescriptorMap.replace(jarFilePath, descriptor);
                 } else {
@@ -159,7 +159,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
             List<ComponentDescriptor> components = ComponentScanner.scan(jarFilePath);
             String moduleName = MavenUtils.getMavenProject(project, module.getName()).get().getDisplayName();
 
-            ModuleDescriptor descriptor = new ModuleDescriptor(moduleName, components);
+            ComponentsDescriptor descriptor = new ComponentsDescriptor(moduleName, components);
             if (jarFilePathModuleDescriptorMap.containsKey(jarFilePath)) {
                 jarFilePathModuleDescriptorMap.replace(jarFilePath, descriptor);
             } else {

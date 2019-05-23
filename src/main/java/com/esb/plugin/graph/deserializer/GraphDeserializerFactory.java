@@ -2,12 +2,12 @@ package com.esb.plugin.graph.deserializer;
 
 import com.esb.api.exception.ESBException;
 import com.esb.internal.commons.JsonParser;
-import com.esb.plugin.component.choice.ChoiceDeserializer;
-import com.esb.plugin.component.flowreference.FlowReferenceDeserializer;
-import com.esb.plugin.component.fork.ForkDeserializer;
-import com.esb.plugin.component.generic.GenericComponentDeserializer;
-import com.esb.plugin.component.stop.StopDeserializer;
-import com.esb.plugin.component.unknown.UnknownDeserializer;
+import com.esb.plugin.component.type.choice.ChoiceDeserializer;
+import com.esb.plugin.component.type.flowreference.FlowReferenceDeserializer;
+import com.esb.plugin.component.type.fork.ForkDeserializer;
+import com.esb.plugin.component.type.generic.GenericComponentDeserializer;
+import com.esb.plugin.component.type.stop.StopDeserializer;
+import com.esb.plugin.component.type.unknown.UnknownDeserializer;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.system.component.*;
 import org.json.JSONObject;

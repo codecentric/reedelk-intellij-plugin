@@ -1,8 +1,8 @@
 package com.esb.plugin.designer.properties.renderer.type;
 
-import com.esb.plugin.component.ComponentData;
-import com.esb.plugin.component.ComponentPropertyDescriptor;
-import com.esb.plugin.component.EnumTypeDescriptor;
+import com.esb.plugin.component.domain.ComponentData;
+import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
+import com.esb.plugin.component.domain.EnumTypeDescriptor;
 import com.esb.plugin.designer.properties.widget.input.EnumDropDown;
 import com.esb.plugin.graph.GraphSnapshot;
 

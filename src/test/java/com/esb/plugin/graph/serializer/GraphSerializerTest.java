@@ -1,8 +1,8 @@
 package com.esb.plugin.graph.serializer;
 
 import com.esb.plugin.AbstractGraphTest;
-import com.esb.plugin.component.choice.ChoiceConditionRoutePair;
-import com.esb.plugin.component.choice.ChoiceNode;
+import com.esb.plugin.component.type.choice.ChoiceConditionRoutePair;
+import com.esb.plugin.component.type.choice.ChoiceNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.system.component.Choice;
 import org.junit.jupiter.api.Test;

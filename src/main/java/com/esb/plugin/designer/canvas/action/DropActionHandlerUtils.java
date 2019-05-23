@@ -1,6 +1,6 @@
 package com.esb.plugin.designer.canvas.action;
 
-import com.esb.plugin.component.ComponentDescriptor;
+import com.esb.plugin.component.domain.ComponentDescriptor;
 import com.intellij.openapi.diagnostic.Logger;
 
 import java.awt.datatransfer.DataFlavor;

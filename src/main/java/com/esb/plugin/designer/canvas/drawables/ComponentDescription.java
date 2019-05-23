@@ -1,11 +1,11 @@
 package com.esb.plugin.designer.canvas.drawables;
 
-import com.esb.plugin.component.ComponentData;
+import com.esb.plugin.component.domain.ComponentData;
 import com.intellij.ui.JBColor;
 
 import java.awt.*;
 
-import static com.esb.plugin.component.ComponentDescriptionDecorator.DESCRIPTION_PROPERTY_NAME;
+import static com.esb.plugin.component.domain.ComponentDescriptionDecorator.DESCRIPTION_PROPERTY_NAME;
 
 
 public class ComponentDescription extends AbstractText {

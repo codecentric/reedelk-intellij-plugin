@@ -1,12 +1,12 @@
 package com.esb.plugin.graph.serializer;
 
 import com.esb.api.exception.ESBException;
-import com.esb.plugin.component.choice.ChoiceSerializer;
-import com.esb.plugin.component.flowreference.FlowReferenceSerializer;
-import com.esb.plugin.component.fork.ForkSerializer;
-import com.esb.plugin.component.generic.GenericComponentSerializer;
-import com.esb.plugin.component.stop.StopSerializer;
-import com.esb.plugin.component.unknown.UnknownSerializer;
+import com.esb.plugin.component.type.choice.ChoiceSerializer;
+import com.esb.plugin.component.type.flowreference.FlowReferenceSerializer;
+import com.esb.plugin.component.type.fork.ForkSerializer;
+import com.esb.plugin.component.type.generic.GenericComponentSerializer;
+import com.esb.plugin.component.type.stop.StopSerializer;
+import com.esb.plugin.component.type.unknown.UnknownSerializer;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.system.component.*;
 

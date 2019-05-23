@@ -1,9 +1,9 @@
 package com.esb.plugin.graph.layout;
 
-import com.esb.plugin.component.ComponentData;
-import com.esb.plugin.component.ComponentDescriptor;
-import com.esb.plugin.component.choice.ChoiceNode;
-import com.esb.plugin.component.generic.GenericComponentNode;
+import com.esb.plugin.component.domain.ComponentData;
+import com.esb.plugin.component.domain.ComponentDescriptor;
+import com.esb.plugin.component.type.choice.ChoiceNode;
+import com.esb.plugin.component.type.generic.GenericComponentNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphProvider;
 import com.esb.plugin.graph.node.GraphNode;

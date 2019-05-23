@@ -1,14 +1,14 @@
 package com.esb.plugin.graph.node;
 
-import com.esb.plugin.component.ComponentData;
-import com.esb.plugin.component.ComponentDescriptionDecorator;
-import com.esb.plugin.component.ComponentDescriptor;
-import com.esb.plugin.component.choice.ChoiceNode;
-import com.esb.plugin.component.flowreference.FlowReferenceNode;
-import com.esb.plugin.component.fork.ForkNode;
-import com.esb.plugin.component.generic.GenericComponentNode;
-import com.esb.plugin.component.stop.StopNode;
-import com.esb.plugin.component.unknown.UnknownNode;
+import com.esb.plugin.component.domain.ComponentData;
+import com.esb.plugin.component.domain.ComponentDescriptionDecorator;
+import com.esb.plugin.component.domain.ComponentDescriptor;
+import com.esb.plugin.component.type.choice.ChoiceNode;
+import com.esb.plugin.component.type.flowreference.FlowReferenceNode;
+import com.esb.plugin.component.type.fork.ForkNode;
+import com.esb.plugin.component.type.generic.GenericComponentNode;
+import com.esb.plugin.component.type.stop.StopNode;
+import com.esb.plugin.component.type.unknown.UnknownNode;
 import com.esb.plugin.service.module.ComponentService;
 import com.esb.system.component.*;
 import com.google.common.collect.ImmutableMap;

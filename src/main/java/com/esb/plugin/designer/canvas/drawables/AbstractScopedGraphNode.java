@@ -1,6 +1,6 @@
 package com.esb.plugin.designer.canvas.drawables;
 
-import com.esb.plugin.component.ComponentData;
+import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.Drawable;
 import com.esb.plugin.graph.node.GraphNode;

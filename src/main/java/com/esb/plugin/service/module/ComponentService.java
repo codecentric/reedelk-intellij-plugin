@@ -1,7 +1,7 @@
 package com.esb.plugin.service.module;
 
-import com.esb.plugin.component.ComponentDescriptor;
-import com.esb.plugin.service.module.impl.esbmodule.ModuleDescriptor;
+import com.esb.plugin.component.domain.ComponentDescriptor;
+import com.esb.plugin.component.domain.ComponentsDescriptor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleServiceManager;
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +16,6 @@ public interface ComponentService {
 
     ComponentDescriptor componentDescriptorByName(String componentFullyQualifiedName);
 
-    Collection<ModuleDescriptor> getModulesDescriptors();
+    Collection<ComponentsDescriptor> getModulesDescriptors();
 
 }

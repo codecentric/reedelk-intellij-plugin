@@ -1,10 +1,9 @@
 package com.esb.plugin.designer.palette;
 
 import com.esb.plugin.commons.Icons;
-import com.esb.plugin.component.ComponentTransferableHandler;
+import com.esb.plugin.component.domain.ComponentsDescriptor;
+import com.esb.plugin.component.scanner.ComponentListUpdateNotifier;
 import com.esb.plugin.service.module.ComponentService;
-import com.esb.plugin.service.module.impl.esbcomponent.ComponentListUpdateNotifier;
-import com.esb.plugin.service.module.impl.esbmodule.ModuleDescriptor;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
@@ -71,13 +70,13 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
 
     private void updatePaletteComponentsList() {
 
-        Collection<ModuleDescriptor> descriptors = ComponentService.getInstance(module).getModulesDescriptors();
+        Collection<ComponentsDescriptor> descriptors = ComponentService.getInstance(module).getModulesDescriptors();
         SwingUtilities.invokeLater(() -> {
             root.removeAllChildren();
 
-            descriptors.forEach(moduleDescriptor -> {
-                DefaultMutableTreeNode moduleRoot = new DefaultMutableTreeNode(moduleDescriptor.getName());
-                moduleDescriptor.getModuleComponents().forEach(descriptor -> {
+            descriptors.forEach(componentsDescriptor -> {
+                DefaultMutableTreeNode moduleRoot = new DefaultMutableTreeNode(componentsDescriptor.getName());
+                componentsDescriptor.getModuleComponents().forEach(descriptor -> {
                     if (!descriptor.isHidden()) {
                         moduleRoot.add(new DefaultMutableTreeNode(descriptor));
                     }

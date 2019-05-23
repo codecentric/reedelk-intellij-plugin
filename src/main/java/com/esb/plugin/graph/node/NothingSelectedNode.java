@@ -1,6 +1,6 @@
 package com.esb.plugin.graph.node;
 
-import com.esb.plugin.component.ComponentData;
+import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.graph.FlowGraph;
 
 import java.awt.*;

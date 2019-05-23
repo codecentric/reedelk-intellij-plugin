@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.palette;
 
 
-import com.esb.plugin.component.ComponentDescriptor;
+import com.esb.plugin.component.domain.ComponentDescriptor;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

@@ -1,6 +1,6 @@
 package com.esb.plugin.designer.properties;
 
-import com.esb.plugin.component.ComponentData;
+import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.designer.SelectListener;
 import com.esb.plugin.designer.properties.renderer.node.NodePropertiesRendererFactory;
 import com.esb.plugin.graph.GraphSnapshot;

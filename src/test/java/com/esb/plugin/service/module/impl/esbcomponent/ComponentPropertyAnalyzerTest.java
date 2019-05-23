@@ -1,8 +1,11 @@
 package com.esb.plugin.service.module.impl.esbcomponent;
 
-import com.esb.plugin.component.ComponentPropertyDescriptor;
-import com.esb.plugin.component.EnumTypeDescriptor;
-import com.esb.plugin.component.TypeDescriptor;
+import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
+import com.esb.plugin.component.domain.EnumTypeDescriptor;
+import com.esb.plugin.component.domain.TypeDescriptor;
+import com.esb.plugin.component.scanner.ComponentAnalyzerContext;
+import com.esb.plugin.component.scanner.ComponentIconsAnalyzer;
+import com.esb.plugin.component.scanner.ComponentPropertyAnalyzer;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.FieldInfo;

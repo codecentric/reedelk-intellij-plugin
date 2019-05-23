@@ -1,7 +1,7 @@
 package com.esb.plugin.designer.properties.renderer.type;
 
 import com.esb.api.exception.ESBException;
-import com.esb.plugin.component.TypeDescriptor;
+import com.esb.plugin.component.domain.TypeDescriptor;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;

@@ -1,12 +1,12 @@
 package com.esb.plugin.graph.manager;
 
+import com.esb.plugin.component.scanner.ComponentListUpdateNotifier;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphProvider;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.SnapshotListener;
 import com.esb.plugin.graph.deserializer.GraphDeserializer;
 import com.esb.plugin.graph.serializer.GraphSerializer;
-import com.esb.plugin.service.module.impl.esbcomponent.ComponentListUpdateNotifier;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;

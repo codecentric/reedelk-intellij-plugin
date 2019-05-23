@@ -1,12 +1,12 @@
 package com.esb.plugin.graph.connector;
 
 import com.esb.api.exception.ESBException;
-import com.esb.plugin.component.choice.ChoiceConnectorBuilder;
-import com.esb.plugin.component.flowreference.FlowReferenceConnectorBuilder;
-import com.esb.plugin.component.fork.ForkConnectorBuilder;
-import com.esb.plugin.component.generic.GenericComponentConnectorBuilder;
-import com.esb.plugin.component.stop.StopConnectionBuilder;
-import com.esb.plugin.component.unknown.UnknownConnectionBuilder;
+import com.esb.plugin.component.type.choice.ChoiceConnectorBuilder;
+import com.esb.plugin.component.type.flowreference.FlowReferenceConnectorBuilder;
+import com.esb.plugin.component.type.fork.ForkConnectorBuilder;
+import com.esb.plugin.component.type.generic.GenericComponentConnectorBuilder;
+import com.esb.plugin.component.type.stop.StopConnectionBuilder;
+import com.esb.plugin.component.type.unknown.UnknownConnectionBuilder;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.system.component.*;

@@ -1,7 +1,7 @@
 package com.esb.plugin.converter;
 
-import com.esb.plugin.component.TypeDescriptor;
-import com.esb.plugin.component.unknown.UnknownPropertyType;
+import com.esb.plugin.component.domain.TypeDescriptor;
+import com.esb.plugin.component.type.unknown.UnknownPropertyType;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
