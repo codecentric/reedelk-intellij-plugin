@@ -18,7 +18,6 @@ dependencies {
     compile group: 'org.json', name: 'json', version: '20180813'
     compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.14.0'
     compile group: 'io.github.classgraph', name: 'classgraph', version: '4.8.25'
-    compile group: 'fr.inria.gforge.spoon', name: 'spoon-core', version: '7.5.0-beta-21'
     compile group: 'com.esb', name: 'api', version: '1.0.0-SNAPSHOT'
     compile group: 'com.esb', name: 'internal-rest-api', version: '1.0.0-SNAPSHOT'
     compile group: 'com.esb', name: 'internal-system-components', version: '1.0.0-SNAPSHOT'
