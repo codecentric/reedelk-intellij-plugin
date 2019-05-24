@@ -1,5 +1,6 @@
 {
   "implementor": "com.esb.system.component.Choice",
+  "description": "A simple description",
   "when": [
     {
       "condition": "1 == 1",

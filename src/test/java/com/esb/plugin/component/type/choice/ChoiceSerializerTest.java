@@ -1,5 +1,6 @@
 package com.esb.plugin.component.type.choice;
 
+import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.graph.FlowGraph;
@@ -61,6 +62,7 @@ public class ChoiceSerializerTest extends AbstractGraphTest {
 
         ComponentData component = choiceNode1.componentData();
         component.set(DATA_CONDITION_ROUTE_PAIRS, choiceRoute);
+        component.set(JsonParser.Implementor.description(), "A simple description");
 
         // When
         serializer.serialize(graph, sequence, choiceNode1, componentNode7);
