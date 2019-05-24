@@ -3,7 +3,9 @@ package com.esb.plugin.component.type.choice;
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.component.domain.ComponentData;
+import com.esb.plugin.fixture.Json;
 import com.esb.plugin.graph.FlowGraph;
+import com.esb.system.component.Choice;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,8 +15,6 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import java.util.List;
 
 import static com.esb.plugin.component.type.choice.ChoiceNode.DATA_CONDITION_ROUTE_PAIRS;
-import static com.esb.plugin.component.type.choice.ChoiceNode.DEFAULT_CONDITION_NAME;
-import static com.esb.plugin.fixture.Json.Choice;
 import static java.util.Arrays.asList;
 
 public class ChoiceSerializerTest extends AbstractGraphTest {
@@ -30,8 +30,6 @@ public class ChoiceSerializerTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlySerializeChoiceNode() {
         // Given
-        JSONArray sequence = new JSONArray();
-
         FlowGraph graph = graphProvider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
@@ -58,11 +56,13 @@ public class ChoiceSerializerTest extends AbstractGraphTest {
         List<ChoiceConditionRoutePair> choiceRoute = asList(
                 new ChoiceConditionRoutePair("1 == 1", componentNode3),
                 new ChoiceConditionRoutePair("1 != 0", componentNode2),
-                new ChoiceConditionRoutePair(DEFAULT_CONDITION_NAME, componentNode5));
+                new ChoiceConditionRoutePair(Choice.DEFAULT_CONDITION, componentNode5));
 
         ComponentData component = choiceNode1.componentData();
         component.set(DATA_CONDITION_ROUTE_PAIRS, choiceRoute);
         component.set(JsonParser.Implementor.description(), "A simple description");
+
+        JSONArray sequence = new JSONArray();
 
         // When
         serializer.serialize(graph, sequence, choiceNode1, componentNode7);
@@ -71,7 +71,7 @@ public class ChoiceSerializerTest extends AbstractGraphTest {
         JSONObject serializedObject = sequence.getJSONObject(0);
 
         String actualJson = serializedObject.toString(2);
-        String expectedJson = Choice.Sample.json();
+        String expectedJson = Json.Choice.Sample.json();
         JSONAssert.assertEquals(expectedJson, actualJson, true);
     }
 

@@ -9,7 +9,6 @@ import java.util.List;
 
 public class ChoiceNode extends AbstractScopedGraphNode {
 
-    public static final String DEFAULT_CONDITION_NAME = "otherwise";
     public static final String DATA_CONDITION_ROUTE_PAIRS = "conditionRoutePairs";
 
     private static final String EMPTY_CONDITION = "";

@@ -3,6 +3,7 @@ package com.esb.plugin.component.type.choice;
 import com.esb.plugin.AbstractDeserializerTest;
 import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.component.domain.ComponentData;
+import com.esb.plugin.fixture.Json;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +13,6 @@ import org.mockito.quality.Strictness;
 
 import java.util.List;
 
-import static com.esb.plugin.fixture.Json.Choice;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -29,7 +29,7 @@ class ChoiceDeserializerTest extends AbstractDeserializerTest {
     @Test
     void shouldDeserializeChoiceDefinitionCorrectly() {
         // Given
-        JSONObject choiceDefinition = new JSONObject(Choice.Sample.json());
+        JSONObject choiceDefinition = new JSONObject(Json.Choice.Sample.json());
 
         // When
         GraphNode lastNode = deserializer.deserialize(root, choiceDefinition);
@@ -51,7 +51,7 @@ class ChoiceDeserializerTest extends AbstractDeserializerTest {
 
     private void assertExistsConditionMatching(String expectedCondition, ChoiceNode targetNode) {
         ComponentData componentData = targetNode.componentData();
-        List<ChoiceConditionRoutePair> when = componentData.get("conditionRoutePairs");
+        List<ChoiceConditionRoutePair> when = componentData.get(ChoiceNode.DATA_CONDITION_ROUTE_PAIRS);
         boolean matchesCondition = when.stream().anyMatch(choiceConditionRoutePair ->
                 choiceConditionRoutePair.getCondition().equals(expectedCondition));
         assertThat(matchesCondition).isTrue();

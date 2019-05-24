@@ -8,12 +8,12 @@ import com.esb.plugin.graph.connector.ConnectorBuilder;
 import com.esb.plugin.graph.connector.ScopedNodeConnector;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.GraphNodeFactory;
+import com.esb.system.component.Choice;
 import com.intellij.openapi.module.Module;
 
 import java.util.List;
 
 import static com.esb.plugin.component.type.choice.ChoiceNode.DATA_CONDITION_ROUTE_PAIRS;
-import static com.esb.plugin.component.type.choice.ChoiceNode.DEFAULT_CONDITION_NAME;
 
 public class ChoiceConnectorBuilder implements ConnectorBuilder {
 
@@ -33,14 +33,15 @@ public class ChoiceConnectorBuilder implements ConnectorBuilder {
 
         ComponentData componentData = componentToAdd.componentData();
         List<ChoiceConditionRoutePair> nodeConditionMap =
-                (List<ChoiceConditionRoutePair>) componentData.get(DATA_CONDITION_ROUTE_PAIRS);
+                componentData.get(DATA_CONDITION_ROUTE_PAIRS);
 
         // TODO: This is duplicated code
         nodeConditionMap
                 .stream()
                 .filter(choiceConditionRoutePair -> choiceConditionRoutePair.getNext() == placeholder)
                 .findFirst()
-                .ifPresent(choiceConditionRoutePair -> choiceConditionRoutePair.setCondition(DEFAULT_CONDITION_NAME));
+                .ifPresent(choiceConditionRoutePair ->
+                        choiceConditionRoutePair.setCondition(Choice.DEFAULT_CONDITION));
 
         return new ScopedNodeConnector(graph, scopeInitialSubgraph);
     }
