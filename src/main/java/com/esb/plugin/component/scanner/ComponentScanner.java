@@ -14,28 +14,27 @@ import java.util.List;
 
 import static java.lang.String.format;
 
+
 public class ComponentScanner {
 
-    private static final Logger LOG = Logger.getInstance(ComponentScanner.class);
+    private final Logger LOG = Logger.getInstance(ComponentScanner.class);
 
-    public static List<ComponentDescriptor> scan(String moduleJarFilePath) {
+    public List<ComponentDescriptor> from(Package targetPackage) {
         ScanResult scanResult = instantiateScanner()
-                .overrideClasspath(moduleJarFilePath)
+                .whitelistPaths(PackageToPath.convert(targetPackage.getName()))
                 .scan();
         return processScanResult(scanResult);
     }
 
-    public static List<ComponentDescriptor> getComponentsFromPackage(String packageName) {
+    public List<ComponentDescriptor> from(String targetPath) {
         ScanResult scanResult = instantiateScanner()
-                .whitelistPackages(packageName)
-                .whitelistPaths(PackageToPath.convert(packageName))
+                .overrideClasspath(targetPath)
                 .scan();
         return processScanResult(scanResult);
     }
 
-    private static List<ComponentDescriptor> processScanResult(ScanResult scanResult) {
+    private List<ComponentDescriptor> processScanResult(ScanResult scanResult) {
         ComponentIconAndImageLoader extractor = new ComponentIconAndImageLoader(scanResult);
-
         List<ComponentDescriptor> componentDescriptors = new ArrayList<>();
         ClassInfoList classInfoList = scanResult.getClassesWithAnnotation(ESBComponent.class.getName());
         for (ClassInfo classInfo : classInfoList) {
@@ -52,11 +51,10 @@ public class ComponentScanner {
         return componentDescriptors;
     }
 
-    private static ClassGraph instantiateScanner() {
+    private ClassGraph instantiateScanner() {
         return new ClassGraph()
                 .enableFieldInfo()
                 .enableAnnotationInfo()
                 .ignoreFieldVisibility();
     }
-
 }
