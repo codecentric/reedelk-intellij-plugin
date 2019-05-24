@@ -63,9 +63,9 @@ public class ChoiceDeserializer extends AbstractDeserializer {
         nodesBelongingToScope.forEach(choiceNode::addToScope);
 
         ComponentData choiceData = choiceNode.componentData();
-        // TODO: Fix this! Cast here is very wrong
+
         List<ChoiceConditionRoutePair> choiceConditionRoutePairList =
-                (List<ChoiceConditionRoutePair>) choiceData.get(DATA_CONDITION_ROUTE_PAIRS);
+                choiceData.get(DATA_CONDITION_ROUTE_PAIRS);
 
         for (Map.Entry<GraphNode, String> entry : preNodeConditionMap.entrySet()) {
             // TODO: this is duplicated code

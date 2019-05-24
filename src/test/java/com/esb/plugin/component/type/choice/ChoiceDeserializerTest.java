@@ -50,9 +50,8 @@ class ChoiceDeserializerTest extends AbstractDeserializerTest {
     }
 
     private void assertExistsConditionMatching(String expectedCondition, ChoiceNode targetNode) {
-        // TODO: Fix this cast!
         ComponentData componentData = targetNode.componentData();
-        List<ChoiceConditionRoutePair> when = (List<ChoiceConditionRoutePair>) componentData.get("conditionRoutePairs");
+        List<ChoiceConditionRoutePair> when = componentData.get("conditionRoutePairs");
         boolean matchesCondition = when.stream().anyMatch(choiceConditionRoutePair ->
                 choiceConditionRoutePair.getCondition().equals(expectedCondition));
         assertThat(matchesCondition).isTrue();
