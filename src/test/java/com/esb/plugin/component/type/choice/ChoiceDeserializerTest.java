@@ -44,6 +44,10 @@ class ChoiceDeserializerTest extends AbstractDeserializerTest {
                 .and().predecessorOf(lastNode).containsExactly(componentNode1, componentNode4, componentNode6)
                 .and().nodesCountIs(9); // total nodes include: root, stop node and all the nodes belonging to this choice
 
+        PluginAssertion.assertThat(graph)
+                .node(choiceNode1)
+                .hasDataWithValue("description", "A simple description");
+
         assertExistsConditionMatching("1 == 1", choiceNode1);
         assertExistsConditionMatching("1 != 0", choiceNode1);
         assertExistsConditionMatching("otherwise", choiceNode1);

@@ -63,6 +63,7 @@ public class ChoiceDeserializer extends AbstractDeserializer {
         nodesBelongingToScope.forEach(choiceNode::addToScope);
 
         ComponentData choiceData = choiceNode.componentData();
+        choiceData.set(Implementor.description(), Implementor.description(componentDefinition));
 
         List<ChoiceConditionRoutePair> choiceConditionRoutePairList =
                 choiceData.get(DATA_CONDITION_ROUTE_PAIRS);
