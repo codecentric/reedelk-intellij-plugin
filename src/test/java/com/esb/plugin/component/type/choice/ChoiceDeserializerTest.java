@@ -13,6 +13,7 @@ import org.mockito.quality.Strictness;
 
 import java.util.List;
 
+import static com.esb.internal.commons.JsonParser.Implementor;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -42,11 +43,9 @@ class ChoiceDeserializerTest extends AbstractDeserializerTest {
                 .and().successorsOf(componentNode2).isOnly(componentNode4)
                 .and().successorsOf(componentNode5).isOnly(componentNode6)
                 .and().predecessorOf(lastNode).containsExactly(componentNode1, componentNode4, componentNode6)
-                .and().nodesCountIs(9); // total nodes include: root, stop node and all the nodes belonging to this choice
+                .and().nodesCountIs(9) // total nodes include: root, stop node and all the nodes belonging to this choice
+                .node(choiceNode1).hasDataWithValue(Implementor.description(), "A simple description");
 
-        PluginAssertion.assertThat(graph)
-                .node(choiceNode1)
-                .hasDataWithValue("description", "A simple description");
 
         assertExistsConditionMatching("1 == 1", choiceNode1);
         assertExistsConditionMatching("1 != 0", choiceNode1);
