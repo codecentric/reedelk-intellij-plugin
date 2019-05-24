@@ -20,7 +20,6 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
 
     private final Tree tree;
     private final Module module;
-    private final DefaultMutableTreeNode componentsTreeNode;
     private DefaultMutableTreeNode root;
 
     public PalettePanel(Module module) {
@@ -29,7 +28,7 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
         this.module = module;
 
         root = new DefaultMutableTreeNode("Root");
-        componentsTreeNode = new DefaultMutableTreeNode("Components");
+        DefaultMutableTreeNode componentsTreeNode = new DefaultMutableTreeNode("Components");
         root.add(componentsTreeNode);
 
         PaletteTreeCellRenderer renderer = new PaletteTreeCellRenderer();
@@ -58,6 +57,21 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
         updatePaletteComponentsList();
     }
 
+    private void updatePaletteComponentsList() {
+        Collection<ComponentsDescriptor> descriptors = ComponentService.getInstance(module).getModulesDescriptors();
+        SwingUtilities.invokeLater(() -> {
+            root.removeAllChildren();
+            descriptors.forEach(descriptor -> {
+                EsbModuleTreeNode treeNode = new EsbModuleTreeNode(descriptor);
+                treeNode.buildChildren();
+                root.add(treeNode);
+            });
+            DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+            model.reload();
+            expandRows();
+        });
+    }
+
     private void expandRows() {
         int j = tree.getRowCount();
         int i = 0;
@@ -68,27 +82,24 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
         }
     }
 
-    private void updatePaletteComponentsList() {
 
-        Collection<ComponentsDescriptor> descriptors = ComponentService.getInstance(module).getModulesDescriptors();
-        SwingUtilities.invokeLater(() -> {
-            root.removeAllChildren();
+    class EsbModuleTreeNode extends DefaultMutableTreeNode {
 
-            descriptors.forEach(componentsDescriptor -> {
-                DefaultMutableTreeNode moduleRoot = new DefaultMutableTreeNode(componentsDescriptor.getName());
-                componentsDescriptor.getModuleComponents().forEach(descriptor -> {
-                    if (!descriptor.isHidden()) {
-                        moduleRoot.add(new DefaultMutableTreeNode(descriptor));
-                    }
-                });
-                root.add(moduleRoot);
-            });
+        private final ComponentsDescriptor descriptor;
 
+        EsbModuleTreeNode(ComponentsDescriptor descriptor) {
+            this.userObject = descriptor.getName();
+            this.descriptor = descriptor;
+        }
 
-            DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
-            model.reload();
-            expandRows();
-        });
+        void buildChildren() {
+            descriptor
+                    .getModuleComponents()
+                    .stream()
+                    .filter(componentDescriptor -> !componentDescriptor.isHidden())
+                    .forEach(descriptor -> add(new DefaultMutableTreeNode(descriptor)));
+        }
     }
+
 
 }

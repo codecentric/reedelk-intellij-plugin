@@ -28,6 +28,8 @@ import java.util.stream.Collectors;
 
 public class ComponentServiceImpl implements ComponentService, MavenImportListener, CompilationStatusListener {
 
+    private static final String SYSTEM_COMPONENTS_MODULE_NAME = "Flow Control";
+
     private final Module module;
     private final Project project;
     private final ComponentListUpdateNotifier publisher;
@@ -147,11 +149,9 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                         }));
     }
 
-
     private ComponentsDescriptor scanSystemComponents() {
-        String moduleName = "Flow Control";
         List<ComponentDescriptor> flowControlComponents = componentScanner.from(Stop.class.getPackage());
-        return new ComponentsDescriptor(moduleName, flowControlComponents);
+        return new ComponentsDescriptor(SYSTEM_COMPONENTS_MODULE_NAME, flowControlComponents);
     }
 
     private Optional<ComponentDescriptor> findComponentMatching(Collection<ComponentsDescriptor> descriptors, String fullyQualifiedName) {
