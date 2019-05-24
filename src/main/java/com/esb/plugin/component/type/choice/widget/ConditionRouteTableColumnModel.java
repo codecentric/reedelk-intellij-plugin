@@ -6,7 +6,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 
-import static com.esb.plugin.component.domain.ComponentDescriptionDecorator.DESCRIPTION_PROPERTY_NAME;
+import static com.esb.internal.commons.JsonParser.Implementor;
 
 class ConditionRouteTableColumnModel extends DefaultTableColumnModel {
 
@@ -28,7 +28,7 @@ class ConditionRouteTableColumnModel extends DefaultTableColumnModel {
         @Override
         protected void setValue(Object value) {
             GraphNode node = (GraphNode) value;
-            String description = (String) node.componentData().get(DESCRIPTION_PROPERTY_NAME);
+            String description = (String) node.componentData().get(Implementor.description());
             setText(description);
         }
     }

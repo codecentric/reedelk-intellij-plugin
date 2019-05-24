@@ -1,12 +1,10 @@
 package com.esb.plugin.editor.designer.drawables;
 
+import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.component.domain.ComponentData;
 import com.intellij.ui.JBColor;
 
 import java.awt.*;
-
-import static com.esb.plugin.component.domain.ComponentDescriptionDecorator.DESCRIPTION_PROPERTY_NAME;
-
 
 public class ComponentDescription extends AbstractText {
 
@@ -18,7 +16,7 @@ public class ComponentDescription extends AbstractText {
 
     @Override
     protected String getText() {
-        return (String) componentData.get(DESCRIPTION_PROPERTY_NAME);
+        return (String) componentData.get(JsonParser.Implementor.description());
     }
 
     @Override

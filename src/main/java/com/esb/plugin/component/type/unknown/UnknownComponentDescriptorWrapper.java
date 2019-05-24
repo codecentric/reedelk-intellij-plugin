@@ -8,7 +8,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
-public class UnknownComponentDescriptorWrapper extends ComponentDescriptor {
+public class UnknownComponentDescriptorWrapper implements ComponentDescriptor {
 
     private final ComponentDescriptor wrapped;
 

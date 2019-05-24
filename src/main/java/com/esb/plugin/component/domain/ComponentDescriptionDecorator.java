@@ -7,13 +7,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static com.esb.internal.commons.JsonParser.Implementor;
+
 /**
  * Decorator which adds the default "Description" property to all registered components.
  */
 // TODO: Maybe Component Descriptor should be declared as interface instead.
-public class ComponentDescriptionDecorator extends ComponentDescriptor {
-
-    public static final String DESCRIPTION_PROPERTY_NAME = "description";
+public class ComponentDescriptionDecorator implements ComponentDescriptor {
 
     private ComponentDescriptor wrapped;
     private final ComponentPropertyDescriptor descriptionDescriptor;
@@ -23,7 +23,7 @@ public class ComponentDescriptionDecorator extends ComponentDescriptor {
 
         PrimitiveTypeDescriptor typeDescriptor = new PrimitiveTypeDescriptor(String.class);
         descriptionDescriptor = new ComponentPropertyDescriptor(
-                DESCRIPTION_PROPERTY_NAME, typeDescriptor, "Description", wrapped.getDisplayName(), false);
+                Implementor.description(), typeDescriptor, "Description", wrapped.getDisplayName(), false);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class ComponentDescriptionDecorator extends ComponentDescriptor {
 
     @Override
     public Optional<ComponentPropertyDescriptor> getPropertyDescriptor(String propertyName) {
-        if (propertyName.equals(DESCRIPTION_PROPERTY_NAME)) {
+        if (propertyName.equals(Implementor.description())) {
             return Optional.of(descriptionDescriptor);
         } else {
             return wrapped.getPropertyDescriptor(propertyName);
