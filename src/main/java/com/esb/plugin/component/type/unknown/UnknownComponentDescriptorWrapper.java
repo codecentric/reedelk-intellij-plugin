@@ -17,13 +17,13 @@ public class UnknownComponentDescriptorWrapper implements ComponentDescriptor {
     }
 
     @Override
-    public String getFullyQualifiedName() {
-        return wrapped.getFullyQualifiedName();
+    public Icon getIcon() {
+        return wrapped.getIcon();
     }
 
     @Override
-    public String getDisplayName() {
-        return wrapped.getDisplayName();
+    public Image getImage() {
+        return wrapped.getImage();
     }
 
     @Override
@@ -32,13 +32,13 @@ public class UnknownComponentDescriptorWrapper implements ComponentDescriptor {
     }
 
     @Override
-    public Icon getIcon() {
-        return wrapped.getIcon();
+    public String getDisplayName() {
+        return wrapped.getDisplayName();
     }
 
     @Override
-    public Image getImage() {
-        return wrapped.getImage();
+    public String getFullyQualifiedName() {
+        return wrapped.getFullyQualifiedName();
     }
 
     @Override
@@ -53,7 +53,7 @@ public class UnknownComponentDescriptorWrapper implements ComponentDescriptor {
 
     class UnknownComponentPropertyDescriptor extends ComponentPropertyDescriptor {
         UnknownComponentPropertyDescriptor(String propertyName) {
-            super(propertyName, new UnknownPropertyType(), "Unknown", null, false);
+            super(propertyName, new UnknownPropertyType(), "Unknown");
         }
     }
 

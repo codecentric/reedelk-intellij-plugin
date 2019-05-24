@@ -2,9 +2,7 @@ package com.esb.plugin.component.type.generic;
 
 import com.esb.plugin.AbstractDeserializerTest;
 import com.esb.plugin.assertion.PluginAssertion;
-import com.esb.plugin.component.domain.ComponentDescriptor;
-import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
-import com.esb.plugin.component.domain.PrimitiveTypeDescriptor;
+import com.esb.plugin.component.domain.*;
 import com.esb.plugin.fixture.ComponentNode1;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONObject;
@@ -30,7 +28,7 @@ class GenericComponentDeserializerTest extends AbstractDeserializerTest {
     @Test
     void shouldDeserializeGenericComponentCorrectly() {
         // Given
-        ComponentDescriptor descriptor = ComponentDescriptor.create()
+        ComponentDescriptor descriptor = DefaultComponentDescriptor.create()
                 .displayName("Test Component")
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .propertyDefinitions(asList(
@@ -62,7 +60,7 @@ class GenericComponentDeserializerTest extends AbstractDeserializerTest {
         return new ComponentPropertyDescriptor(
                 propertyName,
                 new PrimitiveTypeDescriptor(propertyClass),
-                "A property name", "", true);
+                "A property name", "", PropertyRequired.REQUIRED);
     }
 
 }

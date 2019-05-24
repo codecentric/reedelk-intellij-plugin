@@ -3,10 +3,7 @@ package com.esb.plugin.component.scanner;
 import com.esb.api.annotation.Default;
 import com.esb.api.annotation.Property;
 import com.esb.api.annotation.Required;
-import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
-import com.esb.plugin.component.domain.EnumTypeDescriptor;
-import com.esb.plugin.component.domain.PrimitiveTypeDescriptor;
-import com.esb.plugin.component.domain.TypeDescriptor;
+import com.esb.plugin.component.domain.*;
 import com.esb.plugin.converter.ValueConverterFactory;
 import io.github.classgraph.*;
 
@@ -39,7 +36,9 @@ public class ComponentPropertyAnalyzer {
 
         Object defaultValue = getDefaultValue(propertyInfo, propertyType);
 
-        boolean required = propertyInfo.hasAnnotation(Required.class.getName());
+        PropertyRequired required = propertyInfo.hasAnnotation(Required.class.getName()) ?
+                PropertyRequired.REQUIRED :
+                PropertyRequired.NOT_REQUIRED;
         return new ComponentPropertyDescriptor(propertyName, propertyType, displayName, defaultValue, required);
     }
 

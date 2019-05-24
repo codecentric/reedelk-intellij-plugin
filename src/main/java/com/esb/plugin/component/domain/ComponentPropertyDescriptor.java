@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class ComponentPropertyDescriptor {
 
-    private final boolean required;
+    private final PropertyRequired required;
     private final String displayName;
     private final String propertyName;
     private final Object defaultValue;
@@ -13,10 +13,24 @@ public class ComponentPropertyDescriptor {
     public ComponentPropertyDescriptor(
             final String propertyName,
             final TypeDescriptor propertyType,
+            final String displayName) {
+        this(propertyName, propertyType, displayName, null, PropertyRequired.NOT_REQUIRED);
+    }
+
+    public ComponentPropertyDescriptor(
+            final String propertyName,
+            final TypeDescriptor propertyType,
+            final String displayName,
+            final Object defaultValue) {
+        this(propertyName, propertyType, displayName, defaultValue, PropertyRequired.NOT_REQUIRED);
+    }
+
+    public ComponentPropertyDescriptor(
+            final String propertyName,
+            final TypeDescriptor propertyType,
             final String displayName,
             final Object defaultValue,
-            final boolean required) {
-
+            final PropertyRequired required) {
         checkState(propertyName != null, "property name");
         checkState(propertyType != null, "property type");
         this.required = required;
@@ -26,23 +40,23 @@ public class ComponentPropertyDescriptor {
         this.propertyType = propertyType;
     }
 
-    public String getPropertyName() {
-        return propertyName;
-    }
-
-    public TypeDescriptor getPropertyType() {
-        return propertyType;
-    }
-
-    public boolean isRequired() {
-        return required;
-    }
-
     public String getDisplayName() {
         return displayName;
     }
 
+    public PropertyRequired required() {
+        return required;
+    }
+
+    public String getPropertyName() {
+        return propertyName;
+    }
+
     public Object getDefaultValue() {
         return defaultValue;
+    }
+
+    public TypeDescriptor getPropertyType() {
+        return propertyType;
     }
 }

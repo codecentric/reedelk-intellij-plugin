@@ -1,10 +1,7 @@
 package com.esb.plugin.component.type.generic;
 
 import com.esb.plugin.AbstractGraphTest;
-import com.esb.plugin.component.domain.ComponentData;
-import com.esb.plugin.component.domain.ComponentDescriptor;
-import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
-import com.esb.plugin.component.domain.PrimitiveTypeDescriptor;
+import com.esb.plugin.component.domain.*;
 import com.esb.plugin.fixture.ComponentNode1;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
@@ -31,7 +28,7 @@ public class GenericComponentSerializerTest extends AbstractGraphTest {
     void shouldCorrectlySerializeGenericComponent() {
         // Given
         JSONArray sequence = new JSONArray();
-        ComponentData componentData = new ComponentData(ComponentDescriptor.create()
+        ComponentData componentData = new ComponentData(DefaultComponentDescriptor.create()
                 .propertyDefinitions(asList(
                         createPropertyDefinition("property1", String.class),
                         createPropertyDefinition("property2", String.class),
@@ -65,6 +62,6 @@ public class GenericComponentSerializerTest extends AbstractGraphTest {
                 new PrimitiveTypeDescriptor(propertyClass),
                 "A property name",
                 "",
-                true);
+                PropertyRequired.REQUIRED);
     }
 }

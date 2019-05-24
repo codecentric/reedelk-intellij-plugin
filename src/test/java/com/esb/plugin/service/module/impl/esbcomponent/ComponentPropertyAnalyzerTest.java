@@ -2,6 +2,7 @@ package com.esb.plugin.service.module.impl.esbcomponent;
 
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.domain.EnumTypeDescriptor;
+import com.esb.plugin.component.domain.PropertyRequired;
 import com.esb.plugin.component.domain.TypeDescriptor;
 import com.esb.plugin.component.scanner.ComponentAnalyzerContext;
 import com.esb.plugin.component.scanner.ComponentIconAndImageLoader;
@@ -65,7 +66,7 @@ class ComponentPropertyAnalyzerTest {
         ComponentPropertyDescriptor enumDescriptor = descriptor.get();
         assertThat(enumDescriptor.getPropertyName()).isEqualTo("property3");
         assertThat(enumDescriptor.getDisplayName()).isEqualTo("Enum Property");
-        assertThat(enumDescriptor.isRequired()).isFalse();
+        assertThat(enumDescriptor.required()).isEqualTo(PropertyRequired.NOT_REQUIRED);
 
         TypeDescriptor propertyType = enumDescriptor.getPropertyType();
         assertThat(propertyType).isInstanceOf(EnumTypeDescriptor.class);

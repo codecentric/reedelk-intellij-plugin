@@ -5,6 +5,7 @@ import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.commons.PackageToPath;
 import com.esb.plugin.component.domain.ComponentDescriptor;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
+import com.esb.plugin.component.domain.PropertyRequired;
 import com.esb.plugin.component.scanner.ComponentAnalyzer;
 import com.esb.plugin.component.scanner.ComponentAnalyzerContext;
 import com.esb.plugin.component.scanner.ComponentIconAndImageLoader;
@@ -59,8 +60,8 @@ class ComponentAnalyzerTest {
         assertThat(displayName).isEqualTo("Test Component");
 
         assertPropertiesNamesAreExactlyInAnyOrder(descriptor, "property1", "property2", "property3");
-        assertExistsPropertyDefinition(descriptor, "property1", "Property 1", 3, int.class, true);
-        assertExistsPropertyDefinition(descriptor, "property2", "Property 2", null, String.class, false);
+        assertExistsPropertyDefinition(descriptor, "property1", "Property 1", 3, int.class, PropertyRequired.REQUIRED);
+        assertExistsPropertyDefinition(descriptor, "property2", "Property 2", null, String.class, PropertyRequired.NOT_REQUIRED);
     }
 
     private void assertPropertiesNamesAreExactlyInAnyOrder(ComponentDescriptor descriptor, String... expectedPropertyNames) {
@@ -77,7 +78,7 @@ class ComponentAnalyzerTest {
                                                 String expectedDisplayName,
                                                 Object expectedDefaultValue,
                                                 Class<?> expectedPropertyType,
-                                                boolean expectedIsRequired) {
+                                                PropertyRequired expectedIsRequired) {
         Optional<ComponentPropertyDescriptor> propertyDescriptor = descriptor.getPropertyDescriptor(expectedPropertyName);
         assertThat(propertyDescriptor).isPresent();
         ComponentPropertyDescriptor definition = propertyDescriptor.get();
@@ -86,6 +87,6 @@ class ComponentAnalyzerTest {
         assertThat(definition.getPropertyName()).isEqualTo(expectedPropertyName);
         assertThat(definition.getDefaultValue()).isEqualTo(expectedDefaultValue);
         assertThat(definition.getPropertyType().type()).isEqualTo(expectedPropertyType);
-        assertThat(definition.isRequired()).isEqualTo(expectedIsRequired);
+        assertThat(definition.required()).isEqualTo(expectedIsRequired);
     }
 }

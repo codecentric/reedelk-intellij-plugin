@@ -2,8 +2,10 @@ package com.esb.plugin.component.domain;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.*;
+import java.util.Optional;
 
 public class DefaultComponentDescriptor implements ComponentDescriptor {
 
@@ -17,18 +19,37 @@ public class DefaultComponentDescriptor implements ComponentDescriptor {
     private DefaultComponentDescriptor() {
     }
 
+    @Override
+    public Icon getIcon() {
+        return icon;
+    }
+
+    @Override
+    public Image getImage() {
+        return image;
+    }
+
+    @Override
     public boolean isHidden() {
         return hidden;
     }
 
+    @Override
     public String getDisplayName() {
         return displayName;
     }
 
+    @Override
     public String getFullyQualifiedName() {
         return fullyQualifiedName;
     }
 
+    @Override
+    public List<ComponentPropertyDescriptor> getPropertiesDescriptors() {
+        return Collections.unmodifiableList(componentPropertyDescriptors);
+    }
+
+    @Override
     public Optional<ComponentPropertyDescriptor> getPropertyDescriptor(String propertyName) {
         return componentPropertyDescriptors
                 .stream()
@@ -36,33 +57,8 @@ public class DefaultComponentDescriptor implements ComponentDescriptor {
                 .findFirst();
     }
 
-    public List<ComponentPropertyDescriptor> getPropertiesDescriptors() {
-        return Collections.unmodifiableList(componentPropertyDescriptors);
-    }
-
-    public Icon getIcon() {
-        return icon;
-    }
-
-    public Image getImage() {
-        return image;
-    }
-
     public static Builder create() {
         return new Builder();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ComponentDescriptor that = (ComponentDescriptor) o;
-        return fullyQualifiedName.equals(that.getFullyQualifiedName());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(fullyQualifiedName);
     }
 
     public static class Builder {

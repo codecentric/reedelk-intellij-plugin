@@ -12,8 +12,9 @@ import static com.esb.internal.commons.JsonParser.Implementor;
 /**
  * Decorator which adds the default "Description" property to all registered components.
  */
-// TODO: Maybe Component Descriptor should be declared as interface instead.
 public class ComponentDescriptionDecorator implements ComponentDescriptor {
+
+    private static final String DESCRIPTION_PROPERTY_DISPLAY_NAME = "Description";
 
     private ComponentDescriptor wrapped;
     private final ComponentPropertyDescriptor descriptionDescriptor;
@@ -23,12 +24,27 @@ public class ComponentDescriptionDecorator implements ComponentDescriptor {
 
         PrimitiveTypeDescriptor typeDescriptor = new PrimitiveTypeDescriptor(String.class);
         descriptionDescriptor = new ComponentPropertyDescriptor(
-                Implementor.description(), typeDescriptor, "Description", wrapped.getDisplayName(), false);
+                Implementor.description(),
+                typeDescriptor,
+                DESCRIPTION_PROPERTY_DISPLAY_NAME,
+                wrapped.getDisplayName(),
+                PropertyRequired.NOT_REQUIRED);
     }
 
     @Override
-    public String getFullyQualifiedName() {
-        return wrapped.getFullyQualifiedName();
+    public Icon getIcon() {
+        return wrapped.getIcon();
+    }
+
+
+    @Override
+    public Image getImage() {
+        return wrapped.getImage();
+    }
+
+    @Override
+    public boolean isHidden() {
+        return wrapped.isHidden();
     }
 
     @Override
@@ -37,12 +53,18 @@ public class ComponentDescriptionDecorator implements ComponentDescriptor {
     }
 
     @Override
-    public Optional<ComponentPropertyDescriptor> getPropertyDescriptor(String propertyName) {
-        if (propertyName.equals(Implementor.description())) {
-            return Optional.of(descriptionDescriptor);
-        } else {
-            return wrapped.getPropertyDescriptor(propertyName);
-        }
+    public String getFullyQualifiedName() {
+        return wrapped.getFullyQualifiedName();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return wrapped.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return wrapped.hashCode();
     }
 
     @Override
@@ -57,28 +79,11 @@ public class ComponentDescriptionDecorator implements ComponentDescriptor {
     }
 
     @Override
-    public boolean isHidden() {
-        return wrapped.isHidden();
+    public Optional<ComponentPropertyDescriptor> getPropertyDescriptor(String propertyName) {
+        if (propertyName.equals(Implementor.description())) {
+            return Optional.of(descriptionDescriptor);
+        } else {
+            return wrapped.getPropertyDescriptor(propertyName);
+        }
     }
-
-    @Override
-    public Icon getIcon() {
-        return wrapped.getIcon();
-    }
-
-    @Override
-    public Image getImage() {
-        return wrapped.getImage();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return wrapped.equals(o);
-    }
-
-    @Override
-    public int hashCode() {
-        return wrapped.hashCode();
-    }
-
 }

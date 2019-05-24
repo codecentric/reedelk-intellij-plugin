@@ -1,7 +1,7 @@
 package com.esb.plugin.graph.layout;
 
 import com.esb.plugin.component.domain.ComponentData;
-import com.esb.plugin.component.domain.ComponentDescriptor;
+import com.esb.plugin.component.domain.DefaultComponentDescriptor;
 import com.esb.plugin.component.type.choice.ChoiceNode;
 import com.esb.plugin.component.type.generic.GenericComponentNode;
 import com.esb.plugin.graph.FlowGraph;
@@ -360,7 +360,7 @@ public class GraphSamples {
     }
 
     private ComponentData createComponent(String name) {
-        return new ComponentData(ComponentDescriptor.create()
+        return new ComponentData(DefaultComponentDescriptor.create()
                 .fullyQualifiedName(name)
                 .displayName(name)
                 .build());
