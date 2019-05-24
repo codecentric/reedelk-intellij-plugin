@@ -25,11 +25,11 @@ public class ChoiceSerializer extends AbstractScopedNodeSerializer {
 
         Implementor.name(componentData.getFullyQualifiedName(), choiceObject);
 
-        String description = (String) componentData.get(Implementor.description());
+        String description = componentData.get(Implementor.description());
+
         Implementor.description(description, choiceObject);
 
-        List<ChoiceConditionRoutePair> conditionRoutePairs =
-                (List<ChoiceConditionRoutePair>) componentData.get(ChoiceNode.DATA_CONDITION_ROUTE_PAIRS);
+        List<ChoiceConditionRoutePair> conditionRoutePairs = componentData.get(ChoiceNode.DATA_CONDITION_ROUTE_PAIRS);
 
         JSONArray whenArrayObject = new JSONArray();
 

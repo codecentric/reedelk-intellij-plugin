@@ -15,8 +15,9 @@ public class ComponentData {
         this.descriptor = descriptor;
     }
 
-    public Object get(String key) {
-        return componentData.get(key);
+    @SuppressWarnings("unchecked")
+    public <T> T get(String key) {
+        return (T) componentData.get(key);
     }
 
     public void set(String propertyName, Object propertyValue) {

@@ -22,7 +22,8 @@ public class NodeAssertion {
 
     public NodeAssertion hasDataWithValue(String propertyName, Object propertyValue) {
         ComponentData component = this.node.componentData();
-        assertThat(component.get(propertyName)).isEqualTo(propertyValue);
+        Object actualValue = component.get(propertyName);
+        assertThat(actualValue).isEqualTo(propertyValue);
         return this;
     }
 
