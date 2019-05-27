@@ -1,11 +1,16 @@
 package com.esb.plugin.component.scanner;
 
+import com.esb.api.annotation.ESBComponent;
+import com.esb.plugin.assertion.PluginAssertion;
+import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.domain.TypeEnumDescriptor;
 import com.esb.plugin.component.domain.TypePrimitiveDescriptor;
-import io.github.classgraph.ClassGraph;
-import io.github.classgraph.ScanResult;
+import io.github.classgraph.*;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 
@@ -16,7 +21,7 @@ class ComponentPropertyAnalyzerTest {
     private final TypeEnumDescriptor TEST_ENUM = new TypeEnumDescriptor(asList("VALUE1", "VALUE2", "VALUE3"), "VALUE1");
 
     private ComponentPropertyAnalyzer analyzer;
-    private ScanResult scanResult;
+    private ClassInfo testComponentClassInfo;
 
     @BeforeEach
     void setUp() {
@@ -28,52 +33,72 @@ class ComponentPropertyAnalyzerTest {
 
         ComponentAnalyzerContext context = new ComponentAnalyzerContext(scanResult);
         analyzer = new ComponentPropertyAnalyzer(context);
+
+        ClassInfoList classesWithAnnotation = scanResult.getClassesWithAnnotation(ESBComponent.class.getName());
+        testComponentClassInfo = classesWithAnnotation.get(0);
     }
 
     @Test
-    void shouldAnalyzeProperties() {
-        /**
+    void shouldCorrectlyAnalyzeIntTypeProperty() {
         // Given
-         ClassInfoList classesWithAnnotation = scanResult.getClassesWithAnnotation(ESBComponent.class.getName());
-         ClassInfo testComponentClassInfo = classesWithAnnotation.get(0);
-
+        FieldInfo property1 = testComponentClassInfo.getFieldInfo("property1");
 
         // When
-         ComponentDescriptor descriptor = analyzer.analyze(testComponentClassInfo);
+        Optional<ComponentPropertyDescriptor> propertyDescriptor = analyzer.analyze(property1);
 
+        // Then
+        PluginAssertion.assertThat(propertyDescriptor.get())
+                .hasName("property1")
+                .hasDisplayName("Property 1")
+                .hasDefaultValue(3)
+                .required()
+                .hasType(INT_TYPE);
+    }
 
-         PluginAssertion.assertThat(descriptor)
-         .isNotHidden()
-         .hasDisplayName("Test Component")
-         .hasFullyQualifiedName(TestComponent.class.getName())
+    @Test
+    void shouldCorrectlyAnalyzeStringTypeProperty() {
+        // Given
+        FieldInfo property2 = testComponentClassInfo.getFieldInfo("property2");
 
-         // Property 1
-         .hasProperty("property1")
-         .withDisplayName("Property 1")
-         .withDefaultValue(3)
-         .required()
-         .withType(INT_TYPE)
+        // When
+        Optional<ComponentPropertyDescriptor> propertyDescriptor = analyzer.analyze(property2);
 
-         // Property 2
-         .and()
-         .hasProperty("property2")
-         .withDisplayName("Property 2")
-         .withDefaultValue(null)
-         .notRequired()
-         .withType(STRING_TYPE)
+        // Then
+        PluginAssertion.assertThat(propertyDescriptor.get())
+                .hasName("property2")
+                .hasDisplayName("Property 2")
+                .hasDefaultValue(null)
+                .notRequired()
+                .hasType(STRING_TYPE);
+    }
 
-         // Property 3
-         .and()
-         .hasProperty("property3")
-         .withDisplayName("Enum Property")
-         .withDefaultValue("VALUE2")
-         .notRequired()
-         .withType(TEST_ENUM)
+    @Test
+    void shouldCorrectlyAnalyzeEnumTypeProperty() {
+        // Given
+        FieldInfo property3 = testComponentClassInfo.getFieldInfo("property3");
 
-         // Not exposed property
-         .and()
-         .doesNotHaveProperty("notExposedProperty");
-         */
+        // When
+        Optional<ComponentPropertyDescriptor> propertyDescriptor = analyzer.analyze(property3);
+
+        // Then
+        PluginAssertion.assertThat(propertyDescriptor.get())
+                .hasName("property3")
+                .hasDisplayName("Enum Property")
+                .hasDefaultValue("VALUE2")
+                .notRequired()
+                .hasType(TEST_ENUM);
+    }
+
+    @Test
+    void shouldCorrectlyReturnEmptyOptionalForNotExposedProperty() {
+        // Given
+        FieldInfo notExposedProperty = testComponentClassInfo.getFieldInfo("notExposedProperty");
+
+        // When
+        Optional<ComponentPropertyDescriptor> propertyDescriptor = analyzer.analyze(notExposedProperty);
+
+        // Then
+        Assertions.assertThat(propertyDescriptor).isNotPresent();
     }
 
 }

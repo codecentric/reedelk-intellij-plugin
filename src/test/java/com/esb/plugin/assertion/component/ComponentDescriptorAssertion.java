@@ -47,12 +47,6 @@ public class ComponentDescriptorAssertion {
         return this;
     }
 
-    public ComponentPropertyDescriptorAssertion hasProperty(String expectedProperty) {
-        Optional<ComponentPropertyDescriptor> optionalPropertyDescriptor = componentDescriptor.getPropertyDescriptor(expectedProperty);
-        assertThat(optionalPropertyDescriptor).isPresent();
-        return new ComponentPropertyDescriptorAssertion(optionalPropertyDescriptor.get(), this);
-    }
-
     public ComponentDescriptorAssertion doesNotHaveProperty(String notExpectedProperty) {
         Optional<ComponentPropertyDescriptor> optionalPropertyDescriptor = componentDescriptor.getPropertyDescriptor(notExpectedProperty);
         assertThat(optionalPropertyDescriptor).isNotPresent();
@@ -63,4 +57,5 @@ public class ComponentDescriptorAssertion {
         assertThat(componentDescriptor.getPropertiesDescriptors()).hasSize(expectedNumOfProperties);
         return this;
     }
+
 }

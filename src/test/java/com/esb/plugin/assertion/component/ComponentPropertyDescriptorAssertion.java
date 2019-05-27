@@ -9,15 +9,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ComponentPropertyDescriptorAssertion {
 
-    private final ComponentDescriptorAssertion parent;
     private final ComponentPropertyDescriptor propertyDescriptor;
 
-    public ComponentPropertyDescriptorAssertion(ComponentPropertyDescriptor propertyDescriptor, ComponentDescriptorAssertion parent) {
+    public ComponentPropertyDescriptorAssertion(ComponentPropertyDescriptor propertyDescriptor) {
         this.propertyDescriptor = propertyDescriptor;
-        this.parent = parent;
     }
 
-    public ComponentPropertyDescriptorAssertion withDisplayName(String expectedDisplayName) {
+    public ComponentPropertyDescriptorAssertion hasName(String expectedName) {
+        assertThat(propertyDescriptor.getPropertyName()).isEqualTo(expectedName);
+        return this;
+    }
+
+    public ComponentPropertyDescriptorAssertion hasDisplayName(String expectedDisplayName) {
         assertThat(propertyDescriptor.getDisplayName()).isEqualTo(expectedDisplayName);
         return this;
     }
@@ -32,18 +35,14 @@ public class ComponentPropertyDescriptorAssertion {
         return this;
     }
 
-    public ComponentPropertyDescriptorAssertion withDefaultValue(Object object) {
+    public ComponentPropertyDescriptorAssertion hasDefaultValue(Object object) {
         assertThat(propertyDescriptor.getDefaultValue()).isEqualTo(object);
         return this;
     }
 
-    public ComponentPropertyDescriptorAssertion withType(TypeDescriptor descriptor) {
+    public ComponentPropertyDescriptorAssertion hasType(TypeDescriptor descriptor) {
         assertThat(propertyDescriptor.getPropertyType()).isEqualTo(descriptor);
         return this;
-    }
-
-    public ComponentDescriptorAssertion and() {
-        return parent;
     }
 
 }

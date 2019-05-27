@@ -83,5 +83,4 @@ class ComponentAnalyzerTest {
                 .hasDisplayName("Test Component")
                 .hasFullyQualifiedName(TestComponent.class.getName());
     }
-
 }
