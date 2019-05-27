@@ -19,12 +19,15 @@ public class ComponentIconAndImageProvider {
 
     private static final Logger LOG = Logger.getInstance(ComponentIconAndImageProvider.class);
 
-    public ComponentIconAndImageProvider(ScanResult scanResult) {
+    private ComponentIconAndImageProvider() {
+    }
+
+    public static void loadFrom(ScanResult scanResult) {
         ResourceList allImages = scanResult.getResourcesWithExtension(Icons.PNG_EXTENSION);
         load(allImages);
     }
 
-    private void load(ResourceList resources) {
+    private static void load(ResourceList resources) {
         Map<String, ResourceList> resourceNameAndData = resources.asMap();
 
         for (Map.Entry<String, ResourceList> entry : resourceNameAndData.entrySet()) {
@@ -52,12 +55,12 @@ public class ComponentIconAndImageProvider {
         return resourcePath.substring(lastSlash + 1, resourcePath.length() - 4);
     }
 
-    private void registerImage(Resource resource, String mapKey) throws IOException {
+    private static void registerImage(Resource resource, String mapKey) throws IOException {
         Image image = ImageIO.read(resource.open());
         Images.Component.put(mapKey, image);
     }
 
-    private void registerIcon(Resource resource, String mapKey) throws IOException {
+    private static void registerIcon(Resource resource, String mapKey) throws IOException {
         Icon icon = new ImageIcon(ImageIO.read(resource.open()));
         Icons.Component.put(mapKey, icon);
     }

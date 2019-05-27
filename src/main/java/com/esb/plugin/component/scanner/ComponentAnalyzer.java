@@ -19,8 +19,8 @@ public class ComponentAnalyzer {
     private final ComponentAnalyzerContext context;
     private final ComponentPropertyAnalyzer propertyAnalyzer;
 
-    public ComponentAnalyzer(ComponentAnalyzerContext context) {
-        this.propertyAnalyzer = new ComponentPropertyAnalyzer(context);
+    ComponentAnalyzer(ComponentAnalyzerContext context, ComponentPropertyAnalyzer propertyAnalyzer) {
+        this.propertyAnalyzer = propertyAnalyzer;
         this.context = context;
     }
 

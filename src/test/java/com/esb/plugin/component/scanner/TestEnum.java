@@ -1,4 +1,4 @@
-package com.esb.plugin.service.module.impl.esbcomponent;
+package com.esb.plugin.component.scanner;
 
 public enum TestEnum {
 

@@ -8,23 +8,23 @@ import io.github.classgraph.ScanResult;
 import javax.swing.*;
 import java.awt.*;
 
-public class ComponentAnalyzerContext {
+class ComponentAnalyzerContext {
 
     private final ScanResult scanResult;
 
-    public ComponentAnalyzerContext(ScanResult scanResult, ComponentIconAndImageProvider componentIconAndImageProvider) {
+    ComponentAnalyzerContext(ScanResult scanResult) {
         this.scanResult = scanResult;
     }
 
-    public ClassInfo getClassInfo(String fullyQualifiedClassName) {
+    ClassInfo getClassInfo(String fullyQualifiedClassName) {
         return scanResult.getClassInfo(fullyQualifiedClassName);
     }
 
-    public Image getImageByComponentQualifiedName(String fullyQualifiedClassName) {
+    Image getImageByComponentQualifiedName(String fullyQualifiedClassName) {
         return Images.Component.get(fullyQualifiedClassName);
     }
 
-    public Icon getIconByComponentQualifiedName(String fullyQualifiedClassName) {
+    Icon getIconByComponentQualifiedName(String fullyQualifiedClassName) {
         return Icons.Component.get(fullyQualifiedClassName);
     }
 }

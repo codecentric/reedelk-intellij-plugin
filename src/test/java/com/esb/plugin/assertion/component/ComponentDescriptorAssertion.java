@@ -3,6 +3,8 @@ package com.esb.plugin.assertion.component;
 import com.esb.plugin.component.domain.ComponentDescriptor;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,6 +37,16 @@ public class ComponentDescriptorAssertion {
         return this;
     }
 
+    public ComponentDescriptorAssertion hasIcon(Icon expectedIcon) {
+        assertThat(componentDescriptor.getIcon()).isEqualTo(expectedIcon);
+        return this;
+    }
+
+    public ComponentDescriptorAssertion hasImage(Image expectedImage) {
+        assertThat(componentDescriptor.getImage()).isEqualTo(expectedImage);
+        return this;
+    }
+
     public ComponentPropertyDescriptorAssertion hasProperty(String expectedProperty) {
         Optional<ComponentPropertyDescriptor> optionalPropertyDescriptor = componentDescriptor.getPropertyDescriptor(expectedProperty);
         assertThat(optionalPropertyDescriptor).isPresent();
@@ -44,6 +56,11 @@ public class ComponentDescriptorAssertion {
     public ComponentDescriptorAssertion doesNotHaveProperty(String notExpectedProperty) {
         Optional<ComponentPropertyDescriptor> optionalPropertyDescriptor = componentDescriptor.getPropertyDescriptor(notExpectedProperty);
         assertThat(optionalPropertyDescriptor).isNotPresent();
+        return this;
+    }
+
+    public ComponentDescriptorAssertion propertyCount(int expectedNumOfProperties) {
+        assertThat(componentDescriptor.getPropertiesDescriptors()).hasSize(expectedNumOfProperties);
         return this;
     }
 }

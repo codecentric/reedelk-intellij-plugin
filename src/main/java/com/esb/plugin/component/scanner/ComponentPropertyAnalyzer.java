@@ -25,11 +25,11 @@ public class ComponentPropertyAnalyzer {
 
     private final ComponentAnalyzerContext context;
 
-    public ComponentPropertyAnalyzer(ComponentAnalyzerContext context) {
+    ComponentPropertyAnalyzer(ComponentAnalyzerContext context) {
         this.context = context;
     }
 
-    public Optional<ComponentPropertyDescriptor> analyze(FieldInfo fieldInfo) {
+    Optional<ComponentPropertyDescriptor> analyze(FieldInfo fieldInfo) {
         return fieldInfo.hasAnnotation(Property.class.getName()) ?
                 Optional.of(analyzeProperty(fieldInfo)) :
                 Optional.empty();

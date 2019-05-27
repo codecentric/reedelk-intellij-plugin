@@ -34,13 +34,11 @@ public class ComponentScanner {
     }
 
     private List<ComponentDescriptor> processScanResult(ScanResult scanResult) {
-        ComponentIconAndImageProvider iconAndImageProvider = new ComponentIconAndImageProvider(scanResult);
         List<ComponentDescriptor> componentDescriptors = new ArrayList<>();
         ClassInfoList classInfoList = scanResult.getClassesWithAnnotation(ESBComponent.class.getName());
         for (ClassInfo classInfo : classInfoList) {
             try {
-                ComponentAnalyzerContext context = new ComponentAnalyzerContext(scanResult, iconAndImageProvider);
-                ComponentAnalyzer componentAnalyzer = new ComponentAnalyzer(context);
+                ComponentAnalyzer componentAnalyzer = ComponentAnalyzerFactory.get(scanResult);
                 ComponentDescriptor descriptor = componentAnalyzer.analyze(classInfo);
                 componentDescriptors.add(descriptor);
             } catch (Exception e) {
