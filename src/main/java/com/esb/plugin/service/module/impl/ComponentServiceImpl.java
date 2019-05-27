@@ -3,7 +3,7 @@ package com.esb.plugin.service.module.impl;
 import com.esb.plugin.commons.ESBModuleInfo;
 import com.esb.plugin.commons.MavenUtils;
 import com.esb.plugin.component.domain.ComponentDescriptor;
-import com.esb.plugin.component.domain.ComponentsDescriptor;
+import com.esb.plugin.component.domain.ComponentsPackage;
 import com.esb.plugin.component.scanner.ComponentListUpdateNotifier;
 import com.esb.plugin.component.scanner.ComponentScanner;
 import com.esb.plugin.component.type.unknown.UnknownComponentDescriptorWrapper;
@@ -35,10 +35,10 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     private final ComponentListUpdateNotifier publisher;
     private final ComponentScanner componentScanner = new ComponentScanner();
 
-    private final ComponentsDescriptor systemComponents;
-    private final Map<String, ComponentsDescriptor> mavenJarComponentsMap = new HashMap<>();
+    private final ComponentsPackage systemComponents;
+    private final Map<String, ComponentsPackage> mavenJarComponentsMap = new HashMap<>();
 
-    private ComponentsDescriptor moduleComponents;
+    private ComponentsPackage moduleComponents;
 
 
     /**
@@ -87,8 +87,8 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     }
 
     @Override
-    public Collection<ComponentsDescriptor> getModulesDescriptors() {
-        List<ComponentsDescriptor> descriptors = new ArrayList<>(mavenJarComponentsMap.values());
+    public Collection<ComponentsPackage> getModulesDescriptors() {
+        List<ComponentsPackage> descriptors = new ArrayList<>(mavenJarComponentsMap.values());
         descriptors.add(systemComponents);
         if (moduleComponents != null) descriptors.add(moduleComponents);
         return Collections.unmodifiableCollection(descriptors);
@@ -125,7 +125,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                     .forEach(jarFilePath -> {
                         List<ComponentDescriptor> components = componentScanner.from(jarFilePath);
                         String moduleName = ESBModuleInfo.GetESBModuleName(jarFilePath);
-                        ComponentsDescriptor descriptor = new ComponentsDescriptor(moduleName, components);
+                        ComponentsPackage descriptor = new ComponentsPackage(moduleName, components);
                         mavenJarComponentsMap.put(jarFilePath, descriptor);
                         publisher.onComponentListUpdate();
                     });
@@ -144,18 +144,18 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                         .forEach(modulePath -> {
                             List<ComponentDescriptor> components = componentScanner.from(modulePath);
                             String moduleName = MavenUtils.getMavenProject(project, module.getName()).get().getDisplayName();
-                            moduleComponents = new ComponentsDescriptor(moduleName, components);
+                            moduleComponents = new ComponentsPackage(moduleName, components);
                             publisher.onComponentListUpdate();
                         }));
     }
 
-    private ComponentsDescriptor scanSystemComponents() {
+    private ComponentsPackage scanSystemComponents() {
         List<ComponentDescriptor> flowControlComponents = componentScanner.from(Stop.class.getPackage());
-        return new ComponentsDescriptor(SYSTEM_COMPONENTS_MODULE_NAME, flowControlComponents);
+        return new ComponentsPackage(SYSTEM_COMPONENTS_MODULE_NAME, flowControlComponents);
     }
 
-    private Optional<ComponentDescriptor> findComponentMatching(Collection<ComponentsDescriptor> descriptors, String fullyQualifiedName) {
-        for (ComponentsDescriptor descriptor : descriptors) {
+    private Optional<ComponentDescriptor> findComponentMatching(Collection<ComponentsPackage> descriptors, String fullyQualifiedName) {
+        for (ComponentsPackage descriptor : descriptors) {
             Optional<ComponentDescriptor> moduleComponent = descriptor.getModuleComponent(fullyQualifiedName);
             if (moduleComponent.isPresent()) {
                 return moduleComponent;

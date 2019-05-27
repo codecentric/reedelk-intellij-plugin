@@ -16,15 +16,15 @@ public class ComponentAnalyzerContext {
         this.scanResult = scanResult;
     }
 
-    ClassInfo getClassInfo(String fullyQualifiedClassName) {
+    public ClassInfo getClassInfo(String fullyQualifiedClassName) {
         return scanResult.getClassInfo(fullyQualifiedClassName);
     }
 
-    Image getImageByClassName(String fullyQualifiedClassName) {
+    public Image getImageByClassName(String fullyQualifiedClassName) {
         return Images.Component.get(fullyQualifiedClassName);
     }
 
-    Icon getIconByClassName(String fullyQualifiedClassName) {
+    public Icon getIconByClassName(String fullyQualifiedClassName) {
         return Icons.Component.get(fullyQualifiedClassName);
     }
 }

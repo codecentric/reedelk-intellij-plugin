@@ -1,7 +1,7 @@
 package com.esb.plugin.graph.serializer;
 
 import com.esb.plugin.component.domain.ComponentData;
-import com.esb.plugin.component.domain.DefaultComponentDescriptor;
+import com.esb.plugin.component.domain.ComponentDefaultDescriptor;
 import com.esb.plugin.component.type.stop.StopNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
@@ -43,7 +43,7 @@ public class GraphSerializer {
 
     static class UntilNoSuccessors extends StopNode {
         UntilNoSuccessors() {
-            super(new ComponentData(DefaultComponentDescriptor.create().build()));
+            super(new ComponentData(ComponentDefaultDescriptor.create().build()));
         }
     }
 }

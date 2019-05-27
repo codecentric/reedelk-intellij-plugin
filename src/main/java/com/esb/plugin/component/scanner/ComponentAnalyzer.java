@@ -2,9 +2,9 @@ package com.esb.plugin.component.scanner;
 
 import com.esb.api.annotation.ESBComponent;
 import com.esb.api.annotation.Hidden;
+import com.esb.plugin.component.domain.ComponentDefaultDescriptor;
 import com.esb.plugin.component.domain.ComponentDescriptor;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
-import com.esb.plugin.component.domain.DefaultComponentDescriptor;
 import io.github.classgraph.AnnotationInfo;
 import io.github.classgraph.AnnotationParameterValueList;
 import io.github.classgraph.ClassInfo;
@@ -26,17 +26,18 @@ public class ComponentAnalyzer {
 
     public ComponentDescriptor analyze(ClassInfo classInfo) {
         String displayName = getComponentDisplayName(classInfo);
-        return DefaultComponentDescriptor.create()
+        List<ComponentPropertyDescriptor> propertiesDescriptor = analyzeProperties(classInfo);
+        return ComponentDefaultDescriptor.create()
                 .fullyQualifiedName(classInfo.getName())
                 .displayName(displayName)
                 .paletteIcon(context.getIconByClassName(classInfo.getName()))
                 .icon(context.getImageByClassName(classInfo.getName()))
                 .hidden(isHidden(classInfo))
-                .propertyDefinitions(mapPropertyDefinitions(classInfo))
+                .propertyDescriptors(propertiesDescriptor)
                 .build();
     }
 
-    private List<ComponentPropertyDescriptor> mapPropertyDefinitions(ClassInfo classInfo) {
+    private List<ComponentPropertyDescriptor> analyzeProperties(ClassInfo classInfo) {
         return classInfo
                 .getFieldInfo()
                 .stream()

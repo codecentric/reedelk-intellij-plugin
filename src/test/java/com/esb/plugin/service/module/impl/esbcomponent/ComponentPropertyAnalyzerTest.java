@@ -1,9 +1,8 @@
 package com.esb.plugin.service.module.impl.esbcomponent;
 
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
-import com.esb.plugin.component.domain.EnumTypeDescriptor;
-import com.esb.plugin.component.domain.PropertyRequired;
 import com.esb.plugin.component.domain.TypeDescriptor;
+import com.esb.plugin.component.domain.TypeEnumDescriptor;
 import com.esb.plugin.component.scanner.ComponentAnalyzerContext;
 import com.esb.plugin.component.scanner.ComponentIconAndImageLoader;
 import com.esb.plugin.component.scanner.ComponentPropertyAnalyzer;
@@ -16,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
+import static com.esb.plugin.component.domain.ComponentPropertyDescriptor.PropertyRequired.NOT_REQUIRED;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ComponentPropertyAnalyzerTest {
@@ -66,13 +66,13 @@ class ComponentPropertyAnalyzerTest {
         ComponentPropertyDescriptor enumDescriptor = descriptor.get();
         assertThat(enumDescriptor.getPropertyName()).isEqualTo("property3");
         assertThat(enumDescriptor.getDisplayName()).isEqualTo("Enum Property");
-        assertThat(enumDescriptor.required()).isEqualTo(PropertyRequired.NOT_REQUIRED);
+        assertThat(enumDescriptor.required()).isEqualTo(NOT_REQUIRED);
 
         TypeDescriptor propertyType = enumDescriptor.getPropertyType();
-        assertThat(propertyType).isInstanceOf(EnumTypeDescriptor.class);
+        assertThat(propertyType).isInstanceOf(TypeEnumDescriptor.class);
 
-        EnumTypeDescriptor enumTypeDescriptor = (EnumTypeDescriptor) propertyType;
-        assertThat(enumTypeDescriptor.possibleValues()).containsExactly("VALUE1", "VALUE2", "VALUE3");
-        assertThat(enumTypeDescriptor.defaultValue()).isEqualTo("VALUE1");
+        TypeEnumDescriptor typeEnumDescriptor = (TypeEnumDescriptor) propertyType;
+        assertThat(typeEnumDescriptor.possibleValues()).containsExactly("VALUE1", "VALUE2", "VALUE3");
+        assertThat(typeEnumDescriptor.defaultValue()).isEqualTo("VALUE1");
     }
 }

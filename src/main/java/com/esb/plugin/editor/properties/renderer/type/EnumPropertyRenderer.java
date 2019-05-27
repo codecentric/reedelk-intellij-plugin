@@ -2,7 +2,7 @@ package com.esb.plugin.editor.properties.renderer.type;
 
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
-import com.esb.plugin.component.domain.EnumTypeDescriptor;
+import com.esb.plugin.component.domain.TypeEnumDescriptor;
 import com.esb.plugin.editor.properties.widget.input.EnumDropDown;
 import com.esb.plugin.graph.GraphSnapshot;
 
@@ -15,7 +15,7 @@ public class EnumPropertyRenderer implements TypePropertyRenderer {
     public JComponent render(ComponentPropertyDescriptor descriptor, ComponentData componentData, GraphSnapshot snapshot) {
         String propertyName = descriptor.getPropertyName();
 
-        EnumTypeDescriptor propertyType = (EnumTypeDescriptor) descriptor.getPropertyType();
+        TypeEnumDescriptor propertyType = (TypeEnumDescriptor) descriptor.getPropertyType();
         Object propertyValue = componentData.get(propertyName);
 
         EnumDropDown dropDown = new EnumDropDown(propertyType.possibleValues());

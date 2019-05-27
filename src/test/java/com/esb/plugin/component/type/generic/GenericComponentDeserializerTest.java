@@ -2,7 +2,10 @@ package com.esb.plugin.component.type.generic;
 
 import com.esb.plugin.AbstractDeserializerTest;
 import com.esb.plugin.assertion.PluginAssertion;
-import com.esb.plugin.component.domain.*;
+import com.esb.plugin.component.domain.ComponentDefaultDescriptor;
+import com.esb.plugin.component.domain.ComponentDescriptor;
+import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
+import com.esb.plugin.component.domain.TypePrimitiveDescriptor;
 import com.esb.plugin.fixture.ComponentNode1;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONObject;
@@ -11,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import static com.esb.plugin.component.domain.ComponentPropertyDescriptor.PropertyRequired.REQUIRED;
 import static com.esb.plugin.fixture.Json.GenericComponent;
 import static java.util.Arrays.asList;
 
@@ -28,10 +32,10 @@ class GenericComponentDeserializerTest extends AbstractDeserializerTest {
     @Test
     void shouldDeserializeGenericComponentCorrectly() {
         // Given
-        ComponentDescriptor descriptor = DefaultComponentDescriptor.create()
+        ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
                 .displayName("Test Component")
                 .fullyQualifiedName(ComponentNode1.class.getName())
-                .propertyDefinitions(asList(
+                .propertyDescriptors(asList(
                         createPropertyDefinition("property1", String.class),
                         createPropertyDefinition("property2", String.class),
                         createPropertyDefinition("property3", String.class)))
@@ -59,8 +63,8 @@ class GenericComponentDeserializerTest extends AbstractDeserializerTest {
     private ComponentPropertyDescriptor createPropertyDefinition(String propertyName, Class<?> propertyClass) {
         return new ComponentPropertyDescriptor(
                 propertyName,
-                new PrimitiveTypeDescriptor(propertyClass),
-                "A property name", "", PropertyRequired.REQUIRED);
+                new TypePrimitiveDescriptor(propertyClass),
+                "A property name", "", REQUIRED);
     }
 
 }

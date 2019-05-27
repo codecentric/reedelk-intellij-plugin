@@ -1,8 +1,8 @@
 package com.esb.plugin;
 
 import com.esb.plugin.component.domain.ComponentData;
+import com.esb.plugin.component.domain.ComponentDefaultDescriptor;
 import com.esb.plugin.component.domain.ComponentDescriptor;
-import com.esb.plugin.component.domain.DefaultComponentDescriptor;
 import com.esb.plugin.component.type.choice.ChoiceNode;
 import com.esb.plugin.component.type.flowreference.FlowReferenceNode;
 import com.esb.plugin.component.type.fork.ForkNode;
@@ -99,7 +99,7 @@ public abstract class AbstractGraphTest {
     }
 
     private static <T extends GraphNode> T createGraphNodeInstance(Class componentClazz, Class<T> graphNodeClazz) {
-        ComponentDescriptor descriptor = DefaultComponentDescriptor.create()
+        ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
                 .fullyQualifiedName(componentClazz.getName())
                 .build();
         return createGraphNodeInstance(graphNodeClazz, descriptor);

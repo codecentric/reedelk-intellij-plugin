@@ -3,7 +3,10 @@ package com.esb.plugin.component.scanner;
 import com.esb.api.annotation.Default;
 import com.esb.api.annotation.Property;
 import com.esb.api.annotation.Required;
-import com.esb.plugin.component.domain.*;
+import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
+import com.esb.plugin.component.domain.TypeDescriptor;
+import com.esb.plugin.component.domain.TypeEnumDescriptor;
+import com.esb.plugin.component.domain.TypePrimitiveDescriptor;
 import com.esb.plugin.converter.ValueConverterFactory;
 import io.github.classgraph.*;
 
@@ -11,6 +14,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.esb.plugin.component.domain.ComponentPropertyDescriptor.PropertyRequired;
+import static com.esb.plugin.component.domain.ComponentPropertyDescriptor.PropertyRequired.NOT_REQUIRED;
+import static com.esb.plugin.component.domain.ComponentPropertyDescriptor.PropertyRequired.REQUIRED;
 import static com.esb.plugin.converter.ValueConverterFactory.isKnownType;
 
 public class ComponentPropertyAnalyzer {
@@ -36,9 +42,7 @@ public class ComponentPropertyAnalyzer {
 
         Object defaultValue = getDefaultValue(propertyInfo, propertyType);
 
-        PropertyRequired required = propertyInfo.hasAnnotation(Required.class.getName()) ?
-                PropertyRequired.REQUIRED :
-                PropertyRequired.NOT_REQUIRED;
+        PropertyRequired required = propertyInfo.hasAnnotation(Required.class.getName()) ? REQUIRED : NOT_REQUIRED;
         return new ComponentPropertyDescriptor(propertyName, propertyType, displayName, defaultValue, required);
     }
 
@@ -54,14 +58,14 @@ public class ComponentPropertyAnalyzer {
     }
 
     private TypeDescriptor processBaseType(BaseTypeSignature typeSignature) {
-        return new PrimitiveTypeDescriptor(typeSignature.getType());
+        return new TypePrimitiveDescriptor(typeSignature.getType());
     }
 
     private TypeDescriptor processClassRefType(ClassRefTypeSignature typeSignature) {
         String fullyQualifiedClassName = typeSignature.getFullyQualifiedClassName();
         if (isKnownType(fullyQualifiedClassName)) {
             try {
-                return new PrimitiveTypeDescriptor(Class.forName(fullyQualifiedClassName));
+                return new TypePrimitiveDescriptor(Class.forName(fullyQualifiedClassName));
             } catch (ClassNotFoundException e) {
                 // if it is a known type, then the class must be resolvable.
                 // Otherwise the @PropertyValueConverterFactory class would not even compile.
@@ -75,7 +79,7 @@ public class ComponentPropertyAnalyzer {
     }
 
     // TODO: Test corner cases like when there is an enum with no fields!
-    private EnumTypeDescriptor processEnumType(ClassRefTypeSignature enumRefType) {
+    private TypeEnumDescriptor processEnumType(ClassRefTypeSignature enumRefType) {
         ClassInfo enumClassInfo = context.getClassInfo(enumRefType.getFullyQualifiedClassName());
         FieldInfoList declaredFieldInfo = enumClassInfo.getDeclaredFieldInfo();
         List<String> enumNames = declaredFieldInfo
@@ -83,7 +87,7 @@ public class ComponentPropertyAnalyzer {
                 .filter(fieldInfo -> fieldInfo.getTypeDescriptor() instanceof ClassRefTypeSignature)
                 .map(FieldInfo::getName)
                 .collect(Collectors.toList());
-        return new EnumTypeDescriptor(enumNames, enumNames.get(0));
+        return new TypeEnumDescriptor(enumNames, enumNames.get(0));
     }
 
     private boolean isEnumeration(String fullyQualifiedClassName) {

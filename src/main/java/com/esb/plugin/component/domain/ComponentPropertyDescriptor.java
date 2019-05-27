@@ -4,6 +4,11 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class ComponentPropertyDescriptor {
 
+    public enum PropertyRequired {
+        REQUIRED,
+        NOT_REQUIRED;
+    }
+
     private final PropertyRequired required;
     private final String displayName;
     private final String propertyName;
@@ -59,4 +64,5 @@ public class ComponentPropertyDescriptor {
     public TypeDescriptor getPropertyType() {
         return propertyType;
     }
+
 }

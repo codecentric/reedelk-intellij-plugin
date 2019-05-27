@@ -19,6 +19,7 @@ public class TestComponent implements Processor {
     private String property2;
 
     @Property("Enum Property")
+    @Default("VALUE2")
     private TestEnum property3;
 
     private int notExposedProperty;

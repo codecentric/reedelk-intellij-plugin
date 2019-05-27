@@ -7,16 +7,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class DefaultComponentDescriptor implements ComponentDescriptor {
+public class ComponentDefaultDescriptor implements ComponentDescriptor {
+
+    private boolean hidden;
 
     private Icon icon;
     private Image image;
-    private boolean hidden;
     private String displayName;
     private String fullyQualifiedName;
     private List<ComponentPropertyDescriptor> componentPropertyDescriptors = new ArrayList<>();
 
-    private DefaultComponentDescriptor() {
+    private ComponentDefaultDescriptor() {
     }
 
     @Override
@@ -69,9 +70,9 @@ public class DefaultComponentDescriptor implements ComponentDescriptor {
         private Image image;
         private String displayName;
         private String fullyQualifiedName;
-        private java.util.List<ComponentPropertyDescriptor> componentPropertyDescriptors = new ArrayList<>();
+        private List<ComponentPropertyDescriptor> componentPropertyDescriptors = new ArrayList<>();
 
-        public Builder propertyDefinitions(List<ComponentPropertyDescriptor> componentPropertyDescriptors) {
+        public Builder propertyDescriptors(List<ComponentPropertyDescriptor> componentPropertyDescriptors) {
             this.componentPropertyDescriptors.addAll(componentPropertyDescriptors);
             return this;
         }
@@ -102,7 +103,7 @@ public class DefaultComponentDescriptor implements ComponentDescriptor {
         }
 
         public ComponentDescriptor build() {
-            DefaultComponentDescriptor descriptor = new DefaultComponentDescriptor();
+            ComponentDefaultDescriptor descriptor = new ComponentDefaultDescriptor();
             descriptor.hidden = hidden;
             descriptor.displayName = displayName;
             descriptor.icon = icon;
@@ -112,5 +113,4 @@ public class DefaultComponentDescriptor implements ComponentDescriptor {
             return descriptor;
         }
     }
-
 }

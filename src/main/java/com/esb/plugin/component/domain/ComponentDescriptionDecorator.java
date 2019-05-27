@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.esb.internal.commons.JsonParser.Implementor;
+import static com.esb.plugin.component.domain.ComponentPropertyDescriptor.PropertyRequired.NOT_REQUIRED;
 
 /**
  * Decorator which adds the default "Description" property to all registered components.
@@ -22,13 +23,13 @@ public class ComponentDescriptionDecorator implements ComponentDescriptor {
     public ComponentDescriptionDecorator(ComponentDescriptor descriptor) {
         this.wrapped = descriptor;
 
-        PrimitiveTypeDescriptor typeDescriptor = new PrimitiveTypeDescriptor(String.class);
+        TypePrimitiveDescriptor typeDescriptor = new TypePrimitiveDescriptor(String.class);
         descriptionDescriptor = new ComponentPropertyDescriptor(
                 Implementor.description(),
                 typeDescriptor,
                 DESCRIPTION_PROPERTY_DISPLAY_NAME,
                 wrapped.getDisplayName(),
-                PropertyRequired.NOT_REQUIRED);
+                NOT_REQUIRED);
     }
 
     @Override

@@ -4,8 +4,8 @@ import com.esb.api.annotation.ESBComponent;
 import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.commons.PackageToPath;
 import com.esb.plugin.component.domain.ComponentDescriptor;
-import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
-import com.esb.plugin.component.domain.PropertyRequired;
+import com.esb.plugin.component.domain.TypeEnumDescriptor;
+import com.esb.plugin.component.domain.TypePrimitiveDescriptor;
 import com.esb.plugin.component.scanner.ComponentAnalyzer;
 import com.esb.plugin.component.scanner.ComponentAnalyzerContext;
 import com.esb.plugin.component.scanner.ComponentIconAndImageLoader;
@@ -16,16 +16,23 @@ import io.github.classgraph.ScanResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
-import java.util.Optional;
-
-import static java.util.stream.Collectors.toList;
-import static org.assertj.core.api.Assertions.assertThat;
+import static java.util.Arrays.asList;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
 class ComponentAnalyzerTest {
+
+    private final TypePrimitiveDescriptor INT_TYPE = new TypePrimitiveDescriptor(int.class);
+    private final TypePrimitiveDescriptor STRING_TYPE = new TypePrimitiveDescriptor(String.class);
+    private final TypeEnumDescriptor TEST_ENUM = new TypeEnumDescriptor(asList("VALUE1", "VALUE2", "VALUE3"), "VALUE1");
+
+    @Mock
+    private ComponentIconAndImageLoader imgLoader;
 
     private ScanResult scanResult;
     private ComponentAnalyzer analyzer;
@@ -40,9 +47,15 @@ class ComponentAnalyzerTest {
                 .ignoreFieldVisibility()
                 .scan();
 
-        ComponentIconAndImageLoader iconsAnalyzer = new ComponentIconAndImageLoader(scanResult);
+        ComponentAnalyzerContext context = Mockito.spy(new ComponentAnalyzerContext(scanResult, imgLoader));
+        doReturn(null)
+                .when(context)
+                .getIconByClassName(anyString());
 
-        ComponentAnalyzerContext context = new ComponentAnalyzerContext(scanResult, iconsAnalyzer);
+        doReturn(null)
+                .when(context)
+                .getImageByClassName(anyString());
+
         analyzer = new ComponentAnalyzer(context);
     }
 
@@ -57,39 +70,36 @@ class ComponentAnalyzerTest {
 
         // Then
         PluginAssertion.assertThat(descriptor)
+                .isNotHidden()
                 .hasDisplayName("Test Component")
-                .hasProperty("property1");
-        String displayName = descriptor.getDisplayName();
-        assertThat(displayName).isEqualTo("Test Component");
+                .hasFullyQualifiedName(TestComponent.class.getName())
 
-        assertPropertiesNamesAreExactlyInAnyOrder(descriptor, "property1", "property2", "property3");
-        assertExistsPropertyDefinition(descriptor, "property1", "Property 1", 3, int.class, PropertyRequired.REQUIRED);
-        assertExistsPropertyDefinition(descriptor, "property2", "Property 2", null, String.class, PropertyRequired.NOT_REQUIRED);
+                // Property 1
+                .hasProperty("property1")
+                .withDisplayName("Property 1")
+                .withDefaultValue(3)
+                .required()
+                .withType(INT_TYPE)
+
+                // Property 2
+                .and()
+                .hasProperty("property2")
+                .withDisplayName("Property 2")
+                .withDefaultValue(null)
+                .notRequired()
+                .withType(STRING_TYPE)
+
+                // Property 3
+                .and()
+                .hasProperty("property3")
+                .withDisplayName("Enum Property")
+                .withDefaultValue("VALUE2")
+                .notRequired()
+                .withType(TEST_ENUM)
+
+                // Not exposed property
+                .and()
+                .doesNotHaveProperty("notExposedProperty");
     }
 
-    private void assertPropertiesNamesAreExactlyInAnyOrder(ComponentDescriptor descriptor, String... expectedPropertyNames) {
-        List<String> actualPropertyNames = descriptor
-                .getPropertiesDescriptors()
-                .stream()
-                .map(ComponentPropertyDescriptor::getPropertyName)
-                .collect(toList());
-        assertThat(actualPropertyNames).containsExactlyInAnyOrder(expectedPropertyNames);
-    }
-
-    private void assertExistsPropertyDefinition(ComponentDescriptor descriptor,
-                                                String expectedPropertyName,
-                                                String expectedDisplayName,
-                                                Object expectedDefaultValue,
-                                                Class<?> expectedPropertyType,
-                                                PropertyRequired expectedIsRequired) {
-        Optional<ComponentPropertyDescriptor> propertyDescriptor = descriptor.getPropertyDescriptor(expectedPropertyName);
-        assertThat(propertyDescriptor).isPresent();
-        ComponentPropertyDescriptor definition = propertyDescriptor.get();
-
-        assertThat(definition.getDisplayName()).isEqualTo(expectedDisplayName);
-        assertThat(definition.getPropertyName()).isEqualTo(expectedPropertyName);
-        assertThat(definition.getDefaultValue()).isEqualTo(expectedDefaultValue);
-        assertThat(definition.getPropertyType().type()).isEqualTo(expectedPropertyType);
-        assertThat(definition.required()).isEqualTo(expectedIsRequired);
-    }
 }

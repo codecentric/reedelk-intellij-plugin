@@ -1,7 +1,7 @@
 package com.esb.plugin.editor.palette;
 
 import com.esb.plugin.commons.Icons;
-import com.esb.plugin.component.domain.ComponentsDescriptor;
+import com.esb.plugin.component.domain.ComponentsPackage;
 import com.esb.plugin.component.scanner.ComponentListUpdateNotifier;
 import com.esb.plugin.service.module.ComponentService;
 import com.intellij.openapi.module.Module;
@@ -58,7 +58,7 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
     }
 
     private void updatePaletteComponentsList() {
-        Collection<ComponentsDescriptor> descriptors = ComponentService.getInstance(module).getModulesDescriptors();
+        Collection<ComponentsPackage> descriptors = ComponentService.getInstance(module).getModulesDescriptors();
         SwingUtilities.invokeLater(() -> {
             root.removeAllChildren();
             descriptors.forEach(descriptor -> {
@@ -85,9 +85,9 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
 
     class EsbModuleTreeNode extends DefaultMutableTreeNode {
 
-        private final ComponentsDescriptor descriptor;
+        private final ComponentsPackage descriptor;
 
-        EsbModuleTreeNode(ComponentsDescriptor descriptor) {
+        EsbModuleTreeNode(ComponentsPackage descriptor) {
             this.userObject = descriptor.getName();
             this.descriptor = descriptor;
         }
