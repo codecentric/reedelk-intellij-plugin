@@ -15,16 +15,16 @@ import java.util.Map;
 
 import static java.lang.String.format;
 
-public class ComponentIconAndImageLoader {
+public class ComponentIconAndImageProvider {
 
-    private static final Logger LOG = Logger.getInstance(ComponentIconAndImageLoader.class);
+    private static final Logger LOG = Logger.getInstance(ComponentIconAndImageProvider.class);
 
-    public ComponentIconAndImageLoader(ScanResult scanResult) {
+    public ComponentIconAndImageProvider(ScanResult scanResult) {
         ResourceList allImages = scanResult.getResourcesWithExtension(Icons.PNG_EXTENSION);
-        extract(allImages);
+        load(allImages);
     }
 
-    private void extract(ResourceList resources) {
+    private void load(ResourceList resources) {
         Map<String, ResourceList> resourceNameAndData = resources.asMap();
 
         for (Map.Entry<String, ResourceList> entry : resourceNameAndData.entrySet()) {

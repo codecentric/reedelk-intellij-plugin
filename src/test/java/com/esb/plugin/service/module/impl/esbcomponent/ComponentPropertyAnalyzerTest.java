@@ -4,7 +4,7 @@ import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.domain.TypeDescriptor;
 import com.esb.plugin.component.domain.TypeEnumDescriptor;
 import com.esb.plugin.component.scanner.ComponentAnalyzerContext;
-import com.esb.plugin.component.scanner.ComponentIconAndImageLoader;
+import com.esb.plugin.component.scanner.ComponentIconAndImageProvider;
 import com.esb.plugin.component.scanner.ComponentPropertyAnalyzer;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
@@ -32,7 +32,7 @@ class ComponentPropertyAnalyzerTest {
                 .enableAllInfo()
                 .scan();
 
-        ComponentIconAndImageLoader iconsAnalyzer = new ComponentIconAndImageLoader(scanResult);
+        ComponentIconAndImageProvider iconsAnalyzer = new ComponentIconAndImageProvider(scanResult);
 
         ComponentAnalyzerContext context = new ComponentAnalyzerContext(scanResult, iconsAnalyzer);
         analyzer = new ComponentPropertyAnalyzer(context);

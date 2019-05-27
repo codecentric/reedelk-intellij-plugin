@@ -12,7 +12,7 @@ public class ComponentAnalyzerContext {
 
     private final ScanResult scanResult;
 
-    public ComponentAnalyzerContext(ScanResult scanResult, ComponentIconAndImageLoader componentIconAndImageLoader) {
+    public ComponentAnalyzerContext(ScanResult scanResult, ComponentIconAndImageProvider componentIconAndImageProvider) {
         this.scanResult = scanResult;
     }
 
@@ -20,11 +20,11 @@ public class ComponentAnalyzerContext {
         return scanResult.getClassInfo(fullyQualifiedClassName);
     }
 
-    public Image getImageByClassName(String fullyQualifiedClassName) {
+    public Image getImageByComponentQualifiedName(String fullyQualifiedClassName) {
         return Images.Component.get(fullyQualifiedClassName);
     }
 
-    public Icon getIconByClassName(String fullyQualifiedClassName) {
+    public Icon getIconByComponentQualifiedName(String fullyQualifiedClassName) {
         return Icons.Component.get(fullyQualifiedClassName);
     }
 }

@@ -8,7 +8,7 @@ import com.esb.plugin.component.domain.TypeEnumDescriptor;
 import com.esb.plugin.component.domain.TypePrimitiveDescriptor;
 import com.esb.plugin.component.scanner.ComponentAnalyzer;
 import com.esb.plugin.component.scanner.ComponentAnalyzerContext;
-import com.esb.plugin.component.scanner.ComponentIconAndImageLoader;
+import com.esb.plugin.component.scanner.ComponentIconAndImageProvider;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
@@ -32,7 +32,7 @@ class ComponentAnalyzerTest {
     private final TypeEnumDescriptor TEST_ENUM = new TypeEnumDescriptor(asList("VALUE1", "VALUE2", "VALUE3"), "VALUE1");
 
     @Mock
-    private ComponentIconAndImageLoader imgLoader;
+    private ComponentIconAndImageProvider imgLoader;
 
     private ScanResult scanResult;
     private ComponentAnalyzer analyzer;
@@ -50,11 +50,11 @@ class ComponentAnalyzerTest {
         ComponentAnalyzerContext context = Mockito.spy(new ComponentAnalyzerContext(scanResult, imgLoader));
         doReturn(null)
                 .when(context)
-                .getIconByClassName(anyString());
+                .getIconByComponentQualifiedName(anyString());
 
         doReturn(null)
                 .when(context)
-                .getImageByClassName(anyString());
+                .getImageByComponentQualifiedName(anyString());
 
         analyzer = new ComponentAnalyzer(context);
     }

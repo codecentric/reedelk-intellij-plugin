@@ -30,8 +30,8 @@ public class ComponentAnalyzer {
         return ComponentDefaultDescriptor.create()
                 .fullyQualifiedName(classInfo.getName())
                 .displayName(displayName)
-                .paletteIcon(context.getIconByClassName(classInfo.getName()))
-                .icon(context.getImageByClassName(classInfo.getName()))
+                .paletteIcon(context.getIconByComponentQualifiedName(classInfo.getName()))
+                .icon(context.getImageByComponentQualifiedName(classInfo.getName()))
                 .hidden(isHidden(classInfo))
                 .propertyDescriptors(propertiesDescriptor)
                 .build();

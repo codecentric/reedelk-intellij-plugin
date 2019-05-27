@@ -1,6 +1,6 @@
 package com.esb.plugin.commons;
 
-import com.esb.plugin.component.scanner.ComponentIconAndImageLoader;
+import com.esb.plugin.component.scanner.ComponentIconAndImageProvider;
 import com.intellij.openapi.diagnostic.Logger;
 
 import javax.imageio.ImageIO;
@@ -20,7 +20,7 @@ public class Images {
 
         static {
             try {
-                URL resource = ComponentIconAndImageLoader.class.getResource("/icons/default-component.png");
+                URL resource = ComponentIconAndImageProvider.class.getResource("/icons/default-component.png");
                 DefaultComponentImage = ImageIO.read(resource);
             } catch (IOException e) {
                 LOG.error("Could not load default component image", e);
