@@ -62,10 +62,10 @@ public class FlowGraphLayout {
                 // Otherwise take min and max.
                 Optional<ScopedGraphNode> scopeItIsJoining = FindJoiningScope.of(graph, node);
 
+                // TODO: what if int not present?!
                 int min = predecessors.stream().mapToInt(GraphNode::y).min().getAsInt();
                 int max = predecessors.stream().mapToInt(GraphNode::y).max().getAsInt();
 
-                // TODO: Test this logic properly and optimize the code.
                 // If this node is joining a scope, then we place it in the
                 // center of the scope this node is joining to.
                 if (scopeItIsJoining.isPresent()) {

@@ -35,8 +35,7 @@ public class ComponentIconAndImageProvider {
             String mapKey = getMapKeyFromResourcePath(resourcePath);
 
             ResourceList value = entry.getValue();
-            Resource resource = value.get(0);
-            try {
+            try (Resource resource = value.get(0)) {
                 if (mapKey.endsWith("-icon")) {
                     mapKey = mapKey.substring(0, mapKey.length() - 5);
                     registerIcon(resource, mapKey);
