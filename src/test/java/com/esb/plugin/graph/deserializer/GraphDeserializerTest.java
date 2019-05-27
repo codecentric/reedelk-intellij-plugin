@@ -23,37 +23,14 @@ class GraphDeserializerTest extends AbstractDeserializerTest {
 
         // Then
         PluginAssertion.assertThat(graph)
-
-                .root()
-                .is(componentNode1)
-
-                .and()
-                .successorsOf(componentNode1)
-                .isOnly(choiceNode1)
-
-                .and()
-                .successorsOf(choiceNode1)
-                .areExactly(componentNode2, flowReferenceNode1, forkNode1)
-
-                .and()
-                .successorsOf(componentNode2)
-                .isOnly(componentNode5)
-
-                .and()
-                .successorsOf(flowReferenceNode1)
-                .isOnly(componentNode5)
-
-                .and()
-                .successorsOf(forkNode1)
-                .areExactly(componentNode3, componentNode4)
-
-                .and()
-                .successorsOf(componentNode3)
-                .isOnly(componentNode5)
-
-                .and()
-                .successorsOf(componentNode4)
-                .isOnly(componentNode5);
+                .root().is(componentNode1)
+                .and().successorsOf(componentNode1).isOnly(choiceNode1)
+                .and().successorsOf(choiceNode1).areExactly(componentNode2, flowReferenceNode1, forkNode1)
+                .and().successorsOf(componentNode2).isOnly(componentNode5)
+                .and().successorsOf(flowReferenceNode1).isOnly(componentNode5)
+                .and().successorsOf(forkNode1).areExactly(componentNode3, componentNode4)
+                .and().successorsOf(componentNode3).isOnly(componentNode5)
+                .and().successorsOf(componentNode4).isOnly(componentNode5);
     }
 
     @Test
@@ -67,37 +44,14 @@ class GraphDeserializerTest extends AbstractDeserializerTest {
 
         // Then
         PluginAssertion.assertThat(graph)
-
-                .root()
-                .is(componentNode1)
-
-                .and()
-                .successorsOf(componentNode1)
-                .isOnly(choiceNode1)
-
-                .and()
-                .successorsOf(choiceNode1)
-                .isOnly(flowReferenceNode1)
-
-                .and()
-                .successorsOf(flowReferenceNode1)
-                .isOnly(choiceNode2)
-
-                .and()
-                .successorsOf(choiceNode2)
-                .isOnly(flowReferenceNode2)
-
-                .and()
-                .successorsOf(flowReferenceNode2)
-                .isOnly(componentNode2)
-
-                .and()
-                .node(choiceNode1)
-                .scopeContainsExactly(flowReferenceNode1, choiceNode2)
-
-                .and()
-                .node(choiceNode2)
-                .scopeContainsExactly(flowReferenceNode2);
+                .root().is(componentNode1)
+                .and().successorsOf(componentNode1).isOnly(choiceNode1)
+                .and().successorsOf(choiceNode1).isOnly(flowReferenceNode1)
+                .and().successorsOf(flowReferenceNode1).isOnly(choiceNode2)
+                .and().successorsOf(choiceNode2).isOnly(flowReferenceNode2)
+                .and().successorsOf(flowReferenceNode2).isOnly(componentNode2)
+                .and().node(choiceNode1).scopeContainsExactly(flowReferenceNode1, choiceNode2)
+                .and().node(choiceNode2).scopeContainsExactly(flowReferenceNode2);
     }
 
 }

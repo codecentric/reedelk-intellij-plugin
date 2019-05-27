@@ -12,7 +12,6 @@ import com.esb.system.component.Stop;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,12 +57,17 @@ public class ChoiceDeserializer extends AbstractDeserializer {
             graph.add(currentNode, stopNode);
         }
 
-        // Otherwise
-        Collection<GraphNode> nodesBelongingToScope = CollectNodesBetween.them(graph, choiceNode, stopNode);
-        nodesBelongingToScope.forEach(choiceNode::addToScope);
+        // Add all the nodes just added (between choice and stop node) to the Choice's scope.
+        CollectNodesBetween
+                .them(graph, choiceNode, stopNode)
+                .forEach(choiceNode::addToScope);
 
         ComponentData choiceData = choiceNode.componentData();
-        choiceData.set(Implementor.description(), Implementor.description(componentDefinition));
+
+        // TODO: Not sure about this
+        if (componentDefinition.has(Implementor.description())) {
+            choiceData.set(Implementor.description(), Implementor.description(componentDefinition));
+        }
 
         List<ChoiceConditionRoutePair> choiceConditionRoutePairList =
                 choiceData.get(DATA_CONDITION_ROUTE_PAIRS);
