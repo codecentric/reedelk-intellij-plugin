@@ -6,6 +6,7 @@ import com.esb.plugin.component.type.choice.ChoicePropertiesRenderer;
 import com.esb.plugin.component.type.flowreference.FlowReferencePropertiesRenderer;
 import com.esb.plugin.component.type.fork.ForkPropertiesRenderer;
 import com.esb.plugin.component.type.generic.GenericComponentPropertiesRenderer;
+import com.esb.plugin.component.type.placeholder.PlaceholderPropertiesRenderer;
 import com.esb.plugin.component.type.stop.StopPropertiesRenderer;
 import com.esb.plugin.component.type.unknown.UnknownPropertiesRenderer;
 import com.esb.plugin.graph.GraphSnapshot;
@@ -28,6 +29,7 @@ public class NodePropertiesRendererFactory {
         tmp.put(Fork.class.getName(), ForkPropertiesRenderer.class);
         tmp.put(Choice.class.getName(), ChoicePropertiesRenderer.class);
         tmp.put(Unknown.class.getName(), UnknownPropertiesRenderer.class);
+        tmp.put(Placeholder.class.getName(), PlaceholderPropertiesRenderer.class);
         tmp.put(FlowReference.class.getName(), FlowReferencePropertiesRenderer.class);
         RENDERER = Collections.unmodifiableMap(tmp);
     }

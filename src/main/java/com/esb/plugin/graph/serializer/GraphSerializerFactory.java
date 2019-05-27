@@ -5,6 +5,7 @@ import com.esb.plugin.component.type.choice.ChoiceSerializer;
 import com.esb.plugin.component.type.flowreference.FlowReferenceSerializer;
 import com.esb.plugin.component.type.fork.ForkSerializer;
 import com.esb.plugin.component.type.generic.GenericComponentSerializer;
+import com.esb.plugin.component.type.placeholder.PlaceholderSerializer;
 import com.esb.plugin.component.type.stop.StopSerializer;
 import com.esb.plugin.component.type.unknown.UnknownSerializer;
 import com.esb.plugin.graph.node.GraphNode;
@@ -28,6 +29,7 @@ public class GraphSerializerFactory {
         tmp.put(Fork.class.getName(), ForkSerializer.class);
         tmp.put(Choice.class.getName(), ChoiceSerializer.class);
         tmp.put(Unknown.class.getName(), UnknownSerializer.class);
+        tmp.put(Placeholder.class.getName(), PlaceholderSerializer.class);
         tmp.put(FlowReference.class.getName(), FlowReferenceSerializer.class);
         COMPONENT_SERIALIZER_MAP = Collections.unmodifiableMap(tmp);
     }

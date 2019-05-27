@@ -37,5 +37,4 @@ public class ChoicePropertiesRenderer extends GenericComponentPropertiesRenderer
         container.add(choiceRouteTable, CENTER);
         return container;
     }
-
 }

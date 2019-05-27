@@ -5,6 +5,7 @@ import com.esb.plugin.component.type.choice.ChoiceConnectorBuilder;
 import com.esb.plugin.component.type.flowreference.FlowReferenceConnectorBuilder;
 import com.esb.plugin.component.type.fork.ForkConnectorBuilder;
 import com.esb.plugin.component.type.generic.GenericComponentConnectorBuilder;
+import com.esb.plugin.component.type.placeholder.PlaceholderConnectorBuilder;
 import com.esb.plugin.component.type.stop.StopConnectionBuilder;
 import com.esb.plugin.component.type.unknown.UnknownConnectionBuilder;
 import com.esb.plugin.graph.FlowGraph;
@@ -29,6 +30,7 @@ public class ConnectorFactory {
         tmp.put(Fork.class.getName(), ForkConnectorBuilder.class);
         tmp.put(Choice.class.getName(), ChoiceConnectorBuilder.class);
         tmp.put(Unknown.class.getName(), UnknownConnectionBuilder.class);
+        tmp.put(Placeholder.class.getName(), PlaceholderConnectorBuilder.class);
         tmp.put(FlowReference.class.getName(), FlowReferenceConnectorBuilder.class);
         CONNECTOR_BUILDER = Collections.unmodifiableMap(tmp);
     }
