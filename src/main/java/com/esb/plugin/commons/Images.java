@@ -16,7 +16,7 @@ public class Images {
 
     public static class Component {
 
-        private static final Image DefaultComponentImage;
+        public static final Image DefaultComponentImage;
         static {
             try {
                 URL resource = ComponentIconAndImageProvider.class.getResource("/icons/default-component.png");

@@ -28,7 +28,7 @@ public class ChoiceConnectorBuilder implements ConnectorBuilder {
 
         FlowSubGraph scopeInitialSubGraph = new FlowSubGraph();
         scopeInitialSubGraph.root(choice);
-        scopeInitialSubGraph.add(componentToAdd, placeholder);
+        scopeInitialSubGraph.add(choice, placeholder);
 
         ComponentData componentData = componentToAdd.componentData();
         List<ChoiceConditionRoutePair> nodeConditionMap =

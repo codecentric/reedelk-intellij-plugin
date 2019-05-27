@@ -158,6 +158,20 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         }
 
         @Test
+        void shouldComputeSubTreeHeightForScopedDrawableCorrectlyWhenEndNodeIsProvided() {
+            // Given
+            FlowGraph graph = graphProvider.createGraph();
+            graph.root(choiceNode1);
+            graph.add(choiceNode1, componentNode1);
+
+            // When
+            int actual = FlowGraphLayoutUtils.maxHeight(graph, graphics, choiceNode1, componentNode1);
+
+            // Then
+            assertThat(actual).isEqualTo(130 + 5 + 5);
+        }
+
+        @Test
         void shouldComputeSubTreeHeightForNestedChoiceCorrectly() {
             // Given
             FlowGraph graph = graphProvider.createGraph();
@@ -169,6 +183,24 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
 
             // When
             int actual = FlowGraphLayoutUtils.maxHeight(graph, graphics, root);
+
+            // Then: plus 2 padding/s for two choices
+            assertThat(actual).isEqualTo(130 + 5 + 5 + 5 + 5);
+        }
+
+        @Test
+        void shouldComputeSubTreeHeightForNestedChoiceCorrectlyWhenEndNodeOutsideScopeIsProvided() {
+            // Given
+            FlowGraph graph = graphProvider.createGraph();
+            graph.add(root);
+            graph.add(root, choiceNode1);
+            graph.add(choiceNode1, choiceNode2);
+            graph.add(choiceNode2, componentNode1);
+
+            choiceNode1.addToScope(choiceNode2);
+
+            // When
+            int actual = FlowGraphLayoutUtils.maxHeight(graph, graphics, choiceNode1, componentNode1);
 
             // Then: plus 2 padding/s for two choices
             assertThat(actual).isEqualTo(130 + 5 + 5 + 5 + 5);

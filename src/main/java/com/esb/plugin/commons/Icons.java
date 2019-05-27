@@ -21,7 +21,7 @@ public class Icons {
 
     public static class Component {
 
-        private static final Icon DefaultComponentIcon = IconLoader.getIcon("/icons/default-component-icon.png");
+        public static final Icon DefaultComponentIcon = IconLoader.getIcon("/icons/default-component-icon.png");
 
         private static final Map<String, Icon> KEY_ICON_MAP = new HashMap<>();
 

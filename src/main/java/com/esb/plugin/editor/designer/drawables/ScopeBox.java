@@ -14,12 +14,14 @@ import com.intellij.ui.JBColor;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 public class ScopeBox implements Drawable {
+
+    private final int IN_BETWEEN_SCOPES_PADDING = 5;
 
     private final Stroke STROKE = new BasicStroke(1f);
     private final JBColor BOUNDARIES_COLOR = new JBColor(Gray._235, Gray._30);
@@ -66,7 +68,7 @@ public class ScopeBox implements Drawable {
         Drawable drawableWithMinY = scopedGraphNode;
 
         if (!drawables.isEmpty()) {
-            List<Drawable> allDrawables = new ArrayList<>(drawables);
+            Set<Drawable> allDrawables = new HashSet<>(drawables);
             allDrawables.add(scopedGraphNode);
 
             // We need to find min x, max x, min y and max y
@@ -90,17 +92,20 @@ public class ScopeBox implements Drawable {
 
         int subTreeHeight = FlowGraphLayoutUtils.maxHeight(graph, graphics, scopedGraphNode, firstNodeOutsideScope);
 
-        int minY = scopedGraphNode.y() - Math.floorDiv(subTreeHeight, 2) + ScopedGraphNode.VERTICAL_PADDING;
-        int maxY = scopedGraphNode.y() + Math.floorDiv(subTreeHeight, 2) - ScopedGraphNode.VERTICAL_PADDING;
+        int halfSubTreeHeight = Math.floorDiv(subTreeHeight, 2);
+
+        int minY = scopedGraphNode.y() - halfSubTreeHeight + ScopedGraphNode.VERTICAL_PADDING;
+        int maxY = scopedGraphNode.y() + halfSubTreeHeight - ScopedGraphNode.VERTICAL_PADDING;
 
         // Draw Scope Boundaries we need to compute the maximum number of scopes
         int maxScopes = getMaxScopes(graph);
 
         int minX = drawableWithMinX.x() - Math.floorDiv(drawableWithMinX.width(graphics), 2);
-        int maxX = drawableWithMaxX.x() + Math.floorDiv(drawableWithMaxX.width(graphics), 2) + (maxScopes * 5);
+        int maxX = drawableWithMaxX.x() + Math.floorDiv(drawableWithMaxX.width(graphics), 2) + (maxScopes * IN_BETWEEN_SCOPES_PADDING);
 
         int width = maxX - minX;
         int height = maxY - minY;
         return new ScopeBoundaries(minX, minY, width, height);
     }
+
 }

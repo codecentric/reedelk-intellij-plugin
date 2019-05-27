@@ -1,5 +1,8 @@
 package com.esb.plugin.graph.layout;
 
+import com.esb.internal.commons.JsonParser;
+import com.esb.plugin.commons.Icons;
+import com.esb.plugin.commons.Images;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.domain.ComponentDefaultDescriptor;
 import com.esb.plugin.component.type.choice.ChoiceNode;
@@ -8,6 +11,8 @@ import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphProvider;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
+
+import java.util.Collections;
 
 public class GraphSamples {
 
@@ -360,9 +365,14 @@ public class GraphSamples {
     }
 
     private ComponentData createComponent(String name) {
-        return new ComponentData(ComponentDefaultDescriptor.create()
+        ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
                 .fullyQualifiedName(name)
                 .displayName(name)
+                .propertyDescriptors(Collections.emptyList())
+                .icon(Images.Component.DefaultComponentImage)
+                .paletteIcon(Icons.Component.DefaultComponentIcon)
                 .build());
+        componentData.set(JsonParser.Implementor.description(), "Test");
+        return componentData;
     }
 }

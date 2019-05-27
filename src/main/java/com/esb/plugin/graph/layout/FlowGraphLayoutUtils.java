@@ -55,15 +55,24 @@ public class FlowGraphLayoutUtils {
         GraphNode firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedGraphNode).orElse(null);
 
         int sum = VERTICAL_PADDING + VERTICAL_PADDING;
-        for (GraphNode successor : successors) {
-            // We are looking for the max in the subtree starting from this successor.
-            // Therefore the current max starts again from 0.
-            sum += maxHeight(graphics, graph, successor, firstNodeOutsideScope, 0);
-        }
 
         // If this scope does not have successors, the sum is its height.
         if (successors.isEmpty()) {
             sum += scopedGraphNode.height(graphics);
+
+        } else if (successors.size() == 1 && successors.get(0) == firstNodeOutsideScope) {
+            // If this scope has just one successor which is right outside the scope,
+            // then, the sum is its height.
+            sum += scopedGraphNode.height(graphics);
+
+        } else {
+            // If there are many successors, they can not
+            // be (by definition) inside the scope.
+            for (GraphNode successor : successors) {
+                // We are looking for the max in the subtree starting from this successor.
+                // Therefore the current max starts again from 0.
+                sum += maxHeight(graphics, graph, successor, firstNodeOutsideScope, 0);
+            }
         }
 
         int followingMax = 0;
@@ -71,9 +80,7 @@ public class FlowGraphLayoutUtils {
             followingMax = maxHeight(graphics, graph, firstNodeOutsideScope, null, 0);
         }
 
-
         int newCurrentMax = sum > currentMax ? sum : currentMax;
-
         return followingMax > newCurrentMax ? followingMax : newCurrentMax;
     }
 
