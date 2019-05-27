@@ -7,26 +7,33 @@ import com.esb.plugin.component.type.choice.ChoiceNode;
 import com.esb.plugin.component.type.flowreference.FlowReferenceNode;
 import com.esb.plugin.component.type.fork.ForkNode;
 import com.esb.plugin.component.type.generic.GenericComponentNode;
+import com.esb.plugin.component.type.placeholder.PlaceholderNode;
 import com.esb.plugin.component.type.stop.StopNode;
 import com.esb.plugin.component.type.unknown.UnknownNode;
 import com.esb.plugin.service.module.ComponentService;
 import com.esb.system.component.*;
-import com.google.common.collect.ImmutableMap;
 import com.intellij.openapi.module.Module;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class GraphNodeFactory {
 
     private static final Class<? extends GraphNode> DEFAULT = GenericComponentNode.class;
 
-    private static final Map<String, Class<? extends GraphNode>> COMPONENT_DRAWABLE_MAP = ImmutableMap.of(
-            Stop.class.getName(), StopNode.class,
-            Fork.class.getName(), ForkNode.class,
-            Choice.class.getName(), ChoiceNode.class,
-            Unknown.class.getName(), UnknownNode.class,
-            FlowReference.class.getName(), FlowReferenceNode.class);
+    private static final Map<String, Class<? extends GraphNode>> COMPONENT_DRAWABLE_MAP;
+
+    static {
+        Map<String, Class<? extends GraphNode>> tmp = new HashMap<>();
+        tmp.put(Stop.class.getName(), StopNode.class);
+        tmp.put(Fork.class.getName(), ForkNode.class);
+        tmp.put(Choice.class.getName(), ChoiceNode.class);
+        tmp.put(Unknown.class.getName(), UnknownNode.class);
+        tmp.put(Placeholder.class.getName(), PlaceholderNode.class);
+        tmp.put(FlowReference.class.getName(), FlowReferenceNode.class);
+        COMPONENT_DRAWABLE_MAP = tmp;
+    }
 
 
     public static <T extends GraphNode> T get(Module module, String componentName) {

@@ -22,7 +22,7 @@ public class ComponentIconAndImageProvider {
     private ComponentIconAndImageProvider() {
     }
 
-    public static void loadFrom(ScanResult scanResult) {
+    static void loadFrom(ScanResult scanResult) {
         ResourceList allImages = scanResult.getResourcesWithExtension(Icons.PNG_EXTENSION);
         load(allImages);
     }

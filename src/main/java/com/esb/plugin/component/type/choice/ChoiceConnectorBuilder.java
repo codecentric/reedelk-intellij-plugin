@@ -9,6 +9,7 @@ import com.esb.plugin.graph.connector.ScopedNodeConnector;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.GraphNodeFactory;
 import com.esb.system.component.Choice;
+import com.esb.system.component.Placeholder;
 import com.intellij.openapi.module.Module;
 
 import java.util.List;
@@ -20,16 +21,14 @@ public class ChoiceConnectorBuilder implements ConnectorBuilder {
     @Override
     public Connector build(Module module, FlowGraph graph, GraphNode componentToAdd) {
 
-        // TODO: Fixme... this should not use flow reference and also should use the factory
-        GraphNode placeholder = GraphNodeFactory.get(module, "com.esb.system.component.payload.SetPayload");
-        placeholder.componentData().set("payload", "{\"name\":\"Mark\"}");
+        GraphNode placeholder = GraphNodeFactory.get(module, Placeholder.class.getName());
 
         ChoiceNode choice = (ChoiceNode) componentToAdd;
         choice.addToScope(placeholder);
 
-        FlowSubGraph scopeInitialSubgraph = new FlowSubGraph();
-        scopeInitialSubgraph.root(choice);
-        scopeInitialSubgraph.add(componentToAdd, placeholder);
+        FlowSubGraph scopeInitialSubGraph = new FlowSubGraph();
+        scopeInitialSubGraph.root(choice);
+        scopeInitialSubGraph.add(componentToAdd, placeholder);
 
         ComponentData componentData = componentToAdd.componentData();
         List<ChoiceConditionRoutePair> nodeConditionMap =
@@ -43,6 +42,6 @@ public class ChoiceConnectorBuilder implements ConnectorBuilder {
                 .ifPresent(choiceConditionRoutePair ->
                         choiceConditionRoutePair.setCondition(Choice.DEFAULT_CONDITION));
 
-        return new ScopedNodeConnector(graph, scopeInitialSubgraph);
+        return new ScopedNodeConnector(graph, scopeInitialSubGraph);
     }
 }

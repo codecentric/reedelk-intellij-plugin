@@ -7,6 +7,6 @@ import com.intellij.openapi.module.Module;
 public interface ConnectorBuilder {
 
     default Connector build(Module module, FlowGraph graph, GraphNode componentToAdd) {
-        throw new UnsupportedOperationException();
+        return new DefaultNodeConnector(graph, componentToAdd);
     }
 }

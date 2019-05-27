@@ -28,7 +28,7 @@ class ConditionRouteTableColumnModel extends DefaultTableColumnModel {
         @Override
         protected void setValue(Object value) {
             GraphNode node = (GraphNode) value;
-            String description = (String) node.componentData().get(Implementor.description());
+            String description = node.componentData().get(Implementor.description());
             setText(description);
         }
     }

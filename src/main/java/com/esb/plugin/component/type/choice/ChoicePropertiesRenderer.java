@@ -26,8 +26,7 @@ public class ChoicePropertiesRenderer extends GenericComponentPropertiesRenderer
         JBPanel genericProperties = super.render(choiceNode);
 
         ComponentData componentData = choiceNode.componentData();
-        List<ChoiceConditionRoutePair> conditionRoutePairList =
-                (List<ChoiceConditionRoutePair>) componentData.get(DATA_CONDITION_ROUTE_PAIRS);
+        List<ChoiceConditionRoutePair> conditionRoutePairList = componentData.get(DATA_CONDITION_ROUTE_PAIRS);
 
         ConditionRouteTableModel model = new ConditionRouteTableModel(conditionRoutePairList, snapshot);
         ChoiceRouteTable choiceRouteTable = new ChoiceRouteTable(model);

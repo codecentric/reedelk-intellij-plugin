@@ -1,6 +1,5 @@
 package com.esb.plugin.component.type.generic;
 
-import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.domain.TypeDescriptor;
 import com.esb.plugin.converter.ValueConverterFactory;
@@ -10,6 +9,8 @@ import com.esb.plugin.graph.deserializer.DeserializerContext;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONObject;
 
+import static com.esb.internal.commons.JsonParser.Implementor;
+
 public class GenericComponentDeserializer extends AbstractDeserializer {
 
     public GenericComponentDeserializer(FlowGraph graph, DeserializerContext context) {
@@ -18,7 +19,7 @@ public class GenericComponentDeserializer extends AbstractDeserializer {
 
     @Override
     public GraphNode deserialize(GraphNode parent, JSONObject jsonDefinition) {
-        String name = JsonParser.Implementor.name(jsonDefinition);
+        String name = Implementor.name(jsonDefinition);
 
         // The following graph node instance, might be generic
         // component or unknown node.

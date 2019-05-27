@@ -19,7 +19,7 @@ public class UnknownPropertiesRenderer extends AbstractNodePropertiesRenderer {
     @Override
     public JBPanel render(GraphNode node) {
         ComponentData componentData = node.componentData();
-        String unknownImplementorClazz = (String) componentData.get(JsonParser.Implementor.name());
+        String unknownImplementorClazz = componentData.get(JsonParser.Implementor.name());
         DefaultPropertiesPanel propertiesPanel = new DefaultPropertiesPanel();
 
         FormBuilder.get()
