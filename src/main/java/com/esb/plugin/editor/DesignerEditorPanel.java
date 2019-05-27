@@ -16,9 +16,9 @@ public class DesignerEditorPanel extends ThreeComponentsSplitter {
         super(VERTICAL);
 
         ScrollablePropertiesPanel propertiesPanel = new ScrollablePropertiesPanel();
-        CanvasAndPalettePanel canvasAndPalettePanel = new CanvasAndPalettePanel(module, snapshot, propertiesPanel, listener);
+        DesignerAndPalettePanel designerAndPalettePanel = new DesignerAndPalettePanel(module, snapshot, propertiesPanel, listener);
 
-        setInnerComponent(canvasAndPalettePanel);
+        setInnerComponent(designerAndPalettePanel);
         setLastComponent(propertiesPanel);
         setLastSize(PROPERTIES_PANEL_SIZE);
     }

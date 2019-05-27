@@ -9,12 +9,12 @@ import com.intellij.openapi.ui.ThreeComponentsSplitter;
 
 import javax.swing.event.AncestorListener;
 
-class CanvasAndPalettePanel extends ThreeComponentsSplitter {
+class DesignerAndPalettePanel extends ThreeComponentsSplitter {
 
     private static final int DIVIDER_WIDTH = 2;
     private static final int PALETTE_SIZE = 210;
 
-    CanvasAndPalettePanel(Module module, GraphSnapshot snapshot, SelectListener selectListener, AncestorListener listener) {
+    DesignerAndPalettePanel(Module module, GraphSnapshot snapshot, SelectListener selectListener, AncestorListener listener) {
         DesignerPanel canvas = new DesignerPanel(module, snapshot);
         canvas.addListener(selectListener);
         ScrollableDesignerPanel canvasPanel = new ScrollableDesignerPanel(canvas);
