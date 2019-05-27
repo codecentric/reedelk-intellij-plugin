@@ -16,8 +16,14 @@ public class PlaceholderDeserializer extends AbstractDeserializer {
 
     @Override
     public GraphNode deserialize(GraphNode parent, JSONObject jsonDefinition) {
+
         String name = Implementor.name(jsonDefinition);
-        return context.instantiateGraphNode(name);
+
+        GraphNode placeholderNode = context.instantiateGraphNode(name);
+
+        graph.add(parent, placeholderNode);
+
+        return placeholderNode;
     }
 
 }
