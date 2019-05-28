@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public class BelongToSameScope {
 
-    public static boolean from(FlowGraph graph, GraphNode drawable1, GraphNode drawable2) {
-        Optional<ScopedGraphNode> scope1 = FindScope.of(graph, drawable1);
-        Optional<ScopedGraphNode> scope2 = FindScope.of(graph, drawable2);
+    public static boolean from(FlowGraph graph, GraphNode node1, GraphNode node2) {
+        Optional<ScopedGraphNode> scope1 = FindScope.of(graph, node1);
+        Optional<ScopedGraphNode> scope2 = FindScope.of(graph, node2);
 
         if (!scope1.isPresent() && !scope2.isPresent()) {
             // they both don't belong to ANY scope.

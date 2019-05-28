@@ -110,7 +110,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
         // The selected node must be drawn LAST so
         // that it is on top of all the other drawables.
-        selectedNode.ifPresent(drawable -> drawable.draw(graph, g2, DesignerPanel.this));
+        selectedNode.ifPresent(node -> node.draw(graph, g2, DesignerPanel.this));
 
         long end = System.currentTimeMillis() - start;
         LOG.info("Painted... " + end);
@@ -129,8 +129,8 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         int x = event.getX();
         int y = event.getY();
 
-        Optional<GraphNode> drawableWithinCoordinates = getDrawableWithinCoordinates(x, y);
-        if (drawableWithinCoordinates.isPresent()) {
+        Optional<GraphNode> nodeWithinCoordinates = getNodeWithinCoordinates(x, y);
+        if (nodeWithinCoordinates.isPresent()) {
             setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         } else {
             setCursor(Cursor.getDefaultCursor());
@@ -144,10 +144,10 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
         unselect();
 
-        Optional<GraphNode> drawableWithinCoordinates = getDrawableWithinCoordinates(x, y);
-        if (drawableWithinCoordinates.isPresent()) {
+        Optional<GraphNode> nodeWithinCoordinates = getNodeWithinCoordinates(x, y);
+        if (nodeWithinCoordinates.isPresent()) {
             // Unselect the previous one
-            select(drawableWithinCoordinates.get());
+            select(nodeWithinCoordinates.get());
             selected.dragging();
 
             offsetX = event.getX() - selected.x();
@@ -270,10 +270,10 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         setPreferredSize(newDimension);
     }
 
-    private Optional<GraphNode> getDrawableWithinCoordinates(int x, int y) {
+    private Optional<GraphNode> getNodeWithinCoordinates(int x, int y) {
         return graph.nodes()
                         .stream()
-                        .filter(drawable -> drawable.contains(this, x, y))
+                        .filter(node -> node.contains(this, x, y))
                         .findFirst();
     }
 
@@ -283,8 +283,8 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         select(NOTHING_SELECTED);
     }
 
-    private void select(GraphNode drawable) {
-        selected = drawable;
+    private void select(GraphNode node) {
+        selected = node;
         selected.selected();
         selectListener.onSelect(snapshot, selected);
     }

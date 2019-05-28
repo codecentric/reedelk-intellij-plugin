@@ -95,10 +95,10 @@ public class FlowGraphLayout {
 
             checkState(commonParent instanceof ScopedGraphNode);
 
-            Optional<GraphNode> optionalFirstDrawableOutsideScope = FindFirstNodeOutsideScope.of(graph, (ScopedGraphNode) commonParent);
-            GraphNode firstDrawableOutsideScope = optionalFirstDrawableOutsideScope.orElse(null);
+            Optional<GraphNode> optionalFirstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, (ScopedGraphNode) commonParent);
+            GraphNode firstNodeOutsideScope = optionalFirstNodeOutsideScope.orElse(null);
 
-            int maxSubTreeHeight = FlowGraphLayoutUtils.maxHeight(graph, graphics, commonParent, firstDrawableOutsideScope);
+            int maxSubTreeHeight = FlowGraphLayoutUtils.maxHeight(graph, graphics, commonParent, firstNodeOutsideScope);
 
             top = VERTICAL_PADDING + commonParent.y() - Math.floorDiv(maxSubTreeHeight, 2);
 
@@ -115,7 +115,7 @@ public class FlowGraphLayout {
 
                 int tmpX = X_LEFT_PADDING + layerWidthSumPreceding(graph, graphics, layers, containingLayerIndex);
 
-                int maxSubtreeHeight = FlowGraphLayoutUtils.maxHeight(graph, graphics, node, firstDrawableOutsideScope);
+                int maxSubtreeHeight = FlowGraphLayoutUtils.maxHeight(graph, graphics, node, firstNodeOutsideScope);
 
                 // We must subtract the current padding since it
                 // was added while computing max subtree height as well.

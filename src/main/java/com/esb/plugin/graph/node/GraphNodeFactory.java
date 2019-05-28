@@ -54,10 +54,10 @@ public class GraphNodeFactory {
 
         String componentFullyQualifiedName = componentData.getFullyQualifiedName();
 
-        Class<? extends GraphNode> componentDrawableClazz =
+        Class<? extends GraphNode> componentNodeClazz =
                 COMPONENT_DRAWABLE_MAP.getOrDefault(componentFullyQualifiedName, DEFAULT);
         try {
-            return (T) componentDrawableClazz.getConstructor(ComponentData.class).newInstance(componentData);
+            return (T) componentNodeClazz.getConstructor(ComponentData.class).newInstance(componentData);
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }

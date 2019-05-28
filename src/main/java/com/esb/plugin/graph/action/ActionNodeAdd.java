@@ -52,23 +52,23 @@ public class ActionNodeAdd {
 
             Optional<GraphNode> optionalPrecedingNode = findClosestPrecedingDrawable(graph, dropPoint);
             if (optionalPrecedingNode.isPresent()) {
-                GraphNode closestPrecedingDrawable = optionalPrecedingNode.get();
+                GraphNode closestPrecedingNode = optionalPrecedingNode.get();
                 AddStrategy strategy;
 
-                if (closestPrecedingDrawable instanceof ScopedGraphNode) {
+                if (closestPrecedingNode instanceof ScopedGraphNode) {
                     strategy = new PrecedingScopedNode(graph, dropPoint, connector, graphics);
 
-                } else if (graph.successors(closestPrecedingDrawable).isEmpty()) {
+                } else if (graph.successors(closestPrecedingNode).isEmpty()) {
                     strategy = new PrecedingNodeWithoutSuccessor(graph, dropPoint, connector, graphics);
 
                 } else {
                     // Only ScopedGraphNode nodes might have multiple successors. In all other cases
                     // a node in the flow must have at most one successor.
-                    checkState(graph.successors(closestPrecedingDrawable).size() == 1,
+                    checkState(graph.successors(closestPrecedingNode).size() == 1,
                             "Successors size MUST be 1, otherwise it must be a Scoped Drawable");
                     strategy = new PrecedingNodeWithOneSuccessor(graph, dropPoint, connector, graphics);
                 }
-                strategy.execute(closestPrecedingDrawable);
+                strategy.execute(closestPrecedingNode);
             }
         }
     }

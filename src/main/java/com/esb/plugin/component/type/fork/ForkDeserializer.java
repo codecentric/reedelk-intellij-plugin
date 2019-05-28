@@ -40,18 +40,18 @@ public class ForkDeserializer extends AbstractDeserializer {
             JSONObject next = fork.getJSONObject(i);
             JSONArray nextComponents = Fork.next(next);
 
-            GraphNode currentDrawable = forkNode;
+            GraphNode currentNode = forkNode;
             for (int j = 0; j < nextComponents.length(); j++) {
                 JSONObject currentComponentDefinition = nextComponents.getJSONObject(j);
-                currentDrawable = GraphDeserializerFactory.get()
+                currentNode = GraphDeserializerFactory.get()
                         .componentDefinition(currentComponentDefinition)
                         .context(context)
                         .graph(graph)
                         .build()
-                        .deserialize(currentDrawable, currentComponentDefinition);
+                        .deserialize(currentNode, currentComponentDefinition);
             }
 
-            graph.add(currentDrawable, stopNode);
+            graph.add(currentNode, stopNode);
 
         }
 

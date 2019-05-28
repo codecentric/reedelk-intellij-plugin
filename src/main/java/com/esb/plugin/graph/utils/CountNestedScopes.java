@@ -16,7 +16,7 @@ public class CountNestedScopes {
             }
         }
         return FindScope.of(graph, target)
-                .map(scopedDrawable -> 1 + of(graph, scopedDrawable))
+                .map(scopedNode -> 1 + of(graph, scopedNode))
                 .orElse(0);
     }
 }

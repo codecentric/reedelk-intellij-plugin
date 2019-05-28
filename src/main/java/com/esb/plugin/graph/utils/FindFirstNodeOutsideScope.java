@@ -24,9 +24,9 @@ public class FindFirstNodeOutsideScope {
     public static Optional<GraphNode> of(FlowGraph graph, ScopedGraphNode scope) {
         Set<GraphNode> firstNodesOutsideScope = new HashSet<>();
 
-        ListLastNodeOfScope.from(graph, scope)
-                .forEach(lastDrawableOfScope -> {
-                    List<GraphNode> successors = graph.successors(lastDrawableOfScope);
+        ListLastNodesOfScope.from(graph, scope)
+                .forEach(lastNodeOfScope -> {
+                    List<GraphNode> successors = graph.successors(lastNodeOfScope);
                     firstNodesOutsideScope.addAll(successors);
                 });
 

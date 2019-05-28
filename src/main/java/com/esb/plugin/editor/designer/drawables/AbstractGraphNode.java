@@ -7,7 +7,7 @@ import com.esb.plugin.graph.node.Drawable;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.FindScope;
-import com.esb.plugin.graph.utils.ListLastNodeOfScope;
+import com.esb.plugin.graph.utils.ListLastNodesOfScope;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
@@ -212,7 +212,7 @@ public abstract class AbstractGraphNode implements GraphNode {
     protected void drawConnections(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         Optional<ScopedGraphNode> wrappingScope = FindScope.of(graph, this);
         if (wrappingScope.isPresent()) {
-            List<GraphNode> nodesBelongingWrappingScope = ListLastNodeOfScope.from(graph, wrappingScope.get());
+            List<GraphNode> nodesBelongingWrappingScope = ListLastNodesOfScope.from(graph, wrappingScope.get());
             if (nodesBelongingWrappingScope.contains(this)) {
                 // last node of the scope. Don't draw any outgoing arrow.
                 return;

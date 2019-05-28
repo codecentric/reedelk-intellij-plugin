@@ -62,7 +62,7 @@ public class MoveActionHandler extends AbstractActionHandler {
 
         // 3. Remove the dropped node from any scope it might belong to
         Optional<ScopedGraphNode> selectedScope = FindScope.of(copy, selected);
-        selectedScope.ifPresent(scopedDrawable -> scopedDrawable.removeFromScope(selected));
+        selectedScope.ifPresent(scopedNode -> scopedNode.removeFromScope(selected));
 
         // 4. Add the dropped component back to the graph to the dropped position.
         Point dropPoint = new Point(dragX, dragY);
@@ -74,7 +74,7 @@ public class MoveActionHandler extends AbstractActionHandler {
 
         } else {
             // 6. Add back the node to the scope if the original graph was not changed.
-            selectedScope.ifPresent(scopedDrawable -> scopedDrawable.addToScope(selected));
+            selectedScope.ifPresent(scopedNode -> scopedNode.addToScope(selected));
         }
     }
 }

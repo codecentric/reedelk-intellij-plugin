@@ -28,8 +28,8 @@ public abstract class AbstractScopedGraphNode extends AbstractGraphNode implemen
     }
 
     @Override
-    public boolean scopeContains(GraphNode drawable) {
-        return scope.contains(drawable);
+    public boolean scopeContains(GraphNode node) {
+        return scope.contains(node);
     }
 
     @Override
@@ -65,13 +65,13 @@ public abstract class AbstractScopedGraphNode extends AbstractGraphNode implemen
     }
 
     @Override
-    public void addToScope(GraphNode drawable) {
-        this.scope.add(drawable);
+    public void addToScope(GraphNode node) {
+        this.scope.add(node);
     }
 
     @Override
-    public void removeFromScope(GraphNode drawable) {
-        this.scope.remove(drawable);
+    public void removeFromScope(GraphNode node) {
+        this.scope.remove(node);
     }
 
     @Override

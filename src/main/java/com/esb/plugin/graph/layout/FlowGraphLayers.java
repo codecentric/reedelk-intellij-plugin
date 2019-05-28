@@ -24,19 +24,19 @@ class FlowGraphLayers {
     List<List<GraphNode>> compute() {
         List<List<GraphNode>> sorted = new ArrayList<>();
 
-        List<GraphNode> noIncomingEdgesDrawables = getNodesWithoutIncomingEdges();
+        List<GraphNode> noIncomingEdgesNodes = getNodesWithoutIncomingEdges();
 
-        while (!noIncomingEdgesDrawables.isEmpty()) {
-            sorted.add(noIncomingEdgesDrawables);
+        while (!noIncomingEdgesNodes.isEmpty()) {
+            sorted.add(noIncomingEdgesNodes);
 
             // Remove all edges starting from nodes in noIncomingEdgesNodes
-            noIncomingEdgesDrawables.forEach(graph::removeEdgesStartingFrom);
+            noIncomingEdgesNodes.forEach(graph::removeEdgesStartingFrom);
 
             // Remove all nodes without incoming edge
-            noIncomingEdgesDrawables.forEach(graph::remove);
+            noIncomingEdgesNodes.forEach(graph::remove);
 
             // Recompute nodes without incoming edges
-            noIncomingEdgesDrawables = getNodesWithoutIncomingEdges();
+            noIncomingEdgesNodes = getNodesWithoutIncomingEdges();
         }
 
         return sorted;

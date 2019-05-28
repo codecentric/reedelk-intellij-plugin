@@ -7,7 +7,7 @@ import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.BelongToSameScope;
 import com.esb.plugin.graph.utils.FindScopes;
-import com.esb.plugin.graph.utils.ListLastNodeOfScope;
+import com.esb.plugin.graph.utils.ListLastNodesOfScope;
 
 import java.awt.*;
 import java.util.List;
@@ -71,10 +71,10 @@ public class PrecedingNodeWithOneSuccessor extends AbstractAddStrategy {
         }
 
         if (lastInnerMostScope != null) {
-            ListLastNodeOfScope.from(graph, lastInnerMostScope)
-                    .forEach(drawable -> {
-                        connector.addPredecessor(drawable);
-                        graph.remove(drawable, successorOfClosestPrecedingNode);
+            ListLastNodesOfScope.from(graph, lastInnerMostScope)
+                    .forEach(node -> {
+                        connector.addPredecessor(node);
+                        graph.remove(node, successorOfClosestPrecedingNode);
                     });
         } else {
             connector.addPredecessor(closestPrecedingDrawable);

@@ -8,7 +8,7 @@ import com.esb.plugin.graph.node.ScopeBoundaries;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.CountScopesBetween;
 import com.esb.plugin.graph.utils.FindFirstNodeOutsideScope;
-import com.esb.plugin.graph.utils.ListLastNodeOfScope;
+import com.esb.plugin.graph.utils.ListLastNodesOfScope;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 
@@ -49,9 +49,9 @@ public class ScopeBox implements Drawable {
 
     private int getMaxScopes(FlowGraph graph) {
         int max = 0;
-        Collection<GraphNode> allTerminalDrawables = ListLastNodeOfScope.from(graph, scopedGraphNode);
-        for (GraphNode drawable : allTerminalDrawables) {
-            Optional<Integer> scopesBetween = CountScopesBetween.them(scopedGraphNode, drawable);
+        Collection<GraphNode> allTerminalNodes = ListLastNodesOfScope.from(graph, scopedGraphNode);
+        for (GraphNode node : allTerminalNodes) {
+            Optional<Integer> scopesBetween = CountScopesBetween.them(scopedGraphNode, node);
             if (scopesBetween.isPresent()) {
                 max = scopesBetween.get() > max ? scopesBetween.get() : max;
             }
@@ -60,15 +60,15 @@ public class ScopeBox implements Drawable {
     }
 
     ScopeBoundaries getBoundaries(FlowGraph graph, Graphics2D graphics) {
-        Collection<GraphNode> drawables = ListLastNodeOfScope.from(graph, scopedGraphNode);
+        Collection<GraphNode> nodes = ListLastNodesOfScope.from(graph, scopedGraphNode);
 
         Drawable drawableWithMaxX = scopedGraphNode;
         Drawable drawableWithMinX = scopedGraphNode;
         Drawable drawableWithMaxY = scopedGraphNode;
         Drawable drawableWithMinY = scopedGraphNode;
 
-        if (!drawables.isEmpty()) {
-            Set<Drawable> allDrawables = new HashSet<>(drawables);
+        if (!nodes.isEmpty()) {
+            Set<Drawable> allDrawables = new HashSet<>(nodes);
             allDrawables.add(scopedGraphNode);
 
             // We need to find min x, max x, min y and max y

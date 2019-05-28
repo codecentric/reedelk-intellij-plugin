@@ -103,18 +103,18 @@ public class FlowGraphLayoutUtils {
         return sum;
     }
 
-    static GraphNode findCommonParent(FlowGraph graph, Collection<GraphNode> drawables) {
+    static GraphNode findCommonParent(FlowGraph graph, Collection<GraphNode> nodes) {
         Set<GraphNode> commonParents = new HashSet<>();
-        drawables.forEach(drawable -> commonParents.addAll(graph.predecessors(drawable)));
+        nodes.forEach(node -> commonParents.addAll(graph.predecessors(node)));
         checkState(commonParents.size() == 1, "Common parent must be one");
         return commonParents.stream().findFirst().get();
     }
 
-    private static int maxLayerWidth(FlowGraph graph, Graphics2D graphics, List<GraphNode> layerDrawables) {
+    private static int maxLayerWidth(FlowGraph graph, Graphics2D graphics, List<GraphNode> layerNodes) {
         int max = 0;
-        for (GraphNode layerDrawable : layerDrawables) {
-            int nestedScopes = CountNestedScopes.of(graph, layerDrawable);
-            int total = layerDrawable.width(graphics) + nestedScopes * HORIZONTAL_PADDING;
+        for (GraphNode layerNode : layerNodes) {
+            int nestedScopes = CountNestedScopes.of(graph, layerNode);
+            int total = layerNode.width(graphics) + nestedScopes * HORIZONTAL_PADDING;
             if (total > max) max = total;
         }
         return max;

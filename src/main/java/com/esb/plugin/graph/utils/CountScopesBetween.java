@@ -20,15 +20,15 @@ public class CountScopesBetween {
             return Optional.of(depth);
         }
 
-        for (GraphNode drawableInScope : scopedGraphNode.getScope()) {
+        for (GraphNode nodeInScope : scopedGraphNode.getScope()) {
 
-            if (drawableInScope instanceof ScopedGraphNode) {
-                Optional<Integer> found = scopesBetween(depth + 1, (ScopedGraphNode) drawableInScope, target);
+            if (nodeInScope instanceof ScopedGraphNode) {
+                Optional<Integer> found = scopesBetween(depth + 1, (ScopedGraphNode) nodeInScope, target);
                 if (found.isPresent()) {
                     return found;
                 }
 
-            } else if (drawableInScope == target) {
+            } else if (nodeInScope == target) {
                 return Optional.of(depth);
             }
         }

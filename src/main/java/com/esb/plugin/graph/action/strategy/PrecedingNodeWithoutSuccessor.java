@@ -5,7 +5,7 @@ import com.esb.plugin.graph.connector.Connector;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.FindScopes;
-import com.esb.plugin.graph.utils.ListLastNodeOfScope;
+import com.esb.plugin.graph.utils.ListLastNodesOfScope;
 
 import java.awt.*;
 import java.util.Stack;
@@ -28,12 +28,12 @@ public class PrecedingNodeWithoutSuccessor extends AbstractAddStrategy {
     }
 
     @Override
-    public void execute(GraphNode closestPrecedingDrawable) {
+    public void execute(GraphNode closestPrecedingNode) {
 
-        Stack<ScopedGraphNode> scopes = FindScopes.of(graph, closestPrecedingDrawable);
+        Stack<ScopedGraphNode> scopes = FindScopes.of(graph, closestPrecedingNode);
 
         if (scopes.isEmpty()) {
-            connector.addPredecessor(closestPrecedingDrawable);
+            connector.addPredecessor(closestPrecedingNode);
             return;
         }
 
@@ -56,11 +56,11 @@ public class PrecedingNodeWithoutSuccessor extends AbstractAddStrategy {
         }
 
         if (lastInnerMostScope != null) {
-            ListLastNodeOfScope.from(graph, lastInnerMostScope)
+            ListLastNodesOfScope.from(graph, lastInnerMostScope)
                     .forEach(connector::addPredecessor);
 
         } else {
-            connector.addPredecessor(closestPrecedingDrawable);
+            connector.addPredecessor(closestPrecedingNode);
         }
 
         if (currentScope != null) {

@@ -9,7 +9,7 @@ import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ListLastNodeOfScopeTest extends AbstractGraphTest {
+class ListLastNodesOfScopeTest extends AbstractGraphTest {
 
     @Test
     void shouldReturnCorrectlyLastDrawablesFromInnerScope() {
@@ -29,7 +29,7 @@ class ListLastNodeOfScopeTest extends AbstractGraphTest {
         choiceNode2.addToScope(componentNode2);
 
         // When
-        Collection<GraphNode> lastDrawablesOfScope = ListLastNodeOfScope.from(graph, choiceNode2);
+        Collection<GraphNode> lastDrawablesOfScope = ListLastNodesOfScope.from(graph, choiceNode2);
 
         // Then
         assertThat(lastDrawablesOfScope).containsExactlyInAnyOrder(componentNode1, componentNode2);
@@ -53,7 +53,7 @@ class ListLastNodeOfScopeTest extends AbstractGraphTest {
         choiceNode2.addToScope(componentNode2);
 
         // When
-        Collection<GraphNode> lastDrawablesOfScope = ListLastNodeOfScope.from(graph, choiceNode1);
+        Collection<GraphNode> lastDrawablesOfScope = ListLastNodesOfScope.from(graph, choiceNode1);
 
         // Then
         assertThat(lastDrawablesOfScope).containsExactly(componentNode3);
@@ -69,7 +69,7 @@ class ListLastNodeOfScopeTest extends AbstractGraphTest {
         choiceNode1.addToScope(choiceNode2);
 
         // When
-        Collection<GraphNode> lastDrawablesOfScope = ListLastNodeOfScope.from(graph, choiceNode1);
+        Collection<GraphNode> lastDrawablesOfScope = ListLastNodesOfScope.from(graph, choiceNode1);
 
         // Then
         assertThat(lastDrawablesOfScope).containsExactly(choiceNode2);
@@ -88,7 +88,7 @@ class ListLastNodeOfScopeTest extends AbstractGraphTest {
         choiceNode2.addToScope(choiceNode3);
 
         // When
-        Collection<GraphNode> lastDrawablesOfScope = ListLastNodeOfScope.from(graph, choiceNode1);
+        Collection<GraphNode> lastDrawablesOfScope = ListLastNodesOfScope.from(graph, choiceNode1);
 
         // Then
         assertThat(lastDrawablesOfScope).containsExactly(choiceNode3);
@@ -111,7 +111,7 @@ class ListLastNodeOfScopeTest extends AbstractGraphTest {
         choiceNode2.addToScope(componentNode3);
 
         // When
-        Collection<GraphNode> lastDrawablesOfScope = ListLastNodeOfScope.from(graph, choiceNode1);
+        Collection<GraphNode> lastDrawablesOfScope = ListLastNodesOfScope.from(graph, choiceNode1);
 
         // Then
         assertThat(lastDrawablesOfScope).containsExactlyInAnyOrder(componentNode1, componentNode2, componentNode3);
@@ -146,7 +146,7 @@ class ListLastNodeOfScopeTest extends AbstractGraphTest {
         choiceNode3.addToScope(componentNode2);
 
         // When
-        Collection<GraphNode> lastDrawablesOfScope = ListLastNodeOfScope.from(graph, choiceNode1);
+        Collection<GraphNode> lastDrawablesOfScope = ListLastNodesOfScope.from(graph, choiceNode1);
 
         // Then
         assertThat(lastDrawablesOfScope).containsExactlyInAnyOrder(componentNode3, componentNode7);

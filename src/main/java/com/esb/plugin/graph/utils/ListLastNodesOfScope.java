@@ -11,11 +11,11 @@ import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
 
-public class ListLastNodeOfScope {
+public class ListLastNodesOfScope {
 
     public static List<GraphNode> from(FlowGraph graph, ScopedGraphNode scopedGraphNode) {
-        Collection<GraphNode> allDrawablesInScopeAndNestedScope = collectAllDrawablesInsideScopesFrom(scopedGraphNode);
-        return allDrawablesInScopeAndNestedScope
+        Collection<GraphNode> allNodesInScopeAndNestedScope = collectAllNodesInsideScopesFrom(scopedGraphNode);
+        return allNodesInScopeAndNestedScope
                 .stream()
                 .filter(drawable -> {
 
@@ -24,26 +24,23 @@ public class ListLastNodeOfScope {
                     if (successors.isEmpty()) return true;
 
                     // If exists at least one
-                    return !allDrawablesInScopeAndNestedScope.containsAll(successors);
+                    return !allNodesInScopeAndNestedScope.containsAll(successors);
 
                 }).collect(toList());
     }
 
 
-    private static Collection<GraphNode> collectAllDrawablesInsideScopesFrom(ScopedGraphNode scopedGraphNode) {
+    private static Collection<GraphNode> collectAllNodesInsideScopesFrom(ScopedGraphNode scopedGraphNode) {
         Collection<GraphNode> scope = scopedGraphNode.getScope();
         Set<GraphNode> allElements = new HashSet<>(scope);
         Set<GraphNode> nested = new HashSet<>();
-
-        allElements.forEach(drawable -> {
-            if (drawable instanceof ScopedGraphNode) {
-                nested.addAll(collectAllDrawablesInsideScopesFrom((ScopedGraphNode) drawable));
+        allElements.forEach(node -> {
+            if (node instanceof ScopedGraphNode) {
+                nested.addAll(collectAllNodesInsideScopesFrom((ScopedGraphNode) node));
             }
         });
-
         allElements.addAll(nested);
         allElements.add(scopedGraphNode);
-
         return allElements;
     }
 }

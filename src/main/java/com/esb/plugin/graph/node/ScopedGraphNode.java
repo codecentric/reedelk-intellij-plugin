@@ -10,13 +10,13 @@ public interface ScopedGraphNode extends GraphNode {
     int VERTICAL_PADDING = 5;
     int HORIZONTAL_PADDING = 5;
 
-    void addToScope(GraphNode drawable);
+    void addToScope(GraphNode node);
 
-    void removeFromScope(GraphNode drawable);
+    void removeFromScope(GraphNode node);
 
     Collection<GraphNode> getScope();
 
-    boolean scopeContains(GraphNode drawable);
+    boolean scopeContains(GraphNode node);
 
     ScopeBoundaries getScopeBoundaries(FlowGraph graph, Graphics2D graphics);
 
