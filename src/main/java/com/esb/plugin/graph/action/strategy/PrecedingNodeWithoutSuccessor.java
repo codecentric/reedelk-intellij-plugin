@@ -20,10 +20,10 @@ import java.util.Stack;
  * If the closest preceding node does not belong to a scope, then:
  * - Add the node as successor.
  */
-public class PrecedingDrawableWithoutSuccessor extends AbstractAddStrategy {
+public class PrecedingNodeWithoutSuccessor extends AbstractAddStrategy {
 
 
-    public PrecedingDrawableWithoutSuccessor(FlowGraph graph, Point dropPoint, Connector connector, Graphics2D graphics) {
+    public PrecedingNodeWithoutSuccessor(FlowGraph graph, Point dropPoint, Connector connector, Graphics2D graphics) {
         super(graph, dropPoint, connector, graphics);
     }
 

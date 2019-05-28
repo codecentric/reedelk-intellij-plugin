@@ -15,10 +15,10 @@ import java.util.Stack;
 
 import static com.google.common.base.Preconditions.checkState;
 
-public class PrecedingDrawableWithOneSuccessor extends AbstractAddStrategy {
+public class PrecedingNodeWithOneSuccessor extends AbstractAddStrategy {
 
 
-    public PrecedingDrawableWithOneSuccessor(FlowGraph graph, Point dropPoint, Connector connector, Graphics2D graphics) {
+    public PrecedingNodeWithOneSuccessor(FlowGraph graph, Point dropPoint, Connector connector, Graphics2D graphics) {
         super(graph, dropPoint, connector, graphics);
     }
 

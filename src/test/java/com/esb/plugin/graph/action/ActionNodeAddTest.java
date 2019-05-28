@@ -404,7 +404,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
 
         @Nested
         @DisplayName("Preceding node with one successor")
-        class PrecedingDrawableWithOneSuccessor {
+        class PrecedingNodeWithOneSuccessor {
 
             @Test
             void shouldAddNodeBetweenPredecessorOutsideScopeAndSuccessorInsideScope() {
@@ -567,7 +567,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
 
         @Nested
         @DisplayName("Preceding node without successor")
-        class PrecedingDrawableWithoutSuccessor {
+        class PrecedingNodeWithoutSuccessor {
 
             @Test
             void shouldAddNodeBetweenPredecessorInMultipleScopeAndDropPointInsideUpperScope() {

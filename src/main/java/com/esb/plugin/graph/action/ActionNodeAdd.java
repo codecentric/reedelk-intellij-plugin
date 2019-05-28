@@ -4,9 +4,9 @@ package com.esb.plugin.graph.action;
 import com.esb.plugin.editor.Tile;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.action.strategy.AddStrategy;
-import com.esb.plugin.graph.action.strategy.PrecedingDrawableWithOneSuccessor;
-import com.esb.plugin.graph.action.strategy.PrecedingDrawableWithoutSuccessor;
-import com.esb.plugin.graph.action.strategy.PrecedingScopedDrawable;
+import com.esb.plugin.graph.action.strategy.PrecedingNodeWithOneSuccessor;
+import com.esb.plugin.graph.action.strategy.PrecedingNodeWithoutSuccessor;
+import com.esb.plugin.graph.action.strategy.PrecedingScopedNode;
 import com.esb.plugin.graph.connector.Connector;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
@@ -56,17 +56,17 @@ public class ActionNodeAdd {
                 AddStrategy strategy;
 
                 if (closestPrecedingDrawable instanceof ScopedGraphNode) {
-                    strategy = new PrecedingScopedDrawable(graph, dropPoint, connector, graphics);
+                    strategy = new PrecedingScopedNode(graph, dropPoint, connector, graphics);
 
                 } else if (graph.successors(closestPrecedingDrawable).isEmpty()) {
-                    strategy = new PrecedingDrawableWithoutSuccessor(graph, dropPoint, connector, graphics);
+                    strategy = new PrecedingNodeWithoutSuccessor(graph, dropPoint, connector, graphics);
 
                 } else {
                     // Only ScopedGraphNode nodes might have multiple successors. In all other cases
                     // a node in the flow must have at most one successor.
                     checkState(graph.successors(closestPrecedingDrawable).size() == 1,
                             "Successors size MUST be 1, otherwise it must be a Scoped Drawable");
-                    strategy = new PrecedingDrawableWithOneSuccessor(graph, dropPoint, connector, graphics);
+                    strategy = new PrecedingNodeWithOneSuccessor(graph, dropPoint, connector, graphics);
                 }
                 strategy.execute(closestPrecedingDrawable);
             }
