@@ -34,7 +34,17 @@ public class PrecedingScopedNode extends AbstractAddStrategy {
         if (successors.isEmpty()) {
             connector.addPredecessor(closestPrecedingNode);
             addToScopeIfNeeded(closestPrecedingNode);
-            connectCommonSuccessorsOf(closestPrecedingNode);
+            return;
+        }
+
+        // Need to  handle the case where successor is only one and it is outside the scope.
+        // TODO: Missing case
+        if (successors.size() == 1 && !closestPrecedingNode.scopeContains(successors.get(0))) {
+            GraphNode successorOfClosestPrecedingNode = successors.get(0);
+            graph.remove(closestPrecedingNode, successorOfClosestPrecedingNode);
+            connector.addPredecessor(closestPrecedingNode);
+            connector.addSuccessor(successorOfClosestPrecedingNode);
+            connector.addToScope(closestPrecedingNode);
             return;
         }
 
