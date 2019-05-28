@@ -59,7 +59,8 @@ public class PrecedingScopedNode extends AbstractAddStrategy {
             if (isInsideTopArea(successor, dropPoint)) {
                 connector.addPredecessor(closestPrecedingNode, successorIndex);
                 addToScopeIfNeeded(closestPrecedingNode);
-                connectCommonSuccessorsOf(closestPrecedingNode);
+                FindFirstNodeOutsideScope.of(graph, closestPrecedingNode)
+                        .ifPresent(connector::addSuccessor);
                 return;
 
             } else if (isInsideCenterArea(successor, dropPoint)) {
@@ -73,7 +74,8 @@ public class PrecedingScopedNode extends AbstractAddStrategy {
             } else if (isInsideBottomArea(successor, dropPoint)) {
                 connector.addPredecessor(closestPrecedingNode, successorIndex + 1);
                 addToScopeIfNeeded(closestPrecedingNode);
-                connectCommonSuccessorsOf(closestPrecedingNode);
+                FindFirstNodeOutsideScope.of(graph, closestPrecedingNode)
+                        .ifPresent(connector::addSuccessor);
                 return;
             }
         }
@@ -95,11 +97,6 @@ public class PrecedingScopedNode extends AbstractAddStrategy {
         int yBottomTopBound = successor.y() + (Tile.HALF_HEIGHT - Math.floorDiv(Tile.HEIGHT, 4));
         int yBottomBottomBound = successor.y() + Tile.HALF_HEIGHT;
         return dropPoint.y > yBottomTopBound && dropPoint.y < yBottomBottomBound;
-    }
-
-    private void connectCommonSuccessorsOf(ScopedGraphNode closestPrecedingNode) {
-        FindFirstNodeOutsideScope.of(graph, closestPrecedingNode)
-                .ifPresent(connector::addSuccessor);
     }
 
 }
