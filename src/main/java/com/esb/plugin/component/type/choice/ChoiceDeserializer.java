@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -69,15 +70,13 @@ public class ChoiceDeserializer extends AbstractDeserializer {
             choiceData.set(Implementor.description(), Implementor.description(componentDefinition));
         }
 
-        List<ChoiceConditionRoutePair> choiceConditionRoutePairList =
-                choiceData.get(DATA_CONDITION_ROUTE_PAIRS);
+        List<ChoiceConditionRoutePair> choiceConditionRoutePairList = new LinkedList<>();
+        choiceData.set(DATA_CONDITION_ROUTE_PAIRS, choiceConditionRoutePairList);
 
         for (Map.Entry<GraphNode, String> entry : preNodeConditionMap.entrySet()) {
-            // TODO: this is duplicated code
-            choiceConditionRoutePairList.stream()
-                    .filter(choiceConditionRoutePair -> choiceConditionRoutePair.getNext() == entry.getKey())
-                    .findFirst()
-                    .ifPresent(choiceConditionRoutePair -> choiceConditionRoutePair.setCondition(entry.getValue()));
+            ChoiceConditionRoutePair pair =
+                    new ChoiceConditionRoutePair(entry.getValue(), entry.getKey());
+            choiceConditionRoutePairList.add(pair);
         }
 
         return stopNode;
