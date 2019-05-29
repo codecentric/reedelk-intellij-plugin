@@ -24,7 +24,7 @@ public class ScopedNodeConnector implements Connector {
     public void addSuccessor(GraphNode successor) {
         addScopeGraphIfNeeded();
         Collection<GraphNode> nodes = ListLastNodesOfScope.from(graph, (ScopedGraphNode) scopeSubGraph.root());
-        nodes.forEach(drawable -> graph.add(drawable, successor));
+        nodes.forEach(node -> graph.add(node, successor));
     }
 
     @Override

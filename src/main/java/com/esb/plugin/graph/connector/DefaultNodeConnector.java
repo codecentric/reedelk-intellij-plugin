@@ -16,12 +16,26 @@ public class DefaultNodeConnector implements Connector {
 
     @Override
     public void addSuccessor(GraphNode successor) {
-        graph.add(node, successor);
+        if (node.isSuccessorAllowed(graph, successor)) {
+            graph.add(node, successor);
+            node.onSuccessorAdded(graph, successor);
+        }
     }
 
     @Override
     public void addPredecessor(GraphNode predecessor) {
-        graph.add(predecessor, node);
+        if (predecessor.isSuccessorAllowed(graph, node)) {
+            graph.add(predecessor, node);
+            predecessor.onSuccessorAdded(graph, node);
+        }
+    }
+
+    @Override
+    public void addPredecessor(ScopedGraphNode predecessor, int index) {
+        if (predecessor.isSuccessorAllowed(graph, node, index)) {
+            graph.add(predecessor, node, index);
+            predecessor.onSuccessorAdded(graph, node, index);
+        }
     }
 
     @Override
@@ -37,10 +51,5 @@ public class DefaultNodeConnector implements Connector {
     @Override
     public void addToScope(ScopedGraphNode scope) {
         scope.addToScope(node);
-    }
-
-    @Override
-    public void addPredecessor(ScopedGraphNode predecessor, int index) {
-        graph.add(predecessor, node, index);
     }
 }

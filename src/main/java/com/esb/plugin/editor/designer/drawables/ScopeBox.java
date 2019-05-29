@@ -19,14 +19,20 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import static java.awt.BasicStroke.CAP_ROUND;
+import static java.awt.BasicStroke.JOIN_ROUND;
+
 public class ScopeBox implements Drawable {
 
     private final int IN_BETWEEN_SCOPES_PADDING = 5;
 
     private final Stroke STROKE = new BasicStroke(1f);
     private final JBColor BOUNDARIES_COLOR = new JBColor(Gray._235, Gray._30);
+    private final JBColor SELECTED_BOUNDARIES_COLOR = JBColor.DARK_GRAY;
+    private final Stroke DOTTED_STROKE = new BasicStroke(1f, CAP_ROUND, JOIN_ROUND, 0, new float[]{3}, 0);
 
     private final ScopedGraphNode scopedGraphNode;
+    private boolean selected;
 
     public ScopeBox(ScopedGraphNode scopedGraphNode) {
         this.scopedGraphNode = scopedGraphNode;
@@ -34,8 +40,14 @@ public class ScopeBox implements Drawable {
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-        graphics.setStroke(STROKE);
-        graphics.setColor(BOUNDARIES_COLOR);
+
+        if (isSelected()) {
+            graphics.setColor(SELECTED_BOUNDARIES_COLOR);
+            graphics.setStroke(DOTTED_STROKE);
+        } else {
+            graphics.setColor(BOUNDARIES_COLOR);
+            graphics.setStroke(STROKE);
+        }
 
         ScopeBoundaries boundaries = getBoundaries(graph, graphics);
         int x = boundaries.getX();
@@ -108,4 +120,18 @@ public class ScopeBox implements Drawable {
         return new ScopeBoundaries(minX, minY, width, height);
     }
 
+    @Override
+    public void selected() {
+        selected = true;
+    }
+
+    @Override
+    public void unselected() {
+        selected = false;
+    }
+
+    @Override
+    public boolean isSelected() {
+        return selected;
+    }
 }

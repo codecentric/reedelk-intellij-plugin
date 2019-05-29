@@ -21,6 +21,8 @@ public class VerticalDivider implements Drawable {
     private final JBColor VERTICAL_DIVIDER_COLOR = new JBColor(Gray._200, Gray._30);
 
     private final ScopedGraphNode scopedGraphNode;
+    private int x;
+    private int y;
 
     public VerticalDivider(ScopedGraphNode scopedGraphNode) {
         this.scopedGraphNode = scopedGraphNode;
@@ -42,11 +44,16 @@ public class VerticalDivider implements Drawable {
 
         int halfWidth = Math.floorDiv(scopedGraphNode.width(graphics), 2);
 
-        int verticalX = scopedGraphNode.x() + halfWidth - 6;
-        int verticalSeparatorMinY = scopedGraphNode.y() - halfScopeHeight;
-        int verticalSeparatorMaxY = scopedGraphNode.y() + halfScopeHeight;
+        int verticalX = x + halfWidth - 6;
+        int verticalSeparatorMinY = y - halfScopeHeight;
+        int verticalSeparatorMaxY = y + halfScopeHeight;
 
         graphics.drawLine(verticalX, verticalSeparatorMinY, verticalX, verticalSeparatorMaxY);
     }
 
+    @Override
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
 }

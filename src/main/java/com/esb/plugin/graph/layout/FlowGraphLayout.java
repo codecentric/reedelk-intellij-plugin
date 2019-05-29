@@ -1,6 +1,5 @@
 package com.esb.plugin.graph.layout;
 
-import com.esb.plugin.editor.Tile;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopeBoundaries;
@@ -18,8 +17,6 @@ import static com.esb.plugin.graph.node.ScopedGraphNode.VERTICAL_PADDING;
 import static com.google.common.base.Preconditions.checkState;
 
 public class FlowGraphLayout {
-
-    private static final int X_LEFT_PADDING = Math.floorDiv(Tile.WIDTH, 2);
 
     public static void compute(FlowGraph graph, Graphics2D graphics) {
         FlowGraphLayers layers = new FlowGraphLayers(graph);
@@ -41,7 +38,7 @@ public class FlowGraphLayout {
                 // Center in subtree
                 int maxSubtreeHeight = FlowGraphLayoutUtils.maxHeight(graph, graphics, node);
 
-                int tmpX = X_LEFT_PADDING + layerWidthSumPreceding(graph, graphics, layers, containingLayerIndex);
+                int tmpX = Math.floorDiv(node.width(graphics), 2) + layerWidthSumPreceding(graph, graphics, layers, containingLayerIndex);
                 int tmpY = top + Math.floorDiv(maxSubtreeHeight, 2);
                 node.setPosition(tmpX, tmpY);
 
@@ -54,7 +51,7 @@ public class FlowGraphLayout {
                 // Find layer containing this node
                 int containingLayerIndex = findContainingLayer(layers, node);
 
-                int tmpX = X_LEFT_PADDING + layerWidthSumPreceding(graph, graphics, layers, containingLayerIndex);
+                int tmpX = Math.floorDiv(node.width(graphics), 2) + layerWidthSumPreceding(graph, graphics, layers, containingLayerIndex);
 
                 // If it is the first node outside a scope, center it in the middle of the scope
                 // this node is joining from.
@@ -113,7 +110,7 @@ public class FlowGraphLayout {
                     top += VERTICAL_PADDING; // top padding
                 }
 
-                int tmpX = X_LEFT_PADDING + layerWidthSumPreceding(graph, graphics, layers, containingLayerIndex);
+                int tmpX = Math.floorDiv(node.width(graphics), 2) + layerWidthSumPreceding(graph, graphics, layers, containingLayerIndex);
 
                 int maxSubtreeHeight = FlowGraphLayoutUtils.maxHeight(graph, graphics, node, firstNodeOutsideScope);
 

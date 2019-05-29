@@ -16,8 +16,8 @@ import java.util.*;
 
 public abstract class AbstractScopedGraphNode extends AbstractGraphNode implements ScopedGraphNode {
 
-    private final Drawable verticalDivider;
-    private final ScopeBox scopeBox;
+    protected final ScopeBox scopeBox;
+    protected final Drawable verticalDivider;
 
     private Set<GraphNode> scope = new HashSet<>();
 
@@ -40,6 +40,7 @@ public abstract class AbstractScopedGraphNode extends AbstractGraphNode implemen
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         super.draw(graph, graphics, observer);
+        verticalDivider.setPosition(x(), y());
         verticalDivider.draw(graph, graphics, observer);
         scopeBox.draw(graph, graphics, observer);
     }
@@ -82,7 +83,7 @@ public abstract class AbstractScopedGraphNode extends AbstractGraphNode implemen
     // We also need to draw a connection between the end of scope to the next successor.
     // We draw this arrow only if the last drawables of this scope connect
     // arrows in the next scope
-    private void drawEndOfScopeArrow(FlowGraph graph, Graphics2D graphics) {
+    protected void drawEndOfScopeArrow(FlowGraph graph, Graphics2D graphics) {
         FindFirstNodeOutsideScope.of(graph, this).ifPresent(firstNodeOutsideScope -> {
             if (IsLastScopeBeforeNode.of(graph, AbstractScopedGraphNode.this, firstNodeOutsideScope)) {
                 ScopeBoundaries boundaries = scopeBox.getBoundaries(graph, graphics);
@@ -97,7 +98,7 @@ public abstract class AbstractScopedGraphNode extends AbstractGraphNode implemen
         });
     }
 
-    private Point getTarget(Graphics2D graphics, Drawable drawable) {
+    protected Point getTarget(Graphics2D graphics, Drawable drawable) {
         Point barycenter = drawable.getBarycenter(graphics);
         return new Point(
                 barycenter.x - Math.floorDiv(drawable.width(graphics), 2) + 15,

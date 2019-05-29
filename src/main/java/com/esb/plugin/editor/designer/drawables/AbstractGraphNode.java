@@ -18,22 +18,22 @@ public abstract class AbstractGraphNode implements GraphNode {
 
     private final ComponentData componentData;
 
-    private final Drawable icon;
-    private final Drawable arrows;
-    private final Drawable componentTitle;
-    private final Drawable selectedItemBox;
-    private final Drawable componentDescription;
+    protected final Drawable icon;
+    protected final Drawable arrows;
+    protected final Drawable componentTitle;
+    protected final Drawable selectedItemBox;
+    protected final Drawable componentDescription;
 
     // x and y represent the center position of this Drawable.
     private int x;
     private int y;
 
     // represent the coordinates of the dragged node
-    private int draggedX;
-    private int draggedY;
+    protected int draggedX;
+    protected int draggedY;
 
-    private boolean dragging;
-    private boolean selected;
+    protected boolean dragging;
+    protected boolean selected;
 
     public AbstractGraphNode(ComponentData componentData) {
         this.componentData = componentData;

@@ -12,6 +12,7 @@ import com.esb.plugin.graph.layout.FlowGraphLayout;
 import com.esb.plugin.graph.node.Drawable;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.NothingSelectedNode;
+import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.JBColor;
@@ -27,9 +28,7 @@ import java.awt.dnd.DropTargetListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
@@ -94,23 +93,30 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         long start = System.currentTimeMillis();
 
 
-        // Draw each node of the graph
-        // (except the current selected Drawable - see below)
-        Optional<GraphNode> selectedNode = Optional.empty();
-        List<GraphNode> unselectedNodes = new ArrayList<>();
-        for (GraphNode node : graph.nodes()) {
-            if (node.isSelected()) {
-                selectedNode = Optional.of(node);
-            } else {
-                unselectedNodes.add(node);
+        // First draw Scoped Nodes,
+        // Scoped nodes so that the background of (for instance) otherwise lane for choice
+        // is drawn before the nodes on top
+        // First MUST draw outermost scoped nodes!!!
+        graph.breadthFirstTraversal(node -> {
+            if (node instanceof ScopedGraphNode) {
+                node.draw(graph, g2, DesignerPanel.this);
             }
-        }
+        });
 
-        unselectedNodes.forEach(node -> node.draw(graph, g2, DesignerPanel.this));
+        // First draw Scoped Nodes,
+        graph.breadthFirstTraversal(node -> {
+            if (!(node instanceof ScopedGraphNode)) {
+                node.draw(graph, g2, DesignerPanel.this);
+            }
+        });
 
         // The selected node must be drawn LAST so
         // that it is on top of all the other drawables.
-        selectedNode.ifPresent(node -> node.draw(graph, g2, DesignerPanel.this));
+        graph.nodes()
+                .stream()
+                .filter(Drawable::isSelected)
+                .findFirst()
+                .ifPresent(selectedNode -> selectedNode.draw(graph, g2, DesignerPanel.this));
 
         long end = System.currentTimeMillis() - start;
         LOG.info("Painted... " + end);
