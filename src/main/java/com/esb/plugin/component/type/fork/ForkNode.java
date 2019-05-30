@@ -68,7 +68,7 @@ public class ForkNode extends AbstractScopedGraphNode {
     protected void drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         // Draw arrows -> perpendicular to the vertical bar.
         int halfWidth = Math.floorDiv(width(graphics), 2);
-        int verticalX = x() + halfWidth - 6;
+        int verticalX = x() + halfWidth;
 
         List<GraphNode> successors = graph.successors(this);
         for (Drawable successor : successors) {

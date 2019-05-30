@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public abstract class AbstractText implements Widget {
 
-    private static final Pattern REGEX = Pattern.compile(".{1,17}(?:\\s|$)", Pattern.DOTALL);
+    private static final Pattern REGEX = Pattern.compile(".{1,16}(?:\\s|$)", Pattern.DOTALL);
     private final Font font;
 
     private int x;

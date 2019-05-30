@@ -11,7 +11,7 @@ import java.awt.image.ImageObserver;
  */
 public class Icon {
 
-    private static final int TOP_OFFSET = 10;
+    private static final int TOP_OFFSET = 5;
     private static final int ICON_WIDTH = 60;
     private static final int ICON_HEIGHT = 60;
     private static final int HALF_ICON_WIDTH = Math.floorDiv(ICON_WIDTH, 2);

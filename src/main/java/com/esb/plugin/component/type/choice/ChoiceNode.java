@@ -134,7 +134,7 @@ public class ChoiceNode extends AbstractScopedGraphNode {
     private void drawVerticalDividerArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         // Draw arrows -> perpendicular to the vertical bar.
         int halfWidth = Math.floorDiv(width(graphics), 2);
-        int verticalX = x() - 60 + halfWidth - 6;
+        int verticalX = x() - 60 + halfWidth;
 
         List<GraphNode> successors = graph.successors(this);
         for (GraphNode successor : successors) {
@@ -148,7 +148,7 @@ public class ChoiceNode extends AbstractScopedGraphNode {
 
             if (isDefaultRoute(successor)) {
                 graphics.setColor(Color.GRAY);
-                graphics.drawString("otherwise", verticalX + 6, sourceBaryCenter.y - 3);
+                graphics.drawString("otherwise", verticalX + 6, sourceBaryCenter.y + 14);
             }
         }
     }

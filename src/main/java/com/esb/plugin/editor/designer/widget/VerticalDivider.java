@@ -18,7 +18,6 @@ public class VerticalDivider {
 
     private final Stroke STROKE = new BasicStroke(1.3f, CAP_ROUND, JOIN_ROUND);
     private final JBColor VERTICAL_DIVIDER_COLOR = new JBColor(Gray._200, Gray._30);
-
     private final ScopedGraphNode scopedGraphNode;
     private int x;
     private int y;
@@ -42,7 +41,7 @@ public class VerticalDivider {
 
         int halfWidth = Math.floorDiv(scopedGraphNode.width(graphics), 2);
 
-        int verticalX = x + halfWidth - 6;
+        int verticalX = x + halfWidth;
         int verticalSeparatorMinY = y - halfScopeHeight;
         int verticalSeparatorMaxY = y + halfScopeHeight;
 
