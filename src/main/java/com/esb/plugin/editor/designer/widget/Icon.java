@@ -13,8 +13,8 @@ public class Icon implements Widget {
     private static final int HEIGHT = 60;
 
     private final Image image;
-    private final ComponentTitle componentTitle;
-    private final ComponentDescription componentDescription;
+    private final TextComponentTitle textComponentTitle;
+    private final TextComponentDescription textComponentDescription;
 
 
     private int x;
@@ -22,8 +22,8 @@ public class Icon implements Widget {
 
     public Icon(ComponentData componentData) {
         image = componentData.getComponentImage();
-        componentTitle = new ComponentTitle(componentData);
-        componentDescription = new ComponentDescription(componentData);
+        textComponentTitle = new TextComponentTitle(componentData);
+        textComponentDescription = new TextComponentDescription(componentData);
     }
 
     @Override
@@ -32,10 +32,10 @@ public class Icon implements Widget {
         int iconDrawableHeight = height(graphics);
         int halfIconDrawableHeight = Math.floorDiv(iconDrawableHeight, 2);
 
-        int componentTitleHeight = componentTitle.height(graphics);
+        int componentTitleHeight = textComponentTitle.height(graphics);
         int halfComponentTitleHeight = Math.floorDiv(componentTitleHeight, 2);
 
-        int componentDescriptionHeight = componentDescription.height(graphics);
+        int componentDescriptionHeight = textComponentDescription.height(graphics);
         int halfComponentDescriptionHeight = Math.floorDiv(componentDescriptionHeight, 2);
 
         int totalHeight = iconDrawableHeight + componentTitleHeight + componentDescriptionHeight;
@@ -47,14 +47,14 @@ public class Icon implements Widget {
 
         // Center title below icon
         int centerTitleY = y - halfTotalHeight + iconDrawableHeight + halfComponentTitleHeight;
-        componentTitle.setPosition(x, centerTitleY);
+        textComponentTitle.setPosition(x, centerTitleY);
 
         // Center description below title
         int centerDescriptionY = y - halfTotalHeight + iconDrawableHeight + componentTitleHeight + halfComponentDescriptionHeight;
-        componentDescription.setPosition(x, centerDescriptionY);
+        textComponentDescription.setPosition(x, centerDescriptionY);
 
-        componentTitle.draw(graph, graphics, observer);
-        componentDescription.draw(graph, graphics, observer);
+        textComponentTitle.draw(graph, graphics, observer);
+        textComponentDescription.draw(graph, graphics, observer);
 
         int halfWidth = Math.floorDiv(image.getWidth(observer), 2);
         int halfHeight = Math.floorDiv(image.getHeight(observer), 2);
@@ -99,7 +99,7 @@ public class Icon implements Widget {
 
     public Point getBarycenter(Graphics2D graphics, ImageObserver observer) {
         int baryX = x;
-        int baryY = y - Math.floorDiv(height(graphics), 2) + componentTitle.height(graphics);
+        int baryY = y - Math.floorDiv(height(graphics), 2) + textComponentTitle.height(graphics);
         return new Point(baryX, baryY);
     }
 

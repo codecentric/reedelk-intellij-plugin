@@ -51,4 +51,9 @@ public class ForkNode extends AbstractScopedGraphNode {
     public Point getBarycenter(Graphics2D graphics, ImageObserver observer) {
         return new Point();
     }
+
+    @Override
+    public boolean contains(ImageObserver observer, int x, int y) {
+        return false;
+    }
 }

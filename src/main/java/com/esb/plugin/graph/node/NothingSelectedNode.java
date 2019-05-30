@@ -19,6 +19,11 @@ public class NothingSelectedNode implements GraphNode {
     }
 
     @Override
+    public boolean contains(ImageObserver observer, int x, int y) {
+        return false;
+    }
+
+    @Override
     public ComponentData componentData() {
         return null;
     }

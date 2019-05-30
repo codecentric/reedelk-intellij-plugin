@@ -56,4 +56,9 @@ public class VerticalDivider implements Drawable {
         this.x = x;
         this.y = y;
     }
+
+    @Override
+    public boolean contains(ImageObserver observer, int x, int y) {
+        return false;
+    }
 }

@@ -6,11 +6,11 @@ import com.intellij.ui.JBColor;
 
 import java.awt.*;
 
-public class ComponentDescription extends AbstractText {
+public class TextComponentDescription extends AbstractText {
 
     private ComponentData componentData;
 
-    public ComponentDescription(ComponentData componentData) {
+    public TextComponentDescription(ComponentData componentData) {
         this.componentData = componentData;
     }
 

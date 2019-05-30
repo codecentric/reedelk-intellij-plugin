@@ -71,9 +71,15 @@ public class ChoiceNode extends AbstractScopedGraphNode {
         }
     }
 
+
     @Override
     public Point getBarycenter(Graphics2D graphics, ImageObserver observer) {
         return icon.getBarycenter(graphics, observer);
+    }
+
+    @Override
+    public boolean contains(ImageObserver observer, int x, int y) {
+        return icon.contains(observer, x, y);
     }
 
     private boolean isDefaultRoute(GraphNode target) {

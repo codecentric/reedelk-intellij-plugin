@@ -5,11 +5,11 @@ import com.intellij.ui.JBColor;
 
 import java.awt.*;
 
-public class ComponentTitle extends AbstractText {
+public class TextComponentTitle extends AbstractText {
 
     private final String title;
 
-    public ComponentTitle(ComponentData componentData) {
+    public TextComponentTitle(ComponentData componentData) {
         this.title = componentData.getDisplayName();
     }
 

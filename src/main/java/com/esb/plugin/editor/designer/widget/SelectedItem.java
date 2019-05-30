@@ -76,6 +76,11 @@ public class SelectedItem implements Drawable {
     }
 
     @Override
+    public boolean contains(ImageObserver observer, int x, int y) {
+        return false;
+    }
+
+    @Override
     public boolean isSelected() {
         return selected;
     }

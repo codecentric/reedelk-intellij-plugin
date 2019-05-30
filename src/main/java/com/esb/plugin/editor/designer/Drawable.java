@@ -56,9 +56,7 @@ public interface Drawable {
         throw new UnsupportedOperationException();
     }
 
-    default boolean contains(ImageObserver observer, int x, int y) {
-        throw new UnsupportedOperationException();
-    }
+    boolean contains(ImageObserver observer, int x, int y);
 
     void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer);
 

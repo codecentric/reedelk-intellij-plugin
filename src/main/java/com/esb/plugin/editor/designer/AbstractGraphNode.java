@@ -2,7 +2,7 @@ package com.esb.plugin.editor.designer;
 
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.editor.Tile;
-import com.esb.plugin.editor.designer.widget.Arrows;
+import com.esb.plugin.editor.designer.widget.Arrow;
 import com.esb.plugin.editor.designer.widget.Icon;
 import com.esb.plugin.editor.designer.widget.SelectedItem;
 import com.esb.plugin.graph.FlowGraph;
@@ -23,7 +23,6 @@ public abstract class AbstractGraphNode implements GraphNode {
     private final Icon icon;
     private final Icon draggedIcon;
 
-    private final Arrows arrows;
     private final Drawable selectedItemBox;
 
     // x and y represent the center position
@@ -43,8 +42,6 @@ public abstract class AbstractGraphNode implements GraphNode {
 
         icon = new Icon(componentData);
         draggedIcon = new Icon(componentData);
-
-        arrows = new Arrows(this);
         selectedItemBox = new SelectedItem(this);
     }
 
@@ -55,13 +52,13 @@ public abstract class AbstractGraphNode implements GraphNode {
         drawArrows(graph, graphics, observer);
 
         if (selected) {
-            // Center selected box
             selectedItemBox.setPosition(x(), y());
             selectedItemBox.draw(graph, graphics, observer);
         }
 
         if (dragging) {
-            // TODO: Handle dragging
+            draggedIcon.setPosition(draggedX, draggedY);
+            draggedIcon.draw(graph, graphics, observer);
         }
 
     }
@@ -162,6 +159,24 @@ public abstract class AbstractGraphNode implements GraphNode {
                 return;
             }
         }
-        arrows.draw(graph, graphics, observer);
+        drawTheArrows(graph, graphics, observer);
+    }
+
+    private void drawTheArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+        graph.successors(this).forEach(successor -> {
+
+            Point sourceBaryCenter = this.getBarycenter(graphics, observer);
+            Point source = new Point(
+                    sourceBaryCenter.x + Math.floorDiv(60, 2) + 7,
+                    sourceBaryCenter.y);
+
+            Point targetBaryCenter = successor.getBarycenter(graphics, observer);
+            Point target = new Point(
+                    targetBaryCenter.x - Math.floorDiv(60, 2) - 7,
+                    targetBaryCenter.y);
+
+            Arrow arrow = new Arrow(source, target);
+            arrow.draw(graphics);
+        });
     }
 }
