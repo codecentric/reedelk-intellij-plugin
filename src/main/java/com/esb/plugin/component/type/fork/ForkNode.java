@@ -15,6 +15,8 @@ import java.util.List;
 
 public class ForkNode extends AbstractScopedGraphNode {
 
+    private static final int VERTICAL_DIVIDER_X_OFFSET = 10;
+
     private static final int HEIGHT = 145;
     private static final int WIDTH = 110;
 
@@ -42,7 +44,7 @@ public class ForkNode extends AbstractScopedGraphNode {
     public void setPosition(int x, int y) {
         super.setPosition(x, y);
         icon.setPosition(x, y);
-        verticalDivider.setPosition(x, y);
+        verticalDivider.setPosition(x - VERTICAL_DIVIDER_X_OFFSET, y);
     }
 
     @Override
@@ -68,7 +70,7 @@ public class ForkNode extends AbstractScopedGraphNode {
     protected void drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         // Draw arrows -> perpendicular to the vertical bar.
         int halfWidth = Math.floorDiv(width(graphics), 2);
-        int verticalX = x() + halfWidth;
+        int verticalX = x() + halfWidth - VERTICAL_DIVIDER_X_OFFSET;
 
         List<GraphNode> successors = graph.successors(this);
         for (Drawable successor : successors) {

@@ -10,7 +10,6 @@ import com.esb.plugin.graph.SnapshotListener;
 import com.esb.plugin.graph.layout.FlowGraphLayout;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.NothingSelectedNode;
-import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.JBColor;
@@ -74,48 +73,20 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
         // We compute again the graph layout if and only if it was updated.
         if (updated) {
-
             LOG.info("Painting...(updated)");
-
             graph = snapshot.getGraph();
-
             FlowGraphLayout.compute(graph, g2);
-
             PrintFlowInfo.debug(graph);// TODO: debug only
-
             adjustWindowSize();
-
             updated = false;
-
         }
+
 
         long start = System.currentTimeMillis();
 
-
-        // First draw Scoped Nodes,
-        // Scoped nodes so that the background of (for instance) otherwise lane for choice
-        // is drawn before the nodes on top
-        // First MUST draw outermost scoped nodes!!!
-        graph.breadthFirstTraversal(node -> {
-            if (node instanceof ScopedGraphNode) {
-                node.draw(graph, g2, DesignerPanel.this);
-            }
-        });
-
-        // First draw Scoped Nodes,
-        graph.breadthFirstTraversal(node -> {
-            if (!(node instanceof ScopedGraphNode)) {
-                node.draw(graph, g2, DesignerPanel.this);
-            }
-        });
-
-        // The selected node must be drawn LAST so
-        // that it is on top of all the other drawables.
-        graph.nodes()
-                .stream()
-                .filter(Drawable::isSelected)
-                .findFirst()
-                .ifPresent(selectedNode -> selectedNode.draw(graph, g2, DesignerPanel.this));
+        // Draw the graph
+        graph.breadthFirstTraversal(node ->
+                node.draw(graph, g2, DesignerPanel.this));
 
         long end = System.currentTimeMillis() - start;
         LOG.info("Painted... " + end);
@@ -281,9 +252,9 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     private Optional<GraphNode> getNodeWithinCoordinates(int x, int y) {
         return graph.nodes()
-                        .stream()
-                        .filter(node -> node.contains(this, x, y))
-                        .findFirst();
+                .stream()
+                .filter(node -> node.contains(this, x, y))
+                .findFirst();
     }
 
     private void unselect() {
