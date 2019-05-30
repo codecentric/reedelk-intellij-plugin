@@ -37,15 +37,15 @@ public class ChoiceNode extends AbstractScopedGraphNode {
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+        super.draw(graph, graphics, observer);
+
         icon.setPosition(x() - ICON_X_OFFSET, y());
         icon.draw(graph, graphics, observer);
 
         verticalDivider.setPosition(x() - 60, y());
         verticalDivider.draw(graph, graphics, observer);
 
-        drawVerticalDividerArrows(graph, graphics, observer);
-
-        super.draw(graph, graphics, observer);
+        // drawVerticalDividerArrows(graph, graphics, observer);
     }
 
 

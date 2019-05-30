@@ -22,8 +22,7 @@ public abstract class AbstractGraphNode implements GraphNode {
 
     private final Icon icon;
     private final Icon draggedIcon;
-
-    private final Drawable selectedItemBox;
+    private final SelectedItem selectedItemBox;
 
     // x and y represent the center position
     // of this Node on the canvas.
@@ -47,7 +46,6 @@ public abstract class AbstractGraphNode implements GraphNode {
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-        icon.setPosition(x, y);
         icon.draw(graph, graphics, observer);
         drawArrows(graph, graphics, observer);
 
@@ -61,6 +59,7 @@ public abstract class AbstractGraphNode implements GraphNode {
             draggedIcon.draw(graph, graphics, observer);
         }
 
+        graphics.drawOval(x - 5, y - 5, 10, 10);
     }
 
     @Override
@@ -77,6 +76,7 @@ public abstract class AbstractGraphNode implements GraphNode {
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
+        this.icon.setPosition(x, y);
     }
 
     @Override

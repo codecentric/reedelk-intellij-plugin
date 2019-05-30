@@ -59,7 +59,13 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
         } else {
             unselectedNodeScopeBox.draw(graph, graphics, observer);
         }
-        drawEndOfScopeArrow(graph, graphics, observer);
+        //drawEndOfScopeArrow(graph, graphics, observer);
+    }
+
+    @Override
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
     @Override
@@ -75,12 +81,6 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
     @Override
     public ComponentData componentData() {
         return componentData;
-    }
-
-    @Override
-    public void setPosition(int x, int y) {
-        this.x = x;
-        this.y = y;
     }
 
     @Override
