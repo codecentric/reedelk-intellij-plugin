@@ -18,7 +18,7 @@ import java.util.Optional;
 public abstract class AbstractGraphNode implements GraphNode {
 
     private static final int WIDTH = 110;
-    private static final int HEIGHT = 130;
+    private static final int HEIGHT = 140;
 
     private final ComponentData componentData;
 
@@ -60,6 +60,8 @@ public abstract class AbstractGraphNode implements GraphNode {
             draggedIcon.setPosition(draggedX, draggedY);
             draggedIcon.draw(graph, graphics, observer);
         }
+
+        graphics.drawOval(x - 5, y - 5, 10, 10);
     }
 
     @Override

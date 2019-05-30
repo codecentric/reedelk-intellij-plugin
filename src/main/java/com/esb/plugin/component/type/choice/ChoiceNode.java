@@ -18,6 +18,7 @@ public class ChoiceNode extends AbstractScopedGraphNode {
 
     public static final String DATA_CONDITION_ROUTE_PAIRS = "conditionRoutePairs";
 
+    private static final int VERTICAL_DIVIDER_X_OFFSET = 60;
     private static final int ICON_X_OFFSET = 30;
     private static final int HEIGHT = 130;
     private static final int WIDTH = 170;
@@ -37,13 +38,17 @@ public class ChoiceNode extends AbstractScopedGraphNode {
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         super.draw(graph, graphics, observer);
 
-        icon.setPosition(x() - ICON_X_OFFSET, y());
         icon.draw(graph, graphics, observer);
-
-        verticalDivider.setPosition(x() - 60, y());
         verticalDivider.draw(graph, graphics, observer);
 
         drawVerticalDividerArrows(graph, graphics, observer);
+    }
+
+    @Override
+    public void setPosition(int x, int y) {
+        super.setPosition(x, y);
+        icon.setPosition(x - ICON_X_OFFSET, y);
+        verticalDivider.setPosition(x - VERTICAL_DIVIDER_X_OFFSET, y);
     }
 
     @Override
@@ -54,6 +59,16 @@ public class ChoiceNode extends AbstractScopedGraphNode {
     @Override
     public boolean contains(ImageObserver observer, int x, int y) {
         return icon.contains(x, y);
+    }
+
+    @Override
+    public int height(Graphics2D graphics) {
+        return HEIGHT;
+    }
+
+    @Override
+    public int width(Graphics2D graphics) {
+        return WIDTH;
     }
 
     @Override
@@ -81,16 +96,6 @@ public class ChoiceNode extends AbstractScopedGraphNode {
     public boolean isSuccessorAllowed(FlowGraph graph, GraphNode successor, int index) {
         List<GraphNode> successors = graph.successors(this);
         return index < successors.size();
-    }
-
-    @Override
-    public int height(Graphics2D graphics) {
-        return HEIGHT;
-    }
-
-    @Override
-    public int width(Graphics2D graphics) {
-        return WIDTH;
     }
 
 

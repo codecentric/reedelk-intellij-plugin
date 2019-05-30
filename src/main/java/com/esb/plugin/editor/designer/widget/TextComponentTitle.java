@@ -10,6 +10,7 @@ public class TextComponentTitle extends AbstractText {
     private final String title;
 
     public TextComponentTitle(ComponentData componentData) {
+        super(new Font(".SF NS Text", Font.PLAIN, 13));
         this.title = componentData.getDisplayName();
     }
 

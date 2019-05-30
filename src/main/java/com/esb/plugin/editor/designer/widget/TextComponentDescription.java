@@ -11,6 +11,7 @@ public class TextComponentDescription extends AbstractText {
     private ComponentData componentData;
 
     public TextComponentDescription(ComponentData componentData) {
+        super(new Font(".SF NS Text", Font.PLAIN, 13));
         this.componentData = componentData;
     }
 

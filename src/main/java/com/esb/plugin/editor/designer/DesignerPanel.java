@@ -153,13 +153,17 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         if (nodeWithinCoordinates.isPresent()) {
             // Unselect the previous one
             select(nodeWithinCoordinates.get());
-            selected.dragging();
 
             offsetX = event.getX() - selected.x();
             offsetY = event.getY() - selected.y();
-            selected.drag(event.getX() - offsetX, event.getY() - offsetY);
 
-            dragging = true;
+            if (offsetX > 5 || offsetY > 5) {
+                // We start dragging if and only if we move
+                // far enough to consider it a drag movement.
+                selected.dragging();
+                selected.drag(event.getX() - offsetX, event.getY() - offsetY);
+                dragging = true;
+            }
         }
 
         repaint();

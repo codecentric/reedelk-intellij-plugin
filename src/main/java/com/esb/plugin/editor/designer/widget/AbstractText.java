@@ -13,13 +13,19 @@ import java.util.regex.Pattern;
 public abstract class AbstractText implements Widget {
 
     private static final Pattern REGEX = Pattern.compile(".{1,17}(?:\\s|$)", Pattern.DOTALL);
+    private final Font font;
 
     private int x;
     private int y;
 
+    protected AbstractText(Font font) {
+        this.font = font;
+    }
+
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         graphics.setColor(getColor());
+        graphics.setFont(font);
 
         int count = 0;
         for (String line : getTextAsLines()) {
