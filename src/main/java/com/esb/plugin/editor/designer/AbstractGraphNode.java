@@ -60,8 +60,6 @@ public abstract class AbstractGraphNode implements GraphNode {
             draggedIcon.setPosition(draggedX, draggedY);
             draggedIcon.draw(graph, graphics, observer);
         }
-
-        graphics.drawOval(x - 5, y - 5, 10, 10);
     }
 
     @Override
