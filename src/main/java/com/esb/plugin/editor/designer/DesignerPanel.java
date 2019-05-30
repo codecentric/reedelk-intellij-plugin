@@ -2,7 +2,6 @@ package com.esb.plugin.editor.designer;
 
 import com.esb.plugin.commons.PrintFlowInfo;
 import com.esb.plugin.editor.SelectListener;
-import com.esb.plugin.editor.Tile;
 import com.esb.plugin.editor.designer.action.DropActionHandler;
 import com.esb.plugin.editor.designer.action.MoveActionHandler;
 import com.esb.plugin.graph.FlowGraph;
@@ -37,7 +36,8 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     private static final Logger LOG = Logger.getInstance(DesignerPanel.class);
 
-    private final JBColor BACKGROUND_COLOR = JBColor.WHITE;
+    private static final int WINDOW_GROW_STEP = 110;
+    private static final JBColor BACKGROUND_COLOR = JBColor.WHITE;
     private final GraphNode NOTHING_SELECTED = new NothingSelectedNode();
     private final Module module;
 
@@ -268,8 +268,8 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         Collection<GraphNode> nodes = graph.nodes();
         int maxX = nodes.stream().mapToInt(Drawable::x).max().getAsInt();
         int maxY = nodes.stream().mapToInt(Drawable::y).max().getAsInt();
-        int newSizeX = maxX + Tile.WIDTH;
-        int newSizeY = maxY + Tile.HEIGHT;
+        int newSizeX = maxX + WINDOW_GROW_STEP;
+        int newSizeY = maxY + WINDOW_GROW_STEP;
         Dimension newDimension = new Dimension(newSizeX, newSizeY);
         setSize(newDimension);
         setPreferredSize(newDimension);

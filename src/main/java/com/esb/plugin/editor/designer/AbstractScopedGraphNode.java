@@ -59,7 +59,7 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
         } else {
             unselectedNodeScopeBox.draw(graph, graphics, observer);
         }
-        //drawEndOfScopeArrow(graph, graphics, observer);
+        drawEndOfScopeArrow(graph, graphics, observer);
     }
 
     @Override
@@ -124,9 +124,9 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
                         selectedNodeScopeBox.getBoundaries(graph, graphics) :
                         unselectedNodeScopeBox.getBoundaries(graph, graphics);
 
-                Point barycenter = firstNodeOutsideScope.getBarycenter(graphics, observer);
+                Point barycenter = firstNodeOutsideScope.getBarycenter();
                 Point source = new Point(boundaries.getX() + boundaries.getWidth(), barycenter.y);
-                Point target = getTarget(graphics, firstNodeOutsideScope, observer);
+                Point target = getTarget(graphics, firstNodeOutsideScope);
 
                 Arrow arrow = new Arrow(source, target);
                 arrow.draw(graphics);
@@ -134,8 +134,8 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
         });
     }
 
-    protected Point getTarget(Graphics2D graphics, Drawable drawable, ImageObserver observer) {
-        Point barycenter = drawable.getBarycenter(graphics, observer);
+    protected Point getTarget(Graphics2D graphics, Drawable drawable) {
+        Point barycenter = drawable.getBarycenter();
         return new Point(
                 barycenter.x - Math.floorDiv(drawable.width(graphics), 2) + 15,
                 barycenter.y);

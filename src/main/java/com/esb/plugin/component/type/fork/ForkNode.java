@@ -1,7 +1,6 @@
 package com.esb.plugin.component.type.fork;
 
 import com.esb.plugin.component.domain.ComponentData;
-import com.esb.plugin.editor.Tile;
 import com.esb.plugin.editor.designer.AbstractScopedGraphNode;
 import com.esb.plugin.editor.designer.Drawable;
 import com.esb.plugin.editor.designer.widget.Arrow;
@@ -13,6 +12,9 @@ import java.awt.image.ImageObserver;
 import java.util.List;
 
 public class ForkNode extends AbstractScopedGraphNode {
+
+    private static final int WIDTH = 110;
+    private static final int HEIGHT = 130;
 
     public ForkNode(ComponentData componentData) {
         super(componentData);
@@ -26,9 +28,9 @@ public class ForkNode extends AbstractScopedGraphNode {
         List<GraphNode> successors = graph.successors(this);
         for (Drawable successor : successors) {
 
-            Point targetBaryCenter = successor.getBarycenter(graphics, observer);
+            Point targetBaryCenter = successor.getBarycenter();
             Point sourceBaryCenter = new Point(verticalX, targetBaryCenter.y);
-            Point target = getTarget(graphics, successor, observer);
+            Point target = getTarget(graphics, successor);
 
             Arrow arrow = new Arrow(sourceBaryCenter, target);
             arrow.draw(graphics);
@@ -39,16 +41,16 @@ public class ForkNode extends AbstractScopedGraphNode {
 
     @Override
     public int width(Graphics2D graphics) {
-        return Tile.WIDTH;
+        return WIDTH;
     }
 
     @Override
     public int height(Graphics2D graphics) {
-        return Tile.HEIGHT;
+        return HEIGHT;
     }
 
     @Override
-    public Point getBarycenter(Graphics2D graphics, ImageObserver observer) {
+    public Point getBarycenter() {
         return new Point();
     }
 

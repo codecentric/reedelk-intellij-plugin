@@ -6,16 +6,17 @@ import com.esb.plugin.graph.FlowGraph;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
-public class Icon implements Widget {
+public class Icon {
 
-    // The icon has size 60x60
-    private static final int WIDTH = 60;
-    private static final int HEIGHT = 60;
+    private static final int ICON_WIDTH = 60;
+    private static final int ICON_HEIGHT = 60;
+    private static final int HALF_ICON_WIDTH = 30;
+    private static final int HALF_ICON_HEIGHT = 30;
 
+    // The Image has size 60x60
     private final Image image;
     private final TextComponentTitle textComponentTitle;
     private final TextComponentDescription textComponentDescription;
-
 
     private int x;
     private int y;
@@ -26,9 +27,7 @@ public class Icon implements Widget {
         textComponentDescription = new TextComponentDescription(componentData);
     }
 
-    @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-
         int componentTitleHeight = textComponentTitle.height(graphics);
         int halfComponentTitleHeight = Math.floorDiv(componentTitleHeight, 2);
 
@@ -47,47 +46,32 @@ public class Icon implements Widget {
         textComponentDescription.draw(graph, graphics, observer);
 
 
-        int imageX = x - Math.floorDiv(image.getWidth(observer), 2);
+        int imageX = x - HALF_ICON_WIDTH;
         int imageY = y - image.getHeight(observer);
 
         graphics.drawImage(image, imageX, imageY, observer);
     }
 
-
-    @Override
-    public boolean contains(ImageObserver observer, int x, int y) {
-        int halfImageWidth = Math.floorDiv(image.getWidth(observer), 2);
-        int imageHeight = image.getHeight(observer);
-
+    public boolean contains(int x, int y) {
         boolean containsOnXAxis =
-                x >= this.x - halfImageWidth &&
-                        x <= this.x + halfImageWidth;
+                x >= this.x - HALF_ICON_WIDTH &&
+                        x <= this.x + HALF_ICON_WIDTH;
 
         boolean containsOnYAxis =
-                y >= this.y - imageHeight &&
+                y >= this.y - ICON_HEIGHT &&
                         y <= this.y;
+
         return containsOnXAxis && containsOnYAxis;
     }
 
-    @Override
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    @Override
-    public int height(Graphics2D graphics) {
-        return HEIGHT;
-    }
-
-    @Override
-    public int width(Graphics2D graphics) {
-        return WIDTH;
-    }
-
-    public Point getBarycenter(Graphics2D graphics, ImageObserver observer) {
+    public Point getBarycenter() {
         int baryX = x;
-        int baryY = y - Math.floorDiv(image.getHeight(observer), 2);
+        int baryY = y - HALF_ICON_HEIGHT;
         return new Point(baryX, baryY);
     }
 

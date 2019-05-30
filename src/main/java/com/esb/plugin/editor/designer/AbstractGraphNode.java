@@ -1,7 +1,6 @@
 package com.esb.plugin.editor.designer;
 
 import com.esb.plugin.component.domain.ComponentData;
-import com.esb.plugin.editor.Tile;
 import com.esb.plugin.editor.designer.widget.Arrow;
 import com.esb.plugin.editor.designer.widget.Icon;
 import com.esb.plugin.editor.designer.widget.SelectedItem;
@@ -18,14 +17,16 @@ import java.util.Optional;
 
 public abstract class AbstractGraphNode implements GraphNode {
 
+    private static final int WIDTH = 110;
+    private static final int HEIGHT = 130;
+
     private final ComponentData componentData;
 
     private final Icon icon;
     private final Icon draggedIcon;
     private final SelectedItem selectedItemBox;
 
-    // x and y represent the center position
-    // of this Node on the canvas.
+    // x and y represent the center position of this Node on the canvas.
     private int x;
     private int y;
 
@@ -46,8 +47,9 @@ public abstract class AbstractGraphNode implements GraphNode {
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-        icon.draw(graph, graphics, observer);
         drawArrows(graph, graphics, observer);
+
+        icon.draw(graph, graphics, observer);
 
         if (selected) {
             selectedItemBox.setPosition(x(), y());
@@ -58,8 +60,6 @@ public abstract class AbstractGraphNode implements GraphNode {
             draggedIcon.setPosition(draggedX, draggedY);
             draggedIcon.draw(graph, graphics, observer);
         }
-
-        graphics.drawOval(x - 5, y - 5, 10, 10);
     }
 
     @Override
@@ -80,18 +80,18 @@ public abstract class AbstractGraphNode implements GraphNode {
     }
 
     @Override
-    public int height(Graphics2D graphics) {
-        return Tile.HEIGHT;
+    public int width(Graphics2D graphics) {
+        return WIDTH;
     }
 
     @Override
-    public int width(Graphics2D graphics) {
-        return Tile.WIDTH;
+    public int height(Graphics2D graphics) {
+        return HEIGHT;
     }
 
     @Override
     public boolean contains(ImageObserver observer, int x, int y) {
-        return icon.contains(observer, x, y);
+        return icon.contains(x, y);
     }
 
     @Override
@@ -136,9 +136,9 @@ public abstract class AbstractGraphNode implements GraphNode {
     }
 
     @Override
-    public Point getBarycenter(Graphics2D graphics, ImageObserver observer) {
+    public Point getBarycenter() {
         // It it is the center of the Icon.
-        return icon.getBarycenter(graphics, observer);
+        return icon.getBarycenter();
     }
 
     @Override
@@ -159,18 +159,18 @@ public abstract class AbstractGraphNode implements GraphNode {
                 return;
             }
         }
-        drawTheArrows(graph, graphics, observer);
+        drawTheArrows(graph, graphics);
     }
 
-    private void drawTheArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+    private void drawTheArrows(FlowGraph graph, Graphics2D graphics) {
         graph.successors(this).forEach(successor -> {
 
-            Point sourceBaryCenter = this.getBarycenter(graphics, observer);
+            Point sourceBaryCenter = getBarycenter();
             Point source = new Point(
                     sourceBaryCenter.x + Math.floorDiv(60, 2) + 7,
                     sourceBaryCenter.y);
 
-            Point targetBaryCenter = successor.getBarycenter(graphics, observer);
+            Point targetBaryCenter = successor.getBarycenter();
             Point target = new Point(
                     targetBaryCenter.x - Math.floorDiv(60, 2) - 7,
                     targetBaryCenter.y);

@@ -1,6 +1,5 @@
 package com.esb.plugin.graph.action.strategy;
 
-import com.esb.plugin.editor.Tile;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.connector.Connector;
 import com.esb.plugin.graph.node.GraphNode;
@@ -86,11 +85,11 @@ public class PrecedingNodeWithOneSuccessor extends AbstractAddStrategy {
         if (currentScope != null) {
             connector.addToScope(currentScope);
         }
-
     }
 
     private boolean withinYBounds(int dropY, GraphNode node) {
-        return dropY > node.y() - Tile.HALF_HEIGHT &&
-                dropY < node.y() + Tile.HALF_HEIGHT;
+        int halfHeight = Math.floorDiv(node.height(graphics), 2);
+        return dropY > node.y() - halfHeight &&
+                dropY < node.y() + halfHeight;
     }
 }

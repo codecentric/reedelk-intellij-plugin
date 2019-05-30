@@ -19,6 +19,16 @@ public class NothingSelectedNode implements GraphNode {
     }
 
     @Override
+    public int height(Graphics2D graphics) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int width(Graphics2D graphics) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public boolean contains(ImageObserver observer, int x, int y) {
         return false;
     }

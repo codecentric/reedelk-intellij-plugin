@@ -1,7 +1,6 @@
 package com.esb.plugin.graph.action;
 
 
-import com.esb.plugin.editor.Tile;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.action.strategy.AddStrategy;
 import com.esb.plugin.graph.action.strategy.PrecedingNodeWithOneSuccessor;
@@ -50,7 +49,7 @@ public class ActionNodeAdd {
 
         } else {
 
-            Optional<GraphNode> optionalPrecedingNode = findClosestPrecedingDrawable(graph, dropPoint);
+            Optional<GraphNode> optionalPrecedingNode = findClosestPrecedingDrawable(graph, dropPoint, graphics);
             if (optionalPrecedingNode.isPresent()) {
                 GraphNode closestPrecedingNode = optionalPrecedingNode.get();
                 AddStrategy strategy;
@@ -72,11 +71,11 @@ public class ActionNodeAdd {
     }
 
 
-    private static Optional<GraphNode> findClosestPrecedingDrawable(FlowGraph graph, Point dropPoint) {
+    private static Optional<GraphNode> findClosestPrecedingDrawable(FlowGraph graph, Point dropPoint, Graphics2D graphics) {
         List<GraphNode> precedingNodes = graph
                 .nodes()
                 .stream()
-                .filter(byPrecedingNodesOnX(graph, dropPoint.x))
+                .filter(byPrecedingNodesOnX(graph, dropPoint.x, graphics))
                 .collect(toList());
         return findClosestOnYAxis(precedingNodes, dropPoint.y, dropPoint.x);
     }
@@ -102,17 +101,17 @@ public class ActionNodeAdd {
         return Optional.ofNullable(closestPrecedingNode);
     }
 
-    private static Predicate<GraphNode> byPrecedingNodesOnX(FlowGraph graph, int dropX) {
+    private static Predicate<GraphNode> byPrecedingNodesOnX(FlowGraph graph, int dropX, Graphics2D graphics) {
         return preceding -> {
             // The drop point is before/after the center of the node or the center + next node position.
-            if (dropX <= preceding.x() || dropX >= preceding.x() + Tile.WIDTH + Tile.HALF_WIDTH) {
+            if (dropX <= preceding.x() || dropX >= preceding.x() + preceding.width(graphics) + Math.floorDiv(preceding.width(graphics), 2)) {
                 return false;
             }
             // If exists a successor of the current preceding preceding in the preceding + 1 position,
             // then we restrict the drop position so that we consider valid if and only if its x
             // coordinates are between preceding x and successor x.
             for (GraphNode successor : graph.successors(preceding)) {
-                if (successor.x() == preceding.x() + Tile.WIDTH) {
+                if (successor.x() == preceding.x() + preceding.width(graphics)) {
                     return dropX > preceding.x() && dropX < successor.x();
                 }
             }

@@ -1,6 +1,5 @@
 package com.esb.plugin.editor.designer.widget;
 
-import com.esb.plugin.editor.designer.Drawable;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
@@ -15,7 +14,7 @@ import static com.esb.plugin.graph.layout.FlowGraphLayoutUtils.maxHeight;
 import static java.awt.BasicStroke.CAP_ROUND;
 import static java.awt.BasicStroke.JOIN_ROUND;
 
-public class VerticalDivider implements Drawable {
+public class VerticalDivider {
 
     private final Stroke STROKE = new BasicStroke(1.3f, CAP_ROUND, JOIN_ROUND);
     private final JBColor VERTICAL_DIVIDER_COLOR = new JBColor(Gray._200, Gray._30);
@@ -28,7 +27,6 @@ public class VerticalDivider implements Drawable {
         this.scopedGraphNode = scopedGraphNode;
     }
 
-    @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         graphics.setStroke(STROKE);
         graphics.setColor(VERTICAL_DIVIDER_COLOR);
@@ -51,14 +49,8 @@ public class VerticalDivider implements Drawable {
         graphics.drawLine(verticalX, verticalSeparatorMinY, verticalX, verticalSeparatorMaxY);
     }
 
-    @Override
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
-    }
-
-    @Override
-    public boolean contains(ImageObserver observer, int x, int y) {
-        return false;
     }
 }

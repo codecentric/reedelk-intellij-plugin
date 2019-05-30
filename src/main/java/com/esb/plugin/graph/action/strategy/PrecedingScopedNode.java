@@ -1,6 +1,5 @@
 package com.esb.plugin.graph.action.strategy;
 
-import com.esb.plugin.editor.Tile;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.connector.Connector;
 import com.esb.plugin.graph.node.GraphNode;
@@ -87,21 +86,27 @@ public class PrecedingScopedNode extends AbstractAddStrategy {
         }
     }
 
-    private boolean isInsideTopArea(GraphNode successor, Point dropPoint) {
-        int yTopTopBound = successor.y() - Tile.HALF_HEIGHT;
-        int yTopBottomBound = successor.y() - (Tile.HALF_HEIGHT - Math.floorDiv(Tile.HEIGHT, 4));
+    private boolean isInsideTopArea(GraphNode node, Point dropPoint) {
+        int height = node.height(graphics);
+        int halfHeight = Math.floorDiv(height, 2);
+        int yTopTopBound = node.y() - halfHeight;
+        int yTopBottomBound = node.y() - (halfHeight - Math.floorDiv(height, 4));
         return dropPoint.y > yTopTopBound && dropPoint.y < yTopBottomBound;
     }
 
-    private boolean isInsideCenterArea(GraphNode successor, Point dropPoint) {
-        int yCenterTopBound = successor.y() - (Tile.HALF_HEIGHT - Math.floorDiv(Tile.HEIGHT, 4));
-        int yCenterBottomBound = successor.y() + (Tile.HALF_HEIGHT - Math.floorDiv(Tile.HEIGHT, 4));
+    private boolean isInsideCenterArea(GraphNode node, Point dropPoint) {
+        int height = node.height(graphics);
+        int halfHeight = Math.floorDiv(height, 2);
+        int yCenterTopBound = node.y() - (halfHeight - Math.floorDiv(height, 4));
+        int yCenterBottomBound = node.y() + (halfHeight - Math.floorDiv(height, 4));
         return dropPoint.y >= yCenterTopBound && dropPoint.y <= yCenterBottomBound;
     }
 
-    private boolean isInsideBottomArea(GraphNode successor, Point dropPoint) {
-        int yBottomTopBound = successor.y() + (Tile.HALF_HEIGHT - Math.floorDiv(Tile.HEIGHT, 4));
-        int yBottomBottomBound = successor.y() + Tile.HALF_HEIGHT;
+    private boolean isInsideBottomArea(GraphNode node, Point dropPoint) {
+        int height = node.height(graphics);
+        int halfHeight = Math.floorDiv(height, 2);
+        int yBottomTopBound = node.y() + (halfHeight - Math.floorDiv(height, 4));
+        int yBottomBottomBound = node.y() + halfHeight;
         return dropPoint.y > yBottomTopBound && dropPoint.y < yBottomBottomBound;
     }
 

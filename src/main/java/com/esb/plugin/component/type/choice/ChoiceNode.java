@@ -1,9 +1,7 @@
 package com.esb.plugin.component.type.choice;
 
 import com.esb.plugin.component.domain.ComponentData;
-import com.esb.plugin.editor.Tile;
 import com.esb.plugin.editor.designer.AbstractScopedGraphNode;
-import com.esb.plugin.editor.designer.Drawable;
 import com.esb.plugin.editor.designer.widget.Arrow;
 import com.esb.plugin.editor.designer.widget.Icon;
 import com.esb.plugin.editor.designer.widget.VerticalDivider;
@@ -18,16 +16,16 @@ import java.util.List;
 
 public class ChoiceNode extends AbstractScopedGraphNode {
 
-    private static final int ICON_X_OFFSET = 30;
-
     public static final String DATA_CONDITION_ROUTE_PAIRS = "conditionRoutePairs";
+
+    private static final int ICON_X_OFFSET = 30;
+    private static final int HEIGHT = 130;
+    private static final int WIDTH = 170;
 
     private static final String EMPTY_CONDITION = "";
 
-    private final Drawable verticalDivider;
-
     private final Icon icon;
-
+    private final VerticalDivider verticalDivider;
 
     public ChoiceNode(ComponentData componentData) {
         super(componentData);
@@ -45,49 +43,17 @@ public class ChoiceNode extends AbstractScopedGraphNode {
         verticalDivider.setPosition(x() - 60, y());
         verticalDivider.draw(graph, graphics, observer);
 
-        // drawVerticalDividerArrows(graph, graphics, observer);
+        drawVerticalDividerArrows(graph, graphics, observer);
     }
-
-
-    private void drawVerticalDividerArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-        // Draw arrows -> perpendicular to the vertical bar.
-        int halfWidth = Math.floorDiv(width(graphics), 2);
-        int verticalX = x() - 60 + halfWidth - 6;
-
-        List<GraphNode> successors = graph.successors(this);
-        for (GraphNode successor : successors) {
-
-            Point targetBaryCenter = successor.getBarycenter(graphics, observer);
-            Point sourceBaryCenter = new Point(verticalX, targetBaryCenter.y);
-            Point target = getTarget(graphics, successor, observer);
-
-            Arrow arrow = new Arrow(sourceBaryCenter, target);
-            arrow.draw(graphics);
-
-            if (isDefaultRoute(successor)) {
-                graphics.setColor(Color.GRAY);
-                graphics.drawString("otherwise", verticalX + 6, sourceBaryCenter.y + 13);
-            }
-        }
-    }
-
 
     @Override
-    public Point getBarycenter(Graphics2D graphics, ImageObserver observer) {
-        return icon.getBarycenter(graphics, observer);
+    public Point getBarycenter() {
+        return icon.getBarycenter();
     }
 
     @Override
     public boolean contains(ImageObserver observer, int x, int y) {
-        return icon.contains(observer, x, y);
-    }
-
-    private boolean isDefaultRoute(GraphNode target) {
-        return listConditionRoutePairs()
-                .stream()
-                .anyMatch(choiceConditionRoutePair ->
-                        choiceConditionRoutePair.getCondition().equals(Choice.DEFAULT_CONDITION) &&
-                                choiceConditionRoutePair.getNext() == target);
+        return icon.contains(x, y);
     }
 
     @Override
@@ -118,8 +84,13 @@ public class ChoiceNode extends AbstractScopedGraphNode {
     }
 
     @Override
+    public int height(Graphics2D graphics) {
+        return HEIGHT;
+    }
+
+    @Override
     public int width(Graphics2D graphics) {
-        return Tile.WIDTH + 60;
+        return WIDTH;
     }
 
 
@@ -145,5 +116,35 @@ public class ChoiceNode extends AbstractScopedGraphNode {
             component.set(DATA_CONDITION_ROUTE_PAIRS, conditionRoutePair);
         }
         return conditionRoutePair;
+    }
+
+    private boolean isDefaultRoute(GraphNode target) {
+        return listConditionRoutePairs()
+                .stream()
+                .anyMatch(choiceConditionRoutePair ->
+                        choiceConditionRoutePair.getCondition().equals(Choice.DEFAULT_CONDITION) &&
+                                choiceConditionRoutePair.getNext() == target);
+    }
+
+    private void drawVerticalDividerArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+        // Draw arrows -> perpendicular to the vertical bar.
+        int halfWidth = Math.floorDiv(width(graphics), 2);
+        int verticalX = x() - 60 + halfWidth - 6;
+
+        List<GraphNode> successors = graph.successors(this);
+        for (GraphNode successor : successors) {
+
+            Point targetBaryCenter = successor.getBarycenter();
+            Point sourceBaryCenter = new Point(verticalX, targetBaryCenter.y);
+            Point target = getTarget(graphics, successor);
+
+            Arrow arrow = new Arrow(sourceBaryCenter, target);
+            arrow.draw(graphics);
+
+            if (isDefaultRoute(successor)) {
+                graphics.setColor(Color.GRAY);
+                graphics.drawString("otherwise", verticalX + 6, sourceBaryCenter.y + 13);
+            }
+        }
     }
 }

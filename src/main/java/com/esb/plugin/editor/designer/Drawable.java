@@ -37,13 +37,9 @@ public interface Drawable {
         throw new UnsupportedOperationException();
     }
 
-    default int height(Graphics2D graphics) {
-        throw new UnsupportedOperationException();
-    }
+    int height(Graphics2D graphics);
 
-    default int width(Graphics2D graphics) {
-        throw new UnsupportedOperationException();
-    }
+    int width(Graphics2D graphics);
 
     /**
      * It is the graphical center of the Drawable. For instance,
@@ -52,7 +48,7 @@ public interface Drawable {
      *
      * @return the barycenter point of this drawable.
      */
-    default Point getBarycenter(Graphics2D graphics, ImageObserver observer) {
+    default Point getBarycenter() {
         throw new UnsupportedOperationException();
     }
 
