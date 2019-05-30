@@ -84,9 +84,18 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
         long start = System.currentTimeMillis();
 
-        // Draw the graph
-        graph.breadthFirstTraversal(node ->
-                node.draw(graph, g2, DesignerPanel.this));
+        // Draw the graph, the selected node must be drawn LAST
+        graph.breadthFirstTraversal(node -> {
+            if (!node.isSelected())
+                node.draw(graph, g2, DesignerPanel.this);
+        });
+
+        // Draw the selected node
+        graph.nodes()
+                .stream()
+                .filter(Drawable::isSelected)
+                .findFirst()
+                .ifPresent(node -> node.draw(graph, g2, DesignerPanel.this));
 
         long end = System.currentTimeMillis() - start;
         LOG.info("Painted... " + end);
@@ -120,22 +129,19 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
         unselect();
 
-        Optional<GraphNode> nodeWithinCoordinates = getNodeWithinCoordinates(x, y);
-        if (nodeWithinCoordinates.isPresent()) {
-            // Unselect the previous one
-            select(nodeWithinCoordinates.get());
+        getNodeWithinCoordinates(x, y).ifPresent(selectedNode -> {
 
-            offsetX = event.getX() - selected.x();
-            offsetY = event.getY() - selected.y();
+            select(selectedNode);
 
-            if (offsetX > 5 || offsetY > 5) {
-                // We start dragging if and only if we move
-                // far enough to consider it a drag movement.
-                selected.dragging();
-                selected.drag(event.getX() - offsetX, event.getY() - offsetY);
-                dragging = true;
-            }
-        }
+            offsetX = event.getX() - selectedNode.x();
+            offsetY = event.getY() - selectedNode.y();
+
+            // We start dragging if and only if we move
+            // far enough to consider it a drag movement.
+            selectedNode.dragging();
+            selectedNode.drag(event.getX() - offsetX, event.getY() - offsetY);
+            dragging = true;
+        });
 
         repaint();
     }
