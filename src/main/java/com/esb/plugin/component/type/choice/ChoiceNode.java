@@ -20,7 +20,7 @@ public class ChoiceNode extends AbstractScopedGraphNode {
 
     private static final int VERTICAL_DIVIDER_X_OFFSET = 60;
     private static final int ICON_X_OFFSET = 30;
-    private static final int HEIGHT = 130;
+    private static final int HEIGHT = 140;
     private static final int WIDTH = 170;
 
     private static final String EMPTY_CONDITION = "";
@@ -148,7 +148,7 @@ public class ChoiceNode extends AbstractScopedGraphNode {
 
             if (isDefaultRoute(successor)) {
                 graphics.setColor(Color.GRAY);
-                graphics.drawString("otherwise", verticalX + 6, sourceBaryCenter.y + 13);
+                graphics.drawString("otherwise", verticalX + 6, sourceBaryCenter.y - 3);
             }
         }
     }

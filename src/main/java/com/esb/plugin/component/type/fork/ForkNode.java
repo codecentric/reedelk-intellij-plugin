@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ForkNode extends AbstractScopedGraphNode {
 
-    private static final int HEIGHT = 130;
+    private static final int HEIGHT = 145;
     private static final int WIDTH = 110;
 
     private final Icon icon;

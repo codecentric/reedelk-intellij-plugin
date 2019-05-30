@@ -41,10 +41,35 @@ public abstract class ScopeBox implements Widget {
         int x = boundaries.getX();
         int y = boundaries.getY();
 
-        graphics.drawLine(x, y, x + boundaries.getWidth(), y);
-        graphics.drawLine(x + boundaries.getWidth(), y, x + boundaries.getWidth(), y + boundaries.getHeight());
-        graphics.drawLine(x + boundaries.getWidth(), y + boundaries.getHeight(), x, y + boundaries.getHeight());
-        graphics.drawLine(x, y + boundaries.getHeight(), x, y);
+        // Scope Box
+        //  ----------------
+        //  |              |
+        //  |              |
+        //                 |
+        //                 |
+        //  |              |
+        //  |              |
+        //  ----------------
+        int topLeftX = x;
+        int topLeftY = y;
+        int topRightX = x + boundaries.getWidth();
+        int topRightY = y;
+        int bottomRightX = x + boundaries.getWidth();
+        int bottomRightY = y + boundaries.getHeight();
+        int bottomLeftX = x;
+        int bottomLeftY = y + boundaries.getHeight();
+
+        int midBottomLeftX = x;
+        int midBottomLeftY = scopedGraphNode.getBarycenter().y + 20;
+        int midTopLeftX = x;
+        int midTopLeftY = scopedGraphNode.getBarycenter().y - 20;
+
+        graphics.drawLine(topLeftX, topLeftY, topRightX, topRightY);
+        graphics.drawLine(topRightX, topLeftY, bottomRightX, bottomRightY);
+        graphics.drawLine(bottomRightX, bottomRightY, bottomLeftX, bottomLeftY);
+
+        graphics.drawLine(bottomLeftX, bottomLeftY, midBottomLeftX, midBottomLeftY);
+        graphics.drawLine(midTopLeftX, midTopLeftY, topLeftX, topLeftY);
     }
 
     private int getMaxScopes(FlowGraph graph) {
