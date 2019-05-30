@@ -1,4 +1,4 @@
-package com.esb.plugin.graph.node;
+package com.esb.plugin.editor.designer;
 
 import com.esb.plugin.graph.FlowGraph;
 
@@ -50,10 +50,9 @@ public interface Drawable {
      * A component might have an icon + text below. The bary center
      * in this case might be the center of the icon.
      *
-     * @param graphics the graphics used to draw the canvas.
      * @return the barycenter point of this drawable.
      */
-    default Point getBarycenter(Graphics2D graphics) {
+    default Point getBarycenter(Graphics2D graphics, ImageObserver observer) {
         throw new UnsupportedOperationException();
     }
 

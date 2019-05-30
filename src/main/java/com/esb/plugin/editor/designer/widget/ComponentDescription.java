@@ -1,4 +1,4 @@
-package com.esb.plugin.editor.designer.drawables;
+package com.esb.plugin.editor.designer.widget;
 
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.component.domain.ComponentData;

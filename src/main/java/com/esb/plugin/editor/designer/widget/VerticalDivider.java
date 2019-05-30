@@ -1,7 +1,7 @@
-package com.esb.plugin.editor.designer.drawables;
+package com.esb.plugin.editor.designer.widget;
 
+import com.esb.plugin.editor.designer.Drawable;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.node.Drawable;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.FindFirstNodeOutsideScope;
@@ -33,7 +33,7 @@ public class VerticalDivider implements Drawable {
         graphics.setStroke(STROKE);
         graphics.setColor(VERTICAL_DIVIDER_COLOR);
 
-        int padding = (ScopedGraphNode.VERTICAL_PADDING * 4) * 2;
+        int padding = (ScopedGraphNode.VERTICAL_PADDING * 2) * 2;
 
         GraphNode firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedGraphNode).orElse(null);
 

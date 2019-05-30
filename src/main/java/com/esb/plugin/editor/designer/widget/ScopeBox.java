@@ -1,15 +1,14 @@
-package com.esb.plugin.editor.designer.drawables;
+package com.esb.plugin.editor.designer.widget;
 
+import com.esb.plugin.editor.designer.Drawable;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.layout.FlowGraphLayoutUtils;
-import com.esb.plugin.graph.node.Drawable;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopeBoundaries;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.CountScopesBetween;
 import com.esb.plugin.graph.utils.FindFirstNodeOutsideScope;
 import com.esb.plugin.graph.utils.ListLastNodesOfScope;
-import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 
 import java.awt.*;
@@ -19,35 +18,24 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import static java.awt.BasicStroke.CAP_ROUND;
-import static java.awt.BasicStroke.JOIN_ROUND;
-
-public class ScopeBox implements Drawable {
+public abstract class ScopeBox implements Widget {
 
     private final int IN_BETWEEN_SCOPES_PADDING = 5;
 
-    private final Stroke STROKE = new BasicStroke(1f);
-    private final JBColor BOUNDARIES_COLOR = new JBColor(Gray._235, Gray._30);
-    private final JBColor SELECTED_BOUNDARIES_COLOR = JBColor.DARK_GRAY;
-    private final Stroke DOTTED_STROKE = new BasicStroke(1f, CAP_ROUND, JOIN_ROUND, 0, new float[]{3}, 0);
+    private Stroke stroke;
+    private JBColor boundariesColor;
+    private ScopedGraphNode scopedGraphNode;
 
-    private final ScopedGraphNode scopedGraphNode;
-    private boolean selected;
-
-    public ScopeBox(ScopedGraphNode scopedGraphNode) {
+    ScopeBox(ScopedGraphNode scopedGraphNode, JBColor boundariesColor, Stroke stroke) {
+        this.stroke = stroke;
+        this.boundariesColor = boundariesColor;
         this.scopedGraphNode = scopedGraphNode;
     }
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-
-        if (isSelected()) {
-            graphics.setColor(SELECTED_BOUNDARIES_COLOR);
-            graphics.setStroke(DOTTED_STROKE);
-        } else {
-            graphics.setColor(BOUNDARIES_COLOR);
-            graphics.setStroke(STROKE);
-        }
+        graphics.setStroke(stroke);
+        graphics.setColor(boundariesColor);
 
         ScopeBoundaries boundaries = getBoundaries(graph, graphics);
         int x = boundaries.getX();
@@ -71,7 +59,7 @@ public class ScopeBox implements Drawable {
         return max;
     }
 
-    ScopeBoundaries getBoundaries(FlowGraph graph, Graphics2D graphics) {
+    public ScopeBoundaries getBoundaries(FlowGraph graph, Graphics2D graphics) {
         Collection<GraphNode> nodes = ListLastNodesOfScope.from(graph, scopedGraphNode);
 
         Drawable drawableWithMaxX = scopedGraphNode;
@@ -120,18 +108,4 @@ public class ScopeBox implements Drawable {
         return new ScopeBoundaries(minX, minY, width, height);
     }
 
-    @Override
-    public void selected() {
-        selected = true;
-    }
-
-    @Override
-    public void unselected() {
-        selected = false;
-    }
-
-    @Override
-    public boolean isSelected() {
-        return selected;
-    }
 }

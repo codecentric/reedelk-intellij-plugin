@@ -2,8 +2,11 @@ package com.esb.plugin.component.type.choice;
 
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.editor.Tile;
-import com.esb.plugin.editor.designer.drawables.AbstractScopedGraphNode;
-import com.esb.plugin.editor.designer.drawables.Arrow;
+import com.esb.plugin.editor.designer.AbstractScopedGraphNode;
+import com.esb.plugin.editor.designer.Drawable;
+import com.esb.plugin.editor.designer.widget.Arrow;
+import com.esb.plugin.editor.designer.widget.Icon;
+import com.esb.plugin.editor.designer.widget.VerticalDivider;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.system.component.Choice;
@@ -15,83 +18,38 @@ import java.util.List;
 
 public class ChoiceNode extends AbstractScopedGraphNode {
 
+    private static final int ICON_X_OFFSET = 30;
+
     public static final String DATA_CONDITION_ROUTE_PAIRS = "conditionRoutePairs";
 
     private static final String EMPTY_CONDITION = "";
 
+    private final Drawable verticalDivider;
+
+    private final Icon icon;
+
+
     public ChoiceNode(ComponentData componentData) {
         super(componentData);
+        this.icon = new Icon(componentData);
+        this.verticalDivider = new VerticalDivider(this);
     }
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-        int iconDrawableHeight = icon.height(graphics);
-        int halfIconDrawableHeight = Math.floorDiv(iconDrawableHeight, 2);
-
-        int componentTitleHeight = componentTitle.height(graphics);
-        int halfComponentTitleHeight = Math.floorDiv(componentTitleHeight, 2);
-
-        int componentDescriptionHeight = componentDescription.height(graphics);
-        int halfComponentDescriptionHeight = Math.floorDiv(componentDescriptionHeight, 2);
-
-        int totalHeight = iconDrawableHeight + componentTitleHeight + componentDescriptionHeight;
-        int halfTotalHeight = Math.floorDiv(totalHeight, 2);
-
-        // Center icon
-        int centerIconY = y() - halfTotalHeight + halfIconDrawableHeight;
-        icon.setPosition(x() - 30, centerIconY);
-
-        // Center title below icon
-        int centerTitleY = y() - halfTotalHeight + iconDrawableHeight + halfComponentTitleHeight;
-        componentTitle.setPosition(x() - 30, centerTitleY);
-
-        // Center description below title
-        int centerDescriptionY = y() - halfTotalHeight + iconDrawableHeight + componentTitleHeight + halfComponentDescriptionHeight;
-        componentDescription.setPosition(x() - 30, centerDescriptionY);
-
-
-        drawConnections(graph, graphics, observer);
-
+        icon.setPosition(x() - ICON_X_OFFSET, y());
         icon.draw(graph, graphics, observer);
-        componentTitle.draw(graph, graphics, observer);
-        componentDescription.draw(graph, graphics, observer);
 
         verticalDivider.setPosition(x() - 60, y());
         verticalDivider.draw(graph, graphics, observer);
 
-        scopeBox.draw(graph, graphics, observer);
-    }
+        drawVerticalDividerArrows(graph, graphics, observer);
 
-    @Override
-    public void drag(int x, int y) {
-        // Choice Node cannot be dragged
+        super.draw(graph, graphics, observer);
     }
 
 
-    @Override
-    public void dragging() {
-        // Choice Node cannot be dragged
-    }
-
-    @Override
-    public void drop() {
-        // Choice Node cannot be dragged
-    }
-
-    @Override
-    public void selected() {
-        super.selected();
-        scopeBox.selected();
-    }
-
-    @Override
-    public void unselected() {
-        super.unselected();
-        scopeBox.unselected();
-    }
-
-    @Override
-    protected void drawConnections(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+    private void drawVerticalDividerArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         // Draw arrows -> perpendicular to the vertical bar.
         int halfWidth = Math.floorDiv(width(graphics), 2);
         int verticalX = x() - 60 + halfWidth - 6;
@@ -99,9 +57,9 @@ public class ChoiceNode extends AbstractScopedGraphNode {
         List<GraphNode> successors = graph.successors(this);
         for (GraphNode successor : successors) {
 
-            Point targetBaryCenter = successor.getBarycenter(graphics);
+            Point targetBaryCenter = successor.getBarycenter(graphics, observer);
             Point sourceBaryCenter = new Point(verticalX, targetBaryCenter.y);
-            Point target = getTarget(graphics, successor);
+            Point target = getTarget(graphics, successor, observer);
 
             Arrow arrow = new Arrow(sourceBaryCenter, target);
             arrow.draw(graphics);
@@ -111,15 +69,11 @@ public class ChoiceNode extends AbstractScopedGraphNode {
                 graphics.drawString("otherwise", verticalX + 6, sourceBaryCenter.y + 13);
             }
         }
-
-        drawEndOfScopeArrow(graph, graphics);
     }
 
     @Override
-    public Point getBarycenter(Graphics2D graphics) {
-        Point barycenter = super.getBarycenter(graphics);
-        barycenter.x = barycenter.x - 30;
-        return barycenter;
+    public Point getBarycenter(Graphics2D graphics, ImageObserver observer) {
+        return icon.getBarycenter(graphics, observer);
     }
 
     private boolean isDefaultRoute(GraphNode target) {
@@ -152,21 +106,9 @@ public class ChoiceNode extends AbstractScopedGraphNode {
     }
 
     @Override
-    public void onSuccessorRemoved(FlowGraph graph, GraphNode successor) {
-        listConditionRoutePairs()
-                .removeIf(choiceConditionRoutePair ->
-                        choiceConditionRoutePair.getNext() == successor);
-    }
-
-    @Override
     public boolean isSuccessorAllowed(FlowGraph graph, GraphNode successor, int index) {
         List<GraphNode> successors = graph.successors(this);
         return index < successors.size();
-    }
-
-    @Override
-    public boolean isSuccessorAllowed(FlowGraph graph, GraphNode successor) {
-        throw new UnsupportedOperationException();
     }
 
     @Override
