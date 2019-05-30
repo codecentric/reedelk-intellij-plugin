@@ -25,12 +25,12 @@ import static java.util.stream.Collectors.toList;
  */
 public class ActionNodeAdd {
 
-    private final FlowGraph graph;
     private final Point dropPoint;
+    private final FlowGraph graph;
     private final Connector connector;
     private final Graphics2D graphics;
 
-    public ActionNodeAdd(FlowGraph graph, Point dropPoint, Connector connector, Graphics2D graphics) {
+    public ActionNodeAdd(final FlowGraph graph, final Point dropPoint, final Connector connector, final Graphics2D graphics) {
         this.graph = graph;
         this.graphics = graphics;
         this.dropPoint = dropPoint;
@@ -40,7 +40,7 @@ public class ActionNodeAdd {
     public void execute() {
         // First Drawable added to the canvas (it is root)
         if (graph.isEmpty()) {
-            connector.addPredecessor(null);
+            connector.root();
 
             // Check if we are replacing the first (root) node.
         } else if (isReplacingRoot(graph, dropPoint)) {

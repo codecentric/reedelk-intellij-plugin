@@ -12,6 +12,7 @@ import com.esb.system.component.Choice;
 import com.esb.system.component.Placeholder;
 import com.intellij.openapi.module.Module;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import static com.esb.plugin.component.type.choice.ChoiceNode.DATA_CONDITION_ROUTE_PAIRS;
@@ -30,17 +31,11 @@ public class ChoiceConnectorBuilder implements ConnectorBuilder {
         scopeInitialSubGraph.root(choice);
         scopeInitialSubGraph.add(choice, placeholder);
 
-        ComponentData componentData = componentToAdd.componentData();
-        List<ChoiceConditionRoutePair> nodeConditionMap =
-                componentData.get(DATA_CONDITION_ROUTE_PAIRS);
+        List<ChoiceConditionRoutePair> choiceDefaultConditionPairs = new LinkedList<>();
+        choiceDefaultConditionPairs.add(new ChoiceConditionRoutePair(Choice.DEFAULT_CONDITION, placeholder));
 
-        // TODO: This is duplicated code
-        nodeConditionMap
-                .stream()
-                .filter(choiceConditionRoutePair -> choiceConditionRoutePair.getNext() == placeholder)
-                .findFirst()
-                .ifPresent(choiceConditionRoutePair ->
-                        choiceConditionRoutePair.setCondition(Choice.DEFAULT_CONDITION));
+        ComponentData componentData = componentToAdd.componentData();
+        componentData.set(DATA_CONDITION_ROUTE_PAIRS, choiceDefaultConditionPairs);
 
         return new ScopedNodeConnector(graph, scopeInitialSubGraph);
     }

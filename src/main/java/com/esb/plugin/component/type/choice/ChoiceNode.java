@@ -108,7 +108,7 @@ public class ChoiceNode extends AbstractScopedGraphNode {
 
             if (isDefaultRoute(successor)) {
                 graphics.setColor(Color.GRAY);
-                graphics.drawString("otherwise", verticalX + 6, sourceBaryCenter.y - 4);
+                graphics.drawString("otherwise", verticalX + 6, sourceBaryCenter.y + 13);
             }
         }
 
@@ -138,8 +138,17 @@ public class ChoiceNode extends AbstractScopedGraphNode {
 
     @Override
     public void onSuccessorAdded(FlowGraph graph, GraphNode successor, int index) {
-        executeIfRouteToNodeNotPresent(successor, conditionRoutePairs ->
-                conditionRoutePairs.add(index, new ChoiceConditionRoutePair(EMPTY_CONDITION, successor)));
+        if (index == graph.successors(this).size() - 1) {
+            List<ChoiceConditionRoutePair> choiceConditionRoutePairs = listConditionRoutePairs();
+            choiceConditionRoutePairs
+                    .stream()
+                    .filter(choiceConditionRoutePair -> choiceConditionRoutePair.getCondition().equals(Choice.DEFAULT_CONDITION))
+                    .findFirst()
+                    .ifPresent(choiceConditionRoutePair -> choiceConditionRoutePair.setNext(successor));
+        } else {
+            executeIfRouteToNodeNotPresent(successor, conditionRoutePairs ->
+                    conditionRoutePairs.add(index, new ChoiceConditionRoutePair(EMPTY_CONDITION, successor)));
+        }
     }
 
     @Override
