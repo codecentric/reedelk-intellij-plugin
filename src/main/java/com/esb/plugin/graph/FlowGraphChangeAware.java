@@ -112,4 +112,9 @@ public class FlowGraphChangeAware implements FlowGraph {
     public boolean isChanged() {
         return changed;
     }
+
+    public void commit() {
+        wrapped.breadthFirstTraversal(node ->
+                node.commit(FlowGraphChangeAware.this));
+    }
 }

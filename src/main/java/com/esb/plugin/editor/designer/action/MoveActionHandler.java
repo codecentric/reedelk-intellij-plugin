@@ -72,6 +72,7 @@ public class MoveActionHandler extends AbstractActionHandler {
 
         // 5. If the copy of the graph was changed, then update the graph
         if (modifiableGraph.isChanged()) {
+            modifiableGraph.commit();
             snapshot.updateSnapshot(this, modifiableGraph);
 
         } else {

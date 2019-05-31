@@ -21,4 +21,11 @@ public interface GraphOperationListener {
     default boolean isSuccessorAllowed(FlowGraph graph, GraphNode successor) {
         return true;
     }
+
+    /**
+     * Called when all the changes have been made.
+     */
+    default void commit(FlowGraph graph) {
+
+    }
 }

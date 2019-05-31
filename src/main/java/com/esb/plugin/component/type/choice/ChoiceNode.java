@@ -11,8 +11,8 @@ import com.esb.system.component.Choice;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.*;
 
 public class ChoiceNode extends AbstractScopedGraphNode {
 
@@ -71,26 +71,7 @@ public class ChoiceNode extends AbstractScopedGraphNode {
         return WIDTH;
     }
 
-    @Override
-    public void onSuccessorAdded(FlowGraph graph, GraphNode successor) {
-        executeIfRouteToNodeNotPresent(successor, conditionRoutePairs ->
-                conditionRoutePairs.add(new ChoiceConditionRoutePair(EMPTY_CONDITION, successor)));
-    }
 
-    @Override
-    public void onSuccessorAdded(FlowGraph graph, GraphNode successor, int index) {
-        if (index == graph.successors(this).size() - 1) {
-            List<ChoiceConditionRoutePair> choiceConditionRoutePairs = listConditionRoutePairs();
-            choiceConditionRoutePairs
-                    .stream()
-                    .filter(choiceConditionRoutePair -> choiceConditionRoutePair.getCondition().equals(Choice.DEFAULT_CONDITION))
-                    .findFirst()
-                    .ifPresent(choiceConditionRoutePair -> choiceConditionRoutePair.setNext(successor));
-        } else {
-            executeIfRouteToNodeNotPresent(successor, conditionRoutePairs ->
-                    conditionRoutePairs.add(index, new ChoiceConditionRoutePair(EMPTY_CONDITION, successor)));
-        }
-    }
 
     @Override
     public boolean isSuccessorAllowed(FlowGraph graph, GraphNode successor, int index) {
@@ -99,24 +80,55 @@ public class ChoiceNode extends AbstractScopedGraphNode {
     }
 
     @Override
-    public void onSuccessorRemoved(FlowGraph graph, GraphNode successor) {
-        listConditionRoutePairs().removeIf(choiceConditionRoutePair ->
-                choiceConditionRoutePair.getNext() == successor);
-    }
+    public void commit(FlowGraph graph) {
+        List<GraphNode> successors = graph.successors(this);
 
-    interface Action {
-        void execute(List<ChoiceConditionRoutePair> conditionRoutePairs);
-    }
+        // Compute new Choice condition
+        List<ChoiceConditionRoutePair> oldConditions = listConditionRoutePairs();
+        List<ChoiceConditionRoutePair> updatedConditions = new LinkedList<>();
 
-    private void executeIfRouteToNodeNotPresent(GraphNode target, Action action) {
-        List<ChoiceConditionRoutePair> conditionRoutePairList = listConditionRoutePairs();
-        boolean isPresent = conditionRoutePairList.stream()
-                .anyMatch(choiceConditionRoutePair ->
-                        choiceConditionRoutePair.getNext() == target);
-        if (!isPresent) {
-            action.execute(conditionRoutePairList);
+        Map<GraphNode, ChoiceConditionRoutePair> existingConditionMap = new HashMap<>();
+        successors.forEach(successor -> findTargetPair(successor, oldConditions)
+                .ifPresent(choiceConditionRoutePair -> existingConditionMap.put(successor, choiceConditionRoutePair)));
+
+        for (int i = 0; i < successors.size(); i++) {
+            GraphNode successor = successors.get(i);
+            if (existingConditionMap.containsKey(successor)) {
+                ChoiceConditionRoutePair pair = existingConditionMap.get(successor);
+                updatedConditions.add(pair);
+            } else {
+                Collection<ChoiceConditionRoutePair> usedConditionRoutes = new HashSet<>(existingConditionMap.values());
+                usedConditionRoutes.addAll(updatedConditions);
+                Optional<ChoiceConditionRoutePair> oneAtIndexNotUsedYet = findOneAtIndexNotUsedYet(i, oldConditions, usedConditionRoutes);
+                if (oneAtIndexNotUsedYet.isPresent()) {
+                    ChoiceConditionRoutePair pair = oneAtIndexNotUsedYet.get();
+                    pair.setNext(successor);
+                    updatedConditions.add(pair);
+                } else {
+                    updatedConditions.add(new ChoiceConditionRoutePair(EMPTY_CONDITION, successor));
+                }
+            }
         }
+
+        ComponentData component = componentData();
+        component.set(DATA_CONDITION_ROUTE_PAIRS, updatedConditions);
     }
+
+    private Optional<ChoiceConditionRoutePair> findOneAtIndexNotUsedYet(int i, List<ChoiceConditionRoutePair> choiceConditionRoutePairs, Collection<ChoiceConditionRoutePair> alreadyUsed) {
+        if (i < choiceConditionRoutePairs.size()) {
+            ChoiceConditionRoutePair pair = choiceConditionRoutePairs.get(i);
+            if (!alreadyUsed.contains(pair)) return Optional.of(pair);
+        }
+        return Optional.empty();
+    }
+
+    private Optional<ChoiceConditionRoutePair> findTargetPair(GraphNode target, List<ChoiceConditionRoutePair> oldConditions) {
+        return oldConditions
+                .stream()
+                .filter(choiceConditionRoutePair -> choiceConditionRoutePair.getNext() == target)
+                .findFirst();
+    }
+
 
     private List<ChoiceConditionRoutePair> listConditionRoutePairs() {
         ComponentData component = componentData();
