@@ -113,6 +113,11 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
         return Collections.unmodifiableSet(scope);
     }
 
+    @Override
+    public String toString() {
+        return componentData.getFullyQualifiedName();
+    }
+
     // We also need to draw a connection between the end of scope to the next successor.
     // We draw this arrow only if the last drawables of this scope connect
     // arrows in the next scope

@@ -3,6 +3,7 @@ package com.esb.plugin.graph.action;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
+import com.esb.plugin.graph.utils.FindScope;
 
 import java.util.List;
 
@@ -21,27 +22,44 @@ public class ActionNodeRemove {
     public void remove() {
         List<GraphNode> predecessors = graph.predecessors(dropped);
         List<GraphNode> successors = graph.successors(dropped);
-        checkState(predecessors.size() <= 1, "Expected at most one predecessor");
+
+        // We might remove the node right outside the scope, which
+        // might have more than one predecessor
+        //checkState(predecessors.size() <= 1, "Expected at most one predecessor");
         checkState(successors.size() <= 1, "Expected at most one successor");
 
         if (predecessors.isEmpty()) {
             graph.remove(dropped, successors.get(0));
             graph.root(successors.get(0));
+            graph.remove(dropped);
 
         } else {
-            GraphNode predecessor = predecessors.get(0);
-            GraphNode successor = successors.get(0);
 
-            if (predecessor instanceof ScopedGraphNode) {
-                int index = getDroppedIndex((ScopedGraphNode) predecessor, dropped);
-                graph.remove(predecessor, dropped);
-                graph.remove(dropped, successor);
-                graph.add(predecessor, successor, index);
+            GraphNode successor = successors.isEmpty() ? null : successors.get(0);
 
-            } else {
-                graph.remove(predecessor, dropped);
-                graph.remove(dropped, successor);
-                graph.add(predecessor, successor);
+            for (GraphNode predecessor : predecessors) {
+                if (predecessor instanceof ScopedGraphNode) {
+                    int index = getDroppedIndex((ScopedGraphNode) predecessor, dropped);
+                    graph.remove(predecessor, dropped);
+
+                    if (successor != null) {
+                        graph.remove(dropped, successor);
+                        if (((ScopedGraphNode) predecessor).scopeContains(successor)) {
+                            graph.add(predecessor, successor, index);
+                        }
+                    }
+                    FindScope.of(graph, dropped)
+                            .ifPresent(scopedGraphNode -> scopedGraphNode.removeFromScope(scopedGraphNode));
+                    graph.remove(dropped);
+
+                } else {
+                    graph.remove(predecessor, dropped);
+                    if (successor != null) graph.remove(dropped, successor);
+                    graph.remove(dropped);
+                    FindScope.of(graph, dropped)
+                            .ifPresent(scopedGraphNode -> scopedGraphNode.removeFromScope(scopedGraphNode));
+                    if (successor != null) graph.add(predecessor, successor);
+                }
             }
         }
     }

@@ -200,9 +200,9 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     @Override
     public void onStructureChange(@NotNull FlowGraph graph) {
-        unselect();
         SwingUtilities.invokeLater(() -> {
             updated = true;
+            unselect();
             invalidate();
             repaint();
         });
