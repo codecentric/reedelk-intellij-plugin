@@ -71,6 +71,7 @@ public class MoveActionHandler extends AbstractActionHandler {
         addNodeToGraph(modifiableGraph, selected, dropPoint, graphics);
 
         // 5. If the copy of the graph was changed, then update the graph
+        // TODO: IF REMOVED BUT NOT ADDED, then should not be changed... but now if we remove, and then we cannot add the node for some reason the snapshot is still updated which is not necessary
         if (modifiableGraph.isChanged()) {
             modifiableGraph.commit();
             snapshot.updateSnapshot(this, modifiableGraph);
