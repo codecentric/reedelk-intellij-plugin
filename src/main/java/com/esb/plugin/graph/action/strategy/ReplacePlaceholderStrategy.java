@@ -17,15 +17,23 @@ public class ReplacePlaceholderStrategy extends AbstractStrategy {
 
     @Override
     public void execute(GraphNode placeHolder) {
+
+        // Connect predecessors
         List<GraphNode> predecessorsOfPlaceHolder = graph.predecessors(placeHolder);
-        List<GraphNode> successorsOfPlaceHolder = graph.successors(placeHolder);
-        connector.add();
         predecessorsOfPlaceHolder.forEach(connector::addPredecessor);
+
+        // Connect successors
+        List<GraphNode> successorsOfPlaceHolder = graph.successors(placeHolder);
         successorsOfPlaceHolder.forEach(connector::addSuccessor);
+
+        // Add to scope the new node replacing the placeholder
+        // Remove from scope the placeholder
         FindScope.of(graph, placeHolder).ifPresent(scopedGraphNode -> {
             connector.addToScope(scopedGraphNode);
             scopedGraphNode.removeFromScope(placeHolder);
         });
+
+        // Remove the placeholder node from the graph (including inbound/outbound edges)
         graph.remove(placeHolder);
 
     }
