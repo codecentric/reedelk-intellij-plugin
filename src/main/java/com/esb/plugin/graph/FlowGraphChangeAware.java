@@ -37,16 +37,12 @@ public class FlowGraphChangeAware implements FlowGraph {
     @Override
     public void add(@Nullable GraphNode n1, @NotNull GraphNode n2) {
         wrapped.add(n1, n2);
-        if (n1 != null) {
-            n1.onSuccessorAdded(this, n2);
-        }
         changed = true;
     }
 
     @Override
     public void add(@NotNull GraphNode n1, @NotNull GraphNode n2, int index) {
         wrapped.add(n1, n2, index);
-        n1.onSuccessorAdded(this, n2, index);
         changed = true;
     }
 
@@ -59,7 +55,6 @@ public class FlowGraphChangeAware implements FlowGraph {
     @Override
     public void remove(@NotNull GraphNode n1, @NotNull GraphNode n2) {
         wrapped.remove(n1, n2);
-        n1.onSuccessorRemoved(this, n2);
         changed = true;
     }
 

@@ -40,10 +40,7 @@ public class ScopedNodeConnector implements Connector {
         ScopedGraphNode root = (ScopedGraphNode) scopeSubGraph.root();
         ListLastNodesOfScope
                 .from(graph, root)
-                .forEach(node -> {
-                    graph.add(node, successor);
-                    node.onSuccessorAdded(graph, successor);
-                });
+                .forEach(node -> graph.add(node, successor));
     }
 
     @Override
@@ -56,11 +53,6 @@ public class ScopedNodeConnector implements Connector {
     public void addPredecessor(ScopedGraphNode predecessor, int index) {
         addScopeGraphIfNeeded();
         graph.add(predecessor, scopeSubGraph.root(), index);
-    }
-
-    @Override
-    public boolean isSuccessorAllowed(FlowGraph graph, GraphNode predecessor) {
-        throw new UnsupportedOperationException();
     }
 
     @Override

@@ -18,8 +18,6 @@ public interface Connector {
 
     void addPredecessor(ScopedGraphNode predecessor, int index);
 
-    boolean isSuccessorAllowed(FlowGraph graph, GraphNode predecessor);
-
     boolean isSuccessorAllowed(FlowGraph graph, ScopedGraphNode predecessor, int index);
 
 }

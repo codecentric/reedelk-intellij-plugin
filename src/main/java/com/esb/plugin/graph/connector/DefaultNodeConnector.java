@@ -48,10 +48,4 @@ public class DefaultNodeConnector implements Connector {
     public boolean isSuccessorAllowed(FlowGraph graph, ScopedGraphNode predecessor, int index) {
         return predecessor.isSuccessorAllowed(graph, node, index);
     }
-
-    @Override
-    public boolean isSuccessorAllowed(FlowGraph graph, GraphNode predecessor) {
-        return predecessor.isSuccessorAllowed(graph, predecessor);
-    }
-
 }
