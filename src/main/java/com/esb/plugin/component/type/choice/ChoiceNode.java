@@ -98,6 +98,11 @@ public class ChoiceNode extends AbstractScopedGraphNode {
         return index < successors.size();
     }
 
+    @Override
+    public void onSuccessorRemoved(FlowGraph graph, GraphNode successor) {
+        listConditionRoutePairs().removeIf(choiceConditionRoutePair ->
+                choiceConditionRoutePair.getNext() == successor);
+    }
 
     interface Action {
         void execute(List<ChoiceConditionRoutePair> conditionRoutePairs);

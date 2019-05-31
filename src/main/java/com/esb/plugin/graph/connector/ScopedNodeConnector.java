@@ -6,8 +6,6 @@ import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.ListLastNodesOfScope;
 
-import java.util.Collection;
-
 import static com.google.common.base.Preconditions.checkState;
 
 public class ScopedNodeConnector implements Connector {
@@ -21,27 +19,13 @@ public class ScopedNodeConnector implements Connector {
     }
 
     @Override
-    public void addSuccessor(GraphNode successor) {
-        addScopeGraphIfNeeded();
-        Collection<GraphNode> nodes = ListLastNodesOfScope.from(graph, (ScopedGraphNode) scopeSubGraph.root());
-        nodes.forEach(node -> graph.add(node, successor));
-    }
-
-    @Override
-    public void addPredecessor(GraphNode predecessor) {
-        addScopeGraphIfNeeded();
-        graph.add(predecessor, scopeSubGraph.root());
-    }
-
-    @Override
     public void add() {
         addScopeGraphIfNeeded();
     }
 
     @Override
-    public void addPredecessor(ScopedGraphNode predecessor, int index) {
-        addScopeGraphIfNeeded();
-        graph.add(predecessor, scopeSubGraph.root(), index);
+    public void root() {
+        throw new UnsupportedOperationException("Scoped node can not be set as root node");
     }
 
     @Override
@@ -51,8 +35,37 @@ public class ScopedNodeConnector implements Connector {
     }
 
     @Override
-    public void root() {
-        throw new UnsupportedOperationException("Scoped node can not be set as root node");
+    public void addSuccessor(GraphNode successor) {
+        addScopeGraphIfNeeded();
+        ScopedGraphNode root = (ScopedGraphNode) scopeSubGraph.root();
+        ListLastNodesOfScope
+                .from(graph, root)
+                .forEach(node -> {
+                    graph.add(node, successor);
+                    node.onSuccessorAdded(graph, successor);
+                });
+    }
+
+    @Override
+    public void addPredecessor(GraphNode predecessor) {
+        addScopeGraphIfNeeded();
+        graph.add(predecessor, scopeSubGraph.root());
+    }
+
+    @Override
+    public void addPredecessor(ScopedGraphNode predecessor, int index) {
+        addScopeGraphIfNeeded();
+        graph.add(predecessor, scopeSubGraph.root(), index);
+    }
+
+    @Override
+    public boolean isSuccessorAllowed(FlowGraph graph, GraphNode predecessor) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean isSuccessorAllowed(FlowGraph graph, ScopedGraphNode predecessor, int index) {
+        throw new UnsupportedOperationException();
     }
 
     private void addScopeGraphIfNeeded() {

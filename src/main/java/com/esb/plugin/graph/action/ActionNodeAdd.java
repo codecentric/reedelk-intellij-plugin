@@ -56,8 +56,10 @@ public class ActionNodeAdd {
 
                 if (closestPrecedingNode instanceof ScopedGraphNode) {
                     strategy = new PrecedingScopedNode(graph, dropPoint, connector, graphics);
+
                 } else if (graph.successors(closestPrecedingNode).isEmpty()) {
                     strategy = new PrecedingNodeWithoutSuccessor(graph, dropPoint, connector, graphics);
+
                 } else {
                     // Only ScopedGraphNode nodes might have multiple successors. In all other cases
                     // a node in the flow must have at most one successor.

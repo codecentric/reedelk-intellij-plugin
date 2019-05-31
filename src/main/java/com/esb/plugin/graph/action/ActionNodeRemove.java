@@ -6,6 +6,8 @@ import com.esb.plugin.graph.node.ScopedGraphNode;
 
 import java.util.List;
 
+import static com.esb.internal.commons.Preconditions.checkState;
+
 public class ActionNodeRemove {
 
     private final GraphNode dropped;
@@ -19,24 +21,36 @@ public class ActionNodeRemove {
     public void remove() {
         List<GraphNode> predecessors = graph.predecessors(dropped);
         List<GraphNode> successors = graph.successors(dropped);
+        checkState(predecessors.size() <= 1, "Expected at most one predecessor");
+        checkState(successors.size() <= 1, "Expected at most one successor");
+
         if (predecessors.isEmpty()) {
+            graph.remove(dropped, successors.get(0));
             graph.root(successors.get(0));
+
         } else {
-            for (GraphNode predecessor : predecessors) {
-                for (GraphNode successor : successors) {
-                    if (predecessor instanceof ScopedGraphNode) {
-                        // We need to check if successor is in the scope.
-                        ScopedGraphNode scope = (ScopedGraphNode) predecessor;
-                        if (scope.scopeContains(successor)) {
-                            // then we can connect it because it is part of the same scope
-                            graph.add(predecessor, successor);
-                        }
-                    } else {
-                        graph.add(predecessor, successor);
-                    }
-                }
+            GraphNode predecessor = predecessors.get(0);
+            GraphNode successor = successors.get(0);
+
+            if (predecessor instanceof ScopedGraphNode) {
+                int index = getDroppedIndex((ScopedGraphNode) predecessor, dropped);
+                graph.remove(predecessor, dropped);
+                graph.remove(dropped, successor);
+                graph.add(predecessor, successor, index);
+
+            } else {
+                graph.remove(predecessor, dropped);
+                graph.remove(dropped, successor);
+                graph.add(predecessor, successor);
             }
         }
-        graph.remove(dropped);
+    }
+
+    private int getDroppedIndex(ScopedGraphNode scopedPredecessor, GraphNode dropped) {
+        List<GraphNode> successors = graph.successors(scopedPredecessor);
+        for (int i = 0; i < successors.size(); i++) {
+            if (successors.get(i) == dropped) return i;
+        }
+        throw new IllegalStateException("Could not find index");
     }
 }

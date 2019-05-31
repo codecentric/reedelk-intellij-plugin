@@ -15,31 +15,6 @@ public class DefaultNodeConnector implements Connector {
     }
 
     @Override
-    public void addSuccessor(GraphNode successor) {
-        graph.add(node, successor);
-        node.onSuccessorAdded(graph, successor);
-    }
-
-    @Override
-    public void addPredecessor(GraphNode predecessor) {
-        graph.add(predecessor, node);
-        predecessor.onSuccessorAdded(graph, node);
-    }
-
-
-    @Override
-    public void addPredecessor(ScopedGraphNode predecessor, int index) {
-        graph.add(predecessor, node, index);
-        predecessor.onSuccessorAdded(graph, node, index);
-    }
-
-    @Override
-    public boolean isPredecessorAllowed(FlowGraph graph, ScopedGraphNode predecessor, int index) {
-        return predecessor.isSuccessorAllowed(graph, node, index) &&
-                node.isPredecessorAllowed(graph, predecessor);
-    }
-
-    @Override
     public void add() {
         graph.add(node);
     }
@@ -53,4 +28,30 @@ public class DefaultNodeConnector implements Connector {
     public void addToScope(ScopedGraphNode scope) {
         scope.addToScope(node);
     }
+
+    @Override
+    public void addSuccessor(GraphNode successor) {
+        graph.add(node, successor);
+    }
+
+    @Override
+    public void addPredecessor(GraphNode predecessor) {
+        graph.add(predecessor, node);
+    }
+
+    @Override
+    public void addPredecessor(ScopedGraphNode predecessor, int index) {
+        graph.add(predecessor, node, index);
+    }
+
+    @Override
+    public boolean isSuccessorAllowed(FlowGraph graph, ScopedGraphNode predecessor, int index) {
+        return predecessor.isSuccessorAllowed(graph, node, index);
+    }
+
+    @Override
+    public boolean isSuccessorAllowed(FlowGraph graph, GraphNode predecessor) {
+        return predecessor.isSuccessorAllowed(graph, predecessor);
+    }
+
 }

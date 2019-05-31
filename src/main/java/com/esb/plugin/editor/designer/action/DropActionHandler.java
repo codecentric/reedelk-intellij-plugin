@@ -49,8 +49,8 @@ public class DropActionHandler extends AbstractActionHandler {
         GraphNode nodeToAdd = GraphNodeFactory.get(descriptor);
 
         FlowGraph copy = snapshot.getGraph().copy();
-
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
+
 
         addNodeToGraph(modifiableGraph, nodeToAdd, dropPoint, graphics);
 

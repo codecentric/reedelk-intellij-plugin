@@ -56,7 +56,7 @@ public class PrecedingScopedNode extends AbstractAddStrategy {
             // |-----------| yBottomBottomBound
             GraphNode successor = successors.get(successorIndex);
             if (isInsideTopArea(successor, dropPoint)) {
-                if (connector.isPredecessorAllowed(graph, closestPrecedingNode, successorIndex)) {
+                if (connector.isSuccessorAllowed(graph, closestPrecedingNode, successorIndex)) {
                     connector.addPredecessor(closestPrecedingNode, successorIndex);
                     addToScopeIfNeeded(closestPrecedingNode);
                     FindFirstNodeOutsideScope.of(graph, closestPrecedingNode)
@@ -66,7 +66,7 @@ public class PrecedingScopedNode extends AbstractAddStrategy {
 
             } else if (isInsideCenterArea(successor, dropPoint)) {
                 // Replaces the first node at index "successorIndex"
-                if (connector.isPredecessorAllowed(graph, closestPrecedingNode, successorIndex)) {
+                if (connector.isSuccessorAllowed(graph, closestPrecedingNode, successorIndex)) {
                     graph.remove(closestPrecedingNode, successor);
                     connector.addPredecessor(closestPrecedingNode, successorIndex);
                     connector.addSuccessor(successor);
@@ -75,7 +75,7 @@ public class PrecedingScopedNode extends AbstractAddStrategy {
                 return;
 
             } else if (isInsideBottomArea(successor, dropPoint)) {
-                if (connector.isPredecessorAllowed(graph, closestPrecedingNode, successorIndex + 1)) {
+                if (connector.isSuccessorAllowed(graph, closestPrecedingNode, successorIndex + 1)) {
                     connector.addPredecessor(closestPrecedingNode, successorIndex + 1);
                     addToScopeIfNeeded(closestPrecedingNode);
                     FindFirstNodeOutsideScope.of(graph, closestPrecedingNode)

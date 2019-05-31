@@ -1,7 +1,6 @@
 package com.esb.plugin.editor.designer.action;
 
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.FlowGraphChangeAware;
 import com.esb.plugin.graph.action.ActionNodeAdd;
 import com.esb.plugin.graph.connector.Connector;
 import com.esb.plugin.graph.connector.ConnectorFactory;
@@ -18,20 +17,16 @@ abstract class AbstractActionHandler {
         this.module = module;
     }
 
-    FlowGraphChangeAware addNodeToGraph(FlowGraph graph, GraphNode dropped, Point dropPoint, Graphics2D graphics) {
-
-        FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
+    void addNodeToGraph(FlowGraph graph, GraphNode dropped, Point dropPoint, Graphics2D graphics) {
 
         Connector connector = ConnectorFactory.get()
                 .nodeToAdd(dropped)
-                .graph(modifiableGraph)
+                .graph(graph)
                 .module(module)
                 .build();
 
-        ActionNodeAdd actionNodeAdd = new ActionNodeAdd(modifiableGraph, dropPoint, connector, graphics);
+        ActionNodeAdd actionNodeAdd = new ActionNodeAdd(graph, dropPoint, connector, graphics);
         actionNodeAdd.execute();
-
-        return modifiableGraph;
     }
 
 }

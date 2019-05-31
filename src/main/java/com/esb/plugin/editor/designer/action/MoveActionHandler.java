@@ -57,20 +57,22 @@ public class MoveActionHandler extends AbstractActionHandler {
         FlowGraph copy = snapshot.getGraph().copy();
 
         // 2. Remove the dropped node from the copy graph
-        ActionNodeRemove componentRemover = new ActionNodeRemove(copy, selected);
+        FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
+
+        ActionNodeRemove componentRemover = new ActionNodeRemove(modifiableGraph, selected);
         componentRemover.remove();
 
         // 3. Remove the dropped node from any scope it might belong to
-        Optional<ScopedGraphNode> selectedScope = FindScope.of(copy, selected);
+        Optional<ScopedGraphNode> selectedScope = FindScope.of(modifiableGraph, selected);
         selectedScope.ifPresent(scopedNode -> scopedNode.removeFromScope(selected));
 
         // 4. Add the dropped component back to the graph to the dropped position.
         Point dropPoint = new Point(dragX, dragY);
-        FlowGraphChangeAware updatedGraph = addNodeToGraph(copy, selected, dropPoint, graphics);
+        addNodeToGraph(modifiableGraph, selected, dropPoint, graphics);
 
         // 5. If the copy of the graph was changed, then update the graph
-        if (updatedGraph.isChanged()) {
-            snapshot.updateSnapshot(this, updatedGraph);
+        if (modifiableGraph.isChanged()) {
+            snapshot.updateSnapshot(this, modifiableGraph);
 
         } else {
             // 6. Add back the node to the scope if the original graph was not changed.
