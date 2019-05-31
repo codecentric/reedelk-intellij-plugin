@@ -9,7 +9,7 @@ import java.awt.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class AbstractAddStrategyTest extends AbstractGraphTest {
+class AbstractStrategyTest extends AbstractGraphTest {
 
     @Mock
     private Graphics2D graphics;
@@ -38,7 +38,7 @@ class AbstractAddStrategyTest extends AbstractGraphTest {
         componentNode3.setPosition(275, 210);
 
         // When
-        int maxScopeXBound = AbstractAddStrategy.getScopeMaxXBound(graph, choiceNode1, graphics);
+        int maxScopeXBound = AbstractStrategy.getScopeMaxXBound(graph, choiceNode1, graphics);
 
         // Then
         assertThat(maxScopeXBound).isEqualTo(565);
@@ -55,7 +55,7 @@ class AbstractAddStrategyTest extends AbstractGraphTest {
         choiceNode1.setPosition(165, 140);
 
         // When
-        int maxScopeXBound = AbstractAddStrategy.getScopeMaxXBound(graph, choiceNode1, graphics);
+        int maxScopeXBound = AbstractStrategy.getScopeMaxXBound(graph, choiceNode1, graphics);
 
         // Then
         assertThat(maxScopeXBound).isEqualTo(220);
@@ -76,7 +76,7 @@ class AbstractAddStrategyTest extends AbstractGraphTest {
         choiceNode1.addToScope(componentNode1);
 
         // When
-        int maxScopeXBound = AbstractAddStrategy.getScopeMaxXBound(graph, choiceNode1, graphics);
+        int maxScopeXBound = AbstractStrategy.getScopeMaxXBound(graph, choiceNode1, graphics);
 
         // Then
         assertThat(maxScopeXBound).isEqualTo(330);

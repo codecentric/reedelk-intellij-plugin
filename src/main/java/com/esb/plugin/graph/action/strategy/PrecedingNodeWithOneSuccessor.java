@@ -14,7 +14,7 @@ import java.util.Stack;
 
 import static com.google.common.base.Preconditions.checkState;
 
-public class PrecedingNodeWithOneSuccessor extends AbstractAddStrategy {
+public class PrecedingNodeWithOneSuccessor extends AbstractStrategy {
 
 
     public PrecedingNodeWithOneSuccessor(FlowGraph graph, Point dropPoint, Connector connector, Graphics2D graphics) {

@@ -11,21 +11,21 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.util.List;
 
-abstract class AbstractAddStrategy implements AddStrategy {
+abstract class AbstractStrategy implements Strategy {
 
     protected final FlowGraph graph;
     protected final Point dropPoint;
     protected final Connector connector;
     protected final Graphics2D graphics;
 
-    public AbstractAddStrategy(FlowGraph graph, Point dropPoint, Connector connector, Graphics2D graphics) {
+    AbstractStrategy(FlowGraph graph, Point dropPoint, Connector connector, Graphics2D graphics) {
         this.graph = graph;
         this.graphics = graphics;
         this.dropPoint = dropPoint;
         this.connector = connector;
     }
 
-    protected void addToScopeIfNeeded(GraphNode closestPrecedingNode) {
+    void addToScopeIfNeeded(GraphNode closestPrecedingNode) {
         if (closestPrecedingNode instanceof ScopedGraphNode) {
             ScopedGraphNode scopedGraphNode = (ScopedGraphNode) closestPrecedingNode;
             connector.addToScope(scopedGraphNode);

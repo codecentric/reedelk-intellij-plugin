@@ -1,11 +1,9 @@
 package com.esb.plugin.graph.action;
 
 
+import com.esb.plugin.component.type.placeholder.PlaceholderNode;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.action.strategy.AddStrategy;
-import com.esb.plugin.graph.action.strategy.PrecedingNodeWithOneSuccessor;
-import com.esb.plugin.graph.action.strategy.PrecedingNodeWithoutSuccessor;
-import com.esb.plugin.graph.action.strategy.PrecedingScopedNode;
+import com.esb.plugin.graph.action.strategy.*;
 import com.esb.plugin.graph.connector.Connector;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopeBoundaries;
@@ -50,12 +48,13 @@ public class ActionNodeAdd {
 
         } else {
 
-            Optional<GraphNode> optionalPrecedingNode = findClosestPrecedingDrawable(graph, dropPoint, graphics);
-            if (optionalPrecedingNode.isPresent()) {
-                GraphNode closestPrecedingNode = optionalPrecedingNode.get();
-                AddStrategy strategy;
+            findClosestPrecedingDrawable(graph, dropPoint, graphics).ifPresent(closestPrecedingNode -> {
+                Strategy strategy;
 
-                if (closestPrecedingNode instanceof ScopedGraphNode) {
+                if (closestPrecedingNode instanceof PlaceholderNode) {
+                    strategy = new ReplacePlaceholderStrategy(graph, dropPoint, connector, graphics);
+
+                } else if (closestPrecedingNode instanceof ScopedGraphNode) {
                     strategy = new PrecedingScopedNode(graph, dropPoint, connector, graphics);
 
                 } else if (graph.successors(closestPrecedingNode).isEmpty()) {
@@ -68,8 +67,10 @@ public class ActionNodeAdd {
                             "Successors size MUST be 1, otherwise it must be a Scoped Drawable");
                     strategy = new PrecedingNodeWithOneSuccessor(graph, dropPoint, connector, graphics);
                 }
+
                 strategy.execute(closestPrecedingNode);
-            }
+
+            });
         }
     }
 

@@ -15,7 +15,7 @@ import static com.google.common.base.Preconditions.checkState;
  * Strategy for preceding Scoped Node type.
  * Only a scoped node might have more than one successor.
  */
-public class PrecedingScopedNode extends AbstractAddStrategy {
+public class PrecedingScopedNode extends AbstractStrategy {
 
     public PrecedingScopedNode(FlowGraph graph, Point dropPoint, Connector connector, Graphics2D graphics) {
         super(graph, dropPoint, connector, graphics);
