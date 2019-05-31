@@ -79,6 +79,7 @@ public class ChoiceNode extends AbstractScopedGraphNode {
         return index < successors.size();
     }
 
+    // TODO: Extract this logic and test it very well
     @Override
     public void commit(FlowGraph graph) {
         List<GraphNode> successors = graph.successors(this);
