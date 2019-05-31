@@ -49,7 +49,6 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
     @Override
     public void onUnselect() {
         removeAll();
-        //revalidate();
         repaint();
     }
 
