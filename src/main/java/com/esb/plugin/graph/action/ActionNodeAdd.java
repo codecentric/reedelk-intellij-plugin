@@ -8,6 +8,7 @@ import com.esb.plugin.graph.action.strategy.PrecedingNodeWithoutSuccessor;
 import com.esb.plugin.graph.action.strategy.PrecedingScopedNode;
 import com.esb.plugin.graph.connector.Connector;
 import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.node.ScopeBoundaries;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 
 import java.awt.*;
@@ -109,7 +110,12 @@ public class ActionNodeAdd {
             if (dropX <= preceding.x() || dropX >= preceding.x() + preceding.width(graphics) + Math.floorDiv(preceding.width(graphics), 2)) {
                 return false;
             }
-            // If exists a successor of the current preceding preceding in the preceding + 1 position,
+            // TODO: Test this function
+            if (preceding instanceof ScopedGraphNode) {
+                ScopeBoundaries scopeBoundaries = ((ScopedGraphNode) preceding).getScopeBoundaries(graph, graphics);
+                if (dropX >= scopeBoundaries.getX() + scopeBoundaries.getWidth()) return false;
+            }
+            // If exists a successor of the current preceding node in the preceding + 1 position,
             // then we restrict the drop position so that we consider valid if and only if its x
             // coordinates are between preceding x and successor x.
             for (GraphNode successor : graph.successors(preceding)) {
