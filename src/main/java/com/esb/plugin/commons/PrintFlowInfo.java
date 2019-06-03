@@ -59,7 +59,7 @@ public class PrintFlowInfo {
                 .collect(joining(","));
     }
 
-    private static String name(GraphNode node) {
+    public static String name(GraphNode node) {
         return node.componentData().getDisplayName() + "@" + System.identityHashCode(node);
     }
 }

@@ -66,7 +66,7 @@ public class SyncConditionAndRoutePairs {
                 .stream()
                 .filter(choiceConditionRoutePair ->
                         choiceConditionRoutePair.getNext() == target &&
-                                !choiceConditionRoutePair.getCondition().equals("otherwise"))
+                                !choiceConditionRoutePair.getCondition().equals(Choice.DEFAULT_CONDITION))
                 .findFirst();
     }
 
@@ -74,7 +74,7 @@ public class SyncConditionAndRoutePairs {
         if (i < choiceConditionRoutePairs.size()) {
             ChoiceConditionRoutePair pair = choiceConditionRoutePairs.get(i);
             if (!alreadyUsedNodes.contains(pair.getNext()) &&
-                    !pair.getCondition().equals("otherwise")) {
+                    !pair.getCondition().equals(Choice.DEFAULT_CONDITION)) {
                 return Optional.of(pair);
             }
         }

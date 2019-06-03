@@ -164,13 +164,14 @@ class ActionNodeAddTest extends AbstractGraphTest {
             choiceNode1.addToScope(choiceNode2);
             choiceNode2.addToScope(componentNode2);
 
-            root.setPosition(55, 75);
-            choiceNode1.setPosition(165, 75);
-            componentNode1.setPosition(275, 75);
-            choiceNode2.setPosition(390, 75);
-            componentNode2.setPosition(505, 75);
+            root.setPosition(55, 80);
+            choiceNode1.setPosition(195, 80);
+            componentNode1.setPosition(335, 80);
+            choiceNode2.setPosition(480, 80);
+            componentNode2.setPosition(625, 80);
 
-            Point dropPoint = new Point(238, 128);
+            // We drop the new node on top of the 'otherwise'
+            Point dropPoint = new Point(310, 14);
 
             // When
             FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);

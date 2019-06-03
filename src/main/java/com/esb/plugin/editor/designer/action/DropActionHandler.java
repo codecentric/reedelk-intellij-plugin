@@ -1,11 +1,13 @@
 package com.esb.plugin.editor.designer.action;
 
+import com.esb.plugin.commons.PrintFlowInfo;
 import com.esb.plugin.component.domain.ComponentDescriptor;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.GraphNodeFactory;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 
 import java.awt.*;
@@ -14,8 +16,11 @@ import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.awt.dnd.DnDConstants.ACTION_COPY_OR_MOVE;
+import static java.lang.String.format;
 
 public class DropActionHandler extends AbstractActionHandler {
+
+    private static final Logger LOG = Logger.getInstance(DropActionHandler.class);
 
     private final Graphics2D graphics;
     private final GraphSnapshot snapshot;
@@ -51,7 +56,7 @@ public class DropActionHandler extends AbstractActionHandler {
         FlowGraph copy = snapshot.getGraph().copy();
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
 
-
+        LOG.info(format("Node Dropped [%s], drop point [x: %d, y: %d]", PrintFlowInfo.name(nodeToAdd), dropPoint.x, dropPoint.y));
         addNodeToGraph(modifiableGraph, nodeToAdd, dropPoint, graphics);
 
         if (modifiableGraph.isChanged()) {
