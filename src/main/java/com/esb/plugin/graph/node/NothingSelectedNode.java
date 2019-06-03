@@ -14,6 +14,11 @@ public class NothingSelectedNode implements GraphNode {
     }
 
     @Override
+    public void drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public boolean isSelected() {
         return false;
     }

@@ -85,20 +85,15 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         long start = System.currentTimeMillis();
 
         // Draw the graph, the selected node must be drawn LAST
-        graph.breadthFirstTraversal(node -> {
-            if (!node.isSelected())
-                node.draw(graph, g2, DesignerPanel.this);
-        });
+        graph.breadthFirstTraversal(node -> node.draw(graph, g2, DesignerPanel.this));
+        // Draw the graph, the selected node must be drawn LAST
+        graph.breadthFirstTraversal(node -> node.drawArrows(graph, g2, DesignerPanel.this));
 
-        // Draw the selected node
-        graph.nodes()
-                .stream()
-                .filter(Drawable::isSelected)
-                .findFirst()
-                .ifPresent(node -> node.draw(graph, g2, DesignerPanel.this));
+        graph.breadthFirstTraversal(node -> node.drawDrag(graph, g2, DesignerPanel.this));
 
         long end = System.currentTimeMillis() - start;
-        LOG.info("Painted... " + end);
+
+        LOG.info("Painted in " + end + " ms");
     }
 
     @Override

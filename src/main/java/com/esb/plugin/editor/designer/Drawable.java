@@ -25,6 +25,12 @@ public interface Drawable {
     default void unselected() {
     }
 
+    void drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer);
+
+    default void drawDrag(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+
+    }
+
     default boolean isSelected() {
         return false;
     }

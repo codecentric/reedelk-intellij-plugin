@@ -23,4 +23,9 @@ public class TextComponentTitle extends AbstractText {
     protected Color getColor() {
         return JBColor.GRAY;
     }
+
+    @Override
+    protected Color getSelectedColor() {
+        return JBColor.DARK_GRAY;
+    }
 }

@@ -3,7 +3,6 @@ package com.esb.plugin.editor.designer;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.editor.designer.widget.Arrow;
 import com.esb.plugin.editor.designer.widget.Icon;
-import com.esb.plugin.editor.designer.widget.SelectedItem;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
@@ -24,7 +23,6 @@ public abstract class AbstractGraphNode implements GraphNode {
 
     private final Icon icon;
     private final Icon draggedIcon;
-    private final SelectedItem selectedItemBox;
 
     // x and y represent the center position of this Node on the canvas.
     private int x;
@@ -40,22 +38,17 @@ public abstract class AbstractGraphNode implements GraphNode {
     public AbstractGraphNode(ComponentData componentData) {
         this.componentData = componentData;
 
-        icon = new Icon(componentData);
-        draggedIcon = new Icon(componentData);
-        selectedItemBox = new SelectedItem(this);
+        this.icon = new Icon(componentData);
+        this.draggedIcon = new Icon(componentData);
     }
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-        drawArrows(graph, graphics, observer);
-
         icon.draw(graph, graphics, observer);
+    }
 
-        if (selected) {
-            selectedItemBox.setPosition(x(), y());
-            selectedItemBox.draw(graph, graphics, observer);
-        }
-
+    @Override
+    public void drawDrag(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         if (dragging) {
             draggedIcon.setPosition(draggedX, draggedY);
             draggedIcon.draw(graph, graphics, observer);
@@ -77,6 +70,11 @@ public abstract class AbstractGraphNode implements GraphNode {
         this.x = x;
         this.y = y;
         this.icon.setPosition(x, y);
+    }
+
+    @Override
+    public void drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+        _drawArrows(graph, graphics, observer);
     }
 
     @Override
@@ -102,32 +100,29 @@ public abstract class AbstractGraphNode implements GraphNode {
     @Override
     public void selected() {
         selected = true;
-        selectedItemBox.selected();
+        icon.selected();
     }
 
     @Override
     public void unselected() {
         selected = false;
-        selectedItemBox.unselected();
+        icon.unselected();
     }
 
     @Override
     public void drag(int x, int y) {
         draggedX = x;
         draggedY = y;
-        selectedItemBox.drag(x, y);
     }
 
     @Override
     public void dragging() {
         dragging = true;
-        selectedItemBox.dragging();
     }
 
     @Override
     public void drop() {
         dragging = false;
-        selectedItemBox.drop();
     }
 
     @Override
@@ -150,7 +145,7 @@ public abstract class AbstractGraphNode implements GraphNode {
      * Draws connections between this node and the next one. If this is the last
      * node of the scope, don't draw any outgoing arrow.
      */
-    private void drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+    private void _drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         Optional<ScopedGraphNode> wrappingScope = FindScope.of(graph, this);
         if (wrappingScope.isPresent()) {
             List<GraphNode> nodesBelongingWrappingScope = ListLastNodesOfScope.from(graph, wrappingScope.get());

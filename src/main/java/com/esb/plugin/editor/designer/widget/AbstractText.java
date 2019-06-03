@@ -18,13 +18,15 @@ public abstract class AbstractText implements Widget {
     private int x;
     private int y;
 
+    private boolean selected;
+
     protected AbstractText(Font font) {
         this.font = font;
     }
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-        graphics.setColor(getColor());
+        graphics.setColor(selected ? getSelectedColor() : getColor());
         graphics.setFont(font);
 
         int count = 0;
@@ -61,6 +63,8 @@ public abstract class AbstractText implements Widget {
 
     protected abstract Color getColor();
 
+    protected abstract Color getSelectedColor();
+
     private List<String> getTextAsLines() {
         java.util.List<String> matchList = new ArrayList<>();
         Matcher regexMatcher = REGEX.matcher(getText());
@@ -68,5 +72,13 @@ public abstract class AbstractText implements Widget {
             matchList.add(regexMatcher.group());
         }
         return matchList;
+    }
+
+    public void selected() {
+        this.selected = true;
+    }
+
+    public void unselected() {
+        this.selected = false;
     }
 }

@@ -39,8 +39,6 @@ public class ChoiceNode extends AbstractScopedGraphNode {
 
         icon.draw(graph, graphics, observer);
         verticalDivider.draw(graph, graphics, observer);
-
-        drawVerticalDividerArrows(graph, graphics, observer);
     }
 
     @Override
@@ -48,6 +46,11 @@ public class ChoiceNode extends AbstractScopedGraphNode {
         super.setPosition(x, y);
         icon.setPosition(x - ICON_X_OFFSET, y);
         verticalDivider.setPosition(x - VERTICAL_DIVIDER_X_OFFSET, y);
+    }
+
+    @Override
+    public void drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+        drawVerticalDividerArrows(graph, graphics, observer);
     }
 
     @Override

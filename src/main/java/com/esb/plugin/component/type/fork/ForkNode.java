@@ -33,18 +33,21 @@ public class ForkNode extends AbstractScopedGraphNode {
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         super.draw(graph, graphics, observer);
-
         icon.draw(graph, graphics, observer);
         verticalDivider.draw(graph, graphics, observer);
-
-        drawArrows(graph, graphics, observer);
     }
+
 
     @Override
     public void setPosition(int x, int y) {
         super.setPosition(x, y);
         icon.setPosition(x, y);
         verticalDivider.setPosition(x - VERTICAL_DIVIDER_X_OFFSET, y);
+    }
+
+    @Override
+    public void drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+        _drawArrows(graph, graphics, observer);
     }
 
     @Override
@@ -67,7 +70,7 @@ public class ForkNode extends AbstractScopedGraphNode {
         return WIDTH;
     }
 
-    protected void drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+    private void _drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         // Draw arrows -> perpendicular to the vertical bar.
         int halfWidth = Math.floorDiv(width(graphics), 2);
         int verticalX = x() + halfWidth - VERTICAL_DIVIDER_X_OFFSET;

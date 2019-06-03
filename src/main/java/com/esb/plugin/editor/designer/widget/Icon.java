@@ -25,6 +25,8 @@ public class Icon {
     private int x;
     private int y;
 
+    private boolean selected;
+
     public Icon(ComponentData componentData) {
         image = componentData.getComponentImage();
         textComponentTitle = new TextComponentTitle(componentData);
@@ -46,14 +48,20 @@ public class Icon {
         int centerDescriptionY = y + componentTitleHeight + halfComponentDescriptionHeight + TOP_OFFSET;
         textComponentDescription.setPosition(x, centerDescriptionY);
 
-        textComponentTitle.draw(graph, graphics, observer);
-        textComponentDescription.draw(graph, graphics, observer);
-
 
         int imageX = x - HALF_ICON_WIDTH;
         int imageY = y - ICON_HEIGHT + TOP_OFFSET;
 
+
+        if (selected) {
+            // Draw square around title and description
+            graphics.setColor(new Color(250, 250, 250));
+            graphics.fillRect(x - Math.floorDiv(110, 2), y - 70, 110, 140);
+
+        }
         graphics.drawImage(image, imageX, imageY, observer);
+        textComponentTitle.draw(graph, graphics, observer);
+        textComponentDescription.draw(graph, graphics, observer);
     }
 
     public boolean contains(int x, int y) {
@@ -75,5 +83,17 @@ public class Icon {
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    public void selected() {
+        this.selected = true;
+        this.textComponentTitle.selected();
+        this.textComponentDescription.selected();
+    }
+
+    public void unselected() {
+        this.selected = false;
+        this.textComponentTitle.unselected();
+        this.textComponentDescription.unselected();
     }
 }
