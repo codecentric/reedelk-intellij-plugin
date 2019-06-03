@@ -73,22 +73,30 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
         // We compute again the graph layout if and only if it was updated.
         if (updated) {
-            LOG.info("Painting...(updated)");
+
+            LOG.info("Graph changed");
+
             graph = snapshot.getGraph();
+
             FlowGraphLayout.compute(graph, g2);
-            PrintFlowInfo.debug(graph);// TODO: debug only
+
+            PrintFlowInfo.debug(graph);
+
             adjustWindowSize();
+
             updated = false;
         }
 
 
         long start = System.currentTimeMillis();
 
-        // Draw the graph, the selected node must be drawn LAST
+        // Draw the graph nodes
         graph.breadthFirstTraversal(node -> node.draw(graph, g2, DesignerPanel.this));
-        // Draw the graph, the selected node must be drawn LAST
+
+        // Draw the arrows connecting the nodes
         graph.breadthFirstTraversal(node -> node.drawArrows(graph, g2, DesignerPanel.this));
 
+        // Draw on top of everything dragged elements of the graph
         graph.breadthFirstTraversal(node -> node.drawDrag(graph, g2, DesignerPanel.this));
 
         long end = System.currentTimeMillis() - start;
