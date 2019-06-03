@@ -3,6 +3,7 @@ package com.esb.plugin.editor.designer;
 import com.esb.plugin.graph.FlowGraph;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.awt.image.ImageObserver;
 
 public interface Drawable {
@@ -62,4 +63,11 @@ public interface Drawable {
 
     void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer);
 
+    default void mouseMoved(DrawableListener listener, MouseEvent event) {
+
+    }
+
+    default void mousePressed(DrawableListener listener, MouseEvent event) {
+
+    }
 }

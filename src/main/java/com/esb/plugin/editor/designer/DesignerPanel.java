@@ -4,6 +4,7 @@ import com.esb.plugin.commons.PrintFlowInfo;
 import com.esb.plugin.editor.SelectListener;
 import com.esb.plugin.editor.designer.action.DropActionHandler;
 import com.esb.plugin.editor.designer.action.MoveActionHandler;
+import com.esb.plugin.editor.designer.action.RemoveActionHandler;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.SnapshotListener;
@@ -26,12 +27,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Collection;
-import java.util.Optional;
 
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
-public class DesignerPanel extends JBPanel implements MouseMotionListener, MouseListener, DropTargetListener, SnapshotListener {
+public class DesignerPanel extends JBPanel implements MouseMotionListener, MouseListener, DropTargetListener, SnapshotListener, DrawableListener {
 
     private static final Logger LOG = Logger.getInstance(DesignerPanel.class);
 
@@ -106,46 +106,22 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     @Override
     public void mouseDragged(MouseEvent event) {
-        if (dragging) {
-            selected.drag(event.getX() - offsetX, event.getY() - offsetY);
-            repaint();
-        }
+        dragging = true;
+        selected.dragging();
+        selected.drag(event.getX() - offsetX, event.getY() - offsetY);
+        repaint();
     }
 
     @Override
     public void mouseMoved(MouseEvent event) {
-        int x = event.getX();
-        int y = event.getY();
-
-        Optional<GraphNode> nodeWithinCoordinates = getNodeWithinCoordinates(x, y);
-        if (nodeWithinCoordinates.isPresent()) {
-            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        } else {
-            setCursor(Cursor.getDefaultCursor());
-        }
+        setTheCursor(Cursor.getDefaultCursor());
+        graph.nodes().forEach(node -> node.mouseMoved(this, event));
     }
 
     @Override
     public void mousePressed(MouseEvent event) {
-        int x = event.getX();
-        int y = event.getY();
-
         unselect();
-
-        getNodeWithinCoordinates(x, y).ifPresent(selectedNode -> {
-
-            select(selectedNode);
-
-            offsetX = event.getX() - selectedNode.x();
-            offsetY = event.getY() - selectedNode.y();
-
-            // We start dragging if and only if we move
-            // far enough to consider it a drag movement.
-            selectedNode.dragging();
-            selectedNode.drag(event.getX() - offsetX, event.getY() - offsetY);
-            dragging = true;
-        });
-
+        graph.nodes().forEach(node -> node.mousePressed(this, event));
         repaint();
     }
 
@@ -164,26 +140,18 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         Point dragPoint = new Point(dragX, dragY);
 
         // TODO: Create builder.
-        new MoveActionHandler(
-                module,
-                snapshot,
-                getGraphics2D(),
-                selected,
-                dragPoint)
-                .handle();
+        MoveActionHandler handler = new MoveActionHandler(module, snapshot, getGraphics2D(), selected, dragPoint);
+        handler.handle();
 
+        // TODO: This repaint might not be necessary
         repaint();
     }
 
     @Override
     public void drop(DropTargetDropEvent dropEvent) {
         // TODO: Create builder
-        new DropActionHandler(
-                module,
-                snapshot,
-                getGraphics2D(),
-                dropEvent)
-                .handle();
+        DropActionHandler handler = new DropActionHandler(module, snapshot, getGraphics2D(), dropEvent);
+        handler.handle();
     }
 
     @Override
@@ -259,27 +227,37 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         setPreferredSize(newDimension);
     }
 
-    private Optional<GraphNode> getNodeWithinCoordinates(int x, int y) {
-        return graph.nodes()
-                .stream()
-                .filter(node -> node.contains(this, x, y))
-                .findFirst();
-    }
-
     private void unselect() {
         selected.unselected();
         selectListener.onUnselect();
-        select(NOTHING_SELECTED);
+        selected = NOTHING_SELECTED;
     }
 
-    private void select(GraphNode node) {
+    @Override
+    public void select(GraphNode node, MouseEvent event) {
+        unselect();
         selected = node;
         selected.selected();
+
+        offsetX = event.getX() - selected.x();
+        offsetY = event.getY() - selected.y();
+
         selectListener.onSelect(snapshot, selected);
+    }
+
+    @Override
+    public void setTheCursor(Cursor cursor) {
+        setCursor(cursor);
+    }
+
+    @Override
+    public void removeComponent(GraphNode nodeToRemove) {
+        // TODO: Create builder
+        RemoveActionHandler handler = new RemoveActionHandler();
+        handler.handle();
     }
 
     private Graphics2D getGraphics2D() {
         return (Graphics2D) getGraphics();
     }
-
 }

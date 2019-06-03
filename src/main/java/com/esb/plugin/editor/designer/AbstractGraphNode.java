@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.designer;
 
+import com.esb.plugin.commons.Images;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.editor.designer.widget.Arrow;
 import com.esb.plugin.editor.designer.widget.Icon;
@@ -10,6 +11,7 @@ import com.esb.plugin.graph.utils.FindScope;
 import com.esb.plugin.graph.utils.ListLastNodesOfScope;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.awt.image.ImageObserver;
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +46,16 @@ public abstract class AbstractGraphNode implements GraphNode {
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+        if (selected) {
+            // Draw square around title and description
+            graphics.setColor(new Color(250, 250, 250));
+            graphics.fillRect(x - Math.floorDiv(110, 2), y - 70, 110, 140);
+
+            // Draw on top of it
+            graphics.drawImage(Images.Component.RemoveComponent, x + Math.floorDiv(110, 2) - 16, y - 67, observer);
+
+        }
+
         icon.draw(graph, graphics, observer);
     }
 
@@ -52,6 +64,43 @@ public abstract class AbstractGraphNode implements GraphNode {
         if (dragging) {
             draggedIcon.setPosition(draggedX, draggedY);
             draggedIcon.draw(graph, graphics, observer);
+        }
+    }
+
+    private boolean withinRemoveIcon(int x, int y) {
+        if (selected) {
+            int xLeft = this.x + Math.floorDiv(110, 2) - 16;
+            int yTop = this.y - 67;
+            int xRight = xLeft + 13;
+            int yBottom = yTop + 13;
+
+            boolean withinX = x >= xLeft && x <= xRight;
+            boolean withinY = y >= yTop && y <= yBottom;
+            // Remove the node
+            return withinX && withinY;
+        }
+        return false;
+    }
+
+    @Override
+    public void mouseMoved(DrawableListener listener, MouseEvent event) {
+        int x = event.getX();
+        int y = event.getY();
+        if (icon.contains(x, y) || withinRemoveIcon(x, y)) {
+            listener.setTheCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        }
+    }
+
+    @Override
+    public void mousePressed(DrawableListener listener, MouseEvent event) {
+        int x = event.getX();
+        int y = event.getY();
+        if (icon.contains(x, y)) {
+            listener.select(this, event);
+        }
+        if (withinRemoveIcon(x, y)) {
+            listener.removeComponent(this);
+            System.out.println("Remove icon");
         }
     }
 

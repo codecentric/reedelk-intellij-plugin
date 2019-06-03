@@ -25,7 +25,6 @@ public class Icon {
     private int x;
     private int y;
 
-    private boolean selected;
 
     public Icon(ComponentData componentData) {
         image = componentData.getComponentImage();
@@ -53,12 +52,6 @@ public class Icon {
         int imageY = y - ICON_HEIGHT + TOP_OFFSET;
 
 
-        if (selected) {
-            // Draw square around title and description
-            graphics.setColor(new Color(250, 250, 250));
-            graphics.fillRect(x - Math.floorDiv(110, 2), y - 70, 110, 140);
-
-        }
         graphics.drawImage(image, imageX, imageY, observer);
         textComponentTitle.draw(graph, graphics, observer);
         textComponentDescription.draw(graph, graphics, observer);
@@ -86,14 +79,13 @@ public class Icon {
     }
 
     public void selected() {
-        this.selected = true;
         this.textComponentTitle.selected();
         this.textComponentDescription.selected();
     }
 
     public void unselected() {
-        this.selected = false;
         this.textComponentTitle.unselected();
         this.textComponentDescription.unselected();
     }
+
 }

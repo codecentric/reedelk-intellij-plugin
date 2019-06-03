@@ -369,7 +369,7 @@ public class GraphSamples {
                 .fullyQualifiedName(name)
                 .displayName(name)
                 .propertyDescriptors(Collections.emptyList())
-                .icon(Images.Component.DefaultComponentImage)
+                .icon(Images.Component.DefaultComponent)
                 .paletteIcon(Icons.Component.DefaultComponentIcon)
                 .build());
         componentData.set(JsonParser.Implementor.description(), "Test");

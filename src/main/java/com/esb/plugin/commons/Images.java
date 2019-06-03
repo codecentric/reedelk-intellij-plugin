@@ -1,6 +1,5 @@
 package com.esb.plugin.commons;
 
-import com.esb.plugin.component.scanner.ComponentIconAndImageProvider;
 import com.intellij.openapi.diagnostic.Logger;
 
 import javax.imageio.ImageIO;
@@ -16,28 +15,31 @@ public class Images {
 
     public static class Component {
 
-        public static final Image DefaultComponentImage;
+        public static final Image DefaultComponent;
+        public static final Image RemoveComponent;
         static {
-            try {
-                URL resource = ComponentIconAndImageProvider.class.getResource("/icons/default-component.png");
-                DefaultComponentImage = ImageIO.read(resource);
-            } catch (IOException e) {
-                LOG.error("Could not load default component image", e);
-                throw new RuntimeException(e);
-            }
+            DefaultComponent = loadImage("/icons/default-component.png");
+            RemoveComponent = loadImage("/icons/close-icon.png");
         }
 
         private static final Map<String, Image> KEY_IMAGE_MAP = new HashMap<>();
-
 
         public static void put(String key, Image image) {
             KEY_IMAGE_MAP.put(key, image);
         }
 
         public static Image get(String key) {
-            return KEY_IMAGE_MAP.getOrDefault(key, DefaultComponentImage);
+            return KEY_IMAGE_MAP.getOrDefault(key, DefaultComponent);
         }
+    }
 
-
+    private static Image loadImage(String resourceName) {
+        try {
+            URL resource = Images.class.getResource(resourceName);
+            return ImageIO.read(resource);
+        } catch (IOException e) {
+            LOG.error(String.format("Could not load image with resource name '%s'", resourceName), e);
+            throw new RuntimeException(e);
+        }
     }
 }
