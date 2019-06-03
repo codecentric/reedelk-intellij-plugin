@@ -1,6 +1,7 @@
 package com.esb.plugin.component.type.choice;
 
 import com.esb.plugin.component.domain.ComponentData;
+import com.esb.plugin.component.type.choice.functions.SyncConditionAndRoutePairs;
 import com.esb.plugin.editor.designer.AbstractScopedGraphNode;
 import com.esb.plugin.editor.designer.widget.Arrow;
 import com.esb.plugin.editor.designer.widget.Icon;
@@ -11,8 +12,8 @@ import com.esb.system.component.Choice;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.*;
 
 public class ChoiceNode extends AbstractScopedGraphNode {
 
@@ -22,8 +23,6 @@ public class ChoiceNode extends AbstractScopedGraphNode {
     private static final int ICON_X_OFFSET = 30;
     private static final int HEIGHT = 140;
     private static final int WIDTH = 170;
-
-    private static final String EMPTY_CONDITION = "";
 
     private final Icon icon;
     private final VerticalDivider verticalDivider;
@@ -79,57 +78,13 @@ public class ChoiceNode extends AbstractScopedGraphNode {
         return index < successors.size();
     }
 
-    // TODO: Extract this logic and test it very well
     @Override
     public void commit(FlowGraph graph) {
-        List<GraphNode> successors = graph.successors(this);
-
-        // Compute new Choice condition
-        List<ChoiceConditionRoutePair> oldConditions = listConditionRoutePairs();
-        List<ChoiceConditionRoutePair> updatedConditions = new LinkedList<>();
-
-        Map<GraphNode, ChoiceConditionRoutePair> existingConditionMap = new HashMap<>();
-        successors.forEach(successor -> findTargetPair(successor, oldConditions)
-                .ifPresent(choiceConditionRoutePair -> existingConditionMap.put(successor, choiceConditionRoutePair)));
-
-        for (int i = 0; i < successors.size(); i++) {
-            GraphNode successor = successors.get(i);
-            if (existingConditionMap.containsKey(successor)) {
-                ChoiceConditionRoutePair pair = existingConditionMap.get(successor);
-                updatedConditions.add(pair);
-            } else {
-                Collection<ChoiceConditionRoutePair> usedConditionRoutes = new HashSet<>(existingConditionMap.values());
-                usedConditionRoutes.addAll(updatedConditions);
-                Optional<ChoiceConditionRoutePair> oneAtIndexNotUsedYet = findOneAtIndexNotUsedYet(i, oldConditions, usedConditionRoutes);
-                if (oneAtIndexNotUsedYet.isPresent()) {
-                    ChoiceConditionRoutePair pair = oneAtIndexNotUsedYet.get();
-                    pair.setNext(successor);
-                    updatedConditions.add(pair);
-                } else {
-                    updatedConditions.add(new ChoiceConditionRoutePair(EMPTY_CONDITION, successor));
-                }
-            }
-        }
-
+        List<ChoiceConditionRoutePair> updatedConditions =
+                SyncConditionAndRoutePairs.getUpdatedPairs(graph, this, listConditionRoutePairs());
         ComponentData component = componentData();
         component.set(DATA_CONDITION_ROUTE_PAIRS, updatedConditions);
     }
-
-    private Optional<ChoiceConditionRoutePair> findOneAtIndexNotUsedYet(int i, List<ChoiceConditionRoutePair> choiceConditionRoutePairs, Collection<ChoiceConditionRoutePair> alreadyUsed) {
-        if (i < choiceConditionRoutePairs.size()) {
-            ChoiceConditionRoutePair pair = choiceConditionRoutePairs.get(i);
-            if (!alreadyUsed.contains(pair)) return Optional.of(pair);
-        }
-        return Optional.empty();
-    }
-
-    private Optional<ChoiceConditionRoutePair> findTargetPair(GraphNode target, List<ChoiceConditionRoutePair> oldConditions) {
-        return oldConditions
-                .stream()
-                .filter(choiceConditionRoutePair -> choiceConditionRoutePair.getNext() == target)
-                .findFirst();
-    }
-
 
     private List<ChoiceConditionRoutePair> listConditionRoutePairs() {
         ComponentData component = componentData();
