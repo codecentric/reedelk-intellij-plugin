@@ -81,5 +81,4 @@ class AbstractStrategyTest extends AbstractGraphTest {
         // Then
         assertThat(maxScopeXBound).isEqualTo(330);
     }
-
 }
