@@ -50,6 +50,7 @@ public class ChoiceNode extends AbstractScopedGraphNode {
 
     @Override
     public void drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+        super.drawArrows(graph, graphics, observer);
         drawVerticalDividerArrows(graph, graphics, observer);
     }
 

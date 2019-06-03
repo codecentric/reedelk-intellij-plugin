@@ -59,6 +59,10 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
         } else {
             unselectedNodeScopeBox.draw(graph, graphics, observer);
         }
+    }
+
+    @Override
+    public void drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         drawEndOfScopeArrow(graph, graphics, observer);
     }
 
