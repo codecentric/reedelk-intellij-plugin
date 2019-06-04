@@ -9,6 +9,7 @@ import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.FindScope;
 import com.esb.plugin.graph.utils.ListLastNodesOfScope;
+import com.intellij.openapi.diagnostic.Logger;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -17,6 +18,8 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class AbstractGraphNode implements GraphNode {
+
+    private static final Logger LOG = Logger.getInstance(AbstractGraphNode.class);
 
     private static final int WIDTH = 110;
     private static final int HEIGHT = 140;
@@ -39,7 +42,6 @@ public abstract class AbstractGraphNode implements GraphNode {
 
     public AbstractGraphNode(ComponentData componentData) {
         this.componentData = componentData;
-
         this.icon = new Icon(componentData);
         this.draggedIcon = new Icon(componentData);
     }
@@ -67,26 +69,13 @@ public abstract class AbstractGraphNode implements GraphNode {
         }
     }
 
-    private boolean withinRemoveIcon(int x, int y) {
-        if (selected) {
-            int xLeft = this.x + Math.floorDiv(110, 2) - 16;
-            int yTop = this.y - 67;
-            int xRight = xLeft + 13;
-            int yBottom = yTop + 13;
-
-            boolean withinX = x >= xLeft && x <= xRight;
-            boolean withinY = y >= yTop && y <= yBottom;
-            // Remove the node
-            return withinX && withinY;
-        }
-        return false;
-    }
-
     @Override
     public void mouseMoved(DrawableListener listener, MouseEvent event) {
         int x = event.getX();
         int y = event.getY();
-        if (icon.contains(x, y) || withinRemoveIcon(x, y)) {
+        boolean withinRemoveIcon = withinRemoveIcon(x, y);
+        LOG.warn(String.format("Mouse Moved: x=%d, y=%d, within remove icon %s", x, y, withinRemoveIcon));
+        if (icon.contains(x, y) || withinRemoveIcon) {
             listener.setTheCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
     }
@@ -95,10 +84,14 @@ public abstract class AbstractGraphNode implements GraphNode {
     public void mousePressed(DrawableListener listener, MouseEvent event) {
         int x = event.getX();
         int y = event.getY();
+        boolean withinRemoveIcon = withinRemoveIcon(x, y);
+
         if (icon.contains(x, y)) {
             listener.select(this, event);
         }
-        if (withinRemoveIcon(x, y)) {
+
+        LOG.warn(String.format("Mouse Pressed: x=%d, y=%d, within remove icon %s", x, y, withinRemoveIcon));
+        if (withinRemoveIcon) {
             listener.removeComponent(this);
             System.out.println("Remove icon");
         }
@@ -222,5 +215,21 @@ public abstract class AbstractGraphNode implements GraphNode {
             Arrow arrow = new Arrow(source, target);
             arrow.draw(graphics);
         });
+    }
+
+
+    private boolean withinRemoveIcon(int x, int y) {
+        // if (selected) {
+        int xLeft = this.x + Math.floorDiv(110, 2) - 16;
+        int yTop = this.y - 67;
+        int xRight = xLeft + 13;
+        int yBottom = yTop + 13;
+
+        boolean withinX = x >= xLeft && x <= xRight;
+        boolean withinY = y >= yTop && y <= yBottom;
+        // Remove the node
+        return withinX && withinY;
+        //  }
+
     }
 }

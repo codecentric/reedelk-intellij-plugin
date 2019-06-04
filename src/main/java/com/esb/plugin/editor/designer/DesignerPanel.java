@@ -155,6 +155,31 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     }
 
     @Override
+    public void removeComponent(GraphNode nodeToRemove) {
+        // TODO: Create builder
+        RemoveActionHandler handler = new RemoveActionHandler(snapshot, nodeToRemove);
+        handler.handle();
+    }
+
+    @Override
+    public void select(GraphNode node, MouseEvent event) {
+        unselect();
+
+        selected = node;
+        selected.selected();
+
+        offsetX = event.getX() - selected.x();
+        offsetY = event.getY() - selected.y();
+
+        selectListener.onSelect(snapshot, selected);
+    }
+
+    @Override
+    public void setTheCursor(Cursor cursor) {
+        setCursor(cursor);
+    }
+
+    @Override
     public void dragEnter(DropTargetDragEvent dtde) {
         unselect();
         repaint();
@@ -213,6 +238,16 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         this.selectListener = listener;
     }
 
+    private void unselect() {
+        selected.unselected();
+        selectListener.onUnselect();
+        selected = NOTHING_SELECTED;
+    }
+
+    private Graphics2D getGraphics2D() {
+        return (Graphics2D) getGraphics();
+    }
+
     /**
      * If the graph has grown beyond the current window size, we must adapt it.
      */
@@ -225,39 +260,5 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         Dimension newDimension = new Dimension(newSizeX, newSizeY);
         setSize(newDimension);
         setPreferredSize(newDimension);
-    }
-
-    private void unselect() {
-        selected.unselected();
-        selectListener.onUnselect();
-        selected = NOTHING_SELECTED;
-    }
-
-    @Override
-    public void select(GraphNode node, MouseEvent event) {
-        unselect();
-        selected = node;
-        selected.selected();
-
-        offsetX = event.getX() - selected.x();
-        offsetY = event.getY() - selected.y();
-
-        selectListener.onSelect(snapshot, selected);
-    }
-
-    @Override
-    public void setTheCursor(Cursor cursor) {
-        setCursor(cursor);
-    }
-
-    @Override
-    public void removeComponent(GraphNode nodeToRemove) {
-        // TODO: Create builder
-        RemoveActionHandler handler = new RemoveActionHandler();
-        handler.handle();
-    }
-
-    private Graphics2D getGraphics2D() {
-        return (Graphics2D) getGraphics();
     }
 }
