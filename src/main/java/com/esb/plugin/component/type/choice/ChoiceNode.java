@@ -74,8 +74,6 @@ public class ChoiceNode extends AbstractScopedGraphNode {
         return WIDTH;
     }
 
-
-
     @Override
     public boolean isSuccessorAllowed(FlowGraph graph, GraphNode successor, int index) {
         List<GraphNode> successors = graph.successors(this);

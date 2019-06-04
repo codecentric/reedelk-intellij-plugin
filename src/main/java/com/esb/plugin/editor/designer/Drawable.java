@@ -8,23 +8,17 @@ import java.awt.image.ImageObserver;
 
 public interface Drawable {
 
-    default void drag(int x, int y) {
-    }
+    void drag(int x, int y);
 
-    default void dragging() {
-    }
+    void dragging();
 
-    default void drop() {
-    }
+    void drop();
 
-    default void setPosition(int x, int y) {
-    }
+    void setPosition(int x, int y);
 
-    default void selected() {
-    }
+    void selected();
 
-    default void unselected() {
-    }
+    void unselected();
 
     void drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer);
 

@@ -87,5 +87,4 @@ public class Icon {
         this.textComponentTitle.unselected();
         this.textComponentDescription.unselected();
     }
-
 }

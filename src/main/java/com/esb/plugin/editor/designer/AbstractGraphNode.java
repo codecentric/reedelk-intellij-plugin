@@ -1,15 +1,15 @@
 package com.esb.plugin.editor.designer;
 
-import com.esb.plugin.commons.Images;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.editor.designer.widget.Arrow;
 import com.esb.plugin.editor.designer.widget.Icon;
+import com.esb.plugin.editor.designer.widget.RemoveComponentIcon;
+import com.esb.plugin.editor.designer.widget.SelectedBox;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.FindScope;
 import com.esb.plugin.graph.utils.ListLastNodesOfScope;
-import com.intellij.openapi.diagnostic.Logger;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -19,8 +19,6 @@ import java.util.Optional;
 
 public abstract class AbstractGraphNode implements GraphNode {
 
-    private static final Logger LOG = Logger.getInstance(AbstractGraphNode.class);
-
     private static final int WIDTH = 110;
     private static final int HEIGHT = 140;
 
@@ -28,6 +26,8 @@ public abstract class AbstractGraphNode implements GraphNode {
 
     private final Icon icon;
     private final Icon draggedIcon;
+    private final SelectedBox selectedBox;
+    private final RemoveComponentIcon removeComponentIcon;
 
     // x and y represent the center position of this Node on the canvas.
     private int x;
@@ -44,20 +44,23 @@ public abstract class AbstractGraphNode implements GraphNode {
         this.componentData = componentData;
         this.icon = new Icon(componentData);
         this.draggedIcon = new Icon(componentData);
+        this.selectedBox = new SelectedBox();
+        this.removeComponentIcon = new RemoveComponentIcon();
     }
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         if (selected) {
-            // Draw square around title and description
-            graphics.setColor(new Color(250, 250, 250));
-            graphics.fillRect(x - Math.floorDiv(110, 2), y - 70, 110, 140);
+            // Draw the background box of a selected component
+            selectedBox.setPosition(x, y);
+            selectedBox.draw(this, graphics);
 
-            // Draw on top of it
-            graphics.drawImage(Images.Component.RemoveComponent, x + Math.floorDiv(110, 2) - 16, y - 67, observer);
-
+            // Remove icon is on upper top-right corner
+            int topRightX = x + Math.floorDiv(width(graphics), 2) - Math.floorDiv(removeComponentIcon.width(), 2);
+            int topRightY = y - Math.floorDiv(height(graphics), 2) + Math.floorDiv(removeComponentIcon.height(), 2);
+            removeComponentIcon.setPosition(topRightX, topRightY);
+            removeComponentIcon.draw(graphics, observer);
         }
-
         icon.draw(graph, graphics, observer);
     }
 
@@ -73,9 +76,7 @@ public abstract class AbstractGraphNode implements GraphNode {
     public void mouseMoved(DrawableListener listener, MouseEvent event) {
         int x = event.getX();
         int y = event.getY();
-        boolean withinRemoveIcon = withinRemoveIcon(x, y);
-        LOG.warn(String.format("Mouse Moved: x=%d, y=%d, within remove icon %s", x, y, withinRemoveIcon));
-        if (icon.contains(x, y) || withinRemoveIcon) {
+        if (icon.contains(x, y) || withinRemoveIcon(x, y)) {
             listener.setTheCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
     }
@@ -84,17 +85,8 @@ public abstract class AbstractGraphNode implements GraphNode {
     public void mousePressed(DrawableListener listener, MouseEvent event) {
         int x = event.getX();
         int y = event.getY();
-        boolean withinRemoveIcon = withinRemoveIcon(x, y);
-
-        if (icon.contains(x, y)) {
-            listener.select(this, event);
-        }
-
-        LOG.warn(String.format("Mouse Pressed: x=%d, y=%d, within remove icon %s", x, y, withinRemoveIcon));
-        if (withinRemoveIcon) {
-            listener.removeComponent(this);
-            System.out.println("Remove icon");
-        }
+        if (icon.contains(x, y)) listener.select(this, event);
+        if (withinRemoveIcon(x, y)) listener.removeComponent(this);
     }
 
     @Override
@@ -105,18 +97,6 @@ public abstract class AbstractGraphNode implements GraphNode {
     @Override
     public int y() {
         return y;
-    }
-
-    @Override
-    public void setPosition(int x, int y) {
-        this.x = x;
-        this.y = y;
-        this.icon.setPosition(x, y);
-    }
-
-    @Override
-    public void drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-        _drawArrows(graph, graphics, observer);
     }
 
     @Override
@@ -137,6 +117,18 @@ public abstract class AbstractGraphNode implements GraphNode {
     @Override
     public boolean isSelected() {
         return selected;
+    }
+
+    @Override
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+        this.icon.setPosition(x, y);
+    }
+
+    @Override
+    public void drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+        _drawArrows(graph, graphics, observer);
     }
 
     @Override
@@ -174,7 +166,7 @@ public abstract class AbstractGraphNode implements GraphNode {
 
     @Override
     public Point getBarycenter() {
-        // It it is the center of the Icon.
+        // The barycenter for a component node is the center of the icon representing it.
         return icon.getBarycenter();
     }
 
@@ -199,27 +191,7 @@ public abstract class AbstractGraphNode implements GraphNode {
         drawTheArrows(graph, graphics);
     }
 
-    private void drawTheArrows(FlowGraph graph, Graphics2D graphics) {
-        graph.successors(this).forEach(successor -> {
-
-            Point sourceBaryCenter = getBarycenter();
-            Point source = new Point(
-                    sourceBaryCenter.x + Math.floorDiv(60, 2) + 7,
-                    sourceBaryCenter.y);
-
-            Point targetBaryCenter = successor.getBarycenter();
-            Point target = new Point(
-                    targetBaryCenter.x - Math.floorDiv(60, 2) - 7,
-                    targetBaryCenter.y);
-
-            Arrow arrow = new Arrow(source, target);
-            arrow.draw(graphics);
-        });
-    }
-
-
     private boolean withinRemoveIcon(int x, int y) {
-        // if (selected) {
         int xLeft = this.x + Math.floorDiv(110, 2) - 16;
         int yTop = this.y - 67;
         int xRight = xLeft + 13;
@@ -227,9 +199,27 @@ public abstract class AbstractGraphNode implements GraphNode {
 
         boolean withinX = x >= xLeft && x <= xRight;
         boolean withinY = y >= yTop && y <= yBottom;
-        // Remove the node
-        return withinX && withinY;
-        //  }
 
+        return withinX && withinY;
+    }
+
+    private void drawTheArrows(FlowGraph graph, Graphics2D graphics) {
+        graph.successors(this).forEach(successor -> {
+            // Source
+            Point sourceBaryCenter = getBarycenter();
+            Point source = new Point(
+                    sourceBaryCenter.x + Math.floorDiv(60, 2) + 7,
+                    sourceBaryCenter.y);
+
+            // Target
+            Point targetBaryCenter = successor.getBarycenter();
+            Point target = new Point(
+                    targetBaryCenter.x - Math.floorDiv(60, 2) - 7,
+                    targetBaryCenter.y);
+
+            // Arrow to draw
+            Arrow arrow = new Arrow(source, target);
+            arrow.draw(graphics);
+        });
     }
 }

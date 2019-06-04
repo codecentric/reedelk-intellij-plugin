@@ -118,6 +118,21 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
     }
 
     @Override
+    public void drag(int x, int y) {
+        // scoped node is not draggable yet.
+    }
+
+    @Override
+    public void dragging() {
+        // scope node is not draggable yet.
+    }
+
+    @Override
+    public void drop() {
+        // scope node is not draggable yet.
+    }
+
+    @Override
     public String toString() {
         return componentData.getFullyQualifiedName();
     }

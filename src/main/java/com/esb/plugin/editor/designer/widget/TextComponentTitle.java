@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.designer.widget;
 
+import com.esb.plugin.commons.Fonts;
 import com.esb.plugin.component.domain.ComponentData;
 import com.intellij.ui.JBColor;
 
@@ -10,7 +11,7 @@ public class TextComponentTitle extends AbstractText {
     private final String title;
 
     public TextComponentTitle(ComponentData componentData) {
-        super(new Font(".SF NS Text", Font.PLAIN, 13));
+        super(Fonts.COMPONENT_TITLE);
         this.title = componentData.getDisplayName();
     }
 

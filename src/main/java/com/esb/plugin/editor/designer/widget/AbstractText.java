@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class AbstractText implements Widget {
+public abstract class AbstractText {
 
     private static final Pattern REGEX = Pattern.compile(".{1,16}(?:\\s|$)", Pattern.DOTALL);
     private final Font font;
@@ -24,7 +24,6 @@ public abstract class AbstractText implements Widget {
         this.font = font;
     }
 
-    @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         graphics.setColor(selected ? getSelectedColor() : getColor());
         graphics.setFont(font);
@@ -41,19 +40,16 @@ public abstract class AbstractText implements Widget {
         }
     }
 
-    @Override
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    @Override
     public int height(Graphics2D graphics) {
         Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(getText(), graphics);
         return (int) stringBounds.getHeight();
     }
 
-    @Override
     public int width(Graphics2D graphics) {
         Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(getText(), graphics);
         return (int) stringBounds.getWidth();

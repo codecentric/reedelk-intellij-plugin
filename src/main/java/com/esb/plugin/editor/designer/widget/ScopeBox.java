@@ -18,7 +18,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-public abstract class ScopeBox implements Widget {
+public abstract class ScopeBox {
 
     private final int IN_BETWEEN_SCOPES_PADDING = 5;
 
@@ -32,7 +32,6 @@ public abstract class ScopeBox implements Widget {
         this.scopedGraphNode = scopedGraphNode;
     }
 
-    @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         graphics.setStroke(stroke);
         graphics.setColor(boundariesColor);
@@ -132,5 +131,4 @@ public abstract class ScopeBox implements Widget {
         int height = maxY - minY;
         return new ScopeBoundaries(minX, minY, width, height);
     }
-
 }

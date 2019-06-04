@@ -67,8 +67,8 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
 
-        // Set Antialiasing
         Graphics2D g2 = (Graphics2D) graphics;
+
         g2.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
 
         // We compute again the graph layout if and only if it was updated.
@@ -86,7 +86,6 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
             updated = false;
         }
-
 
         long start = System.currentTimeMillis();
 
@@ -127,24 +126,24 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (!dragging) return;
+        if (dragging) {
+            dragging = false;
 
-        dragging = false;
+            int dragX = e.getX();
+            int dragY = e.getY();
 
-        int dragX = e.getX();
-        int dragY = e.getY();
+            selected.drag(dragX, dragY);
+            selected.drop();
 
-        selected.drag(dragX, dragY);
-        selected.drop();
+            Point dragPoint = new Point(dragX, dragY);
 
-        Point dragPoint = new Point(dragX, dragY);
+            // TODO: Create builder.
+            MoveActionHandler handler = new MoveActionHandler(module, snapshot, getGraphics2D(), selected, dragPoint);
+            handler.handle();
 
-        // TODO: Create builder.
-        MoveActionHandler handler = new MoveActionHandler(module, snapshot, getGraphics2D(), selected, dragPoint);
-        handler.handle();
-
-        // TODO: This repaint might not be necessary
-        repaint();
+            // TODO: This repaint might not be necessary
+            repaint();
+        }
     }
 
     @Override
@@ -163,8 +162,6 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     @Override
     public void select(GraphNode node, MouseEvent event) {
-        unselect();
-
         selected = node;
         selected.selected();
 
@@ -238,14 +235,14 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         this.selectListener = listener;
     }
 
+    private Graphics2D getGraphics2D() {
+        return (Graphics2D) getGraphics();
+    }
+
     private void unselect() {
         selected.unselected();
         selectListener.onUnselect();
         selected = NOTHING_SELECTED;
-    }
-
-    private Graphics2D getGraphics2D() {
-        return (Graphics2D) getGraphics();
     }
 
     /**

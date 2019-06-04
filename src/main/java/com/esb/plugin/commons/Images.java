@@ -19,7 +19,7 @@ public class Images {
         public static final Image RemoveComponent;
         static {
             DefaultComponent = loadImage("/icons/default-component.png");
-            RemoveComponent = loadImage("/icons/close-icon.png");
+            RemoveComponent = loadImage("/icons/remove-component-icon.png");
         }
 
         private static final Map<String, Image> KEY_IMAGE_MAP = new HashMap<>();

@@ -14,6 +14,36 @@ public class NothingSelectedNode implements GraphNode {
     }
 
     @Override
+    public void drag(int x, int y) {
+
+    }
+
+    @Override
+    public void dragging() {
+
+    }
+
+    @Override
+    public void drop() {
+
+    }
+
+    @Override
+    public void setPosition(int x, int y) {
+
+    }
+
+    @Override
+    public void selected() {
+
+    }
+
+    @Override
+    public void unselected() {
+
+    }
+
+    @Override
     public void drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         throw new UnsupportedOperationException();
     }
@@ -42,4 +72,5 @@ public class NothingSelectedNode implements GraphNode {
     public ComponentData componentData() {
         return null;
     }
+
 }

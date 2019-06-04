@@ -1,6 +1,7 @@
 package com.esb.plugin.editor.designer.widget;
 
 import com.esb.internal.commons.JsonParser;
+import com.esb.plugin.commons.Fonts;
 import com.esb.plugin.component.domain.ComponentData;
 import com.intellij.ui.JBColor;
 
@@ -11,7 +12,7 @@ public class TextComponentDescription extends AbstractText {
     private ComponentData componentData;
 
     public TextComponentDescription(ComponentData componentData) {
-        super(new Font(".SF NS Text", Font.PLAIN, 13));
+        super(Fonts.COMPONENT_DESCRIPTION);
         this.componentData = componentData;
     }
 
