@@ -3,6 +3,7 @@ package com.esb.plugin.component.type.fork;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.editor.designer.AbstractScopedGraphNode;
 import com.esb.plugin.editor.designer.Drawable;
+import com.esb.plugin.editor.designer.DrawableListener;
 import com.esb.plugin.editor.designer.widget.Arrow;
 import com.esb.plugin.editor.designer.widget.Icon;
 import com.esb.plugin.editor.designer.widget.VerticalDivider;
@@ -10,6 +11,7 @@ import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.awt.image.ImageObserver;
 import java.util.List;
 
@@ -37,6 +39,16 @@ public class ForkNode extends AbstractScopedGraphNode {
         verticalDivider.draw(graph, graphics, observer);
     }
 
+    @Override
+    public void mouseMoved(DrawableListener listener, MouseEvent event) {
+
+    }
+
+    @Override
+    public void mousePressed(DrawableListener listener, MouseEvent event) {
+
+    }
+
 
     @Override
     public void setPosition(int x, int y) {
@@ -49,6 +61,11 @@ public class ForkNode extends AbstractScopedGraphNode {
     public void drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         super.drawArrows(graph, graphics, observer);
         _drawArrows(graph, graphics, observer);
+    }
+
+    @Override
+    public void drawDrag(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+
     }
 
     @Override

@@ -7,8 +7,8 @@ import java.awt.image.ImageObserver;
 
 public class RemoveComponentIcon {
 
-    private static final int ICON_WIDTH = 16;
-    private static final int ICON_HEIGHT = 16;
+    private static final int ICON_WIDTH = 17;
+    private static final int ICON_HEIGHT = 17;
 
     private int x;
     private int y;

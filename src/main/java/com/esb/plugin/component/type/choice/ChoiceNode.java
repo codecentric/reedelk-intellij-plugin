@@ -3,6 +3,7 @@ package com.esb.plugin.component.type.choice;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.type.choice.functions.SyncConditionAndRoutePairs;
 import com.esb.plugin.editor.designer.AbstractScopedGraphNode;
+import com.esb.plugin.editor.designer.DrawableListener;
 import com.esb.plugin.editor.designer.widget.Arrow;
 import com.esb.plugin.editor.designer.widget.Icon;
 import com.esb.plugin.editor.designer.widget.VerticalDivider;
@@ -11,6 +12,7 @@ import com.esb.plugin.graph.node.GraphNode;
 import com.esb.system.component.Choice;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.awt.image.ImageObserver;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,9 +38,24 @@ public class ChoiceNode extends AbstractScopedGraphNode {
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         super.draw(graph, graphics, observer);
-
         icon.draw(graph, graphics, observer);
         verticalDivider.draw(graph, graphics, observer);
+    }
+
+    @Override
+    public void mouseMoved(DrawableListener listener, MouseEvent event) {
+        int x = event.getX();
+        int y = event.getY();
+        if (icon.contains(x, y)) {
+            listener.setTheCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        }
+    }
+
+    @Override
+    public void mousePressed(DrawableListener listener, MouseEvent event) {
+        int x = event.getX();
+        int y = event.getY();
+        if (icon.contains(x, y)) listener.select(this, event);
     }
 
     @Override
@@ -52,6 +69,11 @@ public class ChoiceNode extends AbstractScopedGraphNode {
     public void drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         super.drawArrows(graph, graphics, observer);
         drawVerticalDividerArrows(graph, graphics, observer);
+    }
+
+    @Override
+    public void drawDrag(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+
     }
 
     @Override

@@ -14,54 +14,40 @@ public interface Drawable {
 
     void drop();
 
-    void setPosition(int x, int y);
-
     void selected();
 
     void unselected();
 
+    boolean isSelected();
+
     void drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer);
 
-    default void drawDrag(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+    void drawDrag(FlowGraph graph, Graphics2D graphics, ImageObserver observer);
 
-    }
+    int x();
 
-    default boolean isSelected() {
-        return false;
-    }
+    int y();
 
-    default int x() {
-        throw new UnsupportedOperationException();
-    }
-
-    default int y() {
-        throw new UnsupportedOperationException();
-    }
+    void setPosition(int x, int y);
 
     int height(Graphics2D graphics);
 
     int width(Graphics2D graphics);
 
-    /**
-     * It is the graphical center of the Drawable. For instance,
-     * A component might have an icon + text below. The bary center
-     * in this case might be the center of the icon.
-     *
-     * @return the barycenter point of this drawable.
-     */
-    default Point getBarycenter() {
-        throw new UnsupportedOperationException();
-    }
-
     boolean contains(ImageObserver observer, int x, int y);
 
     void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer);
 
-    default void mouseMoved(DrawableListener listener, MouseEvent event) {
+    void mouseMoved(DrawableListener listener, MouseEvent event);
 
-    }
+    void mousePressed(DrawableListener listener, MouseEvent event);
 
-    default void mousePressed(DrawableListener listener, MouseEvent event) {
-
-    }
+    /**
+     * The "user perceived" center of the Drawable component.
+     * For instance, a component has an icon + text below.
+     * The bary center in this case is the center of the icon.
+     *
+     * @return the barycenter point of this drawable.
+     */
+    Point getBarycenter();
 }
