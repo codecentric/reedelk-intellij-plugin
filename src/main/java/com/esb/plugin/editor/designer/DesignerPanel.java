@@ -123,6 +123,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     public void mousePressed(MouseEvent event) {
         unselect();
         graph.nodes().forEach(node -> node.mousePressed(this, event));
+        repaint();
     }
 
     @Override

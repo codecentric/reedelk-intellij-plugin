@@ -21,6 +21,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.messages.MessageBusConnection;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.event.AncestorEvent;
@@ -137,9 +138,10 @@ public class GraphManager extends AncestorListenerAdapter implements FileEditorM
 
     private void deserializeDocument() {
         if (document != null) {
-            GraphDeserializer.deserialize(module, document.getText(), graphProvider)
-                    .ifPresent(updatedGraph -> snapshot.updateSnapshot(this, updatedGraph));
+            if (StringUtils.isNotBlank(document.getText())) {
+                GraphDeserializer.deserialize(module, document.getText(), graphProvider)
+                        .ifPresent(updatedGraph -> snapshot.updateSnapshot(this, updatedGraph));
+            }
         }
     }
-
 }
