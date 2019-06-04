@@ -41,14 +41,21 @@ public class ForkNode extends AbstractScopedGraphNode {
 
     @Override
     public void mouseMoved(DrawableListener listener, MouseEvent event) {
-
+        int x = event.getX();
+        int y = event.getY();
+        if (icon.contains(x, y)) {
+            listener.setTheCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        }
     }
 
     @Override
     public void mousePressed(DrawableListener listener, MouseEvent event) {
-
+        int x = event.getX();
+        int y = event.getY();
+        if (icon.contains(x, y)) {
+            listener.select(this, event);
+        }
     }
-
 
     @Override
     public void setPosition(int x, int y) {

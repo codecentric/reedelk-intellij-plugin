@@ -20,7 +20,6 @@ public class RemoveActionHandler {
     }
 
     public void handle() {
-
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(snapshot.getGraph().copy());
 
         // 1. Remove the node

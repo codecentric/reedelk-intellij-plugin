@@ -55,7 +55,9 @@ public class ChoiceNode extends AbstractScopedGraphNode {
     public void mousePressed(DrawableListener listener, MouseEvent event) {
         int x = event.getX();
         int y = event.getY();
-        if (icon.contains(x, y)) listener.select(this, event);
+        if (icon.contains(x, y)) {
+            listener.select(this, event);
+        }
     }
 
     @Override
