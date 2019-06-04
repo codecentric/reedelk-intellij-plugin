@@ -85,6 +85,8 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
             adjustWindowSize();
 
             updated = false;
+        } else {
+            LOG.info("Graph not changed");
         }
 
         long start = System.currentTimeMillis();
@@ -121,7 +123,6 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     public void mousePressed(MouseEvent event) {
         unselect();
         graph.nodes().forEach(node -> node.mousePressed(this, event));
-        repaint();
     }
 
     @Override
@@ -129,20 +130,22 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         if (dragging) {
             dragging = false;
 
-            int dragX = e.getX();
-            int dragY = e.getY();
+            if (selected != NOTHING_SELECTED) {
+                int dragX = e.getX();
+                int dragY = e.getY();
 
-            selected.drag(dragX, dragY);
-            selected.drop();
+                selected.drag(dragX, dragY);
+                selected.drop();
 
-            Point dragPoint = new Point(dragX, dragY);
+                Point dragPoint = new Point(dragX, dragY);
 
-            // TODO: Create builder.
-            MoveActionHandler handler = new MoveActionHandler(module, snapshot, getGraphics2D(), selected, dragPoint);
-            handler.handle();
+                // TODO: Create builder.
+                MoveActionHandler handler = new MoveActionHandler(module, snapshot, getGraphics2D(), selected, dragPoint);
+                handler.handle();
 
-            // TODO: This repaint might not be necessary
-            repaint();
+                // TODO: This repaint might not be necessary
+                repaint();
+            }
         }
     }
 
@@ -169,6 +172,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         offsetY = event.getY() - selected.y();
 
         selectListener.onSelect(snapshot, selected);
+        repaint();
     }
 
     @Override

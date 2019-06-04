@@ -6,10 +6,13 @@ import com.esb.plugin.graph.action.ActionNodeRemove;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.FindScope;
+import com.intellij.openapi.diagnostic.Logger;
 
 import java.util.Optional;
 
 public class RemoveActionHandler {
+
+    private static final Logger LOG = Logger.getInstance(RemoveActionHandler.class);
 
     private final GraphNode nodeToRemove;
     private final GraphSnapshot snapshot;
@@ -32,8 +35,8 @@ public class RemoveActionHandler {
 
         if (modifiableGraph.isChanged()) {
             modifiableGraph.commit();
+            LOG.warn("Remove Node updating snapshot");
             snapshot.updateSnapshot(this, modifiableGraph);
-
         } else {
             // 3. Add back the node to the scope if the original graph was not changed.
             selectedScope.ifPresent(scopedNode -> scopedNode.addToScope(nodeToRemove));
