@@ -2,7 +2,6 @@ package com.esb.plugin.runconfig.module.runner;
 
 import com.esb.plugin.commons.Icons;
 import com.intellij.execution.Executor;
-import com.intellij.execution.ExecutorRegistry;
 import com.intellij.openapi.wm.ToolWindowId;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -68,7 +67,4 @@ public class ESBModuleDeployExecutor extends Executor {
         return "deploy.esb.id";
     }
 
-    public static Executor getRunExecutorInstance() {
-        return ExecutorRegistry.getInstance().getExecutorById(EXECUTOR_ID);
-    }
 }
