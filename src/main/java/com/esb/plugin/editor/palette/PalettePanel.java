@@ -75,6 +75,16 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
     }
 
     @NotNull
+    Collection<ComponentsPackage> getComponentsPackages() {
+        return ComponentService.getInstance(module).getModulesDescriptors();
+    }
+
+    void registerComponentListUpdateNotifier() {
+        MessageBusConnection connect = module.getMessageBus().connect();
+        connect.subscribe(ComponentListUpdateNotifier.COMPONENT_LIST_UPDATE_TOPIC, this);
+    }
+
+    @NotNull
     static List<DefaultMutableTreeNode> getComponentsPackagesTreeNodes(Collection<ComponentsPackage> componentsPackages) {
         return componentsPackages
                 .stream()
@@ -93,16 +103,6 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
                 .forEach(componentDescriptor ->
                         componentTreeNode.add(new DefaultMutableTreeNode(componentDescriptor)));
         return componentTreeNode;
-    }
-
-    @NotNull
-    Collection<ComponentsPackage> getComponentsPackages() {
-        return ComponentService.getInstance(module).getModulesDescriptors();
-    }
-
-    void registerComponentListUpdateNotifier() {
-        MessageBusConnection connect = module.getMessageBus().connect();
-        connect.subscribe(ComponentListUpdateNotifier.COMPONENT_LIST_UPDATE_TOPIC, this);
     }
 
     private static final Predicate<ComponentDescriptor> ExcludeHiddenComponent =

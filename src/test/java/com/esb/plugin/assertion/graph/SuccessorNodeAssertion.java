@@ -5,7 +5,9 @@ import com.esb.plugin.graph.node.GraphNode;
 
 import java.util.List;
 
+import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public class SuccessorNodeAssertion {
 
@@ -22,6 +24,22 @@ public class SuccessorNodeAssertion {
     public SuccessorNodeAssertion areExactly(GraphNode... expectedNodes) {
         List<GraphNode> successors = graph.successors(node);
         assertThat(successors).containsExactlyInAnyOrder(expectedNodes);
+        return this;
+    }
+
+    public SuccessorNodeAssertion isAtIndex(GraphNode expectedNode, int expectedIndex) {
+        List<GraphNode> successors = graph.successors(node);
+        assertThat(successors).contains(expectedNode);
+
+        for (int i = 0; i < successors.size(); i++) {
+            GraphNode node = successors.get(i);
+            if (node == expectedNode) {
+                if (i == expectedIndex) {
+                    return this;
+                }
+            }
+        }
+        fail(format("Expected node %s could not be found at expected index %d", expectedNode, expectedIndex));
         return this;
     }
 
