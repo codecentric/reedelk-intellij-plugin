@@ -15,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.MutableTreeNode;
 import java.awt.*;
 import java.util.Collection;
 import java.util.List;
@@ -48,18 +47,18 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
         this.tree.setDragEnabled(true);
         this.tree.setTransferHandler(new ComponentTransferableHandler());
 
-        JBScrollPane componentsTreeScrollPanel = new JBScrollPane(tree);
+        JScrollPane componentsTreeScrollPanel = new JBScrollPane(tree);
 
         add(componentsTreeScrollPanel, CENTER);
 
         registerComponentListUpdateNotifier();
-
         onComponentListUpdate();
     }
 
     @Override
     public void onComponentListUpdate() {
-        List<MutableTreeNode> componentsTreeNodes = getComponentsPackagesTreeNodes();
+        Collection<ComponentsPackage> componentsPackages = getComponentsPackages();
+        List<DefaultMutableTreeNode> componentsTreeNodes = getComponentsPackagesTreeNodes(componentsPackages);
 
         SwingUtilities.invokeLater(() -> {
 
@@ -76,16 +75,16 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
     }
 
     @NotNull
-    List<MutableTreeNode> getComponentsPackagesTreeNodes() {
-        return getComponentsPackages()
+    static List<DefaultMutableTreeNode> getComponentsPackagesTreeNodes(Collection<ComponentsPackage> componentsPackages) {
+        return componentsPackages
                 .stream()
                 .filter(ExcludeModuleWithoutComponents)
-                .map(this::buildPackageTreeNode)
+                .map(PalettePanel::buildPackageTreeNode)
                 .collect(toList());
     }
 
     @NotNull
-    DefaultMutableTreeNode buildPackageTreeNode(ComponentsPackage componentsPackage) {
+    static DefaultMutableTreeNode buildPackageTreeNode(ComponentsPackage componentsPackage) {
         DefaultMutableTreeNode componentTreeNode = new DefaultMutableTreeNode(componentsPackage.getName());
         componentsPackage
                 .getModuleComponents()

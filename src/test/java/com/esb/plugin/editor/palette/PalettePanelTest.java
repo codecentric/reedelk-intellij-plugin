@@ -2,8 +2,6 @@ package com.esb.plugin.editor.palette;
 
 import com.esb.plugin.component.domain.ComponentDescriptor;
 import com.esb.plugin.component.domain.ComponentsPackage;
-import com.intellij.openapi.module.Module;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -12,32 +10,24 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.MutableTreeNode;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
 class PalettePanelTest {
 
-    @Mock
-    private Module mockModule;
     @Mock
     private ComponentDescriptor mockDescriptor1;
     @Mock
     private ComponentDescriptor mockDescriptor2;
     @Mock
     private ComponentDescriptor mockDescriptor3;
-
-    private PalettePanel palettePanel;
-
-    @BeforeEach
-    void setUp() {
-        palettePanel = spy(new TestablePalettePanel(mockModule));
-    }
 
     @Nested
     @DisplayName("Build package tree node tests")
@@ -49,7 +39,7 @@ class PalettePanelTest {
             ComponentsPackage module1 = new ComponentsPackage("Module1", asList(mockDescriptor1, mockDescriptor2));
 
             // When
-            DefaultMutableTreeNode treeNode = palettePanel.buildPackageTreeNode(module1);
+            DefaultMutableTreeNode treeNode = PalettePanel.buildPackageTreeNode(module1);
 
             // Then
             assertThat(treeNode.getUserObject()).isEqualTo("Module1");
@@ -70,12 +60,12 @@ class PalettePanelTest {
             ComponentsPackage module1 = new ComponentsPackage("Module1", asList(mockDescriptor1, mockDescriptor2));
 
             // When
-            DefaultMutableTreeNode treeNode = palettePanel.buildPackageTreeNode(module1);
+            DefaultMutableTreeNode treeNode = PalettePanel.buildPackageTreeNode(module1);
 
             // Then
             List<DefaultMutableTreeNode> children = Collections.list(treeNode.children());
-            assertThat(children).hasSize(1);
 
+            assertThat(children).hasSize(1);
             assertThatExistsChildrenWithUserObject(children, mockDescriptor1);
         }
     }
@@ -87,56 +77,33 @@ class PalettePanelTest {
         @Test
         void shouldCorrectlyReturnCorrectComponentsPackagesTreeNodes() {
             // Given
-            DefaultMutableTreeNode mockTreeNode1 = mock(DefaultMutableTreeNode.class);
-            DefaultMutableTreeNode mockTreeNode2 = mock(DefaultMutableTreeNode.class);
-
             ComponentsPackage module1 = new ComponentsPackage("Module1", asList(mockDescriptor1, mockDescriptor2));
-            ComponentsPackage module2 = new ComponentsPackage("Module2", asList(mockDescriptor3));
-
-            doReturn(asList(module1, module2))
-                    .when(palettePanel)
-                    .getComponentsPackages();
-
-            doReturn(mockTreeNode1)
-                    .when(palettePanel)
-                    .buildPackageTreeNode(module1);
-
-            doReturn(mockTreeNode2)
-                    .when(palettePanel)
-                    .buildPackageTreeNode(module2);
+            ComponentsPackage module2 = new ComponentsPackage("Module2", Collections.singletonList(mockDescriptor3));
 
             // When
-            List<MutableTreeNode> treeNodes = palettePanel.getComponentsPackagesTreeNodes();
+            List<DefaultMutableTreeNode> treeNodes =
+                    PalettePanel.getComponentsPackagesTreeNodes(asList(module1, module2));
 
             // Then
             assertThat(treeNodes).hasSize(2);
-            verify(palettePanel).buildPackageTreeNode(module1);
-            verify(palettePanel).buildPackageTreeNode(module2);
+
+            assertExistsTreeNodeWithNameAndChildrenUserObjects(treeNodes, "Module1", mockDescriptor1, mockDescriptor2);
+            assertExistsTreeNodeWithNameAndChildrenUserObjects(treeNodes, "Module2", mockDescriptor3);
         }
 
         @Test
         void shouldExcludeComponentsPackagesWithNoComponents() {
             // Given
-            DefaultMutableTreeNode mockTreeNode1 = mock(DefaultMutableTreeNode.class);
-
             ComponentsPackage module1 = new ComponentsPackage("Module1", asList(mockDescriptor1, mockDescriptor2));
             ComponentsPackage module2 = new ComponentsPackage("Module2", Collections.emptyList());
 
-            doReturn(asList(module1, module2))
-                    .when(palettePanel)
-                    .getComponentsPackages();
-
-            doReturn(mockTreeNode1)
-                    .when(palettePanel)
-                    .buildPackageTreeNode(module1);
-
             // When
-            List<MutableTreeNode> treeNodes = palettePanel.getComponentsPackagesTreeNodes();
+            List<DefaultMutableTreeNode> treeNodes =
+                    PalettePanel.getComponentsPackagesTreeNodes(asList(module1, module2));
 
             // Then
             assertThat(treeNodes).hasSize(1);
-            verify(palettePanel).buildPackageTreeNode(module1);
-            verify(palettePanel, never()).buildPackageTreeNode(module2);
+            assertExistsTreeNodeWithNameAndChildrenUserObjects(treeNodes, "Module1", mockDescriptor1, mockDescriptor2);
         }
     }
 
@@ -147,24 +114,22 @@ class PalettePanelTest {
         assertThat(found).isTrue();
     }
 
-    /**
-     * Overrides the Palette Panel so that it does not call
-     * SwingUtilities or subscribe to the message bus.
-     */
-    class TestablePalettePanel extends PalettePanel {
+    private Optional<DefaultMutableTreeNode> getTreeNodeHavingName(List<DefaultMutableTreeNode> treeNodes, String expectedName) {
+        return treeNodes
+                .stream()
+                .filter(defaultMutableTreeNode -> defaultMutableTreeNode.getUserObject() == expectedName)
+                .findFirst();
+    }
 
-        TestablePalettePanel(Module module) {
-            super(module);
-        }
+    private void assertExistsTreeNodeWithNameAndChildrenUserObjects(List<DefaultMutableTreeNode> treeNodes, String expectedName, ComponentDescriptor... descriptors) {
+        Optional<DefaultMutableTreeNode> treeNodeMatchingName = getTreeNodeHavingName(treeNodes, expectedName);
+        assertThat(treeNodeMatchingName).isPresent();
 
-        @Override
-        public void onComponentListUpdate() {
-            // do nothing
-        }
+        DefaultMutableTreeNode treeNode = treeNodeMatchingName.get();
+        List<DefaultMutableTreeNode> treeNodeChildren = Collections.list(treeNode.children());
+        assertThat(treeNodeChildren).hasSize(descriptors.length);
 
-        @Override
-        void registerComponentListUpdateNotifier() {
-            // nothing to do
-        }
+        Arrays.stream(descriptors)
+                .forEach(descriptor -> assertThatExistsChildrenWithUserObject(treeNodeChildren, descriptor));
     }
 }
