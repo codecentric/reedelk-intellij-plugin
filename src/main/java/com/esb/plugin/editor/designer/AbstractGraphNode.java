@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.designer;
 
+import com.esb.plugin.commons.Half;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.editor.designer.widget.Arrow;
 import com.esb.plugin.editor.designer.widget.Icon;
@@ -19,8 +20,8 @@ import java.util.Optional;
 
 public abstract class AbstractGraphNode implements GraphNode {
 
-    private static final int WIDTH = 110;
-    private static final int HEIGHT = 140;
+    public static final int WIDTH = 110;
+    public static final int HEIGHT = 140;
 
     private final ComponentData componentData;
 
@@ -56,8 +57,8 @@ public abstract class AbstractGraphNode implements GraphNode {
             selectedBox.draw(this, graphics);
 
             // Remove icon is on upper top-right corner
-            int topRightX = x + Math.floorDiv(width(graphics), 2) - Math.floorDiv(removeComponentIcon.width(), 2);
-            int topRightY = y - Math.floorDiv(height(graphics), 2) + Math.floorDiv(removeComponentIcon.height(), 2);
+            int topRightX = x + Half.of(width(graphics)) - Half.of(removeComponentIcon.width());
+            int topRightY = y - Half.of(height(graphics)) + Half.of(removeComponentIcon.height());
             removeComponentIcon.setPosition(topRightX, topRightY);
             removeComponentIcon.draw(graphics, observer);
         }
@@ -216,13 +217,13 @@ public abstract class AbstractGraphNode implements GraphNode {
             // Source
             Point sourceBaryCenter = getBarycenter();
             Point source = new Point(
-                    sourceBaryCenter.x + Math.floorDiv(60, 2) + 7,
+                    sourceBaryCenter.x + Half.of(60) + 7,
                     sourceBaryCenter.y);
 
             // Target
             Point targetBaryCenter = successor.getBarycenter();
             Point target = new Point(
-                    targetBaryCenter.x - Math.floorDiv(60, 2) - 7,
+                    targetBaryCenter.x - Half.of(60) - 7,
                     targetBaryCenter.y);
 
             // Arrow to draw

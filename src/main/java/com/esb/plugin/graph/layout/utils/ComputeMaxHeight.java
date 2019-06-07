@@ -13,6 +13,9 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class ComputeMaxHeight {
 
+    private ComputeMaxHeight() {
+    }
+
     public static int of(FlowGraph graph, Graphics2D graphics, GraphNode start, GraphNode end) {
         return maxHeight(graphics, graph, start, end, 0);
     }
@@ -24,27 +27,28 @@ public class ComputeMaxHeight {
     private static int maxHeight(Graphics2D graphics, FlowGraph graph, GraphNode start, GraphNode end, int currentMax) {
         if (start == end) {
             return currentMax;
-
         } else if (start instanceof ScopedGraphNode) {
-            return maxHeight(graphics, graph, (ScopedGraphNode) start, end, currentMax);
-
+            return maxHeightOfScopeSubtree(graphics, graph, (ScopedGraphNode) start, end, currentMax);
         } else {
-
-            int newMax = currentMax > start.height(graphics) ? currentMax : start.height(graphics);
-            List<GraphNode> successors = graph.successors(start);
-            checkState(successors.size() == 1 || successors.isEmpty(),
-                    "Zero or at most one successors expected");
-
-            if (successors.isEmpty()) {
-                return newMax;
-            }
-
-            GraphNode successor = successors.get(0);
-            return maxHeight(graphics, graph, successor, end, newMax);
+            return maxHeightOfSubtree(graphics, graph, start, end, currentMax);
         }
     }
 
-    private static int maxHeight(Graphics2D graphics, FlowGraph graph, ScopedGraphNode scopedGraphNode, GraphNode end, int currentMax) {
+    private static int maxHeightOfSubtree(Graphics2D graphics, FlowGraph graph, GraphNode start, GraphNode end, int currentMax) {
+        int newMax = currentMax > start.height(graphics) ? currentMax : start.height(graphics);
+        List<GraphNode> successors = graph.successors(start);
+        checkState(successors.size() == 1 || successors.isEmpty(),
+                "Zero or at most one successors expected");
+
+        if (successors.isEmpty()) {
+            return newMax;
+        }
+
+        GraphNode successor = successors.get(0);
+        return maxHeight(graphics, graph, successor, end, newMax);
+    }
+
+    private static int maxHeightOfScopeSubtree(Graphics2D graphics, FlowGraph graph, ScopedGraphNode scopedGraphNode, GraphNode end, int currentMax) {
         List<GraphNode> successors = graph.successors(scopedGraphNode);
 
         GraphNode firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedGraphNode).orElse(null);

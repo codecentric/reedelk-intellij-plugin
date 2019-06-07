@@ -24,11 +24,13 @@ import java.util.List;
 public class ChoiceNode extends AbstractScopedGraphNode {
 
     public static final String DATA_CONDITION_ROUTE_PAIRS = "conditionRoutePairs";
+    public static final int HEIGHT = 140;
+    public static final int WIDTH = 170;
+
 
     private static final int VERTICAL_DIVIDER_X_OFFSET = 60;
     private static final int ICON_X_OFFSET = 30;
-    private static final int HEIGHT = 140;
-    private static final int WIDTH = 170;
+
 
     private final Icon icon;
     private final VerticalDivider verticalDivider;

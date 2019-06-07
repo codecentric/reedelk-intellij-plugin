@@ -1,6 +1,8 @@
 package com.esb.plugin.graph.action.strategy;
 
 import com.esb.plugin.AbstractGraphTest;
+import com.esb.plugin.commons.Half;
+import com.esb.plugin.component.type.choice.ChoiceNode;
 import com.esb.plugin.graph.FlowGraph;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -58,7 +60,8 @@ class AbstractStrategyTest extends AbstractGraphTest {
         int maxScopeXBound = AbstractStrategy.getScopeMaxXBound(graph, choiceNode1, graphics);
 
         // Then
-        assertThat(maxScopeXBound).isEqualTo(220);
+        int maxX = choiceNode1.x() + Half.of(ChoiceNode.WIDTH);
+        assertThat(maxScopeXBound).isEqualTo(maxX);
     }
 
     @Test

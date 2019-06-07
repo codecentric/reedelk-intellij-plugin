@@ -58,8 +58,8 @@ public class FlowGraphLayoutTester extends JFrame {
                         g2.drawString(String.format("x:%d,y:%d",
                                 drawable.x(),
                                 drawable.y()),
-                                drawable.x() - 40,
-                                drawable.y() - 50);
+                                drawable.x() - 50,
+                                drawable.y() - 60);
                     });
         }
     }
