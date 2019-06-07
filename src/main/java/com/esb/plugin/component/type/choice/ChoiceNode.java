@@ -9,11 +9,15 @@ import com.esb.plugin.editor.designer.widget.Icon;
 import com.esb.plugin.editor.designer.widget.VerticalDivider;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.node.GraphNodeFactory;
 import com.esb.system.component.Choice;
+import com.esb.system.component.Placeholder;
+import com.intellij.openapi.module.Module;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.ImageObserver;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -105,9 +109,28 @@ public class ChoiceNode extends AbstractScopedGraphNode {
     }
 
     @Override
-    public void commit(FlowGraph graph) {
+    public void commit(FlowGraph graph, Module module) {
+        // If successors is empty, lets add a placeholder
+
+        List<ChoiceConditionRoutePair> choiceConditionRoutePairs = listConditionRoutePairs();
+        if (getScope().isEmpty()) {
+            GraphNode placeholder = GraphNodeFactory.get(module, Placeholder.class.getName());
+            graph.add(placeholder);
+            List<GraphNode> successors = graph.successors(this);
+            List<GraphNode> toRemove = new ArrayList<>(successors);
+            toRemove.forEach(node -> {
+                graph.remove(ChoiceNode.this, node);
+                graph.add(placeholder, node);
+            });
+            graph.add(this, placeholder);
+            addToScope(placeholder);
+
+            choiceConditionRoutePairs.add(new ChoiceConditionRoutePair(Choice.DEFAULT_CONDITION, placeholder));
+        }
+
+
         List<ChoiceConditionRoutePair> updatedConditions =
-                SyncConditionAndRoutePairs.getUpdatedPairs(graph, this, listConditionRoutePairs());
+                SyncConditionAndRoutePairs.getUpdatedPairs(graph, this, choiceConditionRoutePairs);
         ComponentData component = componentData();
         component.set(DATA_CONDITION_ROUTE_PAIRS, updatedConditions);
     }

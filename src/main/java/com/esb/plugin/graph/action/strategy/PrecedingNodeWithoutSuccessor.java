@@ -1,7 +1,6 @@
 package com.esb.plugin.graph.action.strategy;
 
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.connector.Connector;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.FindScopes;
@@ -22,9 +21,8 @@ import java.util.Stack;
  */
 public class PrecedingNodeWithoutSuccessor extends AbstractStrategy {
 
-
-    public PrecedingNodeWithoutSuccessor(FlowGraph graph, Point dropPoint, Connector connector, Graphics2D graphics) {
-        super(graph, dropPoint, connector, graphics);
+    public PrecedingNodeWithoutSuccessor(FlowGraph graph, Point dropPoint, GraphNode node, Graphics2D graphics) {
+        super(graph, dropPoint, node, graphics);
     }
 
     @Override
@@ -33,7 +31,7 @@ public class PrecedingNodeWithoutSuccessor extends AbstractStrategy {
         Stack<ScopedGraphNode> scopes = FindScopes.of(graph, closestPrecedingNode);
 
         if (scopes.isEmpty()) {
-            connector.addPredecessor(closestPrecedingNode);
+            graph.add(closestPrecedingNode, node);
             return;
         }
 
@@ -57,14 +55,14 @@ public class PrecedingNodeWithoutSuccessor extends AbstractStrategy {
 
         if (lastInnerMostScope != null) {
             ListLastNodesOfScope.from(graph, lastInnerMostScope)
-                    .forEach(connector::addPredecessor);
+                    .forEach(lastNodeOfScope -> graph.add(lastNodeOfScope, node));
 
         } else {
-            connector.addPredecessor(closestPrecedingNode);
+            graph.add(closestPrecedingNode, node);
         }
 
         if (currentScope != null) {
-            connector.addToScope(currentScope);
+            currentScope.addToScope(node);
         }
     }
 }

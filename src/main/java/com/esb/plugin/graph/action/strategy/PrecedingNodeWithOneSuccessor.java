@@ -1,7 +1,6 @@
 package com.esb.plugin.graph.action.strategy;
 
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.connector.Connector;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.BelongToSameScope;
@@ -16,22 +15,22 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class PrecedingNodeWithOneSuccessor extends AbstractStrategy {
 
-
-    public PrecedingNodeWithOneSuccessor(FlowGraph graph, Point dropPoint, Connector connector, Graphics2D graphics) {
-        super(graph, dropPoint, connector, graphics);
+    public PrecedingNodeWithOneSuccessor(FlowGraph graph, Point dropPoint, GraphNode node, Graphics2D graphics) {
+        super(graph, dropPoint, node, graphics);
     }
 
     @Override
     public void execute(GraphNode closestPrecedingDrawable) {
         List<GraphNode> successors = graph.successors(closestPrecedingDrawable);
-        checkState(successors.size() == 1, "Successors size MUST be 1, otherwise it is a Scoped Drawable");
+        checkState(successors.size() == 1,
+                "Successors size MUST be 1, otherwise it is a Scoped Drawable");
 
         GraphNode successorOfClosestPrecedingNode = successors.get(0);
 
         if (BelongToSameScope.from(graph, closestPrecedingDrawable, successorOfClosestPrecedingNode)) {
             if (withinYBounds(dropPoint.y, closestPrecedingDrawable)) {
-                connector.addPredecessor(closestPrecedingDrawable);
-                connector.addSuccessor(successorOfClosestPrecedingNode);
+                graph.add(closestPrecedingDrawable, node);
+                graph.add(node, successorOfClosestPrecedingNode);
                 graph.remove(closestPrecedingDrawable, successorOfClosestPrecedingNode);
                 addToScopeIfNeeded(closestPrecedingDrawable);
             }
@@ -45,8 +44,8 @@ public class PrecedingNodeWithOneSuccessor extends AbstractStrategy {
 
         Stack<ScopedGraphNode> scopes = FindScopes.of(graph, closestPrecedingDrawable);
         if (scopes.isEmpty()) {
-            connector.addPredecessor(closestPrecedingDrawable);
-            connector.addSuccessor(successorOfClosestPrecedingNode);
+            graph.add(closestPrecedingDrawable, node);
+            graph.add(node, successorOfClosestPrecedingNode);
             graph.remove(closestPrecedingDrawable, successorOfClosestPrecedingNode);
             return;
         }
@@ -70,20 +69,21 @@ public class PrecedingNodeWithOneSuccessor extends AbstractStrategy {
         }
 
         if (lastInnerMostScope != null) {
-            ListLastNodesOfScope.from(graph, lastInnerMostScope)
-                    .forEach(node -> {
-                        connector.addPredecessor(node);
-                        graph.remove(node, successorOfClosestPrecedingNode);
+            ListLastNodesOfScope
+                    .from(graph, lastInnerMostScope)
+                    .forEach(lastNodeOfScope -> {
+                        graph.add(lastNodeOfScope, node);
+                        graph.remove(lastNodeOfScope, successorOfClosestPrecedingNode);
                     });
         } else {
-            connector.addPredecessor(closestPrecedingDrawable);
+            graph.add(closestPrecedingDrawable, node);
         }
 
-        connector.addSuccessor(successorOfClosestPrecedingNode);
+        graph.add(node, successorOfClosestPrecedingNode);
         graph.remove(closestPrecedingDrawable, successorOfClosestPrecedingNode);
 
         if (currentScope != null) {
-            connector.addToScope(currentScope);
+            currentScope.addToScope(node);
         }
     }
 

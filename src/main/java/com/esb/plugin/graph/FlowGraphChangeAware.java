@@ -1,6 +1,7 @@
 package com.esb.plugin.graph;
 
 import com.esb.plugin.graph.node.GraphNode;
+import com.intellij.openapi.module.Module;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -108,8 +109,8 @@ public class FlowGraphChangeAware implements FlowGraph {
         return changed;
     }
 
-    public void commit() {
+    public void commit(Module module) {
         wrapped.breadthFirstTraversal(node ->
-                node.commit(FlowGraphChangeAware.this));
+                node.commit(FlowGraphChangeAware.this, module));
     }
 }

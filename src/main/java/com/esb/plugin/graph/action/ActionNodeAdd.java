@@ -4,7 +4,6 @@ package com.esb.plugin.graph.action;
 import com.esb.plugin.component.type.placeholder.PlaceholderNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.action.strategy.*;
-import com.esb.plugin.graph.connector.Connector;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopeBoundaries;
 import com.esb.plugin.graph.node.ScopedGraphNode;
@@ -23,49 +22,50 @@ import static java.util.stream.Collectors.toList;
  */
 public class ActionNodeAdd {
 
-    private final Point dropPoint;
-    private final FlowGraph graph;
-    private final Connector connector;
     private final Graphics2D graphics;
+    private final FlowGraph graph;
+    private final Point dropPoint;
+    private final GraphNode node;
 
-    public ActionNodeAdd(final FlowGraph graph, final Point dropPoint, final Connector connector, final Graphics2D graphics) {
-        this.graph = graph;
-        this.graphics = graphics;
+    public ActionNodeAdd(final FlowGraph graph, final Point dropPoint, final GraphNode node, final Graphics2D graphics) {
         this.dropPoint = dropPoint;
-        this.connector = connector;
+        this.graphics = graphics;
+        this.graph = graph;
+        this.node = node;
     }
 
     public void execute() {
-        // First Drawable added to the canvas (it is root)
+        // The first Drawable added to the canvas is root
         if (graph.isEmpty()) {
-            connector.root();
+            graph.root(node);
 
             // Check if we are replacing the first (root) node.
         } else if (isReplacingRoot(graph, dropPoint)) {
-            connector.add();
-            connector.addSuccessor(graph.root());
-            connector.root();
+            GraphNode currentRoot = graph.root();
+            graph.root(node);
+            graph.add(node, currentRoot);
 
         } else {
 
             findClosestPrecedingDrawable(graph, dropPoint, graphics).ifPresent(closestPrecedingNode -> {
+
                 Strategy strategy;
 
                 if (closestPrecedingNode instanceof PlaceholderNode) {
-                    strategy = new ReplacePlaceholderStrategy(graph, dropPoint, connector, graphics);
+                    strategy = new ReplacePlaceholderStrategy(graph, dropPoint, node, graphics);
 
                 } else if (closestPrecedingNode instanceof ScopedGraphNode) {
-                    strategy = new PrecedingScopedNode(graph, dropPoint, connector, graphics);
+                    strategy = new PrecedingScopedNode(graph, dropPoint, node, graphics);
 
                 } else if (graph.successors(closestPrecedingNode).isEmpty()) {
-                    strategy = new PrecedingNodeWithoutSuccessor(graph, dropPoint, connector, graphics);
+                    strategy = new PrecedingNodeWithoutSuccessor(graph, dropPoint, node, graphics);
 
                 } else {
                     // Only ScopedGraphNode nodes might have multiple successors. In all other cases
                     // a node in the flow must have at most one successor.
                     checkState(graph.successors(closestPrecedingNode).size() == 1,
                             "Successors size MUST be 1, otherwise it must be a Scoped Drawable");
-                    strategy = new PrecedingNodeWithOneSuccessor(graph, dropPoint, connector, graphics);
+                    strategy = new PrecedingNodeWithOneSuccessor(graph, dropPoint, node, graphics);
                 }
 
                 strategy.execute(closestPrecedingNode);

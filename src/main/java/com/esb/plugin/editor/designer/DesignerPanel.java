@@ -160,7 +160,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     @Override
     public void removeComponent(GraphNode nodeToRemove) {
         // TODO: Create builder
-        RemoveActionHandler handler = new RemoveActionHandler(snapshot, nodeToRemove);
+        RemoveActionHandler handler = new RemoveActionHandler(module, snapshot, nodeToRemove);
         handler.handle();
     }
 

@@ -5,6 +5,7 @@ import com.esb.plugin.component.domain.ComponentDescriptor;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
 import com.esb.plugin.graph.GraphSnapshot;
+import com.esb.plugin.graph.action.ActionNodeAdd;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.GraphNodeFactory;
 import com.intellij.openapi.diagnostic.Logger;
@@ -18,20 +19,22 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static java.awt.dnd.DnDConstants.ACTION_COPY_OR_MOVE;
 import static java.lang.String.format;
 
-public class DropActionHandler extends AbstractActionHandler {
+public class DropActionHandler {
 
     private static final Logger LOG = Logger.getInstance(DropActionHandler.class);
 
+    private final Module module;
     private final Graphics2D graphics;
     private final GraphSnapshot snapshot;
     private final DropTargetDropEvent dropEvent;
 
     public DropActionHandler(Module module, GraphSnapshot snapshot, Graphics2D graphics, DropTargetDropEvent dropEvent) {
-        super(module);
+        checkArgument(module != null, "module");
         checkArgument(snapshot != null, "snapshot");
         checkArgument(graphics != null, "graphics");
         checkArgument(dropEvent != null, "drop event");
 
+        this.module = module;
         this.snapshot = snapshot;
         this.graphics = graphics;
         this.dropEvent = dropEvent;
@@ -57,10 +60,11 @@ public class DropActionHandler extends AbstractActionHandler {
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
 
         LOG.info(format("Node Dropped [%s], drop point [x: %d, y: %d]", PrintFlowInfo.name(nodeToAdd), dropPoint.x, dropPoint.y));
-        addNodeToGraph(modifiableGraph, nodeToAdd, dropPoint, graphics);
+        ActionNodeAdd actionNodeAdd = new ActionNodeAdd(modifiableGraph, dropPoint, nodeToAdd, graphics);
+        actionNodeAdd.execute();
 
         if (modifiableGraph.isChanged()) {
-            modifiableGraph.commit();
+            modifiableGraph.commit(module);
             dropEvent.acceptDrop(ACTION_COPY_OR_MOVE);
             snapshot.updateSnapshot(this, modifiableGraph);
         } else {

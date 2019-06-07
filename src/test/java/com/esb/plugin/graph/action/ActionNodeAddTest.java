@@ -4,8 +4,6 @@ import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
-import com.esb.plugin.graph.connector.Connector;
-import com.esb.plugin.graph.connector.DefaultNodeConnector;
 import com.esb.plugin.graph.node.GraphNode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -611,8 +609,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
 
     private FlowGraphChangeAware addDrawableToGraph(FlowGraph graph, GraphNode dropped, Point dropPoint) {
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
-        Connector connector = new DefaultNodeConnector(modifiableGraph, dropped);
-        ActionNodeAdd action = new ActionNodeAdd(modifiableGraph, dropPoint, connector, graphics);
+        ActionNodeAdd action = new ActionNodeAdd(modifiableGraph, dropPoint, dropped, graphics);
         action.execute();
         return modifiableGraph;
     }

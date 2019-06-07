@@ -3,6 +3,7 @@ package com.esb.plugin.editor.designer.action;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
 import com.esb.plugin.graph.GraphSnapshot;
+import com.esb.plugin.graph.action.ActionNodeAdd;
 import com.esb.plugin.graph.action.ActionNodeRemove;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.NothingSelectedNode;
@@ -15,23 +16,25 @@ import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-public class MoveActionHandler extends AbstractActionHandler {
+public class MoveActionHandler {
 
+    private final Module module;
     private final Point movePoint;
     private final GraphNode selected;
     private final Graphics2D graphics;
     private final GraphSnapshot snapshot;
 
     public MoveActionHandler(Module module, GraphSnapshot snapshot, Graphics2D graphics, GraphNode selectedNode, Point movePoint) {
-        super(module);
+        checkArgument(module != null, "module");
         checkArgument(snapshot != null, "snapshot");
         checkArgument(graphics != null, "graphics");
         checkArgument(selectedNode != null, "selected node");
 
+        this.module = module;
         this.snapshot = snapshot;
         this.graphics = graphics;
-        this.selected = selectedNode;
         this.movePoint = movePoint;
+        this.selected = selectedNode;
     }
 
     public void handle() {
@@ -68,12 +71,14 @@ public class MoveActionHandler extends AbstractActionHandler {
 
         // 4. Add the dropped component back to the graph to the dropped position.
         Point dropPoint = new Point(dragX, dragY);
-        addNodeToGraph(modifiableGraph, selected, dropPoint, graphics);
+
+        ActionNodeAdd actionNodeAdd = new ActionNodeAdd(modifiableGraph, dropPoint, selected, graphics);
+        actionNodeAdd.execute();
 
         // 5. If the copy of the graph was changed, then update the graph
         // TODO: IF REMOVED BUT NOT ADDED, then should not be changed... but now if we remove, and then we cannot add the node for some reason the snapshot is still updated which is not necessary
         if (modifiableGraph.isChanged()) {
-            modifiableGraph.commit();
+            modifiableGraph.commit(module);
             snapshot.updateSnapshot(this, modifiableGraph);
 
         } else {

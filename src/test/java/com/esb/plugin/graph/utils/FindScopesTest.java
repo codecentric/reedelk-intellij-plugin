@@ -244,4 +244,17 @@ class FindScopesTest extends AbstractGraphTest {
         assertThat(scopes).containsExactly(choiceNode2);
     }
 
+    @Test
+    void shouldReturnScopeItselfWhenNodeIsScope() {
+        // Given
+        FlowGraph graph = graphProvider.createGraph();
+        graph.root(root);
+        graph.add(root, choiceNode1);
+
+        // When
+        Stack<ScopedGraphNode> scopes = FindScopes.of(graph, choiceNode1);
+
+        // Then
+        assertThat(scopes).containsExactly(choiceNode1);
+    }
 }

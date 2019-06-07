@@ -7,6 +7,7 @@ import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.FindScope;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.module.Module;
 
 import java.util.Optional;
 
@@ -16,10 +17,12 @@ public class RemoveActionHandler {
 
     private final GraphNode nodeToRemove;
     private final GraphSnapshot snapshot;
+    private final Module module;
 
-    public RemoveActionHandler(GraphSnapshot snapshot, GraphNode nodeToRemove) {
+    public RemoveActionHandler(Module module, GraphSnapshot snapshot, GraphNode nodeToRemove) {
         this.nodeToRemove = nodeToRemove;
         this.snapshot = snapshot;
+        this.module = module;
     }
 
     public void handle() {
@@ -34,7 +37,7 @@ public class RemoveActionHandler {
         selectedScope.ifPresent(scopedNode -> scopedNode.removeFromScope(nodeToRemove));
 
         if (modifiableGraph.isChanged()) {
-            modifiableGraph.commit();
+            modifiableGraph.commit(module);
             LOG.warn("Remove Node updating snapshot");
             snapshot.updateSnapshot(this, modifiableGraph);
         } else {

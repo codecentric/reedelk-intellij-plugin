@@ -1,6 +1,7 @@
 package com.esb.plugin.graph.node;
 
 import com.esb.plugin.graph.FlowGraph;
+import com.intellij.openapi.module.Module;
 
 public interface GraphOperationListener {
 
@@ -11,7 +12,7 @@ public interface GraphOperationListener {
     /**
      * Called when all the changes have been made.
      */
-    default void commit(FlowGraph graph) {
+    default void commit(FlowGraph graph, Module module) {
 
     }
 }
