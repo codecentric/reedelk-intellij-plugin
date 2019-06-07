@@ -13,12 +13,23 @@ public class ComponentTransferableHandler extends TransferHandler {
     }
 
     protected Transferable createTransferable(JComponent source) {
+
         JTree tree = (JTree) source;
+
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-        if (node == null) return null;
 
-        ComponentDescriptor descriptor = (ComponentDescriptor) node.getUserObject();
-        return new ComponentTransferable(descriptor);
+        Object userObject = node.getUserObject();
+
+        if (userObject instanceof ComponentDescriptor) {
+
+            ComponentDescriptor descriptor = (ComponentDescriptor) userObject;
+
+            return new ComponentDescriptorTransferable(descriptor);
+
+        } else {
+
+            return new EmptyTransferable();
+
+        }
     }
-
 }

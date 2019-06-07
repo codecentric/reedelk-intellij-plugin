@@ -12,12 +12,17 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DropTargetDropEvent;
+import java.io.IOException;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.awt.dnd.DnDConstants.ACTION_COPY_OR_MOVE;
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 
 public class DropActionHandler {
 
@@ -42,8 +47,7 @@ public class DropActionHandler {
 
     public void handle() {
 
-        Optional<ComponentDescriptor> optionalDescriptor =
-                DropActionHandlerUtils.getComponentDescriptorFrom(dropEvent);
+        Optional<ComponentDescriptor> optionalDescriptor = getComponentDescriptorFrom(dropEvent);
 
         if (!optionalDescriptor.isPresent()) {
             dropEvent.rejectDrop();
@@ -72,4 +76,17 @@ public class DropActionHandler {
         }
     }
 
+    Optional<ComponentDescriptor> getComponentDescriptorFrom(DropTargetDropEvent dropEvent) {
+        Transferable transferable = dropEvent.getTransferable();
+        DataFlavor[] transferDataFlavor = transferable.getTransferDataFlavors();
+        if (asList(transferDataFlavor).contains(ComponentDescriptor.FLAVOR)) {
+            try {
+                ComponentDescriptor descriptor = (ComponentDescriptor) transferable.getTransferData(ComponentDescriptor.FLAVOR);
+                return Optional.of(descriptor);
+            } catch (UnsupportedFlavorException | IOException e) {
+                LOG.error("Could not extract dropped component name", e);
+            }
+        }
+        return Optional.empty();
+    }
 }
