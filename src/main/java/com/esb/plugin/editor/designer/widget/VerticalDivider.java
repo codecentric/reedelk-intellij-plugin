@@ -1,6 +1,7 @@
 package com.esb.plugin.editor.designer.widget;
 
 import com.esb.plugin.graph.FlowGraph;
+import com.esb.plugin.graph.layout.utils.ComputeMaxHeight;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.FindFirstNodeOutsideScope;
@@ -10,7 +11,6 @@ import com.intellij.ui.JBColor;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
-import static com.esb.plugin.graph.layout.FlowGraphLayoutUtils.maxHeight;
 import static java.awt.BasicStroke.CAP_ROUND;
 import static java.awt.BasicStroke.JOIN_ROUND;
 
@@ -34,7 +34,7 @@ public class VerticalDivider {
 
         GraphNode firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedGraphNode).orElse(null);
 
-        int scopeHeight = maxHeight(graph, graphics, scopedGraphNode, firstNodeOutsideScope);
+        int scopeHeight = ComputeMaxHeight.of(graph, graphics, scopedGraphNode, firstNodeOutsideScope);
         scopeHeight -= padding;
 
         int halfScopeHeight = Math.floorDiv(scopeHeight, 2);

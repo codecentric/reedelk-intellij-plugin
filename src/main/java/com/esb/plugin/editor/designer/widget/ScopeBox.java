@@ -2,7 +2,7 @@ package com.esb.plugin.editor.designer.widget;
 
 import com.esb.plugin.editor.designer.Drawable;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.layout.FlowGraphLayoutUtils;
+import com.esb.plugin.graph.layout.utils.ComputeMaxHeight;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopeBoundaries;
 import com.esb.plugin.graph.node.ScopedGraphNode;
@@ -114,7 +114,7 @@ public abstract class ScopeBox {
 
         GraphNode firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedGraphNode).orElse(null);
 
-        int subTreeHeight = FlowGraphLayoutUtils.maxHeight(graph, graphics, scopedGraphNode, firstNodeOutsideScope);
+        int subTreeHeight = ComputeMaxHeight.of(graph, graphics, scopedGraphNode, firstNodeOutsideScope);
 
         int halfSubTreeHeight = Math.floorDiv(subTreeHeight, 2);
 
