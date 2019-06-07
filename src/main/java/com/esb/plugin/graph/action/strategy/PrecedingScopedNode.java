@@ -57,11 +57,11 @@ public class PrecedingScopedNode extends AbstractStrategy {
             if (isInsideTopArea(successor, dropPoint)) {
                 if (node.isSuccessorAllowed(graph, closestPrecedingNode, successorIndex)) {
                     graph.add(closestPrecedingNode, node, successorIndex);
-                    addToScopeIfNeeded(closestPrecedingNode);
+                    closestPrecedingNode.addToScope(node);
                     FindFirstNodeOutsideScope.of(graph, closestPrecedingNode)
                             .ifPresent(firstNodeOutsideScope -> graph.add(node, firstNodeOutsideScope));
                 }
-                return;
+                break;
 
             } else if (isInsideCenterArea(successor, dropPoint)) {
                 // Replaces the first node at index "successorIndex"
@@ -69,19 +69,19 @@ public class PrecedingScopedNode extends AbstractStrategy {
                     graph.remove(closestPrecedingNode, successor);
                     graph.add(closestPrecedingNode, node, successorIndex);
                     graph.add(node, successor);
-                    addToScopeIfNeeded(closestPrecedingNode);
+                    closestPrecedingNode.addToScope(node);
                 }
-                return;
+                break;
 
             } else if (isInsideBottomArea(successor, dropPoint)) {
                 // Replaces the first node at index "successorIndex"
                 if (node.isSuccessorAllowed(graph, closestPrecedingNode, successorIndex + 1)) {
                     graph.add(closestPrecedingNode, node, successorIndex + 1);
-                    addToScopeIfNeeded(closestPrecedingNode);
+                    closestPrecedingNode.addToScope(node);
                     FindFirstNodeOutsideScope.of(graph, closestPrecedingNode)
                             .ifPresent(firstNodeOutsideScope -> graph.add(node, firstNodeOutsideScope));
                 }
-                return;
+                break;
             }
         }
     }

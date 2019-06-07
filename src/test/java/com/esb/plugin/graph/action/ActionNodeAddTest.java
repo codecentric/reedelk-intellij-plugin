@@ -149,7 +149,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
         }
 
         @Test
-        void shouldCorrectlyAddLowerNodeToFirstChoiceWithoutConnectingToSecondChoiceLastElement() {
+        void shouldCorrectlyAddUpperNodeToFirstChoiceWithoutConnectingToSecondChoiceLastElement() {
             // Given
             FlowGraph graph = graphProvider.createGraph();
             graph.root(root);
