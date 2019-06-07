@@ -105,6 +105,10 @@ public class ActionNodeAdd {
         return Optional.ofNullable(closestPrecedingNode);
     }
 
+    // A value which represent the max vicinity a drop point must
+    // have in order to be snapped to a predecessor.
+    private static final int MAX_SNAP_VICINITY = 110;
+
     private static Predicate<GraphNode> byPrecedingNodesOnX(FlowGraph graph, int dropX, Graphics2D graphics) {
         return preceding -> {
             // The drop point is before/after the center of the node or the center + next node position.
@@ -114,7 +118,11 @@ public class ActionNodeAdd {
             // TODO: Test this function
             if (preceding instanceof ScopedGraphNode) {
                 ScopeBoundaries scopeBoundaries = ((ScopedGraphNode) preceding).getScopeBoundaries(graph, graphics);
-                if (dropX >= scopeBoundaries.getX() + scopeBoundaries.getWidth()) return false;
+                // We don't consider the scope node a predecessor
+                // if the dropX point is after the scope boundary + MAX_SNAP_VICINITY
+                if (dropX >= scopeBoundaries.getX() + scopeBoundaries.getWidth() + MAX_SNAP_VICINITY) {
+                    return false;
+                }
             }
             // If exists a successor of the current preceding node in the preceding + 1 position,
             // then we restrict the drop position so that we consider valid if and only if its x

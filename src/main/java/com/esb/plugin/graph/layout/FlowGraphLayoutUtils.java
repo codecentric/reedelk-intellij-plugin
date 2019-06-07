@@ -65,9 +65,18 @@ public class FlowGraphLayoutUtils {
             // then, the sum is its height.
             sum += scopedGraphNode.height(graphics);
 
+        } else if (successors.size() == 1) {
+            // If this scope has just one successor which is inside the scope,
+            // then, the sum is the max subtree of either the current scoped node or the subtree.
+            // This case is when there is a scope node with just one successor in the scope.
+            // Note that the single successor in the scope might be another scoped node as well.
+            int subtreeMax = maxHeight(graphics, graph, successors.get(0), firstNodeOutsideScope, 0);
+            int scopeNodeMax = scopedGraphNode.height(graphics);
+            sum += subtreeMax > scopeNodeMax ? subtreeMax : scopeNodeMax;
+
         } else {
             // If there are many successors, they can not
-            // be (by definition) inside the scope.
+            // be (by definition) outside the scope.
             for (GraphNode successor : successors) {
                 // We are looking for the max in the subtree starting from this successor.
                 // Therefore the current max starts again from 0.

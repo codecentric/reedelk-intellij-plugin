@@ -30,19 +30,27 @@ public class PrecedingScopedNode extends AbstractStrategy {
 
         List<GraphNode> successors = graph.successors(closestPrecedingNode);
 
+        int scopeMaxXBound = getScopeMaxXBound(graph, closestPrecedingNode, graphics);
+
         if (successors.isEmpty()) {
             graph.add(closestPrecedingNode, node);
-            closestPrecedingNode.addToScope(node);
+            // We just add the node to the scope if it is within the scope max X bounds
+            if (dropPoint.x < scopeMaxXBound) {
+                closestPrecedingNode.addToScope(node);
+            }
             return;
         }
 
-        // Need to  handle the case where successor is only one and it is outside the scope.
+        // We handle the case where the successor is only one and it is outside the scope
         if (successors.size() == 1 && !closestPrecedingNode.scopeContains(successors.get(0))) {
             GraphNode successorOfClosestPrecedingNode = successors.get(0);
             graph.remove(closestPrecedingNode, successorOfClosestPrecedingNode);
             graph.add(closestPrecedingNode, node);
             graph.add(node, successorOfClosestPrecedingNode);
-            closestPrecedingNode.addToScope(node);
+            // We just add the node to the scope if it is within the scope max X bounds
+            if (dropPoint.x < scopeMaxXBound) {
+                closestPrecedingNode.addToScope(node);
+            }
             return;
         }
 

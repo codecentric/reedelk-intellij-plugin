@@ -65,7 +65,20 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
         }
 
         @Test
-        void shouldComputeMaxHeightCorrectlyForChoice() {
+        void shouldComputeMaxHeightCorrectlyForRouteWithoutSuccessor() {
+            // Given
+            FlowGraph graph = provider.createGraph();
+            graph.root(choiceNode1);
+
+            // When
+            int actual = FlowGraphLayoutUtils.maxHeight(graph, graphics, choiceNode1);
+
+            // Then
+            assertThat(actual).isEqualTo(140 + 5 + 5); // scoped graph node has top and bottom padding
+        }
+
+        @Test
+        void shouldComputeMaxHeightCorrectlyForRouteWithSuccessor() {
             // Given
             FlowGraph graph = provider.createGraph();
             graph.root(choiceNode1);
@@ -76,7 +89,36 @@ class FlowGraphLayoutUtilsTest extends AbstractGraphTest {
             int actual = FlowGraphLayoutUtils.maxHeight(graph, graphics, choiceNode1);
 
             // Then
-            assertThat(actual).isEqualTo(140);
+            assertThat(actual).isEqualTo(140 + 5 + 5); // scoped graph node has top and bottom padding
+        }
+
+        @Test
+        void shouldComputeMaxHeightCorrectlyForForkWithoutSuccessor() {
+            // Given
+            FlowGraph graph = provider.createGraph();
+            graph.root(forkNode1);
+            graph.add(forkNode1, componentNode1);
+
+            // When
+            int actual = FlowGraphLayoutUtils.maxHeight(graph, graphics, forkNode1);
+
+            // Then
+            assertThat(actual).isEqualTo(145 + 5 + 5);
+        }
+
+        @Test
+        void shouldComputeMaxHeightCorrectlyForForkWithSuccessor() {
+            // Given
+            FlowGraph graph = provider.createGraph();
+            graph.root(forkNode1);
+            graph.add(forkNode1, componentNode1);
+            forkNode1.addToScope(componentNode1);
+
+            // When
+            int actual = FlowGraphLayoutUtils.maxHeight(graph, graphics, forkNode1);
+
+            // Then
+            assertThat(actual).isEqualTo(145 + 5 + 5);
         }
 
         @Test

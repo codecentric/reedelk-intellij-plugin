@@ -26,4 +26,5 @@ abstract class AbstractStrategy implements Strategy {
         ScopeBoundaries scopeBoundaries = scopedGraphNode.getScopeBoundaries(graph, graphics);
         return scopeBoundaries.getX() + scopeBoundaries.getWidth();
     }
+
 }
