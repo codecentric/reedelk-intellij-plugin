@@ -76,7 +76,12 @@ public abstract class AbstractGraphNode implements GraphNode {
     public void mouseMoved(DrawableListener listener, MouseEvent event) {
         int x = event.getX();
         int y = event.getY();
-        if (icon.contains(x, y) || withinRemoveIcon(x, y)) {
+        if (icon.contains(x, y)) {
+            listener.setTheCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        }
+        // The hand cursor over the remove icon is visible
+        // if and only if the icon is selected.
+        if (selected && withinRemoveIcon(x, y)) {
             listener.setTheCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
     }
@@ -85,8 +90,11 @@ public abstract class AbstractGraphNode implements GraphNode {
     public void mousePressed(DrawableListener listener, MouseEvent event) {
         int x = event.getX();
         int y = event.getY();
-        if (icon.contains(x, y)) listener.select(this, event);
-        if (withinRemoveIcon(x, y)) listener.removeComponent(this);
+        // If the mouse x,y coordinates are within the remove icon,
+        // and the component is currently selected, then we remove the component.
+        if (selected && withinRemoveIcon(x, y)) {
+            listener.removeComponent(this);
+        }
     }
 
     @Override

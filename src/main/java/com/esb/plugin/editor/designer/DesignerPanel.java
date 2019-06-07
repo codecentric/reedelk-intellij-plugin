@@ -121,8 +121,22 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     @Override
     public void mousePressed(MouseEvent event) {
-        unselect();
+        // Notify all nodes that the mouse has been pressed
         graph.nodes().forEach(node -> node.mousePressed(this, event));
+
+        // Unselect the current selected component
+        unselect();
+
+        // Select the component under the current mouse coordinates
+        int x = event.getX();
+        int y = event.getY();
+        graph.nodes()
+                .stream()
+                .filter(node -> node.contains(DesignerPanel.this, x, y))
+                .findFirst()
+                .ifPresent(node -> select(node, event));
+
+        // Repaint all the nodes
         repaint();
     }
 
@@ -162,18 +176,6 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         // TODO: Create builder
         RemoveActionHandler handler = new RemoveActionHandler(module, snapshot, nodeToRemove);
         handler.handle();
-    }
-
-    @Override
-    public void select(GraphNode node, MouseEvent event) {
-        selected = node;
-        selected.selected();
-
-        offsetX = event.getX() - selected.x();
-        offsetY = event.getY() - selected.y();
-
-        selectListener.onSelect(snapshot, selected);
-        repaint();
     }
 
     @Override
@@ -248,6 +250,16 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         selected.unselected();
         selectListener.onUnselect();
         selected = NOTHING_SELECTED;
+    }
+
+    private void select(GraphNode node, MouseEvent event) {
+        selected = node;
+        selected.selected();
+
+        offsetX = event.getX() - selected.x();
+        offsetY = event.getY() - selected.y();
+
+        selectListener.onSelect(snapshot, selected);
     }
 
     /**
