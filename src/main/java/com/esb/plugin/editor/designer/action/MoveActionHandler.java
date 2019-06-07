@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.designer.action;
 
+import com.esb.plugin.commons.Half;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
 import com.esb.plugin.graph.GraphSnapshot;
@@ -45,12 +46,12 @@ public class MoveActionHandler {
         // Create a method inside selected to check if given coordinates are within hover area.
         // this logic should be encapsulated there
         boolean withinX =
-                dragX > selected.x() - Math.floorDiv(selected.width(graphics), 2) &&
-                        dragX < selected.x() + Math.floorDiv(selected.width(graphics), 2);
+                dragX > selected.x() - Half.of(selected.width(graphics)) &&
+                        dragX < selected.x() + Half.of(selected.width(graphics));
 
         boolean withinY =
-                dragY > selected.y() - Math.floorDiv(selected.height(graphics), 2) &&
-                        dragY < selected.y() + Math.floorDiv(selected.height(graphics), 2);
+                dragY > selected.y() - Half.of(selected.height(graphics)) &&
+                        dragY < selected.y() + Half.of(selected.height(graphics));
 
         if (withinX && withinY) return;
 

@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.designer.widget;
 
+import com.esb.plugin.commons.Half;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.layout.utils.ComputeMaxHeight;
 import com.esb.plugin.graph.node.GraphNode;
@@ -37,9 +38,9 @@ public class VerticalDivider {
         int scopeHeight = ComputeMaxHeight.of(graph, graphics, scopedGraphNode, firstNodeOutsideScope);
         scopeHeight -= padding;
 
-        int halfScopeHeight = Math.floorDiv(scopeHeight, 2);
+        int halfScopeHeight = Half.of(scopeHeight);
 
-        int halfWidth = Math.floorDiv(scopedGraphNode.width(graphics), 2);
+        int halfWidth = Half.of(scopedGraphNode.width(graphics));
 
         int verticalX = x + halfWidth;
         int verticalSeparatorMinY = y - halfScopeHeight;

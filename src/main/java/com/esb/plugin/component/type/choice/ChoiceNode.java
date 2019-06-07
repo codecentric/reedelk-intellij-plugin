@@ -1,5 +1,6 @@
 package com.esb.plugin.component.type.choice;
 
+import com.esb.plugin.commons.Half;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.type.choice.functions.SyncConditionAndRoutePairs;
 import com.esb.plugin.editor.designer.AbstractScopedGraphNode;
@@ -153,7 +154,7 @@ public class ChoiceNode extends AbstractScopedGraphNode {
 
     private void drawVerticalDividerArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         // Draw arrows -> perpendicular to the vertical bar.
-        int halfWidth = Math.floorDiv(width(graphics), 2);
+        int halfWidth = Half.of(width(graphics));
         int verticalX = x() - 60 + halfWidth;
 
         List<GraphNode> successors = graph.successors(this);

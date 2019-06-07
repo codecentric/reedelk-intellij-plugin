@@ -1,5 +1,6 @@
 package com.esb.plugin.component.type.fork;
 
+import com.esb.plugin.commons.Half;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.editor.designer.AbstractScopedGraphNode;
 import com.esb.plugin.editor.designer.Drawable;
@@ -93,7 +94,7 @@ public class ForkNode extends AbstractScopedGraphNode {
 
     private void _drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         // Draw arrows -> perpendicular to the vertical bar.
-        int halfWidth = Math.floorDiv(width(graphics), 2);
+        int halfWidth = Half.of(width(graphics));
         int verticalX = x() + halfWidth - VERTICAL_DIVIDER_X_OFFSET;
 
         List<GraphNode> successors = graph.successors(this);

@@ -1,5 +1,6 @@
 package com.esb.plugin.graph.layout;
 
+import com.esb.plugin.commons.Half;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.layout.utils.ComputeLayerWidthSumPreceding;
 import com.esb.plugin.graph.layout.utils.ComputeMaxHeight;
@@ -41,8 +42,8 @@ public class FlowGraphLayout {
                 // Center in subtree
                 int maxSubtreeHeight = ComputeMaxHeight.of(graph, graphics, node);
 
-                int tmpX = Math.floorDiv(node.width(graphics), 2) + ComputeLayerWidthSumPreceding.of(graph, graphics, layers, containingLayerIndex);
-                int tmpY = top + Math.floorDiv(maxSubtreeHeight, 2);
+                int tmpX = Half.of(node.width(graphics)) + ComputeLayerWidthSumPreceding.of(graph, graphics, layers, containingLayerIndex);
+                int tmpY = top + Half.of(maxSubtreeHeight);
                 node.setPosition(tmpX, tmpY);
 
                 compute(top, graph, graphics, graph.successors(node), layers);
@@ -54,7 +55,8 @@ public class FlowGraphLayout {
                 // Find layer containing this node
                 int containingLayerIndex = FindContainingLayer.of(layers, node);
 
-                int tmpX = Math.floorDiv(node.width(graphics), 2) + ComputeLayerWidthSumPreceding.of(graph, graphics, layers, containingLayerIndex);
+                int tmpX = Half.of(node.width(graphics)) +
+                        ComputeLayerWidthSumPreceding.of(graph, graphics, layers, containingLayerIndex);
 
                 // If it is the first node outside a scope, center it in the middle of the scope
                 // this node is joining from.
@@ -71,11 +73,11 @@ public class FlowGraphLayout {
                 if (scopeItIsJoining.isPresent()) {
                     ScopedGraphNode scope = scopeItIsJoining.get();
                     ScopeBoundaries scopeBoundaries = scope.getScopeBoundaries(graph, graphics);
-                    min = scope.y() - Math.floorDiv(scopeBoundaries.getHeight(), 2);
-                    max = scope.y() + Math.floorDiv(scopeBoundaries.getHeight(), 2);
+                    min = scope.y() - Half.of(scopeBoundaries.getHeight());
+                    max = scope.y() + Half.of(scopeBoundaries.getHeight());
                 }
 
-                int tmpY = Math.floorDiv(max + min, 2);
+                int tmpY = Half.of(max + min);
 
                 node.setPosition(tmpX, tmpY);
 
@@ -100,7 +102,7 @@ public class FlowGraphLayout {
 
             int maxSubTreeHeight = ComputeMaxHeight.of(graph, graphics, commonParent, firstNodeOutsideScope);
 
-            top = VERTICAL_PADDING + commonParent.y() - Math.floorDiv(maxSubTreeHeight, 2);
+            top = VERTICAL_PADDING + commonParent.y() - Half.of(maxSubTreeHeight);
 
 
             for (GraphNode node : nodes) {
@@ -113,7 +115,7 @@ public class FlowGraphLayout {
                     top += VERTICAL_PADDING; // top padding
                 }
 
-                int tmpX = Math.floorDiv(node.width(graphics), 2) +
+                int tmpX = Half.of(node.width(graphics)) +
                         ComputeLayerWidthSumPreceding.of(graph, graphics, layers, containingLayerIndex);
 
                 int maxSubtreeHeight = ComputeMaxHeight.of(graph, graphics, node, firstNodeOutsideScope);
@@ -124,7 +126,7 @@ public class FlowGraphLayout {
                     maxSubtreeHeight -= (VERTICAL_PADDING + VERTICAL_PADDING); // top and bottom
                 }
 
-                int tmpY = top + Math.floorDiv(maxSubtreeHeight, 2);
+                int tmpY = top + Half.of(maxSubtreeHeight);
                 node.setPosition(tmpX, tmpY);
 
                 compute(top, graph, graphics, graph.successors(node), layers);

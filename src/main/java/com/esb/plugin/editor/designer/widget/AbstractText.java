@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.designer.widget;
 
+import com.esb.plugin.commons.Half;
 import com.esb.plugin.graph.FlowGraph;
 
 import java.awt.*;
@@ -31,8 +32,8 @@ public abstract class AbstractText {
         int count = 0;
         for (String line : getTextAsLines()) {
             Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(line, graphics);
-            int halfWidth = Math.floorDiv((int) stringBounds.getWidth(), 2);
-            int halfHeight = Math.floorDiv((int) stringBounds.getHeight(), 2);
+            int halfWidth = Half.of((int) stringBounds.getWidth());
+            int halfHeight = Half.of((int) stringBounds.getHeight());
             int startX = x - halfWidth;
             int startY = y + halfHeight + ((int) stringBounds.getHeight() * count);
             graphics.drawString(line, startX, startY);

@@ -201,7 +201,7 @@ public abstract class AbstractGraphNode implements GraphNode {
     }
 
     private boolean withinRemoveIcon(int x, int y) {
-        int xLeft = this.x + Math.floorDiv(110, 2) - 16;
+        int xLeft = this.x + Half.of(WIDTH) - 16;
         int yTop = this.y - 67;
         int xRight = xLeft + 13;
         int yBottom = yTop + 13;

@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.designer.widget;
 
+import com.esb.plugin.commons.Half;
 import com.esb.plugin.editor.designer.Drawable;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.layout.utils.ComputeMaxHeight;
@@ -116,7 +117,7 @@ public abstract class ScopeBox {
 
         int subTreeHeight = ComputeMaxHeight.of(graph, graphics, scopedGraphNode, firstNodeOutsideScope);
 
-        int halfSubTreeHeight = Math.floorDiv(subTreeHeight, 2);
+        int halfSubTreeHeight = Half.of(subTreeHeight);
 
         int minY = scopedGraphNode.y() - halfSubTreeHeight + ScopedGraphNode.VERTICAL_PADDING;
         int maxY = scopedGraphNode.y() + halfSubTreeHeight - ScopedGraphNode.VERTICAL_PADDING;
@@ -124,8 +125,8 @@ public abstract class ScopeBox {
         // Draw Scope Boundaries we need to compute the maximum number of scopes
         int maxScopes = getMaxScopes(graph);
 
-        int minX = drawableWithMinX.x() - Math.floorDiv(drawableWithMinX.width(graphics), 2);
-        int maxX = drawableWithMaxX.x() + Math.floorDiv(drawableWithMaxX.width(graphics), 2) + (maxScopes * IN_BETWEEN_SCOPES_PADDING);
+        int minX = drawableWithMinX.x() - Half.of(drawableWithMinX.width(graphics));
+        int maxX = drawableWithMaxX.x() + Half.of(drawableWithMaxX.width(graphics)) + (maxScopes * IN_BETWEEN_SCOPES_PADDING);
 
         int width = maxX - minX;
         int height = maxY - minY;

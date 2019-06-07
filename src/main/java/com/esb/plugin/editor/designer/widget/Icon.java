@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.designer.widget;
 
+import com.esb.plugin.commons.Half;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.graph.FlowGraph;
 
@@ -14,8 +15,8 @@ public class Icon {
     private static final int TOP_OFFSET = 5;
     private static final int ICON_WIDTH = 60;
     private static final int ICON_HEIGHT = 60;
-    private static final int HALF_ICON_WIDTH = Math.floorDiv(ICON_WIDTH, 2);
-    private static final int HALF_ICON_HEIGHT = Math.floorDiv(ICON_HEIGHT, 2);
+    private static final int HALF_ICON_WIDTH = Half.of(ICON_WIDTH);
+    private static final int HALF_ICON_HEIGHT = Half.of(ICON_HEIGHT);
 
     // The Image has size 60x60
     private final Image image;
@@ -34,10 +35,10 @@ public class Icon {
 
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         int componentTitleHeight = textComponentTitle.height(graphics);
-        int halfComponentTitleHeight = Math.floorDiv(componentTitleHeight, 2);
+        int halfComponentTitleHeight = Half.of(componentTitleHeight);
 
         int componentDescriptionHeight = textComponentDescription.height(graphics);
-        int halfComponentDescriptionHeight = Math.floorDiv(componentDescriptionHeight, 2);
+        int halfComponentDescriptionHeight = Half.of(componentDescriptionHeight);
 
         // Center title below icon
         int centerTitleY = y + halfComponentTitleHeight + TOP_OFFSET;

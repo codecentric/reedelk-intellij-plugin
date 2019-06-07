@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.designer.widget;
 
+import com.esb.plugin.commons.Half;
 import com.esb.plugin.commons.Images;
 
 import java.awt.*;
@@ -15,8 +16,8 @@ public class RemoveComponentIcon {
 
     public void draw(Graphics2D graphics, ImageObserver observer) {
         graphics.drawImage(Images.Component.RemoveComponent,
-                x - Math.floorDiv(ICON_WIDTH, 2),
-                y - Math.floorDiv(ICON_HEIGHT, 2), observer);
+                x - Half.of(ICON_WIDTH),
+                y - Half.of(ICON_HEIGHT), observer);
     }
 
     public void setPosition(int x, int y) {

@@ -1,6 +1,7 @@
 package com.esb.plugin.graph.action;
 
 
+import com.esb.plugin.commons.Half;
 import com.esb.plugin.component.type.placeholder.PlaceholderNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.action.strategy.*;
@@ -21,6 +22,10 @@ import static java.util.stream.Collectors.toList;
  * This class find the best position where to place the node in the Graph given the drop point location.
  */
 public class ActionNodeAdd {
+
+    // A value which represent the max vicinity a drop point must
+    // have in order to be snapped to a predecessor.
+    private static final int MAX_SNAP_VICINITY = 110;
 
     private final Graphics2D graphics;
     private final FlowGraph graph;
@@ -69,7 +74,6 @@ public class ActionNodeAdd {
                 }
 
                 strategy.execute(closestPrecedingNode);
-
             });
         }
     }
@@ -105,14 +109,10 @@ public class ActionNodeAdd {
         return Optional.ofNullable(closestPrecedingNode);
     }
 
-    // A value which represent the max vicinity a drop point must
-    // have in order to be snapped to a predecessor.
-    private static final int MAX_SNAP_VICINITY = 110;
-
     private static Predicate<GraphNode> byPrecedingNodesOnX(FlowGraph graph, int dropX, Graphics2D graphics) {
         return preceding -> {
             // The drop point is before/after the center of the node or the center + next node position.
-            if (dropX <= preceding.x() || dropX >= preceding.x() + preceding.width(graphics) + Math.floorDiv(preceding.width(graphics), 2)) {
+            if (dropX <= preceding.x() || dropX >= preceding.x() + preceding.width(graphics) + Half.of(preceding.width(graphics))) {
                 return false;
             }
             // TODO: Test this function
@@ -148,6 +148,4 @@ public class ActionNodeAdd {
                 .stream()
                 .noneMatch(drawable -> drawable.x() < dropPoint.x);
     }
-
-
 }

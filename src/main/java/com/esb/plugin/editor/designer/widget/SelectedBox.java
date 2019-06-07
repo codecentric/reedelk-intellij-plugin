@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.designer.widget;
 
+import com.esb.plugin.commons.Half;
 import com.esb.plugin.editor.designer.Drawable;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
@@ -18,8 +19,8 @@ public class SelectedBox {
         int parentHeight = parent.height(graphics);
         graphics.setColor(SELECTED_COMPONENT_BG_COLOR);
         graphics.fillRect(
-                x - Math.floorDiv(parentWidth, 2),
-                y - Math.floorDiv(parentHeight, 2),
+                x - Half.of(parentWidth),
+                y - Half.of(parentHeight),
                 parentWidth,
                 parentHeight);
     }

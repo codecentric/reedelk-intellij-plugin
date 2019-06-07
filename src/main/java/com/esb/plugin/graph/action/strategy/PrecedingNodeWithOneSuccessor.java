@@ -1,5 +1,6 @@
 package com.esb.plugin.graph.action.strategy;
 
+import com.esb.plugin.commons.Half;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
@@ -93,7 +94,7 @@ public class PrecedingNodeWithOneSuccessor extends AbstractStrategy {
     }
 
     private boolean withinYBounds(int dropY, GraphNode node) {
-        int halfHeight = Math.floorDiv(node.height(graphics), 2);
+        int halfHeight = Half.of(node.height(graphics));
         return dropY > node.y() - halfHeight &&
                 dropY < node.y() + halfHeight;
     }

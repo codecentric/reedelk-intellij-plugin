@@ -1,5 +1,6 @@
 package com.esb.plugin.graph.action.strategy;
 
+import com.esb.plugin.commons.Half;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
@@ -98,7 +99,7 @@ public class PrecedingScopedNode extends AbstractStrategy {
 
     private boolean isInsideTopArea(GraphNode node, Point dropPoint) {
         int height = node.height(graphics);
-        int halfHeight = Math.floorDiv(height, 2);
+        int halfHeight = Half.of(height);
         int yTopTopBound = node.y() - halfHeight;
         int yTopBottomBound = node.y() - (halfHeight - Math.floorDiv(height, 4));
         return dropPoint.y > yTopTopBound && dropPoint.y < yTopBottomBound;
@@ -106,7 +107,7 @@ public class PrecedingScopedNode extends AbstractStrategy {
 
     private boolean isInsideCenterArea(GraphNode node, Point dropPoint) {
         int height = node.height(graphics);
-        int halfHeight = Math.floorDiv(height, 2);
+        int halfHeight = Half.of(height);
         int yCenterTopBound = node.y() - (halfHeight - Math.floorDiv(height, 4));
         int yCenterBottomBound = node.y() + (halfHeight - Math.floorDiv(height, 4));
         return dropPoint.y >= yCenterTopBound && dropPoint.y <= yCenterBottomBound;
@@ -114,7 +115,7 @@ public class PrecedingScopedNode extends AbstractStrategy {
 
     private boolean isInsideBottomArea(GraphNode node, Point dropPoint) {
         int height = node.height(graphics);
-        int halfHeight = Math.floorDiv(height, 2);
+        int halfHeight = Half.of(height);
         int yBottomTopBound = node.y() + (halfHeight - Math.floorDiv(height, 4));
         int yBottomBottomBound = node.y() + halfHeight;
         return dropPoint.y > yBottomTopBound && dropPoint.y < yBottomBottomBound;
