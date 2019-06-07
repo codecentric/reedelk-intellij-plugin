@@ -39,17 +39,25 @@ public class ActionNodeRemove {
 
             for (GraphNode predecessor : predecessors) {
                 if (predecessor instanceof ScopedGraphNode) {
-                    int index = getDroppedIndex((ScopedGraphNode) predecessor, dropped);
+                    ScopedGraphNode scopedPredecessor = (ScopedGraphNode) predecessor;
+                    int index = getDroppedIndex(scopedPredecessor, dropped);
                     graph.remove(predecessor, dropped);
+
+                    FindScope.of(graph, dropped)
+                            .ifPresent(scopedGraphNode -> scopedGraphNode.removeFromScope(dropped));
 
                     if (successor != null) {
                         graph.remove(dropped, successor);
-                        if (((ScopedGraphNode) predecessor).scopeContains(successor)) {
+                        if (scopedPredecessor.scopeContains(successor)) {
                             graph.add(predecessor, successor, index);
+
+                            // We need to connect the scoped node with the next one only
+                            // if it is empty.
+                        } else if (scopedPredecessor.getScope().isEmpty()) {
+                            graph.add(predecessor, successor);
                         }
                     }
-                    FindScope.of(graph, dropped)
-                            .ifPresent(scopedGraphNode -> scopedGraphNode.removeFromScope(scopedGraphNode));
+
                     graph.remove(dropped);
 
                 } else {

@@ -42,10 +42,12 @@ public class ActionNodeAdd {
     public void execute() {
         // The first Drawable added to the canvas is root
         if (graph.isEmpty()) {
+            // TODO: This one should be a strategy as well
             graph.root(node);
 
             // Check if we are replacing the first (root) node.
         } else if (isReplacingRoot(graph, dropPoint)) {
+            // TODO: This one should be a strategy as well
             GraphNode currentRoot = graph.root();
             graph.root(node);
             graph.add(node, currentRoot);
