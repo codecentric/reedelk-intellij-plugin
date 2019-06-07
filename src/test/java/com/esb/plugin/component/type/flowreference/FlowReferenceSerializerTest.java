@@ -27,7 +27,7 @@ public class FlowReferenceSerializerTest extends AbstractGraphTest {
 
         String expectedReference = "11a2ce60-5c9d-1111-82a7-f1fa1111f333";
 
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, flowReferenceNode1);
 

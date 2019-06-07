@@ -17,7 +17,7 @@ class AbstractStrategyTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlyReturnMaxScopeBoundWhenNestedScopes() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -47,7 +47,7 @@ class AbstractStrategyTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlyReturnMaxScopeBoundWhenScopeDoesNotContainAnyDrawable() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
 
@@ -64,7 +64,7 @@ class AbstractStrategyTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlyReturnMaxScopeBoundWhenScopeContainsOnlyOneElement() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);

@@ -19,7 +19,7 @@ class GraphSerializerTest extends AbstractGraphTest {
     void shouldCorrectlySerializeGraphWithNestedChoice() {
         // Given
         String expectedGraphId = "d7f8160c-db7f-405c-bc38-bd2e3c57b692";
-        FlowGraph graph = graphProvider.createGraph(expectedGraphId);
+        FlowGraph graph = provider.createGraph(expectedGraphId);
         graph.root(componentNode1);
         graph.add(componentNode1, choiceNode1);
         graph.add(choiceNode1, flowReferenceNode1);
@@ -53,7 +53,7 @@ class GraphSerializerTest extends AbstractGraphTest {
     void shouldCorrectlySerializeGraphWithNodesBetweenScopes() {
         // Given
         String expectedId = "d7f8160c-db7f-405c-bc38-bd2e3c57b692";
-        FlowGraph graph = graphProvider.createGraph(expectedId);
+        FlowGraph graph = provider.createGraph(expectedId);
         graph.root(componentNode1);
         graph.add(componentNode1, choiceNode1);
         graph.add(choiceNode1, flowReferenceNode1);

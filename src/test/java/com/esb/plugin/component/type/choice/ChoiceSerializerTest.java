@@ -30,7 +30,7 @@ public class ChoiceSerializerTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlySerializeChoiceNode() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
 

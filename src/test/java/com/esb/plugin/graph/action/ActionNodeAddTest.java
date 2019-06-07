@@ -24,7 +24,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
         @Test
         void shouldCorrectlyAddRootComponent() {
             // Given
-            FlowGraph graph = graphProvider.createGraph();
+            FlowGraph graph = provider.createGraph();
             Point dropPoint = new Point(20, 20);
 
             // When
@@ -41,7 +41,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
         @Test
         void shouldCorrectlyReplaceRootComponentWhenXCoordinateIsSmallerThanCurrentRoot() {
             // Given
-            FlowGraph graph = graphProvider.createGraph();
+            FlowGraph graph = provider.createGraph();
             graph.root(root);
             root.setPosition(20, 20);
 
@@ -66,7 +66,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
         @Test
         void shouldAddComponentAfterRootAsLast() {
             // Given
-            FlowGraph graph = graphProvider.createGraph();
+            FlowGraph graph = provider.createGraph();
             graph.root(root);
             root.setPosition(20, 20);
 
@@ -86,7 +86,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
         @Test
         void shouldAddComponentBetweenRootAndSuccessor() {
             // Given
-            FlowGraph graph = graphProvider.createGraph();
+            FlowGraph graph = provider.createGraph();
 
             graph.root(root);
             root.setPosition(20, 20);
@@ -117,7 +117,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
         @Test
         void shouldAddDrawableAtTheEndOfScope() {
             // Given
-            FlowGraph graph = graphProvider.createGraph();
+            FlowGraph graph = provider.createGraph();
             graph.root(root);
             graph.add(root, choiceNode1);
             graph.add(choiceNode1, componentNode1);
@@ -151,7 +151,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
         @Test
         void shouldCorrectlyAddUpperNodeToFirstChoiceWithoutConnectingToSecondChoiceLastElement() {
             // Given
-            FlowGraph graph = graphProvider.createGraph();
+            FlowGraph graph = provider.createGraph();
             graph.root(root);
             graph.add(root, choiceNode1);
             graph.add(choiceNode1, componentNode1);
@@ -190,7 +190,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
         @Test
         void shouldCorrectlyAddFollowingLowerNodeToFirstChoiceWithoutConnectingToSecondChoiceLastElement() {
             // Given
-            FlowGraph graph = graphProvider.createGraph();
+            FlowGraph graph = provider.createGraph();
             graph.root(root);
             graph.add(root, choiceNode1);
             graph.add(choiceNode1, componentNode1);
@@ -237,7 +237,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
         @Test
         void shouldCorrectlyAddFirstNodeOutsideNestedScope() {
             // Given
-            FlowGraph graph = graphProvider.createGraph();
+            FlowGraph graph = provider.createGraph();
             graph.root(root);
             graph.add(root, choiceNode1);
             graph.add(choiceNode1, componentNode1);
@@ -290,7 +290,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
         @Test
         void shouldAddSecondSuccessorOfNestedChoiceCorrectly() {
             // Given
-            FlowGraph graph = graphProvider.createGraph();
+            FlowGraph graph = provider.createGraph();
             graph.root(root);
             graph.add(root, choiceNode1);
             graph.add(choiceNode1, componentNode1);
@@ -345,7 +345,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
         @Test
         void shouldAddNodeOutsideScope() {
             // Given
-            FlowGraph graph = graphProvider.createGraph();
+            FlowGraph graph = provider.createGraph();
             graph.root(root);
             graph.add(root, choiceNode1);
             graph.add(choiceNode1, componentNode1);
@@ -373,7 +373,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
         @Test
         void shouldCorrectlyAddTwoNodesAfterScope() {
             // Given
-            FlowGraph graph = graphProvider.createGraph();
+            FlowGraph graph = provider.createGraph();
             graph.root(root);
             graph.add(root, choiceNode1);
             graph.add(choiceNode1, componentNode1);
@@ -408,7 +408,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
             @Test
             void shouldAddNodeBetweenPredecessorOutsideScopeAndSuccessorInsideScope() {
                 // Given
-                FlowGraph graph = graphProvider.createGraph();
+                FlowGraph graph = provider.createGraph();
                 graph.root(root);
                 graph.add(root, choiceNode1);
                 graph.add(choiceNode1, componentNode1);
@@ -436,7 +436,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
             @Test
             void shouldAddNodeBetweenPredecessorInScope1AndSuccessorInScope2() {
                 // Given
-                FlowGraph graph = graphProvider.createGraph();
+                FlowGraph graph = provider.createGraph();
                 graph.root(root);
                 graph.add(root, choiceNode1);
                 graph.add(choiceNode1, componentNode1);
@@ -472,7 +472,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
             @Test
             void shouldAddNodeBetweenPredecessorInScopeAndSuccessorOutsideScope() {
                 // Given
-                FlowGraph graph = graphProvider.createGraph();
+                FlowGraph graph = provider.createGraph();
                 graph.root(root);
                 graph.add(root, choiceNode1);
                 graph.add(choiceNode1, componentNode1);
@@ -504,7 +504,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
             @Test
             void shouldAddNodeBetweenPredecessorAndSuccessorBothOutsideScope() {
                 // Given
-                FlowGraph graph = graphProvider.createGraph();
+                FlowGraph graph = provider.createGraph();
                 graph.root(root);
                 graph.add(root, componentNode1);
 
@@ -526,7 +526,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
             @Test
             void shouldAddNodeBetweenPredecessorInMultipleScopeAndSuccessorOutsideScope() {
                 // Given
-                FlowGraph graph = graphProvider.createGraph();
+                FlowGraph graph = provider.createGraph();
                 graph.root(root);
                 graph.add(root, choiceNode1);
                 graph.add(choiceNode1, componentNode1);
@@ -571,7 +571,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
             @Test
             void shouldAddNodeBetweenPredecessorInMultipleScopeAndDropPointInsideUpperScope() {
                 // Given
-                FlowGraph graph = graphProvider.createGraph();
+                FlowGraph graph = provider.createGraph();
                 graph.root(root);
                 graph.add(root, choiceNode1);
                 graph.add(choiceNode1, componentNode1);

@@ -38,7 +38,7 @@ public abstract class AbstractDeserializerTest extends AbstractGraphTest {
         mockContextInstantiateGraphNode(choiceNode1, choiceNode2);
         mockContextInstantiateGraphNode(flowReferenceNode1, flowReferenceNode2);
 
-        graph = graphProvider.createGraph();
+        graph = provider.createGraph();
         graph.root(root);
     }
 
@@ -55,5 +55,4 @@ public abstract class AbstractDeserializerTest extends AbstractGraphTest {
                 .when(context)
                 .instantiateGraphNode(fullyQualifiedName);
     }
-
 }

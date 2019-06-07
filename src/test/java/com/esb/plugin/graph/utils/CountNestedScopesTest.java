@@ -11,7 +11,7 @@ class CountNestedScopesTest extends AbstractGraphTest {
     @Test
     void shouldReturnZeroWhenNodeDoesNotBelongToAnyScope() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, componentNode1);
 
@@ -25,7 +25,7 @@ class CountNestedScopesTest extends AbstractGraphTest {
     @Test
     void shouldReturnOneWhenNodeBelongsToOneScope() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -42,7 +42,7 @@ class CountNestedScopesTest extends AbstractGraphTest {
     @Test
     void shouldReturnTwoWhenNodeBelongsToTwoScopes() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, choiceNode2);
@@ -61,7 +61,7 @@ class CountNestedScopesTest extends AbstractGraphTest {
     @Test
     void shouldReturnOneWhenNodeIsScopedDrawable() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
 
@@ -75,7 +75,7 @@ class CountNestedScopesTest extends AbstractGraphTest {
     @Test
     void shouldReturnTwoWhenNestedScopedDrawables() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, choiceNode2);
@@ -91,7 +91,7 @@ class CountNestedScopesTest extends AbstractGraphTest {
     @Test
     void shouldReturnThreeWhenNestedScopedDrawables() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, choiceNode2);
@@ -110,7 +110,7 @@ class CountNestedScopesTest extends AbstractGraphTest {
     @Test
     void shouldReturnTwoWhenThreeNestedScopesAndNodeIsOutFromInnermost() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, choiceNode2);

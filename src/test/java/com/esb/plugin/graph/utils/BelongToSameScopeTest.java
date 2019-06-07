@@ -11,7 +11,7 @@ class BelongToSameScopeTest extends AbstractGraphTest {
     @Test
     void shouldReturnTrueWhenBothOutsideAnyScope() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, componentNode1);
         graph.add(componentNode1, componentNode2);
@@ -26,7 +26,7 @@ class BelongToSameScopeTest extends AbstractGraphTest {
     @Test
     void shouldReturnTrueWhenBothBelongToSameScope() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -46,7 +46,7 @@ class BelongToSameScopeTest extends AbstractGraphTest {
     @Test
     void shouldReturnFalseWhenBelongToDifferentScopes() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -67,7 +67,7 @@ class BelongToSameScopeTest extends AbstractGraphTest {
     @Test
     void shouldReturnFalseWhenOneBelongToScopeAndTheOtherOutsideAnyScope() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);

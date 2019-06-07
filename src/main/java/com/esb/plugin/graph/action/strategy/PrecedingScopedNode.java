@@ -11,7 +11,7 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkState;
 
 /**
- * Strategy for preceding Scoped Node type.
+ * Strategy which can be applied to preceding nodes of type ScopedGraphNode.
  * Only a scoped node might have more than one successor.
  */
 public class PrecedingScopedNode extends AbstractStrategy {
@@ -23,7 +23,8 @@ public class PrecedingScopedNode extends AbstractStrategy {
     // It is the only type of node with potentially many successors.
     @Override
     public void execute(GraphNode scopeNode) {
-        checkState(scopeNode instanceof ScopedGraphNode, "Strategy only accepts ScopedGraphNode");
+        checkState(scopeNode instanceof ScopedGraphNode,
+                "Strategy only accepts ScopedGraphNode");
 
         ScopedGraphNode closestPrecedingNode = (ScopedGraphNode) scopeNode;
 
@@ -31,7 +32,7 @@ public class PrecedingScopedNode extends AbstractStrategy {
 
         if (successors.isEmpty()) {
             graph.add(closestPrecedingNode, node);
-            addToScopeIfNeeded(closestPrecedingNode);
+            closestPrecedingNode.addToScope(node);
             return;
         }
 
@@ -41,7 +42,7 @@ public class PrecedingScopedNode extends AbstractStrategy {
             graph.remove(closestPrecedingNode, successorOfClosestPrecedingNode);
             graph.add(closestPrecedingNode, node);
             graph.add(node, successorOfClosestPrecedingNode);
-            addToScopeIfNeeded(closestPrecedingNode);
+            closestPrecedingNode.addToScope(node);
             return;
         }
 
@@ -55,6 +56,7 @@ public class PrecedingScopedNode extends AbstractStrategy {
             // |-----------| yBottomBottomBound
             GraphNode successor = successors.get(successorIndex);
             if (isInsideTopArea(successor, dropPoint)) {
+                // Adds a node at index "successorIndex", the existing nodes are shifted down.
                 if (node.isSuccessorAllowed(graph, closestPrecedingNode, successorIndex)) {
                     graph.add(closestPrecedingNode, node, successorIndex);
                     closestPrecedingNode.addToScope(node);
@@ -64,7 +66,7 @@ public class PrecedingScopedNode extends AbstractStrategy {
                 break;
 
             } else if (isInsideCenterArea(successor, dropPoint)) {
-                // Replaces the first node at index "successorIndex"
+                // Replaces the first node at index "successorIndex".
                 if (node.isSuccessorAllowed(graph, closestPrecedingNode, successorIndex)) {
                     graph.remove(closestPrecedingNode, successor);
                     graph.add(closestPrecedingNode, node, successorIndex);
@@ -74,8 +76,8 @@ public class PrecedingScopedNode extends AbstractStrategy {
                 break;
 
             } else if (isInsideBottomArea(successor, dropPoint)) {
-                // Replaces the first node at index "successorIndex"
                 if (node.isSuccessorAllowed(graph, closestPrecedingNode, successorIndex + 1)) {
+                    // Adds a node next to the current index. Existing nodes at "successorIndex + 1" are shifted down.
                     graph.add(closestPrecedingNode, node, successorIndex + 1);
                     closestPrecedingNode.addToScope(node);
                     FindFirstNodeOutsideScope.of(graph, closestPrecedingNode)
@@ -109,5 +111,4 @@ public class PrecedingScopedNode extends AbstractStrategy {
         int yBottomBottomBound = node.y() + halfHeight;
         return dropPoint.y > yBottomTopBound && dropPoint.y < yBottomBottomBound;
     }
-
 }

@@ -20,7 +20,7 @@ class FindJoiningScopeTest extends AbstractGraphTest {
     @Test
     void shouldReturnCorrectJoiningScope() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -39,7 +39,7 @@ class FindJoiningScopeTest extends AbstractGraphTest {
     @Test
     void shouldReturnCorrectOuterJoiningScopeWhenTwoNestedScopes() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -65,7 +65,7 @@ class FindJoiningScopeTest extends AbstractGraphTest {
     @Test
     void shouldReturnCorrectScopeWhenInBetweenTwoScopes() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);

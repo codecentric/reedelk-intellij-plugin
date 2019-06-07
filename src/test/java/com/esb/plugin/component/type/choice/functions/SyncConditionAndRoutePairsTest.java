@@ -18,7 +18,7 @@ class SyncConditionAndRoutePairsTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlyUpdatePairsWhenFollowingNodeRemoved() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -42,7 +42,7 @@ class SyncConditionAndRoutePairsTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlyUpdatePairsWhenFollowingNodeAdded() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -67,7 +67,7 @@ class SyncConditionAndRoutePairsTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlyUpdatePairsWhenFollowingNodeReplacedAnotherNodeInSamePosition() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -93,7 +93,7 @@ class SyncConditionAndRoutePairsTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlyUpdatePairsWhenOtherwiseReplacedByAnotherNode() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode2);
@@ -116,7 +116,7 @@ class SyncConditionAndRoutePairsTest extends AbstractGraphTest {
     @Test
     void shouldThrowExceptionWhenChoicePairsIsEmpty() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -132,7 +132,7 @@ class SyncConditionAndRoutePairsTest extends AbstractGraphTest {
     @Test
     void shouldThrowExceptionWhenThereAreNoSuccessorsOfChoiceNode() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
 

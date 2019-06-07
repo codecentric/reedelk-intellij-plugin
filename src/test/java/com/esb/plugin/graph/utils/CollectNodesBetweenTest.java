@@ -14,7 +14,7 @@ class CollectNodesBetweenTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlyCollectAllElementsBetweenNodes() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -36,7 +36,7 @@ class CollectNodesBetweenTest extends AbstractGraphTest {
     @Test
     void shouldCollectAllElementsBetweenNodesExcludingTheOnesInNestedScope() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);

@@ -10,7 +10,7 @@ class RemoveStopNodesTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlyRemoveStopNodesWhenTwoNestedScopeNodes() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(componentNode1);
         graph.add(componentNode1, choiceNode1);
         graph.add(choiceNode1, componentNode2);

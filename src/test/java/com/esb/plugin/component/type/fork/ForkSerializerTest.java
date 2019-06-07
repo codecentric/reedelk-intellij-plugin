@@ -25,7 +25,7 @@ public class ForkSerializerTest extends AbstractGraphTest {
         // Given
         JSONArray sequence = new JSONArray();
 
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, forkNode1);
 

@@ -17,7 +17,7 @@ class FindScopeTest extends AbstractGraphTest {
     @BeforeEach
     protected void setUp() {
         super.setUp();
-        graph = graphProvider.createGraph();
+        graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, choiceNode2);

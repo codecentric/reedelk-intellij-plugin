@@ -44,7 +44,7 @@ public class GenericComponentSerializerTest extends AbstractGraphTest {
         componentData.set("property2", "second property");
         componentData.set("property3", "third property");
 
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, genericComponent);
 

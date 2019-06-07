@@ -11,7 +11,7 @@ class IsLastScopeBeforeNodeTest extends AbstractGraphTest {
     @Test
     void shouldIsLastScopeBeforeNodeReturnTrueWhenLastScope() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -32,7 +32,7 @@ class IsLastScopeBeforeNodeTest extends AbstractGraphTest {
     @Test
     void shouldIsLastScopeBeforeNodeReturnTrueWhenNestedScope() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -55,7 +55,7 @@ class IsLastScopeBeforeNodeTest extends AbstractGraphTest {
     @Test
     void shouldIsLastScopeBeforeNodeReturnFalseWhenInnermostNestedScope() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);

@@ -14,7 +14,7 @@ class ListLastNodesOfScopeTest extends AbstractGraphTest {
     @Test
     void shouldReturnCorrectlyLastDrawablesFromInnerScope() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, choiceNode2);
@@ -38,7 +38,7 @@ class ListLastNodesOfScopeTest extends AbstractGraphTest {
     @Test
     void shouldReturnCorrectlyLastDrawablesFromOuterScope() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, choiceNode2);
@@ -62,7 +62,7 @@ class ListLastNodesOfScopeTest extends AbstractGraphTest {
     @Test
     void shouldReturnCorrectlyLastDrawablesWhenInnerDrawableIsScopedDrawable() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.add(null, root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, choiceNode2);
@@ -78,7 +78,7 @@ class ListLastNodesOfScopeTest extends AbstractGraphTest {
     @Test
     void shouldReturnCorrectlyLastDrawableOfScopeWhenThreeNestedScopeDrawables() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.add(null, root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, choiceNode2);
@@ -97,7 +97,7 @@ class ListLastNodesOfScopeTest extends AbstractGraphTest {
     @Test
     void shouldReturnCorrectlyLastDrawableOfScopeWhenNestedContainsNodes() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -120,7 +120,7 @@ class ListLastNodesOfScopeTest extends AbstractGraphTest {
     @Test
     void shouldReturnCorrectlyLastDrawableOfScopeWhenMultipleLevelScopes() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);

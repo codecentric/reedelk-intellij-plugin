@@ -17,7 +17,7 @@ class FlowGraphImplTest extends AbstractGraphTest {
     @BeforeEach
     protected void setUp() {
         super.setUp();
-        graph = graphProvider.createGraph();
+        graph = provider.createGraph();
     }
 
     @Test

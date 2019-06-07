@@ -4,6 +4,7 @@ import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.BelongToSameScope;
+import com.esb.plugin.graph.utils.FindScope;
 import com.esb.plugin.graph.utils.FindScopes;
 import com.esb.plugin.graph.utils.ListLastNodesOfScope;
 
@@ -20,23 +21,27 @@ public class PrecedingNodeWithOneSuccessor extends AbstractStrategy {
     }
 
     @Override
-    public void execute(GraphNode closestPrecedingDrawable) {
-        List<GraphNode> successors = graph.successors(closestPrecedingDrawable);
+    public void execute(GraphNode closestPrecedingNode) {
+        List<GraphNode> successors = graph.successors(closestPrecedingNode);
         checkState(successors.size() == 1,
                 "Successors size MUST be 1, otherwise it is a Scoped Drawable");
 
         GraphNode successorOfClosestPrecedingNode = successors.get(0);
 
-        if (BelongToSameScope.from(graph, closestPrecedingDrawable, successorOfClosestPrecedingNode)) {
-            if (withinYBounds(dropPoint.y, closestPrecedingDrawable)) {
-                graph.add(closestPrecedingDrawable, node);
+        if (BelongToSameScope.from(graph, closestPrecedingNode, successorOfClosestPrecedingNode)) {
+            if (withinYBounds(dropPoint.y, closestPrecedingNode)) {
+                graph.add(closestPrecedingNode, node);
                 graph.add(node, successorOfClosestPrecedingNode);
-                graph.remove(closestPrecedingDrawable, successorOfClosestPrecedingNode);
-                addToScopeIfNeeded(closestPrecedingDrawable);
+                graph.remove(closestPrecedingNode, successorOfClosestPrecedingNode);
+
+                // We add it to the scope
+                FindScope.of(graph, closestPrecedingNode)
+                        .ifPresent(scopedGraphNode ->
+                                scopedGraphNode.addToScope(node));
             }
         } else {
             // They belong to different scopes
-            handleDifferentScopes(closestPrecedingDrawable, successorOfClosestPrecedingNode);
+            handleDifferentScopes(closestPrecedingNode, successorOfClosestPrecedingNode);
         }
     }
 

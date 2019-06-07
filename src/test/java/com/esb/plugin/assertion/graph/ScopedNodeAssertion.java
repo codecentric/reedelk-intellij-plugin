@@ -25,6 +25,12 @@ public class ScopedNodeAssertion extends NodeAssertion {
         return this;
     }
 
+    public ScopedNodeAssertion scopeIsEmpty() {
+        Collection<GraphNode> scope = this.node.getScope();
+        assertThat(scope).isEmpty();
+        return this;
+    }
+
     public FlowGraphAssertion and() {
         return parent;
     }

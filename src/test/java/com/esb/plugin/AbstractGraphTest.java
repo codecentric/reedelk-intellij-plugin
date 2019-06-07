@@ -56,12 +56,12 @@ public abstract class AbstractGraphTest {
     protected FlowReferenceNode flowReferenceNode1;
     protected FlowReferenceNode flowReferenceNode2;
 
-    protected FlowGraphProvider graphProvider;
+    protected FlowGraphProvider provider;
 
 
     @BeforeEach
     protected void setUp() {
-        graphProvider = new FlowGraphProvider();
+        provider = new FlowGraphProvider();
 
         root = createGraphNodeInstance(ComponentRoot.class, GenericComponentNode.class);
 

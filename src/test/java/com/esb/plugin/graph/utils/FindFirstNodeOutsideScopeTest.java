@@ -14,7 +14,7 @@ class FindFirstNodeOutsideScopeTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlyReturnEmptyWhenTwoLevelsAndOneContainsANestedScopeWithoutSuccessorsOutsideScope() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -38,7 +38,7 @@ class FindFirstNodeOutsideScopeTest extends AbstractGraphTest {
     @Test
     void shouldCorrectlyReturnFirstDrawableOutsideScopeWhenChoiceWithTwoChildren() {
         // Given
-        FlowGraph graph = graphProvider.createGraph();
+        FlowGraph graph = provider.createGraph();
         graph.root(root);
         graph.add(root, choiceNode1);
         graph.add(choiceNode1, componentNode1);
@@ -50,10 +50,10 @@ class FindFirstNodeOutsideScopeTest extends AbstractGraphTest {
         choiceNode1.addToScope(componentNode2);
 
         // When
-        Optional<GraphNode> drawables = FindFirstNodeOutsideScope.of(graph, choiceNode1);
+        Optional<GraphNode> nodes = FindFirstNodeOutsideScope.of(graph, choiceNode1);
 
         // Then
-        assertThat(drawables.get()).isEqualTo(componentNode3);
+        assertThat(nodes.get()).isEqualTo(componentNode3);
     }
 
 }
