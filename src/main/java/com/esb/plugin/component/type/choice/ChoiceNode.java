@@ -73,7 +73,7 @@ public class ChoiceNode extends AbstractScopedGraphNode {
     @Override
     public void drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         super.drawArrows(graph, graphics, observer);
-        drawVerticalDividerArrows(graph, graphics, observer);
+        drawVerticalDividerArrows(graph, graphics);
     }
 
     @Override
@@ -152,13 +152,17 @@ public class ChoiceNode extends AbstractScopedGraphNode {
                                 choiceConditionRoutePair.getNext() == target);
     }
 
-    private void drawVerticalDividerArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+    private void drawVerticalDividerArrows(FlowGraph graph, Graphics2D graphics) {
         // Draw arrows -> perpendicular to the vertical bar.
         int halfWidth = Half.of(width(graphics));
         int verticalX = x() - 60 + halfWidth;
 
+        // We only need to draw arrows if they are inside the scope
+
         List<GraphNode> successors = graph.successors(this);
         for (GraphNode successor : successors) {
+            // We only draw connections to successors within this scope drawable
+            if (!getScope().contains(successor)) continue;
 
             Point targetBaryCenter = successor.getBarycenter();
             Point sourceBaryCenter = new Point(verticalX, targetBaryCenter.y);

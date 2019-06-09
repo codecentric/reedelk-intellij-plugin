@@ -99,6 +99,8 @@ public class ForkNode extends AbstractScopedGraphNode {
 
         List<GraphNode> successors = graph.successors(this);
         for (Drawable successor : successors) {
+            // We only draw connections to successors within this scope drawable
+            if (!getScope().contains(successor)) continue;
 
             Point targetBaryCenter = successor.getBarycenter();
             Point sourceBaryCenter = new Point(verticalX, targetBaryCenter.y);
