@@ -42,7 +42,7 @@ public class PrecedingNodeWithoutSuccessor extends AbstractStrategy {
 
             currentScope = scopes.pop();
 
-            int maxXBound = getScopeMaxXBound(graph, currentScope, graphics);
+            int maxXBound = scopeMaxXBound(graph, currentScope, graphics);
 
             if (dropPoint.x <= maxXBound) break;
 

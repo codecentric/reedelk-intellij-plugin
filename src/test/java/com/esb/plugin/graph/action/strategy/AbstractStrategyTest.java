@@ -40,7 +40,7 @@ class AbstractStrategyTest extends AbstractGraphTest {
         componentNode3.setPosition(275, 210);
 
         // When
-        int maxScopeXBound = AbstractStrategy.getScopeMaxXBound(graph, choiceNode1, graphics);
+        int maxScopeXBound = AbstractStrategy.scopeMaxXBound(graph, choiceNode1, graphics);
 
         // Then
         assertThat(maxScopeXBound).isEqualTo(565);
@@ -57,7 +57,7 @@ class AbstractStrategyTest extends AbstractGraphTest {
         choiceNode1.setPosition(165, 140);
 
         // When
-        int maxScopeXBound = AbstractStrategy.getScopeMaxXBound(graph, choiceNode1, graphics);
+        int maxScopeXBound = AbstractStrategy.scopeMaxXBound(graph, choiceNode1, graphics);
 
         // Then
         int maxX = choiceNode1.x() + Half.of(ChoiceNode.WIDTH);
@@ -79,7 +79,7 @@ class AbstractStrategyTest extends AbstractGraphTest {
         choiceNode1.addToScope(componentNode1);
 
         // When
-        int maxScopeXBound = AbstractStrategy.getScopeMaxXBound(graph, choiceNode1, graphics);
+        int maxScopeXBound = AbstractStrategy.scopeMaxXBound(graph, choiceNode1, graphics);
 
         // Then
         assertThat(maxScopeXBound).isEqualTo(330);

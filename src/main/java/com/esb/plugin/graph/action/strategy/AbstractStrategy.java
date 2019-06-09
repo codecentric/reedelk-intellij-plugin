@@ -22,17 +22,17 @@ abstract class AbstractStrategy implements Strategy {
         this.node = node;
     }
 
-    static int getScopeMaxXBound(@NotNull FlowGraph graph, @NotNull ScopedGraphNode scopedGraphNode, @NotNull Graphics2D graphics) {
+    static int scopeMaxXBound(@NotNull FlowGraph graph, @NotNull ScopedGraphNode scopedGraphNode, @NotNull Graphics2D graphics) {
         ScopeBoundaries scopeBoundaries = scopedGraphNode.getScopeBoundaries(graph, graphics);
         return scopeBoundaries.getX() + scopeBoundaries.getWidth();
     }
 
-    static int getScopeMaxYBound(@NotNull FlowGraph graph, @NotNull ScopedGraphNode scopedGraphNode, @NotNull Graphics2D graphics) {
+    static int scopeMaxYBound(@NotNull FlowGraph graph, @NotNull ScopedGraphNode scopedGraphNode, @NotNull Graphics2D graphics) {
         ScopeBoundaries boundaries = scopedGraphNode.getScopeBoundaries(graph, graphics);
         return boundaries.getY() + boundaries.getHeight();
     }
 
-    static int getScopeMinYBound(@NotNull FlowGraph graph, @NotNull ScopedGraphNode scopedGraphNode, @NotNull Graphics2D graphics) {
+    static int scopeMinYBound(@NotNull FlowGraph graph, @NotNull ScopedGraphNode scopedGraphNode, @NotNull Graphics2D graphics) {
         ScopeBoundaries boundaries = scopedGraphNode.getScopeBoundaries(graph, graphics);
         return boundaries.getY();
     }
