@@ -34,6 +34,10 @@ public class ForkSerializer extends AbstractScopedNodeSerializer {
         JSONArray forkArrayObject = new JSONArray();
 
         for (GraphNode successor : successorsOfFork) {
+            // This case happens when the fork node has no successors inside the scope,
+            // but exists a successor right outside its scope. In this case we must stop
+            // serializing.
+            if (successor == stop) continue;
 
             JSONObject nextObject = JsonObjectFactory.newJSONObject();
 

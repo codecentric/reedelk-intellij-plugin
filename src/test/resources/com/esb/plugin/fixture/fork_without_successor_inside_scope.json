@@ -1,0 +1,17 @@
+{
+  "id": "d7f8160c-db7f-405c-bc38-bd2e3c57b692",
+  "flow": [
+    {
+      "implementor": "com.esb.plugin.fixture.ComponentRoot"
+    },
+    {
+      "implementor": "com.esb.system.component.Fork",
+      "threadPoolSize": 3,
+      "fork": [
+      ]
+    },
+    {
+      "implementor": "com.esb.plugin.fixture.ComponentNode1"
+    }
+  ]
+}

@@ -1,8 +1,11 @@
 package com.esb.plugin.graph.serializer;
 
+import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.AbstractGraphTest;
+import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.type.choice.ChoiceConditionRoutePair;
 import com.esb.plugin.component.type.choice.ChoiceNode;
+import com.esb.plugin.fixture.Json;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.system.component.Choice;
 import org.junit.jupiter.api.Test;
@@ -82,6 +85,26 @@ class GraphSerializerTest extends AbstractGraphTest {
 
         // Then
         String expectedJson = CompleteFlow.NodesBetweenScopes.json();
+        JSONAssert.assertEquals(expectedJson, actualJson, true);
+    }
+
+    @Test
+    void shouldCorrectlySerializeForkWithoutSuccessorInsideScope() {
+        // Given
+        String expectedId = "d7f8160c-db7f-405c-bc38-bd2e3c57b692";
+        FlowGraph graph = provider.createGraph(expectedId);
+        graph.root(root);
+        graph.add(root, forkNode1);
+        graph.add(forkNode1, componentNode1);
+
+        ComponentData componentData = forkNode1.componentData();
+        componentData.set(JsonParser.Fork.threadPoolSize(), 3);
+
+        // When
+        String actualJson = GraphSerializer.serialize(graph);
+
+        // Then
+        String expectedJson = Json.Fork.WithoutSuccessorInsideScope.json();
         JSONAssert.assertEquals(expectedJson, actualJson, true);
     }
 }

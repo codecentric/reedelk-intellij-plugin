@@ -56,6 +56,13 @@ public class Json {
             public String path() {
                 return "fork_sample.json";
             }
+        },
+
+        WithoutSuccessorInsideScope() {
+            @Override
+            public String path() {
+                return "fork_without_successor_inside_scope.json";
+            }
         }
     }
 
