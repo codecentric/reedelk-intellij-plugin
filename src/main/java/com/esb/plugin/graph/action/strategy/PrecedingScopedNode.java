@@ -13,7 +13,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 /**
  * Strategy which can be applied to preceding nodes of type ScopedGraphNode.
- * Only a scoped node might have more than one successor.
+ * Note that only a scoped node might have more than one successor.
  */
 public class PrecedingScopedNode extends AbstractStrategy {
 
@@ -23,7 +23,6 @@ public class PrecedingScopedNode extends AbstractStrategy {
         super(graph, dropPoint, node, graphics);
     }
 
-    // It is the only type of node with potentially many successors.
     @Override
     public void execute(GraphNode scopeNode) {
         checkState(scopeNode instanceof ScopedGraphNode,
