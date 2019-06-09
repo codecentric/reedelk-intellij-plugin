@@ -27,4 +27,13 @@ abstract class AbstractStrategy implements Strategy {
         return scopeBoundaries.getX() + scopeBoundaries.getWidth();
     }
 
+    static int getScopeMaxYBound(@NotNull FlowGraph graph, @NotNull ScopedGraphNode scopedGraphNode, @NotNull Graphics2D graphics) {
+        ScopeBoundaries boundaries = scopedGraphNode.getScopeBoundaries(graph, graphics);
+        return boundaries.getY() + boundaries.getHeight();
+    }
+
+    static int getScopeMinYBound(@NotNull FlowGraph graph, @NotNull ScopedGraphNode scopedGraphNode, @NotNull Graphics2D graphics) {
+        ScopeBoundaries boundaries = scopedGraphNode.getScopeBoundaries(graph, graphics);
+        return boundaries.getY();
+    }
 }

@@ -64,7 +64,8 @@ public class PrecedingScopedNode extends AbstractStrategy {
             // |  bottom   |
             // |-----------| yBottomBottomBound
             GraphNode successor = successors.get(successorIndex);
-            if (isInsideTopArea(successor, dropPoint)) {
+
+            if (isInsideTopArea(successors, successorIndex, closestPrecedingNode, dropPoint)) {
                 // Adds a node at index "successorIndex", the existing nodes are shifted down.
                 if (node.isSuccessorAllowed(graph, closestPrecedingNode, successorIndex)) {
                     graph.add(closestPrecedingNode, node, successorIndex);
@@ -84,7 +85,7 @@ public class PrecedingScopedNode extends AbstractStrategy {
                 }
                 break;
 
-            } else if (isInsideBottomArea(successor, dropPoint)) {
+            } else if (isInsideBottomArea(successors, successorIndex, closestPrecedingNode, dropPoint)) {
                 if (node.isSuccessorAllowed(graph, closestPrecedingNode, successorIndex + 1)) {
                     // Adds a node next to the current index. Existing nodes at "successorIndex + 1" are shifted down.
                     graph.add(closestPrecedingNode, node, successorIndex + 1);
@@ -97,12 +98,80 @@ public class PrecedingScopedNode extends AbstractStrategy {
         }
     }
 
-    private boolean isInsideTopArea(GraphNode node, Point dropPoint) {
-        int height = node.height(graphics);
-        int halfHeight = Half.of(height);
-        int yTopTopBound = node.y() - halfHeight;
-        int yTopBottomBound = node.y() - (halfHeight - Math.floorDiv(height, 4));
-        return dropPoint.y > yTopTopBound && dropPoint.y < yTopBottomBound;
+    // |-----------| yTopScopeBound
+    // |           |
+    // |           |
+    // |-----------| yTopTopBound
+    // |    top    |
+    // |-----------| yCenterTopBound == yTopBottomBound
+    // |   center  |
+    // |-----------| yCenterBottomBound == yBottomTopBound
+    // |  bottom   |
+    // |-----------| yBottomBottomBound
+    private boolean isInsideTopArea(List<GraphNode> successors, int successorIndex, ScopedGraphNode closestPrecedingNode, Point dropPoint) {
+        if (successorIndex == 0) { // if it is the topmost element
+            // The top area is between top of scope rectangle and yTopBottomBound
+            GraphNode node = successors.get(successorIndex);
+
+            int yTopScopeBound = getScopeMinYBound(graph, closestPrecedingNode, graphics);
+            int height = node.height(graphics);
+            int halfHeight = Half.of(height);
+            int yTopBottomBound = node.y() - (halfHeight - Math.floorDiv(height, 4));
+            return dropPoint.y >= yTopScopeBound && dropPoint.y < yTopBottomBound;
+
+        } else {
+            // The top area is between the previous node yBottomTopBound and current yTopBottomBound
+            GraphNode preceding = successors.get(successorIndex - 1);
+            GraphNode current = successors.get(successorIndex);
+
+            int height = preceding.height(graphics);
+            int halfHeight = Half.of(height);
+            int yBottomTopBound = preceding.y() + (halfHeight - Math.floorDiv(height, 4));
+
+            height = current.height(graphics);
+            halfHeight = Half.of(height);
+            int yTopBottomBound = current.y() - (halfHeight - Math.floorDiv(height, 4));
+
+            return dropPoint.y >= yBottomTopBound && dropPoint.y < yTopBottomBound;
+        }
+    }
+
+
+    // |   center  |
+    // |-----------| yCenterBottomBound == yBottomTopBound
+    // |  bottom   |
+    // |-----------| yBottomBottomBound
+    // |           |
+    // |           |
+    // |-----------| yBottomScopeBound
+    private boolean isInsideBottomArea(List<GraphNode> successors, int successorIndex, ScopedGraphNode closestPrecedingNode, Point dropPoint) {
+        // if it is the lowermost element
+        if (successorIndex == successors.size() - 1) {
+            // The bottom area is between yBottomTopBound and the bottom of the scope rectangle
+
+            GraphNode node = successors.get(successorIndex);
+            int yBottomScopeBound = getScopeMaxYBound(graph, closestPrecedingNode, graphics);
+            int height = node.height(graphics);
+            int halfHeight = Half.of(height);
+            int yBottomTopBound = node.y() + (halfHeight - Math.floorDiv(height, 4));
+            return dropPoint.y <= yBottomScopeBound && dropPoint.y > yBottomTopBound;
+
+        } else {
+            // The bottom area is between the following yTopTopBound and current yTopBottomBound
+            GraphNode following = successors.get(successorIndex + 1);
+            GraphNode current = successors.get(successorIndex);
+
+            int height = current.height(graphics);
+            int halfHeight = Half.of(height);
+            int yBottomTopBound = current.y() + (halfHeight - Math.floorDiv(height, 4));
+
+            height = following.height(graphics);
+            halfHeight = Half.of(height);
+            int yTopBottomBound = following.y() - (halfHeight - Math.floorDiv(height, 4));
+
+
+            return dropPoint.y > yTopBottomBound && dropPoint.y < yBottomTopBound;
+        }
     }
 
     private boolean isInsideCenterArea(GraphNode node, Point dropPoint) {
@@ -111,13 +180,5 @@ public class PrecedingScopedNode extends AbstractStrategy {
         int yCenterTopBound = node.y() - (halfHeight - Math.floorDiv(height, 4));
         int yCenterBottomBound = node.y() + (halfHeight - Math.floorDiv(height, 4));
         return dropPoint.y >= yCenterTopBound && dropPoint.y <= yCenterBottomBound;
-    }
-
-    private boolean isInsideBottomArea(GraphNode node, Point dropPoint) {
-        int height = node.height(graphics);
-        int halfHeight = Half.of(height);
-        int yBottomTopBound = node.y() + (halfHeight - Math.floorDiv(height, 4));
-        int yBottomBottomBound = node.y() + halfHeight;
-        return dropPoint.y > yBottomTopBound && dropPoint.y < yBottomBottomBound;
     }
 }
