@@ -562,6 +562,177 @@ class ActionNodeAddTest extends AbstractGraphTest {
                         .and().node(choiceNode1).scopeContainsExactly(componentNode1, choiceNode2)
                         .and().node(choiceNode2).scopeContainsExactly(componentNode2);
             }
+
+            @Test
+            void shouldAddNodeAfterNestedForkScopedNodeInsideForkNodeScope1() {
+                // Given
+                FlowGraph graph = provider.createGraph();
+                graph.root(root);
+                graph.add(root, forkNode1);
+                graph.add(forkNode1, forkNode2);
+                graph.add(forkNode2, componentNode1);
+                graph.add(forkNode2, forkNode3);
+                graph.add(componentNode1, componentNode2);
+                graph.add(forkNode3, componentNode2);
+
+                forkNode1.addToScope(forkNode2);
+                forkNode2.addToScope(componentNode1);
+                forkNode2.addToScope(forkNode3);
+
+                root.setPosition(55, 157);
+                forkNode1.setPosition(165, 157);
+                forkNode2.setPosition(280, 157);
+                componentNode1.setPosition(400, 80);
+                forkNode3.setPosition(400, 227);
+                componentNode2.setPosition(525, 157);
+
+                // When we drop the node at the end of fork 1 node scope
+                Point dropPoint = new Point(463, 221);
+                FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
+
+                // Then
+                PluginAssertion.assertThat(updatedGraph)
+                        .root().is(root)
+                        .and().successorsOf(root).isOnly(forkNode1)
+                        .and().successorsOf(forkNode1).isOnly(forkNode2)
+                        .and().node(forkNode1).scopeContainsExactly(forkNode2, componentNode3)
+                        .and().successorsOf(forkNode2).areExactly(componentNode1, forkNode3)
+                        .and().node(forkNode2).scopeContainsExactly(componentNode1, forkNode3)
+                        .and().successorsOf(forkNode3).isOnly(componentNode3)
+                        .and().successorsOf(componentNode1).isOnly(componentNode3)
+                        .and().node(forkNode3).scopeIsEmpty()
+                        .and().successorsOf(componentNode3).isOnly(componentNode2)
+                        .and().successorsOf(componentNode2).isEmpty();
+            }
+
+            @Test
+            void shouldAddNodeAfterNestedForkScopedNodeInsideForkNodeScope2() {
+                // Given
+                FlowGraph graph = provider.createGraph();
+                graph.root(root);
+                graph.add(root, forkNode1);
+                graph.add(forkNode1, forkNode2);
+                graph.add(forkNode2, componentNode1);
+                graph.add(forkNode2, forkNode3);
+                graph.add(componentNode1, componentNode2);
+                graph.add(forkNode3, componentNode2);
+
+                forkNode1.addToScope(forkNode2);
+                forkNode2.addToScope(componentNode1);
+                forkNode2.addToScope(forkNode3);
+
+                root.setPosition(55, 157);
+                forkNode1.setPosition(165, 157);
+                forkNode2.setPosition(280, 157);
+                componentNode1.setPosition(400, 80);
+                forkNode3.setPosition(400, 227);
+                componentNode2.setPosition(525, 157);
+
+
+                // When we drop the node at the end of fork 2 node scope
+                Point dropPoint = new Point(458, 227);
+                FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
+
+                // Then
+                PluginAssertion.assertThat(updatedGraph)
+                        .root().is(root)
+                        .and().successorsOf(root).isOnly(forkNode1)
+                        .and().successorsOf(forkNode1).isOnly(forkNode2)
+                        .and().node(forkNode1).scopeContainsExactly(forkNode2)
+                        .and().successorsOf(forkNode2).areExactly(componentNode1, forkNode3)
+                        .and().node(forkNode2).scopeContainsExactly(componentNode1, forkNode3, componentNode3)
+                        .and().successorsOf(forkNode3).isOnly(componentNode3)
+                        .and().successorsOf(componentNode1).isOnly(componentNode2)
+                        .and().node(forkNode3).scopeIsEmpty()
+                        .and().successorsOf(componentNode3).isOnly(componentNode2)
+                        .and().successorsOf(componentNode2).isEmpty();
+            }
+
+            @Test
+            void shouldAddNodeAfterNestedForkScopedNodeInsideForkNodeScope3() {
+                // Given
+                FlowGraph graph = provider.createGraph();
+                graph.root(root);
+                graph.add(root, forkNode1);
+                graph.add(forkNode1, forkNode2);
+                graph.add(forkNode2, componentNode1);
+                graph.add(forkNode2, forkNode3);
+                graph.add(componentNode1, componentNode2);
+                graph.add(forkNode3, componentNode2);
+
+                forkNode1.addToScope(forkNode2);
+                forkNode2.addToScope(componentNode1);
+                forkNode2.addToScope(forkNode3);
+
+                root.setPosition(55, 157);
+                forkNode1.setPosition(165, 157);
+                forkNode2.setPosition(280, 157);
+                componentNode1.setPosition(400, 80);
+                forkNode3.setPosition(400, 227);
+                componentNode2.setPosition(525, 157);
+
+
+                // When we drop the node at the end of fork 3 node scope
+                Point dropPoint = new Point(449, 208);
+                FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
+
+                // Then
+                PluginAssertion.assertThat(updatedGraph)
+                        .root().is(root)
+                        .and().successorsOf(root).isOnly(forkNode1)
+                        .and().successorsOf(forkNode1).isOnly(forkNode2)
+                        .and().node(forkNode1).scopeContainsExactly(forkNode2)
+                        .and().successorsOf(forkNode2).areExactly(componentNode1, forkNode3)
+                        .and().node(forkNode2).scopeContainsExactly(componentNode1, forkNode3)
+                        .and().successorsOf(forkNode3).isOnly(componentNode3)
+                        .and().successorsOf(componentNode1).isOnly(componentNode2)
+                        .and().node(forkNode3).scopeContainsExactly(componentNode3)
+                        .and().successorsOf(componentNode3).isOnly(componentNode2)
+                        .and().successorsOf(componentNode2).isEmpty();
+            }
+
+            @Test
+            void shouldAddNodeAfterNestedForkScopedNodeWhenDroppedOutsideAnyScope() {
+                // Given
+                FlowGraph graph = provider.createGraph();
+                graph.root(root);
+                graph.add(root, forkNode1);
+                graph.add(forkNode1, forkNode2);
+                graph.add(forkNode2, componentNode1);
+                graph.add(forkNode2, forkNode3);
+                graph.add(componentNode1, componentNode2);
+                graph.add(forkNode3, componentNode2);
+
+                forkNode1.addToScope(forkNode2);
+                forkNode2.addToScope(componentNode1);
+                forkNode2.addToScope(forkNode3);
+
+                root.setPosition(55, 157);
+                forkNode1.setPosition(165, 157);
+                forkNode2.setPosition(280, 157);
+                componentNode1.setPosition(400, 80);
+                forkNode3.setPosition(400, 227);
+                componentNode2.setPosition(525, 157);
+
+
+                // When we drop the node outside any scope
+                Point dropPoint = new Point(474, 234);
+                FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
+
+                // Then
+                PluginAssertion.assertThat(updatedGraph)
+                        .root().is(root)
+                        .and().successorsOf(root).isOnly(forkNode1)
+                        .and().successorsOf(forkNode1).isOnly(forkNode2)
+                        .and().node(forkNode1).scopeContainsExactly(forkNode2)
+                        .and().successorsOf(forkNode2).areExactly(componentNode1, forkNode3)
+                        .and().node(forkNode2).scopeContainsExactly(componentNode1, forkNode3)
+                        .and().successorsOf(forkNode3).isOnly(componentNode3)
+                        .and().successorsOf(componentNode1).isOnly(componentNode3)
+                        .and().node(forkNode3).scopeIsEmpty()
+                        .and().successorsOf(componentNode3).isOnly(componentNode2)
+                        .and().successorsOf(componentNode2).isEmpty();
+            }
         }
 
         @Nested
@@ -613,5 +784,4 @@ class ActionNodeAddTest extends AbstractGraphTest {
         action.execute();
         return modifiableGraph;
     }
-
 }

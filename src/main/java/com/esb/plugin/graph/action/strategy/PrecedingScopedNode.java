@@ -5,9 +5,12 @@ import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.FindFirstNodeOutsideScope;
+import com.esb.plugin.graph.utils.FindScope;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -32,27 +35,43 @@ public class PrecedingScopedNode extends AbstractStrategy {
 
         List<GraphNode> successors = graph.successors(closestPrecedingNode);
 
-        int scopeMaxXBound = scopeMaxXBound(graph, closestPrecedingNode, graphics);
-
         if (successors.isEmpty()) {
+            Optional<ScopedGraphNode> optionalScope = findScopeBelongsTo(closestPrecedingNode, dropPoint);
             graph.add(closestPrecedingNode, node);
-            // We just add the node to the scope if it is within the scope max X bounds
-            if (dropPoint.x < scopeMaxXBound) {
-                closestPrecedingNode.addToScope(node);
-            }
+
+            // We add the node to the scope it belongs to
+            optionalScope.ifPresent(scopedGraphNode -> scopedGraphNode.addToScope(node));
             return;
         }
 
         // We handle the case where the successor is only one and it is outside the scope
-        if (successors.size() == 1 && !closestPrecedingNode.scopeContains(successors.get(0))) {
+        if (hasOnlyOneSuccessorOutsideScope(closestPrecedingNode, graph)) {
+            Optional<ScopedGraphNode> optionalScope = findScopeBelongsTo(closestPrecedingNode, dropPoint);
+
             GraphNode successorOfClosestPrecedingNode = successors.get(0);
-            graph.remove(closestPrecedingNode, successorOfClosestPrecedingNode);
-            graph.add(closestPrecedingNode, node);
-            graph.add(node, successorOfClosestPrecedingNode);
-            // We just add the node to the scope if it is within the scope max X bounds
-            if (dropPoint.x < scopeMaxXBound) {
-                closestPrecedingNode.addToScope(node);
+            Optional<ScopedGraphNode> scopePreceding = FindScope.of(graph, closestPrecedingNode);
+            if (scopePreceding.isPresent() && optionalScope.isPresent() && scopePreceding.get() == optionalScope.get()) {
+                // If it is the upper scope then it is the first node outside.. otherwise no
+                graph.remove(closestPrecedingNode, successorOfClosestPrecedingNode);
+                graph.add(closestPrecedingNode, node);
+            } else if (!optionalScope.isPresent() || optionalScope.get() != closestPrecedingNode) {
+                // Need to connect all the preceding of successor,
+                // to the node because the successor might the the joiner of other scopes.
+                List<GraphNode> predecessorsOfSuccessorOfClosestPrecedingNode = new ArrayList<>(graph.predecessors(successorOfClosestPrecedingNode));
+                predecessorsOfSuccessorOfClosestPrecedingNode
+                        .forEach(predecessorOfSuccessorOfClosestPrecedingNode -> {
+                            graph.remove(predecessorOfSuccessorOfClosestPrecedingNode, successorOfClosestPrecedingNode);
+                            graph.add(predecessorOfSuccessorOfClosestPrecedingNode, node);
+                        });
+            } else {
+                graph.remove(closestPrecedingNode, successorOfClosestPrecedingNode);
+                graph.add(closestPrecedingNode, node);
             }
+
+            graph.add(node, successorOfClosestPrecedingNode);
+
+            // We add the node to the scope it belongs to
+            optionalScope.ifPresent(scopedGraphNode -> scopedGraphNode.addToScope(node));
             return;
         }
 
@@ -174,5 +193,32 @@ public class PrecedingScopedNode extends AbstractStrategy {
         int height = node.height(graphics);
         int halfHeight = Half.of(height);
         return node.y() + (halfHeight - Math.floorDiv(height, NODE_TOP_BOTTOM_WEIGHT));
+    }
+
+    private Optional<ScopedGraphNode> findScopeBelongsTo(ScopedGraphNode scope, Point dropPoint) {
+        if (isWithinScopeBounds(scope, dropPoint)) {
+            return Optional.of(scope);
+        } else {
+            // Recursively find parent scopes whit drop point belongs to.
+            Optional<ScopedGraphNode> parentScope = FindScope.of(graph, scope);
+            return parentScope.isPresent() ?
+                    findScopeBelongsTo(parentScope.get(), dropPoint) : Optional.empty();
+        }
+    }
+
+    private boolean isWithinScopeBounds(ScopedGraphNode scopedGraphNode, Point dropPoint) {
+        int scopeMaxXBound = scopeMaxXBound(graph, scopedGraphNode, graphics);
+        int scopeMinXBound = scopeMinXBound(graph, scopedGraphNode, graphics);
+        int scopeMinYBound = scopeMinYBound(graph, scopedGraphNode, graphics);
+        int scopeMaxYBound = scopeMaxYBound(graph, scopedGraphNode, graphics);
+        return dropPoint.x < scopeMaxXBound &&
+                dropPoint.x > scopeMinXBound &&
+                dropPoint.y < scopeMaxYBound &&
+                dropPoint.y > scopeMinYBound;
+    }
+
+    private static boolean hasOnlyOneSuccessorOutsideScope(ScopedGraphNode closestPrecedingNode, FlowGraph graph) {
+        List<GraphNode> successors = graph.successors(closestPrecedingNode);
+        return successors.size() == 1 && !closestPrecedingNode.scopeContains(successors.get(0));
     }
 }
