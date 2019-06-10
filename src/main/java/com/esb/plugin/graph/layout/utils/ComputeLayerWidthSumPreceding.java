@@ -14,7 +14,7 @@ public class ComputeLayerWidthSumPreceding {
     public static int of(FlowGraph graph, Graphics2D graphics, List<List<GraphNode>> layers, int precedingLayerIndex) {
         int sum = 0;
         for (int i = 0; i < precedingLayerIndex; i++) {
-            java.util.List<GraphNode> layerDrawables = layers.get(i);
+            List<GraphNode> layerDrawables = layers.get(i);
             sum += maxLayerWidth(graph, graphics, layerDrawables);
         }
         return sum;
