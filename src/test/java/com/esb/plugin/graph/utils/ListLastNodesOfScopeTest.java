@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ListLastNodesOfScopeTest extends AbstractGraphTest {
 
     @Test
-    void shouldReturnCorrectlyLastDrawablesFromInnerScope() {
+    void shouldReturnCorrectlyLastNodesFromInnerScope() {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
@@ -29,14 +29,14 @@ class ListLastNodesOfScopeTest extends AbstractGraphTest {
         choiceNode2.addToScope(componentNode2);
 
         // When
-        Collection<GraphNode> lastDrawablesOfScope = ListLastNodesOfScope.from(graph, choiceNode2);
+        Collection<GraphNode> lastNodesOfScope = ListLastNodesOfScope.from(graph, choiceNode2);
 
         // Then
-        assertThat(lastDrawablesOfScope).containsExactlyInAnyOrder(componentNode1, componentNode2);
+        assertThat(lastNodesOfScope).containsExactlyInAnyOrder(componentNode1, componentNode2);
     }
 
     @Test
-    void shouldReturnCorrectlyLastDrawablesFromOuterScope() {
+    void shouldReturnCorrectlyLastNodesFromOuterScope() {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
@@ -53,14 +53,14 @@ class ListLastNodesOfScopeTest extends AbstractGraphTest {
         choiceNode2.addToScope(componentNode2);
 
         // When
-        Collection<GraphNode> lastDrawablesOfScope = ListLastNodesOfScope.from(graph, choiceNode1);
+        Collection<GraphNode> lastNodesOfScope = ListLastNodesOfScope.from(graph, choiceNode1);
 
         // Then
-        assertThat(lastDrawablesOfScope).containsExactly(componentNode3);
+        assertThat(lastNodesOfScope).containsExactly(componentNode3);
     }
 
     @Test
-    void shouldReturnCorrectlyLastDrawablesWhenInnerDrawableIsScopedDrawable() {
+    void shouldReturnCorrectlyLastNodesWhenInnerNodeIsScopedNode() {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.add(null, root);
@@ -69,14 +69,14 @@ class ListLastNodesOfScopeTest extends AbstractGraphTest {
         choiceNode1.addToScope(choiceNode2);
 
         // When
-        Collection<GraphNode> lastDrawablesOfScope = ListLastNodesOfScope.from(graph, choiceNode1);
+        Collection<GraphNode> lastNodesOfScope = ListLastNodesOfScope.from(graph, choiceNode1);
 
         // Then
-        assertThat(lastDrawablesOfScope).containsExactly(choiceNode2);
+        assertThat(lastNodesOfScope).containsExactly(choiceNode2);
     }
 
     @Test
-    void shouldReturnCorrectlyLastDrawableOfScopeWhenThreeNestedScopeDrawables() {
+    void shouldReturnCorrectlyLastNodeOfScopeWhenThreeNestedScopeNodes() {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.add(null, root);
@@ -88,14 +88,14 @@ class ListLastNodesOfScopeTest extends AbstractGraphTest {
         choiceNode2.addToScope(choiceNode3);
 
         // When
-        Collection<GraphNode> lastDrawablesOfScope = ListLastNodesOfScope.from(graph, choiceNode1);
+        Collection<GraphNode> lastNodesOfScope = ListLastNodesOfScope.from(graph, choiceNode1);
 
         // Then
-        assertThat(lastDrawablesOfScope).containsExactly(choiceNode3);
+        assertThat(lastNodesOfScope).containsExactly(choiceNode3);
     }
 
     @Test
-    void shouldReturnCorrectlyLastDrawableOfScopeWhenNestedContainsNodes() {
+    void shouldReturnCorrectlyLastNodeOfScopeWhenNestedContainsNodes() {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
@@ -111,14 +111,14 @@ class ListLastNodesOfScopeTest extends AbstractGraphTest {
         choiceNode2.addToScope(componentNode3);
 
         // When
-        Collection<GraphNode> lastDrawablesOfScope = ListLastNodesOfScope.from(graph, choiceNode1);
+        Collection<GraphNode> lastNodesOfScope = ListLastNodesOfScope.from(graph, choiceNode1);
 
         // Then
-        assertThat(lastDrawablesOfScope).containsExactlyInAnyOrder(componentNode1, componentNode2, componentNode3);
+        assertThat(lastNodesOfScope).containsExactlyInAnyOrder(componentNode1, componentNode2, componentNode3);
     }
 
     @Test
-    void shouldReturnCorrectlyLastDrawableOfScopeWhenMultipleLevelScopes() {
+    void shouldReturnCorrectlyLastNodeOfScopeWhenMultipleLevelScopes() {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
@@ -146,10 +146,41 @@ class ListLastNodesOfScopeTest extends AbstractGraphTest {
         choiceNode3.addToScope(componentNode2);
 
         // When
-        Collection<GraphNode> lastDrawablesOfScope = ListLastNodesOfScope.from(graph, choiceNode1);
+        Collection<GraphNode> lastNodesOfScope = ListLastNodesOfScope.from(graph, choiceNode1);
 
         // Then
-        assertThat(lastDrawablesOfScope).containsExactlyInAnyOrder(componentNode3, componentNode7);
+        assertThat(lastNodesOfScope).containsExactlyInAnyOrder(componentNode3, componentNode7);
     }
 
+    @Test
+    void shouldReturnCorrectlyLastNodesOfScopeForTwoNestedForks() {
+        // Given
+        FlowGraph graph = provider.createGraph();
+        graph.root(root);
+        graph.add(root, forkNode1);
+        graph.add(forkNode1, componentNode1);
+        graph.add(componentNode1, forkNode2);
+        graph.add(forkNode2, componentNode2);
+        graph.add(forkNode1, componentNode3);
+        graph.add(componentNode3, forkNode3);
+        graph.add(forkNode3, componentNode4);
+        graph.add(forkNode3, componentNode5);
+        graph.add(componentNode2, componentNode6);
+        graph.add(componentNode4, componentNode6);
+        graph.add(componentNode5, componentNode6);
+
+        forkNode1.addToScope(componentNode1);
+        forkNode1.addToScope(forkNode2);
+        forkNode1.addToScope(forkNode3);
+        forkNode1.addToScope(componentNode2);
+        forkNode1.addToScope(componentNode3);
+        forkNode3.addToScope(componentNode4);
+        forkNode3.addToScope(componentNode5);
+
+        // When
+        Collection<GraphNode> lastNodesOfScope = ListLastNodesOfScope.from(graph, forkNode1);
+
+        // Then
+        assertThat(lastNodesOfScope).containsExactlyInAnyOrder(componentNode2, componentNode4, componentNode5);
+    }
 }
