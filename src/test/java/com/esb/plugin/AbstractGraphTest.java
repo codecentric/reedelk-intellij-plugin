@@ -40,10 +40,12 @@ public abstract class AbstractGraphTest {
     // Stop
     protected StopNode stopNode1;
     protected StopNode stopNode2;
+    protected StopNode stopNode3;
 
     // Fork
     protected ForkNode forkNode1;
     protected ForkNode forkNode2;
+    protected ForkNode forkNode3;
 
     // Choice
     protected ChoiceNode choiceNode1;
@@ -79,9 +81,11 @@ public abstract class AbstractGraphTest {
 
         stopNode1 = createGraphNodeInstance(Stop.class, StopNode.class);
         stopNode2 = createGraphNodeInstance(Stop.class, StopNode.class);
+        stopNode3 = createGraphNodeInstance(Stop.class, StopNode.class);
 
         forkNode1 = createGraphNodeInstance(Fork.class, ForkNode.class);
         forkNode2 = createGraphNodeInstance(Fork.class, ForkNode.class);
+        forkNode3 = createGraphNodeInstance(Fork.class, ForkNode.class);
 
         choiceNode1 = createGraphNodeInstance(Choice.class, ChoiceNode.class);
         choiceNode2 = createGraphNodeInstance(Choice.class, ChoiceNode.class);
@@ -112,5 +116,4 @@ public abstract class AbstractGraphTest {
             throw new RuntimeException(e);
         }
     }
-
 }

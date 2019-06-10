@@ -1,0 +1,51 @@
+{
+  "id": "0f7df27f-ecb4-4048-bbe5-f4c44d35b18e",
+  "flow": [
+    {
+      "implementor": "com.esb.plugin.fixture.ComponentNode1"
+    },
+    {
+      "implementor": "com.esb.system.component.Fork",
+      "threadPoolSize": 3,
+      "fork": [
+        {
+          "next": [
+            {
+              "implementor": "com.esb.system.component.Fork",
+              "threadPoolSize": 3,
+              "fork": [
+                {
+                  "next": [
+                    {
+                      "implementor": "com.esb.plugin.fixture.ComponentNode2"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "next": [
+            {
+              "implementor": "com.esb.system.component.Fork",
+              "threadPoolSize": 3,
+              "fork": [
+                {
+                  "next": [
+                    {
+                      "implementor": "com.esb.plugin.fixture.ComponentNode3"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "implementor": "com.esb.plugin.fixture.ComponentNode4"
+    }
+  ]
+}

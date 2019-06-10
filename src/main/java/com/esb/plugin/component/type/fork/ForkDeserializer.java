@@ -30,11 +30,18 @@ public class ForkDeserializer extends AbstractDeserializer {
         ForkNode forkNode = context.instantiateGraphNode(name);
 
         int threadPoolSize = Fork.threadPoolSize(componentDefinition);
+
         forkNode.componentData().set(Fork.threadPoolSize(), threadPoolSize);
 
         graph.add(parent, forkNode);
 
         JSONArray fork = Fork.fork(componentDefinition);
+
+        // If the fork does not contain any branch, we immediately stop.
+        if (fork.isEmpty()) {
+            graph.add(forkNode, stopNode);
+            return stopNode;
+        }
 
         for (int i = 0; i < fork.length(); i++) {
             JSONObject next = fork.getJSONObject(i);
@@ -52,15 +59,14 @@ public class ForkDeserializer extends AbstractDeserializer {
             }
 
             graph.add(currentNode, stopNode);
-
         }
 
+        // We must add all the nodes between fork and the stop node
+        // to the fork's scope.
         CollectNodesBetween
                 .them(graph, forkNode, stopNode)
                 .forEach(forkNode::addToScope);
 
         return stopNode;
-
     }
-
 }

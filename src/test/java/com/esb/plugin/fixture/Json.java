@@ -33,6 +33,20 @@ public class Json {
             }
         },
 
+        NestedFork() {
+            @Override
+            public String path() {
+                return "complete_flow_with_nested_fork.json";
+            }
+        },
+
+        NestedEmptyFork() {
+            @Override
+            public String path() {
+                return "complete_flow_with_empty_fork.json";
+            }
+        },
+
         NodesBetweenScopes() {
             @Override
             public String path() {

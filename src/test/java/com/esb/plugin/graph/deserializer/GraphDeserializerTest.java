@@ -54,4 +54,43 @@ class GraphDeserializerTest extends AbstractDeserializerTest {
                 .and().node(choiceNode2).scopeContainsExactly(flowReferenceNode2);
     }
 
+    @Test
+    void shouldDeserializeFlowWithNestedForkCorrectly() {
+        // Given
+        String json = CompleteFlow.NestedFork.json();
+        GraphDeserializer deserializer = new GraphDeserializer(json, context, provider);
+
+        // When
+        FlowGraph graph = deserializer.deserialize();
+
+        // Then
+        PluginAssertion.assertThat(graph)
+                .root().is(componentNode1)
+                .and().successorsOf(forkNode1).areExactly(forkNode2, forkNode3)
+                .and().successorsOf(forkNode2).isOnly(componentNode2)
+                .and().node(forkNode2).scopeContainsExactly(componentNode2)
+                .and().successorsOf(forkNode3).isOnly(componentNode3)
+                .and().node(forkNode3).scopeContainsExactly(componentNode3)
+                .and().successorsOf(componentNode2).isOnly(componentNode4)
+                .and().successorsOf(componentNode3).isOnly(componentNode4)
+                .and().successorsOf(componentNode4).isEmpty();
+    }
+
+    @Test
+    void shouldDeserializeFlowWithEmptyForkCorrectly() {
+        // Given
+        String json = CompleteFlow.NestedEmptyFork.json();
+        GraphDeserializer deserializer = new GraphDeserializer(json, context, provider);
+
+        // When
+        FlowGraph graph = deserializer.deserialize();
+
+        // Then
+        PluginAssertion.assertThat(graph)
+                .root().is(componentNode1)
+                .and().successorsOf(componentNode1).isOnly(forkNode1)
+                .and().successorsOf(forkNode1).isOnly(componentNode2)
+                .and().node(forkNode1).scopeIsEmpty()
+                .and().successorsOf(componentNode2).isEmpty();
+    }
 }
