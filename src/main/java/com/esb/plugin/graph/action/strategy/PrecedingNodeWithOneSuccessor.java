@@ -46,13 +46,13 @@ public class PrecedingNodeWithOneSuccessor extends AbstractStrategy {
         }
     }
 
-    private void handleDifferentScopes(GraphNode closestPrecedingDrawable, GraphNode successorOfClosestPrecedingNode) {
+    private void handleDifferentScopes(GraphNode closestPrecedingNode, GraphNode successorOfClosestPrecedingNode) {
 
-        Stack<ScopedGraphNode> scopes = FindScopes.of(graph, closestPrecedingDrawable);
+        Stack<ScopedGraphNode> scopes = FindScopes.of(graph, closestPrecedingNode);
         if (scopes.isEmpty()) {
-            graph.add(closestPrecedingDrawable, node);
+            graph.add(closestPrecedingNode, node);
             graph.add(node, successorOfClosestPrecedingNode);
-            graph.remove(closestPrecedingDrawable, successorOfClosestPrecedingNode);
+            graph.remove(closestPrecedingNode, successorOfClosestPrecedingNode);
             return;
         }
 
@@ -82,11 +82,11 @@ public class PrecedingNodeWithOneSuccessor extends AbstractStrategy {
                         graph.remove(lastNodeOfScope, successorOfClosestPrecedingNode);
                     });
         } else {
-            graph.add(closestPrecedingDrawable, node);
+            graph.add(closestPrecedingNode, node);
         }
 
         graph.add(node, successorOfClosestPrecedingNode);
-        graph.remove(closestPrecedingDrawable, successorOfClosestPrecedingNode);
+        graph.remove(closestPrecedingNode, successorOfClosestPrecedingNode);
 
         if (currentScope != null) {
             currentScope.addToScope(node);
