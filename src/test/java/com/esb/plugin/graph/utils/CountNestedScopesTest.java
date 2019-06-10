@@ -127,4 +127,25 @@ class CountNestedScopesTest extends AbstractGraphTest {
         // Then
         assertThat(scopesCount).isEqualTo(2);
     }
+
+    @Test
+    void shouldReturnTwoWhenNestedScopedNodesOnDifferentLevels() {
+        // Given
+        FlowGraph graph = provider.createGraph();
+        graph.root(root);
+        graph.add(root, forkNode1);
+        graph.add(forkNode1, forkNode2);
+        graph.add(forkNode1, forkNode3);
+        graph.add(forkNode2, componentNode1);
+
+        forkNode1.addToScope(forkNode2);
+        forkNode1.addToScope(forkNode3);
+        forkNode2.addToScope(componentNode1);
+
+        // When
+        int scopesCount = CountNestedScopes.of(graph, forkNode3);
+
+        // Then
+        assertThat(scopesCount).isEqualTo(2);
+    }
 }
