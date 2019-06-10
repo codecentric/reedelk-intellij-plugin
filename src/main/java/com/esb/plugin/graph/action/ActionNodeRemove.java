@@ -9,6 +9,7 @@ import java.util.List;
 
 import static com.esb.internal.commons.Preconditions.checkState;
 
+// TODO: Test me
 public class ActionNodeRemove {
 
     private final GraphNode dropped;
@@ -77,6 +78,9 @@ public class ActionNodeRemove {
         for (int i = 0; i < successors.size(); i++) {
             if (successors.get(i) == dropped) return i;
         }
-        throw new IllegalStateException("Could not find index");
+        // This is the case where we need to find a dropped index
+        // for a scoped predecessor without successors in the scope.
+        // In this case, the index is just 0 since it is the first to be connected.
+        return 0;
     }
 }
