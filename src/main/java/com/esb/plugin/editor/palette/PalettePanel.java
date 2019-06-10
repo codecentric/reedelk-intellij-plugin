@@ -38,8 +38,8 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
         this.root = new DefaultMutableTreeNode(rootTreeNodeName);
 
         PaletteTreeCellRenderer renderer = new PaletteTreeCellRenderer();
-        renderer.setOpenIcon(Icons.ModuleDeploy);
-        renderer.setClosedIcon(Icons.ModuleUnDeploy);
+        renderer.setOpenIcon(Icons.ModuleUnDeploy);
+        renderer.setClosedIcon(Icons.ComponentsModuleCollapsed);
 
         this.tree = new Tree(root);
         this.tree.setCellRenderer(renderer);
