@@ -124,8 +124,8 @@ class SyncConditionAndRoutePairsTest extends AbstractGraphTest {
         List<ChoiceConditionRoutePair> current = new ArrayList<>();
 
         // When
-        assertThrows(IllegalStateException.class, () ->
-                        SyncConditionAndRoutePairs.getUpdatedPairs(graph, choiceNode1, current),
+        assertThrows(IllegalStateException.class,
+                () -> SyncConditionAndRoutePairs.getUpdatedPairs(graph, choiceNode1, current),
                 "Expected numbers of condition pairs >= 1 but 0 were found");
     }
 

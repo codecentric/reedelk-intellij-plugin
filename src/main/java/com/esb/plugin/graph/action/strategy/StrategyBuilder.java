@@ -134,7 +134,7 @@ public class StrategyBuilder {
 
 
     private static Optional<GraphNode> findClosestPrecedingNode(FlowGraph graph, Point dropPoint, Graphics2D graphics) {
-        java.util.List<GraphNode> precedingNodes = graph
+        List<GraphNode> precedingNodes = graph
                 .nodes()
                 .stream()
                 .filter(byPrecedingNodesOnX(graph, dropPoint.x, graphics))
