@@ -126,7 +126,7 @@ class SyncConditionAndRoutePairsTest extends AbstractGraphTest {
         // When
         assertThrows(IllegalStateException.class, () ->
                         SyncConditionAndRoutePairs.getUpdatedPairs(graph, choiceNode1, current),
-                () -> "Expected numbers of condition pairs >= 1 but 0 were found");
+                "Expected numbers of condition pairs >= 1 but 0 were found");
     }
 
     @Test
@@ -142,7 +142,7 @@ class SyncConditionAndRoutePairsTest extends AbstractGraphTest {
         // When
         assertThrows(IllegalStateException.class,
                 () -> SyncConditionAndRoutePairs.getUpdatedPairs(graph, choiceNode1, current),
-                () -> "Expected at least one successor for choice node but 0 were found");
+                "Expected at least one successor for choice node but 0 were found");
 
     }
 

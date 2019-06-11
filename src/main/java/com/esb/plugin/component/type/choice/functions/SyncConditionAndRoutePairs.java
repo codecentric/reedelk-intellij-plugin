@@ -41,6 +41,7 @@ public class SyncConditionAndRoutePairs {
             // We look for an existing pair having this successor already paired with a condition
             Optional<ChoiceConditionRoutePair> targetPair = findTargetPair(successor, oldConditions);
             if (targetPair.isPresent()) {
+                alreadyUsedNodes.add(targetPair.get().getNext());
                 updatedConditions.add(new ChoiceConditionRoutePair(targetPair.get().getCondition(), successor));
                 continue;
             }
@@ -48,6 +49,7 @@ public class SyncConditionAndRoutePairs {
             // We look for a condition not used yet at this successor's position
             Optional<ChoiceConditionRoutePair> oneAtIndexNotUsedYet = findOneAtIndexNotUsedYet(i, oldConditions, alreadyUsedNodes);
             if (oneAtIndexNotUsedYet.isPresent()) {
+                alreadyUsedNodes.add(oneAtIndexNotUsedYet.get().getNext());
                 updatedConditions.add(new ChoiceConditionRoutePair(oneAtIndexNotUsedYet.get().getCondition(), successor));
                 continue;
             }

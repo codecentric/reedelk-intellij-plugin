@@ -24,7 +24,7 @@ public class PrecedingScopedNode implements Strategy {
     private final FlowGraph graph;
     private final Point dropPoint;
 
-    public PrecedingScopedNode(FlowGraph graph, Point dropPoint, ScopedGraphNode scopedNode, Graphics2D graphics) {
+    public PrecedingScopedNode(@NotNull FlowGraph graph, @NotNull Point dropPoint, @NotNull ScopedGraphNode scopedNode, @NotNull Graphics2D graphics) {
         this.closestPrecedingNode = scopedNode;
         this.dropPoint = dropPoint;
         this.graphics = graphics;
@@ -44,9 +44,9 @@ public class PrecedingScopedNode implements Strategy {
             // |-----------| yBottomBottomBound
             GraphNode successor = successors.get(successorIndex);
 
+            // Adds a node at index "successorIndex", the existing nodes are shifted down.
             if (isInsideTopArea(successors, successorIndex, closestPrecedingNode, dropPoint)) {
-                // Adds a node at index "successorIndex", the existing nodes are shifted down.
-                if (node.isSuccessorAllowed(graph, closestPrecedingNode, successorIndex)) {
+                if (closestPrecedingNode.isSuccessorAllowed(graph, node, successorIndex)) {
                     graph.add(closestPrecedingNode, node, successorIndex);
                     closestPrecedingNode.addToScope(node);
                     FindFirstNodeOutsideScope.of(graph, closestPrecedingNode)
@@ -54,8 +54,8 @@ public class PrecedingScopedNode implements Strategy {
                 }
                 break;
 
-            } else if (isInsideCenterArea(successor, dropPoint)) {
                 // Replaces the first node at index "successorIndex".
+            } else if (isInsideCenterArea(successor, dropPoint)) {
                 if (node.isSuccessorAllowed(graph, closestPrecedingNode, successorIndex)) {
                     graph.remove(closestPrecedingNode, successor);
                     graph.add(closestPrecedingNode, node, successorIndex);
@@ -64,9 +64,9 @@ public class PrecedingScopedNode implements Strategy {
                 }
                 break;
 
+                // Adds a node next to the current index. Existing nodes at "successorIndex + 1" are shifted down.
             } else if (isInsideBottomArea(successors, successorIndex, closestPrecedingNode, dropPoint)) {
-                if (node.isSuccessorAllowed(graph, closestPrecedingNode, successorIndex + 1)) {
-                    // Adds a node next to the current index. Existing nodes at "successorIndex + 1" are shifted down.
+                if (closestPrecedingNode.isSuccessorAllowed(graph, node, successorIndex + 1)) {
                     graph.add(closestPrecedingNode, node, successorIndex + 1);
                     closestPrecedingNode.addToScope(node);
                     FindFirstNodeOutsideScope.of(graph, closestPrecedingNode)
@@ -154,12 +154,12 @@ public class PrecedingScopedNode implements Strategy {
         return node.y() + (halfHeight - Math.floorDiv(height, NODE_TOP_BOTTOM_WEIGHT));
     }
 
-    private static int scopeMaxYBound(@NotNull FlowGraph graph, @NotNull ScopedGraphNode scopedGraphNode, @NotNull Graphics2D graphics) {
+    private static int scopeMaxYBound(FlowGraph graph, ScopedGraphNode scopedGraphNode, Graphics2D graphics) {
         ScopeBoundaries boundaries = scopedGraphNode.getScopeBoundaries(graph, graphics);
         return boundaries.getY() + boundaries.getHeight();
     }
 
-    private static int scopeMinYBound(@NotNull FlowGraph graph, @NotNull ScopedGraphNode scopedGraphNode, @NotNull Graphics2D graphics) {
+    private static int scopeMinYBound(FlowGraph graph, ScopedGraphNode scopedGraphNode, Graphics2D graphics) {
         ScopeBoundaries boundaries = scopedGraphNode.getScopeBoundaries(graph, graphics);
         return boundaries.getY();
     }
