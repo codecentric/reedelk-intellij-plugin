@@ -15,134 +15,6 @@ class PrecedingScopedNodeTest extends AbstractGraphTest {
     @Mock
     private Graphics2D graphics;
 
-
-    @DisplayName("Scoped Node without successors")
-    @Nested
-    class WithoutSuccessors {
-
-        @Test
-        void shouldAddSuccessorInsideScope() {
-            // Given
-            // We drop the node inside the fork node 1 "scope box"
-            Point componentNode1DropPoint = new Point(240, 70);
-
-            FlowGraph graph = provider.createGraph();
-            graph.root(root);
-            graph.add(root, forkNode1);
-
-            root.setPosition(55, 75);
-            forkNode1.setPosition(195, 75);
-
-            PrecedingScopedNode strategy =
-                    new PrecedingScopedNode(graph, componentNode1DropPoint, componentNode1, graphics);
-
-            // When
-            strategy.execute(forkNode1);
-
-            // Then
-            PluginAssertion.assertThat(graph)
-                    .root().is(root)
-                    .and().successorsOf(root).isOnly(forkNode1)
-                    .and().successorsOf(forkNode1).isOnly(componentNode1)
-                    .and().node(forkNode1).scopeContainsExactly(componentNode1)
-                    .and().successorsOf(componentNode1).isEmpty();
-        }
-
-        @Test
-        void shouldAddSuccessorOutsideScope() {
-            // Given
-            // We drop the node right outside the fork node 1 "scope box"
-            Point componentNode1DropPoint = new Point(260, 70);
-
-            FlowGraph graph = provider.createGraph();
-            graph.root(root);
-            graph.add(root, forkNode1);
-
-            root.setPosition(55, 75);
-            forkNode1.setPosition(195, 75);
-
-            PrecedingScopedNode strategy =
-                    new PrecedingScopedNode(graph, componentNode1DropPoint, componentNode1, graphics);
-
-            // When
-            strategy.execute(forkNode1);
-
-            // Then
-            PluginAssertion.assertThat(graph)
-                    .root().is(root)
-                    .and().successorsOf(root).isOnly(forkNode1)
-                    .and().successorsOf(forkNode1).isOnly(componentNode1)
-                    .and().node(forkNode1).scopeIsEmpty();
-        }
-    }
-
-    @DisplayName("Scope node with successor outside scope")
-    @Nested
-    class WithSuccessorOutsideScope {
-
-        @Test
-        void shouldAddSuccessorInsideScope() {
-            // Given
-            // We drop the node inside the fork node 1 "scope box"
-            Point componentNode2DropPoint = new Point(210, 80);
-
-            FlowGraph graph = provider.createGraph();
-            graph.root(root);
-            graph.add(root, forkNode1);
-            graph.add(forkNode1, componentNode1);
-
-            root.setPosition(55, 77);
-            forkNode1.setPosition(165, 77);
-            componentNode1.setPosition(280, 77);
-
-            PrecedingScopedNode strategy =
-                    new PrecedingScopedNode(graph, componentNode2DropPoint, componentNode2, graphics);
-
-            // When
-            strategy.execute(forkNode1);
-
-            // Then
-            PluginAssertion.assertThat(graph)
-                    .root().is(root)
-                    .and().successorsOf(root).isOnly(forkNode1)
-                    .and().successorsOf(forkNode1).isOnly(componentNode2)
-                    .and().node(forkNode1).scopeContainsExactly(componentNode2)
-                    .and().successorsOf(componentNode2).isOnly(componentNode1)
-                    .and().successorsOf(componentNode1).isEmpty();
-        }
-
-        @Test
-        void shouldAddSuccessorOutsideScope() {
-            // Given
-            // We drop the node right outside the form node 1 "scope box"
-            Point componentNode2DropPoint = new Point(230, 50);
-
-            FlowGraph graph = provider.createGraph();
-            graph.root(root);
-            graph.add(root, forkNode1);
-            graph.add(forkNode1, componentNode1);
-
-            root.setPosition(55, 77);
-            forkNode1.setPosition(165, 77);
-            componentNode1.setPosition(280, 77);
-
-            PrecedingScopedNode strategy =
-                    new PrecedingScopedNode(graph, componentNode2DropPoint, componentNode2, graphics);
-
-            // When
-            strategy.execute(forkNode1);
-
-            // Then
-            PluginAssertion.assertThat(graph)
-                    .root().is(root)
-                    .and().successorsOf(root).isOnly(forkNode1)
-                    .and().successorsOf(forkNode1).isOnly(componentNode2)
-                    .and().node(forkNode1).scopeIsEmpty()
-                    .and().successorsOf(componentNode2).isOnly(componentNode1)
-                    .and().successorsOf(componentNode1).isEmpty();
-        }
-    }
-
     @DisplayName("Scope node with successor inside scope")
     @Nested
     class WithSuccessorInsideScope {
@@ -163,10 +35,10 @@ class PrecedingScopedNodeTest extends AbstractGraphTest {
             componentNode1.setPosition(335, 75);
 
             PrecedingScopedNode strategy =
-                    new PrecedingScopedNode(graph, componentNode2DropPoint, componentNode2, graphics);
+                    new PrecedingScopedNode(graph, componentNode2DropPoint, choiceNode1, graphics);
 
             // When
-            strategy.execute(choiceNode1);
+            strategy.execute(componentNode2);
 
             // Then
             PluginAssertion.assertThat(graph)
@@ -199,10 +71,10 @@ class PrecedingScopedNodeTest extends AbstractGraphTest {
             componentNode2.setPosition(450, 75);
 
             PrecedingScopedNode strategy =
-                    new PrecedingScopedNode(graph, componentNode3DropPoint, componentNode3, graphics);
+                    new PrecedingScopedNode(graph, componentNode3DropPoint, choiceNode1, graphics);
 
             // When
-            strategy.execute(choiceNode1);
+            strategy.execute(componentNode3);
 
             // Then
             PluginAssertion.assertThat(graph)
@@ -234,10 +106,10 @@ class PrecedingScopedNodeTest extends AbstractGraphTest {
             componentNode1.setPosition(335, 75);
 
             PrecedingScopedNode strategy =
-                    new PrecedingScopedNode(graph, componentNode2DropPoint, componentNode2, graphics);
+                    new PrecedingScopedNode(graph, componentNode2DropPoint, choiceNode1, graphics);
 
             // When
-            strategy.execute(choiceNode1);
+            strategy.execute(componentNode2);
 
             // Then
             PluginAssertion.assertThat(graph)
@@ -271,10 +143,10 @@ class PrecedingScopedNodeTest extends AbstractGraphTest {
 
             // When
             PrecedingScopedNode strategy =
-                    new PrecedingScopedNode(graph, componentNode3DropPoint, componentNode3, graphics);
+                    new PrecedingScopedNode(graph, componentNode3DropPoint, forkNode1, graphics);
 
             // Then
-            strategy.execute(forkNode1);
+            strategy.execute(componentNode3);
 
             PluginAssertion.assertThat(graph)
                     .root().is(root)
@@ -313,10 +185,10 @@ class PrecedingScopedNodeTest extends AbstractGraphTest {
             componentNode3.setPosition(390, 145);
 
             PrecedingScopedNode strategy =
-                    new PrecedingScopedNode(graph, componentNode4DropPoint, componentNode4, graphics);
+                    new PrecedingScopedNode(graph, componentNode4DropPoint, forkNode1, graphics);
 
             // Then
-            strategy.execute(forkNode1);
+            strategy.execute(componentNode4);
 
             PluginAssertion.assertThat(graph)
                     .root().is(root)

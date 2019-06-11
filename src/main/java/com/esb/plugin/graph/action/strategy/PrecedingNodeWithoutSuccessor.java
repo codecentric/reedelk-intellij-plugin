@@ -2,9 +2,11 @@ package com.esb.plugin.graph.action.strategy;
 
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.node.ScopeBoundaries;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.FindScopes;
 import com.esb.plugin.graph.utils.ListLastNodesOfScope;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.Stack;
@@ -19,14 +21,22 @@ import java.util.Stack;
  * If the closest preceding node does not belong to a scope, then:
  * - Add the node as successor.
  */
-public class PrecedingNodeWithoutSuccessor extends AbstractStrategy {
+public class PrecedingNodeWithoutSuccessor implements Strategy {
 
-    public PrecedingNodeWithoutSuccessor(FlowGraph graph, Point dropPoint, GraphNode node, Graphics2D graphics) {
-        super(graph, dropPoint, node, graphics);
+    private final FlowGraph graph;
+    private final GraphNode closestPrecedingNode;
+    private final Point dropPoint;
+    private final Graphics2D graphics;
+
+    public PrecedingNodeWithoutSuccessor(FlowGraph graph, Point dropPoint, GraphNode closestPrecedingNode, Graphics2D graphics) {
+        this.closestPrecedingNode = closestPrecedingNode;
+        this.graph = graph;
+        this.dropPoint = dropPoint;
+        this.graphics = graphics;
     }
 
     @Override
-    public void execute(GraphNode closestPrecedingNode) {
+    public void execute(GraphNode node) {
 
         Stack<ScopedGraphNode> scopes = FindScopes.of(graph, closestPrecedingNode);
 
@@ -64,5 +74,10 @@ public class PrecedingNodeWithoutSuccessor extends AbstractStrategy {
         if (currentScope != null) {
             currentScope.addToScope(node);
         }
+    }
+
+    private static int scopeMaxXBound(@NotNull FlowGraph graph, @NotNull ScopedGraphNode scopedGraphNode, @NotNull Graphics2D graphics) {
+        ScopeBoundaries scopeBoundaries = scopedGraphNode.getScopeBoundaries(graph, graphics);
+        return scopeBoundaries.getX() + scopeBoundaries.getWidth();
     }
 }

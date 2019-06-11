@@ -11,11 +11,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import java.awt.*;
+import java.awt.image.ImageObserver;
 
 class ActionNodeAddTest extends AbstractGraphTest {
 
     @Mock
     private Graphics2D graphics;
+    @Mock
+    private ImageObserver observer;
 
     @Nested
     @DisplayName("Root tests")
@@ -780,7 +783,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
 
     private FlowGraphChangeAware addDrawableToGraph(FlowGraph graph, GraphNode dropped, Point dropPoint) {
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
-        ActionNodeAdd action = new ActionNodeAdd(modifiableGraph, dropPoint, dropped, graphics);
+        ActionNodeAdd action = new ActionNodeAdd(modifiableGraph, dropPoint, dropped, graphics, observer);
         action.execute();
         return modifiableGraph;
     }

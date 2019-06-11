@@ -155,7 +155,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
                 Point dragPoint = new Point(dragX, dragY);
 
                 // TODO: Create builder.
-                MoveActionHandler handler = new MoveActionHandler(module, snapshot, getGraphics2D(), selected, dragPoint);
+                MoveActionHandler handler = new MoveActionHandler(module, snapshot, getGraphics2D(), selected, dragPoint, this);
                 handler.handle();
 
                 // TODO: This repaint might not be necessary
@@ -167,7 +167,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     @Override
     public void drop(DropTargetDropEvent dropEvent) {
         // TODO: Create builder
-        DropActionHandler handler = new DropActionHandler(module, snapshot, getGraphics2D(), dropEvent);
+        DropActionHandler handler = new DropActionHandler(module, snapshot, getGraphics2D(), dropEvent, this);
         handler.handle();
     }
 

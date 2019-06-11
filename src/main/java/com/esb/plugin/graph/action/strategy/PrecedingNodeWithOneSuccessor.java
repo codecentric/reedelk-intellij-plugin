@@ -3,11 +3,13 @@ package com.esb.plugin.graph.action.strategy;
 import com.esb.plugin.commons.Half;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.node.ScopeBoundaries;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.BelongToSameScope;
 import com.esb.plugin.graph.utils.FindScope;
 import com.esb.plugin.graph.utils.FindScopes;
 import com.esb.plugin.graph.utils.ListLastNodesOfScope;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.List;
@@ -15,38 +17,46 @@ import java.util.Stack;
 
 import static com.google.common.base.Preconditions.checkState;
 
-public class PrecedingNodeWithOneSuccessor extends AbstractStrategy {
+public class PrecedingNodeWithOneSuccessor implements Strategy {
 
-    public PrecedingNodeWithOneSuccessor(FlowGraph graph, Point dropPoint, GraphNode node, Graphics2D graphics) {
-        super(graph, dropPoint, node, graphics);
+    private final GraphNode precedingNode;
+    private final Graphics2D graphics;
+    private final FlowGraph graph;
+    private final Point dropPoint;
+
+    public PrecedingNodeWithOneSuccessor(@NotNull FlowGraph graph, @NotNull Point dropPoint, @NotNull GraphNode precedingNode, @NotNull Graphics2D graphics) {
+        this.precedingNode = precedingNode;
+        this.dropPoint = dropPoint;
+        this.graphics = graphics;
+        this.graph = graph;
     }
 
     @Override
-    public void execute(GraphNode closestPrecedingNode) {
-        List<GraphNode> successors = graph.successors(closestPrecedingNode);
+    public void execute(GraphNode node) {
+        List<GraphNode> successors = graph.successors(precedingNode);
         checkState(successors.size() == 1,
                 "Successors size MUST be 1, otherwise it is a Scoped Drawable");
 
         GraphNode successorOfClosestPrecedingNode = successors.get(0);
 
-        if (BelongToSameScope.from(graph, closestPrecedingNode, successorOfClosestPrecedingNode)) {
-            if (withinYBounds(dropPoint.y, closestPrecedingNode)) {
-                graph.add(closestPrecedingNode, node);
+        if (BelongToSameScope.from(graph, precedingNode, successorOfClosestPrecedingNode)) {
+            if (withinYBounds(dropPoint.y, precedingNode)) {
+                graph.add(precedingNode, node);
                 graph.add(node, successorOfClosestPrecedingNode);
-                graph.remove(closestPrecedingNode, successorOfClosestPrecedingNode);
+                graph.remove(precedingNode, successorOfClosestPrecedingNode);
 
                 // We add it to the scope
-                FindScope.of(graph, closestPrecedingNode)
+                FindScope.of(graph, precedingNode)
                         .ifPresent(scopedGraphNode ->
                                 scopedGraphNode.addToScope(node));
             }
         } else {
             // They belong to different scopes
-            handleDifferentScopes(closestPrecedingNode, successorOfClosestPrecedingNode);
+            handleDifferentScopes(precedingNode, node, successorOfClosestPrecedingNode);
         }
     }
 
-    private void handleDifferentScopes(GraphNode closestPrecedingNode, GraphNode successorOfClosestPrecedingNode) {
+    private void handleDifferentScopes(GraphNode closestPrecedingNode, GraphNode node, GraphNode successorOfClosestPrecedingNode) {
 
         Stack<ScopedGraphNode> scopes = FindScopes.of(graph, closestPrecedingNode);
         if (scopes.isEmpty()) {
@@ -97,5 +107,10 @@ public class PrecedingNodeWithOneSuccessor extends AbstractStrategy {
         int halfHeight = Half.of(node.height(graphics));
         return dropY > node.y() - halfHeight &&
                 dropY < node.y() + halfHeight;
+    }
+
+    private static int scopeMaxXBound(FlowGraph graph, ScopedGraphNode scopedGraphNode, Graphics2D graphics) {
+        ScopeBoundaries scopeBoundaries = scopedGraphNode.getScopeBoundaries(graph, graphics);
+        return scopeBoundaries.getX() + scopeBoundaries.getWidth();
     }
 }

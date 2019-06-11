@@ -4,6 +4,6 @@ import com.esb.plugin.graph.node.GraphNode;
 
 public interface Strategy {
 
-    void execute(GraphNode closestPrecedingDrawable);
+    void execute(GraphNode node);
 
 }

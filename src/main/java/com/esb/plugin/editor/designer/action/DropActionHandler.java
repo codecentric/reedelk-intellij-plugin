@@ -16,6 +16,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DropTargetDropEvent;
+import java.awt.image.ImageObserver;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -32,8 +33,9 @@ public class DropActionHandler {
     private final Graphics2D graphics;
     private final GraphSnapshot snapshot;
     private final DropTargetDropEvent dropEvent;
+    private final ImageObserver imageObserver;
 
-    public DropActionHandler(Module module, GraphSnapshot snapshot, Graphics2D graphics, DropTargetDropEvent dropEvent) {
+    public DropActionHandler(Module module, GraphSnapshot snapshot, Graphics2D graphics, DropTargetDropEvent dropEvent, ImageObserver imageObserver) {
         checkArgument(module != null, "module");
         checkArgument(snapshot != null, "snapshot");
         checkArgument(graphics != null, "graphics");
@@ -43,6 +45,7 @@ public class DropActionHandler {
         this.snapshot = snapshot;
         this.graphics = graphics;
         this.dropEvent = dropEvent;
+        this.imageObserver = imageObserver;
     }
 
     public void handle() {
@@ -64,7 +67,7 @@ public class DropActionHandler {
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
 
         LOG.info(format("Node Dropped [%s], drop point [x: %d, y: %d]", PrintFlowInfo.name(nodeToAdd), dropPoint.x, dropPoint.y));
-        ActionNodeAdd actionNodeAdd = new ActionNodeAdd(modifiableGraph, dropPoint, nodeToAdd, graphics);
+        ActionNodeAdd actionNodeAdd = new ActionNodeAdd(modifiableGraph, dropPoint, nodeToAdd, graphics, imageObserver);
         actionNodeAdd.execute();
 
         if (modifiableGraph.isChanged()) {

@@ -13,6 +13,7 @@ import com.esb.plugin.graph.utils.FindScope;
 import com.intellij.openapi.module.Module;
 
 import java.awt.*;
+import java.awt.image.ImageObserver;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -24,8 +25,9 @@ public class MoveActionHandler {
     private final GraphNode selected;
     private final Graphics2D graphics;
     private final GraphSnapshot snapshot;
+    private final ImageObserver imageObserver;
 
-    public MoveActionHandler(Module module, GraphSnapshot snapshot, Graphics2D graphics, GraphNode selectedNode, Point movePoint) {
+    public MoveActionHandler(Module module, GraphSnapshot snapshot, Graphics2D graphics, GraphNode selectedNode, Point movePoint, ImageObserver imageObserver) {
         checkArgument(module != null, "module");
         checkArgument(snapshot != null, "snapshot");
         checkArgument(graphics != null, "graphics");
@@ -36,6 +38,7 @@ public class MoveActionHandler {
         this.graphics = graphics;
         this.movePoint = movePoint;
         this.selected = selectedNode;
+        this.imageObserver = imageObserver;
     }
 
     public void handle() {
@@ -73,7 +76,7 @@ public class MoveActionHandler {
         // 4. Add the dropped component back to the graph to the dropped position.
         Point dropPoint = new Point(dragX, dragY);
 
-        ActionNodeAdd actionNodeAdd = new ActionNodeAdd(modifiableGraph, dropPoint, selected, graphics);
+        ActionNodeAdd actionNodeAdd = new ActionNodeAdd(modifiableGraph, dropPoint, selected, graphics, imageObserver);
         actionNodeAdd.execute();
 
         // 5. If the copy of the graph was changed, then update the graph
