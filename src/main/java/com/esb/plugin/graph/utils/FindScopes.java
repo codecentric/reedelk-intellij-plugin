@@ -20,16 +20,15 @@ public class FindScopes {
      * @return Stack containing all the scopes the target node belongs to.
      */
     public static Stack<ScopedGraphNode> of(@NotNull FlowGraph graph, @NotNull GraphNode target) {
-        Stack<ScopedGraphNode> toReturn = new Stack<>();
-        if (target instanceof ScopedGraphNode) {
-            toReturn.push((ScopedGraphNode) target);
-        }
-
         Stack<ScopedGraphNode> scopedGraphNodes = _of(graph, target);
+        Stack<ScopedGraphNode> toReturn = new Stack<>();
         while (!scopedGraphNodes.isEmpty()) {
             toReturn.push(scopedGraphNodes.pop());
         }
-
+        // The target node, if it is a scoped node, then it is on top of the stack.
+        if (target instanceof ScopedGraphNode) {
+            toReturn.push((ScopedGraphNode) target);
+        }
         return toReturn;
     }
 
