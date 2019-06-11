@@ -82,4 +82,18 @@ class BelongToSameScopeTest extends AbstractGraphTest {
         assertThat(actual).isFalse();
     }
 
+    @Test
+    void shouldReturnFalseWhenOneIsScopedNodeAndTheOtherOutsideScope() {
+        // Given
+        FlowGraph graph = provider.createGraph();
+        graph.root(root);
+        graph.add(root, choiceNode1);
+        graph.add(choiceNode1, componentNode1);
+
+        // When
+        boolean actual = BelongToSameScope.from(graph, choiceNode1, componentNode1);
+
+        // Then
+        assertThat(actual).isFalse();
+    }
 }
