@@ -119,6 +119,11 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
     }
 
     @Override
+    public boolean isInbound() {
+        return componentData.isInbound();
+    }
+
+    @Override
     public void drag(int x, int y) {
         // scoped node is not draggable yet.
     }

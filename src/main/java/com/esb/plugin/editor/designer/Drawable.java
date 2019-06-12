@@ -28,6 +28,8 @@ public interface Drawable {
 
     int y();
 
+    boolean isInbound();
+
     void setPosition(int x, int y);
 
     int height(Graphics2D graphics);

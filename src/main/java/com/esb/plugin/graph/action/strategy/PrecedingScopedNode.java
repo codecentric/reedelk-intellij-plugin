@@ -56,7 +56,7 @@ public class PrecedingScopedNode implements Strategy {
 
                 // Replaces the first node at index "successorIndex".
             } else if (isInsideCenterArea(successor, dropPoint)) {
-                if (node.isSuccessorAllowed(graph, closestPrecedingNode, successorIndex)) {
+                if (closestPrecedingNode.isSuccessorAllowed(graph, closestPrecedingNode, successorIndex)) {
                     graph.remove(closestPrecedingNode, successor);
                     graph.add(closestPrecedingNode, node, successorIndex);
                     graph.add(node, successor);

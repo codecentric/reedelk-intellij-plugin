@@ -13,6 +13,9 @@ public class AddRootStrategy implements Strategy {
 
     @Override
     public void execute(GraphNode node) {
-        graph.root(node);
+        // Only inbound components can be added as root.
+        if (node.isInbound()) {
+            graph.root(node);
+        }
     }
 }

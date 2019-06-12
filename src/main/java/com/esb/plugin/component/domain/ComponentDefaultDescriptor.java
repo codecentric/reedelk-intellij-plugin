@@ -10,6 +10,7 @@ import java.util.Optional;
 public class ComponentDefaultDescriptor implements ComponentDescriptor {
 
     private boolean hidden;
+    private boolean inbound;
 
     private Icon icon;
     private Image image;
@@ -33,6 +34,11 @@ public class ComponentDefaultDescriptor implements ComponentDescriptor {
     @Override
     public boolean isHidden() {
         return hidden;
+    }
+
+    @Override
+    public boolean isInbound() {
+        return inbound;
     }
 
     @Override
@@ -65,6 +71,7 @@ public class ComponentDefaultDescriptor implements ComponentDescriptor {
     public static class Builder {
 
         private boolean hidden;
+        private boolean inbound;
 
         private Icon icon;
         private Image image;
@@ -102,12 +109,18 @@ public class ComponentDefaultDescriptor implements ComponentDescriptor {
             return this;
         }
 
+        public Builder inbound(boolean inbound) {
+            this.inbound = inbound;
+            return this;
+        }
+
         public ComponentDescriptor build() {
             ComponentDefaultDescriptor descriptor = new ComponentDefaultDescriptor();
-            descriptor.hidden = hidden;
-            descriptor.displayName = displayName;
             descriptor.icon = icon;
             descriptor.image = image;
+            descriptor.hidden = hidden;
+            descriptor.inbound = inbound;
+            descriptor.displayName = displayName;
             descriptor.fullyQualifiedName = fullyQualifiedName;
             descriptor.componentPropertyDescriptors.addAll(componentPropertyDescriptors);
             return descriptor;

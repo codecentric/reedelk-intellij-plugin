@@ -81,6 +81,11 @@ public class NothingSelectedNode implements GraphNode {
     }
 
     @Override
+    public boolean isInbound() {
+        return false;
+    }
+
+    @Override
     public boolean isSelected() {
         return false;
     }

@@ -23,6 +23,8 @@ public class Icons {
     public static class Component {
 
         public static final Icon DefaultComponentIcon = IconLoader.getIcon("/icons/default-component-icon.png");
+        public static final Icon InboundTypeComponentIcon = IconLoader.getIcon("/icons/inbound-type-component.png");
+        public static final Icon ProcessorTypeComponentIcon = IconLoader.getIcon("/icons/processor-type-component.png");
 
         private static final Map<String, Icon> KEY_ICON_MAP = new HashMap<>();
 

@@ -32,6 +32,11 @@ public class UnknownComponentDescriptorWrapper implements ComponentDescriptor {
     }
 
     @Override
+    public boolean isInbound() {
+        return wrapped.isInbound();
+    }
+
+    @Override
     public String getDisplayName() {
         return wrapped.getDisplayName();
     }

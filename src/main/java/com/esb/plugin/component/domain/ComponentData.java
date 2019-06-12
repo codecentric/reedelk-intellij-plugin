@@ -49,6 +49,10 @@ public class ComponentData {
         return descriptor.getPropertyDescriptor(propertyName);
     }
 
+    public boolean isInbound() {
+        return descriptor.isInbound();
+    }
+
     public Image getComponentImage() {
         return descriptor.getImage();
     }

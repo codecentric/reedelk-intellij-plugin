@@ -180,6 +180,11 @@ public abstract class AbstractGraphNode implements GraphNode {
     }
 
     @Override
+    public boolean isInbound() {
+        return componentData.isInbound();
+    }
+
+    @Override
     public String toString() {
         return componentData.getFullyQualifiedName();
     }

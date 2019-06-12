@@ -13,8 +13,11 @@ public class ReplaceRootStrategy implements Strategy {
 
     @Override
     public void execute(GraphNode node) {
-        GraphNode currentRoot = graph.root();
-        graph.root(node);
-        graph.add(node, currentRoot);
+        // Only inbound components can replace root.
+        if (node.isInbound()) {
+            GraphNode currentRoot = graph.root();
+            graph.root(node);
+            graph.add(node, currentRoot);
+        }
     }
 }

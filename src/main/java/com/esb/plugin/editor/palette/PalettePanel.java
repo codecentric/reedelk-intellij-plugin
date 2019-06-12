@@ -1,6 +1,5 @@
 package com.esb.plugin.editor.palette;
 
-import com.esb.plugin.commons.Icons;
 import com.esb.plugin.component.domain.ComponentDescriptor;
 import com.esb.plugin.component.domain.ComponentsPackage;
 import com.esb.plugin.component.scanner.ComponentListUpdateNotifier;
@@ -44,13 +43,10 @@ public class PalettePanel extends JBPanel implements DesignerVisibleNotifier, Co
         MessageBusConnection busConnection = project.getMessageBus().connect();
         busConnection.subscribe(DESIGNER_VISIBLE, this);
 
-
         this.root = new DefaultMutableTreeNode(rootTreeNodeName);
         TreeModel model = new DefaultTreeModel(this.root);
 
-        PaletteTreeCellRenderer renderer = new PaletteTreeCellRenderer();
-        renderer.setOpenIcon(Icons.Module);
-        renderer.setClosedIcon(Icons.Module);
+        PaletteComponentTreeRenderer renderer = new PaletteComponentTreeRenderer();
 
         this.tree = new SimpleTree(model);
         this.tree.setCellRenderer(renderer);
@@ -58,10 +54,8 @@ public class PalettePanel extends JBPanel implements DesignerVisibleNotifier, Co
         this.tree.setDragEnabled(true);
         this.tree.setTransferHandler(new ComponentTransferableHandler());
 
-
         JScrollPane componentsTreeScrollPanel = new JBScrollPane(tree);
         componentsTreeScrollPanel.setBorder(BorderFactory.createEmptyBorder());
-
         add(componentsTreeScrollPanel, CENTER);
 
         registerComponentListUpdateNotifier();

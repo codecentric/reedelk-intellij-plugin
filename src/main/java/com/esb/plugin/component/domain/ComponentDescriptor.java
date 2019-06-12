@@ -19,6 +19,8 @@ public interface ComponentDescriptor {
 
     boolean isHidden();
 
+    boolean isInbound();
+
     String getDisplayName();
 
     String getFullyQualifiedName();
