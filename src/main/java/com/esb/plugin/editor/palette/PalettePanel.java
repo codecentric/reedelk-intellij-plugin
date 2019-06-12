@@ -4,10 +4,15 @@ import com.esb.plugin.commons.Icons;
 import com.esb.plugin.component.domain.ComponentDescriptor;
 import com.esb.plugin.component.domain.ComponentsPackage;
 import com.esb.plugin.component.scanner.ComponentListUpdateNotifier;
+import com.esb.plugin.editor.DesignerVisibleNotifier;
 import com.esb.plugin.service.module.ComponentService;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
+import com.intellij.ui.treeStructure.SimpleTree;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
 import java.awt.*;
 import java.util.Collection;
 import java.util.List;
@@ -23,65 +29,53 @@ import java.util.function.Predicate;
 import static java.awt.BorderLayout.CENTER;
 import static java.util.stream.Collectors.toList;
 
-public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier {
+public class PalettePanel extends JBPanel implements DesignerVisibleNotifier, ComponentListUpdateNotifier {
 
     private final String rootTreeNodeName = "root";
 
+    private final Project project;
     private final Tree tree;
-    private final Module module;
     private DefaultMutableTreeNode root;
 
-    public PalettePanel(Module module) {
+    public PalettePanel(Project project) {
         super(new BorderLayout());
 
-        this.module = module;
+        this.project = project;
+        MessageBusConnection busConnection = project.getMessageBus().connect();
+        busConnection.subscribe(DESIGNER_VISIBLE, this);
+
+
         this.root = new DefaultMutableTreeNode(rootTreeNodeName);
+        TreeModel model = new DefaultTreeModel(this.root);
 
         PaletteTreeCellRenderer renderer = new PaletteTreeCellRenderer();
-        renderer.setOpenIcon(Icons.ModuleUnDeploy);
-        renderer.setClosedIcon(Icons.ComponentsModuleCollapsed);
+        renderer.setOpenIcon(Icons.Module);
+        renderer.setClosedIcon(Icons.Module);
 
-        this.tree = new Tree(root);
+        this.tree = new SimpleTree(model);
         this.tree.setCellRenderer(renderer);
         this.tree.setRootVisible(false);
         this.tree.setDragEnabled(true);
         this.tree.setTransferHandler(new ComponentTransferableHandler());
 
+
         JScrollPane componentsTreeScrollPanel = new JBScrollPane(tree);
+        componentsTreeScrollPanel.setBorder(BorderFactory.createEmptyBorder());
 
         add(componentsTreeScrollPanel, CENTER);
 
         registerComponentListUpdateNotifier();
-        onComponentListUpdate();
     }
 
     @Override
-    public void onComponentListUpdate() {
-        Collection<ComponentsPackage> componentsPackages = getComponentsPackages();
-        List<DefaultMutableTreeNode> componentsTreeNodes = getComponentsPackagesTreeNodes(componentsPackages);
-
-        SwingUtilities.invokeLater(() -> {
-
-            root.removeAllChildren();
-
-            componentsTreeNodes.forEach(componentTreeNode -> root.add(componentTreeNode));
-
-            DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
-
-            model.reload();
-
-            expandRows(tree);
-        });
+    public void onComponentListUpdate(Module module) {
+        updateComponents(module);
     }
 
-    @NotNull
-    Collection<ComponentsPackage> getComponentsPackages() {
-        return ComponentService.getInstance(module).getModulesDescriptors();
-    }
-
-    void registerComponentListUpdateNotifier() {
-        MessageBusConnection connect = module.getMessageBus().connect();
-        connect.subscribe(ComponentListUpdateNotifier.COMPONENT_LIST_UPDATE_TOPIC, this);
+    @Override
+    public void onDesignerVisible(VirtualFile virtualFile) {
+        Module module = ModuleUtil.findModuleForFile(virtualFile, project);
+        updateComponents(module);
     }
 
     @NotNull
@@ -103,6 +97,23 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
                 .forEach(componentDescriptor ->
                         componentTreeNode.add(new DefaultMutableTreeNode(componentDescriptor)));
         return componentTreeNode;
+    }
+
+    void registerComponentListUpdateNotifier() {
+        MessageBusConnection connect = project.getMessageBus().connect();
+        connect.subscribe(ComponentListUpdateNotifier.COMPONENT_LIST_UPDATE_TOPIC, this);
+    }
+
+    private void updateComponents(Module module) {
+        Collection<ComponentsPackage> componentsPackages = ComponentService.getInstance(module).getModulesDescriptors();
+        List<DefaultMutableTreeNode> componentsTreeNodes = getComponentsPackagesTreeNodes(componentsPackages);
+        SwingUtilities.invokeLater(() -> {
+            root.removeAllChildren();
+            componentsTreeNodes.forEach(componentTreeNode -> root.add(componentTreeNode));
+            DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+            model.reload();
+            expandRows(tree);
+        });
     }
 
     private static final Predicate<ComponentDescriptor> ExcludeHiddenComponent =

@@ -25,8 +25,8 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class DesignerEditor extends UserDataHolderBase implements FileEditor, PossiblyDumbAware, DocumentListener {
 
-    private DesignerEditorPanel editor;
     private GraphManager manager;
+    private DesignerEditorPanel editor;
 
     DesignerEditor(Project project, VirtualFile file) {
         Module module = ModuleUtil.findModuleForFile(file, project);
@@ -35,7 +35,8 @@ public class DesignerEditor extends UserDataHolderBase implements FileEditor, Po
         FlowGraphProvider graphProvider = new FlowGraphProvider();
         GraphSnapshot snapshot = new GraphSnapshot(graphProvider);
         manager = new GraphManager(project, module, file, snapshot, graphProvider);
-        editor = new DesignerEditorPanel(module, snapshot, manager);
+        editor = new DesignerEditorPanel(module, snapshot);
+        editor.addAncestorListener(new AncestorListener(project, file));
     }
 
     @NotNull

@@ -47,16 +47,19 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
      *
      * @param module the module this service is referring to.
      */
-    public ComponentServiceImpl(Project project, Module module, MessageBus messageBus) {
+    public ComponentServiceImpl(Project project, Module module) {
         this.module = module;
         this.project = project;
-        this.publisher = messageBus.syncPublisher(ComponentListUpdateNotifier.COMPONENT_LIST_UPDATE_TOPIC);
 
-        MessageBusConnection connection = project.getMessageBus().connect();
+        MessageBus messageBus = project.getMessageBus();
+
+        MessageBusConnection connection = messageBus.connect();
         connection.subscribe(MavenImportListener.TOPIC, this);
         connection.subscribe(CompilerTopics.COMPILATION_STATUS, this);
 
-        systemComponents = scanSystemComponents();
+        this.publisher = messageBus.syncPublisher(ComponentListUpdateNotifier.COMPONENT_LIST_UPDATE_TOPIC);
+        this.systemComponents = scanSystemComponents();
+
         asyncUpdateModuleComponents();
         asyncScanClasspathComponents();
     }
@@ -77,11 +80,13 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         }
 
         // Is it a component in this module being developed ?
-        Optional<ComponentDescriptor> moduleComponent = moduleComponents.getModuleComponent(componentFullyQualifiedName);
-        if (moduleComponent.isPresent()) {
-            return moduleComponent.get();
-        }
+        if (moduleComponents != null) {
+            Optional<ComponentDescriptor> moduleComponent = moduleComponents.getModuleComponent(componentFullyQualifiedName);
+            if (moduleComponent.isPresent()) {
+                return moduleComponent.get();
+            }
 
+        }
         // The component is not known
         return new UnknownComponentDescriptorWrapper(componentDescriptorByName(Unknown.class.getName()));
     }
@@ -127,7 +132,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                         String moduleName = ESBModuleInfo.GetESBModuleName(jarFilePath);
                         ComponentsPackage descriptor = new ComponentsPackage(moduleName, components);
                         mavenJarComponentsMap.put(jarFilePath, descriptor);
-                        publisher.onComponentListUpdate();
+                        publisher.onComponentListUpdate(module);
                     });
         });
     }
@@ -145,7 +150,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                             List<ComponentDescriptor> components = componentScanner.from(modulePath);
                             String moduleName = MavenUtils.getMavenProject(project, module.getName()).get().getDisplayName();
                             moduleComponents = new ComponentsPackage(moduleName, components);
-                            publisher.onComponentListUpdate();
+                            publisher.onComponentListUpdate(module);
                         }));
     }
 

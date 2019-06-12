@@ -1,6 +1,7 @@
 package com.esb.plugin.graph.manager;
 
 import com.esb.plugin.component.scanner.ComponentListUpdateNotifier;
+import com.esb.plugin.editor.DesignerVisibleNotifier;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphProvider;
 import com.esb.plugin.graph.GraphSnapshot;
@@ -18,13 +19,11 @@ import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.messages.MessageBusConnection;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.event.AncestorEvent;
 import java.util.Optional;
 
 import static java.util.Arrays.stream;
@@ -37,7 +36,7 @@ import static java.util.Arrays.stream;
  * - Properties updates:
  * - component's property changed
  */
-public class GraphManager extends AncestorListenerAdapter implements FileEditorManagerListener, SnapshotListener, Disposable, ComponentListUpdateNotifier {
+public class GraphManager implements FileEditorManagerListener, SnapshotListener, Disposable, ComponentListUpdateNotifier, DesignerVisibleNotifier {
 
     private static final Logger LOG = Logger.getInstance(GraphManager.class);
 
@@ -60,7 +59,9 @@ public class GraphManager extends AncestorListenerAdapter implements FileEditorM
         this.graphProvider = graphProvider;
 
         busConnection = project.getMessageBus().connect();
+        busConnection.subscribe(DESIGNER_VISIBLE, this);
         busConnection.subscribe(FILE_EDITOR_MANAGER, this);
+
         moduleBusConnection = module.getMessageBus().connect();
         moduleBusConnection.subscribe(COMPONENT_LIST_UPDATE_TOPIC, this);
     }
@@ -83,13 +84,15 @@ public class GraphManager extends AncestorListenerAdapter implements FileEditorM
     }
 
     @Override
-    public void ancestorAdded(AncestorEvent event) {
+    public void onComponentListUpdate(Module module) {
         deserializeDocument();
     }
 
     @Override
-    public void onComponentListUpdate() {
-        deserializeDocument();
+    public void onDesignerVisible(VirtualFile virtualFile) {
+        if (virtualFile.equals(graphFile)) {
+            deserializeDocument();
+        }
     }
 
     @Override

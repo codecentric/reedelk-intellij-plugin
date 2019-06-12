@@ -60,7 +60,9 @@
 
         <fileEditorProvider implementation="com.esb.plugin.editor.DesignerEditorProvider"/>
 
-
+        <!-- Palette Components Tool Window -->
+        <toolWindow id="ESB Components" anchor="right" icon="/icons/icon-16x-blue.png"
+                    factoryClass="com.esb.plugin.editor.palette.PaletteFactory"/>
     </extensions>
 
     <actions>
