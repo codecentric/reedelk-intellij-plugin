@@ -2,9 +2,12 @@ package com.esb.plugin.graph.action;
 
 import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.assertion.PluginAssertion;
+import com.esb.plugin.component.type.generic.GenericComponentNode;
+import com.esb.plugin.fixture.ComponentRoot;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
 import com.esb.plugin.graph.node.GraphNode;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -19,6 +22,14 @@ class ActionNodeAddTest extends AbstractGraphTest {
     private Graphics2D graphics;
     @Mock
     private ImageObserver observer;
+
+    private GraphNode rootReplacement;
+
+    @BeforeEach
+    public void setUp() {
+        super.setUp();
+        rootReplacement = createGraphNodeInstance(ComponentRoot.class, GenericComponentNode.class, true);
+    }
 
     @Nested
     @DisplayName("Root tests")
@@ -51,14 +62,14 @@ class ActionNodeAddTest extends AbstractGraphTest {
             Point dropPoint = new Point(10, 20); // x drop point smaller than the root x coordinate.
 
             // When
-            FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, componentNode1, dropPoint);
+            FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, rootReplacement, dropPoint);
 
             // Then
             PluginAssertion.assertThat(modifiableGraph)
                     .isChanged()
                     .nodesCountIs(2)
-                    .root().is(componentNode1)
-                    .and().successorsOf(componentNode1).isOnly(root);
+                    .root().is(rootReplacement)
+                    .and().successorsOf(rootReplacement).isOnly(root);
         }
     }
 

@@ -58,7 +58,8 @@ public class PalettePanel extends JBPanel implements DesignerVisibleNotifier, Co
         componentsTreeScrollPanel.setBorder(BorderFactory.createEmptyBorder());
         add(componentsTreeScrollPanel, CENTER);
 
-        registerComponentListUpdateNotifier();
+        MessageBusConnection connect = project.getMessageBus().connect();
+        connect.subscribe(COMPONENT_LIST_UPDATE_TOPIC, this);
     }
 
     @Override
@@ -91,11 +92,6 @@ public class PalettePanel extends JBPanel implements DesignerVisibleNotifier, Co
                 .forEach(componentDescriptor ->
                         componentTreeNode.add(new DefaultMutableTreeNode(componentDescriptor)));
         return componentTreeNode;
-    }
-
-    private void registerComponentListUpdateNotifier() {
-        MessageBusConnection connect = project.getMessageBus().connect();
-        connect.subscribe(COMPONENT_LIST_UPDATE_TOPIC, this);
     }
 
     private void updateComponents(Module module) {

@@ -65,7 +65,7 @@ public abstract class AbstractGraphTest {
     protected void setUp() {
         provider = new FlowGraphProvider();
 
-        root = createGraphNodeInstance(ComponentRoot.class, GenericComponentNode.class);
+        root = createGraphNodeInstance(ComponentRoot.class, GenericComponentNode.class, true);
 
         componentNode1 = createGraphNodeInstance(ComponentNode1.class, GenericComponentNode.class);
         componentNode2 = createGraphNodeInstance(ComponentNode2.class, GenericComponentNode.class);
@@ -102,11 +102,16 @@ public abstract class AbstractGraphTest {
         return createGraphNodeInstance(graphNodeClazz, componentData);
     }
 
-    private static <T extends GraphNode> T createGraphNodeInstance(Class componentClazz, Class<T> graphNodeClazz) {
+    protected static <T extends GraphNode> T createGraphNodeInstance(Class componentClazz, Class<T> graphNodeClazz, boolean inbound) {
         ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
                 .fullyQualifiedName(componentClazz.getName())
+                .inbound(inbound)
                 .build();
         return createGraphNodeInstance(graphNodeClazz, descriptor);
+    }
+
+    private static <T extends GraphNode> T createGraphNodeInstance(Class componentClazz, Class<T> graphNodeClazz) {
+        return createGraphNodeInstance(componentClazz, graphNodeClazz, false);
     }
 
     private static <T extends GraphNode> T createGraphNodeInstance(Class<T> graphNodeClazz, ComponentData componentData) {
