@@ -28,17 +28,23 @@ public class GraphSerializer {
     private String serialize() {
         JSONArray flow = new JSONArray();
 
-        GraphNode root = graph.root();
-        GraphSerializerFactory.get()
-                .node(root)
-                .build()
-                .serialize(graph, flow, root, new UntilNoSuccessors());
-
+        serializeFlow(flow);
 
         JSONObject flowObject = JsonObjectFactory.newJSONObject();
         Flow.id(graph.id(), flowObject);
         Flow.flow(flow, flowObject);
         return flowObject.toString(2);
+    }
+
+    private void serializeFlow(JSONArray flow) {
+        // If the graph is empty there is an empty flow
+        if (!graph.isEmpty()) {
+            GraphNode root = graph.root();
+            GraphSerializerFactory.get()
+                    .node(root)
+                    .build()
+                    .serialize(graph, flow, root, new UntilNoSuccessors());
+        }
     }
 
     static class UntilNoSuccessors extends StopNode {

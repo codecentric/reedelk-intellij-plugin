@@ -30,8 +30,12 @@ public class ActionNodeRemove {
         checkState(successors.size() <= 1, "Expected at most one successor");
 
         if (predecessors.isEmpty()) {
-            graph.remove(dropped, successors.get(0));
-            graph.root(successors.get(0));
+            // If we remove the root and it does not have successors,
+            // we cannot remove the successors.
+            if (!successors.isEmpty()) {
+                graph.remove(dropped, successors.get(0));
+                graph.root(successors.get(0));
+            }
             graph.remove(dropped);
 
         } else {

@@ -45,10 +45,16 @@ public class DirectedGraph<NodeType> {
     }
 
     public void removeNode(NodeType n) {
+        // Remove node and all outgoing edges from n
         adjacentNodesMap.remove(n);
+        // Remove all incoming edges to n
         Collection<List<NodeType>> allAdjacentNodes = adjacentNodesMap.values();
         for (List<NodeType> adjacentNodes : allAdjacentNodes) {
             adjacentNodes.remove(n);
+        }
+        // Remove root if and only if the node was root
+        if (root == n) {
+            root = null;
         }
     }
 
@@ -131,5 +137,4 @@ public class DirectedGraph<NodeType> {
         }
         return copy;
     }
-
 }

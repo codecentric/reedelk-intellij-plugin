@@ -25,7 +25,10 @@ public class FlowGraphLayout {
     public static void compute(FlowGraph graph, Graphics2D graphics) {
         FlowGraphLayers layers = new FlowGraphLayers(graph);
         List<List<GraphNode>> layersList = layers.compute();
-        compute(0, graph, graphics, Collections.singletonList(graph.root()), layersList);
+        if (!graph.isEmpty()) {
+            List<GraphNode> currentNodesToProcess = Collections.singletonList(graph.root());
+            compute(0, graph, graphics, currentNodesToProcess, layersList);
+        }
     }
 
     private static void compute(int top, FlowGraph graph, Graphics2D graphics, List<GraphNode> nodes, List<List<GraphNode>> layers) {

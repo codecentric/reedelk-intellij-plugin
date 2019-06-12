@@ -38,7 +38,6 @@ public class RemoveActionHandler {
 
         if (modifiableGraph.isChanged()) {
             modifiableGraph.commit(module);
-            LOG.warn("Remove Node updating snapshot");
             snapshot.updateSnapshot(this, modifiableGraph);
         } else {
             // 3. Add back the node to the scope if the original graph was not changed.

@@ -80,13 +80,12 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
             FlowGraphLayout.compute(graph, g2);
 
-            PrintFlowInfo.debug(graph);
-
             adjustWindowSize();
 
+            PrintFlowInfo.debug(graph);
+
             updated = false;
-        } else {
-            LOG.info("Graph not changed");
+
         }
 
         long start = System.currentTimeMillis();
@@ -266,7 +265,11 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
      * If the graph has grown beyond the current window size, we must adapt it.
      */
     private void adjustWindowSize() {
+        // No need to adjust window size if the graph is empty.
+        if (graph.isEmpty()) return;
+
         Collection<GraphNode> nodes = graph.nodes();
+
         int maxX = nodes.stream().mapToInt(Drawable::x).max().getAsInt();
         int maxY = nodes.stream().mapToInt(Drawable::y).max().getAsInt();
         int newSizeX = maxX + WINDOW_GROW_STEP;
