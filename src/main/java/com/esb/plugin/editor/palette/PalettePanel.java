@@ -99,9 +99,9 @@ public class PalettePanel extends JBPanel implements DesignerVisibleNotifier, Co
         return componentTreeNode;
     }
 
-    void registerComponentListUpdateNotifier() {
+    private void registerComponentListUpdateNotifier() {
         MessageBusConnection connect = project.getMessageBus().connect();
-        connect.subscribe(ComponentListUpdateNotifier.COMPONENT_LIST_UPDATE_TOPIC, this);
+        connect.subscribe(COMPONENT_LIST_UPDATE_TOPIC, this);
     }
 
     private void updateComponents(Module module) {
