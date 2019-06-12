@@ -104,8 +104,10 @@ public class PalettePanel extends JBPanel implements DesignerVisibleNotifier, Co
         SwingUtilities.invokeLater(() -> {
             root.removeAllChildren();
             componentsTreeNodes.forEach(componentTreeNode -> root.add(componentTreeNode));
+
             DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
             model.reload();
+
             expandRows(tree);
         });
     }
