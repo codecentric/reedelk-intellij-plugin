@@ -18,7 +18,7 @@ import java.util.Map;
 
 import static com.esb.internal.commons.Preconditions.checkState;
 
-public class GraphSerializerFactory {
+public class FlowSerializerFactory {
 
     private static final Class<? extends Serializer> GENERIC_SERIALIZER = GenericComponentSerializer.class;
     private static final Map<String, Class<? extends Serializer>> COMPONENT_SERIALIZER_MAP;
@@ -36,14 +36,14 @@ public class GraphSerializerFactory {
 
     private GraphNode node;
 
-    private GraphSerializerFactory() {
+    private FlowSerializerFactory() {
     }
 
-    public static GraphSerializerFactory get() {
-        return new GraphSerializerFactory();
+    public static FlowSerializerFactory get() {
+        return new FlowSerializerFactory();
     }
 
-    public GraphSerializerFactory node(GraphNode node) {
+    public FlowSerializerFactory node(GraphNode node) {
         this.node = node;
         return this;
     }

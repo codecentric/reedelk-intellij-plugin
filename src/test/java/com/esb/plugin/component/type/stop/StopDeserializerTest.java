@@ -1,6 +1,6 @@
 package com.esb.plugin.component.type.stop;
 
-import com.esb.plugin.AbstractDeserializerTest;
+import com.esb.plugin.AbstractNodeDeserializerTest;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,7 @@ import org.mockito.quality.Strictness;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class StopDeserializerTest extends AbstractDeserializerTest {
+public class StopDeserializerTest extends AbstractNodeDeserializerTest {
 
     private StopDeserializer deserializer;
 

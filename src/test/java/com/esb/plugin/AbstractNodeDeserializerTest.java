@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import static java.util.Arrays.stream;
 import static org.mockito.Mockito.doReturn;
 
-public abstract class AbstractDeserializerTest extends AbstractGraphTest {
+public abstract class AbstractNodeDeserializerTest extends AbstractGraphTest {
 
     @Mock
     protected DeserializerContext context;

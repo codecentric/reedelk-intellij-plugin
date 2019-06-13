@@ -1,6 +1,5 @@
 package com.esb.plugin.editor;
 
-import com.esb.plugin.graph.FlowGraphProvider;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.manager.GraphManager;
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
@@ -10,31 +9,21 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorLocation;
 import com.intellij.openapi.fileEditor.FileEditorState;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.PossiblyDumbAware;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolderBase;
-import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
 
-import static com.google.common.base.Preconditions.checkState;
-
 public class FlowDesignerEditor extends UserDataHolderBase implements FileEditor, PossiblyDumbAware, DocumentListener {
 
     private GraphManager manager;
     private DesignerEditor editor;
 
-    FlowDesignerEditor(Project project, VirtualFile file) {
-        Module module = ModuleUtil.findModuleForFile(file, project);
-        checkState(module != null, "Module must not be null");
-
-        FlowGraphProvider graphProvider = new FlowGraphProvider();
-        GraphSnapshot snapshot = new GraphSnapshot(graphProvider);
-        manager = new GraphManager(project, module, file, snapshot, graphProvider);
+    FlowDesignerEditor(Module module, GraphSnapshot snapshot, GraphManager manager) {
+        this.manager = manager;
         editor = new DesignerEditor(module, snapshot);
     }
 

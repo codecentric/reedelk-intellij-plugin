@@ -1,6 +1,6 @@
 package com.esb.plugin.component.type.generic;
 
-import com.esb.plugin.AbstractDeserializerTest;
+import com.esb.plugin.AbstractNodeDeserializerTest;
 import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.component.domain.ComponentDefaultDescriptor;
 import com.esb.plugin.component.domain.ComponentDescriptor;
@@ -19,7 +19,7 @@ import static com.esb.plugin.fixture.Json.GenericComponent;
 import static java.util.Arrays.asList;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
-class GenericComponentDeserializerTest extends AbstractDeserializerTest {
+class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
 
     private GenericComponentDeserializer deserializer;
 

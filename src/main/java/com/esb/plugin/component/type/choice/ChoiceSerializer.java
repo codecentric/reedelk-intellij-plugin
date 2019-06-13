@@ -5,7 +5,7 @@ import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.serializer.AbstractScopedNodeSerializer;
-import com.esb.plugin.graph.serializer.GraphSerializerFactory;
+import com.esb.plugin.graph.serializer.FlowSerializerFactory;
 import com.esb.plugin.graph.serializer.JsonObjectFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -50,7 +50,7 @@ public class ChoiceSerializer extends AbstractScopedNodeSerializer {
 
             GraphNode nextNode = pair.getNext();
 
-            GraphSerializerFactory.get()
+            FlowSerializerFactory.get()
                     .node(nextNode)
                     .build()
                     .serialize(graph, nextArrayObject, nextNode, stop);

@@ -4,14 +4,14 @@ import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.domain.TypeDescriptor;
 import com.esb.plugin.converter.ValueConverterFactory;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.deserializer.AbstractDeserializer;
+import com.esb.plugin.graph.deserializer.AbstractNodeDeserializer;
 import com.esb.plugin.graph.deserializer.DeserializerContext;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONObject;
 
 import static com.esb.internal.commons.JsonParser.Implementor;
 
-public class GenericComponentDeserializer extends AbstractDeserializer {
+public class GenericComponentDeserializer extends AbstractNodeDeserializer {
 
     public GenericComponentDeserializer(FlowGraph graph, DeserializerContext context) {
         super(graph, context);

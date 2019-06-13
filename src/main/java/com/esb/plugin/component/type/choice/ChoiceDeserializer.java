@@ -3,9 +3,9 @@ package com.esb.plugin.component.type.choice;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.type.stop.StopNode;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.deserializer.AbstractDeserializer;
+import com.esb.plugin.graph.deserializer.AbstractNodeDeserializer;
 import com.esb.plugin.graph.deserializer.DeserializerContext;
-import com.esb.plugin.graph.deserializer.GraphDeserializerFactory;
+import com.esb.plugin.graph.deserializer.FlowDeserializerFactory;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.utils.CollectNodesBetween;
 import com.esb.system.component.Stop;
@@ -21,7 +21,7 @@ import static com.esb.internal.commons.JsonParser.Choice;
 import static com.esb.internal.commons.JsonParser.Implementor;
 import static com.esb.plugin.component.type.choice.ChoiceNode.DATA_CONDITION_ROUTE_PAIRS;
 
-public class ChoiceDeserializer extends AbstractDeserializer {
+public class ChoiceDeserializer extends AbstractNodeDeserializer {
 
     public ChoiceDeserializer(FlowGraph graph, DeserializerContext context) {
         super(graph, context);
@@ -90,7 +90,7 @@ public class ChoiceDeserializer extends AbstractDeserializer {
         GraphNode currentNode = parent;
         for (int i = 0; i < arrayToDeserialize.length(); i++) {
             JSONObject currentComponentDef = arrayToDeserialize.getJSONObject(i);
-            currentNode = GraphDeserializerFactory.get()
+            currentNode = FlowDeserializerFactory.get()
                     .componentDefinition(currentComponentDef)
                     .context(context)
                     .graph(graph)

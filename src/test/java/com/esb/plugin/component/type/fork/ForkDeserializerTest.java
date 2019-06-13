@@ -1,6 +1,6 @@
 package com.esb.plugin.component.type.fork;
 
-import com.esb.plugin.AbstractDeserializerTest;
+import com.esb.plugin.AbstractNodeDeserializerTest;
 import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONObject;
@@ -12,7 +12,7 @@ import org.mockito.quality.Strictness;
 import static com.esb.plugin.fixture.Json.Fork;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
-class ForkDeserializerTest extends AbstractDeserializerTest {
+class ForkDeserializerTest extends AbstractNodeDeserializerTest {
 
     private ForkDeserializer deserializer;
 

@@ -1,6 +1,6 @@
 package com.esb.plugin.graph.deserializer;
 
-import com.esb.plugin.AbstractDeserializerTest;
+import com.esb.plugin.AbstractNodeDeserializerTest;
 import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.graph.FlowGraph;
 import org.junit.jupiter.api.Test;
@@ -10,13 +10,13 @@ import org.mockito.quality.Strictness;
 import static com.esb.plugin.fixture.Json.CompleteFlow;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
-class GraphDeserializerTest extends AbstractDeserializerTest {
+class FlowDeserializerTest extends AbstractNodeDeserializerTest {
 
     @Test
     void shouldDeserializeFlowWithAllDefaultComponentsCorrectly() {
         // Given
         String json = CompleteFlow.Sample.json();
-        GraphDeserializer deserializer = new GraphDeserializer(json, context, provider);
+        FlowDeserializer deserializer = new FlowDeserializer(json, context, provider);
 
         // When
         FlowGraph graph = deserializer.deserialize();
@@ -37,7 +37,7 @@ class GraphDeserializerTest extends AbstractDeserializerTest {
     void shouldDeserializeFlowWithNestedChoiceCorrectly() {
         // Given
         String json = CompleteFlow.NestedChoice.json();
-        GraphDeserializer deserializer = new GraphDeserializer(json, context, provider);
+        FlowDeserializer deserializer = new FlowDeserializer(json, context, provider);
 
         // When
         FlowGraph graph = deserializer.deserialize();
@@ -58,7 +58,7 @@ class GraphDeserializerTest extends AbstractDeserializerTest {
     void shouldDeserializeFlowWithNestedForkCorrectly() {
         // Given
         String json = CompleteFlow.NestedFork.json();
-        GraphDeserializer deserializer = new GraphDeserializer(json, context, provider);
+        FlowDeserializer deserializer = new FlowDeserializer(json, context, provider);
 
         // When
         FlowGraph graph = deserializer.deserialize();
@@ -80,7 +80,7 @@ class GraphDeserializerTest extends AbstractDeserializerTest {
     void shouldDeserializeFlowWithEmptyForkCorrectly() {
         // Given
         String json = CompleteFlow.NestedEmptyFork.json();
-        GraphDeserializer deserializer = new GraphDeserializer(json, context, provider);
+        FlowDeserializer deserializer = new FlowDeserializer(json, context, provider);
 
         // When
         FlowGraph graph = deserializer.deserialize();

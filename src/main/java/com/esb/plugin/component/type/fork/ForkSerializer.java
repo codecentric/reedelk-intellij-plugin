@@ -5,7 +5,7 @@ import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.serializer.AbstractScopedNodeSerializer;
-import com.esb.plugin.graph.serializer.GraphSerializerFactory;
+import com.esb.plugin.graph.serializer.FlowSerializerFactory;
 import com.esb.plugin.graph.serializer.JsonObjectFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -43,7 +43,7 @@ public class ForkSerializer extends AbstractScopedNodeSerializer {
 
             JSONArray nextArrayObject = new JSONArray();
 
-            GraphSerializerFactory.get().node(successor)
+            FlowSerializerFactory.get().node(successor)
                     .build()
                     .serialize(graph, nextArrayObject, successor, stop);
 

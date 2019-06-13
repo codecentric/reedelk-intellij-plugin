@@ -2,9 +2,9 @@ package com.esb.plugin.component.type.fork;
 
 import com.esb.plugin.component.type.stop.StopNode;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.deserializer.AbstractDeserializer;
+import com.esb.plugin.graph.deserializer.AbstractNodeDeserializer;
 import com.esb.plugin.graph.deserializer.DeserializerContext;
-import com.esb.plugin.graph.deserializer.GraphDeserializerFactory;
+import com.esb.plugin.graph.deserializer.FlowDeserializerFactory;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.utils.CollectNodesBetween;
 import com.esb.system.component.Stop;
@@ -14,7 +14,7 @@ import org.json.JSONObject;
 import static com.esb.internal.commons.JsonParser.Fork;
 import static com.esb.internal.commons.JsonParser.Implementor;
 
-public class ForkDeserializer extends AbstractDeserializer {
+public class ForkDeserializer extends AbstractNodeDeserializer {
 
     public ForkDeserializer(FlowGraph graph, DeserializerContext context) {
         super(graph, context);
@@ -50,7 +50,7 @@ public class ForkDeserializer extends AbstractDeserializer {
             GraphNode currentNode = forkNode;
             for (int j = 0; j < nextComponents.length(); j++) {
                 JSONObject currentComponentDefinition = nextComponents.getJSONObject(j);
-                currentNode = GraphDeserializerFactory.get()
+                currentNode = FlowDeserializerFactory.get()
                         .componentDefinition(currentComponentDefinition)
                         .context(context)
                         .graph(graph)

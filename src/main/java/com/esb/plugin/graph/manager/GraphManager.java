@@ -5,8 +5,6 @@ import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphProvider;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.SnapshotListener;
-import com.esb.plugin.graph.deserializer.GraphDeserializer;
-import com.esb.plugin.graph.serializer.GraphSerializer;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
@@ -32,7 +30,7 @@ import static java.util.Arrays.stream;
  * - Properties updates:
  * - component's property changed
  */
-public class GraphManager implements FileEditorManagerListener, SnapshotListener, Disposable, ComponentListUpdateNotifier {
+public abstract class GraphManager implements FileEditorManagerListener, SnapshotListener, Disposable, ComponentListUpdateNotifier {
 
     private static final Logger LOG = Logger.getInstance(GraphManager.class);
 
@@ -96,13 +94,13 @@ public class GraphManager implements FileEditorManagerListener, SnapshotListener
 
     @Override
     public void onDataChange(@NotNull FlowGraph graph) {
-        String json = GraphSerializer.serialize(graph);
+        String json = serialize(graph);
         write(json);
     }
 
     @Override
     public void onStructureChange(@NotNull FlowGraph graph) {
-        String json = GraphSerializer.serialize(graph);
+        String json = serialize(graph);
         write(json);
     }
 
@@ -139,11 +137,14 @@ public class GraphManager implements FileEditorManagerListener, SnapshotListener
     }
 
     private void deserializeDocument() {
-        if (document != null) {
-            if (StringUtils.isNotBlank(document.getText())) {
-                GraphDeserializer.deserialize(module, document.getText(), graphProvider)
-                        .ifPresent(updatedGraph -> snapshot.updateSnapshot(this, updatedGraph));
-            }
-        }
+        if (document == null) return;
+        if (StringUtils.isBlank(document.getText())) return;
+        deserialize(module, document, graphProvider)
+                .ifPresent(updatedGraph -> snapshot.updateSnapshot(this, updatedGraph));
     }
+
+    protected abstract String serialize(FlowGraph graph);
+
+    protected abstract Optional<FlowGraph> deserialize(Module module, Document document, FlowGraphProvider graphProvider);
+
 }

@@ -1,6 +1,6 @@
 package com.esb.plugin.component.type.choice;
 
-import com.esb.plugin.AbstractDeserializerTest;
+import com.esb.plugin.AbstractNodeDeserializerTest;
 import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.fixture.Json;
@@ -17,7 +17,7 @@ import static com.esb.internal.commons.JsonParser.Implementor;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
-class ChoiceDeserializerTest extends AbstractDeserializerTest {
+class ChoiceDeserializerTest extends AbstractNodeDeserializerTest {
 
     private ChoiceDeserializer deserializer;
 

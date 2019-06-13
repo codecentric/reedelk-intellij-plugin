@@ -24,7 +24,7 @@ public abstract class AbstractScopedNodeSerializer implements Serializer {
         sequence.put(serializedObject);
 
         firstNodeOutsideScope
-                .ifPresent(n -> GraphSerializerFactory.get()
+                .ifPresent(n -> FlowSerializerFactory.get()
                         .node(n)
                         .build()
                         .serialize(graph, sequence, n, stop));

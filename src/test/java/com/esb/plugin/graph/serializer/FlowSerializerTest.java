@@ -16,7 +16,7 @@ import java.util.List;
 
 import static com.esb.plugin.fixture.Json.CompleteFlow;
 
-class GraphSerializerTest extends AbstractGraphTest {
+class FlowSerializerTest extends AbstractGraphTest {
 
     @Test
     void shouldCorrectlySerializeGraphWithNestedChoice() {
@@ -45,7 +45,7 @@ class GraphSerializerTest extends AbstractGraphTest {
         flowReferenceNode2.componentData().set("ref", "e2a81295-c2eb-48b2-a2b1-6b1e740cdd24");
 
         // When
-        String actualJson = GraphSerializer.serialize(graph);
+        String actualJson = FlowSerializer.serialize(graph);
 
         // Then
         String expectedJson = CompleteFlow.NestedChoice.json();
@@ -81,7 +81,7 @@ class GraphSerializerTest extends AbstractGraphTest {
         flowReferenceNode2.componentData().set("ref", "e2a81295-c2eb-48b2-a2b1-6b1e740cdd24");
 
         // When
-        String actualJson = GraphSerializer.serialize(graph);
+        String actualJson = FlowSerializer.serialize(graph);
 
         // Then
         String expectedJson = CompleteFlow.NodesBetweenScopes.json();
@@ -101,7 +101,7 @@ class GraphSerializerTest extends AbstractGraphTest {
         componentData.set(JsonParser.Fork.threadPoolSize(), 3);
 
         // When
-        String actualJson = GraphSerializer.serialize(graph);
+        String actualJson = FlowSerializer.serialize(graph);
 
         // Then
         String expectedJson = Json.Fork.WithoutSuccessorInsideScope.json();
