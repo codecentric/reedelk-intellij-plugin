@@ -18,6 +18,7 @@ import static java.util.stream.Collectors.toList;
 
 public class StrategyBuilder {
 
+    private boolean isSubflow;
     private FlowGraph graph;
     private Point dropPoint;
     private Graphics2D graphics;
@@ -43,6 +44,11 @@ public class StrategyBuilder {
         return this;
     }
 
+    public StrategyBuilder subflow() {
+        this.isSubflow = true;
+        return this;
+    }
+
     private StrategyBuilder() {
     }
 
@@ -55,10 +61,14 @@ public class StrategyBuilder {
         // First node
         Strategy strategy = new NoOpStrategy();
         if (graph.isEmpty()) {
-            strategy = new AddRootStrategy(graph);
+            strategy = isSubflow ?
+                    new SubFlowAddRootStrategy(graph) :
+                    new FlowAddRootStrategy(graph);
 
         } else if (isReplacingRoot(graph, dropPoint)) {
-            strategy = new ReplaceRootStrategy(graph);
+            strategy = isSubflow ?
+                    new SubFlowReplaceRootStrategy(graph) :
+                    new FlowReplaceRootStrategy(graph);
 
         } else if (overlapsPlaceholder(graph, dropPoint)) {
             GraphNode overlappingPlaceholder = getOverlappingPlaceholder(graph, dropPoint);

@@ -1,5 +1,6 @@
 package com.esb.plugin.editor;
 
+import com.esb.plugin.editor.designer.DesignerPanelActionHandler;
 import com.esb.plugin.filetype.FlowFileType;
 import com.esb.plugin.graph.FlowGraphProvider;
 import com.esb.plugin.graph.GraphSnapshot;
@@ -34,7 +35,8 @@ public class FlowDesignerEditorProvider implements FileEditorProvider, DumbAware
         GraphSnapshot snapshot = new GraphSnapshot(graphProvider);
         FlowGraphManager graphManager = new FlowGraphManager(project, module, file, snapshot, graphProvider);
 
-        return new FlowDesignerEditor(module, snapshot, graphManager);
+        DesignerPanelActionHandler handler = new FlowDesignerPanelActionHandler(module, snapshot);
+        return new FlowDesignerEditor(snapshot, graphManager, handler);
     }
 
     @NotNull

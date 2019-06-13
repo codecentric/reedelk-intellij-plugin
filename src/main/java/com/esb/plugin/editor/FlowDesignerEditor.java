@@ -1,5 +1,6 @@
 package com.esb.plugin.editor;
 
+import com.esb.plugin.editor.designer.DesignerPanelActionHandler;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.manager.GraphManager;
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
@@ -8,7 +9,6 @@ import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorLocation;
 import com.intellij.openapi.fileEditor.FileEditorState;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.PossiblyDumbAware;
 import com.intellij.openapi.util.UserDataHolderBase;
 import org.jetbrains.annotations.NotNull;
@@ -22,9 +22,9 @@ public class FlowDesignerEditor extends UserDataHolderBase implements FileEditor
     private GraphManager manager;
     private DesignerEditor editor;
 
-    FlowDesignerEditor(Module module, GraphSnapshot snapshot, GraphManager manager) {
+    FlowDesignerEditor(GraphSnapshot snapshot, GraphManager manager, DesignerPanelActionHandler actionHandler) {
         this.manager = manager;
-        editor = new DesignerEditor(module, snapshot);
+        this.editor = new DesignerEditor(snapshot, actionHandler);
     }
 
     @NotNull

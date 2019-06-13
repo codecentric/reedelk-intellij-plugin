@@ -13,7 +13,6 @@ import com.esb.plugin.graph.utils.FindScope;
 import com.intellij.openapi.module.Module;
 
 import java.awt.*;
-import java.awt.image.ImageObserver;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -25,9 +24,9 @@ public class MoveActionHandler {
     private final GraphNode selected;
     private final Graphics2D graphics;
     private final GraphSnapshot snapshot;
-    private final ImageObserver imageObserver;
+    private final ActionNodeAdd actionNodeAdd;
 
-    public MoveActionHandler(Module module, GraphSnapshot snapshot, Graphics2D graphics, GraphNode selectedNode, Point movePoint, ImageObserver imageObserver) {
+    public MoveActionHandler(Module module, GraphSnapshot snapshot, Graphics2D graphics, GraphNode selectedNode, Point movePoint, ActionNodeAdd actionNodeAdd) {
         checkArgument(module != null, "module");
         checkArgument(snapshot != null, "snapshot");
         checkArgument(graphics != null, "graphics");
@@ -38,7 +37,7 @@ public class MoveActionHandler {
         this.graphics = graphics;
         this.movePoint = movePoint;
         this.selected = selectedNode;
-        this.imageObserver = imageObserver;
+        this.actionNodeAdd = actionNodeAdd;
     }
 
     public void handle() {
@@ -73,11 +72,8 @@ public class MoveActionHandler {
         Optional<ScopedGraphNode> selectedScope = FindScope.of(modifiableGraph, selected);
         selectedScope.ifPresent(scopedNode -> scopedNode.removeFromScope(selected));
 
-        // 4. Add the dropped component back to the graph to the dropped position.
-        Point dropPoint = new Point(dragX, dragY);
-
-        ActionNodeAdd actionNodeAdd = new ActionNodeAdd(modifiableGraph, dropPoint, selected, graphics, imageObserver);
-        actionNodeAdd.execute();
+        // 4. Add the node
+        actionNodeAdd.execute(modifiableGraph);
 
         // 5. If the copy of the graph was changed, then update the graph
         // TODO: IF REMOVED BUT NOT ADDED, then should not be changed... but now if we remove, and then we cannot add the node for some reason the snapshot is still updated which is not necessary

@@ -2,9 +2,6 @@ package com.esb.plugin.editor.designer;
 
 import com.esb.plugin.commons.PrintFlowInfo;
 import com.esb.plugin.editor.SelectListener;
-import com.esb.plugin.editor.designer.action.DropActionHandler;
-import com.esb.plugin.editor.designer.action.MoveActionHandler;
-import com.esb.plugin.editor.designer.action.RemoveActionHandler;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.SnapshotListener;
@@ -12,7 +9,6 @@ import com.esb.plugin.graph.layout.FlowGraphLayout;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.NothingSelectedNode;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.module.Module;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +34,6 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     private static final int WINDOW_GROW_STEP = 110;
     private static final JBColor BACKGROUND_COLOR = JBColor.WHITE;
     private final GraphNode NOTHING_SELECTED = new NothingSelectedNode();
-    private final Module module;
 
     private GraphSnapshot snapshot;
     private SelectListener selectListener;
@@ -49,14 +44,17 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     private boolean updated = false;
     private boolean dragging;
 
+    private final DesignerPanelActionHandler actionHandler;
+
     private FlowGraph graph;
 
-    public DesignerPanel(Module module, GraphSnapshot snapshot) {
+    public DesignerPanel(GraphSnapshot snapshot, DesignerPanelActionHandler actionHandler) {
         setBackground(BACKGROUND_COLOR);
         addMouseListener(this);
         addMouseMotionListener(this);
 
-        this.module = module;
+        this.actionHandler = actionHandler;
+
         this.snapshot = snapshot;
         this.snapshot.addListener(this);
 
@@ -141,40 +139,33 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (dragging) {
-            dragging = false;
+        if (!dragging) return;
 
-            if (selected != NOTHING_SELECTED) {
-                int dragX = e.getX();
-                int dragY = e.getY();
+        dragging = false;
 
-                selected.drag(dragX, dragY);
-                selected.drop();
+        if (selected != NOTHING_SELECTED) {
+            int dragX = e.getX();
+            int dragY = e.getY();
 
-                Point dragPoint = new Point(dragX, dragY);
+            selected.drag(dragX, dragY);
+            selected.drop();
 
-                // TODO: Create builder.
-                MoveActionHandler handler = new MoveActionHandler(module, snapshot, getGraphics2D(), selected, dragPoint, this);
-                handler.handle();
+            Point dragPoint = new Point(dragX, dragY);
 
-                // TODO: This repaint might not be necessary
-                repaint();
-            }
+            actionHandler.onMove(getGraphics2D(), selected, dragPoint, this);
+
+            repaint();
         }
     }
 
     @Override
     public void drop(DropTargetDropEvent dropEvent) {
-        // TODO: Create builder
-        DropActionHandler handler = new DropActionHandler(module, snapshot, getGraphics2D(), dropEvent, this);
-        handler.handle();
+        actionHandler.onDrop(getGraphics2D(), dropEvent, this);
     }
 
     @Override
     public void removeComponent(GraphNode nodeToRemove) {
-        // TODO: Create builder
-        RemoveActionHandler handler = new RemoveActionHandler(module, snapshot, nodeToRemove);
-        handler.handle();
+        actionHandler.onRemove(nodeToRemove);
     }
 
     @Override

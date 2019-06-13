@@ -18,7 +18,7 @@ import java.awt.image.ImageObserver;
 
 import static com.esb.plugin.component.domain.ComponentClass.INBOUND;
 
-class ActionNodeAddTest extends AbstractGraphTest {
+class FlowActionNodeAddTest extends AbstractGraphTest {
 
     @Mock
     private Graphics2D graphics;
@@ -77,7 +77,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
 
     @Nested
     @DisplayName("Adding a node after root")
-    class ActionNodeAddAfterRoot {
+    class FlowActionNodeAddAfterRoot {
 
         @Test
         void shouldAddComponentAfterRootAsLast() {
@@ -796,7 +796,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
 
     private FlowGraphChangeAware addDrawableToGraph(FlowGraph graph, GraphNode dropped, Point dropPoint) {
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
-        ActionNodeAdd action = new ActionNodeAdd(modifiableGraph, dropPoint, dropped, graphics, observer);
+        FlowActionNodeAdd action = new FlowActionNodeAdd(modifiableGraph, dropPoint, dropped, graphics, observer);
         action.execute();
         return modifiableGraph;
     }
