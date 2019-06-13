@@ -39,7 +39,7 @@ public abstract class GraphManager implements FileEditorManagerListener, Snapsho
     private final VirtualFile graphFile;
     private final GraphSnapshot snapshot;
     private final FlowGraphProvider graphProvider;
-    private final MessageBusConnection busConnection;
+    private final MessageBusConnection projectBusConnection;
     private final MessageBusConnection moduleBusConnection;
 
     private Document document;
@@ -52,8 +52,8 @@ public abstract class GraphManager implements FileEditorManagerListener, Snapsho
         this.snapshot.addListener(this);
         this.graphProvider = graphProvider;
 
-        busConnection = project.getMessageBus().connect();
-        busConnection.subscribe(FILE_EDITOR_MANAGER, this);
+        projectBusConnection = project.getMessageBus().connect();
+        projectBusConnection.subscribe(FILE_EDITOR_MANAGER, this);
 
         moduleBusConnection = module.getMessageBus().connect();
         moduleBusConnection.subscribe(COMPONENT_LIST_UPDATE_TOPIC, this);
@@ -107,7 +107,7 @@ public abstract class GraphManager implements FileEditorManagerListener, Snapsho
     @Override
     public void dispose() {
         this.document = null;
-        this.busConnection.disconnect();
+        this.projectBusConnection.disconnect();
         this.moduleBusConnection.disconnect();
     }
 
