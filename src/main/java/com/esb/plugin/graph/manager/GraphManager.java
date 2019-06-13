@@ -1,7 +1,6 @@
 package com.esb.plugin.graph.manager;
 
 import com.esb.plugin.component.scanner.ComponentListUpdateNotifier;
-import com.esb.plugin.editor.DesignerVisibleNotifier;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphProvider;
 import com.esb.plugin.graph.GraphSnapshot;
@@ -12,10 +11,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.FileEditorManagerListener;
-import com.intellij.openapi.fileEditor.TextEditor;
+import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -36,7 +32,7 @@ import static java.util.Arrays.stream;
  * - Properties updates:
  * - component's property changed
  */
-public class GraphManager implements FileEditorManagerListener, SnapshotListener, Disposable, ComponentListUpdateNotifier, DesignerVisibleNotifier {
+public class GraphManager implements FileEditorManagerListener, SnapshotListener, Disposable, ComponentListUpdateNotifier {
 
     private static final Logger LOG = Logger.getInstance(GraphManager.class);
 
@@ -59,7 +55,6 @@ public class GraphManager implements FileEditorManagerListener, SnapshotListener
         this.graphProvider = graphProvider;
 
         busConnection = project.getMessageBus().connect();
-        busConnection.subscribe(DESIGNER_VISIBLE, this);
         busConnection.subscribe(FILE_EDITOR_MANAGER, this);
 
         moduleBusConnection = module.getMessageBus().connect();
@@ -84,15 +79,19 @@ public class GraphManager implements FileEditorManagerListener, SnapshotListener
     }
 
     @Override
-    public void onComponentListUpdate(Module module) {
-        deserializeDocument();
+    public void selectionChanged(@NotNull FileEditorManagerEvent event) {
+        VirtualFile[] selectedFiles = FileEditorManager.getInstance(project).getSelectedFiles();
+        for (VirtualFile file : selectedFiles) {
+            if (file.equals(graphFile)) {
+                deserializeDocument();
+                break;
+            }
+        }
     }
 
     @Override
-    public void onDesignerVisible(VirtualFile virtualFile) {
-        if (virtualFile.equals(graphFile)) {
-            deserializeDocument();
-        }
+    public void onComponentListUpdate(Module module) {
+        deserializeDocument();
     }
 
     @Override

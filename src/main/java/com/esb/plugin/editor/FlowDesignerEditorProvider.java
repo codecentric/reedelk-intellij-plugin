@@ -9,7 +9,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
-public class DesignerEditorProvider implements FileEditorProvider, DumbAware {
+public class FlowDesignerEditorProvider implements FileEditorProvider, DumbAware {
 
     @Override
     public boolean accept(@NotNull Project project, @NotNull VirtualFile file) {
@@ -19,13 +19,13 @@ public class DesignerEditorProvider implements FileEditorProvider, DumbAware {
     @NotNull
     @Override
     public FileEditor createEditor(@NotNull Project project, @NotNull VirtualFile file) {
-        return new DesignerEditor(project, file);
+        return new FlowDesignerEditor(project, file);
     }
 
     @NotNull
     @Override
     public String getEditorTypeId() {
-        return "esb-designer";
+        return "esb-flow-designer";
     }
 
     @NotNull

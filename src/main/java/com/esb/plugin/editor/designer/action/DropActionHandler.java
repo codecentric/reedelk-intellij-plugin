@@ -79,7 +79,7 @@ public class DropActionHandler {
         }
     }
 
-    Optional<ComponentDescriptor> getComponentDescriptorFrom(DropTargetDropEvent dropEvent) {
+    private Optional<ComponentDescriptor> getComponentDescriptorFrom(DropTargetDropEvent dropEvent) {
         Transferable transferable = dropEvent.getTransferable();
         DataFlavor[] transferDataFlavor = transferable.getTransferDataFlavors();
         if (asList(transferDataFlavor).contains(ComponentDescriptor.FLAVOR)) {

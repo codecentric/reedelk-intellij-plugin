@@ -23,7 +23,12 @@
 
         <!-- File Type -->
         <fileTypeFactory implementation="com.esb.plugin.filetype.FlowFileTypeFactory"/>
+        <fileTypeFactory implementation="com.esb.plugin.filetype.SubFlowFileTypeFactory"/>
         <fileTypeFactory implementation="com.esb.plugin.filetype.FlowConfigFileTypeFactory"/>
+
+        <!-- File Editor -->
+        <fileEditorProvider implementation="com.esb.plugin.editor.FlowDesignerEditorProvider"/>
+        <fileEditorProvider implementation="com.esb.plugin.editor.SubFlowDesignerEditorProvider"/>
 
         <!-- File Templates -->
         <internalFileTemplate name="Maven Module"/>
@@ -57,8 +62,6 @@
         <!-- Run Configurations -->
         <configurationType implementation="com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfigurationType"/>
         <configurationType implementation="com.esb.plugin.runconfig.module.ESBModuleRunConfigurationType"/>
-
-        <fileEditorProvider implementation="com.esb.plugin.editor.DesignerEditorProvider"/>
 
         <!-- Palette Components Tool Window -->
         <toolWindow id="ESB Components" anchor="right" icon="/icons/icon-16x-blue.png"

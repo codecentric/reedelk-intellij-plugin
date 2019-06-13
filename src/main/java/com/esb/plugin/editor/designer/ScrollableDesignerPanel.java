@@ -1,6 +1,6 @@
 package com.esb.plugin.editor.designer;
 
-import com.esb.plugin.editor.DesignerEditorPanel;
+import com.esb.plugin.editor.DesignerEditor;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.ui.components.JBScrollPane;
 
@@ -9,7 +9,7 @@ import java.util.TooManyListenersException;
 
 public class ScrollableDesignerPanel extends JBScrollPane {
 
-    private static final Logger LOG = Logger.getInstance(DesignerEditorPanel.class);
+    private static final Logger LOG = Logger.getInstance(DesignerEditor.class);
 
     public ScrollableDesignerPanel(DesignerPanel designerPanel) {
         super(designerPanel);
