@@ -12,7 +12,6 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.util.ui.UI;
@@ -23,6 +22,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.intellij.openapi.util.text.StringUtil.commonPrefixLength;
+import static com.intellij.openapi.util.text.StringUtil.isEmptyOrSpaces;
 import static com.intellij.uiDesigner.core.GridConstraints.*;
 
 public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable {
@@ -48,8 +49,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
         } else {
             addRuntimePanel.setVisible(false);
         }
-
-        this.moduleBuilder = builder;
+        moduleBuilder = builder;
         runtimeComboManager = new RuntimeComboManager(runtimeCombo, project);
         createInputWithBrowse(wizardContext, moduleBuilder);
     }
@@ -61,7 +61,6 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
 
     @Override
     public void updateDataModel() {
-
         moduleBuilder.isNewProject(isNewProject);
         if (isNewProject) {
             moduleBuilder.setRuntimeConfigName(runtimeConfigNameTextField.getText());
@@ -69,7 +68,6 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
         } else {
             moduleBuilder.setRuntimeConfigName(runtimeComboManager.getRuntimeConfigName());
         }
-
     }
 
     @Override
@@ -86,7 +84,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
             protected String chosenFileToResultingText(@NotNull VirtualFile chosenFile) {
                 String contentEntryPath = moduleBuilder.getContentEntryPath();
                 String path = chosenFile.getPath();
-                return contentEntryPath == null ? path : path.substring(StringUtil.commonPrefixLength(contentEntryPath, path));
+                return contentEntryPath == null ? path : path.substring(commonPrefixLength(contentEntryPath, path));
             }
         });
 
@@ -102,13 +100,25 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
     @Override
     public boolean validate() throws ConfigurationException {
         List<String> errors = new ArrayList<>();
-        if (StringUtil.isEmptyOrSpaces(runtimeConfigNameTextField.getText()))
-            errors.add("Runtime Name can not be empty");
-        if (StringUtil.isEmptyOrSpaces(runtimeHomeDirectoryBrowse.getText()))
-            errors.add("Runtime Path can not be empty");
 
-        Validator validator = new RuntimeHomeValidator(runtimeHomeDirectoryBrowse.getText());
-        validator.validate(errors);
+        // Validating new project
+        if (isNewProject) {
+            if (isEmptyOrSpaces(runtimeConfigNameTextField.getText())) {
+                errors.add("Runtime Name can not be empty");
+            }
+            if (isEmptyOrSpaces(runtimeHomeDirectoryBrowse.getText())) {
+                errors.add("Runtime Path can not be empty");
+            }
+
+            Validator validator = new RuntimeHomeValidator(runtimeHomeDirectoryBrowse.getText());
+            validator.validate(errors);
+
+            // Validating adding new module
+        } else {
+            if (isEmptyOrSpaces(runtimeComboManager.getRuntimeConfigName())) {
+                errors.add("A runtime must be selected");
+            }
+        }
 
         return errors.isEmpty();
     }
