@@ -15,7 +15,7 @@ public class FlowDeserializer extends AbstractDeserializer {
 
     private static final Logger LOG = Logger.getInstance(FlowDeserializer.class);
 
-    private FlowDeserializer(String json, DeserializerContext context, FlowGraphProvider graphProvider) {
+    FlowDeserializer(String json, DeserializerContext context, FlowGraphProvider graphProvider) {
         super(json, context, graphProvider);
     }
 

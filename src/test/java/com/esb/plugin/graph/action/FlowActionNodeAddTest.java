@@ -796,8 +796,8 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
 
     private FlowGraphChangeAware addDrawableToGraph(FlowGraph graph, GraphNode dropped, Point dropPoint) {
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
-        FlowActionNodeAdd action = new FlowActionNodeAdd(modifiableGraph, dropPoint, dropped, graphics, observer);
-        action.execute();
+        FlowActionNodeAdd action = new FlowActionNodeAdd(dropPoint, dropped, graphics, observer);
+        action.execute(modifiableGraph);
         return modifiableGraph;
     }
 }
