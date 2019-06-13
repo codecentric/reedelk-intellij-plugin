@@ -25,6 +25,7 @@ public class SubFlowSerializer extends AbstractSerializer {
 
         JSONObject flowObject = JsonObjectFactory.newJSONObject();
         Subflow.id(graph.id(), flowObject);
+        Subflow.title(graph.title(), flowObject);
         Subflow.description(graph.description(), flowObject);
         Subflow.subflow(flow, flowObject);
 

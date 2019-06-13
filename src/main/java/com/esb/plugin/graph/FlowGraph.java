@@ -12,6 +12,10 @@ public interface FlowGraph {
 
     String id();
 
+    String title();
+
+    void setTitle(String title);
+
     String description();
 
     void setDescription(String description);

@@ -31,8 +31,11 @@ public class SubFlowDesignerEditorProvider implements FileEditorProvider, DumbAw
         // TODO: The module here might be null!
         checkState(module != null, "Module must not be null");
 
+        String defaultFlowTitle = file.getPresentableName();
+        String defaultFlowDescription = file.getNameWithoutExtension() + " subflow";
+
         FlowGraphProvider graphProvider = new FlowGraphProvider();
-        FlowSnapshot snapshot = new FlowSnapshot(graphProvider);
+        FlowSnapshot snapshot = new FlowSnapshot(graphProvider, defaultFlowTitle, defaultFlowDescription);
         GraphManager graphManager = new SubFlowGraphManager(project, module, file, snapshot, graphProvider);
 
         SubFlowDesignerPanelActionHandler handler = new SubFlowDesignerPanelActionHandler(module, snapshot);

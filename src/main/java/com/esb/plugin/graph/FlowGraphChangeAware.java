@@ -18,9 +18,20 @@ public class FlowGraphChangeAware implements FlowGraph {
         this.wrapped = wrapped;
     }
 
+    @NotNull
     @Override
     public String id() {
         return wrapped.id();
+    }
+
+    @Override
+    public String title() {
+        return wrapped.title();
+    }
+
+    @Override
+    public void setTitle(@NotNull String title) {
+        wrapped.setTitle(title);
     }
 
     @Override
@@ -29,7 +40,7 @@ public class FlowGraphChangeAware implements FlowGraph {
     }
 
     @Override
-    public void setDescription(String description) {
+    public void setDescription(@NotNull String description) {
         wrapped.setDescription(description);
         changed = true;
     }

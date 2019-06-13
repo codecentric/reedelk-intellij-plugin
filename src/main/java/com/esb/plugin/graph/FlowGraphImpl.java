@@ -14,6 +14,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 public class FlowGraphImpl implements FlowGraph {
 
     private final String id;
+
+    private String title;
     private String description;
 
     private DirectedGraph<GraphNode> graph;
@@ -32,6 +34,16 @@ public class FlowGraphImpl implements FlowGraph {
     @Override
     public String id() {
         return id;
+    }
+
+    @Override
+    public String title() {
+        return title;
+    }
+
+    @Override
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Override
@@ -123,6 +135,7 @@ public class FlowGraphImpl implements FlowGraph {
     public FlowGraph copy() {
         FlowGraphImpl flowGraph = new FlowGraphImpl(graph.copy(), id);
         flowGraph.setDescription(description);
+        flowGraph.setTitle(title);
         return flowGraph;
     }
 

@@ -31,10 +31,12 @@ abstract class AbstractDeserializer {
         JSONArray flow = getFlow(flowDefinition);
 
         String id = getId(flowDefinition);
+        String title = getTitle(flowDefinition);
         String description = getDescription(flowDefinition);
 
         FlowGraph graph = graphProvider.createGraph(id);
         graph.setDescription(description);
+        graph.setTitle(title);
 
         GraphNode current = null;
         for (int i = 0; i < flow.length(); i++) {
@@ -52,6 +54,8 @@ abstract class AbstractDeserializer {
     }
 
     protected abstract String getId(JSONObject flowDefinition);
+
+    protected abstract String getTitle(JSONObject flowDefinition);
 
     protected abstract JSONArray getFlow(JSONObject flowDefinition);
 

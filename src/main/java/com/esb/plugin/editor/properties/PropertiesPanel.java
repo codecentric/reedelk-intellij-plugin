@@ -1,15 +1,18 @@
 package com.esb.plugin.editor.properties;
 
+import com.esb.plugin.commons.Icons;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.editor.designer.SelectListener;
 import com.esb.plugin.editor.properties.renderer.node.NodePropertiesRendererFactory;
+import com.esb.plugin.editor.properties.widget.DefaultPropertiesPanel;
+import com.esb.plugin.editor.properties.widget.FormBuilder;
+import com.esb.plugin.editor.properties.widget.input.InputField;
+import com.esb.plugin.editor.properties.widget.input.StringInputField;
+import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.NothingSelectedNode;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
-import com.intellij.ui.JBColor;
-import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBTabbedPane;
 
@@ -17,7 +20,8 @@ import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 
-import static java.awt.BorderLayout.*;
+import static java.awt.BorderLayout.CENTER;
+import static java.awt.BorderLayout.NORTH;
 
 public class PropertiesPanel extends JBPanel implements SelectListener {
 
@@ -53,19 +57,46 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
         repaint();
     }
 
-    private static final Logger LOG = Logger.getInstance(PropertiesPanel.class);
+    private JBTabbedPane createDefaultTabbedPane(FlowGraph graph) {
+        JBTabbedPane tabbedPane = new JBTabbedPane();
+        DefaultPropertiesPanel propertiesPanel = new DefaultPropertiesPanel();
 
-    private JLabel label = new JLabel();
+        InputField<String> titleField = new StringInputField();
+        titleField.setValue(graph.title());
+        titleField.addListener(value -> {
+            graph.setTitle(value);
+            snapshot.onDataChange();
+        });
+
+        FormBuilder.get()
+                .addLabel("Title", propertiesPanel)
+                .addLastField(titleField, propertiesPanel);
+
+        InputField<String> descriptionField = new StringInputField();
+        descriptionField.setValue(graph.description());
+        descriptionField.addListener(value -> {
+            graph.setDescription(value);
+            snapshot.onDataChange();
+        });
+
+        FormBuilder.get()
+                .addLabel("Description", propertiesPanel)
+                .addLastField(descriptionField, propertiesPanel);
+
+
+        JBPanel box = createPropertiesBoxPanel(propertiesPanel);
+        tabbedPane.addTab("Flow properties", Icons.FileTypeFlow, box, "flow properties");
+        return tabbedPane;
+    }
 
     @Override
     public void onUnselect() {
-        removeAll();
-        String description = snapshot.getGraph().description();
-        label.setText(description);
-        LOG.warn("Description: " + description);
-        add(label);
-        revalidate();
-        repaint();
+        SwingUtilities.invokeLater(() -> {
+            removeAll();
+            JBTabbedPane defaultTabbedPane = createDefaultTabbedPane(snapshot.getGraph());
+            add(defaultTabbedPane);
+            revalidate();
+        });
     }
 
     private JBPanel createPropertiesPanel(ComponentData componentData, FlowSnapshot snapshot, GraphNode node) {
@@ -77,24 +108,13 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
                 .render(node);
 
         JBPanel propertiesBoxContainer = createPropertiesBoxPanel(propertiesPanel);
-        JBPanel inputOutputPanel = createInputOutputPanel();
-        return createPropertiesHolder(propertiesBoxContainer, inputOutputPanel);
+        return createPropertiesHolder(propertiesBoxContainer);
     }
 
-    private JBPanel createInputOutputPanel() {
-        JBLabel inputOutputLabel = new JBLabel("input/output");
-        JBPanel inputOutputPanel = new JBPanel();
-        inputOutputPanel.setPreferredSize(new Dimension(300, 100));
-        inputOutputPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, JBColor.LIGHT_GRAY));
-        inputOutputPanel.add(inputOutputLabel, CENTER);
-        return inputOutputPanel;
-    }
-
-    private JBPanel createPropertiesHolder(JBPanel propertiesBoxContainer, JBPanel inputOutputPanel) {
+    private JBPanel createPropertiesHolder(JBPanel propertiesBoxContainer) {
         JBPanel propertiesHolder = new JBPanel();
         propertiesHolder.setLayout(new BorderLayout());
         propertiesHolder.add(propertiesBoxContainer, CENTER);
-        propertiesHolder.add(inputOutputPanel, EAST);
         return propertiesHolder;
     }
 
@@ -108,5 +128,4 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
         propertiesBoxContainer.add(fillerPanel, CENTER);
         return propertiesBoxContainer;
     }
-
 }

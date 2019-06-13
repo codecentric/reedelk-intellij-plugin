@@ -25,6 +25,7 @@ public class FlowSerializer extends AbstractSerializer {
 
         JSONObject flowObject = JsonObjectFactory.newJSONObject();
         Flow.id(graph.id(), flowObject);
+        Flow.title(graph.title(), flowObject);
         Flow.description(graph.description(), flowObject);
         Flow.flow(flow, flowObject);
 

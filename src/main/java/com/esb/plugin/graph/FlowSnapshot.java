@@ -7,13 +7,18 @@ import java.util.List;
 
 public class FlowSnapshot {
 
-    private FlowGraph graph;
+    private final String defaultTitle;
+    private final String defaultDescription;
 
-    private final FlowGraphProvider graphProvider;
+    private final FlowGraphProvider provider;
     private final List<SnapshotListener> listeners = new ArrayList<>();
 
-    public FlowSnapshot(FlowGraphProvider graphProvider) {
-        this.graphProvider = graphProvider;
+    private FlowGraph graph;
+
+    public FlowSnapshot(FlowGraphProvider provider, String defaultTitle, String defaultDescription) {
+        this.provider = provider;
+        this.defaultTitle = defaultTitle;
+        this.defaultDescription = defaultDescription;
     }
 
     public void updateSnapshot(Object notifier, @NotNull FlowGraph graph) {
@@ -37,8 +42,11 @@ public class FlowSnapshot {
 
     @NotNull
     public FlowGraph getGraph() {
-        return graph != null ?
-                graph :
-                graphProvider.createGraph();
+        if (graph == null) {
+            graph = provider.createGraph();
+            graph.setTitle(defaultTitle);
+            graph.setDescription(defaultDescription);
+        }
+        return graph;
     }
 }
