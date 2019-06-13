@@ -1,5 +1,6 @@
 package com.esb.plugin.assertion.component;
 
+import com.esb.plugin.component.domain.ComponentClass;
 import com.esb.plugin.component.domain.ComponentDescriptor;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 
@@ -50,6 +51,11 @@ public class ComponentDescriptorAssertion {
     public ComponentDescriptorAssertion doesNotHaveProperty(String notExpectedProperty) {
         Optional<ComponentPropertyDescriptor> optionalPropertyDescriptor = componentDescriptor.getPropertyDescriptor(notExpectedProperty);
         assertThat(optionalPropertyDescriptor).isNotPresent();
+        return this;
+    }
+
+    public ComponentDescriptorAssertion hasClass(ComponentClass expectedClass) {
+        assertThat(componentDescriptor.getComponentClass()).isEqualTo(expectedClass);
         return this;
     }
 

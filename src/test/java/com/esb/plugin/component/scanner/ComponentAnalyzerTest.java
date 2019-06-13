@@ -3,6 +3,7 @@ package com.esb.plugin.component.scanner;
 import com.esb.api.annotation.ESBComponent;
 import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.commons.PackageToPath;
+import com.esb.plugin.component.domain.ComponentClass;
 import com.esb.plugin.component.domain.ComponentDescriptor;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import io.github.classgraph.*;
@@ -81,6 +82,7 @@ class ComponentAnalyzerTest {
                 .hasIcon(mockIcon)
                 .hasImage(mockImage)
                 .hasDisplayName("Test Component")
+                .hasClass(ComponentClass.PROCESSOR)
                 .hasFullyQualifiedName(TestComponent.class.getName());
     }
 }
