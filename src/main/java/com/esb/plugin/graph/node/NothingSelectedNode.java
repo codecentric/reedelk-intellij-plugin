@@ -1,5 +1,6 @@
 package com.esb.plugin.graph.node;
 
+import com.esb.plugin.component.domain.ComponentClass;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.editor.designer.DrawableListener;
 import com.esb.plugin.graph.FlowGraph;
@@ -81,8 +82,8 @@ public class NothingSelectedNode implements GraphNode {
     }
 
     @Override
-    public boolean isInbound() {
-        return false;
+    public ComponentClass getComponentClass() {
+        throw new UnsupportedOperationException();
     }
 
     @Override

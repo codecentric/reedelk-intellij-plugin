@@ -1,6 +1,7 @@
 package com.esb.plugin.editor.designer;
 
 import com.esb.plugin.commons.Half;
+import com.esb.plugin.component.domain.ComponentClass;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.editor.designer.widget.Arrow;
 import com.esb.plugin.editor.designer.widget.ScopeBox;
@@ -119,8 +120,8 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
     }
 
     @Override
-    public boolean isInbound() {
-        return componentData.isInbound();
+    public ComponentClass getComponentClass() {
+        return componentData.getComponentClass();
     }
 
     @Override

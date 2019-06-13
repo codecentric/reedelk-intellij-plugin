@@ -1,5 +1,6 @@
 package com.esb.plugin.component.type.unknown;
 
+import com.esb.plugin.component.domain.ComponentClass;
 import com.esb.plugin.component.domain.ComponentDescriptor;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 
@@ -32,13 +33,13 @@ public class UnknownComponentDescriptorWrapper implements ComponentDescriptor {
     }
 
     @Override
-    public boolean isInbound() {
-        return wrapped.isInbound();
+    public String getDisplayName() {
+        return wrapped.getDisplayName();
     }
 
     @Override
-    public String getDisplayName() {
-        return wrapped.getDisplayName();
+    public ComponentClass getComponentClass() {
+        return wrapped.getComponentClass();
     }
 
     @Override

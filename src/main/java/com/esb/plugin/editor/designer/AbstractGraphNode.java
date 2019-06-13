@@ -1,6 +1,7 @@
 package com.esb.plugin.editor.designer;
 
 import com.esb.plugin.commons.Half;
+import com.esb.plugin.component.domain.ComponentClass;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.editor.designer.widget.Arrow;
 import com.esb.plugin.editor.designer.widget.Icon;
@@ -175,13 +176,14 @@ public abstract class AbstractGraphNode implements GraphNode {
 
     @Override
     public Point getBarycenter() {
-        // The barycenter for a component node is the center of the icon representing it.
+        // The barycenter for a component node is
+        // the center of the icon representing it.
         return icon.getBarycenter();
     }
 
     @Override
-    public boolean isInbound() {
-        return componentData.isInbound();
+    public ComponentClass getComponentClass() {
+        return componentData.getComponentClass();
     }
 
     @Override

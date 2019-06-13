@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.designer;
 
+import com.esb.plugin.component.domain.ComponentClass;
 import com.esb.plugin.graph.FlowGraph;
 
 import java.awt.*;
@@ -28,13 +29,13 @@ public interface Drawable {
 
     int y();
 
-    boolean isInbound();
-
     void setPosition(int x, int y);
+
+    int width(Graphics2D graphics);
 
     int height(Graphics2D graphics);
 
-    int width(Graphics2D graphics);
+    ComponentClass getComponentClass();
 
     boolean contains(ImageObserver observer, int x, int y);
 

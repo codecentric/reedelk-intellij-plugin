@@ -11,7 +11,9 @@ import io.github.classgraph.ScanResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static com.esb.plugin.component.domain.ComponentClass.UNKNOWN;
 import static java.lang.String.format;
 
 
@@ -23,14 +25,16 @@ public class ComponentScanner {
         ScanResult scanResult = instantiateScanner()
                 .whitelistPaths(PackageToPath.convert(targetPackage.getName()))
                 .scan();
-        return processScanResult(scanResult);
+        // Unknown components are filtered out
+        return filterOutUnknownClassComponents(processScanResult(scanResult));
     }
 
     public List<ComponentDescriptor> from(String targetPath) {
         ScanResult scanResult = instantiateScanner()
                 .overrideClasspath(targetPath)
                 .scan();
-        return processScanResult(scanResult);
+        // Unknown components are filtered out
+        return filterOutUnknownClassComponents(processScanResult(scanResult));
     }
 
     private List<ComponentDescriptor> processScanResult(ScanResult scanResult) {
@@ -54,5 +58,11 @@ public class ComponentScanner {
                 .enableFieldInfo()
                 .enableAnnotationInfo()
                 .ignoreFieldVisibility();
+    }
+
+    private static List<ComponentDescriptor> filterOutUnknownClassComponents(List<ComponentDescriptor> componentDescriptorList) {
+        return componentDescriptorList.stream()
+                .filter(descriptor -> !UNKNOWN.equals(descriptor.getComponentClass()))
+                .collect(Collectors.toList());
     }
 }

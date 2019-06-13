@@ -1,6 +1,7 @@
 package com.esb.plugin.editor.palette;
 
 import com.esb.plugin.commons.Icons;
+import com.esb.plugin.component.domain.ComponentClass;
 import com.esb.plugin.component.domain.ComponentDescriptor;
 
 import javax.swing.*;
@@ -36,7 +37,7 @@ public class PaletteComponentTreeRenderer implements TreeCellRenderer {
                 ComponentDescriptor descriptor = (ComponentDescriptor) userObject;
                 this.value.setText(descriptor.getDisplayName());
                 this.value.setIcon(descriptor.getIcon());
-                if (descriptor.isInbound()) {
+                if (descriptor.getComponentClass().equals(ComponentClass.INBOUND)) {
                     this.typeIcon.setIcon(Icons.Component.InboundTypeComponentIcon);
                 } else {
                     this.typeIcon.setIcon(Icons.Component.ProcessorTypeComponentIcon);

@@ -5,6 +5,7 @@ import com.esb.plugin.component.domain.ComponentsPackage;
 import com.esb.plugin.component.scanner.ComponentListUpdateNotifier;
 import com.esb.plugin.editor.DesignerVisibleNotifier;
 import com.esb.plugin.service.module.ComponentService;
+import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
@@ -28,7 +29,7 @@ import java.util.function.Predicate;
 import static java.awt.BorderLayout.CENTER;
 import static java.util.stream.Collectors.toList;
 
-public class PalettePanel extends JBPanel implements DesignerVisibleNotifier, ComponentListUpdateNotifier {
+public class PalettePanel extends JBPanel implements DesignerVisibleNotifier, ComponentListUpdateNotifier, FileEditorManagerListener {
 
     private final String rootTreeNodeName = "root";
 
@@ -60,6 +61,7 @@ public class PalettePanel extends JBPanel implements DesignerVisibleNotifier, Co
 
         MessageBusConnection connect = project.getMessageBus().connect();
         connect.subscribe(COMPONENT_LIST_UPDATE_TOPIC, this);
+        connect.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
     }
 
     @Override

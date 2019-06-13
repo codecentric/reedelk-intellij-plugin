@@ -26,6 +26,8 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.stream;
+
 public class ComponentServiceImpl implements ComponentService, MavenImportListener, CompilationStatusListener {
 
     private static final String SYSTEM_COMPONENTS_MODULE_NAME = "Flow Control";
@@ -116,7 +118,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
             // Remove all jars before reimporting them
             mavenJarComponentsMap.clear();
 
-            ModuleRootManager.getInstance(module)
+            List<String> esbModuleJarPaths = ModuleRootManager.getInstance(module)
                     .orderEntries()
                     .withoutSdk()
                     .withoutDepModules()
@@ -126,33 +128,37 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                     .getPathList()
                     .stream()
                     .filter(ESBModuleInfo::IsESBModule)
-                    .collect(Collectors.toList())
-                    .forEach(jarFilePath -> {
-                        List<ComponentDescriptor> components = componentScanner.from(jarFilePath);
-                        String moduleName = ESBModuleInfo.GetESBModuleName(jarFilePath);
-                        ComponentsPackage descriptor = new ComponentsPackage(moduleName, components);
-                        mavenJarComponentsMap.put(jarFilePath, descriptor);
-                        publisher.onComponentListUpdate(module);
-                    });
+                    .collect(Collectors.toList());
+
+            esbModuleJarPaths.forEach(jarFilePath -> {
+                List<ComponentDescriptor> components = componentScanner.from(jarFilePath);
+                String moduleName = ESBModuleInfo.GetESBModuleName(jarFilePath);
+                ComponentsPackage descriptor = new ComponentsPackage(moduleName, components);
+                mavenJarComponentsMap.put(jarFilePath, descriptor);
+                publisher.onComponentListUpdate(module);
+            });
         });
     }
 
     private void asyncUpdateModuleComponents() {
-        CompletableFuture.runAsync(() ->
-                Arrays.stream(ModuleRootManager.getInstance(module)
-                        .orderEntries()
-                        .withoutSdk()
-                        .withoutLibraries()
-                        .productionOnly()
-                        .classes()
-                        .getUrls())
-                        .forEach(modulePath -> {
-                            List<ComponentDescriptor> components = componentScanner.from(modulePath);
-                            String moduleName = MavenUtils.getMavenProject(project, module.getName()).get().getDisplayName();
-                            moduleComponents = new ComponentsPackage(moduleName, components);
-                            publisher.onComponentListUpdate(module);
-                        }));
+        CompletableFuture.runAsync(() -> {
+            String[] modulePaths = ModuleRootManager.getInstance(module)
+                    .orderEntries()
+                    .withoutSdk()
+                    .withoutLibraries()
+                    .productionOnly()
+                    .classes()
+                    .getUrls();
+
+            stream(modulePaths).forEach(modulePath -> {
+                List<ComponentDescriptor> components = componentScanner.from(modulePath);
+                String moduleName = MavenUtils.getMavenProject(project, module.getName()).get().getDisplayName();
+                moduleComponents = new ComponentsPackage(moduleName, components);
+                publisher.onComponentListUpdate(module);
+            });
+        });
     }
+
 
     private ComponentsPackage scanSystemComponents() {
         List<ComponentDescriptor> flowControlComponents = componentScanner.from(Stop.class.getPackage());

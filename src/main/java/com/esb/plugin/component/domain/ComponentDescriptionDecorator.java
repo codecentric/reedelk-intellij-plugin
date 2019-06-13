@@ -49,8 +49,8 @@ public class ComponentDescriptionDecorator implements ComponentDescriptor {
     }
 
     @Override
-    public boolean isInbound() {
-        return wrapped.isInbound();
+    public ComponentClass getComponentClass() {
+        return wrapped.getComponentClass();
     }
 
     @Override

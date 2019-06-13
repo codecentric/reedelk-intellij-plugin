@@ -41,18 +41,6 @@ public class ComponentData {
         return dataProperties;
     }
 
-    public List<ComponentPropertyDescriptor> getPropertiesDescriptors() {
-        return descriptor.getPropertiesDescriptors();
-    }
-
-    public Optional<ComponentPropertyDescriptor> getPropertyDescriptor(String propertyName) {
-        return descriptor.getPropertyDescriptor(propertyName);
-    }
-
-    public boolean isInbound() {
-        return descriptor.isInbound();
-    }
-
     public Image getComponentImage() {
         return descriptor.getImage();
     }
@@ -61,4 +49,15 @@ public class ComponentData {
         return descriptor.getIcon();
     }
 
+    public ComponentClass getComponentClass() {
+        return descriptor.getComponentClass();
+    }
+
+    public List<ComponentPropertyDescriptor> getPropertiesDescriptors() {
+        return descriptor.getPropertiesDescriptors();
+    }
+
+    public Optional<ComponentPropertyDescriptor> getPropertyDescriptor(String propertyName) {
+        return descriptor.getPropertyDescriptor(propertyName);
+    }
 }

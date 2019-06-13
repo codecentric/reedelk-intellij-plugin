@@ -10,12 +10,12 @@ import java.util.Optional;
 public class ComponentDefaultDescriptor implements ComponentDescriptor {
 
     private boolean hidden;
-    private boolean inbound;
 
     private Icon icon;
     private Image image;
     private String displayName;
     private String fullyQualifiedName;
+    private ComponentClass componentClass;
     private List<ComponentPropertyDescriptor> componentPropertyDescriptors = new ArrayList<>();
 
     private ComponentDefaultDescriptor() {
@@ -37,8 +37,8 @@ public class ComponentDefaultDescriptor implements ComponentDescriptor {
     }
 
     @Override
-    public boolean isInbound() {
-        return inbound;
+    public ComponentClass getComponentClass() {
+        return componentClass;
     }
 
     @Override
@@ -71,12 +71,12 @@ public class ComponentDefaultDescriptor implements ComponentDescriptor {
     public static class Builder {
 
         private boolean hidden;
-        private boolean inbound;
 
         private Icon icon;
         private Image image;
         private String displayName;
         private String fullyQualifiedName;
+        private ComponentClass componentClass;
         private List<ComponentPropertyDescriptor> componentPropertyDescriptors = new ArrayList<>();
 
         public Builder propertyDescriptors(List<ComponentPropertyDescriptor> componentPropertyDescriptors) {
@@ -86,6 +86,11 @@ public class ComponentDefaultDescriptor implements ComponentDescriptor {
 
         public Builder fullyQualifiedName(String fullyQualifiedName) {
             this.fullyQualifiedName = fullyQualifiedName;
+            return this;
+        }
+
+        public Builder componentClass(ComponentClass componentClass) {
+            this.componentClass = componentClass;
             return this;
         }
 
@@ -109,18 +114,13 @@ public class ComponentDefaultDescriptor implements ComponentDescriptor {
             return this;
         }
 
-        public Builder inbound(boolean inbound) {
-            this.inbound = inbound;
-            return this;
-        }
-
         public ComponentDescriptor build() {
             ComponentDefaultDescriptor descriptor = new ComponentDefaultDescriptor();
             descriptor.icon = icon;
             descriptor.image = image;
             descriptor.hidden = hidden;
-            descriptor.inbound = inbound;
             descriptor.displayName = displayName;
+            descriptor.componentClass = componentClass;
             descriptor.fullyQualifiedName = fullyQualifiedName;
             descriptor.componentPropertyDescriptors.addAll(componentPropertyDescriptors);
             return descriptor;

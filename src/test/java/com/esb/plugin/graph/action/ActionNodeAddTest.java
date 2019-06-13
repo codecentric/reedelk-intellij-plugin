@@ -16,6 +16,8 @@ import org.mockito.Mock;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
+import static com.esb.plugin.component.domain.ComponentClass.INBOUND;
+
 class ActionNodeAddTest extends AbstractGraphTest {
 
     @Mock
@@ -28,7 +30,7 @@ class ActionNodeAddTest extends AbstractGraphTest {
     @BeforeEach
     public void setUp() {
         super.setUp();
-        rootReplacement = createGraphNodeInstance(ComponentRoot.class, GenericComponentNode.class, true);
+        rootReplacement = createGraphNodeInstance(ComponentRoot.class, GenericComponentNode.class, INBOUND);
     }
 
     @Nested
