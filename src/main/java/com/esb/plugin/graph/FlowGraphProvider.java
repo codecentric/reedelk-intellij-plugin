@@ -12,5 +12,4 @@ public class FlowGraphProvider {
         String id = UUID.randomUUID().toString();
         return new FlowGraphImpl(id);
     }
-
 }
