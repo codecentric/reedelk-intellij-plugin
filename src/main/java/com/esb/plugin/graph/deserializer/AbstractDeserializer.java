@@ -1,6 +1,5 @@
 package com.esb.plugin.graph.deserializer;
 
-import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphProvider;
 import com.esb.plugin.graph.node.GraphNode;
@@ -30,7 +29,12 @@ abstract class AbstractDeserializer {
     FlowGraph deserialize() {
         JSONObject flowDefinition = from(json);
         JSONArray flow = getFlow(flowDefinition);
-        FlowGraph graph = graphProvider.createGraph(JsonParser.Flow.id(flowDefinition));
+
+        String id = getId(flowDefinition);
+        String description = getDescription(flowDefinition);
+
+        FlowGraph graph = graphProvider.createGraph(id);
+        graph.setDescription(description);
 
         GraphNode current = null;
         for (int i = 0; i < flow.length(); i++) {
@@ -47,6 +51,9 @@ abstract class AbstractDeserializer {
         return RemoveStopNodes.from(graph);
     }
 
+    protected abstract String getId(JSONObject flowDefinition);
+
     protected abstract JSONArray getFlow(JSONObject flowDefinition);
 
+    protected abstract String getDescription(JSONObject description);
 }

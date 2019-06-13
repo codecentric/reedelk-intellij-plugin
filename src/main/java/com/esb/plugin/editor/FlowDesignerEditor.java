@@ -9,6 +9,7 @@ import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorLocation;
 import com.intellij.openapi.fileEditor.FileEditorState;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.PossiblyDumbAware;
 import com.intellij.openapi.util.UserDataHolderBase;
 import org.jetbrains.annotations.NotNull;
@@ -22,9 +23,9 @@ public class FlowDesignerEditor extends UserDataHolderBase implements FileEditor
     private GraphManager manager;
     private DesignerEditor editor;
 
-    FlowDesignerEditor(FlowSnapshot snapshot, GraphManager manager, DesignerPanelActionHandler actionHandler) {
+    FlowDesignerEditor(Module module, FlowSnapshot snapshot, GraphManager manager, DesignerPanelActionHandler actionHandler) {
         this.manager = manager;
-        this.editor = new DesignerEditor(snapshot, actionHandler);
+        this.editor = new DesignerEditor(module, snapshot, actionHandler);
     }
 
     @NotNull

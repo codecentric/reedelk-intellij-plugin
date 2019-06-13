@@ -17,6 +17,7 @@ public class FlowSerializer extends AbstractSerializer {
         super(graph);
     }
 
+    @Override
     protected String serialize() {
         JSONArray flow = new JSONArray();
 
@@ -24,7 +25,9 @@ public class FlowSerializer extends AbstractSerializer {
 
         JSONObject flowObject = JsonObjectFactory.newJSONObject();
         Flow.id(graph.id(), flowObject);
+        Flow.description(graph.description(), flowObject);
         Flow.flow(flow, flowObject);
-        return flowObject.toString(2);
+
+        return flowObject.toString(JSON_INDENT_FACTOR);
     }
 }

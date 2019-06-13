@@ -11,6 +11,7 @@ import com.esb.plugin.component.type.stop.StopPropertiesRenderer;
 import com.esb.plugin.component.type.unknown.UnknownPropertiesRenderer;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.system.component.*;
+import com.intellij.openapi.module.Module;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
@@ -34,6 +35,7 @@ public class NodePropertiesRendererFactory {
         RENDERER = Collections.unmodifiableMap(tmp);
     }
 
+    private Module module;
     private FlowSnapshot snapshot;
     private ComponentData componentData;
 
@@ -54,7 +56,13 @@ public class NodePropertiesRendererFactory {
         return this;
     }
 
+    public NodePropertiesRendererFactory module(Module module) {
+        this.module = module;
+        return this;
+    }
+
     public NodePropertiesRenderer build() {
+        checkNotNull(module, "module");
         checkNotNull(snapshot, "snapshot");
         checkNotNull(componentData, "componentData");
 
@@ -66,8 +74,8 @@ public class NodePropertiesRendererFactory {
     private NodePropertiesRenderer instantiateRenderer(Class<? extends NodePropertiesRenderer> rendererClazz) {
         try {
             return rendererClazz
-                    .getConstructor(FlowSnapshot.class)
-                    .newInstance(snapshot);
+                    .getConstructor(FlowSnapshot.class, Module.class)
+                    .newInstance(snapshot, module);
         } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
             throw new ESBException(e);
         }

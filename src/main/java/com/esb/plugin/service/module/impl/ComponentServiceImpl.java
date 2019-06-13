@@ -30,7 +30,7 @@ import static java.util.Arrays.stream;
 
 public class ComponentServiceImpl implements ComponentService, MavenImportListener, CompilationStatusListener {
 
-    private static final String SYSTEM_COMPONENTS_MODULE_NAME = "Flow Control";
+    private static final String SYSTEM_COMPONENTS_MODULE_NAME = "flow-control";
 
     private final Module module;
     private final Project project;

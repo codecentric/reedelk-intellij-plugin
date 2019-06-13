@@ -9,6 +9,7 @@ import com.esb.plugin.editor.properties.widget.DefaultPropertiesPanel;
 import com.esb.plugin.editor.properties.widget.FormBuilder;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
+import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBPanel;
 
 import javax.swing.*;
@@ -16,8 +17,8 @@ import java.util.List;
 
 public class GenericComponentPropertiesRenderer extends AbstractNodePropertiesRenderer {
 
-    public GenericComponentPropertiesRenderer(FlowSnapshot snapshot) {
-        super(snapshot);
+    public GenericComponentPropertiesRenderer(FlowSnapshot snapshot, Module module) {
+        super(snapshot, module);
     }
 
     @Override

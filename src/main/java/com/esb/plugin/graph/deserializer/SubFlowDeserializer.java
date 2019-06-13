@@ -1,6 +1,5 @@
 package com.esb.plugin.graph.deserializer;
 
-import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphProvider;
 import com.intellij.openapi.diagnostic.Logger;
@@ -10,7 +9,11 @@ import org.json.JSONObject;
 
 import java.util.Optional;
 
+import static com.esb.internal.commons.JsonParser.Subflow;
+
 public class SubFlowDeserializer extends AbstractDeserializer {
+
+    private static final String EMPTY_DESCRIPTION = "";
 
     private static final Logger LOG = Logger.getInstance(FlowDeserializer.class);
 
@@ -31,6 +34,18 @@ public class SubFlowDeserializer extends AbstractDeserializer {
 
     @Override
     protected JSONArray getFlow(JSONObject flowDefinition) {
-        return JsonParser.Subflow.subflow(flowDefinition);
+        return Subflow.subflow(flowDefinition);
+    }
+
+    @Override
+    protected String getId(JSONObject flowDefinition) {
+        return Subflow.id(flowDefinition);
+    }
+
+    @Override
+    protected String getDescription(JSONObject flowDefinition) {
+        return Subflow.hasDescription(flowDefinition) ?
+                Subflow.description(flowDefinition) :
+                EMPTY_DESCRIPTION;
     }
 }

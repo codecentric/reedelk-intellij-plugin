@@ -3,22 +3,24 @@ package com.esb.plugin.component.type.flowreference;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.type.generic.GenericComponentPropertiesRenderer;
+import com.esb.plugin.editor.properties.widget.FormBuilder;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.service.module.SubflowService;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.components.JBPanel;
 
-import java.awt.*;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.esb.internal.commons.JsonParser.FlowReference;
-import static java.awt.BorderLayout.CENTER;
-import static java.awt.BorderLayout.NORTH;
 
 public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesRenderer {
 
-    public FlowReferencePropertiesRenderer(FlowSnapshot snapshot) {
-        super(snapshot);
+    public FlowReferencePropertiesRenderer(FlowSnapshot snapshot, Module module) {
+        super(snapshot, module);
     }
 
     @Override
@@ -33,15 +35,17 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
                         componentData.getPropertyDescriptor(property)
                                 .ifPresent(descriptors::add));
 
-
         JBPanel genericPropertiesPanel = createPropertiesPanelFrom(descriptors, componentData);
 
-        JBPanel selectSubFlowDropDown = new JBPanel();
 
-        JBPanel container = new JBPanel();
-        container.setLayout(new BorderLayout());
-        container.add(genericPropertiesPanel, NORTH);
-        container.add(selectSubFlowDropDown, CENTER);
-        return container;
+        List<String> strings = SubflowService.getInstance(module).listSubflows();
+        JComboBox<String> subflowsList = new ComboBox<>();
+        strings.forEach(subflowsList::addItem);
+
+        FormBuilder.get()
+                .addLabel("Subflow", genericPropertiesPanel)
+                .addLastField(subflowsList, genericPropertiesPanel);
+
+        return genericPropertiesPanel;
     }
 }

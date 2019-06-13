@@ -1,9 +1,6 @@
 package com.esb.plugin.component.scanner;
 
-import com.esb.api.component.AbstractInbound;
-import com.esb.api.component.Component;
-import com.esb.api.component.Inbound;
-import com.esb.api.component.Processor;
+import com.esb.api.component.*;
 import com.esb.plugin.component.domain.ComponentClass;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
@@ -23,13 +20,15 @@ public class ComponentClassAnalyzer {
             return ComponentClass.PROCESSOR;
         } else if (isComponent(classInfo)) {
             return ComponentClass.COMPONENT;
+        } else if (isJoin(classInfo)) {
+            return ComponentClass.JOIN;
         } else {
             return ComponentClass.UNKNOWN;
         }
     }
 
     /**
-     * A component is inbound if implements either the AbstractInbound abstract class
+     * A component is inbound if it implements either the AbstractInbound abstract class
      * or Inbound interface.
      *
      * @param componentClassInfo the class info descriptor.
@@ -45,7 +44,7 @@ public class ComponentClassAnalyzer {
     }
 
     /**
-     * A component is a processor if implements the Processor interface.
+     * A component is a processor if it implements the Processor interface.
      *
      * @param componentClassInfo the class info descriptor.
      * @return true if this class descriptor describes a Processor component, false otherwise.
@@ -55,13 +54,23 @@ public class ComponentClassAnalyzer {
     }
 
     /**
-     * A component is just a component if implements the Component interface.
+     * A component is just a component if it implements the Component interface.
      *
      * @param componentClassInfo the class info descriptor.
      * @return true if this class descriptor describes a Component, false otherwise.
      */
     private boolean isComponent(ClassInfo componentClassInfo) {
         return implementsInterface(componentClassInfo, Component.class);
+    }
+
+    /**
+     * A component is class join if it implements the Join interface.
+     *
+     * @param componentClassInfo the class info descriptor.
+     * @return true if this class descriptor describes a Join, false otherwise.
+     */
+    private boolean isJoin(ClassInfo componentClassInfo) {
+        return implementsInterface(componentClassInfo, Join.class);
     }
 
     private static boolean implementsInterface(ClassInfo componentClassInfo, Class target) {

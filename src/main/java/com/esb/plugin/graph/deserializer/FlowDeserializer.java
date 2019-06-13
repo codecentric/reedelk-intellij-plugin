@@ -13,6 +13,8 @@ import static com.esb.internal.commons.JsonParser.Flow;
 
 public class FlowDeserializer extends AbstractDeserializer {
 
+    private static final String EMPTY_DESCRIPTION = "";
+
     private static final Logger LOG = Logger.getInstance(FlowDeserializer.class);
 
     FlowDeserializer(String json, DeserializerContext context, FlowGraphProvider graphProvider) {
@@ -31,7 +33,19 @@ public class FlowDeserializer extends AbstractDeserializer {
     }
 
     @Override
+    protected String getId(JSONObject flowDefinition) {
+        return Flow.id(flowDefinition);
+    }
+
+    @Override
     protected JSONArray getFlow(JSONObject flowDefinition) {
         return Flow.flow(flowDefinition);
+    }
+
+    @Override
+    protected String getDescription(JSONObject flowDefinition) {
+        return Flow.hasDescription(flowDefinition) ?
+                Flow.description(flowDefinition) :
+                EMPTY_DESCRIPTION;
     }
 }

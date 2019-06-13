@@ -5,6 +5,7 @@ public enum ComponentClass {
     INBOUND,
     PROCESSOR,
     COMPONENT,
+    JOIN,
     UNKNOWN
 
 }

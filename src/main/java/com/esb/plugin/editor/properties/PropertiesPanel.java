@@ -6,6 +6,8 @@ import com.esb.plugin.editor.properties.renderer.node.NodePropertiesRendererFact
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.NothingSelectedNode;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.module.Module;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPanel;
@@ -21,7 +23,12 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
 
     private final MatteBorder border = BorderFactory.createMatteBorder(0, 10, 0, 0, getBackground());
 
-    public PropertiesPanel() {
+    private final Module module;
+    private final FlowSnapshot snapshot;
+
+    public PropertiesPanel(Module module, FlowSnapshot snapshot) {
+        this.module = module;
+        this.snapshot = snapshot;
         setBorder(border);
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
     }
@@ -46,9 +53,18 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
         repaint();
     }
 
+    private static final Logger LOG = Logger.getInstance(PropertiesPanel.class);
+
+    private JLabel label = new JLabel();
+
     @Override
     public void onUnselect() {
         removeAll();
+        String description = snapshot.getGraph().description();
+        label.setText(description);
+        LOG.warn("Description: " + description);
+        add(label);
+        revalidate();
         repaint();
     }
 
@@ -56,6 +72,7 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
         JBPanel propertiesPanel = NodePropertiesRendererFactory.get()
                 .component(componentData)
                 .snapshot(snapshot)
+                .module(module)
                 .build()
                 .render(node);
 

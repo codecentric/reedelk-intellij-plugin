@@ -7,13 +7,14 @@ import com.esb.plugin.editor.properties.widget.DefaultPropertiesPanel;
 import com.esb.plugin.editor.properties.widget.FormBuilder;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
+import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPanel;
 
 public class UnknownPropertiesRenderer extends AbstractNodePropertiesRenderer {
 
-    public UnknownPropertiesRenderer(FlowSnapshot snapshot) {
-        super(snapshot);
+    public UnknownPropertiesRenderer(FlowSnapshot snapshot, Module module) {
+        super(snapshot, module);
     }
 
     @Override

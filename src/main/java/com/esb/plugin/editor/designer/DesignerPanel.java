@@ -22,6 +22,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Collection;
+import java.util.Optional;
 
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
@@ -120,17 +121,19 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         // Notify all nodes that the mouse has been pressed
         graph.nodes().forEach(node -> node.mousePressed(this, event));
 
-        // Unselect the current selected component
-        unselect();
-
         // Select the component under the current mouse coordinates
         int x = event.getX();
         int y = event.getY();
-        graph.nodes()
+        Optional<GraphNode> selected = graph.nodes()
                 .stream()
                 .filter(node -> node.contains(DesignerPanel.this, x, y))
-                .findFirst()
-                .ifPresent(node -> select(node, event));
+                .findFirst();
+        if (selected.isPresent()) {
+            this.selected.unselected();
+            select(selected.get(), event);
+        } else {
+            unselect();
+        }
 
         // Repaint all the nodes
         repaint();

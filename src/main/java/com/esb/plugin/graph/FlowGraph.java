@@ -12,6 +12,10 @@ public interface FlowGraph {
 
     String id();
 
+    String description();
+
+    void setDescription(String description);
+
     boolean isEmpty();
 
     FlowGraph copy();
@@ -41,4 +45,5 @@ public interface FlowGraph {
     void removeEdgesStartingFrom(GraphNode node);
 
     void breadthFirstTraversal(@NotNull Consumer<GraphNode> consumer);
+
 }

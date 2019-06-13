@@ -1,9 +1,10 @@
 package com.esb.plugin.graph.serializer;
 
-import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.graph.FlowGraph;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import static com.esb.internal.commons.JsonParser.Subflow;
 
 public class SubFlowSerializer extends AbstractSerializer {
 
@@ -23,8 +24,10 @@ public class SubFlowSerializer extends AbstractSerializer {
         serializeFlow(flow);
 
         JSONObject flowObject = JsonObjectFactory.newJSONObject();
-        JsonParser.Subflow.id(graph.id(), flowObject);
-        JsonParser.Subflow.subflow(flow, flowObject);
-        return flowObject.toString(2);
+        Subflow.id(graph.id(), flowObject);
+        Subflow.description(graph.description(), flowObject);
+        Subflow.subflow(flow, flowObject);
+
+        return flowObject.toString(JSON_INDENT_FACTOR);
     }
 }

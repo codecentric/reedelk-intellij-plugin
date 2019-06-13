@@ -24,6 +24,17 @@ public class FlowGraphChangeAware implements FlowGraph {
     }
 
     @Override
+    public String description() {
+        return wrapped.description();
+    }
+
+    @Override
+    public void setDescription(String description) {
+        wrapped.setDescription(description);
+        changed = true;
+    }
+
+    @Override
     public void root(@NotNull GraphNode n1) {
         wrapped.root(n1);
         changed = true;

@@ -11,6 +11,8 @@ import static com.esb.internal.commons.Preconditions.checkArgument;
 
 abstract class AbstractSerializer {
 
+    protected static final int JSON_INDENT_FACTOR = 2;
+
     protected final FlowGraph graph;
 
     AbstractSerializer(FlowGraph graph) {
