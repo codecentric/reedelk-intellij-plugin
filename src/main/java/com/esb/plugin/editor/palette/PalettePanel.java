@@ -3,8 +3,9 @@ package com.esb.plugin.editor.palette;
 import com.esb.plugin.component.domain.ComponentDescriptor;
 import com.esb.plugin.component.domain.ComponentsPackage;
 import com.esb.plugin.component.scanner.ComponentListUpdateNotifier;
-import com.esb.plugin.editor.DesignerVisibleNotifier;
 import com.esb.plugin.service.module.ComponentService;
+import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
@@ -29,22 +30,18 @@ import java.util.function.Predicate;
 import static java.awt.BorderLayout.CENTER;
 import static java.util.stream.Collectors.toList;
 
-public class PalettePanel extends JBPanel implements DesignerVisibleNotifier, ComponentListUpdateNotifier, FileEditorManagerListener {
+public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier, FileEditorManagerListener {
 
-    private final String rootTreeNodeName = "root";
-
-    private final Project project;
     private final Tree tree;
-    private DefaultMutableTreeNode root;
+    private final Project project;
+    private final DefaultMutableTreeNode root;
 
     public PalettePanel(Project project) {
         super(new BorderLayout());
 
         this.project = project;
-        MessageBusConnection busConnection = project.getMessageBus().connect();
-        busConnection.subscribe(DESIGNER_VISIBLE, this);
 
-        this.root = new DefaultMutableTreeNode(rootTreeNodeName);
+        this.root = new DefaultMutableTreeNode("root");
         TreeModel model = new DefaultTreeModel(this.root);
 
         PaletteComponentTreeRenderer renderer = new PaletteComponentTreeRenderer();
@@ -62,6 +59,8 @@ public class PalettePanel extends JBPanel implements DesignerVisibleNotifier, Co
         MessageBusConnection connect = project.getMessageBus().connect();
         connect.subscribe(COMPONENT_LIST_UPDATE_TOPIC, this);
         connect.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
+
+        updateComponentsForSelectedFile();
     }
 
     @Override
@@ -70,9 +69,45 @@ public class PalettePanel extends JBPanel implements DesignerVisibleNotifier, Co
     }
 
     @Override
-    public void onDesignerVisible(VirtualFile virtualFile) {
-        Module module = ModuleUtil.findModuleForFile(virtualFile, project);
+    public void selectionChanged(@NotNull FileEditorManagerEvent event) {
+        VirtualFile selectedFile = event.getNewFile();
+        updateComponents(selectedFile);
+    }
+
+    private void updateComponents(VirtualFile file) {
+        Module module = ModuleUtil.findModuleForFile(file, project);
         updateComponents(module);
+    }
+
+    private void updateComponents(Module module) {
+        Collection<ComponentsPackage> componentsPackages = ComponentService.getInstance(module).getModulesDescriptors();
+        List<DefaultMutableTreeNode> componentsTreeNodes = getComponentsPackagesTreeNodes(componentsPackages);
+        SwingUtilities.invokeLater(() -> {
+            root.removeAllChildren();
+            componentsTreeNodes.forEach(componentTreeNode -> root.add(componentTreeNode));
+
+            DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+            model.reload();
+
+            expandRows(tree);
+        });
+    }
+
+    private void updateComponentsForSelectedFile() {
+        VirtualFile[] selectedFiles = FileEditorManager.getInstance(project).getSelectedFiles();
+        if (selectedFiles.length > 0) {
+            updateComponents(selectedFiles[0]);
+        }
+    }
+
+    private static void expandRows(Tree tree) {
+        int j = tree.getRowCount();
+        int i = 0;
+        while (i < j) {
+            tree.expandRow(i);
+            i += 1;
+            j = tree.getRowCount();
+        }
     }
 
     @NotNull
@@ -96,33 +131,9 @@ public class PalettePanel extends JBPanel implements DesignerVisibleNotifier, Co
         return componentTreeNode;
     }
 
-    private void updateComponents(Module module) {
-        Collection<ComponentsPackage> componentsPackages = ComponentService.getInstance(module).getModulesDescriptors();
-        List<DefaultMutableTreeNode> componentsTreeNodes = getComponentsPackagesTreeNodes(componentsPackages);
-        SwingUtilities.invokeLater(() -> {
-            root.removeAllChildren();
-            componentsTreeNodes.forEach(componentTreeNode -> root.add(componentTreeNode));
-
-            DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
-            model.reload();
-
-            expandRows(tree);
-        });
-    }
-
     private static final Predicate<ComponentDescriptor> ExcludeHiddenComponent =
             componentDescriptor -> !componentDescriptor.isHidden();
 
     private static final Predicate<ComponentsPackage> ExcludeModuleWithoutComponents =
             componentsPackage -> !componentsPackage.getModuleComponents().isEmpty();
-
-    private static void expandRows(Tree tree) {
-        int j = tree.getRowCount();
-        int i = 0;
-        while (i < j) {
-            tree.expandRow(i);
-            i += 1;
-            j = tree.getRowCount();
-        }
-    }
 }
