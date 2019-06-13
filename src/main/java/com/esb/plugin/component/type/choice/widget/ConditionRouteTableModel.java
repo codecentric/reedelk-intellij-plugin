@@ -1,7 +1,7 @@
 package com.esb.plugin.component.type.choice.widget;
 
 import com.esb.plugin.component.type.choice.ChoiceConditionRoutePair;
-import com.esb.plugin.graph.GraphSnapshot;
+import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 
 import javax.swing.table.AbstractTableModel;
@@ -9,10 +9,10 @@ import java.util.List;
 
 public class ConditionRouteTableModel extends AbstractTableModel {
 
-    private final GraphSnapshot snapshot;
+    private final FlowSnapshot snapshot;
     private final List<ChoiceConditionRoutePair> conditionRouteList;
 
-    public ConditionRouteTableModel(List<ChoiceConditionRoutePair> conditionRouteList, GraphSnapshot snapshot) {
+    public ConditionRouteTableModel(List<ChoiceConditionRoutePair> conditionRouteList, FlowSnapshot snapshot) {
         this.conditionRouteList = conditionRouteList;
         this.snapshot = snapshot;
     }

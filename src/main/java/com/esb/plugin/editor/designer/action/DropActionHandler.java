@@ -2,7 +2,7 @@ package com.esb.plugin.editor.designer.action;
 
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
-import com.esb.plugin.graph.GraphSnapshot;
+import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.action.ActionNodeAdd;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
@@ -17,11 +17,11 @@ public class DropActionHandler {
     private static final Logger LOG = Logger.getInstance(DropActionHandler.class);
 
     private final Module module;
-    private final GraphSnapshot snapshot;
+    private final FlowSnapshot snapshot;
     private final DropTargetDropEvent dropEvent;
     private final ActionNodeAdd actionNodeAdd;
 
-    public DropActionHandler(Module module, GraphSnapshot snapshot, DropTargetDropEvent dropEvent, ActionNodeAdd actionNodeAdd) {
+    public DropActionHandler(Module module, FlowSnapshot snapshot, DropTargetDropEvent dropEvent, ActionNodeAdd actionNodeAdd) {
         checkArgument(module != null, "module");
         checkArgument(snapshot != null, "snapshot");
         checkArgument(dropEvent != null, "drop event");

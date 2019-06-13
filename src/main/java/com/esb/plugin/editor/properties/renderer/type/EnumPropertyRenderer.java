@@ -4,7 +4,7 @@ import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.domain.TypeEnumDescriptor;
 import com.esb.plugin.editor.properties.widget.input.EnumDropDown;
-import com.esb.plugin.graph.GraphSnapshot;
+import com.esb.plugin.graph.FlowSnapshot;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +12,7 @@ import java.awt.*;
 public class EnumPropertyRenderer implements TypePropertyRenderer {
 
     @Override
-    public JComponent render(ComponentPropertyDescriptor descriptor, ComponentData componentData, GraphSnapshot snapshot) {
+    public JComponent render(ComponentPropertyDescriptor descriptor, ComponentData componentData, FlowSnapshot snapshot) {
         String propertyName = descriptor.getPropertyName();
 
         TypeEnumDescriptor propertyType = (TypeEnumDescriptor) descriptor.getPropertyType();

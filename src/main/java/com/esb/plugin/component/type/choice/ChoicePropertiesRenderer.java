@@ -4,7 +4,7 @@ import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.type.choice.widget.ChoiceRouteTable;
 import com.esb.plugin.component.type.choice.widget.ConditionRouteTableModel;
 import com.esb.plugin.component.type.generic.GenericComponentPropertiesRenderer;
-import com.esb.plugin.graph.GraphSnapshot;
+import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.ui.components.JBPanel;
 
@@ -17,7 +17,7 @@ import static java.awt.BorderLayout.NORTH;
 
 public class ChoicePropertiesRenderer extends GenericComponentPropertiesRenderer {
 
-    public ChoicePropertiesRenderer(GraphSnapshot snapshot) {
+    public ChoicePropertiesRenderer(FlowSnapshot snapshot) {
         super(snapshot);
     }
 

@@ -9,7 +9,7 @@ import com.esb.plugin.component.type.generic.GenericComponentPropertiesRenderer;
 import com.esb.plugin.component.type.placeholder.PlaceholderPropertiesRenderer;
 import com.esb.plugin.component.type.stop.StopPropertiesRenderer;
 import com.esb.plugin.component.type.unknown.UnknownPropertiesRenderer;
-import com.esb.plugin.graph.GraphSnapshot;
+import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.system.component.*;
 
 import java.lang.reflect.InvocationTargetException;
@@ -34,7 +34,7 @@ public class NodePropertiesRendererFactory {
         RENDERER = Collections.unmodifiableMap(tmp);
     }
 
-    private GraphSnapshot snapshot;
+    private FlowSnapshot snapshot;
     private ComponentData componentData;
 
     private NodePropertiesRendererFactory() {
@@ -44,7 +44,7 @@ public class NodePropertiesRendererFactory {
         return new NodePropertiesRendererFactory();
     }
 
-    public NodePropertiesRendererFactory snapshot(GraphSnapshot snapshot) {
+    public NodePropertiesRendererFactory snapshot(FlowSnapshot snapshot) {
         this.snapshot = snapshot;
         return this;
     }
@@ -66,7 +66,7 @@ public class NodePropertiesRendererFactory {
     private NodePropertiesRenderer instantiateRenderer(Class<? extends NodePropertiesRenderer> rendererClazz) {
         try {
             return rendererClazz
-                    .getConstructor(GraphSnapshot.class)
+                    .getConstructor(FlowSnapshot.class)
                     .newInstance(snapshot);
         } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
             throw new ESBException(e);

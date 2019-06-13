@@ -5,7 +5,7 @@ import com.esb.plugin.component.domain.ComponentDescriptor;
 import com.esb.plugin.editor.designer.action.DropActionHandler;
 import com.esb.plugin.editor.designer.action.MoveActionHandler;
 import com.esb.plugin.editor.designer.action.RemoveActionHandler;
-import com.esb.plugin.graph.GraphSnapshot;
+import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.action.ActionNodeAdd;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.GraphNodeFactory;
@@ -28,10 +28,10 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
 
     private static final Logger LOG = Logger.getInstance(AbstractDesignerPanelActionHandler.class);
 
-    protected final GraphSnapshot snapshot;
+    protected final FlowSnapshot snapshot;
     protected final Module module;
 
-    protected AbstractDesignerPanelActionHandler(Module module, GraphSnapshot snapshot) {
+    protected AbstractDesignerPanelActionHandler(Module module, FlowSnapshot snapshot) {
         this.snapshot = snapshot;
         this.module = module;
     }

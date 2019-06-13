@@ -1,7 +1,7 @@
 package com.esb.plugin.editor;
 
 import com.esb.plugin.editor.designer.AbstractDesignerPanelActionHandler;
-import com.esb.plugin.graph.GraphSnapshot;
+import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.action.ActionNodeAdd;
 import com.esb.plugin.graph.action.FlowActionNodeAdd;
 import com.esb.plugin.graph.node.GraphNode;
@@ -12,7 +12,7 @@ import java.awt.image.ImageObserver;
 
 public class FlowDesignerPanelActionHandler extends AbstractDesignerPanelActionHandler {
 
-    FlowDesignerPanelActionHandler(Module module, GraphSnapshot snapshot) {
+    FlowDesignerPanelActionHandler(Module module, FlowSnapshot snapshot) {
         super(module, snapshot);
     }
 

@@ -3,7 +3,7 @@ package com.esb.plugin.editor.properties;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.editor.designer.SelectListener;
 import com.esb.plugin.editor.properties.renderer.node.NodePropertiesRendererFactory;
-import com.esb.plugin.graph.GraphSnapshot;
+import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.NothingSelectedNode;
 import com.intellij.ui.JBColor;
@@ -27,7 +27,7 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
     }
 
     @Override
-    public void onSelect(GraphSnapshot snapshot, GraphNode node) {
+    public void onSelect(FlowSnapshot snapshot, GraphNode node) {
         if (node instanceof NothingSelectedNode) return;
 
         ComponentData componentData = node.componentData();
@@ -52,7 +52,7 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
         repaint();
     }
 
-    private JBPanel createPropertiesPanel(ComponentData componentData, GraphSnapshot snapshot, GraphNode node) {
+    private JBPanel createPropertiesPanel(ComponentData componentData, FlowSnapshot snapshot, GraphNode node) {
         JBPanel propertiesPanel = NodePropertiesRendererFactory.get()
                 .component(componentData)
                 .snapshot(snapshot)

@@ -7,7 +7,7 @@ import com.esb.plugin.editor.properties.renderer.node.AbstractNodePropertiesRend
 import com.esb.plugin.editor.properties.renderer.type.TypeRendererFactory;
 import com.esb.plugin.editor.properties.widget.DefaultPropertiesPanel;
 import com.esb.plugin.editor.properties.widget.FormBuilder;
-import com.esb.plugin.graph.GraphSnapshot;
+import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.ui.components.JBPanel;
 
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class GenericComponentPropertiesRenderer extends AbstractNodePropertiesRenderer {
 
-    public GenericComponentPropertiesRenderer(GraphSnapshot snapshot) {
+    public GenericComponentPropertiesRenderer(FlowSnapshot snapshot) {
         super(snapshot);
     }
 

@@ -3,7 +3,7 @@ package com.esb.plugin.editor.designer.action;
 import com.esb.plugin.commons.Half;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
-import com.esb.plugin.graph.GraphSnapshot;
+import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.action.ActionNodeAdd;
 import com.esb.plugin.graph.action.ActionNodeRemove;
 import com.esb.plugin.graph.node.GraphNode;
@@ -23,10 +23,10 @@ public class MoveActionHandler {
     private final Point movePoint;
     private final GraphNode selected;
     private final Graphics2D graphics;
-    private final GraphSnapshot snapshot;
+    private final FlowSnapshot snapshot;
     private final ActionNodeAdd actionNodeAdd;
 
-    public MoveActionHandler(Module module, GraphSnapshot snapshot, Graphics2D graphics, GraphNode selectedNode, Point movePoint, ActionNodeAdd actionNodeAdd) {
+    public MoveActionHandler(Module module, FlowSnapshot snapshot, Graphics2D graphics, GraphNode selectedNode, Point movePoint, ActionNodeAdd actionNodeAdd) {
         checkArgument(module != null, "module");
         checkArgument(snapshot != null, "snapshot");
         checkArgument(graphics != null, "graphics");

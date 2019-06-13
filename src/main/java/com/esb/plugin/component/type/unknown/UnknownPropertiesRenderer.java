@@ -5,14 +5,14 @@ import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.editor.properties.renderer.node.AbstractNodePropertiesRenderer;
 import com.esb.plugin.editor.properties.widget.DefaultPropertiesPanel;
 import com.esb.plugin.editor.properties.widget.FormBuilder;
-import com.esb.plugin.graph.GraphSnapshot;
+import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPanel;
 
 public class UnknownPropertiesRenderer extends AbstractNodePropertiesRenderer {
 
-    public UnknownPropertiesRenderer(GraphSnapshot snapshot) {
+    public UnknownPropertiesRenderer(FlowSnapshot snapshot) {
         super(snapshot);
     }
 

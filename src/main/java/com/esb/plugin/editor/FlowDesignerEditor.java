@@ -1,7 +1,7 @@
 package com.esb.plugin.editor;
 
 import com.esb.plugin.editor.designer.DesignerPanelActionHandler;
-import com.esb.plugin.graph.GraphSnapshot;
+import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.manager.GraphManager;
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
 import com.intellij.codeHighlighting.HighlightingPass;
@@ -22,7 +22,7 @@ public class FlowDesignerEditor extends UserDataHolderBase implements FileEditor
     private GraphManager manager;
     private DesignerEditor editor;
 
-    FlowDesignerEditor(GraphSnapshot snapshot, GraphManager manager, DesignerPanelActionHandler actionHandler) {
+    FlowDesignerEditor(FlowSnapshot snapshot, GraphManager manager, DesignerPanelActionHandler actionHandler) {
         this.manager = manager;
         this.editor = new DesignerEditor(snapshot, actionHandler);
     }

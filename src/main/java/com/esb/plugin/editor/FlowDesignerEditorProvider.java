@@ -3,7 +3,7 @@ package com.esb.plugin.editor;
 import com.esb.plugin.editor.designer.DesignerPanelActionHandler;
 import com.esb.plugin.filetype.FlowFileType;
 import com.esb.plugin.graph.FlowGraphProvider;
-import com.esb.plugin.graph.GraphSnapshot;
+import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.manager.FlowGraphManager;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorPolicy;
@@ -32,7 +32,7 @@ public class FlowDesignerEditorProvider implements FileEditorProvider, DumbAware
         checkState(module != null, "Module must not be null");
 
         FlowGraphProvider graphProvider = new FlowGraphProvider();
-        GraphSnapshot snapshot = new GraphSnapshot(graphProvider);
+        FlowSnapshot snapshot = new FlowSnapshot(graphProvider);
         FlowGraphManager graphManager = new FlowGraphManager(project, module, file, snapshot, graphProvider);
 
         DesignerPanelActionHandler handler = new FlowDesignerPanelActionHandler(module, snapshot);

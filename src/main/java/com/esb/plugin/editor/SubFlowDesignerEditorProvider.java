@@ -2,7 +2,7 @@ package com.esb.plugin.editor;
 
 import com.esb.plugin.filetype.SubFlowFileType;
 import com.esb.plugin.graph.FlowGraphProvider;
-import com.esb.plugin.graph.GraphSnapshot;
+import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.manager.GraphManager;
 import com.esb.plugin.graph.manager.SubFlowGraphManager;
 import com.intellij.openapi.fileEditor.FileEditor;
@@ -32,7 +32,7 @@ public class SubFlowDesignerEditorProvider implements FileEditorProvider, DumbAw
         checkState(module != null, "Module must not be null");
 
         FlowGraphProvider graphProvider = new FlowGraphProvider();
-        GraphSnapshot snapshot = new GraphSnapshot(graphProvider);
+        FlowSnapshot snapshot = new FlowSnapshot(graphProvider);
         GraphManager graphManager = new SubFlowGraphManager(project, module, file, snapshot, graphProvider);
 
         SubFlowDesignerPanelActionHandler handler = new SubFlowDesignerPanelActionHandler(module, snapshot);

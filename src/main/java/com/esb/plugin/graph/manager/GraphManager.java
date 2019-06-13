@@ -3,7 +3,7 @@ package com.esb.plugin.graph.manager;
 import com.esb.plugin.component.scanner.ComponentListUpdateNotifier;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphProvider;
-import com.esb.plugin.graph.GraphSnapshot;
+import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.SnapshotListener;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -37,14 +37,14 @@ public abstract class GraphManager implements FileEditorManagerListener, Snapsho
     private final Module module;
     private final Project project;
     private final VirtualFile graphFile;
-    private final GraphSnapshot snapshot;
+    private final FlowSnapshot snapshot;
     private final FlowGraphProvider graphProvider;
     private final MessageBusConnection projectBusConnection;
     private final MessageBusConnection moduleBusConnection;
 
     private Document document;
 
-    public GraphManager(@NotNull Project project, @NotNull Module module, @NotNull VirtualFile graphFile, @NotNull GraphSnapshot snapshot, @NotNull FlowGraphProvider graphProvider) {
+    public GraphManager(@NotNull Project project, @NotNull Module module, @NotNull VirtualFile graphFile, @NotNull FlowSnapshot snapshot, @NotNull FlowGraphProvider graphProvider) {
         this.module = module;
         this.project = project;
         this.snapshot = snapshot;

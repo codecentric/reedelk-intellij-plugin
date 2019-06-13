@@ -5,14 +5,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GraphSnapshot {
+public class FlowSnapshot {
 
     private FlowGraph graph;
 
     private final FlowGraphProvider graphProvider;
     private final List<SnapshotListener> listeners = new ArrayList<>();
 
-    public GraphSnapshot(FlowGraphProvider graphProvider) {
+    public FlowSnapshot(FlowGraphProvider graphProvider) {
         this.graphProvider = graphProvider;
     }
 

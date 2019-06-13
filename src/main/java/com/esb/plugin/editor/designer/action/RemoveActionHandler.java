@@ -1,7 +1,7 @@
 package com.esb.plugin.editor.designer.action;
 
 import com.esb.plugin.graph.FlowGraphChangeAware;
-import com.esb.plugin.graph.GraphSnapshot;
+import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.action.ActionNodeRemove;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
@@ -13,10 +13,10 @@ import java.util.Optional;
 public class RemoveActionHandler {
 
     private final GraphNode nodeToRemove;
-    private final GraphSnapshot snapshot;
+    private final FlowSnapshot snapshot;
     private final Module module;
 
-    public RemoveActionHandler(Module module, GraphSnapshot snapshot, GraphNode nodeToRemove) {
+    public RemoveActionHandler(Module module, FlowSnapshot snapshot, GraphNode nodeToRemove) {
         this.nodeToRemove = nodeToRemove;
         this.snapshot = snapshot;
         this.module = module;

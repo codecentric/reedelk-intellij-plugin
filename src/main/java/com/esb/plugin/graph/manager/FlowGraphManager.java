@@ -2,7 +2,7 @@ package com.esb.plugin.graph.manager;
 
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphProvider;
-import com.esb.plugin.graph.GraphSnapshot;
+import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.deserializer.FlowDeserializer;
 import com.esb.plugin.graph.serializer.FlowSerializer;
 import com.intellij.openapi.editor.Document;
@@ -15,7 +15,7 @@ import java.util.Optional;
 
 public class FlowGraphManager extends GraphManager {
 
-    public FlowGraphManager(@NotNull Project project, @NotNull Module module, @NotNull VirtualFile graphFile, @NotNull GraphSnapshot snapshot, @NotNull FlowGraphProvider graphProvider) {
+    public FlowGraphManager(@NotNull Project project, @NotNull Module module, @NotNull VirtualFile graphFile, @NotNull FlowSnapshot snapshot, @NotNull FlowGraphProvider graphProvider) {
         super(project, module, graphFile, snapshot, graphProvider);
     }
 

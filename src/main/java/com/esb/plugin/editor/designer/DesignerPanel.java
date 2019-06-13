@@ -2,7 +2,7 @@ package com.esb.plugin.editor.designer;
 
 import com.esb.plugin.commons.PrintFlowInfo;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.GraphSnapshot;
+import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.SnapshotListener;
 import com.esb.plugin.graph.layout.FlowGraphLayout;
 import com.esb.plugin.graph.node.GraphNode;
@@ -34,7 +34,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     private static final JBColor BACKGROUND_COLOR = JBColor.WHITE;
     private final GraphNode NOTHING_SELECTED = new NothingSelectedNode();
 
-    private GraphSnapshot snapshot;
+    private FlowSnapshot snapshot;
     private SelectListener selectListener;
     private GraphNode selected = NOTHING_SELECTED;
 
@@ -47,7 +47,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     private FlowGraph graph;
 
-    public DesignerPanel(GraphSnapshot snapshot, DesignerPanelActionHandler actionHandler) {
+    public DesignerPanel(FlowSnapshot snapshot, DesignerPanelActionHandler actionHandler) {
         setBackground(BACKGROUND_COLOR);
         addMouseListener(this);
         addMouseMotionListener(this);
