@@ -30,7 +30,7 @@ abstract class AbstractSerializer {
         // If the graph is empty there is an empty flow
         if (!graph.isEmpty()) {
             GraphNode root = graph.root();
-            FlowSerializerFactory.get()
+            SerializerFactory.get()
                     .node(root)
                     .build()
                     .serialize(graph, flow, root, new FlowSerializer.UntilNoSuccessors());

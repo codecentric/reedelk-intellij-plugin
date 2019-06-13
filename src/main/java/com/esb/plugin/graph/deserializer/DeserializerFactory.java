@@ -20,7 +20,7 @@ import java.util.Map;
 
 import static com.esb.internal.commons.Preconditions.checkState;
 
-public class FlowDeserializerFactory {
+public class DeserializerFactory {
 
     private FlowGraph graph;
     private DeserializerContext context;
@@ -39,21 +39,21 @@ public class FlowDeserializerFactory {
         COMPONENT_DESERIALIZER_MAP = Collections.unmodifiableMap(tmp);
     }
 
-    private FlowDeserializerFactory() {
+    private DeserializerFactory() {
     }
 
-    public FlowDeserializerFactory context(DeserializerContext context) {
+    public DeserializerFactory context(DeserializerContext context) {
         this.context = context;
         return this;
     }
 
-    public FlowDeserializerFactory componentDefinition(JSONObject componentDefinition) {
+    public DeserializerFactory componentDefinition(JSONObject componentDefinition) {
         this.componentDefinition = componentDefinition;
         return this;
     }
 
-    public static FlowDeserializerFactory get() {
-        return new FlowDeserializerFactory();
+    public static DeserializerFactory get() {
+        return new DeserializerFactory();
     }
 
     public Deserializer build() {
@@ -66,7 +66,7 @@ public class FlowDeserializerFactory {
         return instantiate(builderClazz);
     }
 
-    public FlowDeserializerFactory graph(FlowGraph graph) {
+    public DeserializerFactory graph(FlowGraph graph) {
         this.graph = graph;
         return this;
     }

@@ -36,7 +36,7 @@ abstract class AbstractDeserializer {
         for (int i = 0; i < flow.length(); i++) {
             JSONObject implementorDefinition = (JSONObject) flow.get(i);
 
-            current = FlowDeserializerFactory.get()
+            current = DeserializerFactory.get()
                     .componentDefinition(implementorDefinition)
                     .context(context)
                     .graph(graph)

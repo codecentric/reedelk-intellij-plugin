@@ -29,7 +29,7 @@ public abstract class AbstractNodeSerializer implements Serializer {
 
             if (stop != successor) {
 
-                FlowSerializerFactory.get()
+                SerializerFactory.get()
                         .node(successor)
                         .build()
                         .serialize(graph, sequence, successor, stop);
