@@ -1,7 +1,6 @@
 package com.esb.plugin.editor.designer;
 
 import com.esb.plugin.commons.PrintFlowInfo;
-import com.esb.plugin.editor.SelectListener;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.SnapshotListener;

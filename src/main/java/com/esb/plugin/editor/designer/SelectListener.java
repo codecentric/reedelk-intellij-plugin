@@ -1,4 +1,4 @@
-package com.esb.plugin.editor;
+package com.esb.plugin.editor.designer;
 
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;

@@ -1,6 +1,6 @@
 package com.esb.plugin.editor.properties;
 
-import com.esb.plugin.editor.SelectListener;
+import com.esb.plugin.editor.designer.SelectListener;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.ui.components.JBScrollPane;

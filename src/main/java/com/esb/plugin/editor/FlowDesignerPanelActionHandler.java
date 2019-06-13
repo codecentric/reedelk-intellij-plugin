@@ -1,5 +1,6 @@
 package com.esb.plugin.editor;
 
+import com.esb.plugin.editor.designer.AbstractDesignerPanelActionHandler;
 import com.esb.plugin.graph.GraphSnapshot;
 import com.esb.plugin.graph.action.ActionNodeAdd;
 import com.esb.plugin.graph.action.FlowActionNodeAdd;

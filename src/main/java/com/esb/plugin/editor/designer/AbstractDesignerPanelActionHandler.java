@@ -1,8 +1,7 @@
-package com.esb.plugin.editor;
+package com.esb.plugin.editor.designer;
 
 import com.esb.plugin.commons.PrintFlowInfo;
 import com.esb.plugin.component.domain.ComponentDescriptor;
-import com.esb.plugin.editor.designer.DesignerPanelActionHandler;
 import com.esb.plugin.editor.designer.action.DropActionHandler;
 import com.esb.plugin.editor.designer.action.MoveActionHandler;
 import com.esb.plugin.editor.designer.action.RemoveActionHandler;
@@ -25,14 +24,14 @@ import java.util.Optional;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
-abstract class AbstractDesignerPanelActionHandler implements DesignerPanelActionHandler {
+public abstract class AbstractDesignerPanelActionHandler implements DesignerPanelActionHandler {
 
     private static final Logger LOG = Logger.getInstance(AbstractDesignerPanelActionHandler.class);
 
     protected final GraphSnapshot snapshot;
     protected final Module module;
 
-    AbstractDesignerPanelActionHandler(Module module, GraphSnapshot snapshot) {
+    protected AbstractDesignerPanelActionHandler(Module module, GraphSnapshot snapshot) {
         this.snapshot = snapshot;
         this.module = module;
     }
