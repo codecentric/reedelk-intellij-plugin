@@ -9,6 +9,7 @@ import org.jetbrains.idea.maven.model.MavenConstants;
 import org.jetbrains.idea.maven.project.MavenProject;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
 
+import java.io.File;
 import java.util.Optional;
 
 public class MavenUtils {
@@ -25,20 +26,17 @@ public class MavenUtils {
        return Optional.empty();
     }
 
-    private static Module findModuleByName(String name, Project project) {
-        return ModuleManager.getInstance(project).findModuleByName(name);
-    }
-
     private static Optional<String> getModulePomXml(String moduleName, Project project) {
         Module moduleByName = findModuleByName(moduleName, project);
         if (moduleByName != null) {
-            VirtualFile moduleFile = moduleByName.getModuleFile();
-            if (moduleFile != null) {
-                String modulePomXml = moduleFile.getParent().getPath() + "/" + MavenConstants.POM_XML;
-                return Optional.of(modulePomXml);
-            }
+            String moduleFilePath = moduleByName.getModuleFilePath();
+            String modulePomXml = new File(moduleFilePath).getParent() + "/" + MavenConstants.POM_XML;
+            return Optional.of(modulePomXml);
         }
         return Optional.empty();
     }
 
+    private static Module findModuleByName(String name, Project project) {
+        return ModuleManager.getInstance(project).findModuleByName(name);
+    }
 }

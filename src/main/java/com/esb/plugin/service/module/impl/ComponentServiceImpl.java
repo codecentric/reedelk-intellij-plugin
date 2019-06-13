@@ -135,8 +135,9 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                 String moduleName = ESBModuleInfo.GetESBModuleName(jarFilePath);
                 ComponentsPackage descriptor = new ComponentsPackage(moduleName, components);
                 mavenJarComponentsMap.put(jarFilePath, descriptor);
-                publisher.onComponentListUpdate(module);
             });
+
+            publisher.onComponentListUpdate(module);
         });
     }
 
@@ -154,8 +155,9 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                 List<ComponentDescriptor> components = componentScanner.from(modulePath);
                 String moduleName = MavenUtils.getMavenProject(project, module.getName()).get().getDisplayName();
                 moduleComponents = new ComponentsPackage(moduleName, components);
-                publisher.onComponentListUpdate(module);
             });
+
+            publisher.onComponentListUpdate(module);
         });
     }
 

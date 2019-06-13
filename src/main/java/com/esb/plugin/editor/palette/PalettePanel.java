@@ -65,7 +65,16 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
 
     @Override
     public void onComponentListUpdate(Module module) {
-        updateComponents(module);
+        // We only update the components for this module if and only if
+        // the current selected file belongs to the module for which the
+        // components have been updated.
+        VirtualFile[] selectedFiles = FileEditorManager.getInstance(project).getSelectedFiles();
+        if (selectedFiles.length > 0) {
+            Module selectedFileModule = ModuleUtil.findModuleForFile(selectedFiles[0], project);
+            if (module == selectedFileModule) {
+                updateComponents(module);
+            }
+        }
     }
 
     @Override
@@ -75,18 +84,24 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
     }
 
     private void updateComponents(VirtualFile file) {
-        Module module = ModuleUtil.findModuleForFile(file, project);
-        updateComponents(module);
+        if (file != null) {
+            Module module = ModuleUtil.findModuleForFile(file, project);
+            updateComponents(module);
+        }
     }
 
     private void updateComponents(Module module) {
         Collection<ComponentsPackage> componentsPackages = ComponentService.getInstance(module).getModulesDescriptors();
         List<DefaultMutableTreeNode> componentsTreeNodes = getComponentsPackagesTreeNodes(componentsPackages);
+
         SwingUtilities.invokeLater(() -> {
+
             root.removeAllChildren();
-            componentsTreeNodes.forEach(componentTreeNode -> root.add(componentTreeNode));
+
+            componentsTreeNodes.forEach(root::add);
 
             DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+
             model.reload();
 
             expandRows(tree);
