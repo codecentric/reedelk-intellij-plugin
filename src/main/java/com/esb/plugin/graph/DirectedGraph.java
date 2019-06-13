@@ -121,11 +121,9 @@ public class DirectedGraph<NodeType> {
 
     public DirectedGraph<NodeType> copy() {
         DirectedGraph<NodeType> copy;
-        if (isEmpty()) {
-            copy = new DirectedGraph<>();
-        } else {
-            copy = new DirectedGraph<>(root);
-        }
+        copy = isEmpty() ?
+                new DirectedGraph<>() :
+                new DirectedGraph<>(root);
 
         Map<NodeType, List<NodeType>> edges = edges();
         for (Map.Entry<NodeType, List<NodeType>> entry : edges.entrySet()) {
