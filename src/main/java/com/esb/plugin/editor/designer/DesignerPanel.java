@@ -8,11 +8,13 @@ import com.esb.plugin.graph.layout.FlowGraphLayout;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.NothingSelectedNode;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.event.AncestorEvent;
 import java.awt.*;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
@@ -59,6 +61,8 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         this.snapshot.addListener(this);
 
         graph = snapshot.getGraph();
+
+        registerAncestorListener();
     }
 
     @Override
@@ -240,8 +244,8 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     private void unselect() {
         selected.unselected();
-        selectListener.onUnselect();
         selected = NOTHING_SELECTED;
+        selectListener.onSelect(snapshot, selected);
     }
 
     private void select(GraphNode node, MouseEvent event) {
@@ -270,5 +274,15 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         Dimension newDimension = new Dimension(newSizeX, newSizeY);
         setSize(newDimension);
         setPreferredSize(newDimension);
+    }
+
+    private void registerAncestorListener() {
+        addAncestorListener(new AncestorListenerAdapter() {
+            @Override
+            public void ancestorRemoved(AncestorEvent event) {
+                super.ancestorRemoved(event);
+                unselect();
+            }
+        });
     }
 }

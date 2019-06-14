@@ -21,16 +21,21 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
 
     private final Module module;
     private final FlowSnapshot snapshot;
+    private final String unselectedTabTitle;
+    private final Icon icon;
 
-    public PropertiesPanel(Module module, FlowSnapshot snapshot) {
+    public PropertiesPanel(Module module, FlowSnapshot snapshot, String unselectedTabTitle, Icon icon) {
         this.module = module;
         this.snapshot = snapshot;
+        this.icon = icon;
+        this.unselectedTabTitle = unselectedTabTitle;
+
         setBorder(border);
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setupAncestorListener();
 
         JBTabbedPane defaultTabbedPane =
-                new GraphTabbedPane(snapshot);
+                new GraphTabbedPane(icon, unselectedTabTitle, snapshot);
         updateTabbedPane(defaultTabbedPane);
     }
 
@@ -38,7 +43,7 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
     public void onSelect(FlowSnapshot snapshot, GraphNode node) {
         if (node instanceof NothingSelectedNode) {
             JBTabbedPane defaultTabbedPane =
-                    new GraphTabbedPane(snapshot);
+                    new GraphTabbedPane(icon, unselectedTabTitle, snapshot);
             updateTabbedPane(defaultTabbedPane);
         } else {
             PropertiesTabbedPane propertiesTabbedPane =
@@ -50,7 +55,7 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
     @Override
     public void onUnselect() {
         JBTabbedPane defaultTabbedPane =
-                new GraphTabbedPane(snapshot);
+                new GraphTabbedPane(icon, unselectedTabTitle, snapshot);
         updateTabbedPane(defaultTabbedPane);
     }
 

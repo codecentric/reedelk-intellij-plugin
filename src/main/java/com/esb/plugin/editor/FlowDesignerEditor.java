@@ -1,6 +1,10 @@
 package com.esb.plugin.editor;
 
+import com.esb.plugin.commons.Icons;
+import com.esb.plugin.commons.Labels;
 import com.esb.plugin.editor.designer.DesignerPanelActionHandler;
+import com.esb.plugin.editor.properties.PropertiesPanel;
+import com.esb.plugin.editor.properties.ScrollablePropertiesPanel;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.manager.GraphManager;
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
@@ -25,7 +29,11 @@ public class FlowDesignerEditor extends UserDataHolderBase implements FileEditor
 
     FlowDesignerEditor(Module module, FlowSnapshot snapshot, GraphManager manager, DesignerPanelActionHandler actionHandler) {
         this.manager = manager;
-        this.editor = new DesignerEditor(module, snapshot, actionHandler);
+
+        PropertiesPanel properties =
+                new PropertiesPanel(module, snapshot, Labels.PROPERTIES_PANEL_FLOW_TITLE, Icons.FileTypeFlow);
+        ScrollablePropertiesPanel propertiesPanel = new ScrollablePropertiesPanel(properties);
+        this.editor = new DesignerEditor(snapshot, actionHandler, propertiesPanel);
     }
 
     @NotNull

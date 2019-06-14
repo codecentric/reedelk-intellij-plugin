@@ -1,6 +1,6 @@
 package com.esb.plugin.editor.properties.widget;
 
-import com.esb.plugin.commons.Icons;
+import com.esb.plugin.commons.Labels;
 import com.esb.plugin.editor.properties.widget.input.InputChangeListener;
 import com.esb.plugin.editor.properties.widget.input.InputField;
 import com.esb.plugin.editor.properties.widget.input.StringInputField;
@@ -9,12 +9,18 @@ import com.esb.plugin.graph.FlowSnapshot;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBTabbedPane;
 
+import javax.swing.*;
+
 public class GraphTabbedPane extends JBTabbedPane {
 
+    private final Icon icon;
+    private final String tabTitle;
     private final FlowSnapshot snapshot;
 
-    public GraphTabbedPane(FlowSnapshot snapshot) {
+    public GraphTabbedPane(Icon icon, String tabTitle, FlowSnapshot snapshot) {
         super();
+        this.icon = icon;
+        this.tabTitle = tabTitle;
         this.snapshot = snapshot;
         initialize();
     }
@@ -24,17 +30,17 @@ public class GraphTabbedPane extends JBTabbedPane {
 
         InputField<String> titleField = createTitleInputField();
         FormBuilder.get()
-                .addLabel("Title", propertiesPanel)
+                .addLabel(Labels.FLOW_GRAPH_TAB_TITLE, propertiesPanel)
                 .addLastField(titleField, propertiesPanel);
 
         InputField<String> descriptionField = createDescriptionInputField();
         FormBuilder.get()
-                .addLabel("Description", propertiesPanel)
+                .addLabel(Labels.FLOW_GRAPH_TAB_TITLE, propertiesPanel)
                 .addLastField(descriptionField, propertiesPanel);
 
         JBPanel propertiesBoxPanel = ContainerFactory.createPropertiesBoxPanel(propertiesPanel);
 
-        addTab("Flow properties", Icons.FileTypeFlow, propertiesBoxPanel, "Flow properties");
+        addTab(tabTitle, icon, propertiesBoxPanel, Labels.FLOW_GRAPH_TAB_TIP);
     }
 
     private InputField<String> createTitleInputField() {
