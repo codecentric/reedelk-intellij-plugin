@@ -13,6 +13,7 @@ import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.components.JBPanel;
 
 import javax.swing.*;
+import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,10 +39,22 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
 
         JBPanel genericPropertiesPanel = createPropertiesPanelFrom(descriptors, componentData);
 
+        JComboBox<SubflowMetadata> subflowsList = new ComboBox<>();
+        subflowsList.setRenderer((list, value, index, isSelected, cellHasFocus) -> {
+            String title = value.getTitle();
+            return new JLabel(title);
+        });
 
-        List<SubflowMetadata> strings = SubflowService.getInstance(module).listSubflows();
-        JComboBox<String> subflowsList = new ComboBox<>();
-        //  strings.forEach(subflowsList::addItem);
+        subflowsList.addItemListener(event -> {
+            if (event.getStateChange() == ItemEvent.SELECTED) {
+                SubflowMetadata item = (SubflowMetadata) event.getItem();
+                componentData.set(FlowReference.ref(), item.getId());
+                snapshot.onDataChange();
+            }
+        });
+
+        List<SubflowMetadata> subflowsMetadata = SubflowService.getInstance(module).listSubflows();
+        subflowsMetadata.forEach(subflowsList::addItem);
 
         FormBuilder.get()
                 .addLabel("Subflow", genericPropertiesPanel)
