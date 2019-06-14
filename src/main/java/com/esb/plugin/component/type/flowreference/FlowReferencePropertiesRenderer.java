@@ -41,8 +41,12 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
 
         JComboBox<SubflowMetadata> subflowsList = new ComboBox<>();
         subflowsList.setRenderer((list, value, index, isSelected, cellHasFocus) -> {
-            String title = value.getTitle();
-            return new JLabel(title);
+            if (value != null) {
+                String title = value.getTitle();
+                return new JLabel(title);
+            } else {
+                return new JLabel("<No subflows defined>");
+            }
         });
 
         subflowsList.addItemListener(event -> {
