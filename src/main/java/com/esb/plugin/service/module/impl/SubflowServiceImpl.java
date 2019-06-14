@@ -1,7 +1,6 @@
 package com.esb.plugin.service.module.impl;
 
 import com.esb.internal.commons.FileExtension;
-import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.service.module.SubflowService;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -13,6 +12,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.esb.internal.commons.JsonParser.Subflow;
 
 public class SubflowServiceImpl implements SubflowService {
 
@@ -39,15 +40,19 @@ public class SubflowServiceImpl implements SubflowService {
             Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
             if (document != null) {
                 String json = document.getText();
-                JSONObject subFlowDefinition = new JSONObject(json);
-                String id = JsonParser.Subflow.id(subFlowDefinition);
-                String title = JsonParser.Subflow.title(subFlowDefinition);
-                return Optional.of(new SubflowMetadata(id, title));
-            } else {
-                return Optional.empty();
+                SubflowMetadata metadata = createMetadata(json);
+                return Optional.of(metadata);
             }
         } catch (Exception e) {
-            return Optional.empty();
+            // nothing to do.
         }
+        return Optional.empty();
+    }
+
+    private SubflowMetadata createMetadata(String json) {
+        JSONObject subFlowDefinition = new JSONObject(json);
+        String id = Subflow.id(subFlowDefinition);
+        String title = Subflow.title(subFlowDefinition);
+        return new SubflowMetadata(id, title);
     }
 }

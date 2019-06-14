@@ -23,6 +23,10 @@ public class FlowReferenceSerializer extends AbstractNodeSerializer {
 
         Object ref = componentData.get(FlowReference.ref());
 
+        if (ref == null) {
+            ref = FlowReferenceNode.DEFAULT_FLOW_REFERENCE;
+        }
+
         componentAsJson.put(FlowReference.ref(), ref);
 
         return componentAsJson;

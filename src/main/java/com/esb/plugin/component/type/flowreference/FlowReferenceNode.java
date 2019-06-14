@@ -5,6 +5,8 @@ import com.esb.plugin.editor.designer.AbstractGraphNode;
 
 public class FlowReferenceNode extends AbstractGraphNode {
 
+    public static final String DEFAULT_FLOW_REFERENCE = "";
+
     public FlowReferenceNode(ComponentData componentData) {
         super(componentData);
     }
