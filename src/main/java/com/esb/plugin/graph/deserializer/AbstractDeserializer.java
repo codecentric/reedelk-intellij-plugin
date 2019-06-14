@@ -57,7 +57,8 @@ abstract class AbstractDeserializer {
 
     protected abstract String getTitle(JSONObject flowDefinition);
 
+    protected abstract String getDescription(JSONObject description);
+
     protected abstract JSONArray getFlow(JSONObject flowDefinition);
 
-    protected abstract String getDescription(JSONObject description);
 }
