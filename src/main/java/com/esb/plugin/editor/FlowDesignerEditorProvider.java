@@ -32,10 +32,9 @@ public class FlowDesignerEditorProvider implements FileEditorProvider, DumbAware
         checkState(module != null, "Module must not be null");
 
         String defaultFlowTitle = file.getNameWithoutExtension();
-        String defaultFlowDescription = file.getNameWithoutExtension() + " flow";
 
         FlowGraphProvider graphProvider = new FlowGraphProvider();
-        FlowSnapshot snapshot = new FlowSnapshot(graphProvider, defaultFlowTitle, defaultFlowDescription);
+        FlowSnapshot snapshot = new FlowSnapshot(graphProvider, defaultFlowTitle);
         FlowGraphManager graphManager = new FlowGraphManager(project, module, file, snapshot, graphProvider);
 
         DesignerPanelActionHandler handler = new FlowDesignerPanelActionHandler(module, snapshot);

@@ -3,10 +3,11 @@ package com.esb.plugin.service.module.impl;
 import com.esb.internal.commons.FileExtension;
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.service.module.SubflowService;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -35,11 +36,16 @@ public class SubflowServiceImpl implements SubflowService {
 
     private Optional<SubflowMetadata> getMetadataFrom(VirtualFile virtualFile) {
         try {
-            String json = IOUtils.toString(virtualFile.getInputStream(), "UTF-8");
-            JSONObject subFlowDefinition = new JSONObject(json);
-            String id = JsonParser.Subflow.id(subFlowDefinition);
-            String title = JsonParser.Subflow.title(subFlowDefinition);
-            return Optional.of(new SubflowMetadata(id, title));
+            Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
+            if (document != null) {
+                String json = document.getText();
+                JSONObject subFlowDefinition = new JSONObject(json);
+                String id = JsonParser.Subflow.id(subFlowDefinition);
+                String title = JsonParser.Subflow.title(subFlowDefinition);
+                return Optional.of(new SubflowMetadata(id, title));
+            } else {
+                return Optional.empty();
+            }
         } catch (Exception e) {
             return Optional.empty();
         }

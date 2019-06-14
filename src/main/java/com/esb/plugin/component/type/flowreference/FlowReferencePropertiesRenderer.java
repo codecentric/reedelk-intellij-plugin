@@ -1,5 +1,6 @@
 package com.esb.plugin.component.type.flowreference;
 
+import com.esb.internal.commons.StringUtils;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.type.generic.GenericComponentPropertiesRenderer;
@@ -16,7 +17,6 @@ import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static com.esb.internal.commons.JsonParser.FlowReference;
 
@@ -44,13 +44,20 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
 
         JComboBox<SubflowMetadata> subflowsList = new ComboBox<>();
         subflowsList.setRenderer((list, value, index, isSelected, cellHasFocus) -> {
-            if (value != null) {
-                String title = value.getTitle();
-                return new JLabel(title);
-            } else {
-                return new JLabel("<No subflows defined>");
-            }
+            String title = value.getTitle();
+            return new JLabel(title);
         });
+
+        List<SubflowMetadata> subflowsMetadata = SubflowService.getInstance(module).listSubflows();
+        subflowsMetadata.add(UNSELECTED_SUBFLOW);
+
+        SubflowMetadata matchingMetadata = findMatchingMetadata(subflowsMetadata, reference);
+        if (!subflowsMetadata.contains(matchingMetadata)) {
+            subflowsMetadata.add(matchingMetadata);
+        }
+
+        subflowsMetadata.forEach(subflowsList::addItem);
+        subflowsList.setSelectedItem(matchingMetadata);
 
         subflowsList.addItemListener(event -> {
             if (event.getStateChange() == ItemEvent.SELECTED) {
@@ -60,14 +67,6 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
             }
         });
 
-
-        List<SubflowMetadata> subflowsMetadata =
-                SubflowService.getInstance(module).listSubflows();
-        subflowsMetadata.forEach(subflowsList::addItem);
-
-        findMatchingMetadata(subflowsMetadata, reference)
-                .ifPresent(subflowsList::setSelectedItem);
-
         FormBuilder.get()
                 .addLabel("Subflow", genericPropertiesPanel)
                 .addLastField(subflowsList, genericPropertiesPanel);
@@ -75,9 +74,29 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
         return genericPropertiesPanel;
     }
 
-    private Optional<SubflowMetadata> findMatchingMetadata(List<SubflowMetadata> subflowsMetadata, String reference) {
-        return subflowsMetadata.stream()
-                .filter(subflowMetadata -> subflowMetadata.getId().equals(reference))
-                .findFirst();
+    private SubflowMetadata findMatchingMetadata(List<SubflowMetadata> subflowsMetadata, String reference) {
+        if (StringUtils.isBlank(reference)) {
+            return UNSELECTED_SUBFLOW;
+        } else {
+            return subflowsMetadata.stream()
+                    .filter(subflowMetadata -> subflowMetadata.getId().equals(reference))
+                    .findFirst()
+                    .orElseGet(() -> new UnresolvedSubflowMetadata(reference));
+        }
+    }
+
+    private static final SubflowMetadata UNSELECTED_SUBFLOW = new UnselectedSubflowMetadata();
+
+    static class UnresolvedSubflowMetadata extends SubflowMetadata {
+
+        UnresolvedSubflowMetadata(String id) {
+            super(id, String.format("Unresolved (%s)", id));
+        }
+    }
+
+    static class UnselectedSubflowMetadata extends SubflowMetadata {
+        UnselectedSubflowMetadata() {
+            super("", "<Not selected>");
+        }
     }
 }
