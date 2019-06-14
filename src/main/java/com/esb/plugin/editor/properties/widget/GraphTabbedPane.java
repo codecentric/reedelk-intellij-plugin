@@ -35,7 +35,7 @@ public class GraphTabbedPane extends JBTabbedPane {
 
         InputField<String> descriptionField = createDescriptionInputField();
         FormBuilder.get()
-                .addLabel(Labels.FLOW_GRAPH_TAB_TITLE, propertiesPanel)
+                .addLabel(Labels.FLOW_GRAPH_TAB_DESCRIPTION, propertiesPanel)
                 .addLastField(descriptionField, propertiesPanel);
 
         JBPanel propertiesBoxPanel = ContainerFactory.createPropertiesBoxPanel(propertiesPanel);

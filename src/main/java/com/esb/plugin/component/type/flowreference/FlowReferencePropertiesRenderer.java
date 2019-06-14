@@ -7,6 +7,7 @@ import com.esb.plugin.editor.properties.widget.FormBuilder;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.service.module.SubflowService;
+import com.esb.plugin.service.module.impl.SubflowMetadata;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.components.JBPanel;
@@ -38,9 +39,9 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
         JBPanel genericPropertiesPanel = createPropertiesPanelFrom(descriptors, componentData);
 
 
-        List<String> strings = SubflowService.getInstance(module).listSubflows();
+        List<SubflowMetadata> strings = SubflowService.getInstance(module).listSubflows();
         JComboBox<String> subflowsList = new ComboBox<>();
-        strings.forEach(subflowsList::addItem);
+        //  strings.forEach(subflowsList::addItem);
 
         FormBuilder.get()
                 .addLabel("Subflow", genericPropertiesPanel)

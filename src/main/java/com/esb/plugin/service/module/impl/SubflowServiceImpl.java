@@ -5,6 +5,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModuleRootManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,7 +18,7 @@ public class SubflowServiceImpl implements SubflowService {
     }
 
     @Override
-    public List<String> listSubflows() {
+    public List<SubflowMetadata> listSubflows() {
         List<String> subflows = new ArrayList<>();
         ModuleRootManager.getInstance(module).getFileIndex()
                 .iterateContent(fileOrDir -> {
@@ -26,6 +27,6 @@ public class SubflowServiceImpl implements SubflowService {
                     }
                     return true;
                 });
-        return subflows;
+        return Arrays.asList();
     }
 }
