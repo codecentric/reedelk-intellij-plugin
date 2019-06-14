@@ -53,6 +53,9 @@
         <moduleService serviceInterface="com.esb.plugin.service.module.ComponentService"
                        serviceImplementation="com.esb.plugin.service.module.impl.ComponentServiceImpl"/>
 
+        <moduleService serviceInterface="com.esb.plugin.service.module.SubflowService"
+                       serviceImplementation="com.esb.plugin.service.module.impl.SubflowServiceImpl"/>
+
         <!-- Program Runner and Executors -->
         <programRunner implementation="com.esb.plugin.runconfig.module.runner.ESBDeploymentRunner" order="first"/>
         <executor implementation="com.esb.plugin.runconfig.module.runner.ESBModuleDeployExecutor"/>
@@ -66,8 +69,7 @@
         <!-- Palette Components Tool Window -->
         <toolWindow id="ESB Components" anchor="right" icon="/icons/icon-16x-blue.png"
                     factoryClass="com.esb.plugin.editor.palette.PaletteFactory"/>
-        <moduleService serviceInterface="com.esb.plugin.service.module.SubflowService"
-                       serviceImplementation="com.esb.plugin.service.module.impl.SubflowServiceImpl"/>
+
     </extensions>
 
     <actions>

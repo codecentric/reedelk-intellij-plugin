@@ -16,6 +16,7 @@ import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.esb.internal.commons.JsonParser.FlowReference;
 
@@ -28,6 +29,8 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
     @Override
     public JBPanel render(GraphNode node) {
         ComponentData componentData = node.componentData();
+
+        String reference = componentData.get(FlowReference.ref());
 
         List<ComponentPropertyDescriptor> descriptors = new ArrayList<>();
         componentData.getDataProperties()
@@ -57,13 +60,24 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
             }
         });
 
-        List<SubflowMetadata> subflowsMetadata = SubflowService.getInstance(module).listSubflows();
+
+        List<SubflowMetadata> subflowsMetadata =
+                SubflowService.getInstance(module).listSubflows();
         subflowsMetadata.forEach(subflowsList::addItem);
+
+        findMatchingMetadata(subflowsMetadata, reference)
+                .ifPresent(subflowsList::setSelectedItem);
 
         FormBuilder.get()
                 .addLabel("Subflow", genericPropertiesPanel)
                 .addLastField(subflowsList, genericPropertiesPanel);
 
         return genericPropertiesPanel;
+    }
+
+    private Optional<SubflowMetadata> findMatchingMetadata(List<SubflowMetadata> subflowsMetadata, String reference) {
+        return subflowsMetadata.stream()
+                .filter(subflowMetadata -> subflowMetadata.getId().equals(reference))
+                .findFirst();
     }
 }

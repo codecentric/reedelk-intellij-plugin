@@ -8,10 +8,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public interface SubflowService {
-
     static SubflowService getInstance(@NotNull Module module) {
         return ModuleServiceManager.getService(module, SubflowService.class);
     }
 
     List<SubflowMetadata> listSubflows();
+
 }
