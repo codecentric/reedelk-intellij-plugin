@@ -135,15 +135,15 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
             // Given
             FlowGraph graph = provider.createGraph();
             graph.root(root);
-            graph.add(root, choiceNode1);
-            graph.add(choiceNode1, componentNode1);
+            graph.add(root, routerNode1);
+            graph.add(routerNode1, componentNode1);
             graph.add(componentNode1, componentNode3);
-            choiceNode1.addToScope(componentNode1);
+            routerNode1.addToScope(componentNode1);
 
             root.setPosition(50, 100);
-            choiceNode1.setPosition(100, 100);
+            routerNode1.setPosition(100, 100);
             componentNode1.setPosition(150, 50);
-            componentNode3.setPosition(200, 100); // not in choiceNode1 node's scope
+            componentNode3.setPosition(200, 100); // not in routerNode1 node's scope
 
             Point dropPoint = new Point(170, 55); // componentNode2 gets moved next to componentNode1
 
@@ -152,36 +152,36 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
 
             // Then
 
-            // We verify that the choice does not get connected to the successor
+            // We verify that the router does not get connected to the successor
             // of the moved element because it is outside the scope.
-            // By definition a Choice node cannot connect other nodes outside the scope.
+            // By definition a Router node cannot connect other nodes outside the scope.
             PluginAssertion.assertThat(updatedGraph)
                     .nodesCountIs(5)
-                    .successorsOf(choiceNode1).isOnly(componentNode1)
+                    .successorsOf(routerNode1).isOnly(componentNode1)
                     .and().successorsOf(componentNode1).isOnly(componentNode2)
                     .and().successorsOf(componentNode2).isOnly(componentNode3)
                     .and().successorsOf(componentNode3).isEmpty()
-                    .and().node(choiceNode1).scopeContainsExactly(componentNode1, componentNode2);
+                    .and().node(routerNode1).scopeContainsExactly(componentNode1, componentNode2);
         }
 
         @Test
-        void shouldCorrectlyAddUpperNodeToFirstChoiceWithoutConnectingToSecondChoiceLastElement() {
+        void shouldCorrectlyAddUpperNodeToFirstRouterWithoutConnectingToSecondRouterLastElement() {
             // Given
             FlowGraph graph = provider.createGraph();
             graph.root(root);
-            graph.add(root, choiceNode1);
-            graph.add(choiceNode1, componentNode1);
-            graph.add(componentNode1, choiceNode2);
-            graph.add(choiceNode2, componentNode2);
+            graph.add(root, routerNode1);
+            graph.add(routerNode1, componentNode1);
+            graph.add(componentNode1, routerNode2);
+            graph.add(routerNode2, componentNode2);
 
-            choiceNode1.addToScope(componentNode1);
-            choiceNode1.addToScope(choiceNode2);
-            choiceNode2.addToScope(componentNode2);
+            routerNode1.addToScope(componentNode1);
+            routerNode1.addToScope(routerNode2);
+            routerNode2.addToScope(componentNode2);
 
             root.setPosition(55, 80);
-            choiceNode1.setPosition(195, 80);
+            routerNode1.setPosition(195, 80);
             componentNode1.setPosition(335, 80);
-            choiceNode2.setPosition(480, 80);
+            routerNode2.setPosition(480, 80);
             componentNode2.setPosition(625, 80);
 
             // We drop the new node on top of the 'otherwise'
@@ -193,37 +193,37 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
             // Then
             PluginAssertion.assertThat(updatedGraph)
                     .root().is(root)
-                    .and().successorsOf(root).areExactly(choiceNode1)
-                    .and().successorsOf(choiceNode1).areExactly(componentNode1, componentNode3)
-                    .and().successorsOf(componentNode1).areExactly(choiceNode2)
-                    .and().successorsOf(choiceNode2).areExactly(componentNode2)
+                    .and().successorsOf(root).areExactly(routerNode1)
+                    .and().successorsOf(routerNode1).areExactly(componentNode1, componentNode3)
+                    .and().successorsOf(componentNode1).areExactly(routerNode2)
+                    .and().successorsOf(routerNode2).areExactly(componentNode2)
                     .and().successorsOf(componentNode3).isEmpty()
                     .and().successorsOf(componentNode2).isEmpty()
-                    .and().node(choiceNode1).scopeContainsExactly(componentNode1, componentNode3, choiceNode2)
-                    .and().node(choiceNode2).scopeContainsExactly(componentNode2);
+                    .and().node(routerNode1).scopeContainsExactly(componentNode1, componentNode3, routerNode2)
+                    .and().node(routerNode2).scopeContainsExactly(componentNode2);
         }
 
         @Test
-        void shouldCorrectlyAddFollowingLowerNodeToFirstChoiceWithoutConnectingToSecondChoiceLastElement() {
+        void shouldCorrectlyAddFollowingLowerNodeToFirstRouterWithoutConnectingToSecondRouterLastElement() {
             // Given
             FlowGraph graph = provider.createGraph();
             graph.root(root);
-            graph.add(root, choiceNode1);
-            graph.add(choiceNode1, componentNode1);
-            graph.add(choiceNode1, componentNode3);
-            graph.add(componentNode1, choiceNode2);
-            graph.add(choiceNode2, componentNode2);
+            graph.add(root, routerNode1);
+            graph.add(routerNode1, componentNode1);
+            graph.add(routerNode1, componentNode3);
+            graph.add(componentNode1, routerNode2);
+            graph.add(routerNode2, componentNode2);
             graph.add(componentNode3, componentNode4);
 
-            choiceNode1.addToScope(componentNode1);
-            choiceNode1.addToScope(componentNode3);
-            choiceNode1.addToScope(componentNode4);
-            choiceNode1.addToScope(choiceNode2);
-            choiceNode2.addToScope(componentNode2);
+            routerNode1.addToScope(componentNode1);
+            routerNode1.addToScope(componentNode3);
+            routerNode1.addToScope(componentNode4);
+            routerNode1.addToScope(routerNode2);
+            routerNode2.addToScope(componentNode2);
 
             root.setPosition(55, 140);
-            choiceNode1.setPosition(165, 140);
-            choiceNode2.setPosition(390, 75);
+            routerNode1.setPosition(165, 140);
+            routerNode2.setPosition(390, 75);
             componentNode1.setPosition(275, 75);
             componentNode2.setPosition(505, 75);
             componentNode3.setPosition(275, 210);
@@ -237,16 +237,16 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
             // Then
             PluginAssertion.assertThat(updatedGraph)
                     .root().is(root)
-                    .and().successorsOf(root).isOnly(choiceNode1)
-                    .and().successorsOf(choiceNode1).areExactly(componentNode1, componentNode3)
+                    .and().successorsOf(root).isOnly(routerNode1)
+                    .and().successorsOf(routerNode1).areExactly(componentNode1, componentNode3)
                     .and().successorsOf(componentNode3).isOnly(componentNode4)
                     .and().successorsOf(componentNode4).isOnly(componentNode5)
                     .and().successorsOf(componentNode5).isEmpty()
-                    .and().successorsOf(componentNode1).isOnly(choiceNode2)
-                    .and().successorsOf(choiceNode2).isOnly(componentNode2)
+                    .and().successorsOf(componentNode1).isOnly(routerNode2)
+                    .and().successorsOf(routerNode2).isOnly(componentNode2)
                     .and().successorsOf(componentNode2).isEmpty()
-                    .and().node(choiceNode1).scopeContainsExactly(componentNode1, componentNode3, componentNode4, componentNode5, choiceNode2)
-                    .and().node(choiceNode2).scopeContainsExactly(componentNode2);
+                    .and().node(routerNode1).scopeContainsExactly(componentNode1, componentNode3, componentNode4, componentNode5, routerNode2)
+                    .and().node(routerNode2).scopeContainsExactly(componentNode2);
         }
 
 
@@ -255,28 +255,28 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
             // Given
             FlowGraph graph = provider.createGraph();
             graph.root(root);
-            graph.add(root, choiceNode1);
-            graph.add(choiceNode1, componentNode1);
-            graph.add(choiceNode1, componentNode3);
-            graph.add(componentNode1, choiceNode2);
-            graph.add(choiceNode2, componentNode2);
+            graph.add(root, routerNode1);
+            graph.add(routerNode1, componentNode1);
+            graph.add(routerNode1, componentNode3);
+            graph.add(componentNode1, routerNode2);
+            graph.add(routerNode2, componentNode2);
             graph.add(componentNode3, componentNode4);
             graph.add(componentNode4, componentNode5);
             graph.add(componentNode5, componentNode6);
 
-            choiceNode1.addToScope(componentNode1);
-            choiceNode1.addToScope(componentNode3);
-            choiceNode1.addToScope(componentNode4);
-            choiceNode1.addToScope(componentNode5);
-            choiceNode1.addToScope(componentNode6);
-            choiceNode1.addToScope(choiceNode2);
-            choiceNode2.addToScope(componentNode2);
+            routerNode1.addToScope(componentNode1);
+            routerNode1.addToScope(componentNode3);
+            routerNode1.addToScope(componentNode4);
+            routerNode1.addToScope(componentNode5);
+            routerNode1.addToScope(componentNode6);
+            routerNode1.addToScope(routerNode2);
+            routerNode2.addToScope(componentNode2);
 
             root.setPosition(55, 140);
-            choiceNode1.setPosition(165, 140);
+            routerNode1.setPosition(165, 140);
             componentNode1.setPosition(275, 75);
             componentNode3.setPosition(275, 210);
-            choiceNode2.setPosition(390, 75);
+            routerNode2.setPosition(390, 75);
             componentNode2.setPosition(505, 75);
             componentNode4.setPosition(390, 210);
             componentNode5.setPosition(505, 210);
@@ -291,46 +291,46 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
             // Then
             PluginAssertion.assertThat(updatedGraph)
                     .root().is(root)
-                    .and().successorsOf(root).isOnly(choiceNode1)
-                    .and().successorsOf(choiceNode1).areExactly(componentNode1, componentNode3)
-                    .and().successorsOf(componentNode1).isOnly(choiceNode2)
-                    .and().successorsOf(choiceNode2).isOnly(componentNode2)
+                    .and().successorsOf(root).isOnly(routerNode1)
+                    .and().successorsOf(routerNode1).areExactly(componentNode1, componentNode3)
+                    .and().successorsOf(componentNode1).isOnly(routerNode2)
+                    .and().successorsOf(routerNode2).isOnly(componentNode2)
                     .and().successorsOf(componentNode2).isOnly(componentNode7)
                     .and().successorsOf(componentNode3).isOnly(componentNode4)
                     .and().successorsOf(componentNode4).isOnly(componentNode5)
                     .and().successorsOf(componentNode5).isOnly(componentNode6)
-                    .and().node(choiceNode1).scopeContainsExactly(componentNode1, componentNode3, componentNode4, componentNode5, componentNode6, componentNode7, choiceNode2)
-                    .and().node(choiceNode2).scopeContainsExactly(componentNode2);
+                    .and().node(routerNode1).scopeContainsExactly(componentNode1, componentNode3, componentNode4, componentNode5, componentNode6, componentNode7, routerNode2)
+                    .and().node(routerNode2).scopeContainsExactly(componentNode2);
         }
 
         @Test
-        void shouldAddSecondSuccessorOfNestedChoiceCorrectly() {
+        void shouldAddSecondSuccessorOfNestedRouterCorrectly() {
             // Given
             FlowGraph graph = provider.createGraph();
             graph.root(root);
-            graph.add(root, choiceNode1);
-            graph.add(choiceNode1, componentNode1);
-            graph.add(choiceNode1, componentNode3);
-            graph.add(componentNode1, choiceNode2);
-            graph.add(choiceNode2, componentNode2);
+            graph.add(root, routerNode1);
+            graph.add(routerNode1, componentNode1);
+            graph.add(routerNode1, componentNode3);
+            graph.add(componentNode1, routerNode2);
+            graph.add(routerNode2, componentNode2);
             graph.add(componentNode2, componentNode7);
             graph.add(componentNode3, componentNode4);
             graph.add(componentNode4, componentNode5);
             graph.add(componentNode5, componentNode6);
 
-            choiceNode1.addToScope(componentNode1);
-            choiceNode1.addToScope(componentNode3);
-            choiceNode1.addToScope(componentNode4);
-            choiceNode1.addToScope(componentNode5);
-            choiceNode1.addToScope(componentNode6);
-            choiceNode1.addToScope(componentNode7);
-            choiceNode1.addToScope(choiceNode2);
-            choiceNode2.addToScope(componentNode2);
+            routerNode1.addToScope(componentNode1);
+            routerNode1.addToScope(componentNode3);
+            routerNode1.addToScope(componentNode4);
+            routerNode1.addToScope(componentNode5);
+            routerNode1.addToScope(componentNode6);
+            routerNode1.addToScope(componentNode7);
+            routerNode1.addToScope(routerNode2);
+            routerNode2.addToScope(componentNode2);
 
             root.setPosition(55, 140);
-            choiceNode1.setPosition(165, 140);
+            routerNode1.setPosition(165, 140);
             componentNode1.setPosition(275, 75);
-            choiceNode2.setPosition(390, 75);
+            routerNode2.setPosition(390, 75);
             componentNode2.setPosition(505, 75);
             componentNode3.setPosition(275, 210);
             componentNode4.setPosition(390, 210);
@@ -345,17 +345,17 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
 
             PluginAssertion.assertThat(updatedGraph)
                     .root().is(root)
-                    .and().successorsOf(root).isOnly(choiceNode1)
-                    .and().successorsOf(choiceNode1).areExactly(componentNode1, componentNode3)
-                    .and().successorsOf(componentNode1).isOnly(choiceNode2)
-                    .and().successorsOf(choiceNode2).isOnly(componentNode2)
+                    .and().successorsOf(root).isOnly(routerNode1)
+                    .and().successorsOf(routerNode1).areExactly(componentNode1, componentNode3)
+                    .and().successorsOf(componentNode1).isOnly(routerNode2)
+                    .and().successorsOf(routerNode2).isOnly(componentNode2)
                     .and().successorsOf(componentNode2).isOnly(componentNode7)
                     .and().successorsOf(componentNode7).isOnly(componentNode8)
                     .and().successorsOf(componentNode3).isOnly(componentNode4)
                     .and().successorsOf(componentNode4).isOnly(componentNode5)
                     .and().successorsOf(componentNode5).isOnly(componentNode6)
-                    .and().node(choiceNode2).scopeContainsExactly(componentNode2)
-                    .and().node(choiceNode1).scopeContainsExactly(componentNode1, componentNode3, componentNode4, componentNode5, componentNode6, componentNode7, componentNode8, choiceNode2);
+                    .and().node(routerNode2).scopeContainsExactly(componentNode2)
+                    .and().node(routerNode1).scopeContainsExactly(componentNode1, componentNode3, componentNode4, componentNode5, componentNode6, componentNode7, componentNode8, routerNode2);
         }
 
         @Test
@@ -363,13 +363,13 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
             // Given
             FlowGraph graph = provider.createGraph();
             graph.root(root);
-            graph.add(root, choiceNode1);
-            graph.add(choiceNode1, componentNode1);
+            graph.add(root, routerNode1);
+            graph.add(routerNode1, componentNode1);
 
             root.setPosition(55, 70);
-            choiceNode1.setPosition(165, 70);
+            routerNode1.setPosition(165, 70);
             componentNode1.setPosition(275, 70);
-            choiceNode1.addToScope(componentNode1);
+            routerNode1.addToScope(componentNode1);
 
             Point dropPoint = new Point(386, 52);
 
@@ -379,11 +379,11 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
             // Then
             PluginAssertion.assertThat(updatedGraph)
                     .root().is(root)
-                    .and().successorsOf(root).isOnly(choiceNode1)
-                    .and().successorsOf(choiceNode1).isOnly(componentNode1)
+                    .and().successorsOf(root).isOnly(routerNode1)
+                    .and().successorsOf(routerNode1).isOnly(componentNode1)
                     .and().successorsOf(componentNode1).isOnly(componentNode2)
                     .and().successorsOf(componentNode2).isEmpty()
-                    .and().node(choiceNode1).scopeContainsExactly(componentNode1);
+                    .and().node(routerNode1).scopeContainsExactly(componentNode1);
         }
 
         @Test
@@ -391,13 +391,13 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
             // Given
             FlowGraph graph = provider.createGraph();
             graph.root(root);
-            graph.add(root, choiceNode1);
-            graph.add(choiceNode1, componentNode1);
+            graph.add(root, routerNode1);
+            graph.add(routerNode1, componentNode1);
             graph.add(componentNode1, componentNode2);
-            choiceNode1.addToScope(componentNode1);
+            routerNode1.addToScope(componentNode1);
 
             root.setPosition(55, 70);
-            choiceNode1.setPosition(165, 70);
+            routerNode1.setPosition(165, 70);
             componentNode1.setPosition(275, 70);
             componentNode2.setPosition(390, 70);
 
@@ -409,12 +409,12 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
             // Then
             PluginAssertion.assertThat(updatedGraph)
                     .root().is(root)
-                    .and().successorsOf(root).isOnly(choiceNode1)
-                    .and().successorsOf(choiceNode1).isOnly(componentNode1)
+                    .and().successorsOf(root).isOnly(routerNode1)
+                    .and().successorsOf(routerNode1).isOnly(componentNode1)
                     .and().successorsOf(componentNode1).isOnly(componentNode2)
                     .and().successorsOf(componentNode2).isOnly(componentNode3)
                     .and().successorsOf(componentNode3).isEmpty()
-                    .and().node(choiceNode1).scopeContainsExactly(componentNode1);
+                    .and().node(routerNode1).scopeContainsExactly(componentNode1);
         }
 
         @Nested
@@ -426,12 +426,12 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                 // Given
                 FlowGraph graph = provider.createGraph();
                 graph.root(root);
-                graph.add(root, choiceNode1);
-                graph.add(choiceNode1, componentNode1);
-                choiceNode1.addToScope(componentNode1);
+                graph.add(root, routerNode1);
+                graph.add(routerNode1, componentNode1);
+                routerNode1.addToScope(componentNode1);
 
                 root.setPosition(55, 70);
-                choiceNode1.setPosition(165, 70);
+                routerNode1.setPosition(165, 70);
                 componentNode1.setPosition(275, 70);
 
                 Point dropPoint = new Point(103, 56);
@@ -443,10 +443,10 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                 PluginAssertion.assertThat(updatedGraph)
                         .root().is(root)
                         .and().successorsOf(root).isOnly(componentNode2)
-                        .and().successorsOf(componentNode2).isOnly(choiceNode1)
-                        .and().successorsOf(choiceNode1).isOnly(componentNode1)
+                        .and().successorsOf(componentNode2).isOnly(routerNode1)
+                        .and().successorsOf(routerNode1).isOnly(componentNode1)
                         .and().successorsOf(componentNode1).isEmpty()
-                        .and().node(choiceNode1).scopeContainsExactly(componentNode1);
+                        .and().node(routerNode1).scopeContainsExactly(componentNode1);
             }
 
             @Test
@@ -454,17 +454,17 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                 // Given
                 FlowGraph graph = provider.createGraph();
                 graph.root(root);
-                graph.add(root, choiceNode1);
-                graph.add(choiceNode1, componentNode1);
-                graph.add(componentNode1, choiceNode2);
-                graph.add(choiceNode2, componentNode2);
-                choiceNode1.addToScope(componentNode1);
-                choiceNode2.addToScope(componentNode2);
+                graph.add(root, routerNode1);
+                graph.add(routerNode1, componentNode1);
+                graph.add(componentNode1, routerNode2);
+                graph.add(routerNode2, componentNode2);
+                routerNode1.addToScope(componentNode1);
+                routerNode2.addToScope(componentNode2);
 
                 root.setPosition(55, 75);
-                choiceNode1.setPosition(165, 75);
+                routerNode1.setPosition(165, 75);
                 componentNode1.setPosition(275, 75);
-                choiceNode2.setPosition(390, 75);
+                routerNode2.setPosition(390, 75);
                 componentNode2.setPosition(500, 75);
 
                 Point dropPoint = new Point(333, 60);
@@ -475,14 +475,14 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                 // Then
                 PluginAssertion.assertThat(updatedGraph)
                         .root().is(root)
-                        .and().successorsOf(root).isOnly(choiceNode1)
-                        .and().successorsOf(choiceNode1).isOnly(componentNode1)
+                        .and().successorsOf(root).isOnly(routerNode1)
+                        .and().successorsOf(routerNode1).isOnly(componentNode1)
                         .and().successorsOf(componentNode1).isOnly(componentNode3)
-                        .and().successorsOf(componentNode3).isOnly(choiceNode2)
-                        .and().successorsOf(choiceNode2).isOnly(componentNode2)
+                        .and().successorsOf(componentNode3).isOnly(routerNode2)
+                        .and().successorsOf(routerNode2).isOnly(componentNode2)
                         .and().successorsOf(componentNode2).isEmpty()
-                        .and().node(choiceNode1).scopeContainsExactly(componentNode1)
-                        .and().node(choiceNode2).scopeContainsExactly(componentNode2);
+                        .and().node(routerNode1).scopeContainsExactly(componentNode1)
+                        .and().node(routerNode2).scopeContainsExactly(componentNode2);
             }
 
             @Test
@@ -490,16 +490,16 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                 // Given
                 FlowGraph graph = provider.createGraph();
                 graph.root(root);
-                graph.add(root, choiceNode1);
-                graph.add(choiceNode1, componentNode1);
+                graph.add(root, routerNode1);
+                graph.add(routerNode1, componentNode1);
                 graph.add(componentNode1, componentNode2);
 
                 root.setPosition(55, 70);
-                choiceNode1.setPosition(165, 70);
+                routerNode1.setPosition(165, 70);
                 componentNode1.setPosition(275, 70);
                 componentNode2.setPosition(390, 70);
 
-                choiceNode1.addToScope(componentNode1);
+                routerNode1.addToScope(componentNode1);
 
                 Point dropPoint = new Point(338, 53);
 
@@ -509,12 +509,12 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                 // Then
                 PluginAssertion.assertThat(updatedGraph)
                         .root().is(root)
-                        .and().successorsOf(root).isOnly(choiceNode1)
-                        .and().successorsOf(choiceNode1).isOnly(componentNode1)
+                        .and().successorsOf(root).isOnly(routerNode1)
+                        .and().successorsOf(routerNode1).isOnly(componentNode1)
                         .and().successorsOf(componentNode1).isOnly(componentNode3)
                         .and().successorsOf(componentNode3).isOnly(componentNode2)
                         .and().successorsOf(componentNode2).isEmpty()
-                        .and().node(choiceNode1).scopeContainsExactly(componentNode1);
+                        .and().node(routerNode1).scopeContainsExactly(componentNode1);
             }
 
             @Test
@@ -544,20 +544,20 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                 // Given
                 FlowGraph graph = provider.createGraph();
                 graph.root(root);
-                graph.add(root, choiceNode1);
-                graph.add(choiceNode1, componentNode1);
-                graph.add(componentNode1, choiceNode2);
-                graph.add(choiceNode2, componentNode2);
+                graph.add(root, routerNode1);
+                graph.add(routerNode1, componentNode1);
+                graph.add(componentNode1, routerNode2);
+                graph.add(routerNode2, componentNode2);
                 graph.add(componentNode2, componentNode3);
 
-                choiceNode1.addToScope(componentNode1);
-                choiceNode1.addToScope(choiceNode2);
-                choiceNode2.addToScope(componentNode2);
+                routerNode1.addToScope(componentNode1);
+                routerNode1.addToScope(routerNode2);
+                routerNode2.addToScope(componentNode2);
 
                 root.setPosition(55, 75);
-                choiceNode1.setPosition(165, 75);
+                routerNode1.setPosition(165, 75);
                 componentNode1.setPosition(275, 75);
-                choiceNode2.setPosition(390, 75);
+                routerNode2.setPosition(390, 75);
                 componentNode2.setPosition(505, 75);
                 componentNode3.setPosition(625, 75);
 
@@ -569,14 +569,14 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                 // Then
                 PluginAssertion.assertThat(updatedGraph)
                         .root().is(root)
-                        .and().successorsOf(root).isOnly(choiceNode1)
-                        .and().successorsOf(choiceNode1).isOnly(componentNode1)
-                        .and().successorsOf(componentNode1).isOnly(choiceNode2)
-                        .and().successorsOf(choiceNode2).isOnly(componentNode2)
+                        .and().successorsOf(root).isOnly(routerNode1)
+                        .and().successorsOf(routerNode1).isOnly(componentNode1)
+                        .and().successorsOf(componentNode1).isOnly(routerNode2)
+                        .and().successorsOf(routerNode2).isOnly(componentNode2)
                         .and().successorsOf(componentNode2).isOnly(componentNode4)
                         .and().successorsOf(componentNode4).isOnly(componentNode3)
-                        .and().node(choiceNode1).scopeContainsExactly(componentNode1, choiceNode2)
-                        .and().node(choiceNode2).scopeContainsExactly(componentNode2);
+                        .and().node(routerNode1).scopeContainsExactly(componentNode1, routerNode2)
+                        .and().node(routerNode2).scopeContainsExactly(componentNode2);
             }
 
             @Test
@@ -760,20 +760,20 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                 // Given
                 FlowGraph graph = provider.createGraph();
                 graph.root(root);
-                graph.add(root, choiceNode1);
-                graph.add(choiceNode1, componentNode1);
-                graph.add(componentNode1, choiceNode2);
-                graph.add(choiceNode2, componentNode2);
+                graph.add(root, routerNode1);
+                graph.add(routerNode1, componentNode1);
+                graph.add(componentNode1, routerNode2);
+                graph.add(routerNode2, componentNode2);
 
                 root.setPosition(55, 75);
-                choiceNode1.setPosition(165, 75);
+                routerNode1.setPosition(165, 75);
                 componentNode1.setPosition(275, 75);
-                choiceNode2.setPosition(390, 75);
+                routerNode2.setPosition(390, 75);
                 componentNode2.setPosition(505, 75);
 
-                choiceNode1.addToScope(componentNode1);
-                choiceNode1.addToScope(choiceNode2);
-                choiceNode2.addToScope(componentNode2);
+                routerNode1.addToScope(componentNode1);
+                routerNode1.addToScope(routerNode2);
+                routerNode2.addToScope(componentNode2);
 
                 Point dropPoint = new Point(563, 56);
 
@@ -783,13 +783,13 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                 // Then
                 PluginAssertion.assertThat(updatedGraph)
                         .root().is(root)
-                        .and().successorsOf(root).isOnly(choiceNode1)
-                        .and().successorsOf(choiceNode1).isOnly(componentNode1)
-                        .and().successorsOf(componentNode1).isOnly(choiceNode2)
-                        .and().successorsOf(choiceNode2).isOnly(componentNode2)
+                        .and().successorsOf(root).isOnly(routerNode1)
+                        .and().successorsOf(routerNode1).isOnly(componentNode1)
+                        .and().successorsOf(componentNode1).isOnly(routerNode2)
+                        .and().successorsOf(routerNode2).isOnly(componentNode2)
                         .and().successorsOf(componentNode2).isOnly(componentNode3)
-                        .and().node(choiceNode1).scopeContainsExactly(componentNode1, choiceNode2, componentNode3)
-                        .and().node(choiceNode2).scopeContainsExactly(componentNode2);
+                        .and().node(routerNode1).scopeContainsExactly(componentNode1, routerNode2, componentNode3)
+                        .and().node(routerNode2).scopeContainsExactly(componentNode2);
             }
         }
     }

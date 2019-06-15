@@ -1,13 +1,13 @@
-package com.esb.plugin.component.type.choice;
+package com.esb.plugin.component.type.router;
 
 import com.esb.plugin.graph.node.GraphNode;
 
-public class ChoiceConditionRoutePair {
+public class RouterConditionRoutePair {
 
     private String condition;
     private GraphNode next;
 
-    public ChoiceConditionRoutePair(String condition, GraphNode next) {
+    public RouterConditionRoutePair(String condition, GraphNode next) {
         this.condition = condition;
         this.next = next;
     }
@@ -30,7 +30,7 @@ public class ChoiceConditionRoutePair {
 
     @Override
     public String toString() {
-        return "ChoiceConditionRoutePair{" +
+        return "RouterConditionRoutePair{" +
                 "condition='" + condition + '\'' +
                 ", next=" + next +
                 '}';

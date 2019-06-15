@@ -24,8 +24,8 @@ class FlowDeserializerTest extends AbstractNodeDeserializerTest {
         // Then
         PluginAssertion.assertThat(graph)
                 .root().is(componentNode1)
-                .and().successorsOf(componentNode1).isOnly(choiceNode1)
-                .and().successorsOf(choiceNode1).areExactly(componentNode2, flowReferenceNode1, forkNode1)
+                .and().successorsOf(componentNode1).isOnly(routerNode1)
+                .and().successorsOf(routerNode1).areExactly(componentNode2, flowReferenceNode1, forkNode1)
                 .and().successorsOf(componentNode2).isOnly(componentNode5)
                 .and().successorsOf(flowReferenceNode1).isOnly(componentNode5)
                 .and().successorsOf(forkNode1).areExactly(componentNode3, componentNode4)
@@ -34,9 +34,9 @@ class FlowDeserializerTest extends AbstractNodeDeserializerTest {
     }
 
     @Test
-    void shouldDeserializeFlowWithNestedChoiceCorrectly() {
+    void shouldDeserializeFlowWithNestedRouterCorrectly() {
         // Given
-        String json = CompleteFlow.NestedChoice.json();
+        String json = CompleteFlow.NestedRouter.json();
         FlowDeserializer deserializer = new FlowDeserializer(json, context, provider);
 
         // When
@@ -45,13 +45,13 @@ class FlowDeserializerTest extends AbstractNodeDeserializerTest {
         // Then
         PluginAssertion.assertThat(graph)
                 .root().is(componentNode1)
-                .and().successorsOf(componentNode1).isOnly(choiceNode1)
-                .and().successorsOf(choiceNode1).isOnly(flowReferenceNode1)
-                .and().successorsOf(flowReferenceNode1).isOnly(choiceNode2)
-                .and().successorsOf(choiceNode2).isOnly(flowReferenceNode2)
+                .and().successorsOf(componentNode1).isOnly(routerNode1)
+                .and().successorsOf(routerNode1).isOnly(flowReferenceNode1)
+                .and().successorsOf(flowReferenceNode1).isOnly(routerNode2)
+                .and().successorsOf(routerNode2).isOnly(flowReferenceNode2)
                 .and().successorsOf(flowReferenceNode2).isOnly(componentNode2)
-                .and().node(choiceNode1).scopeContainsExactly(flowReferenceNode1, choiceNode2)
-                .and().node(choiceNode2).scopeContainsExactly(flowReferenceNode2);
+                .and().node(routerNode1).scopeContainsExactly(flowReferenceNode1, routerNode2)
+                .and().node(routerNode2).scopeContainsExactly(flowReferenceNode2);
     }
 
     @Test

@@ -1,4 +1,4 @@
-package com.esb.plugin.component.type.choice.widget;
+package com.esb.plugin.component.type.router.widget;
 
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
@@ -11,13 +11,11 @@ import java.awt.*;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 
-public class ChoiceRouteTable extends JBPanel {
+public class RouterRouteTable extends JBPanel {
 
     private final Dimension tableScrollPaneDimension = new Dimension(0, 110);
 
-    public ChoiceRouteTable(ConditionRouteTableModel model) {
-
-
+    public RouterRouteTable(ConditionRouteTableModel model) {
         final TableColumnModel tableColumnModel = new ConditionRouteTableColumnModel();
         JBTable table = new JBTable(model, tableColumnModel);
         JScrollPane tableScrollPane = new JBScrollPane(table);
@@ -29,5 +27,4 @@ public class ChoiceRouteTable extends JBPanel {
         add(tableScrollPane, NORTH);
         add(Box.createVerticalGlue(), CENTER);
     }
-
 }

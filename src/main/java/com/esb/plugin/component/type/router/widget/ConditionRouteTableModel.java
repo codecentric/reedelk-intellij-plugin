@@ -1,6 +1,6 @@
-package com.esb.plugin.component.type.choice.widget;
+package com.esb.plugin.component.type.router.widget;
 
-import com.esb.plugin.component.type.choice.ChoiceConditionRoutePair;
+import com.esb.plugin.component.type.router.RouterConditionRoutePair;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 
@@ -10,9 +10,9 @@ import java.util.List;
 public class ConditionRouteTableModel extends AbstractTableModel {
 
     private final FlowSnapshot snapshot;
-    private final List<ChoiceConditionRoutePair> conditionRouteList;
+    private final List<RouterConditionRoutePair> conditionRouteList;
 
-    public ConditionRouteTableModel(List<ChoiceConditionRoutePair> conditionRouteList, FlowSnapshot snapshot) {
+    public ConditionRouteTableModel(List<RouterConditionRoutePair> conditionRouteList, FlowSnapshot snapshot) {
         this.conditionRouteList = conditionRouteList;
         this.snapshot = snapshot;
     }
@@ -46,7 +46,7 @@ public class ConditionRouteTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Object returnValue = null;
-        ChoiceConditionRoutePair conditionRoute = conditionRouteList.get(rowIndex);
+        RouterConditionRoutePair conditionRoute = conditionRouteList.get(rowIndex);
         switch (columnIndex) {
             case 0:
                 returnValue = conditionRoute.getCondition();
@@ -60,7 +60,7 @@ public class ConditionRouteTableModel extends AbstractTableModel {
 
     @Override
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
-        ChoiceConditionRoutePair conditionRoute = conditionRouteList.get(rowIndex);
+        RouterConditionRoutePair conditionRoute = conditionRouteList.get(rowIndex);
         switch (columnIndex) {
             case 0:
                 conditionRoute.setCondition((String) value);

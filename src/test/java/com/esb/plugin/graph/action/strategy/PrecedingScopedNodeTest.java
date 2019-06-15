@@ -26,16 +26,16 @@ class PrecedingScopedNodeTest extends AbstractGraphTest {
 
             FlowGraph graph = provider.createGraph();
             graph.root(root);
-            graph.add(root, choiceNode1);
-            graph.add(choiceNode1, componentNode1);
-            choiceNode1.addToScope(componentNode1);
+            graph.add(root, routerNode1);
+            graph.add(routerNode1, componentNode1);
+            routerNode1.addToScope(componentNode1);
 
             root.setPosition(55, 75);
-            choiceNode1.setPosition(195, 75);
+            routerNode1.setPosition(195, 75);
             componentNode1.setPosition(335, 75);
 
             PrecedingScopedNode strategy =
-                    new PrecedingScopedNode(graph, componentNode2DropPoint, choiceNode1, graphics);
+                    new PrecedingScopedNode(graph, componentNode2DropPoint, routerNode1, graphics);
 
             // When
             strategy.execute(componentNode2);
@@ -43,12 +43,12 @@ class PrecedingScopedNodeTest extends AbstractGraphTest {
             // Then
             PluginAssertion.assertThat(graph)
                     .root().is(root)
-                    .and().successorsOf(root).isOnly(choiceNode1)
-                    .and().successorsOf(choiceNode1).areExactly(componentNode1, componentNode2)
+                    .and().successorsOf(root).isOnly(routerNode1)
+                    .and().successorsOf(routerNode1).areExactly(componentNode1, componentNode2)
                     // component node 2 should have been added to the top (before) component node 1
-                    .and().successorsOf(choiceNode1).isAtIndex(componentNode2, 0)
-                    .and().successorsOf(choiceNode1).isAtIndex(componentNode1, 1)
-                    .and().node(choiceNode1).scopeContainsExactly(componentNode1, componentNode2)
+                    .and().successorsOf(routerNode1).isAtIndex(componentNode2, 0)
+                    .and().successorsOf(routerNode1).isAtIndex(componentNode1, 1)
+                    .and().node(routerNode1).scopeContainsExactly(componentNode1, componentNode2)
                     .and().successorsOf(componentNode1).isEmpty()
                     .and().successorsOf(componentNode2).isEmpty();
         }
@@ -60,18 +60,18 @@ class PrecedingScopedNodeTest extends AbstractGraphTest {
 
             FlowGraph graph = provider.createGraph();
             graph.root(root);
-            graph.add(root, choiceNode1);
-            graph.add(choiceNode1, componentNode1);
+            graph.add(root, routerNode1);
+            graph.add(routerNode1, componentNode1);
             graph.add(componentNode1, componentNode2); // component node 2 is the first node outside scope
-            choiceNode1.addToScope(componentNode1);
+            routerNode1.addToScope(componentNode1);
 
             root.setPosition(55, 75);
-            choiceNode1.setPosition(195, 75);
+            routerNode1.setPosition(195, 75);
             componentNode1.setPosition(335, 75);
             componentNode2.setPosition(450, 75);
 
             PrecedingScopedNode strategy =
-                    new PrecedingScopedNode(graph, componentNode3DropPoint, choiceNode1, graphics);
+                    new PrecedingScopedNode(graph, componentNode3DropPoint, routerNode1, graphics);
 
             // When
             strategy.execute(componentNode3);
@@ -79,12 +79,12 @@ class PrecedingScopedNodeTest extends AbstractGraphTest {
             // Then
             PluginAssertion.assertThat(graph)
                     .root().is(root)
-                    .and().successorsOf(root).isOnly(choiceNode1)
-                    .and().successorsOf(choiceNode1).areExactly(componentNode1, componentNode3)
+                    .and().successorsOf(root).isOnly(routerNode1)
+                    .and().successorsOf(routerNode1).areExactly(componentNode1, componentNode3)
                     // component node 3 should have been added to the top (before) component node 1
-                    .and().successorsOf(choiceNode1).isAtIndex(componentNode3, 0)
-                    .and().successorsOf(choiceNode1).isAtIndex(componentNode1, 1)
-                    .and().node(choiceNode1).scopeContainsExactly(componentNode1, componentNode3)
+                    .and().successorsOf(routerNode1).isAtIndex(componentNode3, 0)
+                    .and().successorsOf(routerNode1).isAtIndex(componentNode1, 1)
+                    .and().node(routerNode1).scopeContainsExactly(componentNode1, componentNode3)
                     .and().successorsOf(componentNode1).isOnly(componentNode2)
                     .and().successorsOf(componentNode3).isOnly(componentNode2)
                     .and().successorsOf(componentNode2).isEmpty();
@@ -97,16 +97,16 @@ class PrecedingScopedNodeTest extends AbstractGraphTest {
 
             FlowGraph graph = provider.createGraph();
             graph.root(root);
-            graph.add(root, choiceNode1);
-            graph.add(choiceNode1, componentNode1);
-            choiceNode1.addToScope(componentNode1);
+            graph.add(root, routerNode1);
+            graph.add(routerNode1, componentNode1);
+            routerNode1.addToScope(componentNode1);
 
             root.setPosition(55, 75);
-            choiceNode1.setPosition(195, 75);
+            routerNode1.setPosition(195, 75);
             componentNode1.setPosition(335, 75);
 
             PrecedingScopedNode strategy =
-                    new PrecedingScopedNode(graph, componentNode2DropPoint, choiceNode1, graphics);
+                    new PrecedingScopedNode(graph, componentNode2DropPoint, routerNode1, graphics);
 
             // When
             strategy.execute(componentNode2);
@@ -114,11 +114,11 @@ class PrecedingScopedNodeTest extends AbstractGraphTest {
             // Then
             PluginAssertion.assertThat(graph)
                     .root().is(root)
-                    .and().successorsOf(root).isOnly(choiceNode1)
-                    .and().successorsOf(choiceNode1).isOnly(componentNode2)
+                    .and().successorsOf(root).isOnly(routerNode1)
+                    .and().successorsOf(routerNode1).isOnly(componentNode2)
                     .and().successorsOf(componentNode2).isOnly(componentNode1)
                     .and().successorsOf(componentNode1).isEmpty()
-                    .and().node(choiceNode1).scopeContainsExactly(componentNode1, componentNode2);
+                    .and().node(routerNode1).scopeContainsExactly(componentNode1, componentNode2);
         }
 
         @Test

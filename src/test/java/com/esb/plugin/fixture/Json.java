@@ -26,10 +26,10 @@ public class Json {
             }
         },
 
-        NestedChoice() {
+        NestedRouter() {
             @Override
             public String path() {
-                return "complete_flow_with_nested_choice.json";
+                return "complete_flow_with_nested_router.json";
             }
         },
 
@@ -80,11 +80,11 @@ public class Json {
         }
     }
 
-    public enum Choice implements DataProvider {
+    public enum Router implements DataProvider {
         Sample() {
             @Override
             public String path() {
-                return "choice_sample.json";
+                return "router_sample.json";
             }
         }
     }

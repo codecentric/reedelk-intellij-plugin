@@ -2,11 +2,11 @@ package com.esb.plugin.editor.properties.renderer.node;
 
 import com.esb.api.exception.ESBException;
 import com.esb.plugin.component.domain.ComponentData;
-import com.esb.plugin.component.type.choice.ChoicePropertiesRenderer;
 import com.esb.plugin.component.type.flowreference.FlowReferencePropertiesRenderer;
 import com.esb.plugin.component.type.fork.ForkPropertiesRenderer;
 import com.esb.plugin.component.type.generic.GenericComponentPropertiesRenderer;
 import com.esb.plugin.component.type.placeholder.PlaceholderPropertiesRenderer;
+import com.esb.plugin.component.type.router.RouterPropertiesRenderer;
 import com.esb.plugin.component.type.stop.StopPropertiesRenderer;
 import com.esb.plugin.component.type.unknown.UnknownPropertiesRenderer;
 import com.esb.plugin.graph.FlowSnapshot;
@@ -28,7 +28,7 @@ public class NodePropertiesRendererFactory {
         Map<String, Class<? extends NodePropertiesRenderer>> tmp = new HashMap<>();
         tmp.put(Stop.class.getName(), StopPropertiesRenderer.class);
         tmp.put(Fork.class.getName(), ForkPropertiesRenderer.class);
-        tmp.put(Choice.class.getName(), ChoicePropertiesRenderer.class);
+        tmp.put(Router.class.getName(), RouterPropertiesRenderer.class);
         tmp.put(Unknown.class.getName(), UnknownPropertiesRenderer.class);
         tmp.put(Placeholder.class.getName(), PlaceholderPropertiesRenderer.class);
         tmp.put(FlowReference.class.getName(), FlowReferencePropertiesRenderer.class);

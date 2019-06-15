@@ -2,11 +2,11 @@ package com.esb.plugin.graph.deserializer;
 
 import com.esb.api.exception.ESBException;
 import com.esb.internal.commons.JsonParser;
-import com.esb.plugin.component.type.choice.ChoiceDeserializer;
 import com.esb.plugin.component.type.flowreference.FlowReferenceDeserializer;
 import com.esb.plugin.component.type.fork.ForkDeserializer;
 import com.esb.plugin.component.type.generic.GenericComponentDeserializer;
 import com.esb.plugin.component.type.placeholder.PlaceholderDeserializer;
+import com.esb.plugin.component.type.router.RouterDeserializer;
 import com.esb.plugin.component.type.stop.StopDeserializer;
 import com.esb.plugin.component.type.unknown.UnknownDeserializer;
 import com.esb.plugin.graph.FlowGraph;
@@ -32,7 +32,7 @@ public class DeserializerFactory {
         Map<String, Class<? extends Deserializer>> tmp = new HashMap<>();
         tmp.put(Stop.class.getName(), StopDeserializer.class);
         tmp.put(Fork.class.getName(), ForkDeserializer.class);
-        tmp.put(Choice.class.getName(), ChoiceDeserializer.class);
+        tmp.put(Router.class.getName(), RouterDeserializer.class);
         tmp.put(Unknown.class.getName(), UnknownDeserializer.class);
         tmp.put(Placeholder.class.getName(), PlaceholderDeserializer.class);
         tmp.put(FlowReference.class.getName(), FlowReferenceDeserializer.class);

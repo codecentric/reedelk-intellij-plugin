@@ -5,8 +5,8 @@ import com.esb.plugin.commons.Icons;
 import com.esb.plugin.commons.Images;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.domain.ComponentDefaultDescriptor;
-import com.esb.plugin.component.type.choice.ChoiceNode;
 import com.esb.plugin.component.type.generic.GenericComponentNode;
+import com.esb.plugin.component.type.router.RouterNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphProvider;
 import com.esb.plugin.graph.node.GraphNode;
@@ -46,10 +46,10 @@ public class GraphSamples {
     private GraphNode componentNode10 = new GenericComponentNode(ccomponentNode10);
     private GraphNode componentNode11 = new GenericComponentNode(ccomponentNode11);
 
-    private ScopedGraphNode c1 = new ChoiceNode(cc1);
-    private ScopedGraphNode c2 = new ChoiceNode(cc2);
-    private ScopedGraphNode c3 = new ChoiceNode(cc3);
-    private ScopedGraphNode c4 = new ChoiceNode(cc4);
+    private ScopedGraphNode c1 = new RouterNode(cc1);
+    private ScopedGraphNode c2 = new RouterNode(cc2);
+    private ScopedGraphNode c3 = new RouterNode(cc3);
+    private ScopedGraphNode c4 = new RouterNode(cc4);
 
     private FlowGraphProvider graphProvider = new FlowGraphProvider();
 

@@ -16,21 +16,21 @@ class FindScopesTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
-        graph.add(choiceNode1, componentNode1);
-        graph.add(componentNode1, choiceNode2);
-        graph.add(choiceNode2, componentNode3);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, componentNode1);
+        graph.add(componentNode1, routerNode2);
+        graph.add(routerNode2, componentNode3);
 
-        choiceNode1.addToScope(componentNode1);
-        choiceNode1.addToScope(choiceNode2);
-        choiceNode2.addToScope(componentNode3);
+        routerNode1.addToScope(componentNode1);
+        routerNode1.addToScope(routerNode2);
+        routerNode2.addToScope(componentNode3);
 
         // When
         Stack<ScopedGraphNode> scopes = FindScopes.of(graph, componentNode3);
 
         // Then
-        assertThat(scopes.pop()).isEqualTo(choiceNode2); // innermost is choice 2
-        assertThat(scopes.pop()).isEqualTo(choiceNode1); // outermost is choice 1
+        assertThat(scopes.pop()).isEqualTo(routerNode2); // innermost is router 2
+        assertThat(scopes.pop()).isEqualTo(routerNode1); // outermost is router 1
         assertThat(scopes).isEmpty();
     }
 
@@ -39,28 +39,28 @@ class FindScopesTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
-        graph.add(choiceNode1, componentNode1);
-        graph.add(componentNode1, choiceNode2);
-        graph.add(choiceNode2, componentNode2);
-        graph.add(componentNode2, choiceNode3);
-        graph.add(choiceNode3, componentNode3);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, componentNode1);
+        graph.add(componentNode1, routerNode2);
+        graph.add(routerNode2, componentNode2);
+        graph.add(componentNode2, routerNode3);
+        graph.add(routerNode3, componentNode3);
         graph.add(componentNode3, componentNode4);
 
-        choiceNode1.addToScope(componentNode1);
-        choiceNode1.addToScope(choiceNode2);
-        choiceNode2.addToScope(componentNode2);
-        choiceNode2.addToScope(choiceNode3);
-        choiceNode3.addToScope(componentNode3);
-        choiceNode3.addToScope(componentNode4);
+        routerNode1.addToScope(componentNode1);
+        routerNode1.addToScope(routerNode2);
+        routerNode2.addToScope(componentNode2);
+        routerNode2.addToScope(routerNode3);
+        routerNode3.addToScope(componentNode3);
+        routerNode3.addToScope(componentNode4);
 
         // When
         Stack<ScopedGraphNode> scopes = FindScopes.of(graph, componentNode4);
 
         // Then
-        assertThat(scopes.pop()).isEqualTo(choiceNode3);
-        assertThat(scopes.pop()).isEqualTo(choiceNode2);
-        assertThat(scopes.pop()).isEqualTo(choiceNode1);
+        assertThat(scopes.pop()).isEqualTo(routerNode3);
+        assertThat(scopes.pop()).isEqualTo(routerNode2);
+        assertThat(scopes.pop()).isEqualTo(routerNode1);
         assertThat(scopes).isEmpty();
     }
 
@@ -96,54 +96,54 @@ class FindScopesTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
-        graph.add(choiceNode1, componentNode1);
-        graph.add(componentNode1, choiceNode2);
-        graph.add(choiceNode2, componentNode2);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, componentNode1);
+        graph.add(componentNode1, routerNode2);
+        graph.add(routerNode2, componentNode2);
         graph.add(componentNode2, componentNode3);
 
-        choiceNode1.addToScope(componentNode1);
-        choiceNode1.addToScope(choiceNode2);
-        choiceNode2.addToScope(componentNode2);
-        choiceNode1.addToScope(componentNode3);
+        routerNode1.addToScope(componentNode1);
+        routerNode1.addToScope(routerNode2);
+        routerNode2.addToScope(componentNode2);
+        routerNode1.addToScope(componentNode3);
 
         // When
         Stack<ScopedGraphNode> scopes = FindScopes.of(graph, componentNode3);
 
         // Then
-        assertThat(scopes.pop()).isEqualTo(choiceNode1); // scope is only choice 1
+        assertThat(scopes.pop()).isEqualTo(routerNode1); // scope is only router 1
         assertThat(scopes).isEmpty();
     }
 
     @Test
-    void shouldCorrectlyReturnScopeWhenChoiceIsRootWithoutElementsInTheScope() {
+    void shouldCorrectlyReturnScopeWhenRouterIsRootWithoutElementsInTheScope() {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
+        graph.add(root, routerNode1);
 
         // When
-        Stack<ScopedGraphNode> scopes = FindScopes.of(graph, choiceNode1);
+        Stack<ScopedGraphNode> scopes = FindScopes.of(graph, routerNode1);
 
         // Then
-        assertThat(scopes.pop()).isEqualTo(choiceNode1);
+        assertThat(scopes.pop()).isEqualTo(routerNode1);
         assertThat(scopes).isEmpty();
     }
 
     @Test
-    void shouldCorrectlyReturnScopeWhenChoiceContainsSingleScopeElement() {
+    void shouldCorrectlyReturnScopeWhenRouterContainsSingleScopeElement() {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
-        graph.add(choiceNode1, componentNode1);
-        choiceNode1.addToScope(componentNode1);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, componentNode1);
+        routerNode1.addToScope(componentNode1);
 
         // When
         Stack<ScopedGraphNode> scopes = FindScopes.of(graph, componentNode1);
 
         // Then
-        assertThat(scopes.pop()).isEqualTo(choiceNode1);
+        assertThat(scopes.pop()).isEqualTo(routerNode1);
         assertThat(scopes).isEmpty();
     }
 
@@ -152,58 +152,58 @@ class FindScopesTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
+        graph.add(root, routerNode1);
 
         // Upper layer
-        graph.add(choiceNode1, componentNode1);
-        graph.add(componentNode1, choiceNode2);
-        graph.add(choiceNode2, componentNode2);
+        graph.add(routerNode1, componentNode1);
+        graph.add(componentNode1, routerNode2);
+        graph.add(routerNode2, componentNode2);
         graph.add(componentNode2, componentNode3);
         graph.add(componentNode3, componentNode4);
         graph.add(componentNode4, componentNode5);
 
         // Lower layer
-        graph.add(choiceNode1, choiceNode3);
-        graph.add(choiceNode3, componentNode6);
-        graph.add(componentNode6, choiceNode4);
-        graph.add(choiceNode4, componentNode7);
+        graph.add(routerNode1, routerNode3);
+        graph.add(routerNode3, componentNode6);
+        graph.add(componentNode6, routerNode4);
+        graph.add(routerNode4, componentNode7);
         graph.add(componentNode7, componentNode8);
         graph.add(componentNode8, componentNode11);
 
-        graph.add(choiceNode4, componentNode9);
-        graph.add(componentNode9, choiceNode5);
-        graph.add(choiceNode5, componentNode10);
+        graph.add(routerNode4, componentNode9);
+        graph.add(componentNode9, routerNode5);
+        graph.add(routerNode5, componentNode10);
         graph.add(componentNode10, componentNode11);
 
         // Setting up the scopes
-        choiceNode1.addToScope(componentNode1);
-        choiceNode1.addToScope(choiceNode2);
-        choiceNode1.addToScope(componentNode3);
-        choiceNode1.addToScope(componentNode4);
-        choiceNode1.addToScope(componentNode5);
-        choiceNode1.addToScope(choiceNode3);
+        routerNode1.addToScope(componentNode1);
+        routerNode1.addToScope(routerNode2);
+        routerNode1.addToScope(componentNode3);
+        routerNode1.addToScope(componentNode4);
+        routerNode1.addToScope(componentNode5);
+        routerNode1.addToScope(routerNode3);
 
-        choiceNode2.addToScope(componentNode2);
+        routerNode2.addToScope(componentNode2);
 
-        choiceNode3.addToScope(componentNode6);
-        choiceNode3.addToScope(choiceNode4);
-        choiceNode3.addToScope(componentNode11);
+        routerNode3.addToScope(componentNode6);
+        routerNode3.addToScope(routerNode4);
+        routerNode3.addToScope(componentNode11);
 
-        choiceNode4.addToScope(componentNode7);
-        choiceNode4.addToScope(componentNode8);
-        choiceNode4.addToScope(componentNode9);
-        choiceNode4.addToScope(choiceNode5);
+        routerNode4.addToScope(componentNode7);
+        routerNode4.addToScope(componentNode8);
+        routerNode4.addToScope(componentNode9);
+        routerNode4.addToScope(routerNode5);
 
-        choiceNode5.addToScope(componentNode10);
+        routerNode5.addToScope(componentNode10);
 
         // When
         Stack<ScopedGraphNode> scopes = FindScopes.of(graph, componentNode10);
 
         // Then
-        assertThat(scopes.pop()).isEqualTo(choiceNode5);
-        assertThat(scopes.pop()).isEqualTo(choiceNode4);
-        assertThat(scopes.pop()).isEqualTo(choiceNode3);
-        assertThat(scopes.pop()).isEqualTo(choiceNode1);
+        assertThat(scopes.pop()).isEqualTo(routerNode5);
+        assertThat(scopes.pop()).isEqualTo(routerNode4);
+        assertThat(scopes.pop()).isEqualTo(routerNode3);
+        assertThat(scopes.pop()).isEqualTo(routerNode1);
         assertThat(scopes).isEmpty();
     }
 
@@ -212,10 +212,10 @@ class FindScopesTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
-        graph.add(choiceNode1, componentNode1);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, componentNode1);
         graph.add(componentNode1, componentNode2);
-        choiceNode1.addToScope(componentNode1);
+        routerNode1.addToScope(componentNode1);
 
         // When
         Stack<ScopedGraphNode> scopes = FindScopes.of(graph, componentNode2);
@@ -229,19 +229,19 @@ class FindScopesTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
-        graph.add(choiceNode1, componentNode1);
-        graph.add(componentNode1, choiceNode2);
-        graph.add(choiceNode2, componentNode2);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, componentNode1);
+        graph.add(componentNode1, routerNode2);
+        graph.add(routerNode2, componentNode2);
 
-        choiceNode1.addToScope(componentNode1);
-        choiceNode2.addToScope(componentNode2);
+        routerNode1.addToScope(componentNode1);
+        routerNode2.addToScope(componentNode2);
 
         // When
         Stack<ScopedGraphNode> scopes = FindScopes.of(graph, componentNode2);
 
         // Then
-        assertThat(scopes).containsExactly(choiceNode2);
+        assertThat(scopes).containsExactly(routerNode2);
     }
 
     @Test
@@ -249,13 +249,13 @@ class FindScopesTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
+        graph.add(root, routerNode1);
 
         // When
-        Stack<ScopedGraphNode> scopes = FindScopes.of(graph, choiceNode1);
+        Stack<ScopedGraphNode> scopes = FindScopes.of(graph, routerNode1);
 
         // Then
-        assertThat(scopes).containsExactly(choiceNode1);
+        assertThat(scopes).containsExactly(routerNode1);
     }
 
     @Test
@@ -263,19 +263,19 @@ class FindScopesTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
-        graph.add(choiceNode1, choiceNode2);
-        graph.add(choiceNode2, choiceNode3);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, routerNode2);
+        graph.add(routerNode2, routerNode3);
 
-        choiceNode1.addToScope(choiceNode2);
-        choiceNode2.addToScope(choiceNode3);
+        routerNode1.addToScope(routerNode2);
+        routerNode2.addToScope(routerNode3);
 
         // When
-        Stack<ScopedGraphNode> scopes = FindScopes.of(graph, choiceNode3);
+        Stack<ScopedGraphNode> scopes = FindScopes.of(graph, routerNode3);
 
         // Then
-        assertThat(scopes.pop()).isEqualTo(choiceNode3);
-        assertThat(scopes.pop()).isEqualTo(choiceNode2);
-        assertThat(scopes.pop()).isEqualTo(choiceNode1);
+        assertThat(scopes.pop()).isEqualTo(routerNode3);
+        assertThat(scopes.pop()).isEqualTo(routerNode2);
+        assertThat(scopes.pop()).isEqualTo(routerNode1);
     }
 }

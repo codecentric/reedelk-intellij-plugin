@@ -13,17 +13,17 @@ class IsLastScopeBeforeNodeTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
-        graph.add(choiceNode1, componentNode1);
-        graph.add(choiceNode1, componentNode2);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, componentNode1);
+        graph.add(routerNode1, componentNode2);
         graph.add(componentNode1, componentNode3);
         graph.add(componentNode2, componentNode3);
 
-        choiceNode1.addToScope(componentNode1);
-        choiceNode1.addToScope(componentNode2);
+        routerNode1.addToScope(componentNode1);
+        routerNode1.addToScope(componentNode2);
 
         // When
-        boolean isLastScope = IsLastScopeBeforeNode.of(graph, choiceNode1, componentNode3);
+        boolean isLastScope = IsLastScopeBeforeNode.of(graph, routerNode1, componentNode3);
 
         // Then
         assertThat(isLastScope).isTrue();
@@ -34,19 +34,19 @@ class IsLastScopeBeforeNodeTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
-        graph.add(choiceNode1, componentNode1);
-        graph.add(componentNode1, choiceNode2);
-        graph.add(choiceNode2, componentNode2);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, componentNode1);
+        graph.add(componentNode1, routerNode2);
+        graph.add(routerNode2, componentNode2);
         graph.add(componentNode2, componentNode3);
 
-        choiceNode1.addToScope(componentNode1);
-        choiceNode1.addToScope(choiceNode2);
+        routerNode1.addToScope(componentNode1);
+        routerNode1.addToScope(routerNode2);
 
-        choiceNode2.addToScope(componentNode2);
+        routerNode2.addToScope(componentNode2);
 
         // When
-        boolean isLastScope = IsLastScopeBeforeNode.of(graph, choiceNode1, componentNode3);
+        boolean isLastScope = IsLastScopeBeforeNode.of(graph, routerNode1, componentNode3);
 
         // Then
         assertThat(isLastScope).isTrue();
@@ -57,19 +57,19 @@ class IsLastScopeBeforeNodeTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
-        graph.add(choiceNode1, componentNode1);
-        graph.add(componentNode1, choiceNode2);
-        graph.add(choiceNode2, componentNode2);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, componentNode1);
+        graph.add(componentNode1, routerNode2);
+        graph.add(routerNode2, componentNode2);
         graph.add(componentNode2, componentNode3);
 
-        choiceNode1.addToScope(componentNode1);
-        choiceNode1.addToScope(choiceNode2);
+        routerNode1.addToScope(componentNode1);
+        routerNode1.addToScope(routerNode2);
 
-        choiceNode2.addToScope(componentNode2);
+        routerNode2.addToScope(componentNode2);
 
         // When
-        boolean isLastScope = IsLastScopeBeforeNode.of(graph, choiceNode2, componentNode3);
+        boolean isLastScope = IsLastScopeBeforeNode.of(graph, routerNode2, componentNode3);
 
         // Then
         assertThat(isLastScope).isFalse();

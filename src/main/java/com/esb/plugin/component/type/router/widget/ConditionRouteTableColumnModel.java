@@ -1,4 +1,4 @@
-package com.esb.plugin.component.type.choice.widget;
+package com.esb.plugin.component.type.router.widget;
 
 import com.esb.plugin.graph.node.GraphNode;
 

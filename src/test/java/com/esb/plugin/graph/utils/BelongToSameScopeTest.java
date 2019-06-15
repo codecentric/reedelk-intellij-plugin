@@ -28,13 +28,13 @@ class BelongToSameScopeTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
-        graph.add(choiceNode1, componentNode1);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, componentNode1);
         graph.add(componentNode1, componentNode2);
         graph.add(componentNode2, componentNode3);
 
-        choiceNode1.addToScope(componentNode1);
-        choiceNode1.addToScope(componentNode2);
+        routerNode1.addToScope(componentNode1);
+        routerNode1.addToScope(componentNode2);
 
         // When
         boolean actual = BelongToSameScope.from(graph, componentNode1, componentNode2);
@@ -48,14 +48,14 @@ class BelongToSameScopeTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
-        graph.add(choiceNode1, componentNode1);
-        graph.add(componentNode1, choiceNode2);
-        graph.add(choiceNode2, componentNode2);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, componentNode1);
+        graph.add(componentNode1, routerNode2);
+        graph.add(routerNode2, componentNode2);
 
-        choiceNode1.addToScope(componentNode1);
-        choiceNode1.addToScope(choiceNode2);
-        choiceNode2.addToScope(componentNode2);
+        routerNode1.addToScope(componentNode1);
+        routerNode1.addToScope(routerNode2);
+        routerNode2.addToScope(componentNode2);
 
         // When
         boolean actual = BelongToSameScope.from(graph, componentNode1, componentNode2);
@@ -69,11 +69,11 @@ class BelongToSameScopeTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
-        graph.add(choiceNode1, componentNode1);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, componentNode1);
         graph.add(componentNode1, componentNode2);
 
-        choiceNode1.addToScope(componentNode1);
+        routerNode1.addToScope(componentNode1);
 
         // When
         boolean actual = BelongToSameScope.from(graph, componentNode1, componentNode2);
@@ -87,11 +87,11 @@ class BelongToSameScopeTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
-        graph.add(choiceNode1, componentNode1);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, componentNode1);
 
         // When
-        boolean actual = BelongToSameScope.from(graph, choiceNode1, componentNode1);
+        boolean actual = BelongToSameScope.from(graph, routerNode1, componentNode1);
 
         // Then
         assertThat(actual).isFalse();

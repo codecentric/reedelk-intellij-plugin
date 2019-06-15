@@ -1,4 +1,4 @@
-package com.esb.plugin.component.type.choice;
+package com.esb.plugin.component.type.router;
 
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.type.stop.StopNode;
@@ -17,13 +17,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static com.esb.internal.commons.JsonParser.Choice;
 import static com.esb.internal.commons.JsonParser.Implementor;
-import static com.esb.plugin.component.type.choice.ChoiceNode.DATA_CONDITION_ROUTE_PAIRS;
+import static com.esb.internal.commons.JsonParser.Router;
+import static com.esb.plugin.component.type.router.RouterNode.DATA_CONDITION_ROUTE_PAIRS;
 
-public class ChoiceDeserializer extends AbstractNodeDeserializer {
+public class RouterDeserializer extends AbstractNodeDeserializer {
 
-    public ChoiceDeserializer(FlowGraph graph, DeserializerContext context) {
+    public RouterDeserializer(FlowGraph graph, DeserializerContext context) {
         super(graph, context);
     }
 
@@ -34,49 +34,50 @@ public class ChoiceDeserializer extends AbstractNodeDeserializer {
 
         String name = Implementor.name(componentDefinition);
 
-        ChoiceNode choiceNode = context.instantiateGraphNode(name);
+        RouterNode routerNode = context.instantiateGraphNode(name);
 
-        Map<GraphNode, String> preNodeConditionMap = new LinkedHashMap<>();
+        Map<GraphNode, String> nodeAndConditionMap = new LinkedHashMap<>();
 
-        graph.add(parent, choiceNode);
+        graph.add(parent, routerNode);
 
         // When
-        JSONArray when = Choice.when(componentDefinition);
+        JSONArray when = Router.when(componentDefinition);
 
         for (int i = 0; i < when.length(); i++) {
 
             JSONObject whenComponent = when.getJSONObject(i);
 
-            JSONArray next = Choice.next(whenComponent);
+            JSONArray next = Router.next(whenComponent);
 
-            GraphNode currentNode = deserialize(next, choiceNode, node -> {
-                String condition = Choice.condition(whenComponent);
-                preNodeConditionMap.put(node, condition);
+            GraphNode currentNode = deserialize(next, routerNode, node -> {
+                String condition = Router.condition(whenComponent);
+                nodeAndConditionMap.put(node, condition);
             });
 
             // Last node is connected to stop node.
             graph.add(currentNode, stopNode);
         }
 
-        // Add all the nodes just added (between choice and stop node) to the Choice's scope.
+        // Add all the nodes just added (between router and stop node) to the Route's scope.
         CollectNodesBetween
-                .them(graph, choiceNode, stopNode)
-                .forEach(choiceNode::addToScope);
+                .them(graph, routerNode, stopNode)
+                .forEach(routerNode::addToScope);
 
-        ComponentData choiceData = choiceNode.componentData();
+        ComponentData routerData = routerNode.componentData();
 
-        // TODO: Not sure about this
+        // Set description
         if (componentDefinition.has(Implementor.description())) {
-            choiceData.set(Implementor.description(), Implementor.description(componentDefinition));
+            routerData.set(Implementor.description(), Implementor.description(componentDefinition));
         }
 
-        List<ChoiceConditionRoutePair> choiceConditionRoutePairList = new LinkedList<>();
-        choiceData.set(DATA_CONDITION_ROUTE_PAIRS, choiceConditionRoutePairList);
+        // Build Condition -> Route pairs list
+        List<RouterConditionRoutePair> routerConditionRoutePairList = new LinkedList<>();
+        routerData.set(DATA_CONDITION_ROUTE_PAIRS, routerConditionRoutePairList);
 
-        for (Map.Entry<GraphNode, String> entry : preNodeConditionMap.entrySet()) {
-            ChoiceConditionRoutePair pair =
-                    new ChoiceConditionRoutePair(entry.getValue(), entry.getKey());
-            choiceConditionRoutePairList.add(pair);
+        for (Map.Entry<GraphNode, String> entry : nodeAndConditionMap.entrySet()) {
+            RouterConditionRoutePair pair =
+                    new RouterConditionRoutePair(entry.getValue(), entry.getKey());
+            routerConditionRoutePairList.add(pair);
         }
 
         return stopNode;

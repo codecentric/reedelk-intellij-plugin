@@ -32,20 +32,20 @@ class ListAllScopesTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
-        graph.add(choiceNode1, componentNode1);
-        graph.add(componentNode1, choiceNode2);
-        graph.add(choiceNode2, componentNode2);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, componentNode1);
+        graph.add(componentNode1, routerNode2);
+        graph.add(routerNode2, componentNode2);
         graph.add(componentNode2, componentNode3);
 
-        choiceNode1.addToScope(componentNode1);
-        choiceNode2.addToScope(componentNode2);
+        routerNode1.addToScope(componentNode1);
+        routerNode2.addToScope(componentNode2);
 
         // When
         List<ScopedGraphNode> allScopes = ListAllScopes.of(graph);
 
         // Then
-        assertThat(allScopes).containsExactlyInAnyOrder(choiceNode1, choiceNode2);
+        assertThat(allScopes).containsExactlyInAnyOrder(routerNode1, routerNode2);
     }
 
     @Test
@@ -53,27 +53,27 @@ class ListAllScopesTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
-        graph.add(choiceNode1, componentNode1);
-        graph.add(componentNode1, choiceNode2);
-        graph.add(choiceNode2, componentNode2);
-        graph.add(componentNode2, choiceNode3);
-        graph.add(choiceNode3, componentNode3);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, componentNode1);
+        graph.add(componentNode1, routerNode2);
+        graph.add(routerNode2, componentNode2);
+        graph.add(componentNode2, routerNode3);
+        graph.add(routerNode3, componentNode3);
         graph.add(componentNode3, componentNode4);
 
-        choiceNode1.addToScope(componentNode1);
-        choiceNode1.addToScope(choiceNode2);
+        routerNode1.addToScope(componentNode1);
+        routerNode1.addToScope(routerNode2);
 
-        choiceNode2.addToScope(componentNode2);
-        choiceNode2.addToScope(choiceNode3);
+        routerNode2.addToScope(componentNode2);
+        routerNode2.addToScope(routerNode3);
 
-        choiceNode3.addToScope(componentNode3);
+        routerNode3.addToScope(componentNode3);
 
         // When
         List<ScopedGraphNode> allScopes = ListAllScopes.of(graph);
 
         // Then
-        assertThat(allScopes).containsExactlyInAnyOrder(choiceNode1, choiceNode2, choiceNode3);
+        assertThat(allScopes).containsExactlyInAnyOrder(routerNode1, routerNode2, routerNode3);
     }
 
 }

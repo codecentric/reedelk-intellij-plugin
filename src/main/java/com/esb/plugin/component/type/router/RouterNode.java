@@ -1,8 +1,8 @@
-package com.esb.plugin.component.type.choice;
+package com.esb.plugin.component.type.router;
 
 import com.esb.plugin.commons.Half;
 import com.esb.plugin.component.domain.ComponentData;
-import com.esb.plugin.component.type.choice.functions.SyncConditionAndRoutePairs;
+import com.esb.plugin.component.type.router.functions.SyncConditionAndRoutePairs;
 import com.esb.plugin.editor.designer.AbstractScopedGraphNode;
 import com.esb.plugin.editor.designer.DrawableListener;
 import com.esb.plugin.editor.designer.widget.Arrow;
@@ -11,8 +11,8 @@ import com.esb.plugin.editor.designer.widget.VerticalDivider;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.GraphNodeFactory;
-import com.esb.system.component.Choice;
 import com.esb.system.component.Placeholder;
+import com.esb.system.component.Router;
 import com.intellij.openapi.module.Module;
 
 import java.awt.*;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ChoiceNode extends AbstractScopedGraphNode {
+public class RouterNode extends AbstractScopedGraphNode {
 
     public static final String DATA_CONDITION_ROUTE_PAIRS = "conditionRoutePairs";
     public static final int HEIGHT = 140;
@@ -36,7 +36,7 @@ public class ChoiceNode extends AbstractScopedGraphNode {
     private final Icon icon;
     private final VerticalDivider verticalDivider;
 
-    public ChoiceNode(ComponentData componentData) {
+    public RouterNode(ComponentData componentData) {
         super(componentData);
         this.icon = new Icon(componentData);
         this.verticalDivider = new VerticalDivider(this);
@@ -111,32 +111,32 @@ public class ChoiceNode extends AbstractScopedGraphNode {
     public void commit(FlowGraph graph, Module module) {
         // If successors is empty, lets add a placeholder
 
-        List<ChoiceConditionRoutePair> choiceConditionRoutePairs = listConditionRoutePairs();
+        List<RouterConditionRoutePair> routerConditionRoutePairs = listConditionRoutePairs();
         if (getScope().isEmpty()) {
             GraphNode placeholder = GraphNodeFactory.get(module, Placeholder.class.getName());
             graph.add(placeholder);
             List<GraphNode> successors = graph.successors(this);
             List<GraphNode> toRemove = new ArrayList<>(successors);
             toRemove.forEach(node -> {
-                graph.remove(ChoiceNode.this, node);
+                graph.remove(RouterNode.this, node);
                 graph.add(placeholder, node);
             });
             graph.add(this, placeholder);
             addToScope(placeholder);
 
-            choiceConditionRoutePairs.add(new ChoiceConditionRoutePair(Choice.DEFAULT_CONDITION, placeholder));
+            routerConditionRoutePairs.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION, placeholder));
         }
 
 
-        List<ChoiceConditionRoutePair> updatedConditions =
-                SyncConditionAndRoutePairs.getUpdatedPairs(graph, this, choiceConditionRoutePairs);
+        List<RouterConditionRoutePair> updatedConditions =
+                SyncConditionAndRoutePairs.getUpdatedPairs(graph, this, routerConditionRoutePairs);
         ComponentData component = componentData();
         component.set(DATA_CONDITION_ROUTE_PAIRS, updatedConditions);
     }
 
-    private List<ChoiceConditionRoutePair> listConditionRoutePairs() {
+    private List<RouterConditionRoutePair> listConditionRoutePairs() {
         ComponentData component = componentData();
-        List<ChoiceConditionRoutePair> conditionRoutePair = component.get(DATA_CONDITION_ROUTE_PAIRS);
+        List<RouterConditionRoutePair> conditionRoutePair = component.get(DATA_CONDITION_ROUTE_PAIRS);
         if (conditionRoutePair == null) {
             conditionRoutePair = new LinkedList<>();
             component.set(DATA_CONDITION_ROUTE_PAIRS, conditionRoutePair);
@@ -147,11 +147,12 @@ public class ChoiceNode extends AbstractScopedGraphNode {
     private boolean isDefaultRoute(GraphNode target) {
         return listConditionRoutePairs()
                 .stream()
-                .anyMatch(choiceConditionRoutePair ->
-                        choiceConditionRoutePair.getCondition().equals(Choice.DEFAULT_CONDITION) &&
-                                choiceConditionRoutePair.getNext() == target);
+                .anyMatch(routerConditionRoutePair ->
+                        Router.DEFAULT_CONDITION.equals(routerConditionRoutePair.getCondition()) &&
+                                routerConditionRoutePair.getNext() == target);
     }
 
+    // TODO: This one should be a class
     private void drawVerticalDividerArrows(FlowGraph graph, Graphics2D graphics) {
         // Draw arrows -> perpendicular to the vertical bar.
         int halfWidth = Half.of(width(graphics));

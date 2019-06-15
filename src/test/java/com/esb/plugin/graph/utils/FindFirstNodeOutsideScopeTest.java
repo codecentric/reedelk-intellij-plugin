@@ -16,41 +16,41 @@ class FindFirstNodeOutsideScopeTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
-        graph.add(choiceNode1, componentNode1);
-        graph.add(componentNode1, choiceNode2);
-        graph.add(choiceNode2, componentNode2);
-        graph.add(choiceNode1, componentNode3);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, componentNode1);
+        graph.add(componentNode1, routerNode2);
+        graph.add(routerNode2, componentNode2);
+        graph.add(routerNode1, componentNode3);
 
-        choiceNode1.addToScope(componentNode1);
-        choiceNode1.addToScope(componentNode3);
-        choiceNode1.addToScope(choiceNode2);
+        routerNode1.addToScope(componentNode1);
+        routerNode1.addToScope(componentNode3);
+        routerNode1.addToScope(routerNode2);
 
-        choiceNode2.addToScope(componentNode2);
+        routerNode2.addToScope(componentNode2);
 
         // When
-        Optional<GraphNode> firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, choiceNode1);
+        Optional<GraphNode> firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, routerNode1);
 
         // Then
         assertThat(firstNodeOutsideScope.isPresent()).isFalse();
     }
 
     @Test
-    void shouldCorrectlyReturnFirstDrawableOutsideScopeWhenChoiceWithTwoChildren() {
+    void shouldCorrectlyReturnFirstDrawableOutsideScopeWhenRouterWithTwoChildren() {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
-        graph.add(choiceNode1, componentNode1);
-        graph.add(choiceNode1, componentNode2);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, componentNode1);
+        graph.add(routerNode1, componentNode2);
         graph.add(componentNode1, componentNode3);
         graph.add(componentNode2, componentNode3);
 
-        choiceNode1.addToScope(componentNode1);
-        choiceNode1.addToScope(componentNode2);
+        routerNode1.addToScope(componentNode1);
+        routerNode1.addToScope(componentNode2);
 
         // When
-        Optional<GraphNode> nodes = FindFirstNodeOutsideScope.of(graph, choiceNode1);
+        Optional<GraphNode> nodes = FindFirstNodeOutsideScope.of(graph, routerNode1);
 
         // Then
         assertThat(nodes.get()).isEqualTo(componentNode3);

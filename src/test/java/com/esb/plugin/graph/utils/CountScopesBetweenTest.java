@@ -12,10 +12,10 @@ class CountScopesBetweenTest extends AbstractGraphTest {
     @Test
     void shouldReturnZeroWhenDrawableIsInTheSameeScope() {
         // Given
-        choiceNode1.addToScope(componentNode1);
+        routerNode1.addToScope(componentNode1);
 
         // When
-        Optional<Integer> actualScopesBetween = CountScopesBetween.them(choiceNode1, componentNode1);
+        Optional<Integer> actualScopesBetween = CountScopesBetween.them(routerNode1, componentNode1);
 
         // Then
         assertThat(actualScopesBetween.get()).isEqualTo(0);
@@ -24,11 +24,11 @@ class CountScopesBetweenTest extends AbstractGraphTest {
     @Test
     void shouldReturnOneWhenOneElementInsideNestedScope() {
         // Given
-        choiceNode1.addToScope(choiceNode2);
-        choiceNode2.addToScope(componentNode1);
+        routerNode1.addToScope(routerNode2);
+        routerNode2.addToScope(componentNode1);
 
         // When
-        Optional<Integer> actualScopesBetween = CountScopesBetween.them(choiceNode1, componentNode1);
+        Optional<Integer> actualScopesBetween = CountScopesBetween.them(routerNode1, componentNode1);
 
         // Then
         assertThat(actualScopesBetween.get()).isEqualTo(1);
@@ -37,10 +37,10 @@ class CountScopesBetweenTest extends AbstractGraphTest {
     @Test
     void shouldReturnZeroWhenSameScopedDrawableElementAsTarget() {
         // Given
-        choiceNode1.addToScope(componentNode1);
+        routerNode1.addToScope(componentNode1);
 
         // When
-        Optional<Integer> actualScopesBetween = CountScopesBetween.them(choiceNode1, choiceNode1);
+        Optional<Integer> actualScopesBetween = CountScopesBetween.them(routerNode1, routerNode1);
 
         // Then
         assertThat(actualScopesBetween.get()).isEqualTo(0);
@@ -49,10 +49,10 @@ class CountScopesBetweenTest extends AbstractGraphTest {
     @Test
     void shouldReturnOneWhenOneNestedScope() {
         // Given
-        choiceNode1.addToScope(choiceNode2);
+        routerNode1.addToScope(routerNode2);
 
         // When
-        Optional<Integer> actualScopesBetween = CountScopesBetween.them(choiceNode1, choiceNode2);
+        Optional<Integer> actualScopesBetween = CountScopesBetween.them(routerNode1, routerNode2);
 
         // Then
         assertThat(actualScopesBetween.get()).isEqualTo(1);
@@ -61,11 +61,11 @@ class CountScopesBetweenTest extends AbstractGraphTest {
     @Test
     void shouldReturnTwoWhenTwoNestedScopes() {
         // Given
-        choiceNode1.addToScope(choiceNode2);
-        choiceNode2.addToScope(choiceNode3);
+        routerNode1.addToScope(routerNode2);
+        routerNode2.addToScope(routerNode3);
 
         // When
-        Optional<Integer> actualScopesBetween = CountScopesBetween.them(choiceNode1, choiceNode3);
+        Optional<Integer> actualScopesBetween = CountScopesBetween.them(routerNode1, routerNode3);
 
         // Then
         assertThat(actualScopesBetween.get()).isEqualTo(2);
@@ -74,25 +74,25 @@ class CountScopesBetweenTest extends AbstractGraphTest {
     @Test
     void shouldReturnCorrectScopesBetweenWhenMultipleLevels() {
         // Given
-        choiceNode1.addToScope(componentNode1);
-        choiceNode1.addToScope(choiceNode3);
-        choiceNode1.addToScope(choiceNode2);
-        choiceNode1.addToScope(componentNode3);
+        routerNode1.addToScope(componentNode1);
+        routerNode1.addToScope(routerNode3);
+        routerNode1.addToScope(routerNode2);
+        routerNode1.addToScope(componentNode3);
 
-        choiceNode2.addToScope(componentNode5);
-        choiceNode2.addToScope(componentNode6);
-        choiceNode2.addToScope(componentNode7);
+        routerNode2.addToScope(componentNode5);
+        routerNode2.addToScope(componentNode6);
+        routerNode2.addToScope(componentNode7);
 
-        choiceNode3.addToScope(componentNode2);
+        routerNode3.addToScope(componentNode2);
 
         // When
-        Optional<Integer> actualScopesBetween = CountScopesBetween.them(choiceNode1, componentNode3);
+        Optional<Integer> actualScopesBetween = CountScopesBetween.them(routerNode1, componentNode3);
 
         // Then
         assertThat(actualScopesBetween.get()).isEqualTo(0);
 
         // When
-        actualScopesBetween = CountScopesBetween.them(choiceNode1, componentNode7);
+        actualScopesBetween = CountScopesBetween.them(routerNode1, componentNode7);
 
         // Then
         assertThat(actualScopesBetween.get()).isEqualTo(1);

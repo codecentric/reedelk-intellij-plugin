@@ -59,9 +59,9 @@ class FlowGraphImplTest extends AbstractGraphTest {
     void shouldReturnCorrectPredecessors() {
         // Given
         graph.root(root);
-        graph.add(root, choiceNode1);
-        graph.add(choiceNode1, componentNode1);
-        graph.add(choiceNode1, componentNode2);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, componentNode1);
+        graph.add(routerNode1, componentNode2);
         graph.add(componentNode1, componentNode3);
         graph.add(componentNode2, componentNode3);
 
@@ -76,12 +76,12 @@ class FlowGraphImplTest extends AbstractGraphTest {
     void shouldReturnCorrectSuccessors() {
         // Given
         graph.root(root);
-        graph.add(root, choiceNode1);
-        graph.add(choiceNode1, componentNode1);
-        graph.add(choiceNode1, componentNode2);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, componentNode1);
+        graph.add(routerNode1, componentNode2);
 
         // When
-        List<GraphNode> successors = graph.successors(choiceNode1);
+        List<GraphNode> successors = graph.successors(routerNode1);
 
         // Then
         assertThat(successors).containsExactlyInAnyOrder(componentNode1, componentNode2);

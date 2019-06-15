@@ -5,7 +5,7 @@
       "implementor": "com.esb.plugin.fixture.ComponentNode1"
     },
     {
-      "implementor": "com.esb.system.component.Choice",
+      "implementor": "com.esb.system.component.Router",
       "when": [
         {
           "condition": "payload.name == 'Mark'",

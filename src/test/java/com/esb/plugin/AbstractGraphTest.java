@@ -4,17 +4,17 @@ import com.esb.plugin.component.domain.ComponentClass;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.domain.ComponentDefaultDescriptor;
 import com.esb.plugin.component.domain.ComponentDescriptor;
-import com.esb.plugin.component.type.choice.ChoiceNode;
 import com.esb.plugin.component.type.flowreference.FlowReferenceNode;
 import com.esb.plugin.component.type.fork.ForkNode;
 import com.esb.plugin.component.type.generic.GenericComponentNode;
+import com.esb.plugin.component.type.router.RouterNode;
 import com.esb.plugin.component.type.stop.StopNode;
 import com.esb.plugin.fixture.*;
 import com.esb.plugin.graph.FlowGraphProvider;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.system.component.Choice;
 import com.esb.system.component.FlowReference;
 import com.esb.system.component.Fork;
+import com.esb.system.component.Router;
 import com.esb.system.component.Stop;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,12 +51,12 @@ public abstract class AbstractGraphTest {
     protected ForkNode forkNode2;
     protected ForkNode forkNode3;
 
-    // Choice
-    protected ChoiceNode choiceNode1;
-    protected ChoiceNode choiceNode2;
-    protected ChoiceNode choiceNode3;
-    protected ChoiceNode choiceNode4;
-    protected ChoiceNode choiceNode5;
+    // Router
+    protected RouterNode routerNode1;
+    protected RouterNode routerNode2;
+    protected RouterNode routerNode3;
+    protected RouterNode routerNode4;
+    protected RouterNode routerNode5;
 
     // Flow Reference
     protected FlowReferenceNode flowReferenceNode1;
@@ -91,11 +91,11 @@ public abstract class AbstractGraphTest {
         forkNode2 = createGraphNodeInstance(Fork.class, ForkNode.class);
         forkNode3 = createGraphNodeInstance(Fork.class, ForkNode.class);
 
-        choiceNode1 = createGraphNodeInstance(Choice.class, ChoiceNode.class);
-        choiceNode2 = createGraphNodeInstance(Choice.class, ChoiceNode.class);
-        choiceNode3 = createGraphNodeInstance(Choice.class, ChoiceNode.class);
-        choiceNode4 = createGraphNodeInstance(Choice.class, ChoiceNode.class);
-        choiceNode5 = createGraphNodeInstance(Choice.class, ChoiceNode.class);
+        routerNode1 = createGraphNodeInstance(Router.class, RouterNode.class);
+        routerNode2 = createGraphNodeInstance(Router.class, RouterNode.class);
+        routerNode3 = createGraphNodeInstance(Router.class, RouterNode.class);
+        routerNode4 = createGraphNodeInstance(Router.class, RouterNode.class);
+        routerNode5 = createGraphNodeInstance(Router.class, RouterNode.class);
 
         flowReferenceNode1 = createGraphNodeInstance(FlowReference.class, FlowReferenceNode.class);
         flowReferenceNode2 = createGraphNodeInstance(FlowReference.class, FlowReferenceNode.class);

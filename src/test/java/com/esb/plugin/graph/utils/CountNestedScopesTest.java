@@ -27,10 +27,10 @@ class CountNestedScopesTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
-        graph.add(choiceNode1, componentNode1);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, componentNode1);
 
-        choiceNode1.addToScope(componentNode1);
+        routerNode1.addToScope(componentNode1);
 
         // When
         int scopesCount = CountNestedScopes.of(graph, componentNode1);
@@ -44,12 +44,12 @@ class CountNestedScopesTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
-        graph.add(choiceNode1, choiceNode2);
-        graph.add(choiceNode2, componentNode1);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, routerNode2);
+        graph.add(routerNode2, componentNode1);
 
-        choiceNode1.addToScope(choiceNode2);
-        choiceNode2.addToScope(componentNode1);
+        routerNode1.addToScope(routerNode2);
+        routerNode2.addToScope(componentNode1);
 
         // When
         int scopesCount = CountNestedScopes.of(graph, componentNode1);
@@ -63,10 +63,10 @@ class CountNestedScopesTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
+        graph.add(root, routerNode1);
 
         // When
-        int scopesCount = CountNestedScopes.of(graph, choiceNode1);
+        int scopesCount = CountNestedScopes.of(graph, routerNode1);
 
         // Then
         assertThat(scopesCount).isEqualTo(1);
@@ -77,12 +77,12 @@ class CountNestedScopesTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
-        graph.add(choiceNode1, choiceNode2);
-        choiceNode1.addToScope(choiceNode2);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, routerNode2);
+        routerNode1.addToScope(routerNode2);
 
         // When
-        int scopesCount = CountNestedScopes.of(graph, choiceNode2);
+        int scopesCount = CountNestedScopes.of(graph, routerNode2);
 
         // Then
         assertThat(scopesCount).isEqualTo(2);
@@ -93,15 +93,15 @@ class CountNestedScopesTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
-        graph.add(choiceNode1, choiceNode2);
-        graph.add(choiceNode2, choiceNode3);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, routerNode2);
+        graph.add(routerNode2, routerNode3);
 
-        choiceNode1.addToScope(choiceNode2);
-        choiceNode2.addToScope(choiceNode3);
+        routerNode1.addToScope(routerNode2);
+        routerNode2.addToScope(routerNode3);
 
         // When
-        int scopesCount = CountNestedScopes.of(graph, choiceNode3);
+        int scopesCount = CountNestedScopes.of(graph, routerNode3);
 
         // Then
         assertThat(scopesCount).isEqualTo(3);
@@ -112,14 +112,14 @@ class CountNestedScopesTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
-        graph.add(choiceNode1, choiceNode2);
-        graph.add(choiceNode2, choiceNode3);
-        graph.add(choiceNode3, componentNode1);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, routerNode2);
+        graph.add(routerNode2, routerNode3);
+        graph.add(routerNode3, componentNode1);
 
-        choiceNode1.addToScope(choiceNode2);
-        choiceNode2.addToScope(choiceNode3);
-        choiceNode2.addToScope(componentNode1);
+        routerNode1.addToScope(routerNode2);
+        routerNode2.addToScope(routerNode3);
+        routerNode2.addToScope(componentNode1);
 
         // When
         int scopesCount = CountNestedScopes.of(graph, componentNode1);

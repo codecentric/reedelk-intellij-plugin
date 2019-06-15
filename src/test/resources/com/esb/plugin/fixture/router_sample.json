@@ -1,5 +1,5 @@
 {
-  "implementor": "com.esb.system.component.Choice",
+  "implementor": "com.esb.system.component.Router",
   "description": "A simple description",
   "when": [
     {

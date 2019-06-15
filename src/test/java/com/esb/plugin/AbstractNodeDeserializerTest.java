@@ -35,7 +35,7 @@ public abstract class AbstractNodeDeserializerTest extends AbstractGraphTest {
 
         mockContextInstantiateGraphNode(stopNode1, stopNode2, stopNode3);
         mockContextInstantiateGraphNode(forkNode1, forkNode2, forkNode3);
-        mockContextInstantiateGraphNode(choiceNode1, choiceNode2, choiceNode3, choiceNode4, choiceNode5);
+        mockContextInstantiateGraphNode(routerNode1, routerNode2, routerNode3, routerNode4, routerNode5);
         mockContextInstantiateGraphNode(flowReferenceNode1, flowReferenceNode2);
 
         graph = provider.createGraph();

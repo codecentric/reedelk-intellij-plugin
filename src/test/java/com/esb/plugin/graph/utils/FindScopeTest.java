@@ -19,12 +19,12 @@ class FindScopeTest extends AbstractGraphTest {
         super.setUp();
         graph = provider.createGraph();
         graph.root(root);
-        graph.add(root, choiceNode1);
-        graph.add(choiceNode1, choiceNode2);
-        graph.add(choiceNode2, componentNode1);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, routerNode2);
+        graph.add(routerNode2, componentNode1);
 
-        choiceNode1.addToScope(choiceNode2);
-        choiceNode2.addToScope(componentNode1);
+        routerNode1.addToScope(routerNode2);
+        routerNode2.addToScope(componentNode1);
     }
 
     @Test
@@ -34,16 +34,16 @@ class FindScopeTest extends AbstractGraphTest {
 
         // Then
         assertThat(actualScope).isPresent();
-        assertThat(actualScope).get().isEqualTo(choiceNode2);
+        assertThat(actualScope).get().isEqualTo(routerNode2);
     }
 
     @Test
     void shouldReturnCorrectScopeOfScopedNode() {
         // When
-        Optional<ScopedGraphNode> actualScope = FindScope.of(graph, choiceNode2);
+        Optional<ScopedGraphNode> actualScope = FindScope.of(graph, routerNode2);
 
         // Then
         assertThat(actualScope).isPresent();
-        assertThat(actualScope).get().isEqualTo(choiceNode1);
+        assertThat(actualScope).get().isEqualTo(routerNode1);
     }
 }

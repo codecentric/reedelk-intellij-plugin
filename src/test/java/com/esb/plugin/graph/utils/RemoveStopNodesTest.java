@@ -12,10 +12,10 @@ class RemoveStopNodesTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(componentNode1);
-        graph.add(componentNode1, choiceNode1);
-        graph.add(choiceNode1, componentNode2);
-        graph.add(choiceNode1, flowReferenceNode1);
-        graph.add(choiceNode1, forkNode1);
+        graph.add(componentNode1, routerNode1);
+        graph.add(routerNode1, componentNode2);
+        graph.add(routerNode1, flowReferenceNode1);
+        graph.add(routerNode1, forkNode1);
         graph.add(componentNode2, stopNode1);
         graph.add(flowReferenceNode1, stopNode1);
 
@@ -28,9 +28,9 @@ class RemoveStopNodesTest extends AbstractGraphTest {
 
         graph.add(stopNode1, componentNode5);
 
-        choiceNode1.addToScope(componentNode2);
-        choiceNode1.addToScope(flowReferenceNode1);
-        choiceNode1.addToScope(forkNode1);
+        routerNode1.addToScope(componentNode2);
+        routerNode1.addToScope(flowReferenceNode1);
+        routerNode1.addToScope(forkNode1);
 
         forkNode1.addToScope(componentNode3);
         forkNode1.addToScope(componentNode4);
