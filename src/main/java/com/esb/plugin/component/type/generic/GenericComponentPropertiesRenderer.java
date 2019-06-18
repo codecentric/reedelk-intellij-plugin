@@ -36,6 +36,7 @@ public class GenericComponentPropertiesRenderer extends AbstractNodePropertiesRe
             final String displayName = descriptor.getDisplayName();
             final String propertyName = descriptor.getPropertyName();
             final TypeDescriptor propertyType = descriptor.getPropertyType();
+
             final PropertyAccessor setter = getAccessor(propertyName, propertyType, data);
             final JComponent renderedComponent =
                     TypeRendererFactory.get().from(propertyType).render(descriptor, setter, snapshot);

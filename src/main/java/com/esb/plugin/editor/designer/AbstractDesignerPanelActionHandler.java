@@ -1,7 +1,6 @@
 package com.esb.plugin.editor.designer;
 
 import com.esb.plugin.commons.PrintFlowInfo;
-import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.domain.ComponentDescriptor;
 import com.esb.plugin.editor.designer.action.DropActionHandler;
 import com.esb.plugin.editor.designer.action.MoveActionHandler;
@@ -22,6 +21,7 @@ import java.awt.image.ImageObserver;
 import java.io.IOException;
 import java.util.Optional;
 
+import static com.esb.plugin.component.domain.ComponentDescriptor.FLAVOR;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
@@ -66,8 +66,8 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
 
             GraphNode nodeToAdd = GraphNodeFactory.get(descriptor);
 
-            // We add default property values for the just added component
-            fillDefaultDescriptorDataValues(nodeToAdd);
+            // Fill default property values for the just added component
+            DefaultDescriptorDataValuesFiller.fill(nodeToAdd);
 
             LOG.info(format("Node Dropped [%s], drop point [x: %d, y: %d]", PrintFlowInfo.name(nodeToAdd), dropPoint.x, dropPoint.y));
 
@@ -89,9 +89,10 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
     private Optional<ComponentDescriptor> getComponentDescriptorFrom(DropTargetDropEvent dropEvent) {
         Transferable transferable = dropEvent.getTransferable();
         DataFlavor[] transferDataFlavor = transferable.getTransferDataFlavors();
-        if (asList(transferDataFlavor).contains(ComponentDescriptor.FLAVOR)) {
+        if (asList(transferDataFlavor).contains(FLAVOR)) {
             try {
-                ComponentDescriptor descriptor = (ComponentDescriptor) transferable.getTransferData(ComponentDescriptor.FLAVOR);
+                ComponentDescriptor descriptor =
+                        (ComponentDescriptor) transferable.getTransferData(FLAVOR);
                 return Optional.of(descriptor);
             } catch (UnsupportedFlavorException | IOException e) {
                 LOG.error("Could not extract dropped component name", e);
@@ -100,11 +101,4 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
         return Optional.empty();
     }
 
-    private void fillDefaultDescriptorDataValues(GraphNode node) {
-        ComponentData componentData = node.componentData();
-        componentData.getPropertiesDescriptors().forEach(descriptor -> {
-            Object defaultValue = descriptor.getDefaultValue();
-            componentData.set(descriptor.getPropertyName(), defaultValue);
-        });
-    }
 }
