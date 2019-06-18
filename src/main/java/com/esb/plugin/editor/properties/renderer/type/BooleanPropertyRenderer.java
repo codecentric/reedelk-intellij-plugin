@@ -15,14 +15,16 @@ public class BooleanPropertyRenderer implements TypePropertyRenderer {
 
     @Override
     public JComponent render(ComponentPropertyDescriptor descriptor, PropertyAccessor accessor, FlowSnapshot snapshot) {
+        boolean selected = accessor.get() == null ?
+                Boolean.FALSE :
+                (Boolean) accessor.get();
+
         BooleanCheckbox checkbox = new BooleanCheckbox();
+        checkbox.setSelected(selected);
         checkbox.addListener(valueAsString -> {
             accessor.set(valueAsString);
             snapshot.onDataChange();
         });
-        boolean selected = accessor.get() == null ? Boolean.FALSE : (Boolean) accessor.get();
-        checkbox.setSelected(selected);
-
         JPanel container = new JPanel();
         container.setLayout(new BorderLayout());
         container.add(checkbox, WEST);

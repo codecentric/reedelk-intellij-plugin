@@ -1,7 +1,6 @@
 package com.esb.plugin.converter;
 
 import com.esb.plugin.component.domain.TypeDescriptor;
-import com.esb.plugin.component.domain.TypeObjectDescriptor;
 import com.esb.plugin.component.type.unknown.UnknownPropertyType;
 
 import java.math.BigDecimal;
@@ -36,7 +35,6 @@ public class ValueConverterFactory {
         tmp.put(BigInteger.class, new BigIntegerConverter());
         tmp.put(BigDecimal.class, new BigDecimalConverter());
 
-        tmp.put(TypeObjectDescriptor.TypeObject.class, new TypedObjectConverter());
         CONVERTER = Collections.unmodifiableMap(tmp);
     }
 

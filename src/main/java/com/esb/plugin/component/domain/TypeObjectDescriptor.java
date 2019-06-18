@@ -43,6 +43,11 @@ public class TypeObjectDescriptor implements TypeDescriptor {
         }
 
         @Override
+        public List<String> keys() {
+            return new ArrayList<>(objectDataHolder.keySet());
+        }
+
+        @Override
         public void set(String propertyName, Object propertyValue) {
             objectDataHolder.put(propertyName, propertyValue);
         }

@@ -10,14 +10,12 @@ import java.awt.event.ActionListener;
 
 public class BooleanCheckbox extends JBCheckBox implements ActionListener {
 
-    private final JBCheckBox checkBox;
     private final ValueConverter<Boolean> converter = new BooleanConverter();
 
     private InputChangeListener<Boolean> listener;
 
     public BooleanCheckbox() {
-        checkBox = new JBCheckBox();
-        checkBox.addActionListener(this);
+        addActionListener(this);
     }
 
     @Override
@@ -29,14 +27,12 @@ public class BooleanCheckbox extends JBCheckBox implements ActionListener {
             listener.onChange(false);
         }
     }
-
     public void setValue(Object value) {
         String valueAsString = converter.toText(value);
-        checkBox.setSelected(Boolean.parseBoolean(valueAsString));
+        setSelected(Boolean.parseBoolean(valueAsString));
     }
 
     public void addListener(InputChangeListener<Boolean> listener) {
         this.listener = listener;
     }
-
 }

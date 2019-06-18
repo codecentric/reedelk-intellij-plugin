@@ -15,6 +15,11 @@ public class ComponentData implements ComponentDataHolder {
         this.descriptor = descriptor;
     }
 
+    @Override
+    public List<String> keys() {
+        return new ArrayList<>(componentData.keySet());
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public <T> T get(String key) {
