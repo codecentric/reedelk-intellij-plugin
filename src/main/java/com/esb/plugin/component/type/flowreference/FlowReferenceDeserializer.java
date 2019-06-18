@@ -32,6 +32,13 @@ public class FlowReferenceDeserializer extends AbstractNodeDeserializer {
             componentData.set(FlowReference.ref(), reference);
         }
 
+        if (componentDefinition.has(Implementor.description())) {
+
+            String description = Implementor.description(componentDefinition);
+
+            componentData.set(Implementor.description(), description);
+        }
+
         graph.add(parent, node);
 
         return node;

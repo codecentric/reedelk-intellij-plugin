@@ -50,8 +50,6 @@ public class GraphNodeFactory {
 
         ComponentData componentData = new ComponentData(componentDescriptionDecorator);
 
-        fillDefaultDescriptorValues(componentData);
-
         String componentFullyQualifiedName = componentData.getFullyQualifiedName();
 
         Class<? extends GraphNode> componentNodeClazz =
@@ -63,10 +61,4 @@ public class GraphNodeFactory {
         }
     }
 
-    private static void fillDefaultDescriptorValues(ComponentData componentData) {
-        componentData.getPropertiesDescriptors().forEach(descriptor -> {
-            Object defaultValue = descriptor.getDefaultValue();
-            componentData.set(descriptor.getPropertyName(), defaultValue);
-        });
-    }
 }

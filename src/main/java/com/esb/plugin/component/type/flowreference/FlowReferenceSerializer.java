@@ -21,12 +21,15 @@ public class FlowReferenceSerializer extends AbstractNodeSerializer {
 
         Implementor.name(componentData.getFullyQualifiedName(), componentAsJson);
 
-        Object ref = componentData.get(FlowReference.ref());
+        String description = componentData.get(Implementor.description());
+        if (description != null) {
+            componentAsJson.put(Implementor.description(), description);
+        }
 
+        Object ref = componentData.get(FlowReference.ref());
         if (ref == null) {
             ref = FlowReferenceNode.DEFAULT_FLOW_REFERENCE;
         }
-
         componentAsJson.put(FlowReference.ref(), ref);
 
         return componentAsJson;

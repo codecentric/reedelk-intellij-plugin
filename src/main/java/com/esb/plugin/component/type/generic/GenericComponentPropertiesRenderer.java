@@ -40,7 +40,8 @@ public class GenericComponentPropertiesRenderer extends AbstractNodePropertiesRe
             final JComponent renderedComponent =
                     TypeRendererFactory.get().from(propertyType).render(descriptor, setter, snapshot);
 
-            // If it is a Type Object we must wrap it
+            // If the property type is a complex object, we wrap it in a
+            // bordered box with title the name of the object property.
             if (propertyType instanceof TypeObjectDescriptor) {
                 JBPanel wrappedRenderedComponent = ContainerFactory
                         .createObjectTypeContainer(descriptor.getDisplayName(), renderedComponent);

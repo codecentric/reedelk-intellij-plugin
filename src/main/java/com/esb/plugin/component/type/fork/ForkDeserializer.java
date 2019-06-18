@@ -1,5 +1,6 @@
 package com.esb.plugin.component.type.fork;
 
+import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.type.stop.StopNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.deserializer.AbstractNodeDeserializer;
@@ -29,9 +30,16 @@ public class ForkDeserializer extends AbstractNodeDeserializer {
 
         ForkNode forkNode = context.instantiateGraphNode(name);
 
+        ComponentData componentData = forkNode.componentData();
+
+        // Set description
+        if (componentDefinition.has(Implementor.description())) {
+            componentData.set(Implementor.description(), Implementor.description(componentDefinition));
+        }
+
         int threadPoolSize = Fork.threadPoolSize(componentDefinition);
 
-        forkNode.componentData().set(Fork.threadPoolSize(), threadPoolSize);
+        componentData.set(Fork.threadPoolSize(), threadPoolSize);
 
         graph.add(parent, forkNode);
 

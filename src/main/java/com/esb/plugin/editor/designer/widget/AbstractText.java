@@ -47,13 +47,21 @@ public abstract class AbstractText {
     }
 
     public int height(Graphics2D graphics) {
-        Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(getText(), graphics);
-        return (int) stringBounds.getHeight();
+        int height = 0;
+        if (getText() != null) {
+            Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(getText(), graphics);
+            height = (int) stringBounds.getHeight();
+        }
+        return height;
     }
 
     public int width(Graphics2D graphics) {
-        Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(getText(), graphics);
-        return (int) stringBounds.getWidth();
+        int width = 0;
+        if (getText() != null) {
+            Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(getText(), graphics);
+            width = (int) stringBounds.getWidth();
+        }
+        return width;
     }
 
     protected abstract String getText();
@@ -63,7 +71,10 @@ public abstract class AbstractText {
     protected abstract Color getSelectedColor();
 
     private List<String> getTextAsLines() {
-        java.util.List<String> matchList = new ArrayList<>();
+        List<String> matchList = new ArrayList<>();
+
+        if (getText() == null) return matchList;
+
         Matcher regexMatcher = REGEX.matcher(getText());
         while (regexMatcher.find()) {
             matchList.add(regexMatcher.group());

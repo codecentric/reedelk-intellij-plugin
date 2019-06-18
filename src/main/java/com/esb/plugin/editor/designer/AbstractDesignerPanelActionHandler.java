@@ -1,6 +1,7 @@
 package com.esb.plugin.editor.designer;
 
 import com.esb.plugin.commons.PrintFlowInfo;
+import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.domain.ComponentDescriptor;
 import com.esb.plugin.editor.designer.action.DropActionHandler;
 import com.esb.plugin.editor.designer.action.MoveActionHandler;
@@ -65,6 +66,9 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
 
             GraphNode nodeToAdd = GraphNodeFactory.get(descriptor);
 
+            // We add default property values for the just added component
+            fillDefaultDescriptorDataValues(nodeToAdd);
+
             LOG.info(format("Node Dropped [%s], drop point [x: %d, y: %d]", PrintFlowInfo.name(nodeToAdd), dropPoint.x, dropPoint.y));
 
             ActionNodeAdd actionNodeAdd = getActionNodeAdd(dropPoint, nodeToAdd, graphics, observer);
@@ -80,6 +84,8 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
         }
     }
 
+    protected abstract ActionNodeAdd getActionNodeAdd(Point dropPoint, GraphNode nodeToAdd, Graphics2D graphics, ImageObserver observer);
+
     private Optional<ComponentDescriptor> getComponentDescriptorFrom(DropTargetDropEvent dropEvent) {
         Transferable transferable = dropEvent.getTransferable();
         DataFlavor[] transferDataFlavor = transferable.getTransferDataFlavors();
@@ -94,5 +100,11 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
         return Optional.empty();
     }
 
-    protected abstract ActionNodeAdd getActionNodeAdd(Point dropPoint, GraphNode nodeToAdd, Graphics2D graphics, ImageObserver observer);
+    private void fillDefaultDescriptorDataValues(GraphNode node) {
+        ComponentData componentData = node.componentData();
+        componentData.getPropertiesDescriptors().forEach(descriptor -> {
+            Object defaultValue = descriptor.getDefaultValue();
+            componentData.set(descriptor.getPropertyName(), defaultValue);
+        });
+    }
 }

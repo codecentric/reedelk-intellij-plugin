@@ -17,9 +17,9 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.esb.internal.commons.JsonParser.FlowReference;
 
@@ -35,15 +35,13 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
 
         String reference = componentData.get(FlowReference.ref());
 
-        List<ComponentPropertyDescriptor> descriptors = new ArrayList<>();
-        componentData.getDataProperties()
+        List<ComponentPropertyDescriptor> descriptors = componentData.getPropertiesDescriptors();
+        List<ComponentPropertyDescriptor> filteredDescriptors = descriptors
                 .stream()
-                .filter(propertyName -> !propertyName.equals(FlowReference.ref()))
-                .forEach(property ->
-                        componentData.getPropertyDescriptor(property)
-                                .ifPresent(descriptors::add));
+                .filter(descriptor -> !FlowReference.ref().equals(descriptor.getPropertyName()))
+                .collect(Collectors.toList());
 
-        JBPanel genericPropertiesPanel = createPropertiesPanelFrom(descriptors, componentData);
+        JBPanel genericPropertiesPanel = createPropertiesPanelFrom(filteredDescriptors, componentData);
 
         Optional<ComponentPropertyDescriptor> propertyDescriptor = componentData.getPropertyDescriptor(FlowReference.ref());
         Preconditions.checkState(propertyDescriptor.isPresent(), "Reference property descriptor must not be null");
