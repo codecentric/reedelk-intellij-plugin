@@ -20,7 +20,8 @@ public class BooleanPropertyRenderer implements TypePropertyRenderer {
             accessor.set(valueAsString);
             snapshot.onDataChange();
         });
-        checkbox.setValue(accessor.get());
+        boolean selected = accessor.get() == null ? Boolean.FALSE : (Boolean) accessor.get();
+        checkbox.setSelected(selected);
 
         JPanel container = new JPanel();
         container.setLayout(new BorderLayout());
