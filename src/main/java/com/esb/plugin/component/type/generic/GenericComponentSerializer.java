@@ -22,6 +22,7 @@ public class GenericComponentSerializer extends AbstractNodeSerializer {
         componentData.getDataProperties().forEach(propertyName -> {
 
             Object data = componentData.get(propertyName);
+            // TODO: Add serialization of nested objects
 
             componentAsJson.put(propertyName, data);
 

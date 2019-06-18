@@ -1,8 +1,8 @@
 package com.esb.plugin.editor.properties.renderer.type;
 
-import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.domain.TypeEnumDescriptor;
+import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.widget.input.EnumDropDown;
 import com.esb.plugin.graph.FlowSnapshot;
 
@@ -12,19 +12,14 @@ import java.awt.*;
 public class EnumPropertyRenderer implements TypePropertyRenderer {
 
     @Override
-    public JComponent render(ComponentPropertyDescriptor descriptor, ComponentData componentData, FlowSnapshot snapshot) {
-        String propertyName = descriptor.getPropertyName();
-
+    public JComponent render(ComponentPropertyDescriptor descriptor, PropertyAccessor accessor, FlowSnapshot snapshot) {
         TypeEnumDescriptor propertyType = (TypeEnumDescriptor) descriptor.getPropertyType();
-        Object propertyValue = componentData.get(propertyName);
-
         EnumDropDown dropDown = new EnumDropDown(propertyType.possibleValues());
-        dropDown.setValue(propertyValue);
+        dropDown.setValue(accessor.get());
         dropDown.addListener(value -> {
-            componentData.set(propertyName, value);
+            accessor.set(value);
             snapshot.onDataChange();
         });
-
         JPanel dropDownContainer = new JPanel();
         dropDownContainer.setLayout(new BorderLayout());
         dropDownContainer.add(dropDown, BorderLayout.WEST);

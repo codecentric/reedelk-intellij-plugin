@@ -3,10 +3,8 @@ package com.esb.plugin.component.scanner;
 import com.esb.api.annotation.Default;
 import com.esb.api.annotation.Property;
 import com.esb.api.annotation.Required;
-import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
-import com.esb.plugin.component.domain.TypeDescriptor;
-import com.esb.plugin.component.domain.TypeEnumDescriptor;
-import com.esb.plugin.component.domain.TypePrimitiveDescriptor;
+import com.esb.api.annotation.Shareable;
+import com.esb.plugin.component.domain.*;
 import com.esb.plugin.converter.ValueConverterFactory;
 import io.github.classgraph.*;
 
@@ -18,6 +16,7 @@ import static com.esb.plugin.component.domain.ComponentPropertyDescriptor.Proper
 import static com.esb.plugin.component.domain.ComponentPropertyDescriptor.PropertyRequired.NOT_REQUIRED;
 import static com.esb.plugin.component.domain.ComponentPropertyDescriptor.PropertyRequired.REQUIRED;
 import static com.esb.plugin.converter.ValueConverterFactory.isKnownType;
+import static java.util.stream.Collectors.toList;
 
 public class ComponentPropertyAnalyzer {
 
@@ -39,10 +38,8 @@ public class ComponentPropertyAnalyzer {
         String propertyName = propertyInfo.getName();
         String displayName = getAnnotationValueOrDefault(propertyInfo, Property.class, propertyInfo.getName());
         TypeDescriptor propertyType = getPropertyType(propertyInfo);
-
         Object defaultValue = getDefaultValue(propertyInfo, propertyType);
-
-        PropertyRequired required = propertyInfo.hasAnnotation(Required.class.getName()) ? REQUIRED : NOT_REQUIRED;
+        PropertyRequired required = hasAnnotation(propertyInfo, Required.class) ? REQUIRED : NOT_REQUIRED;
         return new ComponentPropertyDescriptor(propertyName, propertyType, displayName, defaultValue, required);
     }
 
@@ -51,7 +48,8 @@ public class ComponentPropertyAnalyzer {
         if (typeSignature instanceof BaseTypeSignature) {
             return processBaseType((BaseTypeSignature) typeSignature);
         } else if (typeSignature instanceof ClassRefTypeSignature) {
-            return processClassRefType((ClassRefTypeSignature) typeSignature);
+            ClassRefTypeSignature classRef = (ClassRefTypeSignature) typeSignature;
+            return processClassRefType(fieldInfo, classRef);
         } else {
             throw new UnsupportedType(typeSignature.getClass());
         }
@@ -61,7 +59,7 @@ public class ComponentPropertyAnalyzer {
         return new TypePrimitiveDescriptor(typeSignature.getType());
     }
 
-    private TypeDescriptor processClassRefType(ClassRefTypeSignature typeSignature) {
+    private TypeDescriptor processClassRefType(FieldInfo fieldInfo, ClassRefTypeSignature typeSignature) {
         String fullyQualifiedClassName = typeSignature.getFullyQualifiedClassName();
         if (isKnownType(fullyQualifiedClassName)) {
             try {
@@ -73,9 +71,23 @@ public class ComponentPropertyAnalyzer {
             }
         } else if (isEnumeration(fullyQualifiedClassName)) {
             return processEnumType(typeSignature);
+
         } else {
-            throw new UnsupportedType(fullyQualifiedClassName);
+            // We check that we can resolve class info. If we can, then
+            ClassInfo classInfo = context.getClassInfo(fullyQualifiedClassName);
+            if (classInfo != null) {
+                boolean shareable = hasAnnotation(fieldInfo, Shareable.class);
+                List<ComponentPropertyDescriptor> collect = classInfo
+                        .getFieldInfo()
+                        .stream()
+                        .map(this::analyze)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .collect(toList());
+                return new TypeObjectDescriptor(shareable, collect);
+            }
         }
+        throw new UnsupportedType(typeSignature.getClass());
     }
 
     // TODO: Test corner cases like when there is an enum with no fields!
@@ -113,6 +125,10 @@ public class ComponentPropertyAnalyzer {
         AnnotationInfo annotationInfo = fieldInfo.getAnnotationInfo(annotationClazz.getName());
         AnnotationParameterValueList parameterValues = annotationInfo.getParameterValues();
         return (T) parameterValues.getValue(ANNOTATION_DEFAULT_PARAM_NAME);
+    }
+
+    private boolean hasAnnotation(FieldInfo fieldInfo, Class targetAnnotation) {
+        return fieldInfo.hasAnnotation(targetAnnotation.getName());
     }
 
 }

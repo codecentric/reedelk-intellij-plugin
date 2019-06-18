@@ -42,6 +42,10 @@ public class DeserializerFactory {
     private DeserializerFactory() {
     }
 
+    public static DeserializerFactory get() {
+        return new DeserializerFactory();
+    }
+
     public DeserializerFactory context(DeserializerContext context) {
         this.context = context;
         return this;
@@ -52,8 +56,9 @@ public class DeserializerFactory {
         return this;
     }
 
-    public static DeserializerFactory get() {
-        return new DeserializerFactory();
+    public DeserializerFactory graph(FlowGraph graph) {
+        this.graph = graph;
+        return this;
     }
 
     public Deserializer build() {
@@ -62,13 +67,8 @@ public class DeserializerFactory {
         checkState(componentDefinition != null, "component definition must not be null");
 
         String componentName = JsonParser.Implementor.name(componentDefinition);
-        Class<? extends Deserializer> builderClazz = COMPONENT_DESERIALIZER_MAP.getOrDefault(componentName, GENERIC_DESERIALIZER);
-        return instantiate(builderClazz);
-    }
-
-    public DeserializerFactory graph(FlowGraph graph) {
-        this.graph = graph;
-        return this;
+        Class<? extends Deserializer> deserializerClazz = COMPONENT_DESERIALIZER_MAP.getOrDefault(componentName, GENERIC_DESERIALIZER);
+        return instantiate(deserializerClazz);
     }
 
     private Deserializer instantiate(Class<? extends Deserializer> deserializerClazz) {
@@ -80,5 +80,4 @@ public class DeserializerFactory {
             throw new ESBException(e);
         }
     }
-
 }

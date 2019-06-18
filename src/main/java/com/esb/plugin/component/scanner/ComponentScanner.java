@@ -25,16 +25,24 @@ public class ComponentScanner {
         ScanResult scanResult = instantiateScanner()
                 .whitelistPaths(PackageToPath.convert(targetPackage.getName()))
                 .scan();
+
+        List<ComponentDescriptor> packageComponentDescriptors =
+                processScanResult(scanResult);
+
         // Unknown components are filtered out
-        return filterOutUnknownClassComponents(processScanResult(scanResult));
+        return filterOutUnknownClassComponents(packageComponentDescriptors);
     }
 
     public List<ComponentDescriptor> from(String targetPath) {
         ScanResult scanResult = instantiateScanner()
                 .overrideClasspath(targetPath)
                 .scan();
+
+        List<ComponentDescriptor> targetPathComponentDescriptors =
+                processScanResult(scanResult);
+
         // Unknown components are filtered out
-        return filterOutUnknownClassComponents(processScanResult(scanResult));
+        return filterOutUnknownClassComponents(targetPathComponentDescriptors);
     }
 
     private List<ComponentDescriptor> processScanResult(ScanResult scanResult) {

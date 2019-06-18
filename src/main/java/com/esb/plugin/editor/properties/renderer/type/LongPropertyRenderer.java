@@ -9,4 +9,5 @@ public class LongPropertyRenderer extends NumericPropertyRenderer<Long> {
     protected NumericInputField<Long> getInputField() {
         return new LongInputField();
     }
+
 }

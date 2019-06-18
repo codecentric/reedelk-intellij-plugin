@@ -6,7 +6,7 @@ public class UnknownPropertyType implements TypeDescriptor {
 
     @Override
     public Class<?> type() {
-        throw new UnsupportedOperationException();
+        return UnknownType.class;
     }
 
     @Override
@@ -14,4 +14,6 @@ public class UnknownPropertyType implements TypeDescriptor {
         throw new UnsupportedOperationException();
     }
 
+    public static class UnknownType {
+    }
 }

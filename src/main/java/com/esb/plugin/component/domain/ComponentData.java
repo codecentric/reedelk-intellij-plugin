@@ -5,7 +5,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 
-public class ComponentData {
+public class ComponentData implements ComponentDataHolder {
 
     private final ComponentDescriptor descriptor;
 
@@ -16,10 +16,12 @@ public class ComponentData {
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public <T> T get(String key) {
         return (T) componentData.get(key);
     }
 
+    @Override
     public void set(String propertyName, Object propertyValue) {
         componentData.put(propertyName, propertyValue);
     }

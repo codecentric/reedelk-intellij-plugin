@@ -5,7 +5,7 @@ import com.esb.plugin.component.domain.ComponentClass;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
 
-public class ComponentClassAnalyzer {
+class ComponentClassAnalyzer {
 
     private final ClassInfo classInfo;
 
@@ -13,7 +13,7 @@ public class ComponentClassAnalyzer {
         this.classInfo = classInfo;
     }
 
-    public ComponentClass analyze() {
+    ComponentClass analyze() {
         if (isInbound(classInfo)) {
             return ComponentClass.INBOUND;
         } else if (isProcessor(classInfo)) {

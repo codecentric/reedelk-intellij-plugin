@@ -1,7 +1,7 @@
 package com.esb.plugin.editor.properties.renderer.type;
 
-import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
+import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.widget.input.InputField;
 import com.esb.plugin.graph.FlowSnapshot;
 
@@ -13,24 +13,20 @@ import static java.awt.BorderLayout.WEST;
 
 public abstract class NumericPropertyRenderer<T> implements TypePropertyRenderer {
 
-    @Override
-    public JComponent render(ComponentPropertyDescriptor descriptor, ComponentData componentData, FlowSnapshot snapshot) {
-        String propertyName = descriptor.getPropertyName();
-        Object propertyValue = componentData.get(propertyName);
+    protected abstract InputField<T> getInputField();
 
+    @Override
+    public JComponent render(ComponentPropertyDescriptor descriptor, PropertyAccessor accessor, FlowSnapshot snapshot) {
         InputField<T> inputField = getInputField();
-        inputField.setValue(propertyValue);
+        inputField.setValue(accessor.get());
         inputField.addListener(value -> {
-            componentData.set(propertyName, value);
+            accessor.set(value);
             snapshot.onDataChange();
         });
-
         JPanel inputFieldContainer = new JPanel();
         inputFieldContainer.setLayout(new BorderLayout());
         inputFieldContainer.add(inputField, WEST);
         inputFieldContainer.add(Box.createHorizontalBox(), CENTER);
         return inputFieldContainer;
     }
-
-    protected abstract InputField<T> getInputField();
 }

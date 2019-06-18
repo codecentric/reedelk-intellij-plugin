@@ -17,7 +17,8 @@ import javax.swing.event.AncestorEvent;
 
 public class PropertiesPanel extends JBPanel implements SelectListener {
 
-    private final MatteBorder border = BorderFactory.createMatteBorder(0, 10, 0, 0, getBackground());
+    private final MatteBorder border =
+            BorderFactory.createMatteBorder(0, 10, 0, 0, getBackground());
 
     private final Module module;
     private final FlowSnapshot snapshot;
