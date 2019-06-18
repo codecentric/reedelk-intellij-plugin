@@ -10,6 +10,7 @@ import io.github.classgraph.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static com.esb.plugin.component.domain.ComponentPropertyDescriptor.PropertyRequired;
@@ -92,11 +93,12 @@ public class ComponentPropertyAnalyzer {
 
     // TODO: Test corner cases like when there is an enum with no fields!
     private TypeEnumDescriptor processEnumType(ClassRefTypeSignature enumRefType) {
-        ClassInfo enumClassInfo = context.getClassInfo(enumRefType.getFullyQualifiedClassName());
+        String enumFullyQualifiedClassName = enumRefType.getFullyQualifiedClassName();
+        ClassInfo enumClassInfo = context.getClassInfo(enumFullyQualifiedClassName);
         FieldInfoList declaredFieldInfo = enumClassInfo.getDeclaredFieldInfo();
         List<String> enumNames = declaredFieldInfo
                 .stream()
-                .filter(fieldInfo -> fieldInfo.getTypeDescriptor() instanceof ClassRefTypeSignature)
+                .filter(FilterByFullyQualifiedClassNameType(enumFullyQualifiedClassName))
                 .map(FieldInfo::getName)
                 .collect(Collectors.toList());
         return new TypeEnumDescriptor(enumNames, enumNames.get(0));
@@ -131,4 +133,19 @@ public class ComponentPropertyAnalyzer {
         return fieldInfo.hasAnnotation(targetAnnotation.getName());
     }
 
+    /**
+     * Returns a new Predicate which filters FieldInfo's having type the target
+     * class name specified in the argument of this function.
+     */
+    private static Predicate<FieldInfo> FilterByFullyQualifiedClassNameType(String targetFullyQualifiedClassName) {
+        return fieldInfo -> {
+            TypeSignature typeDescriptor = fieldInfo.getTypeDescriptor();
+            if (typeDescriptor instanceof ClassRefTypeSignature) {
+                ClassRefTypeSignature matchingClass = (ClassRefTypeSignature) typeDescriptor;
+                return matchingClass.getFullyQualifiedClassName()
+                        .equals(targetFullyQualifiedClassName);
+            }
+            return false;
+        };
+    }
 }
