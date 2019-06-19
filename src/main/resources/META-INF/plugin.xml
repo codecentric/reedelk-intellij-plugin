@@ -56,6 +56,9 @@
         <moduleService serviceInterface="com.esb.plugin.service.module.SubflowService"
                        serviceImplementation="com.esb.plugin.service.module.impl.SubflowServiceImpl"/>
 
+        <moduleService serviceInterface="com.esb.plugin.service.module.ConfigService"
+                       serviceImplementation="com.esb.plugin.service.module.impl.ConfigServiceImpl"/>
+
         <!-- Program Runner and Executors -->
         <programRunner implementation="com.esb.plugin.runconfig.module.runner.ESBDeploymentRunner" order="first"/>
         <executor implementation="com.esb.plugin.runconfig.module.runner.ESBModuleDeployExecutor"/>

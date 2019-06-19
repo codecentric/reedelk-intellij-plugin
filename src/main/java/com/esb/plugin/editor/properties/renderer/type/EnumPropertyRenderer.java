@@ -5,6 +5,7 @@ import com.esb.plugin.component.domain.TypeEnumDescriptor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.widget.input.EnumDropDown;
 import com.esb.plugin.graph.FlowSnapshot;
+import com.intellij.openapi.module.Module;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,7 @@ import java.awt.*;
 public class EnumPropertyRenderer implements TypePropertyRenderer {
 
     @Override
-    public JComponent render(ComponentPropertyDescriptor descriptor, PropertyAccessor accessor, FlowSnapshot snapshot) {
+    public JComponent render(Module module, ComponentPropertyDescriptor descriptor, PropertyAccessor accessor, FlowSnapshot snapshot) {
         TypeEnumDescriptor propertyType = (TypeEnumDescriptor) descriptor.getPropertyType();
         EnumDropDown dropDown = new EnumDropDown(propertyType.possibleValues());
         dropDown.setValue(accessor.get());

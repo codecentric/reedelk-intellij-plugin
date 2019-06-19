@@ -4,6 +4,7 @@ import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.widget.input.InputField;
 import com.esb.plugin.graph.FlowSnapshot;
+import com.intellij.openapi.module.Module;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +17,7 @@ public abstract class NumericPropertyRenderer<T> implements TypePropertyRenderer
     protected abstract InputField<T> getInputField();
 
     @Override
-    public JComponent render(ComponentPropertyDescriptor descriptor, PropertyAccessor accessor, FlowSnapshot snapshot) {
+    public JComponent render(Module module, ComponentPropertyDescriptor descriptor, PropertyAccessor accessor, FlowSnapshot snapshot) {
         InputField<T> inputField = getInputField();
         inputField.setValue(accessor.get());
         inputField.addListener(value -> {
