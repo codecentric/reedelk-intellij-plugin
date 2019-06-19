@@ -1,5 +1,6 @@
 package com.esb.plugin.component.type.generic;
 
+import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.component.domain.*;
 import com.esb.plugin.converter.ValueConverterFactory;
 import com.esb.plugin.graph.FlowGraph;
@@ -40,11 +41,30 @@ public class GenericComponentDeserializer extends AbstractNodeDeserializer {
 
         if (propertyType instanceof TypeObjectDescriptor) {
             TypeObjectDescriptor typeObjectDescriptor = (TypeObjectDescriptor) propertyType;
-            TypeObjectDescriptor.TypeObject nestedObject = typeObjectDescriptor.newInstance();
+
+            boolean shareable = typeObjectDescriptor.isShareable();
+
             JSONObject nestedJsonObject = parent.getJSONObject(descriptor.getPropertyName());
-            typeObjectDescriptor.getObjectProperties()
-                    .forEach(typeDescriptor -> deserialize(nestedJsonObject, nestedObject, typeDescriptor));
-            componentData.set(descriptor.getPropertyName(), nestedObject);
+
+            TypeObjectDescriptor.TypeObject nestedObject = typeObjectDescriptor.newInstance();
+
+            if (shareable) {
+
+                // The object must contain a reference
+                if (nestedJsonObject.has(JsonParser.Component.configRef())) {
+                    String configRef = JsonParser.Component.configRef(nestedJsonObject);
+                    nestedObject.set(JsonParser.Component.configRef(), configRef);
+                    componentData.set(descriptor.getPropertyName(), nestedObject);
+                } else {
+                    throw new IllegalStateException("Expected config ref for @Shareable configuration");
+                }
+
+            } else {
+                // The config is not shareable, hence we deserialize the object right away.
+                typeObjectDescriptor.getObjectProperties()
+                        .forEach(typeDescriptor -> deserialize(nestedJsonObject, nestedObject, typeDescriptor));
+                componentData.set(descriptor.getPropertyName(), nestedObject);
+            }
 
         } else {
             Object propertyValue = ValueConverterFactory

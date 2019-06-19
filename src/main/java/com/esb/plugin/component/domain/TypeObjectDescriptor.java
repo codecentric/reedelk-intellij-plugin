@@ -17,6 +17,17 @@ public class TypeObjectDescriptor implements TypeDescriptor {
         this.objectProperties.addAll(objectProperties);
     }
 
+    @Override
+    public Class<?> type() {
+        return TypeObject.class;
+    }
+
+    @Override
+    public Object defaultValue() {
+        return null;
+    }
+
+
     public boolean isShareable() {
         return shareable;
     }
@@ -29,14 +40,8 @@ public class TypeObjectDescriptor implements TypeDescriptor {
         return new TypeObject(typeFullyQualifiedName);
     }
 
-    @Override
-    public Class<?> type() {
-        return TypeObject.class;
-    }
-
-    @Override
-    public Object defaultValue() {
-        return null;
+    public String getTypeFullyQualifiedName() {
+        return typeFullyQualifiedName;
     }
 
     public static class TypeObject implements ComponentDataHolder {

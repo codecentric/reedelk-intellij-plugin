@@ -1,5 +1,7 @@
 package com.esb.plugin.editor.properties.renderer.type;
 
+import com.esb.internal.commons.JsonParser;
+import com.esb.internal.commons.StringUtils;
 import com.esb.plugin.component.domain.ComponentDataHolder;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.domain.TypeDescriptor;
@@ -7,9 +9,11 @@ import com.esb.plugin.component.domain.TypeObjectDescriptor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.esb.plugin.editor.properties.widget.*;
+import com.esb.plugin.editor.properties.widget.input.ConfigSelector;
 import com.esb.plugin.graph.FlowSnapshot;
+import com.esb.plugin.service.module.ConfigService;
+import com.esb.plugin.service.module.impl.ConfigMetadata;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.ui.ComboBox;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -61,9 +65,10 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
 
 
     @NotNull
-    private JComponent renderShareable(Module module, TypeObjectDescriptor typeObjectDescriptor, PropertyAccessor accessor, FlowSnapshot snapshot) {
+    private JComponent renderShareable(Module module, TypeObjectDescriptor typeObjectDescriptor, PropertyAccessor propertyAccessor, FlowSnapshot snapshot) {
 
-        JComponent panel = renderInline(module, accessor, snapshot, typeObjectDescriptor);
+        // TODO: Cannot use this one to render it....
+        JComponent panel = renderInline(module, propertyAccessor, snapshot, typeObjectDescriptor);
 
         ActionableCommandButton editConfigCommand = new ActionableCommandButton("Edit", Edit);
         editConfigCommand.addListener(() ->
@@ -85,11 +90,55 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
         controls.add(deleteConfigCommand);
         controls.add(addConfigCommand);
 
+        List<ConfigMetadata> configMetadata =
+                ConfigService.getInstance(module).listConfigs(typeObjectDescriptor.getTypeFullyQualifiedName());
+        configMetadata.add(UNSELECTED_CONFIG);
+
+        ComponentDataHolder dataHolder = (ComponentDataHolder) propertyAccessor.get();
+        String configReference = dataHolder.get(JsonParser.Component.configRef());
+        ConfigMetadata matchingMetadata = findMatchingMetadata(configMetadata, configReference);
+        if (!configMetadata.contains(matchingMetadata)) {
+            configMetadata.add(matchingMetadata);
+        }
+
+        ConfigSelector selector = new ConfigSelector(configMetadata);
+        selector.setSelectedItem(matchingMetadata);
+        selector.addSelectListener(configMetadata1 -> {
+            // TODO: Complete Me
+        });
+
         JPanel wrapper = new JPanel();
         wrapper.setLayout(new BorderLayout());
-        wrapper.add(new ComboBox<>(), BorderLayout.CENTER);
+        wrapper.add(selector, BorderLayout.CENTER);
         wrapper.add(controls, BorderLayout.EAST);
         return wrapper;
     }
+
+    private static final String DEFAULT_CONFIG_REF = "";
+
+    private static final ConfigMetadata UNSELECTED_CONFIG = new UnselectedConfigMetadata();
+
+    static class UnresolvedConfigMetadata extends ConfigMetadata {
+        UnresolvedConfigMetadata(String id) {
+            super(id, String.format("Unresolved (%s)", id));
+        }
+    }
+
+    static class UnselectedConfigMetadata extends ConfigMetadata {
+        UnselectedConfigMetadata() {
+            super(DEFAULT_CONFIG_REF, "<Not selected>");
+        }
+    }
+
+    private ConfigMetadata findMatchingMetadata(List<ConfigMetadata> configsMetadata, String reference) {
+        if (!StringUtils.isBlank(reference)) {
+            return configsMetadata.stream()
+                    .filter(configMetadata -> configMetadata.getId().equals(reference))
+                    .findFirst()
+                    .orElseGet(() -> new UnresolvedConfigMetadata(reference));
+        }
+        return UNSELECTED_CONFIG;
+    }
+
 
 }

@@ -59,6 +59,7 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
         List<SubflowMetadata> subflowsMetadata = SubflowService.getInstance(module).listSubflows();
         subflowsMetadata.add(UNSELECTED_SUBFLOW);
 
+        // If find matching metadata is unresolved, then we must add it to the collection.
         SubflowMetadata matchingMetadata = findMatchingMetadata(subflowsMetadata, reference);
         if (!subflowsMetadata.contains(matchingMetadata)) {
             subflowsMetadata.add(matchingMetadata);

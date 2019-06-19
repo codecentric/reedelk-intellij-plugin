@@ -6,6 +6,10 @@ public class ConfigMetadata {
     private final String title;
     private final String id;
 
+    public ConfigMetadata(final String id, String title) {
+        this(null, id, title);
+    }
+
     public ConfigMetadata(final String fullyQualifiedName, String id, String title) {
         this.fullyQualifiedName = fullyQualifiedName;
         this.title = title;

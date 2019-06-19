@@ -15,6 +15,7 @@ import java.util.Optional;
 
 import static com.esb.internal.commons.JsonParser.Config;
 import static com.esb.internal.commons.JsonParser.Implementor;
+import static java.util.stream.Collectors.toList;
 
 public class ConfigServiceImpl implements ConfigService {
 
@@ -26,6 +27,14 @@ public class ConfigServiceImpl implements ConfigService {
 
     @Override
     public List<ConfigMetadata> listConfigs(String fullyQualifiedName) {
+        return listConfigs()
+                .stream()
+                .filter(configMetadata ->
+                        configMetadata.getFullyQualifiedName().equals(fullyQualifiedName))
+                .collect(toList());
+    }
+
+    private List<ConfigMetadata> listConfigs() {
         List<ConfigMetadata> configs = new ArrayList<>();
         ModuleRootManager.getInstance(module).getFileIndex().iterateContent(fileOrDir -> {
             if (FileExtension.FLOW_CONFIG.value().equals(fileOrDir.getExtension())) {
