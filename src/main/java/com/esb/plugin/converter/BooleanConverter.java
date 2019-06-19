@@ -20,7 +20,7 @@ public class BooleanConverter implements ValueConverter<Boolean> {
     @Override
     public Boolean from(String propertyName, JSONObject object) {
         return object.isNull(propertyName) ?
-                Boolean.FALSE :
+                null :
                 object.getBoolean(propertyName);
     }
 

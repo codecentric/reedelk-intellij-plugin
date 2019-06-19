@@ -1,7 +1,6 @@
 package com.esb.plugin.editor.properties.accessor;
 
 import com.esb.plugin.component.domain.ComponentDataHolder;
-import com.esb.plugin.component.domain.TypeObjectDescriptor;
 
 public class ObjectPropertyAccessor implements PropertyAccessor {
 
@@ -15,15 +14,11 @@ public class ObjectPropertyAccessor implements PropertyAccessor {
 
     @Override
     public void set(Object object) {
-        data.set(propertyName, new TypeObjectDescriptor.TypeObject());
+        data.set(propertyName, object);
     }
 
     @Override
     public Object get() {
-        Object typeObject = data.get(propertyName);
-        if (typeObject == null) {
-            data.set(propertyName, new TypeObjectDescriptor.TypeObject());
-        }
         return data.get(propertyName);
     }
 }

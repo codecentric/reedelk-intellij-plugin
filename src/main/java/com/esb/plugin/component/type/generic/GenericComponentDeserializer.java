@@ -40,7 +40,7 @@ public class GenericComponentDeserializer extends AbstractNodeDeserializer {
 
         if (propertyType instanceof TypeObjectDescriptor) {
             TypeObjectDescriptor typeObjectDescriptor = (TypeObjectDescriptor) propertyType;
-            TypeObjectDescriptor.TypeObject nestedObject = new TypeObjectDescriptor.TypeObject();
+            TypeObjectDescriptor.TypeObject nestedObject = typeObjectDescriptor.newInstance();
             JSONObject nestedJsonObject = parent.getJSONObject(descriptor.getPropertyName());
             typeObjectDescriptor.getObjectProperties()
                     .forEach(typeDescriptor -> deserialize(nestedJsonObject, nestedObject, typeDescriptor));

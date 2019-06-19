@@ -1,5 +1,6 @@
 package com.esb.plugin.component.type.generic;
 
+import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.domain.ComponentDataHolder;
 import com.esb.plugin.component.domain.TypeObjectDescriptor;
@@ -15,6 +16,7 @@ public class GenericComponentSerializer extends AbstractNodeSerializer {
 
     @Override
     protected JSONObject serializeNode(FlowGraph graph, GraphNode node, GraphNode stop) {
+
         ComponentData componentData = node.componentData();
 
         JSONObject componentAsJson = JsonObjectFactory.newJSONObject();
@@ -32,6 +34,7 @@ public class GenericComponentSerializer extends AbstractNodeSerializer {
             if (data instanceof TypeObjectDescriptor.TypeObject) {
                 TypeObjectDescriptor.TypeObject object = (TypeObjectDescriptor.TypeObject) data;
                 JSONObject nestedObject = JsonObjectFactory.newJSONObject();
+                nestedObject.put(JsonParser.Implementor.name(), object.getTypeFullyQualifiedName());
                 parent.put(propertyName, nestedObject);
                 serialize(object, nestedObject);
             } else {

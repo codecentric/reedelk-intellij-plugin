@@ -7,11 +7,13 @@ import java.util.Map;
 
 public class TypeObjectDescriptor implements TypeDescriptor {
 
+    private final String typeFullyQualifiedName;
     private boolean shareable;
     private List<ComponentPropertyDescriptor> objectProperties = new ArrayList<>();
 
-    public TypeObjectDescriptor(boolean shareable, List<ComponentPropertyDescriptor> objectProperties) {
+    public TypeObjectDescriptor(final String typeFullyQualifiedName, final boolean shareable, final List<ComponentPropertyDescriptor> objectProperties) {
         this.shareable = shareable;
+        this.typeFullyQualifiedName = typeFullyQualifiedName;
         this.objectProperties.addAll(objectProperties);
     }
 
@@ -21,6 +23,10 @@ public class TypeObjectDescriptor implements TypeDescriptor {
 
     public List<ComponentPropertyDescriptor> getObjectProperties() {
         return objectProperties;
+    }
+
+    public TypeObject newInstance() {
+        return new TypeObject(typeFullyQualifiedName);
     }
 
     @Override
@@ -35,7 +41,12 @@ public class TypeObjectDescriptor implements TypeDescriptor {
 
     public static class TypeObject implements ComponentDataHolder {
 
+        private final String typeFullyQualifiedName;
         private Map<String, Object> objectDataHolder = new HashMap<>();
+
+        private TypeObject(String typeFullyQualifiedName) {
+            this.typeFullyQualifiedName = typeFullyQualifiedName;
+        }
 
         @Override
         public Object get(String key) {
@@ -50,6 +61,10 @@ public class TypeObjectDescriptor implements TypeDescriptor {
         @Override
         public void set(String propertyName, Object propertyValue) {
             objectDataHolder.put(propertyName, propertyValue);
+        }
+
+        public String getTypeFullyQualifiedName() {
+            return typeFullyQualifiedName;
         }
     }
 

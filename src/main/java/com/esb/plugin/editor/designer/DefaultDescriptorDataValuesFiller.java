@@ -22,7 +22,7 @@ public class DefaultDescriptorDataValuesFiller {
     }
 
     private static void fillTypeObjectDescriptor(ComponentData componentData, String propertyName, TypeObjectDescriptor propertyType) {
-        TypeObjectDescriptor.TypeObject typeObject = new TypeObjectDescriptor.TypeObject();
+        TypeObjectDescriptor.TypeObject typeObject = propertyType.newInstance();
         componentData.set(propertyName, typeObject);
         propertyType
                 .getObjectProperties()

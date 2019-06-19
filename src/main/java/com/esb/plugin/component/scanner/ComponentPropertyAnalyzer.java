@@ -85,7 +85,7 @@ public class ComponentPropertyAnalyzer {
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .collect(toList());
-                return new TypeObjectDescriptor(shareable, collect);
+                return new TypeObjectDescriptor(fullyQualifiedClassName, shareable, collect);
             }
         }
         throw new UnsupportedType(typeSignature.getClass());
