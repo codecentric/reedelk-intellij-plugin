@@ -59,10 +59,39 @@ class BooleanConverterTest {
     }
 
     @Test
-    void shouldReturnFalseValueFromJsonObject() {
+    void shouldReturnNullValueFromJsonObject() {
         // Given
         JSONObject object = new JSONObject();
         object.put("aNumber", JSONObject.NULL);
+
+        // When
+        Boolean actualValue = converter.from("aNumber", object);
+
+        // Then
+        assertThat(actualValue).isNull();
+    }
+
+    @Test
+    void shouldReturnTrueObjectBooleanValueFromJsonObject() {
+        // Given
+        Boolean aValue = Boolean.TRUE;
+        JSONObject object = new JSONObject();
+        object.put("aNumber", aValue);
+
+        // When
+        Boolean actualValue = converter.from("aNumber", object);
+
+        // Then
+        assertThat(actualValue).isTrue();
+    }
+
+
+    @Test
+    void shouldReturnFalseObjectBooleanValueFromJsonObject() {
+        // Given
+        Boolean aValue = Boolean.FALSE;
+        JSONObject object = new JSONObject();
+        object.put("aNumber", aValue);
 
         // When
         Boolean actualValue = converter.from("aNumber", object);
@@ -72,9 +101,23 @@ class BooleanConverterTest {
     }
 
     @Test
-    void shouldReturnBooleanValueFromJsonObject() {
+    void shouldReturnFalseBooleanValueFromJsonObject() {
         // Given
-        Boolean aValue = Boolean.TRUE;
+        boolean aValue = false;
+        JSONObject object = new JSONObject();
+        object.put("aNumber", aValue);
+
+        // When
+        Boolean actualValue = converter.from("aNumber", object);
+
+        // Then
+        assertThat(actualValue).isFalse();
+    }
+
+    @Test
+    void shouldReturnTrueBooleanValueFromJsonObject() {
+        // Given
+        boolean aValue = true;
         JSONObject object = new JSONObject();
         object.put("aNumber", aValue);
 
@@ -94,6 +137,6 @@ class BooleanConverterTest {
         Boolean actualValue = converter.from("aNumber", object);
 
         // Then
-        assertThat(actualValue).isFalse();
+        assertThat(actualValue).isNull();
     }
 }
