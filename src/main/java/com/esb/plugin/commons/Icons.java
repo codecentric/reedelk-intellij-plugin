@@ -37,4 +37,11 @@ public class Icons {
         }
     }
 
+    public static class Config {
+
+        public static final Icon Add = IconLoader.getIcon("/icons/config-add.png");
+        public static final Icon Delete = IconLoader.getIcon("/icons/config-delete.png");
+        public static final Icon Edit = IconLoader.getIcon("/icons/config-edit.png");
+    }
+
 }

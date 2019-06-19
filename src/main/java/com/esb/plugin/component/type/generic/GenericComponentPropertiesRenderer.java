@@ -39,7 +39,9 @@ public class GenericComponentPropertiesRenderer extends AbstractNodePropertiesRe
 
             final PropertyAccessor setter = getAccessor(propertyName, propertyType, data);
             final JComponent renderedComponent =
-                    TypeRendererFactory.get().from(propertyType).render(descriptor, setter, snapshot);
+                    TypeRendererFactory.get()
+                            .from(propertyType)
+                            .render(descriptor, setter, snapshot);
 
             // If the property type is a complex object, we wrap it in a
             // bordered box with title the name of the object property.

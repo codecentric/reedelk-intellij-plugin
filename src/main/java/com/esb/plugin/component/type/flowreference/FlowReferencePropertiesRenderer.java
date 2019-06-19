@@ -4,6 +4,7 @@ import com.esb.internal.commons.Preconditions;
 import com.esb.internal.commons.StringUtils;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
+import com.esb.plugin.component.type.flowreference.widget.SubflowSelector;
 import com.esb.plugin.component.type.generic.GenericComponentPropertiesRenderer;
 import com.esb.plugin.editor.properties.widget.FormBuilder;
 import com.esb.plugin.graph.FlowSnapshot;
@@ -11,12 +12,9 @@ import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.service.module.SubflowService;
 import com.esb.plugin.service.module.impl.SubflowMetadata;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.components.JBPanel;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-import java.awt.event.ItemEvent;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -47,23 +45,17 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
         Preconditions.checkState(propertyDescriptor.isPresent(), "Reference property descriptor must not be null");
         ComponentPropertyDescriptor referencePropertyDescriptor = propertyDescriptor.get();
 
-        JComboBox<SubflowMetadata> subflowsList = buildSubflowSelectorCombo(componentData, reference);
+        SubflowSelector selector = buildSubflowSelectorCombo(componentData, reference);
 
         FormBuilder.get()
                 .addLabel(referencePropertyDescriptor.getDisplayName(), genericPropertiesPanel)
-                .addLastField(subflowsList, genericPropertiesPanel);
+                .addLastField(selector, genericPropertiesPanel);
 
         return genericPropertiesPanel;
     }
 
     @NotNull
-    private JComboBox<SubflowMetadata> buildSubflowSelectorCombo(ComponentData componentData, String reference) {
-        JComboBox<SubflowMetadata> subflowsList = new ComboBox<>();
-        subflowsList.setRenderer((list, value, index, isSelected, cellHasFocus) -> {
-            String title = value.getTitle();
-            return new JLabel(title);
-        });
-
+    private SubflowSelector buildSubflowSelectorCombo(ComponentData componentData, String reference) {
         List<SubflowMetadata> subflowsMetadata = SubflowService.getInstance(module).listSubflows();
         subflowsMetadata.add(UNSELECTED_SUBFLOW);
 
@@ -72,17 +64,13 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
             subflowsMetadata.add(matchingMetadata);
         }
 
-        subflowsMetadata.forEach(subflowsList::addItem);
-        subflowsList.setSelectedItem(matchingMetadata);
-        subflowsList.addItemListener(event -> {
-            if (event.getStateChange() == ItemEvent.SELECTED) {
-                SubflowMetadata item = (SubflowMetadata) event.getItem();
-                componentData.set(FlowReference.ref(), item.getId());
-                snapshot.onDataChange();
-            }
+        SubflowSelector selector = new SubflowSelector(subflowsMetadata);
+        selector.setSelectedItem(matchingMetadata);
+        selector.addSelectListener(subflowMetadata -> {
+            componentData.set(FlowReference.ref(), subflowMetadata.getId());
+            snapshot.onDataChange();
         });
-
-        return subflowsList;
+        return selector;
     }
 
     private SubflowMetadata findMatchingMetadata(List<SubflowMetadata> subflowsMetadata, String reference) {
