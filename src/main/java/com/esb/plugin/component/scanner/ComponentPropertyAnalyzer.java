@@ -40,7 +40,7 @@ public class ComponentPropertyAnalyzer {
         String displayName = getAnnotationValueOrDefault(propertyInfo, Property.class, propertyInfo.getName());
         TypeDescriptor propertyType = getPropertyType(propertyInfo);
         Object defaultValue = getDefaultValue(propertyInfo, propertyType);
-        PropertyRequired required = hasAnnotation(propertyInfo, Required.class) ? REQUIRED : NOT_REQUIRED;
+        PropertyRequired required = isRequired(propertyInfo) ? REQUIRED : NOT_REQUIRED;
         return new ComponentPropertyDescriptor(propertyName, propertyType, displayName, defaultValue, required);
     }
 
@@ -76,19 +76,18 @@ public class ComponentPropertyAnalyzer {
         } else {
             // We check that we can resolve class info. If we can, then
             ClassInfo classInfo = context.getClassInfo(fullyQualifiedClassName);
-            if (classInfo != null) {
-                boolean shareable = hasAnnotation(fieldInfo, Shareable.class);
-                List<ComponentPropertyDescriptor> collect = classInfo
-                        .getFieldInfo()
-                        .stream()
-                        .map(this::analyze)
-                        .filter(Optional::isPresent)
-                        .map(Optional::get)
-                        .collect(toList());
-                return new TypeObjectDescriptor(fullyQualifiedClassName, shareable, collect);
-            }
+            if (classInfo == null) throw new UnsupportedType(typeSignature.getClass());
+
+            boolean shareable = isShareable(classInfo);
+            List<ComponentPropertyDescriptor> collect = classInfo
+                    .getFieldInfo()
+                    .stream()
+                    .map(this::analyze)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .collect(toList());
+            return new TypeObjectDescriptor(fullyQualifiedClassName, shareable, collect);
         }
-        throw new UnsupportedType(typeSignature.getClass());
     }
 
     // TODO: Test corner cases like when there is an enum with no fields!
@@ -129,10 +128,6 @@ public class ComponentPropertyAnalyzer {
         return (T) parameterValues.getValue(ANNOTATION_DEFAULT_PARAM_NAME);
     }
 
-    private boolean hasAnnotation(FieldInfo fieldInfo, Class targetAnnotation) {
-        return fieldInfo.hasAnnotation(targetAnnotation.getName());
-    }
-
     /**
      * Returns a new Predicate which filters FieldInfo's having type the target
      * class name specified in the argument of this function.
@@ -147,5 +142,13 @@ public class ComponentPropertyAnalyzer {
             }
             return false;
         };
+    }
+
+    private boolean isRequired(FieldInfo fieldInfo) {
+        return fieldInfo.hasAnnotation(Required.class.getName());
+    }
+
+    private boolean isShareable(ClassInfo classInfo) {
+        return classInfo.hasAnnotation(Shareable.class.getName());
     }
 }
