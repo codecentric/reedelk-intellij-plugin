@@ -41,7 +41,9 @@ public class Icons {
 
         public static final Icon Add = IconLoader.getIcon("/icons/config-add.png");
         public static final Icon Delete = IconLoader.getIcon("/icons/config-delete.png");
+        public static final Icon DeleteDisabled = IconLoader.getIcon("/icons/config-delete-disabled.png");
         public static final Icon Edit = IconLoader.getIcon("/icons/config-edit.png");
+        public static final Icon EditDisabled = IconLoader.getIcon("/icons/config-edit-disabled.png");
     }
 
 }

@@ -34,6 +34,7 @@ public class DialogRemoveConfiguration extends DialogWrapper {
     }
 
     public void delete() {
-        ConfigService.getInstance(module).removeConfig(selectedConfig);
+        ConfigService.getInstance(module)
+                .removeConfig(selectedConfig);
     }
 }

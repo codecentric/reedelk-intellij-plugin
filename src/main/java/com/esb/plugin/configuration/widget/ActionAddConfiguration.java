@@ -21,7 +21,7 @@ public class ActionAddConfiguration extends ActionableCommandButton {
     private AddCompleteListener listener;
 
     public ActionAddConfiguration(@NotNull Module module, @NotNull TypeObjectDescriptor typeDescriptor) {
-        super("Add", Add);
+        super("Add", Add, Add);
         this.typeDescriptor = typeDescriptor;
         this.module = module;
     }

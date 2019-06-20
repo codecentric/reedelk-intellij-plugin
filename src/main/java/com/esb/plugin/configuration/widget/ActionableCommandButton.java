@@ -11,9 +11,10 @@ public abstract class ActionableCommandButton extends JLabel implements MouseLis
 
     private ConfigMetadata selectedMetadata;
 
-    ActionableCommandButton(String text, Icon icon) {
+    ActionableCommandButton(String text, Icon icon, Icon disabledIcon) {
         setText(text);
         setIcon(icon);
+        setDisabledIcon(disabledIcon);
         addMouseListener(this);
     }
 

@@ -5,6 +5,7 @@ import com.intellij.openapi.module.Module;
 import org.jetbrains.annotations.NotNull;
 
 import static com.esb.plugin.commons.Icons.Config.Delete;
+import static com.esb.plugin.commons.Icons.Config.DeleteDisabled;
 
 public class ActionDeleteConfiguration extends ActionableCommandButton {
 
@@ -12,12 +13,13 @@ public class ActionDeleteConfiguration extends ActionableCommandButton {
     private DeleteCompleteListener listener;
 
     public ActionDeleteConfiguration(@NotNull Module module) {
-        super("Delete", Delete);
+        super("Delete", Delete, DeleteDisabled);
         this.module = module;
     }
 
     @Override
     protected void onClick(@NotNull ConfigMetadata selectedMetadata) {
+        if (!selectedMetadata.isRemovable()) return;
 
         DialogRemoveConfiguration dialogRemoveConfiguration = new DialogRemoveConfiguration(module, selectedMetadata);
 
@@ -30,6 +32,12 @@ public class ActionDeleteConfiguration extends ActionableCommandButton {
             }
 
         }
+    }
+
+    @Override
+    public void onSelect(ConfigMetadata configMetadata) {
+        super.onSelect(configMetadata);
+        setEnabled(configMetadata.isRemovable());
     }
 
     public void addListener(DeleteCompleteListener listener) {

@@ -42,8 +42,8 @@ public class DialogEditConfiguration extends DialogWrapper {
         return new ConfigPropertiesPanel(module, selectedMetadata, objectDescriptor, false);
     }
 
-    public void save() {
-        ConfigService.getInstance(module).saveConfig(selectedMetadata);
-        // Save selected Metadata into its own file
+    void save() {
+        ConfigService.getInstance(module)
+                .saveConfig(selectedMetadata);
     }
 }

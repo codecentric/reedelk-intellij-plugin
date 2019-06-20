@@ -42,6 +42,7 @@ public class DialogAddConfiguration extends DialogWrapper {
     }
 
     public void add() {
-        ConfigService.getInstance(module).addConfig(newConfigMetadata);
+        ConfigService.getInstance(module)
+                .addConfig(newConfigMetadata);
     }
 }

@@ -72,4 +72,11 @@ public class ConfigMetadata implements ComponentDataHolder {
         throw new UnsupportedOperationException("Could not set config file name");
     }
 
+    public boolean isEditable() {
+        return false;
+    }
+
+    public boolean isRemovable() {
+        return false;
+    }
 }

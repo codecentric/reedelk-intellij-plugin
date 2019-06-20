@@ -6,6 +6,7 @@ import com.intellij.openapi.module.Module;
 import org.jetbrains.annotations.NotNull;
 
 import static com.esb.plugin.commons.Icons.Config.Edit;
+import static com.esb.plugin.commons.Icons.Config.EditDisabled;
 
 public class ActionEditConfiguration extends ActionableCommandButton {
 
@@ -14,13 +15,14 @@ public class ActionEditConfiguration extends ActionableCommandButton {
 
 
     public ActionEditConfiguration(@NotNull Module module, @NotNull TypeObjectDescriptor typeDescriptor) {
-        super("Edit", Edit);
+        super("Edit", Edit, EditDisabled);
         this.module = module;
         this.typeDescriptor = typeDescriptor;
     }
 
     @Override
     protected void onClick(@NotNull ConfigMetadata selectedMetadata) {
+        if (!selectedMetadata.isEditable()) return;
 
         DialogEditConfiguration dialogEditConfiguration = new DialogEditConfiguration(module, typeDescriptor, selectedMetadata);
 
@@ -29,5 +31,11 @@ public class ActionEditConfiguration extends ActionableCommandButton {
             dialogEditConfiguration.save();
 
         }
+    }
+
+    @Override
+    public void onSelect(ConfigMetadata configMetadata) {
+        super.onSelect(configMetadata);
+        setEnabled(configMetadata.isEditable());
     }
 }

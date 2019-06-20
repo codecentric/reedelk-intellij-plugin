@@ -21,4 +21,14 @@ public class ExistingConfigMetadata extends ConfigMetadata {
     public String getFileName() {
         return file.getName();
     }
+
+    @Override
+    public boolean isEditable() {
+        return true;
+    }
+
+    @Override
+    public boolean isRemovable() {
+        return true;
+    }
 }
