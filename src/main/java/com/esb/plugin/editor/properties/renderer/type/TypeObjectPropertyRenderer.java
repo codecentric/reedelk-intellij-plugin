@@ -98,14 +98,34 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
         ActionDeleteConfiguration deleteAction = new ActionDeleteConfiguration(module);
         ActionEditConfiguration editAction = new ActionEditConfiguration(module, typeDescriptor);
         ActionAddConfiguration addAction = new ActionAddConfiguration(module, typeDescriptor);
-        addAction.addListener(addedMetadata -> {
+
+
+        addAction.addListener(addedConfiguration -> {
             List<ConfigMetadata> configMetadata =
-                    ConfigService.getInstance(module).listConfigs(typeDescriptor.getTypeFullyQualifiedName());
+                    ConfigService.getInstance(module).listConfigsBy(typeDescriptor.getTypeFullyQualifiedName());
             configMetadata.add(UNSELECTED_CONFIG);
 
-
-            String newConfigReference = addedMetadata.getId();
+            String newConfigReference = addedConfiguration.getId();
             ConfigMetadata matchingMetadata = findMatchingMetadata(configMetadata, newConfigReference);
+            if (!configMetadata.contains(matchingMetadata)) {
+                configMetadata.add(matchingMetadata);
+            }
+
+            DefaultComboBoxModel<ConfigMetadata> metadata = new DefaultComboBoxModel<>();
+            configMetadata.forEach(metadata::addElement);
+            selector.setModel(metadata);
+            selector.setSelectedItem(matchingMetadata);
+            editAction.onSelect(matchingMetadata);
+            deleteAction.onSelect(matchingMetadata);
+        });
+
+        deleteAction.addListener(deletedConfiguration -> {
+            List<ConfigMetadata> configMetadata =
+                    ConfigService.getInstance(module).listConfigsBy(typeDescriptor.getTypeFullyQualifiedName());
+            configMetadata.add(UNSELECTED_CONFIG);
+
+            String configReference = deletedConfiguration.getId();
+            ConfigMetadata matchingMetadata = findMatchingMetadata(configMetadata, configReference);
             if (!configMetadata.contains(matchingMetadata)) {
                 configMetadata.add(matchingMetadata);
             }
@@ -126,7 +146,7 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
 
         // Get all the configurations for the given implementor's fully qualified name class
         List<ConfigMetadata> configMetadata =
-                ConfigService.getInstance(module).listConfigs(typeDescriptor.getTypeFullyQualifiedName());
+                ConfigService.getInstance(module).listConfigsBy(typeDescriptor.getTypeFullyQualifiedName());
         configMetadata.add(UNSELECTED_CONFIG);
 
 

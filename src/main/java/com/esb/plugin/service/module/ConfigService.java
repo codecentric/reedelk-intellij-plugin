@@ -13,9 +13,11 @@ public interface ConfigService {
         return ModuleServiceManager.getService(module, ConfigService.class);
     }
 
-    List<ConfigMetadata> listConfigs(String fullyQualifiedName);
+    List<ConfigMetadata> listConfigsBy(String fullyQualifiedName);
 
-    void saveConfig(ConfigMetadata selectedMetadata);
+    void saveConfig(ConfigMetadata updatedConfig);
 
-    void addConfig(ConfigMetadata newConfigMetadata);
+    void addConfig(ConfigMetadata newConfig);
+
+    void removeConfig(ConfigMetadata toBeRemovedConfig);
 }

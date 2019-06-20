@@ -11,7 +11,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.ThrowableRunnable;
 import org.json.JSONObject;
 
 import java.nio.file.Paths;
@@ -31,7 +30,7 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
-    public List<ConfigMetadata> listConfigs(String fullyQualifiedName) {
+    public List<ConfigMetadata> listConfigsBy(String fullyQualifiedName) {
         return listConfigs()
                 .stream()
                 .filter(configMetadata ->
@@ -40,15 +39,15 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
-    public void saveConfig(ConfigMetadata selectedMetadata) {
-        VirtualFile file = VfsUtil.findFile(Paths.get(selectedMetadata.getConfigFile()), true);
+    public void saveConfig(ConfigMetadata updatedConfig) {
+        VirtualFile file = VfsUtil.findFile(Paths.get(updatedConfig.getConfigFile()), true);
         checkState(file != null, "Expected file not found");
 
         Document document = FileDocumentManager.getInstance().getDocument(file);
         checkState(document != null,
-                String.format("Expected document for file %s to be found", selectedMetadata.getConfigFile()));
+                String.format("Expected document for file %s to be found", updatedConfig.getConfigFile()));
 
-        String serializedConfig = ConfigSerializer.serialize(selectedMetadata);
+        String serializedConfig = ConfigSerializer.serialize(updatedConfig);
         try {
             WriteCommandAction.writeCommandAction(module.getProject())
                     .run(() -> document.setText(serializedConfig));
@@ -58,20 +57,31 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
-    public void addConfig(ConfigMetadata newConfigMetadata) {
+    public void addConfig(ConfigMetadata newConfig) {
         // We must create the config folder inside resources..
-        String serializedConfig = ConfigSerializer.serialize(newConfigMetadata);
+        String serializedConfig = ConfigSerializer.serialize(newConfig);
         // Check if the file exists already. if it does, throw exception
 
         try {
             String configsFolder = ModuleUtils.getConfigsFolder(module);
             VirtualFile configDir = VfsUtil.createDirectoryIfMissing(configsFolder);
             WriteCommandAction.writeCommandAction(module.getProject())
-                    .run((ThrowableRunnable<Throwable>) () -> {
-                        VirtualFile childData = configDir.createChildData(null, newConfigMetadata.getFileName());
+                    .run(() -> {
+                        VirtualFile childData = configDir.createChildData(null, newConfig.getFileName());
                         VfsUtil.saveText(childData, serializedConfig);
                     });
 
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void removeConfig(ConfigMetadata toBeRemovedConfig) {
+        VirtualFile file = VfsUtil.findFile(Paths.get(toBeRemovedConfig.getConfigFile()), true);
+        try {
+            WriteCommandAction.writeCommandAction(module.getProject())
+                    .run(() -> file.delete(null));
         } catch (Throwable e) {
             e.printStackTrace();
         }

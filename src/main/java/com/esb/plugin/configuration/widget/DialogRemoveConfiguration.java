@@ -1,6 +1,8 @@
 package com.esb.plugin.configuration.widget;
 
 import com.esb.plugin.commons.Labels;
+import com.esb.plugin.service.module.ConfigService;
+import com.esb.plugin.service.module.impl.ConfigMetadata;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -11,8 +13,14 @@ import javax.swing.*;
 
 public class DialogRemoveConfiguration extends DialogWrapper {
 
-    public DialogRemoveConfiguration(@NotNull Module module) {
+    private final Module module;
+    private final ConfigMetadata selectedConfig;
+
+    public DialogRemoveConfiguration(@NotNull Module module, @NotNull ConfigMetadata selectedConfig) {
         super(module.getProject(), false);
+        this.module = module;
+        this.selectedConfig = selectedConfig;
+
         setTitle(Labels.DIALOG_TITLE_DELETE_CONFIGURATION);
         init();
     }
@@ -26,6 +34,6 @@ public class DialogRemoveConfiguration extends DialogWrapper {
     }
 
     public void delete() {
-
+        ConfigService.getInstance(module).removeConfig(selectedConfig);
     }
 }
