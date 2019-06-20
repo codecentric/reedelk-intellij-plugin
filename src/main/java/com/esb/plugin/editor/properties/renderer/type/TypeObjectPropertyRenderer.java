@@ -10,10 +10,10 @@ import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.esb.plugin.editor.properties.widget.*;
 import com.esb.plugin.editor.properties.widget.input.ConfigSelector;
-import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.service.module.ConfigService;
 import com.esb.plugin.service.module.impl.ConfigMetadata;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -21,19 +21,20 @@ import java.awt.*;
 import java.util.List;
 
 import static com.esb.plugin.commons.Icons.Config.*;
+import static javax.swing.SwingUtilities.invokeLater;
 
 public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
 
     @Override
-    public JComponent render(Module module, ComponentPropertyDescriptor descriptor, PropertyAccessor accessor, FlowSnapshot snapshot) {
+    public JComponent render(Module module, ComponentPropertyDescriptor descriptor, PropertyAccessor accessor) {
         TypeObjectDescriptor objectDescriptor = (TypeObjectDescriptor) descriptor.getPropertyType();
         return objectDescriptor.isShareable() ?
-                renderShareable(module, objectDescriptor, accessor, snapshot) :
-                renderInline(module, accessor, snapshot, objectDescriptor);
+                renderShareable(module, objectDescriptor, accessor) :
+                renderInline(module, accessor, objectDescriptor);
     }
 
     @NotNull
-    private JComponent renderInline(Module module, PropertyAccessor propertyAccessor, FlowSnapshot snapshot, TypeObjectDescriptor objectDescriptor) {
+    private JComponent renderInline(Module module, PropertyAccessor propertyAccessor, TypeObjectDescriptor objectDescriptor) {
         List<ComponentPropertyDescriptor> objectProperties = objectDescriptor.getObjectProperties();
 
         DefaultPropertiesPanel propertiesPanel = new DefaultPropertiesPanel();
@@ -45,15 +46,18 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
             // The accessor of type object returns a TypeObject map.
             ComponentDataHolder dataHolder = (ComponentDataHolder) propertyAccessor.get();
 
+            // We need a snapshot because changes needs to be written in the
+            // flow itself since this is an inline object.
             PropertyAccessor nestedPropertyAccessor = PropertyAccessorFactory.get()
                     .typeDescriptor(nestedPropertyDescriptor.getPropertyType())
-                    .dataHolder(dataHolder)
                     .propertyName(nestedPropertyDescriptor.getPropertyName())
+                    .snapshot(propertyAccessor.getSnapshot())
+                    .dataHolder(dataHolder)
                     .build();
 
             TypeRendererFactory typeRendererFactory = TypeRendererFactory.get();
             JComponent renderedComponent = typeRendererFactory.from(propertyType)
-                    .render(module, nestedPropertyDescriptor, nestedPropertyAccessor, snapshot);
+                    .render(module, nestedPropertyDescriptor, nestedPropertyAccessor);
 
             FormBuilder.get()
                     .addLabel(displayName, propertiesPanel)
@@ -65,33 +69,38 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
 
 
     @NotNull
-    private JComponent renderShareable(Module module, TypeObjectDescriptor typeObjectDescriptor, PropertyAccessor propertyAccessor, FlowSnapshot snapshot) {
+    private JComponent renderShareable(Module module, TypeObjectDescriptor typeDescriptor, PropertyAccessor propertyAccessor) {
 
-        // TODO: Cannot use this one to render it....
-        JComponent panel = renderInline(module, propertyAccessor, snapshot, typeObjectDescriptor);
+        Project project = module.getProject();
 
         ActionableCommandButton editConfigCommand = new ActionableCommandButton("Edit", Edit);
-        editConfigCommand.addListener(() ->
-                SwingUtilities.invokeLater(() ->
-                        new DialogEditConfiguration(module.getProject(), panel).show()));
+        editConfigCommand.addListener((selectedConfig) -> invokeLater(() -> {
+            DialogEditConfiguration dialogEditConfiguration = new DialogEditConfiguration(module, typeDescriptor, selectedConfig);
+            if (dialogEditConfiguration.showAndGet()) {
+                dialogEditConfiguration.save();
+            }
+        }));
 
         ActionableCommandButton addConfigCommand = new ActionableCommandButton("Add", Add);
-        addConfigCommand.addListener(() ->
-                SwingUtilities.invokeLater(() ->
-                        new DialogAddConfiguration(module.getProject(), panel).show()));
+        addConfigCommand.addListener((selectedConfig) -> invokeLater(() -> {
+            DialogAddConfiguration dialogAddConfiguration = new DialogAddConfiguration(module, typeDescriptor);
+            if (dialogAddConfiguration.showAndGet()) {
+                dialogAddConfiguration.save();
+            }
+        }));
 
         ActionableCommandButton deleteConfigCommand = new ActionableCommandButton("Delete", Delete);
-        deleteConfigCommand.addListener(() ->
-                SwingUtilities.invokeLater(() ->
-                        new DialogRemoveConfiguration(module.getProject()).show()));
+        deleteConfigCommand.addListener((selectedConfig) -> invokeLater(() -> {
+            DialogRemoveConfiguration dialogRemoveConfiguration = new DialogRemoveConfiguration(project);
+            if (dialogRemoveConfiguration.showAndGet()) {
+                dialogRemoveConfiguration.delete();
+            }
+        }));
 
-        JPanel controls = new JPanel();
-        controls.add(editConfigCommand);
-        controls.add(deleteConfigCommand);
-        controls.add(addConfigCommand);
 
+        // Get all the configurations for the given implementor's fully qualified name class
         List<ConfigMetadata> configMetadata =
-                ConfigService.getInstance(module).listConfigs(typeObjectDescriptor.getTypeFullyQualifiedName());
+                ConfigService.getInstance(module).listConfigs(typeDescriptor.getTypeFullyQualifiedName());
         configMetadata.add(UNSELECTED_CONFIG);
 
         ComponentDataHolder dataHolder = (ComponentDataHolder) propertyAccessor.get();
@@ -102,10 +111,18 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
         }
 
         ConfigSelector selector = new ConfigSelector(configMetadata);
-        selector.setSelectedItem(matchingMetadata);
-        selector.addSelectListener(configMetadata1 -> {
-            // TODO: Complete Me
+        selector.addSelectListener(selectedMetadata -> {
+            editConfigCommand.onSelect(selectedMetadata);
+            deleteConfigCommand.onSelect(selectedMetadata);
         });
+        selector.setSelectedItem(matchingMetadata);
+
+
+        JPanel controls = new JPanel();
+        controls.add(editConfigCommand);
+        controls.add(deleteConfigCommand);
+        controls.add(addConfigCommand);
+
 
         JPanel wrapper = new JPanel();
         wrapper.setLayout(new BorderLayout());
@@ -139,6 +156,4 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
         }
         return UNSELECTED_CONFIG;
     }
-
-
 }

@@ -50,7 +50,7 @@ public class ConfigServiceImpl implements ConfigService {
             Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
             if (document != null) {
                 String json = document.getText();
-                ConfigMetadata metadata = createMetadata(json);
+                ConfigMetadata metadata = createMetadata(virtualFile.getPath(), json);
                 return Optional.of(metadata);
             }
         } catch (Exception e) {
@@ -59,11 +59,11 @@ public class ConfigServiceImpl implements ConfigService {
         return Optional.empty();
     }
 
-    private ConfigMetadata createMetadata(String json) {
+    private ConfigMetadata createMetadata(String fileName, String json) {
         JSONObject configDefinition = new JSONObject(json);
         String id = Config.id(configDefinition);
         String title = Config.title(configDefinition);
         String fullyQualifiedName = Implementor.name(configDefinition);
-        return new ConfigMetadata(fullyQualifiedName, id, title);
+        return new ConfigMetadata(fullyQualifiedName, id, title, fileName, configDefinition);
     }
 }

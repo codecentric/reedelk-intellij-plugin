@@ -4,6 +4,7 @@ import com.esb.api.exception.ESBException;
 import com.esb.internal.commons.StringUtils;
 import com.esb.plugin.component.domain.*;
 import com.esb.plugin.component.type.unknown.UnknownPropertyType;
+import com.esb.plugin.graph.FlowSnapshot;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import static com.esb.internal.commons.Preconditions.checkState;
 public class PropertyAccessorFactory {
 
     private String propertyName;
+    private FlowSnapshot snapshot;
     private TypeDescriptor typeDescriptor;
     private ComponentDataHolder dataHolder;
 
@@ -35,11 +37,6 @@ public class PropertyAccessorFactory {
         return new PropertyAccessorFactory();
     }
 
-    public PropertyAccessorFactory propertyName(String propertyName) {
-        this.propertyName = propertyName;
-        return this;
-    }
-
     public PropertyAccessorFactory typeDescriptor(TypeDescriptor typeDescriptor) {
         this.typeDescriptor = typeDescriptor;
         return this;
@@ -47,6 +44,16 @@ public class PropertyAccessorFactory {
 
     public PropertyAccessorFactory dataHolder(ComponentDataHolder dataHolder) {
         this.dataHolder = dataHolder;
+        return this;
+    }
+
+    public PropertyAccessorFactory propertyName(String propertyName) {
+        this.propertyName = propertyName;
+        return this;
+    }
+
+    public PropertyAccessorFactory snapshot(FlowSnapshot snapshot) {
+        this.snapshot = snapshot;
         return this;
     }
 
@@ -61,9 +68,15 @@ public class PropertyAccessorFactory {
 
     private PropertyAccessor instantiate(Class<? extends PropertyAccessor> accessorClazz) {
         try {
-            return accessorClazz
-                    .getDeclaredConstructor(String.class, ComponentDataHolder.class)
-                    .newInstance(propertyName, dataHolder);
+            if (snapshot != null) {
+                return accessorClazz
+                        .getDeclaredConstructor(String.class, ComponentDataHolder.class, FlowSnapshot.class)
+                        .newInstance(propertyName, dataHolder, snapshot);
+            } else {
+                return accessorClazz
+                        .getDeclaredConstructor(String.class, ComponentDataHolder.class)
+                        .newInstance(propertyName, dataHolder);
+            }
         } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
             throw new ESBException(e);
         }

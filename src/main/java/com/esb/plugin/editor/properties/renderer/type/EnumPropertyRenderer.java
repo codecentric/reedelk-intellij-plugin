@@ -4,27 +4,27 @@ import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.domain.TypeEnumDescriptor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.widget.input.EnumDropDown;
-import com.esb.plugin.graph.FlowSnapshot;
 import com.intellij.openapi.module.Module;
 
 import javax.swing.*;
 import java.awt.*;
 
+import static java.awt.BorderLayout.CENTER;
+import static java.awt.BorderLayout.WEST;
+import static javax.swing.Box.createHorizontalGlue;
+
 public class EnumPropertyRenderer implements TypePropertyRenderer {
 
     @Override
-    public JComponent render(Module module, ComponentPropertyDescriptor descriptor, PropertyAccessor accessor, FlowSnapshot snapshot) {
-        TypeEnumDescriptor propertyType = (TypeEnumDescriptor) descriptor.getPropertyType();
+    public JComponent render(Module module, ComponentPropertyDescriptor propertyDescriptor, PropertyAccessor propertyAccessor) {
+        TypeEnumDescriptor propertyType = (TypeEnumDescriptor) propertyDescriptor.getPropertyType();
         EnumDropDown dropDown = new EnumDropDown(propertyType.possibleValues());
-        dropDown.setValue(accessor.get());
-        dropDown.addListener(value -> {
-            accessor.set(value);
-            snapshot.onDataChange();
-        });
-        JPanel dropDownContainer = new JPanel();
-        dropDownContainer.setLayout(new BorderLayout());
-        dropDownContainer.add(dropDown, BorderLayout.WEST);
-        dropDownContainer.add(Box.createHorizontalGlue(), BorderLayout.CENTER);
+        dropDown.setValue(propertyAccessor.get());
+        dropDown.addListener(propertyAccessor::set);
+
+        JPanel dropDownContainer = new JPanel(new BorderLayout());
+        dropDownContainer.add(dropDown, WEST);
+        dropDownContainer.add(createHorizontalGlue(), CENTER);
         return dropDownContainer;
     }
 }

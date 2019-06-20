@@ -1,7 +1,8 @@
 package com.esb.plugin.editor.properties.widget;
 
 import com.esb.plugin.commons.Labels;
-import com.intellij.openapi.project.Project;
+import com.esb.plugin.component.domain.TypeObjectDescriptor;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.DialogWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -10,11 +11,11 @@ import javax.swing.*;
 
 public class DialogAddConfiguration extends DialogWrapper {
 
-    private final JComponent centerPanel;
+    private final TypeObjectDescriptor typeObjectDescriptor;
 
-    public DialogAddConfiguration(@Nullable Project project, JComponent centerPanel) {
-        super(project, false);
-        this.centerPanel = centerPanel;
+    public DialogAddConfiguration(@NotNull Module module, TypeObjectDescriptor typeObjectDescriptor) {
+        super(module.getProject(), false);
+        this.typeObjectDescriptor = typeObjectDescriptor;
         this.setTitle(Labels.DIALOG_TITLE_ADD_CONFIGURATION);
         this.init();
     }
@@ -30,6 +31,10 @@ public class DialogAddConfiguration extends DialogWrapper {
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
-        return centerPanel;
+        return new JPanel();
+    }
+
+    public void save() {
+
     }
 }
