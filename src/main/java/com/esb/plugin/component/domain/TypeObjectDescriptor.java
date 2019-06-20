@@ -1,5 +1,7 @@
 package com.esb.plugin.component.domain;
 
+import com.esb.internal.commons.JsonParser;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +39,9 @@ public class TypeObjectDescriptor implements TypeDescriptor {
     }
 
     public TypeObject newInstance() {
-        return new TypeObject(typeFullyQualifiedName);
+        return shareable ?
+                new TypeObject() :
+                new TypeObject(typeFullyQualifiedName);
     }
 
     public String getTypeFullyQualifiedName() {
@@ -46,11 +50,16 @@ public class TypeObjectDescriptor implements TypeDescriptor {
 
     public static class TypeObject implements ComponentDataHolder {
 
-        private final String typeFullyQualifiedName;
         private Map<String, Object> objectDataHolder = new HashMap<>();
 
+        // A type object defined within a flow, must have the
+        // implementor fully qualified name information when serialized.
         private TypeObject(String typeFullyQualifiedName) {
-            this.typeFullyQualifiedName = typeFullyQualifiedName;
+            objectDataHolder.put(JsonParser.Implementor.name(), typeFullyQualifiedName);
+        }
+
+        // Config ref constructor (does not need implementor name in the serialized json)
+        private TypeObject() {
         }
 
         @Override
@@ -66,10 +75,6 @@ public class TypeObjectDescriptor implements TypeDescriptor {
         @Override
         public void set(String propertyName, Object propertyValue) {
             objectDataHolder.put(propertyName, propertyValue);
-        }
-
-        public String getTypeFullyQualifiedName() {
-            return typeFullyQualifiedName;
         }
     }
 

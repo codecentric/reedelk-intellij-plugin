@@ -103,6 +103,7 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
                 ConfigService.getInstance(module).listConfigs(typeDescriptor.getTypeFullyQualifiedName());
         configMetadata.add(UNSELECTED_CONFIG);
 
+        // The accessor of type object returns a TypeObject map : in this case it will contain config ref
         ComponentDataHolder dataHolder = (ComponentDataHolder) propertyAccessor.get();
         String configReference = dataHolder.get(JsonParser.Component.configRef());
         ConfigMetadata matchingMetadata = findMatchingMetadata(configMetadata, configReference);
@@ -110,12 +111,25 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
             configMetadata.add(matchingMetadata);
         }
 
+
+        PropertyAccessor configRefAccessor = PropertyAccessorFactory.get()
+                .typeDescriptor(typeDescriptor)
+                .propertyName(JsonParser.Component.configRef())
+                .snapshot(propertyAccessor.getSnapshot())
+                .dataHolder(dataHolder)
+                .build();
+
+
         ConfigSelector selector = new ConfigSelector(configMetadata);
+        selector.setSelectedItem(matchingMetadata);
+        editConfigCommand.onSelect(matchingMetadata);
+        deleteConfigCommand.onSelect(matchingMetadata);
+
         selector.addSelectListener(selectedMetadata -> {
             editConfigCommand.onSelect(selectedMetadata);
             deleteConfigCommand.onSelect(selectedMetadata);
+            configRefAccessor.set(selectedMetadata.getId());
         });
-        selector.setSelectedItem(matchingMetadata);
 
 
         JPanel controls = new JPanel();
