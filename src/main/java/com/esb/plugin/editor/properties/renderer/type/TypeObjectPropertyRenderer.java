@@ -85,6 +85,7 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
     }
 
 
+    // TODO: This method requires de-duplication work !!!!!!!!!!!!! FIXMEEEE
     @NotNull
     private JComponent renderShareable(Module module, TypeObjectDescriptor typeDescriptor, PropertyAccessor propertyAccessor) {
 
