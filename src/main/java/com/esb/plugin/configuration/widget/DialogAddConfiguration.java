@@ -1,4 +1,4 @@
-package com.esb.plugin.editor.properties.widget;
+package com.esb.plugin.configuration.widget;
 
 import com.esb.plugin.commons.Labels;
 import com.esb.plugin.component.domain.TypeObjectDescriptor;

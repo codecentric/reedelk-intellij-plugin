@@ -1,10 +1,12 @@
-package com.esb.plugin.editor.properties.widget;
+package com.esb.plugin.configuration.widget;
 
 import com.esb.plugin.component.domain.TypeDescriptor;
 import com.esb.plugin.component.domain.TypeObjectDescriptor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.esb.plugin.editor.properties.renderer.type.TypeRendererFactory;
+import com.esb.plugin.editor.properties.widget.DefaultPropertiesPanel;
+import com.esb.plugin.editor.properties.widget.FormBuilder;
 import com.esb.plugin.editor.properties.widget.input.StringInputField;
 import com.esb.plugin.service.module.impl.ConfigMetadata;
 import com.intellij.openapi.module.Module;

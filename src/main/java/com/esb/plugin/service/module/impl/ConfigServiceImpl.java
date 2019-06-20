@@ -34,6 +34,20 @@ public class ConfigServiceImpl implements ConfigService {
                 .collect(toList());
     }
 
+    @Override
+    public void saveConfig(ConfigMetadata selectedMetadata) {
+        VirtualFile virtualFile = selectedMetadata.getVirtualFile();
+        Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
+
+        //VfsUtil.createChildSequent()
+        String serializedConfig = serialize(selectedMetadata);
+        document.setText(serializedConfig);
+    }
+
+    private String serialize(ConfigMetadata selectedMetadata) {
+        return null;
+    }
+
     private List<ConfigMetadata> listConfigs() {
         List<ConfigMetadata> configs = new ArrayList<>();
         ModuleRootManager.getInstance(module).getFileIndex().iterateContent(fileOrDir -> {
@@ -50,7 +64,7 @@ public class ConfigServiceImpl implements ConfigService {
             Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
             if (document != null) {
                 String json = document.getText();
-                ConfigMetadata metadata = createMetadata(virtualFile.getName(), json);
+                ConfigMetadata metadata = createMetadata(virtualFile, json);
                 return Optional.of(metadata);
             }
         } catch (Exception e) {
@@ -59,11 +73,11 @@ public class ConfigServiceImpl implements ConfigService {
         return Optional.empty();
     }
 
-    private ConfigMetadata createMetadata(String fileName, String json) {
+    private ConfigMetadata createMetadata(VirtualFile virtualFile, String json) {
         JSONObject configDefinition = new JSONObject(json);
         String id = Config.id(configDefinition);
         String title = Config.title(configDefinition);
         String fullyQualifiedName = Implementor.name(configDefinition);
-        return new ConfigMetadata(fullyQualifiedName, id, title, fileName, configDefinition);
+        return new ConfigMetadata(fullyQualifiedName, id, title, virtualFile, configDefinition);
     }
 }

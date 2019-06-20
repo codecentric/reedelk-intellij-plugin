@@ -6,22 +6,25 @@ import com.esb.plugin.component.domain.ComponentDataHolder;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.domain.TypeDescriptor;
 import com.esb.plugin.component.domain.TypeObjectDescriptor;
+import com.esb.plugin.configuration.widget.ActionAddConfiguration;
+import com.esb.plugin.configuration.widget.ActionDeleteConfiguration;
+import com.esb.plugin.configuration.widget.ActionEditConfiguration;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessorFactory;
-import com.esb.plugin.editor.properties.widget.*;
+import com.esb.plugin.editor.properties.widget.DefaultPropertiesPanel;
+import com.esb.plugin.editor.properties.widget.FormBuilder;
 import com.esb.plugin.editor.properties.widget.input.ConfigSelector;
 import com.esb.plugin.service.module.ConfigService;
 import com.esb.plugin.service.module.impl.ConfigMetadata;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-import static com.esb.plugin.commons.Icons.Config.*;
-import static javax.swing.SwingUtilities.invokeLater;
+import static java.awt.BorderLayout.CENTER;
+import static java.awt.BorderLayout.EAST;
 
 public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
 
@@ -71,31 +74,14 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
     @NotNull
     private JComponent renderShareable(Module module, TypeObjectDescriptor typeDescriptor, PropertyAccessor propertyAccessor) {
 
-        Project project = module.getProject();
+        ActionDeleteConfiguration deleteAction = new ActionDeleteConfiguration(module);
+        ActionEditConfiguration editAction = new ActionEditConfiguration(module, typeDescriptor);
+        ActionAddConfiguration addAction = new ActionAddConfiguration(module, typeDescriptor);
 
-        ActionableCommandButton editConfigCommand = new ActionableCommandButton("Edit", Edit);
-        editConfigCommand.addListener((selectedConfig) -> invokeLater(() -> {
-            DialogEditConfiguration dialogEditConfiguration = new DialogEditConfiguration(module, typeDescriptor, selectedConfig);
-            if (dialogEditConfiguration.showAndGet()) {
-                dialogEditConfiguration.save();
-            }
-        }));
-
-        ActionableCommandButton addConfigCommand = new ActionableCommandButton("Add", Add);
-        addConfigCommand.addListener((selectedConfig) -> invokeLater(() -> {
-            DialogAddConfiguration dialogAddConfiguration = new DialogAddConfiguration(module, typeDescriptor);
-            if (dialogAddConfiguration.showAndGet()) {
-                dialogAddConfiguration.save();
-            }
-        }));
-
-        ActionableCommandButton deleteConfigCommand = new ActionableCommandButton("Delete", Delete);
-        deleteConfigCommand.addListener((selectedConfig) -> invokeLater(() -> {
-            DialogRemoveConfiguration dialogRemoveConfiguration = new DialogRemoveConfiguration(project);
-            if (dialogRemoveConfiguration.showAndGet()) {
-                dialogRemoveConfiguration.delete();
-            }
-        }));
+        JPanel controls = new JPanel();
+        controls.add(editAction);
+        controls.add(deleteAction);
+        controls.add(addAction);
 
 
         // Get all the configurations for the given implementor's fully qualified name class
@@ -111,7 +97,6 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
             configMetadata.add(matchingMetadata);
         }
 
-
         PropertyAccessor configRefAccessor = PropertyAccessorFactory.get()
                 .typeDescriptor(typeDescriptor)
                 .propertyName(JsonParser.Component.configRef())
@@ -119,29 +104,22 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
                 .dataHolder(dataHolder)
                 .build();
 
-
         ConfigSelector selector = new ConfigSelector(configMetadata);
         selector.setSelectedItem(matchingMetadata);
-        editConfigCommand.onSelect(matchingMetadata);
-        deleteConfigCommand.onSelect(matchingMetadata);
+        editAction.onSelect(matchingMetadata);
+        deleteAction.onSelect(matchingMetadata);
 
         selector.addSelectListener(selectedMetadata -> {
-            editConfigCommand.onSelect(selectedMetadata);
-            deleteConfigCommand.onSelect(selectedMetadata);
+            editAction.onSelect(selectedMetadata);
+            deleteAction.onSelect(selectedMetadata);
             configRefAccessor.set(selectedMetadata.getId());
         });
 
 
-        JPanel controls = new JPanel();
-        controls.add(editConfigCommand);
-        controls.add(deleteConfigCommand);
-        controls.add(addConfigCommand);
-
-
         JPanel wrapper = new JPanel();
         wrapper.setLayout(new BorderLayout());
-        wrapper.add(selector, BorderLayout.CENTER);
-        wrapper.add(controls, BorderLayout.EAST);
+        wrapper.add(selector, CENTER);
+        wrapper.add(controls, EAST);
         return wrapper;
     }
 

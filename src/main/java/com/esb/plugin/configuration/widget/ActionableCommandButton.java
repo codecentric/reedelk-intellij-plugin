@@ -1,4 +1,4 @@
-package com.esb.plugin.editor.properties.widget;
+package com.esb.plugin.configuration.widget;
 
 import com.esb.plugin.editor.properties.widget.input.ConfigSelector;
 import com.esb.plugin.service.module.impl.ConfigMetadata;
@@ -7,12 +7,12 @@ import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class ActionableCommandButton extends JLabel implements MouseListener, ConfigSelector.SelectListener {
+class ActionableCommandButton extends JLabel implements MouseListener, ConfigSelector.SelectListener {
 
-    private ActionableCommandListener listener;
     private ConfigMetadata selectedMetadata;
+    private ActionableCommandListener listener;
 
-    public ActionableCommandButton(String text, Icon icon) {
+    ActionableCommandButton(String text, Icon icon) {
         setText(text);
         setIcon(icon);
         addMouseListener(this);
@@ -51,7 +51,7 @@ public class ActionableCommandButton extends JLabel implements MouseListener, Co
     }
 
     public interface ActionableCommandListener {
-        void onClick(ConfigMetadata metadata);
+        void onClick(ConfigMetadata selectedConfig);
     }
 
     public void addListener(ActionableCommandListener listener) {
