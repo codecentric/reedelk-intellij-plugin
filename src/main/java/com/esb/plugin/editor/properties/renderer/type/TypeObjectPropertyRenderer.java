@@ -88,9 +88,35 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
     @NotNull
     private JComponent renderShareable(Module module, TypeObjectDescriptor typeDescriptor, PropertyAccessor propertyAccessor) {
 
+        // The accessor of type object returns a TypeObject map : in this case it will contain config ref
+        ComponentDataHolder dataHolder = (ComponentDataHolder) propertyAccessor.get();
+
+
+        ConfigSelector selector = new ConfigSelector();
+
+
         ActionDeleteConfiguration deleteAction = new ActionDeleteConfiguration(module);
         ActionEditConfiguration editAction = new ActionEditConfiguration(module, typeDescriptor);
         ActionAddConfiguration addAction = new ActionAddConfiguration(module, typeDescriptor);
+        addAction.addListener(addedMetadata -> {
+            List<ConfigMetadata> configMetadata =
+                    ConfigService.getInstance(module).listConfigs(typeDescriptor.getTypeFullyQualifiedName());
+            configMetadata.add(UNSELECTED_CONFIG);
+
+
+            String newConfigReference = addedMetadata.getId();
+            ConfigMetadata matchingMetadata = findMatchingMetadata(configMetadata, newConfigReference);
+            if (!configMetadata.contains(matchingMetadata)) {
+                configMetadata.add(matchingMetadata);
+            }
+
+            DefaultComboBoxModel<ConfigMetadata> metadata = new DefaultComboBoxModel<>();
+            configMetadata.forEach(metadata::addElement);
+            selector.setModel(metadata);
+            selector.setSelectedItem(matchingMetadata);
+            editAction.onSelect(matchingMetadata);
+            deleteAction.onSelect(matchingMetadata);
+        });
 
         JPanel controls = new JPanel();
         controls.add(editAction);
@@ -103,8 +129,7 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
                 ConfigService.getInstance(module).listConfigs(typeDescriptor.getTypeFullyQualifiedName());
         configMetadata.add(UNSELECTED_CONFIG);
 
-        // The accessor of type object returns a TypeObject map : in this case it will contain config ref
-        ComponentDataHolder dataHolder = (ComponentDataHolder) propertyAccessor.get();
+
         String configReference = dataHolder.get(JsonParser.Component.configRef());
         ConfigMetadata matchingMetadata = findMatchingMetadata(configMetadata, configReference);
         if (!configMetadata.contains(matchingMetadata)) {
@@ -118,7 +143,10 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
                 .dataHolder(dataHolder)
                 .build();
 
-        ConfigSelector selector = new ConfigSelector(configMetadata);
+        DefaultComboBoxModel<ConfigMetadata> metadata = new DefaultComboBoxModel<>();
+        configMetadata.forEach(metadata::addElement);
+        selector.setModel(metadata);
+
         selector.setSelectedItem(matchingMetadata);
         editAction.onSelect(matchingMetadata);
         deleteAction.onSelect(matchingMetadata);

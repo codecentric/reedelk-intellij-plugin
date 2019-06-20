@@ -7,15 +7,13 @@ import com.intellij.ui.ListCellRendererWrapper;
 import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.List;
 
 public class ConfigSelector extends ComboBox<ConfigMetadata> implements ItemListener {
 
     private SelectListener listener;
 
-    public ConfigSelector(List<ConfigMetadata> configMetadata) {
+    public ConfigSelector() {
         setRenderer(new ConfigMetadataRenderer());
-        configMetadata.forEach(this::addItem);
         addItemListener(this);
     }
 
@@ -36,7 +34,6 @@ public class ConfigSelector extends ComboBox<ConfigMetadata> implements ItemList
     }
 
     private class ConfigMetadataRenderer extends ListCellRendererWrapper<ConfigMetadata> {
-
         @Override
         public void customize(JList list, ConfigMetadata value, int index, boolean selected, boolean hasFocus) {
             String title = value.getTitle();

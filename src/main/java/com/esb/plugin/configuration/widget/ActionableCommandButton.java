@@ -7,10 +7,9 @@ import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-class ActionableCommandButton extends JLabel implements MouseListener, ConfigSelector.SelectListener {
+public abstract class ActionableCommandButton extends JLabel implements MouseListener, ConfigSelector.SelectListener {
 
     private ConfigMetadata selectedMetadata;
-    private ActionableCommandListener listener;
 
     ActionableCommandButton(String text, Icon icon) {
         setText(text);
@@ -20,9 +19,7 @@ class ActionableCommandButton extends JLabel implements MouseListener, ConfigSel
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (listener != null) {
-            listener.onClick(selectedMetadata);
-        }
+        onClick(selectedMetadata);
     }
 
     @Override
@@ -50,11 +47,6 @@ class ActionableCommandButton extends JLabel implements MouseListener, ConfigSel
 
     }
 
-    public interface ActionableCommandListener {
-        void onClick(ConfigMetadata selectedConfig);
-    }
+    protected abstract void onClick(ConfigMetadata selectedMetadata);
 
-    public void addListener(ActionableCommandListener listener) {
-        this.listener = listener;
-    }
 }
