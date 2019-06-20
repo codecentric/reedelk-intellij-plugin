@@ -44,6 +44,11 @@ public class ConfigServiceImpl implements ConfigService {
         document.setText(serializedConfig);
     }
 
+    @Override
+    public void addConfig(ConfigMetadata newConfigMetadata) {
+
+    }
+
     private String serialize(ConfigMetadata selectedMetadata) {
         return null;
     }

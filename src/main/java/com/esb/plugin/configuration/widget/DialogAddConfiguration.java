@@ -2,6 +2,8 @@ package com.esb.plugin.configuration.widget;
 
 import com.esb.plugin.commons.Labels;
 import com.esb.plugin.component.domain.TypeObjectDescriptor;
+import com.esb.plugin.service.module.ConfigService;
+import com.esb.plugin.service.module.impl.ConfigMetadata;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.DialogWrapper;
 import org.jetbrains.annotations.NotNull;
@@ -11,13 +13,18 @@ import javax.swing.*;
 
 public class DialogAddConfiguration extends DialogWrapper {
 
-    private final TypeObjectDescriptor typeObjectDescriptor;
+    private final TypeObjectDescriptor objectDescriptor;
+    private final ConfigMetadata newConfigMetadata;
+    private final Module module;
 
-    public DialogAddConfiguration(@NotNull Module module, TypeObjectDescriptor typeObjectDescriptor) {
+    public DialogAddConfiguration(@NotNull Module module, TypeObjectDescriptor objectDescriptor, ConfigMetadata newConfig) {
         super(module.getProject(), false);
-        this.typeObjectDescriptor = typeObjectDescriptor;
-        this.setTitle(Labels.DIALOG_TITLE_ADD_CONFIGURATION);
-        this.init();
+        this.objectDescriptor = objectDescriptor;
+        this.newConfigMetadata = newConfig;
+        this.module = module;
+
+        setTitle(Labels.DIALOG_TITLE_ADD_CONFIGURATION);
+        init();
     }
 
     @NotNull
@@ -31,10 +38,10 @@ public class DialogAddConfiguration extends DialogWrapper {
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
-        return new JPanel();
+        return new ConfigPropertiesPanel(module, newConfigMetadata, objectDescriptor, true);
     }
 
-    public void save() {
-
+    public void add() {
+        ConfigService.getInstance(module).addConfig(newConfigMetadata);
     }
 }

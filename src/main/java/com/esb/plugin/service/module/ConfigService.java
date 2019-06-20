@@ -15,4 +15,6 @@ public interface ConfigService {
     List<ConfigMetadata> listConfigs(String fullyQualifiedName);
 
     void saveConfig(ConfigMetadata selectedMetadata);
+
+    void addConfig(ConfigMetadata newConfigMetadata);
 }

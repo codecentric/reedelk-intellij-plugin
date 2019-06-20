@@ -18,9 +18,12 @@ import java.awt.*;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 
-class EditConfigPropertiesPanel extends JBPanel {
+class ConfigPropertiesPanel extends JBPanel {
 
-    EditConfigPropertiesPanel(Module module, ConfigMetadata configMetadata, TypeObjectDescriptor descriptor) {
+    private boolean isNewConfig;
+
+    ConfigPropertiesPanel(Module module, ConfigMetadata configMetadata, TypeObjectDescriptor descriptor, boolean isNewConfig) {
+        this.isNewConfig = isNewConfig;
 
         ConfigMetadataHeaderPanel headerPanel = new ConfigMetadataHeaderPanel(configMetadata);
 
@@ -65,7 +68,7 @@ class EditConfigPropertiesPanel extends JBPanel {
 
         private void init(ConfigMetadata configMetadata) {
             StringInputField configFileInputField = new StringInputField();
-            configFileInputField.setEnabled(false);
+            configFileInputField.setEnabled(isNewConfig);
             configFileInputField.setValue(configMetadata.getFileName());
             FormBuilder.get()
                     .addLabel("Config file", this)

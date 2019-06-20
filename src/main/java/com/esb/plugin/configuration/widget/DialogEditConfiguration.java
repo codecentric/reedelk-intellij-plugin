@@ -39,7 +39,7 @@ public class DialogEditConfiguration extends DialogWrapper {
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
-        return new EditConfigPropertiesPanel(module, selectedMetadata, objectDescriptor);
+        return new ConfigPropertiesPanel(module, selectedMetadata, objectDescriptor, false);
     }
 
     public void save() {

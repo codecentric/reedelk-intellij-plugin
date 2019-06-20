@@ -51,7 +51,11 @@ public class ConfigMetadata implements ComponentDataHolder {
     }
 
     public String getFileName() {
-        return virtualFile.getName();
+        if (virtualFile == null) {
+            return "test_config.fconfig";
+        } else {
+            return virtualFile.getName();
+        }
     }
 
     public VirtualFile getVirtualFile() {
