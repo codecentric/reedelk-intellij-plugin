@@ -1,6 +1,5 @@
 package com.esb.plugin.component.type.flowreference;
 
-import com.esb.internal.commons.Preconditions;
 import com.esb.internal.commons.StringUtils;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
@@ -20,6 +19,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.esb.internal.commons.JsonParser.FlowReference;
+import static com.esb.internal.commons.Preconditions.checkState;
 
 public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesRenderer {
 
@@ -42,7 +42,8 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
         JBPanel genericPropertiesPanel = createPropertiesPanelFrom(filteredDescriptors, componentData);
 
         Optional<ComponentPropertyDescriptor> propertyDescriptor = componentData.getPropertyDescriptor(FlowReference.ref());
-        Preconditions.checkState(propertyDescriptor.isPresent(), "Reference property descriptor must not be null");
+        checkState(propertyDescriptor.isPresent(), "Reference property descriptor must not be null");
+
         ComponentPropertyDescriptor referencePropertyDescriptor = propertyDescriptor.get();
 
         SubflowSelector selector = buildSubflowSelectorCombo(componentData, reference);

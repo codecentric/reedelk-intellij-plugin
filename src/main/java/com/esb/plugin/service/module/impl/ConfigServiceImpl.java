@@ -50,7 +50,7 @@ public class ConfigServiceImpl implements ConfigService {
             Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
             if (document != null) {
                 String json = document.getText();
-                ConfigMetadata metadata = createMetadata(virtualFile.getPath(), json);
+                ConfigMetadata metadata = createMetadata(virtualFile.getName(), json);
                 return Optional.of(metadata);
             }
         } catch (Exception e) {
