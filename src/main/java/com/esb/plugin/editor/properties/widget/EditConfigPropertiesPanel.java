@@ -1,6 +1,5 @@
 package com.esb.plugin.editor.properties.widget;
 
-import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.domain.TypeDescriptor;
 import com.esb.plugin.component.domain.TypeObjectDescriptor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
@@ -13,49 +12,28 @@ import com.intellij.ui.components.JBPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 
-public class EditConfigPropertiesPanel extends JBPanel {
+import static java.awt.BorderLayout.CENTER;
+import static java.awt.BorderLayout.NORTH;
 
-    public EditConfigPropertiesPanel(Module module, ConfigMetadata configMetadata, TypeObjectDescriptor descriptor) {
+class EditConfigPropertiesPanel extends JBPanel {
 
-        ConfigMetadataHeaderPanel headerPanel = new ConfigMetadataHeaderPanel();
+    EditConfigPropertiesPanel(Module module, ConfigMetadata configMetadata, TypeObjectDescriptor descriptor) {
 
-        StringInputField configFileInputField = new StringInputField();
-        configFileInputField.setEnabled(false);
-        configFileInputField.setValue(configMetadata.getFileName());
-        FormBuilder.get()
-                .addLabel("Config file", headerPanel)
-                .addLastField(configFileInputField, headerPanel);
-
-        StringInputField configNameInputField = new StringInputField();
-        configNameInputField.setValue(configMetadata.getTitle());
-        FormBuilder.get()
-                .addLabel("Config title", headerPanel)
-                .addLastField(configNameInputField, headerPanel);
-
-        FormBuilder.get()
-                .addLastField(new JSeparator(), headerPanel);
-
-
-        // The panel should contain at the top the file name
-        List<ComponentPropertyDescriptor> objectProperties = descriptor.getObjectProperties();
-
+        ConfigMetadataHeaderPanel headerPanel = new ConfigMetadataHeaderPanel(configMetadata);
 
         DefaultPropertiesPanel propertiesPanel = new DefaultPropertiesPanel();
-        objectProperties.forEach(nestedPropertyDescriptor -> {
+
+        descriptor.getObjectProperties().forEach(nestedPropertyDescriptor -> {
 
             final String displayName = nestedPropertyDescriptor.getDisplayName();
             final TypeDescriptor propertyType = nestedPropertyDescriptor.getPropertyType();
 
-            // The accessor of type object returns a TypeObject map.
-
-
             // This one does not require a snapshot since it is not part of the flow data
             PropertyAccessor nestedPropertyAccessor = PropertyAccessorFactory.get()
                     .typeDescriptor(nestedPropertyDescriptor.getPropertyType())
-                    .dataHolder(configMetadata)
                     .propertyName(nestedPropertyDescriptor.getPropertyName())
+                    .dataHolder(configMetadata)
                     .build();
 
             TypeRendererFactory typeRendererFactory = TypeRendererFactory.get();
@@ -68,18 +46,37 @@ public class EditConfigPropertiesPanel extends JBPanel {
         });
 
         JPanel propertiesPanelWrapper = new JBPanel<>(new BorderLayout());
-        propertiesPanelWrapper.add(propertiesPanel, BorderLayout.NORTH);
-        propertiesPanelWrapper.add(Box.createVerticalGlue(), BorderLayout.CENTER);
+        propertiesPanelWrapper.add(propertiesPanel, NORTH);
+        propertiesPanelWrapper.add(Box.createVerticalGlue(), CENTER);
 
         setLayout(new BorderLayout());
-        add(headerPanel, BorderLayout.NORTH);
-        add(propertiesPanelWrapper, BorderLayout.CENTER);
+        add(headerPanel, NORTH);
+        add(propertiesPanelWrapper, CENTER);
     }
 
     class ConfigMetadataHeaderPanel extends JBPanel {
-        ConfigMetadataHeaderPanel() {
+        ConfigMetadataHeaderPanel(ConfigMetadata configMetadata) {
             super(new GridBagLayout());
             setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
+            init(configMetadata);
+        }
+
+        private void init(ConfigMetadata configMetadata) {
+            StringInputField configFileInputField = new StringInputField();
+            configFileInputField.setEnabled(false);
+            configFileInputField.setValue(configMetadata.getFileName());
+            FormBuilder.get()
+                    .addLabel("Config file", this)
+                    .addLastField(configFileInputField, this);
+
+            StringInputField configNameInputField = new StringInputField();
+            configNameInputField.setValue(configMetadata.getTitle());
+            FormBuilder.get()
+                    .addLabel("Config title", this)
+                    .addLastField(configNameInputField, this);
+
+            FormBuilder.get()
+                    .addLastField(new JSeparator(), this);
         }
     }
 }
