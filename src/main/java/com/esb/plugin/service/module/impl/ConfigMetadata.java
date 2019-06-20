@@ -1,30 +1,21 @@
 package com.esb.plugin.service.module.impl;
 
 import com.esb.plugin.component.domain.ComponentDataHolder;
-import com.intellij.openapi.vfs.VirtualFile;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.esb.internal.commons.JsonParser.Config;
+import static com.esb.internal.commons.JsonParser.Implementor;
+
 public class ConfigMetadata implements ComponentDataHolder {
 
     private final JSONObject configDefinition;
-    private final String fullyQualifiedName;
-    private final VirtualFile virtualFile;
-    private final String title;
-    private final String id;
 
-    public ConfigMetadata(final String fullyQualifiedName, String id, String title, VirtualFile virtualFile, JSONObject configDefinition) {
-        this.fullyQualifiedName = fullyQualifiedName;
+    public ConfigMetadata(@NotNull JSONObject configDefinition) {
         this.configDefinition = configDefinition;
-        this.virtualFile = virtualFile;
-        this.title = title;
-        this.id = id;
-    }
-
-    public ConfigMetadata(final String id, final String title) {
-        this(null, id, title, null, null);
     }
 
     @Override
@@ -43,26 +34,40 @@ public class ConfigMetadata implements ComponentDataHolder {
     }
 
     public String getId() {
-        return id;
+        return configDefinition.getString(Config.id());
     }
 
     public String getTitle() {
-        return title;
+        return configDefinition.getString(Config.title());
     }
 
-    public String getFileName() {
-        if (virtualFile == null) {
-            return "test_config.fconfig";
-        } else {
-            return virtualFile.getName();
-        }
-    }
-
-    public VirtualFile getVirtualFile() {
-        return virtualFile;
+    public void setTitle(String newTitle) {
+        configDefinition.put(Config.title(), newTitle);
     }
 
     public String getFullyQualifiedName() {
-        return fullyQualifiedName;
+        return configDefinition.getString(Implementor.name());
     }
+
+    /**
+     * Full path of the config file.
+     */
+    public String getConfigFile() {
+        throw new UnsupportedOperationException("Could not get config file");
+    }
+
+    /**
+     * Returns a user friendly version of the file name.
+     */
+    public String getFileName() {
+        throw new UnsupportedOperationException("Could not get readable file name");
+    }
+
+    /**
+     * Sets only the file name.
+     */
+    public void setFileName(String newFileName) {
+        throw new UnsupportedOperationException("Could not set config file name");
+    }
+
 }

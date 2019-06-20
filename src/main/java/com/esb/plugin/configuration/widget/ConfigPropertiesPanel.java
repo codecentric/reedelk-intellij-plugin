@@ -67,19 +67,25 @@ class ConfigPropertiesPanel extends JBPanel {
         }
 
         private void init(ConfigMetadata configMetadata) {
+
+            // Config File Name input field
             StringInputField configFileInputField = new StringInputField();
             configFileInputField.setEnabled(isNewConfig);
             configFileInputField.setValue(configMetadata.getFileName());
+            configFileInputField.addListener(configMetadata::setFileName);
             FormBuilder.get()
                     .addLabel("Config file", this)
                     .addLastField(configFileInputField, this);
 
-            StringInputField configNameInputField = new StringInputField();
-            configNameInputField.setValue(configMetadata.getTitle());
+            // Config Title input title
+            StringInputField configTitleInputField = new StringInputField();
+            configTitleInputField.setValue(configMetadata.getTitle());
+            configTitleInputField.addListener(configMetadata::setTitle);
             FormBuilder.get()
                     .addLabel("Config title", this)
-                    .addLastField(configNameInputField, this);
+                    .addLastField(configTitleInputField, this);
 
+            // Add Separator at the bottom
             FormBuilder.get()
                     .addLastField(new JSeparator(), this);
         }

@@ -9,9 +9,9 @@ import org.json.JSONArray;
 
 import static com.esb.internal.commons.Preconditions.checkArgument;
 
-abstract class AbstractSerializer {
+public abstract class AbstractSerializer {
 
-    protected static final int JSON_INDENT_FACTOR = 2;
+    public static final int JSON_INDENT_FACTOR = 2;
 
     protected final FlowGraph graph;
 

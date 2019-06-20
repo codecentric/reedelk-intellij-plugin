@@ -14,19 +14,33 @@ import com.esb.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.esb.plugin.editor.properties.widget.DefaultPropertiesPanel;
 import com.esb.plugin.editor.properties.widget.FormBuilder;
 import com.esb.plugin.editor.properties.widget.input.ConfigSelector;
+import com.esb.plugin.graph.serializer.JsonObjectFactory;
 import com.esb.plugin.service.module.ConfigService;
 import com.esb.plugin.service.module.impl.ConfigMetadata;
 import com.intellij.openapi.module.Module;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+import static com.esb.internal.commons.JsonParser.Config;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.EAST;
 
 public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
+
+    private static final String DEFAULT_CONFIG_REF = "";
+
+    private static final ConfigMetadata UNSELECTED_CONFIG;
+
+    static {
+        JSONObject unselectedConfigDefinition = JsonObjectFactory.newJSONObject();
+        Config.id(DEFAULT_CONFIG_REF, unselectedConfigDefinition);
+        Config.title("<Not selected>", unselectedConfigDefinition);
+        UNSELECTED_CONFIG = new ConfigMetadata(unselectedConfigDefinition);
+    }
 
     @Override
     public JComponent render(Module module, ComponentPropertyDescriptor descriptor, PropertyAccessor accessor) {
@@ -123,28 +137,17 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
         return wrapper;
     }
 
-    private static final String DEFAULT_CONFIG_REF = "";
-
-    private static final ConfigMetadata UNSELECTED_CONFIG = new UnselectedConfigMetadata();
-
-    static class UnresolvedConfigMetadata extends ConfigMetadata {
-        UnresolvedConfigMetadata(String id) {
-            super(id, String.format("Unresolved (%s)", id));
-        }
-    }
-
-    static class UnselectedConfigMetadata extends ConfigMetadata {
-        UnselectedConfigMetadata() {
-            super(DEFAULT_CONFIG_REF, "<Not selected>");
-        }
-    }
-
     private ConfigMetadata findMatchingMetadata(List<ConfigMetadata> configsMetadata, String reference) {
         if (!StringUtils.isBlank(reference)) {
             return configsMetadata.stream()
                     .filter(configMetadata -> configMetadata.getId().equals(reference))
                     .findFirst()
-                    .orElseGet(() -> new UnresolvedConfigMetadata(reference));
+                    .orElseGet(() -> {
+                        JSONObject configDefinition = JsonObjectFactory.newJSONObject();
+                        Config.title(String.format("Unresolved (%s)", reference), configDefinition);
+                        Config.id(reference, configDefinition);
+                        return new ConfigMetadata(configDefinition);
+                    });
         }
         return UNSELECTED_CONFIG;
     }

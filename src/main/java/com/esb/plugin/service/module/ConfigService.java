@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public interface ConfigService {
+
     static ConfigService getInstance(@NotNull Module module) {
         return ModuleServiceManager.getService(module, ConfigService.class);
     }
