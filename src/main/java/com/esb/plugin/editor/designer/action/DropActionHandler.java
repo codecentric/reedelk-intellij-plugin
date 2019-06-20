@@ -4,7 +4,6 @@ import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.action.ActionNodeAdd;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 
 import java.awt.dnd.DropTargetDropEvent;
@@ -13,8 +12,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static java.awt.dnd.DnDConstants.ACTION_COPY_OR_MOVE;
 
 public class DropActionHandler {
-
-    private static final Logger LOG = Logger.getInstance(DropActionHandler.class);
 
     private final Module module;
     private final FlowSnapshot snapshot;

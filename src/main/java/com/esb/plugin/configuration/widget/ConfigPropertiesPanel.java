@@ -20,6 +20,8 @@ import static java.awt.BorderLayout.NORTH;
 
 class ConfigPropertiesPanel extends JBPanel {
 
+    private static final Dimension MINIMUM_PANEL_SIZE = new Dimension(400, 0);
+
     private boolean isNewConfig;
 
     ConfigPropertiesPanel(Module module, ConfigMetadata configMetadata, TypeObjectDescriptor descriptor, boolean isNewConfig) {
@@ -28,6 +30,7 @@ class ConfigPropertiesPanel extends JBPanel {
         ConfigMetadataHeaderPanel headerPanel = new ConfigMetadataHeaderPanel(configMetadata);
 
         DefaultPropertiesPanel propertiesPanel = new DefaultPropertiesPanel();
+        propertiesPanel.setMinimumSize(MINIMUM_PANEL_SIZE);
 
         descriptor.getObjectProperties().forEach(nestedPropertyDescriptor -> {
 

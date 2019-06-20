@@ -26,18 +26,17 @@ import java.awt.*;
 import java.util.List;
 
 import static com.esb.internal.commons.JsonParser.Config;
+import static com.esb.plugin.component.domain.TypeObjectDescriptor.TypeObject;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.EAST;
 
 public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
 
-    private static final String DEFAULT_CONFIG_REF = "";
-
     private static final ConfigMetadata UNSELECTED_CONFIG;
 
     static {
         JSONObject unselectedConfigDefinition = JsonObjectFactory.newJSONObject();
-        Config.id(DEFAULT_CONFIG_REF, unselectedConfigDefinition);
+        Config.id(TypeObject.DEFAULT_CONFIG_REF, unselectedConfigDefinition);
         Config.title("<Not selected>", unselectedConfigDefinition);
         UNSELECTED_CONFIG = new ConfigMetadata(unselectedConfigDefinition);
     }

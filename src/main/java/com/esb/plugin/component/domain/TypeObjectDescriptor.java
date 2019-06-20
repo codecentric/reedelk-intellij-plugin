@@ -50,6 +50,8 @@ public class TypeObjectDescriptor implements TypeDescriptor {
 
     public static class TypeObject implements ComponentDataHolder {
 
+        public static final String DEFAULT_CONFIG_REF = "";
+
         private Map<String, Object> objectDataHolder = new HashMap<>();
 
         // A type object defined within a flow, must have the
