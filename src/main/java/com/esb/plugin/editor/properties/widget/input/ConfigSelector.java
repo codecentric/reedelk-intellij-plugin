@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.properties.widget.input;
 
+import com.esb.internal.commons.StringUtils;
 import com.esb.plugin.service.module.impl.ConfigMetadata;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.ListCellRendererWrapper;
@@ -36,11 +37,18 @@ public class ConfigSelector extends ComboBox<ConfigMetadata> implements ItemList
     private class ConfigMetadataRenderer extends ListCellRendererWrapper<ConfigMetadata> {
         @Override
         public void customize(JList list, ConfigMetadata value, int index, boolean selected, boolean hasFocus) {
-            String title = value.getTitle();
-            if (value.getTitle() == null) {
-                title = value.getId();
+            StringBuilder renderedValue = new StringBuilder(value.getTitle());
+            if (renderedValue.length() == 0) {
+                renderedValue.append(value.getId());
             }
-            this.setText(title);
+            if (StringUtils.isNotBlank(value.getFileName())) {
+                renderedValue
+                        .append(" ")
+                        .append("(")
+                        .append(value.getFileName())
+                        .append(")");
+            }
+            setText(renderedValue.toString());
         }
     }
 }

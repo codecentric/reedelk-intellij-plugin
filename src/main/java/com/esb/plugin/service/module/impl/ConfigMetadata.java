@@ -12,6 +12,8 @@ import static com.esb.internal.commons.JsonParser.Implementor;
 
 public class ConfigMetadata implements ComponentDataHolder {
 
+    private final String ABSENT_FILE = "";
+
     private final JSONObject configDefinition;
 
     public ConfigMetadata(@NotNull JSONObject configDefinition) {
@@ -60,7 +62,7 @@ public class ConfigMetadata implements ComponentDataHolder {
      * Returns a user friendly version of the file name.
      */
     public String getFileName() {
-        throw new UnsupportedOperationException("Could not get readable file name");
+        return ABSENT_FILE;
     }
 
     /**
