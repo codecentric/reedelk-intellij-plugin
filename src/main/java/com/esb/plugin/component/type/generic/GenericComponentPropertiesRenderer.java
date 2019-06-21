@@ -3,7 +3,7 @@ package com.esb.plugin.component.type.generic;
 import com.esb.plugin.component.domain.*;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessorFactory;
-import com.esb.plugin.editor.properties.renderer.node.AbstractNodePropertiesRenderer;
+import com.esb.plugin.editor.properties.renderer.AbstractNodePropertiesRenderer;
 import com.esb.plugin.editor.properties.renderer.type.TypeRendererFactory;
 import com.esb.plugin.editor.properties.widget.ContainerFactory;
 import com.esb.plugin.editor.properties.widget.DefaultPropertiesPanel;

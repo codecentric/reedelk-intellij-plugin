@@ -1,6 +1,6 @@
 package com.esb.plugin.component.type.stop;
 
-import com.esb.plugin.editor.properties.renderer.node.AbstractNodePropertiesRenderer;
+import com.esb.plugin.editor.properties.renderer.AbstractNodePropertiesRenderer;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.intellij.openapi.module.Module;
 

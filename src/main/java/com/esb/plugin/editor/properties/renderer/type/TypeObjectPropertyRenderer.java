@@ -9,6 +9,7 @@ import com.esb.plugin.component.domain.TypeObjectDescriptor;
 import com.esb.plugin.configuration.widget.ActionAddConfiguration;
 import com.esb.plugin.configuration.widget.ActionDeleteConfiguration;
 import com.esb.plugin.configuration.widget.ActionEditConfiguration;
+import com.esb.plugin.editor.designer.utils.DefaultDescriptorDataValuesFiller;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.esb.plugin.editor.properties.widget.DefaultPropertiesPanel;
@@ -53,14 +54,17 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
     private JComponent renderInline(Module module, PropertyAccessor propertyAccessor, TypeObjectDescriptor objectDescriptor) {
         List<ComponentPropertyDescriptor> objectProperties = objectDescriptor.getObjectProperties();
 
+        // The accessor of type object returns a TypeObject map.
+        ComponentDataHolder dataHolder = (ComponentDataHolder) propertyAccessor.get();
+
+        // Fill Default Properties Values
+        DefaultDescriptorDataValuesFiller.fill(dataHolder, objectProperties);
+
         DefaultPropertiesPanel propertiesPanel = new DefaultPropertiesPanel();
         objectProperties.forEach(nestedPropertyDescriptor -> {
 
             final String displayName = nestedPropertyDescriptor.getDisplayName();
             final TypeDescriptor propertyType = nestedPropertyDescriptor.getPropertyType();
-
-            // The accessor of type object returns a TypeObject map.
-            ComponentDataHolder dataHolder = (ComponentDataHolder) propertyAccessor.get();
 
             // We need a snapshot because changes needs to be written in the
             // flow itself since this is an inline object.

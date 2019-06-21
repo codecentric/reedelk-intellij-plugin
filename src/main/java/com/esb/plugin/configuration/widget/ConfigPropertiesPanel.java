@@ -2,6 +2,7 @@ package com.esb.plugin.configuration.widget;
 
 import com.esb.plugin.component.domain.TypeDescriptor;
 import com.esb.plugin.component.domain.TypeObjectDescriptor;
+import com.esb.plugin.editor.designer.utils.DefaultDescriptorDataValuesFiller;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.esb.plugin.editor.properties.renderer.type.TypeRendererFactory;
@@ -24,15 +25,18 @@ class ConfigPropertiesPanel extends JBPanel {
 
     private boolean isNewConfig;
 
-    ConfigPropertiesPanel(Module module, ConfigMetadata configMetadata, TypeObjectDescriptor descriptor, boolean isNewConfig) {
+    ConfigPropertiesPanel(Module module, ConfigMetadata configMetadata, TypeObjectDescriptor objectDescriptor, boolean isNewConfig) {
         this.isNewConfig = isNewConfig;
+
+        // Fill Default Properties Values
+        DefaultDescriptorDataValuesFiller.fill(configMetadata, objectDescriptor.getObjectProperties());
 
         ConfigMetadataHeaderPanel headerPanel = new ConfigMetadataHeaderPanel(configMetadata);
 
         DefaultPropertiesPanel propertiesPanel = new DefaultPropertiesPanel();
         propertiesPanel.setMinimumSize(MINIMUM_PANEL_SIZE);
 
-        descriptor.getObjectProperties().forEach(nestedPropertyDescriptor -> {
+        objectDescriptor.getObjectProperties().forEach(nestedPropertyDescriptor -> {
 
             final String displayName = nestedPropertyDescriptor.getDisplayName();
             final TypeDescriptor propertyType = nestedPropertyDescriptor.getPropertyType();

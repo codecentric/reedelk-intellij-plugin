@@ -1,10 +1,13 @@
 package com.esb.plugin.editor.designer;
 
 import com.esb.plugin.commons.PrintFlowInfo;
+import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.domain.ComponentDescriptor;
+import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.editor.designer.action.DropActionHandler;
 import com.esb.plugin.editor.designer.action.MoveActionHandler;
 import com.esb.plugin.editor.designer.action.RemoveActionHandler;
+import com.esb.plugin.editor.designer.utils.DefaultDescriptorDataValuesFiller;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.action.ActionNodeAdd;
 import com.esb.plugin.graph.node.GraphNode;
@@ -19,6 +22,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.image.ImageObserver;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import static com.esb.plugin.component.domain.ComponentDescriptor.FLAVOR;
@@ -66,8 +70,12 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
 
             GraphNode nodeToAdd = GraphNodeFactory.get(descriptor);
 
+            ComponentData componentData = nodeToAdd.componentData();
+
+            List<ComponentPropertyDescriptor> propertiesDescriptors = componentData.getPropertiesDescriptors();
+
             // Fill default property values for the just added component
-            DefaultDescriptorDataValuesFiller.fill(nodeToAdd);
+            DefaultDescriptorDataValuesFiller.fill(componentData, propertiesDescriptors);
 
             LOG.info(format("Node Dropped [%s], drop point [x: %d, y: %d]", PrintFlowInfo.name(nodeToAdd), dropPoint.x, dropPoint.y));
 

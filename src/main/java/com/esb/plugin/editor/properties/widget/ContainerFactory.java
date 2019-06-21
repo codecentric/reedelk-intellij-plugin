@@ -1,7 +1,7 @@
 package com.esb.plugin.editor.properties.widget;
 
 import com.esb.plugin.component.domain.ComponentData;
-import com.esb.plugin.editor.properties.renderer.node.NodePropertiesRendererFactory;
+import com.esb.plugin.editor.properties.renderer.NodePropertiesRendererFactory;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.openapi.module.Module;

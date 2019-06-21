@@ -1,4 +1,4 @@
-package com.esb.plugin.editor.properties.renderer.node;
+package com.esb.plugin.editor.properties.renderer;
 
 import com.esb.api.exception.ESBException;
 import com.esb.plugin.component.domain.ComponentData;

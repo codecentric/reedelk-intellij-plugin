@@ -1,4 +1,4 @@
-package com.esb.plugin.editor.properties.renderer.node;
+package com.esb.plugin.editor.properties.renderer;
 
 import com.esb.plugin.graph.FlowSnapshot;
 import com.intellij.openapi.module.Module;

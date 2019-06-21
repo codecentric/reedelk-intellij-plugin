@@ -1,18 +1,20 @@
-package com.esb.plugin.editor.designer;
+package com.esb.plugin.editor.designer.utils;
 
-import com.esb.plugin.component.domain.ComponentData;
+import com.esb.plugin.component.domain.ComponentDataHolder;
+import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.domain.TypeDescriptor;
 import com.esb.plugin.component.domain.TypeObjectDescriptor;
-import com.esb.plugin.graph.node.GraphNode;
+
+import java.util.List;
 
 import static com.esb.internal.commons.JsonParser.Component;
 import static com.esb.plugin.component.domain.TypeObjectDescriptor.TypeObject;
 
 public class DefaultDescriptorDataValuesFiller {
 
-    public static void fill(GraphNode node) {
-        ComponentData componentData = node.componentData();
-        componentData.getPropertiesDescriptors().forEach(descriptor -> {
+    public static void fill(ComponentDataHolder dataHolder, List<ComponentPropertyDescriptor> propertyDescriptors) {
+
+        propertyDescriptors.forEach(descriptor -> {
             String propertyName = descriptor.getPropertyName();
             TypeDescriptor propertyType = descriptor.getPropertyType();
             if (propertyType instanceof TypeObjectDescriptor) {
@@ -20,18 +22,18 @@ public class DefaultDescriptorDataValuesFiller {
                 if (typeObjectDescriptor.isShareable()) {
                     TypeObject nested = typeObjectDescriptor.newInstance();
                     nested.set(Component.configRef(), TypeObject.DEFAULT_CONFIG_REF);
-                    componentData.set(propertyName, nested);
+                    dataHolder.set(propertyName, nested);
                 } else {
-                    fillTypeObjectDescriptor(componentData, propertyName, typeObjectDescriptor);
+                    fillTypeObjectDescriptor(dataHolder, propertyName, typeObjectDescriptor);
                 }
             } else {
                 Object defaultValue = descriptor.getDefaultValue();
-                componentData.set(propertyName, defaultValue);
+                dataHolder.set(propertyName, defaultValue);
             }
         });
     }
 
-    private static void fillTypeObjectDescriptor(ComponentData componentData, String propertyName, TypeObjectDescriptor propertyType) {
+    private static void fillTypeObjectDescriptor(ComponentDataHolder componentData, String propertyName, TypeObjectDescriptor propertyType) {
         TypeObject typeObject = propertyType.newInstance();
         componentData.set(propertyName, typeObject);
         propertyType
