@@ -1,4 +1,4 @@
-package com.esb.plugin.editor.designer.utils;
+package com.esb.plugin.commons;
 
 import com.esb.plugin.component.domain.ComponentDataHolder;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
@@ -13,7 +13,6 @@ import static com.esb.plugin.component.domain.TypeObjectDescriptor.TypeObject;
 public class DefaultDescriptorDataValuesFiller {
 
     public static void fill(ComponentDataHolder dataHolder, List<ComponentPropertyDescriptor> propertyDescriptors) {
-
         propertyDescriptors.forEach(descriptor -> {
             String propertyName = descriptor.getPropertyName();
             TypeDescriptor propertyType = descriptor.getPropertyType();

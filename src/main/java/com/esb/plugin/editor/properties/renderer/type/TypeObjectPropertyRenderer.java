@@ -2,6 +2,7 @@ package com.esb.plugin.editor.properties.renderer.type;
 
 import com.esb.internal.commons.JsonParser;
 import com.esb.internal.commons.StringUtils;
+import com.esb.plugin.commons.DefaultDescriptorDataValuesFiller;
 import com.esb.plugin.component.domain.ComponentDataHolder;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.domain.TypeDescriptor;
@@ -9,7 +10,6 @@ import com.esb.plugin.component.domain.TypeObjectDescriptor;
 import com.esb.plugin.configuration.widget.ActionAddConfiguration;
 import com.esb.plugin.configuration.widget.ActionDeleteConfiguration;
 import com.esb.plugin.configuration.widget.ActionEditConfiguration;
-import com.esb.plugin.editor.designer.utils.DefaultDescriptorDataValuesFiller;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.esb.plugin.editor.properties.widget.DefaultPropertiesPanel;

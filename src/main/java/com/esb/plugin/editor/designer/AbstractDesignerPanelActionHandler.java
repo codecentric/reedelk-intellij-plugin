@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.designer;
 
+import com.esb.plugin.commons.DefaultDescriptorDataValuesFiller;
 import com.esb.plugin.commons.PrintFlowInfo;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.domain.ComponentDescriptor;
@@ -7,7 +8,6 @@ import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.editor.designer.action.DropActionHandler;
 import com.esb.plugin.editor.designer.action.MoveActionHandler;
 import com.esb.plugin.editor.designer.action.RemoveActionHandler;
-import com.esb.plugin.editor.designer.utils.DefaultDescriptorDataValuesFiller;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.action.ActionNodeAdd;
 import com.esb.plugin.graph.node.GraphNode;

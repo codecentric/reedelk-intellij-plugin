@@ -65,8 +65,8 @@ public class TypeObjectDescriptor implements TypeDescriptor {
         }
 
         @Override
-        public Object get(String key) {
-            return objectDataHolder.get(key);
+        public <T> T get(String key) {
+            return (T) objectDataHolder.get(key);
         }
 
         @Override
