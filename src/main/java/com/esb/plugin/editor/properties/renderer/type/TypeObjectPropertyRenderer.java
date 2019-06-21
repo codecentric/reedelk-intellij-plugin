@@ -95,6 +95,13 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
         // The accessor of type object returns a TypeObject map : in this case it will contain config ref
         ComponentDataHolder dataHolder = (ComponentDataHolder) propertyAccessor.get();
 
+        PropertyAccessor configRefAccessor = PropertyAccessorFactory.get()
+                .typeDescriptor(typeDescriptor)
+                .propertyName(JsonParser.Component.configRef())
+                .snapshot(propertyAccessor.getSnapshot())
+                .dataHolder(dataHolder)
+                .build();
+
 
         ConfigSelector selector = new ConfigSelector();
 
@@ -121,6 +128,7 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
             selector.setSelectedItem(matchingMetadata);
             editAction.onSelect(matchingMetadata);
             deleteAction.onSelect(matchingMetadata);
+            configRefAccessor.set(matchingMetadata.getId());
         });
 
         deleteAction.addListener(deletedConfiguration -> {
@@ -160,12 +168,6 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
             configMetadata.add(matchingMetadata);
         }
 
-        PropertyAccessor configRefAccessor = PropertyAccessorFactory.get()
-                .typeDescriptor(typeDescriptor)
-                .propertyName(JsonParser.Component.configRef())
-                .snapshot(propertyAccessor.getSnapshot())
-                .dataHolder(dataHolder)
-                .build();
 
         DefaultComboBoxModel<ConfigMetadata> metadata = new DefaultComboBoxModel<>();
         configMetadata.forEach(metadata::addElement);

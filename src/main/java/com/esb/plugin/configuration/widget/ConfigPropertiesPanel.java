@@ -28,8 +28,10 @@ class ConfigPropertiesPanel extends JBPanel {
     ConfigPropertiesPanel(Module module, ConfigMetadata configMetadata, TypeObjectDescriptor objectDescriptor, boolean isNewConfig) {
         this.isNewConfig = isNewConfig;
 
-        // Fill Default Properties Values
-        DefaultDescriptorDataValuesFiller.fill(configMetadata, objectDescriptor.getObjectProperties());
+        if (isNewConfig) {
+            // Fill Default Properties Values
+            DefaultDescriptorDataValuesFiller.fill(configMetadata, objectDescriptor.getObjectProperties());
+        }
 
         ConfigMetadataHeaderPanel headerPanel = new ConfigMetadataHeaderPanel(configMetadata);
 
