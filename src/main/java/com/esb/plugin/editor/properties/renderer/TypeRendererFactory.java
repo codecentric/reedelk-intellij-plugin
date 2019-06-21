@@ -1,4 +1,4 @@
-package com.esb.plugin.editor.properties.renderer.type;
+package com.esb.plugin.editor.properties.renderer;
 
 import com.esb.plugin.component.domain.TypeDescriptor;
 import com.esb.plugin.component.domain.TypeObjectDescriptor;

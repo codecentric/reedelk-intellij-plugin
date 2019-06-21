@@ -1,4 +1,4 @@
-package com.esb.plugin.editor.properties.renderer.type;
+package com.esb.plugin.editor.properties.renderer;
 
 import com.esb.internal.commons.JsonParser;
 import com.esb.internal.commons.StringUtils;
@@ -87,14 +87,20 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
         return propertiesPanel;
     }
 
-
-    // TODO: This method requires de-duplication work !!!!!!!!!!!!! FIXMEEEE
     @NotNull
     private JComponent renderShareable(Module module, TypeObjectDescriptor typeDescriptor, PropertyAccessor propertyAccessor) {
 
-        // The accessor of type object returns a TypeObject map : in this case it will contain config ref
+        ActionDeleteConfiguration deleteAction = new ActionDeleteConfiguration(module);
+        ActionEditConfiguration editAction = new ActionEditConfiguration(module, typeDescriptor);
+        ActionAddConfiguration addAction = new ActionAddConfiguration(module, typeDescriptor);
+
+        ConfigSelector selector = new ConfigSelector();
+
+        // The accessor of type object returns a TypeObject map
+        // Since the object is shareable, it will contain config a config reference.
         ComponentDataHolder dataHolder = (ComponentDataHolder) propertyAccessor.get();
 
+        // We create the accessor for the config reference
         PropertyAccessor configRefAccessor = PropertyAccessorFactory.get()
                 .typeDescriptor(typeDescriptor)
                 .propertyName(JsonParser.Component.configRef())
@@ -102,50 +108,17 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
                 .dataHolder(dataHolder)
                 .build();
 
-
-        ConfigSelector selector = new ConfigSelector();
-
-
-        ActionDeleteConfiguration deleteAction = new ActionDeleteConfiguration(module);
-        ActionEditConfiguration editAction = new ActionEditConfiguration(module, typeDescriptor);
-        ActionAddConfiguration addAction = new ActionAddConfiguration(module, typeDescriptor);
-
-
         addAction.addListener(addedConfiguration -> {
-            List<ConfigMetadata> configMetadata =
-                    ConfigService.getInstance(module).listConfigsBy(typeDescriptor.getTypeFullyQualifiedName());
-            configMetadata.add(UNSELECTED_CONFIG);
-
-            String newConfigReference = addedConfiguration.getId();
-            ConfigMetadata matchingMetadata = findMatchingMetadata(configMetadata, newConfigReference);
-            if (!configMetadata.contains(matchingMetadata)) {
-                configMetadata.add(matchingMetadata);
-            }
-
-            DefaultComboBoxModel<ConfigMetadata> metadata = new DefaultComboBoxModel<>();
-            configMetadata.forEach(metadata::addElement);
-            selector.setModel(metadata);
-            selector.setSelectedItem(matchingMetadata);
+            ConfigMetadata matchingMetadata =
+                    updateMetadataOnSelector(module, selector, typeDescriptor, addedConfiguration.getId());
             editAction.onSelect(matchingMetadata);
             deleteAction.onSelect(matchingMetadata);
             configRefAccessor.set(matchingMetadata.getId());
         });
 
         deleteAction.addListener(deletedConfiguration -> {
-            List<ConfigMetadata> configMetadata =
-                    ConfigService.getInstance(module).listConfigsBy(typeDescriptor.getTypeFullyQualifiedName());
-            configMetadata.add(UNSELECTED_CONFIG);
-
-            String configReference = deletedConfiguration.getId();
-            ConfigMetadata matchingMetadata = findMatchingMetadata(configMetadata, configReference);
-            if (!configMetadata.contains(matchingMetadata)) {
-                configMetadata.add(matchingMetadata);
-            }
-
-            DefaultComboBoxModel<ConfigMetadata> metadata = new DefaultComboBoxModel<>();
-            configMetadata.forEach(metadata::addElement);
-            selector.setModel(metadata);
-            selector.setSelectedItem(matchingMetadata);
+            ConfigMetadata matchingMetadata =
+                    updateMetadataOnSelector(module, selector, typeDescriptor, deletedConfiguration.getId());
             editAction.onSelect(matchingMetadata);
             deleteAction.onSelect(matchingMetadata);
         });
@@ -155,25 +128,9 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
         controls.add(deleteAction);
         controls.add(addAction);
 
-
-        // Get all the configurations for the given implementor's fully qualified name class
-        List<ConfigMetadata> configMetadata =
-                ConfigService.getInstance(module).listConfigsBy(typeDescriptor.getTypeFullyQualifiedName());
-        configMetadata.add(UNSELECTED_CONFIG);
-
-
         String configReference = dataHolder.get(JsonParser.Component.configRef());
-        ConfigMetadata matchingMetadata = findMatchingMetadata(configMetadata, configReference);
-        if (!configMetadata.contains(matchingMetadata)) {
-            configMetadata.add(matchingMetadata);
-        }
-
-
-        DefaultComboBoxModel<ConfigMetadata> metadata = new DefaultComboBoxModel<>();
-        configMetadata.forEach(metadata::addElement);
-        selector.setModel(metadata);
-
-        selector.setSelectedItem(matchingMetadata);
+        ConfigMetadata matchingMetadata =
+                updateMetadataOnSelector(module, selector, typeDescriptor, configReference);
         editAction.onSelect(matchingMetadata);
         deleteAction.onSelect(matchingMetadata);
 
@@ -189,6 +146,24 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
         wrapper.add(selector, CENTER);
         wrapper.add(controls, EAST);
         return wrapper;
+    }
+
+    private ConfigMetadata updateMetadataOnSelector(Module module, ConfigSelector selector, TypeObjectDescriptor typeObjectDescriptor, String targetReference) {
+        List<ConfigMetadata> configMetadata =
+                ConfigService.getInstance(module).listConfigsBy(typeObjectDescriptor.getTypeFullyQualifiedName());
+        configMetadata.add(UNSELECTED_CONFIG);
+
+        ConfigMetadata matchingMetadata = findMatchingMetadata(configMetadata, targetReference);
+        if (!configMetadata.contains(matchingMetadata)) {
+            configMetadata.add(matchingMetadata);
+        }
+
+        DefaultComboBoxModel<ConfigMetadata> metadata = new DefaultComboBoxModel<>();
+        configMetadata.forEach(metadata::addElement);
+        selector.setModel(metadata);
+        selector.setSelectedItem(matchingMetadata);
+
+        return matchingMetadata;
     }
 
     private ConfigMetadata findMatchingMetadata(List<ConfigMetadata> configsMetadata, String reference) {
