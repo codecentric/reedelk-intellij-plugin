@@ -14,7 +14,6 @@ public class DefaultDescriptorDataValuesFiller {
 
     public static void fill(ComponentDataHolder dataHolder, List<ComponentPropertyDescriptor> propertyDescriptors) {
         propertyDescriptors.forEach(descriptor -> {
-
             String propertyName = descriptor.getPropertyName();
             TypeDescriptor propertyType = descriptor.getPropertyType();
 
