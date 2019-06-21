@@ -7,9 +7,7 @@ import com.esb.plugin.component.domain.ComponentDataHolder;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.domain.TypeDescriptor;
 import com.esb.plugin.component.domain.TypeObjectDescriptor;
-import com.esb.plugin.configuration.widget.ActionAddConfiguration;
-import com.esb.plugin.configuration.widget.ActionDeleteConfiguration;
-import com.esb.plugin.configuration.widget.ActionEditConfiguration;
+import com.esb.plugin.configuration.widget.ConfigControlPanel;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.esb.plugin.editor.properties.widget.DefaultPropertiesPanel;
@@ -89,11 +87,7 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
 
     @NotNull
     private JComponent renderShareable(Module module, TypeObjectDescriptor typeDescriptor, PropertyAccessor propertyAccessor) {
-
-        ActionDeleteConfiguration deleteAction = new ActionDeleteConfiguration(module);
-        ActionEditConfiguration editAction = new ActionEditConfiguration(module, typeDescriptor);
-        ActionAddConfiguration addAction = new ActionAddConfiguration(module, typeDescriptor);
-
+        // The Config Selector Combo
         ConfigSelector selector = new ConfigSelector();
 
         // The accessor of type object returns a TypeObject map
@@ -108,43 +102,29 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
                 .dataHolder(dataHolder)
                 .build();
 
-        addAction.addListener(addedConfiguration -> {
-            ConfigMetadata matchingMetadata =
-                    updateMetadataOnSelector(module, selector, typeDescriptor, addedConfiguration.getId());
-            editAction.onSelect(matchingMetadata);
-            deleteAction.onSelect(matchingMetadata);
-            configRefAccessor.set(matchingMetadata.getId());
-        });
+        ConfigControlPanel configControlPanel = new ConfigControlPanel(module, typeDescriptor);
+        configControlPanel.setAddActionListener(addedConfiguration ->
+                updateMetadataOnSelector(module, selector, typeDescriptor, addedConfiguration.getId()));
 
-        deleteAction.addListener(deletedConfiguration -> {
-            ConfigMetadata matchingMetadata =
-                    updateMetadataOnSelector(module, selector, typeDescriptor, deletedConfiguration.getId());
-            editAction.onSelect(matchingMetadata);
-            deleteAction.onSelect(matchingMetadata);
-        });
-
-        JPanel controls = new JPanel();
-        controls.add(editAction);
-        controls.add(deleteAction);
-        controls.add(addAction);
+        configControlPanel.setDeleteActionListener(deletedConfiguration ->
+                updateMetadataOnSelector(module, selector, typeDescriptor, deletedConfiguration.getId()));
 
         String configReference = dataHolder.get(JsonParser.Component.configRef());
         ConfigMetadata matchingMetadata =
                 updateMetadataOnSelector(module, selector, typeDescriptor, configReference);
-        editAction.onSelect(matchingMetadata);
-        deleteAction.onSelect(matchingMetadata);
+        configControlPanel.onSelect(matchingMetadata);
 
+        // We add the listener after, so that the first time we
+        // don't update the graph json with the same info.
         selector.addSelectListener(selectedMetadata -> {
-            editAction.onSelect(selectedMetadata);
-            deleteAction.onSelect(selectedMetadata);
+            configControlPanel.onSelect(selectedMetadata);
             configRefAccessor.set(selectedMetadata.getId());
         });
-
 
         JPanel wrapper = new JPanel();
         wrapper.setLayout(new BorderLayout());
         wrapper.add(selector, CENTER);
-        wrapper.add(controls, EAST);
+        wrapper.add(configControlPanel, EAST);
         return wrapper;
     }
 
@@ -162,7 +142,6 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
         configMetadata.forEach(metadata::addElement);
         selector.setModel(metadata);
         selector.setSelectedItem(matchingMetadata);
-
         return matchingMetadata;
     }
 
