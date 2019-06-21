@@ -10,6 +10,7 @@ import java.util.Map;
 public class TypeObjectDescriptor implements TypeDescriptor {
 
     private final String typeFullyQualifiedName;
+
     private boolean shareable;
     private List<ComponentPropertyDescriptor> objectProperties = new ArrayList<>();
 
@@ -64,6 +65,7 @@ public class TypeObjectDescriptor implements TypeDescriptor {
         private TypeObject() {
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public <T> T get(String key) {
             return (T) objectDataHolder.get(key);
