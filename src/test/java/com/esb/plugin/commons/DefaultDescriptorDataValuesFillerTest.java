@@ -6,22 +6,15 @@ import com.esb.plugin.component.domain.TypeObjectDescriptor;
 import com.esb.plugin.component.domain.TypePrimitiveDescriptor;
 import com.esb.plugin.graph.serializer.JsonObjectFactory;
 import com.esb.plugin.service.module.impl.ConfigMetadata;
-import com.google.common.collect.ImmutableList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
-
+import static com.esb.internal.commons.JsonParser.Component;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DefaultDescriptorDataValuesFillerTest {
-
-    private final TypePrimitiveDescriptor stringTypeDescriptor =
-            new TypePrimitiveDescriptor(String.class);
-
-    private final TypePrimitiveDescriptor intTypeDescriptor =
-            new TypePrimitiveDescriptor(int.class);
 
     private ComponentDataHolder testDataHolder;
 
@@ -32,13 +25,6 @@ class DefaultDescriptorDataValuesFillerTest {
 
     @Test
     void shouldCorrectlyFillDefaultValuesForPrimitiveTypes() {
-        // Given
-        ComponentPropertyDescriptor namePropertyDescriptor =
-                new ComponentPropertyDescriptor("name", stringTypeDescriptor, "Your name", "Test name");
-
-        ComponentPropertyDescriptor surnamePropertyDescriptor =
-                new ComponentPropertyDescriptor("surname", stringTypeDescriptor, "Your surname", "Test surname");
-
         // When
         DefaultDescriptorDataValuesFiller
                 .fill(testDataHolder, asList(namePropertyDescriptor, surnamePropertyDescriptor));
@@ -61,7 +47,7 @@ class DefaultDescriptorDataValuesFillerTest {
 
         // When
         DefaultDescriptorDataValuesFiller
-                .fill(testDataHolder, ImmutableList.of(addressPropertyDescriptorWithoutDefaultValue));
+                .fill(testDataHolder, singletonList(addressPropertyDescriptorWithoutDefaultValue));
 
         // Then
         String defaultAddress = testDataHolder.get("address");
@@ -71,28 +57,95 @@ class DefaultDescriptorDataValuesFillerTest {
     @Test
     void shouldCorrectlyFillDefaultValuesForComplexTypes() {
         // Given
-        ComponentPropertyDescriptor nestedProperty1 =
-                new ComponentPropertyDescriptor("nestedProperty1", stringTypeDescriptor, "Nested property 1", "Nested one");
-        ComponentPropertyDescriptor nestedProperty2 =
-                new ComponentPropertyDescriptor("nestedProperty2", intTypeDescriptor, "Nested property 2", 234);
-
         String objectFullyQualifiedName = "com.esb.test.Component";
+
         TypeObjectDescriptor typeObjectDescriptor =
-                new TypeObjectDescriptor(objectFullyQualifiedName, false, asList(nestedProperty1, nestedProperty2));
+                new TypeObjectDescriptor(objectFullyQualifiedName, false, asList(namePropertyDescriptor, zipCodePropertyDescriptor));
 
         ComponentPropertyDescriptor objectPropertyDescriptor =
                 new ComponentPropertyDescriptor("configuration", typeObjectDescriptor, "Configuration");
 
         // When
         DefaultDescriptorDataValuesFiller
-                .fill(testDataHolder, Collections.singletonList(objectPropertyDescriptor));
+                .fill(testDataHolder, singletonList(objectPropertyDescriptor));
 
         // Then
         TypeObjectDescriptor.TypeObject configuration = testDataHolder.get("configuration");
-        String defaultNestedProperty1 = configuration.get("nestedProperty1");
-        int defaultNestedProperty2 = configuration.get("nestedProperty2");
 
-        assertThat(defaultNestedProperty1).isEqualTo("Nested one");
-        assertThat(defaultNestedProperty2).isEqualTo(234);
+        String defaultName = configuration.get("name");
+        assertThat(defaultName).isEqualTo("Test name");
+
+        int defaultZipCode = configuration.get("zipCode");
+        assertThat(defaultZipCode).isEqualTo(23411);
     }
+
+    @Test
+    void shouldCorrectlyFillDefaultValuesForNestedComplexObjects() {
+        // Given
+        String object1FullyQualifiedName = "com.esb.test.Component1";
+        String object2FullyQualifiedName = "com.esb.test.Component2";
+
+        TypeObjectDescriptor typeObject2 =
+                new TypeObjectDescriptor(object2FullyQualifiedName, false, asList(surnamePropertyDescriptor, zipCodePropertyDescriptor));
+        ComponentPropertyDescriptor object2PropertyDescriptor =
+                new ComponentPropertyDescriptor("configuration2", typeObject2, "Configuration 2");
+
+        TypeObjectDescriptor typeObject1 =
+                new TypeObjectDescriptor(object1FullyQualifiedName, false, asList(namePropertyDescriptor, object2PropertyDescriptor));
+        ComponentPropertyDescriptor object1PropertyDescriptor =
+                new ComponentPropertyDescriptor("configuration1", typeObject1, "Configuration 1");
+
+        // When
+        DefaultDescriptorDataValuesFiller
+                .fill(testDataHolder, singletonList(object1PropertyDescriptor));
+
+        // Then
+        TypeObjectDescriptor.TypeObject configuration1 = testDataHolder.get("configuration1");
+        String defaultName = configuration1.get("name");
+        assertThat(defaultName).isEqualTo("Test name");
+
+        TypeObjectDescriptor.TypeObject configuration2 = configuration1.get("configuration2");
+        String defaultSurname = configuration2.get("surname");
+        assertThat(defaultSurname).isEqualTo("Test surname");
+    }
+
+    @Test
+    void shouldCorrectlyInitializeShareableComplexObjectWithDefaultReference() {
+        // Given
+        String objectFullyQualifiedName = "com.esb.test.Component";
+
+        TypeObjectDescriptor typeObjectDescriptor =
+                new TypeObjectDescriptor(objectFullyQualifiedName, true, asList(namePropertyDescriptor, zipCodePropertyDescriptor));
+
+        ComponentPropertyDescriptor objectPropertyDescriptor =
+                new ComponentPropertyDescriptor("configuration", typeObjectDescriptor, "Configuration");
+
+        // When
+        DefaultDescriptorDataValuesFiller
+                .fill(testDataHolder, singletonList(objectPropertyDescriptor));
+
+        // Then
+        TypeObjectDescriptor.TypeObject configuration = testDataHolder.get("configuration");
+
+        assertThat(configuration.keys()).containsExactly(Component.configRef());
+
+        String configReference = configuration.get(Component.configRef());
+        assertThat(configReference).isEqualTo(TypeObjectDescriptor.TypeObject.DEFAULT_CONFIG_REF);
+    }
+
+    private final TypePrimitiveDescriptor stringTypeDescriptor =
+            new TypePrimitiveDescriptor(String.class);
+
+    private final TypePrimitiveDescriptor intTypeDescriptor =
+            new TypePrimitiveDescriptor(int.class);
+
+    private final ComponentPropertyDescriptor namePropertyDescriptor =
+            new ComponentPropertyDescriptor("name", stringTypeDescriptor, "Your name", "Test name");
+
+    private final ComponentPropertyDescriptor surnamePropertyDescriptor =
+            new ComponentPropertyDescriptor("surname", stringTypeDescriptor, "Your surname", "Test surname");
+
+    private final ComponentPropertyDescriptor zipCodePropertyDescriptor =
+            new ComponentPropertyDescriptor("zipCode", intTypeDescriptor, "ZIP Code", 23411);
+
 }

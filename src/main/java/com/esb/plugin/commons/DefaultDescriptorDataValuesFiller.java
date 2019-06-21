@@ -14,17 +14,13 @@ public class DefaultDescriptorDataValuesFiller {
 
     public static void fill(ComponentDataHolder dataHolder, List<ComponentPropertyDescriptor> propertyDescriptors) {
         propertyDescriptors.forEach(descriptor -> {
+
             String propertyName = descriptor.getPropertyName();
             TypeDescriptor propertyType = descriptor.getPropertyType();
+
             if (propertyType instanceof TypeObjectDescriptor) {
-                TypeObjectDescriptor typeObjectDescriptor = (TypeObjectDescriptor) propertyType;
-                if (typeObjectDescriptor.isShareable()) {
-                    TypeObject nested = typeObjectDescriptor.newInstance();
-                    nested.set(Component.configRef(), TypeObject.DEFAULT_CONFIG_REF);
-                    dataHolder.set(propertyName, nested);
-                } else {
-                    fillTypeObjectDescriptor(dataHolder, propertyName, typeObjectDescriptor);
-                }
+                fillTypeObject(dataHolder, propertyName, (TypeObjectDescriptor) propertyType);
+
             } else {
                 Object defaultValue = descriptor.getDefaultValue();
                 dataHolder.set(propertyName, defaultValue);
@@ -32,12 +28,18 @@ public class DefaultDescriptorDataValuesFiller {
         });
     }
 
-    private static void fillTypeObjectDescriptor(ComponentDataHolder componentData, String propertyName, TypeObjectDescriptor propertyType) {
-        TypeObject typeObject = propertyType.newInstance();
-        componentData.set(propertyName, typeObject);
-        propertyType
-                .getObjectProperties()
-                .forEach(nestedDescriptor ->
-                        typeObject.set(nestedDescriptor.getPropertyName(), nestedDescriptor.getDefaultValue()));
+    private static void fillTypeObject(ComponentDataHolder dataHolder, String propertyName, TypeObjectDescriptor propertyType) {
+        if (propertyType.isShareable()) {
+            // If the property is shareable, we initialize it with default config ref
+            TypeObject nested = propertyType.newInstance();
+            nested.set(Component.configRef(), TypeObject.DEFAULT_CONFIG_REF);
+            dataHolder.set(propertyName, nested);
+
+        } else {
+            // Recursively fill the content of this object
+            TypeObject typeObject = propertyType.newInstance();
+            dataHolder.set(propertyName, typeObject);
+            fill(typeObject, propertyType.getObjectProperties());
+        }
     }
 }
