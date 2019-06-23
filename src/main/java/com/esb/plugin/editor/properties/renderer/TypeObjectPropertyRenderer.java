@@ -103,11 +103,17 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
                 .build();
 
         ConfigControlPanel configControlPanel = new ConfigControlPanel(module, typeDescriptor);
-        configControlPanel.setAddActionListener(addedConfiguration ->
-                updateMetadataOnSelector(module, selector, typeDescriptor, addedConfiguration.getId()));
+        configControlPanel.setAddActionListener(addedConfiguration -> {
+            ConfigMetadata matchingMetadata =
+                    updateMetadataOnSelector(module, selector, typeDescriptor, addedConfiguration.getId());
+            configControlPanel.onSelect(matchingMetadata);
+            configRefAccessor.set(matchingMetadata.getId());
+        });
 
-        configControlPanel.setDeleteActionListener(deletedConfiguration ->
-                updateMetadataOnSelector(module, selector, typeDescriptor, deletedConfiguration.getId()));
+        configControlPanel.setDeleteActionListener(deletedConfiguration -> {
+            ConfigMetadata matchingMetadata = updateMetadataOnSelector(module, selector, typeDescriptor, deletedConfiguration.getId());
+            configControlPanel.onSelect(matchingMetadata);
+        });
 
         String configReference = dataHolder.get(JsonParser.Component.configRef());
         ConfigMetadata matchingMetadata =
@@ -146,17 +152,16 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
     }
 
     private ConfigMetadata findMatchingMetadata(List<ConfigMetadata> configsMetadata, String reference) {
-        if (!StringUtils.isBlank(reference)) {
-            return configsMetadata.stream()
-                    .filter(configMetadata -> configMetadata.getId().equals(reference))
-                    .findFirst()
-                    .orElseGet(() -> {
-                        JSONObject configDefinition = JsonObjectFactory.newJSONObject();
-                        Config.title(String.format("Unresolved (%s)", reference), configDefinition);
-                        Config.id(reference, configDefinition);
-                        return new ConfigMetadata(configDefinition);
-                    });
-        }
-        return UNSELECTED_CONFIG;
+        if (StringUtils.isBlank(reference)) return UNSELECTED_CONFIG;
+
+        return configsMetadata.stream()
+                .filter(configMetadata -> configMetadata.getId().equals(reference))
+                .findFirst()
+                .orElseGet(() -> {
+                    JSONObject configDefinition = JsonObjectFactory.newJSONObject();
+                    Config.title(String.format("Unresolved (%s)", reference), configDefinition);
+                    Config.id(reference, configDefinition);
+                    return new ConfigMetadata(configDefinition);
+                });
     }
 }
