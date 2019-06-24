@@ -1,6 +1,6 @@
 package com.esb.plugin.service.module.impl;
 
-import com.esb.plugin.commons.JsonObjectComponentHolderDecorator;
+import com.esb.plugin.component.domain.JsonObjectComponentHolderDecorator;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.json.JSONObject;
 

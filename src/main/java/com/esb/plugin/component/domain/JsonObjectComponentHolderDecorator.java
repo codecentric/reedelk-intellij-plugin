@@ -1,6 +1,5 @@
-package com.esb.plugin.commons;
+package com.esb.plugin.component.domain;
 
-import com.esb.plugin.component.domain.ComponentDataHolder;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
