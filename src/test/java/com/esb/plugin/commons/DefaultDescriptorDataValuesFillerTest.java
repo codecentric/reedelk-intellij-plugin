@@ -19,7 +19,7 @@ class DefaultDescriptorDataValuesFillerTest {
 
     @BeforeEach
     void setUp() {
-        testDataHolder = new ConfigMetadata(JsonObjectFactory.newJSONObject());
+        testDataHolder = new ConfigMetadata(new TypeObjectDescriptor.TypeObject());
     }
 
     @Test

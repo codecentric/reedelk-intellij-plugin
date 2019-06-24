@@ -3,7 +3,6 @@ package com.esb.plugin.configuration.widget;
 import com.esb.plugin.component.domain.TypeObjectDescriptor;
 import com.esb.plugin.service.module.ConfigService;
 import com.esb.plugin.service.module.impl.ConfigMetadata;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,8 +10,6 @@ import static com.esb.plugin.commons.Icons.Config.Edit;
 import static com.esb.plugin.commons.Icons.Config.EditDisabled;
 
 public class ActionEditConfiguration extends ActionableCommandButton {
-
-    private static final Logger LOG = Logger.getInstance(ActionEditConfiguration.class);
 
     private final Module module;
     private final TypeObjectDescriptor typeDescriptor;

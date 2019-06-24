@@ -111,4 +111,13 @@ public class Json {
             }
         }
     }
+
+    public enum Configuration implements DataProvider {
+        Sample() {
+            @Override
+            public String path() {
+                return "configuration_sample.json";
+            }
+        };
+    }
 }
