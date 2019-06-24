@@ -8,7 +8,7 @@ import java.util.jar.Manifest;
 
 import static com.esb.internal.commons.ModuleProperties.Bundle;
 
-public class ESBModuleInfo {
+public class ModuleInfo {
 
     public static boolean IsESBModule(String jarFilePath) {
         try {

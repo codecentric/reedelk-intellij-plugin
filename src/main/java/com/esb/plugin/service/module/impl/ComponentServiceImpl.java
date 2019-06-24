@@ -1,7 +1,7 @@
 package com.esb.plugin.service.module.impl;
 
-import com.esb.plugin.commons.ESBModuleInfo;
 import com.esb.plugin.commons.MavenUtils;
+import com.esb.plugin.commons.ModuleInfo;
 import com.esb.plugin.component.domain.ComponentDescriptor;
 import com.esb.plugin.component.domain.ComponentsPackage;
 import com.esb.plugin.component.scanner.ComponentListUpdateNotifier;
@@ -127,12 +127,12 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                     .getPathsList()
                     .getPathList()
                     .stream()
-                    .filter(ESBModuleInfo::IsESBModule)
+                    .filter(ModuleInfo::IsESBModule)
                     .collect(Collectors.toList());
 
             esbModuleJarPaths.forEach(jarFilePath -> {
                 List<ComponentDescriptor> components = componentScanner.from(jarFilePath);
-                String moduleName = ESBModuleInfo.GetESBModuleName(jarFilePath);
+                String moduleName = ModuleInfo.GetESBModuleName(jarFilePath);
                 ComponentsPackage descriptor = new ComponentsPackage(moduleName, components);
                 mavenJarComponentsMap.put(jarFilePath, descriptor);
             });
