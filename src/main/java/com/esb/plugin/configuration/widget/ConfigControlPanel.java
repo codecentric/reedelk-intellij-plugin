@@ -24,6 +24,10 @@ public class ConfigControlPanel extends JBPanel {
         addAction.addListener(completeListener);
     }
 
+    public void setEditActionListener(ActionEditConfiguration.EditCompleteListener completeListener) {
+        editAction.addListener(completeListener);
+    }
+
     public void setDeleteActionListener(ActionDeleteConfiguration.DeleteCompleteListener completeListener) {
         deleteAction.addListener(completeListener);
     }

@@ -2,7 +2,6 @@ package com.esb.plugin.configuration.widget;
 
 import com.esb.plugin.commons.Labels;
 import com.esb.plugin.component.domain.TypeObjectDescriptor;
-import com.esb.plugin.service.module.ConfigService;
 import com.esb.plugin.service.module.impl.ConfigMetadata;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -40,10 +39,5 @@ public class DialogEditConfiguration extends DialogWrapper {
     @Override
     protected JComponent createCenterPanel() {
         return new ConfigPropertiesPanel(module, selectedMetadata, objectDescriptor, false);
-    }
-
-    void save() {
-        ConfigService.getInstance(module)
-                .saveConfig(selectedMetadata);
     }
 }

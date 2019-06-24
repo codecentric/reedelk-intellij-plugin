@@ -5,6 +5,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleServiceManager;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface ConfigService {
@@ -15,9 +16,9 @@ public interface ConfigService {
 
     List<ConfigMetadata> listConfigsBy(String fullyQualifiedName);
 
-    void saveConfig(ConfigMetadata updatedConfig);
+    void saveConfig(ConfigMetadata updatedConfig) throws Exception;
 
-    void addConfig(ConfigMetadata newConfig);
+    void addConfig(ConfigMetadata newConfig) throws IOException;
 
-    void removeConfig(ConfigMetadata toBeRemovedConfig);
+    void removeConfig(ConfigMetadata toBeRemovedConfig) throws Exception;
 }

@@ -1,7 +1,9 @@
 package com.esb.plugin.configuration.widget;
 
 import com.esb.plugin.component.domain.TypeObjectDescriptor;
+import com.esb.plugin.service.module.ConfigService;
 import com.esb.plugin.service.module.impl.ConfigMetadata;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,9 +12,12 @@ import static com.esb.plugin.commons.Icons.Config.EditDisabled;
 
 public class ActionEditConfiguration extends ActionableCommandButton {
 
+    private static final Logger LOG = Logger.getInstance(ActionEditConfiguration.class);
+
     private final Module module;
     private final TypeObjectDescriptor typeDescriptor;
 
+    private EditCompleteListener listener;
 
     public ActionEditConfiguration(@NotNull Module module, @NotNull TypeObjectDescriptor typeDescriptor) {
         super("Edit", Edit, EditDisabled);
@@ -27,9 +32,13 @@ public class ActionEditConfiguration extends ActionableCommandButton {
         DialogEditConfiguration dialogEditConfiguration = new DialogEditConfiguration(module, typeDescriptor, selectedMetadata);
 
         if (dialogEditConfiguration.showAndGet()) {
-
-            dialogEditConfiguration.save();
-
+            try {
+                ConfigService.getInstance(module).saveConfig(selectedMetadata);
+            } catch (Exception exception) {
+                if (listener != null) {
+                    listener.onEditConfigurationError(exception, selectedMetadata);
+                }
+            }
         }
     }
 
@@ -37,5 +46,13 @@ public class ActionEditConfiguration extends ActionableCommandButton {
     public void onSelect(ConfigMetadata configMetadata) {
         super.onSelect(configMetadata);
         setEnabled(configMetadata.isEditable());
+    }
+
+    public void addListener(EditCompleteListener listener) {
+        this.listener = listener;
+    }
+
+    public interface EditCompleteListener {
+        void onEditConfigurationError(Exception exception, ConfigMetadata metadata);
     }
 }

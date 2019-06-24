@@ -5,6 +5,7 @@ import com.intellij.openapi.roots.ModuleRootManager;
 
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 import static com.esb.internal.commons.ModuleProperties.Config;
 
@@ -12,12 +13,13 @@ public class ModuleUtils {
 
     private static final String PROJECT_RESOURCES_FOLDER = "src/main/resources";
 
-    public static String getConfigsFolder(Module module) {
-        String resourcesFolder = getResourcesFolder(module);
-        return Paths.get(resourcesFolder, Config.RESOURCE_DIRECTORY).toString();
+    public static Optional<String> getConfigsFolder(Module module) {
+        Optional<String> resourcesFolder = getResourcesFolder(module);
+        return resourcesFolder.map(resources ->
+                Paths.get(resources, Config.RESOURCE_DIRECTORY).toString());
     }
 
-    public static String getResourcesFolder(Module module) {
+    public static Optional<String> getResourcesFolder(Module module) {
         List<String> pathsList = ModuleRootManager.getInstance(module)
                 .orderEntries()
                 .withoutSdk()
@@ -27,7 +29,6 @@ public class ModuleUtils {
                 .getPathsList().getPathList();
         return pathsList.stream()
                 .filter(sourcesUrls -> sourcesUrls.endsWith(PROJECT_RESOURCES_FOLDER))
-                .findFirst()
-                .get();
+                .findFirst();
     }
 }

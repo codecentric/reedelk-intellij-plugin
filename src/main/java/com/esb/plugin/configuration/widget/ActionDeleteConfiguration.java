@@ -1,5 +1,6 @@
 package com.esb.plugin.configuration.widget;
 
+import com.esb.plugin.service.module.ConfigService;
 import com.esb.plugin.service.module.impl.ConfigMetadata;
 import com.intellij.openapi.module.Module;
 import org.jetbrains.annotations.NotNull;
@@ -21,16 +22,18 @@ public class ActionDeleteConfiguration extends ActionableCommandButton {
     protected void onClick(@NotNull ConfigMetadata selectedMetadata) {
         if (!selectedMetadata.isRemovable()) return;
 
-        DialogRemoveConfiguration dialogRemoveConfiguration = new DialogRemoveConfiguration(module, selectedMetadata);
-
+        DialogRemoveConfiguration dialogRemoveConfiguration = new DialogRemoveConfiguration(module);
         if (dialogRemoveConfiguration.showAndGet()) {
-
-            dialogRemoveConfiguration.delete();
-
-            if (listener != null) {
-                listener.onDeletedConfiguration(selectedMetadata);
+            try {
+                ConfigService.getInstance(module).removeConfig(selectedMetadata);
+                if (listener != null) {
+                    listener.onDeletedConfiguration(selectedMetadata);
+                }
+            } catch (Exception exception) {
+                if (listener != null) {
+                    listener.onDeletedConfigurationError(exception, selectedMetadata);
+                }
             }
-
         }
     }
 
@@ -46,5 +49,7 @@ public class ActionDeleteConfiguration extends ActionableCommandButton {
 
     public interface DeleteCompleteListener {
         void onDeletedConfiguration(ConfigMetadata deletedConfig);
+
+        void onDeletedConfigurationError(Exception exception, ConfigMetadata configMetadata);
     }
 }

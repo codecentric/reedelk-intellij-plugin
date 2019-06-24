@@ -15,9 +15,9 @@ public class ActionNodeRemove {
     private final GraphNode dropped;
     private final FlowGraph graph;
 
-    public ActionNodeRemove(final FlowGraph copy, final GraphNode dropped) {
+    public ActionNodeRemove(final FlowGraph copy, final GraphNode toBeRemoved) {
         this.graph = copy;
-        this.dropped = dropped;
+        this.dropped = toBeRemoved;
     }
 
     public void remove() {
