@@ -1,11 +1,11 @@
 package com.esb.plugin.component.type.router;
 
+import com.esb.plugin.commons.JsonObjectFactory;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.serializer.AbstractScopedNodeSerializer;
-import com.esb.plugin.graph.serializer.JsonObjectFactory;
 import com.esb.plugin.graph.serializer.SerializerFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;

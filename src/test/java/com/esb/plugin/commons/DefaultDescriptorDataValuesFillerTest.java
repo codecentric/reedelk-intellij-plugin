@@ -4,7 +4,6 @@ import com.esb.plugin.component.domain.ComponentDataHolder;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.domain.TypeObjectDescriptor;
 import com.esb.plugin.component.domain.TypePrimitiveDescriptor;
-import com.esb.plugin.graph.serializer.JsonObjectFactory;
 import com.esb.plugin.service.module.impl.ConfigMetadata;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

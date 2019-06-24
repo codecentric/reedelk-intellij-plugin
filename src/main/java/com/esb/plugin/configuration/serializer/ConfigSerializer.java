@@ -1,7 +1,7 @@
 package com.esb.plugin.configuration.serializer;
 
+import com.esb.plugin.commons.JsonObjectFactory;
 import com.esb.plugin.graph.serializer.AbstractSerializer;
-import com.esb.plugin.graph.serializer.JsonObjectFactory;
 import com.esb.plugin.service.module.impl.ConfigMetadata;
 import org.json.JSONObject;
 

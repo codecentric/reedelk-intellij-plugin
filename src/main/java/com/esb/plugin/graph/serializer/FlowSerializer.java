@@ -1,5 +1,6 @@
 package com.esb.plugin.graph.serializer;
 
+import com.esb.plugin.commons.JsonObjectFactory;
 import com.esb.plugin.graph.FlowGraph;
 import org.json.JSONArray;
 import org.json.JSONObject;

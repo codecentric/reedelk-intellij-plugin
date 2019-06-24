@@ -1,5 +1,6 @@
 package com.esb.plugin.service.module.impl;
 
+import com.esb.plugin.commons.JsonObjectComponentHolderDecorator;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.json.JSONObject;
 
@@ -8,7 +9,7 @@ public class ExistingConfigMetadata extends ConfigMetadata {
     private VirtualFile file;
 
     public ExistingConfigMetadata(VirtualFile file, JSONObject configDefinition) {
-        super(configDefinition);
+        super(new JsonObjectComponentHolderDecorator(configDefinition));
         this.file = file;
     }
 

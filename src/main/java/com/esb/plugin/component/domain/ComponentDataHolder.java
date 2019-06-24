@@ -10,4 +10,6 @@ public interface ComponentDataHolder {
 
     void set(String propertyName, Object propertyValue);
 
+    boolean has(String key);
+
 }

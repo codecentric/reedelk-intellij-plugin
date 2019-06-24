@@ -1,19 +1,17 @@
 package com.esb.plugin.configuration.widget;
 
+import com.esb.plugin.commons.JsonObjectFactory;
 import com.esb.plugin.component.domain.TypeObjectDescriptor;
-import com.esb.plugin.graph.serializer.JsonObjectFactory;
 import com.esb.plugin.service.module.ConfigService;
 import com.esb.plugin.service.module.impl.ConfigMetadata;
 import com.esb.plugin.service.module.impl.NewConfigMetadata;
 import com.intellij.openapi.module.Module;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.UUID;
 
 import static com.esb.internal.commons.JsonParser.Config;
-import static com.esb.internal.commons.JsonParser.Implementor;
 import static com.esb.plugin.commons.Icons.Config.Add;
 
 public class ActionAddConfiguration extends ActionableCommandButton {
@@ -36,15 +34,14 @@ public class ActionAddConfiguration extends ActionableCommandButton {
     protected void onClick(ConfigMetadata selectedMetadata) {
         // We ignore the selected. Create new config object.
 
-        JSONObject newConfigJsonObject = JsonObjectFactory.newJSONObject();
+        TypeObjectDescriptor.TypeObject configTypeObject = new TypeObjectDescriptor.TypeObject(typeDescriptor.getTypeFullyQualifiedName());
+        JsonObjectFactory.newJSONObject();
 
-        Implementor.name(typeDescriptor.getTypeFullyQualifiedName(), newConfigJsonObject);
+        configTypeObject.set(Config.id(), UUID.randomUUID().toString());
+        configTypeObject.set(Config.title(), DEFAULT_NEW_CONFIG_TITLE);
 
-        Config.id(UUID.randomUUID().toString(), newConfigJsonObject);
 
-        Config.title(DEFAULT_NEW_CONFIG_TITLE, newConfigJsonObject);
-
-        ConfigMetadata newConfig = new NewConfigMetadata(DEFAULT_CONFIG_FILE_NAME, newConfigJsonObject);
+        ConfigMetadata newConfig = new NewConfigMetadata(DEFAULT_CONFIG_FILE_NAME, configTypeObject);
 
         DialogAddConfiguration dialogAddConfiguration = new DialogAddConfiguration(module, typeDescriptor, newConfig);
 

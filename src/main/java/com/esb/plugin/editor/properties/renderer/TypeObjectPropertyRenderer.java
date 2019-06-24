@@ -15,14 +15,12 @@ import com.esb.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.esb.plugin.editor.properties.widget.DefaultPropertiesPanel;
 import com.esb.plugin.editor.properties.widget.FormBuilder;
 import com.esb.plugin.editor.properties.widget.input.ConfigSelector;
-import com.esb.plugin.graph.serializer.JsonObjectFactory;
 import com.esb.plugin.service.module.ConfigService;
 import com.esb.plugin.service.module.impl.ConfigMetadata;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.awt.RelativePoint;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,9 +38,9 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
     private static final ConfigMetadata UNSELECTED_CONFIG;
 
     static {
-        JSONObject unselectedConfigDefinition = JsonObjectFactory.newJSONObject();
-        Config.id(TypeObject.DEFAULT_CONFIG_REF, unselectedConfigDefinition);
-        Config.title("<Not selected>", unselectedConfigDefinition);
+        TypeObject unselectedConfigDefinition = new TypeObject();
+        unselectedConfigDefinition.set(Config.id(), TypeObject.DEFAULT_CONFIG_REF);
+        unselectedConfigDefinition.set(Config.title(), "<Not selected>");
         UNSELECTED_CONFIG = new ConfigMetadata(unselectedConfigDefinition);
     }
 
@@ -191,10 +189,10 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
                 .filter(configMetadata -> configMetadata.getId().equals(reference))
                 .findFirst()
                 .orElseGet(() -> {
-                    JSONObject configDefinition = JsonObjectFactory.newJSONObject();
-                    Config.title(String.format("Unresolved (%s)", reference), configDefinition);
-                    Config.id(reference, configDefinition);
-                    return new ConfigMetadata(configDefinition);
+                    TypeObject unselectedConfigDefinition = new TypeObject();
+                    unselectedConfigDefinition.set(Config.id(), reference);
+                    unselectedConfigDefinition.set(Config.title(), String.format("Unresolved (%s)", reference));
+                    return new ConfigMetadata(unselectedConfigDefinition);
                 });
     }
 }

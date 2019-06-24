@@ -1,4 +1,4 @@
-package com.esb.plugin.graph.serializer;
+package com.esb.plugin.commons;
 
 import com.intellij.openapi.diagnostic.Logger;
 import org.json.JSONObject;

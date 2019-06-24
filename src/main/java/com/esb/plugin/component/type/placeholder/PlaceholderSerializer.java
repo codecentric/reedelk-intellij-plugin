@@ -1,10 +1,10 @@
 package com.esb.plugin.component.type.placeholder;
 
+import com.esb.plugin.commons.JsonObjectFactory;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.serializer.AbstractNodeSerializer;
-import com.esb.plugin.graph.serializer.JsonObjectFactory;
 import com.esb.system.component.Placeholder;
 import org.json.JSONObject;
 

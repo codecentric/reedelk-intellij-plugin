@@ -31,6 +31,11 @@ public class ComponentData implements ComponentDataHolder {
         componentData.put(propertyName, propertyValue);
     }
 
+    @Override
+    public boolean has(String key) {
+        return componentData.containsKey(key);
+    }
+
     public String getFullyQualifiedName() {
         return descriptor.getFullyQualifiedName();
     }

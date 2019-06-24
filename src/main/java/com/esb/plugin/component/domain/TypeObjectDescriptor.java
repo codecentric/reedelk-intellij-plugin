@@ -59,12 +59,12 @@ public class TypeObjectDescriptor implements TypeDescriptor {
 
         // A type object defined within a flow, must have the
         // implementor fully qualified name information when serialized.
-        private TypeObject(String typeFullyQualifiedName) {
+        public TypeObject(String typeFullyQualifiedName) {
             objectDataHolder.put(JsonParser.Implementor.name(), typeFullyQualifiedName);
         }
 
         // Config ref constructor (does not need implementor name in the serialized json)
-        private TypeObject() {
+        public TypeObject() {
         }
 
         @SuppressWarnings("unchecked")
@@ -81,6 +81,11 @@ public class TypeObjectDescriptor implements TypeDescriptor {
         @Override
         public void set(String propertyName, Object propertyValue) {
             objectDataHolder.put(propertyName, propertyValue);
+        }
+
+        @Override
+        public boolean has(String key) {
+            return objectDataHolder.containsKey(key);
         }
     }
 

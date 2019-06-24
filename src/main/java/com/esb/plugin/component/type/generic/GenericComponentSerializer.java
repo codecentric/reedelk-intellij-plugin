@@ -1,12 +1,12 @@
 package com.esb.plugin.component.type.generic;
 
+import com.esb.plugin.commons.JsonObjectFactory;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.domain.ComponentDataHolder;
 import com.esb.plugin.component.domain.TypeObjectDescriptor;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.serializer.AbstractNodeSerializer;
-import com.esb.plugin.graph.serializer.JsonObjectFactory;
 import org.json.JSONObject;
 
 import static com.esb.internal.commons.JsonParser.Implementor;

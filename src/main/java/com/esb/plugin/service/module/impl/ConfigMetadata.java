@@ -2,7 +2,6 @@ package com.esb.plugin.service.module.impl;
 
 import com.esb.plugin.component.domain.ComponentDataHolder;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,15 +13,15 @@ public class ConfigMetadata implements ComponentDataHolder {
 
     private final String ABSENT_FILE = "";
 
-    private final JSONObject configDefinition;
+    private final ComponentDataHolder configDefinition;
 
-    public ConfigMetadata(@NotNull JSONObject configDefinition) {
+    public ConfigMetadata(@NotNull ComponentDataHolder configDefinition) {
         this.configDefinition = configDefinition;
     }
 
     @Override
     public List<String> keys() {
-        return new ArrayList<>(configDefinition.keySet());
+        return new ArrayList<>(configDefinition.keys());
     }
 
     @Override
@@ -32,23 +31,28 @@ public class ConfigMetadata implements ComponentDataHolder {
 
     @Override
     public void set(String propertyName, Object propertyValue) {
-        configDefinition.put(propertyName, propertyValue);
+        configDefinition.set(propertyName, propertyValue);
+    }
+
+    @Override
+    public boolean has(String key) {
+        return configDefinition.has(key);
     }
 
     public String getId() {
-        return configDefinition.getString(Config.id());
+        return configDefinition.get(Config.id());
     }
 
     public String getTitle() {
-        return configDefinition.getString(Config.title());
+        return configDefinition.get(Config.title());
     }
 
     public void setTitle(String newTitle) {
-        configDefinition.put(Config.title(), newTitle);
+        configDefinition.set(Config.title(), newTitle);
     }
 
     public String getFullyQualifiedName() {
-        return configDefinition.getString(Implementor.name());
+        return configDefinition.get(Implementor.name());
     }
 
     /**
