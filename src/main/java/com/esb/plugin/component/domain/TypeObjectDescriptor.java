@@ -39,6 +39,8 @@ public class TypeObjectDescriptor implements TypeDescriptor {
         return objectProperties;
     }
 
+    // If the type object is not shareable, then the serialized
+    // json does not contain the fully qualified name
     public TypeObject newInstance() {
         return shareable ?
                 new TypeObject() :

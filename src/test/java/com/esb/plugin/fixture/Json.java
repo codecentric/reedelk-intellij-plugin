@@ -61,6 +61,20 @@ public class Json {
             public String path() {
                 return "generic_component_sample.json";
             }
+        },
+
+        WithTypeObject {
+            @Override
+            public String path() {
+                return "generic_component_with_type_object.json";
+            }
+        },
+
+        WithTypeObjectReference {
+            @Override
+            public String path() {
+                return "generic_component_with_type_object_reference.json";
+            }
         }
     }
 

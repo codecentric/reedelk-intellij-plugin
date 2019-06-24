@@ -28,17 +28,16 @@ public class DefaultDescriptorDataValuesFiller {
     }
 
     private static void fillTypeObject(ComponentDataHolder dataHolder, String propertyName, TypeObjectDescriptor propertyType) {
+        TypeObject nested = propertyType.newInstance();
         if (propertyType.isShareable()) {
             // If the property is shareable, we initialize it with default config ref
-            TypeObject nested = propertyType.newInstance();
             nested.set(Component.configRef(), TypeObject.DEFAULT_CONFIG_REF);
             dataHolder.set(propertyName, nested);
 
         } else {
             // Recursively fill the content of this object
-            TypeObject typeObject = propertyType.newInstance();
-            dataHolder.set(propertyName, typeObject);
-            fill(typeObject, propertyType.getObjectProperties());
+            dataHolder.set(propertyName, nested);
+            fill(nested, propertyType.getObjectProperties());
         }
     }
 }
