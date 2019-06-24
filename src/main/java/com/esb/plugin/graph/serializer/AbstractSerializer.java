@@ -22,8 +22,8 @@ public abstract class AbstractSerializer {
 
     protected abstract String serialize();
 
-    protected static class UntilNoSuccessors extends StopNode {
-        UntilNoSuccessors() {
+    public static class UntilNoSuccessors extends StopNode {
+        public UntilNoSuccessors() {
             super(new ComponentData(ComponentDefaultDescriptor.create().build()));
         }
     }

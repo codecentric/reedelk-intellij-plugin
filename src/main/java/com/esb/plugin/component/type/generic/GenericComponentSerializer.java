@@ -31,13 +31,16 @@ public class GenericComponentSerializer extends AbstractNodeSerializer {
         componentData.keys().forEach(propertyName -> {
             Object data = componentData.get(propertyName);
             if (data instanceof TypeObjectDescriptor.TypeObject) {
-                TypeObjectDescriptor.TypeObject object = (TypeObjectDescriptor.TypeObject) data;
-                JSONObject nestedObject = JsonObjectFactory.newJSONObject();
-                parent.put(propertyName, nestedObject);
-                serialize(object, nestedObject);
+                serializeTypeObject(parent, propertyName, (TypeObjectDescriptor.TypeObject) data);
             } else {
                 parent.put(propertyName, data);
             }
         });
+    }
+
+    private void serializeTypeObject(JSONObject parent, String propertyName, TypeObjectDescriptor.TypeObject data) {
+        JSONObject nestedObjectJson = JsonObjectFactory.newJSONObject();
+        parent.put(propertyName, nestedObjectJson);
+        serialize(data, nestedObjectJson);
     }
 }
