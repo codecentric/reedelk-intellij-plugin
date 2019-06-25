@@ -36,7 +36,7 @@ public class ForkNode extends AbstractScopedGraphNode {
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         super.draw(graph, graphics, observer);
-        icon.draw(graph, graphics, observer);
+        icon.draw(graphics, observer);
         verticalDivider.draw(graph, graphics, observer);
     }
 
