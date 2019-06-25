@@ -21,7 +21,7 @@ import java.util.Optional;
 
 public abstract class AbstractGraphNode implements GraphNode {
 
-    public static final int WIDTH = 110;
+    public static final int WIDTH = 120;
     public static final int HEIGHT = 140;
 
     private final ComponentData componentData;
@@ -57,20 +57,16 @@ public abstract class AbstractGraphNode implements GraphNode {
             selectedBox.setPosition(x, y);
             selectedBox.draw(this, graphics);
 
-            // Remove icon is on upper top-right corner
-            int topRightX = x + Half.of(width(graphics)) - Half.of(removeComponentIcon.width());
-            int topRightY = y - Half.of(height(graphics)) + Half.of(removeComponentIcon.height());
-            removeComponentIcon.setPosition(topRightX, topRightY);
-            removeComponentIcon.draw(graphics, observer);
+            drawRemoveComponentIcon(graphics, observer);
         }
-        icon.draw(graph, graphics, observer);
+        icon.draw(graphics, observer);
     }
 
     @Override
     public void drawDrag(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         if (dragging) {
             draggedIcon.setPosition(draggedX, draggedY);
-            draggedIcon.draw(graph, graphics, observer);
+            draggedIcon.draw(graphics, observer);
         }
     }
 
@@ -116,7 +112,7 @@ public abstract class AbstractGraphNode implements GraphNode {
 
     @Override
     public int height(Graphics2D graphics) {
-        return HEIGHT;
+        return icon.height(graphics);
     }
 
     @Override
@@ -191,6 +187,14 @@ public abstract class AbstractGraphNode implements GraphNode {
         return componentData.getFullyQualifiedName();
     }
 
+    protected void drawRemoveComponentIcon(Graphics2D graphics, ImageObserver observer) {
+        // Remove icon is on upper top-right corner
+        int topRightX = x + Half.of(width(graphics)) - Half.of(removeComponentIcon.width());
+        int topRightY = y - Half.of(height(graphics)) + Half.of(removeComponentIcon.height());
+        removeComponentIcon.setPosition(topRightX, topRightY);
+        removeComponentIcon.draw(graphics, observer);
+    }
+
     /**
      * Draws connections between this node and the next one. If this is the last
      * node of the scope, don't draw any outgoing arrow.
@@ -207,7 +211,7 @@ public abstract class AbstractGraphNode implements GraphNode {
         drawTheArrows(graph, graphics);
     }
 
-    private boolean withinRemoveIcon(int x, int y) {
+    protected boolean withinRemoveIcon(int x, int y) {
         int xLeft = this.x + Half.of(WIDTH) - 16;
         int yTop = this.y - 67;
         int xRight = xLeft + 13;
