@@ -1,12 +1,13 @@
 package com.esb.plugin.editor.designer;
 
-import com.esb.plugin.commons.Half;
 import com.esb.plugin.commons.PrintFlowInfo;
+import com.esb.plugin.editor.designer.widget.CenterOfNode;
+import com.esb.plugin.editor.designer.widget.FlowMetadata;
+import com.esb.plugin.editor.designer.widget.InboundLane;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.SnapshotListener;
 import com.esb.plugin.graph.layout.FlowGraphLayout;
-import com.esb.plugin.graph.layout.utils.ComputeMaxHeight;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.NothingSelectedNode;
 import com.intellij.openapi.diagnostic.Logger;
@@ -25,10 +26,8 @@ import java.awt.dnd.DropTargetListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
@@ -37,6 +36,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     private static final Logger LOG = Logger.getInstance(DesignerPanel.class);
 
+    private final int TOP_PADDING = 80;
     private static final int WINDOW_GROW_STEP = 110;
     private static final JBColor BACKGROUND_COLOR = JBColor.WHITE;
     private final GraphNode NOTHING_SELECTED = new NothingSelectedNode();
@@ -50,8 +50,11 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     private boolean updated = false;
     private boolean dragging;
 
-    private final DesignerPanelActionHandler actionHandler;
+    private InboundLane inboundLane;
+    private FlowMetadata flowMetadata;
+    private CenterOfNode centerOfNode;
 
+    private final DesignerPanelActionHandler actionHandler;
 
 
     public DesignerPanel(FlowSnapshot snapshot, DesignerPanelActionHandler actionHandler) {
@@ -60,9 +63,13 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         addMouseMotionListener(this);
 
         this.actionHandler = actionHandler;
-
         this.snapshot = snapshot;
         this.snapshot.addListener(this);
+
+        this.centerOfNode = new CenterOfNode(snapshot);
+        this.inboundLane = new InboundLane(snapshot, TOP_PADDING);
+        this.flowMetadata = new FlowMetadata(snapshot, TOP_PADDING);
+
 
         registerAncestorListener();
     }
@@ -92,8 +99,9 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
         }
 
-        // Draw Incoming bar
-        drawInboundSegment(snapshot, g2);
+        inboundLane.draw(g2);
+
+        flowMetadata.draw(g2);
 
         long start = System.currentTimeMillis();
 
@@ -110,18 +118,9 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
         LOG.info("Painted in " + end + " ms");
 
-        drawCenter(snapshot, g2);
+        centerOfNode.draw(g2);
 
         g2.dispose();
-    }
-
-    private void drawCenter(FlowSnapshot snapshot, Graphics2D g2) {
-        snapshot.getGraph().breadthFirstTraversal(new Consumer<GraphNode>() {
-            @Override
-            public void accept(GraphNode node) {
-                g2.drawOval(node.x() - 5, node.y() - 5, 10, 10);
-            }
-        });
     }
 
     @Override
@@ -304,46 +303,5 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
                 unselect();
             }
         });
-    }
-
-    private final Stroke dashed = new BasicStroke(0.7f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{3}, 0);
-    private final String INBOUND_STRING = "Event";
-    private final int TOP_PADDING = 80;
-
-
-    private void drawInboundSegment(FlowSnapshot snapshot, Graphics2D graphics) {
-        graphics.setColor(JBColor.GRAY);
-        Font font = graphics.getFont().deriveFont(20f);
-        graphics.setFont(font);
-        int width;
-        int height = TOP_PADDING;
-        if (snapshot.getGraph().isEmpty()) {
-            // Center the string
-            width = AbstractGraphNode.WIDTH;
-            height += AbstractGraphNode.HEIGHT;
-        } else {
-            GraphNode root = snapshot.getGraph().root();
-            width = root.width(graphics);
-            height += ComputeMaxHeight.of(snapshot.getGraph(), graphics, root);
-        }
-        Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(INBOUND_STRING, graphics);
-        double inboundTextWidth = stringBounds.getWidth();
-
-
-        graphics.setStroke(dashed);
-        graphics.drawLine(width, 0, width, height);
-        graphics.drawString(INBOUND_STRING, Half.of(width) - Half.of(inboundTextWidth), Half.of(TOP_PADDING));
-
-        String title = snapshot.getGraph().title();
-        stringBounds = graphics.getFontMetrics().getStringBounds(title, graphics);
-        double titleTextWidth = stringBounds.getWidth();
-        graphics.drawString(title, width + 20, Half.of(TOP_PADDING));
-
-        font = graphics.getFont().deriveFont(13f);
-        graphics.setFont(font);
-        String description = snapshot.getGraph().description();
-        stringBounds = graphics.getFontMetrics().getStringBounds(description, graphics);
-
-        graphics.drawString(description, width + 20, Half.of(TOP_PADDING) + (int) stringBounds.getHeight() + 5);
     }
 }
