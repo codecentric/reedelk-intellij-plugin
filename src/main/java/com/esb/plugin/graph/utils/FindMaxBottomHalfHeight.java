@@ -16,7 +16,9 @@ public class FindMaxBottomHalfHeight {
 
     public static int of(FlowGraph graph, Graphics2D graphics, GraphNode start, GraphNode firstNodeOutsideScope) {
         int currentMax = start.bottomHalfHeight(graphics);
+
         List<GraphNode> nextNodes = singletonList(start);
+
         return of(graph, graphics, nextNodes, firstNodeOutsideScope, currentMax);
     }
 
@@ -53,6 +55,8 @@ public class FindMaxBottomHalfHeight {
 
             } else {
 
+                //  If the current node has a bottom half height
+                // taller than the current max, then replace the current max.
                 if (node.bottomHalfHeight(graphics) > newMax) {
                     newMax = node.bottomHalfHeight(graphics);
                 }
