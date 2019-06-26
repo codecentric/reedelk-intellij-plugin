@@ -65,7 +65,7 @@ public class MoveActionHandler {
         // 2. Remove the dropped node from the copy graph
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
 
-        ActionNodeRemove componentRemover = new ActionNodeRemove(modifiableGraph, selected);
+        ActionNodeRemove componentRemover = new ActionNodeRemove(module, modifiableGraph, selected);
         componentRemover.remove();
 
         // 3. Remove the dropped node from any scope it might belong to

@@ -26,7 +26,7 @@ public class RemoveActionHandler {
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(snapshot.getGraph().copy());
 
         // 1. Remove the node
-        ActionNodeRemove componentRemover = new ActionNodeRemove(modifiableGraph, nodeToRemove);
+        ActionNodeRemove componentRemover = new ActionNodeRemove(module, modifiableGraph, nodeToRemove);
         componentRemover.remove();
 
         // 2. Remove the node from any scope it might belong to
