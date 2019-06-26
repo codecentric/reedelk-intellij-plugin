@@ -29,11 +29,17 @@ public class FlowGraphLayout {
     }
 
     public static void compute(FlowGraph graph, Graphics2D graphics, int topPadding) {
+
         FlowGraphLayers layers = new FlowGraphLayers(graph);
+
         List<List<GraphNode>> layersList = layers.compute();
+
         if (!graph.isEmpty()) {
+
             List<GraphNode> currentNodesToProcess = Collections.singletonList(graph.root());
+
             compute(topPadding, graph, graphics, currentNodesToProcess, layersList);
+
         }
     }
 

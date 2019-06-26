@@ -310,6 +310,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     private final String INBOUND_STRING = "Event";
     private final int TOP_PADDING = 80;
 
+
     private void drawInboundSegment(FlowSnapshot snapshot, Graphics2D graphics) {
         graphics.setColor(JBColor.GRAY);
         Font font = graphics.getFont().deriveFont(20f);
@@ -332,5 +333,17 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         graphics.setStroke(dashed);
         graphics.drawLine(width, 0, width, height);
         graphics.drawString(INBOUND_STRING, Half.of(width) - Half.of(inboundTextWidth), Half.of(TOP_PADDING));
+
+        String title = snapshot.getGraph().title();
+        stringBounds = graphics.getFontMetrics().getStringBounds(title, graphics);
+        double titleTextWidth = stringBounds.getWidth();
+        graphics.drawString(title, width + 20, Half.of(TOP_PADDING));
+
+        font = graphics.getFont().deriveFont(13f);
+        graphics.setFont(font);
+        String description = snapshot.getGraph().description();
+        stringBounds = graphics.getFontMetrics().getStringBounds(description, graphics);
+
+        graphics.drawString(description, width + 20, Half.of(TOP_PADDING) + (int) stringBounds.getHeight() + 5);
     }
 }
