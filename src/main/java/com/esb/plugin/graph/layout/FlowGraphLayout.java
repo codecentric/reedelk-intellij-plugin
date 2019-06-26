@@ -42,8 +42,50 @@ public class FlowGraphLayout {
     }
 
     private static void compute(int top, FlowGraph graph, Graphics2D graphics, List<GraphNode> nodes, List<List<GraphNode>> layers) {
-        if (nodes.size() == 1) {
+        if (nodes.isEmpty()) {
+            // Nothing to compute
+            return;
+        }
+
+        // If layer following a scoped node.
+        if (isLayerFollowingScopedNode(graph, nodes)) {
+
+            // Successors can be > 1 only when predecessor is ScopedGraphNode
+            GraphNode commonParent = FindCommonParent.of(graph, nodes);
+
+            // The common parent must be a scoped node since only
+            // scoped nodes can have more than one successor
+            checkState(commonParent instanceof ScopedGraphNode);
+
+            Optional<GraphNode> optionalFirstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, (ScopedGraphNode) commonParent);
+            GraphNode firstNodeOutsideScope = optionalFirstNodeOutsideScope.orElse(null);
+
+            int maxSubTreeHeight = ComputeMaxHeight.of(graph, graphics, commonParent, firstNodeOutsideScope);
+
+            // Vertical padding because it is inside a scope
+            top = VERTICAL_PADDING + commonParent.y() - Half.of(maxSubTreeHeight);
+
+
+            for (GraphNode node : nodes) {
+
+                // If the node it is a scope, we need to add Padding
+                if (node instanceof ScopedGraphNode) {
+                    top += VERTICAL_PADDING;
+                }
+
+                computeXAndYCoordiantes(top, graph, graphics, layers, node, firstNodeOutsideScope);
+
+                // Recursively assign position to other successors of current node
+                compute(top, graph, graphics, graph.successors(node), layers);
+
+                // The new top is the tallest bottom half until the first node outside the scope
+                top = node.y() + FindMaxBottomHalfHeight.of(graph, graphics, node, firstNodeOutsideScope);
+            }
+
+            // It is not a layer following a scoped node
+        } else {
             GraphNode node = nodes.get(0);
+
             List<GraphNode> predecessors = graph.predecessors(node);
 
             // Root
@@ -85,43 +127,13 @@ public class FlowGraphLayout {
 
                 compute(top, graph, graphics, graph.successors(node), layers);
             }
-
-
-            // Layer with multiple nodes: center them all in their respective subtrees.
-        } else if (nodes.size() > 1) {
-
-            // Successors can be > 1 only when predecessor is ScopedGraphNode
-            GraphNode commonParent = FindCommonParent.of(graph, nodes);
-
-            // The common parent must be a scoped node since only
-            // scoped nodes can have more than one successor
-            checkState(commonParent instanceof ScopedGraphNode);
-
-            Optional<GraphNode> optionalFirstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, (ScopedGraphNode) commonParent);
-            GraphNode firstNodeOutsideScope = optionalFirstNodeOutsideScope.orElse(null);
-
-            int maxSubTreeHeight = ComputeMaxHeight.of(graph, graphics, commonParent, firstNodeOutsideScope);
-
-            // Vertical padding because it is inside a scope
-            top = VERTICAL_PADDING + commonParent.y() - Half.of(maxSubTreeHeight);
-
-
-            for (GraphNode node : nodes) {
-
-                // If the node it is a scope, we need to add Padding
-                if (node instanceof ScopedGraphNode) {
-                    top += VERTICAL_PADDING;
-                }
-
-                computeXAndYCoordiantes(top, graph, graphics, layers, node, firstNodeOutsideScope);
-
-                // Recursively assign position to other successors of current node
-                compute(top, graph, graphics, graph.successors(node), layers);
-
-                // The new top is the tallest bottom half until the first node outside the scope
-                top = node.y() + FindMaxBottomHalfHeight.of(graph, graphics, node, firstNodeOutsideScope);
-            }
         }
+    }
+
+    private static boolean isLayerFollowingScopedNode(FlowGraph graph, List<GraphNode> nodes) {
+        if (nodes.isEmpty()) return false;
+        List<GraphNode> predecessor = graph.predecessors(nodes.get(0));
+        return predecessor.size() == 1 && predecessor.get(0) instanceof ScopedGraphNode;
     }
 
     private static void computeXAndYCoordiantes(int top, FlowGraph graph, Graphics2D graphics, List<List<GraphNode>> layers, GraphNode node, GraphNode stop) {
