@@ -9,9 +9,9 @@ import com.esb.plugin.graph.layout.utils.FindContainingLayer;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopeBoundaries;
 import com.esb.plugin.graph.node.ScopedGraphNode;
-import com.esb.plugin.graph.utils.FindBottomHalfHeight;
 import com.esb.plugin.graph.utils.FindFirstNodeOutsideScope;
 import com.esb.plugin.graph.utils.FindJoiningScope;
+import com.esb.plugin.graph.utils.FindMaxBottomHalfHeight;
 import com.esb.plugin.graph.utils.FindTopHalfHeight;
 
 import java.awt.*;
@@ -140,7 +140,7 @@ public class FlowGraphLayout {
                 compute(top, graph, graphics, graph.successors(node), layers);
 
                 // The new top is the tallest bottom half until the first node outside the scope
-                top = YCoordinate + FindBottomHalfHeight.of(graph, graphics, node, firstNodeOutsideScope, node.bottomHalfHeight(graphics));
+                top = YCoordinate + FindMaxBottomHalfHeight.of(graph, graphics, node, firstNodeOutsideScope);
             }
         }
     }

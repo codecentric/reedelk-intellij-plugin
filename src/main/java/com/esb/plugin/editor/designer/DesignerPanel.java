@@ -58,10 +58,6 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
 
     public DesignerPanel(FlowSnapshot snapshot, DesignerPanelActionHandler actionHandler) {
-        setBackground(BACKGROUND_COLOR);
-        addMouseListener(this);
-        addMouseMotionListener(this);
-
         this.actionHandler = actionHandler;
         this.snapshot = snapshot;
         this.snapshot.addListener(this);
@@ -70,8 +66,10 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         this.inboundLane = new InboundLane(snapshot, TOP_PADDING);
         this.flowMetadata = new FlowMetadata(snapshot, TOP_PADDING);
 
-
+        setBackground(BACKGROUND_COLOR);
         registerAncestorListener();
+        addMouseListener(this);
+        addMouseMotionListener(this);
     }
 
     @Override
