@@ -65,14 +65,14 @@ public class StrategyBuilder {
                     new SubFlowAddRootStrategy(graph) :
                     new FlowAddRootStrategy(graph);
 
+        } else if (overlapsPlaceholder(graph, dropPoint)) {
+            GraphNode overlappingPlaceholder = getOverlappingPlaceholder(graph, dropPoint);
+            strategy = new ReplacePlaceholderStrategy(graph, overlappingPlaceholder);
+
         } else if (isReplacingRoot(graph, dropPoint)) {
             strategy = isSubflow ?
                     new SubFlowReplaceRootStrategy(graph) :
                     new FlowReplaceRootStrategy(graph);
-
-        } else if (overlapsPlaceholder(graph, dropPoint)) {
-            GraphNode overlappingPlaceholder = getOverlappingPlaceholder(graph, dropPoint);
-            strategy = new ReplacePlaceholderStrategy(graph, overlappingPlaceholder);
 
         } else {
 
