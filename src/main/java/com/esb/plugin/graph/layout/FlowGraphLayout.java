@@ -12,7 +12,7 @@ import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.FindFirstNodeOutsideScope;
 import com.esb.plugin.graph.utils.FindJoiningScope;
 import com.esb.plugin.graph.utils.FindMaxBottomHalfHeight;
-import com.esb.plugin.graph.utils.FindTopHalfHeight;
+import com.esb.plugin.graph.utils.FindMaxTopHalfHeight;
 
 import java.awt.*;
 import java.util.Collections;
@@ -23,6 +23,8 @@ import static com.esb.plugin.graph.node.ScopedGraphNode.VERTICAL_PADDING;
 import static com.google.common.base.Preconditions.checkState;
 
 public class FlowGraphLayout {
+
+    private static final GraphNode UNTIL_NO_SUCCESSORS = null;
 
     public static void compute(FlowGraph graph, Graphics2D graphics) {
         compute(graph, graphics, 0);
@@ -57,7 +59,7 @@ public class FlowGraphLayout {
                         ComputeLayerWidthSumPreceding.of(graph, graphics, layers, containingLayerIndex);
 
                 // Compute new Y coordinate
-                int topHalfHeight = FindTopHalfHeight.of(graph, graphics, node, null, node.topHalfHeight(graphics));
+                int topHalfHeight = FindMaxTopHalfHeight.of(graph, graphics, node, UNTIL_NO_SUCCESSORS);
                 int YCoordinate = top + topHalfHeight;
 
                 node.setPosition(XCoordinate, YCoordinate);
@@ -131,7 +133,7 @@ public class FlowGraphLayout {
 
                 // Compute new Y coordinate: the top half height is needed since there might
                 // be nodes with a longer bottom half, for instance when a description is very long.
-                int maxTopHalfHeight = FindTopHalfHeight.of(graph, graphics, node, firstNodeOutsideScope, node.topHalfHeight(graphics));
+                int maxTopHalfHeight = FindMaxTopHalfHeight.of(graph, graphics, node, firstNodeOutsideScope);
                 int YCoordinate = top + maxTopHalfHeight;
 
                 node.setPosition(XCoordinate, YCoordinate);

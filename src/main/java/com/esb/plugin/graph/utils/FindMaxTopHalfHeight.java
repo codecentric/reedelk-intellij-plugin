@@ -6,15 +6,15 @@ import com.esb.plugin.graph.node.GraphNode;
 
 import java.awt.*;
 
-public class FindMaxBottomHalfHeight extends AbstractFindMaxHeight {
+public class FindMaxTopHalfHeight extends AbstractFindMaxHeight {
 
-    private static final FindMaxBottomHalfHeight INSTANCE = new FindMaxBottomHalfHeight();
+    private static final FindMaxTopHalfHeight INSTANCE = new FindMaxTopHalfHeight();
 
     public static int of(FlowGraph graph, Graphics2D graphics, GraphNode start, GraphNode firstNodeOutsideScope) {
         return INSTANCE._of(graph, graphics, start, firstNodeOutsideScope);
     }
 
-    private FindMaxBottomHalfHeight() {
-        super(Drawable::bottomHalfHeight);
+    private FindMaxTopHalfHeight() {
+        super(Drawable::topHalfHeight);
     }
 }

@@ -139,4 +139,34 @@ class FindMaxBottomHalfHeightTest extends AbstractGraphTest {
         assertThat(maxBottomHalfHeight).isEqualTo(410);
     }
 
+    @Test
+    void shouldFindBottomHalfCorrectlyBetweenTwoSubsequentScopedNodes() {
+        // Given
+        graph.root(root);
+        graph.add(root, forkNode1);
+        graph.add(forkNode1, forkNode2);
+        graph.add(forkNode2, componentNode1Spy);
+        graph.add(forkNode2, componentNode2Spy);
+        graph.add(componentNode1Spy, forkNode3);
+        graph.add(componentNode2Spy, forkNode3);
+        graph.add(forkNode3, componentNode3Spy);
+        graph.add(forkNode3, componentNode4Spy);
+
+        forkNode1.addToScope(forkNode2);
+        forkNode1.addToScope(forkNode3);
+
+        forkNode2.addToScope(componentNode1Spy);
+        forkNode2.addToScope(componentNode2Spy);
+
+        forkNode3.addToScope(componentNode3Spy);
+        forkNode3.addToScope(componentNode4Spy);
+
+        // When
+        int maxBottomHalfHeight =
+                FindMaxBottomHalfHeight.of(graph, graphics, forkNode2, UNTIL_LAST_NODE);
+
+        // Then
+        assertThat(maxBottomHalfHeight).isEqualTo(Half.of(150 + 470 + 5 + 5));
+    }
+
 }

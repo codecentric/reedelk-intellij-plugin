@@ -30,7 +30,6 @@ public class FindFirstNodeOutsideCurrentScope {
 
         ListLastNodesOfScope.from(graph, target)
                 .forEach(lastNodeOfScope -> {
-
                     List<GraphNode> successors = graph.successors(lastNodeOfScope);
                     // If the target does not belong to any scope,
                     // then we can add all successors, since they
@@ -46,7 +45,6 @@ public class FindFirstNodeOutsideCurrentScope {
                             }
                         });
                     }
-
                 });
 
         checkState(firstNodesOutsideScope.isEmpty() ||
