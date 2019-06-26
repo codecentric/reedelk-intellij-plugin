@@ -9,8 +9,10 @@ import com.esb.plugin.graph.layout.utils.FindContainingLayer;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopeBoundaries;
 import com.esb.plugin.graph.node.ScopedGraphNode;
+import com.esb.plugin.graph.utils.FindBottomHalfHeight;
 import com.esb.plugin.graph.utils.FindFirstNodeOutsideScope;
 import com.esb.plugin.graph.utils.FindJoiningScope;
+import com.esb.plugin.graph.utils.FindTopHalfHeight;
 
 import java.awt.*;
 import java.util.Collections;
@@ -23,11 +25,15 @@ import static com.google.common.base.Preconditions.checkState;
 public class FlowGraphLayout {
 
     public static void compute(FlowGraph graph, Graphics2D graphics) {
+        compute(graph, graphics, 0);
+    }
+
+    public static void compute(FlowGraph graph, Graphics2D graphics, int topPadding) {
         FlowGraphLayers layers = new FlowGraphLayers(graph);
         List<List<GraphNode>> layersList = layers.compute();
         if (!graph.isEmpty()) {
             List<GraphNode> currentNodesToProcess = Collections.singletonList(graph.root());
-            compute(0, graph, graphics, currentNodesToProcess, layersList);
+            compute(topPadding, graph, graphics, currentNodesToProcess, layersList);
         }
     }
 
@@ -39,15 +45,16 @@ public class FlowGraphLayout {
             // Root
             if (predecessors.isEmpty()) {
 
-                // Find layer containing this node
+                // Compute new X coordinate
                 int containingLayerIndex = FindContainingLayer.of(layers, node);
+                int XCoordinate = Half.of(node.width(graphics)) +
+                        ComputeLayerWidthSumPreceding.of(graph, graphics, layers, containingLayerIndex);
 
-                // Center in subtree
-                int maxSubtreeHeight = ComputeMaxHeight.of(graph, graphics, node);
+                // Compute new Y coordinate
+                int topHalfHeight = FindTopHalfHeight.of(graph, graphics, node, null, node.topHalfHeight(graphics));
+                int YCoordinate = top + topHalfHeight;
 
-                int tmpX = Half.of(node.width(graphics)) + ComputeLayerWidthSumPreceding.of(graph, graphics, layers, containingLayerIndex);
-                int tmpY = top + Half.of(maxSubtreeHeight);
-                node.setPosition(tmpX, tmpY);
+                node.setPosition(XCoordinate, YCoordinate);
 
                 compute(top, graph, graphics, graph.successors(node), layers);
 
@@ -57,8 +64,7 @@ public class FlowGraphLayout {
 
                 // Find layer containing this node
                 int containingLayerIndex = FindContainingLayer.of(layers, node);
-
-                int tmpX = Half.of(node.width(graphics)) +
+                int XCoordinate = Half.of(node.width(graphics)) +
                         ComputeLayerWidthSumPreceding.of(graph, graphics, layers, containingLayerIndex);
 
                 // If it is the first node outside a scope, center it in the middle of the scope
@@ -67,7 +73,7 @@ public class FlowGraphLayout {
                 // Otherwise take min and max.
                 Optional<ScopedGraphNode> scopeItIsJoining = FindJoiningScope.of(graph, node);
 
-                // TODO: what if int not present?!
+                // Predecessors must not be empty
                 int min = predecessors.stream().mapToInt(GraphNode::y).min().getAsInt();
                 int max = predecessors.stream().mapToInt(GraphNode::y).max().getAsInt();
 
@@ -80,9 +86,9 @@ public class FlowGraphLayout {
                     max = scope.y() + Half.of(scopeBoundaries.getHeight());
                 }
 
-                int tmpY = Half.of(max + min);
+                int YCoordinate = Half.of(max + min);
 
-                node.setPosition(tmpX, tmpY);
+                node.setPosition(XCoordinate, YCoordinate);
 
                 if (node instanceof ScopedGraphNode) {
                     top += VERTICAL_PADDING; // top padding
@@ -93,11 +99,12 @@ public class FlowGraphLayout {
 
 
         } else if (nodes.size() > 1) {
-            // Layer with multiple nodes.
-            // Center them all in their respective subtrees.
+            // Layer with multiple nodes: center them all in their respective subtrees.
             // Successors can be > 1 only when predecessor is ScopedGraphNode
-            GraphNode commonParent = FindCommonParent.of(graph, nodes); // common parent must be (scoped node)
+            GraphNode commonParent = FindCommonParent.of(graph, nodes);
 
+            // The common parent must be a scoped node since only
+            // scoped nodes can have more than one successor
             checkState(commonParent instanceof ScopedGraphNode);
 
             Optional<GraphNode> optionalFirstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, (ScopedGraphNode) commonParent);
@@ -105,40 +112,33 @@ public class FlowGraphLayout {
 
             int maxSubTreeHeight = ComputeMaxHeight.of(graph, graphics, commonParent, firstNodeOutsideScope);
 
+            // Vertical padding because it is inside a scope
             top = VERTICAL_PADDING + commonParent.y() - Half.of(maxSubTreeHeight);
 
 
             for (GraphNode node : nodes) {
 
-                // Find layer containing this node
-                int containingLayerIndex = FindContainingLayer.of(layers, node);
-
-                // Center in subtree
                 if (node instanceof ScopedGraphNode) {
                     top += VERTICAL_PADDING; // top padding
                 }
 
-                int tmpX = Half.of(node.width(graphics)) +
+                // Compute new X coordinate
+                int containingLayerIndex = FindContainingLayer.of(layers, node);
+                int XCoordinate = Half.of(node.width(graphics)) +
                         ComputeLayerWidthSumPreceding.of(graph, graphics, layers, containingLayerIndex);
 
-                int maxSubtreeHeight = ComputeMaxHeight.of(graph, graphics, node, firstNodeOutsideScope);
+                // Compute new Y coordinate: the top half height is needed since there might
+                // be nodes with a longer bottom half, for instance when a description is very long.
+                int maxTopHalfHeight = FindTopHalfHeight.of(graph, graphics, node, firstNodeOutsideScope, node.topHalfHeight(graphics));
+                int YCoordinate = top + maxTopHalfHeight;
 
-                // We must subtract the current padding since it
-                // was added while computing max subtree height as well.
-                if (node instanceof ScopedGraphNode) {
-                    maxSubtreeHeight -= (VERTICAL_PADDING + VERTICAL_PADDING); // top and bottom
-                }
+                node.setPosition(XCoordinate, YCoordinate);
 
-                int tmpY = top + Half.of(maxSubtreeHeight);
-                node.setPosition(tmpX, tmpY);
-
+                // Recursively assign position to other successors of current node
                 compute(top, graph, graphics, graph.successors(node), layers);
 
-                if (node instanceof ScopedGraphNode) {
-                    top += VERTICAL_PADDING; // bottom padding
-                }
-
-                top += maxSubtreeHeight;
+                // The new top is the tallest bottom half until the first node outside the scope
+                top = YCoordinate + FindBottomHalfHeight.of(graph, graphics, node, firstNodeOutsideScope, node.bottomHalfHeight(graphics));
             }
         }
     }

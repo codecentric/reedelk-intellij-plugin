@@ -2,7 +2,6 @@ package com.esb.plugin.editor.designer.widget;
 
 import com.esb.plugin.commons.Half;
 import com.esb.plugin.component.domain.ComponentData;
-import com.esb.plugin.graph.FlowGraph;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
@@ -12,7 +11,8 @@ import java.awt.image.ImageObserver;
  */
 public class Icon {
 
-    private static final int TOP_OFFSET = 5;
+    private static final int TOP_PADDING = 10;
+
     private static final int ICON_WIDTH = 60;
     private static final int ICON_HEIGHT = 60;
     private static final int HALF_ICON_WIDTH = Half.of(ICON_WIDTH);
@@ -33,7 +33,7 @@ public class Icon {
         textComponentDescription = new TextComponentDescription(componentData);
     }
 
-    public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+    public void draw(Graphics2D graphics, ImageObserver observer) {
         int componentTitleHeight = textComponentTitle.height(graphics);
         int halfComponentTitleHeight = Half.of(componentTitleHeight);
 
@@ -41,21 +41,21 @@ public class Icon {
         int halfComponentDescriptionHeight = Half.of(componentDescriptionHeight);
 
         // Center title below icon
-        int centerTitleY = y + halfComponentTitleHeight + TOP_OFFSET;
+        int centerTitleY = y + halfComponentTitleHeight;
         textComponentTitle.setPosition(x, centerTitleY);
 
         // Center description below title
-        int centerDescriptionY = y + componentTitleHeight + halfComponentDescriptionHeight + TOP_OFFSET;
+        int centerDescriptionY = centerTitleY + componentTitleHeight;
         textComponentDescription.setPosition(x, centerDescriptionY);
 
 
         int imageX = x - HALF_ICON_WIDTH;
-        int imageY = y - ICON_HEIGHT + TOP_OFFSET;
+        int imageY = y - ICON_HEIGHT;
 
 
         graphics.drawImage(image, imageX, imageY, observer);
-        textComponentTitle.draw(graph, graphics, observer);
-        textComponentDescription.draw(graph, graphics, observer);
+        textComponentTitle.draw(graphics);
+        textComponentDescription.draw(graphics);
     }
 
     public boolean contains(int x, int y) {
@@ -70,7 +70,7 @@ public class Icon {
 
     public Point getBarycenter() {
         int baryX = x;
-        int baryY = y - HALF_ICON_HEIGHT + TOP_OFFSET;
+        int baryY = y - HALF_ICON_HEIGHT;
         return new Point(baryX, baryY);
     }
 
@@ -87,5 +87,20 @@ public class Icon {
     public void unselected() {
         this.textComponentTitle.unselected();
         this.textComponentDescription.unselected();
+    }
+
+    public int height(Graphics2D graphics) {
+        return ICON_HEIGHT + TOP_PADDING +
+                textComponentTitle.height(graphics) +
+                textComponentDescription.height(graphics);
+    }
+
+    public int bottomHalfHeight(Graphics2D graphics) {
+        return textComponentTitle.height(graphics) +
+                textComponentDescription.height(graphics);
+    }
+
+    public int topHalfHeight(Graphics2D graphics) {
+        return ICON_HEIGHT + TOP_PADDING;
     }
 }

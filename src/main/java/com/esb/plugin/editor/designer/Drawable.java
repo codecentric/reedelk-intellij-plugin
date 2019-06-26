@@ -33,6 +33,10 @@ public interface Drawable {
 
     int width(Graphics2D graphics);
 
+    int topHalfHeight(Graphics2D graphics);
+
+    int bottomHalfHeight(Graphics2D graphics);
+
     int height(Graphics2D graphics);
 
     ComponentClass getComponentClass();

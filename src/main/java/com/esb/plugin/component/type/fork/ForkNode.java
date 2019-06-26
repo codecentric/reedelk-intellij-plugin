@@ -21,7 +21,7 @@ public class ForkNode extends AbstractScopedGraphNode {
     private static final int VERTICAL_DIVIDER_X_OFFSET = 10;
 
     public static final int HEIGHT = 145;
-    public static final int WIDTH = 110;
+    public static final int WIDTH = 130;
 
     private final Icon icon;
     private final VerticalDivider verticalDivider;
@@ -80,6 +80,16 @@ public class ForkNode extends AbstractScopedGraphNode {
     @Override
     public boolean contains(ImageObserver observer, int x, int y) {
         return icon.contains(x, y);
+    }
+
+    @Override
+    public int bottomHalfHeight(Graphics2D graphics) {
+        return Half.of(HEIGHT);
+    }
+
+    @Override
+    public int topHalfHeight(Graphics2D graphics) {
+        return Half.of(HEIGHT);
     }
 
     @Override

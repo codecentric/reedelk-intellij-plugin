@@ -45,7 +45,7 @@ public class RouterNode extends AbstractScopedGraphNode {
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         super.draw(graph, graphics, observer);
-        icon.draw(graph, graphics, observer);
+        icon.draw(graphics, observer);
         verticalDivider.draw(graph, graphics, observer);
     }
 
@@ -89,6 +89,16 @@ public class RouterNode extends AbstractScopedGraphNode {
     @Override
     public boolean contains(ImageObserver observer, int x, int y) {
         return icon.contains(x, y);
+    }
+
+    @Override
+    public int bottomHalfHeight(Graphics2D graphics) {
+        return Half.of(HEIGHT);
+    }
+
+    @Override
+    public int topHalfHeight(Graphics2D graphics) {
+        return Half.of(HEIGHT);
     }
 
     @Override

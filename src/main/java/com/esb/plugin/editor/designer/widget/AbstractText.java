@@ -1,11 +1,9 @@
 package com.esb.plugin.editor.designer.widget;
 
 import com.esb.plugin.commons.Half;
-import com.esb.plugin.graph.FlowGraph;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.ImageObserver;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -13,7 +11,7 @@ import java.util.regex.Pattern;
 
 public abstract class AbstractText {
 
-    private static final Pattern REGEX = Pattern.compile(".{1,16}(?:\\s|$)", Pattern.DOTALL);
+    private static final Pattern REGEX = Pattern.compile(".{1,18}(?:\\s|$)", Pattern.DOTALL);
     private final Font font;
 
     private int x;
@@ -25,7 +23,7 @@ public abstract class AbstractText {
         this.font = font;
     }
 
-    public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+    public void draw(Graphics2D graphics) {
         graphics.setColor(selected ? getSelectedColor() : getColor());
         graphics.setFont(font);
 
@@ -50,7 +48,8 @@ public abstract class AbstractText {
         int height = 0;
         if (getText() != null) {
             Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(getText(), graphics);
-            height = (int) stringBounds.getHeight();
+            List<String> textAsLines = getTextAsLines();
+            height = (int) stringBounds.getHeight() * textAsLines.size();
         }
         return height;
     }

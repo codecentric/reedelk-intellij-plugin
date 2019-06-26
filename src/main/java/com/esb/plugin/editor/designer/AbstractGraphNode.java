@@ -21,7 +21,7 @@ import java.util.Optional;
 
 public abstract class AbstractGraphNode implements GraphNode {
 
-    public static final int WIDTH = 120;
+    public static final int WIDTH = 130;
     public static final int HEIGHT = 140;
 
     private final ComponentData componentData;
@@ -113,6 +113,16 @@ public abstract class AbstractGraphNode implements GraphNode {
     @Override
     public int height(Graphics2D graphics) {
         return icon.height(graphics);
+    }
+
+    @Override
+    public int topHalfHeight(Graphics2D graphics) {
+        return icon.topHalfHeight(graphics);
+    }
+
+    @Override
+    public int bottomHalfHeight(Graphics2D graphics) {
+        return icon.bottomHalfHeight(graphics);
     }
 
     @Override

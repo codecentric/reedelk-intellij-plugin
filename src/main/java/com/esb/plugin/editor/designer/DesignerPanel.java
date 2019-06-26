@@ -1,10 +1,12 @@
 package com.esb.plugin.editor.designer;
 
+import com.esb.plugin.commons.Half;
 import com.esb.plugin.commons.PrintFlowInfo;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.SnapshotListener;
 import com.esb.plugin.graph.layout.FlowGraphLayout;
+import com.esb.plugin.graph.layout.utils.ComputeMaxHeight;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.NothingSelectedNode;
 import com.intellij.openapi.diagnostic.Logger;
@@ -23,8 +25,10 @@ import java.awt.dnd.DropTargetListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
@@ -48,7 +52,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
     private final DesignerPanelActionHandler actionHandler;
 
-    private FlowGraph graph;
+
 
     public DesignerPanel(FlowSnapshot snapshot, DesignerPanelActionHandler actionHandler) {
         setBackground(BACKGROUND_COLOR);
@@ -59,8 +63,6 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
         this.snapshot = snapshot;
         this.snapshot.addListener(this);
-
-        graph = snapshot.getGraph();
 
         registerAncestorListener();
     }
@@ -73,14 +75,14 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
         g2.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
 
+        FlowGraph graph = snapshot.getGraph();
+
         // We compute again the graph layout if and only if it was updated.
         if (updated) {
 
             LOG.info("Graph changed");
 
-            graph = snapshot.getGraph();
-
-            FlowGraphLayout.compute(graph, g2);
+            FlowGraphLayout.compute(graph, g2, TOP_PADDING);
 
             adjustWindowSize();
 
@@ -89,6 +91,9 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
             updated = false;
 
         }
+
+        // Draw Incoming bar
+        drawInboundSegment(snapshot, g2);
 
         long start = System.currentTimeMillis();
 
@@ -104,6 +109,19 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         long end = System.currentTimeMillis() - start;
 
         LOG.info("Painted in " + end + " ms");
+
+        drawCenter(snapshot, g2);
+
+        g2.dispose();
+    }
+
+    private void drawCenter(FlowSnapshot snapshot, Graphics2D g2) {
+        snapshot.getGraph().breadthFirstTraversal(new Consumer<GraphNode>() {
+            @Override
+            public void accept(GraphNode node) {
+                g2.drawOval(node.x() - 5, node.y() - 5, 10, 10);
+            }
+        });
     }
 
     @Override
@@ -117,12 +135,13 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     @Override
     public void mouseMoved(MouseEvent event) {
         setTheCursor(Cursor.getDefaultCursor());
-        graph.nodes().forEach(node -> node.mouseMoved(this, event));
+        snapshot.getGraph().nodes().forEach(node -> node.mouseMoved(this, event));
     }
 
     @Override
     public void mousePressed(MouseEvent event) {
         // Notify all nodes that the mouse has been pressed
+        FlowGraph graph = snapshot.getGraph();
         graph.nodes().forEach(node -> node.mousePressed(this, event));
 
         // Select the component under the current mouse coordinates
@@ -263,6 +282,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
      */
     private void adjustWindowSize() {
         // No need to adjust window size if the graph is empty.
+        FlowGraph graph = snapshot.getGraph();
         if (graph.isEmpty()) return;
 
         Collection<GraphNode> nodes = graph.nodes();
@@ -284,5 +304,33 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
                 unselect();
             }
         });
+    }
+
+    private final Stroke dashed = new BasicStroke(0.7f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{3}, 0);
+    private final String INBOUND_STRING = "Event";
+    private final int TOP_PADDING = 80;
+
+    private void drawInboundSegment(FlowSnapshot snapshot, Graphics2D graphics) {
+        graphics.setColor(JBColor.GRAY);
+        Font font = graphics.getFont().deriveFont(20f);
+        graphics.setFont(font);
+        int width;
+        int height = TOP_PADDING;
+        if (snapshot.getGraph().isEmpty()) {
+            // Center the string
+            width = AbstractGraphNode.WIDTH;
+            height += AbstractGraphNode.HEIGHT;
+        } else {
+            GraphNode root = snapshot.getGraph().root();
+            width = root.width(graphics);
+            height += ComputeMaxHeight.of(snapshot.getGraph(), graphics, root);
+        }
+        Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(INBOUND_STRING, graphics);
+        double inboundTextWidth = stringBounds.getWidth();
+
+
+        graphics.setStroke(dashed);
+        graphics.drawLine(width, 0, width, height);
+        graphics.drawString(INBOUND_STRING, Half.of(width) - Half.of(inboundTextWidth), Half.of(TOP_PADDING));
     }
 }
