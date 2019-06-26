@@ -14,15 +14,15 @@ public class SelectedBox {
     private int x;
     private int y;
 
-    public void draw(Drawable parent, Graphics2D graphics) {
-        int parentWidth = parent.width(graphics);
-        int parentHeight = parent.height(graphics);
+    public void draw(Drawable drawable, Graphics2D graphics) {
+        int parentWidth = drawable.width(graphics);
+        int topHalfHeight = drawable.topHalfHeight(graphics);
+        int height = drawable.height(graphics);
+
         graphics.setColor(SELECTED_COMPONENT_BG_COLOR);
         graphics.fillRect(
-                x - Half.of(parentWidth),
-                y - Half.of(parentHeight),
-                parentWidth,
-                parentHeight);
+                x - Half.of(parentWidth), y - topHalfHeight,
+                parentWidth, height);
     }
 
     public void setPosition(int x, int y) {
