@@ -67,18 +67,13 @@ public class FlowGraphLayout {
                 int XCoordinate = Half.of(node.width(graphics)) +
                         ComputeLayerWidthSumPreceding.of(graph, graphics, layers, containingLayerIndex);
 
-                // If it is the first node outside a scope, center it in the middle of the scope
-                // this node is joining from.
-
-                // Otherwise take min and max.
-                Optional<ScopedGraphNode> scopeItIsJoining = FindJoiningScope.of(graph, node);
-
                 // Predecessors must not be empty
                 int min = predecessors.stream().mapToInt(GraphNode::y).min().getAsInt();
                 int max = predecessors.stream().mapToInt(GraphNode::y).max().getAsInt();
 
                 // If this node is joining a scope, then we place it in the
                 // center of the scope this node is joining to.
+                Optional<ScopedGraphNode> scopeItIsJoining = FindJoiningScope.of(graph, node);
                 if (scopeItIsJoining.isPresent()) {
                     ScopedGraphNode scope = scopeItIsJoining.get();
                     ScopeBoundaries scopeBoundaries = scope.getScopeBoundaries(graph, graphics);
@@ -118,8 +113,9 @@ public class FlowGraphLayout {
 
             for (GraphNode node : nodes) {
 
+                // If the node it is a scope, we need to add Padding
                 if (node instanceof ScopedGraphNode) {
-                    top += VERTICAL_PADDING; // top padding
+                    top += VERTICAL_PADDING;
                 }
 
                 // Compute new X coordinate
