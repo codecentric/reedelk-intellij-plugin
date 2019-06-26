@@ -50,7 +50,7 @@ public class FlowGraphLayoutTester extends JFrame {
             Graphics2D g2 = (Graphics2D) g;
             g2.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
 
-            FlowGraphLayout.compute(graph, g2);
+            FlowGraphLayout.compute(graph, g2, 0);
             graph.nodes()
                     .forEach(drawable -> {
                         drawable.draw(graph, g2, this);

@@ -26,10 +26,6 @@ public class FlowGraphLayout {
 
     private static final GraphNode UNTIL_NO_SUCCESSORS = null;
 
-    public static void compute(FlowGraph graph, Graphics2D graphics) {
-        compute(graph, graphics, 0);
-    }
-
     public static void compute(FlowGraph graph, Graphics2D graphics, int topPadding) {
 
         FlowGraphLayers layers = new FlowGraphLayers(graph);
@@ -53,19 +49,9 @@ public class FlowGraphLayout {
             // Root
             if (predecessors.isEmpty()) {
 
-                // Compute new X coordinate
-                int containingLayerIndex = FindContainingLayer.of(layers, node);
-                int XCoordinate = Half.of(node.width(graphics)) +
-                        ComputeLayerWidthSumPreceding.of(graph, graphics, layers, containingLayerIndex);
-
-                // Compute new Y coordinate
-                int topHalfHeight = FindMaxTopHalfHeight.of(graph, graphics, node, UNTIL_NO_SUCCESSORS);
-                int YCoordinate = top + topHalfHeight;
-
-                node.setPosition(XCoordinate, YCoordinate);
+                computeXAndYCoordiantes(top, graph, graphics, layers, node, UNTIL_NO_SUCCESSORS);
 
                 compute(top, graph, graphics, graph.successors(node), layers);
-
 
                 // Single node with one or more predecessor/s
             } else {
@@ -101,8 +87,9 @@ public class FlowGraphLayout {
             }
 
 
-        } else if (nodes.size() > 1) {
             // Layer with multiple nodes: center them all in their respective subtrees.
+        } else if (nodes.size() > 1) {
+
             // Successors can be > 1 only when predecessor is ScopedGraphNode
             GraphNode commonParent = FindCommonParent.of(graph, nodes);
 
@@ -126,24 +113,27 @@ public class FlowGraphLayout {
                     top += VERTICAL_PADDING;
                 }
 
-                // Compute new X coordinate
-                int containingLayerIndex = FindContainingLayer.of(layers, node);
-                int XCoordinate = Half.of(node.width(graphics)) +
-                        ComputeLayerWidthSumPreceding.of(graph, graphics, layers, containingLayerIndex);
-
-                // Compute new Y coordinate: the top half height is needed since there might
-                // be nodes with a longer bottom half, for instance when a description is very long.
-                int maxTopHalfHeight = FindMaxTopHalfHeight.of(graph, graphics, node, firstNodeOutsideScope);
-                int YCoordinate = top + maxTopHalfHeight;
-
-                node.setPosition(XCoordinate, YCoordinate);
+                computeXAndYCoordiantes(top, graph, graphics, layers, node, firstNodeOutsideScope);
 
                 // Recursively assign position to other successors of current node
                 compute(top, graph, graphics, graph.successors(node), layers);
 
                 // The new top is the tallest bottom half until the first node outside the scope
-                top = YCoordinate + FindMaxBottomHalfHeight.of(graph, graphics, node, firstNodeOutsideScope);
+                top = node.y() + FindMaxBottomHalfHeight.of(graph, graphics, node, firstNodeOutsideScope);
             }
         }
+    }
+
+    private static void computeXAndYCoordiantes(int top, FlowGraph graph, Graphics2D graphics, List<List<GraphNode>> layers, GraphNode node, GraphNode stop) {
+        // Compute new X coordinate
+        int containingLayerIndex = FindContainingLayer.of(layers, node);
+        int XCoordinate = Half.of(node.width(graphics)) +
+                ComputeLayerWidthSumPreceding.of(graph, graphics, layers, containingLayerIndex);
+
+        // Compute new Y coordinate
+        int topHalfHeight = FindMaxTopHalfHeight.of(graph, graphics, node, stop);
+        int YCoordinate = top + topHalfHeight;
+
+        node.setPosition(XCoordinate, YCoordinate);
     }
 }
