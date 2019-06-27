@@ -12,12 +12,11 @@ public abstract class AbstractText {
     private final VerticalAlignment verticalAlignment;
     private final Font font;
 
+    private boolean selected;
     private int x;
     private int y;
 
-    private boolean selected;
-
-    protected AbstractText(Font font, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment) {
+    AbstractText(Font font, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment) {
         this.horizontalAlignment = horizontalAlignment;
         this.verticalAlignment = verticalAlignment;
         this.font = font;
