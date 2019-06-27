@@ -12,6 +12,7 @@ import java.awt.image.ImageObserver;
 public class Icon {
 
     private static final int TOP_PADDING = 10;
+    private static final int BOTTOM_PADDING = 10;
 
     private static final int ICON_WIDTH = 60;
     private static final int ICON_HEIGHT = 60;
@@ -89,14 +90,15 @@ public class Icon {
     }
 
     public int height(Graphics2D graphics) {
-        return ICON_HEIGHT + TOP_PADDING +
+        return ICON_HEIGHT + TOP_PADDING + BOTTOM_PADDING +
                 textComponentTitle.height(graphics) +
                 textComponentDescription.height(graphics);
     }
 
     public int bottomHalfHeight(Graphics2D graphics) {
         return textComponentTitle.height(graphics) +
-                textComponentDescription.height(graphics);
+                textComponentDescription.height(graphics) +
+                BOTTOM_PADDING;
     }
 
     public int topHalfHeight(Graphics2D graphics) {
