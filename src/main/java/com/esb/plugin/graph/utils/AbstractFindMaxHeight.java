@@ -27,7 +27,7 @@ abstract class AbstractFindMaxHeight {
     int _of(FlowGraph graph, Graphics2D graphics, GraphNode start, GraphNode firstNodeOutsideScope) {
         int currentMax = measurer.measure(start, graphics);
 
-        java.util.List<GraphNode> nextNodes = singletonList(start);
+        List<GraphNode> nextNodes = singletonList(start);
 
         return _of(graph, graphics, nextNodes, firstNodeOutsideScope, currentMax);
     }
