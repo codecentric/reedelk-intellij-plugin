@@ -464,7 +464,6 @@ class ComputeMaxHeightTest extends AbstractGraphTest {
         forkNode2.addToScope(componentNode1);
         forkNode2.addToScope(componentNode2);
 
-
         // When
         int actual = ComputeMaxHeight.of(graph, graphics, root);
 

@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.designer;
 
+import com.esb.plugin.commons.DesignerWindowSizeCalculator;
 import com.esb.plugin.commons.Half;
 import com.esb.plugin.commons.PrintFlowInfo;
 import com.esb.plugin.editor.designer.widget.CenterOfNode;
@@ -27,7 +28,6 @@ import java.awt.dnd.DropTargetListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.Collection;
 import java.util.Optional;
 
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
@@ -38,7 +38,6 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     private static final Logger LOG = Logger.getInstance(DesignerPanel.class);
 
     private final int TOP_PADDING = 80;
-    private static final int WINDOW_GROW_STEP = 110;
     private static final JBColor BACKGROUND_COLOR = JBColor.WHITE;
     private final GraphNode NOTHING_SELECTED = new NothingSelectedNode();
 
@@ -276,22 +275,16 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     }
 
     /**
-     * If the graph has grown beyond the current window size, we must adapt it.
+     * If the graph has grown beyond the current window size,
+     * we must adapt it.
      */
     private void adjustWindowSize() {
-        // No need to adjust window size if the graph is empty.
-        FlowGraph graph = snapshot.getGraph();
-        if (graph.isEmpty()) return;
-
-        Collection<GraphNode> nodes = graph.nodes();
-
-        int maxX = nodes.stream().mapToInt(Drawable::x).max().getAsInt();
-        int maxY = nodes.stream().mapToInt(Drawable::y).max().getAsInt();
-        int newSizeX = maxX + WINDOW_GROW_STEP;
-        int newSizeY = maxY + WINDOW_GROW_STEP;
-        Dimension newDimension = new Dimension(newSizeX, newSizeY);
-        setSize(newDimension);
-        setPreferredSize(newDimension);
+        DesignerWindowSizeCalculator
+                .from(snapshot.getGraph(), getGraphics2D())
+                .ifPresent(dimension -> {
+                    setSize(dimension);
+                    setPreferredSize(dimension);
+                });
     }
 
     private void registerAncestorListener() {
