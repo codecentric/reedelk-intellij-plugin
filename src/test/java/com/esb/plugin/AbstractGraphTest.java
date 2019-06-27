@@ -18,16 +18,22 @@ import com.esb.system.component.Router;
 import com.esb.system.component.Stop;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
 import static com.esb.plugin.component.domain.ComponentClass.INBOUND;
 import static com.esb.plugin.component.domain.ComponentClass.PROCESSOR;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
 @ExtendWith(MockitoExtension.class)
 public abstract class AbstractGraphTest {
+
+    @Mock
+    protected Graphics2D graphics;
 
     protected GraphNode root;
     protected GraphNode componentNode1;
@@ -113,6 +119,20 @@ public abstract class AbstractGraphTest {
     protected static <T extends GraphNode> T createGraphNodeInstance(Class<T> graphNodeClazz, ComponentDescriptor descriptor) {
         ComponentData componentData = new ComponentData(descriptor);
         return spy(createGraphNodeInstance(graphNodeClazz, componentData));
+    }
+
+    private static final int DEFAULT_TOP_HEIGHT = 70;
+    private static final int DEFAULT_BOTTOM_HEIGHT = 50;
+    protected static final int DEFAULT_HEIGHT = DEFAULT_TOP_HEIGHT + DEFAULT_BOTTOM_HEIGHT;
+
+    protected void mockDefaultNodeHeight(GraphNode node) {
+        mockNodeHeight(node, DEFAULT_TOP_HEIGHT, DEFAULT_BOTTOM_HEIGHT);
+    }
+
+    protected void mockNodeHeight(GraphNode node, int topHeight, int bottomHeight) {
+        doReturn(topHeight + bottomHeight).when(node).height(graphics);
+        doReturn(topHeight).when(node).topHalfHeight(graphics);
+        doReturn(bottomHeight).when(node).bottomHalfHeight(graphics);
     }
 
     private static <T extends GraphNode> T createGraphNodeInstance(Class componentClazz, Class<T> graphNodeClazz) {

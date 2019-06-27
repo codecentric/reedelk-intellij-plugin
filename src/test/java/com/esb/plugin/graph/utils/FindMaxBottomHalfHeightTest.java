@@ -6,113 +6,76 @@ import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import java.awt.*;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
 class FindMaxBottomHalfHeightTest extends AbstractGraphTest {
 
     private GraphNode UNTIL_LAST_NODE = null;
 
-    @Mock
-    private Graphics2D graphics;
     private FlowGraph graph;
-
-    private GraphNode componentNode1Spy;
-    private GraphNode componentNode2Spy;
-    private GraphNode componentNode3Spy;
-    private GraphNode componentNode4Spy;
-    private GraphNode componentNode5Spy;
 
     @BeforeEach
     protected void setUp() {
         super.setUp();
         graph = provider.createGraph();
-
-        componentNode1Spy = spy(componentNode1);
-        componentNode2Spy = spy(componentNode2);
-        componentNode3Spy = spy(componentNode3);
-        componentNode4Spy = spy(componentNode4);
-        componentNode5Spy = spy(componentNode5);
-
-
-        doReturn(80)
-                .when(componentNode1Spy)
-                .bottomHalfHeight(graphics);
-
-        doReturn(140)
-                .when(componentNode1Spy)
-                .height(graphics);
-
-        doReturn(230)
-                .when(componentNode2Spy)
-                .bottomHalfHeight(graphics);
-
-        doReturn(310)
-                .when(componentNode2Spy)
-                .height(graphics);
-
-        doReturn(100)
-                .when(componentNode3Spy)
-                .bottomHalfHeight(graphics);
-
-        doReturn(150)
-                .when(componentNode3Spy)
-                .height(graphics);
-
-        doReturn(410)
-                .when(componentNode4Spy)
-                .bottomHalfHeight(graphics);
-
-        doReturn(470)
-                .when(componentNode4Spy)
-                .height(graphics);
+        mockDefaultNodeHeight(root);
+        mockDefaultNodeHeight(componentNode1);
+        mockDefaultNodeHeight(componentNode2);
+        mockDefaultNodeHeight(componentNode3);
+        mockDefaultNodeHeight(componentNode4);
+        mockDefaultNodeHeight(componentNode5);
+        mockDefaultNodeHeight(componentNode6);
+        mockDefaultNodeHeight(componentNode7);
+        mockDefaultNodeHeight(componentNode8);
+        mockDefaultNodeHeight(componentNode9);
+        mockDefaultNodeHeight(componentNode10);
+        mockDefaultNodeHeight(componentNode11);
     }
 
     @Test
     void shouldFindBottomHalfHeightCorrectlyUntilLastNode() {
         // Given
         graph.root(root);
-        graph.add(root, componentNode1Spy);
-        graph.add(componentNode1Spy, componentNode2Spy);
-        graph.add(componentNode2Spy, componentNode3Spy);
+        graph.add(root, componentNode1);
+        graph.add(componentNode1, componentNode2);
+        graph.add(componentNode2, componentNode3);
 
+        mockNodeHeight(componentNode2, 70, 250);
 
         // When
         int maxBottomHalfHeight =
-                FindMaxBottomHalfHeight.of(graph, graphics, componentNode1Spy, UNTIL_LAST_NODE);
+                FindMaxBottomHalfHeight.of(graph, graphics, componentNode1, UNTIL_LAST_NODE);
 
         // Then
-        assertThat(maxBottomHalfHeight).isEqualTo(230);
+        assertThat(maxBottomHalfHeight).isEqualTo(250);
     }
 
     @Test
     void shouldFindBottomHalfHeightCorrectlyWhenScopedNode() {
         // Given
         graph.root(root);
-        graph.add(root, componentNode1Spy);
-        graph.add(componentNode1Spy, forkNode1);
-        graph.add(forkNode1, componentNode2Spy);
-        graph.add(forkNode1, componentNode3Spy);
-        graph.add(componentNode2Spy, componentNode4Spy);
-        graph.add(componentNode3Spy, componentNode4Spy);
+        graph.add(root, componentNode1);
+        graph.add(componentNode1, forkNode1);
+        graph.add(forkNode1, componentNode2);
+        graph.add(forkNode1, componentNode3);
+        graph.add(componentNode2, componentNode4);
+        graph.add(componentNode3, componentNode4);
 
-        forkNode1.addToScope(componentNode2Spy);
-        forkNode1.addToScope(componentNode3Spy);
+        forkNode1.addToScope(componentNode2);
+        forkNode1.addToScope(componentNode3);
+
+        mockNodeHeight(componentNode2, 70, 450);
 
         // When
         int maxBottomHalfHeight =
-                FindMaxBottomHalfHeight.of(graph, graphics, componentNode1Spy, componentNode4Spy);
+                FindMaxBottomHalfHeight.of(graph, graphics, componentNode1, componentNode4);
 
         // Then
-        assertThat(maxBottomHalfHeight).isEqualTo(Half.of(310 + 150 + 5 + 5));
+        assertThat(maxBottomHalfHeight).isEqualTo(Half.of(DEFAULT_HEIGHT + 70 + 450 + 5 + 5));
     }
 
     @Test
@@ -120,20 +83,22 @@ class FindMaxBottomHalfHeightTest extends AbstractGraphTest {
         // Given
         graph.root(root);
         graph.add(root, forkNode1);
-        graph.add(forkNode1, componentNode2Spy);
-        graph.add(componentNode2Spy, forkNode2);
-        graph.add(forkNode2, componentNode3Spy);
-        graph.add(componentNode3Spy, componentNode4Spy);
-        graph.add(componentNode4Spy, componentNode5Spy);
+        graph.add(forkNode1, componentNode2);
+        graph.add(componentNode2, forkNode2);
+        graph.add(forkNode2, componentNode3);
+        graph.add(componentNode3, componentNode4);
+        graph.add(componentNode4, componentNode5);
 
-        forkNode1.addToScope(componentNode2Spy);
+        forkNode1.addToScope(componentNode2);
         forkNode1.addToScope(forkNode2);
-        forkNode1.addToScope(componentNode4Spy);
-        forkNode2.addToScope(componentNode3Spy);
+        forkNode1.addToScope(componentNode4);
+        forkNode2.addToScope(componentNode3);
+
+        mockNodeHeight(componentNode4, 70, 410);
 
         // When
         int maxBottomHalfHeight =
-                FindMaxBottomHalfHeight.of(graph, graphics, componentNode2Spy, componentNode5Spy);
+                FindMaxBottomHalfHeight.of(graph, graphics, componentNode2, componentNode5);
 
         // Then
         assertThat(maxBottomHalfHeight).isEqualTo(410);
@@ -145,28 +110,29 @@ class FindMaxBottomHalfHeightTest extends AbstractGraphTest {
         graph.root(root);
         graph.add(root, forkNode1);
         graph.add(forkNode1, forkNode2);
-        graph.add(forkNode2, componentNode1Spy);
-        graph.add(forkNode2, componentNode2Spy);
-        graph.add(componentNode1Spy, forkNode3);
-        graph.add(componentNode2Spy, forkNode3);
-        graph.add(forkNode3, componentNode3Spy);
-        graph.add(forkNode3, componentNode4Spy);
+        graph.add(forkNode2, componentNode1);
+        graph.add(forkNode2, componentNode2);
+        graph.add(componentNode1, forkNode3);
+        graph.add(componentNode2, forkNode3);
+        graph.add(forkNode3, componentNode3);
+        graph.add(forkNode3, componentNode4);
 
         forkNode1.addToScope(forkNode2);
         forkNode1.addToScope(forkNode3);
 
-        forkNode2.addToScope(componentNode1Spy);
-        forkNode2.addToScope(componentNode2Spy);
+        forkNode2.addToScope(componentNode1);
+        forkNode2.addToScope(componentNode2);
 
-        forkNode3.addToScope(componentNode3Spy);
-        forkNode3.addToScope(componentNode4Spy);
+        forkNode3.addToScope(componentNode3);
+        forkNode3.addToScope(componentNode4);
+
+        mockNodeHeight(componentNode4, 70, 410);
 
         // When
         int maxBottomHalfHeight =
                 FindMaxBottomHalfHeight.of(graph, graphics, forkNode2, UNTIL_LAST_NODE);
 
         // Then
-        assertThat(maxBottomHalfHeight).isEqualTo(Half.of(150 + 470 + 5 + 5));
+        assertThat(maxBottomHalfHeight).isEqualTo(Half.of(DEFAULT_HEIGHT + 70 + 410 + 5 + 5));
     }
-
 }

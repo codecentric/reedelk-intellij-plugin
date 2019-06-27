@@ -1,6 +1,8 @@
 package com.esb.plugin.graph.layout.utils;
 
 import com.esb.plugin.AbstractGraphTest;
+import com.esb.plugin.component.type.fork.ForkNode;
+import com.esb.plugin.editor.designer.AbstractGraphNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import org.junit.jupiter.api.Test;
@@ -9,6 +11,7 @@ import org.mockito.Mock;
 import java.awt.*;
 import java.util.List;
 
+import static com.esb.plugin.graph.node.ScopedGraphNode.HORIZONTAL_PADDING;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,7 +47,10 @@ class ComputeLayerWidthSumPrecedingTest extends AbstractGraphTest {
         int widthSum = ComputeLayerWidthSumPreceding.of(graph, graphics2D, layers, 3);
 
         // Then
-        assertThat(widthSum).isEqualTo(345);
+        assertThat(widthSum).isEqualTo(
+                AbstractGraphNode.WIDTH +
+                        ForkNode.WIDTH + HORIZONTAL_PADDING + // layer 1 (1 nested scope)
+                        ForkNode.WIDTH + HORIZONTAL_PADDING + HORIZONTAL_PADDING); // layer 2 (2 nested scopes)
     }
 
     @Test

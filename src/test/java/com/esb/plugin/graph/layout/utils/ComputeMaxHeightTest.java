@@ -4,35 +4,22 @@ import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.component.type.fork.ForkNode;
 import com.esb.plugin.component.type.router.RouterNode;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import java.awt.*;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doReturn;
 
 @DisplayName("Compute Max Height Tests")
 @MockitoSettings(strictness = Strictness.LENIENT)
 class ComputeMaxHeightTest extends AbstractGraphTest {
 
-    private static final int DEFAULT_TOP_HEIGHT = 70;
-    private static final int DEFAULT_BOTTOM_HEIGHT = 50;
-    private static final int DEFAULT_HEIGHT = DEFAULT_TOP_HEIGHT + DEFAULT_BOTTOM_HEIGHT;
-
-    @Mock
-    Graphics2D graphics;
-
     @BeforeEach
     protected void setUp() {
         super.setUp();
-
         mockDefaultNodeHeight(root);
         mockDefaultNodeHeight(componentNode1);
         mockDefaultNodeHeight(componentNode2);
@@ -45,16 +32,6 @@ class ComputeMaxHeightTest extends AbstractGraphTest {
         mockDefaultNodeHeight(componentNode9);
         mockDefaultNodeHeight(componentNode10);
         mockDefaultNodeHeight(componentNode11);
-    }
-
-    protected void mockDefaultNodeHeight(GraphNode node) {
-        mockNodeHeight(node, DEFAULT_TOP_HEIGHT, DEFAULT_BOTTOM_HEIGHT);
-    }
-
-    protected void mockNodeHeight(GraphNode node, int topHeight, int bottomHeight) {
-        doReturn(topHeight + bottomHeight).when(node).height(graphics);
-        doReturn(topHeight).when(node).topHalfHeight(graphics);
-        doReturn(bottomHeight).when(node).bottomHalfHeight(graphics);
     }
 
     @Test
