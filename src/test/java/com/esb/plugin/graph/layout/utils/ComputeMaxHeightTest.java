@@ -436,7 +436,39 @@ class ComputeMaxHeightTest extends AbstractGraphTest {
 
         // Then:
         // the correct height is the greatest top height (100 + 5) -> componentNode2Spy height + 5 padding fork node2
-        // plus the greatest bottom height (180) -> componentNode1Spy + first scoped node paddings top and bottom 5 + 5
+        // plus the greatest bottom height (180) -> componentNode1Spy + first scoped node padding top and bottom 5 + 5
         assertThat(actual).isEqualTo(DEFAULT_HEIGHT + 5 + 180 + 5 + 5);
+    }
+
+    @Test
+    void shouldComputeMaxHeightCorrectlyWhenNestedForkWithNodeOutsideInnermostScopeTallerThanInnermostScope() {
+        // Given
+        mockNodeHeight(componentNode4, 70, 220);
+
+        FlowGraph graph = provider.createGraph();
+        graph.root(root);
+        graph.add(root, forkNode1);
+        graph.add(forkNode1, forkNode2);
+        graph.add(forkNode1, componentNode3);
+
+        graph.add(forkNode2, componentNode1);
+        graph.add(forkNode2, componentNode2);
+        graph.add(componentNode1, componentNode4);
+        graph.add(componentNode2, componentNode4);
+
+
+        forkNode1.addToScope(forkNode2);
+        forkNode1.addToScope(componentNode3);
+        forkNode1.addToScope(componentNode4);
+
+        forkNode2.addToScope(componentNode1);
+        forkNode2.addToScope(componentNode2);
+
+
+        // When
+        int actual = ComputeMaxHeight.of(graph, graphics, root);
+
+        // Then:
+        assertThat(actual).isEqualTo(DEFAULT_HEIGHT + 220 + DEFAULT_HEIGHT + 5 + 5 + 5);
     }
 }

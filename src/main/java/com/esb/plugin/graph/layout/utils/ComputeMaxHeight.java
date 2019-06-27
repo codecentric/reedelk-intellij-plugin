@@ -82,9 +82,11 @@ public class ComputeMaxHeight {
             // If there are many successors, they can not
             // be (by definition) outside the scope.
             for (GraphNode successor : successors) {
-                // We are looking for the max in the subtree starting from this successor.
-                // Therefore the current max starts again from 0.
-                sum += maxHeight(graphics, graph, successor, firstNodeOutsideScope, 0);
+                // The max is given by the top subtree max + the bottom subtree max
+                int topSubTreeMax = FindMaxTopHalfHeight.of(graph, graphics, successor, firstNodeOutsideScope);
+                int bottomSubTreeMax = FindMaxBottomHalfHeight.of(graph, graphics, successor, firstNodeOutsideScope);
+                int subtreeMax = topSubTreeMax + bottomSubTreeMax;
+                sum += subtreeMax;
             }
         }
 
