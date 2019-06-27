@@ -38,10 +38,9 @@ public class Icon {
         int halfComponentTitleHeight = Half.of(componentTitleHeight);
 
         int componentDescriptionHeight = textComponentDescription.height(graphics);
-        int halfComponentDescriptionHeight = Half.of(componentDescriptionHeight);
 
         // Center title below icon
-        int centerTitleY = y + halfComponentTitleHeight;
+        int centerTitleY = y;
         textComponentTitle.setPosition(x, centerTitleY);
 
         // Center description below title

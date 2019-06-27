@@ -4,14 +4,12 @@ import com.esb.plugin.commons.Half;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public abstract class AbstractText {
 
-    private static final Pattern REGEX = Pattern.compile(".{1,18}(?:\\s|$)", Pattern.DOTALL);
+    private final HorizontalAlignment horizontalAlignment;
+    private final VerticalAlignment verticalAlignment;
     private final Font font;
 
     private int x;
@@ -19,7 +17,9 @@ public abstract class AbstractText {
 
     private boolean selected;
 
-    protected AbstractText(Font font) {
+    protected AbstractText(Font font, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment) {
+        this.horizontalAlignment = horizontalAlignment;
+        this.verticalAlignment = verticalAlignment;
         this.font = font;
     }
 
@@ -27,14 +27,35 @@ public abstract class AbstractText {
         graphics.setColor(selected ? getSelectedColor() : getColor());
         graphics.setFont(font);
 
+        int totalLines = getText().size();
         int count = 0;
-        for (String line : getTextAsLines()) {
-            Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(line, graphics);
-            int halfWidth = Half.of((int) stringBounds.getWidth());
-            int halfHeight = Half.of((int) stringBounds.getHeight());
-            int startX = x - halfWidth;
-            int startY = y + halfHeight + ((int) stringBounds.getHeight() * count);
+        for (String line : getText()) {
+            Rectangle2D bounds = graphics.getFontMetrics().getStringBounds(line, graphics);
+
+            int width = (int) bounds.getWidth();
+            int halfWidth = Half.of(width);
+            int height = (int) bounds.getHeight();
+
+            int startX = 0;
+            int startY = 0;
+
+            if (HorizontalAlignment.CENTER.equals(horizontalAlignment)) {
+                startX = x - halfWidth;
+            } else if (HorizontalAlignment.RIGHT.equals(horizontalAlignment)) {
+                startX = x;
+            }
+
+            if (VerticalAlignment.CENTER.equals(verticalAlignment)) {
+                int totalHeight = (int) bounds.getHeight() * totalLines;
+                int halfTotalHeight = Half.of(totalHeight);
+                startY = y - halfTotalHeight + (height * count + 1);
+
+            } else if (VerticalAlignment.BELOW.equals(verticalAlignment)) {
+                startY = y + height * (count + 1);
+            }
+
             graphics.drawString(line, startX, startY);
+
             count++;
         }
     }
@@ -46,39 +67,12 @@ public abstract class AbstractText {
 
     public int height(Graphics2D graphics) {
         int height = 0;
-        if (getText() != null) {
-            Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(getText(), graphics);
-            List<String> textAsLines = getTextAsLines();
+        if (getText() != null && !getText().isEmpty()) {
+            Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(getText().get(0), graphics);
+            List<String> textAsLines = getText();
             height = (int) stringBounds.getHeight() * textAsLines.size();
         }
         return height;
-    }
-
-    public int width(Graphics2D graphics) {
-        int width = 0;
-        if (getText() != null) {
-            Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(getText(), graphics);
-            width = (int) stringBounds.getWidth();
-        }
-        return width;
-    }
-
-    protected abstract String getText();
-
-    protected abstract Color getColor();
-
-    protected abstract Color getSelectedColor();
-
-    private List<String> getTextAsLines() {
-        List<String> matchList = new ArrayList<>();
-
-        if (getText() == null) return matchList;
-
-        Matcher regexMatcher = REGEX.matcher(getText());
-        while (regexMatcher.find()) {
-            matchList.add(regexMatcher.group());
-        }
-        return matchList;
     }
 
     public void selected() {
@@ -87,5 +81,23 @@ public abstract class AbstractText {
 
     public void unselected() {
         this.selected = false;
+    }
+
+    protected abstract Color getColor();
+
+    protected Color getSelectedColor() {
+        return getColor();
+    }
+
+    protected abstract List<String> getText();
+
+    public enum HorizontalAlignment {
+        RIGHT,
+        CENTER
+    }
+
+    public enum VerticalAlignment {
+        BELOW,
+        CENTER
     }
 }

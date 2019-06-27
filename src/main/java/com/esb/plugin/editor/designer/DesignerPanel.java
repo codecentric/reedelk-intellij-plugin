@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.designer;
 
+import com.esb.plugin.commons.Half;
 import com.esb.plugin.commons.PrintFlowInfo;
 import com.esb.plugin.editor.designer.widget.CenterOfNode;
 import com.esb.plugin.editor.designer.widget.FlowMetadata;
@@ -64,7 +65,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
         this.centerOfNode = new CenterOfNode(snapshot);
         this.inboundLane = new InboundLane(snapshot, TOP_PADDING);
-        this.flowMetadata = new FlowMetadata(snapshot, TOP_PADDING);
+        this.flowMetadata = new FlowMetadata(snapshot, Half.of(TOP_PADDING));
 
         setBackground(BACKGROUND_COLOR);
         registerAncestorListener();

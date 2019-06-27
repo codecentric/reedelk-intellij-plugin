@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.designer.widget;
 
+import com.esb.plugin.commons.Fonts;
 import com.esb.plugin.commons.Half;
 import com.esb.plugin.editor.designer.AbstractGraphNode;
 import com.esb.plugin.graph.FlowSnapshot;
@@ -8,7 +9,8 @@ import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.ui.JBColor;
 
 import java.awt.*;
-import java.awt.geom.Rectangle2D;
+import java.util.Collections;
+import java.util.List;
 
 public class InboundLane {
 
@@ -16,28 +18,39 @@ public class InboundLane {
 
     private final Stroke dashed = new BasicStroke(0.7f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{3}, 0);
     private final String INBOUND_STRING = "Event";
-    private final int topPadding;
+
+    private final InboundComponent inboundComponent;
     private final FlowSnapshot snapshot;
+    private final int topPadding;
 
     public InboundLane(FlowSnapshot snapshot, int topPadding) {
+        this.inboundComponent = new InboundComponent();
         this.topPadding = topPadding;
         this.snapshot = snapshot;
     }
 
-
     public void draw(Graphics2D graphics) {
         int width = AbstractGraphNode.WIDTH;
         drawVerticalBar(graphics, width);
-        drawInboundText(graphics, width);
+        inboundComponent.setPosition(Half.of(width), Half.of(topPadding));
+        inboundComponent.draw(graphics);
     }
 
-    private void drawInboundText(Graphics2D graphics, int width) {
-        Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(INBOUND_STRING, graphics);
-        double inboundTextWidth = stringBounds.getWidth();
+    class InboundComponent extends AbstractText {
 
-        Font font = graphics.getFont().deriveFont(20f);
-        graphics.setFont(font);
-        graphics.drawString(INBOUND_STRING, Half.of(width) - Half.of(inboundTextWidth), Half.of(topPadding));
+        private InboundComponent() {
+            super(Fonts.Component.INBOUND, HorizontalAlignment.CENTER, VerticalAlignment.CENTER);
+        }
+
+        @Override
+        protected Color getColor() {
+            return JBColor.GRAY;
+        }
+
+        @Override
+        protected List<String> getText() {
+            return Collections.singletonList(INBOUND_STRING);
+        }
     }
 
     private void drawVerticalBar(Graphics2D graphics, int width) {
@@ -48,10 +61,8 @@ public class InboundLane {
             GraphNode root = snapshot.getGraph().root();
             height += ComputeMaxHeight.of(snapshot.getGraph(), graphics, root);
         }
-
         graphics.setColor(JBColor.GRAY);
         graphics.setStroke(dashed);
         graphics.drawLine(width, 0, width, height);
     }
-
 }
