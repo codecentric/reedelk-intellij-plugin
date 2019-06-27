@@ -61,7 +61,7 @@ public class FlowGraphLayout {
             // Root
             if (predecessors.isEmpty()) {
 
-                computeXAndYCoordiantes(top, graph, graphics, layers, node, UNTIL_NO_SUCCESSORS);
+                computeXAndY(top, graph, graphics, layers, node, UNTIL_NO_SUCCESSORS);
 
                 compute(top, graph, graphics, graph.successors(node), layers);
 
@@ -101,7 +101,7 @@ public class FlowGraphLayout {
     }
 
     private static void computeLayerFollowingScopedNode(FlowGraph graph, Graphics2D graphics, List<GraphNode> nodes, List<List<GraphNode>> layers) {
-        int top;// Successors can be > 1 only when predecessor is ScopedGraphNode
+        // Successors can be > 1 only when predecessor is ScopedGraphNode
         GraphNode commonParent = FindCommonParent.of(graph, nodes);
 
         // The common parent must be a scoped node since only
@@ -114,12 +114,12 @@ public class FlowGraphLayout {
         int maxSubTreeHeight = ComputeMaxHeight.of(graph, graphics, commonParent, firstNodeOutsideScope);
 
         // Vertical padding because it is inside a scope
-        top = VERTICAL_PADDING + commonParent.y() - Half.of(maxSubTreeHeight);
+        int top = VERTICAL_PADDING + commonParent.y() - Half.of(maxSubTreeHeight);
 
 
         for (GraphNode node : nodes) {
 
-            computeXAndYCoordiantes(top, graph, graphics, layers, node, firstNodeOutsideScope);
+            computeXAndY(top, graph, graphics, layers, node, firstNodeOutsideScope);
 
             // Recursively assign position to other successors of current node
             compute(top, graph, graphics, graph.successors(node), layers);
@@ -130,12 +130,14 @@ public class FlowGraphLayout {
     }
 
     private static boolean isLayerFollowingScopedNode(FlowGraph graph, List<GraphNode> nodes) {
-        if (nodes.isEmpty()) return false;
+        if (nodes.isEmpty()) {
+            return false;
+        }
         List<GraphNode> predecessor = graph.predecessors(nodes.get(0));
         return predecessor.size() == 1 && predecessor.get(0) instanceof ScopedGraphNode;
     }
 
-    private static void computeXAndYCoordiantes(int top, FlowGraph graph, Graphics2D graphics, List<List<GraphNode>> layers, GraphNode node, GraphNode stop) {
+    private static void computeXAndY(int top, FlowGraph graph, Graphics2D graphics, List<List<GraphNode>> layers, GraphNode node, GraphNode stop) {
         // Compute new X coordinate
         int containingLayerIndex = FindContainingLayer.of(layers, node);
         int XCoordinate = Half.of(node.width(graphics)) +
