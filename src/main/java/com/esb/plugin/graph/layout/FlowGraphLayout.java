@@ -119,11 +119,6 @@ public class FlowGraphLayout {
 
         for (GraphNode node : nodes) {
 
-            // If the node it is a scope, we need to add Padding
-            if (node instanceof ScopedGraphNode) {
-                top += VERTICAL_PADDING;
-            }
-
             computeXAndYCoordiantes(top, graph, graphics, layers, node, firstNodeOutsideScope);
 
             // Recursively assign position to other successors of current node

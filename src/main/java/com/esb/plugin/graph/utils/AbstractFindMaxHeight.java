@@ -56,7 +56,7 @@ abstract class AbstractFindMaxHeight {
 
                 int halfScopeMaxHeight = Half.of(scopeMaxHeight);
                 if (halfScopeMaxHeight > newMax) {
-                    newMax = Half.of(scopeMaxHeight);
+                    newMax = halfScopeMaxHeight;
                 }
 
                 if (firstNodeOutside != null) {

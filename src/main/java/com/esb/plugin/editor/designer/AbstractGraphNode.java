@@ -22,7 +22,6 @@ import java.util.Optional;
 public abstract class AbstractGraphNode implements GraphNode {
 
     public static final int WIDTH = 130;
-    public static final int HEIGHT = 140;
 
     private final ComponentData componentData;
 

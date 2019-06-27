@@ -24,6 +24,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import static com.esb.plugin.component.domain.ComponentClass.INBOUND;
 import static com.esb.plugin.component.domain.ComponentClass.PROCESSOR;
+import static org.mockito.Mockito.spy;
 
 @ExtendWith(MockitoExtension.class)
 public abstract class AbstractGraphTest {
@@ -101,11 +102,6 @@ public abstract class AbstractGraphTest {
         flowReferenceNode2 = createGraphNodeInstance(FlowReference.class, FlowReferenceNode.class);
     }
 
-    protected static <T extends GraphNode> T createGraphNodeInstance(Class<T> graphNodeClazz, ComponentDescriptor descriptor) {
-        ComponentData componentData = new ComponentData(descriptor);
-        return createGraphNodeInstance(graphNodeClazz, componentData);
-    }
-
     protected static <T extends GraphNode> T createGraphNodeInstance(Class componentClazz, Class<T> graphNodeClazz, ComponentClass componentClass) {
         ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
                 .fullyQualifiedName(componentClazz.getName())
@@ -114,8 +110,13 @@ public abstract class AbstractGraphTest {
         return createGraphNodeInstance(graphNodeClazz, descriptor);
     }
 
+    protected static <T extends GraphNode> T createGraphNodeInstance(Class<T> graphNodeClazz, ComponentDescriptor descriptor) {
+        ComponentData componentData = new ComponentData(descriptor);
+        return spy(createGraphNodeInstance(graphNodeClazz, componentData));
+    }
+
     private static <T extends GraphNode> T createGraphNodeInstance(Class componentClazz, Class<T> graphNodeClazz) {
-        return createGraphNodeInstance(componentClazz, graphNodeClazz, PROCESSOR);
+        return spy(createGraphNodeInstance(componentClazz, graphNodeClazz, PROCESSOR));
     }
 
     private static <T extends GraphNode> T createGraphNodeInstance(Class<T> graphNodeClazz, ComponentData componentData) {

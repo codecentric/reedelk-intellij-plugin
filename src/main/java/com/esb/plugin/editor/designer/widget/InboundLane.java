@@ -12,6 +12,8 @@ import java.awt.geom.Rectangle2D;
 
 public class InboundLane {
 
+    private static final int DEFAULT_INBOUND_LANE_HEIGHT = 170;
+
     private final Stroke dashed = new BasicStroke(0.7f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{3}, 0);
     private final String INBOUND_STRING = "Event";
     private final int topPadding;
@@ -41,7 +43,7 @@ public class InboundLane {
     private void drawVerticalBar(Graphics2D graphics, int width) {
         int height = topPadding;
         if (snapshot.getGraph().isEmpty()) {
-            height += AbstractGraphNode.HEIGHT;
+            height += DEFAULT_INBOUND_LANE_HEIGHT;
         } else {
             GraphNode root = snapshot.getGraph().root();
             height += ComputeMaxHeight.of(snapshot.getGraph(), graphics, root);

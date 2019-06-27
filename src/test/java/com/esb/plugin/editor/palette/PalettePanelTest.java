@@ -10,10 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.swing.tree.DefaultMutableTreeNode;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,7 +41,7 @@ class PalettePanelTest {
             // Then
             assertThat(treeNode.getUserObject()).isEqualTo("Module1");
 
-            List<DefaultMutableTreeNode> children = Collections.list(treeNode.children());
+            List<DefaultMutableTreeNode> children = toList(treeNode.children());
             assertThat(children).hasSize(2);
 
             assertThatExistsChildrenWithUserObject(children, mockDescriptor1);
@@ -63,7 +60,7 @@ class PalettePanelTest {
             DefaultMutableTreeNode treeNode = PalettePanel.buildPackageTreeNode(module1);
 
             // Then
-            List<DefaultMutableTreeNode> children = Collections.list(treeNode.children());
+            List<DefaultMutableTreeNode> children = toList(treeNode.children());
 
             assertThat(children).hasSize(1);
             assertThatExistsChildrenWithUserObject(children, mockDescriptor1);
@@ -126,10 +123,18 @@ class PalettePanelTest {
         assertThat(treeNodeMatchingName).isPresent();
 
         DefaultMutableTreeNode treeNode = treeNodeMatchingName.get();
-        List<DefaultMutableTreeNode> treeNodeChildren = Collections.list(treeNode.children());
+        List<DefaultMutableTreeNode> treeNodeChildren = toList(treeNode.children());
         assertThat(treeNodeChildren).hasSize(descriptors.length);
 
         Arrays.stream(descriptors)
                 .forEach(descriptor -> assertThatExistsChildrenWithUserObject(treeNodeChildren, descriptor));
+    }
+
+    private List<DefaultMutableTreeNode> toList(Enumeration enumeration) {
+        List<DefaultMutableTreeNode> treeNodes = new ArrayList<>();
+        while (enumeration.hasMoreElements()) {
+            treeNodes.add((DefaultMutableTreeNode) enumeration.nextElement());
+        }
+        return treeNodes;
     }
 }

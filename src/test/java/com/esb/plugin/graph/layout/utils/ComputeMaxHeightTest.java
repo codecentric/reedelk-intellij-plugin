@@ -3,22 +3,59 @@ package com.esb.plugin.graph.layout.utils;
 import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.component.type.fork.ForkNode;
 import com.esb.plugin.component.type.router.RouterNode;
-import com.esb.plugin.editor.designer.AbstractGraphNode;
 import com.esb.plugin.graph.FlowGraph;
+import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.awt.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doReturn;
 
 @DisplayName("Compute Max Height Tests")
+@MockitoSettings(strictness = Strictness.LENIENT)
 class ComputeMaxHeightTest extends AbstractGraphTest {
+
+    private static final int DEFAULT_TOP_HEIGHT = 70;
+    private static final int DEFAULT_BOTTOM_HEIGHT = 50;
+    private static final int DEFAULT_HEIGHT = DEFAULT_TOP_HEIGHT + DEFAULT_BOTTOM_HEIGHT;
 
     @Mock
     Graphics2D graphics;
+
+    @BeforeEach
+    protected void setUp() {
+        super.setUp();
+
+        mockDefaultNodeHeight(root);
+        mockDefaultNodeHeight(componentNode1);
+        mockDefaultNodeHeight(componentNode2);
+        mockDefaultNodeHeight(componentNode3);
+        mockDefaultNodeHeight(componentNode4);
+        mockDefaultNodeHeight(componentNode5);
+        mockDefaultNodeHeight(componentNode6);
+        mockDefaultNodeHeight(componentNode7);
+        mockDefaultNodeHeight(componentNode8);
+        mockDefaultNodeHeight(componentNode9);
+        mockDefaultNodeHeight(componentNode10);
+        mockDefaultNodeHeight(componentNode11);
+    }
+
+    protected void mockDefaultNodeHeight(GraphNode node) {
+        mockNodeHeight(node, DEFAULT_TOP_HEIGHT, DEFAULT_BOTTOM_HEIGHT);
+    }
+
+    protected void mockNodeHeight(GraphNode node, int topHeight, int bottomHeight) {
+        doReturn(topHeight + bottomHeight).when(node).height(graphics);
+        doReturn(topHeight).when(node).topHalfHeight(graphics);
+        doReturn(bottomHeight).when(node).bottomHalfHeight(graphics);
+    }
 
     @Test
     void shouldComputeMaxHeightCorrectlyForRoot() {
@@ -30,7 +67,7 @@ class ComputeMaxHeightTest extends AbstractGraphTest {
         int actual = ComputeMaxHeight.of(graph, graphics, root);
 
         // Then
-        assertThat(actual).isEqualTo(AbstractGraphNode.HEIGHT);
+        assertThat(actual).isEqualTo(DEFAULT_HEIGHT);
     }
 
     @Test
@@ -44,7 +81,7 @@ class ComputeMaxHeightTest extends AbstractGraphTest {
         int actual = ComputeMaxHeight.of(graph, graphics, root);
 
         // Then
-        assertThat(actual).isEqualTo(AbstractGraphNode.HEIGHT);
+        assertThat(actual).isEqualTo(DEFAULT_HEIGHT);
     }
 
     @Test
@@ -64,8 +101,8 @@ class ComputeMaxHeightTest extends AbstractGraphTest {
         // Two nodes on top of each other plus need to take into account
         // the vertical top and bottom padding of the scope.
         assertThat(actual).isEqualTo(
-                AbstractGraphNode.HEIGHT +
-                        AbstractGraphNode.HEIGHT +
+                DEFAULT_HEIGHT +
+                        DEFAULT_HEIGHT +
                         ScopedGraphNode.VERTICAL_PADDING +
                         ScopedGraphNode.VERTICAL_PADDING);
     }
@@ -198,9 +235,9 @@ class ComputeMaxHeightTest extends AbstractGraphTest {
 
         // Then
         assertThat(actual).isEqualTo(
-                AbstractGraphNode.HEIGHT +
-                        AbstractGraphNode.HEIGHT +
-                        AbstractGraphNode.HEIGHT +
+                DEFAULT_HEIGHT +
+                        DEFAULT_HEIGHT +
+                        DEFAULT_HEIGHT +
                         ScopedGraphNode.VERTICAL_PADDING +
                         ScopedGraphNode.VERTICAL_PADDING);
     }
@@ -286,11 +323,11 @@ class ComputeMaxHeightTest extends AbstractGraphTest {
 
         // Then
         assertThat(actual).isEqualTo(
-                AbstractGraphNode.HEIGHT +
-                        AbstractGraphNode.HEIGHT +
-                        AbstractGraphNode.HEIGHT +
-                        AbstractGraphNode.HEIGHT +
-                        AbstractGraphNode.HEIGHT +
+                DEFAULT_HEIGHT +
+                        DEFAULT_HEIGHT +
+                        DEFAULT_HEIGHT +
+                        DEFAULT_HEIGHT +
+                        DEFAULT_HEIGHT +
                         ScopedGraphNode.VERTICAL_PADDING +
                         ScopedGraphNode.VERTICAL_PADDING +
                         ScopedGraphNode.VERTICAL_PADDING +
@@ -343,5 +380,63 @@ class ComputeMaxHeightTest extends AbstractGraphTest {
                         ScopedGraphNode.VERTICAL_PADDING +
                         ScopedGraphNode.VERTICAL_PADDING +
                         ScopedGraphNode.VERTICAL_PADDING);
+    }
+
+    @Test
+    void shouldComputeMaxHeightCorrectlyWhenTallerComponentFollowedBySmallerScopedGraphNode() {
+        // Given
+        mockNodeHeight(componentNode1, 70, 180);
+
+        FlowGraph graph = provider.createGraph();
+        graph.root(root);
+        graph.add(root, forkNode1);
+        graph.add(forkNode1, componentNode1);
+        graph.add(componentNode1, forkNode2);
+        graph.add(forkNode2, componentNode2);
+        graph.add(forkNode2, componentNode3);
+
+        forkNode1.addToScope(componentNode1);
+        forkNode1.addToScope(forkNode2);
+
+        forkNode2.addToScope(componentNode2);
+        forkNode2.addToScope(componentNode3);
+
+        // When
+        int actual = ComputeMaxHeight.of(graph, graphics, root);
+
+        // Then:
+        // the correct height is the greatest top height (100 + 5) -> componentNode2Spy height + 5 padding fork node2
+        // plus the greatest bottom height (180) -> componentNode1Spy + first scoped node paddings top and bottom 5 + 5
+        assertThat(actual).isEqualTo(DEFAULT_HEIGHT + 5 + 180 + 5 + 5);
+    }
+
+    // This test is the opposite of the above
+    @Test
+    void shouldComputeMaxHeightCorrectlyWhenSmallerScopedGraphNodeFollowedByTallerComponent() {
+        // Given
+        mockNodeHeight(componentNode1, 70, 180);
+
+        FlowGraph graph = provider.createGraph();
+        graph.root(root);
+        graph.add(root, forkNode1);
+        graph.add(forkNode1, forkNode2);
+        graph.add(forkNode2, componentNode2);
+        graph.add(forkNode2, componentNode3);
+        graph.add(componentNode2, componentNode1);
+        graph.add(componentNode3, componentNode1);
+
+        forkNode1.addToScope(forkNode2);
+        forkNode1.addToScope(componentNode1);
+
+        forkNode2.addToScope(componentNode2);
+        forkNode2.addToScope(componentNode3);
+
+        // When
+        int actual = ComputeMaxHeight.of(graph, graphics, root);
+
+        // Then:
+        // the correct height is the greatest top height (100 + 5) -> componentNode2Spy height + 5 padding fork node2
+        // plus the greatest bottom height (180) -> componentNode1Spy + first scoped node paddings top and bottom 5 + 5
+        assertThat(actual).isEqualTo(DEFAULT_HEIGHT + 5 + 180 + 5 + 5);
     }
 }

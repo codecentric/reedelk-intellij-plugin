@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.designer.widget;
 
+import com.esb.internal.commons.StringUtils;
 import com.esb.plugin.commons.Half;
 import com.esb.plugin.editor.designer.AbstractGraphNode;
 import com.esb.plugin.graph.FlowSnapshot;
@@ -24,15 +25,17 @@ public class FlowMetadata {
         graphics.setFont(font);
 
         String title = snapshot.getGraph().title();
-        Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(title, graphics);
-        double titleTextWidth = stringBounds.getWidth();
-        graphics.drawString(title, width + 20, Half.of(topPadding));
+        if (StringUtils.isNotBlank(title)) {
+            graphics.drawString(title, width + 20, Half.of(topPadding));
+        }
 
         font = graphics.getFont().deriveFont(13f);
         graphics.setFont(font);
         String description = snapshot.getGraph().description();
-        stringBounds = graphics.getFontMetrics().getStringBounds(description, graphics);
 
-        graphics.drawString(description, width + 20, Half.of(topPadding) + (int) stringBounds.getHeight() + 5);
+        if (StringUtils.isNotBlank(description)) {
+            Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(description, graphics);
+            graphics.drawString(description, width + 20, Half.of(topPadding) + (int) stringBounds.getHeight() + 5);
+        }
     }
 }

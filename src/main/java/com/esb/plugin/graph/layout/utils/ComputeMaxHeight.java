@@ -4,6 +4,8 @@ import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.FindFirstNodeOutsideScope;
+import com.esb.plugin.graph.utils.FindMaxBottomHalfHeight;
+import com.esb.plugin.graph.utils.FindMaxTopHalfHeight;
 
 import java.awt.*;
 import java.util.List;
@@ -16,12 +18,12 @@ public class ComputeMaxHeight {
     private ComputeMaxHeight() {
     }
 
-    public static int of(FlowGraph graph, Graphics2D graphics, GraphNode start, GraphNode end) {
-        return maxHeight(graphics, graph, start, end, 0);
-    }
-
     public static int of(FlowGraph graph, Graphics2D graphics, GraphNode start) {
         return of(graph, graphics, start, null);
+    }
+
+    public static int of(FlowGraph graph, Graphics2D graphics, GraphNode start, GraphNode end) {
+        return maxHeight(graphics, graph, start, end, 0);
     }
 
     private static int maxHeight(Graphics2D graphics, FlowGraph graph, GraphNode start, GraphNode end, int currentMax) {
@@ -69,7 +71,10 @@ public class ComputeMaxHeight {
             // then the sum is the max subtree of either the current scoped node or the subtree.
             // This case is when there is a scope node with just one successor in the scope.
             // Note that the single successor in the scope might be another scoped node as well.
-            int subtreeMax = maxHeight(graphics, graph, successors.get(0), firstNodeOutsideScope, 0);
+            int topSubTreeMax = FindMaxTopHalfHeight.of(graph, graphics, successors.get(0), firstNodeOutsideScope);
+            int bottomSubTreeMax = FindMaxBottomHalfHeight.of(graph, graphics, successors.get(0), firstNodeOutsideScope);
+
+            int subtreeMax = topSubTreeMax + bottomSubTreeMax;
             int scopeNodeMax = scopedGraphNode.height(graphics);
             sum += subtreeMax > scopeNodeMax ? subtreeMax : scopeNodeMax;
 
@@ -83,9 +88,10 @@ public class ComputeMaxHeight {
             }
         }
 
+        // TODO: Test this
         int followingMax = 0;
         if (firstNodeOutsideScope != end && firstNodeOutsideScope != null) {
-            followingMax = maxHeight(graphics, graph, firstNodeOutsideScope, null, 0);
+            followingMax = maxHeight(graphics, graph, firstNodeOutsideScope, end, 0);
         }
 
         int newCurrentMax = sum > currentMax ? sum : currentMax;

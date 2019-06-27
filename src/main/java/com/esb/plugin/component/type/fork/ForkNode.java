@@ -20,7 +20,7 @@ public class ForkNode extends AbstractScopedGraphNode {
 
     private static final int VERTICAL_DIVIDER_X_OFFSET = 10;
 
-    public static final int HEIGHT = 145;
+    public static final int HEIGHT = 146;
     public static final int WIDTH = 130;
 
     private final Icon icon;
