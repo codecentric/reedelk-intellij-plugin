@@ -765,17 +765,17 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                 graph.add(componentNode1, routerNode2);
                 graph.add(routerNode2, componentNode2);
 
-                root.setPosition(55, 75);
-                routerNode1.setPosition(165, 75);
-                componentNode1.setPosition(275, 75);
-                routerNode2.setPosition(390, 75);
-                componentNode2.setPosition(505, 75);
+                root.setPosition(65, 160);
+                routerNode1.setPosition(215, 160);
+                componentNode1.setPosition(370, 160);
+                routerNode2.setPosition(525, 160);
+                componentNode2.setPosition(685, 160);
 
                 routerNode1.addToScope(componentNode1);
                 routerNode1.addToScope(routerNode2);
                 routerNode2.addToScope(componentNode2);
 
-                Point dropPoint = new Point(563, 56);
+                Point dropPoint = new Point(753, 154);
 
                 // When
                 FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
