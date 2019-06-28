@@ -2,13 +2,16 @@ package com.esb.plugin.editor.designer.widget;
 
 import com.esb.plugin.commons.Fonts;
 import com.esb.plugin.commons.Half;
+import com.esb.plugin.commons.Images;
 import com.esb.plugin.editor.designer.AbstractGraphNode;
+import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.layout.utils.ComputeMaxHeight;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.ui.JBColor;
 
 import java.awt.*;
+import java.awt.image.ImageObserver;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,11 +32,35 @@ public class InboundLane {
         this.snapshot = snapshot;
     }
 
-    public void draw(Graphics2D graphics) {
+    public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         int width = AbstractGraphNode.WIDTH;
         drawVerticalBar(graphics, width);
         inboundComponent.setPosition(Half.of(width), Half.of(topPadding));
         inboundComponent.draw(graphics);
+
+        if (graph.isEmpty()) {
+            drawInboundComponentIcon(graphics, observer);
+        }
+    }
+
+    private void drawInboundComponentIcon(Graphics2D graphics, ImageObserver observer) {
+        Image inboundPlaceholderImage = Images.Component.InboundPlaceholderIcon;
+        graphics.drawImage(inboundPlaceholderImage,
+                Half.of(AbstractGraphNode.WIDTH) - Icon.Dimension.HALF_ICON_WIDTH,
+                topPadding + Icon.Dimension.ICON_HEIGHT + Icon.Dimension.TOP_PADDING - Icon.Dimension.ICON_WIDTH, observer);
+    }
+
+    private void drawVerticalBar(Graphics2D graphics, int width) {
+        int height = topPadding;
+        if (snapshot.getGraph().isEmpty()) {
+            height += DEFAULT_INBOUND_LANE_HEIGHT;
+        } else {
+            GraphNode root = snapshot.getGraph().root();
+            height += ComputeMaxHeight.of(snapshot.getGraph(), graphics, root);
+        }
+        graphics.setColor(JBColor.GRAY);
+        graphics.setStroke(dashed);
+        graphics.drawLine(width, 0, width, height);
     }
 
     class InboundComponent extends AbstractText {
@@ -51,18 +78,5 @@ public class InboundLane {
         protected List<String> getText() {
             return Collections.singletonList(INBOUND_STRING);
         }
-    }
-
-    private void drawVerticalBar(Graphics2D graphics, int width) {
-        int height = topPadding;
-        if (snapshot.getGraph().isEmpty()) {
-            height += DEFAULT_INBOUND_LANE_HEIGHT;
-        } else {
-            GraphNode root = snapshot.getGraph().root();
-            height += ComputeMaxHeight.of(snapshot.getGraph(), graphics, root);
-        }
-        graphics.setColor(JBColor.GRAY);
-        graphics.setStroke(dashed);
-        graphics.drawLine(width, 0, width, height);
     }
 }

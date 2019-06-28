@@ -17,9 +17,11 @@ public class Images {
 
         public static final Image DefaultComponent;
         public static final Image RemoveComponent;
+        public static final Image InboundPlaceholderIcon;
         static {
             DefaultComponent = loadImage("/icons/default-component.png");
             RemoveComponent = loadImage("/icons/remove-component-icon.png");
+            InboundPlaceholderIcon = loadImage("/icons/inbound-placeholder-icon.png");
         }
 
         private static final Map<String, Image> KEY_IMAGE_MAP = new HashMap<>();

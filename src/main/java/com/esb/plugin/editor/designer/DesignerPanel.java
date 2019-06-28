@@ -97,7 +97,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
         }
 
-        inboundLane.draw(g2);
+        inboundLane.draw(graph, g2, this);
 
         flowMetadata.draw(g2);
 

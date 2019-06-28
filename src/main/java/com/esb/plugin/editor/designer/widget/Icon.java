@@ -13,13 +13,15 @@ public class Icon {
 
     private static final int ARROW_ICON_PADDING = 5;
 
-    private static final int TOP_PADDING = 10;
-    private static final int BOTTOM_PADDING = 10;
+    public static class Dimension {
+        public static final int TOP_PADDING = 10;
+        public static final int BOTTOM_PADDING = 10;
 
-    private static final int ICON_WIDTH = 60;
-    private static final int ICON_HEIGHT = 60;
-    private static final int HALF_ICON_WIDTH = Half.of(ICON_WIDTH);
-    private static final int HALF_ICON_HEIGHT = Half.of(ICON_HEIGHT);
+        public static final int ICON_WIDTH = 60;
+        public static final int ICON_HEIGHT = 60;
+        public static final int HALF_ICON_WIDTH = Half.of(ICON_WIDTH);
+        public static final int HALF_ICON_HEIGHT = Half.of(ICON_HEIGHT);
+    }
 
     // The Image has size 60x60
     private final Image image;
@@ -47,8 +49,8 @@ public class Icon {
         int centerDescriptionY = centerTitleY + componentTitleHeight;
         textComponentDescription.setPosition(x, centerDescriptionY);
 
-        int imageX = x - HALF_ICON_WIDTH;
-        int imageY = y - ICON_HEIGHT;
+        int imageX = x - Dimension.HALF_ICON_WIDTH;
+        int imageY = y - Dimension.ICON_HEIGHT;
 
         graphics.drawImage(image, imageX, imageY, observer);
         textComponentTitle.draw(graphics);
@@ -57,10 +59,10 @@ public class Icon {
 
     public boolean contains(int x, int y) {
         boolean containsOnXAxis =
-                x >= this.x - HALF_ICON_WIDTH &&
-                        x <= this.x + HALF_ICON_WIDTH;
+                x >= this.x - Dimension.HALF_ICON_WIDTH &&
+                        x <= this.x + Dimension.HALF_ICON_WIDTH;
         boolean containsOnYAxis =
-                y >= this.y - ICON_HEIGHT &&
+                y >= this.y - Dimension.ICON_HEIGHT &&
                         y <= this.y;
         return containsOnXAxis && containsOnYAxis;
     }
@@ -81,7 +83,7 @@ public class Icon {
     }
 
     public int height(Graphics2D graphics) {
-        return ICON_HEIGHT + TOP_PADDING + BOTTOM_PADDING +
+        return Dimension.ICON_HEIGHT + Dimension.TOP_PADDING + Dimension.BOTTOM_PADDING +
                 textComponentTitle.height(graphics) +
                 textComponentDescription.height(graphics);
     }
@@ -89,24 +91,24 @@ public class Icon {
     public int bottomHalfHeight(Graphics2D graphics) {
         return textComponentTitle.height(graphics) +
                 textComponentDescription.height(graphics) +
-                BOTTOM_PADDING;
+                Dimension.BOTTOM_PADDING;
     }
 
     public int topHalfHeight(Graphics2D graphics) {
-        return ICON_HEIGHT + TOP_PADDING;
+        return Dimension.ICON_HEIGHT + Dimension.TOP_PADDING;
     }
 
     // An arrow starts just right after the icon.
     public Point getSourceArrowStart() {
-        int startX = x + HALF_ICON_WIDTH + ARROW_ICON_PADDING;
-        int startY = y - HALF_ICON_HEIGHT;
+        int startX = x + Dimension.HALF_ICON_WIDTH + ARROW_ICON_PADDING;
+        int startY = y - Dimension.HALF_ICON_HEIGHT;
         return new Point(startX, startY);
     }
 
     // An arrow ends just right before the icon.
     public Point getTargetArrowEnd() {
-        int startX = x - HALF_ICON_WIDTH - ARROW_ICON_PADDING;
-        int startY = y - HALF_ICON_HEIGHT;
+        int startX = x - Dimension.HALF_ICON_WIDTH - ARROW_ICON_PADDING;
+        int startY = y - Dimension.HALF_ICON_HEIGHT;
         return new Point(startX, startY);
     }
 }
