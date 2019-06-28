@@ -13,7 +13,6 @@ import com.esb.plugin.graph.utils.ListLastNodesOfScope;
 import com.intellij.ui.JBColor;
 
 import java.awt.*;
-import java.awt.image.ImageObserver;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
@@ -25,19 +24,17 @@ public abstract class ScopeBox {
 
     private Stroke stroke;
     private JBColor boundariesColor;
-    private ScopedGraphNode scopedGraphNode;
 
-    ScopeBox(ScopedGraphNode scopedGraphNode, JBColor boundariesColor, Stroke stroke) {
+    ScopeBox(JBColor boundariesColor, Stroke stroke) {
         this.stroke = stroke;
         this.boundariesColor = boundariesColor;
-        this.scopedGraphNode = scopedGraphNode;
     }
 
-    public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+    public void draw(FlowGraph graph, Graphics2D graphics, ScopedGraphNode node) {
         graphics.setStroke(stroke);
         graphics.setColor(boundariesColor);
 
-        ScopeBoundaries boundaries = getBoundaries(graph, graphics);
+        ScopeBoundaries boundaries = getBoundaries(graph, graphics, node);
         int x = boundaries.getX();
         int y = boundaries.getY();
 
@@ -60,9 +57,9 @@ public abstract class ScopeBox {
         int bottomLeftY = y + boundaries.getHeight();
 
         int midBottomLeftX = x;
-        int midBottomLeftY = scopedGraphNode.getBarycenter().y + 20;
+        int midBottomLeftY = node.getBarycenter().y + 20;
         int midTopLeftX = x;
-        int midTopLeftY = scopedGraphNode.getBarycenter().y - 20;
+        int midTopLeftY = node.getBarycenter().y - 20;
 
         graphics.drawLine(topLeftX, topLeftY, topRightX, topRightY);
         graphics.drawLine(topRightX, topLeftY, bottomRightX, bottomRightY);
@@ -72,7 +69,7 @@ public abstract class ScopeBox {
         graphics.drawLine(midTopLeftX, midTopLeftY, topLeftX, topLeftY);
     }
 
-    private int getMaxScopes(FlowGraph graph) {
+    private int getMaxScopes(FlowGraph graph, ScopedGraphNode scopedGraphNode) {
         int max = 0;
         Collection<GraphNode> allTerminalNodes = ListLastNodesOfScope.from(graph, scopedGraphNode);
         for (GraphNode node : allTerminalNodes) {
@@ -84,7 +81,7 @@ public abstract class ScopeBox {
         return max;
     }
 
-    public ScopeBoundaries getBoundaries(FlowGraph graph, Graphics2D graphics) {
+    public ScopeBoundaries getBoundaries(FlowGraph graph, Graphics2D graphics, ScopedGraphNode scopedGraphNode) {
         Collection<GraphNode> nodes = ListLastNodesOfScope.from(graph, scopedGraphNode);
 
         Drawable drawableWithMaxX = scopedGraphNode;
@@ -123,7 +120,7 @@ public abstract class ScopeBox {
         int maxY = scopedGraphNode.y() + halfSubTreeHeight - ScopedGraphNode.VERTICAL_PADDING;
 
         // Draw Scope Boundaries we need to compute the maximum number of scopes
-        int maxScopes = getMaxScopes(graph);
+        int maxScopes = getMaxScopes(graph, scopedGraphNode);
 
         int minX = drawableWithMinX.x() - Half.of(drawableWithMinX.width(graphics));
         int maxX = drawableWithMaxX.x() + Half.of(drawableWithMaxX.width(graphics)) + (maxScopes * IN_BETWEEN_SCOPES_PADDING);

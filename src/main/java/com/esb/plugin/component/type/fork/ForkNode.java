@@ -120,6 +120,6 @@ public class ForkNode extends AbstractScopedGraphNode {
             arrow.draw(graphics);
         }
 
-        drawEndOfScopeArrow(graph, graphics, observer);
+        drawEndOfScopeArrow(graph, graphics);
     }
 }

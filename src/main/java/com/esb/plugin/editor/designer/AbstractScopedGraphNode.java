@@ -38,8 +38,8 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
 
     public AbstractScopedGraphNode(ComponentData componentData) {
         this.componentData = componentData;
-        this.selectedNodeScopeBox = new SelectedScopeBox(this);
-        this.unselectedNodeScopeBox = new UnselectedScopeBox(this);
+        this.selectedNodeScopeBox = new SelectedScopeBox();
+        this.unselectedNodeScopeBox = new UnselectedScopeBox();
     }
 
     @Override
@@ -50,22 +50,22 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
     @Override
     public ScopeBoundaries getScopeBoundaries(FlowGraph graph, Graphics2D graphics) {
         return isSelected() ?
-                selectedNodeScopeBox.getBoundaries(graph, graphics) :
-                unselectedNodeScopeBox.getBoundaries(graph, graphics);
+                selectedNodeScopeBox.getBoundaries(graph, graphics, this) :
+                unselectedNodeScopeBox.getBoundaries(graph, graphics, this);
     }
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         if (isSelected()) {
-            selectedNodeScopeBox.draw(graph, graphics, observer);
+            selectedNodeScopeBox.draw(graph, graphics, this);
         } else {
-            unselectedNodeScopeBox.draw(graph, graphics, observer);
+            unselectedNodeScopeBox.draw(graph, graphics, this);
         }
     }
 
     @Override
     public void drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-        drawEndOfScopeArrow(graph, graphics, observer);
+        drawEndOfScopeArrow(graph, graphics);
     }
 
     @Override
@@ -147,13 +147,13 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
     // We also need to draw a connection between the end of scope to the next successor.
     // We draw this arrow only if the last drawables of this scope connect
     // arrows in the next scope
-    protected void drawEndOfScopeArrow(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+    protected void drawEndOfScopeArrow(FlowGraph graph, Graphics2D graphics) {
         FindFirstNodeOutsideScope.of(graph, this).ifPresent(firstNodeOutsideScope -> {
             if (IsLastScopeBeforeNode.of(graph, AbstractScopedGraphNode.this, firstNodeOutsideScope)) {
 
                 ScopeBoundaries boundaries = isSelected() ?
-                        selectedNodeScopeBox.getBoundaries(graph, graphics) :
-                        unselectedNodeScopeBox.getBoundaries(graph, graphics);
+                        selectedNodeScopeBox.getBoundaries(graph, graphics, this) :
+                        unselectedNodeScopeBox.getBoundaries(graph, graphics, this);
 
                 Point barycenter = firstNodeOutsideScope.getBarycenter();
                 Point source = new Point(boundaries.getX() + boundaries.getWidth(), barycenter.y);

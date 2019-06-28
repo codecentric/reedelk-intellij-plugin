@@ -35,7 +35,7 @@ public class PrecedingNodeWithOneSuccessor implements Strategy {
     public void execute(GraphNode node) {
         List<GraphNode> successors = graph.successors(precedingNode);
         checkState(successors.size() == 1,
-                "Successors size MUST be 1, otherwise it is a Scoped Drawable");
+                "Successors size MUST be 1, otherwise it would not be preceding node with one successor strategy");
 
         GraphNode successorOfClosestPrecedingNode = successors.get(0);
 

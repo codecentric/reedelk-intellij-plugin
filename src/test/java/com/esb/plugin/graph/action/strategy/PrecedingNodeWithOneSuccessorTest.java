@@ -6,14 +6,13 @@ import com.esb.plugin.graph.FlowGraph;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.awt.*;
 
+@MockitoSettings(strictness = Strictness.LENIENT)
 class PrecedingNodeWithOneSuccessorTest extends AbstractGraphTest {
-
-    @Mock
-    private Graphics2D graphics;
 
     @DisplayName("Scope node with successor outside scope")
     @Nested
@@ -23,16 +22,16 @@ class PrecedingNodeWithOneSuccessorTest extends AbstractGraphTest {
         void shouldAddSuccessorInsideScope() {
             // Given
             // We drop the node inside the fork node 1 "scope box"
-            Point componentNode2DropPoint = new Point(210, 80);
+            Point componentNode2DropPoint = new Point(254, 148);
 
             FlowGraph graph = provider.createGraph();
             graph.root(root);
             graph.add(root, forkNode1);
             graph.add(forkNode1, componentNode1);
 
-            root.setPosition(55, 77);
-            forkNode1.setPosition(165, 77);
-            componentNode1.setPosition(280, 77);
+            root.setPosition(65, 158);
+            forkNode1.setPosition(195, 158);
+            componentNode1.setPosition(330, 155);
 
             PrecedingNodeWithOneSuccessor strategy =
                     new PrecedingNodeWithOneSuccessor(graph, componentNode2DropPoint, forkNode1, graphics);
@@ -54,16 +53,16 @@ class PrecedingNodeWithOneSuccessorTest extends AbstractGraphTest {
         void shouldAddSuccessorOutsideScope() {
             // Given
             // We drop the node right outside the form node 1 "scope box"
-            Point componentNode2DropPoint = new Point(230, 50);
+            Point componentNode2DropPoint = new Point(290, 168);
 
             FlowGraph graph = provider.createGraph();
             graph.root(root);
             graph.add(root, forkNode1);
             graph.add(forkNode1, componentNode1);
 
-            root.setPosition(55, 77);
-            forkNode1.setPosition(165, 77);
-            componentNode1.setPosition(280, 77);
+            root.setPosition(65, 158);
+            forkNode1.setPosition(195, 158);
+            componentNode1.setPosition(330, 155);
 
             PrecedingNodeWithOneSuccessor strategy =
                     new PrecedingNodeWithOneSuccessor(graph, componentNode2DropPoint, forkNode1, graphics);
