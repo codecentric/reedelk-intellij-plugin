@@ -21,8 +21,6 @@ import static com.esb.plugin.component.domain.ComponentClass.INBOUND;
 class FlowActionNodeAddTest extends AbstractGraphTest {
 
     @Mock
-    private Graphics2D graphics;
-    @Mock
     private ImageObserver observer;
 
     private GraphNode rootReplacement;
@@ -494,14 +492,14 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                 graph.add(routerNode1, componentNode1);
                 graph.add(componentNode1, componentNode2);
 
-                root.setPosition(55, 70);
-                routerNode1.setPosition(165, 70);
-                componentNode1.setPosition(275, 70);
-                componentNode2.setPosition(390, 70);
+                root.setPosition(65, 155);
+                routerNode1.setPosition(215, 155);
+                componentNode1.setPosition(370, 155);
+                componentNode2.setPosition(505, 155);
 
                 routerNode1.addToScope(componentNode1);
 
-                Point dropPoint = new Point(338, 53);
+                Point dropPoint = new Point(454, 132);
 
                 // When
                 FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
@@ -637,16 +635,16 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                 forkNode2.addToScope(componentNode1);
                 forkNode2.addToScope(forkNode3);
 
-                root.setPosition(55, 157);
-                forkNode1.setPosition(165, 157);
-                forkNode2.setPosition(280, 157);
-                componentNode1.setPosition(400, 80);
-                forkNode3.setPosition(400, 227);
-                componentNode2.setPosition(525, 157);
+                root.setPosition(65, 223);
+                forkNode1.setPosition(195, 223);
+                forkNode2.setPosition(330, 223);
+                componentNode1.setPosition(470, 160);
+                forkNode3.setPosition(470, 278);
+                componentNode2.setPosition(615, 223);
 
 
                 // When we drop the node at the end of fork 2 node scope
-                Point dropPoint = new Point(458, 227);
+                Point dropPoint = new Point(539, 260);
                 FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
 
                 // Then
@@ -680,16 +678,15 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                 forkNode2.addToScope(componentNode1);
                 forkNode2.addToScope(forkNode3);
 
-                root.setPosition(55, 157);
-                forkNode1.setPosition(165, 157);
-                forkNode2.setPosition(280, 157);
-                componentNode1.setPosition(400, 80);
-                forkNode3.setPosition(400, 227);
-                componentNode2.setPosition(525, 157);
-
+                root.setPosition(65, 223);
+                forkNode1.setPosition(195, 223);
+                forkNode2.setPosition(330, 223);
+                componentNode1.setPosition(470, 160);
+                forkNode3.setPosition(470, 278);
+                componentNode2.setPosition(615, 223);
 
                 // When we drop the node at the end of fork 3 node scope
-                Point dropPoint = new Point(449, 208);
+                Point dropPoint = new Point(529, 282);
                 FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
 
                 // Then
@@ -723,16 +720,15 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                 forkNode2.addToScope(componentNode1);
                 forkNode2.addToScope(forkNode3);
 
-                root.setPosition(55, 157);
-                forkNode1.setPosition(165, 157);
-                forkNode2.setPosition(280, 157);
-                componentNode1.setPosition(400, 80);
-                forkNode3.setPosition(400, 227);
-                componentNode2.setPosition(525, 157);
-
+                root.setPosition(65, 223);
+                forkNode1.setPosition(195, 223);
+                forkNode2.setPosition(330, 223);
+                componentNode1.setPosition(470, 160);
+                forkNode3.setPosition(470, 278);
+                componentNode2.setPosition(615, 223);
 
                 // When we drop the node outside any scope
-                Point dropPoint = new Point(474, 234);
+                Point dropPoint = new Point(566, 185);
                 FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
 
                 // Then
