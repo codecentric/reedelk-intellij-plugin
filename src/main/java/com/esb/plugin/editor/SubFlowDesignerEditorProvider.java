@@ -29,7 +29,6 @@ public class SubFlowDesignerEditorProvider implements FileEditorProvider, DumbAw
     @Override
     public FileEditor createEditor(@NotNull Project project, @NotNull VirtualFile file) {
         Module module = ModuleUtil.findModuleForFile(file, project);
-        // TODO: The module here might be null!
         checkState(module != null, "Module must not be null");
 
         String defaultFlowTitle = SplitWords.from(file.getNameWithoutExtension());
