@@ -2,19 +2,22 @@ package com.esb.plugin.component.type.router;
 
 import com.esb.plugin.commons.Half;
 import com.esb.plugin.component.domain.ComponentData;
+import com.esb.plugin.component.type.router.functions.IsDefaultRoute;
 import com.esb.plugin.component.type.router.functions.ListConditionRoutePairs;
 import com.esb.plugin.component.type.router.functions.SyncConditionAndRoutePairs;
-import com.esb.plugin.component.type.router.widget.VerticalDividerArrows;
 import com.esb.plugin.editor.designer.AbstractScopedGraphNode;
 import com.esb.plugin.editor.designer.DrawableListener;
 import com.esb.plugin.editor.designer.widget.Icon;
 import com.esb.plugin.editor.designer.widget.VerticalDivider;
+import com.esb.plugin.editor.designer.widget.VerticalDividerArrows;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.GraphNodeFactory;
+import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.system.component.Placeholder;
 import com.esb.system.component.Router;
 import com.intellij.openapi.module.Module;
+import com.intellij.ui.JBColor;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -26,7 +29,7 @@ public class RouterNode extends AbstractScopedGraphNode {
 
     public static final String DATA_CONDITION_ROUTE_PAIRS = "conditionRoutePairs";
     public static final int HEIGHT = 140;
-    public static final int WIDTH = 170;
+    private static final int WIDTH = 170;
 
     private static final int VERTICAL_DIVIDER_X_OFFSET = 60;
     private static final int ICON_X_OFFSET = 30;
@@ -40,7 +43,8 @@ public class RouterNode extends AbstractScopedGraphNode {
         super(componentData);
         this.icon = new Icon(componentData);
         this.verticalDivider = new VerticalDivider(this);
-        this.verticalDividerArrows = new VerticalDividerArrows();
+        this.verticalDividerArrows =
+                new VerticalDividerArrows(VERTICAL_DIVIDER_X_OFFSET, new RouterOnProcessSuccessor());
     }
 
     @Override
@@ -149,5 +153,23 @@ public class RouterNode extends AbstractScopedGraphNode {
                 SyncConditionAndRoutePairs.getUpdatedPairs(graph, this, routerConditionRoutePairs);
         ComponentData component = componentData();
         component.set(DATA_CONDITION_ROUTE_PAIRS, updatedConditions);
+    }
+
+    class RouterOnProcessSuccessor implements VerticalDividerArrows.OnProcessSuccessor {
+
+        private final int DEFAULT_ROUTE_TEXT_LEFT_PADDING = 6;
+        private final int DEFAULT_ROUTE_TEXT_TOP_PADDING = 14;
+
+        @Override
+        public void onProcess(ScopedGraphNode parent, GraphNode successor, Graphics2D graphics) {
+            if (IsDefaultRoute.of(parent, successor)) {
+                int halfWidth = Half.of(parent.width(graphics));
+                int verticalX = parent.x() - VERTICAL_DIVIDER_X_OFFSET + halfWidth;
+                graphics.setColor(JBColor.GRAY);
+                Point targetArrowEnd = successor.getTargetArrowEnd();
+                graphics.drawString("otherwise", verticalX + DEFAULT_ROUTE_TEXT_LEFT_PADDING,
+                        targetArrowEnd.y + DEFAULT_ROUTE_TEXT_TOP_PADDING);
+            }
+        }
     }
 }

@@ -3,18 +3,15 @@ package com.esb.plugin.component.type.fork;
 import com.esb.plugin.commons.Half;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.editor.designer.AbstractScopedGraphNode;
-import com.esb.plugin.editor.designer.Drawable;
 import com.esb.plugin.editor.designer.DrawableListener;
-import com.esb.plugin.editor.designer.widget.Arrow;
 import com.esb.plugin.editor.designer.widget.Icon;
 import com.esb.plugin.editor.designer.widget.VerticalDivider;
+import com.esb.plugin.editor.designer.widget.VerticalDividerArrows;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.node.GraphNode;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.ImageObserver;
-import java.util.List;
 
 public class ForkNode extends AbstractScopedGraphNode {
 
@@ -25,12 +22,14 @@ public class ForkNode extends AbstractScopedGraphNode {
 
     private final Icon icon;
     private final VerticalDivider verticalDivider;
+    private final VerticalDividerArrows verticalDividerArrows;
 
 
     public ForkNode(ComponentData componentData) {
         super(componentData);
         this.icon = new Icon(componentData);
         this.verticalDivider = new VerticalDivider(this);
+        this.verticalDividerArrows = new VerticalDividerArrows(VERTICAL_DIVIDER_X_OFFSET);
     }
 
     @Override
@@ -64,7 +63,7 @@ public class ForkNode extends AbstractScopedGraphNode {
     @Override
     public void drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         super.drawArrows(graph, graphics, observer);
-        _drawArrows(graph, graphics, observer);
+        verticalDividerArrows.draw(this, graph, graphics);
     }
 
     @Override
@@ -107,23 +106,4 @@ public class ForkNode extends AbstractScopedGraphNode {
         return WIDTH;
     }
 
-    private void _drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-        // Draw arrows -> perpendicular to the vertical bar.
-        int halfWidth = Half.of(width(graphics));
-        int verticalX = x() + halfWidth - VERTICAL_DIVIDER_X_OFFSET;
-
-        List<GraphNode> successors = graph.successors(this);
-        for (Drawable successor : successors) {
-            // We only draw connections to successors within this scope drawable
-            if (!getScope().contains(successor)) continue;
-
-            Point targetBaryCenter = successor.getTargetArrowEnd();
-            Point sourceBaryCenter = new Point(verticalX, targetBaryCenter.y);
-
-            Arrow arrow = new Arrow(sourceBaryCenter, targetBaryCenter);
-            arrow.draw(graphics);
-        }
-
-        drawEndOfScopeArrow(graph, graphics);
-    }
 }
