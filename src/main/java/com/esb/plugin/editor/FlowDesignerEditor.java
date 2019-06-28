@@ -3,6 +3,7 @@ package com.esb.plugin.editor;
 import com.esb.plugin.commons.Icons;
 import com.esb.plugin.commons.Labels;
 import com.esb.plugin.editor.designer.DesignerPanelActionHandler;
+import com.esb.plugin.editor.designer.FlowDesignerPanel;
 import com.esb.plugin.editor.properties.PropertiesPanel;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.manager.GraphManager;
@@ -28,9 +29,15 @@ public class FlowDesignerEditor extends UserDataHolderBase implements FileEditor
 
     FlowDesignerEditor(Module module, FlowSnapshot snapshot, GraphManager manager, DesignerPanelActionHandler actionHandler) {
         this.manager = manager;
+
         PropertiesPanel properties =
                 new PropertiesPanel(module, snapshot, Labels.PROPERTIES_PANEL_FLOW_TITLE, Icons.FileTypeFlow);
-        this.editor = new DesignerEditor(snapshot, actionHandler, properties);
+
+        FlowDesignerPanel flowDesignerPanel =
+                new FlowDesignerPanel(snapshot, actionHandler);
+        flowDesignerPanel.addListener(properties);
+
+        this.editor = new DesignerEditor(flowDesignerPanel, properties);
     }
 
     @NotNull

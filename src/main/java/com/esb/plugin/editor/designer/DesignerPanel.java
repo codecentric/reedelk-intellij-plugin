@@ -1,11 +1,8 @@
 package com.esb.plugin.editor.designer;
 
 import com.esb.plugin.commons.DesignerWindowSizeCalculator;
-import com.esb.plugin.commons.Half;
 import com.esb.plugin.commons.PrintFlowInfo;
 import com.esb.plugin.editor.designer.widget.CenterOfNode;
-import com.esb.plugin.editor.designer.widget.FlowMetadata;
-import com.esb.plugin.editor.designer.widget.InboundLane;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.SnapshotListener;
@@ -33,15 +30,16 @@ import java.util.Optional;
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
-public class DesignerPanel extends JBPanel implements MouseMotionListener, MouseListener, DropTargetListener, SnapshotListener, DrawableListener {
+public abstract class DesignerPanel extends JBPanel implements MouseMotionListener, MouseListener, DropTargetListener, SnapshotListener, DrawableListener {
 
     private static final Logger LOG = Logger.getInstance(DesignerPanel.class);
 
-    private final int TOP_PADDING = 80;
+    protected final int TOP_PADDING = 80;
+
     private static final JBColor BACKGROUND_COLOR = JBColor.WHITE;
     private final GraphNode NOTHING_SELECTED = new NothingSelectedNode();
 
-    private FlowSnapshot snapshot;
+    protected FlowSnapshot snapshot;
     private SelectListener selectListener;
     private GraphNode selected = NOTHING_SELECTED;
 
@@ -50,8 +48,6 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
     private boolean updated = false;
     private boolean dragging;
 
-    private InboundLane inboundLane;
-    private FlowMetadata flowMetadata;
     private CenterOfNode centerOfNode;
 
     private final DesignerPanelActionHandler actionHandler;
@@ -63,14 +59,14 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
         this.snapshot.addListener(this);
 
         this.centerOfNode = new CenterOfNode(snapshot);
-        this.inboundLane = new InboundLane(snapshot, TOP_PADDING);
-        this.flowMetadata = new FlowMetadata(snapshot, Half.of(TOP_PADDING));
 
         setBackground(BACKGROUND_COLOR);
         registerAncestorListener();
         addMouseListener(this);
         addMouseMotionListener(this);
     }
+
+    protected abstract void onPrePaint(Graphics2D graphics);
 
     @Override
     protected void paintComponent(Graphics graphics) {
@@ -97,9 +93,7 @@ public class DesignerPanel extends JBPanel implements MouseMotionListener, Mouse
 
         }
 
-        inboundLane.draw(graph, g2, this);
-
-        flowMetadata.draw(g2);
+        onPrePaint(g2);
 
         long start = System.currentTimeMillis();
 
