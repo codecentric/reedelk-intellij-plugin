@@ -20,7 +20,7 @@ public class ForkNode extends AbstractScopedGraphNode {
 
     private static final int VERTICAL_DIVIDER_X_OFFSET = 10;
 
-    public static final int HEIGHT = 146;
+    public static final int HEIGHT = 140;
     public static final int WIDTH = 130;
 
     private final Icon icon;
@@ -73,8 +73,13 @@ public class ForkNode extends AbstractScopedGraphNode {
     }
 
     @Override
-    public Point getBarycenter() {
-        return icon.getBarycenter();
+    public Point getTargetArrowEnd() {
+        return icon.getTargetArrowEnd();
+    }
+
+    @Override
+    public Point getSourceArrowStart() {
+        return icon.getSourceArrowStart();
     }
 
     @Override
@@ -112,11 +117,10 @@ public class ForkNode extends AbstractScopedGraphNode {
             // We only draw connections to successors within this scope drawable
             if (!getScope().contains(successor)) continue;
 
-            Point targetBaryCenter = successor.getBarycenter();
+            Point targetBaryCenter = successor.getTargetArrowEnd();
             Point sourceBaryCenter = new Point(verticalX, targetBaryCenter.y);
-            Point target = getTarget(graphics, successor);
 
-            Arrow arrow = new Arrow(sourceBaryCenter, target);
+            Arrow arrow = new Arrow(sourceBaryCenter, targetBaryCenter);
             arrow.draw(graphics);
         }
 

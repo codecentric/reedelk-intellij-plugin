@@ -18,6 +18,14 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+// Scope Box
+//  ----------------
+//  |          C5  |
+//  |     C2       |
+//    C1           |
+//  |     C3       |
+//  |          C4  |
+//  ----------------
 public abstract class ScopeBox {
 
     private final int IN_BETWEEN_SCOPES_PADDING = 5;
@@ -38,15 +46,6 @@ public abstract class ScopeBox {
         int x = boundaries.getX();
         int y = boundaries.getY();
 
-        // Scope Box
-        //  ----------------
-        //  |              |
-        //  |              |
-        //                 |
-        //                 |
-        //  |              |
-        //  |              |
-        //  ----------------
         int topLeftX = x;
         int topLeftY = y;
         int topRightX = x + boundaries.getWidth();
@@ -57,9 +56,9 @@ public abstract class ScopeBox {
         int bottomLeftY = y + boundaries.getHeight();
 
         int midBottomLeftX = x;
-        int midBottomLeftY = node.getBarycenter().y + 20;
+        int midBottomLeftY = node.getTargetArrowEnd().y + 20;
         int midTopLeftX = x;
-        int midTopLeftY = node.getBarycenter().y - 20;
+        int midTopLeftY = node.getTargetArrowEnd().y - 20;
 
         graphics.drawLine(topLeftX, topLeftY, topRightX, topRightY);
         graphics.drawLine(topRightX, topLeftY, bottomRightX, bottomRightY);

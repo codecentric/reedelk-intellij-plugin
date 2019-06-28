@@ -50,11 +50,12 @@ public interface Drawable {
     void mousePressed(DrawableListener listener, MouseEvent event);
 
     /**
-     * The "user perceived" center of the Drawable component.
-     * For instance, a component has an icon + text below.
-     * The bary center in this case is the center of the icon.
-     *
-     * @return the barycenter point of this drawable.
+     * Returns the point where on this node, the target arrow should end.
      */
-    Point getBarycenter();
+    Point getTargetArrowEnd();
+
+    /**
+     * Returns the point where on this node, the start of  the arrow should start.
+     */
+    Point getSourceArrowStart();
 }

@@ -27,8 +27,13 @@ public class NothingSelectedNode implements GraphNode {
     }
 
     @Override
-    public Point getBarycenter() {
-        return null;
+    public Point getTargetArrowEnd() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Point getSourceArrowStart() {
+        throw new UnsupportedOperationException();
     }
 
     @Override

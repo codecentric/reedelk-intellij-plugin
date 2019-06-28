@@ -1,6 +1,5 @@
 package com.esb.plugin.editor.designer;
 
-import com.esb.plugin.commons.Half;
 import com.esb.plugin.component.domain.ComponentClass;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.editor.designer.widget.Arrow;
@@ -155,20 +154,12 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
                         selectedNodeScopeBox.getBoundaries(graph, graphics, this) :
                         unselectedNodeScopeBox.getBoundaries(graph, graphics, this);
 
-                Point barycenter = firstNodeOutsideScope.getBarycenter();
-                Point source = new Point(boundaries.getX() + boundaries.getWidth(), barycenter.y);
-                Point target = getTarget(graphics, firstNodeOutsideScope);
+                Point target = firstNodeOutsideScope.getTargetArrowEnd();
+                Point source = new Point(boundaries.getX() + boundaries.getWidth(), target.y);
 
                 Arrow arrow = new Arrow(source, target);
                 arrow.draw(graphics);
             }
         });
-    }
-
-    protected Point getTarget(Graphics2D graphics, Drawable drawable) {
-        Point barycenter = drawable.getBarycenter();
-        return new Point(
-                barycenter.x - Half.of(drawable.width(graphics)) + 15,
-                barycenter.y);
     }
 }

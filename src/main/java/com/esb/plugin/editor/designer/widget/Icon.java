@@ -11,6 +11,8 @@ import java.awt.image.ImageObserver;
  */
 public class Icon {
 
+    private static final int ARROW_ICON_PADDING = 5;
+
     private static final int TOP_PADDING = 10;
     private static final int BOTTOM_PADDING = 10;
 
@@ -36,9 +38,6 @@ public class Icon {
 
     public void draw(Graphics2D graphics, ImageObserver observer) {
         int componentTitleHeight = textComponentTitle.height(graphics);
-        int halfComponentTitleHeight = Half.of(componentTitleHeight);
-
-        int componentDescriptionHeight = textComponentDescription.height(graphics);
 
         // Center title below icon
         int centerTitleY = y;
@@ -48,10 +47,8 @@ public class Icon {
         int centerDescriptionY = centerTitleY + componentTitleHeight;
         textComponentDescription.setPosition(x, centerDescriptionY);
 
-
         int imageX = x - HALF_ICON_WIDTH;
         int imageY = y - ICON_HEIGHT;
-
 
         graphics.drawImage(image, imageX, imageY, observer);
         textComponentTitle.draw(graphics);
@@ -66,12 +63,6 @@ public class Icon {
                 y >= this.y - ICON_HEIGHT &&
                         y <= this.y;
         return containsOnXAxis && containsOnYAxis;
-    }
-
-    public Point getBarycenter() {
-        int baryX = x;
-        int baryY = y - HALF_ICON_HEIGHT;
-        return new Point(baryX, baryY);
     }
 
     public void setPosition(int x, int y) {
@@ -103,5 +94,19 @@ public class Icon {
 
     public int topHalfHeight(Graphics2D graphics) {
         return ICON_HEIGHT + TOP_PADDING;
+    }
+
+    // An arrow starts just right after the icon.
+    public Point getSourceArrowStart() {
+        int startX = x + HALF_ICON_WIDTH + ARROW_ICON_PADDING;
+        int startY = y - HALF_ICON_HEIGHT;
+        return new Point(startX, startY);
+    }
+
+    // An arrow ends just right before the icon.
+    public Point getTargetArrowEnd() {
+        int startX = x - HALF_ICON_WIDTH - ARROW_ICON_PADDING;
+        int startY = y - HALF_ICON_HEIGHT;
+        return new Point(startX, startY);
     }
 }

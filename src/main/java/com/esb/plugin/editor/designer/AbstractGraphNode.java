@@ -180,10 +180,13 @@ public abstract class AbstractGraphNode implements GraphNode {
     }
 
     @Override
-    public Point getBarycenter() {
-        // The barycenter for a component node is
-        // the center of the icon representing it.
-        return icon.getBarycenter();
+    public Point getTargetArrowEnd() {
+        return icon.getTargetArrowEnd();
+    }
+
+    @Override
+    public Point getSourceArrowStart() {
+        return icon.getSourceArrowStart();
     }
 
     @Override
@@ -234,20 +237,9 @@ public abstract class AbstractGraphNode implements GraphNode {
 
     private void drawTheArrows(FlowGraph graph, Graphics2D graphics) {
         graph.successors(this).forEach(successor -> {
-            // Source
-            Point sourceBaryCenter = getBarycenter();
-            Point source = new Point(
-                    sourceBaryCenter.x + Half.of(60) + 7,
-                    sourceBaryCenter.y);
-
-            // Target
-            Point targetBaryCenter = successor.getBarycenter();
-            Point target = new Point(
-                    targetBaryCenter.x - Half.of(60) - 7,
-                    targetBaryCenter.y);
-
-            // Arrow to draw
-            Arrow arrow = new Arrow(source, target);
+            Point thisNodeArrowStart = getSourceArrowStart();
+            Point successorNodeArrowEnd = successor.getTargetArrowEnd();
+            Arrow arrow = new Arrow(thisNodeArrowStart, successorNodeArrowEnd);
             arrow.draw(graphics);
         });
     }

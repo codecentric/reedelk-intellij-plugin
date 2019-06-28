@@ -28,7 +28,6 @@ public class RouterNode extends AbstractScopedGraphNode {
     public static final int HEIGHT = 140;
     public static final int WIDTH = 170;
 
-
     private static final int VERTICAL_DIVIDER_X_OFFSET = 60;
     private static final int ICON_X_OFFSET = 30;
 
@@ -82,8 +81,13 @@ public class RouterNode extends AbstractScopedGraphNode {
     }
 
     @Override
-    public Point getBarycenter() {
-        return icon.getBarycenter();
+    public Point getTargetArrowEnd() {
+        return icon.getTargetArrowEnd();
+    }
+
+    @Override
+    public Point getSourceArrowStart() {
+        return icon.getSourceArrowStart();
     }
 
     @Override
@@ -175,11 +179,10 @@ public class RouterNode extends AbstractScopedGraphNode {
             // We only draw connections to successors within this scope drawable
             if (!getScope().contains(successor)) continue;
 
-            Point targetBaryCenter = successor.getBarycenter();
+            Point targetBaryCenter = successor.getTargetArrowEnd();
             Point sourceBaryCenter = new Point(verticalX, targetBaryCenter.y);
-            Point target = getTarget(graphics, successor);
 
-            Arrow arrow = new Arrow(sourceBaryCenter, target);
+            Arrow arrow = new Arrow(sourceBaryCenter, targetBaryCenter);
             arrow.draw(graphics);
 
             if (isDefaultRoute(successor)) {
