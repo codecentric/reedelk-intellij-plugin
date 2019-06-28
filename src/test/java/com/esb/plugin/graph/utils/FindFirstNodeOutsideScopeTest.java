@@ -56,4 +56,18 @@ class FindFirstNodeOutsideScopeTest extends AbstractGraphTest {
         assertThat(nodes.get()).isEqualTo(componentNode3);
     }
 
+    @Test
+    void shouldCorrectlyReturnFirstNodeOutsideScopeWhenScopeIsEmpty() {
+        // Given
+        FlowGraph graph = provider.createGraph();
+        graph.root(root);
+        graph.add(root, forkNode1);
+        graph.add(forkNode1, componentNode1);
+
+        // When
+        Optional<GraphNode> nodes = FindFirstNodeOutsideScope.of(graph, forkNode1);
+
+        // Then
+        assertThat(nodes.get()).isEqualTo(componentNode1);
+    }
 }
