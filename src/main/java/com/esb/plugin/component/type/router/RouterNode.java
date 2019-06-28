@@ -1,6 +1,7 @@
 package com.esb.plugin.component.type.router;
 
 import com.esb.plugin.commons.Half;
+import com.esb.plugin.commons.Labels;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.type.router.functions.IsDefaultRoute;
 import com.esb.plugin.component.type.router.functions.ListConditionRoutePairs;
@@ -167,7 +168,7 @@ public class RouterNode extends AbstractScopedGraphNode {
                 int verticalX = parent.x() - VERTICAL_DIVIDER_X_OFFSET + halfWidth;
                 graphics.setColor(JBColor.GRAY);
                 Point targetArrowEnd = successor.getTargetArrowEnd();
-                graphics.drawString("otherwise", verticalX + DEFAULT_ROUTE_TEXT_LEFT_PADDING,
+                graphics.drawString(Labels.ROUTER_DEFAULT_ROUTE, verticalX + DEFAULT_ROUTE_TEXT_LEFT_PADDING,
                         targetArrowEnd.y + DEFAULT_ROUTE_TEXT_TOP_PADDING);
             }
         }

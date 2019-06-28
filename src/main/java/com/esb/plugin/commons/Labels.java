@@ -18,5 +18,7 @@ public class Labels {
 
     public static final String DIALOG_MESSAGE_DELETE_CONFIRM = "Are you sure you want to delete the selected configuration?";
 
+    public static final String ROUTER_DEFAULT_ROUTE = "otherwise";
+
 
 }
