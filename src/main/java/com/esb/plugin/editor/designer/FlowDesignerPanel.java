@@ -23,5 +23,4 @@ public class FlowDesignerPanel extends DesignerPanel {
         inboundLane.draw(snapshot.getGraph(), graphics, this);
         flowMetadata.draw(graphics);
     }
-
 }
