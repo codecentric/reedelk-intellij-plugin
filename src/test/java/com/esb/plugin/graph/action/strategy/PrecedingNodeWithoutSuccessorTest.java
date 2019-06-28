@@ -6,14 +6,10 @@ import com.esb.plugin.graph.FlowGraph;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import java.awt.*;
 
 class PrecedingNodeWithoutSuccessorTest extends AbstractGraphTest {
-
-    @Mock
-    private Graphics2D graphics;
 
     @DisplayName("Scoped Node without successors")
     @Nested
@@ -22,14 +18,14 @@ class PrecedingNodeWithoutSuccessorTest extends AbstractGraphTest {
         void shouldAddSuccessorInsideScope() {
             // Given
             // We drop the node inside the fork node 1 "scope box"
-            Point componentNode1DropPoint = new Point(240, 70);
+            Point componentNode1DropPoint = new Point(255, 144);
 
             FlowGraph graph = provider.createGraph();
             graph.root(root);
             graph.add(root, forkNode1);
 
-            root.setPosition(55, 75);
-            forkNode1.setPosition(195, 75);
+            root.setPosition(65, 158);
+            forkNode1.setPosition(195, 158);
 
             PrecedingNodeWithoutSuccessor strategy =
                     new PrecedingNodeWithoutSuccessor(graph, componentNode1DropPoint, forkNode1, graphics);
@@ -50,14 +46,14 @@ class PrecedingNodeWithoutSuccessorTest extends AbstractGraphTest {
         void shouldAddSuccessorOutsideScope() {
             // Given
             // We drop the node right outside the fork node 1 "scope box"
-            Point componentNode1DropPoint = new Point(260, 70);
+            Point componentNode1DropPoint = new Point(303, 139);
 
             FlowGraph graph = provider.createGraph();
             graph.root(root);
             graph.add(root, forkNode1);
 
-            root.setPosition(55, 75);
-            forkNode1.setPosition(195, 75);
+            root.setPosition(65, 158);
+            forkNode1.setPosition(195, 158);
 
             PrecedingNodeWithoutSuccessor strategy =
                     new PrecedingNodeWithoutSuccessor(graph, componentNode1DropPoint, forkNode1, graphics);
