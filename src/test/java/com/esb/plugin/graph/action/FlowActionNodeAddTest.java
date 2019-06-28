@@ -595,15 +595,15 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                 forkNode2.addToScope(componentNode1);
                 forkNode2.addToScope(forkNode3);
 
-                root.setPosition(55, 157);
-                forkNode1.setPosition(165, 157);
-                forkNode2.setPosition(280, 157);
-                componentNode1.setPosition(400, 80);
-                forkNode3.setPosition(400, 227);
-                componentNode2.setPosition(525, 157);
+                root.setPosition(65, 223);
+                forkNode1.setPosition(195, 223);
+                forkNode2.setPosition(330, 223);
+                componentNode1.setPosition(470, 160);
+                forkNode3.setPosition(470, 278);
+                componentNode2.setPosition(615, 223);
 
-                // When we drop the node at the end of fork 1 node scope
-                Point dropPoint = new Point(463, 221);
+                // When we drop the node between fork 2 and fork 1 node scope
+                Point dropPoint = new Point(544, 191);
                 FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
 
                 // Then
