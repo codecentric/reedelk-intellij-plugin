@@ -5,11 +5,14 @@ import com.esb.plugin.graph.node.GraphNode;
 
 import static com.esb.plugin.component.domain.ComponentClass.INBOUND;
 
-public class SubFlowReplaceRootStrategy implements Strategy {
+/**
+ * In a Subflow we don't replace the root node. We just add a node before.
+ */
+public class SubFlowAddNewRoot implements Strategy {
 
     private final FlowGraph graph;
 
-    public SubFlowReplaceRootStrategy(FlowGraph graph) {
+    public SubFlowAddNewRoot(FlowGraph graph) {
         this.graph = graph;
     }
 

@@ -65,14 +65,14 @@ public class StrategyBuilder {
                     new SubFlowAddRootStrategy(graph) :
                     new FlowAddRootStrategy(graph);
 
-        } else if (overlapsPlaceholder(graph, dropPoint)) {
-            GraphNode overlappingPlaceholder = getOverlappingPlaceholder(graph, dropPoint);
-            strategy = new ReplacePlaceholderStrategy(graph, overlappingPlaceholder);
-
-        } else if (isReplacingRoot(graph, dropPoint)) {
+        } else if (isReplacingRoot(graph, dropPoint, graphics)) {
             strategy = isSubflow ?
-                    new SubFlowReplaceRootStrategy(graph) :
+                    new SubFlowAddNewRoot(graph) :
                     new FlowReplaceRootStrategy(graph);
+
+        } else if (isOverlappingAnyPlaceHolder(graph, dropPoint)) {
+            GraphNode overlappingPlaceholder = getOverlappingPlaceholder(graph, dropPoint);
+            strategy = new ReplaceNodeStrategy(graph, overlappingPlaceholder);
 
         } else {
 
@@ -115,7 +115,7 @@ public class StrategyBuilder {
         return successors.size() == 1 && !closestPrecedingNode.scopeContains(successors.get(0));
     }
 
-    private boolean overlapsPlaceholder(FlowGraph graph, Point dropPoint) {
+    private boolean isOverlappingAnyPlaceHolder(FlowGraph graph, Point dropPoint) {
         return graph.nodes()
                 .stream()
                 .anyMatch(node -> node.contains(observer, dropPoint.x, dropPoint.y) &&
@@ -131,15 +131,18 @@ public class StrategyBuilder {
                 .get();
     }
 
-    /*
-     * Checks if we are replacing the root (i.e there are no nodes preceding the drop point on X).
-     * TODO: do a check on the Y axis as well.
+    /**
+     * We are replacing root if the drop point is before the current root OR
+     * if the drop point is inside the current root node.
      */
-    private static boolean isReplacingRoot(FlowGraph graph, Point dropPoint) {
-        return graph
-                .nodes()
-                .stream()
-                .noneMatch(node -> node.x() < dropPoint.x);
+    private static boolean isReplacingRoot(FlowGraph graph, Point dropPoint, Graphics2D graphics) {
+        checkState(!graph.isEmpty(), "Expected a not empty graph");
+
+        GraphNode root = graph.root();
+        return dropPoint.x <= root.x() + Half.of(root.width(graphics)) &&
+                dropPoint.y > root.y() - Half.of(root.height(graphics)) &&
+                dropPoint.y < root.y() + Half.of(root.height(graphics));
+
     }
 
 

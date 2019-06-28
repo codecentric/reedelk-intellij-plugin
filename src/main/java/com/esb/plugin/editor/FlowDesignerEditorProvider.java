@@ -1,5 +1,6 @@
 package com.esb.plugin.editor;
 
+import com.esb.plugin.commons.SplitWords;
 import com.esb.plugin.editor.designer.DesignerPanelActionHandler;
 import com.esb.plugin.filetype.FlowFileType;
 import com.esb.plugin.graph.FlowGraphProvider;
@@ -31,10 +32,11 @@ public class FlowDesignerEditorProvider implements FileEditorProvider, DumbAware
         // TODO: The module here might be null!
         checkState(module != null, "Module must not be null");
 
-        String defaultFlowTitle = file.getNameWithoutExtension();
+        String defaultFlowTitle = SplitWords.from(file.getNameWithoutExtension());
+        String defaultDescription = defaultFlowTitle + " Flow";
 
         FlowGraphProvider graphProvider = new FlowGraphProvider();
-        FlowSnapshot snapshot = new FlowSnapshot(graphProvider, defaultFlowTitle);
+        FlowSnapshot snapshot = new FlowSnapshot(graphProvider, defaultFlowTitle, defaultDescription);
         FlowGraphManager graphManager = new FlowGraphManager(project, module, file, snapshot, graphProvider);
 
         DesignerPanelActionHandler handler = new FlowDesignerPanelActionHandler(module, snapshot);

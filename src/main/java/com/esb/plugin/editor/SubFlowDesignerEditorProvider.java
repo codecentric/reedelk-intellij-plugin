@@ -1,5 +1,6 @@
 package com.esb.plugin.editor;
 
+import com.esb.plugin.commons.SplitWords;
 import com.esb.plugin.filetype.SubFlowFileType;
 import com.esb.plugin.graph.FlowGraphProvider;
 import com.esb.plugin.graph.FlowSnapshot;
@@ -31,10 +32,11 @@ public class SubFlowDesignerEditorProvider implements FileEditorProvider, DumbAw
         // TODO: The module here might be null!
         checkState(module != null, "Module must not be null");
 
-        String defaultFlowTitle = file.getNameWithoutExtension();
+        String defaultFlowTitle = SplitWords.from(file.getNameWithoutExtension());
+        String defaultDescription = defaultFlowTitle + " Subflow";
 
         FlowGraphProvider graphProvider = new FlowGraphProvider();
-        FlowSnapshot snapshot = new FlowSnapshot(graphProvider, defaultFlowTitle);
+        FlowSnapshot snapshot = new FlowSnapshot(graphProvider, defaultFlowTitle, defaultDescription);
         GraphManager graphManager = new SubFlowGraphManager(project, module, file, snapshot, graphProvider);
 
         SubFlowDesignerPanelActionHandler handler = new SubFlowDesignerPanelActionHandler(module, snapshot);

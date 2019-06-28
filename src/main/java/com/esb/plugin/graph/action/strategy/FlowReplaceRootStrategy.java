@@ -5,21 +5,17 @@ import com.esb.plugin.graph.node.GraphNode;
 
 import static com.esb.plugin.component.domain.ComponentClass.INBOUND;
 
-public class FlowReplaceRootStrategy implements Strategy {
+public class FlowReplaceRootStrategy extends ReplaceNodeStrategy {
 
-    private final FlowGraph graph;
-
-    public FlowReplaceRootStrategy(FlowGraph graph) {
-        this.graph = graph;
+    FlowReplaceRootStrategy(FlowGraph graph) {
+        super(graph, graph.root());
     }
 
     @Override
-    public void execute(GraphNode node) {
+    public void execute(GraphNode replacement) {
         // Only inbound components can replace root.
-        if (INBOUND.equals(node.getComponentClass())) {
-            GraphNode currentRoot = graph.root();
-            graph.root(node);
-            graph.add(node, currentRoot);
+        if (INBOUND.equals(replacement.getComponentClass())) {
+            super.execute(replacement);
         }
     }
 }
