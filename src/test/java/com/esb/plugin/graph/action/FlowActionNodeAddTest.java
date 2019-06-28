@@ -448,7 +448,7 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
             }
 
             @Test
-            void shouldAddNodeBetweenPredecessorInScope1AndSuccessorInScope2() {
+            void shouldAddNodeBetweenSuccessorInScope1AndBeforeScope2() {
                 // Given
                 FlowGraph graph = provider.createGraph();
                 graph.root(root);
@@ -459,13 +459,13 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                 routerNode1.addToScope(componentNode1);
                 routerNode2.addToScope(componentNode2);
 
-                root.setPosition(55, 75);
-                routerNode1.setPosition(165, 75);
-                componentNode1.setPosition(275, 75);
-                routerNode2.setPosition(390, 75);
-                componentNode2.setPosition(500, 75);
+                root.setPosition(65, 155);
+                routerNode1.setPosition(215, 155);
+                componentNode1.setPosition(370, 155);
+                routerNode2.setPosition(525, 155);
+                componentNode2.setPosition(680, 155);
 
-                Point dropPoint = new Point(333, 60);
+                Point dropPoint = new Point(437, 147);
 
                 // When
                 FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
