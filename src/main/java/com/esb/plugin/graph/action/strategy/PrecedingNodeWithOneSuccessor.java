@@ -24,7 +24,7 @@ public class PrecedingNodeWithOneSuccessor implements Strategy {
     private final FlowGraph graph;
     private final Point dropPoint;
 
-    public PrecedingNodeWithOneSuccessor(@NotNull FlowGraph graph, @NotNull Point dropPoint, @NotNull GraphNode precedingNode, @NotNull Graphics2D graphics) {
+    PrecedingNodeWithOneSuccessor(@NotNull FlowGraph graph, @NotNull Point dropPoint, @NotNull GraphNode precedingNode, @NotNull Graphics2D graphics) {
         this.precedingNode = precedingNode;
         this.dropPoint = dropPoint;
         this.graphics = graphics;

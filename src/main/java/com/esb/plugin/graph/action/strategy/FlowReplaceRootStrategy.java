@@ -12,10 +12,8 @@ public class FlowReplaceRootStrategy extends ReplaceNodeStrategy {
     }
 
     @Override
-    public void execute(GraphNode replacement) {
+    public boolean applicableOn(GraphNode replacement) {
         // Only inbound components can replace root.
-        if (INBOUND.equals(replacement.getComponentClass())) {
-            super.execute(replacement);
-        }
+        return INBOUND.equals(replacement.getComponentClass());
     }
 }

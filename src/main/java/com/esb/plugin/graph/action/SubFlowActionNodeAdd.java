@@ -2,7 +2,7 @@ package com.esb.plugin.graph.action;
 
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.action.strategy.Strategy;
-import com.esb.plugin.graph.action.strategy.StrategyBuilder;
+import com.esb.plugin.graph.action.strategy.SubFlowStrategyBuilder;
 import com.esb.plugin.graph.node.GraphNode;
 
 import java.awt.*;
@@ -16,13 +16,15 @@ public class SubFlowActionNodeAdd extends ActionNodeAdd {
 
     @Override
     public void execute(FlowGraph graph) {
-        Strategy strategy = StrategyBuilder.create()
-                .imageObserver(observer)
+        Strategy strategy = SubFlowStrategyBuilder.create()
+                .observer(observer)
                 .dropPoint(dropPoint)
                 .graphics(graphics)
                 .graph(graph)
-                .subflow()
                 .build();
-        strategy.execute(node);
+
+        if (strategy.applicableOn(node)) {
+            strategy.execute(node);
+        }
     }
 }

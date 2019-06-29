@@ -23,16 +23,16 @@ import java.util.Stack;
  */
 public class PrecedingNodeWithoutSuccessor implements Strategy {
 
-    private final FlowGraph graph;
     private final GraphNode closestPrecedingNode;
-    private final Point dropPoint;
     private final Graphics2D graphics;
+    private final FlowGraph graph;
+    private final Point dropPoint;
 
-    public PrecedingNodeWithoutSuccessor(FlowGraph graph, Point dropPoint, GraphNode closestPrecedingNode, Graphics2D graphics) {
+    PrecedingNodeWithoutSuccessor(FlowGraph graph, Point dropPoint, GraphNode closestPrecedingNode, Graphics2D graphics) {
         this.closestPrecedingNode = closestPrecedingNode;
-        this.graph = graph;
         this.dropPoint = dropPoint;
         this.graphics = graphics;
+        this.graph = graph;
     }
 
     @Override

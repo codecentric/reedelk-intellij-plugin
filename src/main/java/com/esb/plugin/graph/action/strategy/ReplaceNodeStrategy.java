@@ -16,8 +16,7 @@ public class ReplaceNodeStrategy implements Strategy {
     private final FlowGraph graph;
     private final GraphNode toBeReplaced;
 
-
-    public ReplaceNodeStrategy(FlowGraph graph, GraphNode toBeReplaced) {
+    ReplaceNodeStrategy(FlowGraph graph, GraphNode toBeReplaced) {
         this.graph = graph;
         this.toBeReplaced = toBeReplaced;
     }
