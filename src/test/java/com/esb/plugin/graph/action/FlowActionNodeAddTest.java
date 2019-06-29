@@ -126,14 +126,14 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
         void shouldAddComponentBetweenRootAndSuccessor() {
             // Given
             FlowGraph graph = provider.createGraph();
-
             graph.root(root);
-            root.setPosition(20, 20);
-
             graph.add(root, componentNode2);
-            componentNode2.setPosition(40, 20);
 
-            Point dropPoint = new Point(30, 20); // drop it between root and componentNode2
+            root.setPosition(65, 150);
+            componentNode2.setPosition(195, 150);
+
+            // Drop it right after root and before component 2
+            Point dropPoint = new Point(148, 124);
 
             // When
             FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, componentNode1, dropPoint);
@@ -453,11 +453,12 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                 graph.add(routerNode1, componentNode1);
                 routerNode1.addToScope(componentNode1);
 
-                root.setPosition(55, 70);
-                routerNode1.setPosition(165, 70);
-                componentNode1.setPosition(275, 70);
 
-                Point dropPoint = new Point(103, 56);
+                root.setPosition(65, 155);
+                routerNode1.setPosition(215, 155);
+                componentNode1.setPosition(370, 155);
+
+                Point dropPoint = new Point(142, 127);
 
                 // When
                 FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode2, dropPoint);
@@ -538,28 +539,6 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                         .and().successorsOf(componentNode3).isOnly(componentNode2)
                         .and().successorsOf(componentNode2).isEmpty()
                         .and().node(routerNode1).scopeContainsExactly(componentNode1);
-            }
-
-            @Test
-            void shouldAddNodeBetweenPredecessorAndSuccessorBothOutsideScope() {
-                // Given
-                FlowGraph graph = provider.createGraph();
-                graph.root(root);
-                graph.add(root, componentNode1);
-
-                root.setPosition(55, 65);
-                componentNode1.setPosition(165, 65);
-
-                Point dropPoint = new Point(106, 45);
-
-                // When
-                FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode2, dropPoint);
-
-                // Then
-                PluginAssertion.assertThat(updatedGraph)
-                        .root().is(root)
-                        .and().successorsOf(root).isOnly(componentNode2)
-                        .and().successorsOf(componentNode2).isOnly(componentNode1);
             }
 
             @Test
