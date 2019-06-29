@@ -67,9 +67,33 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
             // Then
             PluginAssertion.assertThat(modifiableGraph)
                     .isChanged()
+                    .nodesCountIs(1)
+                    .root().is(rootReplacement)
+                    .and().successorsOf(rootReplacement).isEmpty();
+        }
+
+        @Test
+        void shouldReplaceRootWhenDroppedComponentOverlapsRootNode() {
+            // Given
+            FlowGraph graph = provider.createGraph();
+            graph.root(root);
+            graph.add(root, componentNode1);
+
+            root.setPosition(65, 150);
+            componentNode1.setPosition(195, 150);
+
+            // Drop the root component on top of the existing root
+            Point dropPoint = new Point(56, 129);
+
+            // When
+            FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, rootReplacement, dropPoint);
+
+            // Then
+            PluginAssertion.assertThat(modifiableGraph)
+                    .isChanged()
                     .nodesCountIs(2)
                     .root().is(rootReplacement)
-                    .and().successorsOf(rootReplacement).isOnly(root);
+                    .and().successorsOf(rootReplacement).isOnly(componentNode1);
         }
     }
 
@@ -78,13 +102,14 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
     class FlowActionNodeAddAfterRoot {
 
         @Test
-        void shouldAddComponentAfterRootAsLast() {
+        void shouldAddComponentAfterRoot() {
             // Given
             FlowGraph graph = provider.createGraph();
             graph.root(root);
-            root.setPosition(20, 20);
+            root.setPosition(65, 150);
 
-            Point dropPoint = new Point(25, 23);  // a little bit after root center x coordinate
+            // Drop the component next  to the root
+            Point dropPoint = new Point(195, 150);
 
             // When
             FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, componentNode1, dropPoint);

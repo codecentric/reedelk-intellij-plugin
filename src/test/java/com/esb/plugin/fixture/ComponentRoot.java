@@ -1,6 +1,15 @@
 package com.esb.plugin.fixture;
 
-import com.esb.api.component.Component;
+import com.esb.api.component.AbstractInbound;
 
-public class ComponentRoot implements Component {
+public class ComponentRoot extends AbstractInbound {
+    @Override
+    public void onStart() {
+
+    }
+
+    @Override
+    public void onShutdown() {
+
+    }
 }
