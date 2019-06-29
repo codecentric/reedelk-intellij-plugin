@@ -44,7 +44,7 @@ public abstract class StrategyBuilder {
 
 
     @NotNull
-    protected Strategy getStrategyForClosestPrecedingNode(GraphNode precedingNode) {
+    Strategy getStrategyForClosestPrecedingNode(GraphNode precedingNode) {
         if (graph.successors(precedingNode).isEmpty()) {
             return new PrecedingNodeWithoutSuccessor(graph, dropPoint, precedingNode, graphics);
 
