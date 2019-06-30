@@ -35,7 +35,6 @@ public class GraphNodeFactory {
         COMPONENT_DRAWABLE_MAP = tmp;
     }
 
-
     public static <T extends GraphNode> T get(Module module, String componentName) {
         ComponentDescriptor componentDescriptor =
                 ComponentService
@@ -46,14 +45,14 @@ public class GraphNodeFactory {
 
     @SuppressWarnings("unchecked")
     public static <T extends GraphNode> T get(ComponentDescriptor descriptor) {
-        ComponentDescriptionDecorator componentDescriptionDecorator = new ComponentDescriptionDecorator(descriptor);
 
-        ComponentData componentData = new ComponentData(componentDescriptionDecorator);
-
-        String componentFullyQualifiedName = componentData.getFullyQualifiedName();
+        String componentFullyQualifiedName = descriptor.getFullyQualifiedName();
 
         Class<? extends GraphNode> componentNodeClazz =
                 COMPONENT_DRAWABLE_MAP.getOrDefault(componentFullyQualifiedName, DEFAULT);
+
+        ComponentData componentData = createComponentData(componentNodeClazz, descriptor);
+
         try {
             return (T) componentNodeClazz.getConstructor(ComponentData.class).newInstance(componentData);
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
@@ -61,4 +60,23 @@ public class GraphNodeFactory {
         }
     }
 
+    private static ComponentData createComponentData(Class<? extends GraphNode> componentNodeClazz, ComponentDescriptor descriptor) {
+        if (implementsInterface(componentNodeClazz, ScopedGraphNode.class)) {
+            // Scoped Nodes do NOT have a description associated with them
+            return new ComponentData(descriptor);
+        } else {
+            // Normal Nodes have a description associated with them
+            ComponentDescriptionDecorator componentDescriptionDecorator = new ComponentDescriptionDecorator(descriptor);
+            return new ComponentData(componentDescriptionDecorator);
+        }
+    }
+
+    private static boolean implementsInterface(Class target, Class targetInterfaceClazz) {
+        if (target == null) return false;
+        Class[] interfaces = target.getInterfaces();
+        for (Class interfaceClazz : interfaces) {
+            if (interfaceClazz == targetInterfaceClazz) return true;
+        }
+        return implementsInterface(target.getSuperclass(), targetInterfaceClazz);
+    }
 }
