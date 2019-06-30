@@ -11,7 +11,7 @@ import java.awt.image.ImageObserver;
  */
 public class Icon {
 
-    private static final int ARROW_ICON_PADDING = 5;
+    private static final int ARROW_ICON_PADDING = 8;
 
     public static class Dimension {
         public static final int TOP_PADDING = 10;

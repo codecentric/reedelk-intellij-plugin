@@ -15,7 +15,7 @@ import java.awt.image.ImageObserver;
 
 public class ForkNode extends AbstractScopedGraphNode {
 
-    private static final int VERTICAL_DIVIDER_X_OFFSET = 10;
+    private static final int VERTICAL_DIVIDER_X_OFFSET = 7;
 
     public static final int HEIGHT = 140;
     public static final int WIDTH = 130;

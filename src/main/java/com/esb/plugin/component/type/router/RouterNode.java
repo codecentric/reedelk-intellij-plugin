@@ -32,8 +32,8 @@ public class RouterNode extends AbstractScopedGraphNode {
     public static final int HEIGHT = 140;
     private static final int WIDTH = 170;
 
-    private static final int VERTICAL_DIVIDER_X_OFFSET = 60;
-    private static final int ICON_X_OFFSET = 30;
+    private static final int VERTICAL_DIVIDER_X_OFFSET = 45;
+    private static final int ICON_X_OFFSET = 20;
 
 
     private final Icon icon;
