@@ -1,5 +1,6 @@
 package com.esb.plugin.graph.node;
 
+import com.esb.plugin.commons.ImplementsInterface;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.domain.ComponentDescriptionDecorator;
 import com.esb.plugin.component.domain.ComponentDescriptor;
@@ -61,7 +62,7 @@ public class GraphNodeFactory {
     }
 
     private static ComponentData createComponentData(Class<? extends GraphNode> componentNodeClazz, ComponentDescriptor descriptor) {
-        if (implementsInterface(componentNodeClazz, ScopedGraphNode.class)) {
+        if (ImplementsInterface.by(componentNodeClazz, ScopedGraphNode.class)) {
             // Scoped Nodes do NOT have a description associated with them
             return new ComponentData(descriptor);
         } else {
@@ -69,14 +70,5 @@ public class GraphNodeFactory {
             ComponentDescriptionDecorator componentDescriptionDecorator = new ComponentDescriptionDecorator(descriptor);
             return new ComponentData(componentDescriptionDecorator);
         }
-    }
-
-    private static boolean implementsInterface(Class target, Class targetInterfaceClazz) {
-        if (target == null) return false;
-        Class[] interfaces = target.getInterfaces();
-        for (Class interfaceClazz : interfaces) {
-            if (interfaceClazz == targetInterfaceClazz) return true;
-        }
-        return implementsInterface(target.getSuperclass(), targetInterfaceClazz);
     }
 }
