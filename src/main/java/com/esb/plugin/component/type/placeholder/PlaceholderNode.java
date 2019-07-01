@@ -2,8 +2,10 @@ package com.esb.plugin.component.type.placeholder;
 
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.editor.designer.AbstractGraphNode;
+import com.esb.plugin.editor.designer.DrawableListener;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.awt.image.ImageObserver;
 
 public class PlaceholderNode extends AbstractGraphNode {
@@ -18,8 +20,11 @@ public class PlaceholderNode extends AbstractGraphNode {
     }
 
     @Override
-    protected boolean withinRemoveIcon(int x, int y) {
-        // Placeholder cannot be removed
-        return false;
+    public void mouseMoved(DrawableListener listener, MouseEvent event) {
+        int x = event.getX();
+        int y = event.getY();
+        if (icon.contains(x, y)) {
+            listener.setTheCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        }
     }
 }

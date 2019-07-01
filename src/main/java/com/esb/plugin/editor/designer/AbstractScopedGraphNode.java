@@ -1,11 +1,9 @@
 package com.esb.plugin.editor.designer;
 
+import com.esb.plugin.commons.Half;
 import com.esb.plugin.component.domain.ComponentClass;
 import com.esb.plugin.component.domain.ComponentData;
-import com.esb.plugin.editor.designer.widget.Arrow;
-import com.esb.plugin.editor.designer.widget.ScopeBox;
-import com.esb.plugin.editor.designer.widget.SelectedScopeBox;
-import com.esb.plugin.editor.designer.widget.UnselectedScopeBox;
+import com.esb.plugin.editor.designer.widget.*;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopeBoundaries;
@@ -14,6 +12,7 @@ import com.esb.plugin.graph.utils.FindFirstNodeOutsideScope;
 import com.esb.plugin.graph.utils.IsLastScopeBeforeNode;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.awt.image.ImageObserver;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,6 +24,9 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
     private final ComponentData componentData;
     private final ScopeBox selectedNodeScopeBox;
     private final ScopeBox unselectedNodeScopeBox;
+    private final RemoveComponentIcon removeComponentIcon;
+
+    protected final Icon icon;
 
     // x and y represent the center position
     // of this Node on the canvas.
@@ -37,8 +39,10 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
 
     public AbstractScopedGraphNode(ComponentData componentData) {
         this.componentData = componentData;
+        this.icon = new Icon(componentData);
         this.selectedNodeScopeBox = new SelectedScopeBox();
         this.unselectedNodeScopeBox = new UnselectedScopeBox();
+        this.removeComponentIcon = new RemoveComponentIcon();
     }
 
     @Override
@@ -55,7 +59,9 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+        icon.draw(graphics, observer);
         if (isSelected()) {
+            drawRemoveComponentIcon(graph, graphics, observer);
             selectedNodeScopeBox.draw(graph, graphics, this);
         } else {
             unselectedNodeScopeBox.draw(graph, graphics, this);
@@ -71,6 +77,7 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
+        this.icon.setPosition(x, y);
     }
 
     @Override
@@ -139,6 +146,49 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
     }
 
     @Override
+    public void drawDrag(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+
+    }
+
+    @Override
+    public boolean contains(ImageObserver observer, int x, int y) {
+        return icon.contains(x, y);
+    }
+
+    @Override
+    public void mouseMoved(DrawableListener listener, MouseEvent event) {
+        int x = event.getX();
+        int y = event.getY();
+        if (icon.contains(x, y)) {
+            listener.setTheCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        }
+        // The hand cursor over the remove icon is visible
+        // if and only if the icon is selected.
+        if (selected && removeComponentIcon.withinBounds(x, y)) {
+            listener.setTheCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        }
+    }
+
+    @Override
+    public void mousePressed(DrawableListener listener, MouseEvent event) {
+        // If the mouse x,y coordinates are within the remove icon,
+        // and the component is currently selected, then we remove the component.
+        if (selected && removeComponentIcon.withinBounds(x, y)) {
+            listener.removeComponent(this);
+        }
+    }
+
+    @Override
+    public Point getTargetArrowEnd() {
+        return icon.getTargetArrowEnd();
+    }
+
+    @Override
+    public Point getSourceArrowStart() {
+        return icon.getSourceArrowStart();
+    }
+
+    @Override
     public String toString() {
         return componentData.getFullyQualifiedName();
     }
@@ -146,7 +196,7 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
     // We also need to draw a connection between the end of scope to the next successor.
     // We draw this arrow only if the last drawables of this scope connect
     // arrows in the next scope
-    protected void drawEndOfScopeArrow(FlowGraph graph, Graphics2D graphics) {
+    private void drawEndOfScopeArrow(FlowGraph graph, Graphics2D graphics) {
         FindFirstNodeOutsideScope.of(graph, this).ifPresent(firstNodeOutsideScope -> {
             if (IsLastScopeBeforeNode.of(graph, AbstractScopedGraphNode.this, firstNodeOutsideScope)) {
 
@@ -161,5 +211,14 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
                 arrow.draw(graphics);
             }
         });
+    }
+
+    private void drawRemoveComponentIcon(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+        // Remove component icon is on top-right scope box corner
+        ScopeBoundaries scopeBoundaries = getScopeBoundaries(graph, graphics);
+        int topRightX = scopeBoundaries.getX() + scopeBoundaries.getWidth() - Half.of(removeComponentIcon.width());
+        int topRightY = scopeBoundaries.getY() + Half.of(removeComponentIcon.height());
+        removeComponentIcon.setPosition(topRightX, topRightY);
+        removeComponentIcon.draw(graphics, observer);
     }
 }

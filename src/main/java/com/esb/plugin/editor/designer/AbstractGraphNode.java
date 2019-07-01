@@ -25,7 +25,7 @@ public abstract class AbstractGraphNode implements GraphNode {
 
     private final ComponentData componentData;
 
-    private final Icon icon;
+    protected final Icon icon;
     private final Icon draggedIcon;
     private final SelectedBox selectedBox;
     private final RemoveComponentIcon removeComponentIcon;
@@ -55,7 +55,6 @@ public abstract class AbstractGraphNode implements GraphNode {
             // Draw the background box of a selected component
             selectedBox.setPosition(x, y);
             selectedBox.draw(this, graphics);
-
             drawRemoveComponentIcon(graphics, observer);
         }
         icon.draw(graphics, observer);
@@ -78,7 +77,7 @@ public abstract class AbstractGraphNode implements GraphNode {
         }
         // The hand cursor over the remove icon is visible
         // if and only if the icon is selected.
-        if (selected && withinRemoveIcon(x, y)) {
+        if (selected && removeComponentIcon.withinBounds(x, y)) {
             listener.setTheCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
     }
@@ -89,7 +88,7 @@ public abstract class AbstractGraphNode implements GraphNode {
         int y = event.getY();
         // If the mouse x,y coordinates are within the remove icon,
         // and the component is currently selected, then we remove the component.
-        if (selected && withinRemoveIcon(x, y)) {
+        if (selected && removeComponentIcon.withinBounds(x, y)) {
             listener.removeComponent(this);
         }
     }
@@ -143,7 +142,7 @@ public abstract class AbstractGraphNode implements GraphNode {
 
     @Override
     public void drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-        _drawArrows(graph, graphics, observer);
+        _drawArrows(graph, graphics);
     }
 
     @Override
@@ -199,6 +198,7 @@ public abstract class AbstractGraphNode implements GraphNode {
         return componentData.getFullyQualifiedName();
     }
 
+
     protected void drawRemoveComponentIcon(Graphics2D graphics, ImageObserver observer) {
         // Remove icon is on upper top-right corner
         int topRightX = x + Half.of(width(graphics)) - Half.of(removeComponentIcon.width());
@@ -211,28 +211,17 @@ public abstract class AbstractGraphNode implements GraphNode {
      * Draws connections between this node and the next one. If this is the last
      * node of the scope, don't draw any outgoing arrow.
      */
-    private void _drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+    private void _drawArrows(FlowGraph graph, Graphics2D graphics) {
         Optional<ScopedGraphNode> wrappingScope = FindScope.of(graph, this);
         if (wrappingScope.isPresent()) {
             List<GraphNode> nodesBelongingWrappingScope = ListLastNodesOfScope.from(graph, wrappingScope.get());
             if (nodesBelongingWrappingScope.contains(this)) {
-                // last node of the scope. Don't draw any outgoing arrow.
+                // last node of the scope.
+                // Don't draw any outgoing arrow.
                 return;
             }
         }
         drawTheArrows(graph, graphics);
-    }
-
-    protected boolean withinRemoveIcon(int x, int y) {
-        int xLeft = this.x + Half.of(WIDTH) - 16;
-        int yTop = this.y - 67;
-        int xRight = xLeft + 13;
-        int yBottom = yTop + 13;
-
-        boolean withinX = x >= xLeft && x <= xRight;
-        boolean withinY = y >= yTop && y <= yBottom;
-
-        return withinX && withinY;
     }
 
     private void drawTheArrows(FlowGraph graph, Graphics2D graphics) {

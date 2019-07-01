@@ -8,8 +8,8 @@ import java.awt.image.ImageObserver;
 
 public class RemoveComponentIcon {
 
-    private static final int ICON_WIDTH = 17;
-    private static final int ICON_HEIGHT = 17;
+    private static final int ICON_WIDTH = 14;
+    private static final int ICON_HEIGHT = 14;
 
     private int x;
     private int y;
@@ -32,5 +32,17 @@ public class RemoveComponentIcon {
 
     public int height() {
         return ICON_HEIGHT;
+    }
+
+    public boolean withinBounds(int x, int y) {
+        int leftX = this.x - Half.of(ICON_WIDTH);
+        int rightX = this.x + Half.of(ICON_WIDTH);
+        int topY = this.y - Half.of(ICON_HEIGHT);
+        int bottomY = this.y + Half.of(ICON_HEIGHT);
+
+        boolean withinX = x >= leftX && x <= rightX;
+        boolean withinY = y >= topY && y <= bottomY;
+
+        return withinX && withinY;
     }
 }
