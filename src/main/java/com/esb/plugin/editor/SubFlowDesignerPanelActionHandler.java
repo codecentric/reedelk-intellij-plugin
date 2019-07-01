@@ -2,7 +2,7 @@ package com.esb.plugin.editor;
 
 import com.esb.plugin.editor.designer.AbstractDesignerPanelActionHandler;
 import com.esb.plugin.graph.FlowSnapshot;
-import com.esb.plugin.graph.action.add.ActionNodeAdd;
+import com.esb.plugin.graph.action.Action;
 import com.esb.plugin.graph.action.add.SubFlowActionNodeAdd;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.openapi.module.Module;
@@ -17,7 +17,7 @@ public class SubFlowDesignerPanelActionHandler extends AbstractDesignerPanelActi
     }
 
     @Override
-    protected ActionNodeAdd getActionAdd(Point dropPoint, GraphNode nodeToAdd, Graphics2D graphics, ImageObserver observer) {
+    protected Action getActionAdd(Point dropPoint, GraphNode nodeToAdd, Graphics2D graphics, ImageObserver observer) {
         return new SubFlowActionNodeAdd(dropPoint, nodeToAdd, graphics, observer);
     }
 }

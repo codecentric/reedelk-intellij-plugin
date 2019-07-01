@@ -2,6 +2,7 @@ package com.esb.plugin.graph.action.add.strategy;
 
 import com.esb.plugin.component.type.placeholder.PlaceholderNode;
 import com.esb.plugin.graph.FlowGraph;
+import com.esb.plugin.graph.action.Strategy;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import org.jetbrains.annotations.NotNull;

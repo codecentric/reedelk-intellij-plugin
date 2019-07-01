@@ -46,17 +46,16 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
         Point dropPoint = new Point(dragPoint.x, dragPoint.y);
         Action actionNodeAdd = getActionAdd(dropPoint, selected, graphics, observer);
 
-        MoveActionHandler moveActionHandler =
+        MoveActionHandler handler =
                 new MoveActionHandler(module, snapshot, graphics, selected, dragPoint, actionNodeAdd);
 
-        moveActionHandler.handle();
+        handler.handle();
     }
 
     @Override
     public void onRemove(GraphNode nodeToRemove) {
         RemoveActionHandler handler =
                 new RemoveActionHandler(module, snapshot, nodeToRemove);
-
         handler.handle();
     }
 

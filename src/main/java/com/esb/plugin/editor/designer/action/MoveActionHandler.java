@@ -70,9 +70,8 @@ public class MoveActionHandler {
 
         ActionNodeRemove componentRemover = new ActionNodeRemove(() ->
                 GraphNodeFactory.get(module, Placeholder.class.getName()),
-                modifiableGraph,
                 selected);
-        componentRemover.remove();
+        componentRemover.execute(modifiableGraph);
 
         // 3. Remove the dropped node from any scope it might belong to
         Optional<ScopedGraphNode> selectedScope = FindScope.of(modifiableGraph, selected);

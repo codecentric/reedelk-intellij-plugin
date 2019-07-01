@@ -1,7 +1,7 @@
 package com.esb.plugin.graph.action.add;
 
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.action.add.strategy.Strategy;
+import com.esb.plugin.graph.action.Strategy;
 import com.esb.plugin.graph.action.add.strategy.SubFlowStrategyBuilder;
 import com.esb.plugin.graph.node.GraphNode;
 

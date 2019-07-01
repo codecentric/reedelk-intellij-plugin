@@ -28,22 +28,6 @@ public class RemoveActionHandler {
         this.placeholderProvider = () -> GraphNodeFactory.get(module, Placeholder.class.getName());
     }
 
-
-    private void removeNestedNodes(FlowGraphChangeAware modifiableGraph, ScopedGraphNode scopedGraphNode) {
-        Collection<GraphNode> scope = scopedGraphNode.getScope();
-        Collection<GraphNode> copyOfScope = new ArrayList<>(scope);
-        copyOfScope.forEach(node -> {
-            if (node instanceof ScopedGraphNode) {
-                removeNestedNodes(modifiableGraph, (ScopedGraphNode) node);
-            } else {
-                ActionNodeRemove componentRemover = new ActionNodeRemove(placeholderProvider, modifiableGraph, node);
-                componentRemover.remove();
-            }
-        });
-        ActionNodeRemove componentRemover = new ActionNodeRemove(placeholderProvider, modifiableGraph, scopedGraphNode);
-        componentRemover.remove();
-    }
-
     public void handle() {
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(snapshot.getGraph().copy());
 
@@ -53,8 +37,8 @@ public class RemoveActionHandler {
         }
 
         // 1. Remove the node
-        ActionNodeRemove componentRemover = new ActionNodeRemove(placeholderProvider, modifiableGraph, nodeToRemove);
-        componentRemover.remove();
+        ActionNodeRemove componentRemover = new ActionNodeRemove(placeholderProvider, nodeToRemove);
+        componentRemover.execute(modifiableGraph);
 
         // 2. Remove the node from any scope it might belong to
         Optional<ScopedGraphNode> selectedScope = FindScope.of(modifiableGraph, nodeToRemove);
@@ -67,5 +51,20 @@ public class RemoveActionHandler {
             // 3. Add back the node to the scope if the original graph was not changed.
             selectedScope.ifPresent(scopedNode -> scopedNode.addToScope(nodeToRemove));
         }
+    }
+
+    private void removeNestedNodes(FlowGraphChangeAware modifiableGraph, ScopedGraphNode scopedGraphNode) {
+        Collection<GraphNode> scope = scopedGraphNode.getScope();
+        Collection<GraphNode> copyOfScope = new ArrayList<>(scope);
+        copyOfScope.forEach(node -> {
+            if (node instanceof ScopedGraphNode) {
+                removeNestedNodes(modifiableGraph, (ScopedGraphNode) node);
+            } else {
+                ActionNodeRemove componentRemover = new ActionNodeRemove(placeholderProvider, node);
+                componentRemover.execute(modifiableGraph);
+            }
+        });
+        ActionNodeRemove componentRemover = new ActionNodeRemove(placeholderProvider, scopedGraphNode);
+        componentRemover.execute(modifiableGraph);
     }
 }
