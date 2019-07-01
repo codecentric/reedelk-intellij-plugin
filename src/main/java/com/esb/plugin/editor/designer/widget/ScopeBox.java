@@ -68,18 +68,6 @@ public abstract class ScopeBox {
         graphics.drawLine(midTopLeftX, midTopLeftY, topLeftX, topLeftY);
     }
 
-    private int getMaxScopes(FlowGraph graph, ScopedGraphNode scopedGraphNode) {
-        int max = 0;
-        Collection<GraphNode> allTerminalNodes = ListLastNodesOfScope.from(graph, scopedGraphNode);
-        for (GraphNode node : allTerminalNodes) {
-            Optional<Integer> scopesBetween = CountScopesBetween.them(scopedGraphNode, node);
-            if (scopesBetween.isPresent()) {
-                max = scopesBetween.get() > max ? scopesBetween.get() : max;
-            }
-        }
-        return max;
-    }
-
     public ScopeBoundaries getBoundaries(FlowGraph graph, Graphics2D graphics, ScopedGraphNode scopedGraphNode) {
         Collection<GraphNode> nodes = ListLastNodesOfScope.from(graph, scopedGraphNode);
 
@@ -127,5 +115,17 @@ public abstract class ScopeBox {
         int width = maxX - minX;
         int height = maxY - minY;
         return new ScopeBoundaries(minX, minY, width, height);
+    }
+
+    private int getMaxScopes(FlowGraph graph, ScopedGraphNode scopedGraphNode) {
+        int max = 0;
+        Collection<GraphNode> allTerminalNodes = ListLastNodesOfScope.from(graph, scopedGraphNode);
+        for (GraphNode node : allTerminalNodes) {
+            Optional<Integer> scopesBetween = CountScopesBetween.them(scopedGraphNode, node);
+            if (scopesBetween.isPresent()) {
+                max = scopesBetween.get() > max ? scopesBetween.get() : max;
+            }
+        }
+        return max;
     }
 }
