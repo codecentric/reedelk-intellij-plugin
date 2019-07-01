@@ -39,6 +39,11 @@ public class FlowGraphAssertion {
         return this;
     }
 
+    public FlowGraphAssertion isEmpty() {
+        assertThat(graph.isEmpty()).isTrue();
+        return this;
+    }
+
     public FlowGraphAssertion contains(GraphNode node) {
         assertThat(graph.nodes()).contains(node);
         return this;

@@ -1,12 +1,10 @@
 package com.esb.plugin.graph.action;
 
+import com.esb.plugin.component.type.placeholder.PlaceholderNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.GraphNodeFactory;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.FindScope;
-import com.esb.system.component.Placeholder;
-import com.intellij.openapi.module.Module;
 
 import java.util.List;
 
@@ -17,11 +15,15 @@ public class ActionNodeRemove {
 
     private final GraphNode toBeRemoved;
     private final FlowGraph graph;
-    private final Module module;
+    private final PlaceholderProvider placeholderProvider;
 
-    public ActionNodeRemove(Module module, final FlowGraph copy, final GraphNode toBeRemoved) {
+    public interface PlaceholderProvider {
+        PlaceholderNode get();
+    }
+
+    public ActionNodeRemove(PlaceholderProvider placeholderProvider, final FlowGraph copy, final GraphNode toBeRemoved) {
+        this.placeholderProvider = placeholderProvider;
         this.toBeRemoved = toBeRemoved;
-        this.module = module;
         this.graph = copy;
     }
 
@@ -39,7 +41,7 @@ public class ActionNodeRemove {
             if (!successors.isEmpty()) {
                 // If we remove the root, we need to replace
                 // it with the placeholder.
-                GraphNode placeholder = GraphNodeFactory.get(module, Placeholder.class.getName());
+                GraphNode placeholder = placeholderProvider.get();
                 graph.root(placeholder);
                 graph.add(placeholder, successors.get(0));
             }
