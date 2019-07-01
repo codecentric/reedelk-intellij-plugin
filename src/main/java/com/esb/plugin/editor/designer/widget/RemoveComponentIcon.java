@@ -1,6 +1,5 @@
 package com.esb.plugin.editor.designer.widget;
 
-import com.esb.plugin.commons.Half;
 import com.esb.plugin.commons.Images;
 
 import java.awt.*;
@@ -32,14 +31,13 @@ public class RemoveComponentIcon {
     }
 
     public boolean withinBounds(int x, int y) {
-        int leftX = this.x - Half.of(ICON_WIDTH);
-        int rightX = this.x + Half.of(ICON_WIDTH);
-        int topY = this.y - Half.of(ICON_HEIGHT);
-        int bottomY = this.y + Half.of(ICON_HEIGHT);
+        int leftX = this.x;
+        int rightX = this.x + ICON_WIDTH;
+        int topY = this.y;
+        int bottomY = this.y + ICON_HEIGHT;
 
         boolean withinX = x >= leftX && x <= rightX;
         boolean withinY = y >= topY && y <= bottomY;
-
         return withinX && withinY;
     }
 }
