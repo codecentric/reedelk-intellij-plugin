@@ -56,7 +56,7 @@ public abstract class ScopeBox {
         int bottomLeftY = y + boundaries.getHeight();
 
         int midBottomLeftX = x;
-        int midBottomLeftY = node.getTargetArrowEnd().y + 20;
+        int midBottomLeftY = node.getTargetArrowEnd().y + 30;
         int midTopLeftX = x;
         int midTopLeftY = node.getTargetArrowEnd().y - 20;
 
