@@ -89,11 +89,13 @@ public class RouterNode extends AbstractScopedGraphNode {
 
     @Override
     public void commit(FlowGraph graph, Module module) {
-        // If successors is empty, lets add a placeholder
+        // TODO: Extract this function
 
         List<RouterConditionRoutePair> routerConditionRoutePairs =
                 ListConditionRoutePairs.of(componentData());
 
+        // If the scope is empty, the router node always  has  a placeholder
+        // because a router node must have at least  one component in it.
         if (getScope().isEmpty()) {
             GraphNode placeholder = GraphNodeFactory.get(module, Placeholder.class.getName());
             graph.add(placeholder);
@@ -113,6 +115,14 @@ public class RouterNode extends AbstractScopedGraphNode {
                 SyncConditionAndRoutePairs.getUpdatedPairs(graph, this, routerConditionRoutePairs);
         ComponentData component = componentData();
         component.set(DATA_CONDITION_ROUTE_PAIRS, updatedConditions);
+    }
+
+    @Override
+    protected void drawRemoveComponentIcon(Graphics2D graphics, ImageObserver observer) {
+        int topRightX = x() + Half.of(icon.width()) - ICON_X_OFFSET;
+        int topRightY = y() - icon.topHalfHeight(graphics) + Half.of(removeComponentIcon.height());
+        removeComponentIcon.setPosition(topRightX, topRightY);
+        removeComponentIcon.draw(graphics, observer);
     }
 
     class RouterOnProcessSuccessor implements VerticalDividerArrows.OnProcessSuccessor {

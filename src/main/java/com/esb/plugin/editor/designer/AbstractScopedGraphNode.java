@@ -24,7 +24,7 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
     private final ComponentData componentData;
     private final ScopeBox selectedNodeScopeBox;
     private final ScopeBox unselectedNodeScopeBox;
-    private final RemoveComponentIcon removeComponentIcon;
+    protected final RemoveComponentIcon removeComponentIcon;
 
     protected final Icon icon;
 
@@ -61,7 +61,7 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         icon.draw(graphics, observer);
         if (isSelected()) {
-            drawRemoveComponentIcon(graph, graphics, observer);
+            drawRemoveComponentIcon(graphics, observer);
             selectedNodeScopeBox.draw(graph, graphics, this);
         } else {
             unselectedNodeScopeBox.draw(graph, graphics, this);
@@ -171,6 +171,8 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
 
     @Override
     public void mousePressed(DrawableListener listener, MouseEvent event) {
+        int x = event.getX();
+        int y = event.getY();
         // If the mouse x,y coordinates are within the remove icon,
         // and the component is currently selected, then we remove the component.
         if (selected && removeComponentIcon.withinBounds(x, y)) {
@@ -213,11 +215,9 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
         });
     }
 
-    private void drawRemoveComponentIcon(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-        // Remove component icon is on top-right scope box corner
-        ScopeBoundaries scopeBoundaries = getScopeBoundaries(graph, graphics);
-        int topRightX = scopeBoundaries.getX() + scopeBoundaries.getWidth() - Half.of(removeComponentIcon.width());
-        int topRightY = scopeBoundaries.getY() + Half.of(removeComponentIcon.height());
+    protected void drawRemoveComponentIcon(Graphics2D graphics, ImageObserver observer) {
+        int topRightX = x() + Half.of(icon.width());
+        int topRightY = y() - icon.topHalfHeight(graphics) + Half.of(removeComponentIcon.height());
         removeComponentIcon.setPosition(topRightX, topRightY);
         removeComponentIcon.draw(graphics, observer);
     }

@@ -98,6 +98,10 @@ public class Icon {
         return Dimension.ICON_HEIGHT + Dimension.TOP_PADDING;
     }
 
+    public int width() {
+        return Dimension.ICON_WIDTH;
+    }
+
     // An arrow starts just right after the icon.
     public Point getSourceArrowStart() {
         int startX = x + Dimension.HALF_ICON_WIDTH + ARROW_ICON_PADDING;
