@@ -41,6 +41,7 @@ public class ActionNodeRemove implements Action {
         Strategy strategy = new NoOpStrategy();
         if (predecessors.isEmpty()) {
             strategy = new RemoveRootStrategy(graph, placeholderProvider);
+            strategy.execute(toRemove);
         } else {
             GraphNode successor = successors.isEmpty() ? null : successors.get(0);
             for (GraphNode predecessor : predecessors) {
@@ -49,9 +50,9 @@ public class ActionNodeRemove implements Action {
                 } else {
                     strategy = new RemoveSuccessorOfNodeStrategy(graph, predecessor, successor);
                 }
+                strategy.execute(toRemove);
             }
         }
-        strategy.execute(toRemove);
     }
 
     private void checkPreconditions(List<GraphNode> successors) {
