@@ -5,6 +5,7 @@ import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.component.type.placeholder.PlaceholderNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
+import com.esb.plugin.graph.action.remove.ActionNodeRemove;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

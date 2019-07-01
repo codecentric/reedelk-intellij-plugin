@@ -1,4 +1,4 @@
-package com.esb.plugin.graph.action.strategy;
+package com.esb.plugin.graph.action.add.strategy;
 
 import com.esb.plugin.graph.node.GraphNode;
 

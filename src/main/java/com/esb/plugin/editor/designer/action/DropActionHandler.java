@@ -3,7 +3,7 @@ package com.esb.plugin.editor.designer.action;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
 import com.esb.plugin.graph.FlowSnapshot;
-import com.esb.plugin.graph.action.ActionNodeAdd;
+import com.esb.plugin.graph.action.Action;
 import com.intellij.openapi.module.Module;
 
 import java.awt.dnd.DropTargetDropEvent;
@@ -16,31 +16,39 @@ public class DropActionHandler {
     private final Module module;
     private final FlowSnapshot snapshot;
     private final DropTargetDropEvent dropEvent;
-    private final ActionNodeAdd actionNodeAdd;
+    private final Action addAction;
 
-    public DropActionHandler(Module module, FlowSnapshot snapshot, DropTargetDropEvent dropEvent, ActionNodeAdd actionNodeAdd) {
+    public DropActionHandler(Module module, FlowSnapshot snapshot, DropTargetDropEvent dropEvent, Action addAction) {
         checkArgument(module != null, "module");
+        checkArgument(addAction != null, "action");
         checkArgument(snapshot != null, "snapshot");
         checkArgument(dropEvent != null, "drop event");
 
         this.module = module;
         this.snapshot = snapshot;
         this.dropEvent = dropEvent;
-        this.actionNodeAdd = actionNodeAdd;
+        this.addAction = addAction;
     }
 
     public void handle() {
         FlowGraph copy = snapshot.getGraph().copy();
+
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
 
-        actionNodeAdd.execute(modifiableGraph);
+        addAction.execute(modifiableGraph);
 
         if (modifiableGraph.isChanged()) {
+
             modifiableGraph.commit(module);
+
             dropEvent.acceptDrop(ACTION_COPY_OR_MOVE);
+
             snapshot.updateSnapshot(this, modifiableGraph);
+
         } else {
+
             dropEvent.rejectDrop();
+
         }
     }
 }

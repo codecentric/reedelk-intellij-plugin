@@ -1,8 +1,8 @@
-package com.esb.plugin.graph.action;
+package com.esb.plugin.graph.action.add;
 
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.action.strategy.Strategy;
-import com.esb.plugin.graph.action.strategy.SubFlowStrategyBuilder;
+import com.esb.plugin.graph.action.add.strategy.Strategy;
+import com.esb.plugin.graph.action.add.strategy.SubFlowStrategyBuilder;
 import com.esb.plugin.graph.node.GraphNode;
 
 import java.awt.*;

@@ -1,4 +1,4 @@
-package com.esb.plugin.graph.action.strategy;
+package com.esb.plugin.graph.action.add.strategy;
 
 import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.assertion.PluginAssertion;

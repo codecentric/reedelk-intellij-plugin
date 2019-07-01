@@ -1,4 +1,4 @@
-package com.esb.plugin.graph.action.strategy;
+package com.esb.plugin.graph.action.add.strategy;
 
 import com.esb.plugin.commons.Half;
 import com.esb.plugin.graph.FlowGraph;
@@ -11,13 +11,13 @@ import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkState;
 
-public class FlowStrategyBuilder extends StrategyBuilder {
+public class SubFlowStrategyBuilder extends StrategyBuilder {
 
-    private FlowStrategyBuilder() {
+    private SubFlowStrategyBuilder() {
     }
 
-    public static FlowStrategyBuilder create() {
-        return new FlowStrategyBuilder();
+    public static SubFlowStrategyBuilder create() {
+        return new SubFlowStrategyBuilder();
     }
 
     @NotNull
@@ -25,10 +25,10 @@ public class FlowStrategyBuilder extends StrategyBuilder {
     public Strategy build() {
 
         if (graph.isEmpty()) {
-            return new FlowAddRootStrategy(graph);
+            return new SubFlowAddRootStrategy(graph);
 
-        } else if (isReplacingRoot(graph, dropPoint, graphics)) {
-            return new FlowReplaceRootStrategy(graph);
+        } else if (isBeforeRoot(graph, dropPoint, graphics)) {
+            return new SubFlowAddNewRoot(graph);
 
         } else if (isOverlappingAnyPlaceHolder(graph, dropPoint)) {
             GraphNode overlappingPlaceholder = getOverlappingPlaceholder(graph, dropPoint);
@@ -42,16 +42,11 @@ public class FlowStrategyBuilder extends StrategyBuilder {
         }
     }
 
-    /**
-     * We are replacing root if the drop point is before the current root OR
-     * if the drop point is inside the current root node.
-     */
-    private static boolean isReplacingRoot(FlowGraph graph, Point dropPoint, Graphics2D graphics) {
+    private boolean isBeforeRoot(FlowGraph graph, Point dropPoint, Graphics2D graphics) {
         checkState(!graph.isEmpty(), "Expected a not empty graph");
         GraphNode root = graph.root();
-        return dropPoint.x <= root.x() + Half.of(root.width(graphics)) &&
+        return dropPoint.x <= root.x() &&
                 dropPoint.y > root.y() - Half.of(root.height(graphics)) &&
                 dropPoint.y < root.y() + Half.of(root.height(graphics));
-
     }
 }

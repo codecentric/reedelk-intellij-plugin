@@ -4,8 +4,8 @@ import com.esb.plugin.commons.Half;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
 import com.esb.plugin.graph.FlowSnapshot;
-import com.esb.plugin.graph.action.ActionNodeAdd;
-import com.esb.plugin.graph.action.ActionNodeRemove;
+import com.esb.plugin.graph.action.Action;
+import com.esb.plugin.graph.action.remove.ActionNodeRemove;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.GraphNodeFactory;
 import com.esb.plugin.graph.node.NothingSelectedNode;
@@ -26,10 +26,11 @@ public class MoveActionHandler {
     private final GraphNode selected;
     private final Graphics2D graphics;
     private final FlowSnapshot snapshot;
-    private final ActionNodeAdd actionNodeAdd;
+    private final Action actionAdd;
 
-    public MoveActionHandler(Module module, FlowSnapshot snapshot, Graphics2D graphics, GraphNode selectedNode, Point movePoint, ActionNodeAdd actionNodeAdd) {
+    public MoveActionHandler(Module module, FlowSnapshot snapshot, Graphics2D graphics, GraphNode selectedNode, Point movePoint, Action actionAdd) {
         checkArgument(module != null, "module");
+        checkArgument(actionAdd != null, "action");
         checkArgument(snapshot != null, "snapshot");
         checkArgument(graphics != null, "graphics");
         checkArgument(selectedNode != null, "selected node");
@@ -37,9 +38,9 @@ public class MoveActionHandler {
         this.module = module;
         this.snapshot = snapshot;
         this.graphics = graphics;
+        this.actionAdd = actionAdd;
         this.movePoint = movePoint;
         this.selected = selectedNode;
-        this.actionNodeAdd = actionNodeAdd;
     }
 
     public void handle() {
@@ -78,7 +79,7 @@ public class MoveActionHandler {
         selectedScope.ifPresent(scopedNode -> scopedNode.removeFromScope(selected));
 
         // 4. Add the node
-        actionNodeAdd.execute(modifiableGraph);
+        actionAdd.execute(modifiableGraph);
 
         // 5. If the copy of the graph was changed, then update the graph
         // TODO: IF REMOVED BUT NOT ADDED, then should not be changed... but now if we remove, and then we cannot add the node for some reason the snapshot is still updated which is not necessary

@@ -1,4 +1,4 @@
-package com.esb.plugin.graph.action.strategy;
+package com.esb.plugin.graph.action.add.strategy;
 
 import com.esb.plugin.component.type.placeholder.PlaceholderNode;
 import com.esb.plugin.graph.FlowGraph;
@@ -42,7 +42,6 @@ public abstract class StrategyBuilder {
     @NotNull
     public abstract Strategy build();
 
-
     @NotNull
     Strategy getStrategyForClosestPrecedingNode(GraphNode precedingNode) {
         if (graph.successors(precedingNode).isEmpty()) {
@@ -65,13 +64,6 @@ public abstract class StrategyBuilder {
         }
     }
 
-    boolean isOverlappingAnyPlaceHolder(FlowGraph graph, Point dropPoint) {
-        return graph.nodes()
-                .stream()
-                .anyMatch(node -> node.contains(observer, dropPoint.x, dropPoint.y) &&
-                        node instanceof PlaceholderNode);
-    }
-
     @NotNull
     GraphNode getOverlappingPlaceholder(FlowGraph graph, Point dropPoint) {
         return graph.nodes()
@@ -80,6 +72,13 @@ public abstract class StrategyBuilder {
                         node instanceof PlaceholderNode)
                 .findFirst()
                 .get();
+    }
+
+    boolean isOverlappingAnyPlaceHolder(FlowGraph graph, Point dropPoint) {
+        return graph.nodes()
+                .stream()
+                .anyMatch(node -> node.contains(observer, dropPoint.x, dropPoint.y) &&
+                        node instanceof PlaceholderNode);
     }
 
     private boolean hasOnlyOneSuccessorOutsideScope(ScopedGraphNode closestPrecedingNode, FlowGraph graph) {

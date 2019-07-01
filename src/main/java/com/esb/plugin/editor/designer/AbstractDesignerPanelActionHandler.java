@@ -9,7 +9,7 @@ import com.esb.plugin.editor.designer.action.DropActionHandler;
 import com.esb.plugin.editor.designer.action.MoveActionHandler;
 import com.esb.plugin.editor.designer.action.RemoveActionHandler;
 import com.esb.plugin.graph.FlowSnapshot;
-import com.esb.plugin.graph.action.ActionNodeAdd;
+import com.esb.plugin.graph.action.Action;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.GraphNodeFactory;
 import com.intellij.openapi.diagnostic.Logger;
@@ -44,7 +44,7 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
     @Override
     public void onMove(Graphics2D graphics, GraphNode selected, Point dragPoint, ImageObserver observer) {
         Point dropPoint = new Point(dragPoint.x, dragPoint.y);
-        ActionNodeAdd actionNodeAdd = getActionNodeAdd(dropPoint, selected, graphics, observer);
+        Action actionNodeAdd = getActionAdd(dropPoint, selected, graphics, observer);
 
         MoveActionHandler moveActionHandler =
                 new MoveActionHandler(module, snapshot, graphics, selected, dragPoint, actionNodeAdd);
@@ -56,14 +56,17 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
     public void onRemove(GraphNode nodeToRemove) {
         RemoveActionHandler handler =
                 new RemoveActionHandler(module, snapshot, nodeToRemove);
+
         handler.handle();
     }
 
     @Override
     public void onDrop(Graphics2D graphics, DropTargetDropEvent dropEvent, ImageObserver observer) {
-        // The arguments should be drop point and the node to add!
+
         Point dropPoint = dropEvent.getLocation();
+
         Optional<ComponentDescriptor> optionalDescriptor = getComponentDescriptorFrom(dropEvent);
+
         if (optionalDescriptor.isPresent()) {
 
             ComponentDescriptor descriptor = optionalDescriptor.get();
@@ -79,10 +82,11 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
 
             LOG.info(format("Node Dropped [%s], drop point [x: %d, y: %d]", PrintFlowInfo.name(nodeToAdd), dropPoint.x, dropPoint.y));
 
-            ActionNodeAdd actionNodeAdd = getActionNodeAdd(dropPoint, nodeToAdd, graphics, observer);
+            Action actionAdd = getActionAdd(dropPoint, nodeToAdd, graphics, observer);
 
             DropActionHandler handler =
-                    new DropActionHandler(module, snapshot, dropEvent, actionNodeAdd);
+                    new DropActionHandler(module, snapshot, dropEvent, actionAdd);
+
             handler.handle();
 
         } else {
@@ -92,7 +96,7 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
         }
     }
 
-    protected abstract ActionNodeAdd getActionNodeAdd(Point dropPoint, GraphNode nodeToAdd, Graphics2D graphics, ImageObserver observer);
+    protected abstract Action getActionAdd(Point dropPoint, GraphNode nodeToAdd, Graphics2D graphics, ImageObserver observer);
 
     private Optional<ComponentDescriptor> getComponentDescriptorFrom(DropTargetDropEvent dropEvent) {
         Transferable transferable = dropEvent.getTransferable();
@@ -108,5 +112,4 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
         }
         return Optional.empty();
     }
-
 }

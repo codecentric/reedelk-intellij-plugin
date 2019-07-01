@@ -2,7 +2,7 @@ package com.esb.plugin.editor.designer.action;
 
 import com.esb.plugin.graph.FlowGraphChangeAware;
 import com.esb.plugin.graph.FlowSnapshot;
-import com.esb.plugin.graph.action.ActionNodeRemove;
+import com.esb.plugin.graph.action.remove.ActionNodeRemove;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.GraphNodeFactory;
 import com.esb.plugin.graph.node.ScopedGraphNode;

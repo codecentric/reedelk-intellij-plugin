@@ -6,6 +6,7 @@ import com.esb.plugin.component.type.generic.GenericComponentNode;
 import com.esb.plugin.fixture.ComponentRoot;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
+import com.esb.plugin.graph.action.add.FlowActionNodeAdd;
 import com.esb.plugin.graph.node.GraphNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
