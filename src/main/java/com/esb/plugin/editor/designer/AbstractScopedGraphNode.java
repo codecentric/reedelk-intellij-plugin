@@ -40,9 +40,9 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
     public AbstractScopedGraphNode(ComponentData componentData) {
         this.componentData = componentData;
         this.icon = new Icon(componentData);
+        this.removeComponentIcon = new RemoveComponentIcon();
         this.selectedNodeScopeBox = new SelectedScopeBox();
         this.unselectedNodeScopeBox = new UnselectedScopeBox();
-        this.removeComponentIcon = new RemoveComponentIcon();
     }
 
     @Override
@@ -179,6 +179,17 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
             listener.removeComponent(this);
         }
     }
+
+    @Override
+    public int bottomHalfHeight(Graphics2D graphics) {
+        return icon.bottomHalfHeight(graphics);
+    }
+
+    @Override
+    public int topHalfHeight(Graphics2D graphics) {
+        return icon.topHalfHeight(graphics);
+    }
+
 
     @Override
     public Point getTargetArrowEnd() {

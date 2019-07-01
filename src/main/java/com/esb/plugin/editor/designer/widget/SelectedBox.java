@@ -1,7 +1,5 @@
 package com.esb.plugin.editor.designer.widget;
 
-import com.esb.plugin.commons.Half;
-import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 
@@ -17,14 +15,11 @@ public class SelectedBox {
     protected int x;
     protected int y;
 
-    public void draw(GraphNode node, Graphics2D graphics) {
-        int parentWidth = node.width(graphics);
-        int bottomHalfHeight = node.bottomHalfHeight(graphics);
+    public void draw(Graphics2D graphics, int width, int height) {
         graphics.setColor(SELECTED_COMPONENT_BG_COLOR);
-
         RoundRectangle2D.Double aDouble = new RoundRectangle2D.Double(
-                x - Half.of(parentWidth),
-                y + TOP_PADDING, parentWidth - RIGHT_PADDING, bottomHalfHeight - BOTTOM_PADDING, 10, 10);
+                x,
+                y + TOP_PADDING, width - RIGHT_PADDING, height - BOTTOM_PADDING, 10, 10);
 
         graphics.fill(aDouble);
     }

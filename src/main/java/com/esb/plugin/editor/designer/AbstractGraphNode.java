@@ -52,9 +52,9 @@ public abstract class AbstractGraphNode implements GraphNode {
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         if (selected) {
-            // Draw the background box of a selected component
-            selectedBox.setPosition(x, y);
-            selectedBox.draw(this, graphics);
+            // Draw the background box of this selected component
+            selectedBox.setPosition(x - Half.of(width(graphics)) + 2, y);
+            selectedBox.draw(graphics, width(graphics), bottomHalfHeight(graphics));
             drawRemoveComponentIcon(graphics, observer);
         }
         icon.draw(graphics, observer);
