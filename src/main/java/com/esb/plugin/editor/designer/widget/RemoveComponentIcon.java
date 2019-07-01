@@ -15,10 +15,7 @@ public class RemoveComponentIcon {
     private int y;
 
     public void draw(Graphics2D graphics, ImageObserver observer) {
-        graphics.drawImage(
-                Images.Component.RemoveComponent,
-                x - Half.of(ICON_WIDTH),
-                y - Half.of(ICON_HEIGHT), observer);
+        graphics.drawImage(Images.Component.RemoveComponent, x, y, observer);
     }
 
     public void setPosition(int x, int y) {

@@ -201,7 +201,7 @@ public abstract class AbstractGraphNode implements GraphNode {
 
     protected void drawRemoveComponentIcon(Graphics2D graphics, ImageObserver observer) {
         int topRightX = x() + Half.of(icon.width());
-        int topRightY = y() - icon.topHalfHeight(graphics) + Half.of(removeComponentIcon.height());
+        int topRightY = y() - icon.topHalfHeight(graphics) + Icon.Dimension.TOP_PADDING;
         removeComponentIcon.setPosition(topRightX, topRightY);
         removeComponentIcon.draw(graphics, observer);
     }
