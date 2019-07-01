@@ -8,6 +8,7 @@ import com.esb.plugin.graph.deserializer.DeserializerContext;
 import com.esb.plugin.graph.deserializer.DeserializerFactory;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.utils.CollectNodesBetween;
+import com.esb.plugin.graph.utils.FindRelatedScopeOfStopNode;
 import com.esb.system.component.Stop;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -50,8 +51,12 @@ public class RouterDeserializer extends AbstractNodeDeserializer {
             JSONArray next = Router.next(whenComponent);
 
             GraphNode currentNode = deserialize(next, routerNode, node -> {
+                // If the next contains the definition of a scoped drawable,
+                // then the returned node from the deserializer returns a stop node.
+                // We must find the the scope the stop node belongs to.
+                GraphNode firstNonStopNode = findSuccessor(graph, node);
                 String condition = Router.condition(whenComponent);
-                nodeAndConditionMap.put(node, condition);
+                nodeAndConditionMap.put(firstNonStopNode, condition);
             });
 
             // Last node is connected to stop node.
@@ -81,6 +86,15 @@ public class RouterDeserializer extends AbstractNodeDeserializer {
         }
 
         return stopNode;
+    }
+
+    /**
+     * If the target is a stop node, it returns the ScopedGraphNode this stop
+     * is referring to, otherwise the target node.
+     */
+    private GraphNode findSuccessor(FlowGraph graph, GraphNode target) {
+        return target instanceof StopNode ?
+                FindRelatedScopeOfStopNode.find(graph, (StopNode) target) : target;
     }
 
     private interface Action {
