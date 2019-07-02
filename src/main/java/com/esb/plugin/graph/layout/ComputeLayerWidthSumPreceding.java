@@ -25,7 +25,7 @@ public class ComputeLayerWidthSumPreceding {
         int max = currentSum;
         for (GraphNode layerNode : layerNodes) {
             int total = layerNode.width(graphics) + (maxScopes * ScopedGraphNode.HORIZONTAL_PADDING);
-            if (total + currentSum > max) max += total;
+            if (total + currentSum > max) max = total + currentSum;
         }
         return max;
     }
