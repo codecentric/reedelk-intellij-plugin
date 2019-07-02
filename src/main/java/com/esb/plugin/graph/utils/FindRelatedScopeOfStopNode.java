@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * A stop node always follows a scoped node. This function find t
+ * A stop node always follows a scoped node. This function finds the ScopedNode,
+ * the stop node is referring to.
  */
 public class FindRelatedScopeOfStopNode {
 
