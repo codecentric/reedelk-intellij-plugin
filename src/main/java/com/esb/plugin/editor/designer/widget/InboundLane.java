@@ -17,7 +17,7 @@ import java.util.List;
 
 public class InboundLane {
 
-    private static final int DEFAULT_INBOUND_LANE_HEIGHT = 170;
+    private static final int MIN_INBOUND_LANE_HEIGHT = 170;
 
     private final Stroke dashed = new BasicStroke(0.7f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{3}, 0);
     private final String INBOUND_STRING = "Event";
@@ -52,11 +52,15 @@ public class InboundLane {
 
     private void drawVerticalBar(Graphics2D graphics, int width) {
         int height = topPadding;
-        if (snapshot.getGraph().isEmpty()) {
-            height += DEFAULT_INBOUND_LANE_HEIGHT;
+        FlowGraph graph = snapshot.getGraph();
+        if (graph.isEmpty()) {
+            height += MIN_INBOUND_LANE_HEIGHT;
         } else {
-            GraphNode root = snapshot.getGraph().root();
-            height += ComputeMaxHeight.of(snapshot.getGraph(), graphics, root);
+            GraphNode root = graph.root();
+            int maxHeight = ComputeMaxHeight.of(graph, graphics, root);
+            height += maxHeight > MIN_INBOUND_LANE_HEIGHT ?
+                    maxHeight :
+                    MIN_INBOUND_LANE_HEIGHT;
         }
         graphics.setColor(JBColor.GRAY);
         graphics.setStroke(dashed);
