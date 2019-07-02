@@ -10,8 +10,10 @@ import com.esb.plugin.editor.designer.action.MoveActionHandler;
 import com.esb.plugin.editor.designer.action.RemoveActionHandler;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.action.Action;
+import com.esb.plugin.graph.action.remove.ActionNodeRemove;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.GraphNodeFactory;
+import com.esb.system.component.Placeholder;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 
@@ -54,8 +56,10 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
 
     @Override
     public void onRemove(GraphNode nodeToRemove) {
+        Action removeAction = new ActionNodeRemove(() ->
+                GraphNodeFactory.get(module, Placeholder.class.getName()), nodeToRemove);
         RemoveActionHandler handler =
-                new RemoveActionHandler(module, snapshot, nodeToRemove);
+                new RemoveActionHandler(module, snapshot, removeAction);
         handler.handle();
     }
 

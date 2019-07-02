@@ -5,29 +5,27 @@ import com.esb.plugin.graph.FlowGraphChangeAware;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.action.Action;
 import com.intellij.openapi.module.Module;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.dnd.DropTargetDropEvent;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static java.awt.dnd.DnDConstants.ACTION_COPY_OR_MOVE;
 
 public class DropActionHandler {
 
-    private final Module module;
-    private final FlowSnapshot snapshot;
     private final DropTargetDropEvent dropEvent;
+    private final FlowSnapshot snapshot;
     private final Action addAction;
+    private final Module module;
 
-    public DropActionHandler(Module module, FlowSnapshot snapshot, DropTargetDropEvent dropEvent, Action addAction) {
-        checkArgument(module != null, "module");
-        checkArgument(addAction != null, "action");
-        checkArgument(snapshot != null, "snapshot");
-        checkArgument(dropEvent != null, "drop event");
-
-        this.module = module;
-        this.snapshot = snapshot;
-        this.dropEvent = dropEvent;
+    public DropActionHandler(@NotNull Module module,
+                             @NotNull FlowSnapshot snapshot,
+                             @NotNull DropTargetDropEvent dropEvent,
+                             @NotNull Action addAction) {
         this.addAction = addAction;
+        this.dropEvent = dropEvent;
+        this.snapshot = snapshot;
+        this.module = module;
     }
 
     public void handle() {

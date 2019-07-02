@@ -13,34 +13,32 @@ import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.FindScope;
 import com.esb.system.component.Placeholder;
 import com.intellij.openapi.module.Module;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.Optional;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 public class MoveActionHandler {
 
-    private final Module module;
-    private final Point movePoint;
-    private final GraphNode selected;
-    private final Graphics2D graphics;
     private final FlowSnapshot snapshot;
+    private final Graphics2D graphics;
+    private final GraphNode selected;
     private final Action actionAdd;
+    private final Point movePoint;
+    private final Module module;
 
-    public MoveActionHandler(Module module, FlowSnapshot snapshot, Graphics2D graphics, GraphNode selectedNode, Point movePoint, Action actionAdd) {
-        checkArgument(module != null, "module");
-        checkArgument(actionAdd != null, "action");
-        checkArgument(snapshot != null, "snapshot");
-        checkArgument(graphics != null, "graphics");
-        checkArgument(selectedNode != null, "selected node");
-
-        this.module = module;
-        this.snapshot = snapshot;
-        this.graphics = graphics;
+    public MoveActionHandler(@NotNull Module module,
+                             @NotNull FlowSnapshot snapshot,
+                             @NotNull Graphics2D graphics,
+                             @NotNull GraphNode selectedNode,
+                             @NotNull Point movePoint,
+                             @NotNull Action actionAdd) {
+        this.selected = selectedNode;
         this.actionAdd = actionAdd;
         this.movePoint = movePoint;
-        this.selected = selectedNode;
+        this.snapshot = snapshot;
+        this.graphics = graphics;
+        this.module = module;
     }
 
     public void handle() {

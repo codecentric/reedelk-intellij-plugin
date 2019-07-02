@@ -1,70 +1,38 @@
 package com.esb.plugin.editor.designer.action;
 
+import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
 import com.esb.plugin.graph.FlowSnapshot;
-import com.esb.plugin.graph.action.remove.ActionNodeRemove;
-import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.GraphNodeFactory;
-import com.esb.plugin.graph.node.ScopedGraphNode;
-import com.esb.plugin.graph.utils.FindScope;
-import com.esb.system.component.Placeholder;
+import com.esb.plugin.graph.action.Action;
 import com.intellij.openapi.module.Module;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
 
 public class RemoveActionHandler {
 
-    private final GraphNode nodeToRemove;
-    private final Module module;
     private final FlowSnapshot snapshot;
-    private final ActionNodeRemove.PlaceholderProvider placeholderProvider;
+    private final Action removeAction;
+    private final Module module;
 
-    public RemoveActionHandler(Module module, FlowSnapshot snapshot, GraphNode nodeToRemove) {
-        this.nodeToRemove = nodeToRemove;
+    public RemoveActionHandler(@NotNull Module module,
+                               @NotNull FlowSnapshot snapshot,
+                               @NotNull Action removeAction) {
+        this.removeAction = removeAction;
         this.snapshot = snapshot;
         this.module = module;
-        this.placeholderProvider = () -> GraphNodeFactory.get(module, Placeholder.class.getName());
     }
 
     public void handle() {
-        FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(snapshot.getGraph().copy());
+        FlowGraph copy = snapshot.getGraph().copy();
 
-        // First remove all the nodes belonging to this scope.
-        if (nodeToRemove instanceof ScopedGraphNode) {
-            removeNestedNodes(modifiableGraph, (ScopedGraphNode) nodeToRemove);
-        }
+        FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
 
-        // 1. Remove the node
-        ActionNodeRemove componentRemover = new ActionNodeRemove(placeholderProvider, nodeToRemove);
-        componentRemover.execute(modifiableGraph);
-
-        // 2. Remove the node from any scope it might belong to
-        Optional<ScopedGraphNode> selectedScope = FindScope.of(modifiableGraph, nodeToRemove);
-        selectedScope.ifPresent(scopedNode -> scopedNode.removeFromScope(nodeToRemove));
+        removeAction.execute(modifiableGraph);
 
         if (modifiableGraph.isChanged()) {
-            modifiableGraph.commit(module);
-            snapshot.updateSnapshot(this, modifiableGraph);
-        } else {
-            // 3. Add back the node to the scope if the original graph was not changed.
-            selectedScope.ifPresent(scopedNode -> scopedNode.addToScope(nodeToRemove));
-        }
-    }
 
-    private void removeNestedNodes(FlowGraphChangeAware modifiableGraph, ScopedGraphNode scopedGraphNode) {
-        Collection<GraphNode> scope = scopedGraphNode.getScope();
-        Collection<GraphNode> copyOfScope = new ArrayList<>(scope);
-        copyOfScope.forEach(node -> {
-            if (node instanceof ScopedGraphNode) {
-                removeNestedNodes(modifiableGraph, (ScopedGraphNode) node);
-            } else {
-                ActionNodeRemove componentRemover = new ActionNodeRemove(placeholderProvider, node);
-                componentRemover.execute(modifiableGraph);
-            }
-        });
-        ActionNodeRemove componentRemover = new ActionNodeRemove(placeholderProvider, scopedGraphNode);
-        componentRemover.execute(modifiableGraph);
+            modifiableGraph.commit(module);
+
+            snapshot.updateSnapshot(this, modifiableGraph);
+        }
     }
 }
