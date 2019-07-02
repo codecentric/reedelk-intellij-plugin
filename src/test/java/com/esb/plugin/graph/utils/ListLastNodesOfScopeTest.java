@@ -63,7 +63,7 @@ class ListLastNodesOfScopeTest extends AbstractGraphTest {
     void shouldReturnCorrectlyLastNodesWhenInnerNodeIsScopedNode() {
         // Given
         FlowGraph graph = provider.createGraph();
-        graph.add(null, root);
+        graph.root(root);
         graph.add(root, routerNode1);
         graph.add(routerNode1, routerNode2);
         routerNode1.addToScope(routerNode2);
@@ -79,7 +79,7 @@ class ListLastNodesOfScopeTest extends AbstractGraphTest {
     void shouldReturnCorrectlyLastNodeOfScopeWhenThreeNestedScopeNodes() {
         // Given
         FlowGraph graph = provider.createGraph();
-        graph.add(null, root);
+        graph.root(root);
         graph.add(root, routerNode1);
         graph.add(routerNode1, routerNode2);
         graph.add(routerNode2, routerNode3);
@@ -182,5 +182,19 @@ class ListLastNodesOfScopeTest extends AbstractGraphTest {
 
         // Then
         assertThat(lastNodesOfScope).containsExactlyInAnyOrder(componentNode2, componentNode4, componentNode5);
+    }
+
+    @Test
+    void shouldReturnCorrectlyLastNodesWhenScopeIsEmpty() {
+        // Given
+        FlowGraph graph = provider.createGraph();
+        graph.root(root);
+        graph.add(root, routerNode1);
+
+        // When
+        Collection<GraphNode> lastNodesOfScope = ListLastNodesOfScope.from(graph, routerNode1);
+
+        // Then
+        assertThat(lastNodesOfScope).containsExactly(routerNode1);
     }
 }

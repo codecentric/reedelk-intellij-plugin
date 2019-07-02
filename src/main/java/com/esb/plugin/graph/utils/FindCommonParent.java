@@ -1,4 +1,4 @@
-package com.esb.plugin.graph.layout.utils;
+package com.esb.plugin.graph.utils;
 
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.node.GraphNode;

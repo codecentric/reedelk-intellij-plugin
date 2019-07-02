@@ -6,7 +6,7 @@ import com.esb.plugin.commons.Images;
 import com.esb.plugin.editor.designer.AbstractGraphNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowSnapshot;
-import com.esb.plugin.graph.layout.utils.ComputeMaxHeight;
+import com.esb.plugin.graph.layout.ComputeMaxHeight;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.ui.JBColor;
 

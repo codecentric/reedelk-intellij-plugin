@@ -2,17 +2,10 @@ package com.esb.plugin.graph.layout;
 
 import com.esb.plugin.commons.Half;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.layout.utils.ComputeLayerWidthSumPreceding;
-import com.esb.plugin.graph.layout.utils.ComputeMaxHeight;
-import com.esb.plugin.graph.layout.utils.FindCommonParent;
-import com.esb.plugin.graph.layout.utils.FindContainingLayer;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopeBoundaries;
 import com.esb.plugin.graph.node.ScopedGraphNode;
-import com.esb.plugin.graph.utils.FindFirstNodeOutsideScope;
-import com.esb.plugin.graph.utils.FindJoiningScope;
-import com.esb.plugin.graph.utils.FindMaxBottomHalfHeight;
-import com.esb.plugin.graph.utils.FindMaxTopHalfHeight;
+import com.esb.plugin.graph.utils.*;
 
 import java.awt.*;
 import java.util.Collections;
@@ -70,8 +63,10 @@ public class FlowGraphLayout {
 
                 // Find layer containing this node
                 int containingLayerIndex = FindContainingLayer.of(layers, node);
+
+                ComputeLastScopesByLayer computeLastScopesByLayer = new ComputeLastScopesByLayer(graph, layers);
                 int XCoordinate = Half.of(node.width(graphics)) +
-                        ComputeLayerWidthSumPreceding.of(graph, graphics, layers, containingLayerIndex);
+                        ComputeLayerWidthSumPreceding.of(graphics, layers, containingLayerIndex, computeLastScopesByLayer);
 
                 // Predecessors must not be empty
                 int min = predecessors.stream().mapToInt(GraphNode::y).min().getAsInt();
@@ -140,8 +135,10 @@ public class FlowGraphLayout {
     private static void computeXAndY(int top, FlowGraph graph, Graphics2D graphics, List<List<GraphNode>> layers, GraphNode node, GraphNode stop) {
         // Compute new X coordinate
         int containingLayerIndex = FindContainingLayer.of(layers, node);
+
+        ComputeLastScopesByLayer lastScopesByLayer = new ComputeLastScopesByLayer(graph, layers);
         int XCoordinate = Half.of(node.width(graphics)) +
-                ComputeLayerWidthSumPreceding.of(graph, graphics, layers, containingLayerIndex);
+                ComputeLayerWidthSumPreceding.of(graphics, layers, containingLayerIndex, lastScopesByLayer);
 
         // Compute new Y coordinate
         int topHalfHeight = FindMaxTopHalfHeight.of(graph, graphics, node, stop);

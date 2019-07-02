@@ -1,0 +1,29 @@
+package com.esb.plugin.graph.layout;
+
+import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.node.ScopedGraphNode;
+
+import java.awt.*;
+import java.util.List;
+
+public class ComputeLayerWidthSumPreceding {
+
+    public static int of(Graphics2D graphics, List<List<GraphNode>> layers, int precedingLayerIndex, ComputeLastScopesByLayer compute) {
+        int sum = 0;
+        for (int i = 0; i < precedingLayerIndex; i++) {
+            List<GraphNode> layerDrawables = layers.get(i);
+            int maxNumberOfNestedScopesEndingInLayerIndex = compute.getMaxNumberOfNestedScopesEndingInLayerIndex(i);
+            sum = maxLayerWidth(graphics, layerDrawables, sum, maxNumberOfNestedScopesEndingInLayerIndex);
+        }
+        return sum;
+    }
+
+    private static int maxLayerWidth(Graphics2D graphics, List<GraphNode> layerNodes, int currentSum, int maxScopes) {
+        int max = currentSum;
+        for (GraphNode layerNode : layerNodes) {
+            int total = layerNode.width(graphics) + (maxScopes * ScopedGraphNode.HORIZONTAL_PADDING);
+            if (total + currentSum > max) max += total;
+        }
+        return max;
+    }
+}

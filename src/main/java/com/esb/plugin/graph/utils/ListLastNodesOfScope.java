@@ -17,16 +17,15 @@ public class ListLastNodesOfScope {
         Collection<GraphNode> allNodesInScopeAndNestedScope = collectAllNodesInsideScopesFrom(scopedGraphNode);
         return allNodesInScopeAndNestedScope
                 .stream()
-                .filter(drawable -> {
-
-                    List<GraphNode> successors = graph.successors(drawable);
-
-                    if (successors.isEmpty()) return true;
-
+                .filter(node -> {
+                    List<GraphNode> successors = graph.successors(node);
+                    if (successors.isEmpty()) {
+                        return true;
+                    }
                     // If exists at least one
                     return !allNodesInScopeAndNestedScope.containsAll(successors);
-
-                }).collect(toList());
+                })
+                .collect(toList());
     }
 
 

@@ -4,6 +4,7 @@ import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.component.type.fork.ForkNode;
 import com.esb.plugin.component.type.router.RouterNode;
 import com.esb.plugin.graph.FlowGraph;
+import com.esb.plugin.graph.layout.ComputeMaxHeight;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

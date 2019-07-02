@@ -3,11 +3,11 @@ package com.esb.plugin.editor.designer.widget;
 import com.esb.plugin.commons.Half;
 import com.esb.plugin.editor.designer.Drawable;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.layout.utils.ComputeMaxHeight;
+import com.esb.plugin.graph.layout.ComputeMaxHeight;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopeBoundaries;
 import com.esb.plugin.graph.node.ScopedGraphNode;
-import com.esb.plugin.graph.utils.CountScopesBetween;
+import com.esb.plugin.graph.utils.CountMaxNestedScopes;
 import com.esb.plugin.graph.utils.FindFirstNodeOutsideScope;
 import com.esb.plugin.graph.utils.ListLastNodesOfScope;
 import com.intellij.ui.JBColor;
@@ -15,7 +15,6 @@ import com.intellij.ui.JBColor;
 import java.awt.*;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 // Scope Box
@@ -106,8 +105,10 @@ public abstract class ScopeBox {
         int minY = scopedGraphNode.y() - halfSubTreeHeight + ScopedGraphNode.VERTICAL_PADDING;
         int maxY = scopedGraphNode.y() + halfSubTreeHeight - ScopedGraphNode.VERTICAL_PADDING;
 
-        // Draw Scope Boundaries we need to compute the maximum number of scopes
-        int maxScopes = getMaxScopes(graph, scopedGraphNode);
+        // Draw Scope Boundaries we need to compute
+        // the maximum number of nested scopes
+        // belonging to this scope.
+        int maxScopes = CountMaxNestedScopes.of(scopedGraphNode, (GraphNode) drawableWithMaxX);
 
         int minX = drawableWithMinX.x() - Half.of(drawableWithMinX.width(graphics));
         int maxX = drawableWithMaxX.x() + Half.of(drawableWithMaxX.width(graphics)) + (maxScopes * IN_BETWEEN_SCOPES_PADDING);
@@ -115,17 +116,5 @@ public abstract class ScopeBox {
         int width = maxX - minX;
         int height = maxY - minY;
         return new ScopeBoundaries(minX, minY, width, height);
-    }
-
-    private int getMaxScopes(FlowGraph graph, ScopedGraphNode scopedGraphNode) {
-        int max = 0;
-        Collection<GraphNode> allTerminalNodes = ListLastNodesOfScope.from(graph, scopedGraphNode);
-        for (GraphNode node : allTerminalNodes) {
-            Optional<Integer> scopesBetween = CountScopesBetween.them(scopedGraphNode, node);
-            if (scopesBetween.isPresent()) {
-                max = scopesBetween.get() > max ? scopesBetween.get() : max;
-            }
-        }
-        return max;
     }
 }

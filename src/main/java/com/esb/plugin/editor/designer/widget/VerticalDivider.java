@@ -2,7 +2,7 @@ package com.esb.plugin.editor.designer.widget;
 
 import com.esb.plugin.commons.Half;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.layout.utils.ComputeMaxHeight;
+import com.esb.plugin.graph.layout.ComputeMaxHeight;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.FindFirstNodeOutsideScope;
