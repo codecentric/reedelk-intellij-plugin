@@ -31,7 +31,7 @@ public class RemoveScopedGraphNodeStrategy implements com.esb.plugin.graph.actio
         ScopedGraphNode scopeToRemove = (ScopedGraphNode) toRemove;
 
         // First remove all the nodes belonging to this scope and nested scope
-        removeNestedNodes(scopeToRemove);
+        removeNestedScopesNodes(scopeToRemove);
 
         // We make sure that if the node to be removed
         // is a scoped node, then all its nodes in the scope
@@ -54,7 +54,7 @@ public class RemoveScopedGraphNodeStrategy implements com.esb.plugin.graph.actio
 
     }
 
-    private void removeNestedNodes(ScopedGraphNode scopedGraphNode) {
+    private void removeNestedScopesNodes(ScopedGraphNode scopedGraphNode) {
         Collection<GraphNode> scope = scopedGraphNode.getScope();
         Collection<GraphNode> copyOfScope = new ArrayList<>(scope);
         copyOfScope.forEach(new RemoveScopeNodeConsumer());
@@ -64,7 +64,7 @@ public class RemoveScopedGraphNodeStrategy implements com.esb.plugin.graph.actio
         @Override
         public void accept(GraphNode node) {
             if (node instanceof ScopedGraphNode) {
-                removeNestedNodes((ScopedGraphNode) node);
+                removeNestedScopesNodes((ScopedGraphNode) node);
             } else {
                 ActionNodeRemove action = new ActionNodeRemove(placeholderProvider, node);
                 action.execute(graph);
