@@ -28,6 +28,7 @@ import java.util.Set;
 public abstract class ScopeBox {
 
     private final int IN_BETWEEN_SCOPES_PADDING = 5;
+    private final int LEFT_PADDING = 3;
 
     private Stroke stroke;
     private JBColor boundariesColor;
@@ -45,18 +46,18 @@ public abstract class ScopeBox {
         int x = boundaries.getX();
         int y = boundaries.getY();
 
-        int topLeftX = x;
+        int topLeftX = x + LEFT_PADDING;
         int topLeftY = y;
         int topRightX = x + boundaries.getWidth();
         int topRightY = y;
         int bottomRightX = x + boundaries.getWidth();
         int bottomRightY = y + boundaries.getHeight();
-        int bottomLeftX = x;
+        int bottomLeftX = x + LEFT_PADDING;
         int bottomLeftY = y + boundaries.getHeight();
 
-        int midBottomLeftX = x;
+        int midBottomLeftX = x + LEFT_PADDING;
         int midBottomLeftY = node.getTargetArrowEnd().y + 30;
-        int midTopLeftX = x;
+        int midTopLeftX = x + LEFT_PADDING;
         int midTopLeftY = node.getTargetArrowEnd().y - 20;
 
         graphics.drawLine(topLeftX, topLeftY, topRightX, topRightY);
