@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.function.Consumer;
 
 import static com.esb.internal.commons.Preconditions.checkState;
@@ -41,17 +40,8 @@ public class RemoveScopedGraphNodeStrategy implements com.esb.plugin.graph.actio
         checkState(scope.isEmpty(),
                 "Before removing a scoped node remove all the nodes belonging to its own (and nested) scope/s");
 
-
-        // Remove this node.
-        List<GraphNode> successors = graph.successors(scopedGraphNode);
-
-        // This is a node with potentially many successors (if it follows a ScopedGraphNode)
-        // and at most one successor - because if it would not have at most one  successor
-        // it would be a scoped graph node -.
-        checkState(successors.size() <= 1, "Expected at most one successor");
         Strategy strategy = new RemoveGraphNodeStrategy(graph);
         strategy.execute(scopedGraphNode);
-
     }
 
     private void removeNestedScopesNodes(ScopedGraphNode scopedGraphNode) {
@@ -65,6 +55,10 @@ public class RemoveScopedGraphNodeStrategy implements com.esb.plugin.graph.actio
         public void accept(GraphNode node) {
             if (node instanceof ScopedGraphNode) {
                 removeNestedScopesNodes((ScopedGraphNode) node);
+
+                // Remove the current scoped node
+                Strategy strategy = new RemoveGraphNodeStrategy(graph);
+                strategy.execute(node);
             } else {
                 ActionNodeRemove action = new ActionNodeRemove(placeholderProvider, node);
                 action.execute(graph);
