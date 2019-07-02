@@ -36,7 +36,7 @@ class ActionNodeRemoveTest extends AbstractGraphTest {
 
         // When
         ActionNodeRemove action = new ActionNodeRemove(testPlaceholderProvider, componentNode1);
-        action.execute(graph);
+        action.execute(modifiableGraph);
 
         // Then
         PluginAssertion.assertThat(modifiableGraph)
@@ -62,7 +62,7 @@ class ActionNodeRemoveTest extends AbstractGraphTest {
 
         // When
         ActionNodeRemove action = new ActionNodeRemove(testPlaceholderProvider, forkNode2);
-        action.execute(graph);
+        action.execute(modifiableGraph);
 
         // Then
         PluginAssertion.assertThat(modifiableGraph)
