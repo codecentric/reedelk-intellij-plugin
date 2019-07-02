@@ -485,13 +485,14 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                 routerNode1.addToScope(componentNode1);
                 routerNode2.addToScope(componentNode2);
 
-                root.setPosition(65, 155);
-                routerNode1.setPosition(215, 155);
-                componentNode1.setPosition(370, 155);
-                routerNode2.setPosition(525, 155);
-                componentNode2.setPosition(680, 155);
 
-                Point dropPoint = new Point(437, 147);
+                root.setPosition(65, 160);
+                routerNode1.setPosition(215, 160);
+                componentNode1.setPosition(365, 160);
+                routerNode2.setPosition(515, 160);
+                componentNode2.setPosition(665, 160);
+
+                Point dropPoint = new Point(423, 147);
 
                 // When
                 FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
@@ -505,7 +506,7 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                         .and().successorsOf(componentNode3).isOnly(routerNode2)
                         .and().successorsOf(routerNode2).isOnly(componentNode2)
                         .and().successorsOf(componentNode2).isEmpty()
-                        .and().node(routerNode1).scopeContainsExactly(componentNode1)
+                        .and().node(routerNode1).scopeContainsExactly(componentNode1, componentNode3)
                         .and().node(routerNode2).scopeContainsExactly(componentNode2);
             }
 
@@ -767,15 +768,15 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
 
                 root.setPosition(65, 160);
                 routerNode1.setPosition(215, 160);
-                componentNode1.setPosition(370, 160);
-                routerNode2.setPosition(525, 160);
-                componentNode2.setPosition(685, 160);
+                componentNode1.setPosition(365, 160);
+                routerNode2.setPosition(515, 160);
+                componentNode2.setPosition(665, 160);
 
                 routerNode1.addToScope(componentNode1);
                 routerNode1.addToScope(routerNode2);
                 routerNode2.addToScope(componentNode2);
 
-                Point dropPoint = new Point(753, 154);
+                Point dropPoint = new Point(739, 154);
 
                 // When
                 FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
