@@ -1,7 +1,7 @@
-package com.esb.plugin;
+package com.esb.plugin.graph.deserializer;
 
+import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.deserializer.DeserializerContext;
 import com.esb.plugin.graph.node.GraphNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mock;

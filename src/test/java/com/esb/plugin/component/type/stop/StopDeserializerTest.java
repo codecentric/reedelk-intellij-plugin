@@ -1,6 +1,6 @@
 package com.esb.plugin.component.type.stop;
 
-import com.esb.plugin.AbstractNodeDeserializerTest;
+import com.esb.plugin.graph.deserializer.AbstractNodeDeserializerTest;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

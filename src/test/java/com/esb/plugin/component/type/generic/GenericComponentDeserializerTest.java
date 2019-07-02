@@ -1,12 +1,12 @@
 package com.esb.plugin.component.type.generic;
 
-import com.esb.plugin.AbstractNodeDeserializerTest;
 import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.component.domain.ComponentDefaultDescriptor;
 import com.esb.plugin.component.domain.ComponentDescriptor;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.domain.TypePrimitiveDescriptor;
 import com.esb.plugin.fixture.ComponentNode1;
+import com.esb.plugin.graph.deserializer.AbstractNodeDeserializerTest;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;

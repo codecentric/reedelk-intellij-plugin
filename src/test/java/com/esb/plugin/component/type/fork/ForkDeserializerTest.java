@@ -1,7 +1,7 @@
 package com.esb.plugin.component.type.fork;
 
-import com.esb.plugin.AbstractNodeDeserializerTest;
 import com.esb.plugin.assertion.PluginAssertion;
+import com.esb.plugin.graph.deserializer.AbstractNodeDeserializerTest;
 import com.esb.plugin.graph.node.GraphNode;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;

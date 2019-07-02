@@ -1,6 +1,5 @@
 package com.esb.plugin.graph.deserializer;
 
-import com.esb.plugin.AbstractNodeDeserializerTest;
 import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.graph.FlowGraph;
 import org.junit.jupiter.api.Test;
