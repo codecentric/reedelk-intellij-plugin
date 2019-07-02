@@ -1,11 +1,10 @@
-package com.esb.plugin.graph.action;
+package com.esb.plugin.graph.action.remove;
 
 import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.component.type.placeholder.PlaceholderNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
-import com.esb.plugin.graph.action.remove.ActionNodeRemove;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -28,13 +27,13 @@ class ActionNodeRemoveTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
-        graph.add(componentNode1);
+        graph.add(root, componentNode1);
 
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
 
         // When
-        ActionNodeRemove action = new ActionNodeRemove(testPlaceholderProvider, modifiableGraph, componentNode1);
-        action.remove();
+        ActionNodeRemove action = new ActionNodeRemove(testPlaceholderProvider, componentNode1);
+        action.execute(graph);
 
         // Then
         PluginAssertion.assertThat(modifiableGraph)
@@ -42,47 +41,6 @@ class ActionNodeRemoveTest extends AbstractGraphTest {
                 .nodesCountIs(1)
                 .root().is(root)
                 .and().successorsOf(root).isEmpty();
-    }
-
-    @Test
-    void shouldRemoveRootAndAddPlaceholderWhenRootFollowedByNode() {
-        // Given
-        FlowGraph graph = provider.createGraph();
-        graph.root(root);
-        graph.add(root, componentNode1);
-
-        FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
-
-        // When
-        ActionNodeRemove action = new ActionNodeRemove(testPlaceholderProvider, modifiableGraph, root);
-        action.remove();
-
-        // Then
-        PluginAssertion.assertThat(modifiableGraph)
-                .isChanged()
-                .nodesCountIs(2)
-                .root().is(mockPlaceholder)
-                .and().successorsOf(mockPlaceholder).isOnly(componentNode1)
-                .and().successorsOf(componentNode1).isEmpty();
-    }
-
-    @Test
-    void shouldRemoveRootAndLeaveEmptyGraphWhenRootIsOnlyNode() {
-        // Given
-        FlowGraph graph = provider.createGraph();
-        graph.root(root);
-
-        FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
-
-        // When
-        ActionNodeRemove action = new ActionNodeRemove(testPlaceholderProvider, modifiableGraph, root);
-        action.remove();
-
-        // Then
-        PluginAssertion.assertThat(modifiableGraph)
-                .isChanged()
-                .nodesCountIs(0)
-                .isEmpty();
     }
 
     @Test
@@ -98,8 +56,8 @@ class ActionNodeRemoveTest extends AbstractGraphTest {
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
 
         // When
-        ActionNodeRemove action = new ActionNodeRemove(testPlaceholderProvider, modifiableGraph, componentNode1);
-        action.remove();
+        ActionNodeRemove action = new ActionNodeRemove(testPlaceholderProvider, componentNode1);
+        action.execute(graph);
 
         // Then
         PluginAssertion.assertThat(modifiableGraph)
@@ -124,8 +82,8 @@ class ActionNodeRemoveTest extends AbstractGraphTest {
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
 
         // When
-        ActionNodeRemove action = new ActionNodeRemove(testPlaceholderProvider, modifiableGraph, forkNode2);
-        action.remove();
+        ActionNodeRemove action = new ActionNodeRemove(testPlaceholderProvider, forkNode2);
+        action.execute(graph);
 
         // Then
         PluginAssertion.assertThat(modifiableGraph)

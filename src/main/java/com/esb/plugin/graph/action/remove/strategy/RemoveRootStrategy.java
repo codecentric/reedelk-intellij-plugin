@@ -14,7 +14,8 @@ public class RemoveRootStrategy implements Strategy {
     private final FlowGraph graph;
     private final PlaceholderProvider placeholderProvider;
 
-    public RemoveRootStrategy(@NotNull FlowGraph graph, @NotNull PlaceholderProvider placeholderProvider) {
+    public RemoveRootStrategy(@NotNull FlowGraph graph,
+                              @NotNull PlaceholderProvider placeholderProvider) {
         this.graph = graph;
         this.placeholderProvider = placeholderProvider;
     }
