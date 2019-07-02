@@ -1,10 +1,9 @@
-package com.esb.plugin.graph.layout.utils;
+package com.esb.plugin.graph.layout;
 
 import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.component.type.fork.ForkNode;
 import com.esb.plugin.editor.designer.AbstractGraphNode;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.layout.ComputeLayerWidthSumPreceding;
 import com.esb.plugin.graph.node.GraphNode;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -30,9 +29,12 @@ class ComputeLayerWidthSumPrecedingTest extends AbstractGraphTest {
 
         List<GraphNode> layer0 = singletonList(root);
         List<List<GraphNode>> layers = singletonList(layer0);
+        ComputeMaxScopesEndingInEachLayer maxScopesEndingInEachLayer =
+                new ComputeMaxScopesEndingInEachLayer(graph, layers);
 
         // When
-        int widthSum = ComputeLayerWidthSumPreceding.of(graph, graphics2D, layers, 1);
+        int widthSum =
+                ComputeLayerWidthSumPreceding.of(graphics2D, layers, 1, maxScopesEndingInEachLayer);
 
         // Then
         assertThat(widthSum).isEqualTo(130);
@@ -49,8 +51,12 @@ class ComputeLayerWidthSumPrecedingTest extends AbstractGraphTest {
         List<GraphNode> layer1 = singletonList(componentNode1);
         List<List<GraphNode>> layers = asList(layer0, layer1);
 
+        ComputeMaxScopesEndingInEachLayer maxScopesEndingInEachLayer =
+                new ComputeMaxScopesEndingInEachLayer(graph, layers);
+
         // When
-        int widthSum = ComputeLayerWidthSumPreceding.of(graph, graphics2D, layers, 2);
+        int widthSum =
+                ComputeLayerWidthSumPreceding.of(graphics2D, layers, 2, maxScopesEndingInEachLayer);
 
         // Then
         assertThat(widthSum).isEqualTo(260);
@@ -67,8 +73,12 @@ class ComputeLayerWidthSumPrecedingTest extends AbstractGraphTest {
         List<GraphNode> layer1 = singletonList(forkNode1);
         List<List<GraphNode>> layers = asList(layer0, layer1);
 
+        ComputeMaxScopesEndingInEachLayer maxScopesEndingInEachLayer =
+                new ComputeMaxScopesEndingInEachLayer(graph, layers);
+
         // When
-        int widthSum = ComputeLayerWidthSumPreceding.of(graph, graphics2D, layers, 2);
+        int widthSum =
+                ComputeLayerWidthSumPreceding.of(graphics2D, layers, 2, maxScopesEndingInEachLayer);
 
         // Then
         assertThat(widthSum).isEqualTo(260);
@@ -89,8 +99,12 @@ class ComputeLayerWidthSumPrecedingTest extends AbstractGraphTest {
         List<GraphNode> layer2 = singletonList(componentNode1);
         List<List<GraphNode>> layers = asList(layer0, layer1, layer2);
 
+        ComputeMaxScopesEndingInEachLayer maxScopesEndingInEachLayer =
+                new ComputeMaxScopesEndingInEachLayer(graph, layers);
+
         // When
-        int widthSum = ComputeLayerWidthSumPreceding.of(graph, graphics2D, layers, 3);
+        int widthSum =
+                ComputeLayerWidthSumPreceding.of(graphics2D, layers, 3, maxScopesEndingInEachLayer);
 
         // Then
         assertThat(widthSum).isEqualTo(390);
@@ -116,8 +130,12 @@ class ComputeLayerWidthSumPrecedingTest extends AbstractGraphTest {
         List<GraphNode> layer3 = singletonList(componentNode1);
         List<List<GraphNode>> layers = asList(layer0, layer1, layer2, layer3);
 
+        ComputeMaxScopesEndingInEachLayer maxScopesEndingInEachLayer =
+                new ComputeMaxScopesEndingInEachLayer(graph, layers);
+
         // When
-        int widthSum = ComputeLayerWidthSumPreceding.of(graph, graphics2D, layers, 4);
+        int widthSum =
+                ComputeLayerWidthSumPreceding.of(graphics2D, layers, 4, maxScopesEndingInEachLayer);
 
         // Then
         assertThat(widthSum).isEqualTo(525);
@@ -145,8 +163,12 @@ class ComputeLayerWidthSumPrecedingTest extends AbstractGraphTest {
         List<GraphNode> layer3 = asList(componentNode1, componentNode2);
         List<List<GraphNode>> layers = asList(layer0, layer1, layer2, layer3);
 
+        ComputeMaxScopesEndingInEachLayer maxScopesEndingInEachLayer =
+                new ComputeMaxScopesEndingInEachLayer(graph, layers);
+
         // When
-        int widthSum = ComputeLayerWidthSumPreceding.of(graph, graphics2D, layers, 3);
+        int widthSum =
+                ComputeLayerWidthSumPreceding.of(graphics2D, layers, 3, maxScopesEndingInEachLayer);
 
         // Then
         assertThat(widthSum).isEqualTo(
@@ -175,8 +197,12 @@ class ComputeLayerWidthSumPrecedingTest extends AbstractGraphTest {
         List<GraphNode> layer3 = singletonList(componentNode1);
         List<List<GraphNode>> layers = asList(layer0, layer1, layer2, layer3);
 
+        ComputeMaxScopesEndingInEachLayer maxScopesEndingInEachLayer =
+                new ComputeMaxScopesEndingInEachLayer(graph, layers);
+
         // When
-        int widthSum = ComputeLayerWidthSumPreceding.of(graph, graphics2D, layers, 3);
+        int widthSum =
+                ComputeLayerWidthSumPreceding.of(graphics2D, layers, 3, maxScopesEndingInEachLayer);
 
         // Then
         assertThat(widthSum).isEqualTo(

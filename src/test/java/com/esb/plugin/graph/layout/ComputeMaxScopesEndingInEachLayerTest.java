@@ -1,8 +1,7 @@
-package com.esb.plugin.graph.layout.utils;
+package com.esb.plugin.graph.layout;
 
 import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.layout.ComputeLastScopesByLayer;
 import com.esb.plugin.graph.node.GraphNode;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +12,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
-class ComputeLastScopesByLayerTest extends AbstractGraphTest {
+class ComputeMaxScopesEndingInEachLayerTest extends AbstractGraphTest {
 
     private FlowGraph graph;
 
@@ -45,8 +44,8 @@ class ComputeLastScopesByLayerTest extends AbstractGraphTest {
 
 
         // When
-        ComputeLastScopesByLayer evaluate = new ComputeLastScopesByLayer(graph, layers);
-        int actual = evaluate.getMaxNumberOfNestedScopesEndingInLayerIndex(3);
+        ComputeMaxScopesEndingInEachLayer evaluate = new ComputeMaxScopesEndingInEachLayer(graph, layers);
+        int actual = evaluate.forLayer(3);
 
         // Then
         Assertions.assertThat(actual).isEqualTo(2);

@@ -5,18 +5,27 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class CountMaxNestedScopesTest extends AbstractGraphTest {
+class CountMaxScopesTest extends AbstractGraphTest {
 
     @Test
-    void shouldReturnZeroNestedScopes() {
+    void shouldReturnZeroScopes() {
+        // When
+        int actual = CountMaxScopes.of(routerNode1, componentNode1);
+
+        // Then
+        assertThat(actual).isEqualTo(0);
+    }
+
+    @Test
+    void shouldReturnOneScope() {
         // Given
         routerNode1.addToScope(componentNode1);
 
         // When
-        int actual = CountMaxNestedScopes.of(routerNode1, componentNode1);
+        int actual = CountMaxScopes.of(routerNode1, componentNode1);
 
         // Then
-        assertThat(actual).isEqualTo(0);
+        assertThat(actual).isEqualTo(1);
     }
 
     @Test
@@ -26,10 +35,10 @@ class CountMaxNestedScopesTest extends AbstractGraphTest {
         routerNode2.addToScope(componentNode1);
 
         // When
-        int actual = CountMaxNestedScopes.of(routerNode1, componentNode1);
+        int actual = CountMaxScopes.of(routerNode1, componentNode1);
 
         // Then
-        assertThat(actual).isEqualTo(1);
+        assertThat(actual).isEqualTo(2);
     }
 
     @Test
@@ -39,7 +48,7 @@ class CountMaxNestedScopesTest extends AbstractGraphTest {
         routerNode2.addToScope(routerNode3);
 
         // When
-        int actual = CountMaxNestedScopes.of(routerNode1, routerNode3);
+        int actual = CountMaxScopes.of(routerNode1, routerNode3);
 
         // Then
         assertThat(actual).isEqualTo(2);
@@ -54,10 +63,10 @@ class CountMaxNestedScopesTest extends AbstractGraphTest {
         routerNode3.addToScope(componentNode2);
 
         // When
-        int actual = CountMaxNestedScopes.of(routerNode1, componentNode5);
+        int actual = CountMaxScopes.of(routerNode1, componentNode5);
 
         // Then
-        assertThat(actual).isEqualTo(1);
+        assertThat(actual).isEqualTo(2);
     }
 
     @Test
@@ -69,10 +78,10 @@ class CountMaxNestedScopesTest extends AbstractGraphTest {
         forkNode1.addToScope(forkNode2);
 
         // When
-        int actual = CountMaxNestedScopes.of(routerNode1, forkNode1);
+        int actual = CountMaxScopes.of(routerNode1, forkNode1);
 
         // Then
-        assertThat(actual).isEqualTo(3);
+        assertThat(actual).isEqualTo(2);
     }
 
     @Test
@@ -82,7 +91,7 @@ class CountMaxNestedScopesTest extends AbstractGraphTest {
         forkNode1.addToScope(componentNode1);
 
         // When
-        int actual = CountMaxNestedScopes.of(forkNode1, componentNode1);
+        int actual = CountMaxScopes.of(forkNode1, componentNode1);
 
         // Then
         assertThat(actual).isEqualTo(1);

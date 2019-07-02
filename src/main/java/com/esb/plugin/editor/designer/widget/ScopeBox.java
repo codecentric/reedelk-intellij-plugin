@@ -7,7 +7,7 @@ import com.esb.plugin.graph.layout.ComputeMaxHeight;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopeBoundaries;
 import com.esb.plugin.graph.node.ScopedGraphNode;
-import com.esb.plugin.graph.utils.CountMaxNestedScopes;
+import com.esb.plugin.graph.utils.CountMaxScopes;
 import com.esb.plugin.graph.utils.FindFirstNodeOutsideScope;
 import com.esb.plugin.graph.utils.ListLastNodesOfScope;
 import com.intellij.ui.JBColor;
@@ -108,7 +108,7 @@ public abstract class ScopeBox {
         // Draw Scope Boundaries we need to compute
         // the maximum number of nested scopes
         // belonging to this scope.
-        int maxScopes = CountMaxNestedScopes.of(scopedGraphNode, (GraphNode) drawableWithMaxX);
+        int maxScopes = CountMaxScopes.of(scopedGraphNode, (GraphNode) drawableWithMaxX);
 
         int minX = drawableWithMinX.x() - Half.of(drawableWithMinX.width(graphics));
         int maxX = drawableWithMaxX.x() + Half.of(drawableWithMaxX.width(graphics)) + (maxScopes * IN_BETWEEN_SCOPES_PADDING);

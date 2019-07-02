@@ -9,20 +9,20 @@ import com.esb.plugin.graph.utils.ListLastNodesOfScope;
 
 import java.util.*;
 
-public class ComputeLastScopesByLayer {
+class ComputeMaxScopesEndingInEachLayer {
 
     private Map<ScopedGraphNode, Integer> SCOPE_MAX_LAYER_INDEX = new HashMap<>();
 
     private final FlowGraph graph;
     private final List<List<GraphNode>> layers;
 
-    public ComputeLastScopesByLayer(FlowGraph graph, List<List<GraphNode>> layers) {
+    ComputeMaxScopesEndingInEachLayer(FlowGraph graph, List<List<GraphNode>> layers) {
         this.graph = graph;
         this.layers = layers;
         compute();
     }
 
-    public int getMaxNumberOfNestedScopesEndingInLayerIndex(int index) {
+    int forLayer(int index) {
         Set<ScopedGraphNode> scopesInLayer = new HashSet<>();
         for (Map.Entry<ScopedGraphNode, Integer> entry : SCOPE_MAX_LAYER_INDEX.entrySet()) {
             if (entry.getValue() == index) {

@@ -5,7 +5,7 @@ import com.esb.plugin.graph.node.ScopedGraphNode;
 
 import java.util.Collection;
 
-public class CountMaxNestedScopes {
+public class CountMaxScopes {
 
     public static int of(ScopedGraphNode scope, GraphNode target) {
         return countMaxNestedScopes(scope, target, 0);

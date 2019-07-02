@@ -8,11 +8,14 @@ import java.util.List;
 
 public class ComputeLayerWidthSumPreceding {
 
-    public static int of(Graphics2D graphics, List<List<GraphNode>> layers, int precedingLayerIndex, ComputeLastScopesByLayer compute) {
+    private ComputeLayerWidthSumPreceding() {
+    }
+
+    public static int of(Graphics2D graphics, List<List<GraphNode>> layers, int precedingLayerIndex, ComputeMaxScopesEndingInEachLayer maxScopesEndingInEachLayer) {
         int sum = 0;
         for (int i = 0; i < precedingLayerIndex; i++) {
             List<GraphNode> layerDrawables = layers.get(i);
-            int maxNumberOfNestedScopesEndingInLayerIndex = compute.getMaxNumberOfNestedScopesEndingInLayerIndex(i);
+            int maxNumberOfNestedScopesEndingInLayerIndex = maxScopesEndingInEachLayer.forLayer(i);
             sum = maxLayerWidth(graphics, layerDrawables, sum, maxNumberOfNestedScopesEndingInLayerIndex);
         }
         return sum;
