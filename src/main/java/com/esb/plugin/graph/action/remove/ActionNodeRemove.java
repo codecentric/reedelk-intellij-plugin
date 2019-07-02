@@ -6,6 +6,7 @@ import com.esb.plugin.graph.action.Action;
 import com.esb.plugin.graph.action.Strategy;
 import com.esb.plugin.graph.action.remove.strategy.RemoveGraphNodeStrategy;
 import com.esb.plugin.graph.action.remove.strategy.RemoveRootStrategy;
+import com.esb.plugin.graph.action.remove.strategy.RemoveScopedGraphNodeStrategy;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import org.jetbrains.annotations.NotNull;

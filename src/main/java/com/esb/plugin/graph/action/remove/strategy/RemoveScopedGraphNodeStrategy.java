@@ -1,8 +1,8 @@
-package com.esb.plugin.graph.action.remove;
+package com.esb.plugin.graph.action.remove.strategy;
 
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.action.Strategy;
-import com.esb.plugin.graph.action.remove.strategy.RemoveGraphNodeStrategy;
+import com.esb.plugin.graph.action.remove.ActionNodeRemove;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import org.jetbrains.annotations.NotNull;
@@ -20,8 +20,8 @@ public class RemoveScopedGraphNodeStrategy implements com.esb.plugin.graph.actio
     private final PlaceholderProvider placeholderProvider;
     private final FlowGraph graph;
 
-    RemoveScopedGraphNodeStrategy(@NotNull FlowGraph graph,
-                                  @NotNull PlaceholderProvider placeholderProvider) {
+    public RemoveScopedGraphNodeStrategy(@NotNull FlowGraph graph,
+                                         @NotNull PlaceholderProvider placeholderProvider) {
         this.placeholderProvider = placeholderProvider;
         this.graph = graph;
     }
