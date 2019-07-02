@@ -81,7 +81,7 @@ class ComputeLayerWidthSumPrecedingTest extends AbstractGraphTest {
                 ComputeLayerWidthSumPreceding.of(graphics2D, layers, 2, maxScopesEndingInEachLayer);
 
         // Then
-        assertThat(widthSum).isEqualTo(260);
+        assertThat(widthSum).isEqualTo(265);
     }
 
     @Test
@@ -107,7 +107,7 @@ class ComputeLayerWidthSumPrecedingTest extends AbstractGraphTest {
                 ComputeLayerWidthSumPreceding.of(graphics2D, layers, 3, maxScopesEndingInEachLayer);
 
         // Then
-        assertThat(widthSum).isEqualTo(390);
+        assertThat(widthSum).isEqualTo(395);
     }
 
     @Test
@@ -138,7 +138,7 @@ class ComputeLayerWidthSumPrecedingTest extends AbstractGraphTest {
                 ComputeLayerWidthSumPreceding.of(graphics2D, layers, 4, maxScopesEndingInEachLayer);
 
         // Then
-        assertThat(widthSum).isEqualTo(525);
+        assertThat(widthSum).isEqualTo(530);
     }
 
     @Test
@@ -173,8 +173,8 @@ class ComputeLayerWidthSumPrecedingTest extends AbstractGraphTest {
         // Then
         assertThat(widthSum).isEqualTo(
                 AbstractGraphNode.WIDTH +
-                        ForkNode.WIDTH + HORIZONTAL_PADDING + // layer 1 (1 nested scope)
-                        ForkNode.WIDTH + HORIZONTAL_PADDING + HORIZONTAL_PADDING); // layer 2 (2 nested scopes)
+                        ForkNode.WIDTH +
+                        ForkNode.WIDTH);
     }
 
     @Test
