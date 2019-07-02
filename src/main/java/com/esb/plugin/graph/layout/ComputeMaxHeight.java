@@ -90,7 +90,6 @@ public class ComputeMaxHeight {
             }
         }
 
-        // TODO: Test this
         int followingMax = 0;
         if (firstNodeOutsideScope != end && firstNodeOutsideScope != null) {
             followingMax = maxHeight(graphics, graph, firstNodeOutsideScope, end, 0);
