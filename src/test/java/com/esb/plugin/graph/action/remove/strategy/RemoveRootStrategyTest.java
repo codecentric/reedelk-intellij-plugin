@@ -14,7 +14,6 @@ class RemoveRootStrategyTest extends AbstractGraphTest {
     @Mock
     private PlaceholderNode mockPlaceholder;
 
-
     @Test
     void shouldRemoveRootAndAddPlaceholderWhenRootFollowedByNode() {
         // Given
