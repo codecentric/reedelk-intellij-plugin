@@ -207,7 +207,7 @@ class ComputeLayerWidthSumPrecedingTest extends AbstractGraphTest {
         // Then
         assertThat(widthSum).isEqualTo(
                 AbstractGraphNode.WIDTH +
-                        ForkNode.WIDTH + HORIZONTAL_PADDING + // layer 1 (1 nested scope)
-                        ForkNode.WIDTH + HORIZONTAL_PADDING + HORIZONTAL_PADDING); // layer 2 (2 nested scopes)
+                        ForkNode.WIDTH + HORIZONTAL_PADDING +
+                        ForkNode.WIDTH);
     }
 }
