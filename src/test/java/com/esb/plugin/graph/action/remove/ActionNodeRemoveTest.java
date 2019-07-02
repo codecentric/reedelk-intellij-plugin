@@ -23,27 +23,6 @@ class ActionNodeRemoveTest extends AbstractGraphTest {
     }
 
     @Test
-    void shouldRemoveSuccessorOfRoot() {
-        // Given
-        FlowGraph graph = provider.createGraph();
-        graph.root(root);
-        graph.add(root, componentNode1);
-
-        FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
-
-        // When
-        ActionNodeRemove action = new ActionNodeRemove(testPlaceholderProvider, componentNode1);
-        action.execute(graph);
-
-        // Then
-        PluginAssertion.assertThat(modifiableGraph)
-                .isChanged()
-                .nodesCountIs(1)
-                .root().is(root)
-                .and().successorsOf(root).isEmpty();
-    }
-
-    @Test
     void shouldRemoveNodeFromScope() {
         // Given
         FlowGraph graph = provider.createGraph();

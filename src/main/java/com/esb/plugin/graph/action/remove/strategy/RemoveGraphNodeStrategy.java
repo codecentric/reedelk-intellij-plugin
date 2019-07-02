@@ -51,7 +51,7 @@ public class RemoveGraphNodeStrategy implements Strategy {
     }
 
     private void removeSuccessorOfScopedNode(GraphNode toRemove, ScopedGraphNode predecessor, GraphNode successor) {
-        int index = getDroppedIndex(predecessor, toRemove);
+        int index = getToBeRemovedNodeIndex(predecessor, toRemove);
 
         graph.remove(predecessor, toRemove);
         FindScope.of(graph, toRemove)
@@ -73,10 +73,10 @@ public class RemoveGraphNodeStrategy implements Strategy {
         graph.remove(toRemove);
     }
 
-    private int getDroppedIndex(ScopedGraphNode scopedPredecessor, GraphNode dropped) {
+    private int getToBeRemovedNodeIndex(ScopedGraphNode scopedPredecessor, GraphNode toRemove) {
         List<GraphNode> successors = graph.successors(scopedPredecessor);
         for (int i = 0; i < successors.size(); i++) {
-            if (successors.get(i) == dropped) return i;
+            if (successors.get(i) == toRemove) return i;
         }
         // This is the case where we need to find a toRemove index
         // for a scoped predecessor without successors in the scope.
