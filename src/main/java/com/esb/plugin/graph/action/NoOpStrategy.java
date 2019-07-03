@@ -6,6 +6,7 @@ public class NoOpStrategy implements Strategy {
 
     @Override
     public void execute(GraphNode node) {
+        // No op
     }
 
     @Override

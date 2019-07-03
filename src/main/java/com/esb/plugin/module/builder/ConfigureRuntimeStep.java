@@ -72,7 +72,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
 
     @Override
     public void dispose() {
-
+        // No op
     }
 
     private void createInputWithBrowse(WizardContext context, ESBModuleBuilder moduleBuilder) {

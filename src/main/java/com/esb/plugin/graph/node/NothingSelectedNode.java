@@ -18,12 +18,12 @@ public class NothingSelectedNode implements GraphNode {
 
     @Override
     public void mouseMoved(DrawableListener listener, MouseEvent event) {
-
+        // No op
     }
 
     @Override
     public void mousePressed(DrawableListener listener, MouseEvent event) {
-
+        // No op
     }
 
     @Override
@@ -38,32 +38,32 @@ public class NothingSelectedNode implements GraphNode {
 
     @Override
     public void drag(int x, int y) {
-
+        // No op
     }
 
     @Override
     public void dragging() {
-
+        // No op
     }
 
     @Override
     public void drop() {
-
+        // No op
     }
 
     @Override
     public void setPosition(int x, int y) {
-
+        // No op
     }
 
     @Override
     public void selected() {
-
+        // No op
     }
 
     @Override
     public void unselected() {
-
+        // No op
     }
 
     @Override
@@ -73,7 +73,7 @@ public class NothingSelectedNode implements GraphNode {
 
     @Override
     public void drawDrag(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-
+        // No op
     }
 
     @Override

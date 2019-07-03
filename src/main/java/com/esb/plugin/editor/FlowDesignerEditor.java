@@ -60,7 +60,7 @@ public class FlowDesignerEditor extends UserDataHolderBase implements FileEditor
 
     @Override
     public void setState(@NotNull FileEditorState state) {
-
+        // No op
     }
 
     @Override
@@ -75,22 +75,22 @@ public class FlowDesignerEditor extends UserDataHolderBase implements FileEditor
 
     @Override
     public void selectNotify() {
-
+        // No op
     }
 
     @Override
     public void deselectNotify() {
-
+        // No op
     }
 
     @Override
     public void addPropertyChangeListener(@NotNull PropertyChangeListener listener) {
-
+        // No op
     }
 
     @Override
     public void removePropertyChangeListener(@NotNull PropertyChangeListener listener) {
-
+        // No op
     }
 
     @Nullable
