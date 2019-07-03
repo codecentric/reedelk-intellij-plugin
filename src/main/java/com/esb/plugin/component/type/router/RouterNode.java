@@ -128,8 +128,8 @@ public class RouterNode extends AbstractScopedGraphNode {
 
     class RouterOnProcessSuccessor implements VerticalDividerArrows.OnProcessSuccessor {
 
-        private final int DEFAULT_ROUTE_TEXT_LEFT_PADDING = 6;
-        private final int DEFAULT_ROUTE_TEXT_TOP_PADDING = 14;
+        private static final int DEFAULT_ROUTE_TEXT_LEFT_PADDING = 6;
+        private static final int DEFAULT_ROUTE_TEXT_TOP_PADDING = 14;
 
         @Override
         public void onProcess(ScopedGraphNode parent, GraphNode successor, Graphics2D graphics) {

@@ -36,10 +36,10 @@ class ComponentClassAnalyzer {
      */
     private boolean isInbound(ClassInfo componentClassInfo) {
         ClassInfoList superclasses = componentClassInfo.getSuperclasses();
-        boolean implementsAbstractInbound = superclasses.stream().anyMatch(classInfo ->
-                classInfo.getName().equals(AbstractInbound.class.getName()));
-        boolean implementsInboundInterface = componentClassInfo.getInterfaces().stream().anyMatch(classInfo ->
-                classInfo.getName().equals(Inbound.class.getName()));
+        boolean implementsAbstractInbound = superclasses.stream().anyMatch(superClassInfo ->
+                superClassInfo.getName().equals(AbstractInbound.class.getName()));
+        boolean implementsInboundInterface = componentClassInfo.getInterfaces().stream().anyMatch(interfaceClassInfo ->
+                interfaceClassInfo.getName().equals(Inbound.class.getName()));
         return implementsAbstractInbound || implementsInboundInterface;
     }
 

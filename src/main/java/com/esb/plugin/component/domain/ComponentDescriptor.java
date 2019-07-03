@@ -2,7 +2,6 @@ package com.esb.plugin.component.domain;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.datatransfer.DataFlavor;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,8 +9,6 @@ import java.util.Optional;
  * Interface describing the component to be added to the graph.
  */
 public interface ComponentDescriptor {
-
-    DataFlavor FLAVOR = new DataFlavor(ComponentDescriptor.class, "Descriptor of a component");
 
     Icon getIcon();
 

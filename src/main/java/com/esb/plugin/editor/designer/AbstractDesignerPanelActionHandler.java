@@ -27,11 +27,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import static com.esb.plugin.component.domain.ComponentDescriptor.FLAVOR;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
 public abstract class AbstractDesignerPanelActionHandler implements DesignerPanelActionHandler {
+
+    private final DataFlavor FLAVOR = new DataFlavor(ComponentDescriptor.class, "Descriptor of a component");
 
     private static final Logger LOG = Logger.getInstance(AbstractDesignerPanelActionHandler.class);
 
