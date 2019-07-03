@@ -96,7 +96,7 @@ class ComputeMaxHeightTest extends AbstractGraphTest {
         // Then
         // scoped graph node has top and bottom padding
         assertThat(actual).isEqualTo(
-                RouterNode.HEIGHT +
+                RouterNode.NODE_HEIGHT +
                         ScopedGraphNode.VERTICAL_PADDING +
                         ScopedGraphNode.VERTICAL_PADDING);
     }
@@ -116,7 +116,7 @@ class ComputeMaxHeightTest extends AbstractGraphTest {
         // scoped graph node has top and bottom padding, the following
         // componentNode1 has height lower than the router.
         assertThat(actual).isEqualTo(
-                RouterNode.HEIGHT +
+                RouterNode.NODE_HEIGHT +
                         ScopedGraphNode.VERTICAL_PADDING +
                         ScopedGraphNode.VERTICAL_PADDING);
     }
@@ -133,7 +133,7 @@ class ComputeMaxHeightTest extends AbstractGraphTest {
 
         // Then
         assertThat(actual).isEqualTo(
-                ForkNode.HEIGHT +
+                ForkNode.NODE_HEIGHT +
                         ScopedGraphNode.VERTICAL_PADDING +
                         ScopedGraphNode.VERTICAL_PADDING);
     }
@@ -151,7 +151,7 @@ class ComputeMaxHeightTest extends AbstractGraphTest {
 
         // Then
         assertThat(actual).isEqualTo(
-                ForkNode.HEIGHT +
+                ForkNode.NODE_HEIGHT +
                         ScopedGraphNode.VERTICAL_PADDING +
                         ScopedGraphNode.VERTICAL_PADDING);
     }
@@ -175,7 +175,7 @@ class ComputeMaxHeightTest extends AbstractGraphTest {
         // Then
         // Nexted Router height is the height of the node + the 2 vertical
         // padding for the innermost router and the outermost router.
-        assertThat(actual).isEqualTo(RouterNode.HEIGHT +
+        assertThat(actual).isEqualTo(RouterNode.NODE_HEIGHT +
                 ScopedGraphNode.VERTICAL_PADDING +
                 ScopedGraphNode.VERTICAL_PADDING +
                 ScopedGraphNode.VERTICAL_PADDING +
@@ -234,7 +234,7 @@ class ComputeMaxHeightTest extends AbstractGraphTest {
         int actual = ComputeMaxHeight.of(graph, graphics, routerNode1, componentNode1);
 
         // Then
-        assertThat(actual).isEqualTo(RouterNode.HEIGHT +
+        assertThat(actual).isEqualTo(RouterNode.NODE_HEIGHT +
                 ScopedGraphNode.VERTICAL_PADDING +
                 ScopedGraphNode.VERTICAL_PADDING +
                 ScopedGraphNode.VERTICAL_PADDING +
@@ -258,8 +258,8 @@ class ComputeMaxHeightTest extends AbstractGraphTest {
 
         // Then: 2 routers on top of each other + padding/s for 2 routers
         assertThat(actual).isEqualTo(
-                RouterNode.HEIGHT +
-                        RouterNode.HEIGHT +
+                RouterNode.NODE_HEIGHT +
+                        RouterNode.NODE_HEIGHT +
                         ScopedGraphNode.VERTICAL_PADDING +
                         ScopedGraphNode.VERTICAL_PADDING +
                         ScopedGraphNode.VERTICAL_PADDING +
@@ -328,7 +328,7 @@ class ComputeMaxHeightTest extends AbstractGraphTest {
 
         // Then
         assertThat(actual).isEqualTo(
-                RouterNode.HEIGHT +
+                RouterNode.NODE_HEIGHT +
                         ScopedGraphNode.VERTICAL_PADDING +
                         ScopedGraphNode.VERTICAL_PADDING +
                         ScopedGraphNode.VERTICAL_PADDING +
@@ -352,7 +352,7 @@ class ComputeMaxHeightTest extends AbstractGraphTest {
 
         // Then
         assertThat(actual).isEqualTo(
-                ForkNode.HEIGHT +
+                ForkNode.NODE_HEIGHT +
                         ScopedGraphNode.VERTICAL_PADDING +
                         ScopedGraphNode.VERTICAL_PADDING +
                         ScopedGraphNode.VERTICAL_PADDING +

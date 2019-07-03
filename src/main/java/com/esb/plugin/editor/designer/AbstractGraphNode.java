@@ -21,7 +21,7 @@ import java.util.Optional;
 
 public abstract class AbstractGraphNode implements GraphNode {
 
-    public static final int WIDTH = 130;
+    public static final int NODE_WIDTH = 130;
 
     private final ComponentData componentData;
 
@@ -105,7 +105,7 @@ public abstract class AbstractGraphNode implements GraphNode {
 
     @Override
     public int width(Graphics2D graphics) {
-        return WIDTH;
+        return NODE_WIDTH;
     }
 
     @Override

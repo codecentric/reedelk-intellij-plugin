@@ -27,11 +27,11 @@ import java.util.List;
 public class RouterNode extends AbstractScopedGraphNode {
 
     public static final String DATA_CONDITION_ROUTE_PAIRS = "conditionRoutePairs";
-    public static final int HEIGHT = 140;
-    private static final int WIDTH = 170;
+    public static final int NODE_HEIGHT = 140;
+    private static final int NODE_WIDTH = 170;
 
     private static final int VERTICAL_DIVIDER_X_OFFSET = 45;
-    private static final int SELECTED_BOX_WIDTH = WIDTH - VERTICAL_DIVIDER_X_OFFSET;
+    private static final int SELECTED_BOX_WIDTH = NODE_WIDTH - VERTICAL_DIVIDER_X_OFFSET;
     private static final int ICON_X_OFFSET = 20;
 
     private final SelectedBox selectedBox;
@@ -50,7 +50,7 @@ public class RouterNode extends AbstractScopedGraphNode {
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
         // Draw the background box of this selected component
         if (isSelected()) {
-            selectedBox.setPosition(x() - Half.of(WIDTH) + 4, y());
+            selectedBox.setPosition(x() - Half.of(NODE_WIDTH) + 4, y());
             selectedBox.draw(graphics, SELECTED_BOX_WIDTH - 4, bottomHalfHeight(graphics));
         }
 
@@ -74,12 +74,12 @@ public class RouterNode extends AbstractScopedGraphNode {
 
     @Override
     public int height(Graphics2D graphics) {
-        return HEIGHT;
+        return NODE_HEIGHT;
     }
 
     @Override
     public int width(Graphics2D graphics) {
-        return WIDTH;
+        return NODE_WIDTH;
     }
 
     @Override

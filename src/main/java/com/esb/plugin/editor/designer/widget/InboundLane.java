@@ -33,7 +33,7 @@ public class InboundLane {
     }
 
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-        int width = AbstractGraphNode.WIDTH;
+        int width = AbstractGraphNode.NODE_WIDTH;
         drawVerticalBar(graphics, width);
         inboundComponent.setPosition(Half.of(width), Half.of(topPadding));
         inboundComponent.draw(graphics);
@@ -46,7 +46,7 @@ public class InboundLane {
     private void drawInboundComponentIcon(Graphics2D graphics, ImageObserver observer) {
         Image inboundPlaceholderImage = Images.Component.InboundPlaceholderIcon;
         graphics.drawImage(inboundPlaceholderImage,
-                Half.of(AbstractGraphNode.WIDTH) - Icon.Dimension.HALF_ICON_WIDTH,
+                Half.of(AbstractGraphNode.NODE_WIDTH) - Icon.Dimension.HALF_ICON_WIDTH,
                 topPadding + Icon.Dimension.ICON_HEIGHT + Icon.Dimension.TOP_PADDING - Icon.Dimension.ICON_WIDTH, observer);
     }
 

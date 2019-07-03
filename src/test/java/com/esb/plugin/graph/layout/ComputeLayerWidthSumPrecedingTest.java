@@ -172,9 +172,9 @@ class ComputeLayerWidthSumPrecedingTest extends AbstractGraphTest {
 
         // Then
         assertThat(widthSum).isEqualTo(
-                AbstractGraphNode.WIDTH +
-                        ForkNode.WIDTH +
-                        ForkNode.WIDTH);
+                AbstractGraphNode.NODE_WIDTH +
+                        ForkNode.NODE_WIDTH +
+                        ForkNode.NODE_WIDTH);
     }
 
     @Test
@@ -206,8 +206,8 @@ class ComputeLayerWidthSumPrecedingTest extends AbstractGraphTest {
 
         // Then
         assertThat(widthSum).isEqualTo(
-                AbstractGraphNode.WIDTH +
-                        ForkNode.WIDTH + HORIZONTAL_PADDING +
-                        ForkNode.WIDTH);
+                AbstractGraphNode.NODE_WIDTH +
+                        ForkNode.NODE_WIDTH + HORIZONTAL_PADDING +
+                        ForkNode.NODE_WIDTH);
     }
 }

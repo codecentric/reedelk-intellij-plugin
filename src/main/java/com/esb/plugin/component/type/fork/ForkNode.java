@@ -13,11 +13,11 @@ import java.awt.image.ImageObserver;
 
 public class ForkNode extends AbstractScopedGraphNode {
 
-    public static final int HEIGHT = 140;
-    public static final int WIDTH = 130;
+    public static final int NODE_HEIGHT = 140;
+    public static final int NODE_WIDTH = 130;
 
     private static final int VERTICAL_DIVIDER_X_OFFSET = 7;
-    private static final int SELECTED_BOX_WIDTH = WIDTH - 14;
+    private static final int SELECTED_BOX_WIDTH = NODE_WIDTH - 14;
 
     private final SelectedBox selectedBox;
     private final VerticalDivider verticalDivider;
@@ -58,12 +58,12 @@ public class ForkNode extends AbstractScopedGraphNode {
 
     @Override
     public int height(Graphics2D graphics) {
-        return HEIGHT;
+        return NODE_HEIGHT;
     }
 
     @Override
     public int width(Graphics2D graphics) {
-        return WIDTH;
+        return NODE_WIDTH;
     }
 
 }
