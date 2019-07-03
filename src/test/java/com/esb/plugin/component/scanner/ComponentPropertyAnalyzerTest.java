@@ -124,4 +124,19 @@ class ComponentPropertyAnalyzerTest {
                 .notRequired()
                 .hasType(FLOAT_TYPE);
     }
+
+    @Test
+    void shouldReturnDefaultIntValueWhenDefaultAnnotationDoesNotSpecifyAnyValue() {
+        // Given
+        FieldInfo propertyWithMissingDefaultValue =
+                testComponentClassInfo.getFieldInfo("propertyWithMissingDefaultValue");
+
+        // When
+        Optional<ComponentPropertyDescriptor> propertyDescriptor = analyzer.analyze(propertyWithMissingDefaultValue);
+
+        // Then
+        PluginAssertion.assertThat(propertyDescriptor.get())
+                .hasDefaultValue(0)
+                .hasType(INT_TYPE);
+    }
 }

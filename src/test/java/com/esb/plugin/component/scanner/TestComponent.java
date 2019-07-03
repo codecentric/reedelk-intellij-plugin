@@ -14,16 +14,17 @@ public class TestComponent implements Processor {
     @Default("3")
     @Required
     private int property1;
-
     @Property("Property 2")
     private String property2;
-
     @Property("Enum Property")
     @Default("VALUE2")
     private TestEnum property3;
-
     @Property
     private float propertyWithoutDisplayName;
+    @Property("Property with missing default value")
+    @Default
+    private int propertyWithMissingDefaultValue;
+
 
     private int notExposedProperty;
 
