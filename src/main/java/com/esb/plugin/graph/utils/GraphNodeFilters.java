@@ -8,9 +8,12 @@ import java.util.Collection;
 
 import static java.util.stream.Collectors.toList;
 
-public class GraphNodeFilters {
+class GraphNodeFilters {
 
-    public static class StopNodes {
+    private GraphNodeFilters() {
+    }
+
+    static class StopNodes {
         static Collection<StopNode> from(Collection<GraphNode> nodes) {
             return nodes.stream()
                     .filter(n -> n instanceof StopNode)
@@ -19,7 +22,7 @@ public class GraphNodeFilters {
         }
     }
 
-    public static class ScopedGraphNodes {
+    static class ScopedGraphNodes {
         static Collection<ScopedGraphNode> from(Collection<GraphNode> nodes) {
             return nodes.stream()
                     .filter(n -> n instanceof ScopedGraphNode)
@@ -27,5 +30,4 @@ public class GraphNodeFilters {
                     .collect(toList());
         }
     }
-
 }

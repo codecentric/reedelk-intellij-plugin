@@ -10,6 +10,9 @@ import java.util.Stack;
 
 public class FindScopes {
 
+    private FindScopes() {
+    }
+
     /**
      * Returns a Stack containing all the scopes the target node belongs to. The topmost
      * element of the stack is the innermost scope this target belongs to. The last element
@@ -25,6 +28,7 @@ public class FindScopes {
         while (!scopedGraphNodes.isEmpty()) {
             toReturn.push(scopedGraphNodes.pop());
         }
+
         // The target node, if it is a scoped node, then it is on top of the stack.
         if (target instanceof ScopedGraphNode) {
             toReturn.push((ScopedGraphNode) target);

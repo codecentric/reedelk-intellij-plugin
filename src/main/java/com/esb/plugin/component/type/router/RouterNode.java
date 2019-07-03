@@ -56,7 +56,7 @@ public class RouterNode extends AbstractScopedGraphNode {
 
         super.draw(graph, graphics, observer);
 
-        verticalDivider.draw(graph, graphics, observer);
+        verticalDivider.draw(graph, graphics);
     }
 
     @Override

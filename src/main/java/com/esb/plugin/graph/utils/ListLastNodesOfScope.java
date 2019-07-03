@@ -13,6 +13,9 @@ import static java.util.stream.Collectors.toList;
 
 public class ListLastNodesOfScope {
 
+    private ListLastNodesOfScope() {
+    }
+
     public static List<GraphNode> from(FlowGraph graph, ScopedGraphNode scopedGraphNode) {
         Collection<GraphNode> allNodesInScopeAndNestedScope = collectAllNodesInsideScopesFrom(scopedGraphNode);
         return allNodesInScopeAndNestedScope

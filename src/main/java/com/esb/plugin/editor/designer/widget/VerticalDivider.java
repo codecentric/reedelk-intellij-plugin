@@ -10,7 +10,6 @@ import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 
 import java.awt.*;
-import java.awt.image.ImageObserver;
 
 import static java.awt.BasicStroke.CAP_ROUND;
 import static java.awt.BasicStroke.JOIN_ROUND;
@@ -27,7 +26,7 @@ public class VerticalDivider {
         this.scopedGraphNode = scopedGraphNode;
     }
 
-    public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
+    public void draw(FlowGraph graph, Graphics2D graphics) {
         graphics.setStroke(STROKE);
         graphics.setColor(VERTICAL_DIVIDER_COLOR);
 

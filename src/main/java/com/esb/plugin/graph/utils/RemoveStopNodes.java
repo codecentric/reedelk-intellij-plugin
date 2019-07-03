@@ -14,6 +14,9 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class RemoveStopNodes {
 
+    private RemoveStopNodes() {
+    }
+
     /**
      * This class removes from a given flow graph all the nodes having
      * type 'StopNode' and bridges the incoming node to the successor
@@ -74,5 +77,4 @@ public class RemoveStopNodes {
     private static Optional<StopNode> getSuccessorStopNode(FlowGraph graph, GraphNode node) {
         return StopNodes.from(graph.successors(node)).stream().findFirst();
     }
-
 }

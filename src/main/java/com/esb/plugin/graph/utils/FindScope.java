@@ -8,6 +8,9 @@ import java.util.Optional;
 
 public class FindScope {
 
+    private FindScope() {
+    }
+
     public static Optional<ScopedGraphNode> of(FlowGraph graph, GraphNode target) {
         return graph.nodes()
                 .stream()

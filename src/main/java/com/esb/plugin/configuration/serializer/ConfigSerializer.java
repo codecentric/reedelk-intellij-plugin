@@ -10,6 +10,9 @@ import static com.esb.internal.commons.JsonParser.Implementor;
 
 public class ConfigSerializer {
 
+    private ConfigSerializer() {
+    }
+
     public static String serialize(ConfigMetadata configMetadata) {
         JSONObject configJsonObject = JsonObjectFactory.newJSONObject();
         configJsonObject.put(Implementor.name(), configMetadata.getFullyQualifiedName());

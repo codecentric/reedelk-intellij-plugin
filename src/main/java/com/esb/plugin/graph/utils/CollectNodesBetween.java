@@ -8,6 +8,9 @@ import java.util.*;
 
 public class CollectNodesBetween {
 
+    private CollectNodesBetween() {
+    }
+
     public static Collection<GraphNode> them(FlowGraph graph, GraphNode n1, GraphNode n2) {
 
         if (n1 == n2) {

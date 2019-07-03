@@ -21,6 +21,9 @@ import static com.google.common.base.Preconditions.checkState;
  */
 public class FindFirstNodeOutsideScope {
 
+    private FindFirstNodeOutsideScope() {
+    }
+
     public static Optional<GraphNode> of(FlowGraph graph, ScopedGraphNode scope) {
         Set<GraphNode> firstNodesOutsideScope = new HashSet<>();
 

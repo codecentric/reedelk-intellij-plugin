@@ -15,6 +15,14 @@ import static java.util.stream.Collectors.toList;
 
 public class FindClosestPrecedingNode {
 
+    // A value which represent the max vicinity a drop point must
+    // have in order to be snapped to a predecessor.
+    private static final int MAX_SNAP_VICINITY = 110;
+
+
+    private FindClosestPrecedingNode() {
+    }
+
     public static Optional<GraphNode> of(FlowGraph graph, Point dropPoint, Graphics2D graphics) {
         List<GraphNode> precedingNodes = graph
                 .nodes()
@@ -24,18 +32,14 @@ public class FindClosestPrecedingNode {
         return findClosestOnYAxis(precedingNodes, dropPoint.y, dropPoint.x);
     }
 
-    // A value which represent the max vicinity a drop point must
-    // have in order to be snapped to a predecessor.
-    private static final int MAX_SNAP_VICINITY = 110;
-
-
     private static Predicate<GraphNode> byPrecedingNodesOnX(FlowGraph graph, int dropX, Graphics2D graphics) {
         return preceding -> {
+
             // The drop point is before/after the center of the node or the center + next node position.
             if (dropX <= preceding.x() || dropX >= preceding.x() + preceding.width(graphics) + Half.of(preceding.width(graphics))) {
                 return false;
             }
-            // TODO: Test this function
+
             if (preceding instanceof ScopedGraphNode) {
                 ScopeBoundaries scopeBoundaries = ((ScopedGraphNode) preceding).getScopeBoundaries(graph, graphics);
                 // We don't consider the scope node a predecessor
@@ -44,6 +48,7 @@ public class FindClosestPrecedingNode {
                     return false;
                 }
             }
+
             // If exists a successor of the current preceding node in the preceding + 1 position,
             // then we restrict the drop position so that we consider valid if and only if its x
             // coordinates are between preceding x and successor x.
@@ -52,6 +57,7 @@ public class FindClosestPrecedingNode {
                     return dropX > preceding.x() && dropX < successor.x();
                 }
             }
+
             // The next successor is beyond the next position so we consider valid a drop point
             // between preceding x and until the end of preceding + 1 position
             return true;

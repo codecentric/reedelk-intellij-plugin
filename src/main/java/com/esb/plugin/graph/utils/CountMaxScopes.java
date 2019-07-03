@@ -7,6 +7,9 @@ import java.util.Collection;
 
 public class CountMaxScopes {
 
+    private CountMaxScopes() {
+    }
+
     public static int of(ScopedGraphNode scope, GraphNode target) {
         return countMaxNestedScopes(scope, target, 0);
     }

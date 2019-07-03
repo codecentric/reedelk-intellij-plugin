@@ -50,7 +50,7 @@ public class ComponentPropertyAnalyzer {
             return processBaseType((BaseTypeSignature) typeSignature);
         } else if (typeSignature instanceof ClassRefTypeSignature) {
             ClassRefTypeSignature classRef = (ClassRefTypeSignature) typeSignature;
-            return processClassRefType(fieldInfo, classRef);
+            return processClassRefType(classRef);
         } else {
             throw new UnsupportedType(typeSignature.getClass());
         }
@@ -60,7 +60,7 @@ public class ComponentPropertyAnalyzer {
         return new TypePrimitiveDescriptor(typeSignature.getType());
     }
 
-    private TypeDescriptor processClassRefType(FieldInfo fieldInfo, ClassRefTypeSignature typeSignature) {
+    private TypeDescriptor processClassRefType(ClassRefTypeSignature typeSignature) {
         String fullyQualifiedClassName = typeSignature.getFullyQualifiedClassName();
         if (isKnownType(fullyQualifiedClassName)) {
             try {

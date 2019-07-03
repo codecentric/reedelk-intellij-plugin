@@ -9,6 +9,9 @@ import static java.util.stream.Collectors.toList;
 
 public class ListAllScopes {
 
+    private ListAllScopes() {
+    }
+
     public static List<ScopedGraphNode> of(FlowGraph graph) {
         return graph.nodes()
                 .stream()

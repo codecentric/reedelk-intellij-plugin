@@ -6,6 +6,9 @@ import com.esb.plugin.graph.node.ScopedGraphNode;
 
 public class CountNestedScopes {
 
+    private CountNestedScopes() {
+    }
+
     public static int of(FlowGraph graph, GraphNode target) {
         if (target instanceof ScopedGraphNode) {
             return 1 + FindScope.of(graph, target)

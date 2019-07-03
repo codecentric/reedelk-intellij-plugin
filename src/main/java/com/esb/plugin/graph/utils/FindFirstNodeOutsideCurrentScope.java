@@ -22,6 +22,9 @@ import static com.google.common.base.Preconditions.checkState;
  */
 public class FindFirstNodeOutsideCurrentScope {
 
+    private FindFirstNodeOutsideCurrentScope() {
+    }
+
     public static Optional<GraphNode> of(FlowGraph graph, ScopedGraphNode target) {
 
         Optional<ScopedGraphNode> scopeContainingTarget = FindScope.of(graph, target);

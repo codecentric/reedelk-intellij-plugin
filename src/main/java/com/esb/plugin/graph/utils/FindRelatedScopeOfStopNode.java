@@ -14,6 +14,9 @@ import java.util.Optional;
  */
 public class FindRelatedScopeOfStopNode {
 
+    private FindRelatedScopeOfStopNode() {
+    }
+
     public static GraphNode find(FlowGraph graph, StopNode stopNode) {
 
         List<GraphNode> predecessors = graph.predecessors(stopNode);

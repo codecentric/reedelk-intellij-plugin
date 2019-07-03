@@ -11,6 +11,9 @@ import static java.util.stream.Collectors.toList;
 
 public class FindJoiningScope {
 
+    private FindJoiningScope() {
+    }
+
     public static Optional<ScopedGraphNode> of(FlowGraph graph, GraphNode target) {
         List<ScopedGraphNode> scopedGraphNodes = ListAllScopes.of(graph);
         List<ScopedGraphNode> scopesWithTargetAsFirstOutsideNode = scopedGraphNodes.stream()

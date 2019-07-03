@@ -36,7 +36,6 @@ public class GenericComponentDeserializer extends AbstractNodeDeserializer {
         return node;
     }
 
-    // TODO: Fixme
     private void deserialize(JSONObject parent, ComponentDataHolder componentData, ComponentPropertyDescriptor descriptor) {
         TypeDescriptor propertyType = descriptor.getPropertyType();
 

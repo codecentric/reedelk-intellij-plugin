@@ -8,6 +8,9 @@ import java.util.Optional;
 
 public class BelongToSameScope {
 
+    private BelongToSameScope() {
+    }
+
     public static boolean from(FlowGraph graph, GraphNode node1, GraphNode node2) {
         Optional<ScopedGraphNode> scope1 = node1 instanceof ScopedGraphNode ? Optional.of((ScopedGraphNode) node1) : FindScope.of(graph, node1);
         Optional<ScopedGraphNode> scope2 = node2 instanceof ScopedGraphNode ? Optional.of((ScopedGraphNode) node2) : FindScope.of(graph, node2);
