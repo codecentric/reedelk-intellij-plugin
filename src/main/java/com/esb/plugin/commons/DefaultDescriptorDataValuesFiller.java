@@ -12,6 +12,9 @@ import static com.esb.plugin.component.domain.TypeObjectDescriptor.TypeObject;
 
 public class DefaultDescriptorDataValuesFiller {
 
+    private DefaultDescriptorDataValuesFiller() {
+    }
+
     public static void fill(ComponentDataHolder dataHolder, List<ComponentPropertyDescriptor> propertyDescriptors) {
         propertyDescriptors.forEach(descriptor -> {
             String propertyName = descriptor.getPropertyName();

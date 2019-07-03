@@ -4,6 +4,9 @@ import java.util.Stack;
 
 public class StackUtils {
 
+    private StackUtils() {
+    }
+
     public static <T> void reverse(Stack<T> stack) {
         if (stack.isEmpty()) {
             return;

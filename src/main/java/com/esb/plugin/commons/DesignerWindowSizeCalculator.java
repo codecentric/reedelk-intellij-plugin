@@ -11,6 +11,9 @@ public class DesignerWindowSizeCalculator {
 
     private static final int WINDOW_GROW_STEP = 50;
 
+    private DesignerWindowSizeCalculator() {
+    }
+
     public static Optional<Dimension> from(FlowGraph graph, Graphics2D graphics) {
 
         // No need to adjust window size if the graph is empty.

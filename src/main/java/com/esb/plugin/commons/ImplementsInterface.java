@@ -2,6 +2,9 @@ package com.esb.plugin.commons;
 
 public class ImplementsInterface {
 
+    private ImplementsInterface() {
+    }
+
     public static boolean by(Class target, Class targetInterfaceClazz) {
         if (target == null) return false;
         Class[] interfaces = target.getInterfaces();

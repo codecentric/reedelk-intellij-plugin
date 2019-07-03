@@ -10,6 +10,9 @@ import static com.esb.internal.commons.ModuleProperties.Bundle;
 
 public class ModuleInfo {
 
+    private ModuleInfo() {
+    }
+
     public static boolean IsESBModule(String jarFilePath) {
         try {
             Attributes attributes = getManifestAttributesOf(jarFilePath);

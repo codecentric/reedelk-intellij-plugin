@@ -13,6 +13,9 @@ public class ModuleUtils {
 
     private static final String PROJECT_RESOURCES_FOLDER = "src/main/resources";
 
+    private ModuleUtils() {
+    }
+
     public static Optional<String> getConfigsFolder(Module module) {
         Optional<String> resourcesFolder = getResourcesFolder(module);
         return resourcesFolder.map(resources ->

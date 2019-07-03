@@ -8,6 +8,9 @@ import com.intellij.openapi.wm.ToolWindowManager;
 
 public class NotificationUtils {
 
+    private NotificationUtils() {
+    }
+
     public static void notifyInfo(final String toolWindowId, final String text, final Project project) {
         ToolWindowManager
                 .getInstance(project)

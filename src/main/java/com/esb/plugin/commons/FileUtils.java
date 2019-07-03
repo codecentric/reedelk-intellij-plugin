@@ -6,6 +6,9 @@ import java.util.Optional;
 
 public class FileUtils {
 
+    private FileUtils() {
+    }
+
     public static Optional<String> findRuntimeJarName(String runtimeHomeDirectory) {
         String binDirectoryPath = Paths.get(runtimeHomeDirectory, "bin").toString();
         File binDirectory = new File(binDirectoryPath);

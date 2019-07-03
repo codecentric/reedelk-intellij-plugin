@@ -20,7 +20,13 @@ public class Icons {
     public static final Icon FileTypeSubFlow = IconLoader.getIcon("/icons/icon-subflow-file-16x.png");
     public static final Icon FileTypeFlowConfig = IconLoader.getIcon("/icons/icon-flow-config-file-16x.png");
 
+    private Icons() {
+    }
+
     public static class Component {
+
+        private Component() {
+        }
 
         public static final Icon DefaultComponentIcon = IconLoader.getIcon("/icons/default-component-icon.png");
         public static final Icon InboundTypeComponentIcon = IconLoader.getIcon("/icons/inbound-type-component.png");
@@ -38,6 +44,9 @@ public class Icons {
     }
 
     public static class Config {
+
+        private Config() {
+        }
 
         public static final Icon Add = IconLoader.getIcon("/icons/config-add.png");
         public static final Icon Delete = IconLoader.getIcon("/icons/config-delete.png");

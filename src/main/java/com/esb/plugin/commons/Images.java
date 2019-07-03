@@ -13,14 +13,24 @@ public class Images {
 
     private static final Logger LOG = Logger.getInstance(Images.class);
 
+    private Images() {
+    }
+
     public static class Component {
+
+        private Component() {
+        }
 
         public static final Image DefaultComponent;
         public static final Image RemoveComponent;
         public static final Image InboundPlaceholderIcon;
+
         static {
+
             DefaultComponent = loadImage("/icons/default-component.png");
+
             RemoveComponent = loadImage("/icons/remove-component-icon.png");
+
             InboundPlaceholderIcon = loadImage("/icons/inbound-placeholder-icon.png");
         }
 
@@ -33,15 +43,21 @@ public class Images {
         public static Image get(String key) {
             return KEY_IMAGE_MAP.getOrDefault(key, DefaultComponent);
         }
+
+        private static Image loadImage(String resourceName) {
+            try {
+                URL resource = Images.class.getResource(resourceName);
+                return ImageIO.read(resource);
+            } catch (IOException e) {
+                LOG.error(String.format("Could not load image with resource name '%s'", resourceName), e);
+                throw new ImageNotFound(e);
+            }
+        }
     }
 
-    private static Image loadImage(String resourceName) {
-        try {
-            URL resource = Images.class.getResource(resourceName);
-            return ImageIO.read(resource);
-        } catch (IOException e) {
-            LOG.error(String.format("Could not load image with resource name '%s'", resourceName), e);
-            throw new RuntimeException(e);
+    static class ImageNotFound extends RuntimeException {
+        ImageNotFound(IOException e) {
+            super(e);
         }
     }
 }

@@ -25,9 +25,7 @@ public class RuntimeComboManager {
             configurationsList
                     .stream()
                     .map(configuration -> (ESBRuntimeRunConfiguration) configuration)
-                    .forEach(configuration -> {
-                        comboBox.addItem(configuration.getName());
-                    });
+                    .forEach(configuration -> comboBox.addItem(configuration.getName()));
 
             comboBox.setSelectedIndex(-1);
         }

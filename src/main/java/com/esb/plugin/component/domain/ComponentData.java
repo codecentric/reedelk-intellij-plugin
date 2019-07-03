@@ -9,7 +9,7 @@ public class ComponentData implements ComponentDataHolder {
 
     private final ComponentDescriptor descriptor;
 
-    private Map<String, Object> componentData = new LinkedHashMap<>();
+    private Map<String, Object> propertyNameDataMap = new LinkedHashMap<>();
 
     public ComponentData(final ComponentDescriptor descriptor) {
         this.descriptor = descriptor;
@@ -17,23 +17,23 @@ public class ComponentData implements ComponentDataHolder {
 
     @Override
     public List<String> keys() {
-        return new ArrayList<>(componentData.keySet());
+        return new ArrayList<>(propertyNameDataMap.keySet());
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> T get(String key) {
-        return (T) componentData.get(key);
+        return (T) propertyNameDataMap.get(key);
     }
 
     @Override
     public void set(String propertyName, Object propertyValue) {
-        componentData.put(propertyName, propertyValue);
+        propertyNameDataMap.put(propertyName, propertyValue);
     }
 
     @Override
     public boolean has(String key) {
-        return componentData.containsKey(key);
+        return propertyNameDataMap.containsKey(key);
     }
 
     public String getFullyQualifiedName() {
@@ -46,7 +46,7 @@ public class ComponentData implements ComponentDataHolder {
 
     public List<String> getDataProperties() {
         List<String> dataProperties = new ArrayList<>();
-        for (Map.Entry<String, Object> entry : componentData.entrySet()) {
+        for (Map.Entry<String, Object> entry : propertyNameDataMap.entrySet()) {
             dataProperties.add(entry.getKey());
         }
         Collections.reverse(dataProperties);

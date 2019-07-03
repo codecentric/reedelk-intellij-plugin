@@ -20,6 +20,9 @@ public class JsonObjectFactory {
         }
     }
 
+    private JsonObjectFactory() {
+    }
+
     /**
      * Instantiates a new JSON Object with an ordered HashMap. This
      * is needed so that properties are serialized in the same order

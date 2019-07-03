@@ -13,6 +13,9 @@ public class PrintFlowInfo {
 
     private static final Logger LOG = Logger.getInstance(PrintFlowInfo.class);
 
+    private PrintFlowInfo() {
+    }
+
     public static void debug(FlowGraph graph) {
         StringBuilder infoBuilder = new StringBuilder("\n-------------------- Flow Info --------------------");
         graph.breadthFirstTraversal(node -> {

@@ -20,5 +20,7 @@ public class Labels {
 
     public static final String ROUTER_DEFAULT_ROUTE = "otherwise";
 
+    private Labels() {
+    }
 
 }

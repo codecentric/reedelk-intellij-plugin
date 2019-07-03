@@ -14,6 +14,9 @@ import java.util.Optional;
 
 public class MavenUtils {
 
+    private MavenUtils() {
+    }
+
     public static Optional<MavenProject> getMavenProject(Project project, String moduleName) {
        Optional<String> optionalPomXml = getModulePomXml(moduleName, project);
        if (optionalPomXml.isPresent()) {
