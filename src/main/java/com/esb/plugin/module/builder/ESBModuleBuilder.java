@@ -7,6 +7,7 @@ import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfigurationBuilder;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.JavaModuleType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbAwareRunnable;
@@ -24,6 +25,8 @@ import org.jetbrains.idea.maven.wizards.MavenModuleBuilder;
 import javax.swing.*;
 
 public class ESBModuleBuilder extends MavenModuleBuilder {
+
+    private static final Logger LOG = Logger.getInstance(ESBModuleBuilder.class);
 
     private boolean isNewProject;
     private String runtimeConfigName;
@@ -61,10 +64,11 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
         final String sdkVersion = rootModel.getSdkName();
 
         MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> {
+            ESBMavenProjectBuilderHelper projectBuilder = new ESBMavenProjectBuilderHelper();
             try {
-                new ESBMavenProjectBuilderHelper().configure(project, projectId, parentId, root, sdkVersion);
+                projectBuilder.configure(project, projectId, parentId, root, sdkVersion);
             } catch (Throwable throwable) {
-                throwable.printStackTrace();
+                LOG.error("Error while configuring Maven project", throwable);
             }
         });
     }
