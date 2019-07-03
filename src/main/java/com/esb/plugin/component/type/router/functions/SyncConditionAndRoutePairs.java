@@ -15,6 +15,9 @@ public class SyncConditionAndRoutePairs {
 
     private static final String EMPTY_CONDITION = "";
 
+    private SyncConditionAndRoutePairs() {
+    }
+
     public static List<RouterConditionRoutePair> getUpdatedPairs(FlowGraph graph, RouterNode routerNode, List<RouterConditionRoutePair> oldConditions) {
         checkState(oldConditions.size() >= 1, format("Expected numbers of condition pairs >= 1 but %d were found", oldConditions.size()));
 

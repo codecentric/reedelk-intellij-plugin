@@ -9,9 +9,9 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 
 public class ComponentDescriptorTransferable implements Transferable {
 
-    private static final DataFlavor[] flavors = new DataFlavor[]{
-            ComponentDescriptor.FLAVOR
-    };
+    public static final DataFlavor FLAVOR = new DataFlavor(ComponentDescriptor.class, "Descriptor of a component");
+
+    private static final DataFlavor[] flavors = new DataFlavor[]{FLAVOR};
 
     private final ComponentDescriptor descriptor;
 
@@ -26,13 +26,13 @@ public class ComponentDescriptorTransferable implements Transferable {
 
     @Override
     public boolean isDataFlavorSupported(DataFlavor flavor) {
-        return ComponentDescriptor.FLAVOR.equals(flavor);
+        return FLAVOR.equals(flavor);
     }
 
     @Override
     @NotNull
     public ComponentDescriptor getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
-        if (ComponentDescriptor.FLAVOR.equals(flavor)) {
+        if (FLAVOR.equals(flavor)) {
             return descriptor;
         }
         throw new UnsupportedFlavorException(flavor);

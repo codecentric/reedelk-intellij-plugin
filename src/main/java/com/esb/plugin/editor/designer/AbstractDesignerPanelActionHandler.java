@@ -27,12 +27,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import static com.esb.plugin.editor.palette.ComponentDescriptorTransferable.FLAVOR;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
 public abstract class AbstractDesignerPanelActionHandler implements DesignerPanelActionHandler {
-
-    private final DataFlavor FLAVOR = new DataFlavor(ComponentDescriptor.class, "Descriptor of a component");
 
     private static final Logger LOG = Logger.getInstance(AbstractDesignerPanelActionHandler.class);
 
@@ -103,17 +102,24 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
     protected abstract Action getActionAdd(Point dropPoint, GraphNode nodeToAdd, Graphics2D graphics, ImageObserver observer);
 
     private Optional<ComponentDescriptor> getComponentDescriptorFrom(DropTargetDropEvent dropEvent) {
+
         Transferable transferable = dropEvent.getTransferable();
+
         DataFlavor[] transferDataFlavor = transferable.getTransferDataFlavors();
+
         if (asList(transferDataFlavor).contains(FLAVOR)) {
+
             try {
                 ComponentDescriptor descriptor =
                         (ComponentDescriptor) transferable.getTransferData(FLAVOR);
+
                 return Optional.of(descriptor);
+
             } catch (UnsupportedFlavorException | IOException e) {
                 LOG.error("Could not extract dropped component name", e);
             }
         }
+
         return Optional.empty();
     }
 }
