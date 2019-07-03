@@ -13,8 +13,11 @@ public class FindCommonParent {
 
     public static GraphNode of(FlowGraph graph, Collection<GraphNode> nodes) {
         Set<GraphNode> commonParents = new HashSet<>();
+
         nodes.forEach(node -> commonParents.addAll(graph.predecessors(node)));
+
         checkState(commonParents.size() == 1, "Common parent must be one");
-        return commonParents.stream().findFirst().get();
+
+        return commonParents.iterator().next();
     }
 }

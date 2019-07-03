@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -67,12 +68,15 @@ public abstract class StrategyBuilder {
 
     @NotNull
     GraphNode getOverlappingPlaceholder(FlowGraph graph, Point dropPoint) {
-        return graph.nodes()
+        Optional<GraphNode> maybeOverlappingPlaceholder = graph.nodes()
                 .stream()
                 .filter(node -> node.contains(observer, dropPoint.x, dropPoint.y) &&
                         node instanceof PlaceholderNode)
-                .findFirst()
-                .get();
+                .findFirst();
+        if (!maybeOverlappingPlaceholder.isPresent()) {
+            throw new IllegalStateException("Expected at least one placeholder matching the drop point");
+        }
+        return maybeOverlappingPlaceholder.get();
     }
 
     boolean isOverlappingAnyPlaceHolder(FlowGraph graph, Point dropPoint) {

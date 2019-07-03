@@ -30,8 +30,9 @@ public class ModuleInfo {
     }
 
     private static Attributes getManifestAttributesOf(String jarFilePath) throws IOException {
-        JarFile jarFile = new JarFile(new File(jarFilePath));
-        Manifest manifest = jarFile.getManifest();
-        return manifest.getMainAttributes();
+        try (JarFile jarFile = new JarFile(new File(jarFilePath))) {
+            Manifest manifest = jarFile.getManifest();
+            return manifest.getMainAttributes();
+        }
     }
 }

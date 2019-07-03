@@ -19,7 +19,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.esb.internal.commons.JsonParser.FlowReference;
-import static com.esb.internal.commons.Preconditions.checkState;
 
 public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesRenderer {
 
@@ -42,7 +41,10 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
         JBPanel genericPropertiesPanel = createPropertiesPanelFrom(filteredDescriptors, componentData);
 
         Optional<ComponentPropertyDescriptor> propertyDescriptor = componentData.getPropertyDescriptor(FlowReference.ref());
-        checkState(propertyDescriptor.isPresent(), "Reference property descriptor must not be null");
+
+        if (!propertyDescriptor.isPresent()) {
+            throw new IllegalStateException("Reference property descriptor must not be null");
+        }
 
         ComponentPropertyDescriptor referencePropertyDescriptor = propertyDescriptor.get();
 
