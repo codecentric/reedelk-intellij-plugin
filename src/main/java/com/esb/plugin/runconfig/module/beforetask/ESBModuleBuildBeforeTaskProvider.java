@@ -1,7 +1,7 @@
 package com.esb.plugin.runconfig.module.beforetask;
 
 import com.esb.plugin.commons.Icons;
-import com.esb.plugin.commons.MavenUtils;
+import com.esb.plugin.maven.MavenPackageGoal;
 import com.esb.plugin.runconfig.module.ESBModuleRunConfiguration;
 import com.esb.plugin.runconfig.module.runner.ESBModuleUnDeployExecutor;
 import com.esb.plugin.service.project.sourcechange.SourceChangeService;
@@ -13,25 +13,14 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.concurrency.Semaphore;
-import com.intellij.util.execution.ParametersListUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.idea.maven.execution.MavenRunner;
-import org.jetbrains.idea.maven.execution.MavenRunnerParameters;
-import org.jetbrains.idea.maven.model.MavenExplicitProfiles;
-import org.jetbrains.idea.maven.project.MavenProject;
-import org.jetbrains.idea.maven.project.MavenProjectsManager;
-import org.jetbrains.idea.maven.tasks.TasksBundle;
 import org.jetbrains.idea.maven.utils.MavenLog;
 
 import javax.swing.*;
-import java.util.Collections;
-import java.util.Optional;
 
 public class ESBModuleBuildBeforeTaskProvider extends BeforeRunTaskProvider<ESBModuleBuildBeforeTask> {
 
@@ -95,11 +84,12 @@ public class ESBModuleBuildBeforeTaskProvider extends BeforeRunTaskProvider<ESBM
 
         final Semaphore targetDone = new Semaphore();
         final boolean[] result = new boolean[]{true};
+
         try {
             ApplicationManager.getApplication().invokeAndWait(() -> {
 
-                // By saving all documents we trigger the File listener to commit files,
-                // Hence we know if we can hotswap.
+                // By saving all documents we force the File listener
+                // to commit all files. This way we know if we can hot swap or not.
                 FileDocumentManager.getInstance().saveAllDocuments();
 
                 String moduleName = moduleRunConfiguration.getModuleName();
@@ -113,59 +103,21 @@ public class ESBModuleBuildBeforeTaskProvider extends BeforeRunTaskProvider<ESBM
                 final Project project = CommonDataKeys.PROJECT.getData(context);
                 if (project == null || project.isDisposed()) return;
 
-                Optional<MavenProject> optionalMavenProject = MavenUtils.getMavenProject(env.getProject(), moduleName);
-
-                if (!optionalMavenProject.isPresent()) return;
-
-                MavenProject mavenProject = optionalMavenProject.get();
-
-
-                final MavenExplicitProfiles explicitProfiles = MavenProjectsManager.getInstance(project).getExplicitProfiles();
-                final MavenRunner mavenRunner = MavenRunner.getInstance(project);
-
                 targetDone.down();
-                new Task.Backgroundable(project, TasksBundle.message("maven.tasks.executing"), true) {
-                    @Override
-                    public void run(@NotNull ProgressIndicator indicator) {
-                        try {
-                            MavenRunnerParameters params = new MavenRunnerParameters(
-                                    true,
-                                    mavenProject.getDirectory(),
-                                    mavenProject.getFile().getName(),
-                                    ParametersListUtil.parse("package -DskipTests=true"),
-                                    explicitProfiles.getEnabledProfiles(),
-                                    explicitProfiles.getDisabledProfiles());
+                MavenPackageGoal packageGoal = new MavenPackageGoal(project, moduleName, goalResult -> {
+                    result[0] = goalResult;
+                    targetDone.up();
+                });
+                packageGoal.execute();
 
-                            result[0] = mavenRunner.runBatch(Collections.singletonList(params),
-                                    null,
-                                    null,
-                                    TasksBundle.message("maven.tasks.executing"),
-                                    indicator);
-                        }
-                        finally {
-                            targetDone.up();
-                        }
-                    }
-
-                    @Override
-                    public boolean shouldStartInBackground() {
-                        return MavenRunner.getInstance(project).getSettings().isRunMavenInBackground();
-                    }
-
-                    @Override
-                    public void processSentToBackground() {
-                        MavenRunner.getInstance(project).getSettings().setRunMavenInBackground(true);
-                    }
-                }.queue();
             }, ModalityState.NON_MODAL);
-        }
-        catch (Exception e) {
+
+        } catch (Exception e) {
             MavenLog.LOG.error(e);
             return false;
         }
+
         targetDone.waitFor();
         return result[0];
     }
-
-
 }

@@ -29,4 +29,8 @@ public class HttpResponse {
         return this.status < 200 || this.status >= 300;
     }
 
+    public boolean isNotFound() {
+        return this.status == 404;
+    }
+
 }

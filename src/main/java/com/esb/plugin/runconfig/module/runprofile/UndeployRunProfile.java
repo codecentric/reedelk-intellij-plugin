@@ -4,6 +4,8 @@ import com.esb.plugin.service.application.rest.RESTModuleService;
 import com.esb.plugin.service.project.sourcechange.SourceChangeService;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.project.MavenProject;
@@ -19,8 +21,8 @@ public class UndeployRunProfile extends AbstractRunProfile {
 
     @Override
     protected ExecutionResult execute(@NotNull MavenProject mavenProject, @NotNull String moduleFile) throws ExecutionException {
-
-        RESTModuleService service = new RESTModuleService(address, port);
+        Module module = ModuleManager.getInstance(project).findModuleByName(moduleName);
+        RESTModuleService service = new RESTModuleService(project, module, address, port);
 
         // Un Deploy Module
         service.delete(moduleFile);
