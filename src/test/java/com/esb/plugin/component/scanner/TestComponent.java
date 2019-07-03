@@ -22,6 +22,9 @@ public class TestComponent implements Processor {
     @Default("VALUE2")
     private TestEnum property3;
 
+    @Property
+    private float propertyWithoutDisplayName;
+
     private int notExposedProperty;
 
 
@@ -40,6 +43,10 @@ public class TestComponent implements Processor {
 
     public void setProperty3(TestEnum property3) {
         this.property3 = property3;
+    }
+
+    public void setPropertyWithoutDisplayName(float propertyWithoutDisplayName) {
+        this.propertyWithoutDisplayName = propertyWithoutDisplayName;
     }
 
     public void setNotExposedProperty(int notExposedProperty) {

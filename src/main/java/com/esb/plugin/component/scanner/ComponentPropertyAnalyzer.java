@@ -38,6 +38,8 @@ public class ComponentPropertyAnalyzer {
     private ComponentPropertyDescriptor analyzeProperty(FieldInfo propertyInfo) {
         String propertyName = propertyInfo.getName();
         String displayName = getAnnotationValueOrDefault(propertyInfo, Property.class, propertyInfo.getName());
+        displayName = Property.USE_DEFAULT_NAME.equals(displayName) ? propertyName : displayName;
+
         TypeDescriptor propertyType = getPropertyType(propertyInfo);
         Object defaultValue = getDefaultValue(propertyInfo, propertyType);
         PropertyRequired required = isRequired(propertyInfo) ? REQUIRED : NOT_REQUIRED;
@@ -125,7 +127,9 @@ public class ComponentPropertyAnalyzer {
         }
         AnnotationInfo annotationInfo = fieldInfo.getAnnotationInfo(annotationClazz.getName());
         AnnotationParameterValueList parameterValues = annotationInfo.getParameterValues();
-        return (T) parameterValues.getValue(ANNOTATION_DEFAULT_PARAM_NAME);
+        return parameterValues.get(ANNOTATION_DEFAULT_PARAM_NAME) == null ?
+                defaultValue :
+                (T) parameterValues.getValue(ANNOTATION_DEFAULT_PARAM_NAME);
     }
 
     /**

@@ -6,17 +6,18 @@ import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.domain.TypeEnumDescriptor;
 import com.esb.plugin.component.domain.TypePrimitiveDescriptor;
 import io.github.classgraph.*;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class ComponentPropertyAnalyzerTest {
 
     private final TypePrimitiveDescriptor INT_TYPE = new TypePrimitiveDescriptor(int.class);
+    private final TypePrimitiveDescriptor FLOAT_TYPE = new TypePrimitiveDescriptor(float.class);
     private final TypePrimitiveDescriptor STRING_TYPE = new TypePrimitiveDescriptor(String.class);
     private final TypeEnumDescriptor TEST_ENUM = new TypeEnumDescriptor(asList("VALUE1", "VALUE2", "VALUE3"), "VALUE1");
 
@@ -27,8 +28,9 @@ class ComponentPropertyAnalyzerTest {
     void setUp() {
         ScanResult scanResult = new ClassGraph()
                 .whitelistPackages(ComponentPropertyAnalyzerTest.class.getPackage().getName())
-                .enableSystemJarsAndModules()
-                .enableAllInfo()
+                .enableFieldInfo()
+                .enableAnnotationInfo()
+                .ignoreFieldVisibility()
                 .scan();
 
         ComponentAnalyzerContext context = new ComponentAnalyzerContext(scanResult);
@@ -41,7 +43,8 @@ class ComponentPropertyAnalyzerTest {
     @Test
     void shouldCorrectlyAnalyzeIntTypeProperty() {
         // Given
-        FieldInfo property1 = testComponentClassInfo.getFieldInfo("property1");
+        FieldInfo property1 =
+                testComponentClassInfo.getFieldInfo("property1");
 
         // When
         Optional<ComponentPropertyDescriptor> propertyDescriptor = analyzer.analyze(property1);
@@ -58,7 +61,8 @@ class ComponentPropertyAnalyzerTest {
     @Test
     void shouldCorrectlyAnalyzeStringTypeProperty() {
         // Given
-        FieldInfo property2 = testComponentClassInfo.getFieldInfo("property2");
+        FieldInfo property2 =
+                testComponentClassInfo.getFieldInfo("property2");
 
         // When
         Optional<ComponentPropertyDescriptor> propertyDescriptor = analyzer.analyze(property2);
@@ -75,7 +79,8 @@ class ComponentPropertyAnalyzerTest {
     @Test
     void shouldCorrectlyAnalyzeEnumTypeProperty() {
         // Given
-        FieldInfo property3 = testComponentClassInfo.getFieldInfo("property3");
+        FieldInfo property3 =
+                testComponentClassInfo.getFieldInfo("property3");
 
         // When
         Optional<ComponentPropertyDescriptor> propertyDescriptor = analyzer.analyze(property3);
@@ -92,13 +97,31 @@ class ComponentPropertyAnalyzerTest {
     @Test
     void shouldCorrectlyReturnEmptyOptionalForNotExposedProperty() {
         // Given
-        FieldInfo notExposedProperty = testComponentClassInfo.getFieldInfo("notExposedProperty");
+        FieldInfo notExposedProperty =
+                testComponentClassInfo.getFieldInfo("notExposedProperty");
 
         // When
         Optional<ComponentPropertyDescriptor> propertyDescriptor = analyzer.analyze(notExposedProperty);
 
         // Then
-        Assertions.assertThat(propertyDescriptor).isNotPresent();
+        assertThat(propertyDescriptor).isNotPresent();
     }
 
+    @Test
+    void shouldReturnFieldNameWhenPropertyAnnotationDoesNotContainPropertyDisplayName() {
+        // Given
+        FieldInfo propertyWithoutDisplayName =
+                testComponentClassInfo.getFieldInfo("propertyWithoutDisplayName");
+
+        // When
+        Optional<ComponentPropertyDescriptor> propertyDescriptor = analyzer.analyze(propertyWithoutDisplayName);
+
+        // Then
+        PluginAssertion.assertThat(propertyDescriptor.get())
+                .hasName("propertyWithoutDisplayName")
+                .hasDisplayName("propertyWithoutDisplayName")
+                .hasDefaultValue(0.0f)
+                .notRequired()
+                .hasType(FLOAT_TYPE);
+    }
 }
