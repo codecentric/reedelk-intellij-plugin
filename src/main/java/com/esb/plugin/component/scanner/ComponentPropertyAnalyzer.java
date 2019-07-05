@@ -1,9 +1,6 @@
 package com.esb.plugin.component.scanner;
 
-import com.esb.api.annotation.Default;
-import com.esb.api.annotation.Property;
-import com.esb.api.annotation.Required;
-import com.esb.api.annotation.Shareable;
+import com.esb.api.annotation.*;
 import com.esb.plugin.component.domain.*;
 import com.esb.plugin.converter.ValueConverterFactory;
 import io.github.classgraph.*;
@@ -13,13 +10,15 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static com.esb.plugin.component.domain.ComponentPropertyDescriptor.*;
+import static com.esb.plugin.component.domain.ComponentPropertyDescriptor.PropertyClassifier.*;
 import static com.esb.plugin.component.domain.ComponentPropertyDescriptor.PropertyRequired;
 import static com.esb.plugin.component.domain.ComponentPropertyDescriptor.PropertyRequired.NOT_REQUIRED;
 import static com.esb.plugin.component.domain.ComponentPropertyDescriptor.PropertyRequired.REQUIRED;
 import static com.esb.plugin.converter.ValueConverterFactory.isKnownType;
 import static java.util.stream.Collectors.toList;
 
-public class ComponentPropertyAnalyzer {
+class ComponentPropertyAnalyzer {
 
     private static final String ANNOTATION_DEFAULT_PARAM_NAME = "value";
 
@@ -37,13 +36,27 @@ public class ComponentPropertyAnalyzer {
 
     private ComponentPropertyDescriptor analyzeProperty(FieldInfo propertyInfo) {
         String propertyName = propertyInfo.getName();
-        String displayName = getAnnotationValueOrDefault(propertyInfo, Property.class, propertyInfo.getName());
-        displayName = Property.USE_DEFAULT_NAME.equals(displayName) ? propertyName : displayName;
+        String displayName = getDisplayName(propertyInfo, propertyName);
 
         TypeDescriptor propertyType = getPropertyType(propertyInfo);
         Object defaultValue = getDefaultValue(propertyInfo, propertyType);
+
         PropertyRequired required = isRequired(propertyInfo) ? REQUIRED : NOT_REQUIRED;
-        return new ComponentPropertyDescriptor(propertyName, propertyType, displayName, defaultValue, required);
+        PropertyClassifier classifier = isScript(propertyInfo) ? SCRIPT : DEFAULT;
+
+        return new ComponentPropertyDescriptor(
+                propertyName,
+                propertyType,
+                displayName,
+                defaultValue,
+                required,
+                classifier);
+    }
+
+    private String getDisplayName(FieldInfo propertyInfo, String propertyName) {
+        String displayName = getAnnotationValueOrDefault(propertyInfo, Property.class, propertyInfo.getName());
+        displayName = Property.USE_DEFAULT_NAME.equals(displayName) ? propertyName : displayName;
+        return displayName;
     }
 
     private TypeDescriptor getPropertyType(FieldInfo fieldInfo) {
@@ -150,6 +163,10 @@ public class ComponentPropertyAnalyzer {
 
     private boolean isRequired(FieldInfo fieldInfo) {
         return fieldInfo.hasAnnotation(Required.class.getName());
+    }
+
+    private boolean isScript(FieldInfo fieldInfo) {
+        return fieldInfo.hasAnnotation(Script.class.getName());
     }
 
     private boolean isShareable(ClassInfo classInfo) {

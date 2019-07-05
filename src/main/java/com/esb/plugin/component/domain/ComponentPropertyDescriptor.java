@@ -9,17 +9,23 @@ public class ComponentPropertyDescriptor {
         NOT_REQUIRED;
     }
 
-    private final PropertyRequired required;
+    public enum PropertyClassifier {
+        SCRIPT,
+        DEFAULT
+    }
+
     private final String displayName;
     private final String propertyName;
     private final Object defaultValue;
+    private final PropertyRequired required;
+    private final PropertyClassifier classifier;
     private final TypeDescriptor propertyType;
 
     public ComponentPropertyDescriptor(
             final String propertyName,
             final TypeDescriptor propertyType,
             final String displayName) {
-        this(propertyName, propertyType, displayName, null, PropertyRequired.NOT_REQUIRED);
+        this(propertyName, propertyType, displayName, null, PropertyRequired.NOT_REQUIRED, PropertyClassifier.DEFAULT);
     }
 
     public ComponentPropertyDescriptor(
@@ -27,18 +33,21 @@ public class ComponentPropertyDescriptor {
             final TypeDescriptor propertyType,
             final String displayName,
             final Object defaultValue) {
-        this(propertyName, propertyType, displayName, defaultValue, PropertyRequired.NOT_REQUIRED);
+        this(propertyName, propertyType, displayName, defaultValue, PropertyRequired.NOT_REQUIRED, PropertyClassifier.DEFAULT);
     }
 
+    // Create a Builder for this object
     public ComponentPropertyDescriptor(
             final String propertyName,
             final TypeDescriptor propertyType,
             final String displayName,
             final Object defaultValue,
-            final PropertyRequired required) {
+            final PropertyRequired required,
+            final PropertyClassifier classifier) {
         checkState(propertyName != null, "property name");
         checkState(propertyType != null, "property type");
         this.required = required;
+        this.classifier = classifier;
         this.displayName = displayName;
         this.propertyName = propertyName;
         this.defaultValue = defaultValue;
@@ -65,4 +74,7 @@ public class ComponentPropertyDescriptor {
         return propertyType;
     }
 
+    public PropertyClassifier getClassifier() {
+        return classifier;
+    }
 }

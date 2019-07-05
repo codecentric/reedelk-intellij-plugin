@@ -1,85 +1,85 @@
-package com.esb.plugin.editor.properties.widget.input;
+package com.esb.plugin.editor.properties.widget.input.script;
+
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.event.DocumentListener;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.awt.event.KeyEvent.*;
 
-public class SuggestionDropDownDecorator<C extends JComponent> {
+public class SuggestionDropDownDecorator {
 
-    private final C invoker;
-    private final SuggestionClient<C> suggestionClient;
-    private JPopupMenu popupMenu;
-    private JList<String> listComp;
-    DefaultListModel<String> listModel;
+    private final JTextComponent invoker;
+    private final SuggestionClient suggestionClient;
+
+    private JPopupMenu popupMenu = new JPopupMenu();
+    private DefaultListModel<String> listModel = new DefaultListModel<>();
+    private JList<String> listComp = new JList<>(listModel);
     private boolean disableTextEvent;
 
-    public SuggestionDropDownDecorator(C invoker, SuggestionClient<C> suggestionClient) {
+    public SuggestionDropDownDecorator(@NotNull JTextComponent invoker, Document document, @NotNull SuggestionClient suggestionClient) {
         this.invoker = invoker;
         this.suggestionClient = suggestionClient;
+
+        this.listComp.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        this.listComp.setFocusable(false);
+
+        Font font = new Font("Menlo", Font.PLAIN, 20);
+        listComp.setFont(font);
+        listComp.setSelectionBackground(new Color(159, 182, 198));
+        listComp.setBackground(new Color(234, 243, 253));
+        DefaultListCellRenderer renderer = (DefaultListCellRenderer) listComp.getCellRenderer();
+        renderer.setHorizontalAlignment(SwingConstants.LEFT);
+
+        this.popupMenu.setLayout(new BorderLayout());
+        this.popupMenu.setFocusable(false);
+        this.popupMenu.setBackground(new Color(234, 243, 253));
+        this.popupMenu.add(listComp, BorderLayout.WEST);
+
+        document.addDocumentListener(new SuggestionDocumentListener(popupMenu));
+        initInvokerKeyListeners(this.invoker);
     }
 
-    public static <C extends JComponent> void decorate(C component, SuggestionClient<C> suggestionClient) {
-        SuggestionDropDownDecorator<C> decorator = new SuggestionDropDownDecorator<>(component, suggestionClient);
-        decorator.init();
+    public static void decorate(JTextComponent component, Document document, SuggestionClient suggestionClient) {
+        new SuggestionDropDownDecorator(component, document, suggestionClient);
     }
 
-    public void init() {
-        initPopup();
-        initSuggestionCompListener();
-        initInvokerKeyListeners();
-    }
+    class SuggestionDocumentListener implements DocumentListener {
 
-    private void initPopup() {
-        popupMenu = new JPopupMenu();
-        listModel = new DefaultListModel<>();
-        listComp = new JList<>(listModel);
-        listComp.setBorder(BorderFactory.createEmptyBorder(0, 2, 5, 2));
-        listComp.setFocusable(false);
-        popupMenu.setFocusable(false);
-        popupMenu.add(listComp);
-    }
+        private final JPopupMenu popupMenu;
 
-    private void initSuggestionCompListener() {
-        if (invoker instanceof JTextComponent) {
-            JTextComponent tc = (JTextComponent) invoker;
-            tc.getDocument().addDocumentListener(new DocumentListener() {
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    update(e);
-                }
+        SuggestionDocumentListener(JPopupMenu popupMenu) {
+            this.popupMenu = popupMenu;
+        }
 
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    update(e);
-                }
+        @Override
+        public void documentChanged(@NotNull com.intellij.openapi.editor.event.DocumentEvent event) {
+            update(event);
+        }
 
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-                    update(e);
-                }
-
-                private void update(DocumentEvent e) {
-                    if (disableTextEvent) {
-                        return;
-                    }
-                    SwingUtilities.invokeLater(() -> {
-                        List<String> suggestions = suggestionClient.getSuggestions(invoker);
-                        if (suggestions != null && !suggestions.isEmpty()) {
-                            showPopup(suggestions);
-                        } else {
-                            popupMenu.setVisible(false);
-                        }
-                    });
+        private void update(com.intellij.openapi.editor.event.DocumentEvent e) {
+            if (disableTextEvent) {
+                return;
+            }
+            SwingUtilities.invokeLater(() -> {
+                List<String> suggestions = suggestionClient.getSuggestions(invoker);
+                suggestions=Arrays.asList("one", "two", "three");
+                if (suggestions != null && !suggestions.isEmpty()) {
+                    this.popupMenu.setPopupSize(300, suggestions.size() * 33 + 8);
+                    showPopup(suggestions);
+                } else {
+                    popupMenu.setVisible(false);
                 }
             });
-        }//todo init invoker components other than text components
+        }
     }
 
     private void showPopup(List<String> suggestions) {
@@ -94,7 +94,7 @@ public class SuggestionDropDownDecorator<C extends JComponent> {
         popupMenu.show(invoker, (int) p.getX(), (int) p.getY());
     }
 
-    private void initInvokerKeyListeners() {
+    private void initInvokerKeyListeners(JTextComponent invoker) {
         //not using key inputMap cause that would override the original handling
         invoker.addKeyListener(new KeyAdapter() {
             @Override
@@ -145,5 +145,4 @@ public class SuggestionDropDownDecorator<C extends JComponent> {
             }
         }
     }
-
 }

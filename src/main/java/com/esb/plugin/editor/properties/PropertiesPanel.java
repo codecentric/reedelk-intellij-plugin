@@ -41,14 +41,18 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
     }
 
     @Override
-    public void onSelect(FlowSnapshot snapshot, GraphNode node) {
-        if (node instanceof NothingSelectedNode) {
+    public void onSelect(FlowSnapshot snapshot, GraphNode selected) {
+        if (selected instanceof NothingSelectedNode) {
+            // If  nothing is selected, the properties panel displays
+            // information about the flow this editor is referring to.
             JBTabbedPane defaultTabbedPane =
                     new GraphTabbedPane(icon, unselectedTabTitle, snapshot);
             updateTabbedPane(defaultTabbedPane);
         } else {
+            // Otherwise the properties panel displays the properties
+            // of the component currently selected.
             PropertiesTabbedPane propertiesTabbedPane =
-                    new PropertiesTabbedPane(node, module, snapshot);
+                    new PropertiesTabbedPane(selected, module, snapshot);
             updateTabbedPane(propertiesTabbedPane);
         }
     }

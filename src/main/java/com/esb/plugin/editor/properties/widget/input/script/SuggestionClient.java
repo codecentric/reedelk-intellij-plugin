@@ -1,15 +1,15 @@
-package com.esb.plugin.editor.properties.widget.input;
+package com.esb.plugin.editor.properties.widget.input.script;
 
-import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.util.List;
 
-public interface SuggestionClient<C extends JComponent> {
+public interface SuggestionClient {
 
-    Point getPopupLocation(C invoker);
+    Point getPopupLocation(JTextComponent invoker);
 
-    void setSelectedText(C invoker, String selectedValue);
+    void setSelectedText(JTextComponent invoker, String selectedValue);
 
-    List<String> getSuggestions(C invoker);
+    List<String> getSuggestions(JTextComponent invoker);
 
 }
