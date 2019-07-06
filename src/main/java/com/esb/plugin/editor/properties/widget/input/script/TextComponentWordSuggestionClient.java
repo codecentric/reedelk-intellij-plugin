@@ -1,6 +1,7 @@
 package com.esb.plugin.editor.properties.widget.input.script;
 
 import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ThrowableRunnable;
@@ -17,6 +18,8 @@ import java.util.List;
  * Matches individual words instead of complete text
  */
 public class TextComponentWordSuggestionClient implements SuggestionClient {
+
+    private static final Logger LOG = Logger.getInstance(TextComponentWordSuggestionClient.class);
 
     private SuggestionProvider suggestionProvider;
     private Project project;
@@ -76,7 +79,7 @@ public class TextComponentWordSuggestionClient implements SuggestionClient {
     public List<String> getSuggestions(JTextComponent textComponent) {
         try {
             String text = getText(textComponent);
-
+            LOG.info("Get suggestions for text: " + text);
             return text != null ?
                     suggestionProvider.suggest(text) :
                     Collections.emptyList();
@@ -94,8 +97,12 @@ public class TextComponentWordSuggestionClient implements SuggestionClient {
                 return null;
             }
         }
-        int previousWordIndex = Utilities.getWordStart(textComponent, caretPosition - 1);
-        String text = textComponent.getText(previousWordIndex, caretPosition - previousWordIndex);
+        int wordStartIndex = Utilities.getWordStart(textComponent, caretPosition - 1);
+        String text = textComponent.getText(wordStartIndex, caretPosition - wordStartIndex);
+        if (".".equals(text)) {
+            int previousWordIndex = Utilities.getPreviousWord(textComponent, caretPosition - 1);
+            text = textComponent.getText(previousWordIndex, caretPosition - previousWordIndex);
+        }
         return text.trim();
     }
 }
