@@ -106,6 +106,8 @@ public class SuggestionDropDownDecorator {
                     moveDown(e);
                 } else if (e.getKeyCode() == VK_ESCAPE) {
                     popupMenu.setVisible(false);
+                } else if (e.getKeyCode() == VK_BACK_SPACE) {
+                    popupMenu.setVisible(false);
                 }
             }
         });
