@@ -23,7 +23,7 @@ public class EditScriptDialog extends DialogWrapper {
 
     private final Module module;
 
-    private static final int EDITOR_WIDTH = 600;
+    private static final int EDITOR_WIDTH = 800;
     private static final int EDITOR_HEIGHT = 400;
 
     private final Trie trie = new Trie();
