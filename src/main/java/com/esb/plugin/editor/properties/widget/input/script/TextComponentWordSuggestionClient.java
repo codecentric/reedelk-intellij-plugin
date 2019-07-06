@@ -46,18 +46,18 @@ public class TextComponentWordSuggestionClient implements SuggestionClient {
 
     @Override
     public void setSelectedText(JTextComponent textComponent, Document document, String selectedValue) {
-        int cp = textComponent.getCaretPosition();
+        int caretPosition = textComponent.getCaretPosition();
         try {
-            if (cp == 0 || textComponent.getText(cp - 1, 1).trim().isEmpty()) {
-                document.insertString(cp, selectedValue);
+            if (caretPosition == 0 || textComponent.getText(caretPosition - 1, 1).trim().isEmpty()) {
+                document.insertString(caretPosition, selectedValue);
             } else {
-                int previousWordIndex = Utilities.getPreviousWord(textComponent, cp - 1);
-                String text = textComponent.getText(previousWordIndex, cp - previousWordIndex);
+                int wordStartIndex = Utilities.getWordStart(textComponent, caretPosition - 1);
+                String text = textComponent.getText(wordStartIndex, caretPosition - wordStartIndex);
                 if (selectedValue.startsWith(text)) {
                     WriteCommandAction.writeCommandAction(project).run((ThrowableRunnable<Throwable>) () -> {
-                        document.insertString(cp, selectedValue.substring(text.length()));
+                        document.insertString(caretPosition, selectedValue.substring(text.length()));
 
-                        int newCaretPosition = cp + selectedValue.substring(text.length()).length();
+                        int newCaretPosition = caretPosition + selectedValue.substring(text.length()).length();
                         textComponent.setCaretPosition(newCaretPosition);
                         previousCaretPosition = newCaretPosition;
                     });
@@ -69,10 +69,10 @@ public class TextComponentWordSuggestionClient implements SuggestionClient {
                     String realSelected = selectedValue.substring(delta - 1);
 
                     WriteCommandAction.writeCommandAction(project).run((ThrowableRunnable<Throwable>) () -> {
-                        document.insertString(cp, realSelected);
-                        textComponent.setCaretPosition(cp + realSelected.length());
+                        document.insertString(caretPosition, realSelected);
+                        textComponent.setCaretPosition(caretPosition + realSelected.length());
 
-                        int newCaretPosition = cp + realSelected.length();
+                        int newCaretPosition = caretPosition + realSelected.length();
                         textComponent.setCaretPosition(newCaretPosition);
                         previousCaretPosition = newCaretPosition;
                     });
