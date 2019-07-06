@@ -2,27 +2,27 @@ package com.esb.plugin.editor.properties.widget.input.script;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentListener;
+import com.intellij.ui.components.JBList;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.awt.event.KeyEvent.*;
 
 public class SuggestionDropDownDecorator {
 
+    private final Document document;
     private final JTextComponent invoker;
     private final SuggestionClient suggestionClient;
 
     private JPopupMenu popupMenu = new JPopupMenu();
     private DefaultListModel<String> listModel = new DefaultListModel<>();
-    private JList<String> listComp = new JList<>(listModel);
+    private JList<String> listComp = new JBList<>(listModel);
     private boolean disableTextEvent;
 
     public SuggestionDropDownDecorator(@NotNull JTextComponent invoker, Document document, @NotNull SuggestionClient suggestionClient) {
@@ -36,14 +36,14 @@ public class SuggestionDropDownDecorator {
         listComp.setFont(font);
         listComp.setSelectionBackground(new Color(159, 182, 198));
         listComp.setBackground(new Color(234, 243, 253));
-        DefaultListCellRenderer renderer = (DefaultListCellRenderer) listComp.getCellRenderer();
-        renderer.setHorizontalAlignment(SwingConstants.LEFT);
+
 
         this.popupMenu.setLayout(new BorderLayout());
         this.popupMenu.setFocusable(false);
         this.popupMenu.setBackground(new Color(234, 243, 253));
         this.popupMenu.add(listComp, BorderLayout.WEST);
 
+        this.document = document;
         document.addDocumentListener(new SuggestionDocumentListener(popupMenu));
         initInvokerKeyListeners(this.invoker);
     }
@@ -71,7 +71,6 @@ public class SuggestionDropDownDecorator {
             }
             SwingUtilities.invokeLater(() -> {
                 List<String> suggestions = suggestionClient.getSuggestions(invoker);
-                suggestions=Arrays.asList("one", "two", "three");
                 if (suggestions != null && !suggestions.isEmpty()) {
                     this.popupMenu.setPopupSize(300, suggestions.size() * 33 + 8);
                     showPopup(suggestions);
@@ -119,7 +118,7 @@ public class SuggestionDropDownDecorator {
                 popupMenu.setVisible(false);
                 String selectedValue = listComp.getSelectedValue();
                 disableTextEvent = true;
-                suggestionClient.setSelectedText(invoker, selectedValue);
+                suggestionClient.setSelectedText(invoker, document, selectedValue);
                 disableTextEvent = false;
                 e.consume();
             }

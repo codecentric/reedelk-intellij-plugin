@@ -1,5 +1,10 @@
 package com.esb.plugin.editor.properties.widget.input.script;
 
+import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.project.Project;
+import com.intellij.util.ThrowableRunnable;
+
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Utilities;
@@ -7,16 +12,18 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * Matches individual words instead of complete text
  */
 public class TextComponentWordSuggestionClient implements SuggestionClient {
-    private Function<String, List<String>> suggestionProvider;
 
-    public TextComponentWordSuggestionClient(Function<String, List<String>> suggestionProvider) {
+    private SuggestionProvider suggestionProvider;
+    private Project project;
+
+    public TextComponentWordSuggestionClient(Project project, SuggestionProvider suggestionProvider) {
         this.suggestionProvider = suggestionProvider;
+        this.project = project;
     }
 
     @Override
@@ -32,26 +39,36 @@ public class TextComponentWordSuggestionClient implements SuggestionClient {
     }
 
     @Override
-    public void setSelectedText(JTextComponent tp, String selectedValue) {
-        int cp = tp.getCaretPosition();
+    public void setSelectedText(JTextComponent textComponent, Document document, String selectedValue) {
+        int cp = textComponent.getCaretPosition();
         try {
-            if (cp == 0 || tp.getText(cp - 1, 1).trim().isEmpty()) {
-                tp.getDocument().insertString(cp, selectedValue, null);
+            if (cp == 0 || textComponent.getText(cp - 1, 1).trim().isEmpty()) {
+                document.insertString(cp, selectedValue);
             } else {
-                int previousWordIndex = Utilities.getPreviousWord(tp, cp);
-                String text = tp.getText(previousWordIndex, cp - previousWordIndex);
+                int previousWordIndex = Utilities.getPreviousWord(textComponent, cp - 1);
+                String text = textComponent.getText(previousWordIndex, cp - previousWordIndex);
                 if (selectedValue.startsWith(text)) {
-                    tp.getDocument().insertString(cp, selectedValue.substring(text.length()), null);
+                    WriteCommandAction.writeCommandAction(project).run((ThrowableRunnable<Throwable>) () -> {
+                        document.insertString(cp, selectedValue.substring(text.length()));
+                        textComponent.setCaretPosition(cp + selectedValue.substring(text.length()).length());
+                    });
+
                 } else {
                     int lastIndex = text.lastIndexOf(".");
                     int length = text.length();
                     int delta = length - lastIndex;
                     String realSelected = selectedValue.substring(delta - 1);
-                    tp.getDocument().insertString(cp, realSelected, null);
+
+                    WriteCommandAction.writeCommandAction(project).run((ThrowableRunnable<Throwable>) () -> {
+                        document.insertString(cp, realSelected);
+                        textComponent.setCaretPosition(cp + realSelected.length());
+                    });
                 }
             }
         } catch (BadLocationException e) {
             System.err.println(e);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
         }
     }
 
@@ -59,8 +76,9 @@ public class TextComponentWordSuggestionClient implements SuggestionClient {
     public List<String> getSuggestions(JTextComponent textComponent) {
         try {
             String text = getText(textComponent);
+
             return text != null ?
-                    suggestionProvider.apply(text) :
+                    suggestionProvider.suggest(text) :
                     Collections.emptyList();
         } catch (BadLocationException e) {
             System.err.println(e);
@@ -76,13 +94,8 @@ public class TextComponentWordSuggestionClient implements SuggestionClient {
                 return null;
             }
         }
-        int previousWordIndex = Utilities.getPreviousWord(textComponent, caretPosition);
+        int previousWordIndex = Utilities.getWordStart(textComponent, caretPosition - 1);
         String text = textComponent.getText(previousWordIndex, caretPosition - previousWordIndex);
-        if (".".equals(text)) {
-            int previousWord = Utilities.getPreviousWord(textComponent, caretPosition - 2);
-            text = textComponent.getText(previousWord, caretPosition - 1 - previousWord)+ ".";
-        }
-
         return text.trim();
     }
 }
