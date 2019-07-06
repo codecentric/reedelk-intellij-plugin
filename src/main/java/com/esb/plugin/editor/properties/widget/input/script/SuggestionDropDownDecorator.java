@@ -65,10 +65,14 @@ public class SuggestionDropDownDecorator {
             update(event);
         }
 
+
         private void update(com.intellij.openapi.editor.event.DocumentEvent e) {
+
             if (disableTextEvent) {
                 return;
             }
+
+
             SwingUtilities.invokeLater(() -> {
                 List<String> suggestions = suggestionClient.getSuggestions(invoker);
                 if (suggestions != null && !suggestions.isEmpty()) {

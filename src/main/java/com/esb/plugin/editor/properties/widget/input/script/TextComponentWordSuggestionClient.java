@@ -24,6 +24,9 @@ public class TextComponentWordSuggestionClient implements SuggestionClient {
     private SuggestionProvider suggestionProvider;
     private Project project;
 
+    // We just invoke update if we are not  moving back with the caret.
+    private int previousCaretPosition = -1;
+
     public TextComponentWordSuggestionClient(Project project, SuggestionProvider suggestionProvider) {
         this.suggestionProvider = suggestionProvider;
         this.project = project;
@@ -53,7 +56,10 @@ public class TextComponentWordSuggestionClient implements SuggestionClient {
                 if (selectedValue.startsWith(text)) {
                     WriteCommandAction.writeCommandAction(project).run((ThrowableRunnable<Throwable>) () -> {
                         document.insertString(cp, selectedValue.substring(text.length()));
-                        textComponent.setCaretPosition(cp + selectedValue.substring(text.length()).length());
+
+                        int newCaretPosition = cp + selectedValue.substring(text.length()).length();
+                        textComponent.setCaretPosition(newCaretPosition);
+                        previousCaretPosition = newCaretPosition;
                     });
 
                 } else {
@@ -65,6 +71,10 @@ public class TextComponentWordSuggestionClient implements SuggestionClient {
                     WriteCommandAction.writeCommandAction(project).run((ThrowableRunnable<Throwable>) () -> {
                         document.insertString(cp, realSelected);
                         textComponent.setCaretPosition(cp + realSelected.length());
+
+                        int newCaretPosition = cp + realSelected.length();
+                        textComponent.setCaretPosition(newCaretPosition);
+                        previousCaretPosition = newCaretPosition;
                     });
                 }
             }
@@ -77,6 +87,16 @@ public class TextComponentWordSuggestionClient implements SuggestionClient {
 
     @Override
     public List<String> getSuggestions(JTextComponent textComponent) {
+
+        int currentCaretPosition = textComponent.getCaretPosition();
+        if (previousCaretPosition > currentCaretPosition) {
+            previousCaretPosition = currentCaretPosition;
+            return null;
+        } else {
+            previousCaretPosition = currentCaretPosition;
+        }
+
+
         try {
             String text = getText(textComponent);
             LOG.info("Get suggestions for text: " + text);
