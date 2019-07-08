@@ -10,8 +10,6 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static com.esb.plugin.component.domain.ComponentPropertyDescriptor.*;
-import static com.esb.plugin.component.domain.ComponentPropertyDescriptor.PropertyClassifier.*;
 import static com.esb.plugin.component.domain.ComponentPropertyDescriptor.PropertyRequired;
 import static com.esb.plugin.component.domain.ComponentPropertyDescriptor.PropertyRequired.NOT_REQUIRED;
 import static com.esb.plugin.component.domain.ComponentPropertyDescriptor.PropertyRequired.REQUIRED;
@@ -42,15 +40,13 @@ class ComponentPropertyAnalyzer {
         Object defaultValue = getDefaultValue(propertyInfo, propertyType);
 
         PropertyRequired required = isRequired(propertyInfo) ? REQUIRED : NOT_REQUIRED;
-        PropertyClassifier classifier = isScript(propertyInfo) ? SCRIPT : DEFAULT;
 
         return new ComponentPropertyDescriptor(
                 propertyName,
                 propertyType,
                 displayName,
                 defaultValue,
-                required,
-                classifier);
+                required);
     }
 
     private String getDisplayName(FieldInfo propertyInfo, String propertyName) {
@@ -62,24 +58,31 @@ class ComponentPropertyAnalyzer {
     private TypeDescriptor getPropertyType(FieldInfo fieldInfo) {
         TypeSignature typeSignature = fieldInfo.getTypeDescriptor();
         if (typeSignature instanceof BaseTypeSignature) {
-            return processBaseType((BaseTypeSignature) typeSignature);
+            return processPrimitiveType(((BaseTypeSignature) typeSignature).getType(), fieldInfo);
         } else if (typeSignature instanceof ClassRefTypeSignature) {
             ClassRefTypeSignature classRef = (ClassRefTypeSignature) typeSignature;
-            return processClassRefType(classRef);
+            return processClassRefType(classRef, fieldInfo);
         } else {
             throw new UnsupportedType(typeSignature.getClass());
         }
     }
 
-    private TypeDescriptor processBaseType(BaseTypeSignature typeSignature) {
-        return new TypePrimitiveDescriptor(typeSignature.getType());
+    private TypeDescriptor processPrimitiveType(Class<?> clazz, FieldInfo fieldInfo) {
+        if (isScript(fieldInfo) && clazz.equals(String.class)) {
+            // If the filed has annotation @Script, and it is a string, then we process
+            // the field as a script type, otherwise we just ignore the @Script annotation
+            // since it is only valid on String type.
+            return new TypeScriptDescriptor();
+        } else {
+            return new TypePrimitiveDescriptor(clazz);
+        }
     }
 
-    private TypeDescriptor processClassRefType(ClassRefTypeSignature typeSignature) {
+    private TypeDescriptor processClassRefType(ClassRefTypeSignature typeSignature, FieldInfo fieldInfo) {
         String fullyQualifiedClassName = typeSignature.getFullyQualifiedClassName();
         if (isKnownType(fullyQualifiedClassName)) {
             try {
-                return new TypePrimitiveDescriptor(Class.forName(fullyQualifiedClassName));
+                return processPrimitiveType(Class.forName(fullyQualifiedClassName), fieldInfo);
             } catch (ClassNotFoundException e) {
                 // if it is a known type, then the class must be resolvable.
                 // Otherwise the @PropertyValueConverterFactory class would not even compile.

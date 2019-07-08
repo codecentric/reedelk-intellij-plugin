@@ -1,13 +1,15 @@
 package com.esb.plugin.component.type.generic;
 
-import com.esb.plugin.component.domain.*;
+import com.esb.plugin.component.domain.ComponentData;
+import com.esb.plugin.component.domain.ComponentDataHolder;
+import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
+import com.esb.plugin.component.domain.TypeDescriptor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.esb.plugin.editor.properties.renderer.AbstractNodePropertiesRenderer;
+import com.esb.plugin.editor.properties.renderer.TypePropertyRenderer;
 import com.esb.plugin.editor.properties.renderer.TypeRendererFactory;
-import com.esb.plugin.editor.properties.widget.ContainerFactory;
 import com.esb.plugin.editor.properties.widget.DefaultPropertiesPanel;
-import com.esb.plugin.editor.properties.widget.FormBuilder;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.openapi.module.Module;
@@ -31,29 +33,25 @@ public class GenericComponentPropertiesRenderer extends AbstractNodePropertiesRe
 
     protected JBPanel createPropertiesPanelFrom(List<ComponentPropertyDescriptor> propertyDescriptors, ComponentData data) {
         DefaultPropertiesPanel propertiesPanel = new DefaultPropertiesPanel();
+
         propertyDescriptors.forEach(descriptor -> {
 
-            final String displayName = descriptor.getDisplayName();
-            final String propertyName = descriptor.getPropertyName();
-            final TypeDescriptor propertyType = descriptor.getPropertyType();
+            String displayName = descriptor.getDisplayName();
 
-            final PropertyAccessor setter = getAccessor(propertyName, propertyType, data);
-            final JComponent renderedComponent =
-                    TypeRendererFactory.get().from(propertyType).render(module, descriptor, setter);
+            String propertyName = descriptor.getPropertyName();
 
-            // If the property type is a complex object, we wrap it in a
-            // bordered box with title the name of the object property.
-            if (propertyType instanceof TypeObjectDescriptor) {
-                JBPanel wrappedRenderedComponent = ContainerFactory
-                        .createObjectTypeContainer(descriptor.getDisplayName(), renderedComponent);
-                FormBuilder.get()
-                        .addLastField(wrappedRenderedComponent, propertiesPanel);
-            } else {
-                FormBuilder.get()
-                        .addLabel(displayName, propertiesPanel)
-                        .addLastField(renderedComponent, propertiesPanel);
-            }
+            TypeDescriptor propertyType = descriptor.getPropertyType();
+
+            PropertyAccessor setter = getAccessor(propertyName, propertyType, data);
+
+            TypePropertyRenderer renderer = TypeRendererFactory.get().from(propertyType);
+
+            JComponent renderedComponent = renderer.render(module, descriptor, setter);
+
+            renderer.addToParent(propertiesPanel, renderedComponent, displayName);
+
         });
+
         return propertiesPanel;
     }
 

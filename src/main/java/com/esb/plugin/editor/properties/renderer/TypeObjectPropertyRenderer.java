@@ -12,6 +12,7 @@ import com.esb.plugin.configuration.widget.ActionDeleteConfiguration;
 import com.esb.plugin.configuration.widget.ConfigControlPanel;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessorFactory;
+import com.esb.plugin.editor.properties.widget.ContainerFactory;
 import com.esb.plugin.editor.properties.widget.DefaultPropertiesPanel;
 import com.esb.plugin.editor.properties.widget.FormBuilder;
 import com.esb.plugin.editor.properties.widget.input.ConfigSelector;
@@ -20,6 +21,7 @@ import com.esb.plugin.service.module.impl.ConfigMetadata;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.awt.RelativePoint;
+import com.intellij.ui.components.JBPanel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -50,6 +52,16 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
         return objectDescriptor.isShareable() ?
                 renderShareable(module, objectDescriptor, accessor) :
                 renderInline(module, accessor, objectDescriptor);
+    }
+
+    @Override
+    public void addToParent(JComponent parent, JComponent rendered, String label) {
+        // If the property type is a complex object, we wrap it in a
+        // bordered box with title the name of the object property.
+        JBPanel wrappedRenderedComponent = ContainerFactory
+                .createObjectTypeContainer(label, rendered);
+        FormBuilder.get()
+                .addLastField(wrappedRenderedComponent, parent);
     }
 
     @NotNull

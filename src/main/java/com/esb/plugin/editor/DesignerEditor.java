@@ -8,7 +8,7 @@ import com.intellij.openapi.ui.ThreeComponentsSplitter;
 
 public class DesignerEditor extends ThreeComponentsSplitter {
 
-    private static final int PROPERTIES_PANEL_SIZE = 170;
+    private static final int PROPERTIES_PANEL_SIZE = 220;
     private static final boolean VERTICAL = true;
 
     DesignerEditor(DesignerPanel designerPanel, PropertiesPanel propertiesPanel) {

@@ -27,6 +27,7 @@ public class PropertyAccessorFactory {
         tmp.put(TypeObjectDescriptor.class, DefaultPropertyAccessor.class);
         tmp.put(UnknownPropertyType.class, DefaultPropertyAccessor.class);
         tmp.put(TypePrimitiveDescriptor.class, DefaultPropertyAccessor.class);
+        tmp.put(TypeScriptDescriptor.class, DefaultPropertyAccessor.class);
         ACCESSOR_MAP = tmp;
     }
 
@@ -61,6 +62,8 @@ public class PropertyAccessorFactory {
         checkState(StringUtils.isNotBlank(propertyName), "property name must not be empty");
         checkState(typeDescriptor != null, "type descriptor must not be null");
         checkState(dataHolder != null, "data holder must not be null");
+        checkState(ACCESSOR_MAP.containsKey(typeDescriptor.getClass()),
+                String.format("accessor for type %s not defined", typeDescriptor.type()));
 
         Class<? extends PropertyAccessor> accessorClazz = ACCESSOR_MAP.get(typeDescriptor.getClass());
         return instantiate(accessorClazz);

@@ -24,7 +24,7 @@ public class ContainerFactory {
         Border outsideMargin = JBUI.Borders.emptyTop(15);
         Border border = BorderFactory.createTitledBorder(title);
         Border outside = new CompoundBorder(outsideMargin, border);
-        Border margin = JBUI.Borders.empty(10);
+        Border margin = JBUI.Borders.empty(5);
         container.setBorder(new CompoundBorder(outside, margin));
         container.add(renderedComponent, CENTER);
         container.add(Box.createHorizontalGlue(), EAST);

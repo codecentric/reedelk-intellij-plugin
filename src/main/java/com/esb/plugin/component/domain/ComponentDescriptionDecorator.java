@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.esb.internal.commons.JsonParser.Implementor;
-import static com.esb.plugin.component.domain.ComponentPropertyDescriptor.PropertyClassifier.DEFAULT;
 import static com.esb.plugin.component.domain.ComponentPropertyDescriptor.PropertyRequired.NOT_REQUIRED;
 
 /**
@@ -30,8 +29,7 @@ public class ComponentDescriptionDecorator implements ComponentDescriptor {
                 typeDescriptor,
                 DESCRIPTION_PROPERTY_DISPLAY_NAME,
                 wrapped.getDisplayName(),
-                NOT_REQUIRED,
-                DEFAULT);
+                NOT_REQUIRED);
     }
 
     @Override

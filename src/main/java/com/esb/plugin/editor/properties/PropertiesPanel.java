@@ -42,6 +42,7 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
 
     @Override
     public void onSelect(FlowSnapshot snapshot, GraphNode selected) {
+        // TODO: Dispose the previously selected PANEL!
         if (selected instanceof NothingSelectedNode) {
             // If  nothing is selected, the properties panel displays
             // information about the flow this editor is referring to.

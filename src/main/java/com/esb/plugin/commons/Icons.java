@@ -55,4 +55,13 @@ public class Icons {
         public static final Icon EditDisabled = IconLoader.getIcon("/icons/config-edit-disabled.png");
     }
 
+    public static class Script {
+
+        private Script() {
+        }
+
+        public static final Icon Edit = IconLoader.getIcon("/icons/script-edit.png");
+        public static final Icon EditDisabled = IconLoader.getIcon("/icons/script-edit-disabled.png");
+    }
+
 }
