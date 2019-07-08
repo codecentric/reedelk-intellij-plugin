@@ -7,7 +7,6 @@ import com.esb.plugin.component.type.router.functions.IsDefaultRoute;
 import com.esb.plugin.component.type.router.functions.ListConditionRoutePairs;
 import com.esb.plugin.component.type.router.functions.SyncConditionAndRoutePairs;
 import com.esb.plugin.editor.designer.AbstractScopedGraphNode;
-import com.esb.plugin.editor.designer.widget.SelectedBox;
 import com.esb.plugin.editor.designer.widget.VerticalDivider;
 import com.esb.plugin.editor.designer.widget.VerticalDividerArrows;
 import com.esb.plugin.graph.FlowGraph;
@@ -31,16 +30,14 @@ public class RouterNode extends AbstractScopedGraphNode {
     private static final int NODE_WIDTH = 170;
 
     private static final int VERTICAL_DIVIDER_X_OFFSET = 45;
-    private static final int SELECTED_BOX_WIDTH = NODE_WIDTH - VERTICAL_DIVIDER_X_OFFSET;
     private static final int ICON_X_OFFSET = 20;
 
-    private final SelectedBox selectedBox;
+    //private final SelectedBox selectedBox;
     private final VerticalDivider verticalDivider;
     private final VerticalDividerArrows verticalDividerArrows;
 
     public RouterNode(ComponentData componentData) {
         super(componentData);
-        this.selectedBox = new SelectedBox();
         this.verticalDivider = new VerticalDivider(this);
         this.verticalDividerArrows =
                 new VerticalDividerArrows(VERTICAL_DIVIDER_X_OFFSET, new RouterOnProcessSuccessor());
@@ -48,14 +45,7 @@ public class RouterNode extends AbstractScopedGraphNode {
 
     @Override
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-        // Draw the background box of this selected component
-        if (isSelected()) {
-            selectedBox.setPosition(x() - Half.of(NODE_WIDTH) + 4, y());
-            selectedBox.draw(graphics, SELECTED_BOX_WIDTH - 4, bottomHalfHeight(graphics));
-        }
-
         super.draw(graph, graphics, observer);
-
         verticalDivider.draw(graph, graphics);
     }
 
