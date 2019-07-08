@@ -117,6 +117,9 @@ public class TextComponentWordSuggestionClient implements SuggestionClient {
                 return null;
             }
         }
+
+        if (caretPosition == 0) return null;
+
         int wordStartIndex = Utilities.getWordStart(textComponent, caretPosition - 1);
         String text = textComponent.getText(wordStartIndex, caretPosition - wordStartIndex);
         if (".".equals(text)) {
