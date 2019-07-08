@@ -36,7 +36,7 @@ public class EditScriptDialog extends DialogWrapper {
         return editor;
     }
 
-    public String getText() {
-        return editor.getText();
+    public String getValue() {
+        return editor.getValue();
     }
 }

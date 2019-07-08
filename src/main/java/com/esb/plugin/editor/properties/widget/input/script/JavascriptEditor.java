@@ -104,7 +104,7 @@ public class JavascriptEditor extends ThreeComponentsSplitter implements Disposa
         }
     }
 
-    public String getText() {
+    public String getValue() {
         return document.getText();
     }
 }

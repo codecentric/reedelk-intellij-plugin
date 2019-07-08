@@ -23,6 +23,8 @@ public class Labels {
 
     public static final String ROUTER_DEFAULT_ROUTE = "otherwise";
 
+    public static String SCRIPT_EDITOR_CONTEXT_VARS = "Context variables";
+
     private Labels() {
     }
 

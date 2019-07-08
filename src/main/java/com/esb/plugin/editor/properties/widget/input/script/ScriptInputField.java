@@ -37,9 +37,9 @@ public class ScriptInputField extends JPanel implements ActionListener, Document
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (value == null) value = "";
-                EditScriptDialog editScriptDialog = new EditScriptDialog(module, editor.getText());
+                EditScriptDialog editScriptDialog = new EditScriptDialog(module, editor.getValue());
                 if (editScriptDialog.showAndGet()) {
-                    value = editScriptDialog.getText();
+                    value = editScriptDialog.getValue();
                     listener.onChange(value);
                     editor.setValue(value);
                 }
@@ -69,7 +69,7 @@ public class ScriptInputField extends JPanel implements ActionListener, Document
     public void actionPerformed(ActionEvent e) {
         EditScriptDialog editScriptDialog = new EditScriptDialog(module, value);
         if (editScriptDialog.showAndGet()) {
-            this.value = editScriptDialog.getText();
+            this.value = editScriptDialog.getValue();
             listener.onChange(this.value);
         }
     }
