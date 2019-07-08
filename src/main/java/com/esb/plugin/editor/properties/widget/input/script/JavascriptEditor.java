@@ -76,7 +76,7 @@ public class JavascriptEditor extends ThreeComponentsSplitter implements Disposa
         setFirstComponent(context);
         setLastComponent(editorComponent);
         setFirstSize(170);
-        setDividerWidth(4);
+        setDividerWidth(0);
         setDividerMouseZoneSize(4);
     }
 

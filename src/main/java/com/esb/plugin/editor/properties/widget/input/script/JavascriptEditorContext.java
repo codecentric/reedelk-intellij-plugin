@@ -4,6 +4,7 @@ import com.intellij.util.ui.JBUI;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 import java.awt.*;
 
 public class JavascriptEditorContext extends JPanel {
@@ -15,8 +16,11 @@ public class JavascriptEditorContext extends JPanel {
 
         JLabel label = new JLabel("Context variables");
         JPanel labelWrapper = new JPanel();
-        labelWrapper.setBackground(new Color(224, 224, 224));
-        labelWrapper.setBorder(JBUI.Borders.empty(5));
+        labelWrapper.setBackground(new Color(226, 230, 236));
+
+        Border bottom = JBUI.Borders.customLine(new Color(201, 201, 201), 0, 0, 1, 0);
+        Border padding = JBUI.Borders.empty(5);
+        labelWrapper.setBorder(new CompoundBorder(bottom, padding));
         labelWrapper.setLayout(new BorderLayout());
         labelWrapper.add(label, BorderLayout.NORTH);
         add(labelWrapper, BorderLayout.NORTH);
@@ -40,6 +44,7 @@ public class JavascriptEditorContext extends JPanel {
 
         ContextVariable(String name, String type) {
             super(String.format(template, name, type));
+            setBorder(JBUI.Borders.emptyTop(4));
         }
     }
 
