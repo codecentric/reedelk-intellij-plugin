@@ -1,6 +1,6 @@
 package com.esb.plugin.editor.properties.widget.input.script;
 
-import com.esb.plugin.commons.Icons;
+import com.esb.plugin.commons.Labels;
 import com.esb.plugin.editor.properties.widget.input.InputChangeListener;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
@@ -8,54 +8,36 @@ import com.intellij.openapi.module.Module;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import static com.esb.plugin.commons.Icons.Script;
+import static java.awt.BorderLayout.CENTER;
+import static java.awt.BorderLayout.NORTH;
+
 public class ScriptInputField extends JPanel implements ActionListener, DocumentListener {
 
     private InputChangeListener<String> listener;
-
-    private JLabel openEditorBtn;
     private JavascriptEditor editor;
-
+    private String value = "";
 
     private final Module module;
-    private String value;
 
     public ScriptInputField(@NotNull Module module) {
+        super(new BorderLayout());
+
         this.module = module;
-        this.editor = new JavascriptEditor(module.getProject());
-        this.editor.addDocumentListener(this);
 
-        this.openEditorBtn = new JLabel("Open Editor");
-        this.openEditorBtn.setIcon(Icons.Script.Edit);
-        this.openEditorBtn.setDisabledIcon(Icons.Script.Edit);
-        this.openEditorBtn.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (value == null) value = "";
-                EditScriptDialog editScriptDialog = new EditScriptDialog(module, editor.getValue());
-                if (editScriptDialog.showAndGet()) {
-                    value = editScriptDialog.getValue();
-                    listener.onChange(value);
-                    editor.setValue(value);
-                }
-            }
+        JPanel openEditorBtn = new OpenEditorButton();
+        add(openEditorBtn, NORTH);
 
-        });
-
-
-        JPanel wrapper = new JPanel(new BorderLayout());
-        wrapper.add(openEditorBtn, BorderLayout.NORTH);
-        wrapper.setBorder(BorderFactory.createEmptyBorder(3, 0, 10, 0));
-
-
-        setLayout(new BorderLayout());
-        add(wrapper, BorderLayout.NORTH);
-        add(editor, BorderLayout.CENTER);
+        editor = new JavascriptEditor(module.getProject());
+        editor.addDocumentListener(this);
+        add(editor, CENTER);
     }
 
     @Override
@@ -81,5 +63,36 @@ public class ScriptInputField extends JPanel implements ActionListener, Document
     public void setValue(Object o) {
         this.value = (String) o;
         this.editor.setValue(this.value);
+    }
+
+    class OpenEditorButton extends JPanel {
+
+        private final Border BORDER_BTN_OPEN_EDITOR =
+                BorderFactory.createEmptyBorder(3, 0, 10, 0);
+
+        private JLabel openEditorBtn;
+
+        OpenEditorButton() {
+            super(new BorderLayout());
+
+            this.openEditorBtn = new JLabel(Labels.SCRIPT_EDITOR_BTN_OPEN_EDITOR);
+            this.openEditorBtn.setIcon(Script.Edit);
+            this.openEditorBtn.setDisabledIcon(Script.EditDisabled);
+            this.openEditorBtn.addMouseListener(new OpenScriptEditorDialog());
+            add(openEditorBtn, NORTH);
+            setBorder(BORDER_BTN_OPEN_EDITOR);
+        }
+    }
+
+    class OpenScriptEditorDialog extends MouseAdapter {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            EditScriptDialog editScriptDialog = new EditScriptDialog(module, editor.getValue());
+            if (editScriptDialog.showAndGet()) {
+                value = editScriptDialog.getValue();
+                listener.onChange(value);
+                editor.setValue(value);
+            }
+        }
     }
 }

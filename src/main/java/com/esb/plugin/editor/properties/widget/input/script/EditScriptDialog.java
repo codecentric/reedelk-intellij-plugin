@@ -12,7 +12,7 @@ public class EditScriptDialog extends DialogWrapper {
 
     private JavascriptEditor editor;
 
-    public EditScriptDialog(@NotNull Module module, @NotNull String initialValue) {
+    EditScriptDialog(@NotNull Module module, @NotNull String initialValue) {
         super(module.getProject(), false);
         setTitle(Labels.DIALOG_TITLE_EDIT_SCRIPT);
         setResizable(true);
