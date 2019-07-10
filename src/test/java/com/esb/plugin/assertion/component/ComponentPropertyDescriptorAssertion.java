@@ -3,8 +3,6 @@ package com.esb.plugin.assertion.component;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.domain.TypeDescriptor;
 
-import static com.esb.plugin.component.domain.ComponentPropertyDescriptor.PropertyRequired.NOT_REQUIRED;
-import static com.esb.plugin.component.domain.ComponentPropertyDescriptor.PropertyRequired.REQUIRED;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ComponentPropertyDescriptorAssertion {
@@ -26,12 +24,12 @@ public class ComponentPropertyDescriptorAssertion {
     }
 
     public ComponentPropertyDescriptorAssertion required() {
-        assertThat(propertyDescriptor.required()).isEqualTo(REQUIRED);
+        assertThat(propertyDescriptor.required()).isTrue();
         return this;
     }
 
     public ComponentPropertyDescriptorAssertion notRequired() {
-        assertThat(propertyDescriptor.required()).isEqualTo(NOT_REQUIRED);
+        assertThat(propertyDescriptor.required()).isFalse();
         return this;
     }
 

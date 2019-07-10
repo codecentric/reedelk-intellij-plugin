@@ -1,57 +1,41 @@
 package com.esb.plugin.component.domain;
 
+import com.esb.plugin.component.scanner.AutocompleteContext;
+import com.esb.plugin.component.scanner.AutocompleteVariable;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.google.common.base.Preconditions.checkState;
 
 public class ComponentPropertyDescriptor {
+
+    private String displayName;
+    private String propertyName;
+    private Object defaultValue;
+    private PropertyRequired required;
+    private TypeDescriptor propertyType;
+    private final List<AutocompleteContext> autocompleteContexts = new ArrayList<>();
+    private final List<AutocompleteVariable> autocompleteVariables = new ArrayList<>();
 
     public enum PropertyRequired {
         REQUIRED,
         NOT_REQUIRED;
     }
 
-    private final String displayName;
-    private final String propertyName;
-    private final Object defaultValue;
-    private final PropertyRequired required;
-    private final TypeDescriptor propertyType;
-
-    public ComponentPropertyDescriptor(
-            final String propertyName,
-            final TypeDescriptor propertyType,
-            final String displayName) {
-        this(propertyName, propertyType, displayName, null, PropertyRequired.NOT_REQUIRED);
+    private ComponentPropertyDescriptor() {
     }
 
-    public ComponentPropertyDescriptor(
-            final String propertyName,
-            final TypeDescriptor propertyType,
-            final String displayName,
-            final Object defaultValue) {
-        this(propertyName, propertyType, displayName, defaultValue, PropertyRequired.NOT_REQUIRED);
-    }
-
-    // Create a Builder for this object
-    public ComponentPropertyDescriptor(
-            final String propertyName,
-            final TypeDescriptor propertyType,
-            final String displayName,
-            final Object defaultValue,
-            final PropertyRequired required) {
-        checkState(propertyName != null, "property name");
-        checkState(propertyType != null, "property type");
-        this.required = required;
-        this.displayName = displayName;
-        this.propertyName = propertyName;
-        this.defaultValue = defaultValue;
-        this.propertyType = propertyType;
+    public static Builder builder() {
+        return new Builder();
     }
 
     public String getDisplayName() {
         return displayName;
     }
 
-    public PropertyRequired required() {
-        return required;
+    public boolean required() {
+        return PropertyRequired.REQUIRED.equals(required);
     }
 
     public String getPropertyName() {
@@ -66,4 +50,72 @@ public class ComponentPropertyDescriptor {
         return propertyType;
     }
 
+    public List<AutocompleteContext> getAutocompleteContexts() {
+        return autocompleteContexts;
+    }
+
+    public List<AutocompleteVariable> getAutocompleteVariables() {
+        return autocompleteVariables;
+    }
+
+    public static class Builder {
+
+        private String displayName;
+        private String propertyName;
+        private Object defaultValue;
+        private PropertyRequired required = PropertyRequired.NOT_REQUIRED;
+        private TypeDescriptor propertyType;
+        private List<AutocompleteContext> autocompleteContexts = new ArrayList<>();
+        private List<AutocompleteVariable> autocompleteVariables = new ArrayList<>();
+
+        public Builder displayName(String displayName) {
+            this.displayName = displayName;
+            return this;
+        }
+
+        public Builder defaultValue(Object defaultValue) {
+            this.defaultValue = defaultValue;
+            return this;
+        }
+
+        public Builder propertyName(String propertyName) {
+            this.propertyName = propertyName;
+            return this;
+        }
+
+        public Builder required(PropertyRequired required) {
+            this.required = required;
+            return this;
+        }
+
+        public Builder type(TypeDescriptor type) {
+            this.propertyType = type;
+            return this;
+        }
+
+        public Builder autocompleteContext(AutocompleteContext autocompleteContext) {
+            this.autocompleteContexts.add(autocompleteContext);
+            return this;
+        }
+
+        public Builder autocompleteVariables(AutocompleteVariable autocompleteVariable) {
+            this.autocompleteVariables.add(autocompleteVariable);
+            return this;
+        }
+
+        public ComponentPropertyDescriptor build() {
+            checkState(propertyName != null, "property name");
+            checkState(propertyType != null, "property type");
+
+            ComponentPropertyDescriptor descriptor = new ComponentPropertyDescriptor();
+            descriptor.required = required;
+            descriptor.displayName = displayName;
+            descriptor.propertyName = propertyName;
+            descriptor.defaultValue = defaultValue;
+            descriptor.propertyType = propertyType;
+            descriptor.autocompleteContexts.addAll(autocompleteContexts);
+            descriptor.autocompleteVariables.addAll(autocompleteVariables);
+            return descriptor;
+        }
+    }
 }

@@ -41,12 +41,13 @@ class ComponentPropertyAnalyzer {
 
         PropertyRequired required = isRequired(propertyInfo) ? REQUIRED : NOT_REQUIRED;
 
-        return new ComponentPropertyDescriptor(
-                propertyName,
-                propertyType,
-                displayName,
-                defaultValue,
-                required);
+        return ComponentPropertyDescriptor.builder()
+                .displayName(displayName)
+                .propertyName(propertyName)
+                .type(propertyType)
+                .defaultValue(defaultValue)
+                .required(required)
+                .build();
     }
 
     private String getDisplayName(FieldInfo propertyInfo, String propertyName) {
@@ -72,6 +73,8 @@ class ComponentPropertyAnalyzer {
             // If the filed has annotation @Script, and it is a string, then we process
             // the field as a script type, otherwise we just ignore the @Script annotation
             // since it is only valid on String type.
+
+            // Find and map auto complete variable annotations.
             return new TypeScriptDescriptor();
         } else {
             return new TypePrimitiveDescriptor(clazz);

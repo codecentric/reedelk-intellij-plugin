@@ -42,7 +42,11 @@ class DefaultDescriptorDataValuesFillerTest {
     void shouldCorrectlyFillNullDefaultValueForUndefinedDefaultValue() {
         // Given
         ComponentPropertyDescriptor addressPropertyDescriptorWithoutDefaultValue =
-                new ComponentPropertyDescriptor("address", stringTypeDescriptor, "Address");
+                ComponentPropertyDescriptor.builder()
+                        .displayName("Address")
+                        .propertyName("address")
+                        .type(stringTypeDescriptor)
+                        .build();
 
         // When
         DefaultDescriptorDataValuesFiller
@@ -62,7 +66,11 @@ class DefaultDescriptorDataValuesFillerTest {
                 new TypeObjectDescriptor(objectFullyQualifiedName, false, asList(namePropertyDescriptor, zipCodePropertyDescriptor));
 
         ComponentPropertyDescriptor objectPropertyDescriptor =
-                new ComponentPropertyDescriptor("configuration", typeObjectDescriptor, "Configuration");
+                ComponentPropertyDescriptor.builder()
+                        .propertyName("configuration")
+                        .type(typeObjectDescriptor)
+                        .displayName("Configuration")
+                        .build();
 
         // When
         DefaultDescriptorDataValuesFiller
@@ -87,12 +95,20 @@ class DefaultDescriptorDataValuesFillerTest {
         TypeObjectDescriptor typeObject2 =
                 new TypeObjectDescriptor(object2FullyQualifiedName, false, asList(surnamePropertyDescriptor, zipCodePropertyDescriptor));
         ComponentPropertyDescriptor object2PropertyDescriptor =
-                new ComponentPropertyDescriptor("configuration2", typeObject2, "Configuration 2");
+                ComponentPropertyDescriptor.builder()
+                        .propertyName("configuration2")
+                        .type(typeObject2)
+                        .displayName("Configuration 2")
+                        .build();
 
         TypeObjectDescriptor typeObject1 =
                 new TypeObjectDescriptor(object1FullyQualifiedName, false, asList(namePropertyDescriptor, object2PropertyDescriptor));
         ComponentPropertyDescriptor object1PropertyDescriptor =
-                new ComponentPropertyDescriptor("configuration1", typeObject1, "Configuration 1");
+                ComponentPropertyDescriptor.builder()
+                        .propertyName("configuration1")
+                        .type(typeObject1)
+                        .displayName("Configuration 1")
+                        .build();
 
         // When
         DefaultDescriptorDataValuesFiller
@@ -117,7 +133,11 @@ class DefaultDescriptorDataValuesFillerTest {
                 new TypeObjectDescriptor(objectFullyQualifiedName, true, asList(namePropertyDescriptor, zipCodePropertyDescriptor));
 
         ComponentPropertyDescriptor objectPropertyDescriptor =
-                new ComponentPropertyDescriptor("configuration", typeObjectDescriptor, "Configuration");
+                ComponentPropertyDescriptor.builder()
+                        .propertyName("configuration")
+                        .displayName("Configuration")
+                        .type(typeObjectDescriptor)
+                        .build();
 
         // When
         DefaultDescriptorDataValuesFiller
@@ -139,12 +159,26 @@ class DefaultDescriptorDataValuesFillerTest {
             new TypePrimitiveDescriptor(int.class);
 
     private final ComponentPropertyDescriptor namePropertyDescriptor =
-            new ComponentPropertyDescriptor("name", stringTypeDescriptor, "Your name", "Test name");
+            ComponentPropertyDescriptor.builder()
+                    .propertyName("name")
+                    .type(stringTypeDescriptor)
+                    .displayName("Your name")
+                    .defaultValue("Test name")
+                    .build();
 
     private final ComponentPropertyDescriptor surnamePropertyDescriptor =
-            new ComponentPropertyDescriptor("surname", stringTypeDescriptor, "Your surname", "Test surname");
+            ComponentPropertyDescriptor.builder()
+                    .propertyName("surname")
+                    .type(stringTypeDescriptor)
+                    .displayName("Your surname")
+                    .defaultValue("Test surname")
+                    .build();
 
     private final ComponentPropertyDescriptor zipCodePropertyDescriptor =
-            new ComponentPropertyDescriptor("zipCode", intTypeDescriptor, "ZIP Code", 23411);
-
+            ComponentPropertyDescriptor.builder()
+                    .propertyName("zipCode")
+                    .type(intTypeDescriptor)
+                    .displayName("ZIP Code")
+                    .defaultValue(23411)
+                    .build();
 }

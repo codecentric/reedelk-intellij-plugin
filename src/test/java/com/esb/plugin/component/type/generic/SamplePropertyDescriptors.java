@@ -15,28 +15,68 @@ class SamplePropertyDescriptors {
     private static final TypeDescriptor integerTypeDescriptor = new TypePrimitiveDescriptor(Integer.class);
 
     static final ComponentPropertyDescriptor property1 =
-            new ComponentPropertyDescriptor("property1", stringTypeDescriptor, "Property 1 Name", "", REQUIRED);
+            ComponentPropertyDescriptor.builder()
+                    .propertyName("property1")
+                    .type(stringTypeDescriptor)
+                    .displayName("Property 1 Name")
+                    .defaultValue("")
+                    .required(REQUIRED)
+                    .build();
 
     static final ComponentPropertyDescriptor property2 =
-            new ComponentPropertyDescriptor("property2", stringTypeDescriptor, "Property 2 Name", "", REQUIRED);
+            ComponentPropertyDescriptor.builder()
+                    .propertyName("property2")
+                    .type(stringTypeDescriptor)
+                    .displayName("Property 2 Name")
+                    .defaultValue("")
+                    .required(REQUIRED)
+                    .build();
 
     static final ComponentPropertyDescriptor property3 =
-            new ComponentPropertyDescriptor("property3", stringTypeDescriptor, "Property 3 Name", "", REQUIRED);
+            ComponentPropertyDescriptor.builder()
+                    .propertyName("property3")
+                    .type(stringTypeDescriptor)
+                    .displayName("Property 3 Name")
+                    .defaultValue("")
+                    .required(REQUIRED)
+                    .build();
 
     static final ComponentPropertyDescriptor property5 =
-            new ComponentPropertyDescriptor("property5", stringTypeDescriptor, "Property 5 Name", "", REQUIRED);
+            ComponentPropertyDescriptor.builder()
+                    .propertyName("property5")
+                    .type(stringTypeDescriptor)
+                    .displayName("Property 5 Name")
+                    .defaultValue("")
+                    .required(REQUIRED)
+                    .build();
 
     static final ComponentPropertyDescriptor property6 =
-            new ComponentPropertyDescriptor("property6", integerTypeDescriptor, "Property 6 Name", 0, REQUIRED);
+            ComponentPropertyDescriptor.builder()
+                    .propertyName("property6")
+                    .type(integerTypeDescriptor)
+                    .displayName("Property 6 Name")
+                    .defaultValue(0)
+                    .required(REQUIRED)
+                    .build();
 
     static final TypeObjectDescriptor componentNode2TypeDescriptor = new TypeObjectDescriptor(ComponentNode2.class.getName(), false, asList(property5, property6));
 
     static final TypeObjectDescriptor componentNode2ShareableTypeDescriptor = new TypeObjectDescriptor(ComponentNode2.class.getName(), true, asList(property5, property6));
 
     static final ComponentPropertyDescriptor property4 =
-            new ComponentPropertyDescriptor("property4", componentNode2TypeDescriptor, "Property 4 Name", null, REQUIRED);
+            ComponentPropertyDescriptor.builder()
+                    .propertyName("property4")
+                    .type(componentNode2TypeDescriptor)
+                    .displayName("Property 4 Name")
+                    .defaultValue(null)
+                    .required(REQUIRED)
+                    .build();
 
     static final ComponentPropertyDescriptor property7 =
-            new ComponentPropertyDescriptor("property7", componentNode2ShareableTypeDescriptor, "Property 7 Name", "", REQUIRED);
-
+            ComponentPropertyDescriptor.builder()
+                    .propertyName("property7")
+                    .type(componentNode2ShareableTypeDescriptor)
+                    .displayName("Property 7 Name")
+                    .required(REQUIRED)
+                    .build();
 }

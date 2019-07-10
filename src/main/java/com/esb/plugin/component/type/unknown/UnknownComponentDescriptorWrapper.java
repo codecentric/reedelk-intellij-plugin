@@ -54,13 +54,11 @@ public class UnknownComponentDescriptorWrapper implements ComponentDescriptor {
 
     @Override
     public Optional<ComponentPropertyDescriptor> getPropertyDescriptor(String propertyName) {
-        return Optional.of(new UnknownComponentPropertyDescriptor(propertyName));
+        return Optional.of(ComponentPropertyDescriptor
+                .builder()
+                .propertyName(propertyName)
+                .type(new UnknownPropertyType())
+                .displayName("Unknown")
+                .build());
     }
-
-    class UnknownComponentPropertyDescriptor extends ComponentPropertyDescriptor {
-        UnknownComponentPropertyDescriptor(String propertyName) {
-            super(propertyName, new UnknownPropertyType(), "Unknown");
-        }
-    }
-
 }

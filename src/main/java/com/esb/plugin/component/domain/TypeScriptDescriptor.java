@@ -2,8 +2,7 @@ package com.esb.plugin.component.domain;
 
 public class TypeScriptDescriptor implements TypeDescriptor {
 
-    public TypeScriptDescriptor() {
-    }
+    private final String defaultScript = "";
 
     @Override
     public Class<?> type() {
@@ -12,7 +11,7 @@ public class TypeScriptDescriptor implements TypeDescriptor {
 
     @Override
     public Object defaultValue() {
-        return "";
+        return defaultScript;
     }
 
     public static class TypeScript {

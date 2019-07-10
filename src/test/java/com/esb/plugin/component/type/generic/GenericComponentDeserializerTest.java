@@ -59,12 +59,13 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
                 .and().nodesCountIs(2);
     }
 
-    // Fixme
     private ComponentPropertyDescriptor createPropertyDefinition(String propertyName, Class<?> propertyClass) {
-        return new ComponentPropertyDescriptor(
-                propertyName,
-                new TypePrimitiveDescriptor(propertyClass),
-                "A property name", "", REQUIRED);
+        TypePrimitiveDescriptor typePrimitive = new TypePrimitiveDescriptor(propertyClass);
+        return ComponentPropertyDescriptor.builder()
+                .displayName("A property name")
+                .propertyName(propertyName)
+                .type(typePrimitive)
+                .required(REQUIRED)
+                .build();
     }
-
 }
