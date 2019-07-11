@@ -16,6 +16,8 @@ import org.jetbrains.idea.maven.model.MavenId;
 import java.io.IOException;
 import java.util.Properties;
 
+import static com.esb.internal.commons.ModuleProperties.*;
+
 class ESBMavenProjectBuilderHelper {
 
     private static final Logger LOG = Logger.getInstance(ESBMavenProjectBuilderHelper.class);
@@ -51,16 +53,7 @@ class ESBMavenProjectBuilderHelper {
                     }
                 });
 
-        createDirectories(root);
-    }
-
-    private void createDirectories(VirtualFile root) {
-        try {
-            VfsUtil.createDirectories(root.getPath() + "/src/main/resources/flows");
-            VfsUtil.createDirectories(root.getPath() + "/src/main/resources/configs");
-        } catch (IOException e) {
-            LOG.info("Error creating project directories", e);
-        }
+        ProjectDirectoryGenerator.createDirectories(root);
     }
 
     class MavenProjectProperties extends Properties {
@@ -75,6 +68,25 @@ class ESBMavenProjectBuilderHelper {
             this(projectId, sdkVersion);
             setProperty("parentId", parentId.getArtifactId());
             setProperty("parentVersion", parentId.getVersion());
+        }
+    }
+
+    private static class ProjectDirectoryGenerator {
+
+        private static final String BASE_RESOURCE_FOLDER = "/src/main/resources";
+
+        private static void createDirectories(VirtualFile root) {
+            createDirectory(root, BASE_RESOURCE_FOLDER + Flow.RESOURCE_DIRECTORY);
+            createDirectory(root, BASE_RESOURCE_FOLDER + Config.RESOURCE_DIRECTORY);
+            createDirectory(root, BASE_RESOURCE_FOLDER + Metadata.RESOURCE_DIRECTORY);
+        }
+
+        private static void createDirectory(VirtualFile root, String suffix) {
+            try {
+                VfsUtil.createDirectories(root.getPath() + suffix);
+            } catch (IOException e) {
+                LOG.info(String.format("Could not create project directory for root=%s and suffix=%s", root.getPath(), suffix), e);
+            }
         }
     }
 }
