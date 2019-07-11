@@ -8,6 +8,6 @@ public interface PropertyAccessor {
 
     void set(Object object);
 
-    Object get();
+    <T> T get();
 
 }

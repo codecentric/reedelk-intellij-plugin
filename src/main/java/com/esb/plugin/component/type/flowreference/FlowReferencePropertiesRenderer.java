@@ -5,6 +5,8 @@ import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.type.flowreference.widget.SubflowSelector;
 import com.esb.plugin.component.type.generic.GenericComponentPropertiesRenderer;
+import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
+import com.esb.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.esb.plugin.editor.properties.widget.FormBuilder;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
@@ -30,7 +32,17 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
     public JBPanel render(GraphNode node) {
         ComponentData componentData = node.componentData();
 
-        String reference = componentData.get(FlowReference.ref());
+        Optional<ComponentPropertyDescriptor> propertyDescriptor = componentData.getPropertyDescriptor(FlowReference.ref());
+        if (!propertyDescriptor.isPresent()) {
+            throw new IllegalStateException("Reference property descriptor must not be null");
+        }
+
+        PropertyAccessor referencePropertyAccessor = PropertyAccessorFactory.get()
+                .snapshot(snapshot)
+                .propertyName(FlowReference.ref())
+                .dataHolder(componentData)
+                .typeDescriptor(propertyDescriptor.get().getPropertyType())
+                .build();
 
         List<ComponentPropertyDescriptor> descriptors = componentData.getPropertiesDescriptors();
         List<ComponentPropertyDescriptor> filteredDescriptors = descriptors
@@ -40,15 +52,10 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
 
         JBPanel genericPropertiesPanel = createPropertiesPanelFrom(filteredDescriptors, componentData);
 
-        Optional<ComponentPropertyDescriptor> propertyDescriptor = componentData.getPropertyDescriptor(FlowReference.ref());
-
-        if (!propertyDescriptor.isPresent()) {
-            throw new IllegalStateException("Reference property descriptor must not be null");
-        }
 
         ComponentPropertyDescriptor referencePropertyDescriptor = propertyDescriptor.get();
 
-        SubflowSelector selector = buildSubflowSelectorCombo(componentData, reference);
+        SubflowSelector selector = buildSubflowSelectorCombo(componentData, referencePropertyAccessor);
 
         FormBuilder.get()
                 .addLabel(referencePropertyDescriptor.getDisplayName(), genericPropertiesPanel)
@@ -58,22 +65,20 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
     }
 
     @NotNull
-    private SubflowSelector buildSubflowSelectorCombo(ComponentData componentData, String reference) {
+    private SubflowSelector buildSubflowSelectorCombo(ComponentData componentData, PropertyAccessor referencePropertyAccessor) {
         List<SubflowMetadata> subflowsMetadata = SubflowService.getInstance(module).listSubflows();
         subflowsMetadata.add(UNSELECTED_SUBFLOW);
 
         // If find matching metadata is unresolved, then we must add it to the collection.
-        SubflowMetadata matchingMetadata = findMatchingMetadata(subflowsMetadata, reference);
+        SubflowMetadata matchingMetadata = findMatchingMetadata(subflowsMetadata, referencePropertyAccessor.get());
         if (!subflowsMetadata.contains(matchingMetadata)) {
             subflowsMetadata.add(matchingMetadata);
         }
 
         SubflowSelector selector = new SubflowSelector(subflowsMetadata);
         selector.setSelectedItem(matchingMetadata);
-        selector.addSelectListener(subflowMetadata -> {
-            componentData.set(FlowReference.ref(), subflowMetadata.getId());
-            snapshot.onDataChange();
-        });
+        selector.addSelectListener(subflowMetadata ->
+                referencePropertyAccessor.set(subflowMetadata.getId()));
         return selector;
     }
 

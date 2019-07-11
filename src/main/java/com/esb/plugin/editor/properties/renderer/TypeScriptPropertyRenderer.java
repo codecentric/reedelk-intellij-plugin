@@ -1,6 +1,8 @@
 package com.esb.plugin.editor.properties.renderer;
 
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
+import com.esb.plugin.component.scanner.AutocompleteContext;
+import com.esb.plugin.component.scanner.AutocompleteVariable;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.widget.ContainerFactory;
 import com.esb.plugin.editor.properties.widget.FormBuilder;
@@ -9,11 +11,19 @@ import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBPanel;
 
 import javax.swing.*;
+import java.util.List;
 
 public class TypeScriptPropertyRenderer implements TypePropertyRenderer {
 
     @Override
     public JComponent render(Module module, ComponentPropertyDescriptor propertyDescriptor, PropertyAccessor propertyAccessor) {
+        List<AutocompleteVariable> autocompleteVariables = propertyDescriptor.getAutocompleteVariables();
+        List<AutocompleteContext> autocompleteContexts = propertyDescriptor.getAutocompleteContexts();
+
+
+        // Init Script Input Field with variables and context. Also we must listen on variables
+        // connected to  it
+
         ScriptInputField field = new ScriptInputField(module);
         field.setValue(propertyAccessor.get());
         field.addListener(propertyAccessor::set);

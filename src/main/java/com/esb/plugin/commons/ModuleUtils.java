@@ -29,9 +29,14 @@ public class ModuleUtils {
                 .withoutLibraries()
                 .withoutDepModules()
                 .sources()
-                .getPathsList().getPathList();
+                .getPathsList()
+                .getPathList();
         return pathsList.stream()
                 .filter(sourcesUrls -> sourcesUrls.endsWith(PROJECT_RESOURCES_FOLDER))
                 .findFirst();
+    }
+
+    public static String getModuleRoot(Module module) {
+        return ModuleRootManager.getInstance(module).getContentRoots()[0].getPresentableUrl();
     }
 }

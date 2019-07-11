@@ -27,11 +27,14 @@ public class GenericComponentPropertiesRenderer extends AbstractNodePropertiesRe
     @Override
     public JBPanel render(GraphNode node) {
         ComponentData componentData = node.componentData();
+
         List<ComponentPropertyDescriptor> descriptors = componentData.getPropertiesDescriptors();
+
         return createPropertiesPanelFrom(descriptors, componentData);
     }
 
     protected JBPanel createPropertiesPanelFrom(List<ComponentPropertyDescriptor> propertyDescriptors, ComponentData data) {
+
         DefaultPropertiesPanel propertiesPanel = new DefaultPropertiesPanel();
 
         propertyDescriptors.forEach(propertyDescriptor -> {

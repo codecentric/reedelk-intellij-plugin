@@ -69,7 +69,7 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
         List<ComponentPropertyDescriptor> objectProperties = objectDescriptor.getObjectProperties();
 
         // The accessor of type object returns a TypeObject map.
-        ComponentDataHolder dataHolder = (ComponentDataHolder) propertyAccessor.get();
+        ComponentDataHolder dataHolder = propertyAccessor.get();
 
         // Fill Default Properties Values
         DefaultDescriptorDataValuesFiller.fill(dataHolder, objectProperties);
@@ -108,7 +108,7 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
 
         // The accessor of type object returns a TypeObject map
         // Since the object is shareable, it will contain config a config reference.
-        ComponentDataHolder dataHolder = (ComponentDataHolder) propertyAccessor.get();
+        ComponentDataHolder dataHolder = propertyAccessor.get();
 
         // We create the accessor for the config reference
         PropertyAccessor configRefAccessor = PropertyAccessorFactory.get()
