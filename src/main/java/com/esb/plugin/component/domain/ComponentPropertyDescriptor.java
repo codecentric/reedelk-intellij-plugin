@@ -2,6 +2,7 @@ package com.esb.plugin.component.domain;
 
 import com.esb.plugin.component.scanner.AutocompleteContext;
 import com.esb.plugin.component.scanner.AutocompleteVariable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class ComponentPropertyDescriptor {
 
     public enum PropertyRequired {
         REQUIRED,
-        NOT_REQUIRED;
+        NOT_REQUIRED
     }
 
     private ComponentPropertyDescriptor() {
@@ -38,6 +39,7 @@ public class ComponentPropertyDescriptor {
         return PropertyRequired.REQUIRED.equals(required);
     }
 
+    @NotNull
     public String getPropertyName() {
         return propertyName;
     }
@@ -50,10 +52,12 @@ public class ComponentPropertyDescriptor {
         return propertyType;
     }
 
+    @NotNull
     public List<AutocompleteContext> getAutocompleteContexts() {
         return autocompleteContexts;
     }
 
+    @NotNull
     public List<AutocompleteVariable> getAutocompleteVariables() {
         return autocompleteVariables;
     }
@@ -63,8 +67,8 @@ public class ComponentPropertyDescriptor {
         private String displayName;
         private String propertyName;
         private Object defaultValue;
-        private PropertyRequired required = PropertyRequired.NOT_REQUIRED;
         private TypeDescriptor propertyType;
+        private PropertyRequired required = PropertyRequired.NOT_REQUIRED;
         private List<AutocompleteContext> autocompleteContexts = new ArrayList<>();
         private List<AutocompleteVariable> autocompleteVariables = new ArrayList<>();
 
