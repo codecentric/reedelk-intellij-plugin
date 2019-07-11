@@ -34,19 +34,19 @@ public class GenericComponentPropertiesRenderer extends AbstractNodePropertiesRe
     protected JBPanel createPropertiesPanelFrom(List<ComponentPropertyDescriptor> propertyDescriptors, ComponentData data) {
         DefaultPropertiesPanel propertiesPanel = new DefaultPropertiesPanel();
 
-        propertyDescriptors.forEach(descriptor -> {
+        propertyDescriptors.forEach(propertyDescriptor -> {
 
-            String displayName = descriptor.getDisplayName();
+            String displayName = propertyDescriptor.getDisplayName();
 
-            String propertyName = descriptor.getPropertyName();
+            String propertyName = propertyDescriptor.getPropertyName();
 
-            TypeDescriptor propertyType = descriptor.getPropertyType();
+            TypeDescriptor propertyType = propertyDescriptor.getPropertyType();
 
-            PropertyAccessor setter = getAccessor(propertyName, propertyType, data);
+            PropertyAccessor propertyAccessor = getAccessor(propertyName, propertyType, data);
 
             TypePropertyRenderer renderer = TypeRendererFactory.get().from(propertyType);
 
-            JComponent renderedComponent = renderer.render(module, descriptor, setter);
+            JComponent renderedComponent = renderer.render(module, propertyDescriptor, propertyAccessor);
 
             renderer.addToParent(propertiesPanel, renderedComponent, displayName);
 
