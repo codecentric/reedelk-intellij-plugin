@@ -58,7 +58,7 @@ public class GenericComponentPropertiesRenderer extends AbstractNodePropertiesRe
         return propertiesPanel;
     }
 
-    private PropertyAccessor getAccessor(String propertyName, TypeDescriptor propertyType, ComponentDataHolder dataHolder) {
+    protected PropertyAccessor getAccessor(String propertyName, TypeDescriptor propertyType, ComponentDataHolder dataHolder) {
         return PropertyAccessorFactory.get()
                 .typeDescriptor(propertyType)
                 .propertyName(propertyName)
