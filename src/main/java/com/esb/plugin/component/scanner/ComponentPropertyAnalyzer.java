@@ -69,13 +69,11 @@ class ComponentPropertyAnalyzer {
     }
 
     private TypeDescriptor processPrimitiveType(Class<?> clazz, FieldInfo fieldInfo) {
-        if (isScript(fieldInfo) && clazz.equals(String.class)) {
-            // If the filed has annotation @Script, and it is a string, then we process
-            // the field as a script type, otherwise we just ignore the @Script annotation
-            // since it is only valid on String type.
-
+        if (isScript(fieldInfo, clazz)) {
             // Find and map auto complete variable annotations.
             return new TypeScriptDescriptor();
+        } else if (isFile(fieldInfo, clazz)) {
+            return new TypeFileDescriptor();
         } else {
             return new TypePrimitiveDescriptor(clazz);
         }
@@ -167,15 +165,25 @@ class ComponentPropertyAnalyzer {
         };
     }
 
-    private boolean isRequired(FieldInfo fieldInfo) {
-        return fieldInfo.hasAnnotation(Required.class.getName());
+    // A property is a Script if and only if it has
+    // @Script annotation AND type String
+    private boolean isScript(FieldInfo fieldInfo, Class<?> clazz) {
+        return fieldInfo.hasAnnotation(Script.class.getName()) &&
+                String.class.equals(clazz);
     }
 
-    private boolean isScript(FieldInfo fieldInfo) {
-        return fieldInfo.hasAnnotation(Script.class.getName());
+    // A property is a File if and only if it has
+    // @File annotation AND type String
+    private boolean isFile(FieldInfo fieldInfo, Class<?> clazz) {
+        return fieldInfo.hasAnnotation(File.class.getName()) &&
+                String.class.equals(clazz);
     }
 
     private boolean isShareable(ClassInfo classInfo) {
         return classInfo.hasAnnotation(Shareable.class.getName());
+    }
+
+    private boolean isRequired(FieldInfo fieldInfo) {
+        return fieldInfo.hasAnnotation(Required.class.getName());
     }
 }

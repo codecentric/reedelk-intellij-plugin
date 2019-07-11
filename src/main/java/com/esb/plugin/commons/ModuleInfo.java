@@ -13,7 +13,7 @@ public class ModuleInfo {
     private ModuleInfo() {
     }
 
-    public static boolean IsESBModule(String jarFilePath) {
+    public static boolean isModule(String jarFilePath) {
         try {
             Attributes attributes = getManifestAttributesOf(jarFilePath);
             String isEsbModule = attributes.getValue(Bundle.MODULE_HEADER_NAME);
@@ -23,7 +23,7 @@ public class ModuleInfo {
         }
     }
 
-    public static String GetESBModuleName(String jarFilePath) {
+    public static String getModuleName(String jarFilePath) {
         try {
             Attributes attributes = getManifestAttributesOf(jarFilePath);
             return attributes.getValue("Bundle-SymbolicName");

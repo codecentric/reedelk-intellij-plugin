@@ -26,6 +26,8 @@ public class Labels {
     public static final String SCRIPT_EDITOR_CONTEXT_VARS = "Context variables";
     public static final String SCRIPT_EDITOR_BTN_OPEN_EDITOR = "Open Editor";
 
+    public static final String FILE_CHOOSER_TITLE = "Choose File";
+
     private Labels() {
     }
 

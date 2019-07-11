@@ -1,6 +1,7 @@
 package com.esb.plugin.editor.properties.renderer;
 
 import com.esb.plugin.component.domain.TypeDescriptor;
+import com.esb.plugin.component.domain.TypeFileDescriptor;
 import com.esb.plugin.component.domain.TypeObjectDescriptor;
 import com.esb.plugin.component.domain.TypeScriptDescriptor;
 import com.esb.plugin.component.type.unknown.UnknownPropertyType;
@@ -32,6 +33,7 @@ public class TypeRendererFactory {
         tmp.put(BigInteger.class, new BigIntegerPropertyRenderer());
         tmp.put(BigDecimal.class, new BigDecimalPropertyRenderer());
 
+        tmp.put(TypeFileDescriptor.TypeFile.class, new TypeFilePropertyRenderer());
         tmp.put(TypeObjectDescriptor.TypeObject.class, new TypeObjectPropertyRenderer());
         tmp.put(TypeScriptDescriptor.TypeScript.class, new TypeScriptPropertyRenderer());
         tmp.put(UnknownPropertyType.UnknownType.class, new UnknownPropertyRenderer());

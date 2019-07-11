@@ -127,12 +127,12 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                     .getPathsList()
                     .getPathList()
                     .stream()
-                    .filter(ModuleInfo::IsESBModule)
+                    .filter(ModuleInfo::isModule)
                     .collect(Collectors.toList());
 
             esbModuleJarPaths.forEach(jarFilePath -> {
                 List<ComponentDescriptor> components = componentScanner.from(jarFilePath);
-                String moduleName = ModuleInfo.GetESBModuleName(jarFilePath);
+                String moduleName = ModuleInfo.getModuleName(jarFilePath);
                 ComponentsPackage descriptor = new ComponentsPackage(moduleName, components);
                 mavenJarComponentsMap.put(jarFilePath, descriptor);
             });
