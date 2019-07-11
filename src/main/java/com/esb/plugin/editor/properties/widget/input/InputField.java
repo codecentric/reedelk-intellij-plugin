@@ -36,7 +36,7 @@ public abstract class InputField<T> extends JBTextField implements DocumentListe
         notifyListener();
     }
 
-    public void setValue(Object value) {
+    public void setValue(T value) {
         String valueAsString = converter.toText(value);
         setText(valueAsString);
     }

@@ -31,7 +31,7 @@ public class DefaultPropertyAccessor implements PropertyAccessor {
     }
 
     @Override
-    public Object get() {
+    public <T> T get() {
         return data.get(propertyName);
     }
 

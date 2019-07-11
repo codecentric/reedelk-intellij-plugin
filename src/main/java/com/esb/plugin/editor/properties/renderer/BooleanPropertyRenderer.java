@@ -17,7 +17,7 @@ public class BooleanPropertyRenderer implements TypePropertyRenderer {
     public JComponent render(Module module, ComponentPropertyDescriptor descriptor, PropertyAccessor accessor) {
         boolean selected = accessor.get() == null ?
                 Boolean.FALSE :
-                (Boolean) accessor.get();
+                accessor.get();
 
         BooleanCheckbox checkbox = new BooleanCheckbox();
         checkbox.setSelected(selected);
