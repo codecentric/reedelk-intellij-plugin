@@ -22,18 +22,6 @@ public class DefaultPropertyAccessor implements PropertyAccessor {
         this.snapshot = snapshot;
     }
 
-    /**
-     * Constructor used by Accessors who don't want to notify the graph that something has changed.
-     * This is being used by Configuration accessor. Configuration it is saved only when the user
-     * confirms the operation from the dialog. Configuration is stored in a different file from flow files.
-     *
-     * @param propertyName the property name this accessor is referring to
-     * @param dataHolder   the container containing the value of the property named 'propertyName'
-     */
-    public DefaultPropertyAccessor(String propertyName, ComponentDataHolder dataHolder) {
-        this(propertyName, dataHolder, null);
-    }
-
     @Override
     public void set(Object object) {
         data.set(propertyName, object);
