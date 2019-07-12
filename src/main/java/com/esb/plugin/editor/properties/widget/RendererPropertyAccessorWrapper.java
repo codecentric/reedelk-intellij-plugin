@@ -1,7 +1,6 @@
-package com.esb.plugin.editor.properties.renderer;
+package com.esb.plugin.editor.properties.widget;
 
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
-import com.esb.plugin.editor.properties.widget.DefaultPropertiesPanel;
 import com.esb.plugin.graph.FlowSnapshot;
 
 public class RendererPropertyAccessorWrapper implements PropertyAccessor {
@@ -9,7 +8,7 @@ public class RendererPropertyAccessorWrapper implements PropertyAccessor {
     private final PropertyAccessor wrapped;
     private final DefaultPropertiesPanel propertiesPanel;
 
-    public RendererPropertyAccessorWrapper(PropertyAccessor wrapped, DefaultPropertiesPanel propertiesPanel) {
+    RendererPropertyAccessorWrapper(PropertyAccessor wrapped, DefaultPropertiesPanel propertiesPanel) {
         this.wrapped = wrapped;
         this.propertiesPanel = propertiesPanel;
     }

@@ -6,7 +6,6 @@ import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.domain.TypeDescriptor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessorFactory;
-import com.esb.plugin.editor.properties.renderer.RendererPropertyAccessorWrapper;
 import com.esb.plugin.editor.properties.widget.input.InputChangeListener;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.intellij.ui.components.JBPanel;
