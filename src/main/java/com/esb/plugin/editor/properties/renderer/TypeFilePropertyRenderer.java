@@ -4,6 +4,7 @@ import com.esb.plugin.commons.Labels;
 import com.esb.plugin.commons.ModuleUtils;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
+import com.esb.plugin.editor.properties.widget.DefaultPanelContext;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -19,7 +20,7 @@ import javax.swing.*;
 public class TypeFilePropertyRenderer implements TypePropertyRenderer {
 
     @Override
-    public JComponent render(Module module, ComponentPropertyDescriptor propertyDescriptor, PropertyAccessor propertyAccessor) {
+    public JComponent render(Module module, ComponentPropertyDescriptor propertyDescriptor, PropertyAccessor propertyAccessor, DefaultPanelContext defaultPanelContext) {
 
         String resourcesFolder = ModuleUtils.getResourcesFolder(module).get();
 

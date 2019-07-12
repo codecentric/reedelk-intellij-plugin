@@ -6,8 +6,10 @@ public interface PropertyAccessor {
 
     FlowSnapshot getSnapshot();
 
-    void set(Object object);
+    <T> void set(T object);
 
     <T> T get();
+
+    String getProperty();
 
 }

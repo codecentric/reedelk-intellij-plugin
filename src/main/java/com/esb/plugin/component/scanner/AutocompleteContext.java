@@ -4,20 +4,22 @@ import com.esb.api.annotation.AutocompleteType;
 
 public class AutocompleteContext {
 
-    private final AutocompleteType autocompleteType;
-
-    private final String contextName;
     private final String tokensFile;
+    private final String contextName;
+    private final String propertyName;
     private final String jsonSchemaFile;
+    private final AutocompleteType autocompleteType;
 
     public AutocompleteContext(String contextName,
                                AutocompleteType autocompleteType,
                                String jsonSchemaFile,
-                               String tokensFile) {
-        this.contextName = contextName;
-        this.autocompleteType = autocompleteType;
-        this.jsonSchemaFile = jsonSchemaFile;
+                               String tokensFile,
+                               String propertyName) {
         this.tokensFile = tokensFile;
+        this.contextName = contextName;
+        this.propertyName = propertyName;
+        this.jsonSchemaFile = jsonSchemaFile;
+        this.autocompleteType = autocompleteType;
     }
 
     public String getContextName() {
@@ -34,5 +36,9 @@ public class AutocompleteContext {
 
     public String getTokensFile() {
         return tokensFile;
+    }
+
+    public String getPropertyName() {
+        return propertyName;
     }
 }

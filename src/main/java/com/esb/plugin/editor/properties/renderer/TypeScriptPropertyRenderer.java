@@ -5,7 +5,9 @@ import com.esb.plugin.component.scanner.AutocompleteContext;
 import com.esb.plugin.component.scanner.AutocompleteVariable;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.widget.ContainerFactory;
+import com.esb.plugin.editor.properties.widget.DefaultPanelContext;
 import com.esb.plugin.editor.properties.widget.FormBuilder;
+import com.esb.plugin.editor.properties.widget.input.InputChangeListener;
 import com.esb.plugin.editor.properties.widget.input.script.ScriptInputField;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBPanel;
@@ -16,10 +18,12 @@ import java.util.List;
 public class TypeScriptPropertyRenderer implements TypePropertyRenderer {
 
     @Override
-    public JComponent render(Module module, ComponentPropertyDescriptor propertyDescriptor, PropertyAccessor propertyAccessor) {
+    public JComponent render(Module module, ComponentPropertyDescriptor propertyDescriptor, PropertyAccessor propertyAccessor, DefaultPanelContext context) {
         List<AutocompleteVariable> autocompleteVariables = propertyDescriptor.getAutocompleteVariables();
         List<AutocompleteContext> autocompleteContexts = propertyDescriptor.getAutocompleteContexts();
 
+        String inputSchema = "inputJsonSchema";
+        String propertyValue = context.getPropertyValue(inputSchema);
 
         // Init Script Input Field with variables and context. Also we must listen on variables
         // connected to  it
@@ -27,6 +31,15 @@ public class TypeScriptPropertyRenderer implements TypePropertyRenderer {
         ScriptInputField field = new ScriptInputField(module);
         field.setValue(propertyAccessor.get());
         field.addListener(propertyAccessor::set);
+
+        context.subscribe("inputJsonSchema", new InputChangeListener<String>() {
+            @Override
+            public void onChange(String value) {
+                System.out.println("value");
+            }
+        });
+
+
         return field;
     }
 

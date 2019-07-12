@@ -10,6 +10,7 @@ import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBTabbedPane;
 
 import javax.swing.*;
+import java.util.Collections;
 
 public class GraphTabbedPane extends JBTabbedPane {
 
@@ -26,7 +27,7 @@ public class GraphTabbedPane extends JBTabbedPane {
     }
 
     private void initialize() {
-        DefaultPropertiesPanel propertiesPanel = new DefaultPropertiesPanel();
+        FlowPropertiesPanel propertiesPanel = new FlowPropertiesPanel();
 
         InputField<String> titleField = createTitleInputField();
         FormBuilder.get()
@@ -64,5 +65,11 @@ public class GraphTabbedPane extends JBTabbedPane {
         inputField.setValue(value);
         inputField.addListener(changeListener);
         return inputField;
+    }
+
+    class FlowPropertiesPanel extends DefaultPropertiesPanel {
+        FlowPropertiesPanel() {
+            super(null, Collections.emptyList(), null);
+        }
     }
 }

@@ -21,7 +21,7 @@ public class UnknownPropertiesRenderer extends AbstractNodePropertiesRenderer {
     public JBPanel render(GraphNode node) {
         ComponentData componentData = node.componentData();
         String unknownImplementorClazz = componentData.get(JsonParser.Implementor.name());
-        DefaultPropertiesPanel propertiesPanel = new DefaultPropertiesPanel();
+        DefaultPropertiesPanel propertiesPanel = new DefaultPropertiesPanel(componentData, snapshot);
 
         FormBuilder.get()
                 .addLabel("Unknown implementor", propertiesPanel)

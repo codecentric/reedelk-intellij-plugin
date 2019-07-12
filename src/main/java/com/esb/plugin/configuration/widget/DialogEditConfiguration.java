@@ -16,7 +16,7 @@ public class DialogEditConfiguration extends DialogWrapper {
     private final ConfigMetadata selectedMetadata;
     private final Module module;
 
-    public DialogEditConfiguration(@NotNull Module module, @NotNull TypeObjectDescriptor typeObjectDescriptor, @NotNull ConfigMetadata selectedConfig) {
+    DialogEditConfiguration(@NotNull Module module, @NotNull TypeObjectDescriptor typeObjectDescriptor, @NotNull ConfigMetadata selectedConfig) {
         super(module.getProject(), false);
         this.objectDescriptor = typeObjectDescriptor;
         this.selectedMetadata = selectedConfig;

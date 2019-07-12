@@ -13,6 +13,7 @@ import com.esb.plugin.configuration.widget.ConfigControlPanel;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.esb.plugin.editor.properties.widget.ContainerFactory;
+import com.esb.plugin.editor.properties.widget.DefaultPanelContext;
 import com.esb.plugin.editor.properties.widget.DefaultPropertiesPanel;
 import com.esb.plugin.editor.properties.widget.FormBuilder;
 import com.esb.plugin.editor.properties.widget.input.ConfigSelector;
@@ -47,7 +48,7 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
     }
 
     @Override
-    public JComponent render(Module module, ComponentPropertyDescriptor descriptor, PropertyAccessor accessor) {
+    public JComponent render(Module module, ComponentPropertyDescriptor descriptor, PropertyAccessor accessor, DefaultPanelContext context) {
         TypeObjectDescriptor objectDescriptor = (TypeObjectDescriptor) descriptor.getPropertyType();
         return objectDescriptor.isShareable() ?
                 renderShareable(module, objectDescriptor, accessor) :
@@ -74,7 +75,7 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
         // Fill Default Properties Values
         DefaultDescriptorDataValuesFiller.fill(dataHolder, objectProperties);
 
-        DefaultPropertiesPanel propertiesPanel = new DefaultPropertiesPanel();
+        DefaultPropertiesPanel propertiesPanel = new DefaultPropertiesPanel(dataHolder, objectProperties, propertyAccessor.getSnapshot());
         objectProperties.forEach(nestedPropertyDescriptor -> {
 
             final String displayName = nestedPropertyDescriptor.getDisplayName();
@@ -91,7 +92,7 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
 
             TypeRendererFactory typeRendererFactory = TypeRendererFactory.get();
             JComponent renderedComponent = typeRendererFactory.from(propertyType)
-                    .render(module, nestedPropertyDescriptor, nestedPropertyAccessor);
+                    .render(module, nestedPropertyDescriptor, nestedPropertyAccessor, propertiesPanel);
 
             FormBuilder.get()
                     .addLabel(displayName, propertiesPanel)

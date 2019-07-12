@@ -2,6 +2,7 @@ package com.esb.plugin.editor.properties.renderer;
 
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
+import com.esb.plugin.editor.properties.widget.DefaultPanelContext;
 import com.esb.plugin.editor.properties.widget.input.BooleanCheckbox;
 import com.intellij.openapi.module.Module;
 
@@ -14,7 +15,7 @@ import static java.awt.BorderLayout.WEST;
 public class BooleanPropertyRenderer implements TypePropertyRenderer {
 
     @Override
-    public JComponent render(Module module, ComponentPropertyDescriptor descriptor, PropertyAccessor accessor) {
+    public JComponent render(Module module, ComponentPropertyDescriptor descriptor, PropertyAccessor accessor, DefaultPanelContext defaultPanelContext) {
         boolean selected = accessor.get() == null ?
                 Boolean.FALSE :
                 accessor.get();

@@ -2,6 +2,17 @@ package com.esb.plugin.commons;
 
 public class Labels {
 
+    private Labels() {
+    }
+
+    public class PropertiesPanelConfig {
+        private PropertiesPanelConfig() {
+        }
+
+        public static final String FIELD_CONFIG_FILE = "Config file";
+        public static final String FIELD_CONFIG_TITLE = "Config title";
+    }
+
     public static final String PROPERTIES_PANEL_SUBFLOW_TITLE = "Subflow properties";
     public static final String PROPERTIES_PANEL_FLOW_TITLE = "Flow properties";
 
@@ -27,8 +38,5 @@ public class Labels {
     public static final String SCRIPT_EDITOR_BTN_OPEN_EDITOR = "Open Editor";
 
     public static final String FILE_CHOOSER_TITLE = "Choose File";
-
-    private Labels() {
-    }
 
 }

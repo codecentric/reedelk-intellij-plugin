@@ -6,6 +6,7 @@ import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.type.flowreference.widget.SubflowSelector;
 import com.esb.plugin.component.type.generic.GenericComponentPropertiesRenderer;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
+import com.esb.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.esb.plugin.editor.properties.widget.FormBuilder;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
@@ -36,9 +37,12 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
             throw new IllegalStateException("Reference property descriptor must not be null");
         }
 
-        PropertyAccessor referencePropertyAccessor =
-                getAccessor(FlowReference.ref(), propertyDescriptor.get().getPropertyType(), componentData);
-
+        PropertyAccessor referencePropertyAccessor = PropertyAccessorFactory.get()
+                .typeDescriptor(propertyDescriptor.get().getPropertyType())
+                .propertyName(FlowReference.ref())
+                .dataHolder(componentData)
+                .snapshot(snapshot)
+                .build();
 
         List<ComponentPropertyDescriptor> descriptors = componentData.getPropertiesDescriptors();
         List<ComponentPropertyDescriptor> filteredDescriptors = descriptors
@@ -46,8 +50,7 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
                 .filter(descriptor -> !FlowReference.ref().equals(descriptor.getPropertyName()))
                 .collect(Collectors.toList());
 
-        JBPanel genericPropertiesPanel = createPropertiesPanelFrom(filteredDescriptors, componentData);
-
+        JBPanel genericPropertiesPanel = getDefaultPropertiesPanel(componentData, filteredDescriptors);
 
         ComponentPropertyDescriptor referencePropertyDescriptor = propertyDescriptor.get();
 
@@ -59,6 +62,7 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
 
         return genericPropertiesPanel;
     }
+
 
     @NotNull
     private SubflowSelector buildSubflowSelectorCombo(PropertyAccessor referencePropertyAccessor) {

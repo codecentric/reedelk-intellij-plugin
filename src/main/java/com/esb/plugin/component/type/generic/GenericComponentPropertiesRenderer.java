@@ -1,11 +1,9 @@
 package com.esb.plugin.component.type.generic;
 
 import com.esb.plugin.component.domain.ComponentData;
-import com.esb.plugin.component.domain.ComponentDataHolder;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.domain.TypeDescriptor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
-import com.esb.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.esb.plugin.editor.properties.renderer.AbstractNodePropertiesRenderer;
 import com.esb.plugin.editor.properties.renderer.TypePropertyRenderer;
 import com.esb.plugin.editor.properties.renderer.TypeRendererFactory;
@@ -14,6 +12,7 @@ import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBPanel;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.List;
@@ -26,44 +25,37 @@ public class GenericComponentPropertiesRenderer extends AbstractNodePropertiesRe
 
     @Override
     public JBPanel render(GraphNode node) {
+
         ComponentData componentData = node.componentData();
 
         List<ComponentPropertyDescriptor> descriptors = componentData.getPropertiesDescriptors();
 
-        return createPropertiesPanelFrom(descriptors, componentData);
+        return getDefaultPropertiesPanel(componentData, descriptors);
     }
 
-    protected JBPanel createPropertiesPanelFrom(List<ComponentPropertyDescriptor> propertyDescriptors, ComponentData data) {
+    @NotNull
+    protected DefaultPropertiesPanel getDefaultPropertiesPanel(ComponentData componentData, List<ComponentPropertyDescriptor> descriptors) {
+        DefaultPropertiesPanel propertiesPanel = new DefaultPropertiesPanel(componentData, descriptors, snapshot);
 
-        DefaultPropertiesPanel propertiesPanel = new DefaultPropertiesPanel();
-
-        propertyDescriptors.forEach(propertyDescriptor -> {
+        descriptors.forEach(propertyDescriptor -> {
 
             String displayName = propertyDescriptor.getDisplayName();
 
             String propertyName = propertyDescriptor.getPropertyName();
 
-            TypeDescriptor propertyType = propertyDescriptor.getPropertyType();
+            PropertyAccessor propertyAccessor = propertiesPanel.getAccessor(propertyName);
 
-            PropertyAccessor propertyAccessor = getAccessor(propertyName, propertyType, data);
+            TypeDescriptor propertyType = propertyDescriptor.getPropertyType();
 
             TypePropertyRenderer renderer = TypeRendererFactory.get().from(propertyType);
 
-            JComponent renderedComponent = renderer.render(module, propertyDescriptor, propertyAccessor);
+            JComponent renderedComponent =
+                    renderer.render(module, propertyDescriptor, propertyAccessor, propertiesPanel);
 
             renderer.addToParent(propertiesPanel, renderedComponent, displayName);
 
         });
 
         return propertiesPanel;
-    }
-
-    protected PropertyAccessor getAccessor(String propertyName, TypeDescriptor propertyType, ComponentDataHolder dataHolder) {
-        return PropertyAccessorFactory.get()
-                .typeDescriptor(propertyType)
-                .propertyName(propertyName)
-                .dataHolder(dataHolder)
-                .snapshot(snapshot)
-                .build();
     }
 }
