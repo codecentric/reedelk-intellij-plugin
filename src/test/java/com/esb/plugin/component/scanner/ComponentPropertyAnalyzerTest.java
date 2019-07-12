@@ -1,12 +1,14 @@
 package com.esb.plugin.component.scanner;
 
-import com.esb.api.annotation.ESBComponent;
 import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.domain.TypeEnumDescriptor;
 import com.esb.plugin.component.domain.TypePrimitiveDescriptor;
 import com.esb.plugin.component.scanner.property.ComponentPropertyAnalyzer;
-import io.github.classgraph.*;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.FieldInfo;
+import io.github.classgraph.ScanResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -37,8 +39,7 @@ class ComponentPropertyAnalyzerTest {
         ComponentAnalyzerContext context = new ComponentAnalyzerContext(scanResult);
         analyzer = new ComponentPropertyAnalyzer(context);
 
-        ClassInfoList classesWithAnnotation = scanResult.getClassesWithAnnotation(ESBComponent.class.getName());
-        testComponentClassInfo = classesWithAnnotation.get(0);
+        testComponentClassInfo = scanResult.getClassInfo(TestComponent.class.getName());
     }
 
     @Test

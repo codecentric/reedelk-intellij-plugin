@@ -14,7 +14,9 @@ public class HandlersChain {
             new PropertyTypeHandler(),
             new PropertyRequiredHandler(),
             new PropertyDisplayNameHandler(),
-            new PropertyDefaultValueHandler());
+            new PropertyDefaultValueHandler(),
+            new PropertyAutocompleteContextHandler(),
+            new PropertyAutocompleteVariableHandler());
 
     public static ComponentPropertyDescriptor descriptor(FieldInfo propertyInfo, ComponentAnalyzerContext context) {
         ComponentPropertyDescriptor.Builder builder = ComponentPropertyDescriptor.builder();

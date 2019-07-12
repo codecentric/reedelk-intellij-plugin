@@ -104,7 +104,7 @@ public class ComponentPropertyDescriptor {
             return this;
         }
 
-        public Builder autocompleteVariables(AutocompleteVariable autocompleteVariable) {
+        public Builder autocompleteVariable(AutocompleteVariable autocompleteVariable) {
             this.autocompleteVariables.add(autocompleteVariable);
             return this;
         }

@@ -1,5 +1,8 @@
 package com.esb.plugin.component.scanner.property;
 
+import com.esb.api.annotation.File;
+import com.esb.api.annotation.Script;
+import com.esb.api.annotation.Shareable;
 import com.esb.plugin.component.domain.*;
 import com.esb.plugin.component.scanner.ComponentAnalyzerContext;
 import com.esb.plugin.component.scanner.UnsupportedType;
@@ -9,7 +12,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.esb.plugin.component.scanner.property.PropertyScannerUtils.*;
+import static com.esb.plugin.component.scanner.property.PropertyScannerUtils.filterByFullyQualifiedClassNameType;
+import static com.esb.plugin.component.scanner.property.PropertyScannerUtils.isEnumeration;
 import static com.esb.plugin.converter.ValueConverterFactory.isKnownType;
 import static java.util.stream.Collectors.toList;
 
@@ -87,5 +91,24 @@ public class PropertyTypeHandler implements Handler {
                 .map(FieldInfo::getName)
                 .collect(Collectors.toList());
         return new TypeEnumDescriptor(enumNames, enumNames.get(0));
+    }
+
+
+    // A property is a Script if and only if it has
+    // @Script annotation AND type String
+    private boolean isScript(FieldInfo fieldInfo, Class<?> clazz) {
+        return fieldInfo.hasAnnotation(Script.class.getName()) &&
+                String.class.equals(clazz);
+    }
+
+    // A property is a File if and only if it has
+    // @File annotation AND type String
+    private boolean isFile(FieldInfo fieldInfo, Class<?> clazz) {
+        return fieldInfo.hasAnnotation(File.class.getName()) &&
+                String.class.equals(clazz);
+    }
+
+    private boolean isShareable(ClassInfo classInfo) {
+        return classInfo.hasAnnotation(Shareable.class.getName());
     }
 }

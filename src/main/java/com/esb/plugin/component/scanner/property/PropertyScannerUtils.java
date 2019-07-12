@@ -1,9 +1,5 @@
 package com.esb.plugin.component.scanner.property;
 
-import com.esb.api.annotation.File;
-import com.esb.api.annotation.Required;
-import com.esb.api.annotation.Script;
-import com.esb.api.annotation.Shareable;
 import com.esb.plugin.component.scanner.ComponentAnalyzerContext;
 import io.github.classgraph.*;
 
@@ -50,27 +46,5 @@ class PropertyScannerUtils {
                 .getSuperclasses()
                 .stream()
                 .anyMatch(info -> info.getName().equals(Enum.class.getName()));
-    }
-
-    // A property is a Script if and only if it has
-    // @Script annotation AND type String
-    static boolean isScript(FieldInfo fieldInfo, Class<?> clazz) {
-        return fieldInfo.hasAnnotation(Script.class.getName()) &&
-                String.class.equals(clazz);
-    }
-
-    // A property is a File if and only if it has
-    // @File annotation AND type String
-    static boolean isFile(FieldInfo fieldInfo, Class<?> clazz) {
-        return fieldInfo.hasAnnotation(File.class.getName()) &&
-                String.class.equals(clazz);
-    }
-
-    static boolean isShareable(ClassInfo classInfo) {
-        return classInfo.hasAnnotation(Shareable.class.getName());
-    }
-
-    static boolean isRequired(FieldInfo fieldInfo) {
-        return fieldInfo.hasAnnotation(Required.class.getName());
     }
 }

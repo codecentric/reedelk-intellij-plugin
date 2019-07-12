@@ -12,7 +12,7 @@ public class ComponentAnalyzerContext {
 
     private final ScanResult scanResult;
 
-    ComponentAnalyzerContext(ScanResult scanResult) {
+    public ComponentAnalyzerContext(ScanResult scanResult) {
         this.scanResult = scanResult;
     }
 
