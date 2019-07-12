@@ -9,12 +9,11 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
-import java.util.Arrays;
 import java.util.List;
 
 class JavascriptEditorContext extends JPanel {
 
-    JavascriptEditorContext() {
+    JavascriptEditorContext(List<ContextVariable> contextVariables) {
         setLayout(new BorderLayout());
         Border border = BorderFactory.createMatteBorder(1, 1, 1, 0, JBColor.LIGHT_GRAY);
         setBorder(border);
@@ -35,25 +34,18 @@ class JavascriptEditorContext extends JPanel {
         BoxLayout boxLayout = new BoxLayout(context, BoxLayout.PAGE_AXIS);
         context.setLayout(boxLayout);
         context.setBorder(JBUI.Borders.empty(5));
-        DEFAULT_VARIABLES.forEach(context::add);
+        contextVariables.forEach(context::add);
 
         JBScrollPane scrollPane = new JBScrollPane(context);
         scrollPane.setBorder(JBUI.Borders.empty());
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    class ContextVariable extends JLabel {
+    static class ContextVariable extends JLabel {
         static final String template = "<html><i>%s</i>: %s</html>";
-
         ContextVariable(String name, String type) {
             super(String.format(template, name, type));
             setBorder(JBUI.Borders.emptyTop(4));
         }
     }
-
-    private final List<ContextVariable> DEFAULT_VARIABLES = Arrays.asList(
-            new ContextVariable("message", "Message"),
-            new ContextVariable("payload", "Object"),
-            new ContextVariable("inboundProperties", "Map"),
-            new ContextVariable("outboundProperties", "Map"));
 }

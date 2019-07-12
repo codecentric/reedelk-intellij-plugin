@@ -28,16 +28,12 @@ public class TypeScriptPropertyRenderer implements TypePropertyRenderer {
         // Init Script Input Field with variables and context. Also we must listen on variables
         // connected to  it
 
-        ScriptInputField field = new ScriptInputField(module);
+        ScriptInputField field = new ScriptInputField(module, autocompleteVariables, autocompleteContexts);
         field.setValue(propertyAccessor.get());
         field.addListener(propertyAccessor::set);
 
-        context.subscribe("inputJsonSchema", new InputChangeListener<String>() {
-            @Override
-            public void onChange(String value) {
-                System.out.println("value");
-            }
-        });
+        context.subscribe("inputJsonSchema",
+                (InputChangeListener<String>) value -> System.out.println("value"));
 
 
         return field;
