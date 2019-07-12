@@ -6,10 +6,7 @@ import com.esb.plugin.component.domain.AutocompleteContext;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.scanner.ComponentAnalyzerContext;
 import com.intellij.openapi.diagnostic.Logger;
-import io.github.classgraph.AnnotationInfo;
-import io.github.classgraph.AnnotationParameterValue;
-import io.github.classgraph.AnnotationParameterValueList;
-import io.github.classgraph.FieldInfo;
+import io.github.classgraph.*;
 
 public class PropertyAutocompleteContextHandler implements Handler {
 
@@ -29,7 +26,7 @@ public class PropertyAutocompleteContextHandler implements Handler {
                     AutocompleteContext autocompleteContext = processAutocompleteContextInfo((AnnotationInfo) info, propertyInfo.getName());
                     builder.autocompleteContext(autocompleteContext);
                 } catch (Exception e) {
-                    LOG.warn(String.format("Could not process AutocompleteContext info for property named '%s'", propertyInfo.getName()));
+                    LOG.warn(String.format("Could not process AutocompleteContext info for property named '%s'", propertyInfo.getName()), e);
                 }
             }
         }
@@ -38,13 +35,13 @@ public class PropertyAutocompleteContextHandler implements Handler {
     private AutocompleteContext processAutocompleteContextInfo(AnnotationInfo info, String propertyName) {
         String contextName = (String) getParameterValue(info, "name");
         String file = (String) getParameterValue(info, "file");
-        AutocompleteType type = (AutocompleteType) getParameterValue(info, "type");
-        return new AutocompleteContext(contextName, type, propertyName, file);
+        AnnotationEnumValue type = (AnnotationEnumValue) getParameterValue(info, "type");
+        return new AutocompleteContext(contextName, AutocompleteType.valueOf(type.getValueName()), propertyName, file);
     }
 
     private Object getParameterValue(AnnotationInfo info, String parameterName) {
         AnnotationParameterValueList parameterValues = info.getParameterValues();
         AnnotationParameterValue parameterValue = parameterValues.get(parameterName);
-        return parameterValue.getValue();
+        return parameterValue == null ? parameterValue : parameterValue.getValue();
     }
 }

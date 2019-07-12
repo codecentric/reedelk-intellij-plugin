@@ -28,7 +28,18 @@ public class PropertyAutocompleteVariableHandler implements Handler {
                     AutocompleteVariable autocompleteVariable = processAutocompleteVariableInfo((AnnotationInfo) info);
                     builder.autocompleteVariable(autocompleteVariable);
                 } catch (Exception e) {
-                    LOG.warn(String.format("Could not process AutocompleteVariables info for property named '%s'", propertyInfo.getName()));
+                    LOG.warn(String.format("Could not process AutocompleteVariables info for property nam    class NotRelevantPropertyType implements TypeDescriptor {\n" +
+                            "\n" +
+                            "        @Override\n" +
+                            "        public Class<?> type() {\n" +
+                            "            return int.class;\n" +
+                            "        }\n" +
+                            "\n" +
+                            "        @Override\n" +
+                            "        public Object defaultValue() {\n" +
+                            "            return 12;\n" +
+                            "        }\n" +
+                            "    }ed '%s'", propertyInfo.getName()), e);
                 }
             }
         }
