@@ -1,13 +1,12 @@
 package com.esb.plugin.component.scanner;
 
-import com.esb.api.annotation.ESBComponent;
 import com.esb.plugin.assertion.PluginAssertion;
-import com.esb.plugin.commons.PackageToPath;
 import com.esb.plugin.component.domain.ComponentClass;
 import com.esb.plugin.component.domain.ComponentDescriptor;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.scanner.property.ComponentPropertyAnalyzer;
-import io.github.classgraph.*;
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.FieldInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +21,7 @@ import static java.util.Optional.of;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ComponentAnalyzerTest {
+class ComponentAnalyzerTest extends AbstractScannerTest {
 
     @Mock
     private ComponentPropertyAnalyzer propertyAnalyzer;
@@ -37,21 +36,12 @@ class ComponentAnalyzerTest {
     @Mock
     private ComponentPropertyDescriptor descriptor3;
 
-
-    private ScanResult scanResult;
     private ComponentAnalyzer analyzer;
 
     @BeforeEach
     void setUp() {
-        String whiteListPaths = PackageToPath.convert(ComponentAnalyzerTest.class.getPackage().getName());
-        scanResult = new ClassGraph()
-                .whitelistPaths(whiteListPaths)
-                .enableFieldInfo()
-                .enableAnnotationInfo()
-                .ignoreFieldVisibility()
-                .scan();
-
-        ComponentAnalyzerContext context = spy(new ComponentAnalyzerContext(scanResult));
+        super.setUp();
+        ComponentAnalyzerContext context = spy(context());
 
         doReturn(mockIcon)
                 .when(context)
@@ -70,8 +60,7 @@ class ComponentAnalyzerTest {
     @Test
     void shouldCorrectlyAnalyzeClassInfo() {
         // Given
-        ClassInfoList classesWithAnnotation = scanResult.getClassesWithAnnotation(ESBComponent.class.getName());
-        ClassInfo testComponentClassInfo = classesWithAnnotation.get(0);
+        ClassInfo testComponentClassInfo = getTargetComponentClassInfo();
 
         // When
         ComponentDescriptor descriptor = analyzer.analyze(testComponentClassInfo);
@@ -85,5 +74,10 @@ class ComponentAnalyzerTest {
                 .hasDisplayName("Test Component")
                 .hasClass(ComponentClass.PROCESSOR)
                 .hasFullyQualifiedName(TestComponent.class.getName());
+    }
+
+    @Override
+    protected Class targetComponentClazz() {
+        return TestComponent.class;
     }
 }

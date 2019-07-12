@@ -5,10 +5,8 @@ import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.domain.TypeEnumDescriptor;
 import com.esb.plugin.component.domain.TypePrimitiveDescriptor;
 import com.esb.plugin.component.scanner.property.ComponentPropertyAnalyzer;
-import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.FieldInfo;
-import io.github.classgraph.ScanResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +15,7 @@ import java.util.Optional;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ComponentPropertyAnalyzerTest {
+class ComponentPropertyAnalyzerTest extends AbstractScannerTest {
 
     private final TypePrimitiveDescriptor INT_TYPE = new TypePrimitiveDescriptor(int.class);
     private final TypePrimitiveDescriptor FLOAT_TYPE = new TypePrimitiveDescriptor(float.class);
@@ -29,17 +27,9 @@ class ComponentPropertyAnalyzerTest {
 
     @BeforeEach
     void setUp() {
-        ScanResult scanResult = new ClassGraph()
-                .whitelistPackages(ComponentPropertyAnalyzerTest.class.getPackage().getName())
-                .enableFieldInfo()
-                .enableAnnotationInfo()
-                .ignoreFieldVisibility()
-                .scan();
-
-        ComponentAnalyzerContext context = new ComponentAnalyzerContext(scanResult);
-        analyzer = new ComponentPropertyAnalyzer(context);
-
-        testComponentClassInfo = scanResult.getClassInfo(TestComponent.class.getName());
+        super.setUp();
+        analyzer = new ComponentPropertyAnalyzer(context());
+        testComponentClassInfo = getTargetComponentClassInfo();
     }
 
     @Test
@@ -140,5 +130,10 @@ class ComponentPropertyAnalyzerTest {
         PluginAssertion.assertThat(propertyDescriptor.get())
                 .hasDefaultValue(0)
                 .hasType(INT_TYPE);
+    }
+
+    @Override
+    protected Class targetComponentClazz() {
+        return TestComponent.class;
     }
 }

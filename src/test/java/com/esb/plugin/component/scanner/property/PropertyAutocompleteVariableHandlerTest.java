@@ -3,12 +3,8 @@ package com.esb.plugin.component.scanner.property;
 import com.esb.plugin.component.domain.AutocompleteVariable;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.domain.TypeDescriptor;
-import com.esb.plugin.component.scanner.ComponentAnalyzerContext;
-import io.github.classgraph.ClassGraph;
-import io.github.classgraph.ClassInfo;
+import com.esb.plugin.component.scanner.AbstractScannerTest;
 import io.github.classgraph.FieldInfo;
-import io.github.classgraph.ScanResult;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -16,35 +12,20 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
-class PropertyAutocompleteVariableHandlerTest {
+class PropertyAutocompleteVariableHandlerTest extends AbstractScannerTest {
 
-    private ComponentAnalyzerContext context;
-    private ClassInfo componentWithAutocompleteVariable;
     private PropertyAutocompleteVariableHandler handler = new PropertyAutocompleteVariableHandler();
-
-    @BeforeEach
-    void setUp() {
-        ScanResult scanResult = new ClassGraph()
-                .whitelistPackages(PropertyAutocompleteVariableHandlerTest.class.getPackage().getName())
-                .enableFieldInfo()
-                .enableAnnotationInfo()
-                .ignoreFieldVisibility()
-                .scan();
-
-        this.context = new ComponentAnalyzerContext(scanResult);
-        this.componentWithAutocompleteVariable = scanResult.getClassInfo(ComponentWithAutocompleteVariable.class.getName());
-    }
 
     @Test
     void shouldCorrectlyMapAutocompleteVariablesAnnotations() {
         // Given
-        FieldInfo scriptField = componentWithAutocompleteVariable.getFieldInfo("script");
+        FieldInfo scriptField = getTargetComponentClassInfo().getFieldInfo("script");
 
         // When
         ComponentPropertyDescriptor.Builder builder = ComponentPropertyDescriptor.builder();
         builder.propertyName("notRelevantPropertyName").type(new NotRelevantPropertyType());
 
-        handler.handle(scriptField, builder, context);
+        handler.handle(scriptField, builder, context());
 
         // Then
         ComponentPropertyDescriptor descriptor = builder.build();
@@ -53,6 +34,11 @@ class PropertyAutocompleteVariableHandlerTest {
 
         assertExistsAutocompleteVariableMatching(variables, "input", "inputContext", "{}");
         assertExistsAutocompleteVariableMatching(variables, "output", "outputContext", "{}");
+    }
+
+    @Override
+    protected Class targetComponentClazz() {
+        return ComponentWithAutocompleteVariables.class;
     }
 
     private void assertExistsAutocompleteVariableMatching(List<AutocompleteVariable> collection, String expectedVariableName, String expectedContextName, String expectedInitValue) {
