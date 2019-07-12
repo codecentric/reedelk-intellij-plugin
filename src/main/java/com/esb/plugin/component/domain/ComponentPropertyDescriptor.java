@@ -1,7 +1,7 @@
 package com.esb.plugin.component.domain;
 
-import com.esb.plugin.component.scanner.AutocompleteContext;
-import com.esb.plugin.component.scanner.AutocompleteVariable;
+import com.esb.api.annotation.Default;
+import com.esb.plugin.converter.ValueConverterFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ public class ComponentPropertyDescriptor {
 
     private String displayName;
     private String propertyName;
-    private Object defaultValue;
+    private String defaultValue;
     private PropertyRequired required;
     private TypeDescriptor propertyType;
     private final List<AutocompleteContext> autocompleteContexts = new ArrayList<>();
@@ -45,7 +45,9 @@ public class ComponentPropertyDescriptor {
     }
 
     public Object getDefaultValue() {
-        return defaultValue;
+        return Default.USE_DEFAULT_VALUE.equals(defaultValue) ?
+                propertyType.defaultValue() :
+                ValueConverterFactory.forType(propertyType).from(defaultValue);
     }
 
     public TypeDescriptor getPropertyType() {
@@ -66,7 +68,7 @@ public class ComponentPropertyDescriptor {
 
         private String displayName;
         private String propertyName;
-        private Object defaultValue;
+        private String defaultValue;
         private TypeDescriptor propertyType;
         private PropertyRequired required = PropertyRequired.NOT_REQUIRED;
         private List<AutocompleteContext> autocompleteContexts = new ArrayList<>();
@@ -77,7 +79,7 @@ public class ComponentPropertyDescriptor {
             return this;
         }
 
-        public Builder defaultValue(Object defaultValue) {
+        public Builder defaultValue(String defaultValue) {
             this.defaultValue = defaultValue;
             return this;
         }

@@ -179,6 +179,6 @@ class DefaultDescriptorDataValuesFillerTest {
                     .propertyName("zipCode")
                     .type(intTypeDescriptor)
                     .displayName("ZIP Code")
-                    .defaultValue(23411)
+                    .defaultValue("23411")
                     .build();
 }

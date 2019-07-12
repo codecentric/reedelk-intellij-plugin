@@ -55,7 +55,7 @@ class SamplePropertyDescriptors {
                     .propertyName("property6")
                     .type(integerTypeDescriptor)
                     .displayName("Property 6 Name")
-                    .defaultValue(0)
+                    .defaultValue("0")
                     .required(REQUIRED)
                     .build();
 

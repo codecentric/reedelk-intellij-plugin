@@ -8,7 +8,7 @@ import io.github.classgraph.ScanResult;
 import javax.swing.*;
 import java.awt.*;
 
-class ComponentAnalyzerContext {
+public class ComponentAnalyzerContext {
 
     private final ScanResult scanResult;
 
@@ -16,7 +16,7 @@ class ComponentAnalyzerContext {
         this.scanResult = scanResult;
     }
 
-    ClassInfo getClassInfo(String fullyQualifiedClassName) {
+    public ClassInfo getClassInfo(String fullyQualifiedClassName) {
         return scanResult.getClassInfo(fullyQualifiedClassName);
     }
 

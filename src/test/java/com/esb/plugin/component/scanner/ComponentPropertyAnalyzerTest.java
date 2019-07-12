@@ -5,6 +5,7 @@ import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.domain.TypeEnumDescriptor;
 import com.esb.plugin.component.domain.TypePrimitiveDescriptor;
+import com.esb.plugin.component.scanner.property.ComponentPropertyAnalyzer;
 import io.github.classgraph.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

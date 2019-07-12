@@ -1,8 +1,8 @@
 package com.esb.plugin.editor.properties.renderer;
 
+import com.esb.plugin.component.domain.AutocompleteContext;
+import com.esb.plugin.component.domain.AutocompleteVariable;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
-import com.esb.plugin.component.scanner.AutocompleteContext;
-import com.esb.plugin.component.scanner.AutocompleteVariable;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.widget.ContainerFactory;
 import com.esb.plugin.editor.properties.widget.DefaultPanelContext;

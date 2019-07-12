@@ -6,6 +6,7 @@ import com.esb.plugin.commons.PackageToPath;
 import com.esb.plugin.component.domain.ComponentClass;
 import com.esb.plugin.component.domain.ComponentDescriptor;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
+import com.esb.plugin.component.scanner.property.ComponentPropertyAnalyzer;
 import io.github.classgraph.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

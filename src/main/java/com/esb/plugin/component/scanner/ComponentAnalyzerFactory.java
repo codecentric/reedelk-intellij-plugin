@@ -1,5 +1,6 @@
 package com.esb.plugin.component.scanner;
 
+import com.esb.plugin.component.scanner.property.ComponentPropertyAnalyzer;
 import io.github.classgraph.ScanResult;
 
 public class ComponentAnalyzerFactory {

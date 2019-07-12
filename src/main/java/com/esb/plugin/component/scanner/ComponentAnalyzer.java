@@ -6,6 +6,7 @@ import com.esb.plugin.component.domain.ComponentClass;
 import com.esb.plugin.component.domain.ComponentDefaultDescriptor;
 import com.esb.plugin.component.domain.ComponentDescriptor;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
+import com.esb.plugin.component.scanner.property.ComponentPropertyAnalyzer;
 import io.github.classgraph.AnnotationInfo;
 import io.github.classgraph.AnnotationParameterValueList;
 import io.github.classgraph.ClassInfo;

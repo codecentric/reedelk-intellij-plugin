@@ -1,4 +1,4 @@
-package com.esb.plugin.component.scanner;
+package com.esb.plugin.component.domain;
 
 import java.util.Objects;
 
