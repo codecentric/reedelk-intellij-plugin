@@ -1,5 +1,6 @@
 package com.esb.plugin.component.scanner.property;
 
+import com.esb.api.annotation.AutocompleteType;
 import com.esb.plugin.component.domain.AutocompleteContext;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.domain.TypeDescriptor;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public class PropertyAutocompleteContextHandlerTest extends AbstractScannerTest {
 
@@ -31,11 +33,32 @@ public class PropertyAutocompleteContextHandlerTest extends AbstractScannerTest 
         List<AutocompleteContext> contexts = descriptor.getAutocompleteContexts();
         assertThat(contexts).hasSize(3);
 
+        assertExistsAutocompleteContextMatching(contexts, "inputContext", "script", AutocompleteType.JSON_SCHEMA, null);
+        assertExistsAutocompleteContextMatching(contexts, "inputContextWithInlineSchema", "script", AutocompleteType.JSON_SCHEMA, "metadata/person.schema.json");
+        assertExistsAutocompleteContextMatching(contexts, "anotherContext", "script", AutocompleteType.TOKENS, "metadata/autocomplete.txt");
     }
 
     @Override
     protected Class targetComponentClazz() {
         return ComponentWithAutocompleteContexts.class;
+    }
+
+    private void assertExistsAutocompleteContextMatching(List<AutocompleteContext> collection,
+                                                         String expectedContextName,
+                                                         String expectedPropertyName,
+                                                         AutocompleteType expectedAutocompleteType,
+                                                         String expectedFileName) {
+        for (AutocompleteContext context : collection) {
+            String actualFileName = context.getFile();
+            String actualContextName = context.getContextName();
+            String actualPropertyName = context.getPropertyName();
+            AutocompleteType actualAutocompleteType = context.getAutocompleteType();
+            if ((expectedFileName == null && actualFileName == null || expectedFileName.equals(actualFileName)) &&
+                    expectedContextName.equals(actualContextName) &&
+                    expectedPropertyName.equals(actualPropertyName) &&
+                    expectedAutocompleteType.equals(actualAutocompleteType)) return;
+        }
+        fail("Could not find Autocomplete Context definition matching context name=%s, property name=%s, type=%s, file name=%s");
     }
 
     class NotRelevantPropertyType implements TypeDescriptor {
