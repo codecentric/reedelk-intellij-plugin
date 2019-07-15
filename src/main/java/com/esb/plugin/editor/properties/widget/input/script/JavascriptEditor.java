@@ -42,11 +42,11 @@ public class JavascriptEditor extends ThreeComponentsSplitter implements Disposa
 
     JavascriptEditor(@NotNull Project project,
                      @NotNull JavascriptEditorMode mode,
-                     @NotNull JavascriptEditorContext context,
-                     @NotNull SuggestionProvider suggestionProvider,
+                     @NotNull ScriptContextManager contextManager,
                      @NotNull String initialText) {
 
         super(HORIZONTAL);
+
 
         this.project = project;
         this.document = EditorFactory.getInstance().createDocument(initialText);
@@ -56,13 +56,15 @@ public class JavascriptEditor extends ThreeComponentsSplitter implements Disposa
         SuggestionDropDownDecorator.decorate(
                 (JTextComponent) editor.getContentComponent(),
                 document,
-                new TextComponentWordSuggestionClient(project, suggestionProvider));
+                new TextComponentWordSuggestionClient(project, contextManager));
 
         JComponent editorComponent = editor.getComponent();
 
         if (JavascriptEditorMode.DEFAULT.equals(mode)) {
             editorComponent.setBorder(EDITOR_BORDER);
         }
+
+        JavascriptEditorContext context = new JavascriptEditorContext(contextManager.getVariables());
 
         setFirstComponent(context);
         setLastComponent(editorComponent);

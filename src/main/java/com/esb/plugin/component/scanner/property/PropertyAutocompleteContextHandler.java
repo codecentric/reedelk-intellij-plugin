@@ -14,8 +14,17 @@ public class PropertyAutocompleteContextHandler implements Handler {
 
     @Override
     public void handle(FieldInfo propertyInfo, ComponentPropertyDescriptor.Builder builder, ComponentAnalyzerContext context) {
-        boolean hasAutocompleteContextAnnotation = propertyInfo.hasAnnotation(AutocompleteContexts.class.getName());
+        // Check if there are multiple annotations
+        boolean hasAutocompleteContextAnnotation = propertyInfo.hasAnnotation(com.esb.api.annotation.AutocompleteContext.class.getName());
         if (hasAutocompleteContextAnnotation) {
+            AnnotationInfo info = propertyInfo.getAnnotationInfo(com.esb.api.annotation.AutocompleteContext.class.getName());
+            AutocompleteContext autocompleteContext = processAutocompleteContextInfo(info, propertyInfo.getName());
+            builder.autocompleteContext(autocompleteContext);
+        }
+
+        // If there are more than one
+        boolean hasAutocompleteContextsAnnotation = propertyInfo.hasAnnotation(AutocompleteContexts.class.getName());
+        if (hasAutocompleteContextsAnnotation) {
 
             AnnotationInfo annotationInfo = propertyInfo.getAnnotationInfo(AutocompleteContexts.class.getName());
             AnnotationParameterValueList autocompleteContextsList = annotationInfo.getParameterValues();

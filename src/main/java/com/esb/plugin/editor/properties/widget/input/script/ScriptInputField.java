@@ -1,8 +1,6 @@
 package com.esb.plugin.editor.properties.widget.input.script;
 
 import com.esb.plugin.commons.Labels;
-import com.esb.plugin.component.domain.AutocompleteContext;
-import com.esb.plugin.component.domain.AutocompleteVariable;
 import com.esb.plugin.editor.properties.widget.input.InputChangeListener;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
@@ -16,7 +14,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;
 
 import static com.esb.plugin.commons.Icons.Script;
 import static java.awt.BorderLayout.CENTER;
@@ -31,8 +28,7 @@ public class ScriptInputField extends JPanel implements ActionListener, Document
     private final Module module;
 
     public ScriptInputField(@NotNull Module module,
-                            @NotNull List<AutocompleteVariable> autocompleteVariables,
-                            @NotNull List<AutocompleteContext> autocompleteContexts) {
+                            @NotNull ScriptContextManager context) {
         super(new BorderLayout());
 
         this.module = module;
@@ -41,9 +37,9 @@ public class ScriptInputField extends JPanel implements ActionListener, Document
         add(openEditorBtn, NORTH);
 
         editor = JavascriptEditorFactory.get()
+                .mode(JavascriptEditorMode.DEFAULT)
                 .project(module.getProject())
-                .autocompleteVariables(autocompleteVariables)
-                .autocompleteContexts(autocompleteContexts)
+                .context(context)
                 .build();
 
         editor.addDocumentListener(this);

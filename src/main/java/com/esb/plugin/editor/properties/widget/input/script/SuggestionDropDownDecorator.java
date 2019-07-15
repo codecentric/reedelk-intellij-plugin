@@ -1,7 +1,9 @@
 package com.esb.plugin.editor.properties.widget.input.script;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentListener;
+import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.JBList;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,8 +23,8 @@ public class SuggestionDropDownDecorator {
     private final SuggestionClient suggestionClient;
 
     private JPopupMenu popupMenu = new JPopupMenu();
-    private DefaultListModel<String> listModel = new DefaultListModel<>();
-    private JList<String> listComp = new JBList<>(listModel);
+    private DefaultListModel<Suggestion> suggestionListModel = new DefaultListModel<>();
+    private JBList<Suggestion> listComp = new JBList<>(suggestionListModel);
     private boolean disableTextEvent;
 
     public SuggestionDropDownDecorator(@NotNull JTextComponent invoker, Document document, @NotNull SuggestionClient suggestionClient) {
@@ -31,6 +33,7 @@ public class SuggestionDropDownDecorator {
 
         this.listComp.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         this.listComp.setFocusable(false);
+        listComp.setCellRenderer(new MyCellRenderer());
 
         Font font = new Font("Menlo", Font.PLAIN, 20);
         listComp.setFont(font);
@@ -50,6 +53,15 @@ public class SuggestionDropDownDecorator {
 
     public static void decorate(JTextComponent component, Document document, SuggestionClient suggestionClient) {
         new SuggestionDropDownDecorator(component, document, suggestionClient);
+    }
+
+    class MyCellRenderer extends ListCellRendererWrapper<Suggestion> {
+
+        @Override
+        public void customize(JList list, Suggestion value, int index, boolean selected, boolean hasFocus) {
+            setIcon(AllIcons.Nodes.Field);
+            setText(value.getToken());
+        }
     }
 
     class SuggestionDocumentListener implements DocumentListener {
@@ -74,7 +86,7 @@ public class SuggestionDropDownDecorator {
 
 
             SwingUtilities.invokeLater(() -> {
-                List<String> suggestions = suggestionClient.getSuggestions(invoker);
+                List<Suggestion> suggestions = suggestionClient.getSuggestions(invoker);
                 if (suggestions != null && !suggestions.isEmpty()) {
                     this.popupMenu.setPopupSize(300, suggestions.size() * 33 + 8);
                     showPopup(suggestions);
@@ -85,9 +97,9 @@ public class SuggestionDropDownDecorator {
         }
     }
 
-    private void showPopup(List<String> suggestions) {
-        listModel.clear();
-        suggestions.forEach(listModel::addElement);
+    private void showPopup(List<Suggestion> suggestions) {
+        suggestionListModel.clear();
+        suggestions.forEach(suggestionListModel::addElement);
         Point p = suggestionClient.getPopupLocation(invoker);
         if (p == null) {
             return;
@@ -122,9 +134,9 @@ public class SuggestionDropDownDecorator {
             int selectedIndex = listComp.getSelectedIndex();
             if (selectedIndex != -1) {
                 popupMenu.setVisible(false);
-                String selectedValue = listComp.getSelectedValue();
+                Suggestion selectedValue = listComp.getSelectedValue();
                 disableTextEvent = true;
-                suggestionClient.setSelectedText(invoker, document, selectedValue);
+                suggestionClient.setSelectedText(invoker, document, selectedValue.getToken());
                 disableTextEvent = false;
                 e.consume();
             }
@@ -132,9 +144,9 @@ public class SuggestionDropDownDecorator {
     }
 
     private void moveDown(KeyEvent keyEvent) {
-        if (popupMenu.isVisible() && listModel.getSize() > 0) {
+        if (popupMenu.isVisible() && suggestionListModel.getSize() > 0) {
             int selectedIndex = listComp.getSelectedIndex();
-            if (selectedIndex < listModel.getSize()) {
+            if (selectedIndex < suggestionListModel.getSize()) {
                 listComp.setSelectedIndex(selectedIndex + 1);
                 keyEvent.consume();
             }
@@ -142,7 +154,7 @@ public class SuggestionDropDownDecorator {
     }
 
     private void moveUp(KeyEvent keyEvent) {
-        if (popupMenu.isVisible() && listModel.getSize() > 0) {
+        if (popupMenu.isVisible() && suggestionListModel.getSize() > 0) {
             int selectedIndex = listComp.getSelectedIndex();
             if (selectedIndex > 0) {
                 listComp.setSelectedIndex(selectedIndex - 1);

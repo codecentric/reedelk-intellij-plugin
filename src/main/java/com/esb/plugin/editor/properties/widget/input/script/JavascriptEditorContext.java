@@ -13,7 +13,7 @@ import java.util.List;
 
 class JavascriptEditorContext extends JPanel {
 
-    JavascriptEditorContext(List<ContextVariable> contextVariables) {
+    JavascriptEditorContext(List<ScriptContextManager.ContextVariable> contextVariables) {
         setLayout(new BorderLayout());
         Border border = BorderFactory.createMatteBorder(1, 1, 1, 0, JBColor.LIGHT_GRAY);
         setBorder(border);
@@ -34,16 +34,20 @@ class JavascriptEditorContext extends JPanel {
         BoxLayout boxLayout = new BoxLayout(context, BoxLayout.PAGE_AXIS);
         context.setLayout(boxLayout);
         context.setBorder(JBUI.Borders.empty(5));
-        contextVariables.forEach(context::add);
+        contextVariables
+                .stream()
+                .map(contextVariable -> new ContextVariableLabel(contextVariable.name, contextVariable.type))
+                .forEach(context::add);
 
         JBScrollPane scrollPane = new JBScrollPane(context);
         scrollPane.setBorder(JBUI.Borders.empty());
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    static class ContextVariable extends JLabel {
+    static class ContextVariableLabel extends JLabel {
         static final String template = "<html><i>%s</i>: %s</html>";
-        ContextVariable(String name, String type) {
+
+        ContextVariableLabel(String name, String type) {
             super(String.format(template, name, type));
             setBorder(JBUI.Borders.emptyTop(4));
         }

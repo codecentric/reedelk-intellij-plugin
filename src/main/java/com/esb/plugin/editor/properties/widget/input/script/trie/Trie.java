@@ -1,5 +1,8 @@
 package com.esb.plugin.editor.properties.widget.input.script.trie;
 
+import com.esb.plugin.editor.properties.widget.input.script.Suggestion;
+import com.esb.plugin.editor.properties.widget.input.script.SuggestionType;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -62,7 +65,7 @@ public class Trie {
         return current.isEndOfWord();
     }
 
-    public List<String> searchByPrefix(String prefix) {
+    public List<Suggestion> searchByPrefix(String prefix) {
         TrieNode current = root;
         boolean notFound = false;
         StringBuilder tmpWord = new StringBuilder();
@@ -82,7 +85,7 @@ public class Trie {
             return Collections.emptyList();
         }
 
-        List<String> allWords = new ArrayList<>();
+        List<Suggestion> allWords = new ArrayList<>();
 
         int indexOfDot = tmpWord.lastIndexOf(".");
         String finalString = tmpWord.toString();
@@ -94,9 +97,9 @@ public class Trie {
         return allWords;
     }
 
-    private void recursive(TrieNode current, String tmpWord, List<String> allWords) {
+    private void recursive(TrieNode current, String tmpWord, List<Suggestion> allWords) {
         if (current.isEndOfWord()) {
-            allWords.add(tmpWord);
+            allWords.add(new Suggestion(SuggestionType.VARIABLE, tmpWord));
         }
 
         Map<Character, TrieNode> children = current.getChildren();

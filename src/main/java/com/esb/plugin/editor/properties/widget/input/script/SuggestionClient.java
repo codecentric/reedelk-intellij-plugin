@@ -12,6 +12,6 @@ public interface SuggestionClient {
 
     void setSelectedText(JTextComponent invoker, Document document, String selectedValue);
 
-    List<String> getSuggestions(JTextComponent invoker);
+    List<Suggestion> getSuggestions(JTextComponent invoker);
 
 }

@@ -86,7 +86,7 @@ public class TextComponentWordSuggestionClient implements SuggestionClient {
     }
 
     @Override
-    public List<String> getSuggestions(JTextComponent textComponent) {
+    public List<Suggestion> getSuggestions(JTextComponent textComponent) {
 
         int currentCaretPosition = textComponent.getCaretPosition();
         if (previousCaretPosition > currentCaretPosition) {

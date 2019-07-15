@@ -14,10 +14,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.function.Predicate;
 
-public class DefaultPropertiesPanel extends JBPanel implements DefaultPanelContext {
+public class DefaultPropertiesPanel extends JBPanel implements PropertyPanelContext {
 
-    private final Map<String, List<InputChangeListener>> PROPERTY_CHANGE_LISTENER = new HashMap<>();
+    private final Map<String, List<InputChangeListener>> propertyChangeListeners = new HashMap<>();
     private final Map<String, PropertyAccessor> propertyAccessors = new HashMap<>();
 
     private final List<ComponentPropertyDescriptor> descriptors;
@@ -46,15 +47,15 @@ public class DefaultPropertiesPanel extends JBPanel implements DefaultPanelConte
     @Override
     public void subscribe(String propertyName, InputChangeListener<?> inputChangeListener) {
         List<InputChangeListener> changeListenersForProperty =
-                PROPERTY_CHANGE_LISTENER.getOrDefault(propertyName, new ArrayList<>());
+                propertyChangeListeners.getOrDefault(propertyName, new ArrayList<>());
         changeListenersForProperty.add(inputChangeListener);
-        PROPERTY_CHANGE_LISTENER.put(propertyName, changeListenersForProperty);
+        propertyChangeListeners.put(propertyName, changeListenersForProperty);
     }
 
     @Override
     public <T> void notify(String propertyName, T newValue) {
-        if (PROPERTY_CHANGE_LISTENER.containsKey(propertyName)) {
-            PROPERTY_CHANGE_LISTENER.get(propertyName).forEach(inputChangeListener ->
+        if (propertyChangeListeners.containsKey(propertyName)) {
+            propertyChangeListeners.get(propertyName).forEach(inputChangeListener ->
                     inputChangeListener.onChange(newValue));
         }
     }
@@ -63,6 +64,12 @@ public class DefaultPropertiesPanel extends JBPanel implements DefaultPanelConte
     public <T> T getPropertyValue(String propertyName) {
         return propertyAccessors.get(propertyName).get();
     }
+
+    @Override
+    public Optional<ComponentPropertyDescriptor> getDescriptorMatching(Predicate<ComponentPropertyDescriptor> filter) {
+        return descriptors.stream().filter(filter).findFirst();
+    }
+
 
     private void initAccessors() {
         descriptors.forEach(propertyDescriptor -> {

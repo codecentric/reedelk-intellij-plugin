@@ -13,9 +13,9 @@ import com.esb.plugin.configuration.widget.ConfigControlPanel;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.esb.plugin.editor.properties.widget.ContainerFactory;
-import com.esb.plugin.editor.properties.widget.DefaultPanelContext;
 import com.esb.plugin.editor.properties.widget.DefaultPropertiesPanel;
 import com.esb.plugin.editor.properties.widget.FormBuilder;
+import com.esb.plugin.editor.properties.widget.PropertyPanelContext;
 import com.esb.plugin.editor.properties.widget.input.ConfigSelector;
 import com.esb.plugin.service.module.ConfigService;
 import com.esb.plugin.service.module.impl.ConfigMetadata;
@@ -48,7 +48,7 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
     }
 
     @Override
-    public JComponent render(Module module, ComponentPropertyDescriptor descriptor, PropertyAccessor accessor, DefaultPanelContext context) {
+    public JComponent render(Module module, ComponentPropertyDescriptor descriptor, PropertyAccessor accessor, PropertyPanelContext context) {
         TypeObjectDescriptor objectDescriptor = (TypeObjectDescriptor) descriptor.getPropertyType();
         return objectDescriptor.isShareable() ?
                 renderShareable(module, objectDescriptor, accessor) :

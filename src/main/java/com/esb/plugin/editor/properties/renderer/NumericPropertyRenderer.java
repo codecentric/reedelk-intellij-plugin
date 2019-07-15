@@ -2,7 +2,7 @@ package com.esb.plugin.editor.properties.renderer;
 
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
-import com.esb.plugin.editor.properties.widget.DefaultPanelContext;
+import com.esb.plugin.editor.properties.widget.PropertyPanelContext;
 import com.esb.plugin.editor.properties.widget.input.InputField;
 import com.intellij.openapi.module.Module;
 
@@ -18,7 +18,7 @@ public abstract class NumericPropertyRenderer<T> implements TypePropertyRenderer
     protected abstract InputField<T> getInputField();
 
     @Override
-    public JComponent render(Module module, ComponentPropertyDescriptor propertyDescriptor, PropertyAccessor propertyAccessor, DefaultPanelContext defaultPanelContext) {
+    public JComponent render(Module module, ComponentPropertyDescriptor propertyDescriptor, PropertyAccessor propertyAccessor, PropertyPanelContext propertyPanelContext) {
         InputField<T> inputField = getInputField();
         inputField.setValue(propertyAccessor.get());
         inputField.addListener(propertyAccessor::set);

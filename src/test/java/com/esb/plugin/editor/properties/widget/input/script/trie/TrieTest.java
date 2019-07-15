@@ -1,11 +1,13 @@
 package com.esb.plugin.editor.properties.widget.input.script.trie;
 
+import com.esb.plugin.editor.properties.widget.input.script.Suggestion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 class TrieTest {
 
@@ -60,7 +62,7 @@ class TrieTest {
         Trie trie = new Trie();
 
         // When
-        List<String> suggestions = trie.searchByPrefix("f");
+        List<Suggestion> suggestions = trie.searchByPrefix("f");
 
         // Then
         assertThat(suggestions).isEmpty();
@@ -69,27 +71,33 @@ class TrieTest {
     @Test
     void shouldSearchByPrefixReturnCorrectSuggestions1() {
         // When
-        List<String> suggestions = trie.searchByPrefix("A");
+        List<Suggestion> suggestions = trie.searchByPrefix("A");
 
         // Then
-        assertThat(suggestions).containsExactlyInAnyOrder("Abc", "Aabc", "Aabbc", "Aabbcc");
+        fail("Complete me");
+        // TODO:
+        //assertThat(suggestions).containsExactlyInAnyOrder("Abc", "Aabc", "Aabbc", "Aabbcc");
     }
 
     @Test
     void shouldSearchByPrefixReturnCorrectSuggestions2() {
         // When
-        List<String> suggestions = trie.searchByPrefix("Aabb");
+        List<Suggestion> suggestions = trie.searchByPrefix("Aabb");
 
         // Then
-        assertThat(suggestions).containsExactlyInAnyOrder("Aabbc", "Aabbcc");
+        fail("Complete me");
+        // TODO:
+        //assertThat(suggestions).containsExactlyInAnyOrder("Aabbc", "Aabbcc");
     }
 
     @Test
     void shouldSearchByPrefixReturnCorrectSuggestions3() {
         // When
-        List<String> suggestions = trie.searchByPrefix("Bbccd");
+        List<Suggestion> suggestions = trie.searchByPrefix("Bbccd");
 
         // Then
-        assertThat(suggestions).containsExactlyInAnyOrder("Bbccd", "Bbccdd");
+        fail("Complete me");
+        // TODO:
+        //assertThat(suggestions).containsExactlyInAnyOrder("Bbccd", "Bbccdd");
     }
 }
