@@ -9,34 +9,30 @@ import org.everit.json.schema.loader.SchemaClient;
 import org.everit.json.schema.loader.SchemaLoader;
 import org.everit.json.schema.loader.internal.DefaultSchemaClient;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
-import static java.util.Arrays.asList;
-import static java.util.Collections.unmodifiableList;
 
 public class JsonSchemaSuggestionTokenizer {
 
     private final Type DEFAULT = Type.OBJECT;
     private final Module module;
+    private final VirtualFile jsonSchema;
+    private final String parentFolder;
 
-    public JsonSchemaSuggestionTokenizer(Module module) {
+    public JsonSchemaSuggestionTokenizer(@NotNull Module module, @NotNull VirtualFile jsonSchema) {
         this.module = module;
+        this.jsonSchema = jsonSchema;
+        this.parentFolder = jsonSchema.getParent().getPath();
     }
 
-    public SchemaDescriptor read(String parent, VirtualFile virtualFile) {
-        try (InputStream inputStream = virtualFile.getInputStream()) {
+    public SchemaDescriptor read(String parent) {
+        try (InputStream inputStream = jsonSchema.getInputStream()) {
             return findJsonSchemaTokens(parent, inputStream);
         } catch (IOException e) {
             return new SchemaDescriptor(new ArrayList<>());
@@ -45,9 +41,13 @@ public class JsonSchemaSuggestionTokenizer {
 
     SchemaDescriptor findJsonSchemaTokens(String parent, InputStream inputStream) {
         JSONObject rawSchema = new JSONObject(new JSONTokener(inputStream));
+        String rootId = rawSchema.getString("$id");
+        int lastSlash = rootId.lastIndexOf("/");
+        String rootPath = rootId.substring(0, lastSlash);
+
         SchemaLoader loader = SchemaLoader.builder()
                 .schemaJson(rawSchema)
-                .schemaClient(new ProjectClassPathClient(module))
+                .schemaClient(new ProjectClassPathClient(module, parentFolder, rootPath))
                 .build();
 
         Schema schema = loader.load().build();
@@ -82,43 +82,42 @@ public class JsonSchemaSuggestionTokenizer {
 
     static class ProjectClassPathClient implements SchemaClient {
 
-        private static final List<String> HANDLED_PREFIXES = unmodifiableList(asList("classpath://", "classpath:/", "classpath:"));
-
         private final SchemaClient fallbackClient;
-        private Module module;
+        private final String parentFolder;
+        private final String rootHostPath;
+        private final Module module;
 
-        ProjectClassPathClient(@NotNull Module module) {
+        ProjectClassPathClient(@NotNull Module module, @NotNull String parentFolder, @NotNull String rootHostPath) {
             this.fallbackClient = new DefaultSchemaClient();
+            this.parentFolder = parentFolder;
+            this.rootHostPath = rootHostPath;
             this.module = module;
         }
 
         @Override
         public InputStream get(String url) {
+            if (url.startsWith(rootHostPath)) {
+                String relative = url.substring(rootHostPath.length());
+                Path path = Paths.get(parentFolder, relative);
+                try {
+                    return new FileInputStream(path.toFile());
+                } catch (FileNotFoundException e) {
+                    throw new UncheckedIOException(e);
+                }
+            }
+
             return ModuleUtils.getResourcesFolder(module)
                     .map(resourcesFolder -> loadFromResources(resourcesFolder, url))
                     .orElseGet(() -> fallbackClient.get(url));
         }
 
-        @Nullable
         private InputStream loadFromResources(String resourcesFolder, String url) {
             Path path = Paths.get(resourcesFolder, url);
             try {
                 return new FileInputStream(path.toFile());
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                return null;
+                throw new UncheckedIOException(e);
             }
-        }
-
-        private InputStream loadFromClasspath(String str) {
-
-            return getClass().getResourceAsStream(str);
-        }
-
-        private Optional<String> handleProtocol(String url) {
-            return HANDLED_PREFIXES.stream().filter(url::startsWith)
-                    .map(prefix -> "/" + url.substring(prefix.length()))
-                    .findFirst();
         }
     }
 }

@@ -48,12 +48,13 @@ public class ScriptContextManager implements SuggestionProvider {
                 panelContext.subscribe(propertyName,
                         (InputChangeListener<String>) value -> System.out.println("value"));
 
-                JsonSchemaSuggestionTokenizer parser = new JsonSchemaSuggestionTokenizer(module);
+
                 ModuleUtils.getResourcesFolder(module).ifPresent(resourcesFolderPath -> {
 
                     VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(VirtualFileManager.constructUrl("file", resourcesFolderPath + "/" + fileName));
 
-                    JsonSchemaSuggestionTokenizer.SchemaDescriptor read = parser.read(variableName, file);
+                    JsonSchemaSuggestionTokenizer parser = new JsonSchemaSuggestionTokenizer(module, file);
+                    JsonSchemaSuggestionTokenizer.SchemaDescriptor read = parser.read(variableName);
                     contextVariables.add(new ContextVariable(variableName, read.getType().displayName()));
                     suggestionTree.insert(variableName);
                     read.getTokens().forEach(new Consumer<String>() {
@@ -78,10 +79,10 @@ public class ScriptContextManager implements SuggestionProvider {
 
 
     @Override
-    public List<Suggestion> suggest(String text) {
-        List<Suggestion> strings = suggestionTree.searchByPrefix(text);
+    public Set<Suggestion> suggest(String text) {
+        Set<Suggestion> strings = suggestionTree.searchByPrefix(text);
         if (strings == null) {
-            return new ArrayList<>();
+            return new HashSet<>();
         }
         return strings;
     }

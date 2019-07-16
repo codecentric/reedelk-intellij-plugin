@@ -12,7 +12,7 @@ import javax.swing.text.Utilities;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.Collections;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Matches individual words instead of complete text
@@ -86,7 +86,7 @@ public class TextComponentWordSuggestionClient implements SuggestionClient {
     }
 
     @Override
-    public List<Suggestion> getSuggestions(JTextComponent textComponent) {
+    public Set<Suggestion> getSuggestions(JTextComponent textComponent) {
 
         int currentCaretPosition = textComponent.getCaretPosition();
         if (previousCaretPosition > currentCaretPosition) {
@@ -102,10 +102,10 @@ public class TextComponentWordSuggestionClient implements SuggestionClient {
             LOG.info("Get suggestions for text: " + text);
             return text != null ?
                     suggestionProvider.suggest(text) :
-                    Collections.emptyList();
+                    Collections.emptySet();
         } catch (BadLocationException e) {
             System.err.println(e);
-            return Collections.emptyList();
+            return Collections.emptySet();
         }
     }
 

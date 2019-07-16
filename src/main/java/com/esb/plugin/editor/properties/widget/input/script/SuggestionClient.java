@@ -4,7 +4,7 @@ import com.intellij.openapi.editor.Document;
 
 import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.util.List;
+import java.util.Set;
 
 public interface SuggestionClient {
 
@@ -12,6 +12,6 @@ public interface SuggestionClient {
 
     void setSelectedText(JTextComponent invoker, Document document, String selectedValue);
 
-    List<Suggestion> getSuggestions(JTextComponent invoker);
+    Set<Suggestion> getSuggestions(JTextComponent invoker);
 
 }

@@ -12,7 +12,7 @@ import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.List;
+import java.util.Set;
 
 import static java.awt.event.KeyEvent.*;
 
@@ -86,7 +86,7 @@ public class SuggestionDropDownDecorator {
 
 
             SwingUtilities.invokeLater(() -> {
-                List<Suggestion> suggestions = suggestionClient.getSuggestions(invoker);
+                Set<Suggestion> suggestions = suggestionClient.getSuggestions(invoker);
                 if (suggestions != null && !suggestions.isEmpty()) {
                     this.popupMenu.setPopupSize(300, suggestions.size() * 33 + 8);
                     showPopup(suggestions);
@@ -97,7 +97,7 @@ public class SuggestionDropDownDecorator {
         }
     }
 
-    private void showPopup(List<Suggestion> suggestions) {
+    private void showPopup(Set<Suggestion> suggestions) {
         suggestionListModel.clear();
         suggestions.forEach(suggestionListModel::addElement);
         Point p = suggestionClient.getPopupLocation(invoker);

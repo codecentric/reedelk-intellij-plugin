@@ -3,10 +3,10 @@ package com.esb.plugin.editor.properties.widget.input.script.trie;
 import com.esb.plugin.editor.properties.widget.input.script.Suggestion;
 import com.esb.plugin.editor.properties.widget.input.script.SuggestionType;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A trie or prefix tree, is an ordered tree structure, which takes advantage of the keys
@@ -65,7 +65,7 @@ public class Trie {
         return current.isEndOfWord();
     }
 
-    public List<Suggestion> searchByPrefix(String prefix) {
+    public Set<Suggestion> searchByPrefix(String prefix) {
         TrieNode current = root;
         boolean notFound = false;
         StringBuilder tmpWord = new StringBuilder();
@@ -80,12 +80,12 @@ public class Trie {
             current = current.getChildren().get(a);
         }
 
-        if (notFound) return Collections.emptyList();
+        if (notFound) return Collections.emptySet();
         else if (current.isEndOfWord() && current.getChildren().isEmpty()) {
-            return Collections.emptyList();
+            return Collections.emptySet();
         }
 
-        List<Suggestion> allWords = new ArrayList<>();
+        Set<Suggestion> allWords = new HashSet<>();
 
         int indexOfDot = tmpWord.lastIndexOf(".");
         String finalString = tmpWord.toString();
@@ -97,7 +97,7 @@ public class Trie {
         return allWords;
     }
 
-    private void recursive(TrieNode current, String tmpWord, List<Suggestion> allWords) {
+    private void recursive(TrieNode current, String tmpWord, Set<Suggestion> allWords) {
         if (current.isEndOfWord()) {
             allWords.add(new Suggestion(SuggestionType.VARIABLE, tmpWord));
         }
@@ -106,6 +106,8 @@ public class Trie {
         for (Map.Entry<Character, TrieNode> child : children.entrySet()) {
             if (child.getKey() != '.') {
                 recursive(child.getValue(), tmpWord + child.getKey(), allWords);
+            } else {
+                allWords.add(new Suggestion(SuggestionType.VARIABLE, tmpWord));
             }
         }
     }

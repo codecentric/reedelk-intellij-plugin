@@ -4,7 +4,7 @@ import com.esb.plugin.editor.properties.widget.input.script.Suggestion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -62,7 +62,7 @@ class TrieTest {
         Trie trie = new Trie();
 
         // When
-        List<Suggestion> suggestions = trie.searchByPrefix("f");
+        Set<Suggestion> suggestions = trie.searchByPrefix("f");
 
         // Then
         assertThat(suggestions).isEmpty();
@@ -71,7 +71,7 @@ class TrieTest {
     @Test
     void shouldSearchByPrefixReturnCorrectSuggestions1() {
         // When
-        List<Suggestion> suggestions = trie.searchByPrefix("A");
+        Set<Suggestion> suggestions = trie.searchByPrefix("A");
 
         // Then
         fail("Complete me");
@@ -82,7 +82,7 @@ class TrieTest {
     @Test
     void shouldSearchByPrefixReturnCorrectSuggestions2() {
         // When
-        List<Suggestion> suggestions = trie.searchByPrefix("Aabb");
+        Set<Suggestion> suggestions = trie.searchByPrefix("Aabb");
 
         // Then
         fail("Complete me");
@@ -93,7 +93,7 @@ class TrieTest {
     @Test
     void shouldSearchByPrefixReturnCorrectSuggestions3() {
         // When
-        List<Suggestion> suggestions = trie.searchByPrefix("Bbccd");
+        Set<Suggestion> suggestions = trie.searchByPrefix("Bbccd");
 
         // Then
         fail("Complete me");

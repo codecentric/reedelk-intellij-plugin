@@ -17,7 +17,7 @@ class JsonSchemaSuggestionTokenizerTest {
         try (InputStream personSchemaInputStream =
                      JsonSchemaSuggestionTokenizerTest.class.getResourceAsStream("/person.schema.json")) {
             // When
-            JsonSchemaSuggestionTokenizer tokenizer = new JsonSchemaSuggestionTokenizer();
+            JsonSchemaSuggestionTokenizer tokenizer = new JsonSchemaSuggestionTokenizer(null, null);
             SchemaDescriptor descriptor = tokenizer.findJsonSchemaTokens("input", personSchemaInputStream);
 
             // Then
