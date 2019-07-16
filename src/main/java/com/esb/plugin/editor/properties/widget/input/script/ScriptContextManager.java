@@ -25,7 +25,7 @@ public class ScriptContextManager implements SuggestionProvider {
             new ContextVariable("outboundProperties", "Map"));
 
     private final Trie suggestionTree;
-    private final List<ContextVariable> contextVariables = new ArrayList<>();
+    private final Set<ContextVariable> contextVariables = new HashSet<>();
 
     public ScriptContextManager(@NotNull Module module,
                                 @NotNull PropertyPanelContext panelContext,
@@ -55,7 +55,10 @@ public class ScriptContextManager implements SuggestionProvider {
 
                     JsonSchemaSuggestionTokenizer parser = new JsonSchemaSuggestionTokenizer(module, file);
                     JsonSchemaSuggestionTokenizer.SchemaDescriptor read = parser.read(variableName);
-                    contextVariables.add(new ContextVariable(variableName, read.getType().displayName()));
+                    ContextVariable contextVariable = new ContextVariable(variableName, read.getType().displayName());
+                    contextVariables.remove(contextVariable);
+                    contextVariables.add(contextVariable);
+
                     suggestionTree.insert(variableName);
                     read.getTokens().forEach(new Consumer<String>() {
                         @Override
@@ -87,8 +90,8 @@ public class ScriptContextManager implements SuggestionProvider {
         return strings;
     }
 
-    public List<ContextVariable> getVariables() {
-        return Collections.unmodifiableList(contextVariables);
+    public Set<ContextVariable> getVariables() {
+        return Collections.unmodifiableSet(contextVariables);
     }
 
 
@@ -99,6 +102,19 @@ public class ScriptContextManager implements SuggestionProvider {
         public ContextVariable(String name, String type) {
             this.name = name;
             this.type = type;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ContextVariable that = (ContextVariable) o;
+            return name.equals(that.name);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(name);
         }
     }
 }

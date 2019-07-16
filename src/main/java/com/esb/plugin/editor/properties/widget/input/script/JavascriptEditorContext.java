@@ -9,11 +9,11 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
-import java.util.List;
+import java.util.Set;
 
 class JavascriptEditorContext extends JPanel {
 
-    JavascriptEditorContext(List<ScriptContextManager.ContextVariable> contextVariables) {
+    JavascriptEditorContext(Set<ScriptContextManager.ContextVariable> contextVariables) {
         setLayout(new BorderLayout());
         Border border = BorderFactory.createMatteBorder(1, 1, 1, 0, JBColor.LIGHT_GRAY);
         setBorder(border);
