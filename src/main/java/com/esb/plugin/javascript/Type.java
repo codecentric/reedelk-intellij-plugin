@@ -2,10 +2,10 @@ package com.esb.plugin.javascript;
 
 public enum Type implements TypeDefinition {
 
-    ANY {
+    OBJECT {
         @Override
         public String displayName() {
-            return "Any";
+            return "Object";
         }
     },
     MAP {

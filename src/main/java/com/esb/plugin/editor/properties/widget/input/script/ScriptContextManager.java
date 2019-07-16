@@ -48,18 +48,18 @@ public class ScriptContextManager implements SuggestionProvider {
                 panelContext.subscribe(propertyName,
                         (InputChangeListener<String>) value -> System.out.println("value"));
 
-                JsonSchemaSuggestionTokenizer parser = new JsonSchemaSuggestionTokenizer();
+                JsonSchemaSuggestionTokenizer parser = new JsonSchemaSuggestionTokenizer(module);
                 ModuleUtils.getResourcesFolder(module).ifPresent(resourcesFolderPath -> {
 
                     VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(VirtualFileManager.constructUrl("file", resourcesFolderPath + "/" + fileName));
 
-                    JsonSchemaSuggestionTokenizer.SchemaDescriptor read = parser.read(file);
+                    JsonSchemaSuggestionTokenizer.SchemaDescriptor read = parser.read(variableName, file);
                     contextVariables.add(new ContextVariable(variableName, read.getType().displayName()));
                     suggestionTree.insert(variableName);
                     read.getTokens().forEach(new Consumer<String>() {
                         @Override
-                        public void accept(String s) {
-                            suggestionTree.insert(variableName + "." + s);
+                        public void accept(String suggestionToken) {
+                            suggestionTree.insert(suggestionToken);
                         }
                     });
                 });
