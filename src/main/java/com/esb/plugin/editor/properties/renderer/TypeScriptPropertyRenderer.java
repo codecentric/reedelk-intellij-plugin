@@ -1,6 +1,5 @@
 package com.esb.plugin.editor.properties.renderer;
 
-import com.esb.plugin.component.domain.AutocompleteContext;
 import com.esb.plugin.component.domain.AutocompleteVariable;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
@@ -20,7 +19,6 @@ public class TypeScriptPropertyRenderer implements TypePropertyRenderer {
     @Override
     public JComponent render(Module module, ComponentPropertyDescriptor propertyDescriptor, PropertyAccessor propertyAccessor, PropertyPanelContext context) {
         List<AutocompleteVariable> autocompleteVariables = propertyDescriptor.getAutocompleteVariables();
-        List<AutocompleteContext> autocompleteContexts = propertyDescriptor.getAutocompleteContexts();
 
         ScriptContextManager scriptContextManager =
                 new ScriptContextManager(module, context, autocompleteVariables);

@@ -26,12 +26,14 @@ public class ScriptInputField extends JPanel implements ActionListener, Document
     private String value = "";
 
     private final Module module;
+    private final ScriptContextManager context;
 
     public ScriptInputField(@NotNull Module module,
                             @NotNull ScriptContextManager context) {
         super(new BorderLayout());
 
         this.module = module;
+        this.context = context;
 
         JPanel openEditorBtn = new OpenEditorButton();
         add(openEditorBtn, NORTH);
@@ -55,7 +57,7 @@ public class ScriptInputField extends JPanel implements ActionListener, Document
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        EditScriptDialog editScriptDialog = new EditScriptDialog(module, value);
+        EditScriptDialog editScriptDialog = new EditScriptDialog(module, value, context);
         if (editScriptDialog.showAndGet()) {
             this.value = editScriptDialog.getValue();
             listener.onChange(this.value);
@@ -93,7 +95,7 @@ public class ScriptInputField extends JPanel implements ActionListener, Document
     class OpenScriptEditorDialog extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
-            EditScriptDialog editScriptDialog = new EditScriptDialog(module, editor.getValue());
+            EditScriptDialog editScriptDialog = new EditScriptDialog(module, editor.getValue(), context);
             if (editScriptDialog.showAndGet()) {
                 value = editScriptDialog.getValue();
                 listener.onChange(value);
