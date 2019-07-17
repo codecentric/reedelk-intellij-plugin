@@ -2,6 +2,7 @@ package com.esb.plugin.editor.properties.widget.input.script.trie;
 
 import com.esb.plugin.editor.properties.widget.input.script.Suggestion;
 import com.esb.plugin.editor.properties.widget.input.script.SuggestionType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -65,6 +66,7 @@ public class Trie {
         return current.isEndOfWord();
     }
 
+    @NotNull
     public Set<Suggestion> searchByPrefix(String prefix) {
         TrieNode current = root;
         boolean notFound = false;

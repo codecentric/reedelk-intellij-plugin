@@ -1,96 +1,68 @@
 package com.esb.plugin.editor.properties.widget.input.script;
 
-import com.esb.plugin.commons.ModuleUtils;
-import com.esb.plugin.component.domain.AutocompleteContext;
 import com.esb.plugin.component.domain.AutocompleteVariable;
-import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.editor.properties.widget.PropertyPanelContext;
 import com.esb.plugin.editor.properties.widget.input.InputChangeListener;
+import com.esb.plugin.editor.properties.widget.input.script.trie.SuggestionTreeBuilder;
 import com.esb.plugin.editor.properties.widget.input.script.trie.Trie;
-import com.esb.plugin.jsonschema.JsonSchemaSuggestionTokenizer;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.function.Consumer;
 
-public class ScriptContextManager implements SuggestionProvider {
+public class ScriptContextManager implements SuggestionProvider, InputChangeListener {
 
-    private final List<ContextVariable> DEFAULT_VARIABLES = Arrays.asList(
-            new ContextVariable("message", "Message"),
-            new ContextVariable("input", "Any"),
-            new ContextVariable("inboundProperties", "Map"),
-            new ContextVariable("outboundProperties", "Map"));
-
-    private final Trie suggestionTree;
+    private final Module module;
+    private final PropertyPanelContext panelContext;
+    private final List<AutocompleteVariable> autocompleteVariables;
     private final Set<ContextVariable> contextVariables = new HashSet<>();
+
+    private Trie suggestionTree;
 
     public ScriptContextManager(@NotNull Module module,
                                 @NotNull PropertyPanelContext panelContext,
                                 @NotNull List<AutocompleteVariable> autocompleteVariables) {
-        this.suggestionTree = new Trie();
+        this.module = module;
+        this.panelContext = panelContext;
+        this.autocompleteVariables = autocompleteVariables;
 
-        MessageSuggestions.SUGGESTIONS.forEach(suggestionTree::insert);
-        JavascriptKeywords.KEYWORDS.forEach(suggestionTree::insert);
+        SuggestionTreeBuilder.TreeBuilderResult build = SuggestionTreeBuilder.get()
+                .variables(autocompleteVariables)
+                .contextPropertyListener(this)
+                .context(panelContext)
+                .module(module)
+                .build();
 
-        this.contextVariables.addAll(DEFAULT_VARIABLES);
+        this.suggestionTree = build.tree;
 
-        autocompleteVariables.forEach(autocompleteVariable -> {
-            String variableName = autocompleteVariable.getVariableName();
-            String contextName = autocompleteVariable.getContextName();
-            // Find related context in this or any other variable
-
-            findAutocompleteContextByName(panelContext, contextName).ifPresent(autocompleteContext -> {
-                String propertyName = autocompleteContext.getPropertyName();
-                String fileName = panelContext.getPropertyValue(propertyName);
-                panelContext.subscribe(propertyName,
-                        (InputChangeListener<String>) value -> System.out.println("value"));
-
-
-                ModuleUtils.getResourcesFolder(module).ifPresent(resourcesFolderPath -> {
-
-                    VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(VirtualFileManager.constructUrl("file", resourcesFolderPath + "/" + fileName));
-
-                    JsonSchemaSuggestionTokenizer parser = new JsonSchemaSuggestionTokenizer(module, file);
-                    JsonSchemaSuggestionTokenizer.SchemaDescriptor read = parser.read(variableName);
-                    ContextVariable contextVariable = new ContextVariable(variableName, read.getType().displayName());
-                    contextVariables.remove(contextVariable);
-                    contextVariables.add(contextVariable);
-
-                    suggestionTree.insert(variableName);
-                    read.getTokens().forEach(new Consumer<String>() {
-                        @Override
-                        public void accept(String suggestionToken) {
-                            suggestionTree.insert(suggestionToken);
-                        }
-                    });
-                });
-            });
-        });
+        // We add to the context variables panel the default variables
+        // and the variables coming from the variable contexts.
+        this.contextVariables.addAll(DefaultScriptVariables.ALL);
+        this.contextVariables.addAll(build.contextVariables);
     }
 
-    private Optional<AutocompleteContext> findAutocompleteContextByName(@NotNull PropertyPanelContext panelContext, String contextName) {
-        Optional<ComponentPropertyDescriptor> descriptorMatching = panelContext.getDescriptorMatching(descriptor -> descriptor.getAutocompleteContexts()
-                .stream()
-                .anyMatch(autocompleteContext ->
-                        autocompleteContext.getContextName().equals(contextName)));
-        return descriptorMatching.flatMap(descriptor -> descriptor.getAutocompleteContexts().stream()
-                .filter(autocompleteContext -> autocompleteContext.getContextName().equals(contextName)).findFirst());
-    }
-
-
+    @NotNull
     @Override
     public Set<Suggestion> suggest(String text) {
-        Set<Suggestion> strings = suggestionTree.searchByPrefix(text);
-        if (strings == null) {
-            return new HashSet<>();
-        }
-        return strings;
+        return suggestionTree.searchByPrefix(text);
     }
 
-    public Set<ContextVariable> getVariables() {
+    @Override
+    public void onChange(Object value) {
+        SuggestionTreeBuilder.TreeBuilderResult build = SuggestionTreeBuilder.get()
+                .variables(autocompleteVariables)
+                .context(panelContext)
+                .module(module)
+                .build();
+
+        this.suggestionTree = build.tree;
+
+        // Reload context variables
+        this.contextVariables.addAll(DefaultScriptVariables.ALL);
+        this.contextVariables.addAll(build.contextVariables);
+    }
+
+    Set<ContextVariable> getVariables() {
         return Collections.unmodifiableSet(contextVariables);
     }
 

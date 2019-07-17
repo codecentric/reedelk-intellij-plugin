@@ -3,7 +3,6 @@ package com.esb.plugin.jsonschema;
 import com.esb.plugin.commons.ModuleUtils;
 import com.esb.plugin.javascript.Type;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.loader.SchemaClient;
 import org.everit.json.schema.loader.SchemaLoader;
@@ -12,7 +11,10 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -22,24 +24,20 @@ public class JsonSchemaSuggestionTokenizer {
 
     private final Type DEFAULT = Type.OBJECT;
     private final Module module;
-    private final VirtualFile jsonSchema;
+    private final String jsonSchema;
     private final String parentFolder;
 
-    public JsonSchemaSuggestionTokenizer(@NotNull Module module, @NotNull VirtualFile jsonSchema) {
+    public JsonSchemaSuggestionTokenizer(@NotNull Module module, @NotNull String jsonSchema, @NotNull String parentFolder) {
         this.module = module;
         this.jsonSchema = jsonSchema;
-        this.parentFolder = jsonSchema.getParent().getPath();
+        this.parentFolder = parentFolder;
     }
 
     public SchemaDescriptor read(String parent) {
-        try (InputStream inputStream = jsonSchema.getInputStream()) {
-            return findJsonSchemaTokens(parent, inputStream);
-        } catch (IOException e) {
-            return new SchemaDescriptor(new ArrayList<>());
-        }
+        return findJsonSchemaTokens(parent, jsonSchema);
     }
 
-    SchemaDescriptor findJsonSchemaTokens(String parent, InputStream inputStream) {
+    SchemaDescriptor findJsonSchemaTokens(String parent, String inputStream) {
         JSONObject rawSchema = new JSONObject(new JSONTokener(inputStream));
         String rootId = rawSchema.getString("$id");
         int lastSlash = rootId.lastIndexOf("/");
