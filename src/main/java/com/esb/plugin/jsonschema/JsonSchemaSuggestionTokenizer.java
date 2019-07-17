@@ -1,6 +1,7 @@
 package com.esb.plugin.jsonschema;
 
 import com.esb.plugin.commons.ModuleUtils;
+import com.esb.plugin.editor.properties.widget.input.script.ProjectFileContentProvider;
 import com.esb.plugin.javascript.Type;
 import com.intellij.openapi.module.Module;
 import org.everit.json.schema.Schema;
@@ -11,10 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
+import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -26,9 +24,14 @@ public class JsonSchemaSuggestionTokenizer {
     private final Module module;
     private final String jsonSchema;
     private final String parentFolder;
+    private final ProjectFileContentProvider provider;
 
-    public JsonSchemaSuggestionTokenizer(@NotNull Module module, @NotNull String jsonSchema, @NotNull String parentFolder) {
+    public JsonSchemaSuggestionTokenizer(@NotNull Module module,
+                                         @NotNull String jsonSchema,
+                                         @NotNull String parentFolder,
+                                         @NotNull ProjectFileContentProvider provider) {
         this.module = module;
+        this.provider = provider;
         this.jsonSchema = jsonSchema;
         this.parentFolder = parentFolder;
     }
@@ -45,7 +48,7 @@ public class JsonSchemaSuggestionTokenizer {
 
         SchemaLoader loader = SchemaLoader.builder()
                 .schemaJson(rawSchema)
-                .schemaClient(new ProjectClassPathClient(module, parentFolder, rootPath))
+                .schemaClient(new ProjectClassPathClient(module, parentFolder, rootPath, provider))
                 .build();
 
         Schema schema = loader.load().build();
@@ -84,11 +87,16 @@ public class JsonSchemaSuggestionTokenizer {
         private final String parentFolder;
         private final String rootHostPath;
         private final Module module;
+        private final ProjectFileContentProvider provider;
 
-        ProjectClassPathClient(@NotNull Module module, @NotNull String parentFolder, @NotNull String rootHostPath) {
+        ProjectClassPathClient(@NotNull Module module,
+                               @NotNull String parentFolder,
+                               @NotNull String rootHostPath,
+                               @NotNull ProjectFileContentProvider provider) {
             this.fallbackClient = new DefaultSchemaClient();
             this.parentFolder = parentFolder;
             this.rootHostPath = rootHostPath;
+            this.provider = provider;
             this.module = module;
         }
 
@@ -96,12 +104,9 @@ public class JsonSchemaSuggestionTokenizer {
         public InputStream get(String url) {
             if (url.startsWith(rootHostPath)) {
                 String relative = url.substring(rootHostPath.length());
-                Path path = Paths.get(parentFolder, relative);
-                try {
-                    return new FileInputStream(path.toFile());
-                } catch (FileNotFoundException e) {
-                    throw new UncheckedIOException(e);
-                }
+                String finalFilePath = parentFolder + relative;
+                String content = provider.getContent(finalFilePath);
+                return new ByteArrayInputStream(content.getBytes());
             }
 
             return ModuleUtils.getResourcesFolder(module)
@@ -112,6 +117,7 @@ public class JsonSchemaSuggestionTokenizer {
         private InputStream loadFromResources(String resourcesFolder, String url) {
             Path path = Paths.get(resourcesFolder, url);
             try {
+                // TODO: This should use intelliJ File Manager
                 return new FileInputStream(path.toFile());
             } catch (FileNotFoundException e) {
                 throw new UncheckedIOException(e);

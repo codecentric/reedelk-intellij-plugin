@@ -9,12 +9,11 @@ import com.esb.plugin.editor.properties.widget.PropertyPanelContext;
 import com.esb.plugin.editor.properties.widget.input.InputChangeListener;
 import com.esb.plugin.editor.properties.widget.input.script.JavascriptKeywords;
 import com.esb.plugin.editor.properties.widget.input.script.MessageSuggestions;
+import com.esb.plugin.editor.properties.widget.input.script.ProjectFileContentProvider;
+import com.esb.plugin.editor.properties.widget.input.script.ScriptContextManager;
 import com.esb.plugin.jsonschema.JsonSchemaSuggestionTokenizer;
 import com.esb.plugin.jsonschema.JsonSchemaSuggestionTokenizer.SchemaDescriptor;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -95,27 +94,20 @@ public class SuggestionTreeBuilder {
 
         ModuleUtils.getResourcesFolder(module).ifPresent(resourcesFolderPath -> {
 
-            VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(VirtualFileManager.constructUrl("file", resourcesFolderPath + "/" + fileName));
-            if (file != null) {
-                String parentFolder = file.getParent().getPath();
-                Document document = FileDocumentManager.getInstance().getDocument(file);
-                if (document != null) {
-                    String json = document.getText();
-                    JsonSchemaSuggestionTokenizer parser = new JsonSchemaSuggestionTokenizer(module, json, parentFolder);
-                    SchemaDescriptor tokenizedSchema = parser.read(variableName);
+            String jsonSchemaFileUrl = VirtualFileManager.constructUrl("file", resourcesFolderPath + "/" + fileName);
 
-                    ContextVariable contextVariable = new ContextVariable(variableName, tokenizedSchema.getType().displayName());
-                    contextVariables.add(contextVariable);
+            ProjectFileContentProvider provider = new ProjectFileContentProvider();
+            String json = provider.getContent(jsonSchemaFileUrl);
+            String parentFolder = provider.getParentFolder(jsonSchemaFileUrl);
 
-                    suggestionTree.insert(variableName);
-                    tokenizedSchema.getTokens().forEach(suggestionTree::insert);
-                } else {
-                    // TODO: If the document has not been loaded yet?
-                }
+            JsonSchemaSuggestionTokenizer parser = new JsonSchemaSuggestionTokenizer(module, json, parentFolder, provider);
+            SchemaDescriptor tokenizedSchema = parser.read(variableName);
 
-            } else {
-                // TODO: Notify that the file could not be found...
-            }
+            ScriptContextManager.ContextVariable contextVariable = new ScriptContextManager.ContextVariable(variableName, tokenizedSchema.getType().displayName());
+            contextVariables.add(contextVariable);
+
+            suggestionTree.insert(variableName);
+            tokenizedSchema.getTokens().forEach(suggestionTree::insert);
         });
     }
 
