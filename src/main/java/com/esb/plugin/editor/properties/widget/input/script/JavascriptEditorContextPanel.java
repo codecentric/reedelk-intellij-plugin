@@ -11,9 +11,9 @@ import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.util.Set;
 
-class JavascriptEditorContext extends JPanel {
+class JavascriptEditorContextPanel extends JPanel {
 
-    JavascriptEditorContext(Set<ScriptContextManager.ContextVariable> contextVariables) {
+    JavascriptEditorContextPanel(Set<ScriptContextManager.ContextVariable> contextVariables) {
         setLayout(new BorderLayout());
         Border border = BorderFactory.createMatteBorder(1, 1, 1, 0, JBColor.LIGHT_GRAY);
         setBorder(border);

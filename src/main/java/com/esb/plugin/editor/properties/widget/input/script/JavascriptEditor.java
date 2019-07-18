@@ -11,6 +11,7 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import com.intellij.util.ThrowableRunnable;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -27,10 +28,11 @@ public class JavascriptEditor extends ThreeComponentsSplitter implements Disposa
         private static final int DIVIDER_WIDTH = 0;
         private static final int DIVIDER_MOUSE_ZONE_WIDTH = 4;
         private static final int EDITOR_CONTEXT_VARIABLES_SIZE = 170;
+        private static final int POPUP_WIDTH = 800;
+        private static final int POPUP_HEIGHT = 400;
+        private static final int DEFAULT_WIDTH = 800;
+        private static final int DEFAULT_HEIGHT = 150;
     }
-
-    private static final int EDITOR_WIDTH = 800;
-    private static final int EDITOR_HEIGHT = 400;
 
     private static final boolean HORIZONTAL = false;
     private static final FileType JAVASCRIPT_FILE_TYPE =
@@ -62,16 +64,20 @@ public class JavascriptEditor extends ThreeComponentsSplitter implements Disposa
 
         if (JavascriptEditorMode.DEFAULT.equals(mode)) {
             editorComponent.setBorder(EDITOR_BORDER);
+            setPreferredSize(new Dimension(Dimensions.DEFAULT_WIDTH, Dimensions.DEFAULT_HEIGHT));
+
+        } else if (JavascriptEditorMode.POPUP.equals(mode)) {
+            editorComponent.setBorder(JBUI.Borders.empty());
+            setPreferredSize(new Dimension(Dimensions.POPUP_WIDTH, Dimensions.POPUP_HEIGHT));
         }
 
-        JavascriptEditorContext context = new JavascriptEditorContext(contextManager.getVariables());
+        JavascriptEditorContextPanel contextPanel = new JavascriptEditorContextPanel(contextManager.getVariables());
 
-        setFirstComponent(context);
+        setFirstComponent(contextPanel);
         setLastComponent(editorComponent);
         setDividerWidth(Dimensions.DIVIDER_WIDTH);
         setFirstSize(Dimensions.EDITOR_CONTEXT_VARIABLES_SIZE);
         setDividerMouseZoneSize(Dimensions.DIVIDER_MOUSE_ZONE_WIDTH);
-        setPreferredSize(new Dimension(EDITOR_WIDTH, EDITOR_HEIGHT));
     }
 
     @Override
