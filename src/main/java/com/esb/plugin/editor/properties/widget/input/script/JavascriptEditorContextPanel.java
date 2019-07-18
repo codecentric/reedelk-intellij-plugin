@@ -1,7 +1,7 @@
 package com.esb.plugin.editor.properties.widget.input.script;
 
+import com.esb.plugin.commons.Colors;
 import com.esb.plugin.commons.Labels;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.JBUI;
 
@@ -11,37 +11,43 @@ import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.util.Set;
 
+import static java.awt.BorderLayout.CENTER;
+import static java.awt.BorderLayout.NORTH;
+
 class JavascriptEditorContextPanel extends JPanel {
+
+    private final Border panelBorder = BorderFactory.createMatteBorder(1, 1, 1, 0,
+            Colors.SCRIPT_EDITOR_CONTEXT_PANEL_BORDER);
+
+    private final Border panelTitleBorder = new CompoundBorder(
+            JBUI.Borders.customLine(Colors.SCRIPT_EDITOR_CONTEXT_PANEL_BORDER_BOTTOM, 0, 0, 1, 0),
+            JBUI.Borders.empty(5));
 
     JavascriptEditorContextPanel(Set<ScriptContextManager.ContextVariable> contextVariables) {
         setLayout(new BorderLayout());
-        Border border = BorderFactory.createMatteBorder(1, 1, 1, 0, JBColor.LIGHT_GRAY);
-        setBorder(border);
+        setBorder(panelBorder);
 
-        JLabel label = new JLabel(Labels.SCRIPT_EDITOR_CONTEXT_VARS);
-        JPanel labelWrapper = new JPanel();
-        labelWrapper.setBackground(new Color(226, 230, 236));
-
-        Border bottom = JBUI.Borders.customLine(new Color(201, 201, 201), 0, 0, 1, 0);
-        Border padding = JBUI.Borders.empty(5);
-        labelWrapper.setBorder(new CompoundBorder(bottom, padding));
-        labelWrapper.setLayout(new BorderLayout());
-        labelWrapper.add(label, BorderLayout.NORTH);
-        add(labelWrapper, BorderLayout.NORTH);
+        JLabel panelTitle = new JLabel(Labels.SCRIPT_EDITOR_CONTEXT_VARS_TITLE);
+        JPanel panelTitleWrapper = new JPanel();
+        panelTitleWrapper.setBackground(Colors.SCRIPT_EDITOR_CONTEXT_PANEL_TITLE_BG);
+        panelTitleWrapper.setBorder(panelTitleBorder);
+        panelTitleWrapper.setLayout(new BorderLayout());
+        panelTitleWrapper.add(panelTitle, NORTH);
+        add(panelTitleWrapper, NORTH);
 
 
-        JPanel context = new JPanel();
-        BoxLayout boxLayout = new BoxLayout(context, BoxLayout.PAGE_AXIS);
-        context.setLayout(boxLayout);
-        context.setBorder(JBUI.Borders.empty(5));
+        JPanel panelVariablesWrapper = new JPanel();
+        BoxLayout boxLayout = new BoxLayout(panelVariablesWrapper, BoxLayout.PAGE_AXIS);
+        panelVariablesWrapper.setLayout(boxLayout);
+        panelVariablesWrapper.setBorder(JBUI.Borders.empty(5));
         contextVariables
                 .stream()
                 .map(contextVariable -> new ContextVariableLabel(contextVariable.name, contextVariable.type))
-                .forEach(context::add);
+                .forEach(panelVariablesWrapper::add);
 
-        JBScrollPane scrollPane = new JBScrollPane(context);
-        scrollPane.setBorder(JBUI.Borders.empty());
-        add(scrollPane, BorderLayout.CENTER);
+        JBScrollPane panelVariablesScrollPane = new JBScrollPane(panelVariablesWrapper);
+        panelVariablesScrollPane.setBorder(JBUI.Borders.empty());
+        add(panelVariablesScrollPane, CENTER);
     }
 
     static class ContextVariableLabel extends JLabel {
