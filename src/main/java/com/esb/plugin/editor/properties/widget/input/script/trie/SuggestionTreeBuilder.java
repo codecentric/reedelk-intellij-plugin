@@ -7,13 +7,10 @@ import com.esb.plugin.component.domain.AutocompleteVariable;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.editor.properties.widget.PropertyPanelContext;
 import com.esb.plugin.editor.properties.widget.input.InputChangeListener;
-import com.esb.plugin.editor.properties.widget.input.script.JavascriptKeywords;
-import com.esb.plugin.editor.properties.widget.input.script.MessageSuggestions;
-import com.esb.plugin.editor.properties.widget.input.script.ProjectFileContentProvider;
-import com.esb.plugin.editor.properties.widget.input.script.ScriptContextManager;
+import com.esb.plugin.editor.properties.widget.input.script.*;
 import com.esb.plugin.javascript.Type;
-import com.esb.plugin.jsonschema.JsonSchemaSuggestionTokenizer;
-import com.esb.plugin.jsonschema.JsonSchemaSuggestionTokenizer.SchemaDescriptor;
+import com.esb.plugin.jsonschema.JsonSchemaSuggestionProcessor;
+import com.esb.plugin.jsonschema.JsonSchemaSuggestionProcessor.SchemaDescriptor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import org.jetbrains.annotations.NotNull;
@@ -109,14 +106,17 @@ public class SuggestionTreeBuilder {
             String json = provider.getContent(jsonSchemaFileUrl);
             String parentFolder = provider.getParentFolder(jsonSchemaFileUrl);
 
-            JsonSchemaSuggestionTokenizer parser = new JsonSchemaSuggestionTokenizer(module, json, parentFolder, provider);
+            JsonSchemaSuggestionProcessor parser = new JsonSchemaSuggestionProcessor(module, json, parentFolder, provider);
             SchemaDescriptor tokenizedSchema = parser.read(variableName);
 
             ScriptContextManager.ContextVariable contextVariable = new ScriptContextManager.ContextVariable(variableName, tokenizedSchema.getType().displayName());
             contextVariables.add(contextVariable);
 
-            suggestionTree.insert(variableName);
-            tokenizedSchema.getTokens().forEach(suggestionTree::insert);
+            suggestionTree.insert(new SuggestionToken(variableName, SuggestionType.VARIABLE));
+            tokenizedSchema
+                    .getTokens()
+                    .stream()
+                    .map(token -> new SuggestionToken(token, SuggestionType.PROPERTY)).forEach(suggestionTree::insert);
         });
     }
 

@@ -17,7 +17,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JsonSchemaSuggestionTokenizer {
+public class JsonSchemaSuggestionProcessor {
 
     private final Type DEFAULT = Type.OBJECT;
     private final Module module;
@@ -25,7 +25,7 @@ public class JsonSchemaSuggestionTokenizer {
     private final String parentFolder;
     private final ProjectFileContentProvider provider;
 
-    public JsonSchemaSuggestionTokenizer(@NotNull Module module,
+    public JsonSchemaSuggestionProcessor(@NotNull Module module,
                                          @NotNull String jsonSchema,
                                          @NotNull String parentFolder,
                                          @NotNull ProjectFileContentProvider provider) {

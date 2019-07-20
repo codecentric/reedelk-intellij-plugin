@@ -1,7 +1,7 @@
 package com.esb.plugin.editor.properties.widget.input.script.trie;
 
 import com.esb.plugin.editor.properties.widget.input.script.Suggestion;
-import com.esb.plugin.editor.properties.widget.input.script.SuggestionType;
+import com.esb.plugin.editor.properties.widget.input.script.SuggestionToken;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -28,14 +28,16 @@ public class Trie {
         root = new TrieNode();
     }
 
-    public void insert(String word) {
+    public void insert(SuggestionToken suggestionToken) {
         TrieNode current = root;
+        String word = suggestionToken.value;
 
         for (int i = 0; i < word.length(); i++) {
             current = current.getChildren()
                     .computeIfAbsent(word.charAt(i), charAtI -> new TrieNode());
         }
         current.setEndOfWord(true);
+        current.setType(suggestionToken.type);
     }
 
     public boolean delete(String word) {
@@ -101,7 +103,7 @@ public class Trie {
 
     private void recursive(TrieNode current, String tmpWord, Set<Suggestion> allWords) {
         if (current.isEndOfWord()) {
-            allWords.add(new Suggestion(SuggestionType.VARIABLE, tmpWord));
+            allWords.add(new Suggestion(current.getType(), tmpWord));
         }
 
         Map<Character, TrieNode> children = current.getChildren();
@@ -109,7 +111,7 @@ public class Trie {
             if (child.getKey() != '.') {
                 recursive(child.getValue(), tmpWord + child.getKey(), allWords);
             } else {
-                allWords.add(new Suggestion(SuggestionType.VARIABLE, tmpWord));
+                allWords.add(new Suggestion(current.getType(), tmpWord));
             }
         }
     }

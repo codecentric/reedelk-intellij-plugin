@@ -35,6 +35,7 @@ public class SuggestionDropDownDecorator {
         this.listComp.setFocusable(false);
         listComp.setCellRenderer(new MyCellRenderer());
 
+        // TODO: Get the font from the IDE preferences
         Font font = new Font("Menlo", Font.PLAIN, 20);
         listComp.setFont(font);
         listComp.setSelectionBackground(new Color(159, 182, 198));
@@ -59,7 +60,13 @@ public class SuggestionDropDownDecorator {
 
         @Override
         public void customize(JList list, Suggestion value, int index, boolean selected, boolean hasFocus) {
-            setIcon(AllIcons.Nodes.Field);
+            if (SuggestionType.VARIABLE.equals(value.getSuggestionType())) {
+                setIcon(AllIcons.Nodes.Field);
+            } else if (SuggestionType.PROPERTY.equals(value.getSuggestionType())) {
+                setIcon(AllIcons.Nodes.Property);
+            } else {
+                setIcon(AllIcons.Nodes.EmptyNode);
+            }
             setText(value.getToken());
         }
     }
