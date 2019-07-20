@@ -12,9 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,11 +36,7 @@ public class JsonSchemaSuggestionTokenizer {
     }
 
     public SchemaDescriptor read(String parent) {
-        return findJsonSchemaTokens(parent, jsonSchema);
-    }
-
-    SchemaDescriptor findJsonSchemaTokens(String parent, String inputStream) {
-        JSONObject rawSchema = new JSONObject(new JSONTokener(inputStream));
+        JSONObject rawSchema = new JSONObject(new JSONTokener(jsonSchema));
         String rootId = rawSchema.getString("$id");
         int lastSlash = rootId.lastIndexOf("/");
         String rootPath = rootId.substring(0, lastSlash);
@@ -61,7 +56,6 @@ public class JsonSchemaSuggestionTokenizer {
 
         return new SchemaDescriptor(results);
     }
-
 
     public class SchemaDescriptor {
         private Type rootObjectType;
@@ -115,13 +109,9 @@ public class JsonSchemaSuggestionTokenizer {
         }
 
         private InputStream loadFromResources(String resourcesFolder, String url) {
-            Path path = Paths.get(resourcesFolder, url);
-            try {
-                // TODO: This should use intelliJ File Manager
-                return new FileInputStream(path.toFile());
-            } catch (FileNotFoundException e) {
-                throw new UncheckedIOException(e);
-            }
+            String finalFilePath = resourcesFolder + url;
+            String content = provider.getContent(finalFilePath);
+            return new ByteArrayInputStream(content.getBytes());
         }
     }
 }

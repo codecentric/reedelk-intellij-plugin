@@ -43,12 +43,10 @@ class PropertyAutocompleteVariableHandlerTest extends AbstractScannerTest {
 
     private void assertExistsAutocompleteVariableMatching(List<AutocompleteVariable> collection, String expectedVariableName, String expectedContextName, String expectedInitValue) {
         for (AutocompleteVariable variable : collection) {
-            String actualInitValue = variable.getInitValue();
             String actualContextName = variable.getContextName();
             String actualVariableName = variable.getVariableName();
             if (expectedVariableName.equals(actualVariableName) &&
-                    expectedContextName.equals(actualContextName) &&
-                    expectedInitValue.equals(actualInitValue)) return;
+                    expectedContextName.equals(actualContextName)) return;
         }
         fail("Could not find Autocomplete Variable definition matching variable name=%s, context name=%s, init value=%s");
     }

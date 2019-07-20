@@ -11,6 +11,7 @@ import com.esb.plugin.editor.properties.widget.input.script.JavascriptKeywords;
 import com.esb.plugin.editor.properties.widget.input.script.MessageSuggestions;
 import com.esb.plugin.editor.properties.widget.input.script.ProjectFileContentProvider;
 import com.esb.plugin.editor.properties.widget.input.script.ScriptContextManager;
+import com.esb.plugin.javascript.Type;
 import com.esb.plugin.jsonschema.JsonSchemaSuggestionTokenizer;
 import com.esb.plugin.jsonschema.JsonSchemaSuggestionTokenizer.SchemaDescriptor;
 import com.intellij.openapi.module.Module;
@@ -73,7 +74,10 @@ public class SuggestionTreeBuilder {
         String contextName = autocompleteVariable.getContextName();
         // Find the autocomplete context related to this variable
         // in this or any other variable defined in the descriptors.
-        findAutocompleteContextByName(panelContext, contextName).ifPresent(autocompleteContext -> {
+        Optional<AutocompleteContext> autocompleteContextByName = findAutocompleteContextByName(panelContext, contextName);
+        if (autocompleteContextByName.isPresent()) {
+            AutocompleteContext autocompleteContext = autocompleteContextByName.get();
+
             String propertyName = autocompleteContext.getPropertyName();
             AutocompleteType autocompleteType = autocompleteContext.getAutocompleteType();
 
@@ -85,7 +89,12 @@ public class SuggestionTreeBuilder {
                 String fileName = panelContext.getPropertyValue(propertyName);
                 extractSuggestionTokensFromJsonSchema(module, variableName, fileName);
             }
-        });
+
+        } else {
+            ScriptContextManager.ContextVariable contextVariable = new ScriptContextManager.ContextVariable(variableName, Type.OBJECT.displayName());
+            contextVariables.add(contextVariable);
+        }
+
     }
 
     private void extractSuggestionTokensFromJsonSchema(@NotNull Module module,

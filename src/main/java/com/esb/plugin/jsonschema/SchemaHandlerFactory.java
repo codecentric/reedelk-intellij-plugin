@@ -8,7 +8,6 @@ import java.util.Map;
 public class SchemaHandlerFactory {
 
     private static final Map<Class<? extends Schema>, SchemaHandler> SCHEMA_TYPE_HANDLER_MAP;
-
     static {
         Map<Class<? extends Schema>, SchemaHandler> tmp = new HashMap<>();
         tmp.put(StringSchema.class, new PrimitiveSchemaHandler());

@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 public class ObjectSchemaHandler implements SchemaHandler {
+
     @Override
     public void handle(List<String> collector, String parent, String propertyKey, Schema propertySchema) {
+
         ObjectSchema objectSchema = (ObjectSchema) propertySchema;
         for (Map.Entry<String, Schema> property : objectSchema.getPropertySchemas().entrySet()) {
             String key = property.getKey();

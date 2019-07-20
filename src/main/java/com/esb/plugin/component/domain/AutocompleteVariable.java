@@ -2,18 +2,12 @@ package com.esb.plugin.component.domain;
 
 public class AutocompleteVariable {
 
-    private String initValue;
     private String contextName;
     private String variableName;
 
-    public AutocompleteVariable(String variableName, String initValue, String contextName) {
-        this.initValue = initValue;
+    public AutocompleteVariable(String variableName, String contextName) {
         this.contextName = contextName;
         this.variableName = variableName;
-    }
-
-    public String getInitValue() {
-        return initValue;
     }
 
     public String getContextName() {
