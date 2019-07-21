@@ -1,11 +1,11 @@
 package com.esb.plugin.component.scanner.property;
 
-import com.esb.api.annotation.AutocompleteVariable;
+import com.esb.api.annotation.Variable;
 
 public class ComponentWithAutocompleteVariables {
 
-    @AutocompleteVariable(variableName = "input", initValue = "{}", contextName = "inputContext")
-    @AutocompleteVariable(variableName = "output", initValue = "{}", contextName = "outputContext")
+    @Variable(variableName = "input", contextName = "inputContext")
+    @Variable(variableName = "output", contextName = "outputContext")
     private String script;
 
 }
