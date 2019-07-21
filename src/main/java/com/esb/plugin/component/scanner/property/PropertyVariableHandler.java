@@ -11,9 +11,9 @@ import io.github.classgraph.AnnotationParameterValue;
 import io.github.classgraph.AnnotationParameterValueList;
 import io.github.classgraph.FieldInfo;
 
-public class PropertyAutocompleteVariableHandler implements Handler {
+public class PropertyVariableHandler implements Handler {
 
-    private static final Logger LOG = Logger.getInstance(PropertyAutocompleteVariableHandler.class);
+    private static final Logger LOG = Logger.getInstance(PropertyVariableHandler.class);
 
     @Override
     public void handle(FieldInfo propertyInfo, ComponentPropertyDescriptor.Builder builder, ComponentAnalyzerContext context) {

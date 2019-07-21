@@ -1,11 +1,14 @@
 package com.esb.plugin.editor.properties.widget.input.script.trie;
 
 import com.esb.plugin.editor.properties.widget.input.script.Suggestion;
+import com.esb.plugin.editor.properties.widget.input.script.SuggestionToken;
+import com.esb.plugin.editor.properties.widget.input.script.SuggestionType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
+import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
@@ -16,14 +19,14 @@ class TrieTest {
     @BeforeEach
     void setUp() {
         this.trie = new Trie();
-        this.trie.insert("Abc");
-        this.trie.insert("Aabc");
-        this.trie.insert("Aabbc");
-        this.trie.insert("Aabbcc");
-        this.trie.insert("Bcd");
-        this.trie.insert("Bbcd");
-        this.trie.insert("Bbccd");
-        this.trie.insert("Bbccdd");
+        this.trie.insert(new SuggestionToken("Abc", SuggestionType.VARIABLE));
+        this.trie.insert(new SuggestionToken("Aabc", SuggestionType.VARIABLE));
+        this.trie.insert(new SuggestionToken("Aabbc", SuggestionType.PROPERTY));
+        this.trie.insert(new SuggestionToken("Aabbcc", SuggestionType.PROPERTY));
+        this.trie.insert(new SuggestionToken("Bcd", SuggestionType.VARIABLE));
+        this.trie.insert(new SuggestionToken("Bbcd", SuggestionType.PROPERTY));
+        this.trie.insert(new SuggestionToken("Bbccd", SuggestionType.PROPERTY));
+        this.trie.insert(new SuggestionToken("Bbccdd", SuggestionType.VARIABLE));
     }
 
     @Test
@@ -74,9 +77,11 @@ class TrieTest {
         Set<Suggestion> suggestions = trie.searchByPrefix("A");
 
         // Then
-        fail("Complete me");
-        // TODO:
-        //assertThat(suggestions).containsExactlyInAnyOrder("Abc", "Aabc", "Aabbc", "Aabbcc");
+        assertThat(suggestions).hasSize(4);
+        assertThatExistsSuggestion(suggestions, "Abc", SuggestionType.VARIABLE);
+        assertThatExistsSuggestion(suggestions, "Aabc", SuggestionType.VARIABLE);
+        assertThatExistsSuggestion(suggestions, "Aabbc", SuggestionType.PROPERTY);
+        assertThatExistsSuggestion(suggestions, "Aabbcc", SuggestionType.PROPERTY);
     }
 
     @Test
@@ -85,9 +90,9 @@ class TrieTest {
         Set<Suggestion> suggestions = trie.searchByPrefix("Aabb");
 
         // Then
-        fail("Complete me");
-        // TODO:
-        //assertThat(suggestions).containsExactlyInAnyOrder("Aabbc", "Aabbcc");
+        assertThat(suggestions).hasSize(2);
+        assertThatExistsSuggestion(suggestions, "Aabbc", SuggestionType.PROPERTY);
+        assertThatExistsSuggestion(suggestions, "Aabbcc", SuggestionType.PROPERTY);
     }
 
     @Test
@@ -96,8 +101,18 @@ class TrieTest {
         Set<Suggestion> suggestions = trie.searchByPrefix("Bbccd");
 
         // Then
-        fail("Complete me");
-        // TODO:
-        //assertThat(suggestions).containsExactlyInAnyOrder("Bbccd", "Bbccdd");
+        assertThat(suggestions).hasSize(2);
+        assertThatExistsSuggestion(suggestions, "Bbccd", SuggestionType.PROPERTY);
+        assertThatExistsSuggestion(suggestions, "Bbccdd", SuggestionType.VARIABLE);
+    }
+
+    private void assertThatExistsSuggestion(Set<Suggestion> suggestions, String expectedToken, SuggestionType expectedType) {
+        for (Suggestion suggestion : suggestions) {
+            if (expectedToken.equals(suggestion.getToken()) &&
+                    expectedType.equals(suggestion.getSuggestionType())) {
+                return;
+            }
+        }
+        fail(format("Could not find suggestion matching token=%s and type=%s", expectedToken, expectedType));
     }
 }

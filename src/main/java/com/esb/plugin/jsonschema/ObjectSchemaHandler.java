@@ -17,6 +17,7 @@ public class ObjectSchemaHandler implements SchemaHandler {
             Schema pSchema = property.getValue();
 
             String realParent = parent == null || parent.equals("") ? "" : parent + ".";
+
             SchemaHandlerFactory.get(pSchema)
                     .handle(collector, realParent, key, pSchema);
         }

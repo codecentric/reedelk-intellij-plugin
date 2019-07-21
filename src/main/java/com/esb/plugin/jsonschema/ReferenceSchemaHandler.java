@@ -1,5 +1,6 @@
 package com.esb.plugin.jsonschema;
 
+import com.esb.internal.commons.StringUtils;
 import org.everit.json.schema.ReferenceSchema;
 import org.everit.json.schema.Schema;
 
@@ -9,8 +10,16 @@ public class ReferenceSchemaHandler implements SchemaHandler {
 
     @Override
     public void handle(List<String> collector, String parent, String propertyKey, Schema propertySchema) {
+        if (StringUtils.isBlank(parent)) {
+            collector.add(propertyKey);
+        } else {
+            collector.add(parent + propertyKey);
+        }
+
         ReferenceSchema referencedSchema = (ReferenceSchema) propertySchema;
+
         Schema referredSchema = referencedSchema.getReferredSchema();
+
         SchemaHandlerFactory.get(referredSchema)
                 .handle(collector, parent + propertyKey, "", referredSchema);
     }

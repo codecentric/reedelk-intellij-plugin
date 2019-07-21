@@ -49,7 +49,6 @@ public class JsonSchemaSuggestionProcessor {
         Schema schema = loader.load().build();
 
         List<String> results = new ArrayList<>();
-        results.add(parent);
 
         SchemaHandlerFactory.get(schema)
                 .handle(results, parent, null, schema);

@@ -12,9 +12,9 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
-class PropertyAutocompleteVariableHandlerTest extends AbstractScannerTest {
+class PropertyVariableHandlerTest extends AbstractScannerTest {
 
-    private PropertyAutocompleteVariableHandler handler = new PropertyAutocompleteVariableHandler();
+    private PropertyVariableHandler handler = new PropertyVariableHandler();
 
     @Test
     void shouldCorrectlyMapAutocompleteVariablesAnnotations() {

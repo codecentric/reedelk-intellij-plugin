@@ -88,7 +88,7 @@ public class SuggestionTreeBuilder {
             }
 
         } else {
-            ScriptContextManager.ContextVariable contextVariable = new ScriptContextManager.ContextVariable(variableName, Type.OBJECT.displayName());
+            ContextVariable contextVariable = new ContextVariable(variableName, Type.OBJECT.displayName());
             contextVariables.add(contextVariable);
         }
 
@@ -107,16 +107,18 @@ public class SuggestionTreeBuilder {
             String parentFolder = provider.getParentFolder(jsonSchemaFileUrl);
 
             JsonSchemaSuggestionProcessor parser = new JsonSchemaSuggestionProcessor(module, json, parentFolder, provider);
-            SchemaDescriptor tokenizedSchema = parser.read(variableName);
+            SchemaDescriptor suggestionProcessorResult = parser.read(variableName);
 
-            ScriptContextManager.ContextVariable contextVariable = new ScriptContextManager.ContextVariable(variableName, tokenizedSchema.getType().displayName());
+            ContextVariable contextVariable = new ContextVariable(variableName, suggestionProcessorResult.getType().displayName());
             contextVariables.add(contextVariable);
 
             suggestionTree.insert(new SuggestionToken(variableName, SuggestionType.VARIABLE));
-            tokenizedSchema
+
+            suggestionProcessorResult
                     .getTokens()
                     .stream()
                     .map(token -> new SuggestionToken(token, SuggestionType.PROPERTY)).forEach(suggestionTree::insert);
+
         });
     }
 
