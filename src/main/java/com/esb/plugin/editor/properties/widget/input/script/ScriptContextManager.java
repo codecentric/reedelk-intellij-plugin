@@ -43,8 +43,13 @@ public class ScriptContextManager implements SuggestionProvider, InputChangeList
 
     @NotNull
     @Override
-    public Set<Suggestion> suggest(String text) {
-        return suggestionTree.searchByPrefix(text);
+    public List<Suggestion> suggest(String text) {
+        // Order suggestions
+        Set<Suggestion> suggestions = suggestionTree.searchByPrefix(text);
+        List<Suggestion> sortedList = new ArrayList<>(suggestions);
+        Collections.sort(sortedList,
+                Comparator.comparing(Suggestion::getSuggestionType));
+        return sortedList;
     }
 
     @Override

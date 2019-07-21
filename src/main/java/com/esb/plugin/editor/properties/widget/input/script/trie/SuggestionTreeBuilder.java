@@ -114,6 +114,8 @@ public class SuggestionTreeBuilder {
 
             suggestionTree.insert(new SuggestionToken(variableName, SuggestionType.VARIABLE));
 
+            // TODO: We should append the parent here, and not
+            // TODO: passing it to the json schema suggestion processor.
             suggestionProcessorResult
                     .getTokens()
                     .stream()

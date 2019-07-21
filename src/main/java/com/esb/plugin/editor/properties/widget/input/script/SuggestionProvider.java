@@ -2,10 +2,10 @@ package com.esb.plugin.editor.properties.widget.input.script;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Set;
+import java.util.List;
 
 public interface SuggestionProvider {
 
     @NotNull
-    Set<Suggestion> suggest(String text);
+    List<Suggestion> suggest(String text);
 }

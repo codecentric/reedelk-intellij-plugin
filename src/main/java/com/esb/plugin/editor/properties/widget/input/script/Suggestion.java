@@ -1,8 +1,9 @@
 package com.esb.plugin.editor.properties.widget.input.script;
 
+import java.util.Comparator;
 import java.util.Objects;
 
-public class Suggestion {
+public class Suggestion implements Comparator<Suggestion> {
 
     private final SuggestionType suggestionType;
     private final String token;
@@ -18,6 +19,11 @@ public class Suggestion {
 
     public String getToken() {
         return token;
+    }
+
+    @Override
+    public int compare(Suggestion suggestion1, Suggestion suggestion2) {
+        return suggestion1.getSuggestionType().compareTo(suggestion2.getSuggestionType());
     }
 
     @Override
