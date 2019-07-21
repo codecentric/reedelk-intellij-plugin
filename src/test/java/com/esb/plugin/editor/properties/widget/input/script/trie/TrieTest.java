@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.properties.widget.input.script.trie;
 
+import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.editor.properties.widget.input.script.Suggestion;
 import com.esb.plugin.editor.properties.widget.input.script.SuggestionToken;
 import com.esb.plugin.editor.properties.widget.input.script.SuggestionType;
@@ -8,9 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
-import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 
 class TrieTest {
 
@@ -30,36 +29,6 @@ class TrieTest {
     }
 
     @Test
-    void shouldSearchReturnTrue() {
-        // When
-        boolean result = trie.search("Aabbc");
-
-        // Then
-        assertThat(result).isTrue();
-    }
-
-    @Test
-    void shouldSearchReturnFalseWhenNotEmpty() {
-        // When
-        boolean result = trie.search("ffgghh");
-
-        // Then
-        assertThat(result).isFalse();
-    }
-
-    @Test
-    void shouldSearchReturnFalseWhenEmpty() {
-        // Given
-        Trie trie = new Trie();
-
-        // When
-        boolean result = trie.search("ffgghh");
-
-        // Then
-        assertThat(result).isFalse();
-    }
-
-    @Test
     void shouldSearchByPrefixReturnEmptyWhenEmpty() {
         // Given
         Trie trie = new Trie();
@@ -73,46 +42,30 @@ class TrieTest {
 
     @Test
     void shouldSearchByPrefixReturnCorrectSuggestions1() {
-        // When
-        Set<Suggestion> suggestions = trie.searchByPrefix("A");
-
-        // Then
-        assertThat(suggestions).hasSize(4);
-        assertThatExistsSuggestion(suggestions, "Abc", SuggestionType.VARIABLE);
-        assertThatExistsSuggestion(suggestions, "Aabc", SuggestionType.VARIABLE);
-        assertThatExistsSuggestion(suggestions, "Aabbc", SuggestionType.PROPERTY);
-        assertThatExistsSuggestion(suggestions, "Aabbcc", SuggestionType.PROPERTY);
+        // Expect
+        PluginAssertion.assertThat(trie).searchByPrefix("A")
+                .hasNumberOfResults(4)
+                .hasResult("Abc", SuggestionType.VARIABLE)
+                .hasResult("Aabc", SuggestionType.VARIABLE)
+                .hasResult("Aabbc", SuggestionType.PROPERTY)
+                .hasResult("Aabbcc", SuggestionType.PROPERTY);
     }
 
     @Test
     void shouldSearchByPrefixReturnCorrectSuggestions2() {
-        // When
-        Set<Suggestion> suggestions = trie.searchByPrefix("Aabb");
-
-        // Then
-        assertThat(suggestions).hasSize(2);
-        assertThatExistsSuggestion(suggestions, "Aabbc", SuggestionType.PROPERTY);
-        assertThatExistsSuggestion(suggestions, "Aabbcc", SuggestionType.PROPERTY);
+        // Expect
+        PluginAssertion.assertThat(trie).searchByPrefix("Aabb")
+                .hasNumberOfResults(2)
+                .hasResult("Aabbc", SuggestionType.PROPERTY)
+                .hasResult("Aabbcc", SuggestionType.PROPERTY);
     }
 
     @Test
     void shouldSearchByPrefixReturnCorrectSuggestions3() {
-        // When
-        Set<Suggestion> suggestions = trie.searchByPrefix("Bbccd");
-
-        // Then
-        assertThat(suggestions).hasSize(2);
-        assertThatExistsSuggestion(suggestions, "Bbccd", SuggestionType.PROPERTY);
-        assertThatExistsSuggestion(suggestions, "Bbccdd", SuggestionType.VARIABLE);
-    }
-
-    private void assertThatExistsSuggestion(Set<Suggestion> suggestions, String expectedToken, SuggestionType expectedType) {
-        for (Suggestion suggestion : suggestions) {
-            if (expectedToken.equals(suggestion.getToken()) &&
-                    expectedType.equals(suggestion.getSuggestionType())) {
-                return;
-            }
-        }
-        fail(format("Could not find suggestion matching token=%s and type=%s", expectedToken, expectedType));
+        // Expect
+        PluginAssertion.assertThat(trie).searchByPrefix("Bbccd")
+                .hasNumberOfResults(2)
+                .hasResult("Bbccd", SuggestionType.PROPERTY)
+                .hasResult("Bbccdd", SuggestionType.VARIABLE);
     }
 }

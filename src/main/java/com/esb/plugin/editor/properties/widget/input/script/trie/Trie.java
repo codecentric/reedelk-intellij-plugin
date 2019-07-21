@@ -48,26 +48,6 @@ public class Trie {
         return root == null;
     }
 
-    /**
-     * Searches the given key in trie for a full match
-     * and returns true on success else returns false.
-     * @param word the word to search in the tree
-     * @return true if the word was found, false otherwise.
-     */
-    public boolean search(String word) {
-        TrieNode current = root;
-
-        for (int i = 0; i < word.length(); i++) {
-            char ch = word.charAt(i);
-            TrieNode node = current.getChildren().get(ch);
-            if (node == null) {
-                return false;
-            }
-            current = node;
-        }
-        return current.isEndOfWord();
-    }
-
     @NotNull
     public Set<Suggestion> searchByPrefix(String prefix) {
         TrieNode current = root;
