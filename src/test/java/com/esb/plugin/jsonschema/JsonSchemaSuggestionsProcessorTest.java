@@ -2,16 +2,16 @@ package com.esb.plugin.jsonschema;
 
 import org.junit.jupiter.api.Test;
 
-class JsonSchemaSuggestionProcessorTest {
+class JsonSchemaSuggestionsProcessorTest {
 
     // TODO: Fixme
     @Test
     void shouldCorrectlyCreateSuggestionTokensForJsonSchema() {
         /**
          try (InputStream personSchemaInputStream =
-         JsonSchemaSuggestionProcessorTest.class.getResourceAsStream("/person.schema.json")) {
+         JsonSchemaSuggestionsProcessorTest.class.getResourceAsStream("/person.schema.json")) {
          // When
-         JsonSchemaSuggestionProcessor tokenizer = new JsonSchemaSuggestionProcessor(null, null, null, null);
+         JsonSchemaSuggestionsProcessor tokenizer = new JsonSchemaSuggestionsProcessor(null, null, null, null);
          SchemaDescriptor descriptor = tokenizer.findJsonSchemaTokens("input", personSchemaInputStream);
 
          // Then

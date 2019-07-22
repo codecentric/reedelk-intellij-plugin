@@ -7,10 +7,13 @@ import com.esb.plugin.component.domain.AutocompleteVariable;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.editor.properties.widget.PropertyPanelContext;
 import com.esb.plugin.editor.properties.widget.input.InputChangeListener;
-import com.esb.plugin.editor.properties.widget.input.script.*;
+import com.esb.plugin.editor.properties.widget.input.script.JavascriptKeywords;
+import com.esb.plugin.editor.properties.widget.input.script.MessageSuggestions;
+import com.esb.plugin.editor.properties.widget.input.script.ProjectFileContentProvider;
+import com.esb.plugin.editor.properties.widget.input.script.SuggestionToken;
 import com.esb.plugin.javascript.Type;
-import com.esb.plugin.jsonschema.JsonSchemaSuggestionProcessor;
-import com.esb.plugin.jsonschema.JsonSchemaSuggestionProcessor.SchemaDescriptor;
+import com.esb.plugin.jsonschema.JsonSchemaSuggestionsProcessor;
+import com.esb.plugin.jsonschema.JsonSchemaSuggestionsResult;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import org.jetbrains.annotations.NotNull;
@@ -21,6 +24,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import static com.esb.plugin.editor.properties.widget.input.script.ScriptContextManager.ContextVariable;
+import static com.esb.plugin.editor.properties.widget.input.script.SuggestionType.PROPERTY;
+import static com.esb.plugin.editor.properties.widget.input.script.SuggestionType.VARIABLE;
 
 public class SuggestionTreeBuilder {
 
@@ -106,20 +111,20 @@ public class SuggestionTreeBuilder {
             String json = provider.getContent(jsonSchemaFileUrl);
             String parentFolder = provider.getParentFolder(jsonSchemaFileUrl);
 
-            JsonSchemaSuggestionProcessor parser = new JsonSchemaSuggestionProcessor(module, json, parentFolder, provider);
-            SchemaDescriptor suggestionProcessorResult = parser.read(variableName);
+            JsonSchemaSuggestionsProcessor parser = new JsonSchemaSuggestionsProcessor(module, json, parentFolder, provider);
+            JsonSchemaSuggestionsResult suggestionProcessorResult = parser.read();
 
-            ContextVariable contextVariable = new ContextVariable(variableName, suggestionProcessorResult.getType().displayName());
+            ContextVariable contextVariable = new ContextVariable(variableName, Type.OBJECT.displayName());
             contextVariables.add(contextVariable);
 
-            suggestionTree.insert(new SuggestionToken(variableName, SuggestionType.VARIABLE));
+            suggestionTree.insert(new SuggestionToken(variableName, VARIABLE));
 
-            // TODO: We should append the parent here, and not
-            // TODO: passing it to the json schema suggestion processor.
             suggestionProcessorResult
                     .getTokens()
                     .stream()
-                    .map(token -> new SuggestionToken(token, SuggestionType.PROPERTY)).forEach(suggestionTree::insert);
+                    .map(token -> variableName + "." + token) // append the parent variable name to each token
+                    .map(token -> new SuggestionToken(token, PROPERTY))
+                    .forEach(suggestionTree::insert);
 
         });
     }

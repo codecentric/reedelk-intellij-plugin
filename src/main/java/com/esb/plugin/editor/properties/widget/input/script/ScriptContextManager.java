@@ -26,29 +26,29 @@ public class ScriptContextManager implements SuggestionProvider, InputChangeList
         this.panelContext = panelContext;
         this.autocompleteVariables = autocompleteVariables;
 
-        SuggestionTreeBuilder.TreeBuilderResult build = SuggestionTreeBuilder.get()
+        SuggestionTreeBuilder.TreeBuilderResult treeBuilderResult = SuggestionTreeBuilder.get()
                 .variables(autocompleteVariables)
                 .contextPropertyListener(this)
                 .context(panelContext)
                 .module(module)
                 .build();
 
-        this.suggestionTree = build.tree;
+        this.suggestionTree = treeBuilderResult.tree;
 
         // We add to the context variables panel the default variables
         // and the variables coming from the variable contexts.
         this.contextVariables.addAll(DefaultScriptVariables.ALL);
-        this.contextVariables.addAll(build.contextVariables);
+        this.contextVariables.addAll(treeBuilderResult.contextVariables);
     }
 
     @NotNull
     @Override
     public List<Suggestion> suggest(String text) {
-        // Order suggestions
         Set<Suggestion> suggestions = suggestionTree.searchByPrefix(text);
         List<Suggestion> sortedList = new ArrayList<>(suggestions);
-        Collections.sort(sortedList,
-                Comparator.comparing(Suggestion::getSuggestionType));
+
+        // Order results by the order defined by the type of suggestion
+        sortedList.sort(Comparator.comparing(Suggestion::getSuggestionType));
         return sortedList;
     }
 
