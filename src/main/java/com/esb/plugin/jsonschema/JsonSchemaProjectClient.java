@@ -18,10 +18,10 @@ public class JsonSchemaProjectClient implements SchemaClient {
     private final String rootHostPath;
     private final Module module;
 
-    JsonSchemaProjectClient(@NotNull Module module,
-                            @NotNull String parentFolder,
-                            @NotNull String rootHostPath,
-                            @NotNull ProjectFileContentProvider provider) {
+    public JsonSchemaProjectClient(@NotNull Module module,
+                                   @NotNull String parentFolder,
+                                   @NotNull String rootHostPath,
+                                   @NotNull ProjectFileContentProvider provider) {
         this.fallbackClient = new DefaultSchemaClient();
         this.parentFolder = parentFolder;
         this.rootHostPath = rootHostPath;

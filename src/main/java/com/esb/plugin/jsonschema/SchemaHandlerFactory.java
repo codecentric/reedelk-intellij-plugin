@@ -10,10 +10,11 @@ public class SchemaHandlerFactory {
     private static final Map<Class<? extends Schema>, SchemaHandler> SCHEMA_TYPE_HANDLER_MAP;
     static {
         Map<Class<? extends Schema>, SchemaHandler> tmp = new HashMap<>();
+        tmp.put(EmptySchema.class, new EmptySchemaHandler());
+        tmp.put(ObjectSchema.class, new ObjectSchemaHandler());
         tmp.put(StringSchema.class, new PrimitiveSchemaHandler());
         tmp.put(NumberSchema.class, new PrimitiveSchemaHandler());
         tmp.put(ReferenceSchema.class, new ReferenceSchemaHandler());
-        tmp.put(ObjectSchema.class, new ObjectSchemaHandler());
         SCHEMA_TYPE_HANDLER_MAP = tmp;
     }
 

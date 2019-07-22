@@ -12,11 +12,15 @@ import com.esb.plugin.editor.properties.widget.input.script.MessageSuggestions;
 import com.esb.plugin.editor.properties.widget.input.script.ProjectFileContentProvider;
 import com.esb.plugin.editor.properties.widget.input.script.SuggestionToken;
 import com.esb.plugin.javascript.Type;
+import com.esb.plugin.jsonschema.JsonSchemaProjectClient;
 import com.esb.plugin.jsonschema.JsonSchemaSuggestionsProcessor;
 import com.esb.plugin.jsonschema.JsonSchemaSuggestionsResult;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import org.everit.json.schema.loader.SchemaClient;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.util.HashSet;
 import java.util.List;
@@ -111,7 +115,14 @@ public class SuggestionTreeBuilder {
             String json = provider.getContent(jsonSchemaFileUrl);
             String parentFolder = provider.getParentFolder(jsonSchemaFileUrl);
 
-            JsonSchemaSuggestionsProcessor parser = new JsonSchemaSuggestionsProcessor(module, json, parentFolder, provider);
+            JSONObject schemaJsonObject = new JSONObject(new JSONTokener(json));
+            String rootId = schemaJsonObject.getString("$id");
+
+            int lastSlash = rootId.lastIndexOf("/");
+            String rootPath = rootId.substring(0, lastSlash);
+
+            SchemaClient schemaClient = new JsonSchemaProjectClient(module, parentFolder, rootPath, provider);
+            JsonSchemaSuggestionsProcessor parser = new JsonSchemaSuggestionsProcessor(schemaJsonObject, schemaClient);
             JsonSchemaSuggestionsResult suggestionProcessorResult = parser.read();
 
             ContextVariable contextVariable = new ContextVariable(variableName, Type.OBJECT.displayName());
@@ -125,7 +136,6 @@ public class SuggestionTreeBuilder {
                     .map(token -> variableName + "." + token) // append the parent variable name to each token
                     .map(token -> new SuggestionToken(token, PROPERTY))
                     .forEach(suggestionTree::insert);
-
         });
     }
 
