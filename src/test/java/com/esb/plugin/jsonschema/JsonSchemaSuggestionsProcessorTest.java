@@ -1,6 +1,6 @@
 package com.esb.plugin.jsonschema;
 
-import org.assertj.core.api.Assertions;
+import com.esb.plugin.fixture.JsonSchema;
 import org.everit.json.schema.loader.SchemaClient;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -8,7 +8,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
 class JsonSchemaSuggestionsProcessorTest {
@@ -17,9 +22,10 @@ class JsonSchemaSuggestionsProcessorTest {
     private SchemaClient mockSchemaClient;
 
     @Test
-    void shouldCorrectlyCreateSuggestionTokensForJsonSchema() {
+    void shouldCorrectlyExtractTokensForSimpleSchema() {
         // Given
-        JSONObject jsonSchemaObject = new JSONObject();
+        String simpleJsonSchema = JsonSchema.SIMPLE.json();
+        JSONObject jsonSchemaObject = new JSONObject(simpleJsonSchema);
         JsonSchemaSuggestionsProcessor processor = new JsonSchemaSuggestionsProcessor(jsonSchemaObject, mockSchemaClient);
 
         // When
@@ -27,13 +33,37 @@ class JsonSchemaSuggestionsProcessorTest {
 
         // Then
         List<String> actualTokens = result.getTokens();
-        Assertions.assertThat(actualTokens).containsExactlyInAnyOrder(
-                "input",
-                "input.firstName",
-                "input.lastName",
-                "input.address.zip",
-                "input.address.country",
-                "input.address.city",
-                "input.age");
+        assertThat(actualTokens).containsExactlyInAnyOrder(
+                "property1",
+                "property2",
+                "property3");
+    }
+
+    @Test
+    void shouldCorrectlyExtractTokensForSchemaWithReference() {
+        // Given
+        String referencedSchemaJson = JsonSchema.REFERENCED.json();
+        InputStream inputStream = new ByteArrayInputStream(referencedSchemaJson.getBytes());
+        doReturn(inputStream)
+                .when(mockSchemaClient)
+                .get("/referenced.schema.json");
+
+        String schemaWithReference = JsonSchema.WITH_REFERENCE.json();
+        JSONObject jsonSchemaObject = new JSONObject(schemaWithReference);
+        JsonSchemaSuggestionsProcessor processor = new JsonSchemaSuggestionsProcessor(jsonSchemaObject, mockSchemaClient);
+
+        // When
+        JsonSchemaSuggestionsResult result = processor.read();
+
+        // Then
+        List<String> actualTokens = result.getTokens();
+        assertThat(actualTokens).containsExactlyInAnyOrder(
+                "firstName",
+                "lastName",
+                "age",
+                "address",
+                "address.city",
+                "address.country",
+                "address.zip");
     }
 }

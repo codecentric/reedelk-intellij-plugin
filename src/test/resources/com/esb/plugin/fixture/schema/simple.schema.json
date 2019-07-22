@@ -1,0 +1,19 @@
+{
+  "title": "Entity",
+  "type": "object",
+  "properties": {
+    "property1": {
+      "type": "string",
+      "description": "First property"
+    },
+    "property2": {
+      "type": "string",
+      "description": "Second property"
+    },
+    "property3": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Third property"
+    }
+  }
+}

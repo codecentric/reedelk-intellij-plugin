@@ -16,7 +16,7 @@
       "minimum": 0
     },
     "address": {
-      "$ref": "/address.schema.json"
+      "$ref": "/referenced.schema.json"
     }
   }
 }

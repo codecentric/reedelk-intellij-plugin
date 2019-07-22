@@ -6,7 +6,7 @@ import java.net.URL;
 
 public class Json {
 
-    private static final String FIXTURE_BASE_PATH = "/com/esb/plugin/fixture/";
+    private static final String FIXTURE_BASE_PATH = "/com/esb/plugin/fixture/flow/";
 
     interface DataProvider {
 
