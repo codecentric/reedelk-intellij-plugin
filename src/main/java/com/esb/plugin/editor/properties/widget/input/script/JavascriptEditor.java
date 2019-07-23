@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.properties.widget.input.script;
 
+import com.esb.plugin.editor.properties.widget.input.script.suggestion.SuggestionDropDownDecorator;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Document;

@@ -1,4 +1,4 @@
-package com.esb.plugin.editor.properties.widget.input.script;
+package com.esb.plugin.editor.properties.widget.input.script.suggestion;
 
 import java.util.Arrays;
 import java.util.List;

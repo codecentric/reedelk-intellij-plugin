@@ -1,7 +1,5 @@
 package com.esb.plugin.editor.properties.widget.input.script.suggestion;
 
-import com.esb.plugin.editor.properties.widget.input.script.SuggestionType;
-
 import java.util.HashMap;
 import java.util.Map;
 

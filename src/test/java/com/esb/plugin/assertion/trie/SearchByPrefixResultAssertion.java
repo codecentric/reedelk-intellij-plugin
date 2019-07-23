@@ -1,7 +1,7 @@
 package com.esb.plugin.assertion.trie;
 
-import com.esb.plugin.editor.properties.widget.input.script.Suggestion;
-import com.esb.plugin.editor.properties.widget.input.script.SuggestionType;
+import com.esb.plugin.editor.properties.widget.input.script.suggestion.Suggestion;
+import com.esb.plugin.editor.properties.widget.input.script.suggestion.SuggestionType;
 
 import java.util.Set;
 

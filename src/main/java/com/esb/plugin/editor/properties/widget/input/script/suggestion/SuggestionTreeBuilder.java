@@ -7,10 +7,7 @@ import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.domain.VariableDefinition;
 import com.esb.plugin.editor.properties.widget.PropertyPanelContext;
 import com.esb.plugin.editor.properties.widget.input.InputChangeListener;
-import com.esb.plugin.editor.properties.widget.input.script.JavascriptKeywords;
-import com.esb.plugin.editor.properties.widget.input.script.MessageSuggestions;
 import com.esb.plugin.editor.properties.widget.input.script.ProjectFileContentProvider;
-import com.esb.plugin.editor.properties.widget.input.script.SuggestionToken;
 import com.esb.plugin.javascript.Type;
 import com.esb.plugin.jsonschema.JsonSchemaProjectClient;
 import com.esb.plugin.jsonschema.JsonSchemaSuggestionsProcessor;
@@ -30,8 +27,8 @@ import java.util.Set;
 import static com.esb.internal.commons.Preconditions.checkState;
 import static com.esb.internal.commons.StringUtils.isNotBlank;
 import static com.esb.plugin.editor.properties.widget.input.script.ScriptContextManager.ContextVariable;
-import static com.esb.plugin.editor.properties.widget.input.script.SuggestionType.PROPERTY;
-import static com.esb.plugin.editor.properties.widget.input.script.SuggestionType.VARIABLE;
+import static com.esb.plugin.editor.properties.widget.input.script.suggestion.SuggestionType.PROPERTY;
+import static com.esb.plugin.editor.properties.widget.input.script.suggestion.SuggestionType.VARIABLE;
 
 public class SuggestionTreeBuilder {
 
@@ -72,7 +69,7 @@ public class SuggestionTreeBuilder {
 
         suggestionTree = new SuggestionTree();
         MessageSuggestions.SUGGESTIONS.forEach(suggestionTree::insert);
-        JavascriptKeywords.KEYWORDS.forEach(suggestionTree::insert);
+        JavascriptKeywordSuggestions.KEYWORDS.forEach(suggestionTree::insert);
 
         Set<ContextVariable> contextVariables = new HashSet<>();
 

@@ -1,6 +1,6 @@
 package com.esb.plugin.assertion.trie;
 
-import com.esb.plugin.editor.properties.widget.input.script.Suggestion;
+import com.esb.plugin.editor.properties.widget.input.script.suggestion.Suggestion;
 import com.esb.plugin.editor.properties.widget.input.script.suggestion.SuggestionTree;
 
 import java.util.Set;

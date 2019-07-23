@@ -1,9 +1,6 @@
 package com.esb.plugin.editor.properties.widget.input.script.suggestion;
 
 import com.esb.plugin.assertion.PluginAssertion;
-import com.esb.plugin.editor.properties.widget.input.script.Suggestion;
-import com.esb.plugin.editor.properties.widget.input.script.SuggestionToken;
-import com.esb.plugin.editor.properties.widget.input.script.SuggestionType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

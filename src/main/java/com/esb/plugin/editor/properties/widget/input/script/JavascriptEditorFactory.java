@@ -1,5 +1,7 @@
 package com.esb.plugin.editor.properties.widget.input.script;
 
+import com.esb.plugin.editor.properties.widget.input.script.suggestion.JavascriptKeywordSuggestions;
+import com.esb.plugin.editor.properties.widget.input.script.suggestion.MessageSuggestions;
 import com.esb.plugin.editor.properties.widget.input.script.suggestion.SuggestionTree;
 import com.intellij.openapi.project.Project;
 
@@ -33,7 +35,7 @@ public class JavascriptEditorFactory {
     public JavascriptEditor build() {
         SuggestionTree suggestionTree = new SuggestionTree();
         MessageSuggestions.SUGGESTIONS.forEach(suggestionTree::insert);
-        JavascriptKeywords.KEYWORDS.forEach(suggestionTree::insert);
+        JavascriptKeywordSuggestions.KEYWORDS.forEach(suggestionTree::insert);
 
         return new JavascriptEditor(project, mode, context, initialValue);
     }

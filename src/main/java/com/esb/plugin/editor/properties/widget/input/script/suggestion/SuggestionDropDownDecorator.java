@@ -1,4 +1,4 @@
-package com.esb.plugin.editor.properties.widget.input.script;
+package com.esb.plugin.editor.properties.widget.input.script.suggestion;
 
 import com.esb.plugin.commons.Colors;
 import com.intellij.icons.AllIcons;

@@ -1,5 +1,8 @@
 package com.esb.plugin.editor.properties.widget.input.script;
 
+import com.esb.plugin.editor.properties.widget.input.script.suggestion.Suggestion;
+import com.esb.plugin.editor.properties.widget.input.script.suggestion.SuggestionClient;
+import com.esb.plugin.editor.properties.widget.input.script.suggestion.SuggestionProvider;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;

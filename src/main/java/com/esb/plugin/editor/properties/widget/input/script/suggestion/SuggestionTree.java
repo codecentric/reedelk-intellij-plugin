@@ -1,7 +1,5 @@
 package com.esb.plugin.editor.properties.widget.input.script.suggestion;
 
-import com.esb.plugin.editor.properties.widget.input.script.Suggestion;
-import com.esb.plugin.editor.properties.widget.input.script.SuggestionToken;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
