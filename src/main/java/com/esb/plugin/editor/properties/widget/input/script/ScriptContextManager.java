@@ -1,6 +1,6 @@
 package com.esb.plugin.editor.properties.widget.input.script;
 
-import com.esb.plugin.component.domain.AutocompleteVariable;
+import com.esb.plugin.component.domain.VariableDefinition;
 import com.esb.plugin.editor.properties.widget.PropertyPanelContext;
 import com.esb.plugin.editor.properties.widget.input.InputChangeListener;
 import com.esb.plugin.editor.properties.widget.input.script.trie.SuggestionTreeBuilder;
@@ -15,20 +15,20 @@ public class ScriptContextManager implements SuggestionProvider, InputChangeList
 
     private final Module module;
     private final PropertyPanelContext panelContext;
-    private final List<AutocompleteVariable> autocompleteVariables;
+    private final List<VariableDefinition> variableDefinitions;
     private final Set<ContextVariable> contextVariables = new HashSet<>();
 
     private Trie suggestionTree;
 
     public ScriptContextManager(@NotNull Module module,
                                 @NotNull PropertyPanelContext panelContext,
-                                @NotNull List<AutocompleteVariable> autocompleteVariables) {
+                                @NotNull List<VariableDefinition> variableDefinitions) {
         this.module = module;
         this.panelContext = panelContext;
-        this.autocompleteVariables = autocompleteVariables;
+        this.variableDefinitions = variableDefinitions;
 
         TreeBuilderResult treeBuilderResult = SuggestionTreeBuilder.get()
-                .variables(autocompleteVariables)
+                .variables(variableDefinitions)
                 .contextPropertyListener(this)
                 .context(panelContext)
                 .module(module)
@@ -56,7 +56,7 @@ public class ScriptContextManager implements SuggestionProvider, InputChangeList
     @Override
     public void onChange(Object value) {
         TreeBuilderResult treeBuilderResult = SuggestionTreeBuilder.get()
-                .variables(autocompleteVariables)
+                .variables(variableDefinitions)
                 .context(panelContext)
                 .module(module)
                 .build();

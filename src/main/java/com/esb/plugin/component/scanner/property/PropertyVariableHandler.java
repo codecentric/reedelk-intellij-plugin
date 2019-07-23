@@ -2,8 +2,8 @@ package com.esb.plugin.component.scanner.property;
 
 import com.esb.api.annotation.Variable;
 import com.esb.api.annotation.Variables;
-import com.esb.plugin.component.domain.AutocompleteVariable;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
+import com.esb.plugin.component.domain.VariableDefinition;
 import com.esb.plugin.component.scanner.ComponentAnalyzerContext;
 import com.intellij.openapi.diagnostic.Logger;
 import io.github.classgraph.AnnotationInfo;
@@ -21,8 +21,8 @@ public class PropertyVariableHandler implements Handler {
         boolean hasVariableAnnotation = propertyInfo.hasAnnotation(Variable.class.getName());
         if (hasVariableAnnotation) {
             AnnotationInfo info = propertyInfo.getAnnotationInfo(Variable.class.getName());
-            AutocompleteVariable autocompleteVariable = processAutocompleteVariableInfo(info);
-            builder.autocompleteVariable(autocompleteVariable);
+            VariableDefinition variableDefinition = processAutocompleteVariableInfo(info);
+            builder.autocompleteVariable(variableDefinition);
         }
 
         // More than one variable definition
@@ -34,8 +34,8 @@ public class PropertyVariableHandler implements Handler {
 
             for (Object info : annotationInfos) {
                 try {
-                    AutocompleteVariable autocompleteVariable = processAutocompleteVariableInfo((AnnotationInfo) info);
-                    builder.autocompleteVariable(autocompleteVariable);
+                    VariableDefinition variableDefinition = processAutocompleteVariableInfo((AnnotationInfo) info);
+                    builder.autocompleteVariable(variableDefinition);
                 } catch (Exception e) {
                     LOG.warn(String.format("Could not process AutocompleteVariables info for property named '%s'", propertyInfo.getName()), e);
                 }
@@ -43,10 +43,10 @@ public class PropertyVariableHandler implements Handler {
         }
     }
 
-    private AutocompleteVariable processAutocompleteVariableInfo(AnnotationInfo info) {
+    private VariableDefinition processAutocompleteVariableInfo(AnnotationInfo info) {
         String variableName = getParameterValue(info, "variableName");
         String contextName = getParameterValue(info, "contextName");
-        return new AutocompleteVariable(variableName, contextName);
+        return new VariableDefinition(variableName, contextName);
     }
 
     private String getParameterValue(AnnotationInfo info, String parameterName) {

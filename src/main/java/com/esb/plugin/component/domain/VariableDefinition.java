@@ -1,11 +1,11 @@
 package com.esb.plugin.component.domain;
 
-public class AutocompleteVariable {
+public class VariableDefinition {
 
     private String contextName;
     private String variableName;
 
-    public AutocompleteVariable(String variableName, String contextName) {
+    public VariableDefinition(String variableName, String contextName) {
         this.contextName = contextName;
         this.variableName = variableName;
     }
@@ -17,5 +17,4 @@ public class AutocompleteVariable {
     public String getVariableName() {
         return variableName;
     }
-
 }

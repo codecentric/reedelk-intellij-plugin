@@ -17,7 +17,7 @@ public class ComponentPropertyDescriptor {
     private PropertyRequired required;
     private TypeDescriptor propertyType;
     private final List<AutocompleteContext> autocompleteContexts = new ArrayList<>();
-    private final List<AutocompleteVariable> autocompleteVariables = new ArrayList<>();
+    private final List<VariableDefinition> variableDefinitions = new ArrayList<>();
 
     public enum PropertyRequired {
         REQUIRED,
@@ -60,8 +60,8 @@ public class ComponentPropertyDescriptor {
     }
 
     @NotNull
-    public List<AutocompleteVariable> getAutocompleteVariables() {
-        return autocompleteVariables;
+    public List<VariableDefinition> getVariableDefinitions() {
+        return variableDefinitions;
     }
 
     public static class Builder {
@@ -72,7 +72,7 @@ public class ComponentPropertyDescriptor {
         private TypeDescriptor propertyType;
         private PropertyRequired required = PropertyRequired.NOT_REQUIRED;
         private List<AutocompleteContext> autocompleteContexts = new ArrayList<>();
-        private List<AutocompleteVariable> autocompleteVariables = new ArrayList<>();
+        private List<VariableDefinition> variableDefinitions = new ArrayList<>();
 
         public Builder displayName(String displayName) {
             this.displayName = displayName;
@@ -104,8 +104,8 @@ public class ComponentPropertyDescriptor {
             return this;
         }
 
-        public Builder autocompleteVariable(AutocompleteVariable autocompleteVariable) {
-            this.autocompleteVariables.add(autocompleteVariable);
+        public Builder autocompleteVariable(VariableDefinition variableDefinition) {
+            this.variableDefinitions.add(variableDefinition);
             return this;
         }
 
@@ -120,7 +120,7 @@ public class ComponentPropertyDescriptor {
             descriptor.defaultValue = defaultValue;
             descriptor.propertyType = propertyType;
             descriptor.autocompleteContexts.addAll(autocompleteContexts);
-            descriptor.autocompleteVariables.addAll(autocompleteVariables);
+            descriptor.variableDefinitions.addAll(variableDefinitions);
             return descriptor;
         }
     }

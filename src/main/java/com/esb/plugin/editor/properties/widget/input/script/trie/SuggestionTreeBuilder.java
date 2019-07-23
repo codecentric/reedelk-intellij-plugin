@@ -3,8 +3,8 @@ package com.esb.plugin.editor.properties.widget.input.script.trie;
 import com.esb.api.annotation.AutocompleteType;
 import com.esb.plugin.commons.ModuleUtils;
 import com.esb.plugin.component.domain.AutocompleteContext;
-import com.esb.plugin.component.domain.AutocompleteVariable;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
+import com.esb.plugin.component.domain.VariableDefinition;
 import com.esb.plugin.editor.properties.widget.PropertyPanelContext;
 import com.esb.plugin.editor.properties.widget.input.InputChangeListener;
 import com.esb.plugin.editor.properties.widget.input.script.JavascriptKeywords;
@@ -39,8 +39,7 @@ public class SuggestionTreeBuilder {
     private Trie suggestionTree;
     private InputChangeListener<?> listener;
     private PropertyPanelContext panelContext;
-    private List<AutocompleteVariable> autocompleteVariables;
-    private final Set<ContextVariable> contextVariables = new HashSet<>();
+    private List<VariableDefinition> variableDefinitions;
 
     public static SuggestionTreeBuilder get() {
         return new SuggestionTreeBuilder();
@@ -56,8 +55,8 @@ public class SuggestionTreeBuilder {
         return this;
     }
 
-    public SuggestionTreeBuilder variables(List<AutocompleteVariable> autocompleteVariables) {
-        this.autocompleteVariables = autocompleteVariables;
+    public SuggestionTreeBuilder variables(List<VariableDefinition> variableDefinitions) {
+        this.variableDefinitions = variableDefinitions;
         return this;
     }
 
@@ -69,16 +68,18 @@ public class SuggestionTreeBuilder {
     public TreeBuilderResult build() {
         checkState(module != null, "module");
         checkState(panelContext != null, "panelContext");
-        checkState(autocompleteVariables != null, "autocompleteVariables");
+        checkState(variableDefinitions != null, "variableDefinitions");
 
         suggestionTree = new Trie();
         MessageSuggestions.SUGGESTIONS.forEach(suggestionTree::insert);
         JavascriptKeywords.KEYWORDS.forEach(suggestionTree::insert);
 
-        autocompleteVariables.forEach(autocompleteVariable -> {
+        Set<ContextVariable> contextVariables = new HashSet<>();
 
-            String variableName = autocompleteVariable.getVariableName();
-            String contextName = autocompleteVariable.getContextName();
+        variableDefinitions.forEach(variableDefinition -> {
+
+            String variableName = variableDefinition.getVariableName();
+            String contextName = variableDefinition.getContextName();
 
             // The variable needs to be added to the context variables panel
             ContextVariable contextVariable = new ContextVariable(variableName, Type.OBJECT.displayName());

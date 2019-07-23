@@ -1,7 +1,7 @@
 package com.esb.plugin.editor.properties.renderer;
 
-import com.esb.plugin.component.domain.AutocompleteVariable;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
+import com.esb.plugin.component.domain.VariableDefinition;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.widget.ContainerFactory;
 import com.esb.plugin.editor.properties.widget.FormBuilder;
@@ -18,10 +18,10 @@ public class TypeScriptPropertyRenderer implements TypePropertyRenderer {
 
     @Override
     public JComponent render(Module module, ComponentPropertyDescriptor propertyDescriptor, PropertyAccessor propertyAccessor, PropertyPanelContext context) {
-        List<AutocompleteVariable> autocompleteVariables = propertyDescriptor.getAutocompleteVariables();
+        List<VariableDefinition> variableDefinitions = propertyDescriptor.getVariableDefinitions();
 
         ScriptContextManager scriptContextManager =
-                new ScriptContextManager(module, context, autocompleteVariables);
+                new ScriptContextManager(module, context, variableDefinitions);
         ScriptInputField field = new ScriptInputField(module, scriptContextManager);
         field.setValue(propertyAccessor.get());
         field.addListener(propertyAccessor::set);

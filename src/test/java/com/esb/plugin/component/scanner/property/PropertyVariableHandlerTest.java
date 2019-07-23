@@ -1,8 +1,8 @@
 package com.esb.plugin.component.scanner.property;
 
-import com.esb.plugin.component.domain.AutocompleteVariable;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.domain.TypeDescriptor;
+import com.esb.plugin.component.domain.VariableDefinition;
 import com.esb.plugin.component.scanner.AbstractScannerTest;
 import io.github.classgraph.FieldInfo;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ class PropertyVariableHandlerTest extends AbstractScannerTest {
 
         // Then
         ComponentPropertyDescriptor descriptor = builder.build();
-        List<AutocompleteVariable> variables = descriptor.getAutocompleteVariables();
+        List<VariableDefinition> variables = descriptor.getVariableDefinitions();
         assertThat(variables).hasSize(2);
 
         assertExistsAutocompleteVariableMatching(variables, "input", "inputContext", "{}");
@@ -41,8 +41,8 @@ class PropertyVariableHandlerTest extends AbstractScannerTest {
         return ComponentWithAutocompleteVariables.class;
     }
 
-    private void assertExistsAutocompleteVariableMatching(List<AutocompleteVariable> collection, String expectedVariableName, String expectedContextName, String expectedInitValue) {
-        for (AutocompleteVariable variable : collection) {
+    private void assertExistsAutocompleteVariableMatching(List<VariableDefinition> collection, String expectedVariableName, String expectedContextName, String expectedInitValue) {
+        for (VariableDefinition variable : collection) {
             String actualContextName = variable.getContextName();
             String actualVariableName = variable.getVariableName();
             if (expectedVariableName.equals(actualVariableName) &&
