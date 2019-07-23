@@ -1,13 +1,12 @@
 package com.esb.plugin.editor.designer.widget;
 
+import com.esb.plugin.commons.Colors;
 import com.esb.plugin.commons.Half;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.layout.ComputeMaxHeight;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.FindFirstNodeOutsideScope;
-import com.intellij.ui.Gray;
-import com.intellij.ui.JBColor;
 
 import java.awt.*;
 
@@ -17,7 +16,6 @@ import static java.awt.BasicStroke.JOIN_ROUND;
 public class VerticalDivider {
 
     private final Stroke STROKE = new BasicStroke(1.3f, CAP_ROUND, JOIN_ROUND);
-    private final JBColor VERTICAL_DIVIDER_COLOR = new JBColor(Gray._200, Gray._30);
     private final ScopedGraphNode scopedGraphNode;
     private int x;
     private int y;
@@ -28,7 +26,7 @@ public class VerticalDivider {
 
     public void draw(FlowGraph graph, Graphics2D graphics) {
         graphics.setStroke(STROKE);
-        graphics.setColor(VERTICAL_DIVIDER_COLOR);
+        graphics.setColor(Colors.DESIGNER_VERTICAL_DIVIDER);
 
         int padding = (ScopedGraphNode.VERTICAL_PADDING * 2) * 2;
 

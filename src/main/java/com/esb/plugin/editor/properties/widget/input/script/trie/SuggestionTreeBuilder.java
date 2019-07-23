@@ -132,7 +132,6 @@ public class SuggestionTreeBuilder {
             SchemaClient schemaClient = new JsonSchemaProjectClient(module, parentFolder, rootPath, provider);
 
             JsonSchemaSuggestionsProcessor processor = new JsonSchemaSuggestionsProcessor(schemaJsonObject, schemaClient);
-
             JsonSchemaSuggestionsResult suggestionResult = processor.process();
 
             // All the properties of this variable extracted from the json schema

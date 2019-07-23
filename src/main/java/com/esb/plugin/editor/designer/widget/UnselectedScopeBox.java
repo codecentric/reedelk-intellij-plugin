@@ -1,13 +1,13 @@
 package com.esb.plugin.editor.designer.widget;
 
-import com.intellij.ui.Gray;
-import com.intellij.ui.JBColor;
+import com.esb.plugin.commons.Colors;
 
 import java.awt.*;
 
 public class UnselectedScopeBox extends ScopeBox {
 
     public UnselectedScopeBox() {
-        super(new JBColor(Gray._235, Gray._30), new BasicStroke(1f));
+        super(Colors.DESIGNER_UNSELECTED_SCOPE_BOX_BOUNDARIES,
+                new BasicStroke(1f));
     }
 }

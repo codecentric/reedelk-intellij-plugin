@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.properties.widget.input.script;
 
+import com.esb.plugin.commons.Colors;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentListener;
@@ -37,14 +38,15 @@ public class SuggestionDropDownDecorator {
 
         // TODO: Get the font from the IDE preferences
         Font font = new Font("Menlo", Font.PLAIN, 20);
+
         listComp.setFont(font);
-        listComp.setSelectionBackground(new Color(159, 182, 198));
-        listComp.setBackground(new Color(234, 243, 253));
+        listComp.setSelectionBackground(Colors.SCRIPT_EDITOR_SUGGESTION_POPUP_BG_SELECTION);
+        listComp.setBackground(Colors.SCRIPT_EDITOR_SUGGESTION_POPUP_BG);
 
 
         this.popupMenu.setLayout(new BorderLayout());
         this.popupMenu.setFocusable(false);
-        this.popupMenu.setBackground(new Color(234, 243, 253));
+        this.popupMenu.setBackground(Colors.SCRIPT_EDITOR_SUGGESTION_POPUP_BG);
         this.popupMenu.add(listComp, BorderLayout.WEST);
 
         this.document = document;
