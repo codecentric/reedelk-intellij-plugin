@@ -1,17 +1,18 @@
-package com.esb.plugin.editor.properties.widget.input.script.trie;
+package com.esb.plugin.editor.properties.widget.input.script.suggestion;
 
 import com.esb.plugin.editor.properties.widget.input.script.SuggestionType;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class TrieNode {
+public class SuggestionTreeNode {
 
-    private final Map<Character, TrieNode> children = new HashMap<>();
+    private final Map<Character, SuggestionTreeNode> children = new HashMap<>();
+
     private SuggestionType type;
     private boolean endOfWord;
 
-    Map<Character, TrieNode> getChildren() {
+    Map<Character, SuggestionTreeNode> getChildren() {
         return children;
     }
 

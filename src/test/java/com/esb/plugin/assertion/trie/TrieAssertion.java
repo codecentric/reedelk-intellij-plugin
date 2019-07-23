@@ -1,20 +1,20 @@
 package com.esb.plugin.assertion.trie;
 
 import com.esb.plugin.editor.properties.widget.input.script.Suggestion;
-import com.esb.plugin.editor.properties.widget.input.script.trie.Trie;
+import com.esb.plugin.editor.properties.widget.input.script.suggestion.SuggestionTree;
 
 import java.util.Set;
 
 public class TrieAssertion {
 
-    private final Trie trie;
+    private final SuggestionTree suggestionTree;
 
-    public TrieAssertion(Trie trie) {
-        this.trie = trie;
+    public TrieAssertion(SuggestionTree suggestionTree) {
+        this.suggestionTree = suggestionTree;
     }
 
     public SearchByPrefixResultAssertion searchByPrefix(String prefix) {
-        Set<Suggestion> suggestions = trie.searchByPrefix(prefix);
+        Set<Suggestion> suggestions = suggestionTree.searchByPrefix(prefix);
         return new SearchByPrefixResultAssertion(suggestions);
     }
 }

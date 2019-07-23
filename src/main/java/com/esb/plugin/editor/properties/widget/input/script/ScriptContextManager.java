@@ -3,9 +3,9 @@ package com.esb.plugin.editor.properties.widget.input.script;
 import com.esb.plugin.component.domain.VariableDefinition;
 import com.esb.plugin.editor.properties.widget.PropertyPanelContext;
 import com.esb.plugin.editor.properties.widget.input.InputChangeListener;
-import com.esb.plugin.editor.properties.widget.input.script.trie.SuggestionTreeBuilder;
-import com.esb.plugin.editor.properties.widget.input.script.trie.TreeBuilderResult;
-import com.esb.plugin.editor.properties.widget.input.script.trie.Trie;
+import com.esb.plugin.editor.properties.widget.input.script.suggestion.SuggestionTree;
+import com.esb.plugin.editor.properties.widget.input.script.suggestion.SuggestionTreeBuilder;
+import com.esb.plugin.editor.properties.widget.input.script.suggestion.SuggestionTreeBuilderResult;
 import com.intellij.openapi.module.Module;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,7 +18,7 @@ public class ScriptContextManager implements SuggestionProvider, InputChangeList
     private final List<VariableDefinition> variableDefinitions;
     private final Set<ContextVariable> contextVariables = new HashSet<>();
 
-    private Trie suggestionTree;
+    private SuggestionTree suggestionTree;
 
     public ScriptContextManager(@NotNull Module module,
                                 @NotNull PropertyPanelContext panelContext,
@@ -27,7 +27,7 @@ public class ScriptContextManager implements SuggestionProvider, InputChangeList
         this.panelContext = panelContext;
         this.variableDefinitions = variableDefinitions;
 
-        TreeBuilderResult builderResult = SuggestionTreeBuilder.get()
+        SuggestionTreeBuilderResult builderResult = SuggestionTreeBuilder.get()
                 .variables(variableDefinitions)
                 .contextPropertyListener(this)
                 .context(panelContext)
@@ -55,7 +55,7 @@ public class ScriptContextManager implements SuggestionProvider, InputChangeList
 
     @Override
     public void onChange(Object value) {
-        TreeBuilderResult builderResult = SuggestionTreeBuilder.get()
+        SuggestionTreeBuilderResult builderResult = SuggestionTreeBuilder.get()
                 .variables(variableDefinitions)
                 .context(panelContext)
                 .module(module)

@@ -1,4 +1,4 @@
-package com.esb.plugin.editor.properties.widget.input.script.trie;
+package com.esb.plugin.editor.properties.widget.input.script.suggestion;
 
 import com.esb.api.annotation.AutocompleteType;
 import com.esb.plugin.commons.ModuleUtils;
@@ -36,7 +36,7 @@ import static com.esb.plugin.editor.properties.widget.input.script.SuggestionTyp
 public class SuggestionTreeBuilder {
 
     private Module module;
-    private Trie suggestionTree;
+    private SuggestionTree suggestionTree;
     private InputChangeListener<?> listener;
     private PropertyPanelContext panelContext;
     private List<VariableDefinition> variableDefinitions;
@@ -65,12 +65,12 @@ public class SuggestionTreeBuilder {
         return this;
     }
 
-    public TreeBuilderResult build() {
+    public SuggestionTreeBuilderResult build() {
         checkState(module != null, "module");
         checkState(panelContext != null, "panelContext");
         checkState(variableDefinitions != null, "variableDefinitions");
 
-        suggestionTree = new Trie();
+        suggestionTree = new SuggestionTree();
         MessageSuggestions.SUGGESTIONS.forEach(suggestionTree::insert);
         JavascriptKeywords.KEYWORDS.forEach(suggestionTree::insert);
 
@@ -91,7 +91,7 @@ public class SuggestionTreeBuilder {
             buildVariableContext(variableName, contextName);
         });
 
-        return new TreeBuilderResult(suggestionTree, contextVariables);
+        return new SuggestionTreeBuilderResult(suggestionTree, contextVariables);
     }
 
     private void buildVariableContext(String variableName, String contextName) {

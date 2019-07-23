@@ -1,4 +1,4 @@
-package com.esb.plugin.editor.properties.widget.input.script.trie;
+package com.esb.plugin.editor.properties.widget.input.script.suggestion;
 
 import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.editor.properties.widget.input.script.Suggestion;
@@ -11,30 +11,30 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class TrieTest {
+class SuggestionTreeTest {
 
-    private Trie trie;
+    private SuggestionTree suggestionTree;
 
     @BeforeEach
     void setUp() {
-        this.trie = new Trie();
-        this.trie.insert(new SuggestionToken("Abc", SuggestionType.VARIABLE));
-        this.trie.insert(new SuggestionToken("Aabc", SuggestionType.VARIABLE));
-        this.trie.insert(new SuggestionToken("Aabbc", SuggestionType.PROPERTY));
-        this.trie.insert(new SuggestionToken("Aabbcc", SuggestionType.PROPERTY));
-        this.trie.insert(new SuggestionToken("Bcd", SuggestionType.VARIABLE));
-        this.trie.insert(new SuggestionToken("Bbcd", SuggestionType.PROPERTY));
-        this.trie.insert(new SuggestionToken("Bbccd", SuggestionType.PROPERTY));
-        this.trie.insert(new SuggestionToken("Bbccdd", SuggestionType.VARIABLE));
+        this.suggestionTree = new SuggestionTree();
+        this.suggestionTree.insert(new SuggestionToken("Abc", SuggestionType.VARIABLE));
+        this.suggestionTree.insert(new SuggestionToken("Aabc", SuggestionType.VARIABLE));
+        this.suggestionTree.insert(new SuggestionToken("Aabbc", SuggestionType.PROPERTY));
+        this.suggestionTree.insert(new SuggestionToken("Aabbcc", SuggestionType.PROPERTY));
+        this.suggestionTree.insert(new SuggestionToken("Bcd", SuggestionType.VARIABLE));
+        this.suggestionTree.insert(new SuggestionToken("Bbcd", SuggestionType.PROPERTY));
+        this.suggestionTree.insert(new SuggestionToken("Bbccd", SuggestionType.PROPERTY));
+        this.suggestionTree.insert(new SuggestionToken("Bbccdd", SuggestionType.VARIABLE));
     }
 
     @Test
     void shouldSearchByPrefixReturnEmptyWhenEmpty() {
         // Given
-        Trie trie = new Trie();
+        SuggestionTree suggestionTree = new SuggestionTree();
 
         // When
-        Set<Suggestion> suggestions = trie.searchByPrefix("f");
+        Set<Suggestion> suggestions = suggestionTree.searchByPrefix("f");
 
         // Then
         assertThat(suggestions).isEmpty();
@@ -43,7 +43,7 @@ class TrieTest {
     @Test
     void shouldSearchByPrefixReturnCorrectSuggestions1() {
         // Expect
-        PluginAssertion.assertThat(trie).searchByPrefix("A")
+        PluginAssertion.assertThat(suggestionTree).searchByPrefix("A")
                 .hasNumberOfResults(4)
                 .hasResult("Abc", SuggestionType.VARIABLE)
                 .hasResult("Aabc", SuggestionType.VARIABLE)
@@ -54,7 +54,7 @@ class TrieTest {
     @Test
     void shouldSearchByPrefixReturnCorrectSuggestions2() {
         // Expect
-        PluginAssertion.assertThat(trie).searchByPrefix("Aabb")
+        PluginAssertion.assertThat(suggestionTree).searchByPrefix("Aabb")
                 .hasNumberOfResults(2)
                 .hasResult("Aabbc", SuggestionType.PROPERTY)
                 .hasResult("Aabbcc", SuggestionType.PROPERTY);
@@ -63,7 +63,7 @@ class TrieTest {
     @Test
     void shouldSearchByPrefixReturnCorrectSuggestions3() {
         // Expect
-        PluginAssertion.assertThat(trie).searchByPrefix("Bbccd")
+        PluginAssertion.assertThat(suggestionTree).searchByPrefix("Bbccd")
                 .hasNumberOfResults(2)
                 .hasResult("Bbccd", SuggestionType.PROPERTY)
                 .hasResult("Bbccdd", SuggestionType.VARIABLE);

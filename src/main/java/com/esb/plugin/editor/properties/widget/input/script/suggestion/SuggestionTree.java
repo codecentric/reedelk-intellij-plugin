@@ -1,4 +1,4 @@
-package com.esb.plugin.editor.properties.widget.input.script.trie;
+package com.esb.plugin.editor.properties.widget.input.script.suggestion;
 
 import com.esb.plugin.editor.properties.widget.input.script.Suggestion;
 import com.esb.plugin.editor.properties.widget.input.script.SuggestionToken;
@@ -20,21 +20,21 @@ import java.util.Set;
  * All descendants of a node have a common prefix of a String associated with that node,
  * whereas the root is associated with an empty String.
  */
-public class Trie {
+public class SuggestionTree {
 
-    private TrieNode root;
+    private SuggestionTreeNode root;
 
-    public Trie() {
-        root = new TrieNode();
+    public SuggestionTree() {
+        root = new SuggestionTreeNode();
     }
 
     public void insert(SuggestionToken suggestionToken) {
-        TrieNode current = root;
+        SuggestionTreeNode current = root;
         String word = suggestionToken.value;
 
         for (int i = 0; i < word.length(); i++) {
             current = current.getChildren()
-                    .computeIfAbsent(word.charAt(i), charAtI -> new TrieNode());
+                    .computeIfAbsent(word.charAt(i), charAtI -> new SuggestionTreeNode());
         }
         current.setEndOfWord(true);
         current.setType(suggestionToken.type);
@@ -50,7 +50,7 @@ public class Trie {
 
     @NotNull
     public Set<Suggestion> searchByPrefix(String prefix) {
-        TrieNode current = root;
+        SuggestionTreeNode current = root;
         boolean notFound = false;
         StringBuilder tmpWord = new StringBuilder();
 
@@ -81,13 +81,13 @@ public class Trie {
         return allWords;
     }
 
-    private void recursive(TrieNode current, String tmpWord, Set<Suggestion> allWords) {
+    private void recursive(SuggestionTreeNode current, String tmpWord, Set<Suggestion> allWords) {
         if (current.isEndOfWord()) {
             allWords.add(new Suggestion(current.getType(), tmpWord));
         }
 
-        Map<Character, TrieNode> children = current.getChildren();
-        for (Map.Entry<Character, TrieNode> child : children.entrySet()) {
+        Map<Character, SuggestionTreeNode> children = current.getChildren();
+        for (Map.Entry<Character, SuggestionTreeNode> child : children.entrySet()) {
             if (child.getKey() != '.') {
                 recursive(child.getValue(), tmpWord + child.getKey(), allWords);
             } else {
@@ -96,7 +96,7 @@ public class Trie {
         }
     }
 
-    private boolean delete(TrieNode current, String word, int index) {
+    private boolean delete(SuggestionTreeNode current, String word, int index) {
         if (index == word.length()) {
             if (!current.isEndOfWord()) {
                 return false;
@@ -105,7 +105,7 @@ public class Trie {
             return current.getChildren().isEmpty();
         }
         char ch = word.charAt(index);
-        TrieNode node = current.getChildren().get(ch);
+        SuggestionTreeNode node = current.getChildren().get(ch);
         if (node == null) {
             return false;
         }

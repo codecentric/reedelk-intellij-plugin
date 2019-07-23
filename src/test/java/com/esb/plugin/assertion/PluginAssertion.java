@@ -7,14 +7,14 @@ import com.esb.plugin.assertion.graph.FlowGraphChangeAwareAssertion;
 import com.esb.plugin.assertion.trie.TrieAssertion;
 import com.esb.plugin.component.domain.ComponentDescriptor;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
-import com.esb.plugin.editor.properties.widget.input.script.trie.Trie;
+import com.esb.plugin.editor.properties.widget.input.script.suggestion.SuggestionTree;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
 
 public class PluginAssertion {
 
-    public static TrieAssertion assertThat(Trie trie) {
-        return new TrieAssertion(trie);
+    public static TrieAssertion assertThat(SuggestionTree suggestionTree) {
+        return new TrieAssertion(suggestionTree);
     }
 
     public static FlowGraphAssertion assertThat(FlowGraph graph) {

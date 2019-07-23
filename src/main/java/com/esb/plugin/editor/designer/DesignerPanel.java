@@ -253,8 +253,9 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
 
     private void unselect() {
         selected.unselected();
+        selectListener.onUnselect();
+
         selected = NOTHING_SELECTED;
-        selectListener.onSelect(snapshot, selected);
     }
 
     private void select(GraphNode node, MouseEvent event) {

@@ -1,6 +1,6 @@
 package com.esb.plugin.editor.properties.widget.input.script;
 
-import com.esb.plugin.editor.properties.widget.input.script.trie.Trie;
+import com.esb.plugin.editor.properties.widget.input.script.suggestion.SuggestionTree;
 import com.intellij.openapi.project.Project;
 
 public class JavascriptEditorFactory {
@@ -31,9 +31,9 @@ public class JavascriptEditorFactory {
     }
 
     public JavascriptEditor build() {
-        Trie trie = new Trie();
-        MessageSuggestions.SUGGESTIONS.forEach(trie::insert);
-        JavascriptKeywords.KEYWORDS.forEach(trie::insert);
+        SuggestionTree suggestionTree = new SuggestionTree();
+        MessageSuggestions.SUGGESTIONS.forEach(suggestionTree::insert);
+        JavascriptKeywords.KEYWORDS.forEach(suggestionTree::insert);
 
         return new JavascriptEditor(project, mode, context, initialValue);
     }

@@ -1,15 +1,15 @@
-package com.esb.plugin.editor.properties.widget.input.script.trie;
+package com.esb.plugin.editor.properties.widget.input.script.suggestion;
 
 import com.esb.plugin.editor.properties.widget.input.script.ScriptContextManager;
 
 import java.util.Set;
 
-public class TreeBuilderResult {
+public class SuggestionTreeBuilderResult {
 
-    public final Trie tree;
+    public final SuggestionTree tree;
     public final Set<ScriptContextManager.ContextVariable> contextVariables;
 
-    TreeBuilderResult(Trie tree, Set<ScriptContextManager.ContextVariable> contextVariables) {
+    SuggestionTreeBuilderResult(SuggestionTree tree, Set<ScriptContextManager.ContextVariable> contextVariables) {
         this.tree = tree;
         this.contextVariables = contextVariables;
     }

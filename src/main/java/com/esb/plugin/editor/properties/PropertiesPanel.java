@@ -5,7 +5,6 @@ import com.esb.plugin.editor.properties.widget.GraphTabbedPane;
 import com.esb.plugin.editor.properties.widget.PropertiesTabbedPane;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.NothingSelectedNode;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.ui.components.JBPanel;
@@ -43,19 +42,11 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
     @Override
     public void onSelect(FlowSnapshot snapshot, GraphNode selected) {
         // TODO: Dispose the previously selected PANEL!
-        if (selected instanceof NothingSelectedNode) {
-            // If  nothing is selected, the properties panel displays
-            // information about the flow this editor is referring to.
-            JBTabbedPane defaultTabbedPane =
-                    new GraphTabbedPane(icon, unselectedTabTitle, snapshot);
-            updateTabbedPane(defaultTabbedPane);
-        } else {
-            // Otherwise the properties panel displays the properties
-            // of the component currently selected.
-            PropertiesTabbedPane propertiesTabbedPane =
-                    new PropertiesTabbedPane(selected, module, snapshot);
-            updateTabbedPane(propertiesTabbedPane);
-        }
+        // Otherwise the properties panel displays the properties
+        // of the component currently selected.
+        PropertiesTabbedPane propertiesTabbedPane =
+                new PropertiesTabbedPane(selected, module, snapshot);
+        updateTabbedPane(propertiesTabbedPane);
     }
 
     @Override
