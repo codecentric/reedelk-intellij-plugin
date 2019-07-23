@@ -13,6 +13,12 @@ public enum Type implements TypeDefinition {
         public String displayName() {
             return "Map";
         }
-    };
+    },
+    MESSAGE {
+        @Override
+        public String displayName() {
+            return "Message";
+        }
+    }
 
 }

@@ -4,6 +4,7 @@ import com.esb.plugin.component.domain.AutocompleteVariable;
 import com.esb.plugin.editor.properties.widget.PropertyPanelContext;
 import com.esb.plugin.editor.properties.widget.input.InputChangeListener;
 import com.esb.plugin.editor.properties.widget.input.script.trie.SuggestionTreeBuilder;
+import com.esb.plugin.editor.properties.widget.input.script.trie.TreeBuilderResult;
 import com.esb.plugin.editor.properties.widget.input.script.trie.Trie;
 import com.intellij.openapi.module.Module;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +27,7 @@ public class ScriptContextManager implements SuggestionProvider, InputChangeList
         this.panelContext = panelContext;
         this.autocompleteVariables = autocompleteVariables;
 
-        SuggestionTreeBuilder.TreeBuilderResult treeBuilderResult = SuggestionTreeBuilder.get()
+        TreeBuilderResult treeBuilderResult = SuggestionTreeBuilder.get()
                 .variables(autocompleteVariables)
                 .contextPropertyListener(this)
                 .context(panelContext)
@@ -54,23 +55,22 @@ public class ScriptContextManager implements SuggestionProvider, InputChangeList
 
     @Override
     public void onChange(Object value) {
-        SuggestionTreeBuilder.TreeBuilderResult build = SuggestionTreeBuilder.get()
+        TreeBuilderResult treeBuilderResult = SuggestionTreeBuilder.get()
                 .variables(autocompleteVariables)
                 .context(panelContext)
                 .module(module)
                 .build();
 
-        this.suggestionTree = build.tree;
+        this.suggestionTree = treeBuilderResult.tree;
 
         // Reload context variables
         this.contextVariables.addAll(DefaultScriptVariables.ALL);
-        this.contextVariables.addAll(build.contextVariables);
+        this.contextVariables.addAll(treeBuilderResult.contextVariables);
     }
 
     Set<ContextVariable> getVariables() {
         return Collections.unmodifiableSet(contextVariables);
     }
-
 
     public static class ContextVariable {
         public final String name;

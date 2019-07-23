@@ -1,6 +1,7 @@
 package com.esb.plugin.editor.properties.widget.input.script.trie;
 
 import com.esb.api.annotation.AutocompleteType;
+import com.esb.internal.commons.StringUtils;
 import com.esb.plugin.commons.ModuleUtils;
 import com.esb.plugin.component.domain.AutocompleteContext;
 import com.esb.plugin.component.domain.AutocompleteVariable;
@@ -44,22 +45,22 @@ public class SuggestionTreeBuilder {
         return new SuggestionTreeBuilder();
     }
 
-    public SuggestionTreeBuilder module(Module module) {
+    public SuggestionTreeBuilder module(@NotNull Module module) {
         this.module = module;
         return this;
     }
 
-    public SuggestionTreeBuilder context(PropertyPanelContext context) {
+    public SuggestionTreeBuilder context(@NotNull PropertyPanelContext context) {
         this.panelContext = context;
         return this;
     }
 
-    public SuggestionTreeBuilder variables(List<AutocompleteVariable> autocompleteVariables) {
+    public SuggestionTreeBuilder variables(@NotNull List<AutocompleteVariable> autocompleteVariables) {
         this.autocompleteVariables = autocompleteVariables;
         return this;
     }
 
-    public SuggestionTreeBuilder contextPropertyListener(InputChangeListener<?> listener) {
+    public SuggestionTreeBuilder contextPropertyListener(@NotNull InputChangeListener<?> listener) {
         this.listener = listener;
         return this;
     }
@@ -70,12 +71,12 @@ public class SuggestionTreeBuilder {
         MessageSuggestions.SUGGESTIONS.forEach(suggestionTree::insert);
         JavascriptKeywords.KEYWORDS.forEach(suggestionTree::insert);
 
-        autocompleteVariables.forEach(this::processAutocompleteVariable);
+        autocompleteVariables.forEach(this::buildAutocompleteVariable);
 
         return new TreeBuilderResult(suggestionTree, contextVariables);
     }
 
-    private void processAutocompleteVariable(AutocompleteVariable autocompleteVariable) {
+    private void buildAutocompleteVariable(AutocompleteVariable autocompleteVariable) {
         String variableName = autocompleteVariable.getVariableName();
         String contextName = autocompleteVariable.getContextName();
         // Find the autocomplete context related to this variable
@@ -93,19 +94,20 @@ public class SuggestionTreeBuilder {
 
             if (autocompleteType.equals(AutocompleteType.JSON_SCHEMA)) {
                 String fileName = panelContext.getPropertyValue(propertyName);
-                extractSuggestionTokensFromJsonSchema(module, variableName, fileName);
+                if (StringUtils.isNotBlank(fileName)) {
+                    suggestionTokensFromJsonSchema(module, variableName, fileName);
+                }
             }
 
         } else {
             ContextVariable contextVariable = new ContextVariable(variableName, Type.OBJECT.displayName());
             contextVariables.add(contextVariable);
         }
-
     }
 
-    private void extractSuggestionTokensFromJsonSchema(@NotNull Module module,
-                                                       @NotNull String variableName,
-                                                       @NotNull String fileName) {
+    private void suggestionTokensFromJsonSchema(@NotNull Module module,
+                                                @NotNull String variableName,
+                                                @NotNull String fileName) {
 
         ModuleUtils.getResourcesFolder(module).ifPresent(resourcesFolderPath -> {
 
@@ -116,26 +118,30 @@ public class SuggestionTreeBuilder {
             String parentFolder = provider.getParentFolder(jsonSchemaFileUrl);
 
             JSONObject schemaJsonObject = new JSONObject(new JSONTokener(json));
-            String rootId = schemaJsonObject.getString("$id");
 
-            int lastSlash = rootId.lastIndexOf("/");
-            String rootPath = rootId.substring(0, lastSlash);
+            String rootPath = getRootPath(schemaJsonObject);
 
             SchemaClient schemaClient = new JsonSchemaProjectClient(module, parentFolder, rootPath, provider);
+
             JsonSchemaSuggestionsProcessor parser = new JsonSchemaSuggestionsProcessor(schemaJsonObject, schemaClient);
-            JsonSchemaSuggestionsResult suggestionProcessorResult = parser.read();
 
-            ContextVariable contextVariable = new ContextVariable(variableName, Type.OBJECT.displayName());
-            contextVariables.add(contextVariable);
+            JsonSchemaSuggestionsResult suggestionResult = parser.read();
 
-            suggestionTree.insert(new SuggestionToken(variableName, VARIABLE));
-
-            suggestionProcessorResult
+            // All the properties of this variable extracted from the json schema
+            // need to be added to the suggestion tree.
+            suggestionResult
                     .getTokens()
                     .stream()
                     .map(token -> variableName + "." + token) // append the parent variable name to each token
                     .map(token -> new SuggestionToken(token, PROPERTY))
                     .forEach(suggestionTree::insert);
+
+            // The variable needs to be added to the context variables panel
+            ContextVariable contextVariable = new ContextVariable(variableName, Type.OBJECT.displayName());
+            contextVariables.add(contextVariable);
+
+            // The variable needs to be added to the tree to enable suggestion
+            suggestionTree.insert(new SuggestionToken(variableName, VARIABLE));
         });
     }
 
@@ -148,13 +154,10 @@ public class SuggestionTreeBuilder {
                 .filter(autocompleteContext -> autocompleteContext.getContextName().equals(contextName)).findFirst());
     }
 
-    public class TreeBuilderResult {
-        public final Trie tree;
-        public final Set<ContextVariable> contextVariables;
 
-        private TreeBuilderResult(Trie tree, Set<ContextVariable> contextVariables) {
-            this.tree = tree;
-            this.contextVariables = contextVariables;
-        }
+    private String getRootPath(JSONObject schemaJsonObject) {
+        String rootId = schemaJsonObject.getString("$id");
+        int lastSlash = rootId.lastIndexOf("/");
+        return rootId.substring(0, lastSlash);
     }
 }

@@ -46,7 +46,7 @@ class JsonSchemaSuggestionsProcessorTest {
         InputStream inputStream = new ByteArrayInputStream(referencedSchemaJson.getBytes());
         doReturn(inputStream)
                 .when(mockSchemaClient)
-                .get("/referenced.schema.json");
+                .get("https://reedelk.com/referenced.schema.json");
 
         String schemaWithReference = JsonSchema.WITH_REFERENCE.json();
         JSONObject jsonSchemaObject = new JSONObject(schemaWithReference);
