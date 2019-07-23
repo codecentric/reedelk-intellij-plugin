@@ -1,7 +1,6 @@
 package com.esb.plugin.editor.properties.widget.input.script.trie;
 
 import com.esb.api.annotation.AutocompleteType;
-import com.esb.internal.commons.StringUtils;
 import com.esb.plugin.commons.ModuleUtils;
 import com.esb.plugin.component.domain.AutocompleteContext;
 import com.esb.plugin.component.domain.AutocompleteVariable;
@@ -28,6 +27,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.esb.internal.commons.Preconditions.checkState;
+import static com.esb.internal.commons.StringUtils.isNotBlank;
 import static com.esb.plugin.editor.properties.widget.input.script.ScriptContextManager.ContextVariable;
 import static com.esb.plugin.editor.properties.widget.input.script.SuggestionType.PROPERTY;
 import static com.esb.plugin.editor.properties.widget.input.script.SuggestionType.VARIABLE;
@@ -45,77 +46,84 @@ public class SuggestionTreeBuilder {
         return new SuggestionTreeBuilder();
     }
 
-    public SuggestionTreeBuilder module(@NotNull Module module) {
+    public SuggestionTreeBuilder module(Module module) {
         this.module = module;
         return this;
     }
 
-    public SuggestionTreeBuilder context(@NotNull PropertyPanelContext context) {
+    public SuggestionTreeBuilder context(PropertyPanelContext context) {
         this.panelContext = context;
         return this;
     }
 
-    public SuggestionTreeBuilder variables(@NotNull List<AutocompleteVariable> autocompleteVariables) {
+    public SuggestionTreeBuilder variables(List<AutocompleteVariable> autocompleteVariables) {
         this.autocompleteVariables = autocompleteVariables;
         return this;
     }
 
-    public SuggestionTreeBuilder contextPropertyListener(@NotNull InputChangeListener<?> listener) {
+    public SuggestionTreeBuilder contextPropertyListener(InputChangeListener<?> listener) {
         this.listener = listener;
         return this;
     }
 
     public TreeBuilderResult build() {
+        checkState(module != null, "module");
+        checkState(panelContext != null, "panelContext");
+        checkState(autocompleteVariables != null, "autocompleteVariables");
+
         this.suggestionTree = new Trie();
 
         MessageSuggestions.SUGGESTIONS.forEach(suggestionTree::insert);
         JavascriptKeywords.KEYWORDS.forEach(suggestionTree::insert);
 
-        autocompleteVariables.forEach(this::buildAutocompleteVariable);
+        autocompleteVariables.forEach(autocompleteVariable -> {
+
+            String variableName = autocompleteVariable.getVariableName();
+            String contextName = autocompleteVariable.getContextName();
+
+            // The variable needs to be added to the context variables panel
+            ContextVariable contextVariable = new ContextVariable(variableName, Type.OBJECT.displayName());
+            contextVariables.add(contextVariable);
+
+            // The variable needs to be added to the tree to enable suggestion
+            suggestionTree.insert(new SuggestionToken(variableName, VARIABLE));
+
+            buildVariableContext(variableName, contextName);
+        });
 
         return new TreeBuilderResult(suggestionTree, contextVariables);
     }
 
-    private void buildAutocompleteVariable(AutocompleteVariable autocompleteVariable) {
-        String variableName = autocompleteVariable.getVariableName();
-        String contextName = autocompleteVariable.getContextName();
+    private void buildVariableContext(@NotNull String variableName, @NotNull String contextName) {
         // Find the autocomplete context related to this variable
         // in this or any other variable defined in the descriptors.
-        Optional<AutocompleteContext> autocompleteContextByName = findAutocompleteContextByName(panelContext, contextName);
-        if (autocompleteContextByName.isPresent()) {
-            AutocompleteContext autocompleteContext = autocompleteContextByName.get();
-
+        findAutocompleteContextByName(panelContext, contextName).ifPresent(autocompleteContext -> {
             String propertyName = autocompleteContext.getPropertyName();
             AutocompleteType autocompleteType = autocompleteContext.getAutocompleteType();
+
+            if (AutocompleteType.JSON_SCHEMA.equals(autocompleteType)) {
+                String jsonSchemaRelativeFileName = panelContext.getPropertyValue(propertyName);
+                if (isNotBlank(jsonSchemaRelativeFileName)) {
+                    suggestionTokensFromJsonSchema(module, variableName, jsonSchemaRelativeFileName);
+                }
+            }
 
             if (listener != null) {
                 panelContext.subscribe(propertyName, listener);
             }
-
-            if (autocompleteType.equals(AutocompleteType.JSON_SCHEMA)) {
-                String fileName = panelContext.getPropertyValue(propertyName);
-                if (StringUtils.isNotBlank(fileName)) {
-                    suggestionTokensFromJsonSchema(module, variableName, fileName);
-                }
-            }
-
-        } else {
-            ContextVariable contextVariable = new ContextVariable(variableName, Type.OBJECT.displayName());
-            contextVariables.add(contextVariable);
-        }
+        });
     }
 
-    private void suggestionTokensFromJsonSchema(@NotNull Module module,
-                                                @NotNull String variableName,
-                                                @NotNull String fileName) {
-
+    private void suggestionTokensFromJsonSchema(Module module, String variableName, String fileName) {
         ModuleUtils.getResourcesFolder(module).ifPresent(resourcesFolderPath -> {
 
-            String jsonSchemaFileUrl = VirtualFileManager.constructUrl("file", resourcesFolderPath + "/" + fileName);
+            // The file name URL of the json schema is relative to the resources folder
+            String jsonSchemaUrl =
+                    VirtualFileManager.constructUrl("file", resourcesFolderPath + "/" + fileName);
 
             ProjectFileContentProvider provider = new ProjectFileContentProvider();
-            String json = provider.getContent(jsonSchemaFileUrl);
-            String parentFolder = provider.getParentFolder(jsonSchemaFileUrl);
+            String json = provider.getContent(jsonSchemaUrl);
+            String parentFolder = provider.getParentFolder(jsonSchemaUrl);
 
             JSONObject schemaJsonObject = new JSONObject(new JSONTokener(json));
 
@@ -135,16 +143,13 @@ public class SuggestionTreeBuilder {
                     .map(token -> variableName + "." + token) // append the parent variable name to each token
                     .map(token -> new SuggestionToken(token, PROPERTY))
                     .forEach(suggestionTree::insert);
-
-            // The variable needs to be added to the context variables panel
-            ContextVariable contextVariable = new ContextVariable(variableName, Type.OBJECT.displayName());
-            contextVariables.add(contextVariable);
-
-            // The variable needs to be added to the tree to enable suggestion
-            suggestionTree.insert(new SuggestionToken(variableName, VARIABLE));
         });
     }
 
+    /**
+     * It finds the AutocompleteContext definition in any property descriptor
+     * matching the given context name.
+     */
     private Optional<AutocompleteContext> findAutocompleteContextByName(@NotNull PropertyPanelContext panelContext, String contextName) {
         Optional<ComponentPropertyDescriptor> descriptorMatching = panelContext.getDescriptorMatching(descriptor -> descriptor.getAutocompleteContexts()
                 .stream()
@@ -153,7 +158,6 @@ public class SuggestionTreeBuilder {
         return descriptorMatching.flatMap(descriptor -> descriptor.getAutocompleteContexts().stream()
                 .filter(autocompleteContext -> autocompleteContext.getContextName().equals(contextName)).findFirst());
     }
-
 
     private String getRootPath(JSONObject schemaJsonObject) {
         String rootId = schemaJsonObject.getString("$id");
