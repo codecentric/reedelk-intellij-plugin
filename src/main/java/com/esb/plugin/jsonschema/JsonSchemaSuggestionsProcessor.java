@@ -21,7 +21,7 @@ public class JsonSchemaSuggestionsProcessor {
         this.client = client;
     }
 
-    public JsonSchemaSuggestionsResult read() {
+    public JsonSchemaSuggestionsResult process() {
         SchemaLoader loader = SchemaLoader.builder()
                 .schemaJson(jsonSchemaObject)
                 .schemaClient(client)

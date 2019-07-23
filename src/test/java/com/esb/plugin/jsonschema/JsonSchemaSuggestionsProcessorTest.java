@@ -29,7 +29,7 @@ class JsonSchemaSuggestionsProcessorTest {
         JsonSchemaSuggestionsProcessor processor = new JsonSchemaSuggestionsProcessor(jsonSchemaObject, mockSchemaClient);
 
         // When
-        JsonSchemaSuggestionsResult result = processor.read();
+        JsonSchemaSuggestionsResult result = processor.process();
 
         // Then
         List<String> actualTokens = result.getTokens();
@@ -53,7 +53,7 @@ class JsonSchemaSuggestionsProcessorTest {
         JsonSchemaSuggestionsProcessor processor = new JsonSchemaSuggestionsProcessor(jsonSchemaObject, mockSchemaClient);
 
         // When
-        JsonSchemaSuggestionsResult result = processor.read();
+        JsonSchemaSuggestionsResult result = processor.process();
 
         // Then
         List<String> actualTokens = result.getTokens();

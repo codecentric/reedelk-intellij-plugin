@@ -71,8 +71,7 @@ public class SuggestionTreeBuilder {
         checkState(panelContext != null, "panelContext");
         checkState(autocompleteVariables != null, "autocompleteVariables");
 
-        this.suggestionTree = new Trie();
-
+        suggestionTree = new Trie();
         MessageSuggestions.SUGGESTIONS.forEach(suggestionTree::insert);
         JavascriptKeywords.KEYWORDS.forEach(suggestionTree::insert);
 
@@ -131,9 +130,9 @@ public class SuggestionTreeBuilder {
 
             SchemaClient schemaClient = new JsonSchemaProjectClient(module, parentFolder, rootPath, provider);
 
-            JsonSchemaSuggestionsProcessor parser = new JsonSchemaSuggestionsProcessor(schemaJsonObject, schemaClient);
+            JsonSchemaSuggestionsProcessor processor = new JsonSchemaSuggestionsProcessor(schemaJsonObject, schemaClient);
 
-            JsonSchemaSuggestionsResult suggestionResult = parser.read();
+            JsonSchemaSuggestionsResult suggestionResult = processor.process();
 
             // All the properties of this variable extracted from the json schema
             // need to be added to the suggestion tree.

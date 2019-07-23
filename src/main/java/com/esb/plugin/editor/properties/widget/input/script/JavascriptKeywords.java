@@ -2,7 +2,6 @@ package com.esb.plugin.editor.properties.widget.input.script;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class JavascriptKeywords {
 
@@ -71,15 +70,4 @@ public class JavascriptKeywords {
             new SuggestionToken("while", SuggestionType.LANGUAGE),
             new SuggestionToken("with", SuggestionType.LANGUAGE),
             new SuggestionToken("yield", SuggestionType.LANGUAGE));
-
-    public static final String REGEX;
-
-    static {
-        List<String> suggestionValues = KEYWORDS.stream()
-                .map(suggestionToken -> suggestionToken.value)
-                .collect(Collectors.toList());
-        String pipedKeywords = String.join("|", suggestionValues);
-        REGEX = "(\\W)*(" + pipedKeywords + ")";
-    }
-
 }
