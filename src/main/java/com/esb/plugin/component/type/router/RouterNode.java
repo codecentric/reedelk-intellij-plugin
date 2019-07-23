@@ -1,5 +1,6 @@
 package com.esb.plugin.component.type.router;
 
+import com.esb.plugin.commons.Colors;
 import com.esb.plugin.commons.Half;
 import com.esb.plugin.commons.Labels;
 import com.esb.plugin.component.domain.ComponentData;
@@ -16,7 +17,6 @@ import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.system.component.Placeholder;
 import com.esb.system.component.Router;
 import com.intellij.openapi.module.Module;
-import com.intellij.ui.JBColor;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
@@ -126,7 +126,7 @@ public class RouterNode extends AbstractScopedGraphNode {
             if (IsDefaultRoute.of(parent, successor)) {
                 int halfWidth = Half.of(parent.width(graphics));
                 int verticalX = parent.x() - VERTICAL_DIVIDER_X_OFFSET + halfWidth;
-                graphics.setColor(JBColor.GRAY);
+                graphics.setColor(Colors.TEXT_DEFAULT_ROUTE);
                 Point targetArrowEnd = successor.getTargetArrowEnd();
                 graphics.drawString(Labels.ROUTER_DEFAULT_ROUTE, verticalX + DEFAULT_ROUTE_TEXT_LEFT_PADDING,
                         targetArrowEnd.y + DEFAULT_ROUTE_TEXT_TOP_PADDING);
