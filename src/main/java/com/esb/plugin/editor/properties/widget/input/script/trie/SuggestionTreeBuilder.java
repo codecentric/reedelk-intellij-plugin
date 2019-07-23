@@ -93,7 +93,7 @@ public class SuggestionTreeBuilder {
         return new TreeBuilderResult(suggestionTree, contextVariables);
     }
 
-    private void buildVariableContext(@NotNull String variableName, @NotNull String contextName) {
+    private void buildVariableContext(String variableName, String contextName) {
         // Find the autocomplete context related to this variable
         // in this or any other variable defined in the descriptors.
         findAutocompleteContextByName(panelContext, contextName).ifPresent(autocompleteContext -> {
