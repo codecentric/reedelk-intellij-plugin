@@ -27,25 +27,25 @@ public class ScriptContextManager implements SuggestionProvider, InputChangeList
         this.panelContext = panelContext;
         this.variableDefinitions = variableDefinitions;
 
-        TreeBuilderResult treeBuilderResult = SuggestionTreeBuilder.get()
+        TreeBuilderResult builderResult = SuggestionTreeBuilder.get()
                 .variables(variableDefinitions)
                 .contextPropertyListener(this)
                 .context(panelContext)
                 .module(module)
                 .build();
 
-        this.suggestionTree = treeBuilderResult.tree;
+        this.suggestionTree = builderResult.tree;
 
         // We add to the context variables panel the default variables
         // and the variables coming from the variable contexts.
         this.contextVariables.addAll(DefaultScriptVariables.ALL);
-        this.contextVariables.addAll(treeBuilderResult.contextVariables);
+        this.contextVariables.addAll(builderResult.contextVariables);
     }
 
     @NotNull
     @Override
-    public List<Suggestion> suggest(String text) {
-        Set<Suggestion> suggestions = suggestionTree.searchByPrefix(text);
+    public List<Suggestion> suggest(String prefixText) {
+        Set<Suggestion> suggestions = suggestionTree.searchByPrefix(prefixText);
         List<Suggestion> sortedList = new ArrayList<>(suggestions);
 
         // Order results by the order defined by the type of suggestion
@@ -55,17 +55,17 @@ public class ScriptContextManager implements SuggestionProvider, InputChangeList
 
     @Override
     public void onChange(Object value) {
-        TreeBuilderResult treeBuilderResult = SuggestionTreeBuilder.get()
+        TreeBuilderResult builderResult = SuggestionTreeBuilder.get()
                 .variables(variableDefinitions)
                 .context(panelContext)
                 .module(module)
                 .build();
 
-        this.suggestionTree = treeBuilderResult.tree;
+        this.suggestionTree = builderResult.tree;
 
         // Reload context variables
         this.contextVariables.addAll(DefaultScriptVariables.ALL);
-        this.contextVariables.addAll(treeBuilderResult.contextVariables);
+        this.contextVariables.addAll(builderResult.contextVariables);
     }
 
     Set<ContextVariable> getVariables() {
