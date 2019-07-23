@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.designer;
 
+import com.esb.plugin.commons.Colors;
 import com.esb.plugin.commons.DesignerWindowSizeCalculator;
 import com.esb.plugin.commons.PrintFlowInfo;
 import com.esb.plugin.editor.designer.widget.CenterOfNode;
@@ -11,7 +12,6 @@ import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.NothingSelectedNode;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.ui.AncestorListenerAdapter;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,7 +36,6 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
 
     protected final int TOP_PADDING = 80;
 
-    private static final JBColor BACKGROUND_COLOR = JBColor.WHITE;
     private final GraphNode NOTHING_SELECTED = new NothingSelectedNode();
 
     protected FlowSnapshot snapshot;
@@ -60,7 +59,7 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
 
         this.centerOfNode = new CenterOfNode(snapshot);
 
-        setBackground(BACKGROUND_COLOR);
+        setBackground(Colors.DESIGNER_BG);
         registerAncestorListener();
         addMouseListener(this);
         addMouseMotionListener(this);

@@ -1,15 +1,15 @@
 package com.esb.plugin.editor.designer.widget;
 
-import com.intellij.ui.JBColor;
+import com.esb.plugin.commons.Colors;
 
 import java.awt.*;
 import java.awt.geom.GeneralPath;
 
 public class Arrow {
 
-    private static final JBColor ARROW_COLOR = JBColor.lightGray;
     private static final int ARROW_SIZE = 10;
     private static final double ARROW_ANGLE = Math.PI / 5.0d;
+
     private final Stroke STROKE = new BasicStroke(1f);
     private final Point source;
     private final Point target;
@@ -21,7 +21,7 @@ public class Arrow {
 
     public void draw(Graphics2D graphics) {
         graphics.setStroke(STROKE);
-        graphics.setColor(ARROW_COLOR);
+        graphics.setColor(Colors.DESIGNER_ARROW);
 
         final double startx = source.getX();
         final double starty = source.getY();

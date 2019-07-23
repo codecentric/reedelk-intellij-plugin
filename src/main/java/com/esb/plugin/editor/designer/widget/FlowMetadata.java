@@ -1,10 +1,10 @@
 package com.esb.plugin.editor.designer.widget;
 
 import com.esb.internal.commons.StringUtils;
+import com.esb.plugin.commons.Colors;
 import com.esb.plugin.commons.Fonts;
 import com.esb.plugin.commons.Half;
 import com.esb.plugin.graph.FlowSnapshot;
-import com.intellij.ui.JBColor;
 
 import java.awt.*;
 import java.util.Collections;
@@ -51,7 +51,7 @@ public class FlowMetadata {
 
         @Override
         protected Color getColor() {
-            return JBColor.GRAY;
+            return Colors.TEXT_FLOW_TITLE;
         }
 
         @Override
@@ -73,7 +73,7 @@ public class FlowMetadata {
 
         @Override
         protected Color getColor() {
-            return JBColor.GRAY;
+            return Colors.TEXT_FLOW_DESCRIPTION;
         }
 
         @Override

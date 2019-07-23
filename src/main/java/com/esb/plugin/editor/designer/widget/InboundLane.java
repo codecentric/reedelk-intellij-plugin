@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.designer.widget;
 
+import com.esb.plugin.commons.Colors;
 import com.esb.plugin.commons.Fonts;
 import com.esb.plugin.commons.Half;
 import com.esb.plugin.commons.Images;
@@ -8,7 +9,6 @@ import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.layout.ComputeMaxHeight;
 import com.esb.plugin.graph.node.GraphNode;
-import com.intellij.ui.JBColor;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
@@ -62,7 +62,7 @@ public class InboundLane {
                     maxHeight :
                     MIN_INBOUND_LANE_HEIGHT;
         }
-        graphics.setColor(JBColor.GRAY);
+        graphics.setColor(Colors.DESIGNER_INBOUND_LANE_VERTICAL_BAR);
         graphics.setStroke(dashed);
         graphics.drawLine(width, 0, width, height);
     }
@@ -75,7 +75,7 @@ public class InboundLane {
 
         @Override
         protected Color getColor() {
-            return JBColor.GRAY;
+            return Colors.TEXT_INBOUND_LANE;
         }
 
         @Override

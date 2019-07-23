@@ -1,9 +1,9 @@
 package com.esb.plugin.editor.designer.widget;
 
 import com.esb.internal.commons.StringUtils;
+import com.esb.plugin.commons.Colors;
 import com.esb.plugin.commons.Fonts;
 import com.esb.plugin.component.domain.ComponentData;
-import com.intellij.ui.JBColor;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class TextComponentTitle extends AbstractText {
             return Collections.emptyList();
         }
 
-        java.util.List<String> matchList = new ArrayList<>();
+        List<String> matchList = new ArrayList<>();
         Matcher regexMatcher = REGEX.matcher(title);
         while (regexMatcher.find()) {
             matchList.add(regexMatcher.group());
@@ -39,11 +39,11 @@ public class TextComponentTitle extends AbstractText {
 
     @Override
     protected Color getColor() {
-        return JBColor.GRAY;
+        return Colors.TEXT_COMPONENT_TITLE;
     }
 
     @Override
     protected Color getSelectedColor() {
-        return JBColor.DARK_GRAY;
+        return Colors.TEXT_COMPONENT_TITLE_SELECTED;
     }
 }

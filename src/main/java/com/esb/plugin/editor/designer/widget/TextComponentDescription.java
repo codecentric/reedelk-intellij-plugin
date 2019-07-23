@@ -1,9 +1,9 @@
 package com.esb.plugin.editor.designer.widget;
 
 import com.esb.internal.commons.StringUtils;
+import com.esb.plugin.commons.Colors;
 import com.esb.plugin.commons.Fonts;
 import com.esb.plugin.component.domain.ComponentData;
-import com.intellij.ui.JBColor;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -42,11 +42,11 @@ public class TextComponentDescription extends AbstractText {
 
     @Override
     protected Color getColor() {
-        return JBColor.LIGHT_GRAY;
+        return Colors.TEXT_COMPONENT_DESCRIPTION;
     }
 
     @Override
     protected Color getSelectedColor() {
-        return JBColor.GRAY;
+        return Colors.TEXT_COMPONENT_DESCRIPTION_SELECTED;
     }
 }
