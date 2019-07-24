@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.properties.widget.input.script;
 
+import com.esb.plugin.commons.Colors;
 import com.esb.plugin.editor.properties.widget.input.script.suggestion.SuggestionDropDownDecorator;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -23,7 +24,7 @@ import java.awt.*;
 public class JavascriptEditor extends ThreeComponentsSplitter implements Disposable {
 
     private static final Border EDITOR_BORDER =
-            BorderFactory.createMatteBorder(1, 1, 1, 1, Color.LIGHT_GRAY);
+            BorderFactory.createMatteBorder(1, 1, 1, 1, Colors.SCRIPT_EDITOR_BORDER);
 
     private static class Dimensions {
         private static final int DIVIDER_WIDTH = 0;

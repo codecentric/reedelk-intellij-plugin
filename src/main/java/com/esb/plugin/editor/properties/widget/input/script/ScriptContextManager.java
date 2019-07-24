@@ -46,7 +46,8 @@ public class ScriptContextManager implements SuggestionProvider, InputChangeList
         Set<Suggestion> suggestions = suggestionTree.searchByPrefix(prefixText);
         List<Suggestion> sortedList = new ArrayList<>(suggestions);
 
-        // Order results by the order defined by the type of suggestion
+        // Order results by the order defined
+        // by the suggestion's type.
         sortedList.sort(Comparator.comparing(Suggestion::getSuggestionType));
         return sortedList;
     }
