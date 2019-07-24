@@ -90,13 +90,13 @@ public class ScriptInputField extends JPanel implements ActionListener, Document
 
         OpenEditorButton() {
             super(new BorderLayout());
-
-            this.openEditorBtn = new JLabel(Labels.SCRIPT_EDITOR_BTN_OPEN_EDITOR);
-            this.openEditorBtn.setIcon(Script.Edit);
-            this.openEditorBtn.setDisabledIcon(Script.EditDisabled);
-            this.openEditorBtn.addMouseListener(new OpenScriptEditorDialog());
-            add(openEditorBtn, NORTH);
             setBorder(BORDER_BTN_OPEN_EDITOR);
+
+            openEditorBtn = new JLabel(Labels.SCRIPT_EDITOR_BTN_OPEN_EDITOR);
+            openEditorBtn.setIcon(Script.Edit);
+            openEditorBtn.setDisabledIcon(Script.EditDisabled);
+            openEditorBtn.addMouseListener(new OpenScriptEditorDialog());
+            add(openEditorBtn, NORTH);
         }
     }
 
