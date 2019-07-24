@@ -3,7 +3,7 @@ package com.esb.plugin.editor.properties.widget.input.script.suggestion;
 import java.util.Arrays;
 import java.util.List;
 
-public class JavascriptKeywordSuggestions {
+public class PredefinedJavascriptSuggestions {
 
     public static final List<SuggestionToken> KEYWORDS = Arrays.asList(
             new SuggestionToken("abstract", SuggestionType.LANGUAGE),

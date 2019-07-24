@@ -6,13 +6,14 @@ import com.esb.plugin.editor.properties.widget.input.InputField;
 import com.esb.plugin.editor.properties.widget.input.StringInputField;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowSnapshot;
+import com.intellij.openapi.Disposable;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBTabbedPane;
 
 import javax.swing.*;
 import java.util.Collections;
 
-public class GraphTabbedPane extends JBTabbedPane {
+public class GraphTabbedPane extends JBTabbedPane implements Disposable {
 
     private final Icon icon;
     private final String tabTitle;
@@ -24,6 +25,11 @@ public class GraphTabbedPane extends JBTabbedPane {
         this.tabTitle = tabTitle;
         this.snapshot = snapshot;
         initialize();
+    }
+
+    @Override
+    public void dispose() {
+        // nothing to dispose
     }
 
     private void initialize() {
