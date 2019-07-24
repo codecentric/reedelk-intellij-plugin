@@ -10,8 +10,8 @@ import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.esb.plugin.editor.properties.renderer.TypePropertyRenderer;
 import com.esb.plugin.editor.properties.renderer.TypeRendererFactory;
-import com.esb.plugin.editor.properties.widget.DefaultPropertiesPanel;
 import com.esb.plugin.editor.properties.widget.FormBuilder;
+import com.esb.plugin.editor.properties.widget.PropertiesPanelHolder;
 import com.esb.plugin.editor.properties.widget.input.StringInputField;
 import com.esb.plugin.service.module.impl.ConfigMetadata;
 import com.intellij.openapi.module.Module;
@@ -39,7 +39,7 @@ class ConfigPropertiesPanel extends JBPanel {
 
         ConfigMetadataHeaderPanel headerPanel = new ConfigMetadataHeaderPanel(configMetadata, isNewConfig);
 
-        DefaultConfigPropertiesPanel propertiesPanel = new DefaultConfigPropertiesPanel(configMetadata, descriptors);
+        ConfigPropertiesPanelHolder propertiesPanel = new ConfigPropertiesPanelHolder(configMetadata, descriptors);
 
         descriptors.forEach(propertyDescriptor -> {
 
@@ -101,9 +101,9 @@ class ConfigPropertiesPanel extends JBPanel {
         }
     }
 
-    class DefaultConfigPropertiesPanel extends DefaultPropertiesPanel {
+    class ConfigPropertiesPanelHolder extends PropertiesPanelHolder {
 
-        DefaultConfigPropertiesPanel(ConfigMetadata configMetadata, List<ComponentPropertyDescriptor> descriptors) {
+        ConfigPropertiesPanelHolder(ConfigMetadata configMetadata, List<ComponentPropertyDescriptor> descriptors) {
             super(configMetadata, descriptors);
             setMinimumSize(MINIMUM_PANEL_SIZE);
         }

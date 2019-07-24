@@ -3,13 +3,13 @@ package com.esb.plugin.component.type.unknown;
 import com.esb.internal.commons.JsonParser;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.editor.properties.renderer.AbstractNodePropertiesRenderer;
-import com.esb.plugin.editor.properties.widget.DefaultPropertiesPanel;
+import com.esb.plugin.editor.properties.widget.DisposablePanel;
 import com.esb.plugin.editor.properties.widget.FormBuilder;
+import com.esb.plugin.editor.properties.widget.PropertiesPanelHolder;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBLabel;
-import com.intellij.ui.components.JBPanel;
 
 public class UnknownPropertiesRenderer extends AbstractNodePropertiesRenderer {
 
@@ -18,10 +18,10 @@ public class UnknownPropertiesRenderer extends AbstractNodePropertiesRenderer {
     }
 
     @Override
-    public JBPanel render(GraphNode node) {
+    public DisposablePanel render(GraphNode node) {
         ComponentData componentData = node.componentData();
         String unknownImplementorClazz = componentData.get(JsonParser.Implementor.name());
-        DefaultPropertiesPanel propertiesPanel = new DefaultPropertiesPanel(componentData, snapshot);
+        PropertiesPanelHolder propertiesPanel = new PropertiesPanelHolder(componentData, snapshot);
 
         FormBuilder.get()
                 .addLabel("Unknown implementor", propertiesPanel)

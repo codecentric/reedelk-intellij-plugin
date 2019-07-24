@@ -2,6 +2,7 @@ package com.esb.plugin.editor.properties.widget.input.script;
 
 import com.esb.plugin.commons.Labels;
 import com.esb.plugin.editor.properties.widget.input.InputChangeListener;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.module.Module;
@@ -19,7 +20,7 @@ import static com.esb.plugin.commons.Icons.Script;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 
-public class ScriptInputField extends JPanel implements ActionListener, DocumentListener {
+public class ScriptInputField extends JPanel implements ActionListener, DocumentListener, Disposable {
 
     private InputChangeListener<String> listener;
     private JavascriptEditor editor;
@@ -63,6 +64,12 @@ public class ScriptInputField extends JPanel implements ActionListener, Document
             listener.onChange(this.value);
         }
     }
+
+    @Override
+    public void dispose() {
+        this.editor.dispose();
+    }
+
 
     public void addListener(InputChangeListener<String> listener) {
         this.listener = listener;

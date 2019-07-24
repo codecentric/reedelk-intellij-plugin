@@ -1,12 +1,10 @@
 package com.esb.plugin.editor.properties.renderer;
 
+import com.esb.plugin.editor.properties.widget.DisposablePanel;
 import com.esb.plugin.graph.node.GraphNode;
-import com.intellij.ui.components.JBPanel;
 
 public interface NodePropertiesRenderer {
-
-    default JBPanel render(GraphNode node) {
+    default DisposablePanel render(GraphNode node) {
         throw new UnsupportedOperationException();
     }
-
 }

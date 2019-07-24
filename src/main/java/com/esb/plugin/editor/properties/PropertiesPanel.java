@@ -1,7 +1,7 @@
 package com.esb.plugin.editor.properties;
 
 import com.esb.plugin.editor.designer.SelectListener;
-import com.esb.plugin.editor.properties.widget.GraphTabbedPane;
+import com.esb.plugin.editor.properties.widget.GraphMetadataPane;
 import com.esb.plugin.editor.properties.widget.PropertiesTabbedPane;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
@@ -41,8 +41,8 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
         setupAncestorListener();
 
         // By default just show info about the graph
-        GraphTabbedPane defaultTabbedPane =
-                new GraphTabbedPane(icon, unselectedTabTitle, snapshot);
+        GraphMetadataPane defaultTabbedPane =
+                new GraphMetadataPane(icon, unselectedTabTitle, snapshot);
         updateTabbedPane(defaultTabbedPane);
 
         this.currentPane = defaultTabbedPane;
@@ -50,12 +50,11 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
 
     @Override
     public void onSelect(FlowSnapshot snapshot, GraphNode selected) {
-        // TODO: Dispose (to dispose the javascript editor for instance)
-        //  the previously selected PANEL!
         if (selected instanceof NothingSelectedNode) {
-            // If nothing is
-            GraphTabbedPane graphProperties =
-                    new GraphTabbedPane(icon, unselectedTabTitle, snapshot);
+            // If nothing is selected we display input fields to edit graph metadata,
+            // such as title and description.
+            GraphMetadataPane graphProperties =
+                    new GraphMetadataPane(icon, unselectedTabTitle, snapshot);
             updateTabbedPane(graphProperties);
 
             this.currentPane = graphProperties;

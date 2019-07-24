@@ -10,8 +10,8 @@ public interface SuggestionClient {
 
     Point getPopupLocation(JTextComponent invoker);
 
-    void setSelectedText(JTextComponent invoker, Document document, String selectedValue);
-
     List<Suggestion> getSuggestions(JTextComponent invoker);
+
+    void setSelectedText(JTextComponent invoker, Document document, String selectedValue);
 
 }

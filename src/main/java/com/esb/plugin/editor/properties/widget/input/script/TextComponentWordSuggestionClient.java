@@ -102,7 +102,6 @@ public class TextComponentWordSuggestionClient implements SuggestionClient {
 
         try {
             String text = getText(textComponent);
-            LOG.info("Get suggestions for text: " + text);
             return text != null ?
                     suggestionProvider.suggest(text) :
                     Collections.emptyList();

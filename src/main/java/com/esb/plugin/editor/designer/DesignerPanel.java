@@ -141,14 +141,23 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
                 .stream()
                 .filter(node -> node.contains(DesignerPanel.this, x, y))
                 .findFirst();
+
         if (selected.isPresent()) {
-            this.selected.unselected();
-            select(selected.get(), event);
+
+            unselect();
+
+            GraphNode selectedNde = selected.get();
+            select(selectedNde);
+
+            offsetX = event.getX() - selectedNde.x();
+            offsetY = event.getY() - selectedNde.y();
+
         } else {
             unselect();
+            select(NOTHING_SELECTED);
         }
 
-        // Repaint all the nodes
+        // Repaint all nodes
         repaint();
     }
 
@@ -159,6 +168,7 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
         dragging = false;
 
         if (selected != NOTHING_SELECTED) {
+
             int dragX = e.getX();
             int dragY = e.getY();
 
@@ -169,7 +179,7 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
 
             actionHandler.onMove(getGraphics2D(), selected, dragPoint, this);
 
-            repaint();
+            SwingUtilities.invokeLater(this::repaint);
         }
     }
 
@@ -191,6 +201,7 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
     @Override
     public void dragEnter(DropTargetDragEvent dtde) {
         unselect();
+        select(NOTHING_SELECTED);
         repaint();
     }
 
@@ -208,6 +219,7 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
         SwingUtilities.invokeLater(() -> {
             updated = true;
             unselect();
+            select(NOTHING_SELECTED);
             invalidate();
             repaint();
         });
@@ -258,13 +270,9 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
         selected = NOTHING_SELECTED;
     }
 
-    private void select(GraphNode node, MouseEvent event) {
+    private void select(GraphNode node) {
         selected = node;
         selected.selected();
-
-        offsetX = event.getX() - selected.x();
-        offsetY = event.getY() - selected.y();
-
         selectListener.onSelect(snapshot, selected);
     }
 

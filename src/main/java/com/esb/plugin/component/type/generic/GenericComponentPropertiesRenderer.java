@@ -7,11 +7,11 @@ import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.renderer.AbstractNodePropertiesRenderer;
 import com.esb.plugin.editor.properties.renderer.TypePropertyRenderer;
 import com.esb.plugin.editor.properties.renderer.TypeRendererFactory;
-import com.esb.plugin.editor.properties.widget.DefaultPropertiesPanel;
+import com.esb.plugin.editor.properties.widget.DisposablePanel;
+import com.esb.plugin.editor.properties.widget.PropertiesPanelHolder;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.openapi.module.Module;
-import com.intellij.ui.components.JBPanel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -24,7 +24,7 @@ public class GenericComponentPropertiesRenderer extends AbstractNodePropertiesRe
     }
 
     @Override
-    public JBPanel render(GraphNode node) {
+    public DisposablePanel render(GraphNode node) {
 
         ComponentData componentData = node.componentData();
 
@@ -34,8 +34,8 @@ public class GenericComponentPropertiesRenderer extends AbstractNodePropertiesRe
     }
 
     @NotNull
-    protected DefaultPropertiesPanel getDefaultPropertiesPanel(ComponentData componentData, List<ComponentPropertyDescriptor> descriptors) {
-        DefaultPropertiesPanel propertiesPanel = new DefaultPropertiesPanel(componentData, descriptors, snapshot);
+    protected PropertiesPanelHolder getDefaultPropertiesPanel(ComponentData componentData, List<ComponentPropertyDescriptor> descriptors) {
+        PropertiesPanelHolder propertiesPanel = new PropertiesPanelHolder(componentData, descriptors, snapshot);
 
         descriptors.forEach(propertyDescriptor -> {
 

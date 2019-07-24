@@ -7,13 +7,13 @@ import com.esb.plugin.component.type.flowreference.widget.SubflowSelector;
 import com.esb.plugin.component.type.generic.GenericComponentPropertiesRenderer;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessorFactory;
+import com.esb.plugin.editor.properties.widget.DisposablePanel;
 import com.esb.plugin.editor.properties.widget.FormBuilder;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.service.module.SubflowService;
 import com.esb.plugin.service.module.impl.SubflowMetadata;
 import com.intellij.openapi.module.Module;
-import com.intellij.ui.components.JBPanel;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
     }
 
     @Override
-    public JBPanel render(GraphNode node) {
+    public DisposablePanel render(GraphNode node) {
         ComponentData componentData = node.componentData();
 
         Optional<ComponentPropertyDescriptor> propertyDescriptor = componentData.getPropertyDescriptor(FlowReference.ref());
@@ -50,7 +50,7 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
                 .filter(descriptor -> !FlowReference.ref().equals(descriptor.getPropertyName()))
                 .collect(Collectors.toList());
 
-        JBPanel genericPropertiesPanel = getDefaultPropertiesPanel(componentData, filteredDescriptors);
+        DisposablePanel genericPropertiesPanel = getDefaultPropertiesPanel(componentData, filteredDescriptors);
 
         ComponentPropertyDescriptor referencePropertyDescriptor = propertyDescriptor.get();
 

@@ -1,10 +1,10 @@
 package com.esb.plugin.component.type.placeholder;
 
 import com.esb.plugin.editor.properties.renderer.AbstractNodePropertiesRenderer;
+import com.esb.plugin.editor.properties.widget.DisposablePanel;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.node.GraphNode;
 import com.intellij.openapi.module.Module;
-import com.intellij.ui.components.JBPanel;
 
 public class PlaceholderPropertiesRenderer extends AbstractNodePropertiesRenderer {
 
@@ -13,8 +13,8 @@ public class PlaceholderPropertiesRenderer extends AbstractNodePropertiesRendere
     }
 
     @Override
-    public JBPanel render(GraphNode node) {
+    public DisposablePanel render(GraphNode node) {
         // There are no properties to render for this type of node.
-        return new JBPanel();
+        return new DisposablePanel();
     }
 }

@@ -10,8 +10,6 @@ public interface PropertyPanelContext {
 
     void subscribe(String propertyName, InputChangeListener<?> inputChangeListener);
 
-    <T> void notify(String propertyName, T newValue);
-
     <T> T getPropertyValue(String propertyName);
 
     Optional<ComponentPropertyDescriptor> getDescriptorMatching(Predicate<ComponentPropertyDescriptor> filter);

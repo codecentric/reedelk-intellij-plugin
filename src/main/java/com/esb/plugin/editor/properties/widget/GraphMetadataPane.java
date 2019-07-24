@@ -7,19 +7,18 @@ import com.esb.plugin.editor.properties.widget.input.StringInputField;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.intellij.openapi.Disposable;
-import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBTabbedPane;
 
 import javax.swing.*;
 import java.util.Collections;
 
-public class GraphTabbedPane extends JBTabbedPane implements Disposable {
+public class GraphMetadataPane extends JBTabbedPane implements Disposable {
 
     private final Icon icon;
     private final String tabTitle;
     private final FlowSnapshot snapshot;
 
-    public GraphTabbedPane(Icon icon, String tabTitle, FlowSnapshot snapshot) {
+    public GraphMetadataPane(Icon icon, String tabTitle, FlowSnapshot snapshot) {
         super();
         this.icon = icon;
         this.tabTitle = tabTitle;
@@ -33,7 +32,7 @@ public class GraphTabbedPane extends JBTabbedPane implements Disposable {
     }
 
     private void initialize() {
-        FlowPropertiesPanel propertiesPanel = new FlowPropertiesPanel();
+        FlowPropertiesPanelHolder propertiesPanel = new FlowPropertiesPanelHolder();
 
         InputField<String> titleField = createTitleInputField();
         FormBuilder.get()
@@ -45,7 +44,7 @@ public class GraphTabbedPane extends JBTabbedPane implements Disposable {
                 .addLabel(Labels.FLOW_GRAPH_TAB_DESCRIPTION, propertiesPanel)
                 .addLastField(descriptionField, propertiesPanel);
 
-        JBPanel propertiesBoxPanel = ContainerFactory.createPropertiesBoxPanel(propertiesPanel);
+        DisposablePanel propertiesBoxPanel = ContainerFactory.pushPanelToTop(propertiesPanel);
 
         addTab(tabTitle, icon, propertiesBoxPanel, Labels.FLOW_GRAPH_TAB_TIP);
     }
@@ -73,8 +72,8 @@ public class GraphTabbedPane extends JBTabbedPane implements Disposable {
         return inputField;
     }
 
-    class FlowPropertiesPanel extends DefaultPropertiesPanel {
-        FlowPropertiesPanel() {
+    class FlowPropertiesPanelHolder extends PropertiesPanelHolder {
+        FlowPropertiesPanelHolder() {
             super(null, Collections.emptyList(), null);
         }
     }
