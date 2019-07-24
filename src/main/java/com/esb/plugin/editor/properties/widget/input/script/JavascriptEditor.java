@@ -1,6 +1,5 @@
 package com.esb.plugin.editor.properties.widget.input.script;
 
-import com.esb.plugin.commons.Colors;
 import com.esb.plugin.editor.properties.widget.input.script.suggestion.SuggestionDropDownDecorator;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -13,29 +12,20 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import com.intellij.util.ThrowableRunnable;
-import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import java.awt.*;
 
 public class JavascriptEditor extends ThreeComponentsSplitter implements Disposable {
-
-    private static final Border EDITOR_BORDER =
-            BorderFactory.createMatteBorder(1, 1, 1, 1, Colors.SCRIPT_EDITOR_BORDER);
 
     private static class Dimensions {
         private static final int DIVIDER_WIDTH = 0;
         private static final int DIVIDER_MOUSE_ZONE_WIDTH = 4;
         private static final int EDITOR_CONTEXT_VARIABLES_SIZE = 170;
-        private static final int POPUP_WIDTH = 800;
-        private static final int POPUP_HEIGHT = 400;
-        private static final int DEFAULT_WIDTH = 800;
-        private static final int DEFAULT_HEIGHT = 150;
     }
 
     private static final boolean HORIZONTAL = false;
+
     private static final FileType JAVASCRIPT_FILE_TYPE =
             FileTypeManager.getInstance().getFileTypeByExtension("js");
 
@@ -60,14 +50,8 @@ public class JavascriptEditor extends ThreeComponentsSplitter implements Disposa
 
         JComponent editorComponent = editor.getComponent();
 
-        if (JavascriptEditorMode.DEFAULT.equals(mode)) {
-            editorComponent.setBorder(EDITOR_BORDER);
-            setPreferredSize(new Dimension(Dimensions.DEFAULT_WIDTH, Dimensions.DEFAULT_HEIGHT));
-
-        } else if (JavascriptEditorMode.POPUP.equals(mode)) {
-            editorComponent.setBorder(JBUI.Borders.empty());
-            setPreferredSize(new Dimension(Dimensions.POPUP_WIDTH, Dimensions.POPUP_HEIGHT));
-        }
+        editorComponent.setBorder(mode.border());
+        setPreferredSize(mode.preferredSize());
 
         JavascriptEditorContextPanel contextPanel = new JavascriptEditorContextPanel(contextManager.getVariables());
 
