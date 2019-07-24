@@ -30,7 +30,7 @@ public class TextComponentWordSuggestionClient implements SuggestionClient {
     // We just invoke update if we are not  moving back with the caret.
     private int previousCaretPosition = -1;
 
-    public TextComponentWordSuggestionClient(Project project, SuggestionProvider suggestionProvider) {
+    TextComponentWordSuggestionClient(Project project, SuggestionProvider suggestionProvider) {
         this.suggestionProvider = suggestionProvider;
         this.project = project;
     }

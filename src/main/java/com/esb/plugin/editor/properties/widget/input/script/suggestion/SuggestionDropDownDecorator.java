@@ -2,6 +2,9 @@ package com.esb.plugin.editor.properties.widget.input.script.suggestion;
 
 import com.esb.plugin.commons.Colors;
 import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import com.intellij.openapi.editor.colors.EditorFontType;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.ui.components.JBList;
 import org.jetbrains.annotations.NotNull;
@@ -26,34 +29,37 @@ public class SuggestionDropDownDecorator {
     private JBList<Suggestion> listComp = new JBList<>(suggestionListModel);
     private boolean disableTextEvent;
 
-    public SuggestionDropDownDecorator(@NotNull JTextComponent invoker, Document document, @NotNull SuggestionClient suggestionClient) {
+    private SuggestionDropDownDecorator(@NotNull JTextComponent invoker,
+                                        @NotNull Document document,
+                                        @NotNull SuggestionClient suggestionClient,
+                                        @NotNull Font font) {
         this.invoker = invoker;
         this.suggestionClient = suggestionClient;
 
-        this.listComp.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-        this.listComp.setFocusable(false);
+        listComp.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        listComp.setFocusable(false);
         listComp.setCellRenderer(new SuggestionCellRenderer());
-
-        // TODO: Get the font from the IDE preferences
-        Font font = new Font("Menlo", Font.PLAIN, 20);
 
         listComp.setFont(font);
         listComp.setSelectionBackground(Colors.SCRIPT_EDITOR_SUGGESTION_POPUP_BG_SELECTION);
         listComp.setBackground(Colors.SCRIPT_EDITOR_SUGGESTION_POPUP_BG);
 
 
-        this.popupMenu.setLayout(new BorderLayout());
-        this.popupMenu.setFocusable(false);
-        this.popupMenu.setBackground(Colors.SCRIPT_EDITOR_SUGGESTION_POPUP_BG);
-        this.popupMenu.add(listComp, BorderLayout.WEST);
+        popupMenu.setLayout(new BorderLayout());
+        popupMenu.setFocusable(false);
+        popupMenu.setBackground(Colors.SCRIPT_EDITOR_SUGGESTION_POPUP_BG);
+        popupMenu.add(listComp, BorderLayout.WEST);
 
         this.document = document;
         document.addDocumentListener(new SuggestionDocumentListener(popupMenu));
         initInvokerKeyListeners(this.invoker);
     }
 
-    public static void decorate(JTextComponent component, Document document, SuggestionClient suggestionClient) {
-        new SuggestionDropDownDecorator(component, document, suggestionClient);
+    public static void decorate(Editor editor, Document document, SuggestionClient suggestionClient) {
+        JTextComponent component = (JTextComponent) editor.getContentComponent();
+        EditorColorsScheme colorsScheme = editor.getColorsScheme();
+        Font dropDownFont = colorsScheme.getFont(EditorFontType.PLAIN);
+        new SuggestionDropDownDecorator(component, document, suggestionClient, dropDownFont);
     }
 
     class SuggestionDocumentListener implements DocumentListener {

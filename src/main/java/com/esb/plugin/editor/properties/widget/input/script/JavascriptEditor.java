@@ -18,7 +18,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 
 public class JavascriptEditor extends ThreeComponentsSplitter implements Disposable {
@@ -56,10 +55,7 @@ public class JavascriptEditor extends ThreeComponentsSplitter implements Disposa
         this.document = EditorFactory.getInstance().createDocument(initialText);
         this.editor = EditorFactory.getInstance().createEditor(document, project, JAVASCRIPT_FILE_TYPE, false);
 
-
-        SuggestionDropDownDecorator.decorate(
-                (JTextComponent) editor.getContentComponent(),
-                document,
+        SuggestionDropDownDecorator.decorate(editor, document,
                 new TextComponentWordSuggestionClient(project, contextManager));
 
         JComponent editorComponent = editor.getComponent();
@@ -84,7 +80,12 @@ public class JavascriptEditor extends ThreeComponentsSplitter implements Disposa
 
     @Override
     public void dispose() {
-        EditorFactory.getInstance().releaseEditor(editor);
+        Editor[] allEditors = EditorFactory.getInstance().getAllEditors();
+        for (Editor currentEditor : allEditors) {
+            if (currentEditor == editor) {
+                EditorFactory.getInstance().releaseEditor(currentEditor);
+            }
+        }
     }
 
     public void addDocumentListener(DocumentListener listener) {
