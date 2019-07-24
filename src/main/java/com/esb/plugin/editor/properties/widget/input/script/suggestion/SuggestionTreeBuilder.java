@@ -2,12 +2,13 @@ package com.esb.plugin.editor.properties.widget.input.script.suggestion;
 
 import com.esb.api.annotation.AutocompleteType;
 import com.esb.plugin.commons.ModuleUtils;
+import com.esb.plugin.commons.ParentFolder;
+import com.esb.plugin.commons.ProjectFileContentProvider;
 import com.esb.plugin.component.domain.AutocompleteContext;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.component.domain.VariableDefinition;
 import com.esb.plugin.editor.properties.widget.PropertyPanelContext;
 import com.esb.plugin.editor.properties.widget.input.InputChangeListener;
-import com.esb.plugin.editor.properties.widget.input.script.ProjectFileContentProvider;
 import com.esb.plugin.javascript.Type;
 import com.esb.plugin.jsonschema.JsonSchemaProjectClient;
 import com.esb.plugin.jsonschema.JsonSchemaSuggestionsProcessor;
@@ -101,7 +102,7 @@ public class SuggestionTreeBuilder {
             if (AutocompleteType.JSON_SCHEMA.equals(autocompleteType)) {
                 String jsonSchemaRelativeFileName = panelContext.getPropertyValue(propertyName);
                 if (isNotBlank(jsonSchemaRelativeFileName)) {
-                    suggestionTokensFromJsonSchema(module, variableName, jsonSchemaRelativeFileName);
+                    populateSuggestionTokensFromJsonSchema(module, variableName, jsonSchemaRelativeFileName);
                 }
             }
 
@@ -111,34 +112,36 @@ public class SuggestionTreeBuilder {
         });
     }
 
-    private void suggestionTokensFromJsonSchema(Module module, String variableName, String fileName) {
+    private void populateSuggestionTokensFromJsonSchema(Module module, String variableName, String fileName) {
         ModuleUtils.getResourcesFolder(module).ifPresent(resourcesFolderPath -> {
 
             // The file name URL of the json schema is relative to the resources folder
             String jsonSchemaUrl =
                     VirtualFileManager.constructUrl("file", resourcesFolderPath + "/" + fileName);
 
-            ProjectFileContentProvider provider = new ProjectFileContentProvider();
-            String json = provider.getContent(jsonSchemaUrl);
-            String parentFolder = provider.getParentFolder(jsonSchemaUrl);
 
-            JSONObject schemaJsonObject = new JSONObject(new JSONTokener(json));
+            ProjectFileContentProvider.of(jsonSchemaUrl).ifPresent(json -> {
 
-            String rootPath = getRootPath(schemaJsonObject);
+                String parentFolder = ParentFolder.of(jsonSchemaUrl);
 
-            SchemaClient schemaClient = new JsonSchemaProjectClient(module, parentFolder, rootPath, provider);
+                JSONObject schemaJsonObject = new JSONObject(new JSONTokener(json));
 
-            JsonSchemaSuggestionsProcessor processor = new JsonSchemaSuggestionsProcessor(schemaJsonObject, schemaClient);
-            JsonSchemaSuggestionsResult suggestionResult = processor.process();
+                String rootPath = getRootPath(schemaJsonObject);
 
-            // All the properties of this variable extracted from the json schema
-            // need to be added to the suggestion tree.
-            suggestionResult
-                    .getTokens()
-                    .stream()
-                    .map(token -> variableName + "." + token) // append the parent variable name to each token
-                    .map(token -> new SuggestionToken(token, PROPERTY))
-                    .forEach(suggestionTree::insert);
+                SchemaClient schemaClient = new JsonSchemaProjectClient(module, parentFolder, rootPath);
+
+                JsonSchemaSuggestionsProcessor processor = new JsonSchemaSuggestionsProcessor(schemaJsonObject, schemaClient);
+                JsonSchemaSuggestionsResult suggestionResult = processor.process();
+
+                // All the properties of this variable extracted from the json schema
+                // need to be added to the suggestion tree.
+                suggestionResult
+                        .getTokens()
+                        .stream()
+                        .map(token -> variableName + "." + token) // append the parent variable name to each token
+                        .map(token -> new SuggestionToken(token, PROPERTY))
+                        .forEach(suggestionTree::insert);
+            });
         });
     }
 

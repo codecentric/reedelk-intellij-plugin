@@ -1,7 +1,7 @@
 package com.esb.plugin.jsonschema;
 
 import com.esb.plugin.commons.ModuleUtils;
-import com.esb.plugin.editor.properties.widget.input.script.ProjectFileContentProvider;
+import com.esb.plugin.commons.ProjectFileContentProvider;
 import com.intellij.openapi.module.Module;
 import org.everit.json.schema.loader.SchemaClient;
 import org.everit.json.schema.loader.internal.DefaultSchemaClient;
@@ -12,7 +12,6 @@ import java.io.InputStream;
 
 public class JsonSchemaProjectClient implements SchemaClient {
 
-    private final ProjectFileContentProvider provider;
     private final SchemaClient fallbackClient;
     private final String parentFolder;
     private final String rootHostPath;
@@ -20,12 +19,10 @@ public class JsonSchemaProjectClient implements SchemaClient {
 
     public JsonSchemaProjectClient(@NotNull Module module,
                                    @NotNull String parentFolder,
-                                   @NotNull String rootHostPath,
-                                   @NotNull ProjectFileContentProvider provider) {
+                                   @NotNull String rootHostPath) {
         this.fallbackClient = new DefaultSchemaClient();
         this.parentFolder = parentFolder;
         this.rootHostPath = rootHostPath;
-        this.provider = provider;
         this.module = module;
     }
 
@@ -34,8 +31,9 @@ public class JsonSchemaProjectClient implements SchemaClient {
         if (url.startsWith(rootHostPath)) {
             String relative = url.substring(rootHostPath.length());
             String finalFilePath = parentFolder + relative;
-            String content = provider.getContent(finalFilePath);
-            return new ByteArrayInputStream(content.getBytes());
+            return ProjectFileContentProvider.of(finalFilePath)
+                    .map(content -> new ByteArrayInputStream(content.getBytes()))
+                    .orElseGet(() -> new ByteArrayInputStream("{}".getBytes()));
         }
 
         return ModuleUtils.getResourcesFolder(module)
@@ -45,7 +43,8 @@ public class JsonSchemaProjectClient implements SchemaClient {
 
     private InputStream loadFromResources(String resourcesFolder, String url) {
         String finalFilePath = resourcesFolder + url;
-        String content = provider.getContent(finalFilePath);
-        return new ByteArrayInputStream(content.getBytes());
+        return ProjectFileContentProvider.of(finalFilePath)
+                .map(content -> new ByteArrayInputStream(content.getBytes()))
+                .orElseGet(() -> new ByteArrayInputStream("{}".getBytes()));
     }
 }
