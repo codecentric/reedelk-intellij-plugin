@@ -1,5 +1,6 @@
-package com.esb.plugin.editor.properties.widget.input.script;
+package com.esb.plugin.editor.properties.widget.input.script.editor;
 
+import com.esb.plugin.editor.properties.widget.input.script.ScriptContextManager;
 import com.esb.plugin.editor.properties.widget.input.script.suggestion.SuggestionDropDownDecorator;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -46,14 +47,15 @@ public class JavascriptEditor extends ThreeComponentsSplitter implements Disposa
         this.editor = EditorFactory.getInstance().createEditor(document, project, JAVASCRIPT_FILE_TYPE, false);
 
         SuggestionDropDownDecorator.decorate(editor, document,
-                new TextComponentWordSuggestionClient(project, contextManager));
+                new EditorWordSuggestionClient(project, contextManager));
 
         JComponent editorComponent = editor.getComponent();
 
         editorComponent.setBorder(mode.border());
         setPreferredSize(mode.preferredSize());
 
-        JavascriptEditorContextPanel contextPanel = new JavascriptEditorContextPanel(contextManager.getVariables());
+        JavascriptEditorContextPanel contextPanel =
+                new JavascriptEditorContextPanel(contextManager.getVariables());
 
         setFirstComponent(contextPanel);
         setLastComponent(editorComponent);

@@ -1,5 +1,6 @@
-package com.esb.plugin.editor.properties.widget.input.script;
+package com.esb.plugin.editor.properties.widget.input.script.editor;
 
+import com.esb.plugin.editor.properties.widget.input.script.ScriptContextManager;
 import com.esb.plugin.editor.properties.widget.input.script.suggestion.PredefinedJavascriptSuggestions;
 import com.esb.plugin.editor.properties.widget.input.script.suggestion.PredefinedMessageSuggestions;
 import com.esb.plugin.editor.properties.widget.input.script.suggestion.SuggestionTree;

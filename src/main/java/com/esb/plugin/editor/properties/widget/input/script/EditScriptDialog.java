@@ -1,6 +1,9 @@
 package com.esb.plugin.editor.properties.widget.input.script;
 
 import com.esb.plugin.commons.Labels;
+import com.esb.plugin.editor.properties.widget.input.script.editor.JavascriptEditor;
+import com.esb.plugin.editor.properties.widget.input.script.editor.JavascriptEditorFactory;
+import com.esb.plugin.editor.properties.widget.input.script.editor.JavascriptEditorMode;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.DialogWrapper;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +15,9 @@ public class EditScriptDialog extends DialogWrapper {
 
     private JavascriptEditor editor;
 
-    EditScriptDialog(@NotNull Module module, @NotNull String initialValue, ScriptContextManager context) {
+    EditScriptDialog(@NotNull Module module,
+                     @NotNull String initialValue,
+                     @NotNull ScriptContextManager context) {
         super(module.getProject(), false);
         setTitle(Labels.DIALOG_TITLE_EDIT_SCRIPT);
         setResizable(true);

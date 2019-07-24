@@ -4,6 +4,7 @@ import com.esb.plugin.component.domain.VariableDefinition;
 import com.esb.plugin.editor.properties.widget.PropertyPanelContext;
 import com.esb.plugin.editor.properties.widget.input.InputChangeListener;
 import com.esb.plugin.editor.properties.widget.input.script.suggestion.*;
+import com.esb.plugin.javascript.Type;
 import com.intellij.openapi.module.Module;
 import org.jetbrains.annotations.NotNull;
 
@@ -67,8 +68,15 @@ public class ScriptContextManager implements SuggestionProvider, InputChangeList
         this.contextVariables.addAll(builderResult.contextVariables);
     }
 
-    Set<ContextVariable> getVariables() {
+    public Set<ContextVariable> getVariables() {
         return Collections.unmodifiableSet(contextVariables);
+    }
+
+    private static class DefaultScriptVariables {
+        static final List<ScriptContextManager.ContextVariable> ALL = Arrays.asList(
+                new ScriptContextManager.ContextVariable("message", Type.MESSAGE.displayName()),
+                new ScriptContextManager.ContextVariable("inboundProperties", Type.MAP.displayName()),
+                new ScriptContextManager.ContextVariable("outboundProperties", Type.MAP.displayName()));
     }
 
     public static class ContextVariable {

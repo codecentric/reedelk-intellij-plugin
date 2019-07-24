@@ -2,6 +2,9 @@ package com.esb.plugin.editor.properties.widget.input.script;
 
 import com.esb.plugin.commons.Labels;
 import com.esb.plugin.editor.properties.widget.input.InputChangeListener;
+import com.esb.plugin.editor.properties.widget.input.script.editor.JavascriptEditor;
+import com.esb.plugin.editor.properties.widget.input.script.editor.JavascriptEditorFactory;
+import com.esb.plugin.editor.properties.widget.input.script.editor.JavascriptEditorMode;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;

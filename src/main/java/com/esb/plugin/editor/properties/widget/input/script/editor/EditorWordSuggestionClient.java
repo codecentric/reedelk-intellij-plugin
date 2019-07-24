@@ -1,4 +1,4 @@
-package com.esb.plugin.editor.properties.widget.input.script;
+package com.esb.plugin.editor.properties.widget.input.script.editor;
 
 import com.esb.plugin.editor.properties.widget.input.script.suggestion.Suggestion;
 import com.esb.plugin.editor.properties.widget.input.script.suggestion.SuggestionClient;
@@ -22,9 +22,9 @@ import java.util.Optional;
 /**
  * Matches individual words instead of complete text
  */
-public class TextComponentWordSuggestionClient implements SuggestionClient {
+public class EditorWordSuggestionClient implements SuggestionClient {
 
-    private static final Logger LOG = Logger.getInstance(TextComponentWordSuggestionClient.class);
+    private static final Logger LOG = Logger.getInstance(EditorWordSuggestionClient.class);
 
     private SuggestionProvider suggestionProvider;
     private Project project;
@@ -32,7 +32,7 @@ public class TextComponentWordSuggestionClient implements SuggestionClient {
     // We just invoke update if we are not  moving back with the caret.
     private int previousCaretPosition = -1;
 
-    TextComponentWordSuggestionClient(Project project, SuggestionProvider suggestionProvider) {
+    EditorWordSuggestionClient(Project project, SuggestionProvider suggestionProvider) {
         this.suggestionProvider = suggestionProvider;
         this.project = project;
     }

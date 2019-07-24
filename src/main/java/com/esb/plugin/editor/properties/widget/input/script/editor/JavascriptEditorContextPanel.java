@@ -1,7 +1,8 @@
-package com.esb.plugin.editor.properties.widget.input.script;
+package com.esb.plugin.editor.properties.widget.input.script.editor;
 
 import com.esb.plugin.commons.Colors;
 import com.esb.plugin.commons.Labels;
+import com.esb.plugin.editor.properties.widget.input.script.ScriptContextManager;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.JBUI;
 
