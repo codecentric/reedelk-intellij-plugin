@@ -1,10 +1,8 @@
 package com.esb.plugin.editor.properties.widget.input.script.suggestion;
 
 import com.esb.plugin.commons.Colors;
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentListener;
-import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.JBList;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,7 +32,7 @@ public class SuggestionDropDownDecorator {
 
         this.listComp.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         this.listComp.setFocusable(false);
-        listComp.setCellRenderer(new MyCellRenderer());
+        listComp.setCellRenderer(new SuggestionCellRenderer());
 
         // TODO: Get the font from the IDE preferences
         Font font = new Font("Menlo", Font.PLAIN, 20);
@@ -56,21 +54,6 @@ public class SuggestionDropDownDecorator {
 
     public static void decorate(JTextComponent component, Document document, SuggestionClient suggestionClient) {
         new SuggestionDropDownDecorator(component, document, suggestionClient);
-    }
-
-    class MyCellRenderer extends ListCellRendererWrapper<Suggestion> {
-
-        @Override
-        public void customize(JList list, Suggestion value, int index, boolean selected, boolean hasFocus) {
-            if (SuggestionType.VARIABLE.equals(value.getSuggestionType())) {
-                setIcon(AllIcons.Nodes.Field);
-            } else if (SuggestionType.PROPERTY.equals(value.getSuggestionType())) {
-                setIcon(AllIcons.Nodes.Property);
-            } else {
-                setIcon(AllIcons.Nodes.EmptyNode);
-            }
-            setText(value.getToken());
-        }
     }
 
     class SuggestionDocumentListener implements DocumentListener {
