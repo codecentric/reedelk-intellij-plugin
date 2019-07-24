@@ -82,7 +82,6 @@ public class SuggestionDropDownDecorator {
                 return;
             }
 
-
             SwingUtilities.invokeLater(() -> {
                 List<Suggestion> suggestions = suggestionClient.getSuggestions(invoker);
                 if (!suggestions.isEmpty()) {
