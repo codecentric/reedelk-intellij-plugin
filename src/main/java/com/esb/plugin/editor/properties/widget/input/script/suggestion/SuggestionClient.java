@@ -5,10 +5,11 @@ import com.intellij.openapi.editor.Document;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.util.List;
+import java.util.Optional;
 
 public interface SuggestionClient {
 
-    Point getPopupLocation(JTextComponent invoker);
+    Optional<Point> getPopupLocation(JTextComponent invoker);
 
     List<Suggestion> getSuggestions(JTextComponent invoker);
 

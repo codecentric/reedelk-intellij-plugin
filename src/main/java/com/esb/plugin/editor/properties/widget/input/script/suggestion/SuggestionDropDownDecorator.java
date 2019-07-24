@@ -85,8 +85,8 @@ public class SuggestionDropDownDecorator {
 
             SwingUtilities.invokeLater(() -> {
                 List<Suggestion> suggestions = suggestionClient.getSuggestions(invoker);
-                if (suggestions != null && !suggestions.isEmpty()) {
-                    this.popupMenu.setPopupSize(300, suggestions.size() * 33 + 8);
+                if (!suggestions.isEmpty()) {
+                    popupMenu.setPopupSize(300, suggestions.size() * 33 + 8);
                     showPopup(suggestions);
                 } else {
                     popupMenu.setVisible(false);
@@ -98,13 +98,11 @@ public class SuggestionDropDownDecorator {
     private void showPopup(List<Suggestion> suggestions) {
         suggestionListModel.clear();
         suggestions.forEach(suggestionListModel::addElement);
-        Point p = suggestionClient.getPopupLocation(invoker);
-        if (p == null) {
-            return;
-        }
-        popupMenu.pack();
-        listComp.setSelectedIndex(0);
-        popupMenu.show(invoker, (int) p.getX(), (int) p.getY());
+        suggestionClient.getPopupLocation(invoker).ifPresent(point -> {
+            popupMenu.pack();
+            listComp.setSelectedIndex(0);
+            popupMenu.show(invoker, (int) point.getX(), (int) point.getY());
+        });
     }
 
     private void initInvokerKeyListeners(JTextComponent invoker) {

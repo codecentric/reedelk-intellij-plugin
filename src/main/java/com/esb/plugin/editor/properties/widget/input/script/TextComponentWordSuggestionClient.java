@@ -8,6 +8,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ThrowableRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
@@ -16,6 +17,7 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Matches individual words instead of complete text
@@ -36,14 +38,15 @@ public class TextComponentWordSuggestionClient implements SuggestionClient {
     }
 
     @Override
-    public Point getPopupLocation(JTextComponent invoker) {
+    public Optional<Point> getPopupLocation(JTextComponent invoker) {
         int caretPosition = invoker.getCaretPosition();
         try {
             Rectangle2D rectangle2D = invoker.modelToView(caretPosition);
-            return new Point((int) rectangle2D.getX(), (int) (rectangle2D.getY() + rectangle2D.getHeight()));
+            Point point = new Point((int) rectangle2D.getX(), (int) (rectangle2D.getY() + rectangle2D.getHeight()));
+            return Optional.of(point);
         } catch (BadLocationException e) {
-            System.err.println(e);
-            return null;
+            LOG.warn(e);
+            return Optional.empty();
         }
     }
 
@@ -81,24 +84,22 @@ public class TextComponentWordSuggestionClient implements SuggestionClient {
                     });
                 }
             }
-        } catch (BadLocationException e) {
-            System.err.println(e);
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } catch (Throwable e) {
+            LOG.warn(e);
         }
     }
 
+    @NotNull
     @Override
     public List<Suggestion> getSuggestions(JTextComponent textComponent) {
 
         int currentCaretPosition = textComponent.getCaretPosition();
         if (previousCaretPosition > currentCaretPosition) {
             previousCaretPosition = currentCaretPosition;
-            return null;
+            return Collections.emptyList();
         } else {
             previousCaretPosition = currentCaretPosition;
         }
-
 
         try {
             String text = getText(textComponent);
@@ -106,7 +107,7 @@ public class TextComponentWordSuggestionClient implements SuggestionClient {
                     suggestionProvider.suggest(text) :
                     Collections.emptyList();
         } catch (BadLocationException e) {
-            System.err.println(e);
+            LOG.warn(e);
             return Collections.emptyList();
         }
     }
