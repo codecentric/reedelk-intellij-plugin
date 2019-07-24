@@ -8,6 +8,7 @@ import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.NothingSelectedNode;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBTabbedPane;
@@ -73,7 +74,7 @@ public class PropertiesPanel extends JBPanel implements SelectListener {
     @Override
     public void onUnselect() {
         if (currentPane != null) {
-            currentPane.dispose();
+            Disposer.dispose(currentPane);
         }
     }
 
