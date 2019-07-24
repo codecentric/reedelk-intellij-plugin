@@ -44,11 +44,11 @@ public abstract class GraphManager implements FileEditorManagerListener, Snapsho
 
     private Document document;
 
-    public GraphManager(@NotNull Project project,
-                        @NotNull Module module,
-                        @NotNull VirtualFile graphFile,
-                        @NotNull FlowSnapshot snapshot,
-                        @NotNull FlowGraphProvider graphProvider) {
+    GraphManager(@NotNull Project project,
+                 @NotNull Module module,
+                 @NotNull VirtualFile graphFile,
+                 @NotNull FlowSnapshot snapshot,
+                 @NotNull FlowGraphProvider graphProvider) {
         this.module = module;
         this.project = project;
         this.snapshot = snapshot;
