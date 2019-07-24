@@ -22,12 +22,13 @@ import static java.awt.BorderLayout.NORTH;
 
 public class ScriptInputField extends JPanel implements ActionListener, DocumentListener, Disposable {
 
+    private final Module module;
+    private final ScriptContextManager context;
+
+
     private InputChangeListener<String> listener;
     private JavascriptEditor editor;
     private String value = "";
-
-    private final Module module;
-    private final ScriptContextManager context;
 
     public ScriptInputField(@NotNull Module module,
                             @NotNull ScriptContextManager context) {
