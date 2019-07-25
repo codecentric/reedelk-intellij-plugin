@@ -7,6 +7,7 @@ import com.esb.plugin.editor.properties.widget.input.StringInputField;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.intellij.openapi.Disposable;
+import com.intellij.util.ui.JBUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,13 +16,14 @@ import java.util.Collections;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 
-public class GraphMetadataPane extends DisposablePanel implements Disposable {
+public class FlowMetadataPanel extends DisposablePanel implements Disposable {
 
     private final FlowSnapshot snapshot;
 
-    public GraphMetadataPane(FlowSnapshot snapshot) {
+    public FlowMetadataPanel(FlowSnapshot snapshot) {
         this.snapshot = snapshot;
         initialize();
+        setBorder(JBUI.Borders.empty(10));
     }
 
     @Override

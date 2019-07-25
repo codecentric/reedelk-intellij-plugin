@@ -9,8 +9,10 @@ import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.SnapshotListener;
 import com.esb.plugin.graph.layout.FlowGraphLayout;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.NothingSelectedNode;
+import com.esb.plugin.service.project.EmptySelectableItem;
+import com.esb.plugin.service.project.SelectableItem;
 import com.esb.plugin.service.project.SelectableItemComponent;
+import com.esb.plugin.service.project.SelectableItemFlow;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.AncestorListenerAdapter;
@@ -39,12 +41,11 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
 
     final int TOP_PADDING = 80;
 
-    private final GraphNode NOTHING_SELECTED = new NothingSelectedNode();
     private final Module module;
 
     protected FlowSnapshot snapshot;
 
-    private GraphNode selected = NOTHING_SELECTED;
+    private GraphNode selected;
 
     private int offsetX;
     private int offsetY;
@@ -166,7 +167,7 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
 
         } else {
             unselect();
-            select(NOTHING_SELECTED);
+            select(new SelectableItemFlow(snapshot));
         }
 
         // Repaint all nodes
@@ -179,7 +180,7 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
 
         dragging = false;
 
-        if (selected != NOTHING_SELECTED) {
+        if (selected != null) {
 
             int dragX = e.getX();
             int dragY = e.getY();
@@ -212,8 +213,6 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
 
     @Override
     public void dragEnter(DropTargetDragEvent dtde) {
-        unselect();
-        select(NOTHING_SELECTED);
         repaint();
     }
 
@@ -230,8 +229,6 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
     public void onStructureChange(@NotNull FlowGraph graph) {
         SwingUtilities.invokeLater(() -> {
             updated = true;
-            unselect();
-            select(NOTHING_SELECTED);
             invalidate();
             repaint();
         });
@@ -272,17 +269,20 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
     }
 
     private void unselect() {
-        selected.unselected();
-        componentSelectedPublisher.onUnSelected();
-
-        selected = NOTHING_SELECTED;
+        if (selected != null) {
+            selected.unselected();
+            componentSelectedPublisher.onUnSelected();
+        }
     }
 
     private void select(GraphNode node) {
         selected = node;
         selected.selected();
-
         componentSelectedPublisher.onSelection(new SelectableItemComponent(module, snapshot, selected));
+    }
+
+    private void select(SelectableItem selectableItem) {
+        componentSelectedPublisher.onSelection(selectableItem);
     }
 
     /**
@@ -300,10 +300,18 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
 
     private void registerAncestorListener() {
         addAncestorListener(new AncestorListenerAdapter() {
+
+            @Override
+            public void ancestorAdded(AncestorEvent event) {
+                super.ancestorAdded(event);
+                select(new SelectableItemFlow(snapshot));
+            }
+
             @Override
             public void ancestorRemoved(AncestorEvent event) {
                 super.ancestorRemoved(event);
                 unselect();
+                select(new EmptySelectableItem());
             }
         });
     }

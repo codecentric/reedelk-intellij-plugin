@@ -1,12 +1,11 @@
 package com.esb.plugin.editor.properties;
 
-import com.esb.plugin.commons.Colors;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.editor.properties.widget.ContainerFactory;
+import com.esb.plugin.editor.properties.widget.DisposablePanel;
 import com.esb.plugin.editor.properties.widget.DisposableScrollPane;
-import com.esb.plugin.service.project.DesignerSelectionManager;
-import com.esb.plugin.service.project.SelectableItem;
-import com.esb.plugin.service.project.SelectableItemComponent;
+import com.esb.plugin.editor.properties.widget.FlowMetadataPanel;
+import com.esb.plugin.service.project.*;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
@@ -14,25 +13,25 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.AncestorListenerAdapter;
+import com.intellij.ui.JBColor;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.border.MatteBorder;
 import javax.swing.event.AncestorEvent;
+import java.awt.*;
 
 import static com.esb.plugin.service.project.DesignerSelectionManager.CurrentSelectionListener;
 
 public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelectionListener {
 
-    private final MatteBorder border =
-            BorderFactory.createMatteBorder(10, 10, 0, 0, Colors.PROPERTIES_BACKGROUND);
     private final Project project;
 
     private Disposable currentPane;
     private DesignerSelectionManager designerSelectionManager;
 
     public PropertiesPanel(@NotNull Project project) {
-        setBorder(border);
+        setBorder(JBUI.Borders.empty());
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setupAncestorListener();
         this.project = project;
@@ -74,22 +73,34 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
         }
 
 
-        /**
-         if (selected instanceof NothingSelectedNode) {
-         // If nothing is selected we display input fields to edit graph metadata,
-         // such as title and description.
-         GraphMetadataPane graphProperties = new GraphMetadataPane(snapshot);
-         toolWindow.setTitle("Flow");
+        if (selectedItem instanceof SelectableItemFlow) {
+            // If nothing is selected we display input fields to edit graph metadata,
+            // such as title and description.
+            FlowMetadataPanel graphProperties = new FlowMetadataPanel(selectedItem.getSnapshot());
+            toolWindow.setTitle("Flow");
 
-         SwingUtilities.invokeLater(() -> {
-         removeAll();
-         add(graphProperties);
-         revalidate();
-         });
+            SwingUtilities.invokeLater(() -> {
+                removeAll();
+                add(graphProperties);
+                revalidate();
+            });
 
-         this.currentPane = graphProperties;
+            this.currentPane = graphProperties;
+        }
 
-         } */
+        if (selectedItem instanceof EmptySelectableItem) {
+            DisposablePanel empty = new DisposablePanel();
+            empty.setBackground(new JBColor(new Color(237, 237, 237), new Color(237, 237, 237)));
+            empty.setLayout(new BorderLayout());
+            empty.add(new JLabel("No selection"), BorderLayout.CENTER);
+            SwingUtilities.invokeLater(() -> {
+                removeAll();
+                add(empty);
+                revalidate();
+            });
+
+            this.currentPane = empty;
+        }
     }
 
     @Override

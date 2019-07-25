@@ -37,6 +37,7 @@ public class ContainerFactory {
                 .build()
                 .render(node);
         DisposablePanel propertiesBoxContainer = pushPanelToTop(propertiesPanel);
+        propertiesBoxContainer.setBorder(JBUI.Borders.empty(10));
         return wrapInsideScrollPane(propertiesBoxContainer);
     }
 

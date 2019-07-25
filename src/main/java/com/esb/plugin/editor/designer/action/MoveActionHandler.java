@@ -8,7 +8,6 @@ import com.esb.plugin.graph.action.Action;
 import com.esb.plugin.graph.action.remove.ActionNodeRemove;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.GraphNodeFactory;
-import com.esb.plugin.graph.node.NothingSelectedNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.FindScope;
 import com.esb.system.component.Placeholder;
@@ -57,8 +56,6 @@ public class MoveActionHandler {
                         dragY < selected.y() + Half.of(selected.height(graphics));
 
         if (withinX && withinY) return;
-
-        if (selected instanceof NothingSelectedNode) return;
 
         // 1. Copy the original graph
         FlowGraph copy = snapshot.getGraph().copy();
