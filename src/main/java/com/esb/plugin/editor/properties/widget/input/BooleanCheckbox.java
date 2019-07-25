@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.properties.widget.input;
 
+import com.esb.plugin.commons.Colors;
 import com.esb.plugin.converter.BooleanConverter;
 import com.esb.plugin.converter.ValueConverter;
 import com.intellij.ui.components.JBCheckBox;
@@ -15,6 +16,7 @@ public class BooleanCheckbox extends JBCheckBox implements ActionListener {
     private InputChangeListener<Boolean> listener;
 
     public BooleanCheckbox() {
+        setBackground(Colors.PROPERTIES_BACKGROUND);
         addActionListener(this);
     }
 
