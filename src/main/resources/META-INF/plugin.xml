@@ -44,11 +44,14 @@
         <applicationService serviceInterface="com.esb.plugin.service.application.http.ESBHttpService"
                             serviceImplementation="com.esb.plugin.service.application.http.impl.ESBHttpServiceImpl"/>
 
-        <projectService serviceInterface="com.esb.plugin.service.project.sourcechange.SourceChangeService"
-                        serviceImplementation="com.esb.plugin.service.project.sourcechange.impl.SourceChangeServiceImpl"/>
+        <projectService serviceInterface="com.esb.plugin.service.project.SourceChangeService"
+                        serviceImplementation="com.esb.plugin.service.project.impl.SourceChangeServiceImpl"/>
 
-        <projectService serviceInterface="com.esb.plugin.service.project.toolwindow.ESBToolWindowService"
-                        serviceImplementation="com.esb.plugin.service.project.toolwindow.impl.ESBToolWindowServiceImpl"/>
+        <projectService serviceInterface="com.esb.plugin.service.project.ESBToolWindowService"
+                        serviceImplementation="com.esb.plugin.service.project.impl.ESBToolWindowServiceImpl"/>
+
+        <projectService serviceInterface="com.esb.plugin.service.project.SelectedComponentManager"
+                        serviceImplementation="com.esb.plugin.service.project.impl.SelectedComponentManagerImpl"/>
 
         <moduleService serviceInterface="com.esb.plugin.service.module.ComponentService"
                        serviceImplementation="com.esb.plugin.service.module.impl.ComponentServiceImpl"/>
@@ -69,9 +72,10 @@
         <configurationType implementation="com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfigurationType"/>
         <configurationType implementation="com.esb.plugin.runconfig.module.ESBModuleRunConfigurationType"/>
 
-        <!-- Palette Components Tool Window -->
+        <!-- Palette and Component properties tool window -->
         <toolWindow id="ESB Components" anchor="right" icon="/icons/icon-16x-blue.png"
                     factoryClass="com.esb.plugin.editor.palette.PaletteFactory"/>
+
         <toolWindow id="componentPropertiesToolWindow" anchor="bottom"
                     factoryClass="com.esb.plugin.editor.properties.PropertiesPanelToolWindowFactory"/>
 
@@ -83,8 +87,12 @@
 
     <project-components>
         <component>
-            <interface-class>com.esb.plugin.service.project.sourcechange.SourceChangeService</interface-class>
-            <implementation-class>com.esb.plugin.service.project.sourcechange.impl.SourceChangeServiceImpl
+            <interface-class>com.esb.plugin.service.project.SourceChangeService</interface-class>
+            <implementation-class>com.esb.plugin.service.project.impl.SourceChangeServiceImpl</implementation-class>
+        </component>
+        <component>
+            <interface-class>com.esb.plugin.service.project.SelectedComponentManager</interface-class>
+            <implementation-class>com.esb.plugin.service.project.impl.SelectedComponentManagerImpl
             </implementation-class>
         </component>
     </project-components>

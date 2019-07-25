@@ -1,6 +1,6 @@
-package com.esb.plugin.service.project.sourcechange.impl;
+package com.esb.plugin.service.project.impl;
 
-import com.esb.plugin.service.project.sourcechange.SourceChangeService;
+import com.esb.plugin.service.project.SourceChangeService;
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;

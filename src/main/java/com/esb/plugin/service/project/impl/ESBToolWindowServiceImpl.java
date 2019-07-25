@@ -1,6 +1,6 @@
-package com.esb.plugin.service.project.toolwindow.impl;
+package com.esb.plugin.service.project.impl;
 
-import com.esb.plugin.service.project.toolwindow.ESBToolWindowService;
+import com.esb.plugin.service.project.ESBToolWindowService;
 import com.intellij.openapi.project.Project;
 
 import java.util.HashMap;

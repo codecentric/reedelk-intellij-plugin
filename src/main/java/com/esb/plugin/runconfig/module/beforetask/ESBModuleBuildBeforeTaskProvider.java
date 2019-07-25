@@ -4,7 +4,7 @@ import com.esb.plugin.commons.Icons;
 import com.esb.plugin.maven.MavenPackageGoal;
 import com.esb.plugin.runconfig.module.ESBModuleRunConfiguration;
 import com.esb.plugin.runconfig.module.runner.ESBModuleUnDeployExecutor;
-import com.esb.plugin.service.project.sourcechange.SourceChangeService;
+import com.esb.plugin.service.project.SourceChangeService;
 import com.intellij.execution.BeforeRunTaskProvider;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.runners.ExecutionEnvironment;

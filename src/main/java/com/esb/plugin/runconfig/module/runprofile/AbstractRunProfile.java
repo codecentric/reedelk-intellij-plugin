@@ -3,7 +3,7 @@ package com.esb.plugin.runconfig.module.runprofile;
 import com.esb.plugin.commons.MavenUtils;
 import com.esb.plugin.commons.NotificationUtils;
 import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfiguration;
-import com.esb.plugin.service.project.toolwindow.ESBToolWindowService;
+import com.esb.plugin.service.project.ESBToolWindowService;
 import com.intellij.execution.*;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.runners.ProgramRunner;

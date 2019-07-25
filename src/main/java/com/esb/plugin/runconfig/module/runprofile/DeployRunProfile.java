@@ -1,7 +1,6 @@
 package com.esb.plugin.runconfig.module.runprofile;
 
-import com.esb.plugin.service.application.rest.RESTModuleService;
-import com.esb.plugin.service.project.sourcechange.SourceChangeService;
+import com.esb.plugin.service.project.SourceChangeService;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.openapi.module.Module;

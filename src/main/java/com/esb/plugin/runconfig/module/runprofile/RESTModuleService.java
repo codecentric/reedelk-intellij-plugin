@@ -1,4 +1,4 @@
-package com.esb.plugin.service.application.rest;
+package com.esb.plugin.runconfig.module.runprofile;
 
 import com.esb.internal.rest.api.InternalAPI;
 import com.esb.internal.rest.api.hotswap.v1.HotSwapPOSTReq;
@@ -24,13 +24,13 @@ public class RESTModuleService {
     private final Project project;
     private final Module module;
 
-    public RESTModuleService(Project project, Module module, String address, int port) {
+    RESTModuleService(Project project, Module module, String address, int port) {
         this.baseUrl = String.format(BASE_ADMIN_CONSOLE_URL_TEMPLATE, address, port);
         this.project = project;
         this.module = module;
     }
 
-    public void hotSwap(String moduleFile, String resourcesRootDirectory) throws ExecutionException {
+    void hotSwap(String moduleFile, String resourcesRootDirectory) throws ExecutionException {
         HotSwapPOSTReq req = new HotSwapPOSTReq();
         req.setModuleFilePath(moduleFile);
         req.setResourcesRootDirectory(resourcesRootDirectory);
@@ -62,7 +62,7 @@ public class RESTModuleService {
         }
     }
 
-    public void deploy(String moduleFile) throws ExecutionException {
+    void deploy(String moduleFile) throws ExecutionException {
         ModulePOSTReq req = new ModulePOSTReq();
         req.setModuleFilePath(moduleFile);
 

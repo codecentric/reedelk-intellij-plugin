@@ -7,21 +7,19 @@ import com.esb.plugin.editor.properties.widget.input.StringInputField;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.intellij.openapi.Disposable;
-import com.intellij.ui.components.JBTabbedPane;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Collections;
 
-public class GraphMetadataPane extends JBTabbedPane implements Disposable {
+import static java.awt.BorderLayout.CENTER;
+import static java.awt.BorderLayout.NORTH;
 
-    private final Icon icon;
-    private final String tabTitle;
+public class GraphMetadataPane extends DisposablePanel implements Disposable {
+
     private final FlowSnapshot snapshot;
 
-    public GraphMetadataPane(Icon icon, String tabTitle, FlowSnapshot snapshot) {
-        super();
-        this.icon = icon;
-        this.tabTitle = tabTitle;
+    public GraphMetadataPane(FlowSnapshot snapshot) {
         this.snapshot = snapshot;
         initialize();
     }
@@ -32,7 +30,7 @@ public class GraphMetadataPane extends JBTabbedPane implements Disposable {
     }
 
     private void initialize() {
-        FlowPropertiesPanelHolder propertiesPanel = new FlowPropertiesPanelHolder();
+        DisposablePanel propertiesPanel = new PropertiesPanelHolder(null, Collections.emptyList(), null);
 
         InputField<String> titleField = createTitleInputField();
         FormBuilder.get()
@@ -44,9 +42,9 @@ public class GraphMetadataPane extends JBTabbedPane implements Disposable {
                 .addLabel(Labels.FLOW_GRAPH_TAB_DESCRIPTION, propertiesPanel)
                 .addLastField(descriptionField, propertiesPanel);
 
-        DisposablePanel propertiesBoxPanel = ContainerFactory.pushPanelToTop(propertiesPanel);
-
-        addTab(tabTitle, icon, propertiesBoxPanel, Labels.FLOW_GRAPH_TAB_TIP);
+        setLayout(new BorderLayout());
+        add(propertiesPanel, NORTH);
+        add(Box.createGlue(), CENTER);
     }
 
     private InputField<String> createTitleInputField() {
@@ -70,11 +68,5 @@ public class GraphMetadataPane extends JBTabbedPane implements Disposable {
         inputField.setValue(value);
         inputField.addListener(changeListener);
         return inputField;
-    }
-
-    class FlowPropertiesPanelHolder extends PropertiesPanelHolder {
-        FlowPropertiesPanelHolder() {
-            super(null, Collections.emptyList(), null);
-        }
     }
 }
