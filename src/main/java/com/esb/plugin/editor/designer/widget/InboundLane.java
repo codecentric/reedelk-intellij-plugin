@@ -6,9 +6,7 @@ import com.esb.plugin.commons.Half;
 import com.esb.plugin.commons.Images;
 import com.esb.plugin.editor.designer.AbstractGraphNode;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.FlowSnapshot;
-import com.esb.plugin.graph.layout.ComputeMaxHeight;
-import com.esb.plugin.graph.node.GraphNode;
+import com.intellij.ui.components.JBPanel;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
@@ -17,19 +15,17 @@ import java.util.List;
 
 public class InboundLane {
 
-    private static final int MIN_INBOUND_LANE_HEIGHT = 170;
-
     private final Stroke dashed = new BasicStroke(0.7f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{3}, 0);
     private final String INBOUND_STRING = "Event";
 
     private final InboundComponent inboundComponent;
-    private final FlowSnapshot snapshot;
     private final int topPadding;
+    private final JBPanel parent;
 
-    public InboundLane(FlowSnapshot snapshot, int topPadding) {
+    public InboundLane(int topPadding, JBPanel parent) {
         this.inboundComponent = new InboundComponent();
         this.topPadding = topPadding;
-        this.snapshot = snapshot;
+        this.parent = parent;
     }
 
     public void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
@@ -51,24 +47,12 @@ public class InboundLane {
     }
 
     private void drawVerticalBar(Graphics2D graphics, int width) {
-        int height = topPadding;
-        FlowGraph graph = snapshot.getGraph();
-        if (graph.isEmpty()) {
-            height += MIN_INBOUND_LANE_HEIGHT;
-        } else {
-            GraphNode root = graph.root();
-            int maxHeight = ComputeMaxHeight.of(graph, graphics, root);
-            height += maxHeight > MIN_INBOUND_LANE_HEIGHT ?
-                    maxHeight :
-                    MIN_INBOUND_LANE_HEIGHT;
-        }
         graphics.setColor(Colors.DESIGNER_INBOUND_LANE_VERTICAL_BAR);
         graphics.setStroke(dashed);
-        graphics.drawLine(width, 0, width, height);
+        graphics.drawLine(width, 0, width, parent.getHeight());
     }
 
     class InboundComponent extends AbstractText {
-
         private InboundComponent() {
             super(Fonts.Component.INBOUND, HorizontalAlignment.CENTER, VerticalAlignment.CENTER);
         }

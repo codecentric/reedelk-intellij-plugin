@@ -15,7 +15,7 @@ public class FlowDesignerPanel extends DesignerPanel {
 
     public FlowDesignerPanel(Module module, FlowSnapshot snapshot, DesignerPanelActionHandler actionHandler) {
         super(module, snapshot, actionHandler);
-        this.inboundLane = new InboundLane(snapshot, TOP_PADDING);
+        this.inboundLane = new InboundLane(TOP_PADDING, this);
         this.flowMetadata = new FlowMetadata(snapshot, Half.of(TOP_PADDING), AbstractGraphNode.NODE_WIDTH);
     }
 
