@@ -29,7 +29,7 @@ public class ContainerFactory {
         return container;
     }
 
-    static DisposableScrollPane createPropertiesPanel(Module module, ComponentData componentData, FlowSnapshot snapshot, GraphNode node) {
+    public static DisposableScrollPane createPropertiesPanel(Module module, ComponentData componentData, FlowSnapshot snapshot, GraphNode node) {
         DisposablePanel propertiesPanel = NodePropertiesRendererFactory.get()
                 .component(componentData)
                 .snapshot(snapshot)
