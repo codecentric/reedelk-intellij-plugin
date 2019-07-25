@@ -1,10 +1,8 @@
 package com.esb.plugin.editor;
 
-import com.esb.plugin.commons.Icons;
-import com.esb.plugin.commons.Labels;
 import com.esb.plugin.editor.designer.DesignerPanelActionHandler;
+import com.esb.plugin.editor.designer.ScrollableDesignerPanel;
 import com.esb.plugin.editor.designer.SubFlowDesignerPanel;
-import com.esb.plugin.editor.properties.PropertiesPanel;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.manager.GraphManager;
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
@@ -25,19 +23,12 @@ import java.beans.PropertyChangeListener;
 public class SubFlowDesignerEditor extends UserDataHolderBase implements FileEditor, PossiblyDumbAware, DocumentListener {
 
     private GraphManager manager;
-    private DesignerEditor editor;
+    private ScrollableDesignerPanel editor;
 
     SubFlowDesignerEditor(Module module, FlowSnapshot snapshot, GraphManager manager, DesignerPanelActionHandler actionHandler) {
         this.manager = manager;
-
-        PropertiesPanel properties =
-                new PropertiesPanel(module, snapshot, Labels.PROPERTIES_PANEL_SUBFLOW_TITLE, Icons.FileTypeSubFlow);
-
-        SubFlowDesignerPanel subFlowDesignerPanel =
-                new SubFlowDesignerPanel(snapshot, actionHandler);
-        subFlowDesignerPanel.addListener(properties);
-
-        this.editor = new DesignerEditor(subFlowDesignerPanel, properties);
+        SubFlowDesignerPanel subFlowDesignerPanel = new SubFlowDesignerPanel(module, snapshot, actionHandler);
+        this.editor = new ScrollableDesignerPanel(subFlowDesignerPanel);
     }
 
     @NotNull

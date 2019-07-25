@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.properties.renderer;
 
+import com.esb.plugin.commons.Colors;
 import com.esb.plugin.commons.Labels;
 import com.esb.plugin.commons.ModuleUtils;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.event.ActionListener;
 
 public class TypeFilePropertyRenderer implements TypePropertyRenderer {
 
@@ -96,6 +98,11 @@ public class TypeFilePropertyRenderer implements TypePropertyRenderer {
     }
 
     class MyTextFieldWithBrowse extends TextFieldWithBrowseButton {
+
+        public MyTextFieldWithBrowse() {
+            super((ActionListener) null);
+            setBackground(Colors.PROPERTIES_BACKGROUND);
+        }
 
         void addBrowseFolderListener(@NotNull MyTextBrowseFolderListener listener) {
             listener.setOwnerComponent(this);
