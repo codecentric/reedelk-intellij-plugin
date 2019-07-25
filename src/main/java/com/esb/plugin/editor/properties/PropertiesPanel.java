@@ -2,17 +2,13 @@ package com.esb.plugin.editor.properties;
 
 import com.esb.plugin.commons.Colors;
 import com.esb.plugin.component.domain.ComponentData;
-import com.esb.plugin.editor.designer.ComponentSelectedListener;
 import com.esb.plugin.editor.properties.widget.ContainerFactory;
 import com.esb.plugin.editor.properties.widget.DisposableScrollPane;
-import com.esb.plugin.editor.properties.widget.GraphMetadataPane;
-import com.esb.plugin.graph.FlowSnapshot;
-import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.NothingSelectedNode;
-import com.esb.plugin.service.project.SelectedComponentManager;
+import com.esb.plugin.service.project.DesignerSelectionManager;
+import com.esb.plugin.service.project.SelectableItem;
+import com.esb.plugin.service.project.SelectableItemComponent;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.ToolWindow;
@@ -24,14 +20,16 @@ import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.AncestorEvent;
 
-public class PropertiesPanel extends PropertiesBasePanel implements ComponentSelectedListener {
+import static com.esb.plugin.service.project.DesignerSelectionManager.CurrentSelectionListener;
+
+public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelectionListener {
 
     private final MatteBorder border =
             BorderFactory.createMatteBorder(10, 10, 0, 0, Colors.PROPERTIES_BACKGROUND);
     private final Project project;
 
     private Disposable currentPane;
-    private SelectedComponentManager selectedComponentManager;
+    private DesignerSelectionManager designerSelectionManager;
 
     public PropertiesPanel(@NotNull Project project) {
         setBorder(border);
@@ -39,53 +37,30 @@ public class PropertiesPanel extends PropertiesBasePanel implements ComponentSel
         setupAncestorListener();
         this.project = project;
 
-        selectedComponentManager = ServiceManager.getService(project, SelectedComponentManager.class);
+        designerSelectionManager = ServiceManager.getService(project, DesignerSelectionManager.class);
 
         project.getMessageBus()
-                .connect().subscribe(ComponentSelectedListener.COMPONENT_SELECTED_TOPIC, this);
+                .connect().subscribe(CurrentSelectionListener.CURRENT_SELECTION_TOPIC, this);
     }
 
     @Override
-    public void onComponentUnSelected() {
-        if (currentPane != null) {
-            Disposer.dispose(currentPane);
-        }
-    }
-
-    @Override
-    public void onComponentSelected(Module module, FlowSnapshot snapshot, GraphNode selected) {
-
+    public void onSelection(SelectableItem selectedItem) {
         ToolWindow toolWindow = ToolWindowManager
                 .getInstance(project)
                 .getToolWindow(PropertiesPanelToolWindowFactory.ID);
 
-
-        if (selected instanceof NothingSelectedNode) {
-            // If nothing is selected we display input fields to edit graph metadata,
-            // such as title and description.
-            GraphMetadataPane graphProperties = new GraphMetadataPane(snapshot);
-            toolWindow.setTitle("Flow");
-
-            SwingUtilities.invokeLater(() -> {
-                removeAll();
-                add(graphProperties);
-                revalidate();
-            });
-
-            this.currentPane = graphProperties;
-
-        } else {
-
+        if (selectedItem instanceof SelectableItemComponent) {
             // Otherwise the properties panel displays the properties
             // of the component currently selected.
-            ComponentData componentData = selected.componentData();
+            ComponentData componentData = selectedItem.getSelectedNode().componentData();
 
 
             DisposableScrollPane propertiesPanel =
-                    ContainerFactory.createPropertiesPanel(module, componentData, snapshot, selected);
+                    ContainerFactory.createPropertiesPanel(selectedItem.getModule(),
+                            componentData,
+                            selectedItem.getSnapshot(),
+                            selectedItem.getSelectedNode());
 
-
-            Icon icon = componentData.getComponentIcon();
             String displayName = componentData.getDisplayName();
             toolWindow.setTitle(displayName);
 
@@ -97,6 +72,31 @@ public class PropertiesPanel extends PropertiesBasePanel implements ComponentSel
 
             this.currentPane = propertiesPanel;
         }
+
+
+        /**
+         if (selected instanceof NothingSelectedNode) {
+         // If nothing is selected we display input fields to edit graph metadata,
+         // such as title and description.
+         GraphMetadataPane graphProperties = new GraphMetadataPane(snapshot);
+         toolWindow.setTitle("Flow");
+
+         SwingUtilities.invokeLater(() -> {
+         removeAll();
+         add(graphProperties);
+         revalidate();
+         });
+
+         this.currentPane = graphProperties;
+
+         } */
+    }
+
+    @Override
+    public void onUnSelected() {
+        if (currentPane != null) {
+            Disposer.dispose(currentPane);
+        }
     }
 
     private void setupAncestorListener() {
@@ -104,11 +104,8 @@ public class PropertiesPanel extends PropertiesBasePanel implements ComponentSel
             @Override
             public void ancestorAdded(AncestorEvent event) {
                 super.ancestorAdded(event);
-                selectedComponentManager.getCurrentSelection()
-                        .ifPresent(currentSelection -> onComponentSelected(
-                                currentSelection.getModule(),
-                                currentSelection.getSnapshot(),
-                                currentSelection.getSelectedNode()));
+                designerSelectionManager.getCurrentSelection()
+                        .ifPresent(PropertiesPanel.this::onSelection);
             }
 
             @Override

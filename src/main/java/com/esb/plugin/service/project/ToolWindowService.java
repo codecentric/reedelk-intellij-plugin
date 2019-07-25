@@ -9,9 +9,9 @@ import java.util.Optional;
 /**
  * This service keeps track of the tool window id for a given run config
  */
-public interface ESBToolWindowService {
-    static ESBToolWindowService getInstance(@NotNull Project project) {
-        return ServiceManager.getService(project, ESBToolWindowService.class);
+public interface ToolWindowService {
+    static ToolWindowService getInstance(@NotNull Project project) {
+        return ServiceManager.getService(project, ToolWindowService.class);
     }
 
     void put(String runConfigName, String toolWindowId);

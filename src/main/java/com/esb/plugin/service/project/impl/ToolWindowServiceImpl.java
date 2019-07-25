@@ -1,17 +1,17 @@
 package com.esb.plugin.service.project.impl;
 
-import com.esb.plugin.service.project.ESBToolWindowService;
+import com.esb.plugin.service.project.ToolWindowService;
 import com.intellij.openapi.project.Project;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class ESBToolWindowServiceImpl implements ESBToolWindowService {
+public class ToolWindowServiceImpl implements ToolWindowService {
 
     private Map<String,String> runConfigToolWindowMap = new HashMap<>();
 
-    public ESBToolWindowServiceImpl(Project project) {
+    public ToolWindowServiceImpl(Project project) {
     }
 
     @Override

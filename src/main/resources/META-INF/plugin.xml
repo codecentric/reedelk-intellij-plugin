@@ -41,16 +41,16 @@
         <moduleBuilder builderClass="com.esb.plugin.module.builder.ESBModuleBuilder" id="ESB_MODULE_BUILDER" order="first"/>
 
         <!-- Services -->
-        <applicationService serviceInterface="com.esb.plugin.service.application.http.ESBHttpService"
-                            serviceImplementation="com.esb.plugin.service.application.http.impl.ESBHttpServiceImpl"/>
+        <applicationService serviceInterface="com.esb.plugin.service.application.http.HttpService"
+                            serviceImplementation="com.esb.plugin.service.application.http.impl.HttpServiceImpl"/>
 
         <projectService serviceInterface="com.esb.plugin.service.project.SourceChangeService"
                         serviceImplementation="com.esb.plugin.service.project.impl.SourceChangeServiceImpl"/>
 
-        <projectService serviceInterface="com.esb.plugin.service.project.ESBToolWindowService"
-                        serviceImplementation="com.esb.plugin.service.project.impl.ESBToolWindowServiceImpl"/>
+        <projectService serviceInterface="com.esb.plugin.service.project.ToolWindowService"
+                        serviceImplementation="com.esb.plugin.service.project.impl.ToolWindowServiceImpl"/>
 
-        <projectService serviceInterface="com.esb.plugin.service.project.SelectedComponentManager"
+        <projectService serviceInterface="com.esb.plugin.service.project.DesignerSelectionManager"
                         serviceImplementation="com.esb.plugin.service.project.impl.SelectedComponentManagerImpl"/>
 
         <moduleService serviceInterface="com.esb.plugin.service.module.ComponentService"
@@ -91,7 +91,7 @@
             <implementation-class>com.esb.plugin.service.project.impl.SourceChangeServiceImpl</implementation-class>
         </component>
         <component>
-            <interface-class>com.esb.plugin.service.project.SelectedComponentManager</interface-class>
+            <interface-class>com.esb.plugin.service.project.DesignerSelectionManager</interface-class>
             <implementation-class>com.esb.plugin.service.project.impl.SelectedComponentManagerImpl
             </implementation-class>
         </component>

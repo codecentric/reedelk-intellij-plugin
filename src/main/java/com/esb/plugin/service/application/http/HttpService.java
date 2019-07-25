@@ -6,12 +6,12 @@ import okhttp3.MediaType;
 import java.io.IOException;
 
 
-public interface ESBHttpService {
+public interface HttpService {
 
     MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
-    static ESBHttpService getInstance() {
-        return ServiceManager.getService(ESBHttpService.class);
+    static HttpService getInstance() {
+        return ServiceManager.getService(HttpService.class);
     }
 
     HttpResponse post(String url, String payload, MediaType mediaType) throws IOException;

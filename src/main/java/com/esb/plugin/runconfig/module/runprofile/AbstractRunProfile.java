@@ -3,7 +3,7 @@ package com.esb.plugin.runconfig.module.runprofile;
 import com.esb.plugin.commons.MavenUtils;
 import com.esb.plugin.commons.NotificationUtils;
 import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfiguration;
-import com.esb.plugin.service.project.ESBToolWindowService;
+import com.esb.plugin.service.project.ToolWindowService;
 import com.intellij.execution.*;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.runners.ProgramRunner;
@@ -62,7 +62,7 @@ abstract class AbstractRunProfile implements RunProfileState {
 
 
     void switchToolWindowAndNotifyWithMessage(String message) {
-        ESBToolWindowService toolWindowService = ServiceManager.getService(project, ESBToolWindowService.class);
+        ToolWindowService toolWindowService = ServiceManager.getService(project, ToolWindowService.class);
         Optional<String> optionalToolWindowId = toolWindowService.get(runtimeConfigName);
         optionalToolWindowId.ifPresent(toolWindowId -> getToolWindowById(toolWindowId).show(null));
         optionalToolWindowId.ifPresent(toolWindowId -> NotificationUtils.notifyInfo(toolWindowId, message, project));

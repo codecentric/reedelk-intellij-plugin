@@ -1,16 +1,16 @@
 package com.esb.plugin.service.application.http.impl;
 
-import com.esb.plugin.service.application.http.ESBHttpService;
 import com.esb.plugin.service.application.http.HttpResponse;
+import com.esb.plugin.service.application.http.HttpService;
 import okhttp3.*;
 
 import java.io.IOException;
 
-public class ESBHttpServiceImpl implements ESBHttpService {
+public class HttpServiceImpl implements HttpService {
 
     private OkHttpClient client;
 
-    public ESBHttpServiceImpl() {
+    public HttpServiceImpl() {
         this.client = new OkHttpClient();
     }
 

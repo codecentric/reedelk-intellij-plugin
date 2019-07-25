@@ -1,8 +1,8 @@
 package com.esb.plugin.runconfig.runtime;
 
 import com.esb.plugin.commons.NetworkUtils;
-import com.esb.plugin.service.project.ESBToolWindowService;
 import com.esb.plugin.service.project.SourceChangeService;
+import com.esb.plugin.service.project.ToolWindowService;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.*;
@@ -81,7 +81,7 @@ public class ESBRuntimeRunConfiguration extends RunConfigurationBase<ESBRuntimeR
         // Store the ToolWindowId associated to this RunConfig. It will be used
         // later by a ModuleRun Configuration to switch to this tool window when a
         // deploy/un-deploy action is completed.
-        ESBToolWindowService toolWindowService = ServiceManager.getService(getProject(), ESBToolWindowService.class);
+        ToolWindowService toolWindowService = ServiceManager.getService(getProject(), ToolWindowService.class);
         toolWindowService.put(getName(), executor.getToolWindowId());
         return new ESBRuntimeRunCommandLine(this, environment);
     }

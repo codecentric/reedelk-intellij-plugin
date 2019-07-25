@@ -5,8 +5,8 @@ import com.esb.internal.rest.api.hotswap.v1.HotSwapPOSTReq;
 import com.esb.internal.rest.api.module.v1.ModuleDELETEReq;
 import com.esb.internal.rest.api.module.v1.ModulePOSTReq;
 import com.esb.plugin.maven.MavenPackageGoal;
-import com.esb.plugin.service.application.http.ESBHttpService;
 import com.esb.plugin.service.application.http.HttpResponse;
+import com.esb.plugin.service.application.http.HttpService;
 import com.intellij.execution.ExecutionException;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -95,18 +95,18 @@ public class RESTModuleService {
     }
 
     private HttpResponse post(String url, String json) throws ExecutionException {
-        ESBHttpService ESBHttpService = ServiceManager.getService(ESBHttpService.class);
+        HttpService HttpService = ServiceManager.getService(HttpService.class);
         try {
-            return ESBHttpService.post(url, json, ESBHttpService.JSON);
+            return HttpService.post(url, json, HttpService.JSON);
         } catch (IOException e) {
             throw new ExecutionException(e);
         }
     }
 
     private HttpResponse delete(String url, String json) throws ExecutionException {
-        ESBHttpService ESBHttpService = ServiceManager.getService(ESBHttpService.class);
+        HttpService HttpService = ServiceManager.getService(HttpService.class);
         try {
-            return ESBHttpService.delete(url, json, ESBHttpService.JSON);
+            return HttpService.delete(url, json, HttpService.JSON);
         } catch (IOException e) {
             throw new ExecutionException(e);
         }

@@ -10,6 +10,7 @@ import com.esb.plugin.graph.SnapshotListener;
 import com.esb.plugin.graph.layout.FlowGraphLayout;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.NothingSelectedNode;
+import com.esb.plugin.service.project.SelectableItemComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.AncestorListenerAdapter;
@@ -28,6 +29,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Optional;
 
+import static com.esb.plugin.service.project.DesignerSelectionManager.CurrentSelectionListener;
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
@@ -53,7 +55,7 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
 
     private final DesignerPanelActionHandler actionHandler;
 
-    private ComponentSelectedListener componentSelectedPublisher;
+    private CurrentSelectionListener componentSelectedPublisher;
 
 
     DesignerPanel(@NotNull Module module,
@@ -72,7 +74,7 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
         addMouseMotionListener(this);
 
         componentSelectedPublisher = module.getProject().getMessageBus()
-                .syncPublisher(ComponentSelectedListener.COMPONENT_SELECTED_TOPIC);
+                .syncPublisher(CurrentSelectionListener.CURRENT_SELECTION_TOPIC);
     }
 
     protected abstract void onPrePaint(Graphics2D graphics);
@@ -271,7 +273,7 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
 
     private void unselect() {
         selected.unselected();
-        componentSelectedPublisher.onComponentUnSelected();
+        componentSelectedPublisher.onUnSelected();
 
         selected = NOTHING_SELECTED;
     }
@@ -280,7 +282,7 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
         selected = node;
         selected.selected();
 
-        componentSelectedPublisher.onComponentSelected(module, snapshot, selected);
+        componentSelectedPublisher.onSelection(new SelectableItemComponent(module, snapshot, selected));
     }
 
     /**
