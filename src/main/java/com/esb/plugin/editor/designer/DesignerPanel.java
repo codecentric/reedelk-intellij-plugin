@@ -39,21 +39,19 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
 
     final int TOP_PADDING = 80;
 
-    private final Module module;
-
     protected FlowSnapshot snapshot;
 
-    private GraphNode selected;
+    private final Module module;
+    private final DesignerPanelActionHandler actionHandler;
 
     private int offsetX;
     private int offsetY;
-    private boolean updated = false;
     private boolean dragging;
+    private boolean updated = false;
 
+    private GraphNode selected;
     private CenterOfNode centerOfNode;
-
-    private final DesignerPanelActionHandler actionHandler;
-
+    private SelectableItem currentSelection;
     private CurrentSelectionListener componentSelectedPublisher;
 
 
@@ -272,24 +270,20 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
             selected.unselected();
             selected = null;
         }
-
         if (currentSelection != null) {
             componentSelectedPublisher.onUnSelected(currentSelection);
         }
     }
 
-    private SelectableItem currentSelection;
-
     private void select(GraphNode node) {
         selected = node;
         selected.selected();
-
         currentSelection = new SelectableItemComponent(module, snapshot, selected);
         select(currentSelection);
     }
 
     private void select(SelectableItem selectableItem) {
-        this.currentSelection = selectableItem;
+        currentSelection = selectableItem;
         componentSelectedPublisher.onSelection(selectableItem);
     }
 
@@ -306,7 +300,6 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
 
     private void registerAncestorListener() {
         addAncestorListener(new AncestorListenerAdapter() {
-
             @Override
             public void ancestorAdded(AncestorEvent event) {
                 super.ancestorAdded(event);
