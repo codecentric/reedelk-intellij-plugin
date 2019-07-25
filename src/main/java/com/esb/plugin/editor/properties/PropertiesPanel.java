@@ -1,11 +1,9 @@
 package com.esb.plugin.editor.properties;
 
+import com.esb.plugin.commons.Labels;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.editor.properties.widget.*;
-import com.esb.plugin.service.project.DesignerSelectionManager;
-import com.esb.plugin.service.project.SelectableItem;
-import com.esb.plugin.service.project.SelectableItemComponent;
-import com.esb.plugin.service.project.SelectableItemFlow;
+import com.esb.plugin.service.project.*;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
@@ -72,19 +70,20 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
         }
 
 
-        if (selectedItem instanceof SelectableItemFlow) {
-            // If nothing is selected we display input fields to edit graph metadata,
-            // such as title and description.
-            FlowMetadataPanel graphProperties = new FlowMetadataPanel(selectedItem.getSnapshot());
-            toolWindow.setTitle("Flow");
+        if (selectedItem instanceof SelectableItemFlow ||
+                selectedItem instanceof SelectableItemSubflow) {
 
+            FlowAndSubflowMetadataPanel panel = new FlowAndSubflowMetadataPanel(selectedItem.getSnapshot());
+            toolWindow.setTitle(selectedItem instanceof SelectableItemFlow ?
+                    Labels.PROPERTIES_PANEL_FLOW_TITLE :
+                    Labels.PROPERTIES_PANEL_SUBFLOW_TITLE);
             SwingUtilities.invokeLater(() -> {
                 removeAll();
-                add(graphProperties);
+                add(panel);
                 revalidate();
             });
 
-            this.currentPane = graphProperties;
+            this.currentPane = panel;
         }
     }
 

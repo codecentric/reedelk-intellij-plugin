@@ -137,7 +137,6 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
     }
 
     class RegisterModuleConsumer implements Consumer<Module> {
-
         @Override
         public void accept(Module module) {
             if (module.getModuleFile() != null) {

@@ -11,7 +11,6 @@ import com.esb.plugin.graph.layout.FlowGraphLayout;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.service.project.SelectableItem;
 import com.esb.plugin.service.project.SelectableItemComponent;
-import com.esb.plugin.service.project.SelectableItemFlow;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.AncestorListenerAdapter;
@@ -78,8 +77,6 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
                 .getMessageBus()
                 .syncPublisher(CurrentSelectionListener.CURRENT_SELECTION_TOPIC);
     }
-
-    protected abstract void onPrePaint(Graphics2D graphics);
 
     @Override
     protected void paintComponent(Graphics graphics) {
@@ -154,17 +151,18 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
 
         if (selected.isPresent()) {
 
-            unselect();
-
             GraphNode selectedNde = selected.get();
+
+            unselect();
             select(selectedNde);
 
             offsetX = event.getX() - selectedNde.x();
             offsetY = event.getY() - selectedNde.y();
 
         } else {
+            // Nothing is selected, we display flow properties
             unselect();
-            select(new SelectableItemFlow(snapshot));
+            select(getNoComponentSelectedItem());
         }
 
         // Repaint all nodes
@@ -261,6 +259,10 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
         // nothing to do
     }
 
+    protected abstract void onPrePaint(Graphics2D graphics);
+
+    protected abstract SelectableItem getNoComponentSelectedItem();
+
     private Graphics2D getGraphics2D() {
         return (Graphics2D) getGraphics();
     }
@@ -308,7 +310,7 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
             @Override
             public void ancestorAdded(AncestorEvent event) {
                 super.ancestorAdded(event);
-                select(new SelectableItemFlow(snapshot));
+                select(getNoComponentSelectedItem());
             }
 
             @Override

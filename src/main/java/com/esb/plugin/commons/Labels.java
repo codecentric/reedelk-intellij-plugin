@@ -13,12 +13,11 @@ public class Labels {
         public static final String FIELD_CONFIG_TITLE = "Config title";
     }
 
-    public static final String PROPERTIES_PANEL_SUBFLOW_TITLE = "Subflow properties";
-    public static final String PROPERTIES_PANEL_FLOW_TITLE = "Flow properties";
+    public static final String PROPERTIES_PANEL_SUBFLOW_TITLE = "Subflow";
+    public static final String PROPERTIES_PANEL_FLOW_TITLE = "Flow";
 
     public static final String FLOW_GRAPH_TAB_TITLE = "Title";
     public static final String FLOW_GRAPH_TAB_DESCRIPTION = "Description";
-    public static final String FLOW_GRAPH_TAB_TIP = "Flow properties";
 
     public static final String DIALOG_TITLE_ADD_CONFIGURATION = "Add Configuration";
     public static final String DIALOG_TITLE_EDIT_CONFIGURATION = "Edit Configuration";

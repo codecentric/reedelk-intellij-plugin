@@ -16,11 +16,11 @@ import java.util.Collections;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 
-public class FlowMetadataPanel extends DisposablePanel implements Disposable {
+public class FlowAndSubflowMetadataPanel extends DisposablePanel implements Disposable {
 
     private final FlowSnapshot snapshot;
 
-    public FlowMetadataPanel(FlowSnapshot snapshot) {
+    public FlowAndSubflowMetadataPanel(FlowSnapshot snapshot) {
         this.snapshot = snapshot;
         initialize();
         setBorder(JBUI.Borders.empty(10));

@@ -8,6 +8,9 @@ import java.awt.*;
 public class Colors {
 
     public static final JBColor PROPERTIES_BACKGROUND = JBColor.WHITE;
+    public static final JBColor PROPERTIES_EMPTY_SELECTION_BACKGROUND = new JBColor(new Color(237, 237, 237), new Color(237, 237, 237));
+    public static final JBColor PROPERTIES_EMPTY_SELECTION_TEXT = new JBColor(new Color(153, 153, 153), new Color(153, 153, 153));
+
     public static final Color SCRIPT_EDITOR_CONTEXT_PANEL_BORDER = JBColor.LIGHT_GRAY;
     public static final Color SCRIPT_EDITOR_CONTEXT_PANEL_TITLE_BG = new Color(226, 230, 236);
     public static final Color SCRIPT_EDITOR_CONTEXT_PANEL_BORDER_BOTTOM = new Color(201, 201, 201);
