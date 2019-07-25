@@ -28,9 +28,9 @@ public class Icons {
         private Component() {
         }
 
-        public static final Icon DefaultComponentIcon = IconLoader.getIcon("/icons/default-component-icon.png");
-        public static final Icon InboundTypeComponentIcon = IconLoader.getIcon("/icons/inbound-type-component.png");
-        public static final Icon ProcessorTypeComponentIcon = IconLoader.getIcon("/icons/processor-type-component.png");
+        public static final Icon DefaultComponent = IconLoader.getIcon("/icons/default-component-icon.png");
+        public static final Icon InboundTypeComponent = IconLoader.getIcon("/icons/inbound-type-component.png");
+        public static final Icon ProcessorTypeComponent = IconLoader.getIcon("/icons/processor-type-component.png");
 
         private static final Map<String, Icon> KEY_ICON_MAP = new HashMap<>();
 
@@ -39,7 +39,7 @@ public class Icons {
         }
 
         public static Icon get(String key) {
-            return KEY_ICON_MAP.getOrDefault(key, DefaultComponentIcon);
+            return KEY_ICON_MAP.getOrDefault(key, DefaultComponent);
         }
     }
 
@@ -62,6 +62,14 @@ public class Icons {
 
         public static final Icon Edit = IconLoader.getIcon("/icons/script-edit.png");
         public static final Icon EditDisabled = IconLoader.getIcon("/icons/script-edit-disabled.png");
+    }
+
+    public static class ToolWindow {
+
+        private ToolWindow() {
+        }
+
+        public static final Icon Properties = IconLoader.getIcon("/icons/toolbar-properties.png");
     }
 
 }

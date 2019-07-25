@@ -16,8 +16,8 @@ public class PropertiesPanelToolWindowFactory implements ToolWindowFactory {
 
     @Override
     public void init(ToolWindow window) {
-        window.setStripeTitle("Properties");
-        window.setIcon(Icons.Component.DefaultComponentIcon);
+        window.setStripeTitle("Flow Properties");
+        window.setIcon(Icons.ToolWindow.Properties);
     }
 
     @Override

@@ -38,9 +38,9 @@ public class PaletteComponentTreeRenderer implements TreeCellRenderer {
                 this.value.setText(descriptor.getDisplayName());
                 this.value.setIcon(descriptor.getIcon());
                 if (descriptor.getComponentClass().equals(ComponentClass.INBOUND)) {
-                    this.typeIcon.setIcon(Icons.Component.InboundTypeComponentIcon);
+                    this.typeIcon.setIcon(Icons.Component.InboundTypeComponent);
                 } else {
-                    this.typeIcon.setIcon(Icons.Component.ProcessorTypeComponentIcon);
+                    this.typeIcon.setIcon(Icons.Component.ProcessorTypeComponent);
                 }
                 return renderer;
             }
