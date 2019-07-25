@@ -129,10 +129,12 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
 
     @Override
     public void mouseDragged(MouseEvent event) {
-        dragging = true;
-        selected.dragging();
-        selected.drag(event.getX() - offsetX, event.getY() - offsetY);
-        repaint();
+        if (selected != null) {
+            dragging = true;
+            selected.dragging();
+            selected.drag(event.getX() - offsetX, event.getY() - offsetY);
+            repaint();
+        }
     }
 
     @Override
@@ -271,6 +273,7 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
     private void unselect() {
         if (selected != null) {
             selected.unselected();
+            selected = null;
             componentSelectedPublisher.onUnSelected();
         }
     }

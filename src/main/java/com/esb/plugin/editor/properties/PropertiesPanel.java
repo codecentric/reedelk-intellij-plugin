@@ -30,7 +30,7 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
     private Disposable currentPane;
     private DesignerSelectionManager designerSelectionManager;
 
-    public PropertiesPanel(@NotNull Project project) {
+    PropertiesPanel(@NotNull Project project) {
         setBorder(JBUI.Borders.empty());
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setupAncestorListener();
@@ -91,8 +91,12 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
         if (selectedItem instanceof EmptySelectableItem) {
             DisposablePanel empty = new DisposablePanel();
             empty.setBackground(new JBColor(new Color(237, 237, 237), new Color(237, 237, 237)));
-            empty.setLayout(new BorderLayout());
-            empty.add(new JLabel("No selection"), BorderLayout.CENTER);
+            empty.setLayout(new GridBagLayout());
+
+            toolWindow.setTitle("");
+            JLabel noSelectionLabel = new JLabel("No selection");
+            noSelectionLabel.setForeground(new Color(153, 153, 153));
+            empty.add(noSelectionLabel);
             SwingUtilities.invokeLater(() -> {
                 removeAll();
                 add(empty);
