@@ -1,5 +1,7 @@
 package com.esb.plugin.editor.properties.widget.input;
 
+import com.esb.plugin.commons.Colors;
+
 import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -13,6 +15,7 @@ public class EnumDropDown extends JComboBox<String> implements ItemListener {
 
     public EnumDropDown(List<String> values) {
         super(values.toArray(new String[0]));
+        setBackground(Colors.PROPERTIES_BACKGROUND);
         getPreferredSize().width = WIDTH;
         addItemListener(this);
     }

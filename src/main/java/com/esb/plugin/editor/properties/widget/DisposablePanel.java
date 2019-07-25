@@ -1,19 +1,11 @@
 package com.esb.plugin.editor.properties.widget;
 
+import com.esb.plugin.editor.properties.PropertiesBasePanel;
 import com.intellij.openapi.Disposable;
 
-import javax.swing.*;
 import java.awt.*;
 
-public class DisposablePanel extends JPanel implements Disposable {
-
-    public DisposablePanel() {
-    }
-
-    public DisposablePanel(LayoutManager layoutManager) {
-        super(layoutManager);
-    }
-
+public class DisposablePanel extends PropertiesBasePanel implements Disposable {
     @Override
     public void dispose() {
         // Dispose all the children components implementing

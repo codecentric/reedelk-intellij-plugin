@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.properties.widget.input.script.editor;
 
+import com.esb.plugin.commons.Colors;
 import com.esb.plugin.editor.properties.widget.input.script.ScriptContextManager;
 import com.esb.plugin.editor.properties.widget.input.script.suggestion.SuggestionDropDownDecorator;
 import com.intellij.openapi.Disposable;
@@ -40,7 +41,7 @@ public class JavascriptEditor extends ThreeComponentsSplitter implements Disposa
                      @NotNull String initialText) {
 
         super(HORIZONTAL);
-
+        setBackground(Colors.PROPERTIES_BACKGROUND);
 
         this.project = project;
         this.document = EditorFactory.getInstance().createDocument(initialText);
@@ -51,7 +52,6 @@ public class JavascriptEditor extends ThreeComponentsSplitter implements Disposa
 
         JComponent editorComponent = editor.getComponent();
 
-        editorComponent.setBorder(mode.border());
         setPreferredSize(mode.preferredSize());
 
         JavascriptEditorContextPanel contextPanel =
