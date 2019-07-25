@@ -51,7 +51,7 @@
                         serviceImplementation="com.esb.plugin.service.project.impl.ToolWindowServiceImpl"/>
 
         <projectService serviceInterface="com.esb.plugin.service.project.DesignerSelectionManager"
-                        serviceImplementation="com.esb.plugin.service.project.impl.SelectedComponentManagerImpl"/>
+                        serviceImplementation="com.esb.plugin.service.project.impl.DesignerSelectionManagerImpl"/>
 
         <moduleService serviceInterface="com.esb.plugin.service.module.ComponentService"
                        serviceImplementation="com.esb.plugin.service.module.impl.ComponentServiceImpl"/>
@@ -92,7 +92,7 @@
         </component>
         <component>
             <interface-class>com.esb.plugin.service.project.DesignerSelectionManager</interface-class>
-            <implementation-class>com.esb.plugin.service.project.impl.SelectedComponentManagerImpl
+            <implementation-class>com.esb.plugin.service.project.impl.DesignerSelectionManagerImpl
             </implementation-class>
         </component>
     </project-components>

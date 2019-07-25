@@ -13,6 +13,8 @@ public class Labels {
         public static final String FIELD_CONFIG_TITLE = "Config title";
     }
 
+    public static final String TOOL_WINDOW_FLOW_PROPERTIES_TITLE = "Flow Properties";
+
     public static final String PROPERTIES_PANEL_SUBFLOW_TITLE = "Subflow";
     public static final String PROPERTIES_PANEL_FLOW_TITLE = "Flow";
 

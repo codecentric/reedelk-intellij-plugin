@@ -9,13 +9,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public class SelectedComponentManagerImpl implements DesignerSelectionManager, DesignerSelectionManager.CurrentSelectionListener, Disposable {
+public class DesignerSelectionManagerImpl implements DesignerSelectionManager, DesignerSelectionManager.CurrentSelectionListener, Disposable {
 
     private final MessageBusConnection connection;
 
     private SelectableItem currentSelection;
 
-    public SelectedComponentManagerImpl(@NotNull Project project) {
+    public DesignerSelectionManagerImpl(@NotNull Project project) {
         this.connection = project.getMessageBus().connect();
         this.connection.subscribe(CurrentSelectionListener.CURRENT_SELECTION_TOPIC, this);
     }
@@ -41,5 +41,4 @@ public class SelectedComponentManagerImpl implements DesignerSelectionManager, D
             this.currentSelection = null;
         }
     }
-
 }

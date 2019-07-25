@@ -1,6 +1,7 @@
 package com.esb.plugin.editor.properties;
 
 import com.esb.plugin.commons.Icons;
+import com.esb.plugin.commons.Labels;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
@@ -16,7 +17,7 @@ public class PropertiesPanelToolWindowFactory implements ToolWindowFactory {
 
     @Override
     public void init(ToolWindow window) {
-        window.setStripeTitle("Flow Properties");
+        window.setStripeTitle(Labels.TOOL_WINDOW_FLOW_PROPERTIES_TITLE);
         window.setIcon(Icons.ToolWindow.Properties);
     }
 
