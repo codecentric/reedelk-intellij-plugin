@@ -20,7 +20,7 @@ public interface DesignerSelectionManager {
 
         void onSelection(SelectableItem selectedItem);
 
-        void onUnSelected();
+        void onUnSelected(SelectableItem selectableItem);
     }
 
 }

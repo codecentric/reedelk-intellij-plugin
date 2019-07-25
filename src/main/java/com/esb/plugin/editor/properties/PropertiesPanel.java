@@ -5,7 +5,10 @@ import com.esb.plugin.editor.properties.widget.ContainerFactory;
 import com.esb.plugin.editor.properties.widget.DisposablePanel;
 import com.esb.plugin.editor.properties.widget.DisposableScrollPane;
 import com.esb.plugin.editor.properties.widget.FlowMetadataPanel;
-import com.esb.plugin.service.project.*;
+import com.esb.plugin.service.project.DesignerSelectionManager;
+import com.esb.plugin.service.project.SelectableItem;
+import com.esb.plugin.service.project.SelectableItemComponent;
+import com.esb.plugin.service.project.SelectableItemFlow;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
@@ -29,6 +32,7 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
 
     private Disposable currentPane;
     private DesignerSelectionManager designerSelectionManager;
+    private SelectableItem currentSelection;
 
     PropertiesPanel(@NotNull Project project) {
         setBorder(JBUI.Borders.empty());
@@ -44,9 +48,9 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
 
     @Override
     public void onSelection(SelectableItem selectedItem) {
-        ToolWindow toolWindow = ToolWindowManager
-                .getInstance(project)
-                .getToolWindow(PropertiesPanelToolWindowFactory.ID);
+        this.currentSelection = selectedItem;
+
+        ToolWindow toolWindow = getToolWindow();
 
         if (selectedItem instanceof SelectableItemComponent) {
             // Otherwise the properties panel displays the properties
@@ -87,13 +91,27 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
 
             this.currentPane = graphProperties;
         }
+    }
 
-        if (selectedItem instanceof EmptySelectableItem) {
+    private ToolWindow getToolWindow() {
+        return ToolWindowManager
+                .getInstance(project)
+                .getToolWindow(PropertiesPanelToolWindowFactory.ID);
+    }
+
+    @Override
+    public void onUnSelected(SelectableItem unselected) {
+        if (currentSelection == unselected) {
+            if (currentPane != null) {
+                Disposer.dispose(currentPane);
+            }
+
+
             DisposablePanel empty = new DisposablePanel();
             empty.setBackground(new JBColor(new Color(237, 237, 237), new Color(237, 237, 237)));
             empty.setLayout(new GridBagLayout());
 
-            toolWindow.setTitle("");
+            getToolWindow().setTitle("");
             JLabel noSelectionLabel = new JLabel("No selection");
             noSelectionLabel.setForeground(new Color(153, 153, 153));
             empty.add(noSelectionLabel);
@@ -107,13 +125,6 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
         }
     }
 
-    @Override
-    public void onUnSelected() {
-        if (currentPane != null) {
-            Disposer.dispose(currentPane);
-        }
-    }
-
     private void setupAncestorListener() {
         addAncestorListener(new AncestorListenerAdapter() {
             @Override
@@ -121,12 +132,6 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
                 super.ancestorAdded(event);
                 designerSelectionManager.getCurrentSelection()
                         .ifPresent(PropertiesPanel.this::onSelection);
-            }
-
-            @Override
-            public void ancestorRemoved(AncestorEvent event) {
-                super.ancestorRemoved(event);
-                removeAll();
             }
         });
     }

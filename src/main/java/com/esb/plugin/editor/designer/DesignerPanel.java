@@ -9,7 +9,6 @@ import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.SnapshotListener;
 import com.esb.plugin.graph.layout.FlowGraphLayout;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.service.project.EmptySelectableItem;
 import com.esb.plugin.service.project.SelectableItem;
 import com.esb.plugin.service.project.SelectableItemComponent;
 import com.esb.plugin.service.project.SelectableItemFlow;
@@ -74,7 +73,9 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
         addMouseListener(this);
         addMouseMotionListener(this);
 
-        componentSelectedPublisher = module.getProject().getMessageBus()
+        componentSelectedPublisher = module
+                .getProject()
+                .getMessageBus()
                 .syncPublisher(CurrentSelectionListener.CURRENT_SELECTION_TOPIC);
     }
 
@@ -107,8 +108,6 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
 
         onPrePaint(g2);
 
-        long start = System.currentTimeMillis();
-
         // Draw the graph nodes
         graph.breadthFirstTraversal(node -> node.draw(graph, g2, DesignerPanel.this));
 
@@ -117,10 +116,6 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
 
         // Draw on top of everything dragged elements of the graph
         graph.breadthFirstTraversal(node -> node.drawDrag(graph, g2, DesignerPanel.this));
-
-        long end = System.currentTimeMillis() - start;
-
-        LOG.info("Painted in " + end + " ms");
 
         centerOfNode.draw(g2);
 
@@ -274,17 +269,25 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
         if (selected != null) {
             selected.unselected();
             selected = null;
-            componentSelectedPublisher.onUnSelected();
+        }
+
+        if (currentSelection != null) {
+            componentSelectedPublisher.onUnSelected(currentSelection);
         }
     }
+
+    private SelectableItem currentSelection;
 
     private void select(GraphNode node) {
         selected = node;
         selected.selected();
-        componentSelectedPublisher.onSelection(new SelectableItemComponent(module, snapshot, selected));
+
+        currentSelection = new SelectableItemComponent(module, snapshot, selected);
+        select(currentSelection);
     }
 
     private void select(SelectableItem selectableItem) {
+        this.currentSelection = selectableItem;
         componentSelectedPublisher.onSelection(selectableItem);
     }
 
@@ -293,12 +296,10 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
      * we must adapt it.
      */
     private void adjustWindowSize() {
-        DesignerWindowSizeCalculator
-                .from(snapshot.getGraph(), getGraphics2D())
-                .ifPresent(dimension -> {
-                    setSize(dimension);
-                    setPreferredSize(dimension);
-                });
+        DesignerWindowSizeCalculator.from(snapshot.getGraph(), getGraphics2D()).ifPresent(dimension -> {
+            setSize(dimension);
+            setPreferredSize(dimension);
+        });
     }
 
     private void registerAncestorListener() {
@@ -314,7 +315,6 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
             public void ancestorRemoved(AncestorEvent event) {
                 super.ancestorRemoved(event);
                 unselect();
-                select(new EmptySelectableItem());
             }
         });
     }

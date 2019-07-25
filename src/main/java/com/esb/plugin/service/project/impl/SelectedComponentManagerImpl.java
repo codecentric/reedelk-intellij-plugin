@@ -36,8 +36,10 @@ public class SelectedComponentManagerImpl implements DesignerSelectionManager, D
     }
 
     @Override
-    public void onUnSelected() {
-        this.currentSelection = null;
+    public void onUnSelected(SelectableItem selectableItem) {
+        if (currentSelection == selectableItem) {
+            this.currentSelection = null;
+        }
     }
 
 }
