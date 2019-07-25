@@ -71,5 +71,4 @@ public class Icons {
 
         public static final Icon Properties = IconLoader.getIcon("/icons/toolbar-properties.png");
     }
-
 }
