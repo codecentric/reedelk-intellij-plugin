@@ -74,9 +74,12 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
                 selectedItem instanceof SelectableItemSubflow) {
 
             FlowAndSubflowMetadataPanel panel = new FlowAndSubflowMetadataPanel(selectedItem.getSnapshot());
-            toolWindow.setTitle(selectedItem instanceof SelectableItemFlow ?
+
+            String toolWindowTitle = selectedItem instanceof SelectableItemFlow ?
                     Labels.PROPERTIES_PANEL_FLOW_TITLE :
-                    Labels.PROPERTIES_PANEL_SUBFLOW_TITLE);
+                    Labels.PROPERTIES_PANEL_SUBFLOW_TITLE;
+            toolWindow.setTitle(toolWindowTitle);
+
             SwingUtilities.invokeLater(() -> {
                 removeAll();
                 add(panel);
