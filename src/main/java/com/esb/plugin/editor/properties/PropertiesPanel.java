@@ -1,10 +1,7 @@
 package com.esb.plugin.editor.properties;
 
 import com.esb.plugin.component.domain.ComponentData;
-import com.esb.plugin.editor.properties.widget.ContainerFactory;
-import com.esb.plugin.editor.properties.widget.DisposablePanel;
-import com.esb.plugin.editor.properties.widget.DisposableScrollPane;
-import com.esb.plugin.editor.properties.widget.FlowMetadataPanel;
+import com.esb.plugin.editor.properties.widget.*;
 import com.esb.plugin.service.project.DesignerSelectionManager;
 import com.esb.plugin.service.project.SelectableItem;
 import com.esb.plugin.service.project.SelectableItemComponent;
@@ -16,13 +13,11 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.AncestorListenerAdapter;
-import com.intellij.ui.JBColor;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
-import java.awt.*;
 
 import static com.esb.plugin.service.project.DesignerSelectionManager.CurrentSelectionListener;
 
@@ -93,12 +88,6 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
         }
     }
 
-    private ToolWindow getToolWindow() {
-        return ToolWindowManager
-                .getInstance(project)
-                .getToolWindow(PropertiesPanelToolWindowFactory.ID);
-    }
-
     @Override
     public void onUnSelected(SelectableItem unselected) {
         if (currentSelection == unselected) {
@@ -106,15 +95,7 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
                 Disposer.dispose(currentPane);
             }
 
-
-            DisposablePanel empty = new DisposablePanel();
-            empty.setBackground(new JBColor(new Color(237, 237, 237), new Color(237, 237, 237)));
-            empty.setLayout(new GridBagLayout());
-
-            getToolWindow().setTitle("");
-            JLabel noSelectionLabel = new JLabel("No selection");
-            noSelectionLabel.setForeground(new Color(153, 153, 153));
-            empty.add(noSelectionLabel);
+            DisposablePanel empty = new EmptySelectionPanel(project);
             SwingUtilities.invokeLater(() -> {
                 removeAll();
                 add(empty);
@@ -134,5 +115,11 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
                         .ifPresent(PropertiesPanel.this::onSelection);
             }
         });
+    }
+
+    private ToolWindow getToolWindow() {
+        return ToolWindowManager
+                .getInstance(project)
+                .getToolWindow(PropertiesPanelToolWindowFactory.ID);
     }
 }
