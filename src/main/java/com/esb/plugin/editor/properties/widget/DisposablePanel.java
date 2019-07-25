@@ -6,6 +6,15 @@ import com.intellij.openapi.Disposable;
 import java.awt.*;
 
 public class DisposablePanel extends PropertiesBasePanel implements Disposable {
+
+    public DisposablePanel() {
+        super();
+    }
+
+    public DisposablePanel(LayoutManager layoutManager) {
+        super(layoutManager);
+    }
+
     @Override
     public void dispose() {
         // Dispose all the children components implementing
