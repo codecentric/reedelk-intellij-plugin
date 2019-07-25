@@ -302,13 +302,11 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
         addAncestorListener(new AncestorListenerAdapter() {
             @Override
             public void ancestorAdded(AncestorEvent event) {
-                super.ancestorAdded(event);
                 select(getNoComponentSelectedItem());
             }
 
             @Override
             public void ancestorRemoved(AncestorEvent event) {
-                super.ancestorRemoved(event);
                 unselect();
             }
         });
