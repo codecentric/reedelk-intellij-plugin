@@ -36,10 +36,9 @@ public class TypeFilePropertyRenderer implements TypePropertyRenderer {
             }
         };
 
-
         descriptor.setTitle(Labels.FILE_CHOOSER_TITLE);
 
-        MyTextFieldWithBrowse choseFile = new MyTextFieldWithBrowse();
+        TextFieldWithBrowse choseFile = new TextFieldWithBrowse();
 
 
         ModuleUtils.getResourcesFolder(module)
@@ -48,15 +47,15 @@ public class TypeFilePropertyRenderer implements TypePropertyRenderer {
 
 
         choseFile.addBrowseFolderListener(
-                new MyTextBrowseFolderListener(descriptor, module.getProject(), resourcesFolder, propertyAccessor));
+                new TextBrowseFolderListener(descriptor, module.getProject(), resourcesFolder, propertyAccessor));
 
         return choseFile;
     }
 
 
-    class MyTextBrowseFolderListener extends ComponentWithBrowseButton.BrowseFolderActionListener<JTextField> {
+    class TextBrowseFolderListener extends ComponentWithBrowseButton.BrowseFolderActionListener<JTextField> {
 
-        MyTextBrowseFolderListener(@NotNull FileChooserDescriptor fileChooserDescriptor, @Nullable Project project, String boh, PropertyAccessor propertyAccessor) {
+        TextBrowseFolderListener(@NotNull FileChooserDescriptor fileChooserDescriptor, @Nullable Project project, String boh, PropertyAccessor propertyAccessor) {
             super(null, null, null, project, fileChooserDescriptor, new MyTextComponentAccessor(boh, propertyAccessor));
         }
 
@@ -66,6 +65,20 @@ public class TypeFilePropertyRenderer implements TypePropertyRenderer {
 
         FileChooserDescriptor getFileChooserDescriptor() {
             return myFileChooserDescriptor;
+        }
+    }
+
+    class TextFieldWithBrowse extends TextFieldWithBrowseButton {
+
+        TextFieldWithBrowse() {
+            super((ActionListener) null);
+            setBackground(Colors.PROPERTIES_BACKGROUND);
+        }
+
+        void addBrowseFolderListener(@NotNull TextBrowseFolderListener listener) {
+            listener.setOwnerComponent(this);
+            addActionListener(listener);
+            installPathCompletion(listener.getFileChooserDescriptor());
         }
     }
 
@@ -94,20 +107,6 @@ public class TypeFilePropertyRenderer implements TypePropertyRenderer {
             String fileRelativePath = text.substring(root.length() + 1);
             component.setText(fileRelativePath);
             propertyAccessor.set(fileRelativePath);
-        }
-    }
-
-    class MyTextFieldWithBrowse extends TextFieldWithBrowseButton {
-
-        public MyTextFieldWithBrowse() {
-            super((ActionListener) null);
-            setBackground(Colors.PROPERTIES_BACKGROUND);
-        }
-
-        void addBrowseFolderListener(@NotNull MyTextBrowseFolderListener listener) {
-            listener.setOwnerComponent(this);
-            addActionListener(listener);
-            installPathCompletion(listener.getFileChooserDescriptor());
         }
     }
 }
