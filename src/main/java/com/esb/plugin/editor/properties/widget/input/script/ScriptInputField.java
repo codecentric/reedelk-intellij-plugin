@@ -1,6 +1,7 @@
 package com.esb.plugin.editor.properties.widget.input.script;
 
 import com.esb.plugin.commons.Labels;
+import com.esb.plugin.editor.properties.PropertiesBasePanel;
 import com.esb.plugin.editor.properties.widget.input.InputChangeListener;
 import com.esb.plugin.editor.properties.widget.input.script.editor.JavascriptEditor;
 import com.esb.plugin.editor.properties.widget.input.script.editor.JavascriptEditorFactory;
@@ -9,6 +10,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.module.Module;
+import com.intellij.ui.components.JBPanel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -23,7 +25,7 @@ import static com.esb.plugin.commons.Icons.Script;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 
-public class ScriptInputField extends JPanel implements ActionListener, DocumentListener, Disposable {
+public class ScriptInputField extends PropertiesBasePanel implements ActionListener, DocumentListener, Disposable {
 
     private final Module module;
     private final ScriptContextManager context;
@@ -84,7 +86,7 @@ public class ScriptInputField extends JPanel implements ActionListener, Document
         this.editor.setValue(this.value);
     }
 
-    class OpenEditorButton extends JPanel {
+    class OpenEditorButton extends JBPanel {
 
         private final Border BORDER_BTN_OPEN_EDITOR =
                 BorderFactory.createEmptyBorder(3, 0, 10, 0);
@@ -94,6 +96,7 @@ public class ScriptInputField extends JPanel implements ActionListener, Document
         OpenEditorButton() {
             super(new BorderLayout());
             setBorder(BORDER_BTN_OPEN_EDITOR);
+            setBackground(Color.WHITE);
 
             openEditorBtn = new JLabel(Labels.SCRIPT_EDITOR_BTN_OPEN_EDITOR);
             openEditorBtn.setIcon(Script.Edit);
