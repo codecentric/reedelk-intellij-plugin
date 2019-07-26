@@ -216,10 +216,8 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
 
     @Override
     public void onDataChange() {
-        SwingUtilities.invokeLater(() -> {
-            snapshotUpdated = true;
-            repaint();
-        });
+        snapshotUpdated = true;
+        SwingUtilities.invokeLater(this::repaint);
     }
 
     @Override

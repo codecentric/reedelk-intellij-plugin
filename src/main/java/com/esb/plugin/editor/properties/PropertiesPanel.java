@@ -47,7 +47,6 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
 
         ToolWindow toolWindow = getToolWindow();
 
-        JComponent component;
 
         if (selectedItem instanceof SelectableItemComponent) {
             // Otherwise the properties panel displays the properties
@@ -63,7 +62,7 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
             String displayName = componentData.getDisplayName();
             toolWindow.setTitle(displayName);
 
-            component = propertiesPanel;
+            updateContent(propertiesPanel);
             this.currentPane = propertiesPanel;
 
         } else if (selectedItem instanceof SelectableItemFlow ||
@@ -76,19 +75,13 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
                     Labels.PROPERTIES_PANEL_SUBFLOW_TITLE;
             toolWindow.setTitle(toolWindowTitle);
 
-            component = panel;
+
+            updateContent(panel);
             this.currentPane = panel;
 
         } else {
             throw new IllegalStateException("Unknown selectable item");
         }
-
-        SwingUtilities.invokeLater(() -> {
-            removeAll();
-            add(component);
-            revalidate();
-        });
-
     }
 
     @Override
@@ -103,12 +96,16 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
 
     private void setEmptySelection() {
         DisposablePanel empty = new EmptySelectionPanel(project);
+        updateContent(empty);
+        this.currentPane = empty;
+    }
+
+    private void updateContent(JComponent content) {
         SwingUtilities.invokeLater(() -> {
             removeAll();
-            add(empty);
+            add(content);
             revalidate();
         });
-        this.currentPane = empty;
     }
 
     private void setupAncestorListener() {

@@ -21,6 +21,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.esb.plugin.service.project.DesignerSelectionManager.CurrentSelectionListener;
@@ -80,6 +81,10 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
                 deserializeDocument();
                 currentSelectionPublisher.onSelection(getNothingSelectedItem());
             });
+        } else if (!Objects.equals(file.getExtension(), "flow")) {
+            // Unselect the current selection
+            designerSelectionManager.getCurrentSelection()
+                    .ifPresent(currentSelectionPublisher::onUnSelected);
         }
     }
 
@@ -95,6 +100,14 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
     @Override
     public void selectionChanged(@NotNull FileEditorManagerEvent event) {
         VirtualFile[] selectedFiles = FileEditorManager.getInstance(module.getProject()).getSelectedFiles();
+        if (!(event.getNewEditor() instanceof FlowDesignerEditor)) {
+            // If we get to this point we must unselect
+            // the current selection since we are switching
+            // to text or any other editor defined for this
+            // file extension.
+            designerSelectionManager.getCurrentSelection()
+                    .ifPresent(currentSelectionPublisher::onUnSelected);
+        }
         for (VirtualFile file : selectedFiles) {
             if (file.equals(graphFile)) {
                 if (event.getNewEditor() instanceof FlowDesignerEditor) {
@@ -102,12 +115,6 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
                     currentSelectionPublisher.onSelection(getNothingSelectedItem());
                     break;
                 }
-                // If we get to this point we must unselect
-                // the current selection since we are switching
-                // to text or any other editor defined for this
-                // file extension.
-                designerSelectionManager.getCurrentSelection()
-                        .ifPresent(currentSelectionPublisher::onUnSelected);
             }
         }
     }
