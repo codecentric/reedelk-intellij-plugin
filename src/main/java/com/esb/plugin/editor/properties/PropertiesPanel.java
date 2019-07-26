@@ -47,11 +47,12 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
 
         ToolWindow toolWindow = getToolWindow();
 
+        JComponent component;
+
         if (selectedItem instanceof SelectableItemComponent) {
             // Otherwise the properties panel displays the properties
             // of the component currently selected.
             ComponentData componentData = selectedItem.getSelectedNode().componentData();
-
 
             DisposableScrollPane propertiesPanel =
                     ContainerFactory.createPropertiesPanel(selectedItem.getModule(),
@@ -62,17 +63,10 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
             String displayName = componentData.getDisplayName();
             toolWindow.setTitle(displayName);
 
-            SwingUtilities.invokeLater(() -> {
-                removeAll();
-                add(propertiesPanel);
-                revalidate();
-            });
-
+            component = propertiesPanel;
             this.currentPane = propertiesPanel;
-        }
 
-
-        if (selectedItem instanceof SelectableItemFlow ||
+        } else if (selectedItem instanceof SelectableItemFlow ||
                 selectedItem instanceof SelectableItemSubflow) {
 
             FlowAndSubflowMetadataPanel panel = new FlowAndSubflowMetadataPanel(selectedItem.getSnapshot());
@@ -82,14 +76,19 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
                     Labels.PROPERTIES_PANEL_SUBFLOW_TITLE;
             toolWindow.setTitle(toolWindowTitle);
 
-            SwingUtilities.invokeLater(() -> {
-                removeAll();
-                add(panel);
-                revalidate();
-            });
-
+            component = panel;
             this.currentPane = panel;
+
+        } else {
+            throw new IllegalStateException("Unknown selectable item");
         }
+
+        SwingUtilities.invokeLater(() -> {
+            removeAll();
+            add(component);
+            revalidate();
+        });
+
     }
 
     @Override
