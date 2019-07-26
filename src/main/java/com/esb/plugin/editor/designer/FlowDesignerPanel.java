@@ -24,13 +24,13 @@ public class FlowDesignerPanel extends DesignerPanel {
     }
 
     @Override
-    protected void onBeforePaint(Graphics2D graphics) {
+    protected void beforePaint(Graphics2D graphics) {
         inboundLane.draw(snapshot.getGraph(), graphics, this);
         flowMetadata.draw(graphics);
     }
 
     @Override
-    protected SelectableItem getNothingSelectedItem() {
+    protected SelectableItem defaultSelectedItem() {
         return nothingSelectedItem;
     }
 }

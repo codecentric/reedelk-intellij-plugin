@@ -21,12 +21,12 @@ public class SubFlowDesignerPanel extends DesignerPanel {
     }
 
     @Override
-    protected void onBeforePaint(Graphics2D graphics) {
+    protected void beforePaint(Graphics2D graphics) {
         flowMetadata.draw(graphics);
     }
 
     @Override
-    protected SelectableItem getNothingSelectedItem() {
+    protected SelectableItem defaultSelectedItem() {
         return nothingSelectedItem;
     }
 }

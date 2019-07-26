@@ -95,7 +95,7 @@ public abstract class DesignerPanel extends JBPanel implements
             @Override
             public void ancestorAdded(AncestorEvent event) {
                 super.ancestorAdded(event);
-                select(getNothingSelectedItem());
+                select(defaultSelectedItem());
                 visible = true;
             }
 
@@ -134,7 +134,7 @@ public abstract class DesignerPanel extends JBPanel implements
 
         }
 
-        onBeforePaint(g2);
+        beforePaint(g2);
 
         // Draw the graph nodes
         graph.breadthFirstTraversal(node -> node.draw(graph, g2, DesignerPanel.this));
@@ -193,7 +193,7 @@ public abstract class DesignerPanel extends JBPanel implements
         } else {
             // Nothing is selected, we display flow properties
             unselect();
-            select(getNothingSelectedItem());
+            select(defaultSelectedItem());
         }
 
         // Repaint all nodes
@@ -269,7 +269,7 @@ public abstract class DesignerPanel extends JBPanel implements
             // it is important to reset the current selection to the flow otherwise
             // the selection would be bound to the old object before refreshing
             // the flow (or subflow) graph.
-            SwingUtilities.invokeLater(() -> select(getNothingSelectedItem()));
+            SwingUtilities.invokeLater(() -> select(defaultSelectedItem()));
         }
     }
 
@@ -303,9 +303,9 @@ public abstract class DesignerPanel extends JBPanel implements
         // nothing to do
     }
 
-    protected abstract void onBeforePaint(Graphics2D graphics);
+    protected abstract void beforePaint(Graphics2D graphics);
 
-    protected abstract SelectableItem getNothingSelectedItem();
+    protected abstract SelectableItem defaultSelectedItem();
 
     private Graphics2D getGraphics2D() {
         return (Graphics2D) getGraphics();
