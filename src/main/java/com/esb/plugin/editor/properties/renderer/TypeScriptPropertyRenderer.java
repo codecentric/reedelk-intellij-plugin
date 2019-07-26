@@ -20,8 +20,7 @@ public class TypeScriptPropertyRenderer implements TypePropertyRenderer {
     public JComponent render(Module module, ComponentPropertyDescriptor propertyDescriptor, PropertyAccessor propertyAccessor, PropertyPanelContext context) {
         List<VariableDefinition> variableDefinitions = propertyDescriptor.getVariableDefinitions();
 
-        ScriptContextManager scriptContextManager =
-                new ScriptContextManager(module, context, variableDefinitions);
+        ScriptContextManager scriptContextManager = new ScriptContextManager(module, context, variableDefinitions);
         ScriptInputField field = new ScriptInputField(module, scriptContextManager);
         field.setValue(propertyAccessor.get());
         field.addListener(propertyAccessor::set);
