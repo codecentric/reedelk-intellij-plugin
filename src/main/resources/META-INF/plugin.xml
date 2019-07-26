@@ -44,14 +44,8 @@
         <applicationService serviceInterface="com.esb.plugin.service.application.http.HttpService"
                             serviceImplementation="com.esb.plugin.service.application.http.impl.HttpServiceImpl"/>
 
-        <projectService serviceInterface="com.esb.plugin.service.project.SourceChangeService"
-                        serviceImplementation="com.esb.plugin.service.project.impl.SourceChangeServiceImpl"/>
-
         <projectService serviceInterface="com.esb.plugin.service.project.ToolWindowService"
                         serviceImplementation="com.esb.plugin.service.project.impl.ToolWindowServiceImpl"/>
-
-        <projectService serviceInterface="com.esb.plugin.service.project.DesignerSelectionManager"
-                        serviceImplementation="com.esb.plugin.service.project.impl.DesignerSelectionManagerImpl"/>
 
         <moduleService serviceInterface="com.esb.plugin.service.module.ComponentService"
                        serviceImplementation="com.esb.plugin.service.module.impl.ComponentServiceImpl"/>

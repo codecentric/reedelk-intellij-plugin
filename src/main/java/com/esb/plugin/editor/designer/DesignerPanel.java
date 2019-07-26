@@ -13,12 +13,10 @@ import com.esb.plugin.service.project.SelectableItem;
 import com.esb.plugin.service.project.SelectableItemComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
-import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.ui.components.JBPanel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.event.AncestorEvent;
 import java.awt.*;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
@@ -66,7 +64,6 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
         this.centerOfNode = new CenterOfNode(snapshot);
 
         setBackground(Colors.DESIGNER_BG);
-        registerAncestorListener();
         addMouseListener(this);
         addMouseMotionListener(this);
 
@@ -161,7 +158,7 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
         } else {
             // Nothing is selected, we display flow properties
             unselect();
-            select(getNoComponentSelectedItem());
+            select(getNothingSelectedItem());
         }
 
         // Repaint all nodes
@@ -250,7 +247,7 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
 
     protected abstract void onBeforePaint(Graphics2D graphics);
 
-    protected abstract SelectableItem getNoComponentSelectedItem();
+    protected abstract SelectableItem getNothingSelectedItem();
 
     private Graphics2D getGraphics2D() {
         return (Graphics2D) getGraphics();
@@ -286,20 +283,6 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
         DesignerWindowSizeCalculator.from(snapshot.getGraph(), getGraphics2D()).ifPresent(dimension -> {
             setSize(dimension);
             setPreferredSize(dimension);
-        });
-    }
-
-    private void registerAncestorListener() {
-        addAncestorListener(new AncestorListenerAdapter() {
-            @Override
-            public void ancestorAdded(AncestorEvent event) {
-                select(getNoComponentSelectedItem());
-            }
-
-            @Override
-            public void ancestorRemoved(AncestorEvent event) {
-                unselect();
-            }
         });
     }
 }

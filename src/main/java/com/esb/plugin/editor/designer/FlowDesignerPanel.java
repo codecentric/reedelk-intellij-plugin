@@ -28,7 +28,7 @@ public class FlowDesignerPanel extends DesignerPanel {
     }
 
     @Override
-    protected SelectableItem getNoComponentSelectedItem() {
+    protected SelectableItem getNothingSelectedItem() {
         return new SelectableItemFlow(snapshot);
     }
 }

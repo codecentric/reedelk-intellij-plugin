@@ -5,6 +5,7 @@ import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphProvider;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.SnapshotListener;
+import com.esb.plugin.service.project.SelectableItem;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
@@ -20,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
+import static com.esb.plugin.service.project.DesignerSelectionManager.CurrentSelectionListener;
 import static java.util.Arrays.stream;
 
 /**
@@ -30,37 +32,45 @@ import static java.util.Arrays.stream;
  * - Properties updates:
  * - component's property changed
  */
-public abstract class GraphManager implements FileEditorManagerListener, SnapshotListener, Disposable, ComponentListUpdateNotifier {
+public abstract class GraphManager implements FileEditorManagerListener, FileEditorManagerListener.Before, SnapshotListener, Disposable, ComponentListUpdateNotifier {
 
     private static final Logger LOG = Logger.getInstance(GraphManager.class);
 
     private final Module module;
     private final Project project;
     private final VirtualFile graphFile;
-    private final FlowSnapshot snapshot;
+    final FlowSnapshot snapshot;
     private final FlowGraphProvider graphProvider;
     private final MessageBusConnection projectBusConnection;
     private final MessageBusConnection moduleBusConnection;
+
+    private final CurrentSelectionListener currentSelectionPublisher;
 
     private Document document;
 
     GraphManager(@NotNull Project project,
                  @NotNull Module module,
-                 @NotNull VirtualFile graphFile,
+                 @NotNull VirtualFile managedFile,
                  @NotNull FlowSnapshot snapshot,
                  @NotNull FlowGraphProvider graphProvider) {
         this.module = module;
         this.project = project;
         this.snapshot = snapshot;
-        this.graphFile = graphFile;
+        this.graphFile = managedFile;
         this.snapshot.addListener(this);
         this.graphProvider = graphProvider;
 
         projectBusConnection = project.getMessageBus().connect();
-        projectBusConnection.subscribe(FILE_EDITOR_MANAGER, this);
+        projectBusConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
+        projectBusConnection.subscribe(FileEditorManagerListener.Before.FILE_EDITOR_MANAGER, this);
 
         moduleBusConnection = module.getMessageBus().connect();
         moduleBusConnection.subscribe(COMPONENT_LIST_UPDATE_TOPIC, this);
+
+        currentSelectionPublisher = module
+                .getProject()
+                .getMessageBus()
+                .syncPublisher(CurrentSelectionListener.CURRENT_SELECTION_TOPIC);
     }
 
     @Override
@@ -69,15 +79,16 @@ public abstract class GraphManager implements FileEditorManagerListener, Snapsho
             findRelatedEditorDocument(source, file).ifPresent(document -> {
                 this.document = document;
                 deserializeDocument();
+                currentSelectionPublisher.onSelection(getNothingSelectedItem());
             });
         }
     }
 
     @Override
-    public void fileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
-        if (file.equals(graphFile)) {
-            this.document = null;
-        }
+    public void beforeFileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+        // Unselect the current selection
+        System.out.println("Beforefile closed");
+        currentSelectionPublisher.onUnSelected(getNothingSelectedItem());
     }
 
     @Override
@@ -86,6 +97,8 @@ public abstract class GraphManager implements FileEditorManagerListener, Snapsho
         for (VirtualFile file : selectedFiles) {
             if (file.equals(graphFile)) {
                 deserializeDocument();
+                // select the graph stuff
+                currentSelectionPublisher.onSelection(getNothingSelectedItem());
                 break;
             }
         }
@@ -143,6 +156,8 @@ public abstract class GraphManager implements FileEditorManagerListener, Snapsho
     }
 
     protected abstract String serialize(FlowGraph graph);
+
+    protected abstract SelectableItem getNothingSelectedItem();
 
     protected abstract Optional<FlowGraph> deserialize(Module module, Document document, FlowGraphProvider graphProvider);
 
