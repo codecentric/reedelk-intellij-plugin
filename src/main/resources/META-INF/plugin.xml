@@ -35,7 +35,7 @@
         <internalFileTemplate name="Maven Project"/>
 
         <stepsBeforeRunProvider
-                implementation="com.esb.plugin.runconfig.module.beforetask.ESBModuleBuildBeforeTaskProvider"/>
+                implementation="com.esb.plugin.runconfig.module.beforetask.ModuelBuilderBeforeTaskProvider"/>
 
         <!-- Module Builder -->
         <moduleBuilder builderClass="com.esb.plugin.module.builder.ESBModuleBuilder" id="ESB_MODULE_BUILDER" order="first"/>
@@ -63,14 +63,14 @@
                        serviceImplementation="com.esb.plugin.service.module.impl.ConfigServiceImpl"/>
 
         <!-- Program Runner and Executors -->
-        <programRunner implementation="com.esb.plugin.runconfig.module.runner.ESBDeploymentRunner" order="first"/>
-        <executor implementation="com.esb.plugin.runconfig.module.runner.ESBModuleDeployExecutor"/>
-        <executor implementation="com.esb.plugin.runconfig.module.runner.ESBModuleUnDeployExecutor"/>
+        <programRunner implementation="com.esb.plugin.runconfig.module.runner.DeploymentRunner" order="first"/>
+        <executor implementation="com.esb.plugin.runconfig.module.runner.ModuleDeployExecutor"/>
+        <executor implementation="com.esb.plugin.runconfig.module.runner.ModuleUnDeployExecutor"/>
 
 
         <!-- Run Configurations -->
-        <configurationType implementation="com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfigurationType"/>
-        <configurationType implementation="com.esb.plugin.runconfig.module.ESBModuleRunConfigurationType"/>
+        <configurationType implementation="com.esb.plugin.runconfig.runtime.RuntimeRunConfigurationType"/>
+        <configurationType implementation="com.esb.plugin.runconfig.module.ModuleRunConfigurationType"/>
 
         <!-- Palette and Component properties tool window -->
         <toolWindow id="ESB Components" anchor="right" icon="/icons/icon-16x-blue.png"

@@ -16,7 +16,7 @@ import java.awt.*;
 
 import static com.intellij.uiDesigner.core.GridConstraints.*;
 
-public class ESBModuleRunConfigurationSettings extends SettingsEditor<ESBModuleRunConfiguration> {
+public class ModuleRunConfigurationSettings extends SettingsEditor<ModuleRunConfiguration> {
 
     private JPanel jPanel;
     private JComboBox<String> runtimeCombo;
@@ -24,7 +24,7 @@ public class ESBModuleRunConfigurationSettings extends SettingsEditor<ESBModuleR
     private ModuleDescriptionsComboBox moduleComboBox;
 
 
-    public ESBModuleRunConfigurationSettings(@NotNull Project project) {
+    public ModuleRunConfigurationSettings(@NotNull Project project) {
         moduleComboBox = new ModuleDescriptionsComboBox();
         moduleComboBox.setAllModulesFromProject(project);
 
@@ -40,7 +40,7 @@ public class ESBModuleRunConfigurationSettings extends SettingsEditor<ESBModuleR
     }
 
     @Override
-    protected void resetEditorFrom(@NotNull ESBModuleRunConfiguration configuration) {
+    protected void resetEditorFrom(@NotNull ModuleRunConfiguration configuration) {
         String module = configuration.getModuleName();
         if (module != null) {
             Project project = configuration.getProject();
@@ -55,7 +55,7 @@ public class ESBModuleRunConfigurationSettings extends SettingsEditor<ESBModuleR
     }
 
     @Override
-    protected void applyEditorTo(@NotNull ESBModuleRunConfiguration configuration) throws ConfigurationException {
+    protected void applyEditorTo(@NotNull ModuleRunConfiguration configuration) throws ConfigurationException {
         Module selectedModule = moduleComboBox.getSelectedModule();
         if (selectedModule != null) configuration.setModule(selectedModule.getName());
 

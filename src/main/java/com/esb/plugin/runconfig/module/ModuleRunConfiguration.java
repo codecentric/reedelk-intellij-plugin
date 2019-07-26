@@ -1,7 +1,7 @@
 package com.esb.plugin.runconfig.module;
 
-import com.esb.plugin.runconfig.module.runner.ESBModuleDeployExecutor;
-import com.esb.plugin.runconfig.module.runner.ESBModuleUnDeployExecutor;
+import com.esb.plugin.runconfig.module.runner.ModuleDeployExecutor;
+import com.esb.plugin.runconfig.module.runner.ModuleUnDeployExecutor;
 import com.esb.plugin.runconfig.module.runprofile.DeployRunProfile;
 import com.esb.plugin.runconfig.module.runprofile.UndeployRunProfile;
 import com.intellij.execution.ExecutionException;
@@ -18,25 +18,25 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ESBModuleRunConfiguration extends RunConfigurationBase implements
+public class ModuleRunConfiguration extends RunConfigurationBase implements
         RunConfigurationWithSuppressedDefaultRunAction,
         RunConfigurationWithSuppressedDefaultDebugAction {
 
-    private static final String PREFIX = "ESBModuleRunConfiguration-";
+    private static final String PREFIX = "ModuleRunConfiguration-";
     private static final String MODULE_NAME = PREFIX + "ModuleName";
     private static final String RUNTIME_CONFIG_NAME = PREFIX + "RuntimeConfigName";
 
     private String runtimeConfigName;
     private String moduleName;
 
-    protected ESBModuleRunConfiguration(@NotNull Project project, @Nullable ConfigurationFactory factory, @Nullable String name) {
+    protected ModuleRunConfiguration(@NotNull Project project, @Nullable ConfigurationFactory factory, @Nullable String name) {
         super(project, factory, name);
     }
 
     @NotNull
     @Override
     public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
-        return new ESBModuleRunConfigurationSettings(getProject());
+        return new ModuleRunConfigurationSettings(getProject());
     }
 
     @Override
@@ -50,11 +50,11 @@ public class ESBModuleRunConfiguration extends RunConfigurationBase implements
         Project project = getProject();
 
         // Deploy Executor
-        if (ESBModuleDeployExecutor.EXECUTOR_ID.equals(executor.getId())) {
+        if (ModuleDeployExecutor.EXECUTOR_ID.equals(executor.getId())) {
             return new DeployRunProfile(project, moduleName, runtimeConfigName);
 
             // UnDeploy Executor
-        } else if (ESBModuleUnDeployExecutor.EXECUTOR_ID.equals(executor.getId())) {
+        } else if (ModuleUnDeployExecutor.EXECUTOR_ID.equals(executor.getId())) {
             return new UndeployRunProfile(project, moduleName, runtimeConfigName);
 
         } else {

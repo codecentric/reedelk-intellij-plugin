@@ -15,16 +15,16 @@ import com.intellij.openapi.project.Project;
 
 import java.io.IOException;
 
-public class RESTModuleService {
+public class RestService {
 
-    private static final Logger LOG = Logger.getInstance(RESTModuleService.class);
+    private static final Logger LOG = Logger.getInstance(RestService.class);
 
     private static final String BASE_ADMIN_CONSOLE_URL_TEMPLATE = "http://%s:%d/api";
     private final String baseUrl;
     private final Project project;
     private final Module module;
 
-    RESTModuleService(Project project, Module module, String address, int port) {
+    RestService(Project project, Module module, String address, int port) {
         this.baseUrl = String.format(BASE_ADMIN_CONSOLE_URL_TEMPLATE, address, port);
         this.project = project;
         this.module = module;

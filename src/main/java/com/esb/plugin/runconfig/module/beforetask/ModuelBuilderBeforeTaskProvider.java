@@ -2,8 +2,8 @@ package com.esb.plugin.runconfig.module.beforetask;
 
 import com.esb.plugin.commons.Icons;
 import com.esb.plugin.maven.MavenPackageGoal;
-import com.esb.plugin.runconfig.module.ESBModuleRunConfiguration;
-import com.esb.plugin.runconfig.module.runner.ESBModuleUnDeployExecutor;
+import com.esb.plugin.runconfig.module.ModuleRunConfiguration;
+import com.esb.plugin.runconfig.module.runner.ModuleUnDeployExecutor;
 import com.esb.plugin.service.project.SourceChangeService;
 import com.intellij.execution.BeforeRunTaskProvider;
 import com.intellij.execution.configurations.RunConfiguration;
@@ -22,12 +22,12 @@ import org.jetbrains.idea.maven.utils.MavenLog;
 
 import javax.swing.*;
 
-public class ESBModuleBuildBeforeTaskProvider extends BeforeRunTaskProvider<ESBModuleBuildBeforeTask> {
+public class ModuelBuilderBeforeTaskProvider extends BeforeRunTaskProvider<ModuleBuilderBeforeTask> {
 
-    public static final Key<ESBModuleBuildBeforeTask> ID = Key.create("ESBModule.BeforeRunTask");
+    public static final Key<ModuleBuilderBeforeTask> ID = Key.create("ESBModule.BeforeRunTask");
 
     @Override
-    public Key<ESBModuleBuildBeforeTask> getId() {
+    public Key<ModuleBuilderBeforeTask> getId() {
         return ID;
     }
 
@@ -43,7 +43,7 @@ public class ESBModuleBuildBeforeTaskProvider extends BeforeRunTaskProvider<ESBM
     }
 
     @Override
-    public String getDescription(ESBModuleBuildBeforeTask beforeRunTask) {
+    public String getDescription(ModuleBuilderBeforeTask beforeRunTask) {
         return "Build ESB Module package";
     }
 
@@ -54,32 +54,32 @@ public class ESBModuleBuildBeforeTaskProvider extends BeforeRunTaskProvider<ESBM
 
     @Nullable
     @Override
-    public ESBModuleBuildBeforeTask createTask(@NotNull RunConfiguration runConfiguration) {
-        final ESBModuleBuildBeforeTask task = new ESBModuleBuildBeforeTask(getId());
-        task.setEnabled(runConfiguration instanceof ESBModuleRunConfiguration);
+    public ModuleBuilderBeforeTask createTask(@NotNull RunConfiguration runConfiguration) {
+        final ModuleBuilderBeforeTask task = new ModuleBuilderBeforeTask(getId());
+        task.setEnabled(runConfiguration instanceof ModuleRunConfiguration);
         return task;
     }
 
     @Override
-    public boolean canExecuteTask(RunConfiguration runConfiguration, ESBModuleBuildBeforeTask beforeRunTask) {
-        return runConfiguration instanceof ESBModuleRunConfiguration;
+    public boolean canExecuteTask(@NotNull RunConfiguration runConfiguration, @NotNull ModuleBuilderBeforeTask beforeRunTask) {
+        return runConfiguration instanceof ModuleRunConfiguration;
     }
 
 
     @Override
-    public boolean executeTask(DataContext context, @NotNull RunConfiguration configuration, @NotNull ExecutionEnvironment env, @NotNull ESBModuleBuildBeforeTask task) {
+    public boolean executeTask(DataContext context, @NotNull RunConfiguration configuration, @NotNull ExecutionEnvironment env, @NotNull ModuleBuilderBeforeTask task) {
 
-        if (!(configuration instanceof ESBModuleRunConfiguration)) return false;
+        if (!(configuration instanceof ModuleRunConfiguration)) return false;
 
 
         // We should also skip this step if there are no files changed in the src directory
 
         // We skip this step if the executor is Un-Deploy
-        if (ESBModuleUnDeployExecutor.EXECUTOR_ID.equals(env.getExecutor().getId())) {
+        if (ModuleUnDeployExecutor.EXECUTOR_ID.equals(env.getExecutor().getId())) {
             return true;
         }
 
-        ESBModuleRunConfiguration moduleRunConfiguration = (ESBModuleRunConfiguration) configuration;
+        ModuleRunConfiguration moduleRunConfiguration = (ModuleRunConfiguration) configuration;
 
 
         final Semaphore targetDone = new Semaphore();

@@ -16,7 +16,7 @@ import java.awt.*;
 
 import static com.intellij.uiDesigner.core.GridConstraints.*;
 
-public class RuntimeRunConfigurationSettings extends SettingsEditor<ESBRuntimeRunConfiguration> {
+public class RuntimeRunConfigurationSettings extends SettingsEditor<RuntimeRunConfiguration> {
 
     private JPanel jPanel;
     private JTextField vmOptionsTextField;
@@ -29,7 +29,7 @@ public class RuntimeRunConfigurationSettings extends SettingsEditor<ESBRuntimeRu
     }
 
     @Override
-    protected void resetEditorFrom(@NotNull ESBRuntimeRunConfiguration runtimeRunConfiguration) {
+    protected void resetEditorFrom(@NotNull RuntimeRunConfiguration runtimeRunConfiguration) {
         vmOptionsTextField.setText(runtimeRunConfiguration.getVmOptions());
         runtimePortTextField.setText(runtimeRunConfiguration.getRuntimePort());
         runtimeHomeField.setText(runtimeRunConfiguration.getRuntimeHomeDirectory());
@@ -37,7 +37,7 @@ public class RuntimeRunConfigurationSettings extends SettingsEditor<ESBRuntimeRu
     }
 
     @Override
-    protected void applyEditorTo(@NotNull ESBRuntimeRunConfiguration configuration) throws ConfigurationException {
+    protected void applyEditorTo(@NotNull RuntimeRunConfiguration configuration) throws ConfigurationException {
         configuration.setRuntimeHomeDirectory(runtimeHomeField.getText());
         configuration.setVmOptions(vmOptionsTextField.getText());
         configuration.setRuntimePort(runtimePortTextField.getText());

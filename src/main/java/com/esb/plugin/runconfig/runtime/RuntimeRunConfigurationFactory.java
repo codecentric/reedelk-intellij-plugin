@@ -6,18 +6,18 @@ import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
-public class ESBRuntimeRunConfigurationFactory extends ConfigurationFactory {
+public class RuntimeRunConfigurationFactory extends ConfigurationFactory {
 
-    private static final String FACTORY_NAME = "ESB Runtime Run Configuration Factory";
+    private static final String FACTORY_NAME = "Runtime Run Configuration Factory";
 
-    public ESBRuntimeRunConfigurationFactory(@NotNull ConfigurationType type) {
+    public RuntimeRunConfigurationFactory(@NotNull ConfigurationType type) {
         super(type);
     }
 
     @NotNull
     @Override
     public RunConfiguration createTemplateConfiguration(@NotNull Project project) {
-        return new ESBRuntimeRunConfiguration(project, this, "ESB Runtime Run Configuration");
+        return new RuntimeRunConfiguration(project, this, "Runtime Run Configuration");
     }
 
     @NotNull

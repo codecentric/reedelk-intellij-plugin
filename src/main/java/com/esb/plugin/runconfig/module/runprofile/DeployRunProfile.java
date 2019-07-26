@@ -23,7 +23,7 @@ public class DeployRunProfile extends AbstractRunProfile {
     @Override
     protected ExecutionResult execute(@NotNull MavenProject mavenProject, @NotNull String moduleFile) throws ExecutionException {
         Module module = ModuleManager.getInstance(project).findModuleByName(moduleName);
-        RESTModuleService service = new RESTModuleService(project, module, address, port);
+        RestService service = new RestService(project, module, address, port);
 
         // Check if we can hot swap the module flows.
         if (SourceChangeService.getInstance(project).isHotSwap(runtimeConfigName, moduleName)) {

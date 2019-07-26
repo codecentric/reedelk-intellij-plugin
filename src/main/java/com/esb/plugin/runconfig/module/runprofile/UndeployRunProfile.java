@@ -21,7 +21,7 @@ public class UndeployRunProfile extends AbstractRunProfile {
     @Override
     protected ExecutionResult execute(@NotNull MavenProject mavenProject, @NotNull String moduleFile) throws ExecutionException {
         Module module = ModuleManager.getInstance(project).findModuleByName(moduleName);
-        RESTModuleService service = new RESTModuleService(project, module, address, port);
+        RestService service = new RestService(project, module, address, port);
 
         // Un Deploy Module
         service.delete(moduleFile);

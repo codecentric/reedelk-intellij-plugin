@@ -1,7 +1,7 @@
 package com.esb.plugin.commons;
 
-import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfiguration;
-import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfigurationType;
+import com.esb.plugin.runconfig.runtime.RuntimeRunConfiguration;
+import com.esb.plugin.runconfig.runtime.RuntimeRunConfigurationType;
 import com.intellij.execution.RunManager;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.openapi.project.Project;
@@ -20,11 +20,11 @@ public class RuntimeComboManager {
         this.comboBox = comboBox;
 
         if (project != null) {
-            List<RunConfiguration> configurationsList = RunManager.getInstance(project).getConfigurationsList(new ESBRuntimeRunConfigurationType());
+            List<RunConfiguration> configurationsList = RunManager.getInstance(project).getConfigurationsList(new RuntimeRunConfigurationType());
 
             configurationsList
                     .stream()
-                    .map(configuration -> (ESBRuntimeRunConfiguration) configuration)
+                    .map(configuration -> (RuntimeRunConfiguration) configuration)
                     .forEach(configuration -> comboBox.addItem(configuration.getName()));
 
             comboBox.setSelectedIndex(-1);

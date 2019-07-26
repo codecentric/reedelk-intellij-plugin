@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class ESBModuleUnDeployExecutor extends Executor {
+public class ModuleUnDeployExecutor extends Executor {
 
     @NonNls
     public static final String EXECUTOR_ID = "unDeployESBModule";

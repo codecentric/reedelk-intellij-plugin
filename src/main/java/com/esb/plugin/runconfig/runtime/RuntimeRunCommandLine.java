@@ -14,11 +14,11 @@ import java.nio.file.Paths;
 
 import static java.lang.String.format;
 
-public class ESBRuntimeRunCommandLine extends JavaCommandLineState {
+public class RuntimeRunCommandLine extends JavaCommandLineState {
 
-    private final ESBRuntimeRunConfiguration configuration;
+    private final RuntimeRunConfiguration configuration;
 
-    protected ESBRuntimeRunCommandLine(@NotNull ESBRuntimeRunConfiguration configuration, @NotNull ExecutionEnvironment environment) {
+    protected RuntimeRunCommandLine(@NotNull RuntimeRunConfiguration configuration, @NotNull ExecutionEnvironment environment) {
         super(environment);
         this.configuration = configuration;
     }

@@ -2,7 +2,7 @@ package com.esb.plugin.runconfig.module.runprofile;
 
 import com.esb.plugin.commons.MavenUtils;
 import com.esb.plugin.commons.NotificationUtils;
-import com.esb.plugin.runconfig.runtime.ESBRuntimeRunConfiguration;
+import com.esb.plugin.runconfig.runtime.RuntimeRunConfiguration;
 import com.esb.plugin.service.project.ToolWindowService;
 import com.intellij.execution.*;
 import com.intellij.execution.configurations.RunProfileState;
@@ -50,7 +50,7 @@ abstract class AbstractRunProfile implements RunProfileState {
 
         RunnerAndConfigurationSettings configSettings = RunManager.getInstance(project).findConfigurationByName(runtimeConfigName);
         if (configSettings == null) throw new ExecutionException("Could not find config with name = " + runtimeConfigName + ", check module run configuration");
-        ESBRuntimeRunConfiguration runtimeRunConfiguration = (ESBRuntimeRunConfiguration) configSettings.getConfiguration();
+        RuntimeRunConfiguration runtimeRunConfiguration = (RuntimeRunConfiguration) configSettings.getConfiguration();
 
         this.port = Integer.parseInt(runtimeRunConfiguration.getRuntimePort());
         this.address = runtimeRunConfiguration.getRuntimeBindAddress();

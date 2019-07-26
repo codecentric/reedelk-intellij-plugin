@@ -4,9 +4,9 @@ import com.intellij.execution.BeforeRunTask;
 import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NotNull;
 
-public class ESBModuleBuildBeforeTask extends BeforeRunTask<ESBModuleBuildBeforeTask> {
+public class ModuleBuilderBeforeTask extends BeforeRunTask<ModuleBuilderBeforeTask> {
 
-    protected ESBModuleBuildBeforeTask(@NotNull Key<ESBModuleBuildBeforeTask> providerId) {
+    protected ModuleBuilderBeforeTask(@NotNull Key<ModuleBuilderBeforeTask> providerId) {
         super(providerId);
     }
 }

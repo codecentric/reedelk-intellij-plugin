@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class ESBModuleRunConfigurationType implements ConfigurationType {
+public class ModuleRunConfigurationType implements ConfigurationType {
     @NotNull
     @Override
     public String getDisplayName() {
@@ -34,6 +34,6 @@ public class ESBModuleRunConfigurationType implements ConfigurationType {
 
     @Override
     public ConfigurationFactory[] getConfigurationFactories() {
-        return new ConfigurationFactory[] { new ESBModuleRunConfigurationFactory(this) };
+        return new ConfigurationFactory[]{new ModuleRunConfigurationFactory(this)};
     }
 }

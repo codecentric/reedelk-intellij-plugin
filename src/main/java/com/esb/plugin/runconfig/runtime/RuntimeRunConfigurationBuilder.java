@@ -4,31 +4,31 @@ import com.intellij.execution.RunManager;
 import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.openapi.project.Project;
 
-public class ESBRuntimeRunConfigurationBuilder {
+public class RuntimeRunConfigurationBuilder {
 
     private String runtimeHomeDirectory;
     private String runtimeConfigName;
 
-    private ESBRuntimeRunConfigurationBuilder() {
+    private RuntimeRunConfigurationBuilder() {
     }
 
-    public static ESBRuntimeRunConfigurationBuilder build() {
-        return new ESBRuntimeRunConfigurationBuilder();
+    public static RuntimeRunConfigurationBuilder build() {
+        return new RuntimeRunConfigurationBuilder();
     }
 
-    public ESBRuntimeRunConfigurationBuilder withRuntimeHomeDirectory(String runtimeHomeDirectory) {
+    public RuntimeRunConfigurationBuilder withRuntimeHomeDirectory(String runtimeHomeDirectory) {
         this.runtimeHomeDirectory = runtimeHomeDirectory;
         return this;
     }
 
-    public ESBRuntimeRunConfigurationBuilder withRuntimeConfigName(String runtimeConfigName) {
+    public RuntimeRunConfigurationBuilder withRuntimeConfigName(String runtimeConfigName) {
         this.runtimeConfigName = runtimeConfigName;
         return this;
     }
 
     public void add(Project project) {
-        RunnerAndConfigurationSettings runConfigurationSettings = RunManager.getInstance(project).createConfiguration(runtimeConfigName, new ESBRuntimeRunConfigurationFactory(new ESBRuntimeRunConfigurationType()));
-        ESBRuntimeRunConfiguration configuration = (ESBRuntimeRunConfiguration) runConfigurationSettings.getConfiguration();
+        RunnerAndConfigurationSettings runConfigurationSettings = RunManager.getInstance(project).createConfiguration(runtimeConfigName, new RuntimeRunConfigurationFactory(new RuntimeRunConfigurationType()));
+        RuntimeRunConfiguration configuration = (RuntimeRunConfiguration) runConfigurationSettings.getConfiguration();
         configuration.setRuntimeHomeDirectory(runtimeHomeDirectory);
         configuration.setName(runtimeConfigName);
 

@@ -20,9 +20,9 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.util.Collections;
 
-public class ESBRuntimeRunConfiguration extends RunConfigurationBase<ESBRuntimeRunConfiguration> implements ModuleRunProfile {
+public class RuntimeRunConfiguration extends RunConfigurationBase<RuntimeRunConfiguration> implements ModuleRunProfile {
 
-    private static final String PREFIX = "ESBRuntimeRunConfiguration-";
+    private static final String PREFIX = "RuntimeRunConfiguration-";
     private static final String VM_OPTIONS = PREFIX + "VmOptions";
     private static final String PORT = PREFIX + "Port";
     private static final String RUNTIME_HOME_DIRECTORY = PREFIX + "RuntimeHomeDirectory";
@@ -32,13 +32,13 @@ public class ESBRuntimeRunConfiguration extends RunConfigurationBase<ESBRuntimeR
     private String runtimeBindAddress = "localhost";
     private String runtimeHomeDirectory;
 
-    protected ESBRuntimeRunConfiguration(@NotNull Project project, @Nullable ConfigurationFactory factory, @Nullable String name) {
+    protected RuntimeRunConfiguration(@NotNull Project project, @Nullable ConfigurationFactory factory, @Nullable String name) {
         super(project, factory, name);
     }
 
     @NotNull
     @Override
-    public SettingsEditor<ESBRuntimeRunConfiguration> getConfigurationEditor() {
+    public SettingsEditor<RuntimeRunConfiguration> getConfigurationEditor() {
         RuntimeRunConfigurationSettings runtimeRunConfigurationSettings = new RuntimeRunConfigurationSettings(getProject());
         // Runtime Run Config does not have any Before Task to be executed prior to Runtime Launch.
         setBeforeRunTasks(Collections.emptyList());
@@ -83,7 +83,7 @@ public class ESBRuntimeRunConfiguration extends RunConfigurationBase<ESBRuntimeR
         // deploy/un-deploy action is completed.
         ToolWindowService toolWindowService = ServiceManager.getService(getProject(), ToolWindowService.class);
         toolWindowService.put(getName(), executor.getToolWindowId());
-        return new ESBRuntimeRunCommandLine(this, environment);
+        return new RuntimeRunCommandLine(this, environment);
     }
 
     public void setVmOptions(String vmOptions) {
