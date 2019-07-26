@@ -340,7 +340,7 @@ public abstract class DesignerPanel extends JBPanel implements
 
     /**
      * If the graph has grown beyond the current window size,
-     * we must adapt it.
+     * (horizontally or vertically) we must  adapt the window size accordingly.
      */
     private void adjustWindowSize() {
         DesignerWindowSizeCalculator.from(snapshot.getGraph(), getGraphics2D()).ifPresent(dimension -> {
