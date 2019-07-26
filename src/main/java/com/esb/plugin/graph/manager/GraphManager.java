@@ -24,12 +24,10 @@ import static com.esb.plugin.service.project.DesignerSelectionManager.CurrentSel
 import static java.util.Arrays.stream;
 
 /**
- * Centralizes updates of the graph coming from the following sources:
- * - The text editor associated with the flow designer (the user manually updates the JSON)
- * - Designer updates:
- * - drag and drop and moving around components
- * - Properties updates:
- * - component's property changed
+ * Centralizes updates of the graph coming from:
+ * - Text Editor associated with the flow designer (the user manually updates the JSON)
+ * - Flow Designer: updates caused by drag and drop and moving around components
+ * - Properties Panel: updates cause by component's property changes from an input field
  */
 public abstract class GraphManager implements FileEditorManagerListener, FileEditorManagerListener.Before, SnapshotListener, Disposable, ComponentListUpdateNotifier {
 
@@ -126,7 +124,8 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
      */
     private Optional<Document> findRelatedEditorDocument(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
         FileEditor[] editors = source.getEditors(file);
-        return stream(editors).filter(fileEditor -> fileEditor instanceof TextEditor)
+        return stream(editors)
+                .filter(fileEditor -> fileEditor instanceof TextEditor)
                 .findFirst()
                 .map(fileEditor -> (TextEditor) fileEditor)
                 .map(textEditor -> textEditor.getEditor().getDocument());
