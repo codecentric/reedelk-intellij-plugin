@@ -41,5 +41,4 @@ public class DesignerSelectionManagerImpl implements DesignerSelectionManager, D
             this.currentSelection = null;
         }
     }
-
 }
