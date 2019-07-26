@@ -1,13 +1,16 @@
 package com.esb.plugin.graph.manager;
 
 import com.esb.plugin.component.scanner.ComponentListUpdateNotifier;
+import com.esb.plugin.editor.FlowDesignerEditor;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphProvider;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.SnapshotListener;
+import com.esb.plugin.service.project.DesignerSelectionManager;
 import com.esb.plugin.service.project.SelectableItem;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.*;
@@ -43,7 +46,7 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
     private final MessageBusConnection moduleBusConnection;
 
     private final CurrentSelectionListener currentSelectionPublisher;
-
+    private final DesignerSelectionManager designerSelectionManager;
     private Document document;
 
     GraphManager(@NotNull Module module,
@@ -65,6 +68,8 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
 
         currentSelectionPublisher = module.getProject().getMessageBus()
                 .syncPublisher(CurrentSelectionListener.CURRENT_SELECTION_TOPIC);
+
+        designerSelectionManager = ServiceManager.getService(module.getProject(), DesignerSelectionManager.class);
     }
 
     @Override
@@ -80,9 +85,11 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
 
     @Override
     public void beforeFileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
-        // Unselect the current selection
-        System.out.println("Beforefile closed");
-        currentSelectionPublisher.onUnSelected(getNothingSelectedItem());
+        if (file.equals(graphFile)) {
+            // Unselect the current selection
+            designerSelectionManager.getCurrentSelection()
+                    .ifPresent(currentSelectionPublisher::onUnSelected);
+        }
     }
 
     @Override
@@ -90,10 +97,17 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
         VirtualFile[] selectedFiles = FileEditorManager.getInstance(module.getProject()).getSelectedFiles();
         for (VirtualFile file : selectedFiles) {
             if (file.equals(graphFile)) {
-                deserializeDocument();
-                // select the graph stuff
-                currentSelectionPublisher.onSelection(getNothingSelectedItem());
-                break;
+                if (event.getNewEditor() instanceof FlowDesignerEditor) {
+                    deserializeDocument();
+                    currentSelectionPublisher.onSelection(getNothingSelectedItem());
+                    break;
+                }
+                // If we get to this point we must unselect
+                // the current selection since we are switching
+                // to text or any other editor defined for this
+                // file extension.
+                designerSelectionManager.getCurrentSelection()
+                        .ifPresent(currentSelectionPublisher::onUnSelected);
             }
         }
     }
