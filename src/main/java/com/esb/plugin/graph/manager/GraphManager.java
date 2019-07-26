@@ -12,7 +12,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.messages.MessageBusConnection;
@@ -37,9 +36,8 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
     private static final Logger LOG = Logger.getInstance(GraphManager.class);
 
     private final Module module;
-    private final Project project;
+    private final FlowSnapshot snapshot;
     private final VirtualFile graphFile;
-    final FlowSnapshot snapshot;
     private final FlowGraphProvider graphProvider;
     private final MessageBusConnection projectBusConnection;
     private final MessageBusConnection moduleBusConnection;
@@ -48,28 +46,24 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
 
     private Document document;
 
-    GraphManager(@NotNull Project project,
-                 @NotNull Module module,
+    GraphManager(@NotNull Module module,
                  @NotNull VirtualFile managedFile,
                  @NotNull FlowSnapshot snapshot,
                  @NotNull FlowGraphProvider graphProvider) {
         this.module = module;
-        this.project = project;
         this.snapshot = snapshot;
         this.graphFile = managedFile;
         this.snapshot.addListener(this);
         this.graphProvider = graphProvider;
 
-        projectBusConnection = project.getMessageBus().connect();
+        projectBusConnection = module.getProject().getMessageBus().connect();
         projectBusConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
         projectBusConnection.subscribe(FileEditorManagerListener.Before.FILE_EDITOR_MANAGER, this);
 
         moduleBusConnection = module.getMessageBus().connect();
         moduleBusConnection.subscribe(COMPONENT_LIST_UPDATE_TOPIC, this);
 
-        currentSelectionPublisher = module
-                .getProject()
-                .getMessageBus()
+        currentSelectionPublisher = module.getProject().getMessageBus()
                 .syncPublisher(CurrentSelectionListener.CURRENT_SELECTION_TOPIC);
     }
 
@@ -93,7 +87,7 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
 
     @Override
     public void selectionChanged(@NotNull FileEditorManagerEvent event) {
-        VirtualFile[] selectedFiles = FileEditorManager.getInstance(project).getSelectedFiles();
+        VirtualFile[] selectedFiles = FileEditorManager.getInstance(module.getProject()).getSelectedFiles();
         for (VirtualFile file : selectedFiles) {
             if (file.equals(graphFile)) {
                 deserializeDocument();
@@ -130,7 +124,7 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
      */
     private void write(String json) {
         try {
-            WriteCommandAction.writeCommandAction(project)
+            WriteCommandAction.writeCommandAction(module.getProject())
                     .run((ThrowableRunnable<Throwable>) () -> document.setText(json));
         } catch (Throwable throwable) {
             LOG.error("Could not write Graph's JSON data", throwable);

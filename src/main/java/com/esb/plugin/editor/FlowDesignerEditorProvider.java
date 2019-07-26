@@ -36,7 +36,7 @@ public class FlowDesignerEditorProvider implements FileEditorProvider, DumbAware
 
         FlowGraphProvider graphProvider = new FlowGraphProvider();
         FlowSnapshot snapshot = new FlowSnapshot(graphProvider, defaultFlowTitle, defaultDescription);
-        FlowGraphManager graphManager = new FlowGraphManager(project, module, file, snapshot, graphProvider);
+        FlowGraphManager graphManager = new FlowGraphManager(module, file, snapshot, graphProvider);
 
         DesignerPanelActionHandler handler = new FlowDesignerPanelActionHandler(module, snapshot);
         return new FlowDesignerEditor(module, snapshot, graphManager, handler);

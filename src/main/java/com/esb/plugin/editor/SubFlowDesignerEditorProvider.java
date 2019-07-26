@@ -36,7 +36,7 @@ public class SubFlowDesignerEditorProvider implements FileEditorProvider, DumbAw
 
         FlowGraphProvider graphProvider = new FlowGraphProvider();
         FlowSnapshot snapshot = new FlowSnapshot(graphProvider, defaultFlowTitle, defaultDescription);
-        GraphManager graphManager = new SubFlowGraphManager(project, module, file, snapshot, graphProvider);
+        GraphManager graphManager = new SubFlowGraphManager(module, file, snapshot, graphProvider);
 
         SubFlowDesignerPanelActionHandler handler = new SubFlowDesignerPanelActionHandler(module, snapshot);
         return new SubFlowDesignerEditor(module, snapshot, graphManager, handler);

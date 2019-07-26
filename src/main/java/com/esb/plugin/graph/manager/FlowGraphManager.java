@@ -9,7 +9,6 @@ import com.esb.plugin.service.project.SelectableItem;
 import com.esb.plugin.service.project.SelectableItemFlow;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,12 +18,11 @@ public class FlowGraphManager extends GraphManager {
 
     private final SelectableItem nothingSelectedItem;
 
-    public FlowGraphManager(@NotNull Project project,
-                            @NotNull Module module,
+    public FlowGraphManager(@NotNull Module module,
                             @NotNull VirtualFile managedFile,
                             @NotNull FlowSnapshot snapshot,
                             @NotNull FlowGraphProvider graphProvider) {
-        super(project, module, managedFile, snapshot, graphProvider);
+        super(module, managedFile, snapshot, graphProvider);
         nothingSelectedItem = new SelectableItemFlow(snapshot);
     }
 
