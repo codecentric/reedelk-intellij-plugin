@@ -24,15 +24,15 @@ import org.jetbrains.idea.maven.wizards.MavenModuleBuilder;
 
 import javax.swing.*;
 
-public class ESBModuleBuilder extends MavenModuleBuilder {
+public class ModuleBuilder extends MavenModuleBuilder {
 
-    private static final Logger LOG = Logger.getInstance(ESBModuleBuilder.class);
+    private static final Logger LOG = Logger.getInstance(ModuleBuilder.class);
 
     private boolean isNewProject;
     private String runtimeConfigName;
     private String runtimeHomeDirectory;
 
-    public ESBModuleBuilder() {
+    public ModuleBuilder() {
         setProjectId(defaultMavenId());
     }
 
@@ -64,7 +64,7 @@ public class ESBModuleBuilder extends MavenModuleBuilder {
         final String sdkVersion = rootModel.getSdkName();
 
         MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> {
-            ESBMavenProjectBuilderHelper projectBuilder = new ESBMavenProjectBuilderHelper();
+            MavenProjectBuilderHelper projectBuilder = new MavenProjectBuilderHelper();
             try {
                 projectBuilder.configure(project, projectId, parentId, root, sdkVersion);
             } catch (Throwable throwable) {

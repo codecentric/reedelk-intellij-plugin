@@ -28,7 +28,7 @@ import static com.intellij.uiDesigner.core.GridConstraints.*;
 
 public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable {
 
-    private ESBModuleBuilder moduleBuilder;
+    private ModuleBuilder moduleBuilder;
     
     private JPanel jPanel;
     private JLabel runtimeName;
@@ -42,7 +42,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
 
     private boolean isNewProject;
 
-    public ConfigureRuntimeStep(WizardContext wizardContext, ESBModuleBuilder builder, Project project) {
+    public ConfigureRuntimeStep(WizardContext wizardContext, ModuleBuilder builder, Project project) {
         isNewProject = wizardContext.isCreatingNewProject();
         if (isNewProject) {
             chooseRuntimePanel.setVisible(false);
@@ -75,7 +75,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
         // No op
     }
 
-    private void createInputWithBrowse(WizardContext context, ESBModuleBuilder moduleBuilder) {
+    private void createInputWithBrowse(WizardContext context, ModuleBuilder moduleBuilder) {
         FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
         runtimeHomeDirectoryBrowse = new TextFieldWithBrowseButton();
         runtimeHomeDirectoryBrowse.addBrowseFolderListener(new TextBrowseFolderListener(descriptor, context.getProject()) {

@@ -18,9 +18,9 @@ import java.util.Properties;
 
 import static com.esb.internal.commons.ModuleProperties.*;
 
-class ESBMavenProjectBuilderHelper {
+class MavenProjectBuilderHelper {
 
-    private static final Logger LOG = Logger.getInstance(ESBMavenProjectBuilderHelper.class);
+    private static final Logger LOG = Logger.getInstance(MavenProjectBuilderHelper.class);
 
     void configure(Project project, MavenId projectId, @Nullable MavenId parentId, VirtualFile root, String sdkVersion) throws Throwable {
 

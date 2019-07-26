@@ -38,7 +38,8 @@
                 implementation="com.esb.plugin.runconfig.module.beforetask.ModuelBuilderBeforeTaskProvider"/>
 
         <!-- Module Builder -->
-        <moduleBuilder builderClass="com.esb.plugin.module.builder.ESBModuleBuilder" id="ESB_MODULE_BUILDER" order="first"/>
+        <moduleBuilder builderClass="com.esb.plugin.module.builder.ModuleBuilder" id="ESB_MODULE_BUILDER"
+                       order="first"/>
 
         <!-- Services -->
         <applicationService serviceInterface="com.esb.plugin.service.application.http.HttpService"

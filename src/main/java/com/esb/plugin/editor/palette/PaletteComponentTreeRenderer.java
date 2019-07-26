@@ -3,6 +3,7 @@ package com.esb.plugin.editor.palette;
 import com.esb.plugin.commons.Icons;
 import com.esb.plugin.component.domain.ComponentClass;
 import com.esb.plugin.component.domain.ComponentDescriptor;
+import com.intellij.util.ui.JBUI;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -20,11 +21,18 @@ public class PaletteComponentTreeRenderer implements TreeCellRenderer {
 
     public PaletteComponentTreeRenderer() {
         this.value = new JLabel();
+        this.value.setAlignmentY(JLabel.CENTER_ALIGNMENT);
+
         this.typeIcon = new JLabel();
+        this.typeIcon.setAlignmentY(JLabel.CENTER_ALIGNMENT);
         this.typeIcon.setIcon(Icons.Module);
+        this.typeIcon.setBorder(JBUI.Borders.empty(1, 0, 0, 3));
+
         this.renderer = new JPanel();
+        this.renderer.setLayout(new GridBagLayout());
         this.renderer.add(typeIcon);
         this.renderer.add(value);
+
         this.defaultRenderer.setOpenIcon(Icons.Module);
         this.defaultRenderer.setClosedIcon(Icons.Module);
     }
@@ -37,6 +45,11 @@ public class PaletteComponentTreeRenderer implements TreeCellRenderer {
                 ComponentDescriptor descriptor = (ComponentDescriptor) userObject;
                 this.value.setText(descriptor.getDisplayName());
                 this.value.setIcon(descriptor.getIcon());
+                if (selected) {
+                    this.value.setForeground(Color.WHITE);
+                } else {
+                    this.value.setForeground(Color.DARK_GRAY);
+                }
                 if (descriptor.getComponentClass().equals(ComponentClass.INBOUND)) {
                     this.typeIcon.setIcon(Icons.Component.InboundTypeComponent);
                 } else {
