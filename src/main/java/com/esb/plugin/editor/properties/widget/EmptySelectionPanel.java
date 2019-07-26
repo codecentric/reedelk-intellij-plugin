@@ -1,6 +1,7 @@
 package com.esb.plugin.editor.properties.widget;
 
 import com.esb.plugin.commons.Colors;
+import com.esb.plugin.commons.Labels;
 import com.esb.plugin.editor.properties.PropertiesPanelToolWindowFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
@@ -21,7 +22,7 @@ public class EmptySelectionPanel extends DisposablePanel {
                 .getToolWindow(PropertiesPanelToolWindowFactory.ID);
 
         toolWindow.setTitle("");
-        JLabel noSelectionLabel = new JLabel("No selection");
+        JLabel noSelectionLabel = new JLabel(Labels.PROPERTIES_PANEL_NOTHING_SELECTED);
         noSelectionLabel.setForeground(Colors.PROPERTIES_EMPTY_SELECTION_TEXT);
         add(noSelectionLabel);
     }

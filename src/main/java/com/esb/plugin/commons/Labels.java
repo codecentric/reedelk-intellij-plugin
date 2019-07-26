@@ -17,6 +17,7 @@ public class Labels {
 
     public static final String PROPERTIES_PANEL_SUBFLOW_TITLE = "Subflow";
     public static final String PROPERTIES_PANEL_FLOW_TITLE = "Flow";
+    public static final String PROPERTIES_PANEL_NOTHING_SELECTED = "There are no flow components selected";
 
     public static final String FLOW_GRAPH_TAB_TITLE = "Title";
     public static final String FLOW_GRAPH_TAB_DESCRIPTION = "Description";
