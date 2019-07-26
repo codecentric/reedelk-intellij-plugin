@@ -47,7 +47,7 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
     private int offsetX;
     private int offsetY;
     private boolean dragging;
-    private boolean updated = false;
+    private boolean snapshotUpdated = false;
 
     private GraphNode selected;
     private CenterOfNode centerOfNode;
@@ -86,8 +86,9 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
 
         FlowGraph graph = snapshot.getGraph();
 
-        // We compute again the graph layout if and only if it was updated.
-        if (updated) {
+        // We compute again the graph layout if and
+        // only if the graph snapshot it was updated.
+        if (snapshotUpdated) {
 
             LOG.info("Graph changed");
 
@@ -97,7 +98,7 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
 
             PrintFlowInfo.debug(graph);
 
-            updated = false;
+            snapshotUpdated = false;
 
         }
 
@@ -212,7 +213,7 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
     @Override
     public void onDataChange() {
         SwingUtilities.invokeLater(() -> {
-            updated = true;
+            snapshotUpdated = true;
             repaint();
         });
     }
