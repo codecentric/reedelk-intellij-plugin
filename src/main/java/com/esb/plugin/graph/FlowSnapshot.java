@@ -10,7 +10,6 @@ public class FlowSnapshot {
     private final String defaultTitle;
     private final String defaultDescription;
     private final FlowGraphProvider provider;
-
     private final Set<SnapshotListener> listeners = new HashSet<>();
 
     private FlowGraph graph;
@@ -28,7 +27,6 @@ public class FlowSnapshot {
                 listener.onDataChange();
             }
         }
-
     }
 
     public void onDataChange() {
