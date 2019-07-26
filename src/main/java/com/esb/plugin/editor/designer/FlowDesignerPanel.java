@@ -22,7 +22,7 @@ public class FlowDesignerPanel extends DesignerPanel {
     }
 
     @Override
-    protected void onPrePaint(Graphics2D graphics) {
+    protected void onBeforePaint(Graphics2D graphics) {
         inboundLane.draw(snapshot.getGraph(), graphics, this);
         flowMetadata.draw(graphics);
     }

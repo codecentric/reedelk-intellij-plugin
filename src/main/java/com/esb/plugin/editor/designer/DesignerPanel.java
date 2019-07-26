@@ -102,7 +102,7 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
 
         }
 
-        onPrePaint(g2);
+        onBeforePaint(g2);
 
         // Draw the graph nodes
         graph.breadthFirstTraversal(node -> node.draw(graph, g2, DesignerPanel.this));
@@ -224,12 +224,17 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
     }
 
     @Override
+    public void mouseExited(MouseEvent e) {
+        // nothing to do
+    }
+
+    @Override
     public void mouseEntered(MouseEvent e) {
         // nothing to do
     }
 
     @Override
-    public void mouseExited(MouseEvent e) {
+    public void dragExit(DropTargetEvent dte) {
         // nothing to do
     }
 
@@ -243,12 +248,7 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
         // nothing to do
     }
 
-    @Override
-    public void dragExit(DropTargetEvent dte) {
-        // nothing to do
-    }
-
-    protected abstract void onPrePaint(Graphics2D graphics);
+    protected abstract void onBeforePaint(Graphics2D graphics);
 
     protected abstract SelectableItem getNoComponentSelectedItem();
 

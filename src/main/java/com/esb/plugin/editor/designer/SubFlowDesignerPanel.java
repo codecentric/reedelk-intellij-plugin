@@ -19,7 +19,7 @@ public class SubFlowDesignerPanel extends DesignerPanel {
     }
 
     @Override
-    protected void onPrePaint(Graphics2D graphics) {
+    protected void onBeforePaint(Graphics2D graphics) {
         flowMetadata.draw(graphics);
     }
 
