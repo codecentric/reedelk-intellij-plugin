@@ -3,6 +3,7 @@ package com.esb.plugin.editor.designer;
 import com.esb.plugin.commons.Colors;
 import com.esb.plugin.commons.DesignerWindowSizeCalculator;
 import com.esb.plugin.commons.PrintFlowInfo;
+import com.esb.plugin.component.scanner.ComponentListUpdateNotifier;
 import com.esb.plugin.editor.designer.widget.CenterOfNodeDrawable;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowSnapshot;
@@ -17,6 +18,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.ui.components.JBPanel;
+import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -35,7 +37,13 @@ import static com.esb.plugin.service.project.DesignerSelectionManager.CurrentSel
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
-public abstract class DesignerPanel extends JBPanel implements MouseMotionListener, MouseListener, DropTargetListener, SnapshotListener, DrawableListener {
+public abstract class DesignerPanel extends JBPanel implements
+        MouseMotionListener,
+        MouseListener,
+        DropTargetListener,
+        SnapshotListener,
+        DrawableListener,
+        ComponentListUpdateNotifier {
 
     private static final Logger LOG = Logger.getInstance(DesignerPanel.class);
 
@@ -72,6 +80,9 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
         setBackground(Colors.DESIGNER_BG);
         addMouseListener(this);
         addMouseMotionListener(this);
+
+        MessageBusConnection connect = module.getMessageBus().connect();
+        connect.subscribe(COMPONENT_LIST_UPDATE_TOPIC, this);
 
         componentSelectedPublisher = module
                 .getProject()
@@ -242,7 +253,23 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
     public void onDataChange() {
         snapshotUpdated = true;
         if (visible) {
+            // When some graph data is changed we need to repaint the canvas.
+            // This is needed for instance to refresh flow (or subflow) and
+            // components descriptions properties.
             SwingUtilities.invokeLater(this::repaint);
+        }
+    }
+
+    @Override
+    public void onComponentListUpdate(Module module) {
+        if (visible) {
+            // When the component list is updated or we click on the 'compile' button
+            // the graph is de-serialized to apply changes and refresh properties
+            // which might have been changed from custom Java components. Therefore
+            // it is important to reset the current selection to the flow otherwise
+            // the selection would be bound to the old object before refreshing
+            // the flow (or subflow) graph.
+            SwingUtilities.invokeLater(() -> select(getNothingSelectedItem()));
         }
     }
 
