@@ -46,7 +46,10 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
         this.currentSelection = selectedItem;
 
         ToolWindow toolWindow = getToolWindow();
-
+        if (!toolWindow.isVisible()) {
+            toolWindow.show(() -> {
+            });
+        }
 
         if (selectedItem instanceof SelectableItemComponent) {
             // Otherwise the properties panel displays the properties
