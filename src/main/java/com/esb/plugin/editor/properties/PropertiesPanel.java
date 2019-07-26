@@ -35,6 +35,11 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
 
         designerSelectionManager = ServiceManager.getService(project, DesignerSelectionManager.class);
 
+        DisposablePanel empty = new EmptySelectionPanel(project);
+        add(empty);
+        this.currentPane = empty;
+
+
         project.getMessageBus()
                 .connect().subscribe(CurrentSelectionListener.CURRENT_SELECTION_TOPIC, this);
     }

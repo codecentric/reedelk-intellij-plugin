@@ -210,19 +210,9 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
     }
 
     @Override
-    public void onDataChange(@NotNull FlowGraph graph) {
+    public void onDataChange() {
         SwingUtilities.invokeLater(() -> {
             updated = true;
-            invalidate();
-            repaint();
-        });
-    }
-
-    @Override
-    public void onStructureChange(@NotNull FlowGraph graph) {
-        SwingUtilities.invokeLater(() -> {
-            updated = true;
-            invalidate();
             repaint();
         });
     }

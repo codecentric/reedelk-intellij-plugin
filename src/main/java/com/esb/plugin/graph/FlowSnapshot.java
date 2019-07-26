@@ -2,8 +2,8 @@ package com.esb.plugin.graph;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class FlowSnapshot {
 
@@ -11,7 +11,7 @@ public class FlowSnapshot {
     private final String defaultDescription;
     private final FlowGraphProvider provider;
 
-    private final List<SnapshotListener> listeners = new ArrayList<>();
+    private final Set<SnapshotListener> listeners = new HashSet<>();
 
     private FlowGraph graph;
 
@@ -25,15 +25,17 @@ public class FlowSnapshot {
         this.graph = graph;
         for (SnapshotListener listener : listeners) {
             if (listener != notifier) {
-                listener.onStructureChange(graph);
+                listener.onDataChange();
             }
         }
+
     }
 
     public void onDataChange() {
         for (SnapshotListener listener : listeners) {
-            listener.onDataChange(graph);
+            listener.onDataChange();
         }
+
     }
 
     public void addListener(SnapshotListener listener) {

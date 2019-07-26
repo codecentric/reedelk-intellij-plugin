@@ -97,14 +97,9 @@ public abstract class GraphManager implements FileEditorManagerListener, Snapsho
     }
 
     @Override
-    public void onDataChange(@NotNull FlowGraph graph) {
-        String json = serialize(graph);
-        write(json);
-    }
-
-    @Override
-    public void onStructureChange(@NotNull FlowGraph graph) {
-        String json = serialize(graph);
+    public void onDataChange() {
+        FlowGraph updatedGraph = snapshot.getGraph();
+        String json = serialize(updatedGraph);
         write(json);
     }
 
