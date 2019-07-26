@@ -43,6 +43,8 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
 
     @Override
     public void onSelection(SelectableItem selectedItem) {
+        // We must Dispose the current content before
+        // creating and assigning a new content.
         if (currentPane != null) {
             Disposer.dispose(currentPane);
         }
@@ -54,35 +56,9 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
         displayToolWindow();
 
         if (selectedItem instanceof SelectableItemComponent) {
-            // Otherwise the properties panel displays the properties
-            // of the component currently selected.
-            ComponentData componentData = selectedItem.getSelectedNode().componentData();
-
-            DisposableScrollPane propertiesPanel =
-                    ContainerFactory.createPropertiesPanel(selectedItem.getModule(),
-                            componentData,
-                            selectedItem.getSnapshot(),
-                            selectedItem.getSelectedNode());
-
-            String displayName = componentData.getDisplayName();
-            setToolWindowTitle(displayName);
-
-            updateContent(propertiesPanel);
-            this.currentPane = propertiesPanel;
-
-        } else if (selectedItem instanceof SelectableItemFlow ||
-                selectedItem instanceof SelectableItemSubflow) {
-
-            FlowAndSubflowMetadataPanel panel = new FlowAndSubflowMetadataPanel(selectedItem.getSnapshot());
-
-            String toolWindowTitle = selectedItem instanceof SelectableItemFlow ?
-                    Labels.PROPERTIES_PANEL_FLOW_TITLE :
-                    Labels.PROPERTIES_PANEL_SUBFLOW_TITLE;
-            setToolWindowTitle(toolWindowTitle);
-
-            updateContent(panel);
-            this.currentPane = panel;
-
+            createFlowComponentContent(selectedItem);
+        } else if (selectedItem instanceof SelectableItemFlow || selectedItem instanceof SelectableItemSubflow) {
+            createFlowOrSubflowContent(selectedItem);
         } else {
             throw new IllegalStateException("Unknown selectable item");
         }
@@ -104,6 +80,36 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
         if (currentSelection != null) {
             onSelection(currentSelection);
         }
+    }
+
+    private void createFlowOrSubflowContent(SelectableItem selectedItem) {
+        FlowAndSubflowMetadataPanel panel = new FlowAndSubflowMetadataPanel(selectedItem.getSnapshot());
+
+        String toolWindowTitle = selectedItem instanceof SelectableItemFlow ?
+                Labels.PROPERTIES_PANEL_FLOW_TITLE :
+                Labels.PROPERTIES_PANEL_SUBFLOW_TITLE;
+        setToolWindowTitle(toolWindowTitle);
+
+        updateContent(panel);
+        this.currentPane = panel;
+    }
+
+    private void createFlowComponentContent(SelectableItem selectedItem) {
+        // Otherwise the properties panel displays the properties
+        // of the component currently selected.
+        ComponentData componentData = selectedItem.getSelectedNode().componentData();
+
+        DisposableScrollPane propertiesPanel =
+                ContainerFactory.createPropertiesPanel(selectedItem.getModule(),
+                        componentData,
+                        selectedItem.getSnapshot(),
+                        selectedItem.getSelectedNode());
+
+        String displayName = componentData.getDisplayName();
+        setToolWindowTitle(displayName);
+
+        updateContent(propertiesPanel);
+        this.currentPane = propertiesPanel;
     }
 
     private void setEmptySelection() {
