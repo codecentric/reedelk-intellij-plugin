@@ -147,7 +147,8 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
     private class DeserializeGraphAndNotify extends SwingWorker {
         @Override
         public Optional<FlowGraph> construct() {
-            // Background Thread
+            // Background Thread. We are assuming that deserialization
+            // of the graph from JSON is a lengthy operation.
             return deserialize(module, document, graphProvider);
         }
 

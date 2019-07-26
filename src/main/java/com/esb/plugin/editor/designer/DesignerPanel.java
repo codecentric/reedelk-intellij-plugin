@@ -57,6 +57,8 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
     private CurrentSelectionListener componentSelectedPublisher;
     private DesignerSelectionManager service;
 
+    private boolean visible = false;
+
     DesignerPanel(@NotNull Module module,
                   @NotNull FlowSnapshot snapshot,
                   @NotNull DesignerPanelActionHandler actionHandler) {
@@ -83,12 +85,14 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
             public void ancestorAdded(AncestorEvent event) {
                 super.ancestorAdded(event);
                 select(getNothingSelectedItem());
+                visible = true;
             }
 
             @Override
             public void ancestorRemoved(AncestorEvent event) {
                 super.ancestorRemoved(event);
                 unselect();
+                visible = false;
             }
         });
     }
@@ -237,7 +241,9 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
     @Override
     public void onDataChange() {
         snapshotUpdated = true;
-        SwingUtilities.invokeLater(this::repaint);
+        if (visible) {
+            SwingUtilities.invokeLater(this::repaint);
+        }
     }
 
     @Override

@@ -43,13 +43,15 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
 
     @Override
     public void onSelection(SelectableItem selectedItem) {
+        if (currentPane != null) {
+            Disposer.dispose(currentPane);
+        }
+
         this.currentSelection = selectedItem;
 
-        ToolWindow toolWindow = getToolWindow();
-        if (!toolWindow.isVisible()) {
-            toolWindow.show(() -> {
-            });
-        }
+        // We display the tool window if an item is selected
+        // and it is still not visible yet.
+        displayToolWindow();
 
         if (selectedItem instanceof SelectableItemComponent) {
             // Otherwise the properties panel displays the properties
@@ -63,7 +65,7 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
                             selectedItem.getSelectedNode());
 
             String displayName = componentData.getDisplayName();
-            toolWindow.setTitle(displayName);
+            setToolWindowTitle(displayName);
 
             updateContent(propertiesPanel);
             this.currentPane = propertiesPanel;
@@ -76,8 +78,7 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
             String toolWindowTitle = selectedItem instanceof SelectableItemFlow ?
                     Labels.PROPERTIES_PANEL_FLOW_TITLE :
                     Labels.PROPERTIES_PANEL_SUBFLOW_TITLE;
-            toolWindow.setTitle(toolWindowTitle);
-
+            setToolWindowTitle(toolWindowTitle);
 
             updateContent(panel);
             this.currentPane = panel;
@@ -128,6 +129,19 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
                         .ifPresent(PropertiesPanel.this::onSelection);
             }
         });
+    }
+
+    private void setToolWindowTitle(String newToolWindowTitle) {
+        ToolWindow toolWindow = getToolWindow();
+        toolWindow.setTitle(newToolWindowTitle);
+    }
+
+    private void displayToolWindow() {
+        ToolWindow toolWindow = getToolWindow();
+        if (!toolWindow.isVisible()) {
+            toolWindow.show(() -> {
+            });
+        }
     }
 
     private ToolWindow getToolWindow() {
