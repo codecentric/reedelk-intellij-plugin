@@ -285,6 +285,7 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
         }
         if (currentSelection != null) {
             service.getCurrentSelection().ifPresent(selectableItem -> {
+                // We only unselect if the current selection...todo: maybe this one could be handled in the properties
                 if (selectableItem == currentSelection) {
                     componentSelectedPublisher.onUnSelected(currentSelection);
                 }

@@ -135,11 +135,13 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
     private void deserializeDocument() {
         if (document == null) return;
         if (StringUtils.isBlank(document.getText())) return;
-        deserialize(module, document, graphProvider)
-                .ifPresent(updatedGraph -> {
-                    snapshot.updateSnapshot(this, updatedGraph);
-                    currentSelectionPublisher.refresh();
-                });
+
+        deserialize(module, document, graphProvider).ifPresent(updatedGraph -> {
+            snapshot.updateSnapshot(this, updatedGraph);
+            // When we deserialize the document we must refresh the current selection,
+            // so that the Properties panel always references the correct graph data.
+            currentSelectionPublisher.refresh();
+        });
     }
 
     protected abstract String serialize(FlowGraph graph);
