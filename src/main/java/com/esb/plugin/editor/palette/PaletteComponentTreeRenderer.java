@@ -1,5 +1,6 @@
 package com.esb.plugin.editor.palette;
 
+import com.esb.plugin.commons.Colors;
 import com.esb.plugin.commons.Icons;
 import com.esb.plugin.component.domain.ComponentClass;
 import com.esb.plugin.component.domain.ComponentDescriptor;
@@ -19,7 +20,7 @@ public class PaletteComponentTreeRenderer implements TreeCellRenderer {
 
     private DefaultTreeCellRenderer defaultRenderer = new DefaultTreeCellRenderer();
 
-    public PaletteComponentTreeRenderer() {
+    PaletteComponentTreeRenderer() {
         this.value = new JLabel();
         this.value.setAlignmentY(JLabel.CENTER_ALIGNMENT);
 
@@ -40,24 +41,30 @@ public class PaletteComponentTreeRenderer implements TreeCellRenderer {
     @Override
     public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
         if (value instanceof DefaultMutableTreeNode) {
+
             Object userObject = ((DefaultMutableTreeNode) value).getUserObject();
+
             if (userObject instanceof ComponentDescriptor) {
                 ComponentDescriptor descriptor = (ComponentDescriptor) userObject;
+
                 this.value.setText(descriptor.getDisplayName());
                 this.value.setIcon(descriptor.getIcon());
+
                 if (selected) {
-                    this.value.setForeground(Color.WHITE);
+                    this.value.setForeground(Colors.PALETTE_TEXT_SELECTED);
                 } else {
-                    this.value.setForeground(Color.DARK_GRAY);
+                    this.value.setForeground(Colors.PALETTE_TEXT_UNSELECTED);
                 }
-                if (descriptor.getComponentClass().equals(ComponentClass.INBOUND)) {
-                    this.typeIcon.setIcon(Icons.Component.InboundTypeComponent);
+
+                if (ComponentClass.INBOUND.equals(descriptor.getComponentClass())) {
+                    typeIcon.setIcon(Icons.Component.InboundTypeComponent);
                 } else {
-                    this.typeIcon.setIcon(Icons.Component.ProcessorTypeComponent);
+                    typeIcon.setIcon(Icons.Component.ProcessorTypeComponent);
                 }
                 return renderer;
             }
         }
+
         return defaultRenderer.getTreeCellRendererComponent(tree, value, selected, expanded,
                 leaf, row, hasFocus);
     }

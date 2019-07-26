@@ -35,4 +35,7 @@ public class Colors {
     public static final JBColor TEXT_COMPONENT_TITLE_SELECTED = JBColor.DARK_GRAY;
     public static final JBColor TEXT_DEFAULT_ROUTE = JBColor.GRAY;
 
+    public static final JBColor PALETTE_TEXT_SELECTED = JBColor.WHITE;
+    public static final JBColor PALETTE_TEXT_UNSELECTED = JBColor.DARK_GRAY;
+
 }
