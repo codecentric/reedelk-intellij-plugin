@@ -14,11 +14,13 @@ public class FlowDesignerPanel extends DesignerPanel {
 
     private InboundLane inboundLane;
     private FlowMetadata flowMetadata;
+    private SelectableItem nothingSelectedItem;
 
     public FlowDesignerPanel(Module module, FlowSnapshot snapshot, DesignerPanelActionHandler actionHandler) {
         super(module, snapshot, actionHandler);
         this.inboundLane = new InboundLane(TOP_PADDING, this);
         this.flowMetadata = new FlowMetadata(snapshot, Half.of(TOP_PADDING), AbstractGraphNode.NODE_WIDTH);
+        this.nothingSelectedItem = new SelectableItemFlow(snapshot);
     }
 
     @Override
@@ -29,6 +31,6 @@ public class FlowDesignerPanel extends DesignerPanel {
 
     @Override
     protected SelectableItem getNothingSelectedItem() {
-        return new SelectableItemFlow(snapshot);
+        return nothingSelectedItem;
     }
 }

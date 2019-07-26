@@ -6,11 +6,8 @@ import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphProvider;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.SnapshotListener;
-import com.esb.plugin.service.project.DesignerSelectionManager;
-import com.esb.plugin.service.project.SelectableItem;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.*;
@@ -21,7 +18,6 @@ import com.intellij.util.messages.MessageBusConnection;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import static com.esb.plugin.service.project.DesignerSelectionManager.CurrentSelectionListener;
@@ -47,7 +43,6 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
     private final MessageBusConnection moduleBusConnection;
 
     private final CurrentSelectionListener currentSelectionPublisher;
-    private final DesignerSelectionManager designerSelectionManager;
     private Document document;
 
     GraphManager(@NotNull Module module,
@@ -62,15 +57,12 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
 
         projectBusConnection = module.getProject().getMessageBus().connect();
         projectBusConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
-        projectBusConnection.subscribe(FileEditorManagerListener.Before.FILE_EDITOR_MANAGER, this);
 
         moduleBusConnection = module.getMessageBus().connect();
         moduleBusConnection.subscribe(COMPONENT_LIST_UPDATE_TOPIC, this);
 
         currentSelectionPublisher = module.getProject().getMessageBus()
                 .syncPublisher(CurrentSelectionListener.CURRENT_SELECTION_TOPIC);
-
-        designerSelectionManager = ServiceManager.getService(module.getProject(), DesignerSelectionManager.class);
     }
 
     @Override
@@ -79,40 +71,17 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
             findRelatedEditorDocument(source, file).ifPresent(document -> {
                 this.document = document;
                 deserializeDocument();
-                currentSelectionPublisher.onSelection(getNothingSelectedItem());
             });
-        } else if (!Objects.equals(file.getExtension(), "flow")) {
-            // Unselect the current selection
-            designerSelectionManager.getCurrentSelection()
-                    .ifPresent(currentSelectionPublisher::onUnSelected);
-        }
-    }
-
-    @Override
-    public void beforeFileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
-        if (file.equals(graphFile)) {
-            // Unselect the current selection
-            designerSelectionManager.getCurrentSelection()
-                    .ifPresent(currentSelectionPublisher::onUnSelected);
         }
     }
 
     @Override
     public void selectionChanged(@NotNull FileEditorManagerEvent event) {
         VirtualFile[] selectedFiles = FileEditorManager.getInstance(module.getProject()).getSelectedFiles();
-        if (!(event.getNewEditor() instanceof FlowDesignerEditor)) {
-            // If we get to this point we must unselect
-            // the current selection since we are switching
-            // to text or any other editor defined for this
-            // file extension.
-            designerSelectionManager.getCurrentSelection()
-                    .ifPresent(currentSelectionPublisher::onUnSelected);
-        }
         for (VirtualFile file : selectedFiles) {
             if (file.equals(graphFile)) {
                 if (event.getNewEditor() instanceof FlowDesignerEditor) {
                     deserializeDocument();
-                    currentSelectionPublisher.onSelection(getNothingSelectedItem());
                     break;
                 }
             }
@@ -167,12 +136,13 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
         if (document == null) return;
         if (StringUtils.isBlank(document.getText())) return;
         deserialize(module, document, graphProvider)
-                .ifPresent(updatedGraph -> snapshot.updateSnapshot(this, updatedGraph));
+                .ifPresent(updatedGraph -> {
+                    snapshot.updateSnapshot(this, updatedGraph);
+                    currentSelectionPublisher.refresh();
+                });
     }
 
     protected abstract String serialize(FlowGraph graph);
-
-    protected abstract SelectableItem getNothingSelectedItem();
 
     protected abstract Optional<FlowGraph> deserialize(Module module, Document document, FlowGraphProvider graphProvider);
 

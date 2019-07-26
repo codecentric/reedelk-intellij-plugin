@@ -3,20 +3,24 @@ package com.esb.plugin.editor.designer;
 import com.esb.plugin.commons.Colors;
 import com.esb.plugin.commons.DesignerWindowSizeCalculator;
 import com.esb.plugin.commons.PrintFlowInfo;
-import com.esb.plugin.editor.designer.widget.CenterOfNode;
+import com.esb.plugin.editor.designer.widget.CenterOfNodeDrawable;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.SnapshotListener;
 import com.esb.plugin.graph.layout.FlowGraphLayout;
 import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.service.project.DesignerSelectionManager;
 import com.esb.plugin.service.project.SelectableItem;
 import com.esb.plugin.service.project.SelectableItemComponent;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
+import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.ui.components.JBPanel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.event.AncestorEvent;
 import java.awt.*;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
@@ -48,10 +52,10 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
     private boolean snapshotUpdated = false;
 
     private GraphNode selected;
-    private CenterOfNode centerOfNode;
+    private CenterOfNodeDrawable centerOfNodeDrawable;
     private SelectableItem currentSelection;
     private CurrentSelectionListener componentSelectedPublisher;
-
+    private DesignerSelectionManager service;
 
     DesignerPanel(@NotNull Module module,
                   @NotNull FlowSnapshot snapshot,
@@ -61,7 +65,7 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
         this.snapshot = snapshot;
         this.snapshot.addListener(this);
 
-        this.centerOfNode = new CenterOfNode(snapshot);
+        this.centerOfNodeDrawable = new CenterOfNodeDrawable(snapshot);
 
         setBackground(Colors.DESIGNER_BG);
         addMouseListener(this);
@@ -71,6 +75,22 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
                 .getProject()
                 .getMessageBus()
                 .syncPublisher(CurrentSelectionListener.CURRENT_SELECTION_TOPIC);
+
+        service = ServiceManager.getService(module.getProject(), DesignerSelectionManager.class);
+
+        addAncestorListener(new AncestorListenerAdapter() {
+            @Override
+            public void ancestorAdded(AncestorEvent event) {
+                super.ancestorAdded(event);
+                select(getNothingSelectedItem());
+            }
+
+            @Override
+            public void ancestorRemoved(AncestorEvent event) {
+                super.ancestorRemoved(event);
+                unselect();
+            }
+        });
     }
 
     @Override
@@ -110,7 +130,7 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
         // Draw on top of everything dragged elements of the graph
         graph.breadthFirstTraversal(node -> node.drawDrag(graph, g2, DesignerPanel.this));
 
-        centerOfNode.draw(g2);
+        centerOfNodeDrawable.draw(g2);
 
         g2.dispose();
     }
@@ -264,7 +284,11 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
             selected = null;
         }
         if (currentSelection != null) {
-            componentSelectedPublisher.onUnSelected(currentSelection);
+            service.getCurrentSelection().ifPresent(selectableItem -> {
+                if (selectableItem == currentSelection) {
+                    componentSelectedPublisher.onUnSelected(currentSelection);
+                }
+            });
         }
     }
 

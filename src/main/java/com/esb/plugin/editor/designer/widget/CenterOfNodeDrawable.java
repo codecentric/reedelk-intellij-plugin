@@ -5,11 +5,11 @@ import com.esb.plugin.graph.FlowSnapshot;
 
 import java.awt.*;
 
-public class CenterOfNode {
+public class CenterOfNodeDrawable {
 
     private final FlowSnapshot snapshot;
 
-    public CenterOfNode(FlowSnapshot snapshot) {
+    public CenterOfNodeDrawable(FlowSnapshot snapshot) {
         this.snapshot = snapshot;
     }
 

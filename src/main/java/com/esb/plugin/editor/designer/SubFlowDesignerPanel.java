@@ -12,10 +12,12 @@ import java.awt.*;
 public class SubFlowDesignerPanel extends DesignerPanel {
 
     private FlowMetadata flowMetadata;
+    private SelectableItem nothingSelectedItem;
 
     public SubFlowDesignerPanel(Module module, FlowSnapshot snapshot, DesignerPanelActionHandler actionHandler) {
         super(module, snapshot, actionHandler);
         this.flowMetadata = new FlowMetadata(snapshot, Half.of(TOP_PADDING));
+        this.nothingSelectedItem = new SelectableItemSubflow(snapshot);
     }
 
     @Override
@@ -25,6 +27,6 @@ public class SubFlowDesignerPanel extends DesignerPanel {
 
     @Override
     protected SelectableItem getNothingSelectedItem() {
-        return new SelectableItemSubflow(snapshot);
+        return nothingSelectedItem;
     }
 }

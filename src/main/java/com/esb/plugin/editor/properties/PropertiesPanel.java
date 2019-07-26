@@ -94,6 +94,13 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
         }
     }
 
+    @Override
+    public void refresh() {
+        if (currentSelection != null) {
+            onSelection(currentSelection);
+        }
+    }
+
     private void setEmptySelection() {
         DisposablePanel empty = new EmptySelectionPanel(project);
         updateContent(empty);

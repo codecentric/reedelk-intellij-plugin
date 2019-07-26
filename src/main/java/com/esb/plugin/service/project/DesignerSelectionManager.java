@@ -21,6 +21,9 @@ public interface DesignerSelectionManager {
         void onSelection(SelectableItem selectedItem);
 
         void onUnSelected(SelectableItem selectableItem);
+
+        default void refresh() {
+        }
     }
 
 }
