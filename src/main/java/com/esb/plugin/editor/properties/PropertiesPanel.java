@@ -94,6 +94,7 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
                 Disposer.dispose(currentPane);
             }
             setEmptySelection();
+            currentSelection = null;
         }
     }
 
