@@ -64,7 +64,7 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
     }
 
     @Override
-    public void onDrop(Graphics2D graphics, DropTargetDropEvent dropEvent, ImageObserver observer) {
+    public Optional<GraphNode> onDrop(Graphics2D graphics, DropTargetDropEvent dropEvent, ImageObserver observer) {
 
         Point dropPoint = dropEvent.getLocation();
 
@@ -92,9 +92,13 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
 
             handler.handle();
 
+            return Optional.of(nodeToAdd);
+
         } else {
 
             dropEvent.rejectDrop();
+
+            return Optional.empty();
 
         }
     }

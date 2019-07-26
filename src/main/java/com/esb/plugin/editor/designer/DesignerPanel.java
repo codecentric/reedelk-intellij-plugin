@@ -189,7 +189,14 @@ public abstract class DesignerPanel extends JBPanel implements MouseMotionListen
 
     @Override
     public void drop(DropTargetDropEvent dropEvent) {
-        actionHandler.onDrop(getGraphics2D(), dropEvent, this);
+        // If the drop event was successful we select the newly
+        // added Graph Node.
+        actionHandler
+                .onDrop(getGraphics2D(), dropEvent, this)
+                .ifPresent(addedNode -> {
+                    unselect();
+                    select(addedNode);
+                });
     }
 
     @Override
