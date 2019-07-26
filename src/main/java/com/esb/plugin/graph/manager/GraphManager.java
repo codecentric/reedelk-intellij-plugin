@@ -14,10 +14,12 @@ import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThrowableRunnable;
+import com.intellij.util.concurrency.SwingWorker;
 import com.intellij.util.messages.MessageBusConnection;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import java.util.Optional;
 
 import static com.esb.plugin.service.project.DesignerSelectionManager.CurrentSelectionListener;
@@ -88,7 +90,7 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
 
     @Override
     public void onComponentListUpdate(Module module) {
-        deserializeDocument();
+        SwingUtilities.invokeLater(this::deserializeDocument);
     }
 
     @Override
@@ -135,16 +137,31 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
         if (document == null) return;
         if (StringUtils.isBlank(document.getText())) return;
 
-        deserialize(module, document, graphProvider).ifPresent(updatedGraph -> {
-            snapshot.updateSnapshot(this, updatedGraph);
-            // When we deserialize the document we must refresh the current selection,
-            // so that the Properties panel always references the correct graph data.
-            currentSelectionPublisher.refresh();
-        });
+        new DeserializeGraphAndNotify().start();
     }
 
     protected abstract String serialize(FlowGraph graph);
 
     protected abstract Optional<FlowGraph> deserialize(Module module, Document document, FlowGraphProvider graphProvider);
 
+    private class DeserializeGraphAndNotify extends SwingWorker {
+        @Override
+        public Optional<FlowGraph> construct() {
+            // Background Thread
+            return deserialize(module, document, graphProvider);
+        }
+
+        @Override
+        public void finished() {
+            // AWT Thread dispatch
+            Optional<FlowGraph> optionalGraph = (Optional<FlowGraph>) get();
+            optionalGraph.ifPresent(graph -> {
+                snapshot.updateSnapshot(GraphManager.this, graph);
+                // When we deserialize the document we must refresh the current selection,
+                // so that the Properties panel always references the correct and latest
+                // graph data.
+                currentSelectionPublisher.refresh();
+            });
+        }
+    }
 }
