@@ -10,10 +10,8 @@ import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.SnapshotListener;
 import com.esb.plugin.graph.layout.FlowGraphLayout;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.service.project.DesignerSelectionManager;
 import com.esb.plugin.service.project.SelectableItem;
 import com.esb.plugin.service.project.SelectableItemComponent;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.AncestorListenerAdapter;
@@ -60,10 +58,9 @@ public abstract class DesignerPanel extends JBPanel implements
     private boolean snapshotUpdated = false;
 
     private GraphNode selected;
-    private CenterOfNodeDrawable centerOfNodeDrawable;
     private SelectableItem currentSelection;
+    private CenterOfNodeDrawable centerOfNodeDrawable;
     private CurrentSelectionListener componentSelectedPublisher;
-    private DesignerSelectionManager service;
 
     private boolean visible = false;
 
@@ -89,23 +86,7 @@ public abstract class DesignerPanel extends JBPanel implements
                 .getMessageBus()
                 .syncPublisher(CurrentSelectionListener.CURRENT_SELECTION_TOPIC);
 
-        service = ServiceManager.getService(module.getProject(), DesignerSelectionManager.class);
-
-        addAncestorListener(new AncestorListenerAdapter() {
-            @Override
-            public void ancestorAdded(AncestorEvent event) {
-                super.ancestorAdded(event);
-                select(defaultSelectedItem());
-                visible = true;
-            }
-
-            @Override
-            public void ancestorRemoved(AncestorEvent event) {
-                super.ancestorRemoved(event);
-                unselect();
-                visible = false;
-            }
-        });
+        addAncestorListener();
     }
 
     @Override
@@ -317,12 +298,7 @@ public abstract class DesignerPanel extends JBPanel implements
             selected = null;
         }
         if (currentSelection != null) {
-            service.getCurrentSelection().ifPresent(selectableItem -> {
-                // We only unselect if the current selection...todo: maybe this one could be handled in the properties
-                if (selectableItem == currentSelection) {
-                    componentSelectedPublisher.onUnSelected(currentSelection);
-                }
-            });
+            componentSelectedPublisher.onUnSelected(currentSelection);
         }
     }
 
@@ -346,6 +322,24 @@ public abstract class DesignerPanel extends JBPanel implements
         DesignerWindowSizeCalculator.from(snapshot.getGraph(), getGraphics2D()).ifPresent(dimension -> {
             setSize(dimension);
             setPreferredSize(dimension);
+        });
+    }
+
+    private void addAncestorListener() {
+        addAncestorListener(new AncestorListenerAdapter() {
+            @Override
+            public void ancestorAdded(AncestorEvent event) {
+                super.ancestorAdded(event);
+                select(defaultSelectedItem());
+                visible = true;
+            }
+
+            @Override
+            public void ancestorRemoved(AncestorEvent event) {
+                super.ancestorRemoved(event);
+                unselect();
+                visible = false;
+            }
         });
     }
 }
