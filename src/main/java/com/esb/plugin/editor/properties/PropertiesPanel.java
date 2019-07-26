@@ -32,14 +32,10 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setupAncestorListener();
         this.project = project;
+        this.designerSelectionManager =
+                ServiceManager.getService(project, DesignerSelectionManager.class);
 
-        designerSelectionManager = ServiceManager.getService(project, DesignerSelectionManager.class);
-
-
-        DisposablePanel empty = new EmptySelectionPanel(project);
-        add(empty);
-        this.currentPane = empty;
-
+        setEmptySelection();
 
         project.getMessageBus()
                 .connect().subscribe(CurrentSelectionListener.CURRENT_SELECTION_TOPIC, this);
@@ -102,16 +98,18 @@ public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelec
             if (currentPane != null) {
                 Disposer.dispose(currentPane);
             }
-
-            DisposablePanel empty = new EmptySelectionPanel(project);
-            SwingUtilities.invokeLater(() -> {
-                removeAll();
-                add(empty);
-                revalidate();
-            });
-
-            this.currentPane = empty;
+            setEmptySelection();
         }
+    }
+
+    private void setEmptySelection() {
+        DisposablePanel empty = new EmptySelectionPanel(project);
+        SwingUtilities.invokeLater(() -> {
+            removeAll();
+            add(empty);
+            revalidate();
+        });
+        this.currentPane = empty;
     }
 
     private void setupAncestorListener() {
