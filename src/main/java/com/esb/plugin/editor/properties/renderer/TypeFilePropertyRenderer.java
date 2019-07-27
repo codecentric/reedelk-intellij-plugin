@@ -39,7 +39,6 @@ public class TypeFilePropertyRenderer implements TypePropertyRenderer {
 
         TextFieldWithBrowse choseFile = new TextFieldWithBrowse();
 
-
         ModuleUtils.getResourcesFolder(module)
                 .ifPresent(resourcesFolderPath ->
                         choseFile.setText(propertyAccessor.get()));
@@ -53,9 +52,8 @@ public class TypeFilePropertyRenderer implements TypePropertyRenderer {
 
 
     class TextBrowseFolderListener extends ComponentWithBrowseButton.BrowseFolderActionListener<JTextField> {
-
         TextBrowseFolderListener(@NotNull FileChooserDescriptor fileChooserDescriptor, @Nullable Project project, String boh, PropertyAccessor propertyAccessor) {
-            super(null, null, null, project, fileChooserDescriptor, new MyTextComponentAccessor(boh, propertyAccessor));
+            super(null, null, null, project, fileChooserDescriptor, new FileComponentPropertyAccessor(boh, propertyAccessor));
         }
 
         void setOwnerComponent(@NotNull TextFieldWithBrowseButton component) {
@@ -68,7 +66,6 @@ public class TypeFilePropertyRenderer implements TypePropertyRenderer {
     }
 
     class TextFieldWithBrowse extends TextFieldWithBrowseButton {
-
         TextFieldWithBrowse() {
             super((ActionListener) null);
         }
@@ -80,12 +77,12 @@ public class TypeFilePropertyRenderer implements TypePropertyRenderer {
         }
     }
 
-    class MyTextComponentAccessor implements TextComponentAccessor<JTextField> {
+    class FileComponentPropertyAccessor implements TextComponentAccessor<JTextField> {
 
         private final String root;
         private final PropertyAccessor propertyAccessor;
 
-        MyTextComponentAccessor(String root, PropertyAccessor propertyAccessor) {
+        FileComponentPropertyAccessor(String root, PropertyAccessor propertyAccessor) {
             this.root = root;
             this.propertyAccessor = propertyAccessor;
         }
