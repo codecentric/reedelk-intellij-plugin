@@ -97,7 +97,7 @@ public class SubFlowDesignerEditor extends UserDataHolderBase implements FileEdi
             @NotNull
             @Override
             public HighlightingPass[] createPassesForVisibleArea() {
-                return new HighlightingPass[0];
+                return HighlightingPass.EMPTY_ARRAY;
             }
         };
     }

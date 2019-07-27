@@ -10,7 +10,6 @@ import com.esb.plugin.component.domain.TypeObjectDescriptor;
 import com.esb.plugin.configuration.widget.ActionAddConfiguration;
 import com.esb.plugin.configuration.widget.ActionDeleteConfiguration;
 import com.esb.plugin.configuration.widget.ConfigControlPanel;
-import com.esb.plugin.editor.properties.PropertiesBasePanel;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.esb.plugin.editor.properties.widget.*;
@@ -160,7 +159,7 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
             configRefAccessor.set(selectedMetadata.getId());
         });
 
-        JPanel wrapper = new PropertiesBasePanel();
+        JPanel wrapper = new DisposablePanel();
         wrapper.setLayout(new BorderLayout());
         wrapper.add(selector, CENTER);
         wrapper.add(configControlPanel, EAST);

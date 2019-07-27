@@ -1,11 +1,11 @@
 package com.esb.plugin.configuration.widget;
 
 import com.esb.plugin.component.domain.TypeObjectDescriptor;
-import com.esb.plugin.editor.properties.PropertiesBasePanel;
+import com.esb.plugin.editor.properties.widget.DisposablePanel;
 import com.esb.plugin.service.module.impl.ConfigMetadata;
 import com.intellij.openapi.module.Module;
 
-public class ConfigControlPanel extends PropertiesBasePanel {
+public class ConfigControlPanel extends DisposablePanel {
 
     private final ActionDeleteConfiguration deleteAction;
     private final ActionEditConfiguration editAction;

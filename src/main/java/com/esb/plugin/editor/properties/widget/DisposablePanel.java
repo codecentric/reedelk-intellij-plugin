@@ -1,11 +1,11 @@
 package com.esb.plugin.editor.properties.widget;
 
-import com.esb.plugin.editor.properties.PropertiesBasePanel;
 import com.intellij.openapi.Disposable;
+import com.intellij.ui.components.JBPanel;
 
 import java.awt.*;
 
-public class DisposablePanel extends PropertiesBasePanel implements Disposable {
+public class DisposablePanel extends JBPanel implements Disposable {
 
     public DisposablePanel() {
         super();

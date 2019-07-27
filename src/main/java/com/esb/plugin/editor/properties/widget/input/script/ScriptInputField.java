@@ -1,7 +1,7 @@
 package com.esb.plugin.editor.properties.widget.input.script;
 
 import com.esb.plugin.commons.Labels;
-import com.esb.plugin.editor.properties.PropertiesBasePanel;
+import com.esb.plugin.editor.properties.widget.DisposablePanel;
 import com.esb.plugin.editor.properties.widget.input.InputChangeListener;
 import com.esb.plugin.editor.properties.widget.input.script.editor.JavascriptEditor;
 import com.esb.plugin.editor.properties.widget.input.script.editor.JavascriptEditorFactory;
@@ -25,7 +25,7 @@ import static com.esb.plugin.commons.Icons.Script;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 
-public class ScriptInputField extends PropertiesBasePanel implements ActionListener, DocumentListener, Disposable {
+public class ScriptInputField extends DisposablePanel implements ActionListener, DocumentListener, Disposable {
 
     private final Module module;
     private final ScriptContextManager context;
@@ -96,7 +96,6 @@ public class ScriptInputField extends PropertiesBasePanel implements ActionListe
         OpenEditorButton() {
             super(new BorderLayout());
             setBorder(BORDER_BTN_OPEN_EDITOR);
-            setBackground(Color.WHITE);
 
             openEditorBtn = new JLabel(Labels.SCRIPT_EDITOR_BTN_OPEN_EDITOR);
             openEditorBtn.setIcon(Script.Edit);

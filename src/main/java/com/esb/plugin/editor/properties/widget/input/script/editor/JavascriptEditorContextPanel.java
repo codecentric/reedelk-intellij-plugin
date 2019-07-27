@@ -2,7 +2,7 @@ package com.esb.plugin.editor.properties.widget.input.script.editor;
 
 import com.esb.plugin.commons.Colors;
 import com.esb.plugin.commons.Labels;
-import com.esb.plugin.editor.properties.PropertiesBasePanel;
+import com.esb.plugin.editor.properties.widget.DisposablePanel;
 import com.esb.plugin.editor.properties.widget.input.script.ScriptContextManager;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.JBUI;
@@ -16,7 +16,7 @@ import java.util.Set;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 
-class JavascriptEditorContextPanel extends PropertiesBasePanel {
+class JavascriptEditorContextPanel extends DisposablePanel {
 
     private final Border panelBorder = BorderFactory.createMatteBorder(1, 1, 1, 0,
             Colors.SCRIPT_EDITOR_CONTEXT_PANEL_BORDER);
@@ -38,7 +38,7 @@ class JavascriptEditorContextPanel extends PropertiesBasePanel {
         add(panelTitleWrapper, NORTH);
 
 
-        JPanel panelVariablesWrapper = new PropertiesBasePanel();
+        JPanel panelVariablesWrapper = new DisposablePanel();
         BoxLayout boxLayout = new BoxLayout(panelVariablesWrapper, BoxLayout.PAGE_AXIS);
         panelVariablesWrapper.setLayout(boxLayout);
         panelVariablesWrapper.setBorder(JBUI.Borders.empty(5));
@@ -48,7 +48,6 @@ class JavascriptEditorContextPanel extends PropertiesBasePanel {
                 .forEach(panelVariablesWrapper::add);
 
         JBScrollPane panelVariablesScrollPane = new JBScrollPane(panelVariablesWrapper);
-        panelVariablesWrapper.setBackground(Colors.PROPERTIES_BACKGROUND);
         panelVariablesScrollPane.setBorder(JBUI.Borders.empty());
         add(panelVariablesScrollPane, CENTER);
     }

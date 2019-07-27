@@ -98,7 +98,7 @@ public class FlowDesignerEditor extends UserDataHolderBase implements FileEditor
             @NotNull
             @Override
             public HighlightingPass[] createPassesForVisibleArea() {
-                return new HighlightingPass[0];
+                return HighlightingPass.EMPTY_ARRAY;
             }
         };
     }

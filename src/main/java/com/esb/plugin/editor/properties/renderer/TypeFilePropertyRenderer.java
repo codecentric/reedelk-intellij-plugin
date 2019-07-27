@@ -1,6 +1,5 @@
 package com.esb.plugin.editor.properties.renderer;
 
-import com.esb.plugin.commons.Colors;
 import com.esb.plugin.commons.Labels;
 import com.esb.plugin.commons.ModuleUtils;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
@@ -72,7 +71,6 @@ public class TypeFilePropertyRenderer implements TypePropertyRenderer {
 
         TextFieldWithBrowse() {
             super((ActionListener) null);
-            setBackground(Colors.PROPERTIES_BACKGROUND);
         }
 
         void addBrowseFolderListener(@NotNull TextBrowseFolderListener listener) {
@@ -95,11 +93,9 @@ public class TypeFilePropertyRenderer implements TypePropertyRenderer {
         @Override
         public String getText(JTextField component) {
             String filePath = propertyAccessor.get();
-            if (filePath == null) {
-                return root + "/";
-            } else {
-                return root + "/" + filePath;
-            }
+            return filePath == null ?
+                    root + "/" :
+                    root + "/" + filePath;
         }
 
         @Override

@@ -19,7 +19,7 @@ import javax.swing.event.AncestorEvent;
 
 import static com.esb.plugin.service.project.DesignerSelectionManager.CurrentSelectionListener;
 
-public class PropertiesPanel extends PropertiesBasePanel implements CurrentSelectionListener {
+public class PropertiesPanel extends DisposablePanel implements CurrentSelectionListener {
 
     private final Project project;
 
