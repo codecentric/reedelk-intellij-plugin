@@ -51,7 +51,6 @@ public class RouterRouteTable extends JBPanel {
                 if (column == 0 && row != table.getModel().getRowCount() - 1) {
                     String scriptCellValue = (String) table.getModel().getValueAt(row, column + 1);
 
-
                     EditScriptDialog editScriptDialog = new EditScriptDialog(module, scriptCellValue);
                     if (editScriptDialog.showAndGet()) {
                         String updatedValue = editScriptDialog.getValue();
