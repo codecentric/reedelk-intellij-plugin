@@ -26,7 +26,7 @@ public class RouterRouteTable extends JBPanel {
 
         final TableColumnModel tableColumnModel = new ConditionRouteTableColumnModel();
         table = new JBTable(model, tableColumnModel);
-        table.addMouseListener(new TableMouseListener());
+        table.addMouseListener(new OpenEditScriptDialogMouseListener());
 
         JScrollPane tableScrollPane = new JBScrollPane(table);
         tableScrollPane.setPreferredSize(tableScrollPaneDimension);
@@ -36,19 +36,20 @@ public class RouterRouteTable extends JBPanel {
         add(Box.createVerticalGlue(), CENTER);
     }
 
-    class TableMouseListener extends MouseAdapter {
-
+    /**
+     * Listener which displays Script Editor Dialog when any of the 'edit script'
+     * icon in the first column is clicked.
+     */
+    class OpenEditScriptDialogMouseListener extends MouseAdapter {
         @Override
-        public void mousePressed(MouseEvent e) {
-            if (e.getClickCount() == 1) {
-                int row = table.rowAtPoint(e.getPoint());
-                int column = table.columnAtPoint(e.getPoint());
-
+        public void mousePressed(MouseEvent event) {
+            if (event.getClickCount() == 1) {
+                int row = table.rowAtPoint(event.getPoint());
+                int column = table.columnAtPoint(event.getPoint());
                 // The 'otherwise' script cannot be edited. If we click on
                 // the Edit script we show a popup containing the Script Editor.
                 if (column == 0 && row != table.getModel().getRowCount() - 1) {
                     String scriptCellValue = (String) table.getModel().getValueAt(row, column + 1);
-
                     EditScriptDialog editScriptDialog = new EditScriptDialog(module, scriptCellValue);
                     if (editScriptDialog.showAndGet()) {
                         String updatedValue = editScriptDialog.getValue();

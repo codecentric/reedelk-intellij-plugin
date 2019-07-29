@@ -5,6 +5,10 @@ import com.intellij.ui.components.JBPanel;
 
 import java.awt.*;
 
+/**
+ * A Panel which calls dispose() an all children implementing
+ * Disposable interface, {@see com.intellij.openapi.Disposable}.
+ */
 public class DisposablePanel extends JBPanel implements Disposable {
 
     public DisposablePanel() {
