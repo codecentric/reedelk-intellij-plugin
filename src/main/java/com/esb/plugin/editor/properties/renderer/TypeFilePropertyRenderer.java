@@ -4,7 +4,7 @@ import com.esb.plugin.commons.Labels;
 import com.esb.plugin.commons.ModuleUtils;
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
-import com.esb.plugin.editor.properties.widget.PropertyPanelContext;
+import com.esb.plugin.editor.properties.widget.input.script.PropertyPanelContext;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;

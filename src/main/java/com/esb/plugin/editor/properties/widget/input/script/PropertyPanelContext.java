@@ -1,4 +1,4 @@
-package com.esb.plugin.editor.properties.widget;
+package com.esb.plugin.editor.properties.widget.input.script;
 
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
 import com.esb.plugin.editor.properties.widget.input.InputChangeListener;

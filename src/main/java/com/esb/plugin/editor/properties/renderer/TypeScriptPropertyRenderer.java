@@ -6,7 +6,7 @@ import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.widget.ContainerFactory;
 import com.esb.plugin.editor.properties.widget.DisposablePanel;
 import com.esb.plugin.editor.properties.widget.FormBuilder;
-import com.esb.plugin.editor.properties.widget.PropertyPanelContext;
+import com.esb.plugin.editor.properties.widget.input.script.PropertyPanelContext;
 import com.esb.plugin.editor.properties.widget.input.script.ScriptContextManager;
 import com.esb.plugin.editor.properties.widget.input.script.ScriptInputField;
 import com.intellij.openapi.module.Module;

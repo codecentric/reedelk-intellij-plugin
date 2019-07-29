@@ -30,7 +30,7 @@ public class RouterPropertiesRenderer extends GenericComponentPropertiesRenderer
         List<RouterConditionRoutePair> conditionRoutePairList = componentData.get(DATA_CONDITION_ROUTE_PAIRS);
 
         ConditionRouteTableModel model = new ConditionRouteTableModel(conditionRoutePairList, snapshot);
-        RouterRouteTable routerRouteTable = new RouterRouteTable(model);
+        RouterRouteTable routerRouteTable = new RouterRouteTable(module, model);
 
         DisposablePanel container = new DisposablePanel();
         container.setLayout(new BorderLayout());

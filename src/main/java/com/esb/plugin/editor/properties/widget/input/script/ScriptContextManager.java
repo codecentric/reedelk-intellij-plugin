@@ -1,7 +1,6 @@
 package com.esb.plugin.editor.properties.widget.input.script;
 
 import com.esb.plugin.component.domain.VariableDefinition;
-import com.esb.plugin.editor.properties.widget.PropertyPanelContext;
 import com.esb.plugin.editor.properties.widget.input.InputChangeListener;
 import com.esb.plugin.editor.properties.widget.input.script.suggestion.*;
 import com.intellij.openapi.module.Module;

@@ -10,12 +10,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.util.Collections;
 
 public class EditScriptDialog extends DialogWrapper {
 
     private JavascriptEditor editor;
 
-    EditScriptDialog(@NotNull Module module,
+    // An editor without extra context variables
+    public EditScriptDialog(@NotNull Module module, @NotNull String initialValue) {
+        this(module, initialValue, new ScriptContextManager(module, new EmptyPanelContext(), Collections.emptyList()));
+    }
+
+    public EditScriptDialog(@NotNull Module module,
                      @NotNull String initialValue,
                      @NotNull ScriptContextManager context) {
         super(module.getProject(), false);
