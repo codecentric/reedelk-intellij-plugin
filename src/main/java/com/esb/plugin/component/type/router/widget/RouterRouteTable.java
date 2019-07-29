@@ -25,14 +25,16 @@ public class RouterRouteTable extends JBPanel {
         this.module = module;
 
         final TableColumnModel tableColumnModel = new ConditionRouteTableColumnModel();
-        JBTable table = new JBTable(model, tableColumnModel);
+        table = new JBTable(model, tableColumnModel);
         table.addMouseListener(new TableMouseListener());
-        this.table = table;
+        table.setBorder(BorderFactory.createEmptyBorder());
+
+
         JScrollPane tableScrollPane = new JBScrollPane(table);
         tableScrollPane.setPreferredSize(tableScrollPaneDimension);
 
         setLayout(new BorderLayout());
-        setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
+        setBorder(BorderFactory.createEmptyBorder());
 
         add(tableScrollPane, NORTH);
         add(Box.createVerticalGlue(), CENTER);
