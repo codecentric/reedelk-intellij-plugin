@@ -43,18 +43,16 @@ public class RouterRouteTable extends JBPanel {
     class OpenEditScriptDialogMouseListener extends MouseAdapter {
         @Override
         public void mousePressed(MouseEvent event) {
-            if (event.getClickCount() == 1) {
-                int row = table.rowAtPoint(event.getPoint());
-                int column = table.columnAtPoint(event.getPoint());
-                // The 'otherwise' script cannot be edited. If we click on
-                // the Edit script we show a popup containing the Script Editor.
-                if (column == 0 && row != table.getModel().getRowCount() - 1) {
-                    String scriptCellValue = (String) table.getModel().getValueAt(row, column + 1);
-                    EditScriptDialog editScriptDialog = new EditScriptDialog(module, scriptCellValue);
-                    if (editScriptDialog.showAndGet()) {
-                        String updatedValue = editScriptDialog.getValue();
-                        table.getModel().setValueAt(updatedValue, row, column + 1);
-                    }
+            int row = table.rowAtPoint(event.getPoint());
+            int column = table.columnAtPoint(event.getPoint());
+            // The 'otherwise' script cannot be edited. If we click on
+            // the Edit script we show a popup containing the Script Editor.
+            if (column == 0 && row != table.getModel().getRowCount() - 1) {
+                String scriptCellValue = (String) table.getModel().getValueAt(row, column + 1);
+                EditScriptDialog editScriptDialog = new EditScriptDialog(module, scriptCellValue);
+                if (editScriptDialog.showAndGet()) {
+                    String updatedValue = editScriptDialog.getValue();
+                    table.getModel().setValueAt(updatedValue, row, column + 1);
                 }
             }
         }
