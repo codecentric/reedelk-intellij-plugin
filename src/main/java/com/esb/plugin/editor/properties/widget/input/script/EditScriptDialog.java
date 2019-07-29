@@ -16,7 +16,8 @@ public class EditScriptDialog extends DialogWrapper {
 
     private JavascriptEditor editor;
 
-    // An editor without extra context variables
+    // An editor without extra context variables - such as the one used in the
+    // Router component or in the Logger component -
     public EditScriptDialog(@NotNull Module module, @NotNull String initialValue) {
         this(module, initialValue, new ScriptContextManager(module, new EmptyPanelContext(), Collections.emptyList()));
     }
