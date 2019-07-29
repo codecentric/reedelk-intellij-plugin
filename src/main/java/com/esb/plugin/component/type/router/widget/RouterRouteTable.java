@@ -7,6 +7,8 @@ import com.intellij.ui.table.JBTable;
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
@@ -18,6 +20,7 @@ public class RouterRouteTable extends JBPanel {
     public RouterRouteTable(ConditionRouteTableModel model) {
         final TableColumnModel tableColumnModel = new ConditionRouteTableColumnModel();
         JBTable table = new JBTable(model, tableColumnModel);
+        table.addMouseListener(new TableMouseListener(table));
         JScrollPane tableScrollPane = new JBScrollPane(table);
         tableScrollPane.setPreferredSize(tableScrollPaneDimension);
 
@@ -26,5 +29,27 @@ public class RouterRouteTable extends JBPanel {
 
         add(tableScrollPane, NORTH);
         add(Box.createVerticalGlue(), CENTER);
+    }
+
+    class TableMouseListener extends MouseAdapter {
+
+        private final JBTable table;
+
+        TableMouseListener(JBTable table) {
+            this.table = table;
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            if (e.getClickCount() == 1) {
+                int row = table.rowAtPoint(e.getPoint());
+                int column = table.columnAtPoint(e.getPoint());
+
+                // The 'otherwise' cannot be edited.
+                if (column == 0 && row != table.getModel().getRowCount() - 1) {
+                    System.out.println("yes");
+                }
+            }
+        }
     }
 }

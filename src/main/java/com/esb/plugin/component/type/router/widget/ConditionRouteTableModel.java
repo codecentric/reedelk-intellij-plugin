@@ -40,18 +40,18 @@ public class ConditionRouteTableModel extends AbstractTableModel {
     @Override
     public boolean isCellEditable(int row, int col) {
         // row 0 and column 0 is not editable (this is the default route)
-        return row != conditionRouteList.size() - 1 && col != 1;
+        return !(row == conditionRouteList.size() - 1 && col == 1);
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Object returnValue = null;
+        Object returnValue = "";
         RouterConditionRoutePair conditionRoute = conditionRouteList.get(rowIndex);
         switch (columnIndex) {
-            case 0:
+            case 1:
                 returnValue = conditionRoute.getCondition();
                 break;
-            case 1:
+            case 2:
                 returnValue = conditionRoute.getNext();
                 break;
         }
@@ -62,10 +62,10 @@ public class ConditionRouteTableModel extends AbstractTableModel {
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
         RouterConditionRoutePair conditionRoute = conditionRouteList.get(rowIndex);
         switch (columnIndex) {
-            case 0:
+            case 1:
                 conditionRoute.setCondition((String) value);
                 break;
-            case 1:
+            case 2:
                 conditionRoute.setNext((GraphNode) value);
                 break;
         }

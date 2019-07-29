@@ -1,6 +1,6 @@
-package com.esb.plugin.javascript;
+package com.esb.plugin.editor.properties.widget.input.script;
 
-public enum Type implements TypeDefinition {
+public enum Type {
 
     OBJECT {
         @Override
@@ -19,6 +19,8 @@ public enum Type implements TypeDefinition {
         public String displayName() {
             return "Message";
         }
-    }
+    };
+
+    public abstract String displayName();
 
 }
