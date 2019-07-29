@@ -19,6 +19,12 @@ public enum Type {
         public String displayName() {
             return "Message";
         }
+    },
+    ANY {
+        @Override
+        public String displayName() {
+            return "Any";
+        }
     };
 
     public abstract String displayName();

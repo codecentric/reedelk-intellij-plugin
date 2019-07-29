@@ -8,6 +8,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
+import static java.util.Arrays.asList;
+
 public class ScriptContextManager implements SuggestionProvider, InputChangeListener {
 
     private final Module module;
@@ -71,7 +73,8 @@ public class ScriptContextManager implements SuggestionProvider, InputChangeList
     }
 
     private static class DefaultScriptVariables {
-        static final List<ScriptContextManager.ContextVariable> ALL = Arrays.asList(
+        static final List<ScriptContextManager.ContextVariable> ALL = asList(
+                new ScriptContextManager.ContextVariable("payload", Type.ANY.displayName()),
                 new ScriptContextManager.ContextVariable("message", Type.MESSAGE.displayName()),
                 new ScriptContextManager.ContextVariable("inboundProperties", Type.MAP.displayName()),
                 new ScriptContextManager.ContextVariable("outboundProperties", Type.MAP.displayName()));

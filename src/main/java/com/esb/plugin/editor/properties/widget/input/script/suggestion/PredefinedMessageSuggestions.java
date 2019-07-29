@@ -6,6 +6,7 @@ import java.util.List;
 public class PredefinedMessageSuggestions {
 
     public static final List<SuggestionToken> SUGGESTIONS = Arrays.asList(
+            new SuggestionToken("payload", SuggestionType.VARIABLE),
             new SuggestionToken("message", SuggestionType.VARIABLE),
             new SuggestionToken("inboundProperties", SuggestionType.VARIABLE),
             new SuggestionToken("outboundProperties", SuggestionType.VARIABLE),
