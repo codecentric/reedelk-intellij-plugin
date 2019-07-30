@@ -29,10 +29,17 @@ public class ScriptInputInlineField extends DisposablePanel implements DocumentL
 
         editor.addDocumentListener(this);
 
+
         setLayout(new BorderLayout());
         add(editor, BorderLayout.CENTER);
     }
 
+    @Override
+    public void documentChanged(@NotNull DocumentEvent event) {
+        if (listener != null) {
+            listener.onChange(event.getDocument().getText());
+        }
+    }
 
     public String getValue() {
         return value;
@@ -45,12 +52,5 @@ public class ScriptInputInlineField extends DisposablePanel implements DocumentL
 
     public void addListener(InputChangeListener<String> listener) {
         this.listener = listener;
-    }
-
-    @Override
-    public void documentChanged(@NotNull DocumentEvent event) {
-        if (listener != null) {
-            listener.onChange(event.getDocument().getText());
-        }
     }
 }

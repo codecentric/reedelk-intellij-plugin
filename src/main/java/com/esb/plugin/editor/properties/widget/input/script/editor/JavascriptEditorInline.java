@@ -7,10 +7,7 @@ import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.EditorSettings;
 import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.event.DocumentListener;
-import com.intellij.openapi.editor.ex.DocumentEx;
-import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.ex.LineIterator;
-import com.intellij.openapi.editor.ex.RangeMarkerEx;
+import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
@@ -22,9 +19,10 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeListener;
-import java.util.Collections;
+import java.util.List;
 
 import static com.esb.plugin.editor.properties.widget.input.script.editor.EditorConstants.JAVASCRIPT_FILE_TYPE;
+import static java.util.Collections.singletonList;
 import static javax.swing.JScrollPane.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.JScrollPane.VERTICAL_SCROLLBAR_NEVER;
 
@@ -45,19 +43,19 @@ class JavascriptEditorInline extends JavascriptEditor {
                 new EditorWordSuggestionClient(project, contextManager));
 
         EditorSettings settings = editor.getSettings();
+        settings.setRightMargin(0);
         settings.setAdditionalLinesCount(0);
-        settings.setShowIntentionBulb(false);
+        settings.setAdditionalColumnsCount(0);
+        settings.setSoftMargins(singletonList(0));
+        settings.setBlockCursor(false);
+        settings.setCaretRowShown(false);
         settings.setGutterIconsShown(false);
         settings.setLineNumbersShown(false);
-        settings.setCaretRowShown(false);
-        settings.setBlockCursor(false);
-        settings.setRightMargin(0);
-        settings.setAdditionalColumnsCount(0);
-        settings.setAdditionalPageAtBottom(false);
-        settings.setAllowSingleLogicalLineFolding(false);
-        settings.setSoftMargins(Collections.singletonList(0));
-        settings.setLeadingWhitespaceShown(false);
+        settings.setShowIntentionBulb(false);
         settings.setLineMarkerAreaShown(false);
+        settings.setAdditionalPageAtBottom(false);
+        settings.setLeadingWhitespaceShown(false);
+        settings.setAllowSingleLogicalLineFolding(false);
 
         editor.getScrollPane().setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
         editor.getScrollPane().setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_NEVER);
@@ -328,6 +326,62 @@ class JavascriptEditorInline extends JavascriptEditor {
         @Override
         public <T> boolean replace(@NotNull Key<T> key, @Nullable T oldValue, @Nullable T newValue) {
             return ((UserDataHolderEx) wrapped).replace(key, oldValue, newValue);
+        }
+
+        @Override
+        public void setStripTrailingSpacesEnabled(boolean isEnabled) {
+            wrapped.setStripTrailingSpacesEnabled(isEnabled);
+        }
+
+        @Override
+        public void addEditReadOnlyListener(@NotNull EditReadOnlyListener listener) {
+            wrapped.addEditReadOnlyListener(listener);
+        }
+
+        @Override
+        public void removeEditReadOnlyListener(@NotNull EditReadOnlyListener listener) {
+            wrapped.removeEditReadOnlyListener(listener);
+        }
+
+        @Override
+        public void suppressGuardedExceptions() {
+            wrapped.suppressGuardedExceptions();
+        }
+
+        @Override
+        public void unSuppressGuardedExceptions() {
+            wrapped.unSuppressGuardedExceptions();
+        }
+
+        @Override
+        public boolean isInEventsHandling() {
+            return wrapped.isInEventsHandling();
+        }
+
+        @Override
+        public void clearLineModificationFlags() {
+            wrapped.clearLineModificationFlags();
+        }
+
+        @Override
+        public boolean isInBulkUpdate() {
+            return wrapped.isInBulkUpdate();
+        }
+
+        @Override
+        public void setInBulkUpdate(boolean value) {
+            wrapped.setInBulkUpdate(value);
+        }
+
+        @NotNull
+        @Override
+        public List<RangeMarker> getGuardedBlocks() {
+            return wrapped.getGuardedBlocks();
+        }
+
+        @Override
+        public int getModificationSequence() {
+            return wrapped.getModificationSequence();
         }
     }
 }
