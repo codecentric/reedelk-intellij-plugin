@@ -2,6 +2,8 @@ package com.esb.plugin.component.domain;
 
 public class TypeScriptDescriptor implements TypeDescriptor {
 
+    public static final String INLINE_ANNOTATION_PARAM_NAME = "inline";
+
     private final String defaultScript = "";
     private final boolean inline;
 

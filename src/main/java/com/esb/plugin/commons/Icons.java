@@ -63,6 +63,7 @@ public class Icons {
         public static final Icon Edit = IconLoader.getIcon("/icons/script-edit.png");
         public static final Icon EditDisabled = IconLoader.getIcon("/icons/script-edit-disabled.png");
         public static final Icon EditSelected = IconLoader.getIcon("/icons/script-edit-selected.png");
+        public static final Icon Code = IconLoader.getIcon("/icons/code.png");
     }
 
     public static class ToolWindow {

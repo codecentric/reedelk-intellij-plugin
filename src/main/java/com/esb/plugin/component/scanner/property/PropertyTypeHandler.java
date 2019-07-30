@@ -41,8 +41,7 @@ public class PropertyTypeHandler implements Handler {
         if (isScript(fieldInfo, clazz)) {
             // Find and map auto complete variable annotations.
             Boolean inline = PropertyScannerUtils.getAnnotationParameterValueOrDefault(fieldInfo,
-                    Script.class, "inline", true);
-
+                    Script.class, TypeScriptDescriptor.INLINE_ANNOTATION_PARAM_NAME, true);
             return new TypeScriptDescriptor(inline);
         } else if (isFile(fieldInfo, clazz)) {
             return new TypeFileDescriptor();
@@ -83,7 +82,6 @@ public class PropertyTypeHandler implements Handler {
         }
     }
 
-    // TODO: Test corner cases like when there is an enum with no fields!
     private TypeEnumDescriptor processEnumType(ClassRefTypeSignature enumRefType, ComponentAnalyzerContext context) {
         String enumFullyQualifiedClassName = enumRefType.getFullyQualifiedClassName();
         ClassInfo enumClassInfo = context.getClassInfo(enumFullyQualifiedClassName);
@@ -96,16 +94,13 @@ public class PropertyTypeHandler implements Handler {
         return new TypeEnumDescriptor(enumNames, enumNames.get(0));
     }
 
-
-    // A property is a Script if and only if it has
-    // @Script annotation AND type String
+    // A property is a Script if and only if it has @Script annotation AND its type is String
     private boolean isScript(FieldInfo fieldInfo, Class<?> clazz) {
         return fieldInfo.hasAnnotation(Script.class.getName()) &&
                 String.class.equals(clazz);
     }
 
-    // A property is a File if and only if it has
-    // @File annotation AND type String
+    // A property is a File if and only if it has @File annotation AND its type is String
     private boolean isFile(FieldInfo fieldInfo, Class<?> clazz) {
         return fieldInfo.hasAnnotation(File.class.getName()) &&
                 String.class.equals(clazz);

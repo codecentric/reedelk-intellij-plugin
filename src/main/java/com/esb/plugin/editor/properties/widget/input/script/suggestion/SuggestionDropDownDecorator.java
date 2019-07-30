@@ -7,6 +7,7 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.EditorFontType;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.ui.components.JBList;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -36,19 +37,23 @@ public class SuggestionDropDownDecorator {
         this.invoker = invoker;
         this.suggestionClient = suggestionClient;
 
-        listComp.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        listComp.setBorder(JBUI.Borders.empty());
         listComp.setFocusable(false);
         listComp.setCellRenderer(new SuggestionCellRenderer());
 
         listComp.setFont(font);
         listComp.setSelectionBackground(Colors.SCRIPT_EDITOR_SUGGESTION_POPUP_BG_SELECTION);
         listComp.setBackground(Colors.SCRIPT_EDITOR_SUGGESTION_POPUP_BG);
+        listComp.setLayoutOrientation(JList.VERTICAL);
+        listComp.setLayout(new BorderLayout());
 
 
         popupMenu.setLayout(new BorderLayout());
         popupMenu.setFocusable(false);
         popupMenu.setBackground(Colors.SCRIPT_EDITOR_SUGGESTION_POPUP_BG);
+        popupMenu.setBorder(JBUI.Borders.empty());
         popupMenu.add(listComp, BorderLayout.WEST);
+
 
         this.document = document;
         document.addDocumentListener(new SuggestionDocumentListener(popupMenu));
@@ -85,7 +90,6 @@ public class SuggestionDropDownDecorator {
             SwingUtilities.invokeLater(() -> {
                 List<Suggestion> suggestions = suggestionClient.getSuggestions(invoker);
                 if (!suggestions.isEmpty()) {
-                    popupMenu.setPopupSize(300, suggestions.size() * 33 + 8);
                     showPopup(suggestions);
                 } else {
                     popupMenu.setVisible(false);

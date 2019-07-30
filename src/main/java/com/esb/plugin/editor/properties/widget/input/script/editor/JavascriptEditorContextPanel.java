@@ -11,6 +11,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
+import java.util.Comparator;
 import java.util.Set;
 
 import static java.awt.BorderLayout.CENTER;
@@ -44,6 +45,7 @@ class JavascriptEditorContextPanel extends DisposablePanel {
         panelVariablesWrapper.setBorder(JBUI.Borders.empty(5));
         contextVariables
                 .stream()
+                .sorted(Comparator.comparing(contextVariable -> contextVariable.name))
                 .map(contextVariable -> new ContextVariableLabel(contextVariable.name, contextVariable.type))
                 .forEach(panelVariablesWrapper::add);
 
@@ -53,7 +55,7 @@ class JavascriptEditorContextPanel extends DisposablePanel {
     }
 
     static class ContextVariableLabel extends JLabel {
-        static final String template = "<html><i>%s</i>: %s</html>";
+        static final String template = "<html>%s: %s</html>";
         ContextVariableLabel(String name, String type) {
             super(String.format(template, name, type));
             setBorder(JBUI.Borders.emptyTop(4));

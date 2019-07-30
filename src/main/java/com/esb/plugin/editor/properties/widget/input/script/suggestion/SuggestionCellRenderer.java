@@ -1,21 +1,54 @@
 package com.esb.plugin.editor.properties.widget.input.script.suggestion;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.ui.ListCellRendererWrapper;
+import com.intellij.openapi.ui.ComboBox;
+import com.intellij.util.ui.JBUI;
 
 import javax.swing.*;
+import java.awt.*;
 
-public class SuggestionCellRenderer extends ListCellRendererWrapper<Suggestion> {
+import static com.esb.plugin.editor.properties.widget.input.script.suggestion.SuggestionType.PROPERTY;
+import static com.esb.plugin.editor.properties.widget.input.script.suggestion.SuggestionType.VARIABLE;
+import static com.intellij.icons.AllIcons.Nodes;
+
+public class SuggestionCellRenderer implements ListCellRenderer<Suggestion> {
+
+    private final int suggestionItemWidth = 400;
+    private final int suggestionItemTopBottomPadding = 2;
+    private final int suggestionItemLeftRightPadding = 5;
+
+    private final ListCellRenderer<Suggestion> myDefaultRenderer;
+
+    @SuppressWarnings("unchecked")
+    SuggestionCellRenderer() {
+        myDefaultRenderer = new ComboBox().getRenderer();
+    }
 
     @Override
-    public void customize(JList list, Suggestion value, int index, boolean selected, boolean hasFocus) {
-        if (SuggestionType.VARIABLE.equals(value.getSuggestionType())) {
-            setIcon(AllIcons.Nodes.Field);
-        } else if (SuggestionType.PROPERTY.equals(value.getSuggestionType())) {
-            setIcon(AllIcons.Nodes.Property);
-        } else {
-            setIcon(AllIcons.Nodes.EmptyNode);
+    public Component getListCellRendererComponent(JList<? extends Suggestion> list, Suggestion value, int index, boolean isSelected, boolean cellHasFocus) {
+        Component component = myDefaultRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        if (component instanceof JLabel) {
+
+            JLabel label = (JLabel) component;
+
+            label.setBorder(JBUI.Borders.empty(suggestionItemTopBottomPadding, suggestionItemLeftRightPadding));
+
+            int height = label.getFontMetrics(component.getFont()).getHeight();
+
+            label.setPreferredSize(new Dimension(suggestionItemWidth, height + suggestionItemTopBottomPadding + suggestionItemTopBottomPadding));
+
+            if (VARIABLE.equals(value.getSuggestionType())) {
+                label.setIcon(Nodes.Field);
+
+            } else if (PROPERTY.equals(value.getSuggestionType())) {
+                label.setIcon(Nodes.Property);
+
+            } else {
+                label.setIcon(Nodes.EmptyNode);
+            }
+
+            label.setText(value.getToken());
         }
-        setText(value.getToken());
+
+        return component;
     }
 }
