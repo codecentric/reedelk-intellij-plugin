@@ -1,6 +1,7 @@
 package com.esb.plugin.editor.properties.widget.input;
 
 import com.esb.plugin.converter.ValueConverter;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBTextField;
 
 import javax.swing.event.DocumentEvent;
@@ -16,6 +17,7 @@ public abstract class InputField<T> extends JBTextField implements DocumentListe
     private InputChangeListener<T> listener;
 
     InputField() {
+        setForeground(JBColor.DARK_GRAY);
         converter = getConverter();
         document = (PlainDocument) getDocument();
         document.addDocumentListener(this);

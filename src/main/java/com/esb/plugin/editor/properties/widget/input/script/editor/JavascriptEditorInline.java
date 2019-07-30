@@ -5,7 +5,6 @@ import com.esb.plugin.editor.properties.widget.input.script.ScriptContextManager
 import com.esb.plugin.editor.properties.widget.input.script.suggestion.SuggestionDropDownDecorator;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.EditorSettings;
-import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.JBUI;
@@ -17,7 +16,6 @@ import java.awt.*;
 import static com.esb.plugin.editor.properties.widget.input.script.editor.EditorConstants.JAVASCRIPT_FILE_TYPE;
 import static java.util.Collections.singletonList;
 import static javax.swing.JScrollPane.HORIZONTAL_SCROLLBAR_NEVER;
-import static javax.swing.JScrollPane.VERTICAL_SCROLLBAR_NEVER;
 
 class JavascriptEditorInline extends JavascriptEditor {
 
@@ -27,18 +25,17 @@ class JavascriptEditorInline extends JavascriptEditor {
                            @NotNull String initialText) {
 
         this.project = project;
-        this.document = new ForbiddenNewLineDocumentWrapper((DocumentEx) EditorFactory.getInstance().createDocument(initialText));
-        this.editor = (EditorEx) EditorFactory
-                .getInstance()
+        this.document = EditorFactory.getInstance().createDocument(initialText);
+        this.editor = (EditorEx) EditorFactory.getInstance()
                 .createEditor(document, project, JAVASCRIPT_FILE_TYPE, false);
 
+        editor.setOneLineMode(true);
         SuggestionDropDownDecorator.decorate(editor, document,
                 new EditorWordSuggestionClient(project, contextManager));
 
         configureSettings(editor.getSettings());
 
         editor.getScrollPane().setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
-        editor.getScrollPane().setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_NEVER);
 
         JComponent editorComponent = editor.getComponent();
 
