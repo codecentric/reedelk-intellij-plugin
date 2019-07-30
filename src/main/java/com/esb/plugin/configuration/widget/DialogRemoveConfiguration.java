@@ -11,7 +11,7 @@ import javax.swing.*;
 
 public class DialogRemoveConfiguration extends DialogWrapper {
 
-    public DialogRemoveConfiguration(@NotNull Module module) {
+    DialogRemoveConfiguration(@NotNull Module module) {
         super(module.getProject(), false);
         setTitle(Labels.DIALOG_TITLE_DELETE_CONFIGURATION);
         init();
