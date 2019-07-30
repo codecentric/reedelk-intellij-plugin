@@ -134,6 +134,19 @@ public class PropertiesPanel extends DisposablePanel implements CurrentSelection
                 designerSelectionManager.getCurrentSelection()
                         .ifPresent(PropertiesPanel.this::onSelection);
             }
+
+            @Override
+            public void ancestorRemoved(AncestorEvent event) {
+                super.ancestorRemoved(event);
+                // Properties panel is collapsed, we need to clear
+                // the current content if present.
+                if (currentPane != null) {
+                    Disposer.dispose(currentPane);
+                    SwingUtilities.invokeLater(() -> {
+                        removeAll();
+                    });
+                }
+            }
         });
     }
 
