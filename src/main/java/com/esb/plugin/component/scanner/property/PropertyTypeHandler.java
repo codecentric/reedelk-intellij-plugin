@@ -40,7 +40,10 @@ public class PropertyTypeHandler implements Handler {
     private TypeDescriptor processPrimitiveType(Class<?> clazz, FieldInfo fieldInfo) {
         if (isScript(fieldInfo, clazz)) {
             // Find and map auto complete variable annotations.
-            return new TypeScriptDescriptor();
+            Boolean inline = PropertyScannerUtils.getAnnotationParameterValueOrDefault(fieldInfo,
+                    Script.class, "inline", true);
+
+            return new TypeScriptDescriptor(inline);
         } else if (isFile(fieldInfo, clazz)) {
             return new TypeFileDescriptor();
         } else {

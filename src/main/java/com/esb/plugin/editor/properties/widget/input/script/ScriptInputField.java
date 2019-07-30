@@ -67,7 +67,7 @@ public class ScriptInputField extends DisposablePanel implements ActionListener,
         EditScriptDialog editScriptDialog = new EditScriptDialog(module, value, context);
         if (editScriptDialog.showAndGet()) {
             this.value = editScriptDialog.getValue();
-            listener.onChange(this.value);
+            this.listener.onChange(this.value);
         }
     }
 

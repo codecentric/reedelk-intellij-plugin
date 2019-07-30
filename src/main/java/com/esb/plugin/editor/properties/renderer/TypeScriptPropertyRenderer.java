@@ -1,6 +1,7 @@
 package com.esb.plugin.editor.properties.renderer;
 
 import com.esb.plugin.component.domain.ComponentPropertyDescriptor;
+import com.esb.plugin.component.domain.TypeScriptDescriptor;
 import com.esb.plugin.component.domain.VariableDefinition;
 import com.esb.plugin.editor.properties.accessor.PropertyAccessor;
 import com.esb.plugin.editor.properties.widget.ContainerFactory;
@@ -9,6 +10,7 @@ import com.esb.plugin.editor.properties.widget.FormBuilder;
 import com.esb.plugin.editor.properties.widget.input.script.PropertyPanelContext;
 import com.esb.plugin.editor.properties.widget.input.script.ScriptContextManager;
 import com.esb.plugin.editor.properties.widget.input.script.ScriptInputField;
+import com.esb.plugin.editor.properties.widget.input.script.ScriptInputInlineField;
 import com.intellij.openapi.module.Module;
 
 import javax.swing.*;
@@ -18,13 +20,21 @@ public class TypeScriptPropertyRenderer implements TypePropertyRenderer {
 
     @Override
     public JComponent render(Module module, ComponentPropertyDescriptor propertyDescriptor, PropertyAccessor propertyAccessor, PropertyPanelContext context) {
+        TypeScriptDescriptor descriptor = (TypeScriptDescriptor) propertyDescriptor.getPropertyType();
         List<VariableDefinition> variableDefinitions = propertyDescriptor.getVariableDefinitions();
-
         ScriptContextManager scriptContextManager = new ScriptContextManager(module, context, variableDefinitions);
-        ScriptInputField field = new ScriptInputField(module, scriptContextManager);
-        field.setValue(propertyAccessor.get());
-        field.addListener(propertyAccessor::set);
-        return field;
+
+        if (descriptor.isInline()) {
+            ScriptInputInlineField field = new ScriptInputInlineField(module, scriptContextManager);
+            field.setValue(propertyAccessor.get());
+            field.addListener(propertyAccessor::set);
+            return field;
+        } else {
+            ScriptInputField field = new ScriptInputField(module, scriptContextManager);
+            field.setValue(propertyAccessor.get());
+            field.addListener(propertyAccessor::set);
+            return field;
+        }
     }
 
     @Override

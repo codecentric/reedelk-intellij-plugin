@@ -21,6 +21,21 @@ class PropertyScannerUtils {
                 (T) parameterValues.getValue(ANNOTATION_DEFAULT_PARAM_NAME);
     }
 
+    static <T> T getAnnotationParameterValueOrDefault(FieldInfo fieldInfo, Class<?> annotationClazz, String annotationParamName, T defaultValue) {
+        if (!fieldInfo.hasAnnotation(annotationClazz.getName())) {
+            return defaultValue;
+        }
+        AnnotationInfo annotationInfo = fieldInfo.getAnnotationInfo(annotationClazz.getName());
+        Object parameterValue = getParameterValue(annotationInfo, annotationParamName);
+        return parameterValue != null ? (T) parameterValue : defaultValue;
+    }
+
+    private static Object getParameterValue(AnnotationInfo info, String parameterName) {
+        AnnotationParameterValueList parameterValues = info.getParameterValues();
+        AnnotationParameterValue parameterValue = parameterValues.get(parameterName);
+        return parameterValue == null ? parameterValue : parameterValue.getValue();
+    }
+
     /**
      * Returns a new Predicate which filters FieldInfo's having type the target
      * class name specified in the argument of this function.

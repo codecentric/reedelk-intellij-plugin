@@ -37,13 +37,15 @@ public class JavascriptEditorFactory {
         SuggestionTree suggestionTree = new SuggestionTree();
         PredefinedMessageSuggestions.SUGGESTIONS.forEach(suggestionTree::insert);
         PredefinedJavascriptSuggestions.KEYWORDS.forEach(suggestionTree::insert);
-
-        return new JavascriptEditor(project, mode, context, initialValue);
+        if (JavascriptEditorMode.INLINE == mode) {
+            return new JavascriptEditorInline(project, mode, context, initialValue);
+        } else {
+            return new JavascriptEditorDefault(project, mode, context, initialValue);
+        }
     }
 
     public JavascriptEditorFactory initialValue(String initialValue) {
         this.initialValue = initialValue;
         return this;
     }
-
 }
