@@ -93,9 +93,12 @@ public class FindClosestPrecedingNode {
         GraphNode closestPrecedingNode = null;
         for (GraphNode precedingNode : precedingNodes) {
             // If the preceding node is a ScopedGraphNode, then we consider it
-            // the closest if and only if the drop point belongs to the scope.
-            // If the drop point does not belong to the scope, then it is not
+            // the closest one on Y axis if and only if the drop point belongs to its scope.
+            // Meaning that the drop point is within the boundaries of the node's scope.
+            // If the drop point does not belong to the node's scope, then it is not
             // eligible to be considered the closest preceding node.
+            // This happens when you have two or more preceding nodes, at least one
+            // of which is a scoped node.
             if (precedingNode instanceof ScopedGraphNode) {
                 ScopedGraphNode scopedPrecedingNode = (ScopedGraphNode) precedingNode;
                 ScopeBoundaries scopeBoundaries = scopedPrecedingNode.getScopeBoundaries(graph, graphics);
