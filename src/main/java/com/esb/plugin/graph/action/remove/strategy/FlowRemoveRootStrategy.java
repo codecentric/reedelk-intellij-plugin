@@ -7,15 +7,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.esb.plugin.graph.action.remove.ActionNodeRemove.PlaceholderProvider;
-
-public class RemoveRootStrategy implements Strategy {
+public class FlowRemoveRootStrategy implements Strategy {
 
     private final FlowGraph graph;
     private final PlaceholderProvider placeholderProvider;
 
-    public RemoveRootStrategy(@NotNull FlowGraph graph,
-                              @NotNull PlaceholderProvider placeholderProvider) {
+    public FlowRemoveRootStrategy(@NotNull FlowGraph graph,
+                                  @NotNull PlaceholderProvider placeholderProvider) {
         this.graph = graph;
         this.placeholderProvider = placeholderProvider;
     }

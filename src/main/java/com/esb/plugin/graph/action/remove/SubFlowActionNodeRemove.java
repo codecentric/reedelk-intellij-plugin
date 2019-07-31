@@ -1,12 +1,12 @@
 package com.esb.plugin.graph.action.remove;
 
-import com.esb.plugin.component.type.placeholder.PlaceholderNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.action.Action;
 import com.esb.plugin.graph.action.Strategy;
+import com.esb.plugin.graph.action.remove.strategy.PlaceholderProvider;
 import com.esb.plugin.graph.action.remove.strategy.RemoveGraphNodeStrategy;
-import com.esb.plugin.graph.action.remove.strategy.RemoveRootStrategy;
 import com.esb.plugin.graph.action.remove.strategy.RemoveScopedGraphNodeStrategy;
+import com.esb.plugin.graph.action.remove.strategy.SubflowRemoveRootStrategy;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import org.jetbrains.annotations.NotNull;
@@ -15,23 +15,19 @@ import java.util.List;
 
 import static com.esb.internal.commons.Preconditions.checkState;
 
-/**
- * Removes a single node from the graph.
- */
-public class ActionNodeRemove implements Action {
+public class SubFlowActionNodeRemove implements Action {
 
     private final PlaceholderProvider placeholderProvider;
     private final GraphNode toRemove;
 
-    public ActionNodeRemove(@NotNull PlaceholderProvider placeholderProvider,
-                            @NotNull GraphNode toRemove) {
+    public SubFlowActionNodeRemove(@NotNull GraphNode toRemove,
+                                   @NotNull PlaceholderProvider placeholderProvider) {
         this.placeholderProvider = placeholderProvider;
         this.toRemove = toRemove;
     }
 
     @Override
     public void execute(FlowGraph graph) {
-
         List<GraphNode> predecessors = graph.predecessors(toRemove);
         List<GraphNode> successors = graph.successors(toRemove);
 
@@ -40,7 +36,7 @@ public class ActionNodeRemove implements Action {
         if (predecessors.isEmpty()) {
             // If the predecessor of the node to remove is empty,
             // we are removing root node.
-            strategy = new RemoveRootStrategy(graph, placeholderProvider);
+            strategy = new SubflowRemoveRootStrategy(graph);
 
         } else if (toRemove instanceof ScopedGraphNode) {
             // Handle ScopedGraphNode
@@ -55,9 +51,5 @@ public class ActionNodeRemove implements Action {
         }
 
         strategy.execute(toRemove);
-    }
-
-    public interface PlaceholderProvider {
-        PlaceholderNode get();
     }
 }

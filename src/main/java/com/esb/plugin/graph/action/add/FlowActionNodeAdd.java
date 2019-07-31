@@ -2,9 +2,11 @@ package com.esb.plugin.graph.action.add;
 
 
 import com.esb.plugin.graph.FlowGraph;
+import com.esb.plugin.graph.action.Action;
 import com.esb.plugin.graph.action.Strategy;
 import com.esb.plugin.graph.action.add.strategy.FlowStrategyBuilder;
 import com.esb.plugin.graph.node.GraphNode;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
@@ -13,10 +15,21 @@ import java.awt.image.ImageObserver;
  * Adds to the graph a new node representing the Component Name to the given location.
  * This class find the best position where to place the node in the Graph given the drop point location.
  */
-public class FlowActionNodeAdd extends ActionNodeAdd {
+public class FlowActionNodeAdd implements Action {
 
-    public FlowActionNodeAdd(Point dropPoint, GraphNode node, Graphics2D graphics, ImageObserver observer) {
-        super(dropPoint, node, graphics, observer);
+    protected final ImageObserver observer;
+    protected final Graphics2D graphics;
+    protected final Point dropPoint;
+    protected final GraphNode node;
+
+    public FlowActionNodeAdd(@NotNull Point dropPoint,
+                             @NotNull GraphNode node,
+                             @NotNull Graphics2D graphics,
+                             @NotNull ImageObserver observer) {
+        this.dropPoint = dropPoint;
+        this.observer = observer;
+        this.graphics = graphics;
+        this.node = node;
     }
 
     @Override

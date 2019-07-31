@@ -2,7 +2,7 @@ package com.esb.plugin.graph.action.remove.strategy;
 
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.action.Strategy;
-import com.esb.plugin.graph.action.remove.ActionNodeRemove;
+import com.esb.plugin.graph.action.remove.FlowActionNodeRemove;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.function.Consumer;
 
 import static com.esb.internal.commons.Preconditions.checkState;
-import static com.esb.plugin.graph.action.remove.ActionNodeRemove.PlaceholderProvider;
 
 public class RemoveScopedGraphNodeStrategy implements com.esb.plugin.graph.action.Strategy {
 
@@ -52,15 +51,15 @@ public class RemoveScopedGraphNodeStrategy implements com.esb.plugin.graph.actio
 
     private class RemoveScopeNodeConsumer implements Consumer<GraphNode> {
         @Override
-        public void accept(GraphNode node) {
-            if (node instanceof ScopedGraphNode) {
-                removeNestedScopesNodes((ScopedGraphNode) node);
+        public void accept(GraphNode nodeToRemove) {
+            if (nodeToRemove instanceof ScopedGraphNode) {
+                removeNestedScopesNodes((ScopedGraphNode) nodeToRemove);
 
                 // Remove the current scoped node
                 Strategy strategy = new RemoveGraphNodeStrategy(graph);
-                strategy.execute(node);
+                strategy.execute(nodeToRemove);
             } else {
-                ActionNodeRemove action = new ActionNodeRemove(placeholderProvider, node);
+                FlowActionNodeRemove action = new FlowActionNodeRemove(nodeToRemove, placeholderProvider);
                 action.execute(graph);
             }
         }

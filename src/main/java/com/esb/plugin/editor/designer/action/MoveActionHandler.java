@@ -5,12 +5,9 @@ import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.action.Action;
-import com.esb.plugin.graph.action.remove.ActionNodeRemove;
 import com.esb.plugin.graph.node.GraphNode;
-import com.esb.plugin.graph.node.GraphNodeFactory;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 import com.esb.plugin.graph.utils.FindScope;
-import com.esb.system.component.Placeholder;
 import com.intellij.openapi.module.Module;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,18 +19,22 @@ public class MoveActionHandler {
     private final FlowSnapshot snapshot;
     private final Graphics2D graphics;
     private final GraphNode selected;
-    private final Action actionAdd;
     private final Point movePoint;
     private final Module module;
+
+    private final Action actionRemove;
+    private final Action actionAdd;
 
     public MoveActionHandler(@NotNull Module module,
                              @NotNull FlowSnapshot snapshot,
                              @NotNull Graphics2D graphics,
-                             @NotNull GraphNode selectedNode,
+                             @NotNull GraphNode selected,
                              @NotNull Point movePoint,
-                             @NotNull Action actionAdd) {
-        this.selected = selectedNode;
+                             @NotNull Action actionAdd,
+                             @NotNull Action actionRemove) {
+        this.selected = selected;
         this.actionAdd = actionAdd;
+        this.actionRemove = actionRemove;
         this.movePoint = movePoint;
         this.snapshot = snapshot;
         this.graphics = graphics;
@@ -63,10 +64,7 @@ public class MoveActionHandler {
         // 2. Remove the dropped node from the copy graph
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
 
-        ActionNodeRemove componentRemover = new ActionNodeRemove(() ->
-                GraphNodeFactory.get(module, Placeholder.class.getName()),
-                selected);
-        componentRemover.execute(modifiableGraph);
+        actionRemove.execute(modifiableGraph);
 
         // 3. Remove the dropped node from any scope it might belong to
         Optional<ScopedGraphNode> selectedScope = FindScope.of(modifiableGraph, selected);

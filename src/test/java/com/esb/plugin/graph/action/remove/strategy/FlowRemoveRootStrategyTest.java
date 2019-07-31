@@ -5,11 +5,10 @@ import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.component.type.placeholder.PlaceholderNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.action.Strategy;
-import com.esb.plugin.graph.action.remove.ActionNodeRemove;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-class RemoveRootStrategyTest extends AbstractGraphTest {
+class FlowRemoveRootStrategyTest extends AbstractGraphTest {
 
     @Mock
     private PlaceholderNode mockPlaceholder;
@@ -22,7 +21,7 @@ class RemoveRootStrategyTest extends AbstractGraphTest {
         graph.add(root, componentNode1);
 
         // When
-        Strategy strategy = new RemoveRootStrategy(graph, new TestPlaceholderProvider());
+        Strategy strategy = new FlowRemoveRootStrategy(graph, new TestPlaceholderProvider());
         strategy.execute(root);
 
         // Then
@@ -40,7 +39,7 @@ class RemoveRootStrategyTest extends AbstractGraphTest {
         graph.root(root);
 
         // When
-        Strategy strategy = new RemoveRootStrategy(graph, new TestPlaceholderProvider());
+        Strategy strategy = new FlowRemoveRootStrategy(graph, new TestPlaceholderProvider());
         strategy.execute(root);
 
         // Then
@@ -49,11 +48,10 @@ class RemoveRootStrategyTest extends AbstractGraphTest {
                 .isEmpty();
     }
 
-    class TestPlaceholderProvider implements ActionNodeRemove.PlaceholderProvider {
+    class TestPlaceholderProvider implements PlaceholderProvider {
         @Override
         public PlaceholderNode get() {
             return mockPlaceholder;
         }
     }
-
 }

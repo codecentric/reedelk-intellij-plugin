@@ -208,7 +208,7 @@ public abstract class DesignerPanel extends JBPanel implements
         // If the drop event was successful we select the newly
         // added Graph Node.
         actionHandler
-                .onDrop(getGraphics2D(), dropEvent, this)
+                .onAdd(getGraphics2D(), dropEvent, this)
                 .ifPresent(addedNode -> {
                     unselect();
                     select(addedNode);

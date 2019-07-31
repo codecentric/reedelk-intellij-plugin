@@ -11,7 +11,7 @@ public interface DesignerPanelActionHandler {
 
     void onMove(Graphics2D graphics, GraphNode selected, Point dragPoint, ImageObserver observer);
 
-    Optional<GraphNode> onDrop(Graphics2D graphics, DropTargetDropEvent dropEvent, ImageObserver observer);
+    Optional<GraphNode> onAdd(Graphics2D graphics, DropTargetDropEvent dropEvent, ImageObserver observer);
 
     void onRemove(GraphNode nodeToRemove);
 }
