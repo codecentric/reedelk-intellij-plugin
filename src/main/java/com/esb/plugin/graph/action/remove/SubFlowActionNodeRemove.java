@@ -15,6 +15,11 @@ import java.util.List;
 
 import static com.esb.internal.commons.Preconditions.checkState;
 
+/**
+ * Removes a single node from a Subflow. In a subflow when the root
+ * node is removed, the first successor of the root takes new place
+ * as root node.
+ */
 public class SubFlowActionNodeRemove implements Action {
 
     private final PlaceholderProvider placeholderProvider;

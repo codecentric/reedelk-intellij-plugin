@@ -16,7 +16,9 @@ import java.util.List;
 import static com.esb.internal.commons.Preconditions.checkState;
 
 /**
- * Removes a single node from a Flow.
+ * Removes a single node from a Flow. In a Flow if the root node is
+ * removed, a placeholder is added, because the only type of node
+ * allowed as root is 'inbound'.
  */
 public class FlowActionNodeRemove implements Action {
 
