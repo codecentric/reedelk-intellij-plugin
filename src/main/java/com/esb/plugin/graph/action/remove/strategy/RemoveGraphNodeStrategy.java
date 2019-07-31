@@ -25,8 +25,8 @@ public class RemoveGraphNodeStrategy implements Strategy {
 
         GraphNode successor = successors.isEmpty() ? null : successors.get(0);
 
-        // Root
         if (predecessors.isEmpty()) {
+            // It is the first node of the graph
             graph.remove(toRemove);
         } else {
             for (GraphNode predecessor : predecessors) {
