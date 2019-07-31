@@ -34,8 +34,8 @@ public class RemoveGraphNodeStrategy implements Strategy {
             // means that it has not been called beforehand.
             checkState(successors.size() <= 1, "Expected at most one successor");
             graph.remove(toRemove);
-        } else {
 
+        } else {
             // This is a node with at least  one predecessor. We must connect predecessors
             // with the node to remove successors.
             for (GraphNode predecessor : predecessors) {
@@ -45,11 +45,11 @@ public class RemoveGraphNodeStrategy implements Strategy {
                     removeSuccessorOfNodeStrategy(toRemove, predecessor, successor);
                 }
             }
-        }
 
-        // Remove the node from any scope it might belong to
-        Optional<ScopedGraphNode> selectedScope = FindScope.of(graph, toRemove);
-        selectedScope.ifPresent(scopedNode -> scopedNode.removeFromScope(toRemove));
+            // Remove the node from any scope it might belong to
+            Optional<ScopedGraphNode> selectedScope = FindScope.of(graph, toRemove);
+            selectedScope.ifPresent(scopedNode -> scopedNode.removeFromScope(toRemove));
+        }
     }
 
     private void removeSuccessorOfNodeStrategy(GraphNode toRemove, GraphNode predecessor, GraphNode successor) {

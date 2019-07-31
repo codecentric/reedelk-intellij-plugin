@@ -241,4 +241,19 @@ class RemoveGraphNodeStrategyTest extends AbstractGraphTest {
                 .and().successorsOf(componentNode1).isEmpty()
                 .and().successorsOf(componentNode2).isEmpty();
     }
+
+    // The client strategies are responsible to set the new root.
+    @Test
+    void shouldRemoveNodeWithoutPredecessorsAndLeaveEmptyRoot() {
+        // Given
+        graph.add(root, componentNode1);
+
+        // When
+        strategy.execute(root);
+
+        // Then
+        PluginAssertion.assertThat(graph)
+                .nodesCountIs(1)
+                .root().is(null);
+    }
 }

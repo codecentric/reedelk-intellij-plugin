@@ -48,7 +48,7 @@ class FlowRemoveRootStrategyTest extends AbstractGraphTest {
                 .isEmpty();
     }
 
-    class TestPlaceholderProvider implements PlaceholderProvider {
+    private class TestPlaceholderProvider implements PlaceholderProvider {
         @Override
         public PlaceholderNode get() {
             return mockPlaceholder;

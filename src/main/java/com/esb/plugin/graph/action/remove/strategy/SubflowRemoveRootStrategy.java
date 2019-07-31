@@ -25,7 +25,6 @@ public class SubflowRemoveRootStrategy implements Strategy {
     @Override
     public void execute(GraphNode root) {
         List<GraphNode> successors = graph.successors(root);
-        checkState(successors.size() <= 1, "Expected at most one successor");
 
         if (!successors.isEmpty()) {
             if (root instanceof ScopedGraphNode) {
@@ -33,6 +32,8 @@ public class SubflowRemoveRootStrategy implements Strategy {
                 FindFirstNodeOutsideScope.of(graph, (ScopedGraphNode) root)
                         .ifPresent(graph::root);
             } else {
+                checkState(successors.size() == 1,
+                        "Expected exactly one successor");
                 graph.root(successors.get(0));
             }
         }
