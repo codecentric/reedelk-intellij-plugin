@@ -7,6 +7,7 @@ import com.esb.plugin.fixture.ComponentRoot;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
 import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.graph.node.ScopeBoundaries;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -17,6 +18,8 @@ import java.awt.*;
 import java.awt.image.ImageObserver;
 
 import static com.esb.plugin.component.domain.ComponentClass.INBOUND;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doReturn;
 
 class FlowActionNodeAddTest extends AbstractGraphTest {
 
@@ -447,8 +450,8 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
             graph.root(root); // REST Listener
             graph.add(root, routerNode1); // Router1
             graph.add(routerNode1, routerNode2); // Router2
-            graph.add(routerNode2, componentNode1);
-            graph.add(routerNode2, componentNode2);
+            graph.add(routerNode2, componentNode1); // Component1
+            graph.add(routerNode2, componentNode2); // Component2
 
             routerNode1.addToScope(routerNode2);
             routerNode2.addToScope(componentNode1);
@@ -476,6 +479,52 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                     .and().successorsOf(componentNode3).isEmpty()
                     .and().node(routerNode1).scopeContainsExactly(routerNode2, componentNode3)
                     .and().node(routerNode2).scopeContainsExactly(componentNode1, componentNode2);
+        }
+
+        @Test
+        void shouldAddNodeInsideScopeWhenUpperNodeIsOutsideNestedScope() {
+            // Given
+            FlowGraph graph = provider.createGraph();
+            graph.root(root); // REST Listener
+            graph.add(root, forkNode1); // Fork1
+            graph.add(forkNode1, componentNode1); // Component1
+            graph.add(forkNode1, forkNode2); // Fork2
+            graph.add(forkNode2, componentNode2); // Component2
+            graph.add(forkNode2, componentNode3); // Component3
+
+            forkNode1.addToScope(componentNode1);
+            forkNode1.addToScope(forkNode2);
+
+            forkNode2.addToScope(componentNode2);
+            forkNode2.addToScope(componentNode3);
+
+            root.setPosition(65, 255);
+            forkNode1.setPosition(195, 255);
+            componentNode1.setPosition(325, 155);
+            forkNode2.setPosition(325, 310);
+            componentNode2.setPosition(455, 270);
+            componentNode3.setPosition(455, 380);
+
+            doReturn(new ScopeBoundaries(260, 200, 265, 220))
+                    .when(forkNode2).getScopeBoundaries(any(), any());
+
+            Point dropPoint = new Point(421, 211);
+
+            // When
+            FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode4, dropPoint);
+
+            // Then
+            PluginAssertion.assertThat(updatedGraph)
+                    .root().is(root)
+                    .and().successorsOf(root).isOnly(forkNode1)
+                    .and().successorsOf(forkNode1).areExactly(componentNode1, forkNode2)
+                    .and().successorsOf(componentNode1).isEmpty()
+                    .and().successorsOf(forkNode2).areExactly(componentNode2, componentNode3, componentNode4)
+                    .and().node(forkNode2).scopeContainsExactly(componentNode2, componentNode3, componentNode4)
+                    .and().node(forkNode1).scopeContainsExactly(componentNode1, forkNode2)
+                    .and().successorsOf(componentNode2).isEmpty()
+                    .and().successorsOf(componentNode3).isEmpty()
+                    .and().successorsOf(componentNode4).isEmpty();
         }
 
         @Nested
