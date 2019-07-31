@@ -1,7 +1,7 @@
 package com.esb.plugin.graph.manager;
 
 import com.esb.plugin.component.scanner.ComponentListUpdateNotifier;
-import com.esb.plugin.editor.FlowDesignerEditor;
+import com.esb.plugin.editor.DesignerEditor;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphProvider;
 import com.esb.plugin.graph.FlowSnapshot;
@@ -80,7 +80,7 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
         VirtualFile[] selectedFiles = FileEditorManager.getInstance(module.getProject()).getSelectedFiles();
         for (VirtualFile file : selectedFiles) {
             if (file.equals(graphFile)) {
-                if (event.getNewEditor() instanceof FlowDesignerEditor) {
+                if (event.getNewEditor() instanceof DesignerEditor) {
                     deserializeDocument();
                     break;
                 }
