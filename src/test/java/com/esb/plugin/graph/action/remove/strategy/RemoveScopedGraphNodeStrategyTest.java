@@ -82,7 +82,7 @@ class RemoveScopedGraphNodeStrategyTest extends AbstractGraphTest {
                 .and().successorsOf(componentNode3).isEmpty();
     }
 
-    class TestPlaceholderProvider implements ActionNodeRemove.PlaceholderProvider {
+    class TestPlaceholderProvider implements PlaceholderProvider {
         @Override
         public PlaceholderNode get() {
             return mockPlaceholder;

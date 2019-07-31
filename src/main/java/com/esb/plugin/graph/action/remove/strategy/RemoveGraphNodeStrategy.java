@@ -24,11 +24,17 @@ public class RemoveGraphNodeStrategy implements Strategy {
         List<GraphNode> successors = graph.successors(toRemove);
 
         GraphNode successor = successors.isEmpty() ? null : successors.get(0);
-        for (GraphNode predecessor : predecessors) {
-            if (predecessor instanceof ScopedGraphNode) {
-                removeSuccessorOfScopedNode(toRemove, (ScopedGraphNode) predecessor, successor);
-            } else {
-                removeSuccessorOfNodeStrategy(toRemove, predecessor, successor);
+
+        // Root
+        if (predecessors.isEmpty()) {
+            graph.remove(toRemove);
+        } else {
+            for (GraphNode predecessor : predecessors) {
+                if (predecessor instanceof ScopedGraphNode) {
+                    removeSuccessorOfScopedNode(toRemove, (ScopedGraphNode) predecessor, successor);
+                } else {
+                    removeSuccessorOfNodeStrategy(toRemove, predecessor, successor);
+                }
             }
         }
 

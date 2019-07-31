@@ -5,11 +5,12 @@ import com.esb.plugin.assertion.PluginAssertion;
 import com.esb.plugin.component.type.placeholder.PlaceholderNode;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphChangeAware;
+import com.esb.plugin.graph.action.remove.strategy.PlaceholderProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-class ActionNodeRemoveTest extends AbstractGraphTest {
+class FlowActionNodeRemoveTest extends AbstractGraphTest {
 
     @Mock
     private PlaceholderNode mockPlaceholder;
@@ -35,7 +36,7 @@ class ActionNodeRemoveTest extends AbstractGraphTest {
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
 
         // When
-        ActionNodeRemove action = new ActionNodeRemove(testPlaceholderProvider, componentNode1);
+        FlowActionNodeRemove action = new FlowActionNodeRemove(componentNode1, testPlaceholderProvider);
         action.execute(modifiableGraph);
 
         // Then
@@ -61,7 +62,7 @@ class ActionNodeRemoveTest extends AbstractGraphTest {
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
 
         // When
-        ActionNodeRemove action = new ActionNodeRemove(testPlaceholderProvider, forkNode2);
+        FlowActionNodeRemove action = new FlowActionNodeRemove(forkNode2, testPlaceholderProvider);
         action.execute(modifiableGraph);
 
         // Then
@@ -74,7 +75,7 @@ class ActionNodeRemoveTest extends AbstractGraphTest {
                 .node(forkNode1).scopeIsEmpty();
     }
 
-    class TestPlaceholderProvider implements ActionNodeRemove.PlaceholderProvider {
+    class TestPlaceholderProvider implements PlaceholderProvider {
         @Override
         public PlaceholderNode get() {
             return mockPlaceholder;
