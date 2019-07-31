@@ -10,6 +10,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
+import static com.esb.internal.commons.Preconditions.checkState;
+
 public class RemoveGraphNodeStrategy implements Strategy {
 
     private final FlowGraph graph;
@@ -26,9 +28,16 @@ public class RemoveGraphNodeStrategy implements Strategy {
         GraphNode successor = successors.isEmpty() ? null : successors.get(0);
 
         if (predecessors.isEmpty()) {
-            // It is the first node of the graph
+            // It is the first node of the graph we don't have to connect any predecessor
+            // with the current node successors. If the node to remove is  a scoped node
+            // then it must be a node with empty scope. Otherwise the RemoveScopedGraphNodeStrategy
+            // means that it has not been called beforehand.
+            checkState(successors.size() <= 1, "Expected at most one successor");
             graph.remove(toRemove);
         } else {
+
+            // This is a node with at least  one predecessor. We must connect predecessors
+            // with the node to remove successors.
             for (GraphNode predecessor : predecessors) {
                 if (predecessor instanceof ScopedGraphNode) {
                     removeSuccessorOfScopedNode(toRemove, (ScopedGraphNode) predecessor, successor);
