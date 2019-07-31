@@ -30,7 +30,7 @@ public class FindClosestPrecedingNode {
                 .stream()
                 .filter(byPrecedingNodesOnX(graph, dropPoint.x, graphics))
                 .collect(toList());
-        return findClosestOnYAxis(precedingNodes, dropPoint.y, dropPoint.x);
+        return findClosestOnYAxis(precedingNodes, dropPoint.y, dropPoint.x, graph, graphics);
     }
 
     private static Predicate<GraphNode> byPrecedingNodesOnX(FlowGraph graph, int dropX, Graphics2D graphics) {
@@ -87,20 +87,33 @@ public class FindClosestPrecedingNode {
     }
 
     // If there are two on the same Y we pick the closest on X
-    private static Optional<GraphNode> findClosestOnYAxis(List<GraphNode> precedingNodes, int dropY, int dropX) {
+    private static Optional<GraphNode> findClosestOnYAxis(List<GraphNode> precedingNodes, int dropY, int dropX, FlowGraph graph, Graphics2D graphics) {
         int minY = Integer.MAX_VALUE;
         int minX = Integer.MAX_VALUE;
         GraphNode closestPrecedingNode = null;
         for (GraphNode precedingNode : precedingNodes) {
-            int delta = Math.abs(precedingNode.y() - dropY);
-            if (delta < minY) {
-                closestPrecedingNode = precedingNode;
-                minY = delta;
-                minX = precedingNode.x();
-            } else if (delta == minY) {
-                if (Math.abs(dropX - precedingNode.x()) < Math.abs(minX - dropX)) {
+            // If the preceding node is a ScopedGraphNode, then we consider it
+            // the closest if and only if the drop point belongs to the scope.
+            // If the drop point does not belong to the scope, then it is not
+            // eligible to be considered the closest preceding node.
+            if (precedingNode instanceof ScopedGraphNode) {
+                ScopedGraphNode scopedPrecedingNode = (ScopedGraphNode) precedingNode;
+                ScopeBoundaries scopeBoundaries = scopedPrecedingNode.getScopeBoundaries(graph, graphics);
+                if (dropY >= scopeBoundaries.getY() && dropY <= scopeBoundaries.getY() + scopeBoundaries.getHeight()) {
+                    return Optional.of(precedingNode);
+                }
+
+            } else {
+                int delta = Math.abs(precedingNode.y() - dropY);
+                if (delta < minY) {
                     closestPrecedingNode = precedingNode;
+                    minY = delta;
                     minX = precedingNode.x();
+                } else if (delta == minY) {
+                    if (Math.abs(dropX - precedingNode.x()) < Math.abs(minX - dropX)) {
+                        closestPrecedingNode = precedingNode;
+                        minX = precedingNode.x();
+                    }
                 }
             }
         }
