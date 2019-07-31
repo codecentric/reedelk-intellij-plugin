@@ -440,6 +440,44 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                     .and().node(routerNode1).scopeContainsExactly(componentNode1);
         }
 
+        @Test
+        void shouldAddNodeRightAfterScopeWhenItContainsTwoNodes() {
+            // Given
+            FlowGraph graph = provider.createGraph();
+            graph.root(root); // REST Listener
+            graph.add(root, routerNode1); // Router1
+            graph.add(routerNode1, routerNode2); // Router2
+            graph.add(routerNode2, componentNode1);
+            graph.add(routerNode2, componentNode2);
+
+            routerNode1.addToScope(routerNode2);
+            routerNode2.addToScope(componentNode1);
+            routerNode2.addToScope(componentNode2);
+
+            root.setPosition(65, 200);
+            routerNode1.setPosition(215, 200);
+            routerNode2.setPosition(385, 200);
+            componentNode1.setPosition(535, 160);
+            componentNode2.setPosition(535, 270);
+
+            Point dropPoint = new Point(608, 195);
+
+            // When
+            FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
+
+            // Then
+            PluginAssertion.assertThat(updatedGraph)
+                    .root().is(root)
+                    .and().successorsOf(root).isOnly(routerNode1)
+                    .and().successorsOf(routerNode1).isOnly(routerNode2)
+                    .and().successorsOf(routerNode2).areExactly(componentNode1, componentNode2)
+                    .and().successorsOf(componentNode1).isOnly(componentNode3)
+                    .and().successorsOf(componentNode2).isOnly(componentNode3)
+                    .and().successorsOf(componentNode3).isEmpty()
+                    .and().node(routerNode1).scopeContainsExactly(routerNode2, componentNode3)
+                    .and().node(routerNode2).scopeContainsExactly(componentNode1, componentNode2);
+        }
+
         @Nested
         @DisplayName("Preceding node with one successor")
         class PrecedingNodeWithOneSuccessor {

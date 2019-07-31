@@ -7,6 +7,7 @@ import com.esb.plugin.graph.node.ScopeBoundaries;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 
 import java.awt.*;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -41,11 +42,32 @@ public class FindClosestPrecedingNode {
             }
 
             if (preceding instanceof ScopedGraphNode) {
-                ScopeBoundaries scopeBoundaries = ((ScopedGraphNode) preceding).getScopeBoundaries(graph, graphics);
-                // We don't consider the scope node a predecessor
-                // if the dropX point is after the scope boundary + MAX_SNAP_VICINITY
-                if (dropX >= scopeBoundaries.getX() + scopeBoundaries.getWidth() + MAX_SNAP_VICINITY) {
-                    return false;
+                // Boundaries + Max vicinity if it is empty.
+                // Otherwise we must check that it is the closes
+                // amongst all the nodes in the scope on the X axis.
+                ScopedGraphNode precedingScopedGraphNode = (ScopedGraphNode) preceding;
+                ScopeBoundaries scopeBoundaries = precedingScopedGraphNode.getScopeBoundaries(graph, graphics);
+
+                Collection<GraphNode> scope = precedingScopedGraphNode.getScope();
+
+                // If a preceding node is a ScopedGraphNode, then we have two cases:
+                if (scope.isEmpty()) {
+                    // If the scope does not contain any other node (IS EMPTY),
+                    // then we consider it a potential preceding node if and only if the drop
+                    // point is within the scope boundaries + some SNAP_VICINITY.
+                    if (dropX >= scopeBoundaries.getX() + scopeBoundaries.getWidth() + MAX_SNAP_VICINITY) {
+                        return false;
+                    }
+                } else {
+                    // It the scope is NOT EMPTY, then the Scoped Graph Node is preceding
+                    // if and only if it DOES NOT exist in the scope another node with
+                    // x coordinates before the dropX point. Meaning that amongst all the
+                    // nodes in the scope, the Scoped Node is the only one preceding the
+                    // drop point.
+                    for (GraphNode node : scope) {
+                        // Exists a node in the scope before the dropX point?
+                        if (dropX > node.x()) return false;
+                    }
                 }
             }
 
