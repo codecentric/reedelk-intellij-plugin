@@ -44,4 +44,8 @@ public class Labels {
     public static final String DESIGNER_INFO_BUILDING_FLOW = "Building flow ...";
     public static final String DESIGNER_INFO_FLOW_CONTAINS_ERRORS = "The flow contains error, and it can not not be displayed.";
 
+    public static final String ACTION_CREATE_FLOW_FILE_TITLE = "Reedelk flow file";
+    public static final String ACTION_CREATE_FLOW_FILE_DESCRIPTION = "Create a new Reedelk flow file";
+    public static final String ACTION_CREATE_FLOW_KIND = "Flow";
+    public static final String ACTION_CREATE_SUBFLOW_KIND = "Subflow";
 }

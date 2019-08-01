@@ -1,6 +1,7 @@
 package com.esb.plugin.action;
 
 import com.esb.plugin.commons.Icons;
+import com.esb.plugin.commons.Labels;
 import com.esb.plugin.commons.Template;
 import com.intellij.ide.actions.CreateFileAction;
 import com.intellij.ide.actions.CreateFileFromTemplateAction;
@@ -23,22 +24,22 @@ import java.util.Properties;
 
 public class CreateProjectFile extends CreateFileFromTemplateAction implements DumbAware {
 
-    private static final String CREATE_FILE = "Reedelk project file";
-
     public CreateProjectFile() {
-        super(CREATE_FILE, "Create a new Reedelk project file", Icons.FileTypeFlow);
+        super(Labels.ACTION_CREATE_FLOW_FILE_TITLE,
+                Labels.ACTION_CREATE_FLOW_FILE_DESCRIPTION,
+                Icons.FileTypeFlow);
     }
 
     @Override
     protected void buildDialog(Project project, PsiDirectory directory, CreateFileFromTemplateDialog.Builder builder) {
-        builder.setTitle(CREATE_FILE)
-                .addKind("Flow", Icons.FileTypeFlow, Template.ProjectFile.FLOW)
-                .addKind("Subflow", Icons.FileTypeSubFlow, Template.ProjectFile.SUBFLOW);
+        builder.setTitle(Labels.ACTION_CREATE_FLOW_FILE_TITLE)
+                .addKind(Labels.ACTION_CREATE_FLOW_KIND, Icons.FileTypeFlow, Template.ProjectFile.FLOW)
+                .addKind(Labels.ACTION_CREATE_SUBFLOW_KIND, Icons.FileTypeSubFlow, Template.ProjectFile.SUBFLOW);
     }
 
     @Override
     protected String getActionName(PsiDirectory directory, String newName, String templateName) {
-        return "Create Reedelk project file";
+        return Labels.ACTION_CREATE_FLOW_FILE_TITLE;
     }
 
     @Override
@@ -65,7 +66,7 @@ public class CreateProjectFile extends CreateFileFromTemplateAction implements D
             }
             return null;
         } catch (ParseException e) {
-            throw new IncorrectOperationException("Error parsing Velocity template: " + e.getMessage(), (Throwable) e);
+            throw new IncorrectOperationException("Error parsing template: " + e.getMessage(), (Throwable) e);
         } catch (IncorrectOperationException e) {
             throw e;
         } catch (Exception e) {
