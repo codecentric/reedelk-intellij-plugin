@@ -10,8 +10,10 @@ import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.SnapshotListener;
 import com.esb.plugin.graph.layout.FlowGraphLayout;
 import com.esb.plugin.graph.node.GraphNode;
+import com.esb.plugin.service.project.DesignerSelectionManager;
 import com.esb.plugin.service.project.SelectableItem;
 import com.esb.plugin.service.project.SelectableItemComponent;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.AncestorListenerAdapter;
@@ -66,6 +68,7 @@ public abstract class DesignerPanel extends JBPanel implements
     private InfoPanel buildingFlowInfoPanel = new InfoPanel.BuildingFlowInfoPanel();
 
     private boolean visible = false;
+    private DesignerSelectionManager designerSelectionManager;
 
     DesignerPanel(@NotNull Module module,
                   @NotNull FlowSnapshot snapshot,
@@ -88,6 +91,10 @@ public abstract class DesignerPanel extends JBPanel implements
                 .getProject()
                 .getMessageBus()
                 .syncPublisher(CurrentSelectionListener.CURRENT_SELECTION_TOPIC);
+
+
+        designerSelectionManager =
+                ServiceManager.getService(module.getProject(), DesignerSelectionManager.class);
 
         addAncestorListener();
     }
@@ -254,6 +261,20 @@ public abstract class DesignerPanel extends JBPanel implements
     public void onDataChange() {
         snapshotUpdated = true;
         if (visible) {
+            // If it is visible and nothing is selected, we need to set default
+            // selection. The first time we open the designer, we  need to wait
+            // for the background Thread to deserialize the graph. When the
+            // graph is de-serialized, we get notified with this method call.
+            // If nothing is already selected, we set as current selection
+            // the default selected item.
+            snapshot.applyOnValidGraph(graph -> {
+                boolean isAnySelectionPresent =
+                        designerSelectionManager.getCurrentSelection().isPresent();
+                if (!isAnySelectionPresent) {
+                    select(defaultSelectedItem());
+                }
+            });
+
             // When some graph data is changed we need to repaint the canvas.
             // This is needed for instance to refresh flow (or subflow) and
             // components descriptions properties.
