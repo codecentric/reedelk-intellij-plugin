@@ -27,11 +27,11 @@ class MavenProjectBuilderHelper {
         if (parentId == null) {
             // Parent ID IS NULL
             MavenProjectProperties props = new MavenProjectProperties(projectId, sdkVersion);
-            createFromTemplate(project, props, Template.Internal.MAVEN_PROJECT, root);
+            createFromTemplate(project, props, Template.Maven.PROJECT, root);
         } else {
             // Parent ID is NOT NULL
             MavenProjectProperties props = new MavenProjectProperties(projectId, sdkVersion, parentId);
-            createFromTemplate(project, props, Template.Internal.MAVEN_MODULE, root);
+            createFromTemplate(project, props, Template.Maven.MODULE, root);
         }
 
     }

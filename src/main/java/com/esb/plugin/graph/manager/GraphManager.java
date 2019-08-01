@@ -10,20 +10,22 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.*;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
+import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.concurrency.SwingWorker;
 import com.intellij.util.messages.MessageBusConnection;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.Optional;
 
 import static com.esb.plugin.service.project.DesignerSelectionManager.CurrentSelectionListener;
-import static java.util.Arrays.stream;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * Centralizes updates of the graph coming from:
@@ -68,10 +70,8 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
     @Override
     public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
         if (file.equals(graphFile)) {
-            findRelatedEditorDocument(source, file).ifPresent(document -> {
-                this.document = document;
-                deserializeDocument();
-            });
+            this.document = FileDocumentManager.getInstance().getDocument(file);
+            deserializeDocument();
         }
     }
 
@@ -121,28 +121,21 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
         }
     }
 
-    /**
-     * Finds the Document Object this Editor's GraphManager is referring to.
-     */
-    private Optional<Document> findRelatedEditorDocument(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
-        FileEditor[] editors = source.getEditors(file);
-        return stream(editors)
-                .filter(fileEditor -> fileEditor instanceof TextEditor)
-                .findFirst()
-                .map(fileEditor -> (TextEditor) fileEditor)
-                .map(textEditor -> textEditor.getEditor().getDocument());
-    }
-
     private void deserializeDocument() {
-        if (document == null) return;
-        if (StringUtils.isBlank(document.getText())) return;
-
-        new DeserializeGraphAndNotify().start();
+        // We only deserialize if the document is present and the text
+        // is not empty.
+        if (document != null && !isBlank(document.getText())) {
+            deserializeGraphAndNotify();
+        }
     }
 
     protected abstract String serialize(FlowGraph graph);
 
     protected abstract Optional<FlowGraph> deserialize(Module module, Document document, FlowGraphProvider graphProvider);
+
+    private void deserializeGraphAndNotify() {
+        new DeserializeGraphAndNotify().start();
+    }
 
     private class DeserializeGraphAndNotify extends SwingWorker {
         @Override

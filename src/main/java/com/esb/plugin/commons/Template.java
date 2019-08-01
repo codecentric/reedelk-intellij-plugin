@@ -5,12 +5,21 @@ public class Template {
     private Template() {
     }
 
-    public class Internal {
+    public class Maven {
 
-        private Internal() {
+        private Maven() {
         }
 
-        public static final String MAVEN_PROJECT = "Maven Project";
-        public static final String MAVEN_MODULE = "Maven Module";
+        public static final String PROJECT = "MavenProject";
+        public static final String MODULE = "MavenModule";
+    }
+
+    public class ProjectFile {
+
+        private ProjectFile() {
+        }
+
+        public static final String FLOW = "FlowFile";
+        public static final String SUBFLOW = "SubflowFile";
     }
 }
