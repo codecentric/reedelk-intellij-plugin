@@ -16,8 +16,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -25,7 +23,7 @@ import static com.esb.plugin.commons.Icons.Script;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 
-public class ScriptInputField extends DisposablePanel implements ActionListener, DocumentListener, Disposable {
+public class ScriptInputField extends DisposablePanel implements DocumentListener, Disposable {
 
     private final Module module;
     private final ScriptContextManager context;
@@ -63,15 +61,6 @@ public class ScriptInputField extends DisposablePanel implements ActionListener,
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        EditScriptDialog editScriptDialog = new EditScriptDialog(module, value, context);
-        if (editScriptDialog.showAndGet()) {
-            this.value = editScriptDialog.getValue();
-            this.listener.onChange(this.value);
-        }
-    }
-
-    @Override
     public void dispose() {
         this.editor.dispose();
     }
@@ -94,13 +83,12 @@ public class ScriptInputField extends DisposablePanel implements ActionListener,
         private JLabel openEditorBtn;
 
         OpenEditorButton() {
-            super(new BorderLayout());
-            setBorder(BORDER_BTN_OPEN_EDITOR);
-
             openEditorBtn = new JLabel(Labels.SCRIPT_EDITOR_BTN_OPEN_EDITOR);
             openEditorBtn.setIcon(Script.Edit);
             openEditorBtn.setDisabledIcon(Script.EditDisabled);
             openEditorBtn.addMouseListener(new OpenScriptEditorDialog());
+            setLayout(new BorderLayout());
+            setBorder(BORDER_BTN_OPEN_EDITOR);
             add(openEditorBtn, NORTH);
         }
     }
@@ -108,9 +96,9 @@ public class ScriptInputField extends DisposablePanel implements ActionListener,
     class OpenScriptEditorDialog extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
-            EditScriptDialog editScriptDialog = new EditScriptDialog(module, editor.getValue(), context);
-            if (editScriptDialog.showAndGet()) {
-                value = editScriptDialog.getValue();
+            EditScriptDialog dialog = new EditScriptDialog(module, value, context);
+            if (dialog.showAndGet()) {
+                value = dialog.getValue();
                 listener.onChange(value);
                 editor.setValue(value);
             }

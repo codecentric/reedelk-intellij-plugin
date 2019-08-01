@@ -2,7 +2,6 @@ package com.esb.plugin.editor.properties.widget.input.script.editor;
 
 import com.esb.plugin.editor.properties.widget.input.script.ScriptContextManager;
 import com.esb.plugin.editor.properties.widget.input.script.suggestion.SuggestionDropDownDecorator;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.project.Project;
@@ -14,7 +13,7 @@ import java.awt.*;
 
 import static com.esb.plugin.editor.properties.widget.input.script.editor.EditorConstants.JAVASCRIPT_FILE_TYPE;
 
-class JavascriptEditorDefault extends JavascriptEditor implements Disposable {
+class JavascriptEditorDefault extends JavascriptEditor {
 
     private static final boolean HORIZONTAL = false;
 

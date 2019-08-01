@@ -18,16 +18,6 @@ public abstract class JavascriptEditor extends JPanel implements Disposable {
     protected EditorEx editor;
     protected Document document;
 
-    @Override
-    public void dispose() {
-        Editor[] allEditors = EditorFactory.getInstance().getAllEditors();
-        for (Editor currentEditor : allEditors) {
-            if (currentEditor == editor) {
-                EditorFactory.getInstance().releaseEditor(currentEditor);
-            }
-        }
-    }
-
     public void addDocumentListener(DocumentListener listener) {
         this.document.addDocumentListener(listener);
     }
@@ -48,5 +38,15 @@ public abstract class JavascriptEditor extends JPanel implements Disposable {
 
     public String getValue() {
         return document.getText();
+    }
+
+    @Override
+    public void dispose() {
+        Editor[] allEditors = EditorFactory.getInstance().getAllEditors();
+        for (Editor currentEditor : allEditors) {
+            if (currentEditor == editor) {
+                EditorFactory.getInstance().releaseEditor(currentEditor);
+            }
+        }
     }
 }

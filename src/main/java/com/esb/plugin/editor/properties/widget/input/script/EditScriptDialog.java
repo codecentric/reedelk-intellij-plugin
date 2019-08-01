@@ -16,8 +16,8 @@ public class EditScriptDialog extends DialogWrapper {
 
     private JavascriptEditor editor;
 
-    // An editor without extra context variables - such as the one used in the
-    // Router component or in the Logger component -
+    // An editor without extra context variables (just the default ones)
+    // - such as the one used in the Router component or in the Logger component -
     public EditScriptDialog(@NotNull Module module, @NotNull String initialValue) {
         this(module, initialValue, new ScriptContextManager(module, new EmptyPanelContext(), Collections.emptyList()));
     }
@@ -55,5 +55,13 @@ public class EditScriptDialog extends DialogWrapper {
 
     public String getValue() {
         return editor.getValue();
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        if (this.editor != null) {
+            this.editor.dispose();
+        }
     }
 }
