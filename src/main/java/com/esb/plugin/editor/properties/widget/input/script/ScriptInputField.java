@@ -35,21 +35,21 @@ public class ScriptInputField extends DisposablePanel implements DocumentListene
 
     public ScriptInputField(@NotNull Module module,
                             @NotNull ScriptContextManager context) {
-        super(new BorderLayout());
-
         this.module = module;
         this.context = context;
 
         JPanel openEditorBtn = new OpenEditorButton();
-        add(openEditorBtn, NORTH);
 
-        editor = JavascriptEditorFactory.get()
+        this.editor = JavascriptEditorFactory.get()
                 .mode(JavascriptEditorMode.DEFAULT)
                 .project(module.getProject())
                 .context(context)
                 .build();
 
-        editor.addDocumentListener(this);
+        this.editor.addDocumentListener(this);
+
+        setLayout(new BorderLayout());
+        add(openEditorBtn, NORTH);
         add(editor, CENTER);
     }
 
@@ -64,7 +64,6 @@ public class ScriptInputField extends DisposablePanel implements DocumentListene
     public void dispose() {
         this.editor.dispose();
     }
-
 
     public void addListener(InputChangeListener<String> listener) {
         this.listener = listener;
@@ -87,6 +86,7 @@ public class ScriptInputField extends DisposablePanel implements DocumentListene
             openEditorBtn.setIcon(Script.Edit);
             openEditorBtn.setDisabledIcon(Script.EditDisabled);
             openEditorBtn.addMouseListener(new OpenScriptEditorDialog());
+
             setLayout(new BorderLayout());
             setBorder(BORDER_BTN_OPEN_EDITOR);
             add(openEditorBtn, NORTH);
