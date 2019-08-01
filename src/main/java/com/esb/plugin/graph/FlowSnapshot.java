@@ -40,7 +40,6 @@ public class FlowSnapshot {
         }
     }
 
-
     public void applyOnGraph(@NotNull Consumer<FlowGraph> validGraphConsumer,
                              @NotNull Consumer<Void> emptyGraphConsumer,
                              @NotNull Consumer<FlowGraph> errorGraphConsumer) {
