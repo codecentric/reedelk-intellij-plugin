@@ -38,12 +38,8 @@ import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
 public abstract class DesignerPanel extends JBPanel implements
-        MouseMotionListener,
-        MouseListener,
-        DropTargetListener,
-        SnapshotListener,
-        DrawableListener,
-        ComponentListUpdateNotifier {
+        MouseMotionListener, MouseListener, DropTargetListener,
+        SnapshotListener, DrawableListener, ComponentListUpdateNotifier {
 
     private static final Logger LOG = Logger.getInstance(DesignerPanel.class);
 
