@@ -101,6 +101,8 @@ public abstract class DesignerPanel extends JBPanel implements
         g2.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
 
         snapshot.applyOnGraph(graph -> {
+
+                    // Set the canvas background
                     setBackground(Colors.DESIGNER_BG);
 
                     // We compute again the graph layout if and
@@ -135,6 +137,7 @@ public abstract class DesignerPanel extends JBPanel implements
                 },
 
                 absentFlow -> buildingFlowInfoPanel.draw(g2, this, this),
+
                 flowWithError -> errorFlowInfoPanel.draw(g2, this, this));
 
         g2.dispose();
@@ -218,13 +221,18 @@ public abstract class DesignerPanel extends JBPanel implements
 
     @Override
     public void drop(DropTargetDropEvent dropEvent) {
-        // If the drop event was successful we select the newly
-        // added Graph Node.
-        actionHandler.onAdd(getGraphics2D(), dropEvent, this)
-                .ifPresent(addedNode -> {
-                    unselect();
-                    select(addedNode);
-                });
+        // Drop operation can only be applied on a valid graph.
+        // A graph is valid if and only if it does not contain
+        // errors and it is not null in the current snapshot.
+        snapshot.applyOnValidGraph(graph -> {
+            // If the drop event was successful we select the newly
+            // added Graph Node.
+            actionHandler.onAdd(getGraphics2D(), dropEvent, DesignerPanel.this)
+                    .ifPresent(addedNode -> {
+                        unselect();
+                        select(addedNode);
+                    });
+        });
     }
 
     @Override
@@ -262,7 +270,9 @@ public abstract class DesignerPanel extends JBPanel implements
             // it is important to reset the current selection to the flow otherwise
             // the selection would be bound to the old object before refreshing
             // the flow (or subflow) graph.
-            SwingUtilities.invokeLater(() -> select(defaultSelectedItem()));
+            snapshot.applyOnValidGraph(graph ->
+                    SwingUtilities.invokeLater(() ->
+                            select(defaultSelectedItem())));
         }
     }
 
