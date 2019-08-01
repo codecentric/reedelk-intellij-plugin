@@ -263,13 +263,15 @@ public abstract class DesignerPanel extends JBPanel implements
             // graph is de-serialized, we get notified with this method call.
             // If nothing is already selected, we set as current selection
             // the default selected item.
-            snapshot.applyOnValidGraph(graph -> {
-                boolean isAnySelectionPresent =
-                        designerSelectionManager.getCurrentSelection().isPresent();
-                if (!isAnySelectionPresent) {
-                    select(defaultSelectedItem());
-                }
-            });
+            snapshot.applyOnGraph(graph -> {
+                        boolean isAnySelectionPresent =
+                                designerSelectionManager.getCurrentSelection().isPresent();
+                        if (!isAnySelectionPresent) {
+                            select(defaultSelectedItem());
+                        }
+                    },
+                    absentFlow -> unselect(),
+                    flowWithError -> unselect());
 
             // When some graph data is changed we need to repaint the canvas.
             // This is needed for instance to refresh flow (or subflow) and
