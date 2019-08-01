@@ -83,13 +83,13 @@ public abstract class DesignerPanel extends JBPanel implements
         MessageBusConnection connect = module.getMessageBus().connect();
         connect.subscribe(COMPONENT_LIST_UPDATE_TOPIC, this);
 
-        componentSelectedPublisher = module
+        this.componentSelectedPublisher = module
                 .getProject()
                 .getMessageBus()
                 .syncPublisher(CurrentSelectionListener.CURRENT_SELECTION_TOPIC);
 
 
-        designerSelectionManager =
+        this.designerSelectionManager =
                 ServiceManager.getService(module.getProject(), DesignerSelectionManager.class);
 
         addAncestorListener();

@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.esb.plugin.editor.palette.ComponentDescriptorTransferable.FLAVOR;
+import static java.awt.dnd.DnDConstants.ACTION_COPY_OR_MOVE;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
@@ -93,20 +94,22 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
 
             Action addAction = getAddAction(dropPoint, nodeToAdd, graphics, observer);
 
-            DropActionHandler handler =
-                    new DropActionHandler(module, snapshot, dropEvent, addAction);
+            DropActionHandler handler = new DropActionHandler(module, snapshot, addAction);
 
-            handler.handle();
+            boolean handled = handler.handle();
 
-            return Optional.of(nodeToAdd);
+            if (handled) {
 
-        } else {
+                dropEvent.acceptDrop(ACTION_COPY_OR_MOVE);
 
-            dropEvent.rejectDrop();
-
-            return Optional.empty();
+                return Optional.of(nodeToAdd);
+            }
 
         }
+
+        dropEvent.rejectDrop();
+
+        return Optional.empty();
     }
 
     protected abstract Action getAddAction(Point dropPoint, GraphNode nodeToAdd, Graphics2D graphics, ImageObserver observer);
