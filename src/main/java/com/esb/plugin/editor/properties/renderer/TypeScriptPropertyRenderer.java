@@ -29,6 +29,7 @@ public class TypeScriptPropertyRenderer implements TypePropertyRenderer {
             field.setValue(propertyAccessor.get());
             field.addListener(propertyAccessor::set);
             return field;
+
         } else {
             ScriptInputField field = new ScriptInputField(module, scriptContextManager);
             field.setValue(propertyAccessor.get());

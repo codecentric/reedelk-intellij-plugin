@@ -41,7 +41,7 @@ public class ContainerFactory {
         return wrapInsideScrollPane(propertiesBoxContainer);
     }
 
-    static DisposablePanel pushPanelToTop(DisposablePanel propertiesPanel) {
+    private static DisposablePanel pushPanelToTop(DisposablePanel propertiesPanel) {
         DisposablePanel propertiesBoxContainer = new DisposablePanel();
         propertiesBoxContainer.setLayout(new BorderLayout());
         propertiesBoxContainer.add(propertiesPanel, NORTH);
