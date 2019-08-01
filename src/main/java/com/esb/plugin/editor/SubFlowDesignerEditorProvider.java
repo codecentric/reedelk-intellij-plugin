@@ -30,8 +30,8 @@ public class SubFlowDesignerEditorProvider implements FileEditorProvider, DumbAw
         Module module = ModuleUtil.findModuleForFile(file, project);
         checkState(module != null, "Module must not be null");
 
+        FlowSnapshot snapshot = new FlowSnapshot();
         FlowGraphProvider graphProvider = new FlowGraphProvider();
-        FlowSnapshot snapshot = new FlowSnapshot(graphProvider);
         GraphManager graphManager = new SubFlowGraphManager(module, file, snapshot, graphProvider);
 
         SubFlowDesignerPanelActionHandler handler = new SubFlowDesignerPanelActionHandler(module, snapshot);

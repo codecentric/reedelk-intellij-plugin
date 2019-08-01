@@ -29,7 +29,7 @@ public class DropActionHandler {
     }
 
     public void handle() {
-        FlowGraph copy = snapshot.getGraph().copy();
+        FlowGraph copy = snapshot.getGraphOrThrowIfAbsent();
 
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
 

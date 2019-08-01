@@ -26,11 +26,8 @@ public class Images {
         public static final Image InboundPlaceholderIcon;
 
         static {
-
             DefaultComponent = loadImage("/icons/default-component.png");
-
             RemoveComponent = loadImage("/icons/remove-component-icon.png");
-
             InboundPlaceholderIcon = loadImage("/icons/inbound-placeholder-icon.png");
         }
 
@@ -44,14 +41,29 @@ public class Images {
             return KEY_IMAGE_MAP.getOrDefault(key, DefaultComponent);
         }
 
-        private static Image loadImage(String resourceName) {
-            try {
-                URL resource = Images.class.getResource(resourceName);
-                return ImageIO.read(resource);
-            } catch (IOException e) {
-                LOG.error(String.format("Could not load image with resource name '%s'", resourceName), e);
-                throw new ImageNotFound(e);
-            }
+    }
+
+    public static class Flow {
+
+        private Flow() {
+        }
+
+        public static final Image Error;
+        public static final Image Loading;
+
+        static {
+            Error = loadImage("/icons/flow-error.png");
+            Loading = loadImage("/icons/flow-loading.png");
+        }
+    }
+
+    private static Image loadImage(String resourceName) {
+        try {
+            URL resource = Images.class.getResource(resourceName);
+            return ImageIO.read(resource);
+        } catch (IOException e) {
+            LOG.error(String.format("Could not load image with resource name '%s'", resourceName), e);
+            throw new ImageNotFound(e);
         }
     }
 

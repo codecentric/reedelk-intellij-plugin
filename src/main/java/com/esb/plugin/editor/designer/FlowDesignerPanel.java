@@ -3,6 +3,7 @@ package com.esb.plugin.editor.designer;
 import com.esb.plugin.commons.Half;
 import com.esb.plugin.editor.designer.widget.FlowMetadata;
 import com.esb.plugin.editor.designer.widget.InboundLane;
+import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.service.project.SelectableItem;
 import com.esb.plugin.service.project.SelectableItemFlow;
@@ -25,7 +26,8 @@ public class FlowDesignerPanel extends DesignerPanel {
 
     @Override
     protected void beforePaint(Graphics2D graphics) {
-        inboundLane.draw(snapshot.getGraph(), graphics, this);
+        FlowGraph graph = snapshot.getGraphOrThrowIfAbsent();
+        inboundLane.draw(graph, graphics, FlowDesignerPanel.this);
         flowMetadata.draw(graphics);
     }
 

@@ -3,14 +3,13 @@ package com.esb.plugin.graph.manager;
 import com.esb.plugin.graph.FlowGraph;
 import com.esb.plugin.graph.FlowGraphProvider;
 import com.esb.plugin.graph.FlowSnapshot;
+import com.esb.plugin.graph.deserializer.DeserializationError;
 import com.esb.plugin.graph.deserializer.FlowDeserializer;
 import com.esb.plugin.graph.serializer.FlowSerializer;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Optional;
 
 public class FlowGraphManager extends GraphManager {
 
@@ -27,7 +26,7 @@ public class FlowGraphManager extends GraphManager {
     }
 
     @Override
-    protected Optional<FlowGraph> deserialize(Module module, Document document, FlowGraphProvider graphProvider) {
+    protected FlowGraph deserialize(Module module, Document document, FlowGraphProvider graphProvider) throws DeserializationError {
         return FlowDeserializer.deserialize(module, document.getText(), graphProvider);
     }
 }

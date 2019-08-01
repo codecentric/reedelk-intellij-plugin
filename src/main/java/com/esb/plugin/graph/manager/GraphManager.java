@@ -2,10 +2,8 @@ package com.esb.plugin.graph.manager;
 
 import com.esb.plugin.component.scanner.ComponentListUpdateNotifier;
 import com.esb.plugin.editor.DesignerEditor;
-import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.FlowGraphProvider;
-import com.esb.plugin.graph.FlowSnapshot;
-import com.esb.plugin.graph.SnapshotListener;
+import com.esb.plugin.graph.*;
+import com.esb.plugin.graph.deserializer.DeserializationError;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
@@ -22,7 +20,6 @@ import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.util.Optional;
 
 import static com.esb.plugin.service.project.DesignerSelectionManager.CurrentSelectionListener;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -95,7 +92,7 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
 
     @Override
     public void onDataChange() {
-        FlowGraph updatedGraph = snapshot.getGraph();
+        FlowGraph updatedGraph = snapshot.getGraphOrThrowIfAbsent();
         String json = serialize(updatedGraph);
         write(json);
     }
@@ -131,7 +128,7 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
 
     protected abstract String serialize(FlowGraph graph);
 
-    protected abstract Optional<FlowGraph> deserialize(Module module, Document document, FlowGraphProvider graphProvider);
+    protected abstract FlowGraph deserialize(Module module, Document document, FlowGraphProvider graphProvider) throws DeserializationError;
 
     private void deserializeGraphAndNotify() {
         new DeserializeGraphAndNotify().start();
@@ -139,23 +136,32 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
 
     private class DeserializeGraphAndNotify extends SwingWorker {
         @Override
-        public Optional<FlowGraph> construct() {
+        public FlowGraph construct() {
             // Background Thread. We are assuming that deserialization
             // of the graph from JSON is a lengthy operation.
-            return deserialize(module, document, graphProvider);
+            try {
+                return deserialize(module, document, graphProvider);
+            } catch (DeserializationError e) {
+                LOG.warn("Deserialization error", e);
+                return new ErrorFlowGraph(e);
+            } catch (Exception e) {
+                LOG.warn("Error", e);
+                return new ErrorFlowGraph(e);
+            }
         }
 
         @Override
         public void finished() {
             // AWT Thread dispatch
-            Optional<FlowGraph> optionalGraph = (Optional<FlowGraph>) get();
-            optionalGraph.ifPresent(graph -> {
-                snapshot.updateSnapshot(GraphManager.this, graph);
+            FlowGraph graph = (FlowGraph) get();
+            snapshot.updateSnapshot(GraphManager.this, graph);
+            // We refresh the current selection only if the graph is not in error.
+            if (!graph.isError()) {
                 // When we deserialize the document we must refresh the current selection,
                 // so that the Properties panel always references the correct and latest
                 // graph data.
                 currentSelectionPublisher.refresh();
-            });
+            }
         }
     }
 }

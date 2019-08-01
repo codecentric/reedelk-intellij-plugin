@@ -22,7 +22,9 @@ public class RemoveActionHandler {
     }
 
     public void handle() {
-        FlowGraph copy = snapshot.getGraph().copy();
+        FlowGraph graph = snapshot.getGraphOrThrowIfAbsent();
+
+        FlowGraph copy = graph.copy();
 
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
 

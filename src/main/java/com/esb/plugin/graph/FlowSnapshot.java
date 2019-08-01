@@ -4,17 +4,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class FlowSnapshot {
 
-    private final FlowGraphProvider provider;
     private final Set<SnapshotListener> listeners = new HashSet<>();
 
     private FlowGraph graph;
-
-    public FlowSnapshot(FlowGraphProvider provider) {
-        this.provider = provider;
-    }
 
     public void updateSnapshot(Object notifier, @NotNull FlowGraph graph) {
         this.graph = graph;
@@ -29,17 +25,37 @@ public class FlowSnapshot {
         for (SnapshotListener listener : listeners) {
             listener.onDataChange();
         }
-
     }
 
-    public void addListener(SnapshotListener listener) {
+    public void addListener(@NotNull SnapshotListener listener) {
         this.listeners.add(listener);
     }
 
-    @NotNull
-    public FlowGraph getGraph() {
+
+    public void applyOnValidGraph(@NotNull Consumer<FlowGraph> validGraphConsumer) {
+        if (graph != null) {
+            if (!graph.isError()) {
+                validGraphConsumer.accept(graph);
+            }
+        }
+    }
+
+
+    public void applyOnGraph(@NotNull Consumer<FlowGraph> validGraphConsumer,
+                             @NotNull Consumer<Void> emptyGraphConsumer,
+                             @NotNull Consumer<FlowGraph> errorGraphConsumer) {
         if (graph == null) {
-            graph = provider.createGraph();
+            emptyGraphConsumer.accept(null);
+        } else if (graph.isError()) {
+            errorGraphConsumer.accept(graph);
+        } else {
+            validGraphConsumer.accept(graph);
+        }
+    }
+
+    public FlowGraph getGraphOrThrowIfAbsent() {
+        if (graph == null) {
+            throw new IllegalStateException("Expected a not null graph");
         }
         return graph;
     }

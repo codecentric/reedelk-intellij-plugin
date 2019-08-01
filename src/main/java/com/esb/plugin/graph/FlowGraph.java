@@ -50,4 +50,12 @@ public interface FlowGraph {
 
     void breadthFirstTraversal(@NotNull Consumer<GraphNode> consumer);
 
+    default boolean isError() {
+        return false;
+    }
+
+    default Exception getError() {
+        // An error is set if and only if isError returns true;
+        throw new UnsupportedOperationException();
+    }
 }

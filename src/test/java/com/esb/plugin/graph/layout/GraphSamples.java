@@ -1,6 +1,7 @@
 package com.esb.plugin.graph.layout;
 
 import com.esb.internal.commons.JsonParser;
+import com.esb.plugin.AbstractGraphTest;
 import com.esb.plugin.commons.Icons;
 import com.esb.plugin.commons.Images;
 import com.esb.plugin.component.domain.ComponentData;
@@ -8,7 +9,6 @@ import com.esb.plugin.component.domain.ComponentDefaultDescriptor;
 import com.esb.plugin.component.type.generic.GenericComponentNode;
 import com.esb.plugin.component.type.router.RouterNode;
 import com.esb.plugin.graph.FlowGraph;
-import com.esb.plugin.graph.FlowGraphProvider;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.plugin.graph.node.ScopedGraphNode;
 
@@ -51,7 +51,8 @@ public class GraphSamples {
     private ScopedGraphNode c3 = new RouterNode(cc3);
     private ScopedGraphNode c4 = new RouterNode(cc4);
 
-    private FlowGraphProvider graphProvider = new FlowGraphProvider();
+    private AbstractGraphTest.TestAwareGraphProvider graphProvider =
+            new AbstractGraphTest.TestAwareGraphProvider();
 
 
     public static FlowGraph graph1() {

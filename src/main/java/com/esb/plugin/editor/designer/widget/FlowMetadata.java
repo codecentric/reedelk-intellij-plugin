@@ -56,7 +56,7 @@ public class FlowMetadata {
 
         @Override
         protected List<String> getText() {
-            String flowTitle = snapshot.getGraph().title();
+            String flowTitle = snapshot.getGraphOrThrowIfAbsent().title();
             if (StringUtils.isNotBlank(flowTitle)) {
                 return Collections.singletonList(flowTitle);
             } else {
@@ -78,7 +78,7 @@ public class FlowMetadata {
 
         @Override
         protected List<String> getText() {
-            String description = snapshot.getGraph().description();
+            String description = snapshot.getGraphOrThrowIfAbsent().description();
             if (StringUtils.isNotBlank(description)) {
                 return Collections.singletonList(description);
             } else {

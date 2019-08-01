@@ -15,7 +15,7 @@ public class CenterOfNodeDrawable {
 
     public void draw(Graphics2D g2) {
         if (DebugControls.DEBUG_DESIGNER) {
-            snapshot.getGraph()
+            snapshot.getGraphOrThrowIfAbsent()
                     .breadthFirstTraversal(node ->
                             g2.drawOval(node.x() - 5, node.y() - 5, 10, 10));
         }

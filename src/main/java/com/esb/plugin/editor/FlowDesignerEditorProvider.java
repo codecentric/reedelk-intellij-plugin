@@ -30,8 +30,8 @@ public class FlowDesignerEditorProvider implements FileEditorProvider, DumbAware
         Module module = ModuleUtil.findModuleForFile(file, project);
         checkState(module != null, "Module must not be null");
 
+        FlowSnapshot snapshot = new FlowSnapshot();
         FlowGraphProvider graphProvider = new FlowGraphProvider();
-        FlowSnapshot snapshot = new FlowSnapshot(graphProvider);
         FlowGraphManager graphManager = new FlowGraphManager(module, file, snapshot, graphProvider);
 
         DesignerPanelActionHandler handler = new FlowDesignerPanelActionHandler(module, snapshot);

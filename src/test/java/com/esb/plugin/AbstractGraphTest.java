@@ -10,6 +10,8 @@ import com.esb.plugin.component.type.generic.GenericComponentNode;
 import com.esb.plugin.component.type.router.RouterNode;
 import com.esb.plugin.component.type.stop.StopNode;
 import com.esb.plugin.fixture.*;
+import com.esb.plugin.graph.FlowGraph;
+import com.esb.plugin.graph.FlowGraphImpl;
 import com.esb.plugin.graph.FlowGraphProvider;
 import com.esb.plugin.graph.node.GraphNode;
 import com.esb.system.component.FlowReference;
@@ -23,6 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
+import java.util.UUID;
 
 import static com.esb.plugin.component.domain.ComponentClass.INBOUND;
 import static com.esb.plugin.component.domain.ComponentClass.PROCESSOR;
@@ -69,12 +72,12 @@ public abstract class AbstractGraphTest {
     protected FlowReferenceNode flowReferenceNode1;
     protected FlowReferenceNode flowReferenceNode2;
 
-    protected FlowGraphProvider provider;
+    protected TestAwareGraphProvider provider;
 
 
     @BeforeEach
     protected void setUp() {
-        provider = new FlowGraphProvider();
+        provider = new TestAwareGraphProvider();
 
         root = createGraphNodeInstance(ComponentRoot.class, GenericComponentNode.class, INBOUND);
 
@@ -144,6 +147,13 @@ public abstract class AbstractGraphTest {
             return graphNodeClazz.getConstructor(ComponentData.class).newInstance(componentData);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public static class TestAwareGraphProvider extends FlowGraphProvider {
+        public FlowGraph createGraph() {
+            String id = UUID.randomUUID().toString();
+            return new FlowGraphImpl(id);
         }
     }
 }

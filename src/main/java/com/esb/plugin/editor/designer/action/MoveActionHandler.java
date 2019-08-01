@@ -59,7 +59,7 @@ public class MoveActionHandler {
         if (withinX && withinY) return;
 
         // 1. Copy the original graph
-        FlowGraph copy = snapshot.getGraph().copy();
+        FlowGraph copy = snapshot.getGraphOrThrowIfAbsent();
 
         // 2. Remove the dropped node from the copy graph
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);

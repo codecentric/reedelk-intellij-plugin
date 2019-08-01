@@ -7,8 +7,6 @@ import com.intellij.openapi.module.Module;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.Optional;
-
 import static com.esb.internal.commons.JsonParser.Subflow;
 
 public class SubFlowDeserializer extends AbstractDeserializer {
@@ -22,14 +20,13 @@ public class SubFlowDeserializer extends AbstractDeserializer {
         super(json, context, graphProvider);
     }
 
-    public static Optional<FlowGraph> deserialize(Module module, String json, FlowGraphProvider graphProvider) {
+    public static FlowGraph deserialize(Module module, String json, FlowGraphProvider graphProvider) throws DeserializationError {
         DeserializerContext context = new DeserializerContext(module);
         SubFlowDeserializer deserializer = new SubFlowDeserializer(json, context, graphProvider);
         try {
-            return Optional.of(deserializer.deserialize());
+            return deserializer.deserialize();
         } catch (Exception e) {
-            LOG.error("Deserialization error", e);
-            return Optional.empty();
+            throw new DeserializationError(e);
         }
     }
 

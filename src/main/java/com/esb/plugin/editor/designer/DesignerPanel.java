@@ -5,7 +5,7 @@ import com.esb.plugin.commons.DesignerWindowSizeCalculator;
 import com.esb.plugin.commons.PrintFlowInfo;
 import com.esb.plugin.component.scanner.ComponentListUpdateNotifier;
 import com.esb.plugin.editor.designer.widget.CenterOfNodeDrawable;
-import com.esb.plugin.graph.FlowGraph;
+import com.esb.plugin.editor.designer.widget.InfoPanel;
 import com.esb.plugin.graph.FlowSnapshot;
 import com.esb.plugin.graph.SnapshotListener;
 import com.esb.plugin.graph.layout.FlowGraphLayout;
@@ -62,6 +62,9 @@ public abstract class DesignerPanel extends JBPanel implements
     private CenterOfNodeDrawable centerOfNodeDrawable;
     private CurrentSelectionListener componentSelectedPublisher;
 
+    private InfoPanel errorFlowInfoPanel = new InfoPanel.FlowWithErrorInfoPanel();
+    private InfoPanel buildingFlowInfoPanel = new InfoPanel.BuildingFlowInfoPanel();
+
     private boolean visible = false;
 
     DesignerPanel(@NotNull Module module,
@@ -74,7 +77,7 @@ public abstract class DesignerPanel extends JBPanel implements
 
         this.centerOfNodeDrawable = new CenterOfNodeDrawable(snapshot);
 
-        setBackground(Colors.DESIGNER_BG);
+
         addMouseListener(this);
         addMouseMotionListener(this);
 
@@ -97,36 +100,42 @@ public abstract class DesignerPanel extends JBPanel implements
 
         g2.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
 
-        FlowGraph graph = snapshot.getGraph();
+        snapshot.applyOnGraph(graph -> {
+                    setBackground(Colors.DESIGNER_BG);
 
-        // We compute again the graph layout if and
-        // only if the graph snapshot it was updated.
-        if (snapshotUpdated) {
+                    // We compute again the graph layout if and
+                    // only if the graph snapshot it was updated.
+                    if (snapshotUpdated) {
 
-            LOG.info("Graph changed");
+                        LOG.info("Graph changed");
 
-            FlowGraphLayout.compute(graph, g2, TOP_PADDING);
+                        FlowGraphLayout.compute(graph, g2, TOP_PADDING);
 
-            adjustWindowSize();
+                        adjustWindowSize();
 
-            PrintFlowInfo.debug(graph);
+                        PrintFlowInfo.debug(graph);
 
-            snapshotUpdated = false;
+                        snapshotUpdated = false;
 
-        }
+                    }
 
-        beforePaint(g2);
+                    beforePaint(g2);
 
-        // Draw the graph nodes
-        graph.breadthFirstTraversal(node -> node.draw(graph, g2, DesignerPanel.this));
+                    // Draw the graph nodes
+                    graph.breadthFirstTraversal(node -> node.draw(graph, g2, DesignerPanel.this));
 
-        // Draw the arrows connecting the nodes
-        graph.breadthFirstTraversal(node -> node.drawArrows(graph, g2, DesignerPanel.this));
+                    // Draw the arrows connecting the nodes
+                    graph.breadthFirstTraversal(node -> node.drawArrows(graph, g2, DesignerPanel.this));
 
-        // Draw on top of everything dragged elements of the graph
-        graph.breadthFirstTraversal(node -> node.drawDrag(graph, g2, DesignerPanel.this));
+                    // Draw on top of everything dragged elements of the graph
+                    graph.breadthFirstTraversal(node -> node.drawDrag(graph, g2, DesignerPanel.this));
 
-        centerOfNodeDrawable.draw(g2);
+                    centerOfNodeDrawable.draw(g2);
+
+                },
+
+                absentFlow -> buildingFlowInfoPanel.draw(g2, this, this),
+                flowWithError -> errorFlowInfoPanel.draw(g2, this, this));
 
         g2.dispose();
     }
@@ -144,41 +153,45 @@ public abstract class DesignerPanel extends JBPanel implements
     @Override
     public void mouseMoved(MouseEvent event) {
         setTheCursor(Cursor.getDefaultCursor());
-        snapshot.getGraph().nodes().forEach(node -> node.mouseMoved(this, event));
+        snapshot.applyOnValidGraph(graph ->
+                graph.nodes().forEach(node ->
+                        node.mouseMoved(DesignerPanel.this, event)));
     }
 
     @Override
     public void mousePressed(MouseEvent event) {
         // Notify all nodes that the mouse has been pressed
-        FlowGraph graph = snapshot.getGraph();
-        graph.nodes().forEach(node -> node.mousePressed(this, event));
+        snapshot.applyOnValidGraph(graph -> {
 
-        // Select the component under the current mouse coordinates
-        int x = event.getX();
-        int y = event.getY();
-        Optional<GraphNode> selected = graph.nodes()
-                .stream()
-                .filter(node -> node.contains(DesignerPanel.this, x, y))
-                .findFirst();
+            graph.nodes().forEach(node -> node.mousePressed(DesignerPanel.this, event));
 
-        if (selected.isPresent()) {
+            // Select the component under the current mouse coordinates
+            int x = event.getX();
+            int y = event.getY();
+            Optional<GraphNode> selected = graph.nodes()
+                    .stream()
+                    .filter(node -> node.contains(DesignerPanel.this, x, y))
+                    .findFirst();
 
-            GraphNode selectedNde = selected.get();
+            if (selected.isPresent()) {
 
-            unselect();
-            select(selectedNde);
+                GraphNode selectedNde = selected.get();
 
-            offsetX = event.getX() - selectedNde.x();
-            offsetY = event.getY() - selectedNde.y();
+                unselect();
+                select(selectedNde);
 
-        } else {
-            // Nothing is selected, we display flow properties
-            unselect();
-            select(defaultSelectedItem());
-        }
+                offsetX = event.getX() - selectedNde.x();
+                offsetY = event.getY() - selectedNde.y();
 
-        // Repaint all nodes
-        repaint();
+            } else {
+                // Nothing is selected, we display flow properties
+                unselect();
+                select(defaultSelectedItem());
+            }
+
+            // Repaint all nodes
+            repaint();
+        });
     }
 
     @Override
@@ -207,8 +220,7 @@ public abstract class DesignerPanel extends JBPanel implements
     public void drop(DropTargetDropEvent dropEvent) {
         // If the drop event was successful we select the newly
         // added Graph Node.
-        actionHandler
-                .onAdd(getGraphics2D(), dropEvent, this)
+        actionHandler.onAdd(getGraphics2D(), dropEvent, this)
                 .ifPresent(addedNode -> {
                     unselect();
                     select(addedNode);
@@ -319,24 +331,23 @@ public abstract class DesignerPanel extends JBPanel implements
      * (horizontally or vertically) we must  adapt the window size accordingly.
      */
     private void adjustWindowSize() {
-        DesignerWindowSizeCalculator.from(snapshot.getGraph(), getGraphics2D()).ifPresent(dimension -> {
-            setSize(dimension);
-            setPreferredSize(dimension);
-        });
+        snapshot.applyOnValidGraph(graph ->
+                DesignerWindowSizeCalculator.from(graph, getGraphics2D()).ifPresent(dimension -> {
+                    setSize(dimension);
+                    setPreferredSize(dimension);
+                }));
     }
 
     private void addAncestorListener() {
         addAncestorListener(new AncestorListenerAdapter() {
             @Override
             public void ancestorAdded(AncestorEvent event) {
-                super.ancestorAdded(event);
-                select(defaultSelectedItem());
+                snapshot.applyOnValidGraph(graph -> select(defaultSelectedItem()));
                 visible = true;
             }
 
             @Override
             public void ancestorRemoved(AncestorEvent event) {
-                super.ancestorRemoved(event);
                 unselect();
                 visible = false;
             }

@@ -9,4 +9,7 @@ public class Half {
         return Math.floorDiv(value, 2);
     }
 
+    public static int of(double value) {
+        return Math.floorDiv((int) Math.round(value), 2);
+    }
 }

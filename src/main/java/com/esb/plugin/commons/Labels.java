@@ -41,4 +41,7 @@ public class Labels {
 
     public static final String FILE_CHOOSER_TITLE = "Choose File";
 
+    public static final String DESIGNER_INFO_BUILDING_FLOW = "Building flow ...";
+    public static final String DESIGNER_INFO_FLOW_CONTAINS_ERRORS = "The flow contains error, and it can not not be displayed.";
+
 }
