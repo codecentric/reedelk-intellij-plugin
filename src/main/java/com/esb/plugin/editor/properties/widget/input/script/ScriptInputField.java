@@ -58,6 +58,7 @@ public class ScriptInputField extends DisposablePanel implements DocumentListene
         if (listener != null) {
             listener.onChange(event.getDocument().getText());
         }
+        value = event.getDocument().getText();
     }
 
     @Override
