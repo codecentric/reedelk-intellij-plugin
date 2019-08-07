@@ -44,13 +44,14 @@ class ComponentClassAnalyzer {
     }
 
     /**
-     * A component is a processor if it implements the Processor interface.
+     * A component is a processor if it implements the ProcessorSync or ProcessorAsync interface.
      *
      * @param componentClassInfo the class info descriptor.
      * @return true if this class descriptor describes a Processor component, false otherwise.
      */
     private boolean isProcessor(ClassInfo componentClassInfo) {
-        return implementsInterface(componentClassInfo, Processor.class);
+        return implementsInterface(componentClassInfo, ProcessorSync.class) ||
+                implementsInterface(componentClassInfo, ProcessorAsync.class);
     }
 
     /**

@@ -9,7 +9,7 @@ public enum JavascriptEditorMode {
     POPUP {
         @Override
         public Dimension preferredSize(EditorEx editor) {
-            return new Dimension(800, 400);
+            return new Dimension(1000, 600);
         }
     },
 
