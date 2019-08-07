@@ -3,6 +3,7 @@ package com.esb.plugin.editor.designer;
 import com.esb.plugin.commons.Colors;
 import com.esb.plugin.commons.DesignerWindowSizeCalculator;
 import com.esb.plugin.commons.PrintFlowInfo;
+import com.esb.plugin.commons.ToolWindowUtils;
 import com.esb.plugin.component.scanner.ComponentListUpdateNotifier;
 import com.esb.plugin.editor.designer.widget.CenterOfNodeDrawable;
 import com.esb.plugin.editor.designer.widget.InfoPanel;
@@ -344,6 +345,9 @@ public abstract class DesignerPanel extends JBPanel implements
     }
 
     private void select(GraphNode node) {
+        // Display the Component Properties Tool Window
+        // if it is not visible already
+        ToolWindowUtils.ComponentProperties.show(module.getProject());
         selected = node;
         selected.selected();
         currentSelection = new SelectableItemComponent(module, snapshot, selected);

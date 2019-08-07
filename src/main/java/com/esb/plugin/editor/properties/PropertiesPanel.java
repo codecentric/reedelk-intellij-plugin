@@ -1,6 +1,7 @@
 package com.esb.plugin.editor.properties;
 
 import com.esb.plugin.commons.Labels;
+import com.esb.plugin.commons.ToolWindowUtils;
 import com.esb.plugin.component.domain.ComponentData;
 import com.esb.plugin.editor.properties.widget.*;
 import com.esb.plugin.service.project.*;
@@ -8,8 +9,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
@@ -53,7 +52,7 @@ public class PropertiesPanel extends DisposablePanel implements CurrentSelection
 
         // We display the tool window if an item is selected
         // and it is still not visible yet.
-        displayToolWindow();
+        ToolWindowUtils.ComponentProperties.show(project);
 
         if (selectedItem instanceof SelectableItemComponent) {
             createFlowComponentContent(selectedItem);
@@ -147,21 +146,7 @@ public class PropertiesPanel extends DisposablePanel implements CurrentSelection
     }
 
     private void setToolWindowTitle(String newToolWindowTitle) {
-        ToolWindow toolWindow = getToolWindow();
-        toolWindow.setTitle(newToolWindowTitle);
-    }
-
-    private void displayToolWindow() {
-        ToolWindow toolWindow = getToolWindow();
-        if (!toolWindow.isVisible()) {
-            toolWindow.show(() -> {
-            });
-        }
-    }
-
-    private ToolWindow getToolWindow() {
-        return ToolWindowManager
-                .getInstance(project)
-                .getToolWindow(PropertiesPanelToolWindowFactory.ID);
+        ToolWindowUtils.ComponentProperties.get(project)
+                .setTitle(newToolWindowTitle);
     }
 }
