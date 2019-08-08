@@ -3,7 +3,6 @@ package com.esb.plugin.service.project.impl;
 import com.esb.plugin.service.project.SourceChangeService;
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.Application;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.ModuleListener;
@@ -14,7 +13,9 @@ import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.Function;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.SystemIndependent;
 
+import java.io.File;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -28,22 +29,12 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
     private static final Boolean UNCHANGED = false;
 
     private Map<String, String> moduleNameRootPathMap = new HashMap<>();
-    private Map<BiKey, Boolean> moduleNameChangedMap = new HashMap<>();
+    private Map<BiKey, Boolean> runtimeModuleNameChangedMap = new HashMap<>();
 
-    public SourceChangeServiceImpl(Project project, Application application) {
-        project.getMessageBus()
-                .connect(this)
-                .subscribe(ProjectTopics.MODULES, this);
-
-        stream(ModuleManager
-                .getInstance(project)
-                .getModules())
-                .forEach(new RegisterModuleConsumer());
-
-        application
-                .getMessageBus()
-                .connect(this)
-                .subscribe(VirtualFileManager.VFS_CHANGES, this);
+    public SourceChangeServiceImpl(Project project) {
+        stream(ModuleManager.getInstance(project).getModules()).forEach(new RegisterModuleConsumer());
+        project.getMessageBus().connect(this).subscribe(ProjectTopics.MODULES, this);
+        project.getMessageBus().connect(this).subscribe(VirtualFileManager.VFS_CHANGES, this);
     }
 
     @Override
@@ -54,24 +45,24 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
     @Override
     public boolean isCompileRequired(String runtimeConfigName, String moduleName) {
         BiKey key = new BiKey(runtimeConfigName, moduleName);
-        return moduleNameChangedMap.getOrDefault(key, CHANGED);
+        return runtimeModuleNameChangedMap.getOrDefault(key, CHANGED);
     }
 
     @Override
     public void unchanged(String runtimeConfigName, String moduleName) {
         BiKey key = new BiKey(runtimeConfigName, moduleName);
-        moduleNameChangedMap.put(key, UNCHANGED);
+        runtimeModuleNameChangedMap.put(key, UNCHANGED);
     }
 
     @Override
     public void changed(String runtimeConfigName, String moduleName) {
         BiKey key = new BiKey(runtimeConfigName, moduleName);
-        moduleNameChangedMap.put(key, CHANGED);
+        runtimeModuleNameChangedMap.put(key, CHANGED);
     }
 
     @Override
     public void reset(String runtimeConfigName) {
-        moduleNameChangedMap.entrySet()
+        runtimeModuleNameChangedMap.entrySet()
                 .removeIf(biKeyBooleanEntry -> {
                     BiKey key = biKeyBooleanEntry.getKey();
                     return key.key1.equals(runtimeConfigName);
@@ -91,22 +82,38 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
 
     @Override
     public void moduleAdded(@NotNull Project project, @NotNull Module module) {
-        // nothing to do
+        @SystemIndependent String moduleFilePath = module.getModuleFilePath();
+        File moduleFilePathFile = new File(moduleFilePath);
+        moduleNameRootPathMap.putIfAbsent(module.getName(), moduleFilePathFile.getParent());
     }
 
     @Override
     public void moduleRemoved(@NotNull Project project, @NotNull Module module) {
-        // nothing to do
+        moduleNameRootPathMap.remove(module.getName());
     }
 
     @Override
     public void modulesRenamed(@NotNull Project project, @NotNull List<Module> modules, @NotNull Function<Module, String> oldNameProvider) {
-        // nothing to do
+        modules.forEach(module -> {
+            // Remove Old Name
+            String oldModuleName = oldNameProvider.fun(module);
+            moduleNameRootPathMap.remove(oldModuleName);
+
+            // Add new name
+            @SystemIndependent String moduleFilePath = module.getModuleFilePath();
+            File moduleFilePathFile = new File(moduleFilePath);
+            moduleNameRootPathMap.putIfAbsent(module.getName(), moduleFilePathFile.getParent());
+
+            // Remove from module name
+            Set<BiKey> biKeys = runtimeModuleNameChangedMap.keySet();
+            biKeys.removeIf(key -> oldModuleName.equals(key.key2));
+        });
     }
 
     @Override
     public void dispose() {
-        moduleNameChangedMap.clear();
+        runtimeModuleNameChangedMap.clear();
+        moduleNameRootPathMap.clear();
     }
 
     private Optional<String> isModuleSourceChange(VirtualFile virtualFile) {
@@ -129,7 +136,7 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
     }
 
     private void setToChangedMatching(String moduleName) {
-        for (Map.Entry<BiKey, Boolean> entry : moduleNameChangedMap.entrySet()) {
+        for (Map.Entry<BiKey, Boolean> entry : runtimeModuleNameChangedMap.entrySet()) {
             if (entry.getKey().key2.equals(moduleName)) {
                 entry.setValue(CHANGED);
             }
@@ -139,9 +146,9 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
     class RegisterModuleConsumer implements Consumer<Module> {
         @Override
         public void accept(Module module) {
-            if (module.getModuleFile() != null) {
-                moduleNameRootPathMap.putIfAbsent(module.getName(), module.getModuleFile().getParent().getPath());
-            }
+            @SystemIndependent String moduleFilePath = module.getModuleFilePath();
+            File moduleFilePathFile = new File(moduleFilePath);
+            moduleNameRootPathMap.putIfAbsent(module.getName(), moduleFilePathFile.getParent());
         }
     }
 
@@ -166,6 +173,14 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
         @Override
         public int hashCode() {
             return Objects.hash(key1, key2);
+        }
+
+        @Override
+        public String toString() {
+            return "BiKey{" +
+                    "key1='" + key1 + '\'' +
+                    ", key2='" + key2 + '\'' +
+                    '}';
         }
     }
 }
