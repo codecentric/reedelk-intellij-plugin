@@ -27,13 +27,13 @@ public class GenericComponentSerializer extends AbstractNodeSerializer {
         return componentAsJson;
     }
 
-    private void serialize(ComponentDataHolder componentData, JSONObject parent) {
+    private void serialize(ComponentDataHolder componentData, JSONObject componentAsJson) {
         componentData.keys().forEach(propertyName -> {
             Object data = componentData.get(propertyName);
             if (data instanceof TypeObjectDescriptor.TypeObject) {
-                serializeTypeObject(parent, propertyName, (TypeObjectDescriptor.TypeObject) data);
+                serializeTypeObject(componentAsJson, propertyName, (TypeObjectDescriptor.TypeObject) data);
             } else {
-                parent.put(propertyName, data);
+                componentAsJson.put(propertyName, data);
             }
         });
     }
