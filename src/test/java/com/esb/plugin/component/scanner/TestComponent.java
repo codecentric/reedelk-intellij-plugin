@@ -4,11 +4,11 @@ import com.esb.api.annotation.Default;
 import com.esb.api.annotation.ESBComponent;
 import com.esb.api.annotation.Property;
 import com.esb.api.annotation.Required;
-import com.esb.api.component.Processor;
+import com.esb.api.component.ProcessorSync;
 import com.esb.api.message.Message;
 
 @ESBComponent("Test Component")
-public class TestComponent implements Processor {
+public class TestComponent implements ProcessorSync {
 
     @Property("Property 1")
     @Default("3")
