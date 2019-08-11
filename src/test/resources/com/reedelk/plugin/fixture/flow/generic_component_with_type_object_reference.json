@@ -1,0 +1,7 @@
+{
+  "implementor": "com.reedelk.plugin.fixture.ComponentNode1",
+  "property1": "first property",
+  "property7": {
+    "configRef": "4ba1b6a0-9644-11e9-bc42-526af7764f64"
+  }
+}

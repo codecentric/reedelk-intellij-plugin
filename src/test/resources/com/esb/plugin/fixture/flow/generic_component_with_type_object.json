@@ -1,9 +1,0 @@
-{
-  "implementor": "com.esb.plugin.fixture.ComponentNode1",
-  "property1": "first property",
-  "property4": {
-    "implementor": "com.esb.plugin.fixture.ComponentNode2",
-    "property5": "property five",
-    "property6": 255
-  }
-}

@@ -1,0 +1,58 @@
+{
+  "id": "45a5ce60-5c9d-4075-82a7-d3fa9284f22a",
+  "flow": [
+    {
+      "implementor": "com.reedelk.plugin.fixture.ComponentNode1"
+    },
+    {
+      "implementor": "com.reedelk.runtime.component.Router",
+      "when": [
+        {
+          "condition": "payload.name == 'Mark'",
+          "next": [
+            {
+              "implementor": "com.reedelk.plugin.fixture.ComponentNode2"
+            }
+          ]
+        },
+        {
+          "condition": "payload.name == 'John'",
+          "next": [
+            {
+              "implementor": "com.reedelk.runtime.component.FlowReference",
+              "ref": "11a2ce60-5c9d-4075-82a7-f1fa1111f999"
+            }
+          ]
+        },
+        {
+          "condition": "otherwise",
+          "next": [
+            {
+              "implementor": "com.reedelk.runtime.component.Fork",
+              "threadPoolSize": 3,
+              "fork": [
+                {
+                  "next": [
+                    {
+                      "implementor": "com.reedelk.plugin.fixture.ComponentNode3"
+                    }
+                  ]
+                },
+                {
+                  "next": [
+                    {
+                      "implementor": "com.reedelk.plugin.fixture.ComponentNode4"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "implementor": "com.reedelk.plugin.fixture.ComponentNode5"
+    }
+  ]
+}

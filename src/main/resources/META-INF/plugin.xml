@@ -1,7 +1,7 @@
 <idea-plugin>
-    <id>com.esb.intellij.designer</id>
-    <name>ESB Flow Designer</name>
-    <vendor email="support@esb.com" url="http://www.esb.com">ESB</vendor>
+    <id>com.reedelk.plugin</id>
+    <name>Reedelk ESB</name>
+    <vendor email="info@reedelk.com" url="http://www.reedelk.com">Reedelk</vendor>
 
     <description>
         <![CDATA[
@@ -22,74 +22,74 @@
     <extensions defaultExtensionNs="com.intellij">
 
         <!-- File Type -->
-        <fileTypeFactory implementation="com.esb.plugin.filetype.FlowFileTypeFactory"/>
-        <fileTypeFactory implementation="com.esb.plugin.filetype.SubFlowFileTypeFactory"/>
-        <fileTypeFactory implementation="com.esb.plugin.filetype.FlowConfigFileTypeFactory"/>
+        <fileTypeFactory implementation="com.reedelk.plugin.filetype.FlowFileTypeFactory"/>
+        <fileTypeFactory implementation="com.reedelk.plugin.filetype.SubFlowFileTypeFactory"/>
+        <fileTypeFactory implementation="com.reedelk.plugin.filetype.FlowConfigFileTypeFactory"/>
 
         <!-- File Editor -->
-        <fileEditorProvider implementation="com.esb.plugin.editor.FlowDesignerEditorProvider"/>
-        <fileEditorProvider implementation="com.esb.plugin.editor.SubFlowDesignerEditorProvider"/>
+        <fileEditorProvider implementation="com.reedelk.plugin.editor.FlowDesignerEditorProvider"/>
+        <fileEditorProvider implementation="com.reedelk.plugin.editor.SubFlowDesignerEditorProvider"/>
 
         <!-- File Templates -->
         <internalFileTemplate name="Maven Module"/>
         <internalFileTemplate name="Maven Project"/>
 
         <stepsBeforeRunProvider
-                implementation="com.esb.plugin.runconfig.module.beforetask.ModuelBuilderBeforeTaskProvider"/>
+                implementation="com.reedelk.plugin.runconfig.module.beforetask.ModuelBuilderBeforeTaskProvider"/>
 
         <!-- Module Builder -->
-        <moduleBuilder builderClass="com.esb.plugin.module.builder.ModuleBuilder" id="ESB_MODULE_BUILDER"
+        <moduleBuilder builderClass="com.reedelk.plugin.builder.ModuleBuilder" id="ESB_MODULE_BUILDER"
                        order="first"/>
 
         <!-- Services -->
-        <applicationService serviceInterface="com.esb.plugin.service.application.http.HttpService"
-                            serviceImplementation="com.esb.plugin.service.application.http.impl.HttpServiceImpl"/>
+        <applicationService serviceInterface="com.reedelk.plugin.service.application.http.HttpService"
+                            serviceImplementation="com.reedelk.plugin.service.application.http.impl.HttpServiceImpl"/>
 
-        <projectService serviceInterface="com.esb.plugin.service.project.ToolWindowService"
-                        serviceImplementation="com.esb.plugin.service.project.impl.ToolWindowServiceImpl"/>
+        <projectService serviceInterface="com.reedelk.plugin.service.project.ToolWindowService"
+                        serviceImplementation="com.reedelk.plugin.service.project.impl.ToolWindowServiceImpl"/>
 
-        <moduleService serviceInterface="com.esb.plugin.service.module.ComponentService"
-                       serviceImplementation="com.esb.plugin.service.module.impl.ComponentServiceImpl"/>
+        <moduleService serviceInterface="com.reedelk.plugin.service.module.ComponentService"
+                       serviceImplementation="com.reedelk.plugin.service.module.impl.ComponentServiceImpl"/>
 
-        <moduleService serviceInterface="com.esb.plugin.service.module.SubflowService"
-                       serviceImplementation="com.esb.plugin.service.module.impl.SubflowServiceImpl"/>
+        <moduleService serviceInterface="com.reedelk.plugin.service.module.SubflowService"
+                       serviceImplementation="com.reedelk.plugin.service.module.impl.SubflowServiceImpl"/>
 
-        <moduleService serviceInterface="com.esb.plugin.service.module.ConfigService"
-                       serviceImplementation="com.esb.plugin.service.module.impl.ConfigServiceImpl"/>
+        <moduleService serviceInterface="com.reedelk.plugin.service.module.ConfigService"
+                       serviceImplementation="com.reedelk.plugin.service.module.impl.ConfigServiceImpl"/>
 
         <!-- Program Runner and Executors -->
-        <programRunner implementation="com.esb.plugin.runconfig.module.runner.DeploymentRunner" order="first"/>
-        <executor implementation="com.esb.plugin.runconfig.module.runner.ModuleDeployExecutor"/>
-        <executor implementation="com.esb.plugin.runconfig.module.runner.ModuleUnDeployExecutor"/>
+        <programRunner implementation="com.reedelk.plugin.runconfig.module.runner.DeploymentRunner" order="first"/>
+        <executor implementation="com.reedelk.plugin.runconfig.module.runner.ModuleDeployExecutor"/>
+        <executor implementation="com.reedelk.plugin.runconfig.module.runner.ModuleUnDeployExecutor"/>
 
 
         <!-- Run Configurations -->
-        <configurationType implementation="com.esb.plugin.runconfig.runtime.RuntimeRunConfigurationType"/>
-        <configurationType implementation="com.esb.plugin.runconfig.module.ModuleRunConfigurationType"/>
+        <configurationType implementation="com.reedelk.plugin.runconfig.runtime.RuntimeRunConfigurationType"/>
+        <configurationType implementation="com.reedelk.plugin.runconfig.module.ModuleRunConfigurationType"/>
 
         <!-- Palette and Component properties tool window -->
         <toolWindow id="ESB Components" anchor="right" icon="/icons/icon-16x-blue.png"
-                    factoryClass="com.esb.plugin.editor.palette.PaletteFactory"/>
+                    factoryClass="com.reedelk.plugin.editor.palette.PaletteFactory"/>
 
         <toolWindow id="componentPropertiesToolWindow" anchor="bottom"
-                    factoryClass="com.esb.plugin.editor.properties.PropertiesPanelToolWindowFactory"/>
+                    factoryClass="com.reedelk.plugin.editor.properties.PropertiesPanelToolWindowFactory"/>
 
     </extensions>
 
     <actions>
-        <action id="Reedelk.CreateProjectFile" class="com.esb.plugin.action.CreateProjectFile">
+        <action id="Reedelk.CreateProjectFile" class="com.reedelk.plugin.action.CreateProjectFile">
             <add-to-group group-id="NewGroup1" anchor="after" relative-to-action="NewClass"/>
         </action>
     </actions>
 
     <project-components>
         <component>
-            <interface-class>com.esb.plugin.service.project.SourceChangeService</interface-class>
-            <implementation-class>com.esb.plugin.service.project.impl.SourceChangeServiceImpl</implementation-class>
+            <interface-class>com.reedelk.plugin.service.project.SourceChangeService</interface-class>
+            <implementation-class>com.reedelk.plugin.service.project.impl.SourceChangeServiceImpl</implementation-class>
         </component>
         <component>
-            <interface-class>com.esb.plugin.service.project.DesignerSelectionManager</interface-class>
-            <implementation-class>com.esb.plugin.service.project.impl.DesignerSelectionManagerImpl
+            <interface-class>com.reedelk.plugin.service.project.DesignerSelectionManager</interface-class>
+            <implementation-class>com.reedelk.plugin.service.project.impl.DesignerSelectionManagerImpl
             </implementation-class>
         </component>
     </project-components>
