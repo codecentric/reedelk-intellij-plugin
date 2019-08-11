@@ -42,7 +42,7 @@
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text resource-bundle="com/esb/plugin/Labels" key="vmOptions"/>
+          <text resource-bundle="com/reedelk/plugin/Labels" key="vmOptions"/>
         </properties>
       </component>
       <component id="790e1" class="javax.swing.JLabel">
@@ -50,7 +50,7 @@
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text resource-bundle="com/esb/plugin/Labels" key="runtimeHome"/>
+          <text resource-bundle="com/reedelk/plugin/Labels" key="runtimeHome"/>
         </properties>
       </component>
       <component id="3992b" class="javax.swing.JTextField" binding="vmOptionsTextField">
@@ -66,7 +66,7 @@
           <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text resource-bundle="com/esb/plugin/Labels" key="bindAddress"/>
+          <text resource-bundle="com/reedelk/plugin/Labels" key="bindAddress"/>
         </properties>
       </component>
       <component id="8da95" class="javax.swing.JTextField" binding="runtimeAddressTextField">

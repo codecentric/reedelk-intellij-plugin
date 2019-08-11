@@ -18,7 +18,7 @@ public enum Label {
     }
 
     public String get() {
-        ResourceBundle bundle = ResourceBundle.getBundle("com/esb/plugin/Labels");
+        ResourceBundle bundle = ResourceBundle.getBundle("com/reedelk/plugin/Labels");
         return bundle.getString(labelKey);
     }
 
