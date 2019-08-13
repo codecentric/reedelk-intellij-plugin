@@ -28,7 +28,7 @@ public class ModuleBuilder extends MavenModuleBuilder {
 
     private static final Logger LOG = Logger.getInstance(ModuleBuilder.class);
 
-    private boolean isNewProject;
+    private boolean createRuntimeConfig;
     private String runtimeConfigName;
     private String runtimeHomeDirectory;
 
@@ -43,7 +43,7 @@ public class ModuleBuilder extends MavenModuleBuilder {
 
         VirtualFile root = LocalFileSystem.getInstance().findFileByPath(getContentEntryPath());
 
-        if (isNewProject) {
+        if (createRuntimeConfig) {
             // Create Runtime Run Configuration
             RuntimeRunConfigurationBuilder.build()
                     .withRuntimeConfigName(runtimeConfigName)
@@ -132,7 +132,7 @@ public class ModuleBuilder extends MavenModuleBuilder {
         this.runtimeHomeDirectory = runtimeHomeDirectory;
     }
 
-    public void isNewProject(boolean isNewProject) {
-        this.isNewProject = isNewProject;
+    public void createRuntimeConfig(boolean createRuntimeConfig) {
+        this.createRuntimeConfig = createRuntimeConfig;
     }
 }

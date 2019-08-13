@@ -23,17 +23,15 @@ class MavenProjectBuilderHelper {
     private static final Logger LOG = Logger.getInstance(MavenProjectBuilderHelper.class);
 
     void configure(Project project, MavenId projectId, @Nullable MavenId parentId, VirtualFile root, String sdkVersion) throws Throwable {
-
         if (parentId == null) {
-            // Parent ID IS NULL
+            // Parent ID IS NULL (configuring a new project)
             MavenProjectProperties props = new MavenProjectProperties(projectId, sdkVersion);
             createFromTemplate(project, props, Template.Maven.PROJECT, root);
         } else {
-            // Parent ID is NOT NULL
+            // Parent ID is NOT NULL (configuring a new module)
             MavenProjectProperties props = new MavenProjectProperties(projectId, sdkVersion, parentId);
             createFromTemplate(project, props, Template.Maven.MODULE, root);
         }
-
     }
 
     private void createFromTemplate(Project project, Properties properties, String templateName, VirtualFile root) throws Throwable {

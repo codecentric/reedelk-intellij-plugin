@@ -9,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.Collections;
 import java.util.List;
 
 public class RuntimeComboManager {
@@ -17,26 +19,14 @@ public class RuntimeComboManager {
     private JComboBox<String> comboBox;
 
     public RuntimeComboManager(@NotNull JComboBox<String> comboBox, Project project) {
-        this.comboBox = comboBox;
+        configure(comboBox, project, Collections.emptyList());
+        this.comboBox.setSelectedIndex(0);
+    }
 
-        if (project != null) {
-            List<RunConfiguration> configurationsList = RunManager.getInstance(project).getConfigurationsList(new RuntimeRunConfigurationType());
-
-            configurationsList
-                    .stream()
-                    .map(configuration -> (RuntimeRunConfiguration) configuration)
-                    .forEach(configuration -> comboBox.addItem(configuration.getName()));
-
-            comboBox.setSelectedIndex(-1);
-        }
-
-
-        this.comboBox.addItemListener(event -> {
-            if (event.getStateChange() == ItemEvent.SELECTED) {
-                this.runtimeConfigName = (String) event.getItem();
-            }
-        });
-
+    public RuntimeComboManager(@NotNull JComboBox<String> comboBox, Project project, List<String> additionalItems, ItemListener itemListener) {
+        configure(comboBox, project, additionalItems);
+        this.comboBox.addItemListener(itemListener);
+        this.comboBox.setSelectedIndex(0);
     }
 
     public String getRuntimeConfigName() {
@@ -45,5 +35,21 @@ public class RuntimeComboManager {
 
     public void setRuntimeConfigName(String runtimeConfigName) {
         comboBox.setSelectedItem(runtimeConfigName);
+    }
+
+    private void configure(@NotNull JComboBox<String> comboBox, Project project, List<String> additionalItems) {
+        this.comboBox = comboBox;
+        if (project != null) {
+            List<RunConfiguration> runtimeConfigurations = RunManager.getInstance(project).getConfigurationsList(new RuntimeRunConfigurationType());
+            runtimeConfigurations.stream()
+                    .map(configuration -> (RuntimeRunConfiguration) configuration)
+                    .forEach(configuration -> comboBox.addItem(configuration.getName()));
+        }
+        additionalItems.forEach(comboBox::addItem);
+        comboBox.addItemListener(event -> {
+            if (event.getStateChange() == ItemEvent.SELECTED) {
+                this.runtimeConfigName = (String) event.getItem();
+            }
+        });
     }
 }

@@ -12,6 +12,7 @@ import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.util.ui.UI;
+import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.commons.RuntimeComboManager;
 import com.reedelk.plugin.validator.RuntimeHomeValidator;
 import com.reedelk.plugin.validator.Validator;
@@ -19,12 +20,14 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.intellij.openapi.util.text.StringUtil.commonPrefixLength;
 import static com.intellij.openapi.util.text.StringUtil.isEmptyOrSpaces;
 import static com.intellij.uiDesigner.core.GridConstraints.*;
+import static java.util.Collections.singletonList;
 
 public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable {
 
@@ -50,7 +53,17 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
             addRuntimePanel.setVisible(false);
         }
         moduleBuilder = builder;
-        runtimeComboManager = new RuntimeComboManager(runtimeCombo, project);
+        runtimeComboManager = new RuntimeComboManager(runtimeCombo, project, singletonList(Labels.WIZARD_RUNTIME_STEP_ADD_NEW_CONFIG),
+                event -> {
+                    if (event.getStateChange() == ItemEvent.SELECTED) {
+                        String newConfigName = (String) event.getItem();
+                        if (newConfigName.equals(Labels.WIZARD_RUNTIME_STEP_ADD_NEW_CONFIG)) {
+                            addRuntimePanel.setVisible(true);
+                        } else {
+                            addRuntimePanel.setVisible(false);
+                        }
+                    }
+                });
         createInputWithBrowse(wizardContext, moduleBuilder);
     }
 
@@ -61,12 +74,18 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
 
     @Override
     public void updateDataModel() {
-        moduleBuilder.isNewProject(isNewProject);
         if (isNewProject) {
             moduleBuilder.setRuntimeConfigName(runtimeConfigNameTextField.getText());
             moduleBuilder.setRuntimeHomeDirectory(runtimeHomeDirectoryBrowse.getText());
+            moduleBuilder.createRuntimeConfig(true);
         } else {
-            moduleBuilder.setRuntimeConfigName(runtimeComboManager.getRuntimeConfigName());
+            if (Labels.WIZARD_RUNTIME_STEP_ADD_NEW_CONFIG.equals(runtimeComboManager.getRuntimeConfigName())) {
+                moduleBuilder.setRuntimeConfigName(runtimeConfigNameTextField.getText());
+                moduleBuilder.setRuntimeHomeDirectory(runtimeHomeDirectoryBrowse.getText());
+                moduleBuilder.createRuntimeConfig(true);
+            } else {
+                moduleBuilder.setRuntimeConfigName(runtimeComboManager.getRuntimeConfigName());
+            }
         }
     }
 
