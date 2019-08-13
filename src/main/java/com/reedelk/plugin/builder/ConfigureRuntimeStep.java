@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ import static com.intellij.openapi.util.text.StringUtil.isEmptyOrSpaces;
 import static com.intellij.uiDesigner.core.GridConstraints.*;
 import static java.util.Collections.singletonList;
 
-public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable {
+public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable, ItemListener {
 
     private ModuleBuilder moduleBuilder;
 
@@ -53,17 +54,12 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
             addRuntimePanel.setVisible(false);
         }
         moduleBuilder = builder;
-        runtimeComboManager = new RuntimeComboManager(runtimeCombo, project, singletonList(Labels.WIZARD_RUNTIME_STEP_ADD_NEW_CONFIG),
-                event -> {
-                    if (event.getStateChange() == ItemEvent.SELECTED) {
-                        String newConfigName = (String) event.getItem();
-                        if (newConfigName.equals(Labels.WIZARD_RUNTIME_STEP_ADD_NEW_CONFIG)) {
-                            addRuntimePanel.setVisible(true);
-                        } else {
-                            addRuntimePanel.setVisible(false);
-                        }
-                    }
-                });
+        runtimeComboManager = new RuntimeComboManager(
+                runtimeCombo,
+                project,
+                singletonList(Labels.WIZARD_RUNTIME_STEP_ADD_NEW_CONFIG),
+                this);
+        runtimeConfigNameChanged(runtimeComboManager.getRuntimeConfigName());
         createInputWithBrowse(wizardContext, moduleBuilder);
     }
 
@@ -94,28 +90,6 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
         // No op
     }
 
-    private void createInputWithBrowse(WizardContext context, ModuleBuilder moduleBuilder) {
-        FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-        runtimeHomeDirectoryBrowse = new TextFieldWithBrowseButton();
-        runtimeHomeDirectoryBrowse.addBrowseFolderListener(new TextBrowseFolderListener(descriptor, context.getProject()) {
-            @NotNull
-            @Override
-            protected String chosenFileToResultingText(@NotNull VirtualFile chosenFile) {
-                String contentEntryPath = moduleBuilder.getContentEntryPath();
-                String path = chosenFile.getPath();
-                return contentEntryPath == null ? path : path.substring(commonPrefixLength(contentEntryPath, path));
-            }
-        });
-
-        JPanel runtimeChooserPanel = UI.PanelFactory.panel(runtimeHomeDirectoryBrowse).
-                withComment("Select ESB runtime home directory this project will be using. " +
-                        "The runtime will be used to provide a default configuration for this project.")
-                .createPanel();
-
-
-        addRuntimePanel.add(runtimeChooserPanel, CHOOSE_RUNTIME_INPUT_GRID_CONSTRAINTS);
-    }
-
     @Override
     public boolean validate() throws ConfigurationException {
         List<String> errors = new ArrayList<>();
@@ -140,6 +114,41 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
         }
 
         return errors.isEmpty();
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent event) {
+        if (event.getStateChange() == ItemEvent.SELECTED) {
+            String newConfigName = (String) event.getItem();
+            runtimeConfigNameChanged(newConfigName);
+        }
+    }
+
+    private void runtimeConfigNameChanged(String newRuntimeConfigName) {
+        if (Labels.WIZARD_RUNTIME_STEP_ADD_NEW_CONFIG.equals(newRuntimeConfigName)) {
+            addRuntimePanel.setVisible(true);
+        } else {
+            addRuntimePanel.setVisible(false);
+        }
+    }
+
+    private void createInputWithBrowse(WizardContext context, ModuleBuilder moduleBuilder) {
+        FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
+        runtimeHomeDirectoryBrowse = new TextFieldWithBrowseButton();
+        runtimeHomeDirectoryBrowse.addBrowseFolderListener(new TextBrowseFolderListener(descriptor, context.getProject()) {
+            @NotNull
+            @Override
+            protected String chosenFileToResultingText(@NotNull VirtualFile chosenFile) {
+                String contentEntryPath = moduleBuilder.getContentEntryPath();
+                String path = chosenFile.getPath();
+                return contentEntryPath == null ? path : path.substring(commonPrefixLength(contentEntryPath, path));
+            }
+        });
+        JPanel runtimeChooserPanel = UI.PanelFactory.panel(runtimeHomeDirectoryBrowse).
+                withComment("Select ESB runtime home directory this project will be using. " +
+                        "The runtime will be used to provide a default configuration for this project.")
+                .createPanel();
+        addRuntimePanel.add(runtimeChooserPanel, CHOOSE_RUNTIME_INPUT_GRID_CONSTRAINTS);
     }
 
     private static final GridConstraints CHOOSE_RUNTIME_INPUT_GRID_CONSTRAINTS =

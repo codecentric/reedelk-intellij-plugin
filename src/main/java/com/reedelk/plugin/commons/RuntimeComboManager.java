@@ -21,12 +21,14 @@ public class RuntimeComboManager {
     public RuntimeComboManager(@NotNull JComboBox<String> comboBox, Project project) {
         configure(comboBox, project, Collections.emptyList());
         this.comboBox.setSelectedIndex(0);
+        this.runtimeConfigName = (String) this.comboBox.getSelectedItem();
     }
 
     public RuntimeComboManager(@NotNull JComboBox<String> comboBox, Project project, List<String> additionalItems, ItemListener itemListener) {
         configure(comboBox, project, additionalItems);
         this.comboBox.addItemListener(itemListener);
         this.comboBox.setSelectedIndex(0);
+        this.runtimeConfigName = (String) this.comboBox.getSelectedItem();
     }
 
     public String getRuntimeConfigName() {
