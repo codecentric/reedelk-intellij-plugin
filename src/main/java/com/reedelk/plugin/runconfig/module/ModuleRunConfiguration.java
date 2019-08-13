@@ -62,7 +62,6 @@ public class ModuleRunConfiguration extends RunConfigurationBase implements
         }
     }
 
-
     @Override
     public void readExternal(@NotNull Element element) throws InvalidDataException {
         super.readExternal(element);
