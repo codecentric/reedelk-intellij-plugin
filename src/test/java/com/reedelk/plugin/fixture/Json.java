@@ -118,6 +118,12 @@ public class Json {
             public String path() {
                 return "configuration_sample.json";
             }
-        };
+        },
+        NestedConfig() {
+            @Override
+            public String path() {
+                return "configuration_nested.json";
+            }
+        }
     }
 }
