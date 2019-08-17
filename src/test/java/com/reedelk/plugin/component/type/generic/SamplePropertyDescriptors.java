@@ -9,12 +9,12 @@ import com.reedelk.plugin.fixture.ComponentNode2;
 import static com.reedelk.plugin.component.domain.ComponentPropertyDescriptor.PropertyRequired.REQUIRED;
 import static java.util.Arrays.asList;
 
-class SamplePropertyDescriptors {
+public class SamplePropertyDescriptors {
 
-    private static final TypeDescriptor stringTypeDescriptor = new TypePrimitiveDescriptor(String.class);
-    private static final TypeDescriptor integerTypeDescriptor = new TypePrimitiveDescriptor(Integer.class);
+    public static final TypeDescriptor stringTypeDescriptor = new TypePrimitiveDescriptor(String.class);
+    public static final TypeDescriptor integerTypeDescriptor = new TypePrimitiveDescriptor(Integer.class);
 
-    static final ComponentPropertyDescriptor property1 =
+    public static final ComponentPropertyDescriptor property1 =
             ComponentPropertyDescriptor.builder()
                     .propertyName("property1")
                     .type(stringTypeDescriptor)
@@ -23,7 +23,7 @@ class SamplePropertyDescriptors {
                     .required(REQUIRED)
                     .build();
 
-    static final ComponentPropertyDescriptor property2 =
+    public static final ComponentPropertyDescriptor property2 =
             ComponentPropertyDescriptor.builder()
                     .propertyName("property2")
                     .type(stringTypeDescriptor)
@@ -32,7 +32,7 @@ class SamplePropertyDescriptors {
                     .required(REQUIRED)
                     .build();
 
-    static final ComponentPropertyDescriptor property3 =
+    public static final ComponentPropertyDescriptor property3 =
             ComponentPropertyDescriptor.builder()
                     .propertyName("property3")
                     .type(stringTypeDescriptor)
@@ -41,7 +41,7 @@ class SamplePropertyDescriptors {
                     .required(REQUIRED)
                     .build();
 
-    static final ComponentPropertyDescriptor property5 =
+    public static final ComponentPropertyDescriptor property5 =
             ComponentPropertyDescriptor.builder()
                     .propertyName("property5")
                     .type(stringTypeDescriptor)
@@ -50,7 +50,7 @@ class SamplePropertyDescriptors {
                     .required(REQUIRED)
                     .build();
 
-    static final ComponentPropertyDescriptor property6 =
+    public static final ComponentPropertyDescriptor property6 =
             ComponentPropertyDescriptor.builder()
                     .propertyName("property6")
                     .type(integerTypeDescriptor)
@@ -59,11 +59,11 @@ class SamplePropertyDescriptors {
                     .required(REQUIRED)
                     .build();
 
-    static final TypeObjectDescriptor componentNode2TypeDescriptor = new TypeObjectDescriptor(ComponentNode2.class.getName(), false, asList(property5, property6));
+    public static final TypeObjectDescriptor componentNode2TypeDescriptor = new TypeObjectDescriptor(ComponentNode2.class.getName(), false, asList(property5, property6));
 
-    static final TypeObjectDescriptor componentNode2ShareableTypeDescriptor = new TypeObjectDescriptor(ComponentNode2.class.getName(), true, asList(property5, property6));
+    public static final TypeObjectDescriptor componentNode2ShareableTypeDescriptor = new TypeObjectDescriptor(ComponentNode2.class.getName(), true, asList(property5, property6));
 
-    static final ComponentPropertyDescriptor property4 =
+    public static final ComponentPropertyDescriptor property4 =
             ComponentPropertyDescriptor.builder()
                     .propertyName("property4")
                     .type(componentNode2TypeDescriptor)
@@ -72,7 +72,7 @@ class SamplePropertyDescriptors {
                     .required(REQUIRED)
                     .build();
 
-    static final ComponentPropertyDescriptor property7 =
+    public static final ComponentPropertyDescriptor property7 =
             ComponentPropertyDescriptor.builder()
                     .propertyName("property7")
                     .type(componentNode2ShareableTypeDescriptor)

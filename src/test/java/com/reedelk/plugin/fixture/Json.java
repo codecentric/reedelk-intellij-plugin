@@ -6,14 +6,14 @@ import java.net.URL;
 
 public class Json {
 
-    private static final String FIXTURE_BASE_PATH = "/com/reedelk/plugin/fixture/flow/";
+    private static final String FLOW_FIXTURE_BASE_PATH = "/com/reedelk/plugin/fixture/";
 
     interface DataProvider {
 
         String path();
 
         default String json() {
-            URL url = Json.class.getResource(FIXTURE_BASE_PATH + path());
+            URL url = Json.class.getResource(FLOW_FIXTURE_BASE_PATH + path());
             return FileUtils.readFrom(url);
         }
     }
@@ -22,35 +22,35 @@ public class Json {
         Sample() {
             @Override
             public String path() {
-                return "complete_flow_sample.json";
+                return "flow/complete_flow_sample.json";
             }
         },
 
         NestedRouter() {
             @Override
             public String path() {
-                return "complete_flow_with_nested_router.json";
+                return "flow/complete_flow_with_nested_router.json";
             }
         },
 
         NestedFork() {
             @Override
             public String path() {
-                return "complete_flow_with_nested_fork.json";
+                return "flow/complete_flow_with_nested_fork.json";
             }
         },
 
         NestedEmptyFork() {
             @Override
             public String path() {
-                return "complete_flow_with_empty_fork.json";
+                return "flow/complete_flow_with_empty_fork.json";
             }
         },
 
         NodesBetweenScopes() {
             @Override
             public String path() {
-                return "complete_flow_with_nodes_between_scopes.json";
+                return "flow/complete_flow_with_nodes_between_scopes.json";
             }
         }
     }
@@ -59,21 +59,21 @@ public class Json {
         Sample() {
             @Override
             public String path() {
-                return "generic_component_sample.json";
+                return "flow/generic_component_sample.json";
             }
         },
 
         WithTypeObject {
             @Override
             public String path() {
-                return "generic_component_with_type_object.json";
+                return "flow/generic_component_with_type_object.json";
             }
         },
 
         WithTypeObjectReference {
             @Override
             public String path() {
-                return "generic_component_with_type_object_reference.json";
+                return "flow/generic_component_with_type_object_reference.json";
             }
         }
     }
@@ -82,14 +82,14 @@ public class Json {
         Sample() {
             @Override
             public String path() {
-                return "fork_sample.json";
+                return "flow/fork_sample.json";
             }
         },
 
         WithoutSuccessorInsideScope() {
             @Override
             public String path() {
-                return "fork_without_successor_inside_scope.json";
+                return "flow/fork_without_successor_inside_scope.json";
             }
         }
     }
@@ -98,7 +98,7 @@ public class Json {
         Sample() {
             @Override
             public String path() {
-                return "router_sample.json";
+                return "flow/router_sample.json";
             }
         }
     }
@@ -107,7 +107,7 @@ public class Json {
         Sample() {
             @Override
             public String path() {
-                return "flow_reference_sample.json";
+                return "flow/flow_reference_sample.json";
             }
         }
     }
@@ -116,13 +116,13 @@ public class Json {
         Sample() {
             @Override
             public String path() {
-                return "configuration_sample.json";
+                return "configuration/configuration_sample.json";
             }
         },
         NestedConfig() {
             @Override
             public String path() {
-                return "configuration_nested.json";
+                return "configuration/configuration_nested.json";
             }
         }
     }

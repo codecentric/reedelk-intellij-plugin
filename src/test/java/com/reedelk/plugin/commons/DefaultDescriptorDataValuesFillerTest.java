@@ -3,11 +3,12 @@ package com.reedelk.plugin.commons;
 import com.reedelk.plugin.component.domain.ComponentDataHolder;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
-import com.reedelk.plugin.component.domain.TypePrimitiveDescriptor;
 import com.reedelk.plugin.service.module.impl.ConfigMetadata;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.integerTypeDescriptor;
+import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.stringTypeDescriptor;
 import static com.reedelk.runtime.commons.JsonParser.Component;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -41,6 +42,7 @@ class DefaultDescriptorDataValuesFillerTest {
     @Test
     void shouldCorrectlyFillNullDefaultValueForUndefinedDefaultValue() {
         // Given
+
         ComponentPropertyDescriptor addressPropertyDescriptorWithoutDefaultValue =
                 ComponentPropertyDescriptor.builder()
                         .displayName("Address")
@@ -152,11 +154,7 @@ class DefaultDescriptorDataValuesFillerTest {
         assertThat(configReference).isEqualTo(TypeObjectDescriptor.TypeObject.DEFAULT_CONFIG_REF);
     }
 
-    private final TypePrimitiveDescriptor stringTypeDescriptor =
-            new TypePrimitiveDescriptor(String.class);
 
-    private final TypePrimitiveDescriptor intTypeDescriptor =
-            new TypePrimitiveDescriptor(int.class);
 
     private final ComponentPropertyDescriptor namePropertyDescriptor =
             ComponentPropertyDescriptor.builder()
@@ -177,7 +175,7 @@ class DefaultDescriptorDataValuesFillerTest {
     private final ComponentPropertyDescriptor zipCodePropertyDescriptor =
             ComponentPropertyDescriptor.builder()
                     .propertyName("zipCode")
-                    .type(intTypeDescriptor)
+                    .type(integerTypeDescriptor)
                     .displayName("ZIP Code")
                     .defaultValue("23411")
                     .build();
