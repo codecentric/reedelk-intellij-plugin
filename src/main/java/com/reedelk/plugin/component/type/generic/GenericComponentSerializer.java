@@ -27,7 +27,7 @@ public class GenericComponentSerializer extends AbstractNodeSerializer {
         return componentAsJson;
     }
 
-    private void serialize(ComponentDataHolder componentData, JSONObject componentAsJson) {
+    public static void serialize(ComponentDataHolder componentData, JSONObject componentAsJson) {
         componentData.keys().forEach(propertyName -> {
             Object data = componentData.get(propertyName);
             if (data instanceof TypeObjectDescriptor.TypeObject) {
@@ -38,7 +38,7 @@ public class GenericComponentSerializer extends AbstractNodeSerializer {
         });
     }
 
-    private void serializeTypeObject(JSONObject parent, String propertyName, TypeObjectDescriptor.TypeObject data) {
+    private static void serializeTypeObject(JSONObject parent, String propertyName, TypeObjectDescriptor.TypeObject data) {
         JSONObject nestedObjectJson = JsonObjectFactory.newJSONObject();
         parent.put(propertyName, nestedObjectJson);
         serialize(data, nestedObjectJson);

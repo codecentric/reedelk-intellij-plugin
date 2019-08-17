@@ -3,7 +3,6 @@ package com.reedelk.plugin.editor.properties.renderer;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.awt.RelativePoint;
-import com.reedelk.plugin.commons.DefaultDescriptorDataValuesFiller;
 import com.reedelk.plugin.component.domain.ComponentDataHolder;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeDescriptor;
@@ -51,7 +50,7 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
     public JComponent render(Module module, ComponentPropertyDescriptor descriptor, PropertyAccessor accessor, PropertyPanelContext context) {
         TypeObjectDescriptor objectDescriptor = (TypeObjectDescriptor) descriptor.getPropertyType();
         return objectDescriptor.isShareable() ?
-                renderShareable(module, objectDescriptor, accessor) :
+                renderShareable(module, descriptor, accessor) :
                 renderInline(module, accessor, objectDescriptor);
     }
 
@@ -69,11 +68,8 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
     private JComponent renderInline(Module module, PropertyAccessor propertyAccessor, TypeObjectDescriptor objectDescriptor) {
         List<ComponentPropertyDescriptor> objectProperties = objectDescriptor.getObjectProperties();
 
-        // The accessor of type object returns a TypeObject map.
+        // The accessor of type object returns a TypeObject map, if it  is empty...
         ComponentDataHolder dataHolder = propertyAccessor.get();
-
-        // Fill Default Properties Values
-        DefaultDescriptorDataValuesFiller.fill(dataHolder, objectProperties);
 
         PropertiesPanelHolder propertiesPanel = new PropertiesPanelHolder(dataHolder, objectProperties, propertyAccessor.getSnapshot());
         objectProperties.forEach(nestedPropertyDescriptor -> {
@@ -81,7 +77,7 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
             final String displayName = nestedPropertyDescriptor.getDisplayName();
             final TypeDescriptor propertyType = nestedPropertyDescriptor.getPropertyType();
 
-            // We need a snapshot because changes needs to be written in the
+            // We need a snapshot because changes need to be written in the
             // flow itself since this is an inline object.
             PropertyAccessor nestedPropertyAccessor = PropertyAccessorFactory.get()
                     .typeDescriptor(nestedPropertyDescriptor.getPropertyType())
@@ -90,20 +86,18 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
                     .dataHolder(dataHolder)
                     .build();
 
-            TypeRendererFactory typeRendererFactory = TypeRendererFactory.get();
-            JComponent renderedComponent = typeRendererFactory.from(propertyType)
-                    .render(module, nestedPropertyDescriptor, nestedPropertyAccessor, propertiesPanel);
+            TypePropertyRenderer renderer = TypeRendererFactory.get().from(propertyType);
 
-            FormBuilder.get()
-                    .addLabel(displayName, propertiesPanel)
-                    .addLastField(renderedComponent, propertiesPanel);
+            JComponent renderedComponent = renderer.render(module, nestedPropertyDescriptor, nestedPropertyAccessor, propertiesPanel);
+
+            renderer.addToParent(propertiesPanel, renderedComponent, displayName);
         });
 
         return propertiesPanel;
     }
 
     @NotNull
-    private JComponent renderShareable(Module module, TypeObjectDescriptor typeDescriptor, PropertyAccessor propertyAccessor) {
+    private JComponent renderShareable(Module module, ComponentPropertyDescriptor descriptor, PropertyAccessor propertyAccessor) {
         // The Config Selector Combo
         ConfigSelector selector = new ConfigSelector();
 
@@ -113,18 +107,18 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
 
         // We create the accessor for the config reference
         PropertyAccessor configRefAccessor = PropertyAccessorFactory.get()
-                .typeDescriptor(typeDescriptor)
+                .typeDescriptor(descriptor.getPropertyType())
                 .propertyName(JsonParser.Component.configRef())
                 .snapshot(propertyAccessor.getSnapshot())
                 .dataHolder(dataHolder)
                 .build();
 
-        ConfigControlPanel configControlPanel = new ConfigControlPanel(module, typeDescriptor);
+        ConfigControlPanel configControlPanel = new ConfigControlPanel(module, (TypeObjectDescriptor) descriptor.getPropertyType());
         configControlPanel.setAddActionListener(new ActionAddConfiguration.AddCompleteListener() {
             @Override
             public void onAddedConfiguration(ConfigMetadata addedConfiguration) {
                 ConfigMetadata matchingMetadata =
-                        updateMetadataOnSelector(module, selector, typeDescriptor, addedConfiguration.getId());
+                        updateMetadataOnSelector(module, selector, descriptor, addedConfiguration.getId());
                 configControlPanel.onSelect(matchingMetadata);
                 configRefAccessor.set(matchingMetadata.getId());
             }
@@ -138,7 +132,7 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
         configControlPanel.setDeleteActionListener(new ActionDeleteConfiguration.DeleteCompleteListener() {
             @Override
             public void onDeletedConfiguration(ConfigMetadata deletedConfiguration) {
-                ConfigMetadata matchingMetadata = updateMetadataOnSelector(module, selector, typeDescriptor, deletedConfiguration.getId());
+                ConfigMetadata matchingMetadata = updateMetadataOnSelector(module, selector, descriptor, deletedConfiguration.getId());
                 configControlPanel.onSelect(matchingMetadata);
             }
 
@@ -153,7 +147,7 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
 
         String configReference = dataHolder.get(JsonParser.Component.configRef());
         ConfigMetadata matchingMetadata =
-                updateMetadataOnSelector(module, selector, typeDescriptor, configReference);
+                updateMetadataOnSelector(module, selector, descriptor, configReference);
         configControlPanel.onSelect(matchingMetadata);
 
         // We add the listener after, so that the first time we
@@ -178,9 +172,9 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
                 .show(RelativePoint.getCenterOf(configControlPanel), Position.above);
     }
 
-    private ConfigMetadata updateMetadataOnSelector(Module module, ConfigSelector selector, TypeObjectDescriptor typeObjectDescriptor, String targetReference) {
+    private ConfigMetadata updateMetadataOnSelector(Module module, ConfigSelector selector, ComponentPropertyDescriptor typeObjectDescriptor, String targetReference) {
         List<ConfigMetadata> configMetadata =
-                ConfigService.getInstance(module).listConfigsBy(typeObjectDescriptor.getTypeFullyQualifiedName());
+                ConfigService.getInstance(module).listConfigsBy(typeObjectDescriptor);
         configMetadata.add(UNSELECTED_CONFIG);
 
         ConfigMetadata matchingMetadata = findMatchingMetadata(configMetadata, targetReference);

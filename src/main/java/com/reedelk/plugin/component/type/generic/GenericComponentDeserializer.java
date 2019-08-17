@@ -27,6 +27,8 @@ public class GenericComponentDeserializer extends AbstractNodeDeserializer {
 
         ComponentData componentData = node.componentData();
 
+        // TODO: This is wrong. Should just deserialize all the  properties from the definition,
+        //  TODO:  if there is no match in the json, then nothing happens...
         jsonDefinition.keys().forEachRemaining(propertyName ->
                 componentData.getPropertyDescriptor(propertyName)
                         .ifPresent(descriptor -> deserialize(jsonDefinition, componentData, descriptor)));
@@ -36,7 +38,7 @@ public class GenericComponentDeserializer extends AbstractNodeDeserializer {
         return node;
     }
 
-    private void deserialize(JSONObject parent, ComponentDataHolder componentData, ComponentPropertyDescriptor descriptor) {
+    public static void deserialize(JSONObject parent, ComponentDataHolder componentData, ComponentPropertyDescriptor descriptor) {
         TypeDescriptor propertyType = descriptor.getPropertyType();
 
         if (propertyType instanceof TypeObjectDescriptor) {

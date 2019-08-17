@@ -12,6 +12,8 @@ import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.reedelk.plugin.editor.properties.renderer.TypePropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.TypeRendererFactory;
+import com.reedelk.plugin.editor.properties.widget.ContainerFactory;
+import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 import com.reedelk.plugin.editor.properties.widget.FormBuilder;
 import com.reedelk.plugin.editor.properties.widget.PropertiesPanelHolder;
 import com.reedelk.plugin.editor.properties.widget.input.StringInputField;
@@ -24,9 +26,9 @@ import java.util.List;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 
-class ConfigPropertiesPanel extends JBPanel {
+class ConfigPropertiesPanel extends DisposablePanel {
 
-    private static final Dimension MINIMUM_PANEL_SIZE = new Dimension(400, 0);
+    static Dimension PREFERRED_PANEL_SIZE = new Dimension(500, 550);
 
     ConfigPropertiesPanel(Module module, ConfigMetadata configMetadata, TypeObjectDescriptor objectDescriptor, boolean isNewConfig) {
 
@@ -56,15 +58,12 @@ class ConfigPropertiesPanel extends JBPanel {
             JComponent renderedComponent = renderer.render(module, propertyDescriptor, propertyAccessor, propertiesPanel);
 
             renderer.addToParent(propertiesPanel, renderedComponent, displayName);
-        });
 
-        JPanel propertiesPanelWrapper = new JBPanel<>(new BorderLayout());
-        propertiesPanelWrapper.add(propertiesPanel, NORTH);
-        propertiesPanelWrapper.add(Box.createVerticalGlue(), CENTER);
+        });
 
         setLayout(new BorderLayout());
         add(headerPanel, NORTH);
-        add(propertiesPanelWrapper, CENTER);
+        add(ContainerFactory.pushPanelToTop(propertiesPanel), CENTER);
     }
 
     class ConfigMetadataHeaderPanel extends JBPanel {
@@ -95,8 +94,7 @@ class ConfigPropertiesPanel extends JBPanel {
                     .addLastField(configTitleInputField, this);
 
             // Add Separator at the bottom
-            FormBuilder.get()
-                    .addLastField(new JSeparator(), this);
+            FormBuilder.get().addLastField(new JSeparator(), this);
         }
     }
 
@@ -104,10 +102,13 @@ class ConfigPropertiesPanel extends JBPanel {
 
         ConfigPropertiesPanelHolder(ConfigMetadata configMetadata, List<ComponentPropertyDescriptor> descriptors) {
             super(configMetadata, descriptors);
-            setMinimumSize(MINIMUM_PANEL_SIZE);
         }
 
-        // This one does not require a snapshot since it is not part of the flow data
+        /**
+         * We override the default Properties panel holder because the accessors of data
+         * displayed in this panel goes to the configuration file and not in the graph
+         * component's data (snapshot).
+         */
         protected PropertyAccessor getAccessor(String propertyName, TypeDescriptor propertyType, ComponentDataHolder dataHolder) {
             return PropertyAccessorFactory.get()
                     .typeDescriptor(propertyType)

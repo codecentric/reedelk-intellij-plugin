@@ -1,6 +1,5 @@
 package com.reedelk.plugin.editor.properties.widget;
 
-import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.component.domain.ComponentDataHolder;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeDescriptor;
@@ -22,29 +21,30 @@ public class PropertiesPanelHolder extends DisposablePanel implements PropertyPa
     private final Map<String, PropertyAccessor> propertyAccessors = new HashMap<>();
 
     private final List<ComponentPropertyDescriptor> descriptors;
-    private final ComponentDataHolder componentData;
+    private final ComponentDataHolder dataHolder;
     private final FlowSnapshot snapshot;
 
 
-    public PropertiesPanelHolder(ComponentData componentData, FlowSnapshot snapshot) {
-        this(componentData, Collections.emptyList(), snapshot);
+    public PropertiesPanelHolder(ComponentDataHolder dataHolder, FlowSnapshot snapshot) {
+        this(dataHolder, Collections.emptyList(), snapshot);
     }
 
     /**
      * Constructor used by a configuration panel Dialog. The configuration panel Dialog does not
      * immediately change the values on the Graph snapshot since it writes the values in a a config file.
      */
-    public PropertiesPanelHolder(ComponentDataHolder componentData, List<ComponentPropertyDescriptor> descriptors) {
-        this(componentData, descriptors, null);
+    public PropertiesPanelHolder(ComponentDataHolder dataHolder, List<ComponentPropertyDescriptor> descriptors) {
+        this(dataHolder, descriptors, null);
     }
 
-    public PropertiesPanelHolder(ComponentDataHolder componentData, List<ComponentPropertyDescriptor> descriptors, FlowSnapshot snapshot) {
+    public PropertiesPanelHolder(ComponentDataHolder dataHolder, List<ComponentPropertyDescriptor> descriptors, FlowSnapshot snapshot) {
         super(new GridBagLayout());
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
 
         this.snapshot = snapshot;
+        this.dataHolder = dataHolder;
         this.descriptors = descriptors;
-        this.componentData = componentData;
+
         initAccessors();
     }
 
@@ -78,7 +78,7 @@ public class PropertiesPanelHolder extends DisposablePanel implements PropertyPa
         descriptors.forEach(propertyDescriptor -> {
             String propertyName = propertyDescriptor.getPropertyName();
             TypeDescriptor propertyType = propertyDescriptor.getPropertyType();
-            PropertyAccessor propertyAccessor = getAccessor(propertyName, propertyType, componentData);
+            PropertyAccessor propertyAccessor = getAccessor(propertyName, propertyType, dataHolder);
             PropertyChangeNotifierDecorator propertyAccessorWrapper = new PropertyChangeNotifierDecorator(propertyAccessor);
             propertyAccessors.put(propertyName, propertyAccessorWrapper);
         });

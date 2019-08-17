@@ -4,6 +4,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
+import com.reedelk.plugin.editor.properties.widget.ContainerFactory;
 import com.reedelk.plugin.service.module.impl.ConfigMetadata;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,6 +40,7 @@ public class DialogAddConfiguration extends DialogWrapper {
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
-        return new ConfigPropertiesPanel(module, newConfigMetadata, objectDescriptor, true);
+        ConfigPropertiesPanel panel = new ConfigPropertiesPanel(module, newConfigMetadata, objectDescriptor, true);
+        return ContainerFactory.makeItScrollable(panel, ConfigPropertiesPanel.PREFERRED_PANEL_SIZE);
     }
 }

@@ -1,6 +1,7 @@
 package com.reedelk.plugin.service.module.impl;
 
 import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.Module;
@@ -9,11 +10,14 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThrowableRunnable;
 import com.reedelk.plugin.commons.ModuleUtils;
-import com.reedelk.plugin.configuration.serializer.ConfigSerializer;
+import com.reedelk.plugin.component.domain.ComponentDataHolder;
+import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
+import com.reedelk.plugin.component.scanner.ComponentIconAndImageProvider;
+import com.reedelk.plugin.configuration.ConfigDeserializer;
+import com.reedelk.plugin.configuration.ConfigSerializer;
 import com.reedelk.plugin.service.module.ConfigService;
 import com.reedelk.runtime.commons.FileExtension;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -22,9 +26,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.reedelk.runtime.commons.Preconditions.checkState;
-import static java.util.stream.Collectors.toList;
 
 public class ConfigServiceImpl implements ConfigService {
+
+    private static final Logger LOG = Logger.getInstance(ComponentIconAndImageProvider.class);
 
     private final Module module;
 
@@ -34,12 +39,15 @@ public class ConfigServiceImpl implements ConfigService {
 
     @Override
     @NotNull
-    public List<ConfigMetadata> listConfigsBy(@NotNull String fullyQualifiedName) {
-        return listConfigurations()
-                .stream()
-                .filter(configMetadata ->
-                        configMetadata.getFullyQualifiedName().equals(fullyQualifiedName))
-                .collect(toList());
+    public List<ConfigMetadata> listConfigsBy(@NotNull ComponentPropertyDescriptor configPropertyDescriptor) {
+        List<ConfigMetadata> configs = new ArrayList<>();
+        ModuleRootManager.getInstance(module).getFileIndex().iterateContent(fileOrDir -> {
+            if (FileExtension.FLOW_CONFIG.value().equals(fileOrDir.getExtension())) {
+                getConfigurationFrom(fileOrDir, configPropertyDescriptor).ifPresent(configs::add);
+            }
+            return true;
+        });
+        return configs;
     }
 
     @Override
@@ -87,30 +95,24 @@ public class ConfigServiceImpl implements ConfigService {
         }
     }
 
-    private List<ConfigMetadata> listConfigurations() {
-        List<ConfigMetadata> configs = new ArrayList<>();
-        ModuleRootManager.getInstance(module).getFileIndex().iterateContent(fileOrDir -> {
-            if (FileExtension.FLOW_CONFIG.value().equals(fileOrDir.getExtension())) {
-                getMetadataFrom(fileOrDir).ifPresent(configs::add);
-            }
-            return true;
-        });
-        return configs;
-    }
-
-    private Optional<? extends ConfigMetadata> getMetadataFrom(VirtualFile virtualFile) {
+    private Optional<? extends ConfigMetadata> getConfigurationFrom(VirtualFile virtualFile, ComponentPropertyDescriptor componentPropertyDescriptor) {
         Optional<Document> maybeDocument = getDocumentFromFile(virtualFile);
         if (maybeDocument.isPresent()) {
             String json = maybeDocument.get().getText();
-            return getConfigMetadata(virtualFile, json);
+            return getConfigMetadata(virtualFile, json, componentPropertyDescriptor);
         }
         return Optional.empty();
     }
 
-    private Optional<ExistingConfigMetadata> getConfigMetadata(VirtualFile virtualFile, String json) {
-        JSONObject configDefinition = new JSONObject(json);
-        ExistingConfigMetadata existingConfigMetadata = new ExistingConfigMetadata(virtualFile, configDefinition);
-        return Optional.of(existingConfigMetadata);
+    private Optional<ExistingConfigMetadata> getConfigMetadata(VirtualFile virtualFile, String json, ComponentPropertyDescriptor componentPropertyDescriptor) {
+        try {
+            ComponentDataHolder dataHolder = ConfigDeserializer.deserialize(json, componentPropertyDescriptor);
+            ExistingConfigMetadata existingConfigMetadata = new ExistingConfigMetadata(virtualFile, dataHolder);
+            return Optional.of(existingConfigMetadata);
+        } catch (Exception exception) {
+            LOG.warn(String.format("Could not deserialize config from config file %s", virtualFile.getName()), exception);
+            return Optional.empty();
+        }
     }
 
     private Optional<Document> getDocumentFromFile(VirtualFile virtualFile) {

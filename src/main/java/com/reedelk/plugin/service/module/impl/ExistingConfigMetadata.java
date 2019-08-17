@@ -1,15 +1,14 @@
 package com.reedelk.plugin.service.module.impl;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import com.reedelk.plugin.component.domain.JsonObjectComponentHolderDecorator;
-import org.json.JSONObject;
+import com.reedelk.plugin.component.domain.ComponentDataHolder;
 
 public class ExistingConfigMetadata extends ConfigMetadata {
 
     private VirtualFile file;
 
-    public ExistingConfigMetadata(VirtualFile file, JSONObject configDefinition) {
-        super(new JsonObjectComponentHolderDecorator(configDefinition));
+    public ExistingConfigMetadata(VirtualFile file, ComponentDataHolder dataHolder) {
+        super(dataHolder);
         this.file = file;
     }
 

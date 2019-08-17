@@ -1,6 +1,7 @@
 package com.reedelk.plugin.editor.properties.widget;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.editor.properties.renderer.NodePropertiesRendererFactory;
@@ -19,10 +20,10 @@ public class ContainerFactory {
 
     public static DisposablePanel createObjectTypeContainer(String title, JComponent renderedComponent) {
         DisposablePanel container = new DisposablePanel(new BorderLayout());
-        Border outsideMargin = JBUI.Borders.emptyTop(15);
+        Border outsideMargin = JBUI.Borders.emptyTop(3);
         Border border = BorderFactory.createTitledBorder(title);
         Border outside = new CompoundBorder(outsideMargin, border);
-        Border margin = JBUI.Borders.empty(5);
+        Border margin = JBUI.Borders.empty(3);
         container.setBorder(new CompoundBorder(outside, margin));
         container.add(renderedComponent, CENTER);
         container.add(Box.createHorizontalGlue(), EAST);
@@ -41,12 +42,19 @@ public class ContainerFactory {
         return wrapInsideScrollPane(propertiesBoxContainer);
     }
 
-    private static DisposablePanel pushPanelToTop(DisposablePanel propertiesPanel) {
+    public static DisposablePanel pushPanelToTop(DisposablePanel propertiesPanel) {
         DisposablePanel propertiesBoxContainer = new DisposablePanel();
         propertiesBoxContainer.setLayout(new BorderLayout());
         propertiesBoxContainer.add(propertiesPanel, NORTH);
         propertiesBoxContainer.add(Box.createGlue(), CENTER);
         return propertiesBoxContainer;
+    }
+
+    public static JComponent makeItScrollable(DisposablePanel panel, Dimension preferredPanelSize) {
+        JBScrollPane scrollPane = new JBScrollPane(panel);
+        scrollPane.setBorder(JBUI.Borders.empty());
+        scrollPane.setPreferredSize(preferredPanelSize);
+        return scrollPane;
     }
 
     private static DisposableScrollPane wrapInsideScrollPane(DisposablePanel propertiesPanel) {
