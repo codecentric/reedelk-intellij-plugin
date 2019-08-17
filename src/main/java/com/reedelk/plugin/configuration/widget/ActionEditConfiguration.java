@@ -28,7 +28,6 @@ public class ActionEditConfiguration extends ActionableCommandButton {
         if (!selectedMetadata.isEditable()) return;
 
         DialogEditConfiguration dialogEditConfiguration = new DialogEditConfiguration(module, typeDescriptor, selectedMetadata);
-
         if (dialogEditConfiguration.showAndGet()) {
             try {
                 ConfigService.getInstance(module).saveConfig(selectedMetadata);
