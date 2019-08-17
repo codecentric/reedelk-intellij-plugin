@@ -16,7 +16,8 @@ public class ActionEditConfiguration extends ActionableCommandButton {
 
     private EditCompleteListener listener;
 
-    ActionEditConfiguration(@NotNull Module module, @NotNull TypeObjectDescriptor typeDescriptor) {
+    ActionEditConfiguration(@NotNull Module module,
+                            @NotNull TypeObjectDescriptor typeDescriptor) {
         super("Edit", Edit, EditDisabled);
         this.module = module;
         this.typeDescriptor = typeDescriptor;

@@ -108,7 +108,7 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
         ConfigSelector selector = new ConfigSelector();
 
         // The accessor of type object returns a TypeObject map
-        // Since the object is shareable, it will contain config a config reference.
+        // Since the object is shareable, it will contain a config reference.
         ComponentDataHolder dataHolder = propertyAccessor.get();
 
         // We create the accessor for the config reference

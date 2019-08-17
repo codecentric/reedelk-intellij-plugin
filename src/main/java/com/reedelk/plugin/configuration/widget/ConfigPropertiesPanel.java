@@ -53,8 +53,7 @@ class ConfigPropertiesPanel extends JBPanel {
 
             TypePropertyRenderer renderer = TypeRendererFactory.get().from(propertyType);
 
-            JComponent renderedComponent =
-                    renderer.render(module, propertyDescriptor, propertyAccessor, propertiesPanel);
+            JComponent renderedComponent = renderer.render(module, propertyDescriptor, propertyAccessor, propertiesPanel);
 
             renderer.addToParent(propertiesPanel, renderedComponent, displayName);
         });

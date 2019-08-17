@@ -16,7 +16,9 @@ public class DialogAddConfiguration extends DialogWrapper {
     private final ConfigMetadata newConfigMetadata;
     private final Module module;
 
-    DialogAddConfiguration(@NotNull Module module, TypeObjectDescriptor objectDescriptor, ConfigMetadata newConfig) {
+    DialogAddConfiguration(@NotNull Module module,
+                           @NotNull TypeObjectDescriptor objectDescriptor,
+                           @NotNull ConfigMetadata newConfig) {
         super(module.getProject(), false);
         this.objectDescriptor = objectDescriptor;
         this.newConfigMetadata = newConfig;
