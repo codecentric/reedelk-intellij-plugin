@@ -13,6 +13,7 @@ public class SamplePropertyDescriptors {
 
     public static final TypeDescriptor stringTypeDescriptor = new TypePrimitiveDescriptor(String.class);
     public static final TypeDescriptor integerTypeDescriptor = new TypePrimitiveDescriptor(Integer.class);
+    public static final TypeDescriptor booleanTypeDescriptor = new TypePrimitiveDescriptor(Boolean.class);
 
     public static final ComponentPropertyDescriptor property1 =
             ComponentPropertyDescriptor.builder()

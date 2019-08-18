@@ -119,10 +119,18 @@ public class Json {
                 return "configuration/configuration_sample.json";
             }
         },
+
         NestedConfig() {
             @Override
             public String path() {
                 return "configuration/configuration_nested.json";
+            }
+        },
+
+        NestedConfigMissingNestedObjectProperty() {
+            @Override
+            public String path() {
+                return "configuration/configuration_nested_missing_object_property.json";
             }
         }
     }

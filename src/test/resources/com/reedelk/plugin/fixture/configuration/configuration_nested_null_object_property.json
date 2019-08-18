@@ -1,0 +1,9 @@
+{
+  "implementor": "com.reedelk.plugin.fixture.ComponentNode1",
+  "id": "38add40d-6a29-4e9e-9620-2bf165276204",
+  "title": "Sample title",
+  "property1": "my property 1 value",
+  "property2": 473,
+  "property3": true,
+  "property4": null
+}

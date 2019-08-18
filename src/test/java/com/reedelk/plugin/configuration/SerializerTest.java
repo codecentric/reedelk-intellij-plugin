@@ -10,7 +10,7 @@ import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObjec
 import static com.reedelk.plugin.fixture.Json.Configuration;
 import static com.reedelk.runtime.commons.JsonParser.Config;
 
-class ConfigSerializerTest {
+class SerializerTest {
 
     @Test
     void shouldSerializeConfigCorrectly() {
@@ -24,7 +24,7 @@ class ConfigSerializerTest {
         ConfigMetadata metadata = new ConfigMetadata(type1);
 
         // When
-        String actualJson = ConfigSerializer.serialize(metadata);
+        String actualJson = Serializer.serialize(metadata);
 
         // Then
         String expectedJson = Configuration.Sample.json();
@@ -48,10 +48,13 @@ class ConfigSerializerTest {
         ConfigMetadata metadata = new ConfigMetadata(type1);
 
         // When
-        String actualJson = ConfigSerializer.serialize(metadata);
+        String actualJson = Serializer.serialize(metadata);
 
         // Then
         String expectedJson = Configuration.NestedConfig.json();
         JSONAssert.assertEquals(expectedJson, actualJson, true);
     }
+
+
+    // TODO: Test that if  the ObjectType is empty, nothing is written...(e.g does not contain any property)
 }

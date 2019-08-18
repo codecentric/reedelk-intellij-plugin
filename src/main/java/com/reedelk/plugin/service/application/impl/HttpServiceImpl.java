@@ -1,7 +1,7 @@
-package com.reedelk.plugin.service.application.http.impl;
+package com.reedelk.plugin.service.application.impl;
 
-import com.reedelk.plugin.service.application.http.HttpResponse;
-import com.reedelk.plugin.service.application.http.HttpService;
+import com.reedelk.plugin.service.application.HttpResponse;
+import com.reedelk.plugin.service.application.HttpService;
 import okhttp3.*;
 
 import java.io.IOException;
@@ -51,5 +51,4 @@ public class HttpServiceImpl implements HttpService {
             return httpResponse;
         }
     }
-
 }

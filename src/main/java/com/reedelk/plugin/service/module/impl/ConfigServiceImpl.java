@@ -1,7 +1,6 @@
 package com.reedelk.plugin.service.module.impl;
 
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.Module;
@@ -10,11 +9,9 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThrowableRunnable;
 import com.reedelk.plugin.commons.ModuleUtils;
-import com.reedelk.plugin.component.domain.ComponentDataHolder;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
-import com.reedelk.plugin.component.scanner.ComponentIconAndImageProvider;
-import com.reedelk.plugin.configuration.ConfigDeserializer;
-import com.reedelk.plugin.configuration.ConfigSerializer;
+import com.reedelk.plugin.configuration.Deserializer;
+import com.reedelk.plugin.configuration.Serializer;
 import com.reedelk.plugin.service.module.ConfigService;
 import com.reedelk.runtime.commons.FileExtension;
 import org.jetbrains.annotations.NotNull;
@@ -28,8 +25,6 @@ import java.util.Optional;
 import static com.reedelk.runtime.commons.Preconditions.checkState;
 
 public class ConfigServiceImpl implements ConfigService {
-
-    private static final Logger LOG = Logger.getInstance(ComponentIconAndImageProvider.class);
 
     private final Module module;
 
@@ -59,14 +54,14 @@ public class ConfigServiceImpl implements ConfigService {
         checkState(document != null,
                 String.format("Expected document for file %s to be found", updatedConfig.getConfigFile()));
 
-        String serializedConfig = ConfigSerializer.serialize(updatedConfig);
+        String serializedConfig = Serializer.serialize(updatedConfig);
         executeWriteCommand(() -> document.setText(serializedConfig));
     }
 
     @Override
     public void addConfig(@NotNull ConfigMetadata newConfig) throws IOException {
         // Serialize the config
-        String serializedConfig = ConfigSerializer.serialize(newConfig);
+        String serializedConfig = Serializer.serialize(newConfig);
 
         Optional<String> maybeConfigDirectory = getConfigDirectory();
         if (maybeConfigDirectory.isPresent()) {
@@ -99,20 +94,10 @@ public class ConfigServiceImpl implements ConfigService {
         Optional<Document> maybeDocument = getDocumentFromFile(virtualFile);
         if (maybeDocument.isPresent()) {
             String json = maybeDocument.get().getText();
-            return getConfigMetadata(virtualFile, json, componentPropertyDescriptor);
+            return Deserializer.deserialize(json, componentPropertyDescriptor)
+                    .map(dataHolder -> new ExistingConfigMetadata(virtualFile, dataHolder));
         }
         return Optional.empty();
-    }
-
-    private Optional<ExistingConfigMetadata> getConfigMetadata(VirtualFile virtualFile, String json, ComponentPropertyDescriptor componentPropertyDescriptor) {
-        try {
-            ComponentDataHolder dataHolder = ConfigDeserializer.deserialize(json, componentPropertyDescriptor);
-            ExistingConfigMetadata existingConfigMetadata = new ExistingConfigMetadata(virtualFile, dataHolder);
-            return Optional.of(existingConfigMetadata);
-        } catch (Exception exception) {
-            LOG.warn(String.format("Could not deserialize config from config file %s", virtualFile.getName()), exception);
-            return Optional.empty();
-        }
     }
 
     private Optional<Document> getDocumentFromFile(VirtualFile virtualFile) {

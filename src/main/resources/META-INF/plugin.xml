@@ -42,8 +42,8 @@
                        order="first"/>
 
         <!-- Services -->
-        <applicationService serviceInterface="com.reedelk.plugin.service.application.http.HttpService"
-                            serviceImplementation="com.reedelk.plugin.service.application.http.impl.HttpServiceImpl"/>
+        <applicationService serviceInterface="com.reedelk.plugin.service.application.HttpService"
+                            serviceImplementation="com.reedelk.plugin.service.application.impl.HttpServiceImpl"/>
 
         <projectService serviceInterface="com.reedelk.plugin.service.project.ToolWindowService"
                         serviceImplementation="com.reedelk.plugin.service.project.impl.ToolWindowServiceImpl"/>
