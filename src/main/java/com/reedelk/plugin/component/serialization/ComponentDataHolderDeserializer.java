@@ -41,7 +41,8 @@ public class ComponentDataHolderDeserializer {
             JSONObject nestedJsonObject = componentJsonObject.getJSONObject(descriptor.getPropertyName());
 
             if (YES.equals(propertyType.getShareable())) {
-                // The object must contain a reference
+                // The config is shareable, therefore we just set the reference value
+                // pointing to the shared config.
                 if (nestedJsonObject.has(JsonParser.Component.configRef())) {
                     String configRef = JsonParser.Component.configRef(nestedJsonObject);
                     nestedObject.set(JsonParser.Component.configRef(), configRef);
@@ -73,7 +74,9 @@ public class ComponentDataHolderDeserializer {
             TypeObjectDescriptor.TypeObject typeObject = propertyObjectType.newInstance();
             dataHolder.set(descriptor.getPropertyName(), typeObject);
             // From now on, the subtree contains null objects.
-            propertyObjectType.getObjectProperties().forEach(d -> addEmptyObjectsInstancesForTypeObject(typeObject, d));
+            propertyObjectType.getObjectProperties()
+                    .forEach(propertyDescriptor ->
+                            addEmptyObjectsInstancesForTypeObject(typeObject, propertyDescriptor));
         }
     }
 }
