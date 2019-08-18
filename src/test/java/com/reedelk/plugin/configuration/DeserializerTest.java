@@ -8,6 +8,7 @@ import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.fixture.ComponentNode1;
 import com.reedelk.plugin.fixture.ComponentNode2;
 import com.reedelk.plugin.fixture.ComponentNode3;
+import com.reedelk.plugin.fixture.ComponentNode4;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -142,7 +143,7 @@ class DeserializerTest {
                         asList(host, port, keepAlive, securityConfigPropertyDescriptor),
                         Shareable.NO);
 
-        ComponentPropertyDescriptor componentNode1Property =
+        ComponentPropertyDescriptor httpConfigProperty =
                 ComponentPropertyDescriptor.builder()
                         .displayName("HTTP Configuration")
                         .propertyName("httpConfig")
@@ -152,7 +153,7 @@ class DeserializerTest {
         String json = NestedConfigNullObjectProperty.json();
 
         // When
-        Optional<ComponentDataHolder> deserialized = Deserializer.deserialize(json, componentNode1Property);
+        Optional<ComponentDataHolder> deserialized = Deserializer.deserialize(json, httpConfigProperty);
 
         // Then
         assertThat(deserialized).isPresent();
@@ -166,6 +167,54 @@ class DeserializerTest {
         TypeObjectDescriptor.TypeObject nestedObject = dataHolder.get("securityConfig");
         PluginAssertion.assertThat(nestedObject)
                 .containsExactly("implementor", "keyStoreConfig");
+    }
+
+    @Test
+    void shouldReturnEmptyWhenJsonContainsErrors() {
+        // Given
+        TypeObjectDescriptor httpConfigType =
+                new TypeObjectDescriptor(ComponentNode1.class.getName(),
+                        asList(host, port, keepAlive, securityConfigPropertyDescriptor),
+                        Shareable.NO);
+
+        ComponentPropertyDescriptor httpConfigProperty =
+                ComponentPropertyDescriptor.builder()
+                        .displayName("HTTP Configuration")
+                        .propertyName("httpConfig")
+                        .type(httpConfigType)
+                        .build();
+
+        String notValidJson = "myInvalidJson";
+
+        // When
+        Optional<ComponentDataHolder> deserialized = Deserializer.deserialize(notValidJson, httpConfigProperty);
+
+        // Then
+        assertThat(deserialized).isEmpty();
+    }
+
+    @Test
+    void shouldReturnEmptyWhenJsonImplementorIsDifferentFromConfigPropertyFullyQualifiedName() {
+        // Given
+        TypeObjectDescriptor activeMqConfigType = new TypeObjectDescriptor(
+                ComponentNode4.class.getName(), // we provide an object descriptor with a different qualified name
+                asList(host, port, keepAlive),
+                Shareable.NO);
+
+        ComponentPropertyDescriptor actieMqConfigPropertyDescriptor =
+                ComponentPropertyDescriptor.builder()
+                        .displayName("Active MQ config")
+                        .propertyName("activeMQConfig")
+                        .type(activeMqConfigType)
+                        .build();
+
+        String json = Sample.json();
+
+        // When
+        Optional<ComponentDataHolder> deserialized = Deserializer.deserialize(json, actieMqConfigPropertyDescriptor);
+
+        // Then
+        assertThat(deserialized).isEmpty();
     }
 
     private final ComponentPropertyDescriptor host =
