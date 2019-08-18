@@ -2,6 +2,7 @@ package com.reedelk.plugin.configuration;
 
 import com.reedelk.plugin.fixture.ComponentNode1;
 import com.reedelk.plugin.fixture.ComponentNode2;
+import com.reedelk.plugin.fixture.ComponentNode3;
 import com.reedelk.plugin.service.module.impl.ConfigMetadata;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -16,13 +17,13 @@ class SerializerTest {
     @Test
     void shouldSerializeConfigCorrectly() {
         // Given
-        TypeObject type1 = new TypeObject(ComponentNode1.class.getName());
-        type1.set(Config.id(), "38add40d-6a29-4e9e-9620-2bf165276204");
-        type1.set(Config.title(), "Sample title");
-        type1.set("property1", "my property 1 value");
-        type1.set("property2", 473);
-        type1.set("property3", true);
-        ConfigMetadata metadata = new ConfigMetadata(type1);
+        TypeObject httpConfigType = new TypeObject(ComponentNode1.class.getName());
+        httpConfigType.set(Config.id(), "38add40d-6a29-4e9e-9620-2bf165276204");
+        httpConfigType.set(Config.title(), "HTTP Configuration");
+        httpConfigType.set("host", "192.168.1.32");
+        httpConfigType.set("port", 9190);
+        httpConfigType.set("keepAlive", false);
+        ConfigMetadata metadata = new ConfigMetadata(httpConfigType);
 
         // When
         String actualJson = Serializer.serialize(metadata);
@@ -35,18 +36,22 @@ class SerializerTest {
     @Test
     void shouldSerializeConfigWithNestedConfigObjectCorrectly() {
         // Given
-        TypeObject type2 = new TypeObject(ComponentNode2.class.getName());
-        type2.set("property5", "my property 5 value");
-        type2.set("property6", true);
+        TypeObject keyStoreConfig = new TypeObject(ComponentNode3.class.getName());
+        keyStoreConfig.set("algorithm", "SHA-1");
 
-        TypeObject type1 = new TypeObject(ComponentNode1.class.getName());
-        type1.set(Config.id(), "38add40d-6a29-4e9e-9620-2bf165276204");
-        type1.set(Config.title(), "Sample title");
-        type1.set("property1", "my property 1 value");
-        type1.set("property2", 473);
-        type1.set("property3", true);
-        type1.set("property4", type2);
-        ConfigMetadata metadata = new ConfigMetadata(type1);
+        TypeObject securityConfig = new TypeObject(ComponentNode2.class.getName());
+        securityConfig.set("userName", "myUserName");
+        securityConfig.set("password", "myPassword");
+        securityConfig.set("keyStoreConfig", keyStoreConfig);
+
+        TypeObject httpConfigType = new TypeObject(ComponentNode1.class.getName());
+        httpConfigType.set(Config.id(), "38add40d-6a29-4e9e-9620-2bf165276204");
+        httpConfigType.set(Config.title(), "HTTP Configuration");
+        httpConfigType.set("host", "localhost");
+        httpConfigType.set("port", 8182);
+        httpConfigType.set("keepAlive", true);
+        httpConfigType.set("securityConfig", securityConfig);
+        ConfigMetadata metadata = new ConfigMetadata(httpConfigType);
 
         // When
         String actualJson = Serializer.serialize(metadata);
