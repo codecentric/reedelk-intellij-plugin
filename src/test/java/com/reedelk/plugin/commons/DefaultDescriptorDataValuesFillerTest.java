@@ -2,6 +2,7 @@ package com.reedelk.plugin.commons;
 
 import com.reedelk.plugin.component.domain.ComponentDataHolder;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
+import com.reedelk.plugin.component.domain.Shareable;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.service.module.impl.ConfigMetadata;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,7 +66,7 @@ class DefaultDescriptorDataValuesFillerTest {
         String objectFullyQualifiedName = "com.esb.test.Component";
 
         TypeObjectDescriptor typeObjectDescriptor =
-                new TypeObjectDescriptor(objectFullyQualifiedName, false, asList(namePropertyDescriptor, zipCodePropertyDescriptor));
+                new TypeObjectDescriptor(objectFullyQualifiedName, asList(namePropertyDescriptor, zipCodePropertyDescriptor), Shareable.NO);
 
         ComponentPropertyDescriptor objectPropertyDescriptor =
                 ComponentPropertyDescriptor.builder()
@@ -95,7 +96,7 @@ class DefaultDescriptorDataValuesFillerTest {
         String object2FullyQualifiedName = "com.esb.test.Component2";
 
         TypeObjectDescriptor typeObject2 =
-                new TypeObjectDescriptor(object2FullyQualifiedName, false, asList(surnamePropertyDescriptor, zipCodePropertyDescriptor));
+                new TypeObjectDescriptor(object2FullyQualifiedName, asList(surnamePropertyDescriptor, zipCodePropertyDescriptor), Shareable.NO);
         ComponentPropertyDescriptor object2PropertyDescriptor =
                 ComponentPropertyDescriptor.builder()
                         .propertyName("configuration2")
@@ -104,7 +105,7 @@ class DefaultDescriptorDataValuesFillerTest {
                         .build();
 
         TypeObjectDescriptor typeObject1 =
-                new TypeObjectDescriptor(object1FullyQualifiedName, false, asList(namePropertyDescriptor, object2PropertyDescriptor));
+                new TypeObjectDescriptor(object1FullyQualifiedName, asList(namePropertyDescriptor, object2PropertyDescriptor), Shareable.NO);
         ComponentPropertyDescriptor object1PropertyDescriptor =
                 ComponentPropertyDescriptor.builder()
                         .propertyName("configuration1")
@@ -132,7 +133,7 @@ class DefaultDescriptorDataValuesFillerTest {
         String objectFullyQualifiedName = "com.esb.test.Component";
 
         TypeObjectDescriptor typeObjectDescriptor =
-                new TypeObjectDescriptor(objectFullyQualifiedName, true, asList(namePropertyDescriptor, zipCodePropertyDescriptor));
+                new TypeObjectDescriptor(objectFullyQualifiedName, asList(namePropertyDescriptor, zipCodePropertyDescriptor), Shareable.YES);
 
         ComponentPropertyDescriptor objectPropertyDescriptor =
                 ComponentPropertyDescriptor.builder()

@@ -30,6 +30,7 @@ import java.util.List;
 
 import static com.intellij.openapi.ui.MessageType.WARNING;
 import static com.intellij.openapi.ui.popup.Balloon.Position;
+import static com.reedelk.plugin.component.domain.Shareable.YES;
 import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
 import static com.reedelk.runtime.commons.JsonParser.Config;
 import static java.awt.BorderLayout.CENTER;
@@ -49,7 +50,7 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
     @Override
     public JComponent render(Module module, ComponentPropertyDescriptor descriptor, PropertyAccessor accessor, PropertyPanelContext context) {
         TypeObjectDescriptor objectDescriptor = (TypeObjectDescriptor) descriptor.getPropertyType();
-        return objectDescriptor.isShareable() ?
+        return YES.equals(objectDescriptor.getShareable()) ?
                 renderShareable(module, descriptor, accessor) :
                 renderInline(module, accessor, objectDescriptor);
     }

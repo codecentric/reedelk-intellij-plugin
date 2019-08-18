@@ -127,10 +127,17 @@ public class Json {
             }
         },
 
-        NestedConfigMissingNestedObjectProperty() {
+        NestedConfigMissingObjectProperty() {
             @Override
             public String path() {
                 return "configuration/configuration_nested_missing_object_property.json";
+            }
+        },
+
+        NestedConfigNullObjectProperty() {
+            @Override
+            public String path() {
+                return "configuration/configuration_nested_null_object_property.json";
             }
         }
     }

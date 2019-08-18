@@ -7,7 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
-import static com.reedelk.plugin.fixture.Json.Configuration;
+import static com.reedelk.plugin.fixture.Json.Configuration.NestedConfig;
+import static com.reedelk.plugin.fixture.Json.Configuration.Sample;
 import static com.reedelk.runtime.commons.JsonParser.Config;
 
 class SerializerTest {
@@ -27,7 +28,7 @@ class SerializerTest {
         String actualJson = Serializer.serialize(metadata);
 
         // Then
-        String expectedJson = Configuration.Sample.json();
+        String expectedJson = Sample.json();
         JSONAssert.assertEquals(expectedJson, actualJson, true);
     }
 
@@ -51,7 +52,7 @@ class SerializerTest {
         String actualJson = Serializer.serialize(metadata);
 
         // Then
-        String expectedJson = Configuration.NestedConfig.json();
+        String expectedJson = NestedConfig.json();
         JSONAssert.assertEquals(expectedJson, actualJson, true);
     }
 

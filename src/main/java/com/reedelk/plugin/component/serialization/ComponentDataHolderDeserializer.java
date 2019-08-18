@@ -9,22 +9,22 @@ import com.reedelk.runtime.commons.JsonParser;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
+import static com.reedelk.plugin.component.domain.Shareable.YES;
+
 public class ComponentDataHolderDeserializer {
 
-    public static void deserialize(JSONObject componentJsonObject, ComponentDataHolder componentData, ComponentPropertyDescriptor descriptor) {
-        TypeDescriptor propertyType = descriptor.getPropertyType();
+    public static void deserialize(@NotNull JSONObject componentJsonObject,
+                                   @NotNull ComponentDataHolder componentData,
+                                   @NotNull ComponentPropertyDescriptor propertyDescriptor) {
+        TypeDescriptor propertyType = propertyDescriptor.getPropertyType();
 
-        // TODO: This is wrong. Should just deserialize all the  properties from the definition,
-        //  TODO:  if there is no match in the json, then nothing happens...
-        // Also if the property is a typed object, it should add the object empty  in the container
         if (propertyType instanceof TypeObjectDescriptor) {
-            deserializeTypeObject(componentJsonObject, componentData, descriptor, (TypeObjectDescriptor) propertyType);
-
+            deserializeTypeObject(componentJsonObject, componentData, propertyDescriptor, (TypeObjectDescriptor) propertyType);
         } else {
             Object propertyValue = ValueConverterFactory
                     .forType(propertyType)
-                    .from(descriptor.getPropertyName(), componentJsonObject);
-            componentData.set(descriptor.getPropertyName(), propertyValue);
+                    .from(propertyDescriptor.getPropertyName(), componentJsonObject);
+            componentData.set(propertyDescriptor.getPropertyName(), propertyValue);
         }
     }
 
@@ -33,30 +33,47 @@ public class ComponentDataHolderDeserializer {
                                               @NotNull ComponentPropertyDescriptor descriptor,
                                               @NotNull TypeObjectDescriptor propertyType) {
 
-
-        boolean shareable = propertyType.isShareable();
-
-        JSONObject nestedJsonObject = componentJsonObject.getJSONObject(descriptor.getPropertyName());
-
         TypeObjectDescriptor.TypeObject nestedObject = propertyType.newInstance();
 
-        if (shareable) {
-            // The object must contain a reference
-            if (nestedJsonObject.has(JsonParser.Component.configRef())) {
-                String configRef = JsonParser.Component.configRef(nestedJsonObject);
-                nestedObject.set(JsonParser.Component.configRef(), configRef);
-                componentData.set(descriptor.getPropertyName(), nestedObject);
+        if (componentJsonObject.has(descriptor.getPropertyName()) &&
+                !componentJsonObject.isNull(descriptor.getPropertyName())) {
+
+            JSONObject nestedJsonObject = componentJsonObject.getJSONObject(descriptor.getPropertyName());
+
+            if (YES.equals(propertyType.getShareable())) {
+                // The object must contain a reference
+                if (nestedJsonObject.has(JsonParser.Component.configRef())) {
+                    String configRef = JsonParser.Component.configRef(nestedJsonObject);
+                    nestedObject.set(JsonParser.Component.configRef(), configRef);
+                    componentData.set(descriptor.getPropertyName(), nestedObject);
+                } else {
+                    throw new IllegalStateException("Expected config ref for @Shareable configuration");
+                }
+
             } else {
-                throw new IllegalStateException("Expected config ref for @Shareable configuration");
+                // The config is not shareable, hence we deserialize the object right away.
+                propertyType.getObjectProperties()
+                        .forEach(typeDescriptor ->
+                                deserialize(nestedJsonObject, nestedObject, typeDescriptor));
+                componentData.set(descriptor.getPropertyName(), nestedObject);
             }
 
         } else {
-            // The config is not shareable, hence we deserialize the object right away.
-            propertyType.getObjectProperties()
-                    .forEach(typeDescriptor ->
-                            deserialize(nestedJsonObject, nestedObject, typeDescriptor));
-            componentData.set(descriptor.getPropertyName(), nestedObject);
+            // If the property is not present in the JSON we still fill up
+            // Instances of type object for object properties recursively.
+            // This is needed, to enable the UI to fill up the values in the
+            // Type Object properties when the user edits a value.
+            addEmptyObjectsInstancesForTypeObject(componentData, descriptor);
         }
     }
 
+    private static void addEmptyObjectsInstancesForTypeObject(ComponentDataHolder dataHolder, ComponentPropertyDescriptor descriptor) {
+        if (descriptor.getPropertyType() instanceof TypeObjectDescriptor) {
+            TypeObjectDescriptor p = (TypeObjectDescriptor) descriptor.getPropertyType();
+            TypeObjectDescriptor.TypeObject typeObject = p.newInstance();
+            dataHolder.set(descriptor.getPropertyName(), typeObject);
+            // From now on, the subtree contains null objects.
+            p.getObjectProperties().forEach(d -> addEmptyObjectsInstancesForTypeObject(typeObject, d));
+        }
+    }
 }

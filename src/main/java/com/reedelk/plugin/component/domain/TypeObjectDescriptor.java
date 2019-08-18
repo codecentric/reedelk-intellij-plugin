@@ -1,20 +1,25 @@
 package com.reedelk.plugin.component.domain;
 
 import com.reedelk.runtime.commons.JsonParser;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.reedelk.plugin.component.domain.Shareable.YES;
+
 public class TypeObjectDescriptor implements TypeDescriptor {
 
     private final String typeFullyQualifiedName;
 
-    private boolean shareable;
+    private Shareable shareable;
     private List<ComponentPropertyDescriptor> objectProperties = new ArrayList<>();
 
-    public TypeObjectDescriptor(final String typeFullyQualifiedName, final boolean shareable, final List<ComponentPropertyDescriptor> objectProperties) {
+    public TypeObjectDescriptor(@NotNull final String typeFullyQualifiedName,
+                                @NotNull final List<ComponentPropertyDescriptor> objectProperties,
+                                @NotNull final Shareable shareable) {
         this.shareable = shareable;
         this.typeFullyQualifiedName = typeFullyQualifiedName;
         this.objectProperties.addAll(objectProperties);
@@ -30,8 +35,7 @@ public class TypeObjectDescriptor implements TypeDescriptor {
         return null;
     }
 
-
-    public boolean isShareable() {
+    public Shareable getShareable() {
         return shareable;
     }
 
@@ -42,7 +46,7 @@ public class TypeObjectDescriptor implements TypeDescriptor {
     // If the type object is not shareable, then the serialized
     // json does not contain the fully qualified name
     public TypeObject newInstance() {
-        return shareable ?
+        return YES.equals(shareable) ?
                 new TypeObject() :
                 new TypeObject(typeFullyQualifiedName);
     }

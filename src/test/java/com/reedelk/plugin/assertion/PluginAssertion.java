@@ -1,10 +1,12 @@
 package com.reedelk.plugin.assertion;
 
+import com.reedelk.plugin.assertion.component.ComponentDataHolderAssertion;
 import com.reedelk.plugin.assertion.component.ComponentDescriptorAssertion;
 import com.reedelk.plugin.assertion.component.ComponentPropertyDescriptorAssertion;
 import com.reedelk.plugin.assertion.graph.FlowGraphAssertion;
 import com.reedelk.plugin.assertion.graph.FlowGraphChangeAwareAssertion;
 import com.reedelk.plugin.assertion.trie.TrieAssertion;
+import com.reedelk.plugin.component.domain.ComponentDataHolder;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.editor.properties.widget.input.script.suggestion.SuggestionTree;
@@ -31,5 +33,9 @@ public class PluginAssertion {
 
     public static ComponentPropertyDescriptorAssertion assertThat(ComponentPropertyDescriptor propertyDescriptor) {
         return new ComponentPropertyDescriptorAssertion(propertyDescriptor);
+    }
+
+    public static ComponentDataHolderAssertion assertThat(ComponentDataHolder dataHolder) {
+        return new ComponentDataHolderAssertion(dataHolder);
     }
 }

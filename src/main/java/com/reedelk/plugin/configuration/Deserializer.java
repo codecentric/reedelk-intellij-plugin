@@ -49,25 +49,10 @@ public class Deserializer {
         dataHolder.set(Implementor.name(), jsonDefinition.getString(Implementor.name()));
 
         propertyType.getObjectProperties().forEach(descriptor -> {
-            if (jsonDefinition.has(descriptor.getPropertyName())) {
-                // If the JSON object contains the definition for the property, then we deserialize it.
-                ComponentDataHolderDeserializer.deserialize(jsonDefinition, dataHolder, descriptor);
-            } else {
-                // The JSON does not  contain
-                addEmptyObjectsInstancesForTypeObject(dataHolder, descriptor);
-            }
+            ComponentDataHolderDeserializer.deserialize(jsonDefinition, dataHolder, descriptor);
         });
         return Optional.of(dataHolder);
 
     }
 
-    private static void addEmptyObjectsInstancesForTypeObject(TypeObjectDescriptor.TypeObject typeObject, ComponentPropertyDescriptor descriptor) {
-        if (descriptor.getPropertyType() instanceof TypeObjectDescriptor) {
-            TypeObjectDescriptor p = (TypeObjectDescriptor) descriptor.getPropertyType();
-            TypeObjectDescriptor.TypeObject dataHolder = p.newInstance();
-            typeObject.set(descriptor.getPropertyName(), dataHolder);
-            // From now on, the subtree contains null objects.
-            p.getObjectProperties().forEach(d -> addEmptyObjectsInstancesForTypeObject(dataHolder, d));
-        }
-    }
 }

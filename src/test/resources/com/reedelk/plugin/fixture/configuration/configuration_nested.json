@@ -1,13 +1,17 @@
 {
   "implementor": "com.reedelk.plugin.fixture.ComponentNode1",
   "id": "38add40d-6a29-4e9e-9620-2bf165276204",
-  "title": "Sample title",
-  "property1": "my property 1 value",
-  "property2": 473,
-  "property3": true,
-  "property4": {
+  "title": "HTTP Configuration",
+  "host": "localhost",
+  "port": 8182,
+  "keepAlive": true,
+  "securityConfig": {
     "implementor": "com.reedelk.plugin.fixture.ComponentNode2",
-    "property5": "my property 5 value",
-    "property6": true
+    "userName": "myUserName",
+    "password": "myPassword",
+    "keyStoreConfig": {
+      "implementor": "com.reedelk.plugin.fixture.ComponentNode3",
+      "algorithm": "SHA-1"
+    }
   }
 }

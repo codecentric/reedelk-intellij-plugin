@@ -1,9 +1,6 @@
 package com.reedelk.plugin.component.type.generic;
 
-import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
-import com.reedelk.plugin.component.domain.TypeDescriptor;
-import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
-import com.reedelk.plugin.component.domain.TypePrimitiveDescriptor;
+import com.reedelk.plugin.component.domain.*;
 import com.reedelk.plugin.fixture.ComponentNode2;
 
 import static com.reedelk.plugin.component.domain.ComponentPropertyDescriptor.PropertyRequired.REQUIRED;
@@ -60,9 +57,11 @@ public class SamplePropertyDescriptors {
                     .required(REQUIRED)
                     .build();
 
-    public static final TypeObjectDescriptor componentNode2TypeDescriptor = new TypeObjectDescriptor(ComponentNode2.class.getName(), false, asList(property5, property6));
+    public static final TypeObjectDescriptor componentNode2TypeDescriptor =
+            new TypeObjectDescriptor(ComponentNode2.class.getName(), asList(property5, property6), Shareable.NO);
 
-    public static final TypeObjectDescriptor componentNode2ShareableTypeDescriptor = new TypeObjectDescriptor(ComponentNode2.class.getName(), true, asList(property5, property6));
+    public static final TypeObjectDescriptor componentNode2ShareableTypeDescriptor =
+            new TypeObjectDescriptor(ComponentNode2.class.getName(), asList(property5, property6), Shareable.YES);
 
     public static final ComponentPropertyDescriptor property4 =
             ComponentPropertyDescriptor.builder()

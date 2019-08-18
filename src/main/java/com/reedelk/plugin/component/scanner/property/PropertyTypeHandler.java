@@ -5,7 +5,6 @@ import com.reedelk.plugin.component.scanner.ComponentAnalyzerContext;
 import com.reedelk.plugin.component.scanner.UnsupportedType;
 import com.reedelk.runtime.api.annotation.File;
 import com.reedelk.runtime.api.annotation.Script;
-import com.reedelk.runtime.api.annotation.Shareable;
 import io.github.classgraph.*;
 
 import java.util.List;
@@ -68,17 +67,17 @@ public class PropertyTypeHandler implements Handler {
             ClassInfo classInfo = context.getClassInfo(fullyQualifiedClassName);
             if (classInfo == null) throw new UnsupportedType(typeSignature.getClass());
 
-            boolean shareable = isShareable(classInfo);
+            Shareable shareable = isShareable(classInfo);
             ComponentPropertyAnalyzer propertyAnalyzer = new ComponentPropertyAnalyzer(context);
 
-            List<ComponentPropertyDescriptor> collect = classInfo
+            List<ComponentPropertyDescriptor> allProperties = classInfo
                     .getFieldInfo()
                     .stream()
                     .map(propertyAnalyzer::analyze)
                     .filter(Optional::isPresent)
                     .map(Optional::get)
                     .collect(toList());
-            return new TypeObjectDescriptor(fullyQualifiedClassName, shareable, collect);
+            return new TypeObjectDescriptor(fullyQualifiedClassName, allProperties, shareable);
         }
     }
 
@@ -106,7 +105,8 @@ public class PropertyTypeHandler implements Handler {
                 String.class.equals(clazz);
     }
 
-    private boolean isShareable(ClassInfo classInfo) {
-        return classInfo.hasAnnotation(Shareable.class.getName());
+    private Shareable isShareable(ClassInfo classInfo) {
+        return classInfo.hasAnnotation(com.reedelk.runtime.api.annotation.Shareable.class.getName()) ?
+                Shareable.YES : Shareable.NO;
     }
 }
