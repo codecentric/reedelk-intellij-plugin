@@ -61,6 +61,27 @@ class SerializerTest {
         JSONAssert.assertEquals(expectedJson, actualJson, true);
     }
 
+    @Test
+    void shouldNotSerializeEmptyObjects() {
+        // Given
+        TypeObject keyStoreConfig = new TypeObject(ComponentNode3.class.getName());
+        TypeObject securityConfig = new TypeObject(ComponentNode2.class.getName());
+        securityConfig.set("keyStoreConfig", keyStoreConfig);
 
-    // TODO: Test that if  the ObjectType is empty, nothing is written...(e.g does not contain any property)
+        TypeObject httpConfigType = new TypeObject(ComponentNode1.class.getName());
+        httpConfigType.set(Config.id(), "38add40d-6a29-4e9e-9620-2bf165276204");
+        httpConfigType.set(Config.title(), "HTTP Configuration");
+        httpConfigType.set("host", "192.168.1.32");
+        httpConfigType.set("port", 9190);
+        httpConfigType.set("keepAlive", false);
+        httpConfigType.set("securityConfig", securityConfig);
+        ConfigMetadata metadata = new ConfigMetadata(httpConfigType);
+
+        // When
+        String actualJson = Serializer.serialize(metadata);
+
+        // Then
+        String expectedJson = Sample.json();
+        JSONAssert.assertEquals(expectedJson, actualJson, true);
+    }
 }
