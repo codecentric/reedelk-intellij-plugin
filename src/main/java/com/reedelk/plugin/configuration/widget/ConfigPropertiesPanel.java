@@ -28,8 +28,6 @@ import static java.awt.BorderLayout.NORTH;
 
 class ConfigPropertiesPanel extends DisposablePanel {
 
-    static Dimension PREFERRED_PANEL_SIZE = new Dimension(500, 550);
-
     ConfigPropertiesPanel(Module module, ConfigMetadata configMetadata, TypeObjectDescriptor objectDescriptor, boolean isNewConfig) {
 
         List<ComponentPropertyDescriptor> descriptors = objectDescriptor.getObjectProperties();

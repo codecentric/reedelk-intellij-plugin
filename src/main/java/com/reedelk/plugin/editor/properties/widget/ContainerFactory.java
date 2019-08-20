@@ -50,10 +50,9 @@ public class ContainerFactory {
         return propertiesBoxContainer;
     }
 
-    public static JComponent makeItScrollable(DisposablePanel panel, Dimension preferredPanelSize) {
+    public static JComponent makeItScrollable(DisposablePanel panel) {
         JBScrollPane scrollPane = new JBScrollPane(panel);
         scrollPane.setBorder(JBUI.Borders.empty());
-        scrollPane.setPreferredSize(preferredPanelSize);
         return scrollPane;
     }
 

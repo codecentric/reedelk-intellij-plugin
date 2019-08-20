@@ -41,6 +41,6 @@ public class DialogEditConfiguration extends DialogWrapper {
     @Override
     protected JComponent createCenterPanel() {
         ConfigPropertiesPanel panel = new ConfigPropertiesPanel(module, selectedMetadata, objectDescriptor, false);
-        return ContainerFactory.makeItScrollable(panel, ConfigPropertiesPanel.PREFERRED_PANEL_SIZE);
+        return ContainerFactory.makeItScrollable(panel);
     }
 }
