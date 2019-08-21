@@ -9,7 +9,7 @@ import com.reedelk.plugin.component.domain.AutocompleteContext;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.VariableDefinition;
 import com.reedelk.plugin.editor.properties.widget.input.InputChangeListener;
-import com.reedelk.plugin.editor.properties.widget.input.script.PropertyPanelContext;
+import com.reedelk.plugin.editor.properties.widget.input.script.ContainerContext;
 import com.reedelk.plugin.editor.properties.widget.input.script.Type;
 import com.reedelk.plugin.jsonschema.JsonSchemaProjectClient;
 import com.reedelk.plugin.jsonschema.JsonSchemaSuggestionsProcessor;
@@ -36,7 +36,7 @@ public class SuggestionTreeBuilder {
     private Module module;
     private SuggestionTree suggestionTree;
     private InputChangeListener<?> listener;
-    private PropertyPanelContext panelContext;
+    private ContainerContext panelContext;
     private List<VariableDefinition> variableDefinitions;
 
     public static SuggestionTreeBuilder get() {
@@ -48,7 +48,7 @@ public class SuggestionTreeBuilder {
         return this;
     }
 
-    public SuggestionTreeBuilder context(PropertyPanelContext context) {
+    public SuggestionTreeBuilder context(ContainerContext context) {
         this.panelContext = context;
         return this;
     }
@@ -149,7 +149,7 @@ public class SuggestionTreeBuilder {
      * It finds the AutocompleteContext definition in any property descriptor
      * matching the given context name.
      */
-    private Optional<AutocompleteContext> findAutocompleteContextByName(@NotNull PropertyPanelContext panelContext, String contextName) {
+    private Optional<AutocompleteContext> findAutocompleteContextByName(@NotNull ContainerContext panelContext, String contextName) {
         Optional<ComponentPropertyDescriptor> descriptorMatching = panelContext.getDescriptorMatching(descriptor -> descriptor.getAutocompleteContexts()
                 .stream()
                 .anyMatch(autocompleteContext ->

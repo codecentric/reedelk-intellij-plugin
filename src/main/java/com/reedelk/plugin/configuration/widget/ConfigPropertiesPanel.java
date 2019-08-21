@@ -43,8 +43,6 @@ class ConfigPropertiesPanel extends DisposablePanel {
 
         descriptors.forEach(propertyDescriptor -> {
 
-            String displayName = propertyDescriptor.getDisplayName();
-
             String propertyName = propertyDescriptor.getPropertyName();
 
             PropertyAccessor propertyAccessor = propertiesPanel.getAccessor(propertyName);
@@ -55,7 +53,7 @@ class ConfigPropertiesPanel extends DisposablePanel {
 
             JComponent renderedComponent = renderer.render(module, propertyDescriptor, propertyAccessor, propertiesPanel);
 
-            renderer.addToParent(propertiesPanel, renderedComponent, displayName);
+            renderer.addToParent(propertiesPanel, renderedComponent, propertyDescriptor, propertiesPanel);
 
         });
 

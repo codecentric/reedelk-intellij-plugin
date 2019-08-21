@@ -14,12 +14,12 @@ public class PropertyAutocompleteContextHandler implements Handler {
 
     @Override
     public void handle(FieldInfo propertyInfo, ComponentPropertyDescriptor.Builder builder, ComponentAnalyzerContext context) {
-        // Check if there are multiple annotations
+        // Check if there is a single annotation
         boolean hasAutocompleteContextAnnotation = propertyInfo.hasAnnotation(com.reedelk.runtime.api.annotation.AutocompleteContext.class.getName());
         if (hasAutocompleteContextAnnotation) {
             AnnotationInfo info = propertyInfo.getAnnotationInfo(com.reedelk.runtime.api.annotation.AutocompleteContext.class.getName());
             AutocompleteContext autocompleteContext = processAutocompleteContextInfo(info, propertyInfo.getName());
-            builder.autocompleteContext(autocompleteContext);
+            builder.context(autocompleteContext);
         }
 
         // If there are more than one
@@ -33,7 +33,7 @@ public class PropertyAutocompleteContextHandler implements Handler {
             for (Object info : annotationInfos) {
                 try {
                     AutocompleteContext autocompleteContext = processAutocompleteContextInfo((AnnotationInfo) info, propertyInfo.getName());
-                    builder.autocompleteContext(autocompleteContext);
+                    builder.context(autocompleteContext);
                 } catch (Exception e) {
                     LOG.warn(String.format("Could not process AutocompleteContext info for property named '%s'", propertyInfo.getName()), e);
                 }

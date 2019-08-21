@@ -12,6 +12,7 @@ public class HandlersChain {
     private static final List<Handler> HANDLERS = Arrays.asList(
             new PropertyNameHandler(),
             new PropertyTypeHandler(),
+            new PropertyWhenHandler(),
             new PropertyVariableHandler(),
             new PropertyDisplayNameHandler(),
             new PropertyDefaultValueHandler(),

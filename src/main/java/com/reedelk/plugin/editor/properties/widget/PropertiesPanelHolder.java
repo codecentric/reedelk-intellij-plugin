@@ -6,7 +6,7 @@ import com.reedelk.plugin.component.domain.TypeDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.reedelk.plugin.editor.properties.widget.input.InputChangeListener;
-import com.reedelk.plugin.editor.properties.widget.input.script.PropertyPanelContext;
+import com.reedelk.plugin.editor.properties.widget.input.script.ContainerContext;
 import com.reedelk.plugin.graph.FlowSnapshot;
 
 import javax.swing.*;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Predicate;
 
-public class PropertiesPanelHolder extends DisposablePanel implements PropertyPanelContext {
+public class PropertiesPanelHolder extends DisposablePanel implements ContainerContext {
 
     private final Map<String, List<InputChangeListener>> propertyChangeListeners = new HashMap<>();
     private final Map<String, PropertyAccessor> propertyAccessors = new HashMap<>();

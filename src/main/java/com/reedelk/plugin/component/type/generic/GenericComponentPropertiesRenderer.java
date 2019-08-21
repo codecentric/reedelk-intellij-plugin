@@ -40,8 +40,6 @@ public class GenericComponentPropertiesRenderer extends AbstractNodePropertiesRe
 
         descriptors.forEach(descriptor -> {
 
-            String displayName = descriptor.getDisplayName();
-
             String propertyName = descriptor.getPropertyName();
 
             PropertyAccessor propertyAccessor = propertiesPanel.getAccessor(propertyName);
@@ -52,7 +50,7 @@ public class GenericComponentPropertiesRenderer extends AbstractNodePropertiesRe
 
             JComponent renderedComponent = renderer.render(module, descriptor, propertyAccessor, propertiesPanel);
 
-            renderer.addToParent(propertiesPanel, renderedComponent, displayName);
+            renderer.addToParent(propertiesPanel, renderedComponent, descriptor, propertiesPanel);
 
         });
 

@@ -32,5 +32,4 @@ public class ComponentPropertyDescriptorAssertion {
         assertThat(propertyDescriptor.getPropertyType()).isEqualTo(descriptor);
         return this;
     }
-
 }

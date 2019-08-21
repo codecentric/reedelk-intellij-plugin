@@ -5,13 +5,19 @@ import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.widget.input.InputField;
 import com.reedelk.plugin.editor.properties.widget.input.StringInputField;
-import com.reedelk.plugin.editor.properties.widget.input.script.PropertyPanelContext;
+import com.reedelk.plugin.editor.properties.widget.input.script.ContainerContext;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
 public class StringPropertyRenderer implements TypePropertyRenderer {
+    @NotNull
     @Override
-    public JComponent render(Module module, ComponentPropertyDescriptor propertyDescriptor, PropertyAccessor propertyAccessor, PropertyPanelContext propertyPanelContext) {
+    public JComponent render(@NotNull Module module,
+                             @NotNull ComponentPropertyDescriptor propertyDescriptor,
+                             @NotNull PropertyAccessor propertyAccessor,
+                             @NotNull ContainerContext context) {
+
         InputField<String> field = new StringInputField();
         field.setValue(propertyAccessor.get());
         field.addListener(propertyAccessor::set);

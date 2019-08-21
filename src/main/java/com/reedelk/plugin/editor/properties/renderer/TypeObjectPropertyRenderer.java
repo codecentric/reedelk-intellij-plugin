@@ -3,10 +3,8 @@ package com.reedelk.plugin.editor.properties.renderer;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.awt.RelativePoint;
-import com.reedelk.plugin.component.domain.ComponentDataHolder;
-import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
-import com.reedelk.plugin.component.domain.TypeDescriptor;
-import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
+import com.reedelk.plugin.commons.Labels;
+import com.reedelk.plugin.component.domain.*;
 import com.reedelk.plugin.configuration.widget.ActionAddConfiguration;
 import com.reedelk.plugin.configuration.widget.ActionDeleteConfiguration;
 import com.reedelk.plugin.configuration.widget.ConfigControlPanel;
@@ -17,7 +15,7 @@ import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 import com.reedelk.plugin.editor.properties.widget.FormBuilder;
 import com.reedelk.plugin.editor.properties.widget.PropertiesPanelHolder;
 import com.reedelk.plugin.editor.properties.widget.input.ConfigSelector;
-import com.reedelk.plugin.editor.properties.widget.input.script.PropertyPanelContext;
+import com.reedelk.plugin.editor.properties.widget.input.script.ContainerContext;
 import com.reedelk.plugin.service.module.ConfigService;
 import com.reedelk.plugin.service.module.impl.ConfigMetadata;
 import com.reedelk.runtime.commons.JsonParser;
@@ -27,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.Objects;
 
 import static com.intellij.openapi.ui.MessageType.WARNING;
 import static com.intellij.openapi.ui.popup.Balloon.Position;
@@ -43,12 +42,13 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
     static {
         TypeObject unselectedConfigDefinition = new TypeObject();
         unselectedConfigDefinition.set(Config.id(), TypeObject.DEFAULT_CONFIG_REF);
-        unselectedConfigDefinition.set(Config.title(), "<Not selected>");
+        unselectedConfigDefinition.set(Config.title(), Labels.CONFIG_NOT_SELECTED_ITEM);
         UNSELECTED_CONFIG = new ConfigMetadata(unselectedConfigDefinition);
     }
 
+    @NotNull
     @Override
-    public JComponent render(Module module, ComponentPropertyDescriptor descriptor, PropertyAccessor accessor, PropertyPanelContext context) {
+    public JComponent render(@NotNull Module module, @NotNull ComponentPropertyDescriptor descriptor, @NotNull PropertyAccessor accessor, @NotNull ContainerContext context) {
         TypeObjectDescriptor objectDescriptor = (TypeObjectDescriptor) descriptor.getPropertyType();
         return YES.equals(objectDescriptor.getShareable()) ?
                 renderShareable(module, descriptor, accessor) :
@@ -56,11 +56,20 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
     }
 
     @Override
-    public void addToParent(JComponent parent, JComponent rendered, String label) {
+    public void addToParent(@NotNull JComponent parent,
+                            @NotNull JComponent rendered,
+                            @NotNull ComponentPropertyDescriptor descriptor,
+                            @NotNull ContainerContext context) {
         // If the property type is a complex object, we wrap it in a
         // bordered box with title the name of the object property.
-        DisposablePanel wrappedRenderedComponent = ContainerFactory
-                .createObjectTypeContainer(label, rendered);
+        DisposablePanel wrappedRenderedComponent =
+                ContainerFactory.createObjectTypeContainer(descriptor.getDisplayName(), rendered);
+
+        // If the property has any 'when' condition, we apply listener/s to make it
+        // visible (or not) when the condition is met (or not).
+        applyWhenVisibilityConditions(descriptor.getWhenDefinitions(), wrappedRenderedComponent, context);
+
+        // Add the component o the parent container.
         FormBuilder.get()
                 .addLastField(wrappedRenderedComponent, parent);
     }
@@ -73,25 +82,19 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
         ComponentDataHolder dataHolder = propertyAccessor.get();
 
         PropertiesPanelHolder propertiesPanel = new PropertiesPanelHolder(dataHolder, objectProperties, propertyAccessor.getSnapshot());
-        objectProperties.forEach(nestedPropertyDescriptor -> {
+        objectProperties.forEach(objectProperty -> {
 
-            final String displayName = nestedPropertyDescriptor.getDisplayName();
-            final TypeDescriptor propertyType = nestedPropertyDescriptor.getPropertyType();
+            String propertyName = objectProperty.getPropertyName();
 
-            // We need a snapshot because changes need to be written in the
-            // flow itself since this is an inline object.
-            PropertyAccessor nestedPropertyAccessor = PropertyAccessorFactory.get()
-                    .typeDescriptor(nestedPropertyDescriptor.getPropertyType())
-                    .propertyName(nestedPropertyDescriptor.getPropertyName())
-                    .snapshot(propertyAccessor.getSnapshot())
-                    .dataHolder(dataHolder)
-                    .build();
+            PropertyAccessor nestedPropertyAccessor = propertiesPanel.getAccessor(propertyName);
+
+            TypeDescriptor propertyType = objectProperty.getPropertyType();
 
             TypePropertyRenderer renderer = TypeRendererFactory.get().from(propertyType);
 
-            JComponent renderedComponent = renderer.render(module, nestedPropertyDescriptor, nestedPropertyAccessor, propertiesPanel);
+            JComponent renderedComponent = renderer.render(module, objectProperty, nestedPropertyAccessor, propertiesPanel);
 
-            renderer.addToParent(propertiesPanel, renderedComponent, displayName);
+            renderer.addToParent(propertiesPanel, renderedComponent, objectProperty, propertiesPanel);
         });
 
         return propertiesPanel;
@@ -167,7 +170,7 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
 
     private void displayErrorPopup(Exception exception, ConfigControlPanel configControlPanel) {
         String errorMessage = exception.getMessage();
-        String content = String.format("<p><b>An error has occurred:</b><p>%s</p>", errorMessage);
+        String content = String.format(Labels.BALLOON_EDIT_CONFIG_ERROR, errorMessage);
         JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(content, WARNING, null)
                 .createBalloon()
                 .show(RelativePoint.getCenterOf(configControlPanel), Position.above);
@@ -202,5 +205,23 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
                     unselectedConfigDefinition.set(Config.title(), String.format("Unresolved (%s)", reference));
                     return new ConfigMetadata(unselectedConfigDefinition);
                 });
+    }
+
+    private static void applyWhenVisibilityConditions(List<WhenDefinition> whenDefinitions, JComponent panel, ContainerContext context) {
+        whenDefinitions.forEach(whenDefinition -> {
+            String propertyName = whenDefinition.getPropertyName();
+            String propertyValue = whenDefinition.getPropertyValue();
+            Object actualPropertyValue = context.getPropertyValue(propertyName);
+            setVisible(panel, Objects.equals(propertyValue, actualPropertyValue));
+            context.subscribe(whenDefinition.getPropertyName(), value -> {
+                setVisible(panel, Objects.equals(propertyValue, value));
+            });
+        });
+    }
+
+    private static void setVisible(JComponent panel, boolean visible) {
+        panel.setVisible(visible);
+        panel.repaint();
+        panel.revalidate();
     }
 }

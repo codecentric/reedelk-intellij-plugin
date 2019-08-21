@@ -13,14 +13,14 @@ import static java.util.Arrays.asList;
 public class ScriptContextManager implements SuggestionProvider, InputChangeListener {
 
     private final Module module;
-    private final PropertyPanelContext panelContext;
+    private final ContainerContext panelContext;
     private final List<VariableDefinition> variableDefinitions;
     private final Set<ContextVariable> contextVariables = new HashSet<>();
 
     private SuggestionTree suggestionTree;
 
     public ScriptContextManager(@NotNull Module module,
-                                @NotNull PropertyPanelContext panelContext,
+                                @NotNull ContainerContext panelContext,
                                 @NotNull List<VariableDefinition> variableDefinitions) {
         this.module = module;
         this.panelContext = panelContext;

@@ -6,7 +6,8 @@ import com.reedelk.plugin.component.domain.TypeEnumDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 import com.reedelk.plugin.editor.properties.widget.input.EnumDropDown;
-import com.reedelk.plugin.editor.properties.widget.input.script.PropertyPanelContext;
+import com.reedelk.plugin.editor.properties.widget.input.script.ContainerContext;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,11 +18,26 @@ import static javax.swing.Box.createHorizontalGlue;
 
 public class EnumPropertyRenderer implements TypePropertyRenderer {
 
+    @NotNull
     @Override
-    public JComponent render(Module module, ComponentPropertyDescriptor propertyDescriptor, PropertyAccessor propertyAccessor, PropertyPanelContext propertyPanelContext) {
+    public JComponent render(@NotNull Module module,
+                             @NotNull ComponentPropertyDescriptor propertyDescriptor,
+                             @NotNull PropertyAccessor propertyAccessor,
+                             @NotNull ContainerContext context) {
+
         TypeEnumDescriptor propertyType = (TypeEnumDescriptor) propertyDescriptor.getPropertyType();
+
         EnumDropDown dropDown = new EnumDropDown(propertyType.possibleValues());
-        dropDown.setValue(propertyAccessor.get());
+
+        // It the value is null, we set the default value. But probably
+        // it  should be set in the accessor ??
+        if (propertyAccessor.get() == null) {
+            Object defaultValue = propertyDescriptor.getDefaultValue();
+            dropDown.setValue(defaultValue);
+        } else {
+            dropDown.setValue(propertyAccessor.get());
+        }
+
         dropDown.addListener(propertyAccessor::set);
 
         JPanel dropDownContainer = new DisposablePanel(new BorderLayout());

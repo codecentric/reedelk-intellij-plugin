@@ -6,7 +6,7 @@ import com.reedelk.plugin.editor.properties.widget.input.InputChangeListener;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-public interface PropertyPanelContext {
+public interface ContainerContext {
 
     void subscribe(String propertyName, InputChangeListener<?> inputChangeListener);
 

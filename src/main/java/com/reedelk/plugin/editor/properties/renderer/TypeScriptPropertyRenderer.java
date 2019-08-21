@@ -8,18 +8,24 @@ import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.widget.ContainerFactory;
 import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 import com.reedelk.plugin.editor.properties.widget.FormBuilder;
-import com.reedelk.plugin.editor.properties.widget.input.script.PropertyPanelContext;
+import com.reedelk.plugin.editor.properties.widget.input.script.ContainerContext;
 import com.reedelk.plugin.editor.properties.widget.input.script.ScriptContextManager;
 import com.reedelk.plugin.editor.properties.widget.input.script.ScriptInputField;
 import com.reedelk.plugin.editor.properties.widget.input.script.ScriptInputInlineField;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.List;
 
 public class TypeScriptPropertyRenderer implements TypePropertyRenderer {
 
+    @NotNull
     @Override
-    public JComponent render(Module module, ComponentPropertyDescriptor propertyDescriptor, PropertyAccessor propertyAccessor, PropertyPanelContext context) {
+    public JComponent render(@NotNull Module module,
+                             @NotNull ComponentPropertyDescriptor propertyDescriptor,
+                             @NotNull PropertyAccessor propertyAccessor,
+                             @NotNull ContainerContext context) {
+
         TypeScriptDescriptor descriptor = (TypeScriptDescriptor) propertyDescriptor.getPropertyType();
         List<VariableDefinition> variableDefinitions = propertyDescriptor.getVariableDefinitions();
         ScriptContextManager scriptContextManager = new ScriptContextManager(module, context, variableDefinitions);
@@ -39,11 +45,15 @@ public class TypeScriptPropertyRenderer implements TypePropertyRenderer {
     }
 
     @Override
-    public void addToParent(JComponent parent, JComponent rendered, String label) {
-        // If the property type is a complex object, we wrap it in a
-        // bordered box with title the name of the object property.
-        DisposablePanel wrappedRenderedComponent = ContainerFactory
-                .createObjectTypeContainer(label, rendered);
+    public void addToParent(@NotNull JComponent parent,
+                            @NotNull JComponent rendered,
+                            @NotNull ComponentPropertyDescriptor descriptor,
+                            @NotNull ContainerContext tracker) {
+        // Wrap it in a bordered box with title the name of the object property.
+        DisposablePanel wrappedRenderedComponent =
+                ContainerFactory.createObjectTypeContainer(descriptor.getDisplayName(), rendered);
+
+        // Add the rendered component to the parent.
         FormBuilder.get()
                 .addLastField(wrappedRenderedComponent, parent);
     }

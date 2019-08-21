@@ -50,4 +50,7 @@ public class Labels {
     public static final String ACTION_CREATE_SUBFLOW_KIND = "Subflow";
 
     public static final String WIZARD_RUNTIME_STEP_ADD_NEW_CONFIG = "<Add new configuration>";
+
+    public static final String BALLOON_EDIT_CONFIG_ERROR = "<p><b>An error has occurred:</b><p>%s</p>";
+    public static final String CONFIG_NOT_SELECTED_ITEM = "<Not selected>";
 }

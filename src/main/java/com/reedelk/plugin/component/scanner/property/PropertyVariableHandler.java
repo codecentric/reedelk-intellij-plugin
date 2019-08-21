@@ -17,12 +17,12 @@ public class PropertyVariableHandler implements Handler {
 
     @Override
     public void handle(FieldInfo propertyInfo, ComponentPropertyDescriptor.Builder builder, ComponentAnalyzerContext context) {
-        // Check if there are multiple annotations
+        // Check if there is a single annotation
         boolean hasVariableAnnotation = propertyInfo.hasAnnotation(Variable.class.getName());
         if (hasVariableAnnotation) {
             AnnotationInfo info = propertyInfo.getAnnotationInfo(Variable.class.getName());
             VariableDefinition variableDefinition = processAutocompleteVariableInfo(info);
-            builder.autocompleteVariable(variableDefinition);
+            builder.variable(variableDefinition);
         }
 
         // More than one variable definition
@@ -35,7 +35,7 @@ public class PropertyVariableHandler implements Handler {
             for (Object info : annotationInfos) {
                 try {
                     VariableDefinition variableDefinition = processAutocompleteVariableInfo((AnnotationInfo) info);
-                    builder.autocompleteVariable(variableDefinition);
+                    builder.variable(variableDefinition);
                 } catch (Exception e) {
                     LOG.warn(String.format("Could not process AutocompleteVariables info for property named '%s'", propertyInfo.getName()), e);
                 }

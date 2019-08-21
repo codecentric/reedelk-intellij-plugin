@@ -4,7 +4,8 @@ import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.widget.input.BooleanCheckbox;
-import com.reedelk.plugin.editor.properties.widget.input.script.PropertyPanelContext;
+import com.reedelk.plugin.editor.properties.widget.input.script.ContainerContext;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,8 +15,12 @@ import static java.awt.BorderLayout.WEST;
 
 public class BooleanPropertyRenderer implements TypePropertyRenderer {
 
+    @NotNull
     @Override
-    public JComponent render(Module module, ComponentPropertyDescriptor descriptor, PropertyAccessor accessor, PropertyPanelContext propertyPanelContext) {
+    public JComponent render(@NotNull Module module,
+                             @NotNull ComponentPropertyDescriptor descriptor,
+                             @NotNull PropertyAccessor accessor,
+                             @NotNull ContainerContext context) {
         boolean selected = accessor.get() == null ?
                 Boolean.FALSE :
                 accessor.get();

@@ -14,9 +14,12 @@ public class ComponentPropertyDescriptor {
     private String displayName;
     private String propertyName;
     private String defaultValue;
+
     private TypeDescriptor propertyType;
-    private final List<AutocompleteContext> autocompleteContexts = new ArrayList<>();
+
+    private final List<WhenDefinition> whenDefinitions = new ArrayList<>();
     private final List<VariableDefinition> variableDefinitions = new ArrayList<>();
+    private final List<AutocompleteContext> autocompleteContexts = new ArrayList<>();
 
 
     private ComponentPropertyDescriptor() {
@@ -46,6 +49,11 @@ public class ComponentPropertyDescriptor {
     }
 
     @NotNull
+    public List<WhenDefinition> getWhenDefinitions() {
+        return whenDefinitions;
+    }
+
+    @NotNull
     public List<AutocompleteContext> getAutocompleteContexts() {
         return autocompleteContexts;
     }
@@ -60,7 +68,10 @@ public class ComponentPropertyDescriptor {
         private String displayName;
         private String propertyName;
         private String defaultValue;
+
         private TypeDescriptor propertyType;
+
+        private List<WhenDefinition> whenDefinitions = new ArrayList<>();
         private List<AutocompleteContext> autocompleteContexts = new ArrayList<>();
         private List<VariableDefinition> variableDefinitions = new ArrayList<>();
 
@@ -84,13 +95,18 @@ public class ComponentPropertyDescriptor {
             return this;
         }
 
-        public Builder autocompleteContext(AutocompleteContext autocompleteContext) {
+        public Builder context(AutocompleteContext autocompleteContext) {
             this.autocompleteContexts.add(autocompleteContext);
             return this;
         }
 
-        public Builder autocompleteVariable(VariableDefinition variableDefinition) {
+        public Builder variable(VariableDefinition variableDefinition) {
             this.variableDefinitions.add(variableDefinition);
+            return this;
+        }
+
+        public Builder when(WhenDefinition whenDefinition) {
+            this.whenDefinitions.add(whenDefinition);
             return this;
         }
 
@@ -103,6 +119,7 @@ public class ComponentPropertyDescriptor {
             descriptor.propertyName = propertyName;
             descriptor.defaultValue = defaultValue;
             descriptor.propertyType = propertyType;
+            descriptor.whenDefinitions.addAll(whenDefinitions);
             descriptor.autocompleteContexts.addAll(autocompleteContexts);
             descriptor.variableDefinitions.addAll(variableDefinitions);
             return descriptor;
