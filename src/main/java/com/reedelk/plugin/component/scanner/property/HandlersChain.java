@@ -20,7 +20,7 @@ public class HandlersChain {
 
     public static ComponentPropertyDescriptor descriptor(FieldInfo propertyInfo, ComponentAnalyzerContext context) {
         ComponentPropertyDescriptor.Builder builder = ComponentPropertyDescriptor.builder();
-        HANDLERS.stream().forEachOrdered(handler -> handler.handle(propertyInfo, builder, context));
+        HANDLERS.forEach(handler -> handler.handle(propertyInfo, builder, context));
         return builder.build();
     }
 }

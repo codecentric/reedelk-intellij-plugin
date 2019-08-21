@@ -3,7 +3,6 @@ package com.reedelk.plugin.component.scanner;
 import com.reedelk.runtime.api.annotation.Default;
 import com.reedelk.runtime.api.annotation.ESBComponent;
 import com.reedelk.runtime.api.annotation.Property;
-import com.reedelk.runtime.api.annotation.Required;
 import com.reedelk.runtime.api.component.ProcessorSync;
 import com.reedelk.runtime.api.message.Message;
 
@@ -13,7 +12,6 @@ public class TestComponent implements ProcessorSync {
 
     @Property("Property 1")
     @Default("3")
-    @Required
     private int property1;
     @Property("Property 2")
     private String property2;

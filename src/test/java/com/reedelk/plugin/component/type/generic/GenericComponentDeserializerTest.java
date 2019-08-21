@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import static com.reedelk.plugin.component.domain.ComponentPropertyDescriptor.PropertyRequired.REQUIRED;
 import static com.reedelk.plugin.fixture.Json.GenericComponent;
 import static java.util.Arrays.asList;
 
@@ -65,7 +64,6 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
                 .displayName("A property name")
                 .propertyName(propertyName)
                 .type(typePrimitive)
-                .required(REQUIRED)
                 .build();
     }
 }

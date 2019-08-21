@@ -1,5 +1,6 @@
 package com.reedelk.plugin.component.scanner;
 
+import com.google.common.collect.ImmutableMap;
 import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeEnumDescriptor;
@@ -10,17 +11,22 @@ import io.github.classgraph.FieldInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
 import java.util.Optional;
 
-import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ComponentPropertyAnalyzerTest extends AbstractScannerTest {
 
+    private final Map<String, String> ENUM_VALUES = ImmutableMap.of(
+            "VALUE1", "Value 1",
+            "VALUE2", "VALUE2",
+            "VALUE3", "Value 3");
+
     private final TypePrimitiveDescriptor INT_TYPE = new TypePrimitiveDescriptor(int.class);
     private final TypePrimitiveDescriptor FLOAT_TYPE = new TypePrimitiveDescriptor(float.class);
     private final TypePrimitiveDescriptor STRING_TYPE = new TypePrimitiveDescriptor(String.class);
-    private final TypeEnumDescriptor TEST_ENUM = new TypeEnumDescriptor(asList("VALUE1", "VALUE2", "VALUE3"), "VALUE1");
+    private final TypeEnumDescriptor TEST_ENUM = new TypeEnumDescriptor(ENUM_VALUES, "VALUE1");
 
     private ComponentPropertyAnalyzer analyzer;
     private ClassInfo testComponentClassInfo;
@@ -46,7 +52,6 @@ class ComponentPropertyAnalyzerTest extends AbstractScannerTest {
                 .hasName("property1")
                 .hasDisplayName("Property 1")
                 .hasDefaultValue(3)
-                .required()
                 .hasType(INT_TYPE);
     }
 
@@ -64,7 +69,6 @@ class ComponentPropertyAnalyzerTest extends AbstractScannerTest {
                 .hasName("property2")
                 .hasDisplayName("Property 2")
                 .hasDefaultValue(null)
-                .notRequired()
                 .hasType(STRING_TYPE);
     }
 
@@ -82,7 +86,6 @@ class ComponentPropertyAnalyzerTest extends AbstractScannerTest {
                 .hasName("property3")
                 .hasDisplayName("Enum Property")
                 .hasDefaultValue("VALUE2")
-                .notRequired()
                 .hasType(TEST_ENUM);
     }
 
@@ -113,7 +116,6 @@ class ComponentPropertyAnalyzerTest extends AbstractScannerTest {
                 .hasName("propertyWithoutDisplayName")
                 .hasDisplayName("propertyWithoutDisplayName")
                 .hasDefaultValue(0.0f)
-                .notRequired()
                 .hasType(FLOAT_TYPE);
     }
 
