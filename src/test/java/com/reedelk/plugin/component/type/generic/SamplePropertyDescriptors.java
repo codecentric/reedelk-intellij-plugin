@@ -3,7 +3,6 @@ package com.reedelk.plugin.component.type.generic;
 import com.reedelk.plugin.component.domain.*;
 import com.reedelk.plugin.fixture.ComponentNode2;
 
-import static com.reedelk.plugin.component.domain.ComponentPropertyDescriptor.PropertyRequired.REQUIRED;
 import static java.util.Arrays.asList;
 
 public class SamplePropertyDescriptors {
@@ -18,7 +17,6 @@ public class SamplePropertyDescriptors {
                     .type(stringTypeDescriptor)
                     .displayName("Property 1 Name")
                     .defaultValue("")
-                    .required(REQUIRED)
                     .build();
 
     public static final ComponentPropertyDescriptor property2 =
@@ -27,7 +25,6 @@ public class SamplePropertyDescriptors {
                     .type(stringTypeDescriptor)
                     .displayName("Property 2 Name")
                     .defaultValue("")
-                    .required(REQUIRED)
                     .build();
 
     public static final ComponentPropertyDescriptor property3 =
@@ -36,7 +33,6 @@ public class SamplePropertyDescriptors {
                     .type(stringTypeDescriptor)
                     .displayName("Property 3 Name")
                     .defaultValue("")
-                    .required(REQUIRED)
                     .build();
 
     public static final ComponentPropertyDescriptor property5 =
@@ -45,7 +41,6 @@ public class SamplePropertyDescriptors {
                     .type(stringTypeDescriptor)
                     .displayName("Property 5 Name")
                     .defaultValue("")
-                    .required(REQUIRED)
                     .build();
 
     public static final ComponentPropertyDescriptor property6 =
@@ -54,7 +49,6 @@ public class SamplePropertyDescriptors {
                     .type(integerTypeDescriptor)
                     .displayName("Property 6 Name")
                     .defaultValue("0")
-                    .required(REQUIRED)
                     .build();
 
     public static final TypeObjectDescriptor componentNode2TypeDescriptor =
@@ -69,7 +63,6 @@ public class SamplePropertyDescriptors {
                     .type(componentNode2TypeDescriptor)
                     .displayName("Property 4 Name")
                     .defaultValue(null)
-                    .required(REQUIRED)
                     .build();
 
     public static final ComponentPropertyDescriptor property7 =
@@ -77,6 +70,5 @@ public class SamplePropertyDescriptors {
                     .propertyName("property7")
                     .type(componentNode2ShareableTypeDescriptor)
                     .displayName("Property 7 Name")
-                    .required(REQUIRED)
                     .build();
 }

@@ -1,20 +1,24 @@
 package com.reedelk.plugin.component.scanner.property;
 
+import com.reedelk.plugin.commons.GetAnnotationValue;
 import com.reedelk.plugin.component.domain.*;
 import com.reedelk.plugin.component.scanner.ComponentAnalyzerContext;
 import com.reedelk.plugin.component.scanner.UnsupportedType;
+import com.reedelk.runtime.api.annotation.Default;
+import com.reedelk.runtime.api.annotation.DisplayName;
 import com.reedelk.runtime.api.annotation.File;
 import com.reedelk.runtime.api.annotation.Script;
 import io.github.classgraph.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.reedelk.plugin.component.scanner.property.PropertyScannerUtils.filterByFullyQualifiedClassNameType;
 import static com.reedelk.plugin.component.scanner.property.PropertyScannerUtils.isEnumeration;
 import static com.reedelk.plugin.converter.ValueConverterFactory.isKnownType;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 public class PropertyTypeHandler implements Handler {
 
@@ -85,12 +89,14 @@ public class PropertyTypeHandler implements Handler {
         String enumFullyQualifiedClassName = enumRefType.getFullyQualifiedClassName();
         ClassInfo enumClassInfo = context.getClassInfo(enumFullyQualifiedClassName);
         FieldInfoList declaredFieldInfo = enumClassInfo.getDeclaredFieldInfo();
-        List<String> enumNames = declaredFieldInfo
+        Map<String, String> nameAndDisplayName = declaredFieldInfo
                 .stream()
                 .filter(filterByFullyQualifiedClassNameType(enumFullyQualifiedClassName))
-                .map(FieldInfo::getName)
-                .collect(Collectors.toList());
-        return new TypeEnumDescriptor(enumNames, enumNames.get(0));
+                .collect(toMap(FieldInfo::getName, fieldInfo ->
+                        GetAnnotationValue.getOrDefault(fieldInfo, DisplayName.class, fieldInfo.getName())));
+
+        String defaultValue = GetAnnotationValue.getOrThrow(enumClassInfo, Default.class);
+        return new TypeEnumDescriptor(nameAndDisplayName, defaultValue);
     }
 
     // A property is a Script if and only if it has @Script annotation AND its type is String

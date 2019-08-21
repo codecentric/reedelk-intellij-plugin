@@ -1,18 +1,21 @@
 package com.reedelk.plugin.component.domain;
 
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Collections;
-import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class TypeEnumDescriptor implements TypeDescriptor {
 
-    private final List<String> values;
+    private final Map<String, String> valueAndDisplayNameMap;
     private final String defaultValue;
 
-    public TypeEnumDescriptor(final List<String> values, final String defaultValue) {
+    public TypeEnumDescriptor(@NotNull Map<String, String> valueAndDisplayNameMap,
+                              @NotNull String defaultValue) {
+        this.valueAndDisplayNameMap = valueAndDisplayNameMap;
         this.defaultValue = defaultValue;
-        this.values = values;
     }
 
     @Override
@@ -21,12 +24,8 @@ public class TypeEnumDescriptor implements TypeDescriptor {
     }
 
     @Override
-    public Object defaultValue() {
+    public String defaultValue() {
         return defaultValue;
-    }
-
-    public List<String> possibleValues() {
-        return Collections.unmodifiableList(values);
     }
 
     @Override
@@ -34,12 +33,16 @@ public class TypeEnumDescriptor implements TypeDescriptor {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TypeEnumDescriptor that = (TypeEnumDescriptor) o;
-        return Objects.equals(values, that.values) &&
-                Objects.equals(defaultValue, that.defaultValue);
+        return valueAndDisplayNameMap.equals(that.valueAndDisplayNameMap) &&
+                defaultValue.equals(that.defaultValue);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(values, defaultValue);
+        return Objects.hash(valueAndDisplayNameMap, defaultValue);
+    }
+
+    public Map<String, String> valueAndDisplayMap() {
+        return Collections.unmodifiableMap(valueAndDisplayNameMap);
     }
 }

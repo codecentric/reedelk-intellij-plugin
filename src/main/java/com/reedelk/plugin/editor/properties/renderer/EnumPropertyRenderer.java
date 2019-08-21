@@ -27,17 +27,14 @@ public class EnumPropertyRenderer implements TypePropertyRenderer {
 
         TypeEnumDescriptor propertyType = (TypeEnumDescriptor) propertyDescriptor.getPropertyType();
 
-        EnumDropDown dropDown = new EnumDropDown(propertyType.possibleValues());
+        EnumDropDown dropDown = new EnumDropDown(propertyType.valueAndDisplayMap());
 
-        // It the value is null, we set the default value. But probably
-        // it  should be set in the accessor ??
+        // We set the default value if not present
         if (propertyAccessor.get() == null) {
-            Object defaultValue = propertyDescriptor.getDefaultValue();
-            dropDown.setValue(defaultValue);
-        } else {
-            dropDown.setValue(propertyAccessor.get());
+            propertyAccessor.set(propertyDescriptor.getDefaultValue());
         }
 
+        dropDown.setValue(propertyAccessor.get());
         dropDown.addListener(propertyAccessor::set);
 
         JPanel dropDownContainer = new DisposablePanel(new BorderLayout());

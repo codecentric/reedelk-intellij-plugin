@@ -25,7 +25,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
-import java.util.Objects;
 
 import static com.intellij.openapi.ui.MessageType.WARNING;
 import static com.intellij.openapi.ui.popup.Balloon.Position;
@@ -212,10 +211,11 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
             String propertyName = whenDefinition.getPropertyName();
             String propertyValue = whenDefinition.getPropertyValue();
             Object actualPropertyValue = context.getPropertyValue(propertyName);
-            setVisible(panel, Objects.equals(propertyValue, actualPropertyValue));
-            context.subscribe(whenDefinition.getPropertyName(), value -> {
-                setVisible(panel, conditionIsMet(propertyValue, value));
-            });
+
+            setVisible(panel, conditionIsMet(propertyValue, actualPropertyValue));
+
+            context.subscribe(whenDefinition.getPropertyName(), value ->
+                    setVisible(panel, conditionIsMet(propertyValue, value)));
         });
     }
 
