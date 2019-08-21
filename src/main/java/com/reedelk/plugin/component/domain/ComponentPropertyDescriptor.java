@@ -14,15 +14,10 @@ public class ComponentPropertyDescriptor {
     private String displayName;
     private String propertyName;
     private String defaultValue;
-    private PropertyRequired required;
     private TypeDescriptor propertyType;
     private final List<AutocompleteContext> autocompleteContexts = new ArrayList<>();
     private final List<VariableDefinition> variableDefinitions = new ArrayList<>();
 
-    public enum PropertyRequired {
-        REQUIRED,
-        NOT_REQUIRED
-    }
 
     private ComponentPropertyDescriptor() {
     }
@@ -33,10 +28,6 @@ public class ComponentPropertyDescriptor {
 
     public String getDisplayName() {
         return displayName;
-    }
-
-    public boolean required() {
-        return PropertyRequired.REQUIRED.equals(required);
     }
 
     @NotNull
@@ -70,7 +61,6 @@ public class ComponentPropertyDescriptor {
         private String propertyName;
         private String defaultValue;
         private TypeDescriptor propertyType;
-        private PropertyRequired required = PropertyRequired.NOT_REQUIRED;
         private List<AutocompleteContext> autocompleteContexts = new ArrayList<>();
         private List<VariableDefinition> variableDefinitions = new ArrayList<>();
 
@@ -86,11 +76,6 @@ public class ComponentPropertyDescriptor {
 
         public Builder propertyName(String propertyName) {
             this.propertyName = propertyName;
-            return this;
-        }
-
-        public Builder required(PropertyRequired required) {
-            this.required = required;
             return this;
         }
 
@@ -114,7 +99,6 @@ public class ComponentPropertyDescriptor {
             checkState(propertyType != null, "property type");
 
             ComponentPropertyDescriptor descriptor = new ComponentPropertyDescriptor();
-            descriptor.required = required;
             descriptor.displayName = displayName;
             descriptor.propertyName = propertyName;
             descriptor.defaultValue = defaultValue;

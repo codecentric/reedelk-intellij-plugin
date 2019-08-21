@@ -23,16 +23,6 @@ public class ComponentPropertyDescriptorAssertion {
         return this;
     }
 
-    public ComponentPropertyDescriptorAssertion required() {
-        assertThat(propertyDescriptor.required()).isTrue();
-        return this;
-    }
-
-    public ComponentPropertyDescriptorAssertion notRequired() {
-        assertThat(propertyDescriptor.required()).isFalse();
-        return this;
-    }
-
     public ComponentPropertyDescriptorAssertion hasDefaultValue(Object object) {
         assertThat(propertyDescriptor.getDefaultValue()).isEqualTo(object);
         return this;
