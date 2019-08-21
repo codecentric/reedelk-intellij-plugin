@@ -214,9 +214,13 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
             Object actualPropertyValue = context.getPropertyValue(propertyName);
             setVisible(panel, Objects.equals(propertyValue, actualPropertyValue));
             context.subscribe(whenDefinition.getPropertyName(), value -> {
-                setVisible(panel, Objects.equals(propertyValue, value));
+                setVisible(panel, conditionIsMet(propertyValue, value));
             });
         });
+    }
+
+    private static boolean conditionIsMet(String target, Object value) {
+        return value != null && value.toString().equals(target);
     }
 
     private static void setVisible(JComponent panel, boolean visible) {
