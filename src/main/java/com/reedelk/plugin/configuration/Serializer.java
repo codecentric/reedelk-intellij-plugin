@@ -1,5 +1,6 @@
 package com.reedelk.plugin.configuration;
 
+import com.reedelk.plugin.commons.JsonObjectFactory;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.component.serialization.ComponentDataHolderSerializer;
 import com.reedelk.plugin.graph.serializer.AbstractSerializer;
@@ -17,12 +18,13 @@ public class Serializer {
         TypeObjectDescriptor typeObjectDescriptor =
                 dataHolder.getConfigObjectDescriptor();
 
-        JSONObject serialize =
-                ComponentDataHolderSerializer.serialize(typeObjectDescriptor, dataHolder);
+        JSONObject object = JsonObjectFactory.newJSONObject();
+        JsonParser.Config.id(dataHolder.getId(), object);
+        JsonParser.Config.title(dataHolder.getTitle(), object);
+        JsonParser.Implementor.name(dataHolder.getFullyQualifiedName(), object);
 
-        JsonParser.Config.id(dataHolder.getId(), serialize);
-        JsonParser.Config.title(dataHolder.getTitle(), serialize);
-        JsonParser.Implementor.name(dataHolder.getFullyQualifiedName(), serialize);
-        return serialize.toString(AbstractSerializer.JSON_INDENT_FACTOR);
+        ComponentDataHolderSerializer.serialize(typeObjectDescriptor, dataHolder, object);
+
+        return object.toString(AbstractSerializer.JSON_INDENT_FACTOR);
     }
 }
