@@ -37,7 +37,6 @@ import static java.awt.BorderLayout.EAST;
 public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
 
     private static final ConfigMetadata UNSELECTED_CONFIG;
-
     static {
         TypeObject unselectedConfigDefinition = new TypeObject();
         unselectedConfigDefinition.set(Config.id(), TypeObject.DEFAULT_CONFIG_REF);
@@ -177,7 +176,7 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
 
     private ConfigMetadata updateMetadataOnSelector(Module module, ConfigSelector selector, ComponentPropertyDescriptor typeObjectDescriptor, String targetReference) {
         List<ConfigMetadata> configMetadata =
-                ConfigService.getInstance(module).listConfigsBy(typeObjectDescriptor);
+                ConfigService.getInstance(module).listConfigsBy((TypeObjectDescriptor) typeObjectDescriptor.getPropertyType());
         configMetadata.add(UNSELECTED_CONFIG);
 
         ConfigMetadata matchingMetadata = findMatchingMetadata(configMetadata, targetReference);

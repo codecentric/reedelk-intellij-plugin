@@ -2,13 +2,17 @@ package com.reedelk.plugin.service.module.impl;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import com.reedelk.plugin.component.domain.ComponentDataHolder;
+import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
+import org.jetbrains.annotations.NotNull;
 
 public class ExistingConfigMetadata extends ConfigMetadata {
 
     private VirtualFile file;
 
-    public ExistingConfigMetadata(VirtualFile file, ComponentDataHolder dataHolder) {
-        super(dataHolder);
+    public ExistingConfigMetadata(@NotNull VirtualFile file,
+                                  @NotNull ComponentDataHolder dataHolder,
+                                  @NotNull TypeObjectDescriptor configObjectDescriptor) {
+        super(dataHolder, configObjectDescriptor);
         this.file = file;
     }
 

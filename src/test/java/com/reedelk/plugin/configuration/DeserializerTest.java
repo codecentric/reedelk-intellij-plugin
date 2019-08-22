@@ -29,17 +29,10 @@ class DeserializerTest {
                 asList(host, port, keepAlive),
                 Shareable.NO);
 
-        ComponentPropertyDescriptor httpConfigPropertyDescriptor =
-                ComponentPropertyDescriptor.builder()
-                        .displayName("HTTP Configuration")
-                        .propertyName("httpConfig")
-                        .type(httpConfigType)
-                        .build();
-
         String json = Sample.json();
 
         // When
-        Optional<ComponentDataHolder> deserialized = Deserializer.deserialize(json, httpConfigPropertyDescriptor);
+        Optional<ComponentDataHolder> deserialized = Deserializer.deserialize(json, httpConfigType);
 
         // Then
         assertThat(deserialized).isPresent();
@@ -64,18 +57,11 @@ class DeserializerTest {
                         asList(host, port, keepAlive, securityConfigPropertyDescriptor),
                         Shareable.NO);
 
-        ComponentPropertyDescriptor httpConfigPropertyDescriptor =
-                ComponentPropertyDescriptor.builder()
-                        .displayName("HTTP Configuration")
-                        .propertyName("httpConfig")
-                        .type(httpConfigType)
-                        .build();
-
         String json = NestedConfig.json();
 
         // When
         Optional<ComponentDataHolder> deserialized =
-                Deserializer.deserialize(json, httpConfigPropertyDescriptor);
+                Deserializer.deserialize(json, httpConfigType);
 
         // Then
         assertThat(deserialized).isPresent();
@@ -109,17 +95,11 @@ class DeserializerTest {
                         asList(host, port, keepAlive, securityConfigPropertyDescriptor),
                         Shareable.NO);
 
-        ComponentPropertyDescriptor componentNode1Property =
-                ComponentPropertyDescriptor.builder()
-                        .displayName("HTTP Configuration")
-                        .propertyName("httpConfig")
-                        .type(httpConfigType)
-                        .build();
 
         String json = NestedConfigMissingObjectProperty.json();
 
         // When
-        Optional<ComponentDataHolder> deserialized = Deserializer.deserialize(json, componentNode1Property);
+        Optional<ComponentDataHolder> deserialized = Deserializer.deserialize(json, httpConfigType);
 
         // Then
         assertThat(deserialized).isPresent();
@@ -143,17 +123,11 @@ class DeserializerTest {
                         asList(host, port, keepAlive, securityConfigPropertyDescriptor),
                         Shareable.NO);
 
-        ComponentPropertyDescriptor httpConfigProperty =
-                ComponentPropertyDescriptor.builder()
-                        .displayName("HTTP Configuration")
-                        .propertyName("httpConfig")
-                        .type(httpConfigType)
-                        .build();
 
         String json = NestedConfigNullObjectProperty.json();
 
         // When
-        Optional<ComponentDataHolder> deserialized = Deserializer.deserialize(json, httpConfigProperty);
+        Optional<ComponentDataHolder> deserialized = Deserializer.deserialize(json, httpConfigType);
 
         // Then
         assertThat(deserialized).isPresent();
@@ -177,17 +151,11 @@ class DeserializerTest {
                         asList(host, port, keepAlive, securityConfigPropertyDescriptor),
                         Shareable.NO);
 
-        ComponentPropertyDescriptor httpConfigProperty =
-                ComponentPropertyDescriptor.builder()
-                        .displayName("HTTP Configuration")
-                        .propertyName("httpConfig")
-                        .type(httpConfigType)
-                        .build();
 
         String notValidJson = "myInvalidJson";
 
         // When
-        Optional<ComponentDataHolder> deserialized = Deserializer.deserialize(notValidJson, httpConfigProperty);
+        Optional<ComponentDataHolder> deserialized = Deserializer.deserialize(notValidJson, httpConfigType);
 
         // Then
         assertThat(deserialized).isEmpty();
@@ -201,17 +169,10 @@ class DeserializerTest {
                 asList(host, port, keepAlive),
                 Shareable.NO);
 
-        ComponentPropertyDescriptor actieMqConfigPropertyDescriptor =
-                ComponentPropertyDescriptor.builder()
-                        .displayName("Active MQ config")
-                        .propertyName("activeMQConfig")
-                        .type(activeMqConfigType)
-                        .build();
-
         String json = Sample.json();
 
         // When
-        Optional<ComponentDataHolder> deserialized = Deserializer.deserialize(json, actieMqConfigPropertyDescriptor);
+        Optional<ComponentDataHolder> deserialized = Deserializer.deserialize(json, activeMqConfigType);
 
         // Then
         assertThat(deserialized).isEmpty();

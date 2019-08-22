@@ -120,6 +120,13 @@ public class Json {
             }
         },
 
+        SampleWithEmptyConfig() {
+            @Override
+            public String path() {
+                return "configuration/configuration_sample_empty_nested.json";
+            }
+        },
+
         NestedConfig() {
             @Override
             public String path() {

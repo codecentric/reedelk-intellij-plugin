@@ -9,7 +9,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThrowableRunnable;
 import com.reedelk.plugin.commons.ModuleUtils;
-import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
+import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.configuration.Deserializer;
 import com.reedelk.plugin.configuration.Serializer;
 import com.reedelk.plugin.service.module.ConfigService;
@@ -34,11 +34,11 @@ public class ConfigServiceImpl implements ConfigService {
 
     @Override
     @NotNull
-    public List<ConfigMetadata> listConfigsBy(@NotNull ComponentPropertyDescriptor configPropertyDescriptor) {
+    public List<ConfigMetadata> listConfigsBy(@NotNull TypeObjectDescriptor typeObjectDescriptor) {
         List<ConfigMetadata> configs = new ArrayList<>();
         ModuleRootManager.getInstance(module).getFileIndex().iterateContent(fileOrDir -> {
             if (FileExtension.FLOW_CONFIG.value().equals(fileOrDir.getExtension())) {
-                getConfigurationFrom(fileOrDir, configPropertyDescriptor).ifPresent(configs::add);
+                getConfigurationFrom(fileOrDir, typeObjectDescriptor).ifPresent(configs::add);
             }
             return true;
         });
@@ -76,6 +76,7 @@ public class ConfigServiceImpl implements ConfigService {
             executeWriteCommand(() -> {
                 // Write the serialized config
                 VirtualFile directoryIfMissing = VfsUtil.createDirectoryIfMissing(configDir);
+                // TODO: Fix null pointer
                 VirtualFile childData = directoryIfMissing.createChildData(null, newConfig.getFileName());
                 VfsUtil.saveText(childData, serializedConfig);
             });
@@ -90,12 +91,13 @@ public class ConfigServiceImpl implements ConfigService {
         }
     }
 
-    private Optional<? extends ConfigMetadata> getConfigurationFrom(VirtualFile virtualFile, ComponentPropertyDescriptor componentPropertyDescriptor) {
+    private Optional<? extends ConfigMetadata> getConfigurationFrom(VirtualFile virtualFile, TypeObjectDescriptor configTypeDescriptor) {
+
         Optional<Document> maybeDocument = getDocumentFromFile(virtualFile);
         if (maybeDocument.isPresent()) {
             String json = maybeDocument.get().getText();
-            return Deserializer.deserialize(json, componentPropertyDescriptor)
-                    .map(dataHolder -> new ExistingConfigMetadata(virtualFile, dataHolder));
+            return Deserializer.deserialize(json, configTypeDescriptor)
+                    .map(dataHolder -> new ExistingConfigMetadata(virtualFile, dataHolder, configTypeDescriptor));
         }
         return Optional.empty();
     }

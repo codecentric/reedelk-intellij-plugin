@@ -1,9 +1,10 @@
 package com.reedelk.plugin.configuration;
 
-import com.reedelk.plugin.commons.JsonObjectFactory;
+import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.component.serialization.ComponentDataHolderSerializer;
 import com.reedelk.plugin.graph.serializer.AbstractSerializer;
 import com.reedelk.plugin.service.module.impl.ConfigMetadata;
+import com.reedelk.runtime.commons.JsonParser;
 import org.json.JSONObject;
 
 public class Serializer {
@@ -12,10 +13,16 @@ public class Serializer {
     }
 
     public static String serialize(ConfigMetadata dataHolder) {
-        JSONObject configJsonObject = JsonObjectFactory.newJSONObject();
 
-        ComponentDataHolderSerializer.serialize(dataHolder, configJsonObject);
+        TypeObjectDescriptor typeObjectDescriptor =
+                dataHolder.getConfigObjectDescriptor();
 
-        return configJsonObject.toString(AbstractSerializer.JSON_INDENT_FACTOR);
+        JSONObject serialize =
+                ComponentDataHolderSerializer.serialize(typeObjectDescriptor, dataHolder);
+
+        JsonParser.Config.id(dataHolder.getId(), serialize);
+        JsonParser.Config.title(dataHolder.getTitle(), serialize);
+        JsonParser.Implementor.name(dataHolder.getFullyQualifiedName(), serialize);
+        return serialize.toString(AbstractSerializer.JSON_INDENT_FACTOR);
     }
 }

@@ -41,7 +41,7 @@ public class ActionAddConfiguration extends ActionableCommandButton {
         configTypeObject.set(Config.title(), DEFAULT_NEW_CONFIG_TITLE);
 
 
-        ConfigMetadata newConfig = new NewConfigMetadata(DEFAULT_CONFIG_FILE_NAME, configTypeObject);
+        ConfigMetadata newConfig = new NewConfigMetadata(DEFAULT_CONFIG_FILE_NAME, configTypeObject, typeDescriptor);
 
         DialogAddConfiguration dialogAddConfiguration = new DialogAddConfiguration(module, typeDescriptor, newConfig);
 
