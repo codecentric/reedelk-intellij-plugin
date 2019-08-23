@@ -34,6 +34,7 @@ public class TypeRendererFactory {
         tmp.put(BigInteger.class, new BigIntegerPropertyRenderer());
         tmp.put(BigDecimal.class, new BigDecimalPropertyRenderer());
 
+        tmp.put(Map.class, new TypeMapPropertyRenderer());
         tmp.put(TypeFileDescriptor.TypeFile.class, new TypeFilePropertyRenderer());
         tmp.put(TypeObjectDescriptor.TypeObject.class, new TypeObjectPropertyRenderer());
         tmp.put(TypeScriptDescriptor.TypeScript.class, new TypeScriptPropertyRenderer());

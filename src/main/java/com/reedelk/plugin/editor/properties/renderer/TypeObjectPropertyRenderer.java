@@ -10,12 +10,8 @@ import com.reedelk.plugin.configuration.widget.ActionDeleteConfiguration;
 import com.reedelk.plugin.configuration.widget.ConfigControlPanel;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessorFactory;
-import com.reedelk.plugin.editor.properties.widget.ContainerFactory;
-import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
-import com.reedelk.plugin.editor.properties.widget.FormBuilder;
-import com.reedelk.plugin.editor.properties.widget.PropertiesPanelHolder;
+import com.reedelk.plugin.editor.properties.widget.*;
 import com.reedelk.plugin.editor.properties.widget.input.ConfigSelector;
-import com.reedelk.plugin.editor.properties.widget.input.script.ContainerContext;
 import com.reedelk.plugin.service.module.ConfigService;
 import com.reedelk.plugin.service.module.impl.ConfigMetadata;
 import com.reedelk.runtime.commons.JsonParser;
@@ -58,6 +54,7 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
                             @NotNull JComponent rendered,
                             @NotNull ComponentPropertyDescriptor descriptor,
                             @NotNull ContainerContext context) {
+
         // If the property type is a complex object, we wrap it in a
         // bordered box with title the name of the object property.
         DisposablePanel wrappedRenderedComponent =
@@ -67,9 +64,12 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
         // visible (or not) when the condition is met (or not).
         applyWhenVisibilityConditions(descriptor.getWhenDefinitions(), wrappedRenderedComponent, context);
 
-        // Add the component o the parent container.
+        // Add the component to the parent container.
         FormBuilder.get()
                 .addLastField(wrappedRenderedComponent, parent);
+
+        // Add the component to the context
+        context.addComponent(new JComponentHolder(rendered));
     }
 
     @NotNull
@@ -209,11 +209,11 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
         whenDefinitions.forEach(whenDefinition -> {
             String propertyName = whenDefinition.getPropertyName();
             String propertyValue = whenDefinition.getPropertyValue();
-            Object actualPropertyValue = context.getPropertyValue(propertyName);
+            Object actualPropertyValue = context.propertyValueFrom(propertyName);
 
             setVisible(panel, conditionIsMet(propertyValue, actualPropertyValue));
 
-            context.subscribe(whenDefinition.getPropertyName(), value ->
+            context.subscribeOnPropertyChange(whenDefinition.getPropertyName(), value ->
                     setVisible(panel, conditionIsMet(propertyValue, value)));
         });
     }

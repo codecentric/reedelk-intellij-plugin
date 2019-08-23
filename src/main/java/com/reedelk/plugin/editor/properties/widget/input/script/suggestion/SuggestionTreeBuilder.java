@@ -8,8 +8,8 @@ import com.reedelk.plugin.commons.ProjectFileContentProvider;
 import com.reedelk.plugin.component.domain.AutocompleteContext;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.VariableDefinition;
+import com.reedelk.plugin.editor.properties.widget.ContainerContext;
 import com.reedelk.plugin.editor.properties.widget.input.InputChangeListener;
-import com.reedelk.plugin.editor.properties.widget.input.script.ContainerContext;
 import com.reedelk.plugin.editor.properties.widget.input.script.Type;
 import com.reedelk.plugin.jsonschema.JsonSchemaProjectClient;
 import com.reedelk.plugin.jsonschema.JsonSchemaSuggestionsProcessor;
@@ -100,14 +100,14 @@ public class SuggestionTreeBuilder {
             AutocompleteType autocompleteType = autocompleteContext.getAutocompleteType();
 
             if (AutocompleteType.JSON_SCHEMA.equals(autocompleteType)) {
-                String jsonSchemaRelativeFileName = panelContext.getPropertyValue(propertyName);
+                String jsonSchemaRelativeFileName = panelContext.propertyValueFrom(propertyName);
                 if (isNotBlank(jsonSchemaRelativeFileName)) {
                     populateSuggestionTokensFromJsonSchema(module, variableName, jsonSchemaRelativeFileName);
                 }
             }
 
             if (listener != null) {
-                panelContext.subscribe(propertyName, listener);
+                panelContext.subscribeOnPropertyChange(propertyName, listener);
             }
         });
     }
@@ -150,7 +150,7 @@ public class SuggestionTreeBuilder {
      * matching the given context name.
      */
     private Optional<AutocompleteContext> findAutocompleteContextByName(@NotNull ContainerContext panelContext, String contextName) {
-        Optional<ComponentPropertyDescriptor> descriptorMatching = panelContext.getDescriptorMatching(descriptor -> descriptor.getAutocompleteContexts()
+        Optional<ComponentPropertyDescriptor> descriptorMatching = panelContext.getPropertyDescriptor(descriptor -> descriptor.getAutocompleteContexts()
                 .stream()
                 .anyMatch(autocompleteContext ->
                         autocompleteContext.getContextName().equals(contextName)));

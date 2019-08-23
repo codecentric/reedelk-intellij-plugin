@@ -6,16 +6,18 @@ import com.reedelk.plugin.component.domain.TypeDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.reedelk.plugin.editor.properties.widget.input.InputChangeListener;
-import com.reedelk.plugin.editor.properties.widget.input.script.ContainerContext;
 import com.reedelk.plugin.graph.FlowSnapshot;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 public class PropertiesPanelHolder extends DisposablePanel implements ContainerContext {
+
+    private final List<JComponentHolder> componentHolders = new ArrayList<>();
 
     private final Map<String, List<InputChangeListener>> propertyChangeListeners = new HashMap<>();
     private final Map<String, PropertyAccessor> propertyAccessors = new HashMap<>();
@@ -49,7 +51,7 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
     }
 
     @Override
-    public void subscribe(String propertyName, InputChangeListener<?> inputChangeListener) {
+    public void subscribeOnPropertyChange(String propertyName, InputChangeListener<?> inputChangeListener) {
         List<InputChangeListener> changeListenersForProperty =
                 propertyChangeListeners.getOrDefault(propertyName, new ArrayList<>());
         changeListenersForProperty.add(inputChangeListener);
@@ -57,14 +59,30 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
     }
 
     @Override
-    public <T> T getPropertyValue(String propertyName) {
+    public <T> T propertyValueFrom(String propertyName) {
         return propertyAccessors.get(propertyName).get();
     }
 
     @Override
-    public Optional<ComponentPropertyDescriptor> getDescriptorMatching(Predicate<ComponentPropertyDescriptor> filter) {
+    public Optional<ComponentPropertyDescriptor> getPropertyDescriptor(Predicate<ComponentPropertyDescriptor> filter) {
         return descriptors.stream().filter(filter).findFirst();
     }
+
+    @Override
+    public void addComponent(JComponentHolder componentHolder) {
+        componentHolders.add(componentHolder);
+    }
+
+    @Override
+    public Optional<JComponent> getComponentMatchingMetadata(BiPredicate<String, String> metadataPredicate) {
+        for (JComponentHolder holder : componentHolders) {
+            if (holder.matches(metadataPredicate)) {
+                return Optional.of(holder.getComponent());
+            }
+        }
+        return Optional.empty();
+    }
+
 
     public PropertyAccessor getAccessor(String propertyName) {
         return this.propertyAccessors.get(propertyName);

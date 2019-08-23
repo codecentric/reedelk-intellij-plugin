@@ -38,6 +38,7 @@ public class ValueConverterFactory {
         tmp.put(BigInteger.class, new BigIntegerConverter());
         tmp.put(BigDecimal.class, new BigDecimalConverter());
 
+        tmp.put(Map.class, new MapConverter());
         tmp.put(TypeFileDescriptor.TypeFile.class, new FileConverter());
         tmp.put(TypeScriptDescriptor.TypeScript.class, new ScriptConverter());
 

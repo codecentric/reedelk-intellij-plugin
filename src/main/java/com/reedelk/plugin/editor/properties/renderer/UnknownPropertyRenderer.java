@@ -3,7 +3,7 @@ package com.reedelk.plugin.editor.properties.renderer;
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
-import com.reedelk.plugin.editor.properties.widget.input.script.ContainerContext;
+import com.reedelk.plugin.editor.properties.widget.ContainerContext;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

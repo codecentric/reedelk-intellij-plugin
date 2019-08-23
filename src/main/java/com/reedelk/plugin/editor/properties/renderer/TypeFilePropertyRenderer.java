@@ -11,7 +11,7 @@ import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.commons.ModuleUtils;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
-import com.reedelk.plugin.editor.properties.widget.input.script.ContainerContext;
+import com.reedelk.plugin.editor.properties.widget.ContainerContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

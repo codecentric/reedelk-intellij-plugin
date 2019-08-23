@@ -1,21 +1,19 @@
 package com.reedelk.plugin.component.scanner.property;
 
 import com.reedelk.plugin.commons.GetAnnotationValue;
+import com.reedelk.plugin.component.domain.Shareable;
 import com.reedelk.plugin.component.domain.*;
 import com.reedelk.plugin.component.scanner.ComponentAnalyzerContext;
 import com.reedelk.plugin.component.scanner.UnsupportedType;
-import com.reedelk.runtime.api.annotation.Default;
-import com.reedelk.runtime.api.annotation.DisplayName;
-import com.reedelk.runtime.api.annotation.File;
-import com.reedelk.runtime.api.annotation.Script;
+import com.reedelk.runtime.api.annotation.*;
 import io.github.classgraph.*;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.reedelk.plugin.component.scanner.property.PropertyScannerUtils.filterByFullyQualifiedClassNameType;
-import static com.reedelk.plugin.component.scanner.property.PropertyScannerUtils.isEnumeration;
+import static com.reedelk.plugin.component.domain.TypeScriptDescriptor.INLINE_ANNOTATION_PARAM_NAME;
+import static com.reedelk.plugin.component.scanner.property.PropertyScannerUtils.*;
 import static com.reedelk.plugin.converter.ValueConverterFactory.isKnownType;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -27,7 +25,7 @@ public class PropertyTypeHandler implements Handler {
         TypeSignature typeSignature = propertyInfo.getTypeDescriptor();
 
         if (typeSignature instanceof BaseTypeSignature) {
-            TypeDescriptor typeDescriptor = processPrimitiveType(((BaseTypeSignature) typeSignature).getType(), propertyInfo);
+            TypeDescriptor typeDescriptor = processKnownType(((BaseTypeSignature) typeSignature).getType(), propertyInfo);
             builder.type(typeDescriptor);
 
         } else if (typeSignature instanceof ClassRefTypeSignature) {
@@ -40,14 +38,21 @@ public class PropertyTypeHandler implements Handler {
         }
     }
 
-    private TypeDescriptor processPrimitiveType(Class<?> clazz, FieldInfo fieldInfo) {
+    private TypeDescriptor processKnownType(Class<?> clazz, FieldInfo fieldInfo) {
         if (isScript(fieldInfo, clazz)) {
             // Find and map auto complete variable annotations.
-            Boolean inline = PropertyScannerUtils.getAnnotationParameterValueOrDefault(fieldInfo,
-                    Script.class, TypeScriptDescriptor.INLINE_ANNOTATION_PARAM_NAME, true);
+            Boolean inline =
+                    PropertyScannerUtils.getAnnotationParameterValueOrDefault(
+                            fieldInfo,
+                            Script.class,
+                            INLINE_ANNOTATION_PARAM_NAME,
+                            true);
             return new TypeScriptDescriptor(inline);
         } else if (isFile(fieldInfo, clazz)) {
             return new TypeFileDescriptor();
+        } else if (isMap(fieldInfo, clazz)) {
+            String tabGroup = getAnnotationValueOrDefault(fieldInfo, TabGroup.class, null);
+            return new TypeMapDescriptor(tabGroup);
         } else {
             return new TypePrimitiveDescriptor(clazz);
         }
@@ -57,7 +62,7 @@ public class PropertyTypeHandler implements Handler {
         String fullyQualifiedClassName = typeSignature.getFullyQualifiedClassName();
         if (isKnownType(fullyQualifiedClassName)) {
             try {
-                return processPrimitiveType(Class.forName(fullyQualifiedClassName), fieldInfo);
+                return processKnownType(Class.forName(fullyQualifiedClassName), fieldInfo);
             } catch (ClassNotFoundException e) {
                 // if it is a known type, then the class must be resolvable.
                 // Otherwise the @PropertyValueConverterFactory class would not even compile.
@@ -109,6 +114,10 @@ public class PropertyTypeHandler implements Handler {
     private boolean isFile(FieldInfo fieldInfo, Class<?> clazz) {
         return fieldInfo.hasAnnotation(File.class.getName()) &&
                 String.class.equals(clazz);
+    }
+
+    private boolean isMap(FieldInfo fieldInfo, Class<?> clazz) {
+        return Map.class.equals(clazz);
     }
 
     private Shareable isShareable(ClassInfo classInfo) {

@@ -2,6 +2,7 @@ package com.reedelk.plugin.editor.properties.widget.input.script;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.component.domain.VariableDefinition;
+import com.reedelk.plugin.editor.properties.widget.ContainerContext;
 import com.reedelk.plugin.editor.properties.widget.input.InputChangeListener;
 import com.reedelk.plugin.editor.properties.widget.input.script.suggestion.*;
 import org.jetbrains.annotations.NotNull;
