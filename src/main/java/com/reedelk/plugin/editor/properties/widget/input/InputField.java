@@ -55,5 +55,4 @@ public abstract class InputField<T> extends JBTextField implements DocumentListe
             listener.onChange(objectValue);
         }
     }
-
 }

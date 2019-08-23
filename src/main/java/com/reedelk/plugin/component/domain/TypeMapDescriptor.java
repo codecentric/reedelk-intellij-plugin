@@ -1,6 +1,5 @@
 package com.reedelk.plugin.component.domain;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -19,7 +18,7 @@ public class TypeMapDescriptor implements TypeDescriptor {
 
     @Override
     public Object defaultValue() {
-        return new HashMap<>();
+        return null;
     }
 
     public Optional<String> getTabGroup() {
