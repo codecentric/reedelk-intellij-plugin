@@ -10,6 +10,7 @@ public class SamplePropertyDescriptors {
     public static final TypeDescriptor stringTypeDescriptor = new TypePrimitiveDescriptor(String.class);
     public static final TypeDescriptor integerTypeDescriptor = new TypePrimitiveDescriptor(Integer.class);
     public static final TypeDescriptor booleanTypeDescriptor = new TypePrimitiveDescriptor(Boolean.class);
+    public static final TypeDescriptor mapTypeDescriptor = new TypeMapDescriptor("properties");
 
     public static final ComponentPropertyDescriptor property1 =
             ComponentPropertyDescriptor.builder()
@@ -70,5 +71,12 @@ public class SamplePropertyDescriptors {
                     .propertyName("property7")
                     .type(componentNode2ShareableTypeDescriptor)
                     .displayName("Property 7 Name")
+                    .build();
+
+    public static final ComponentPropertyDescriptor property8 =
+            ComponentPropertyDescriptor.builder()
+                    .propertyName("property8")
+                    .type(mapTypeDescriptor)
+                    .displayName("Property 8 Name")
                     .build();
 }

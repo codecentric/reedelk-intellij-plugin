@@ -75,6 +75,20 @@ public class Json {
             public String path() {
                 return "flow/generic_component_with_type_object_reference.json";
             }
+        },
+
+        WithNotEmptyMapProperty {
+            @Override
+            public String path() {
+                return "flow/generic_component_with_not_empty_map.json";
+            }
+        },
+
+        WithEmptyMapProperty {
+            @Override
+            public String path() {
+                return "flow/generic_component_with_empty_map.json";
+            }
         }
     }
 

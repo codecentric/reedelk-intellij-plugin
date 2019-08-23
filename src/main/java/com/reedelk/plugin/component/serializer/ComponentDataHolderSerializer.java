@@ -82,7 +82,8 @@ public class ComponentDataHolderSerializer {
     private static void putData(@NotNull JSONObject jsonObject,
                                 @NotNull String propertyName,
                                 @Nullable Object data) {
-        Stream.of(data).filter(ExcludeEmptyMaps)
+        Stream.of(data)
+                .filter(ExcludeEmptyMaps)
                 .forEach(filteredData -> jsonObject.put(propertyName, filteredData));
     }
 
