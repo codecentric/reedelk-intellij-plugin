@@ -22,7 +22,7 @@ public class MapConverter implements ValueConverter<Map<String, ?>> {
     }
 
     @Override
-    public Map<String, ?> from(String value) {
+    public Map<String,?> from(String value) {
         try {
             JSONObject jsonObject = new JSONObject(value);
             return asMap(jsonObject);
@@ -33,12 +33,12 @@ public class MapConverter implements ValueConverter<Map<String, ?>> {
     }
 
     @Override
-    public Map<String, ?> from(String propertyName, JSONObject object) {
+    public Map<String,?> from(String propertyName, JSONObject object) {
         JSONObject jsonObject = object.getJSONObject(propertyName);
         return asMap(jsonObject);
     }
 
-    private Map<String, ?> asMap(JSONObject jsonObject) {
+    private Map<String,?> asMap(JSONObject jsonObject) {
         Map<String, Object> map = new LinkedHashMap<>();
         jsonObject.keySet().forEach(key -> map.put(key, jsonObject.get(key)));
         return map;
