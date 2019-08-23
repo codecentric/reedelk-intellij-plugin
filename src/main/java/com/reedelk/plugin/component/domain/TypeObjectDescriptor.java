@@ -8,19 +8,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.reedelk.plugin.component.domain.Shareable.YES;
+import static com.reedelk.plugin.component.domain.Shared.YES;
 
 public class TypeObjectDescriptor implements TypeDescriptor {
 
     private final String typeFullyQualifiedName;
 
-    private Shareable shareable;
+    private Shared shared;
     private List<ComponentPropertyDescriptor> objectProperties = new ArrayList<>();
 
     public TypeObjectDescriptor(@NotNull final String typeFullyQualifiedName,
                                 @NotNull final List<ComponentPropertyDescriptor> objectProperties,
-                                @NotNull final Shareable shareable) {
-        this.shareable = shareable;
+                                @NotNull final Shared shared) {
+        this.shared = shared;
         this.typeFullyQualifiedName = typeFullyQualifiedName;
         this.objectProperties.addAll(objectProperties);
     }
@@ -35,18 +35,18 @@ public class TypeObjectDescriptor implements TypeDescriptor {
         return null;
     }
 
-    public Shareable getShareable() {
-        return shareable;
+    public Shared getShared() {
+        return shared;
     }
 
     public List<ComponentPropertyDescriptor> getObjectProperties() {
         return objectProperties;
     }
 
-    // If the type object is not shareable, then the serialized
+    // If the type object is not shared, then the serialized
     // json does not contain the fully qualified name
     public TypeObject newInstance() {
-        return YES.equals(shareable) ?
+        return YES.equals(shared) ?
                 new TypeObject() :
                 new TypeObject(typeFullyQualifiedName);
     }

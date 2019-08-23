@@ -14,6 +14,7 @@ import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Vector;
+import java.util.function.Consumer;
 
 import static com.reedelk.plugin.commons.Icons.MapType.AddItem;
 import static com.reedelk.plugin.commons.Icons.MapType.RemoveItem;
@@ -79,11 +80,7 @@ class TypeMapTabContainer extends JBPanel {
 
         private void updateAccessorData() {
             Map<String, String> updated = new LinkedHashMap<>();
-            getDataVector().forEach(vector -> {
-                String key = getOrEmptyIfNull(vector, 0); // 0 is the key
-                String value = getOrEmptyIfNull(vector, 1); // 1 is the value
-                updated.put(key, value);
-            });
+            getDataVector().forEach(new VectorDataConsumer(updated));
             accessor.set(updated);
         }
 
@@ -92,11 +89,6 @@ class TypeMapTabContainer extends JBPanel {
             if (map != null) {
                 map.forEach((key, value) -> addRow(new Object[]{key, value}));
             }
-        }
-
-        private String getOrEmptyIfNull(Vector vector, int index) {
-            String value = (String) vector.get(index);
-            return value == null ? "" : value;
         }
     }
 
@@ -111,6 +103,27 @@ class TypeMapTabContainer extends JBPanel {
             TableColumn valueColumn = new TableColumn(1);
             valueColumn.setHeaderValue(COLUMN_NAMES[1]);
             addColumn(valueColumn);
+        }
+    }
+
+    class VectorDataConsumer implements Consumer<Vector> {
+
+        private final Map<String, String> map;
+
+        VectorDataConsumer(Map<String, String> map) {
+            this.map = map;
+        }
+
+        @Override
+        public void accept(Vector vector) {
+            String key = getOrEmptyIfNull(vector, 0); // 0 is the key
+            String value = getOrEmptyIfNull(vector, 1); // 1 is the value
+            map.put(key, value);
+        }
+
+        private String getOrEmptyIfNull(Vector vector, int index) {
+            String value = (String) vector.get(index);
+            return value == null ? "" : value;
         }
     }
 }

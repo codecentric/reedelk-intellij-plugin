@@ -61,7 +61,7 @@ public class ComponentDataHolderSerializer {
                                           @NotNull String propertyName,
                                           @NotNull TypeObject data) {
         TypeObjectDescriptor propertyType = (TypeObjectDescriptor) propertyDescriptor.getPropertyType();
-        if (Shareable.YES.equals(propertyType.getShareable())) {
+        if (Shared.YES.equals(propertyType.getShared())) {
             JSONObject refObject = JsonObjectFactory.newJSONObject();
             String ref = data.get(JsonParser.Component.configRef());
             JsonParser.Component.configRef(ref, refObject);

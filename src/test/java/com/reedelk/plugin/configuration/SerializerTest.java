@@ -1,7 +1,7 @@
 package com.reedelk.plugin.configuration;
 
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
-import com.reedelk.plugin.component.domain.Shareable;
+import com.reedelk.plugin.component.domain.Shared;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.component.serializer.ConfigurationSerializer;
 import com.reedelk.plugin.fixture.ComponentNode1;
@@ -128,7 +128,7 @@ class SerializerTest {
 
     private TypeObjectDescriptor keyStoreConfigObjectType = new TypeObjectDescriptor(ComponentNode3.class.getName(),
             Collections.singletonList(algorithm),
-            Shareable.NO);
+            Shared.NO);
 
     private ComponentPropertyDescriptor keyStoreConfigDescriptor =
             ComponentPropertyDescriptor.builder()
@@ -154,7 +154,7 @@ class SerializerTest {
 
     private TypeObjectDescriptor securityConfigObjectType = new TypeObjectDescriptor(ComponentNode2.class.getName(),
             Arrays.asList(userName, password, keyStoreConfigDescriptor),
-            Shareable.NO);
+            Shared.NO);
 
     private ComponentPropertyDescriptor securityConfigDescriptor =
             ComponentPropertyDescriptor.builder()
@@ -166,5 +166,5 @@ class SerializerTest {
     private TypeObjectDescriptor configObjectDescriptor = new TypeObjectDescriptor(
             ComponentNode1.class.getName(),
             Arrays.asList(hostProperty, portProperty, keepAlive, securityConfigDescriptor),
-            Shareable.YES);
+            Shared.YES);
 }

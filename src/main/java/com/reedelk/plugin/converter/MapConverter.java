@@ -9,11 +9,13 @@ public class MapConverter implements ValueConverter<Map<String, ?>> {
 
     @Override
     public String toText(Object value) {
+        // TODO: Why are we not using it?
         throw new UnsupportedOperationException();
     }
 
     @Override
     public Map<String, ?> from(String value) {
+        // TODO: Why are we not using it?
         throw new UnsupportedOperationException();
     }
 

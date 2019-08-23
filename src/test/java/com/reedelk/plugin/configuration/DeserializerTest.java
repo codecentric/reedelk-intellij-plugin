@@ -4,7 +4,7 @@ import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.component.deserializer.ConfigurationDeserializer;
 import com.reedelk.plugin.component.domain.ComponentDataHolder;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
-import com.reedelk.plugin.component.domain.Shareable;
+import com.reedelk.plugin.component.domain.Shared;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.fixture.ComponentNode1;
 import com.reedelk.plugin.fixture.ComponentNode2;
@@ -28,7 +28,7 @@ class DeserializerTest {
         TypeObjectDescriptor httpConfigType = new TypeObjectDescriptor(
                 ComponentNode1.class.getName(),
                 asList(host, port, keepAlive),
-                Shareable.NO);
+                Shared.NO);
 
         String json = Sample.json();
 
@@ -56,7 +56,7 @@ class DeserializerTest {
         TypeObjectDescriptor httpConfigType =
                 new TypeObjectDescriptor(ComponentNode1.class.getName(),
                         asList(host, port, keepAlive, securityConfigPropertyDescriptor),
-                        Shareable.NO);
+                        Shared.NO);
 
         String json = NestedConfig.json();
 
@@ -94,7 +94,7 @@ class DeserializerTest {
         TypeObjectDescriptor httpConfigType =
                 new TypeObjectDescriptor(ComponentNode1.class.getName(),
                         asList(host, port, keepAlive, securityConfigPropertyDescriptor),
-                        Shareable.NO);
+                        Shared.NO);
 
 
         String json = NestedConfigMissingObjectProperty.json();
@@ -122,7 +122,7 @@ class DeserializerTest {
         TypeObjectDescriptor httpConfigType =
                 new TypeObjectDescriptor(ComponentNode1.class.getName(),
                         asList(host, port, keepAlive, securityConfigPropertyDescriptor),
-                        Shareable.NO);
+                        Shared.NO);
 
 
         String json = NestedConfigNullObjectProperty.json();
@@ -150,7 +150,7 @@ class DeserializerTest {
         TypeObjectDescriptor httpConfigType =
                 new TypeObjectDescriptor(ComponentNode1.class.getName(),
                         asList(host, port, keepAlive, securityConfigPropertyDescriptor),
-                        Shareable.NO);
+                        Shared.NO);
 
 
         String notValidJson = "myInvalidJson";
@@ -168,7 +168,7 @@ class DeserializerTest {
         TypeObjectDescriptor activeMqConfigType = new TypeObjectDescriptor(
                 ComponentNode4.class.getName(), // we provide an object descriptor with a different qualified name
                 asList(host, port, keepAlive),
-                Shareable.NO);
+                Shared.NO);
 
         String json = Sample.json();
 
@@ -227,7 +227,7 @@ class DeserializerTest {
     private final TypeObjectDescriptor keyStoreConfigObjectType = new TypeObjectDescriptor(
             ComponentNode3.class.getName(),
             singletonList(algorithm),
-            Shareable.NO);
+            Shared.NO);
 
     private final ComponentPropertyDescriptor keyStoreConfig =
             ComponentPropertyDescriptor.builder()
@@ -239,7 +239,7 @@ class DeserializerTest {
     private final TypeObjectDescriptor securityConfigObjectType = new TypeObjectDescriptor(
             ComponentNode2.class.getName(),
             asList(userName, password, keyStoreConfig),
-            Shareable.NO);
+            Shared.NO);
 
     private final ComponentPropertyDescriptor securityConfigPropertyDescriptor =
             ComponentPropertyDescriptor.builder()

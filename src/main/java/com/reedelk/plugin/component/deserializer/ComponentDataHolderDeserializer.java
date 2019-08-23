@@ -9,7 +9,7 @@ import com.reedelk.runtime.commons.JsonParser;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
-import static com.reedelk.plugin.component.domain.Shareable.YES;
+import static com.reedelk.plugin.component.domain.Shared.YES;
 
 public class ComponentDataHolderDeserializer {
 
@@ -40,7 +40,7 @@ public class ComponentDataHolderDeserializer {
 
             JSONObject nestedJsonObject = componentJsonObject.getJSONObject(descriptor.getPropertyName());
 
-            if (YES.equals(propertyType.getShareable())) {
+            if (YES.equals(propertyType.getShared())) {
                 // The config is shareable, therefore we just set the reference value
                 // pointing to the shared config.
                 if (nestedJsonObject.has(JsonParser.Component.configRef())) {
@@ -48,7 +48,7 @@ public class ComponentDataHolderDeserializer {
                     nestedObject.set(JsonParser.Component.configRef(), configRef);
                     componentData.set(descriptor.getPropertyName(), nestedObject);
                 } else {
-                    throw new IllegalStateException("Expected config ref for @Shareable configuration");
+                    throw new IllegalStateException("Expected config ref for @Shared configuration");
                 }
 
             } else {

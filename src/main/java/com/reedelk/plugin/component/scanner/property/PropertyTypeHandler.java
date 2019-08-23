@@ -1,7 +1,7 @@
 package com.reedelk.plugin.component.scanner.property;
 
 import com.reedelk.plugin.commons.GetAnnotationValue;
-import com.reedelk.plugin.component.domain.Shareable;
+import com.reedelk.plugin.component.domain.Shared;
 import com.reedelk.plugin.component.domain.*;
 import com.reedelk.plugin.component.scanner.ComponentAnalyzerContext;
 import com.reedelk.plugin.component.scanner.UnsupportedType;
@@ -76,7 +76,7 @@ public class PropertyTypeHandler implements Handler {
             ClassInfo classInfo = context.getClassInfo(fullyQualifiedClassName);
             if (classInfo == null) throw new UnsupportedType(typeSignature.getClass());
 
-            Shareable shareable = isShareable(classInfo);
+            Shared shared = isShareable(classInfo);
             ComponentPropertyAnalyzer propertyAnalyzer = new ComponentPropertyAnalyzer(context);
 
             List<ComponentPropertyDescriptor> allProperties = classInfo
@@ -86,7 +86,7 @@ public class PropertyTypeHandler implements Handler {
                     .filter(Optional::isPresent)
                     .map(Optional::get)
                     .collect(toList());
-            return new TypeObjectDescriptor(fullyQualifiedClassName, allProperties, shareable);
+            return new TypeObjectDescriptor(fullyQualifiedClassName, allProperties, shared);
         }
     }
 
@@ -120,8 +120,8 @@ public class PropertyTypeHandler implements Handler {
         return Map.class.equals(clazz);
     }
 
-    private Shareable isShareable(ClassInfo classInfo) {
-        return classInfo.hasAnnotation(com.reedelk.runtime.api.annotation.Shareable.class.getName()) ?
-                Shareable.YES : Shareable.NO;
+    private Shared isShareable(ClassInfo classInfo) {
+        return classInfo.hasAnnotation(com.reedelk.runtime.api.annotation.Shared.class.getName()) ?
+                Shared.YES : Shared.NO;
     }
 }

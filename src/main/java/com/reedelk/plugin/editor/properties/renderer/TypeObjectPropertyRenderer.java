@@ -24,8 +24,8 @@ import java.util.List;
 
 import static com.intellij.openapi.ui.MessageType.WARNING;
 import static com.intellij.openapi.ui.popup.Balloon.Position;
-import static com.reedelk.plugin.component.domain.Shareable.NO;
-import static com.reedelk.plugin.component.domain.Shareable.YES;
+import static com.reedelk.plugin.component.domain.Shared.NO;
+import static com.reedelk.plugin.component.domain.Shared.YES;
 import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
 import static com.reedelk.runtime.commons.JsonParser.Config;
 import static java.awt.BorderLayout.CENTER;
@@ -48,7 +48,7 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
                              @NotNull PropertyAccessor accessor,
                              @NotNull ContainerContext context) {
         TypeObjectDescriptor objectDescriptor = (TypeObjectDescriptor) descriptor.getPropertyType();
-        return YES.equals(objectDescriptor.getShareable()) ?
+        return YES.equals(objectDescriptor.getShared()) ?
                 renderShareable(module, descriptor, accessor) :
                 renderInline(module, accessor, objectDescriptor);
     }
@@ -60,7 +60,7 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
                             @NotNull ContainerContext context) {
 
         TypeObjectDescriptor objectDescriptor = (TypeObjectDescriptor) descriptor.getPropertyType();
-        if (NO.equals(objectDescriptor.getShareable())) {
+        if (NO.equals(objectDescriptor.getShared())) {
             addToParentInline(parent, rendered, descriptor, context);
         } else {
             addToParentShared(parent, rendered, descriptor, context);

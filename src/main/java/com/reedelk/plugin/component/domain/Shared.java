@@ -1,6 +1,6 @@
 package com.reedelk.plugin.component.domain;
 
-public enum Shareable {
+public enum Shared {
     YES,
     NO
 }
