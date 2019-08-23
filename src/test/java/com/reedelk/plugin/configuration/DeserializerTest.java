@@ -1,6 +1,7 @@
 package com.reedelk.plugin.configuration;
 
 import com.reedelk.plugin.assertion.PluginAssertion;
+import com.reedelk.plugin.component.deserializer.ConfigurationDeserializer;
 import com.reedelk.plugin.component.domain.ComponentDataHolder;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.Shareable;
@@ -32,7 +33,7 @@ class DeserializerTest {
         String json = Sample.json();
 
         // When
-        Optional<ComponentDataHolder> deserialized = Deserializer.deserialize(json, httpConfigType);
+        Optional<ComponentDataHolder> deserialized = ConfigurationDeserializer.deserialize(json, httpConfigType);
 
         // Then
         assertThat(deserialized).isPresent();
@@ -61,7 +62,7 @@ class DeserializerTest {
 
         // When
         Optional<ComponentDataHolder> deserialized =
-                Deserializer.deserialize(json, httpConfigType);
+                ConfigurationDeserializer.deserialize(json, httpConfigType);
 
         // Then
         assertThat(deserialized).isPresent();
@@ -99,7 +100,7 @@ class DeserializerTest {
         String json = NestedConfigMissingObjectProperty.json();
 
         // When
-        Optional<ComponentDataHolder> deserialized = Deserializer.deserialize(json, httpConfigType);
+        Optional<ComponentDataHolder> deserialized = ConfigurationDeserializer.deserialize(json, httpConfigType);
 
         // Then
         assertThat(deserialized).isPresent();
@@ -127,7 +128,7 @@ class DeserializerTest {
         String json = NestedConfigNullObjectProperty.json();
 
         // When
-        Optional<ComponentDataHolder> deserialized = Deserializer.deserialize(json, httpConfigType);
+        Optional<ComponentDataHolder> deserialized = ConfigurationDeserializer.deserialize(json, httpConfigType);
 
         // Then
         assertThat(deserialized).isPresent();
@@ -155,7 +156,7 @@ class DeserializerTest {
         String notValidJson = "myInvalidJson";
 
         // When
-        Optional<ComponentDataHolder> deserialized = Deserializer.deserialize(notValidJson, httpConfigType);
+        Optional<ComponentDataHolder> deserialized = ConfigurationDeserializer.deserialize(notValidJson, httpConfigType);
 
         // Then
         assertThat(deserialized).isEmpty();
@@ -172,7 +173,7 @@ class DeserializerTest {
         String json = Sample.json();
 
         // When
-        Optional<ComponentDataHolder> deserialized = Deserializer.deserialize(json, activeMqConfigType);
+        Optional<ComponentDataHolder> deserialized = ConfigurationDeserializer.deserialize(json, activeMqConfigType);
 
         // Then
         assertThat(deserialized).isEmpty();

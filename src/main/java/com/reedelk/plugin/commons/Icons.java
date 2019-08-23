@@ -73,4 +73,13 @@ public class Icons {
 
         public static final Icon Properties = IconLoader.getIcon("/icons/toolbar-properties.png");
     }
+
+    public static class MapType {
+
+        private MapType() {
+        }
+
+        public static final Icon AddItem = IconLoader.getIcon("/icons/map-item-add.png");
+        public static final Icon RemoveItem = IconLoader.getIcon("/icons/map-item-remove.png");
+    }
 }

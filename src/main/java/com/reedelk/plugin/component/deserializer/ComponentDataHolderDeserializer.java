@@ -1,4 +1,4 @@
-package com.reedelk.plugin.component.serialization;
+package com.reedelk.plugin.component.deserializer;
 
 import com.reedelk.plugin.component.domain.ComponentDataHolder;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;

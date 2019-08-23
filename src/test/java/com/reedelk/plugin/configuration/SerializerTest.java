@@ -3,6 +3,7 @@ package com.reedelk.plugin.configuration;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.Shareable;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
+import com.reedelk.plugin.component.serializer.ConfigurationSerializer;
 import com.reedelk.plugin.fixture.ComponentNode1;
 import com.reedelk.plugin.fixture.ComponentNode2;
 import com.reedelk.plugin.fixture.ComponentNode3;
@@ -33,7 +34,7 @@ class SerializerTest {
         ConfigMetadata metadata = new ConfigMetadata(httpConfigType, configObjectDescriptor);
 
         // When
-        String actualJson = Serializer.serialize(metadata);
+        String actualJson = ConfigurationSerializer.serialize(metadata);
 
         // Then
         String expectedJson = Sample.json();
@@ -63,7 +64,7 @@ class SerializerTest {
         ConfigMetadata metadata = new ConfigMetadata(httpConfigType, configObjectDescriptor);
 
         // When
-        String actualJson = Serializer.serialize(metadata);
+        String actualJson = ConfigurationSerializer.serialize(metadata);
 
         // Then
         String expectedJson = NestedConfig.json();
@@ -89,7 +90,7 @@ class SerializerTest {
         ConfigMetadata metadata = new ConfigMetadata(httpConfigType, configObjectDescriptor);
 
         // When
-        String actualJson = Serializer.serialize(metadata);
+        String actualJson = ConfigurationSerializer.serialize(metadata);
 
         // Then
         String expectedJson = SampleWithEmptyConfig.json();

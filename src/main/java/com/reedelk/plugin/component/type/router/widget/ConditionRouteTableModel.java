@@ -1,13 +1,14 @@
 package com.reedelk.plugin.component.type.router.widget;
 
 import com.reedelk.plugin.component.type.router.RouterConditionRoutePair;
+import com.reedelk.plugin.editor.properties.widget.PropertyTable;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
 
-public class ConditionRouteTableModel extends AbstractTableModel {
+public class ConditionRouteTableModel extends AbstractTableModel implements PropertyTable.PropertyTableModel {
 
     private final FlowSnapshot snapshot;
     private final List<RouterConditionRoutePair> conditionRouteList;
@@ -71,5 +72,4 @@ public class ConditionRouteTableModel extends AbstractTableModel {
         }
         snapshot.onDataChange();
     }
-
 }

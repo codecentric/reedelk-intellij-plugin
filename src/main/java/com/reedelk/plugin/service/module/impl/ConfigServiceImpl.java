@@ -9,9 +9,9 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThrowableRunnable;
 import com.reedelk.plugin.commons.ModuleUtils;
+import com.reedelk.plugin.component.deserializer.ConfigurationDeserializer;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
-import com.reedelk.plugin.configuration.Deserializer;
-import com.reedelk.plugin.configuration.Serializer;
+import com.reedelk.plugin.component.serializer.ConfigurationSerializer;
 import com.reedelk.plugin.service.module.ConfigService;
 import com.reedelk.runtime.commons.FileExtension;
 import org.jetbrains.annotations.NotNull;
@@ -54,14 +54,14 @@ public class ConfigServiceImpl implements ConfigService {
         checkState(document != null,
                 String.format("Expected document for file %s to be found", updatedConfig.getConfigFile()));
 
-        String serializedConfig = Serializer.serialize(updatedConfig);
+        String serializedConfig = ConfigurationSerializer.serialize(updatedConfig);
         executeWriteCommand(() -> document.setText(serializedConfig));
     }
 
     @Override
     public void addConfig(@NotNull ConfigMetadata newConfig) throws IOException {
         // Serialize the config
-        String serializedConfig = Serializer.serialize(newConfig);
+        String serializedConfig = ConfigurationSerializer.serialize(newConfig);
 
         Optional<String> maybeConfigDirectory = getConfigDirectory();
         if (maybeConfigDirectory.isPresent()) {
@@ -96,7 +96,7 @@ public class ConfigServiceImpl implements ConfigService {
         Optional<Document> maybeDocument = getDocumentFromFile(virtualFile);
         if (maybeDocument.isPresent()) {
             String json = maybeDocument.get().getText();
-            return Deserializer.deserialize(json, configTypeDescriptor)
+            return ConfigurationDeserializer.deserialize(json, configTypeDescriptor)
                     .map(dataHolder -> new ExistingConfigMetadata(virtualFile, dataHolder, configTypeDescriptor));
         }
         return Optional.empty();

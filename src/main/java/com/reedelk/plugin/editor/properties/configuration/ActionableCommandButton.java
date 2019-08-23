@@ -1,21 +1,18 @@
-package com.reedelk.plugin.configuration.widget;
+package com.reedelk.plugin.editor.properties.configuration;
 
+import com.reedelk.plugin.editor.properties.widget.ClickableLabel;
 import com.reedelk.plugin.editor.properties.widget.input.ConfigSelector;
 import com.reedelk.plugin.service.module.impl.ConfigMetadata;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
-public abstract class ActionableCommandButton extends JLabel implements MouseListener, ConfigSelector.SelectListener {
+public abstract class ActionableCommandButton extends ClickableLabel implements ConfigSelector.SelectListener {
 
     private ConfigMetadata selectedMetadata;
 
     ActionableCommandButton(String text, Icon icon, Icon disabledIcon) {
-        setText(text);
-        setIcon(icon);
-        setDisabledIcon(disabledIcon);
-        addMouseListener(this);
+        super(text, icon, disabledIcon);
     }
 
     @Override
@@ -26,26 +23,6 @@ public abstract class ActionableCommandButton extends JLabel implements MouseLis
     @Override
     public void onSelect(ConfigMetadata configMetadata) {
         this.selectedMetadata = configMetadata;
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
     }
 
     protected abstract void onClick(ConfigMetadata selectedMetadata);

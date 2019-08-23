@@ -53,4 +53,7 @@ public class Labels {
 
     public static final String BALLOON_EDIT_CONFIG_ERROR = "<p><b>An error has occurred:</b><p>%s</p>";
     public static final String CONFIG_NOT_SELECTED_ITEM = "<Not selected>";
+
+    public static final String ACTION_MAP_TABLE_ADD = "Add";
+    public static final String ACTION_MAP_TABLE_REMOVE = "Remove";
 }

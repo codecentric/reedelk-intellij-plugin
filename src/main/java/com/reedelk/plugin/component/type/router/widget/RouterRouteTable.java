@@ -2,8 +2,8 @@ package com.reedelk.plugin.component.type.router.widget;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBPanel;
-import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
+import com.reedelk.plugin.editor.properties.widget.PropertyTable;
 import com.reedelk.plugin.editor.properties.widget.input.script.EditScriptDialog;
 
 import javax.swing.*;
@@ -17,22 +17,20 @@ import static java.awt.BorderLayout.NORTH;
 
 public class RouterRouteTable extends JBPanel {
 
-    private final Dimension tableScrollPaneDimension = new Dimension(0, 110);
     private final Module module;
     private final JBTable table;
 
     public RouterRouteTable(Module module, ConditionRouteTableModel model) {
         this.module = module;
 
-        final TableColumnModel tableColumnModel = new ConditionRouteTableColumnModel();
-        table = new JBTable(model, tableColumnModel);
-        table.addMouseListener(new OpenEditScriptDialogMouseListener());
+        TableColumnModel tableColumnModel = new ConditionRouteTableColumnModel();
 
-        JScrollPane tableScrollPane = new JBScrollPane(table);
-        tableScrollPane.setPreferredSize(tableScrollPaneDimension);
+        PropertyTable propertyTable = new PropertyTable(model, tableColumnModel);
+        this.table = propertyTable.getTable();
+        this.table.addMouseListener(new OpenEditScriptDialogMouseListener());
 
         setLayout(new BorderLayout());
-        add(tableScrollPane, NORTH);
+        add(propertyTable, NORTH);
         add(Box.createVerticalGlue(), CENTER);
     }
 
@@ -45,7 +43,7 @@ public class RouterRouteTable extends JBPanel {
         public void mousePressed(MouseEvent event) {
             int row = table.rowAtPoint(event.getPoint());
             int column = table.columnAtPoint(event.getPoint());
-            // The 'otherwise' script cannot be edited. If we click on
+            // The 'otherwise' script (column 0) cannot be edited. If we click on
             // the Edit script we show a popup containing the Script Editor.
             if (column == 0 && row != table.getModel().getRowCount() - 1) {
                 String scriptCellValue = (String) table.getModel().getValueAt(row, column + 1);

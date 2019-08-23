@@ -1,4 +1,4 @@
-package com.reedelk.plugin.configuration.widget;
+package com.reedelk.plugin.editor.properties.configuration;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;

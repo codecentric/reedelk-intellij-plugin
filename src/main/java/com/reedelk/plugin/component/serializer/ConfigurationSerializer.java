@@ -1,16 +1,15 @@
-package com.reedelk.plugin.configuration;
+package com.reedelk.plugin.component.serializer;
 
 import com.reedelk.plugin.commons.JsonObjectFactory;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
-import com.reedelk.plugin.component.serialization.ComponentDataHolderSerializer;
 import com.reedelk.plugin.graph.serializer.AbstractSerializer;
 import com.reedelk.plugin.service.module.impl.ConfigMetadata;
 import com.reedelk.runtime.commons.JsonParser;
 import org.json.JSONObject;
 
-public class Serializer {
+public class ConfigurationSerializer {
 
-    private Serializer() {
+    private ConfigurationSerializer() {
     }
 
     public static String serialize(ConfigMetadata dataHolder) {

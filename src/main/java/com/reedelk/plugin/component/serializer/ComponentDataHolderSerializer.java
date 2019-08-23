@@ -1,4 +1,4 @@
-package com.reedelk.plugin.component.serialization;
+package com.reedelk.plugin.component.serializer;
 
 import com.reedelk.plugin.commons.JsonObjectFactory;
 import com.reedelk.plugin.component.domain.*;

@@ -1,4 +1,4 @@
-package com.reedelk.plugin.configuration.widget;
+package com.reedelk.plugin.editor.properties.configuration;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBPanel;
@@ -59,7 +59,7 @@ class ConfigPropertiesPanel extends DisposablePanel {
 
         setLayout(new BorderLayout());
         add(headerPanel, NORTH);
-        add(ContainerFactory.pushPanelToTop(propertiesPanel), CENTER);
+        add(ContainerFactory.pushTop(propertiesPanel), CENTER);
     }
 
     class ConfigMetadataHeaderPanel extends JBPanel {

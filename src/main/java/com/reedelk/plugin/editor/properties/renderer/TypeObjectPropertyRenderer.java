@@ -5,11 +5,11 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.awt.RelativePoint;
 import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.component.domain.*;
-import com.reedelk.plugin.configuration.widget.ActionAddConfiguration;
-import com.reedelk.plugin.configuration.widget.ActionDeleteConfiguration;
-import com.reedelk.plugin.configuration.widget.ConfigControlPanel;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessorFactory;
+import com.reedelk.plugin.editor.properties.configuration.ActionAddConfiguration;
+import com.reedelk.plugin.editor.properties.configuration.ActionDeleteConfiguration;
+import com.reedelk.plugin.editor.properties.configuration.ConfigControlPanel;
 import com.reedelk.plugin.editor.properties.widget.*;
 import com.reedelk.plugin.editor.properties.widget.input.ConfigSelector;
 import com.reedelk.plugin.service.module.ConfigService;
@@ -24,6 +24,7 @@ import java.util.List;
 
 import static com.intellij.openapi.ui.MessageType.WARNING;
 import static com.intellij.openapi.ui.popup.Balloon.Position;
+import static com.reedelk.plugin.component.domain.Shareable.NO;
 import static com.reedelk.plugin.component.domain.Shareable.YES;
 import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
 import static com.reedelk.runtime.commons.JsonParser.Config;
@@ -42,7 +43,10 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
 
     @NotNull
     @Override
-    public JComponent render(@NotNull Module module, @NotNull ComponentPropertyDescriptor descriptor, @NotNull PropertyAccessor accessor, @NotNull ContainerContext context) {
+    public JComponent render(@NotNull Module module,
+                             @NotNull ComponentPropertyDescriptor descriptor,
+                             @NotNull PropertyAccessor accessor,
+                             @NotNull ContainerContext context) {
         TypeObjectDescriptor objectDescriptor = (TypeObjectDescriptor) descriptor.getPropertyType();
         return YES.equals(objectDescriptor.getShareable()) ?
                 renderShareable(module, descriptor, accessor) :
@@ -55,19 +59,12 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
                             @NotNull ComponentPropertyDescriptor descriptor,
                             @NotNull ContainerContext context) {
 
-        // If the property type is a complex object, we wrap it in a
-        // bordered box with title the name of the object property.
-        DisposablePanel wrappedRenderedComponent =
-                ContainerFactory.createObjectTypeContainer(descriptor.getDisplayName(), rendered);
-
-        // If the property has any 'when' condition, we apply listener/s to make it
-        // visible (or not) when the condition is met (or not).
-        applyWhenVisibilityConditions(descriptor.getWhenDefinitions(), wrappedRenderedComponent, context);
-
-        // Add the component to the parent container.
-        FormBuilder.get()
-                .addLastField(wrappedRenderedComponent, parent);
-
+        TypeObjectDescriptor objectDescriptor = (TypeObjectDescriptor) descriptor.getPropertyType();
+        if (NO.equals(objectDescriptor.getShareable())) {
+            addToParentInline(parent, rendered, descriptor, context);
+        } else {
+            addToParentShared(parent, rendered, descriptor, context);
+        }
         // Add the component to the context
         context.addComponent(new JComponentHolder(rendered));
     }
@@ -226,5 +223,31 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
         panel.setVisible(visible);
         panel.repaint();
         panel.revalidate();
+    }
+
+    private void addToParentInline(@NotNull JComponent parent, @NotNull JComponent rendered, @NotNull ComponentPropertyDescriptor descriptor, @NotNull ContainerContext context) {
+        // If the property type is a complex object (not shared), we wrap it in a
+        // bordered box with title the name of the object property.
+        DisposablePanel wrappedRenderedComponent =
+                ContainerFactory.createObjectTypeContainer(descriptor.getDisplayName(), rendered);
+
+        // If the property has any 'when' condition, we apply listener/s to make it
+        // visible (or not) when the condition is met (or not).
+        applyWhenVisibilityConditions(descriptor.getWhenDefinitions(), wrappedRenderedComponent, context);
+
+        // Add the component to the parent container.
+        FormBuilder.get()
+                .addLastField(wrappedRenderedComponent, parent);
+    }
+
+    private void addToParentShared(@NotNull JComponent parent, @NotNull JComponent rendered, @NotNull ComponentPropertyDescriptor descriptor, @NotNull ContainerContext context) {
+        // If the property has any 'when' condition, we apply listener/s to make it
+        // visible (or not) when the condition is met (or not).
+        applyWhenVisibilityConditions(descriptor.getWhenDefinitions(), rendered, context);
+
+        // Add the component to the parent container.
+        FormBuilder.get()
+                .addLabel(descriptor.getDisplayName(), parent)
+                .addLastField(rendered, parent);
     }
 }

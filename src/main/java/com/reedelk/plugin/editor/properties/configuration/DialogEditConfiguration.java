@@ -1,4 +1,4 @@
-package com.reedelk.plugin.configuration.widget;
+package com.reedelk.plugin.editor.properties.configuration;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.DialogWrapper;

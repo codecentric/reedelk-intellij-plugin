@@ -37,15 +37,15 @@ public class ContainerFactory {
                 .module(module)
                 .build()
                 .render(node);
-        DisposablePanel propertiesBoxContainer = pushPanelToTop(propertiesPanel);
+        DisposablePanel propertiesBoxContainer = pushTop(propertiesPanel);
         propertiesBoxContainer.setBorder(JBUI.Borders.empty(10));
         return wrapInsideScrollPane(propertiesBoxContainer);
     }
 
-    public static DisposablePanel pushPanelToTop(DisposablePanel propertiesPanel) {
+    public static DisposablePanel pushTop(JComponent component) {
         DisposablePanel propertiesBoxContainer = new DisposablePanel();
         propertiesBoxContainer.setLayout(new BorderLayout());
-        propertiesBoxContainer.add(propertiesPanel, NORTH);
+        propertiesBoxContainer.add(component, NORTH);
         propertiesBoxContainer.add(Box.createGlue(), CENTER);
         return propertiesBoxContainer;
     }
