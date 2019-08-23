@@ -2,17 +2,19 @@ package com.reedelk.plugin.component.serializer;
 
 import com.reedelk.plugin.commons.JsonObjectFactory;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
-import com.reedelk.plugin.graph.serializer.AbstractSerializer;
 import com.reedelk.plugin.service.module.impl.ConfigMetadata;
 import com.reedelk.runtime.commons.JsonParser;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
+
+import static com.reedelk.plugin.graph.serializer.AbstractSerializer.JSON_INDENT_FACTOR;
 
 public class ConfigurationSerializer {
 
     private ConfigurationSerializer() {
     }
 
-    public static String serialize(ConfigMetadata dataHolder) {
+    public static String serialize(@NotNull ConfigMetadata dataHolder) {
 
         TypeObjectDescriptor typeObjectDescriptor =
                 dataHolder.getConfigObjectDescriptor();
@@ -24,6 +26,6 @@ public class ConfigurationSerializer {
 
         ComponentDataHolderSerializer.serialize(typeObjectDescriptor, dataHolder, object);
 
-        return object.toString(AbstractSerializer.JSON_INDENT_FACTOR);
+        return object.toString(JSON_INDENT_FACTOR);
     }
 }

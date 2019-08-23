@@ -4,9 +4,13 @@ import com.reedelk.plugin.commons.JsonObjectFactory;
 import com.reedelk.plugin.component.domain.*;
 import com.reedelk.runtime.commons.JsonParser;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
 
@@ -51,7 +55,7 @@ public class ComponentDataHolderSerializer {
             if (isTypeObject(data)) {
                 processTypeObject(jsonObject, propertyDescriptor, propertyName, (TypeObject) data);
             } else {
-                jsonObject.put(propertyName, data);
+                putData(jsonObject, propertyName, data);
             }
         }
     }
@@ -65,14 +69,21 @@ public class ComponentDataHolderSerializer {
             JSONObject refObject = JsonObjectFactory.newJSONObject();
             String ref = data.get(JsonParser.Component.configRef());
             JsonParser.Component.configRef(ref, refObject);
-            jsonObject.put(propertyName, refObject);
+            putData(jsonObject, propertyName, refObject);
 
         } else {
             JSONObject object = JsonObjectFactory.newJSONObject();
             object.put(JsonParser.Implementor.name(), propertyType.getTypeFullyQualifiedName());
             serialize(propertyType, data, object);
-            jsonObject.put(propertyName, object);
+            putData(jsonObject, propertyName, object);
         }
+    }
+
+    private static void putData(@NotNull JSONObject jsonObject,
+                                @NotNull String propertyName,
+                                @Nullable Object data) {
+        Stream.of(data).filter(ExcludeEmptyMaps)
+                .forEach(filteredData -> jsonObject.put(propertyName, filteredData));
     }
 
     private static boolean isTypeObject(Object data) {
@@ -91,4 +102,16 @@ public class ComponentDataHolderSerializer {
         }
         return satisfied;
     }
+
+    /**
+     * A predicate which return false if the given
+     * object has type Map and it is empty.
+     */
+    private static final Predicate<Object> ExcludeEmptyMaps = data -> {
+        if (data instanceof Map) {
+            Map dataMap = (Map) data;
+            return !dataMap.isEmpty();
+        }
+        return true;
+    };
 }

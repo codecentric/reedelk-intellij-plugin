@@ -33,17 +33,21 @@ public class PropertyTable extends JBScrollPane {
 
     public void removeSelectedRow() {
         int selectedRow = table.getSelectedRow();
+
+        // If the selected row is -1, it means that we called remove,
+        // without having selected any item in the table.
         if (selectedRow > -1) {
             tableModel.removeRow(selectedRow);
-        }
-        // Shift the selection to previous/next item.
-        if (table.getModel().getRowCount() > 0) {
-            if (table.getModel().getRowCount() >= selectedRow + 1) {
-                // Existed one after the one removed.
-                table.setRowSelectionInterval(selectedRow, selectedRow);
-            } else {
-                // It did not exist a row after the one we removed.
-                table.setRowSelectionInterval(selectedRow - 1, selectedRow - 1);
+
+            // Shift the selection to previous/next item.
+            if (table.getModel().getRowCount() > 0) {
+                if (table.getModel().getRowCount() >= selectedRow + 1) {
+                    // Existed one after the one removed.
+                    table.setRowSelectionInterval(selectedRow, selectedRow);
+                } else {
+                    // It did not exist a row after the one we removed.
+                    table.setRowSelectionInterval(selectedRow - 1, selectedRow - 1);
+                }
             }
         }
     }
