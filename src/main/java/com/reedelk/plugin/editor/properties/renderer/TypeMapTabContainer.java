@@ -13,7 +13,6 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 import static com.reedelk.plugin.commons.Icons.MapType.AddItem;
 import static com.reedelk.plugin.commons.Icons.MapType.RemoveItem;
@@ -88,9 +87,9 @@ class TypeMapTabContainer extends JBPanel {
         }
 
         private void initialize() {
-            Map<String, ?> map = this.accessor.get();
+            Map<String, String> map = this.accessor.get();
             if (map != null) {
-                map.forEach((BiConsumer<String, Object>) (key, value) -> addRow(new Object[]{key, value}));
+                map.forEach((key, value) -> addRow(new Object[]{key, value}));
             }
         }
     }
