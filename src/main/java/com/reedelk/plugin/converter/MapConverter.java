@@ -2,21 +2,26 @@ package com.reedelk.plugin.converter;
 
 import org.json.JSONObject;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class MapConverter implements ValueConverter<Map<String, ?>> {
+
     @Override
     public String toText(Object value) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Map<String, ?> from(String value) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Map<String, ?> from(String propertyName, JSONObject object) {
-        return null;
+        JSONObject jsonObject = object.getJSONObject(propertyName);
+        Map<String, Object> map = new LinkedHashMap<>();
+        jsonObject.keySet().forEach(key -> map.put(key, jsonObject.get(key)));
+        return map;
     }
 }
