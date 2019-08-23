@@ -1,5 +1,6 @@
 package com.reedelk.plugin.assertion;
 
+import com.reedelk.plugin.assertion.commons.MapAssertion;
 import com.reedelk.plugin.assertion.component.ComponentDataHolderAssertion;
 import com.reedelk.plugin.assertion.component.ComponentDescriptorAssertion;
 import com.reedelk.plugin.assertion.component.ComponentPropertyDescriptorAssertion;
@@ -13,18 +14,28 @@ import com.reedelk.plugin.editor.properties.widget.input.script.suggestion.Sugge
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowGraphChangeAware;
 
+import java.util.Map;
+
 public class PluginAssertion {
 
-    public static TrieAssertion assertThat(SuggestionTree suggestionTree) {
-        return new TrieAssertion(suggestionTree);
+    public static MapAssertion assertThat(Map<String, ?> map) {
+        return new MapAssertion(map);
     }
 
     public static FlowGraphAssertion assertThat(FlowGraph graph) {
         return new FlowGraphAssertion(graph);
     }
 
+    public static TrieAssertion assertThat(SuggestionTree suggestionTree) {
+        return new TrieAssertion(suggestionTree);
+    }
+
     public static FlowGraphChangeAwareAssertion assertThat(FlowGraphChangeAware graph) {
         return new FlowGraphChangeAwareAssertion(graph);
+    }
+
+    public static ComponentDataHolderAssertion assertThat(ComponentDataHolder dataHolder) {
+        return new ComponentDataHolderAssertion(dataHolder);
     }
 
     public static ComponentDescriptorAssertion assertThat(ComponentDescriptor componentDescriptor) {
@@ -33,9 +44,5 @@ public class PluginAssertion {
 
     public static ComponentPropertyDescriptorAssertion assertThat(ComponentPropertyDescriptor propertyDescriptor) {
         return new ComponentPropertyDescriptorAssertion(propertyDescriptor);
-    }
-
-    public static ComponentDataHolderAssertion assertThat(ComponentDataHolder dataHolder) {
-        return new ComponentDataHolderAssertion(dataHolder);
     }
 }

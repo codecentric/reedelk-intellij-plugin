@@ -3,6 +3,7 @@ package com.reedelk.plugin.converter;
 import com.intellij.openapi.diagnostic.Logger;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -28,14 +29,18 @@ public class MapConverter implements ValueConverter<Map<String, ?>> {
             return asMap(jsonObject);
         } catch (Exception e) {
             LOG.warn(format("Could not parse JSON from value [%s]", value), e);
-            return null;
+            return new HashMap<>();
         }
     }
 
     @Override
     public Map<String,?> from(String propertyName, JSONObject object) {
-        JSONObject jsonObject = object.getJSONObject(propertyName);
-        return asMap(jsonObject);
+        if (object.has(propertyName) && !object.isNull(propertyName)) {
+            JSONObject jsonObject = object.getJSONObject(propertyName);
+            return asMap(jsonObject);
+        } else {
+            return new HashMap<>();
+        }
     }
 
     private Map<String,?> asMap(JSONObject jsonObject) {
