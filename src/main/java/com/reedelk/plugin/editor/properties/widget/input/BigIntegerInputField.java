@@ -9,6 +9,10 @@ import java.math.BigInteger;
 
 public class BigIntegerInputField extends NumericInputField<BigInteger> {
 
+    public BigIntegerInputField(String hint) {
+        super(hint);
+    }
+
     @Override
     protected DocumentFilter getInputFilter() {
         return new NumericDocumentFilter(value -> {

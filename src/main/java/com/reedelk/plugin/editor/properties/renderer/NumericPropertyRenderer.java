@@ -24,7 +24,7 @@ public abstract class NumericPropertyRenderer<T> extends AbstractTypePropertyRen
                              @NotNull PropertyAccessor propertyAccessor,
                              @NotNull ContainerContext context) {
 
-        InputField<T> inputField = getInputField();
+        InputField<T> inputField = getInputField(propertyDescriptor.getHintValue());
         inputField.setValue(propertyAccessor.get());
         inputField.addListener(propertyAccessor::set);
 
@@ -34,5 +34,5 @@ public abstract class NumericPropertyRenderer<T> extends AbstractTypePropertyRen
         return inputFieldContainer;
     }
 
-    protected abstract InputField<T> getInputField();
+    protected abstract InputField<T> getInputField(String hint);
 }

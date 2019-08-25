@@ -5,7 +5,7 @@ import com.reedelk.plugin.editor.properties.widget.input.InputField;
 
 public class DoublePropertyRenderer extends NumericPropertyRenderer<Double> {
     @Override
-    protected InputField<Double> getInputField() {
-        return new DoubleInputField();
+    protected InputField<Double> getInputField(String hint) {
+        return new DoubleInputField(hint);
     }
 }

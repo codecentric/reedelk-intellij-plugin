@@ -9,6 +9,10 @@ import java.math.BigDecimal;
 
 public class BigDecimalInputField extends NumericInputField<BigDecimal> {
 
+    public BigDecimalInputField(String hint) {
+        super(hint);
+    }
+
     @Override
     protected DocumentFilter getInputFilter() {
         return new NumericDocumentFilter(value -> {

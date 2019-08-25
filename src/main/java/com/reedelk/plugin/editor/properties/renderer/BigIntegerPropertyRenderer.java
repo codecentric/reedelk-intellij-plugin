@@ -7,7 +7,7 @@ import java.math.BigInteger;
 
 public class BigIntegerPropertyRenderer extends NumericPropertyRenderer<BigInteger> {
     @Override
-    protected InputField<BigInteger> getInputField() {
-        return new BigIntegerInputField();
+    protected InputField<BigInteger> getInputField(String hint) {
+        return new BigIntegerInputField(hint);
     }
 }

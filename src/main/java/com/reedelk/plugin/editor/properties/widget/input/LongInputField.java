@@ -8,6 +8,10 @@ import javax.swing.text.DocumentFilter;
 
 public class LongInputField extends NumericInputField<Long> {
 
+    public LongInputField(String hint) {
+        super(hint);
+    }
+
     @Override
     protected DocumentFilter getInputFilter() {
         return new NumericDocumentFilter(value -> {

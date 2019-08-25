@@ -7,6 +7,11 @@ import com.reedelk.plugin.editor.properties.widget.NumericDocumentFilter;
 import javax.swing.text.DocumentFilter;
 
 public class FloatInputField extends NumericInputField<Float> {
+
+    public FloatInputField(String hint) {
+        super(hint);
+    }
+
     @Override
     protected DocumentFilter getInputFilter() {
         return new NumericDocumentFilter(value -> {

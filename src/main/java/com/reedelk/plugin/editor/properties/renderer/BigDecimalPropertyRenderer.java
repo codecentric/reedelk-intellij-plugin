@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 public class BigDecimalPropertyRenderer extends NumericPropertyRenderer<BigDecimal> {
     @Override
-    protected InputField<BigDecimal> getInputField() {
-        return new BigDecimalInputField();
+    protected InputField<BigDecimal> getInputField(String hint) {
+        return new BigDecimalInputField(hint);
     }
 }

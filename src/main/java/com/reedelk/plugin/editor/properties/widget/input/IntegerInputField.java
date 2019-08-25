@@ -8,6 +8,10 @@ import javax.swing.text.DocumentFilter;
 
 public class IntegerInputField extends NumericInputField<Integer> {
 
+    public IntegerInputField(String hint) {
+        super(hint);
+    }
+
     @Override
     protected DocumentFilter getInputFilter() {
         return new NumericDocumentFilter(value -> {
