@@ -1,7 +1,6 @@
 package com.reedelk.plugin.editor.properties.widget;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.editor.properties.renderer.NodePropertiesRendererFactory;
@@ -39,7 +38,7 @@ public class ContainerFactory {
                 .render(node);
         DisposablePanel propertiesBoxContainer = pushTop(propertiesPanel);
         propertiesBoxContainer.setBorder(JBUI.Borders.empty(10));
-        return wrapInsideScrollPane(propertiesBoxContainer);
+        return makeItScrollable(propertiesBoxContainer);
     }
 
     public static DisposablePanel pushTop(JComponent component) {
@@ -50,16 +49,10 @@ public class ContainerFactory {
         return propertiesBoxContainer;
     }
 
-    public static JComponent makeItScrollable(DisposablePanel panel) {
-        JBScrollPane scrollPane = new JBScrollPane(panel);
-        scrollPane.setBorder(JBUI.Borders.empty());
-        return scrollPane;
-    }
-
-    private static DisposableScrollPane wrapInsideScrollPane(DisposablePanel propertiesPanel) {
+    public static DisposableScrollPane makeItScrollable(DisposablePanel panel) {
         DisposableScrollPane scrollPane = new DisposableScrollPane();
-        scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        scrollPane.setViewportView(propertiesPanel);
+        scrollPane.setBorder(JBUI.Borders.empty());
+        scrollPane.setViewportView(panel);
         scrollPane.createVerticalScrollBar();
         scrollPane.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);
         return scrollPane;
