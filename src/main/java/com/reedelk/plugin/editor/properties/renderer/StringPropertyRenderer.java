@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class StringPropertyRenderer implements TypePropertyRenderer {
+public class StringPropertyRenderer extends AbstractTypePropertyRenderer {
     @NotNull
     @Override
     public JComponent render(@NotNull Module module,
@@ -18,7 +18,7 @@ public class StringPropertyRenderer implements TypePropertyRenderer {
                              @NotNull PropertyAccessor propertyAccessor,
                              @NotNull ContainerContext context) {
 
-        InputField<String> field = new StringInputField();
+        InputField<String> field = new StringInputField("/resource/{id}");
         field.setValue(propertyAccessor.get());
         field.addListener(propertyAccessor::set);
         return field;

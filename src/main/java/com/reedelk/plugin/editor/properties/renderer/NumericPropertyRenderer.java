@@ -15,7 +15,7 @@ import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.WEST;
 import static javax.swing.Box.createHorizontalBox;
 
-public abstract class NumericPropertyRenderer<T> implements TypePropertyRenderer {
+public abstract class NumericPropertyRenderer<T> extends AbstractTypePropertyRenderer {
 
     @NotNull
     @Override

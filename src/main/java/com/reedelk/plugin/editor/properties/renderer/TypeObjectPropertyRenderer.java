@@ -4,7 +4,10 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.awt.RelativePoint;
 import com.reedelk.plugin.commons.Labels;
-import com.reedelk.plugin.component.domain.*;
+import com.reedelk.plugin.component.domain.ComponentDataHolder;
+import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
+import com.reedelk.plugin.component.domain.TypeDescriptor;
+import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.reedelk.plugin.editor.properties.configuration.ActionAddConfiguration;
@@ -31,7 +34,7 @@ import static com.reedelk.runtime.commons.JsonParser.Config;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.EAST;
 
-public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
+public class TypeObjectPropertyRenderer extends AbstractTypePropertyRenderer {
 
     private static final ConfigMetadata UNSELECTED_CONFIG;
     static {
@@ -63,7 +66,7 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
         if (NO.equals(objectDescriptor.getShared())) {
             addToParentInline(parent, rendered, descriptor, context);
         } else {
-            addToParentShared(parent, rendered, descriptor, context);
+            super.addToParent(parent, rendered, descriptor, context);
         }
         // Add the component to the context
         context.addComponent(new JComponentHolder(rendered));
@@ -163,6 +166,7 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
         return wrapper;
     }
 
+    // TODO: Extract in an utility class to show error messages...
     private void displayErrorPopup(Exception exception, ConfigControlPanel configControlPanel) {
         String errorMessage = exception.getMessage();
         String content = String.format(Labels.BALLOON_EDIT_CONFIG_ERROR, errorMessage);
@@ -202,29 +206,6 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
                 });
     }
 
-    private static void applyWhenVisibilityConditions(List<WhenDefinition> whenDefinitions, JComponent panel, ContainerContext context) {
-        whenDefinitions.forEach(whenDefinition -> {
-            String propertyName = whenDefinition.getPropertyName();
-            String propertyValue = whenDefinition.getPropertyValue();
-            Object actualPropertyValue = context.propertyValueFrom(propertyName);
-
-            setVisible(panel, conditionIsMet(propertyValue, actualPropertyValue));
-
-            context.subscribeOnPropertyChange(whenDefinition.getPropertyName(), value ->
-                    setVisible(panel, conditionIsMet(propertyValue, value)));
-        });
-    }
-
-    private static boolean conditionIsMet(String target, Object value) {
-        return value != null && value.toString().equals(target);
-    }
-
-    private static void setVisible(JComponent panel, boolean visible) {
-        panel.setVisible(visible);
-        panel.repaint();
-        panel.revalidate();
-    }
-
     private void addToParentInline(@NotNull JComponent parent, @NotNull JComponent rendered, @NotNull ComponentPropertyDescriptor descriptor, @NotNull ContainerContext context) {
         // If the property type is a complex object (not shared), we wrap it in a
         // bordered box with title the name of the object property.
@@ -233,21 +214,10 @@ public class TypeObjectPropertyRenderer implements TypePropertyRenderer {
 
         // If the property has any 'when' condition, we apply listener/s to make it
         // visible (or not) when the condition is met (or not).
-        applyWhenVisibilityConditions(descriptor.getWhenDefinitions(), wrappedRenderedComponent, context);
+        applyWhenVisibilityConditions(descriptor.getWhenDefinitions(), context, wrappedRenderedComponent);
 
         // Add the component to the parent container.
         FormBuilder.get()
                 .addLastField(wrappedRenderedComponent, parent);
-    }
-
-    private void addToParentShared(@NotNull JComponent parent, @NotNull JComponent rendered, @NotNull ComponentPropertyDescriptor descriptor, @NotNull ContainerContext context) {
-        // If the property has any 'when' condition, we apply listener/s to make it
-        // visible (or not) when the condition is met (or not).
-        applyWhenVisibilityConditions(descriptor.getWhenDefinitions(), rendered, context);
-
-        // Add the component to the parent container.
-        FormBuilder.get()
-                .addLabel(descriptor.getDisplayName(), parent)
-                .addLastField(rendered, parent);
     }
 }

@@ -18,4 +18,12 @@ public class UnknownPropertyRenderer implements TypePropertyRenderer {
                              @NotNull ContainerContext context) {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public void addToParent(@NotNull JComponent parent,
+                            @NotNull JComponent rendered,
+                            @NotNull ComponentPropertyDescriptor descriptor,
+                            @NotNull ContainerContext context) {
+        throw new UnsupportedOperationException();
+    }
 }

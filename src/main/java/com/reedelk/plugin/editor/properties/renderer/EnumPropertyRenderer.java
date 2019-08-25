@@ -16,7 +16,7 @@ import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.WEST;
 import static javax.swing.Box.createHorizontalGlue;
 
-public class EnumPropertyRenderer implements TypePropertyRenderer {
+public class EnumPropertyRenderer extends AbstractTypePropertyRenderer {
 
     @NotNull
     @Override

@@ -13,7 +13,7 @@ import java.awt.*;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.WEST;
 
-public class BooleanPropertyRenderer implements TypePropertyRenderer {
+public class BooleanPropertyRenderer extends AbstractTypePropertyRenderer {
 
     @NotNull
     @Override

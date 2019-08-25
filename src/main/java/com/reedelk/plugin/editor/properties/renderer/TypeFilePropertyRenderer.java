@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionListener;
 
-public class TypeFilePropertyRenderer implements TypePropertyRenderer {
+public class TypeFilePropertyRenderer extends AbstractTypePropertyRenderer {
 
     @NotNull
     @Override
