@@ -3,6 +3,7 @@ package com.reedelk.plugin.component.domain;
 import com.reedelk.plugin.converter.ValueConverterFactory;
 import com.reedelk.runtime.api.annotation.Default;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class ComponentPropertyDescriptor {
 
+    private String hintValue;
     private String displayName;
     private String propertyName;
     private String defaultValue;
@@ -36,6 +38,11 @@ public class ComponentPropertyDescriptor {
     @NotNull
     public String getPropertyName() {
         return propertyName;
+    }
+
+    @Nullable
+    public String getHintValue() {
+        return hintValue;
     }
 
     public Object getDefaultValue() {
@@ -65,6 +72,7 @@ public class ComponentPropertyDescriptor {
 
     public static class Builder {
 
+        private String hintValue;
         private String displayName;
         private String propertyName;
         private String defaultValue;
@@ -82,6 +90,11 @@ public class ComponentPropertyDescriptor {
 
         public Builder defaultValue(String defaultValue) {
             this.defaultValue = defaultValue;
+            return this;
+        }
+
+        public Builder hintValue(String hintValue) {
+            this.hintValue = hintValue;
             return this;
         }
 
@@ -119,6 +132,7 @@ public class ComponentPropertyDescriptor {
             descriptor.propertyName = propertyName;
             descriptor.defaultValue = defaultValue;
             descriptor.propertyType = propertyType;
+            descriptor.hintValue = hintValue;
             descriptor.whenDefinitions.addAll(whenDefinitions);
             descriptor.autocompleteContexts.addAll(autocompleteContexts);
             descriptor.variableDefinitions.addAll(variableDefinitions);

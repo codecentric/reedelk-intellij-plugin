@@ -18,7 +18,7 @@ public class StringPropertyRenderer extends AbstractTypePropertyRenderer {
                              @NotNull PropertyAccessor propertyAccessor,
                              @NotNull ContainerContext context) {
 
-        InputField<String> field = new StringInputField("/resource/{id}");
+        InputField<String> field = new StringInputField(propertyDescriptor.getHintValue());
         field.setValue(propertyAccessor.get());
         field.addListener(propertyAccessor::set);
         return field;

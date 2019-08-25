@@ -13,6 +13,7 @@ public class HandlersChain {
             new PropertyNameHandler(),
             new PropertyTypeHandler(),
             new PropertyWhenHandler(),
+            new PropertyHintHandler(),
             new PropertyVariableHandler(),
             new PropertyDisplayNameHandler(),
             new PropertyDefaultValueHandler(),
