@@ -8,9 +8,19 @@ public class Labels {
     public class PropertiesPanelConfig {
         private PropertiesPanelConfig() {
         }
-
         public static final String FIELD_CONFIG_FILE = "Config file";
         public static final String FIELD_CONFIG_TITLE = "Config title";
+    }
+
+    public class Hint {
+        private Hint() {
+        }
+
+        public static final String FLOW_SUBFLOW_TITLE = "My integration flow";
+        public static final String FLOW_SUBFLOW_DESCRIPTION = "My integration flow description";
+        public static final String COMPONENT_DESCRIPTION = "My component description";
+        public static final String CONFIG_FILE_TITLE = "my_listener_config";
+        public static final String CONFIG_TITLE = "My Listener Configuration";
     }
 
     public static final String TOOL_WINDOW_FLOW_PROPERTIES_TITLE = "Flow Properties";

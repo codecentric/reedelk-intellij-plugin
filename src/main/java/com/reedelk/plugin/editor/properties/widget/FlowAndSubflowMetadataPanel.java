@@ -3,6 +3,7 @@ package com.reedelk.plugin.editor.properties.widget;
 import com.intellij.openapi.Disposable;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Labels;
+import com.reedelk.plugin.commons.Labels.Hint;
 import com.reedelk.plugin.editor.properties.widget.input.InputChangeListener;
 import com.reedelk.plugin.editor.properties.widget.input.InputField;
 import com.reedelk.plugin.editor.properties.widget.input.StringInputField;
@@ -51,7 +52,7 @@ public class FlowAndSubflowMetadataPanel extends DisposablePanel implements Disp
 
     private InputField<String> createTitleInputField() {
         FlowGraph graph = snapshot.getGraphOrThrowIfAbsent();
-        return createStringInputField(graph.title(), value -> {
+        return createStringInputField(graph.title(), Hint.FLOW_SUBFLOW_TITLE, value -> {
             graph.setTitle(value);
             snapshot.onDataChange();
         });
@@ -59,14 +60,14 @@ public class FlowAndSubflowMetadataPanel extends DisposablePanel implements Disp
 
     private InputField<String> createDescriptionInputField() {
         FlowGraph graph = snapshot.getGraphOrThrowIfAbsent();
-        return createStringInputField(graph.description(), value -> {
+        return createStringInputField(graph.description(), Hint.FLOW_SUBFLOW_DESCRIPTION, value -> {
             graph.setDescription(value);
             snapshot.onDataChange();
         });
     }
 
-    private InputField<String> createStringInputField(String value, InputChangeListener<String> changeListener) {
-        InputField<String> inputField = new StringInputField();
+    private InputField<String> createStringInputField(String value, String hint, InputChangeListener<String> changeListener) {
+        InputField<String> inputField = new StringInputField(hint);
         inputField.setValue(value);
         inputField.addListener(changeListener);
         return inputField;

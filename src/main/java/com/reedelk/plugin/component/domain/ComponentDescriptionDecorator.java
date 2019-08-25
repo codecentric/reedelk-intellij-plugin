@@ -1,5 +1,7 @@
 package com.reedelk.plugin.component.domain;
 
+import com.reedelk.plugin.commons.Labels.Hint;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ public class ComponentDescriptionDecorator implements ComponentDescriptor {
         descriptionDescriptor = ComponentPropertyDescriptor.builder()
                 .propertyName(Implementor.description())
                 .type(typeDescriptor)
+                .hintValue(Hint.COMPONENT_DESCRIPTION)
                 .displayName(DESCRIPTION_PROPERTY_DISPLAY_NAME)
                 .defaultValue(wrapped.getDisplayName())
                 .build();

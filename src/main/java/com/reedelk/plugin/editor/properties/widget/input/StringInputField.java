@@ -5,10 +5,6 @@ import com.reedelk.plugin.converter.ValueConverter;
 
 public class StringInputField extends InputField<String> {
 
-    public StringInputField() {
-        super();
-    }
-
     public StringInputField(String hint) {
         super(hint);
     }

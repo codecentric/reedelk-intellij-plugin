@@ -3,6 +3,7 @@ package com.reedelk.plugin.editor.properties.configuration;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBPanel;
 import com.reedelk.plugin.commons.DefaultDescriptorDataValuesFiller;
+import com.reedelk.plugin.commons.Labels.Hint;
 import com.reedelk.plugin.commons.Labels.PropertiesPanelConfig;
 import com.reedelk.plugin.component.domain.ComponentDataHolder;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
@@ -73,7 +74,7 @@ class ConfigPropertiesPanel extends DisposablePanel {
         private void init(ConfigMetadata configMetadata, boolean isNewConfig) {
 
             // Config File Name input field
-            StringInputField configFileInputField = new StringInputField();
+            StringInputField configFileInputField = new StringInputField(Hint.CONFIG_FILE_TITLE);
             configFileInputField.setEnabled(isNewConfig);
             configFileInputField.setValue(configMetadata.getFileName());
             configFileInputField.addListener(configMetadata::setFileName);
@@ -82,7 +83,7 @@ class ConfigPropertiesPanel extends DisposablePanel {
                     .addLastField(configFileInputField, this);
 
             // Config Title input title
-            StringInputField configTitleInputField = new StringInputField();
+            StringInputField configTitleInputField = new StringInputField(Hint.CONFIG_TITLE);
             configTitleInputField.setValue(configMetadata.getTitle());
             configTitleInputField.addListener(configMetadata::setTitle);
             FormBuilder.get()
