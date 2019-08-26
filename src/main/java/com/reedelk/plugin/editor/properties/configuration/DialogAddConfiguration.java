@@ -13,6 +13,8 @@ import javax.swing.*;
 
 public class DialogAddConfiguration extends DialogWrapper {
 
+    private final boolean NEW_CONFIG = true;
+
     private final TypeObjectDescriptor objectDescriptor;
     private final ConfigMetadata newConfigMetadata;
     private final Module module;
@@ -40,7 +42,7 @@ public class DialogAddConfiguration extends DialogWrapper {
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
-        ConfigPropertiesPanel panel = new ConfigPropertiesPanel(module, newConfigMetadata, objectDescriptor, true);
+        ConfigPropertiesPanel panel = new ConfigPropertiesPanel(module, newConfigMetadata, objectDescriptor, NEW_CONFIG);
         return ContainerFactory.makeItScrollable(panel);
     }
 }

@@ -13,6 +13,8 @@ import javax.swing.*;
 
 public class DialogEditConfiguration extends DialogWrapper {
 
+    private final boolean EXISTING_CONFIG = false;
+
     private final TypeObjectDescriptor objectDescriptor;
     private final ConfigMetadata selectedMetadata;
     private final Module module;
@@ -40,7 +42,7 @@ public class DialogEditConfiguration extends DialogWrapper {
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
-        ConfigPropertiesPanel panel = new ConfigPropertiesPanel(module, selectedMetadata, objectDescriptor, false);
+        ConfigPropertiesPanel panel = new ConfigPropertiesPanel(module, selectedMetadata, objectDescriptor, EXISTING_CONFIG);
         return ContainerFactory.makeItScrollable(panel);
     }
 }
