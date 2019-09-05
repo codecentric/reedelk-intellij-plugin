@@ -12,4 +12,11 @@ public class Sizes {
 
         public static final Dimension HEIGHT = new Dimension(0, 130);
     }
+
+    public static class TabbedPane {
+        private TabbedPane() {
+        }
+
+        public static final Dimension HEIGHT = new Dimension(0, 150);
+    }
 }

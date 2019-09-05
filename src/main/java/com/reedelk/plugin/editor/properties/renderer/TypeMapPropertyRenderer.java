@@ -3,6 +3,7 @@ package com.reedelk.plugin.editor.properties.renderer;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBTabbedPane;
+import com.reedelk.plugin.commons.Sizes;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeMapDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
@@ -30,6 +31,7 @@ public class TypeMapPropertyRenderer implements TypePropertyRenderer {
 
         JBTabbedPane tabbedPane = groupTabbedPane.orElseGet(() -> {
             JBTabbedPane tabbed = new JBTabbedPane(JTabbedPane.LEFT);
+            tabbed.setPreferredSize(Sizes.TabbedPane.HEIGHT);
 
             TypeMapDescriptor propertyType = (TypeMapDescriptor) propertyDescriptor.getPropertyType();
             Optional<String> tabGroup = propertyType.getTabGroup();
