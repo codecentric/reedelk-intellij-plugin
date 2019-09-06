@@ -16,8 +16,8 @@ import static java.awt.BorderLayout.*;
 
 class CollapsibleObjectTypeContainer extends DisposablePanel {
 
-    private final JComponent collapsedContent;
-    private final JComponent unCollapsedContent;
+    private final DisposablePanel collapsedContent;
+    private final DisposablePanel unCollapsedContent;
 
     private boolean collapsed = true;
 
@@ -30,16 +30,27 @@ class CollapsibleObjectTypeContainer extends DisposablePanel {
         setBorder(Borders.emptyTop(5));
     }
 
+    @Override
+    public void dispose() {
+        super.dispose();
+        collapsedContent.dispose();
+        unCollapsedContent.dispose();
+    }
+
     private void collapse() {
-        CollapsibleObjectTypeContainer.this.removeAll();
-        CollapsibleObjectTypeContainer.this.add(collapsedContent);
-        SwingUtilities.invokeLater(CollapsibleObjectTypeContainer.this::revalidate);
+        SwingUtilities.invokeLater(() -> {
+            remove(unCollapsedContent);
+            add(collapsedContent);
+            revalidate();
+        });
     }
 
     private void unCollapse() {
-        CollapsibleObjectTypeContainer.this.removeAll();
-        CollapsibleObjectTypeContainer.this.add(unCollapsedContent);
-        SwingUtilities.invokeLater(CollapsibleObjectTypeContainer.this::revalidate);
+        SwingUtilities.invokeLater(() -> {
+            remove(collapsedContent);
+            add(unCollapsedContent);
+            revalidate();
+        });
     }
 
     class UnCollapsedContent extends DisposablePanel {
@@ -50,7 +61,7 @@ class CollapsibleObjectTypeContainer extends DisposablePanel {
             CompoundBorder externalBorder = new CompoundBorder(contentBorder, Borders.empty(2, 4, 4, 0));
             CompoundBorder borderWithPadding = new CompoundBorder(Borders.empty(0, 8, 8, 0), externalBorder);
 
-            JPanel nestedContainerWrapper = new JPanel();
+            JPanel nestedContainerWrapper = new DisposablePanel();
             nestedContainerWrapper.setLayout(new BorderLayout());
             nestedContainerWrapper.add(content, CENTER);
             nestedContainerWrapper.setBorder(borderWithPadding);
