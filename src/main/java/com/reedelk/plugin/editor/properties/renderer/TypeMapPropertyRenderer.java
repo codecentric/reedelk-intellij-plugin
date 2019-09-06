@@ -69,12 +69,12 @@ public class TypeMapPropertyRenderer implements TypePropertyRenderer {
         // Add the component to the parent container.
         FormBuilder.get().addLastField(rendered, parent);
 
+        JComponentHolder holder = new JComponentHolder(rendered);
+
         // Add the component to the container context.
         TypeMapDescriptor propertyType = (TypeMapDescriptor) descriptor.getPropertyType();
-        Optional<String> tabGroup = propertyType.getTabGroup();
-
-        JComponentHolder holder = new JComponentHolder(rendered);
-        tabGroup.ifPresent(group -> holder.addMetadata(TabGroup.class.getName(), group));
+        propertyType.getTabGroup()
+                .ifPresent(group -> holder.addMetadata(TabGroup.class.getName(), group));
 
         context.addComponent(holder);
     }
