@@ -5,12 +5,15 @@ import com.intellij.openapi.editor.EditorSettings;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.JBUI;
+import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.editor.properties.widget.input.script.ScriptContextManager;
 import com.reedelk.plugin.editor.properties.widget.input.script.suggestion.SuggestionDropDownDecorator;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 import java.awt.*;
 
 import static com.reedelk.plugin.editor.properties.widget.input.script.editor.EditorConstants.JAVASCRIPT_FILE_TYPE;
@@ -39,12 +42,18 @@ class JavascriptEditorInline extends JavascriptEditor {
 
         JComponent editorComponent = editor.getComponent();
 
+
+        JLabel codeIcon = new JLabel();
+        codeIcon.setIcon(Icons.Script.Code);
+
+        Border outside = JBUI.Borders.customLine(Colors.SCRIPT_EDITOR_INLINE_ICON_BORDER, 1, 1, 1, 0);
+        Border inside = JBUI.Borders.empty(0, 4);
+        CompoundBorder border = new CompoundBorder(outside, inside);
+        codeIcon.setBorder(border);
+
         setLayout(new BorderLayout());
         setPreferredSize(mode.preferredSize(editor));
-        JLabel icon = new JLabel();
-        icon.setIcon(Icons.Script.Code);
-        icon.setBorder(JBUI.Borders.emptyRight(5));
-        add(icon, BorderLayout.WEST);
+        add(codeIcon, BorderLayout.WEST);
         add(editorComponent, BorderLayout.CENTER);
     }
 

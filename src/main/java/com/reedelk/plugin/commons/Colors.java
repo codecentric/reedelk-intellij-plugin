@@ -17,6 +17,8 @@ public class Colors {
     public static final Color SCRIPT_EDITOR_SUGGESTION_POPUP_BG = new Color(234, 243, 253);
     public static final Color SCRIPT_EDITOR_SUGGESTION_POPUP_BG_SELECTION = new Color(159, 182, 198);
 
+    public static final Color SCRIPT_EDITOR_INLINE_ICON_BORDER = Color.LIGHT_GRAY;
+
     public static final JBColor DESIGNER_BG = JBColor.WHITE;
     public static final JBColor DESIGNER_VERTICAL_DIVIDER = new JBColor(Gray._200, Gray._30);
     public static final JBColor DESIGNER_SELECTED_COMPONENT_BG = new JBColor(Gray._245, Gray._245);
