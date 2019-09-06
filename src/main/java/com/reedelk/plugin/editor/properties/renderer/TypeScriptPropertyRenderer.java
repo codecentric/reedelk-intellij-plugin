@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.util.List;
 
-public class TypeScriptPropertyRenderer implements TypePropertyRenderer {
+public class TypeScriptPropertyRenderer extends AbstractTypePropertyRenderer {
 
     @NotNull
     @Override
@@ -44,17 +44,29 @@ public class TypeScriptPropertyRenderer implements TypePropertyRenderer {
     @Override
     public void addToParent(@NotNull JComponent parent,
                             @NotNull JComponent rendered,
-                            @NotNull ComponentPropertyDescriptor descriptor,
+                            @NotNull ComponentPropertyDescriptor propertyDescriptor,
                             @NotNull ContainerContext context) {
-        // Wrap it in a bordered box with title the name of the object property.
-        DisposablePanel wrappedRenderedComponent =
-                ContainerFactory.createObjectTypeContainer(descriptor.getDisplayName(), rendered);
 
-        // Add the component to the parent container.
-        FormBuilder.get()
-                .addLastField(wrappedRenderedComponent, parent);
+        TypeScriptDescriptor descriptor = (TypeScriptDescriptor) propertyDescriptor.getPropertyType();
+        if (descriptor.isInline()) {
+            // If the script input field is inline, it is like any other input field.
+            super.addToParent(parent, rendered, propertyDescriptor, context);
 
-        // Add the component to the context.
-        context.addComponent(new JComponentHolder(rendered));
+        } else {
+            // If the script is NOT inline, we wrap it in a bordered box having as title
+            // the display name of the property.
+            DisposablePanel wrappedRenderedComponent =
+                    ContainerFactory.createObjectTypeContainer(propertyDescriptor.getDisplayName(), rendered);
+
+            // Apply visibility condition for the Script input.
+            applyWhenVisibilityConditions(propertyDescriptor.getWhenDefinitions(), context, wrappedRenderedComponent);
+
+            // Add the component to the parent container.
+            FormBuilder.get()
+                    .addLastField(wrappedRenderedComponent, parent);
+
+            // Add the component to the context.
+            context.addComponent(new JComponentHolder(rendered));
+        }
     }
 }
