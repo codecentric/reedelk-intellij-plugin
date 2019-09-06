@@ -12,6 +12,7 @@ import static com.reedelk.plugin.component.domain.Shared.YES;
 
 public class TypeObjectDescriptor implements TypeDescriptor {
 
+    private final Collapsible collapsible;
     private final String typeFullyQualifiedName;
 
     private Shared shared;
@@ -19,9 +20,12 @@ public class TypeObjectDescriptor implements TypeDescriptor {
 
     public TypeObjectDescriptor(@NotNull final String typeFullyQualifiedName,
                                 @NotNull final List<ComponentPropertyDescriptor> objectProperties,
-                                @NotNull final Shared shared) {
+                                @NotNull final Shared shared,
+                                @NotNull final Collapsible collapsible) {
         this.shared = shared;
+        this.collapsible = collapsible;
         this.typeFullyQualifiedName = typeFullyQualifiedName;
+
         this.objectProperties.addAll(objectProperties);
     }
 
@@ -37,6 +41,10 @@ public class TypeObjectDescriptor implements TypeDescriptor {
 
     public Shared getShared() {
         return shared;
+    }
+
+    public Collapsible getCollapsible() {
+        return collapsible;
     }
 
     public List<ComponentPropertyDescriptor> getObjectProperties() {

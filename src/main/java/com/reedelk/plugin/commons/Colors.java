@@ -39,4 +39,6 @@ public class Colors {
     public static final JBColor PALETTE_TEXT_SELECTED = JBColor.WHITE;
     public static final JBColor PALETTE_TEXT_UNSELECTED = JBColor.DARK_GRAY;
 
+    public static final JBColor CONTAINER_OBJECT_TYPE_COLLAPSIBLE_BORDER = JBColor.LIGHT_GRAY;
+
 }

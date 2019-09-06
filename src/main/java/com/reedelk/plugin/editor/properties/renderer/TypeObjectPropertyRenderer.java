@@ -209,8 +209,10 @@ public class TypeObjectPropertyRenderer extends AbstractTypePropertyRenderer {
     private void addToParentInline(@NotNull JComponent parent, @NotNull JComponent rendered, @NotNull ComponentPropertyDescriptor descriptor, @NotNull ContainerContext context) {
         // If the property type is a complex object (not shared), we wrap it in a
         // bordered box with title the name of the object property.
+        TypeObjectDescriptor objectDescriptor = (TypeObjectDescriptor) descriptor.getPropertyType();
+
         DisposablePanel wrappedRenderedComponent =
-                ContainerFactory.createObjectTypeContainer(descriptor.getDisplayName(), rendered);
+                ContainerFactory.createObjectTypeContainer(descriptor.getDisplayName(), objectDescriptor, rendered);
 
         // If the property has any 'when' condition, we apply listener/s to make it
         // visible (or not) when the condition is met (or not).

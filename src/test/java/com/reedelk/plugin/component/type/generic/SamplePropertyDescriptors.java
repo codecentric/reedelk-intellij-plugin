@@ -53,10 +53,10 @@ public class SamplePropertyDescriptors {
                     .build();
 
     public static final TypeObjectDescriptor componentNode2TypeDescriptor =
-            new TypeObjectDescriptor(ComponentNode2.class.getName(), asList(property5, property6), Shared.NO);
+            new TypeObjectDescriptor(ComponentNode2.class.getName(), asList(property5, property6), Shared.NO, Collapsible.NO);
 
     public static final TypeObjectDescriptor componentNode2ShareableTypeDescriptor =
-            new TypeObjectDescriptor(ComponentNode2.class.getName(), asList(property5, property6), Shared.YES);
+            new TypeObjectDescriptor(ComponentNode2.class.getName(), asList(property5, property6), Shared.YES, Collapsible.NO);
 
     public static final ComponentPropertyDescriptor property4 =
             ComponentPropertyDescriptor.builder()

@@ -1,6 +1,7 @@
 package com.reedelk.plugin.component.scanner.property;
 
 import com.reedelk.plugin.commons.GetAnnotationValue;
+import com.reedelk.plugin.component.domain.Collapsible;
 import com.reedelk.plugin.component.domain.Shared;
 import com.reedelk.plugin.component.domain.*;
 import com.reedelk.plugin.component.scanner.ComponentAnalyzerContext;
@@ -50,7 +51,7 @@ public class PropertyTypeHandler implements Handler {
             return new TypeScriptDescriptor(inline);
         } else if (isFile(fieldInfo, clazz)) {
             return new TypeFileDescriptor();
-        } else if (isMap(fieldInfo, clazz)) {
+        } else if (isMap(clazz)) {
             String tabGroup = getAnnotationValueOrDefault(fieldInfo, TabGroup.class, null);
             return new TypeMapDescriptor(tabGroup);
         } else {
@@ -74,9 +75,12 @@ public class PropertyTypeHandler implements Handler {
         } else {
             // We check that we can resolve class info. If we can, then
             ClassInfo classInfo = context.getClassInfo(fullyQualifiedClassName);
-            if (classInfo == null) throw new UnsupportedType(typeSignature.getClass());
+            if (classInfo == null) {
+                throw new UnsupportedType(typeSignature.getClass());
+            }
 
             Shared shared = isShareable(classInfo);
+            Collapsible collapsible = isCollapsible(classInfo);
             ComponentPropertyAnalyzer propertyAnalyzer = new ComponentPropertyAnalyzer(context);
 
             List<ComponentPropertyDescriptor> allProperties = classInfo
@@ -86,7 +90,7 @@ public class PropertyTypeHandler implements Handler {
                     .filter(Optional::isPresent)
                     .map(Optional::get)
                     .collect(toList());
-            return new TypeObjectDescriptor(fullyQualifiedClassName, allProperties, shared);
+            return new TypeObjectDescriptor(fullyQualifiedClassName, allProperties, shared, collapsible);
         }
     }
 
@@ -116,12 +120,17 @@ public class PropertyTypeHandler implements Handler {
                 String.class.equals(clazz);
     }
 
-    private boolean isMap(FieldInfo fieldInfo, Class<?> clazz) {
+    private boolean isMap(Class<?> clazz) {
         return Map.class.equals(clazz);
     }
 
     private Shared isShareable(ClassInfo classInfo) {
         return classInfo.hasAnnotation(com.reedelk.runtime.api.annotation.Shared.class.getName()) ?
                 Shared.YES : Shared.NO;
+    }
+
+    private Collapsible isCollapsible(ClassInfo classInfo) {
+        return classInfo.hasAnnotation(com.reedelk.runtime.api.annotation.Collapsible.class.getName()) ?
+                Collapsible.YES : Collapsible.NO;
     }
 }

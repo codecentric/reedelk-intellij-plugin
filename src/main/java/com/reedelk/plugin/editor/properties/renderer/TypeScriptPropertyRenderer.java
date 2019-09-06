@@ -5,7 +5,9 @@ import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeScriptDescriptor;
 import com.reedelk.plugin.component.domain.VariableDefinition;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
-import com.reedelk.plugin.editor.properties.widget.*;
+import com.reedelk.plugin.editor.properties.widget.ContainerContext;
+import com.reedelk.plugin.editor.properties.widget.FormBuilder;
+import com.reedelk.plugin.editor.properties.widget.JComponentHolder;
 import com.reedelk.plugin.editor.properties.widget.input.script.ScriptContextManager;
 import com.reedelk.plugin.editor.properties.widget.input.script.ScriptInputField;
 import com.reedelk.plugin.editor.properties.widget.input.script.ScriptInputInlineField;
@@ -53,17 +55,12 @@ public class TypeScriptPropertyRenderer extends AbstractTypePropertyRenderer {
             super.addToParent(parent, rendered, propertyDescriptor, context);
 
         } else {
-            // If the script is NOT inline, we wrap it in a bordered box having as title
-            // the display name of the property.
-            DisposablePanel wrappedRenderedComponent =
-                    ContainerFactory.createObjectTypeContainer(propertyDescriptor.getDisplayName(), rendered);
-
             // Apply visibility condition for the Script input.
-            applyWhenVisibilityConditions(propertyDescriptor.getWhenDefinitions(), context, wrappedRenderedComponent);
+            applyWhenVisibilityConditions(propertyDescriptor.getWhenDefinitions(), context, rendered);
 
             // Add the component to the parent container.
             FormBuilder.get()
-                    .addLastField(wrappedRenderedComponent, parent);
+                    .addLastField(rendered, parent);
 
             // Add the component to the context.
             context.addComponent(new JComponentHolder(rendered));

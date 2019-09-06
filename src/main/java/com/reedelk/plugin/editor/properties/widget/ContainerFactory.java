@@ -2,31 +2,31 @@ package com.reedelk.plugin.editor.properties.widget;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.util.ui.JBUI;
+import com.reedelk.plugin.component.domain.Collapsible;
 import com.reedelk.plugin.component.domain.ComponentData;
+import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.editor.properties.renderer.NodePropertiesRendererFactory;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
 import java.awt.*;
 
-import static java.awt.BorderLayout.*;
+import static java.awt.BorderLayout.CENTER;
+import static java.awt.BorderLayout.NORTH;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS;
 
 public class ContainerFactory {
 
-    public static DisposablePanel createObjectTypeContainer(String title, JComponent renderedComponent) {
-        DisposablePanel container = new DisposablePanel(new BorderLayout());
-        Border outsideMargin = JBUI.Borders.emptyTop(3);
-        Border border = BorderFactory.createTitledBorder(title);
-        Border outside = new CompoundBorder(outsideMargin, border);
-        Border margin = JBUI.Borders.empty(3);
-        container.setBorder(new CompoundBorder(outside, margin));
-        container.add(renderedComponent, CENTER);
-        container.add(Box.createHorizontalGlue(), EAST);
-        return container;
+    public static DisposablePanel createObjectTypeContainer(
+            @NotNull String displayName,
+            @NotNull TypeObjectDescriptor descriptor,
+            @NotNull JComponent renderedComponent) {
+
+        return Collapsible.YES.equals(descriptor.getCollapsible()) ?
+                new CollapsibleObjectTypeContainer(renderedComponent, displayName) :
+                new DefaultObjectTypeContainer(renderedComponent, displayName);
     }
 
     public static DisposableScrollPane createPropertiesPanel(Module module, ComponentData componentData, FlowSnapshot snapshot, GraphNode node) {
