@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.reedelk.plugin.component.domain.TypeScriptDescriptor.INLINE_ANNOTATION_PARAM_NAME;
 import static com.reedelk.plugin.component.scanner.property.PropertyScannerUtils.*;
 import static com.reedelk.plugin.converter.ValueConverterFactory.isKnownType;
 import static java.util.stream.Collectors.toList;
@@ -24,16 +23,13 @@ public class PropertyTypeHandler implements Handler {
     @Override
     public void handle(FieldInfo propertyInfo, ComponentPropertyDescriptor.Builder builder, ComponentAnalyzerContext context) {
         TypeSignature typeSignature = propertyInfo.getTypeDescriptor();
-
         if (typeSignature instanceof BaseTypeSignature) {
             TypeDescriptor typeDescriptor = processKnownType(((BaseTypeSignature) typeSignature).getType(), propertyInfo);
             builder.type(typeDescriptor);
-
         } else if (typeSignature instanceof ClassRefTypeSignature) {
             ClassRefTypeSignature classRef = (ClassRefTypeSignature) typeSignature;
             TypeDescriptor typeDescriptor = processClassRefType(classRef, propertyInfo, context);
             builder.type(typeDescriptor);
-
         } else {
             throw new UnsupportedType(typeSignature.getClass());
         }
@@ -41,14 +37,9 @@ public class PropertyTypeHandler implements Handler {
 
     private TypeDescriptor processKnownType(Class<?> clazz, FieldInfo fieldInfo) {
         if (isScript(fieldInfo, clazz)) {
-            // Find and map auto complete variable annotations.
-            Boolean inline =
-                    PropertyScannerUtils.getAnnotationParameterValueOrDefault(
-                            fieldInfo,
-                            Script.class,
-                            INLINE_ANNOTATION_PARAM_NAME,
-                            true);
-            return new TypeScriptDescriptor(inline);
+            return new TypeScriptDescriptor();
+        } else if (isScriptInline(fieldInfo, clazz)) {
+            return new TypeScriptInlineDescriptor();
         } else if (isFile(fieldInfo, clazz)) {
             return new TypeFileDescriptor();
         } else if (isMap(clazz)) {
@@ -111,6 +102,11 @@ public class PropertyTypeHandler implements Handler {
     // A property is a Script if and only if it has @Script annotation AND its type is String
     private boolean isScript(FieldInfo fieldInfo, Class<?> clazz) {
         return fieldInfo.hasAnnotation(Script.class.getName()) &&
+                String.class.equals(clazz);
+    }
+
+    private boolean isScriptInline(FieldInfo fieldInfo, Class<?> clazz) {
+        return fieldInfo.hasAnnotation(ScriptInline.class.getName()) &&
                 String.class.equals(clazz);
     }
 

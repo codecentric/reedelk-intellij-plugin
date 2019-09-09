@@ -1,8 +1,6 @@
 package com.reedelk.plugin.converter;
 
 import com.reedelk.plugin.component.domain.TypeDescriptor;
-import com.reedelk.plugin.component.domain.TypeFileDescriptor;
-import com.reedelk.plugin.component.domain.TypeScriptDescriptor;
 import com.reedelk.plugin.component.type.unknown.UnknownPropertyType;
 
 import java.math.BigDecimal;
@@ -11,6 +9,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.reedelk.plugin.component.domain.TypeFileDescriptor.TypeFile;
+import static com.reedelk.plugin.component.domain.TypeScriptDescriptor.TypeScript;
+import static com.reedelk.plugin.component.domain.TypeScriptInlineDescriptor.TypeScriptInline;
 import static java.lang.String.format;
 
 public class ValueConverterFactory {
@@ -39,8 +40,9 @@ public class ValueConverterFactory {
         tmp.put(BigDecimal.class, new BigDecimalConverter());
 
         tmp.put(Map.class, new MapConverter());
-        tmp.put(TypeFileDescriptor.TypeFile.class, new FileConverter());
-        tmp.put(TypeScriptDescriptor.TypeScript.class, new ScriptConverter());
+        tmp.put(TypeFile.class, new FileConverter());
+        tmp.put(TypeScript.class, new ScriptConverter());
+        tmp.put(TypeScriptInline.class, new ScriptConverter());
 
         CONVERTER = Collections.unmodifiableMap(tmp);
     }

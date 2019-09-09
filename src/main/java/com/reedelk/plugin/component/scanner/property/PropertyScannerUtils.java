@@ -27,7 +27,11 @@ class PropertyScannerUtils {
         }
         AnnotationInfo annotationInfo = fieldInfo.getAnnotationInfo(annotationClazz.getName());
         Object parameterValue = getParameterValue(annotationInfo, annotationParamName);
-        return parameterValue != null ? (T) parameterValue : defaultValue;
+        if (parameterValue instanceof AnnotationEnumValue) {
+            return (T) ((AnnotationEnumValue) parameterValue).loadClassAndReturnEnumValue();
+        } else {
+            return parameterValue != null ? (T) parameterValue : defaultValue;
+        }
     }
 
     private static Object getParameterValue(AnnotationInfo info, String parameterName) {

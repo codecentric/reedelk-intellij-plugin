@@ -1,9 +1,6 @@
 package com.reedelk.plugin.editor.properties.renderer;
 
-import com.reedelk.plugin.component.domain.TypeDescriptor;
-import com.reedelk.plugin.component.domain.TypeFileDescriptor;
-import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
-import com.reedelk.plugin.component.domain.TypeScriptDescriptor;
+import com.reedelk.plugin.component.domain.*;
 import com.reedelk.plugin.component.type.unknown.UnknownPropertyType;
 
 import java.math.BigDecimal;
@@ -38,6 +35,8 @@ public class TypeRendererFactory {
         tmp.put(TypeFileDescriptor.TypeFile.class, new TypeFilePropertyRenderer());
         tmp.put(TypeObjectDescriptor.TypeObject.class, new TypeObjectPropertyRenderer());
         tmp.put(TypeScriptDescriptor.TypeScript.class, new TypeScriptPropertyRenderer());
+        tmp.put(TypeScriptInlineDescriptor.TypeScriptInline.class, new TypeScriptInlinePropertyRenderer());
+
         tmp.put(UnknownPropertyType.UnknownType.class, new UnknownPropertyRenderer());
 
         RENDERER = tmp;

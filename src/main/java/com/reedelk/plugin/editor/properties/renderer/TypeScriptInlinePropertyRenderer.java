@@ -5,16 +5,14 @@ import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.VariableDefinition;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.widget.ContainerContext;
-import com.reedelk.plugin.editor.properties.widget.FormBuilder;
-import com.reedelk.plugin.editor.properties.widget.JComponentHolder;
 import com.reedelk.plugin.editor.properties.widget.input.script.ScriptContextManager;
-import com.reedelk.plugin.editor.properties.widget.input.script.ScriptInputField;
+import com.reedelk.plugin.editor.properties.widget.input.script.ScriptInputInlineField;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.List;
 
-public class TypeScriptPropertyRenderer extends AbstractTypePropertyRenderer {
+public class TypeScriptInlinePropertyRenderer extends AbstractTypePropertyRenderer {
 
     @NotNull
     @Override
@@ -26,26 +24,10 @@ public class TypeScriptPropertyRenderer extends AbstractTypePropertyRenderer {
         List<VariableDefinition> variableDefinitions = propertyDescriptor.getVariableDefinitions();
         ScriptContextManager scriptContext = new ScriptContextManager(module, context, variableDefinitions);
 
-        ScriptInputField field = new ScriptInputField(module, scriptContext);
+        ScriptInputInlineField field =
+                new ScriptInputInlineField(module, scriptContext, propertyDescriptor.getHintValue());
         field.setValue(propertyAccessor.get());
         field.addListener(propertyAccessor::set);
         return field;
-    }
-
-    @Override
-    public void addToParent(@NotNull JComponent parent,
-                            @NotNull JComponent rendered,
-                            @NotNull ComponentPropertyDescriptor propertyDescriptor,
-                            @NotNull ContainerContext context) {
-
-        // Apply visibility condition for the Script input.
-        applyWhenVisibilityConditions(propertyDescriptor.getWhenDefinitions(), context, rendered);
-
-        // Add the component to the parent container.
-        FormBuilder.get()
-                .addLastField(rendered, parent);
-
-        // Add the component to the context.
-        context.addComponent(new JComponentHolder(rendered));
     }
 }

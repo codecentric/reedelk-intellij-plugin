@@ -9,8 +9,7 @@ import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 import com.reedelk.plugin.editor.properties.widget.input.InputChangeListener;
 import com.reedelk.plugin.editor.properties.widget.input.script.editor.JavascriptEditor;
-import com.reedelk.plugin.editor.properties.widget.input.script.editor.JavascriptEditorFactory;
-import com.reedelk.plugin.editor.properties.widget.input.script.editor.JavascriptEditorMode;
+import com.reedelk.plugin.editor.properties.widget.input.script.editor.JavascriptEditorDefault;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -40,17 +39,12 @@ public class ScriptInputField extends DisposablePanel implements DocumentListene
 
         JPanel openEditorBtn = new OpenEditorButton();
 
-        this.editor = JavascriptEditorFactory.get()
-                .mode(JavascriptEditorMode.DEFAULT)
-                .project(module.getProject())
-                .context(context)
-                .build();
-
-        this.editor.addDocumentListener(this);
+        this.editor = new JavascriptEditorDefault(module.getProject(), context);
+        this.editor.addListener(listener);
 
         setLayout(new BorderLayout());
         add(openEditorBtn, NORTH);
-        add(editor, CENTER);
+        add(editor.getComponent(), CENTER);
     }
 
     @Override
@@ -68,6 +62,7 @@ public class ScriptInputField extends DisposablePanel implements DocumentListene
 
     public void addListener(InputChangeListener<String> listener) {
         this.listener = listener;
+        this.editor.addListener(listener);
     }
 
     public void setValue(Object o) {

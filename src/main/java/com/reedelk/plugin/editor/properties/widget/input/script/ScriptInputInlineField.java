@@ -1,56 +1,34 @@
 package com.reedelk.plugin.editor.properties.widget.input.script;
 
-import com.intellij.openapi.editor.event.DocumentEvent;
-import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 import com.reedelk.plugin.editor.properties.widget.input.InputChangeListener;
 import com.reedelk.plugin.editor.properties.widget.input.script.editor.JavascriptEditor;
-import com.reedelk.plugin.editor.properties.widget.input.script.editor.JavascriptEditorFactory;
-import com.reedelk.plugin.editor.properties.widget.input.script.editor.JavascriptEditorMode;
-import org.jetbrains.annotations.NotNull;
+import com.reedelk.plugin.editor.properties.widget.input.script.editor.JavascriptEditorInline;
 
 import java.awt.*;
 
-public class ScriptInputInlineField extends DisposablePanel implements DocumentListener {
+import static java.awt.BorderLayout.CENTER;
 
-    private InputChangeListener<String> listener;
+public class ScriptInputInlineField extends DisposablePanel {
 
     private JavascriptEditor editor;
-    private String value = "";
 
-    public ScriptInputInlineField(Module module, ScriptContextManager context) {
-        editor = JavascriptEditorFactory.get()
-                .mode(JavascriptEditorMode.INLINE)
-                .project(module.getProject())
-                .initialValue(value)
-                .context(context)
-                .build();
-
-        editor.addDocumentListener(this);
-
-
+    public ScriptInputInlineField(Module module, ScriptContextManager context, String hint) {
+        editor = new JavascriptEditorInline(module.getProject(), context, hint);
         setLayout(new BorderLayout());
-        add(editor, BorderLayout.CENTER);
-    }
-
-    @Override
-    public void documentChanged(@NotNull DocumentEvent event) {
-        if (listener != null) {
-            listener.onChange(event.getDocument().getText());
-        }
+        add(editor.getComponent(), CENTER);
     }
 
     public String getValue() {
-        return value;
+        return editor.getValue();
     }
 
     public void setValue(String newValue) {
-        this.value = newValue;
-        this.editor.setValue(this.value);
+        editor.setValue(newValue);
     }
 
     public void addListener(InputChangeListener<String> listener) {
-        this.listener = listener;
+        this.editor.addListener(listener);
     }
 }

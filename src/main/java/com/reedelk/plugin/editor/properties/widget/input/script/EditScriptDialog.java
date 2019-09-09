@@ -4,8 +4,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.editor.properties.widget.input.script.editor.JavascriptEditor;
-import com.reedelk.plugin.editor.properties.widget.input.script.editor.JavascriptEditorFactory;
-import com.reedelk.plugin.editor.properties.widget.input.script.editor.JavascriptEditorMode;
+import com.reedelk.plugin.editor.properties.widget.input.script.editor.JavascriptEditorDefault;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,19 +21,15 @@ public class EditScriptDialog extends DialogWrapper {
         this(module, initialValue, new ScriptContextManager(module, new EmptyPanelContext(), Collections.emptyList()));
     }
 
-    public EditScriptDialog(@NotNull Module module,
-                            @NotNull String initialValue,
-                            @NotNull ScriptContextManager context) {
+    EditScriptDialog(@NotNull Module module,
+                     @NotNull String initialValue,
+                     @NotNull ScriptContextManager context) {
         super(module.getProject(), false);
         setTitle(Labels.DIALOG_TITLE_EDIT_SCRIPT);
         setResizable(true);
 
-        editor = JavascriptEditorFactory.get()
-                .mode(JavascriptEditorMode.POPUP)
-                .project(module.getProject())
-                .initialValue(initialValue)
-                .context(context)
-                .build();
+        editor = new JavascriptEditorDefault(module.getProject(), context);
+        editor.setValue(initialValue);
 
         init();
     }
@@ -50,11 +45,7 @@ public class EditScriptDialog extends DialogWrapper {
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
-        return editor;
-    }
-
-    public String getValue() {
-        return editor.getValue();
+        return editor.getComponent();
     }
 
     @Override
@@ -63,5 +54,9 @@ public class EditScriptDialog extends DialogWrapper {
         if (this.editor != null) {
             this.editor.dispose();
         }
+    }
+
+    public String getValue() {
+        return editor.getValue();
     }
 }

@@ -18,6 +18,10 @@ public class ClickableLabel extends JLabel implements MouseListener {
         this(text, icon, disabledIcon, null);
     }
 
+    public ClickableLabel(Icon icon, Icon disabledIcon, OnClickAction action) {
+        this("", icon, disabledIcon, IconAlignment.LEFT, action);
+    }
+
     public ClickableLabel(String text, Icon icon, Icon disabledIcon, OnClickAction action) {
         this(text, icon, disabledIcon, IconAlignment.LEFT, action);
     }

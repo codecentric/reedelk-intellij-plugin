@@ -27,4 +27,11 @@ public class Fonts {
         public static final Font TITLE = new Font(FONT_NAME, Font.PLAIN, 20);
         public static final Font DESCRIPTION = new Font(FONT_NAME, Font.PLAIN, 13);
     }
+
+    public static class ScriptEditor {
+        private ScriptEditor() {
+        }
+
+        public static final Font SCRIPT_EDITOR = new Font(FONT_NAME, Font.PLAIN, 16);
+    }
 }
