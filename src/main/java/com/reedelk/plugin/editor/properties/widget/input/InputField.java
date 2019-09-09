@@ -18,10 +18,6 @@ public abstract class InputField<T> extends JBTextField implements DocumentListe
 
     private InputChangeListener<T> listener;
 
-    InputField() {
-        this(null);
-    }
-
     InputField(String hint) {
         setForeground(JBColor.DARK_GRAY);
         converter = getConverter();
