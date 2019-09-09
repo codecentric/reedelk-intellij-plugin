@@ -11,13 +11,13 @@ import com.intellij.openapi.project.Project;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.Fonts;
 import com.reedelk.plugin.commons.Icons;
-import com.reedelk.plugin.commons.ScriptUtils;
 import com.reedelk.plugin.editor.properties.widget.ClickableLabel;
 import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 import com.reedelk.plugin.editor.properties.widget.input.InputChangeListener;
 import com.reedelk.plugin.editor.properties.widget.input.StringInputField;
 import com.reedelk.plugin.editor.properties.widget.input.script.ScriptContextManager;
 import com.reedelk.plugin.editor.properties.widget.input.script.suggestion.SuggestionDropDownDecorator;
+import com.reedelk.runtime.api.commons.ScriptUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
