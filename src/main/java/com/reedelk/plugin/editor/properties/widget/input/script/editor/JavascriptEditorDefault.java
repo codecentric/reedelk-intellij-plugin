@@ -18,6 +18,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import static com.reedelk.plugin.editor.properties.widget.input.script.editor.EditorConstants.JAVASCRIPT_FILE_TYPE;
+import static java.awt.BorderLayout.CENTER;
 
 public class JavascriptEditorDefault extends DisposablePanel implements JavascriptEditor {
 
@@ -95,6 +96,6 @@ public class JavascriptEditorDefault extends DisposablePanel implements Javascri
 
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(1000, 600));
-        add(splitter, BorderLayout.CENTER);
+        add(splitter, CENTER);
     }
 }
