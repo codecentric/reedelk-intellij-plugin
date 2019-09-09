@@ -8,10 +8,8 @@ public class PredefinedMessageSuggestions {
     public static final List<SuggestionToken> SUGGESTIONS = Arrays.asList(
             new SuggestionToken("payload", SuggestionType.VARIABLE),
             new SuggestionToken("message", SuggestionType.VARIABLE),
-            new SuggestionToken("inboundProperties", SuggestionType.VARIABLE),
-            new SuggestionToken("outboundProperties", SuggestionType.VARIABLE),
-            new SuggestionToken("message.typedContent", SuggestionType.PROPERTY),
-            new SuggestionToken("message.inboundProperties", SuggestionType.PROPERTY),
-            new SuggestionToken("message.outboundProperties", SuggestionType.PROPERTY),
-            new SuggestionToken("message.typedContent.content", SuggestionType.PROPERTY));
+            new SuggestionToken("attributes", SuggestionType.VARIABLE),
+            new SuggestionToken("message.content", SuggestionType.PROPERTY),
+            new SuggestionToken("message.attributes", SuggestionType.PROPERTY),
+            new SuggestionToken("message.content.data", SuggestionType.PROPERTY));
 }
