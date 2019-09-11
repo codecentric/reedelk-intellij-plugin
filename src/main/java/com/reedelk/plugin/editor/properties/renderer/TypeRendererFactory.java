@@ -1,12 +1,18 @@
 package com.reedelk.plugin.editor.properties.renderer;
 
-import com.reedelk.plugin.component.domain.*;
-import com.reedelk.plugin.component.type.unknown.UnknownPropertyType;
+import com.reedelk.plugin.component.domain.TypeDescriptor;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.reedelk.plugin.component.domain.TypeComboDescriptor.TypeCombo;
+import static com.reedelk.plugin.component.domain.TypeFileDescriptor.TypeFile;
+import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
+import static com.reedelk.plugin.component.domain.TypeScriptDescriptor.TypeScript;
+import static com.reedelk.plugin.component.domain.TypeScriptInlineDescriptor.TypeScriptInline;
+import static com.reedelk.plugin.component.type.unknown.UnknownPropertyType.UnknownType;
 
 public class TypeRendererFactory {
 
@@ -32,12 +38,14 @@ public class TypeRendererFactory {
         tmp.put(BigDecimal.class, new BigDecimalPropertyRenderer());
 
         tmp.put(Map.class, new TypeMapPropertyRenderer());
-        tmp.put(TypeFileDescriptor.TypeFile.class, new TypeFilePropertyRenderer());
-        tmp.put(TypeObjectDescriptor.TypeObject.class, new TypeObjectPropertyRenderer());
-        tmp.put(TypeScriptDescriptor.TypeScript.class, new TypeScriptPropertyRenderer());
-        tmp.put(TypeScriptInlineDescriptor.TypeScriptInline.class, new TypeScriptInlinePropertyRenderer());
 
-        tmp.put(UnknownPropertyType.UnknownType.class, new UnknownPropertyRenderer());
+        tmp.put(TypeFile.class, new TypeFilePropertyRenderer());
+        tmp.put(TypeCombo.class, new TypeComboPropertyRenderer());
+        tmp.put(TypeObject.class, new TypeObjectPropertyRenderer());
+        tmp.put(TypeScript.class, new TypeScriptPropertyRenderer());
+        tmp.put(TypeScriptInline.class, new TypeScriptInlinePropertyRenderer());
+
+        tmp.put(UnknownType.class, new UnknownPropertyRenderer());
 
         RENDERER = tmp;
     }

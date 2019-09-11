@@ -33,7 +33,7 @@ public class TypeMapPropertyRenderer implements TypePropertyRenderer {
             JBTabbedPane tabbed = new JBTabbedPane(JTabbedPane.LEFT);
             tabbed.setPreferredSize(Sizes.TabbedPane.HEIGHT);
 
-            TypeMapDescriptor propertyType = (TypeMapDescriptor) propertyDescriptor.getPropertyType();
+            TypeMapDescriptor propertyType = propertyDescriptor.getPropertyType();
             Optional<String> tabGroup = propertyType.getTabGroup();
 
             Border border = BorderFactory.createLineBorder(JBColor.LIGHT_GRAY);
@@ -72,7 +72,7 @@ public class TypeMapPropertyRenderer implements TypePropertyRenderer {
         JComponentHolder holder = new JComponentHolder(rendered);
 
         // Add the component to the container context.
-        TypeMapDescriptor propertyType = (TypeMapDescriptor) descriptor.getPropertyType();
+        TypeMapDescriptor propertyType = descriptor.getPropertyType();
         propertyType.getTabGroup()
                 .ifPresent(group -> holder.addMetadata(TabGroup.class.getName(), group));
 
@@ -80,7 +80,7 @@ public class TypeMapPropertyRenderer implements TypePropertyRenderer {
     }
 
     private Optional<JBTabbedPane> getGroupTabbedPane(ComponentPropertyDescriptor propertyDescriptor, ContainerContext context) {
-        TypeMapDescriptor propertyType = (TypeMapDescriptor) propertyDescriptor.getPropertyType();
+        TypeMapDescriptor propertyType = propertyDescriptor.getPropertyType();
         Optional<String> tabGroup = propertyType.getTabGroup();
         if (tabGroup.isPresent()) {
             // Tab group annotation was present in the property definition. We need to lookup

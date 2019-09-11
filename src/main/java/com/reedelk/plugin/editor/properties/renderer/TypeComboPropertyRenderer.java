@@ -1,22 +1,19 @@
 package com.reedelk.plugin.editor.properties.renderer;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.ui.ComboBox;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
-import com.reedelk.plugin.component.domain.TypeEnumDescriptor;
+import com.reedelk.plugin.component.domain.TypeComboDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.widget.ContainerContext;
 import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
-import com.reedelk.plugin.editor.properties.widget.input.EnumDropDown;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ItemEvent;
 
-import static java.awt.BorderLayout.CENTER;
-import static java.awt.BorderLayout.WEST;
-import static javax.swing.Box.createHorizontalGlue;
-
-public class EnumPropertyRenderer extends AbstractTypePropertyRenderer {
+public class TypeComboPropertyRenderer extends AbstractTypePropertyRenderer {
 
     @NotNull
     @Override
@@ -25,21 +22,27 @@ public class EnumPropertyRenderer extends AbstractTypePropertyRenderer {
                              @NotNull PropertyAccessor propertyAccessor,
                              @NotNull ContainerContext context) {
 
-        TypeEnumDescriptor propertyType = propertyDescriptor.getPropertyType();
-
-        EnumDropDown dropDown = new EnumDropDown(propertyType.valueAndDisplayMap());
+        TypeComboDescriptor typeComboDescriptor = propertyDescriptor.getPropertyType();
 
         // We set the default value if not present
         if (propertyAccessor.get() == null) {
             propertyAccessor.set(propertyDescriptor.getDefaultValue());
         }
 
-        dropDown.setValue(propertyAccessor.get());
-        dropDown.addListener(propertyAccessor::set);
+        boolean editable = typeComboDescriptor.isEditable();
+        String[] comboValues = typeComboDescriptor.getComboValues();
 
-        JPanel dropDownContainer = new DisposablePanel(new BorderLayout());
-        dropDownContainer.add(dropDown, WEST);
-        dropDownContainer.add(createHorizontalGlue(), CENTER);
-        return dropDownContainer;
+        ComboBox<String> comboBox = new ComboBox<>(comboValues);
+        comboBox.setEditable(editable);
+        comboBox.setSelectedItem(propertyAccessor.get());
+        comboBox.addItemListener(itemEvent -> {
+            if (ItemEvent.SELECTED == itemEvent.getStateChange()) {
+                propertyAccessor.set(itemEvent.getItem());
+            }
+        });
+
+        DisposablePanel panel = new DisposablePanel(new BorderLayout());
+        panel.add(comboBox, BorderLayout.WEST);
+        return panel;
     }
 }

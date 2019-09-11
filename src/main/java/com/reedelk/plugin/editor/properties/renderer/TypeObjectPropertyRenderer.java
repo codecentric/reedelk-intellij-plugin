@@ -50,7 +50,7 @@ public class TypeObjectPropertyRenderer extends AbstractTypePropertyRenderer {
                              @NotNull ComponentPropertyDescriptor descriptor,
                              @NotNull PropertyAccessor accessor,
                              @NotNull ContainerContext context) {
-        TypeObjectDescriptor objectDescriptor = (TypeObjectDescriptor) descriptor.getPropertyType();
+        TypeObjectDescriptor objectDescriptor = descriptor.getPropertyType();
         return YES.equals(objectDescriptor.getShared()) ?
                 renderShareable(module, descriptor, accessor) :
                 renderInline(module, accessor, objectDescriptor);
@@ -61,8 +61,7 @@ public class TypeObjectPropertyRenderer extends AbstractTypePropertyRenderer {
                             @NotNull JComponent rendered,
                             @NotNull ComponentPropertyDescriptor descriptor,
                             @NotNull ContainerContext context) {
-
-        TypeObjectDescriptor objectDescriptor = (TypeObjectDescriptor) descriptor.getPropertyType();
+        TypeObjectDescriptor objectDescriptor = descriptor.getPropertyType();
         if (NO.equals(objectDescriptor.getShared())) {
             addToParentInline(parent, rendered, descriptor, context);
         } else {
@@ -115,7 +114,7 @@ public class TypeObjectPropertyRenderer extends AbstractTypePropertyRenderer {
                 .dataHolder(dataHolder)
                 .build();
 
-        ConfigControlPanel configControlPanel = new ConfigControlPanel(module, (TypeObjectDescriptor) descriptor.getPropertyType());
+        ConfigControlPanel configControlPanel = new ConfigControlPanel(module, descriptor.getPropertyType());
         configControlPanel.setAddActionListener(new ActionAddConfiguration.AddCompleteListener() {
             @Override
             public void onAddedConfiguration(ConfigMetadata addedConfiguration) {
@@ -177,7 +176,7 @@ public class TypeObjectPropertyRenderer extends AbstractTypePropertyRenderer {
 
     private ConfigMetadata updateMetadataOnSelector(Module module, ConfigSelector selector, ComponentPropertyDescriptor typeObjectDescriptor, String targetReference) {
         List<ConfigMetadata> configMetadata =
-                ConfigService.getInstance(module).listConfigsBy((TypeObjectDescriptor) typeObjectDescriptor.getPropertyType());
+                ConfigService.getInstance(module).listConfigsBy(typeObjectDescriptor.getPropertyType());
         configMetadata.add(UNSELECTED_CONFIG);
 
         ConfigMetadata matchingMetadata = findMatchingMetadata(configMetadata, targetReference);
@@ -209,7 +208,7 @@ public class TypeObjectPropertyRenderer extends AbstractTypePropertyRenderer {
     private void addToParentInline(@NotNull JComponent parent, @NotNull JComponent rendered, @NotNull ComponentPropertyDescriptor descriptor, @NotNull ContainerContext context) {
         // If the property type is a complex object (not shared), we wrap it in a
         // bordered box with title the name of the object property.
-        TypeObjectDescriptor objectDescriptor = (TypeObjectDescriptor) descriptor.getPropertyType();
+        TypeObjectDescriptor objectDescriptor = descriptor.getPropertyType();
 
         DisposablePanel wrappedRenderedComponent =
                 ContainerFactory.createObjectTypeContainer(descriptor.getDisplayName(), objectDescriptor, rendered);

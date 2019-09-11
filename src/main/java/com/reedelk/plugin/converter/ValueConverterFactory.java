@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.reedelk.plugin.component.domain.TypeComboDescriptor.TypeCombo;
 import static com.reedelk.plugin.component.domain.TypeFileDescriptor.TypeFile;
 import static com.reedelk.plugin.component.domain.TypeScriptDescriptor.TypeScript;
 import static com.reedelk.plugin.component.domain.TypeScriptInlineDescriptor.TypeScriptInline;
@@ -40,7 +41,9 @@ public class ValueConverterFactory {
         tmp.put(BigDecimal.class, new BigDecimalConverter());
 
         tmp.put(Map.class, new MapConverter());
+
         tmp.put(TypeFile.class, new FileConverter());
+        tmp.put(TypeCombo.class, new ComboConverter());
         tmp.put(TypeScript.class, new ScriptConverter());
         tmp.put(TypeScriptInline.class, new ScriptConverter());
 

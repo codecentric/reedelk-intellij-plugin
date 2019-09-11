@@ -17,6 +17,7 @@ import java.util.Optional;
 
 import static com.reedelk.plugin.component.scanner.property.PropertyScannerUtils.*;
 import static com.reedelk.plugin.converter.ValueConverterFactory.isKnownType;
+import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -25,13 +26,16 @@ public class PropertyTypeHandler implements Handler {
     @Override
     public void handle(FieldInfo propertyInfo, ComponentPropertyDescriptor.Builder builder, ComponentAnalyzerContext context) {
         TypeSignature typeSignature = propertyInfo.getTypeDescriptor();
+
         if (typeSignature instanceof BaseTypeSignature) {
             TypeDescriptor typeDescriptor = processKnownType(((BaseTypeSignature) typeSignature).getType(), propertyInfo);
             builder.type(typeDescriptor);
+
         } else if (typeSignature instanceof ClassRefTypeSignature) {
             ClassRefTypeSignature classRef = (ClassRefTypeSignature) typeSignature;
             TypeDescriptor typeDescriptor = processClassRefType(classRef, propertyInfo, context);
             builder.type(typeDescriptor);
+
         } else {
             throw new UnsupportedType(typeSignature.getClass());
         }
@@ -44,6 +48,11 @@ public class PropertyTypeHandler implements Handler {
             return new TypeScriptInlineDescriptor();
         } else if (isFile(fieldInfo, clazz)) {
             return new TypeFileDescriptor();
+        } else if (isCombo(fieldInfo, clazz)) {
+            boolean editable = getAnnotationParameterValueOrDefault(fieldInfo, Combo.class, "editable", false);
+            Object[] comboValues = getAnnotationParameterValueOrDefault(fieldInfo, Combo.class, "comboValues", new String[]{});
+            List<String> items = stream(comboValues).map(value -> (String) value).collect(toList());
+            return new TypeComboDescriptor(editable, items.toArray(new String[]{}));
         } else if (isMap(clazz)) {
             String tabGroup = getAnnotationValueOrDefault(fieldInfo, TabGroup.class, null);
             return new TypeMapDescriptor(tabGroup);
@@ -97,28 +106,46 @@ public class PropertyTypeHandler implements Handler {
                 .collect(toMap(FieldInfo::getName, fieldInfo ->
                         GetAnnotationValue.getOrDefault(fieldInfo, DisplayName.class, fieldInfo.getName())));
 
-        // Default enum value is the first key.
-        // The default value can be overridden on the property definition with
-        // the @Default annotation..
+        // Default enum value is the first key. Its default value can be overridden
+        // on the property definition with the @Default annotation.
         String defaultEnumValue = MapUtils.getFirstKeyOrDefault(nameAndDisplayName, StringUtils.EMPTY);
 
         return new TypeEnumDescriptor(nameAndDisplayName, defaultEnumValue);
     }
 
-    // A property is a Script if and only if it has @Script annotation AND its type is String
+    /**
+     * A property is a Script if and only if it has @Script annotation
+     * AND its type is String.
+     */
     private boolean isScript(FieldInfo fieldInfo, Class<?> clazz) {
         return fieldInfo.hasAnnotation(Script.class.getName()) &&
                 String.class.equals(clazz);
     }
 
+    /**
+     * A property is an inline Script if and only if it has @ScriptInline annotation
+     * AND its type is String.
+     */
     private boolean isScriptInline(FieldInfo fieldInfo, Class<?> clazz) {
         return fieldInfo.hasAnnotation(ScriptInline.class.getName()) &&
                 String.class.equals(clazz);
     }
 
-    // A property is a File if and only if it has @File annotation AND its type is String
+    /**
+     * A property is a File if and only if it has @File annotation
+     * AND its type is String.
+     */
     private boolean isFile(FieldInfo fieldInfo, Class<?> clazz) {
         return fieldInfo.hasAnnotation(File.class.getName()) &&
+                String.class.equals(clazz);
+    }
+
+    /**
+     * A property is a Combo if and only if it has @Combo annotation
+     * AND its type is String.
+     */
+    private boolean isCombo(FieldInfo fieldInfo, Class<?> clazz) {
+        return fieldInfo.hasAnnotation(Combo.class.getName()) &&
                 String.class.equals(clazz);
     }
 

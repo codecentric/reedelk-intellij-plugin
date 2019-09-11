@@ -21,6 +21,7 @@ class PropertyScannerUtils {
                 (T) parameterValues.getValue(ANNOTATION_DEFAULT_PARAM_NAME);
     }
 
+    @SuppressWarnings("unchecked")
     static <T> T getAnnotationParameterValueOrDefault(FieldInfo fieldInfo, Class<?> annotationClazz, String annotationParamName, T defaultValue) {
         if (!fieldInfo.hasAnnotation(annotationClazz.getName())) {
             return defaultValue;
@@ -29,6 +30,9 @@ class PropertyScannerUtils {
         Object parameterValue = getParameterValue(annotationInfo, annotationParamName);
         if (parameterValue instanceof AnnotationEnumValue) {
             return (T) ((AnnotationEnumValue) parameterValue).loadClassAndReturnEnumValue();
+        }
+        if (parameterValue != null && parameterValue.getClass().isArray()) {
+            return (T) parameterValue;
         } else {
             return parameterValue != null ? (T) parameterValue : defaultValue;
         }

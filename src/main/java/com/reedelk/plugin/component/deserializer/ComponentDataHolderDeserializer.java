@@ -70,7 +70,7 @@ public class ComponentDataHolderDeserializer {
 
     private static void addEmptyObjectsInstancesForTypeObject(ComponentDataHolder dataHolder, ComponentPropertyDescriptor descriptor) {
         if (descriptor.getPropertyType() instanceof TypeObjectDescriptor) {
-            TypeObjectDescriptor propertyObjectType = (TypeObjectDescriptor) descriptor.getPropertyType();
+            TypeObjectDescriptor propertyObjectType = descriptor.getPropertyType();
             TypeObjectDescriptor.TypeObject typeObject = propertyObjectType.newInstance();
             dataHolder.set(descriptor.getPropertyName(), typeObject);
             // From now on, the subtree contains null objects.

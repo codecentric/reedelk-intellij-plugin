@@ -45,14 +45,11 @@ public class ComponentPropertyDescriptor {
         return hintValue;
     }
 
+    @Nullable
     public Object getDefaultValue() {
         return Default.USE_DEFAULT_VALUE.equals(defaultValue) ?
                 propertyType.defaultValue() :
                 ValueConverterFactory.forType(propertyType).from(defaultValue);
-    }
-
-    public TypeDescriptor getPropertyType() {
-        return propertyType;
     }
 
     @NotNull
@@ -68,6 +65,12 @@ public class ComponentPropertyDescriptor {
     @NotNull
     public List<VariableDefinition> getVariableDefinitions() {
         return variableDefinitions;
+    }
+
+    @NotNull
+    @SuppressWarnings("unchecked")
+    public <T extends TypeDescriptor> T getPropertyType() {
+        return (T) propertyType;
     }
 
     public static class Builder {
