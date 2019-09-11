@@ -4,7 +4,7 @@ import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.Fonts;
 import com.reedelk.plugin.commons.Half;
 import com.reedelk.plugin.graph.FlowSnapshot;
-import com.reedelk.runtime.commons.StringUtils;
+import com.reedelk.runtime.api.commons.StringUtils;
 
 import java.awt.*;
 import java.util.Collections;

@@ -17,8 +17,8 @@ import com.reedelk.plugin.editor.properties.widget.*;
 import com.reedelk.plugin.editor.properties.widget.input.ConfigSelector;
 import com.reedelk.plugin.service.module.ConfigService;
 import com.reedelk.plugin.service.module.impl.ConfigMetadata;
+import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.JsonParser;
-import com.reedelk.runtime.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

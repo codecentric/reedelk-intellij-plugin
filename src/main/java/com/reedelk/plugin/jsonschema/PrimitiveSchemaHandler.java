@@ -1,6 +1,6 @@
 package com.reedelk.plugin.jsonschema;
 
-import com.reedelk.runtime.commons.StringUtils;
+import com.reedelk.runtime.api.commons.StringUtils;
 import org.everit.json.schema.Schema;
 
 import java.util.List;

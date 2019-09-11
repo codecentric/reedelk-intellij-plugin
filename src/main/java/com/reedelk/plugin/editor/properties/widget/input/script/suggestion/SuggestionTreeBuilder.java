@@ -28,8 +28,8 @@ import java.util.Set;
 import static com.reedelk.plugin.editor.properties.widget.input.script.ScriptContextManager.ContextVariable;
 import static com.reedelk.plugin.editor.properties.widget.input.script.suggestion.SuggestionType.PROPERTY;
 import static com.reedelk.plugin.editor.properties.widget.input.script.suggestion.SuggestionType.VARIABLE;
+import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 import static com.reedelk.runtime.commons.Preconditions.checkState;
-import static com.reedelk.runtime.commons.StringUtils.isNotBlank;
 
 public class SuggestionTreeBuilder {
 
