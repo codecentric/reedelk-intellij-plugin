@@ -1,12 +1,14 @@
 package com.reedelk.plugin.component.scanner.property;
 
 import com.reedelk.plugin.commons.GetAnnotationValue;
+import com.reedelk.plugin.commons.MapUtils;
 import com.reedelk.plugin.component.domain.Collapsible;
 import com.reedelk.plugin.component.domain.Shared;
 import com.reedelk.plugin.component.domain.*;
 import com.reedelk.plugin.component.scanner.ComponentAnalyzerContext;
 import com.reedelk.plugin.component.scanner.UnsupportedType;
 import com.reedelk.runtime.api.annotation.*;
+import com.reedelk.runtime.api.commons.StringUtils;
 import io.github.classgraph.*;
 
 import java.util.List;
@@ -95,8 +97,12 @@ public class PropertyTypeHandler implements Handler {
                 .collect(toMap(FieldInfo::getName, fieldInfo ->
                         GetAnnotationValue.getOrDefault(fieldInfo, DisplayName.class, fieldInfo.getName())));
 
-        String defaultValue = GetAnnotationValue.getOrThrow(enumClassInfo, Default.class);
-        return new TypeEnumDescriptor(nameAndDisplayName, defaultValue);
+        // Default enum value is the first key.
+        // The default value can be overridden on the property definition with
+        // the @Default annotation..
+        String defaultEnumValue = MapUtils.getFirstKeyOrDefault(nameAndDisplayName, StringUtils.EMPTY);
+
+        return new TypeEnumDescriptor(nameAndDisplayName, defaultEnumValue);
     }
 
     // A property is a Script if and only if it has @Script annotation AND its type is String
