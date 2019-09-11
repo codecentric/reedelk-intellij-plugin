@@ -17,11 +17,8 @@ import static java.util.stream.Collectors.toList;
 
 public class EnumDropDown extends ComboBox<KeyValue> implements ItemListener {
 
-    private static final int WIDTH = 150;
-
-    private InputChangeListener<String> listener;
-
     private final List<KeyValue> keyValues;
+    private InputChangeListener<String> listener;
 
     public EnumDropDown(Map<String, String> valueAndDisplayNameMap) {
         this.keyValues = valueAndDisplayNameMap
@@ -30,11 +27,10 @@ public class EnumDropDown extends ComboBox<KeyValue> implements ItemListener {
                 .map(entry -> new DefaultMapEntry(entry.getKey(), entry.getValue()))
                 .collect(toList());
 
-        DefaultComboBoxModel<KeyValue> hello = new DefaultComboBoxModel<>();
-        keyValues.forEach(hello::addElement);
-        setModel(hello);
+        DefaultComboBoxModel<KeyValue> comboModel = new DefaultComboBoxModel<>();
+        keyValues.forEach(comboModel::addElement);
+        setModel(comboModel);
         setRenderer(new ItemRenderer());
-        getPreferredSize().width = WIDTH;
         addItemListener(this);
     }
 

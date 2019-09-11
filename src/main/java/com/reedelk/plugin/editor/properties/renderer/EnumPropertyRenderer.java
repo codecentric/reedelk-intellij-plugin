@@ -12,9 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 
-import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.WEST;
-import static javax.swing.Box.createHorizontalGlue;
 
 public class EnumPropertyRenderer extends AbstractTypePropertyRenderer {
 
@@ -39,7 +37,6 @@ public class EnumPropertyRenderer extends AbstractTypePropertyRenderer {
 
         JPanel dropDownContainer = new DisposablePanel(new BorderLayout());
         dropDownContainer.add(dropDown, WEST);
-        dropDownContainer.add(createHorizontalGlue(), CENTER);
         return dropDownContainer;
     }
 }

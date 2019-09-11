@@ -1,17 +1,18 @@
 package com.reedelk.plugin.editor.properties.renderer;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.ui.ComboBox;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeComboDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.widget.ContainerContext;
 import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
+import com.reedelk.plugin.editor.properties.widget.input.StringDropDown;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemEvent;
+
+import static java.awt.BorderLayout.WEST;
 
 public class TypeComboPropertyRenderer extends AbstractTypePropertyRenderer {
 
@@ -32,18 +33,12 @@ public class TypeComboPropertyRenderer extends AbstractTypePropertyRenderer {
         boolean editable = typeComboDescriptor.isEditable();
         String[] comboValues = typeComboDescriptor.getComboValues();
 
-        // TODO: Extract this combo box as a widgetlike the input field...
-        ComboBox<String> comboBox = new ComboBox<>(comboValues);
-        comboBox.setEditable(editable);
-        comboBox.setSelectedItem(propertyAccessor.get());
-        comboBox.addItemListener(itemEvent -> {
-            if (ItemEvent.SELECTED == itemEvent.getStateChange()) {
-                propertyAccessor.set(itemEvent.getItem());
-            }
-        });
+        StringDropDown dropDown = new StringDropDown(comboValues, editable);
+        dropDown.setValue(propertyAccessor.get());
+        dropDown.addListener(propertyAccessor::set);
 
-        DisposablePanel panel = new DisposablePanel(new BorderLayout());
-        panel.add(comboBox, BorderLayout.WEST);
-        return panel;
+        JPanel dropDownContainer = new DisposablePanel(new BorderLayout());
+        dropDownContainer.add(dropDown, WEST);
+        return dropDownContainer;
     }
 }
