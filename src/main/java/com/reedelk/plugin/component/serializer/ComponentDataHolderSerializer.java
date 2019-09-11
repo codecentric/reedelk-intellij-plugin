@@ -37,8 +37,8 @@ public class ComponentDataHolderSerializer {
             if (whenDefinitions.isEmpty()) {
                 serialize(componentData, parent, propertyDescriptor);
             } else {
-                // We just serialize if and only if all the when
-                // conditions are satisfied.
+                // We just serialize if and only if all
+                // the when conditions are satisfied.
                 if (areAllSatisfied(whenDefinitions, componentData)) {
                     serialize(componentData, parent, propertyDescriptor);
                 }
@@ -72,8 +72,8 @@ public class ComponentDataHolderSerializer {
             putData(jsonObject, propertyName, refObject);
 
         } else {
+            // We don't have to put the implementor name if it is not shared
             JSONObject object = JsonObjectFactory.newJSONObject();
-            object.put(JsonParser.Implementor.name(), propertyType.getTypeFullyQualifiedName());
             serialize(propertyType, data, object);
             putData(jsonObject, propertyName, object);
         }

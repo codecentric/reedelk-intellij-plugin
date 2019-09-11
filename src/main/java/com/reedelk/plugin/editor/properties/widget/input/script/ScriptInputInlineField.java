@@ -1,6 +1,7 @@
 package com.reedelk.plugin.editor.properties.widget.input.script;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 import com.reedelk.plugin.editor.properties.widget.input.InputChangeListener;
 import com.reedelk.plugin.editor.properties.widget.input.script.editor.JavascriptEditor;
@@ -18,6 +19,7 @@ public class ScriptInputInlineField extends DisposablePanel {
         editor = new JavascriptEditorInline(module.getProject(), context, hint);
         setLayout(new BorderLayout());
         add(editor.getComponent(), CENTER);
+        setBorder(JBUI.Borders.empty(0, 3));
     }
 
     public String getValue() {
