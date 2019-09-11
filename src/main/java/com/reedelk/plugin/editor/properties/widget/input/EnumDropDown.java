@@ -1,5 +1,6 @@
 package com.reedelk.plugin.editor.properties.widget.input;
 
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.ListCellRendererWrapper;
 import org.apache.commons.collections.KeyValue;
 import org.apache.commons.collections.keyvalue.DefaultMapEntry;
@@ -14,7 +15,7 @@ import java.util.Optional;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 
-public class EnumDropDown extends JComboBox<KeyValue> implements ItemListener {
+public class EnumDropDown extends ComboBox<KeyValue> implements ItemListener {
 
     private static final int WIDTH = 150;
 
