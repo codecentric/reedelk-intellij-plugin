@@ -32,6 +32,7 @@ public class TypeComboPropertyRenderer extends AbstractTypePropertyRenderer {
         boolean editable = typeComboDescriptor.isEditable();
         String[] comboValues = typeComboDescriptor.getComboValues();
 
+        // TODO: Extract this combo box as a widgetlike the input field...
         ComboBox<String> comboBox = new ComboBox<>(comboValues);
         comboBox.setEditable(editable);
         comboBox.setSelectedItem(propertyAccessor.get());
