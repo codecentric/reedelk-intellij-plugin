@@ -6,11 +6,9 @@
   "port": 8182,
   "keepAlive": true,
   "securityConfig": {
-    "implementor": "com.reedelk.plugin.fixture.ComponentNode2",
     "userName": "myUserName",
     "password": "myPassword",
     "keyStoreConfig": {
-      "implementor": "com.reedelk.plugin.fixture.ComponentNode3",
       "algorithm": "SHA-1"
     }
   }

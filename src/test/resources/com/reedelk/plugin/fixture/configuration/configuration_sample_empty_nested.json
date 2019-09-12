@@ -4,11 +4,5 @@
   "title": "HTTP Configuration",
   "host": "192.168.1.32",
   "port": 9190,
-  "keepAlive": false,
-  "securityConfig": {
-    "implementor": "com.reedelk.plugin.fixture.ComponentNode2",
-    "keyStoreConfig": {
-      "implementor": "com.reedelk.plugin.fixture.ComponentNode3"
-    }
-  }
+  "keepAlive": false
 }
