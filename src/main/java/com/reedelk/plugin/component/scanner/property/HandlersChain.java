@@ -15,7 +15,6 @@ public class HandlersChain {
             new WhenHandler(),
             new HintHandler(),
             new VariableHandler(),
-            new TransientHandler(),
             new DisplayNameHandler(),
             new DefaultValueHandler(),
             new AutocompleteContextHandler());

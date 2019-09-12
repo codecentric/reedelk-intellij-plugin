@@ -81,16 +81,10 @@ public class ComponentDataHolderSerializer {
                                 @NotNull JSONObject jsonObject,
                                 @Nullable Object data) {
         String propertyName = propertyDescriptor.getPropertyName();
-        Transient isTransient = propertyDescriptor.getIsTransient();
-
-        // We only serialize if the property is NOT transient.
-        // If it is transient it should not be put in the final JSON.
-        if (Transient.NO.equals(isTransient)) {
-            Stream.of(data)
-                    .filter(ExcludeEmptyMaps)
-                    .filter(ExcludeEmptyObjects)
-                    .forEach(filteredData -> jsonObject.put(propertyName, filteredData));
-        }
+        Stream.of(data)
+                .filter(ExcludeEmptyMaps)
+                .filter(ExcludeEmptyObjects)
+                .forEach(filteredData -> jsonObject.put(propertyName, filteredData));
     }
 
     private static boolean isTypeObject(Object data) {

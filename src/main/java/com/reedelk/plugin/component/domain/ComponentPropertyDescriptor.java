@@ -18,7 +18,6 @@ public class ComponentPropertyDescriptor {
     private String propertyName;
     private String defaultValue;
 
-    private Transient isTransient;
     private TypeDescriptor propertyType;
     private WhenDefinition whenDefinition;
 
@@ -45,11 +44,6 @@ public class ComponentPropertyDescriptor {
     @Nullable
     public String getHintValue() {
         return hintValue;
-    }
-
-    @NotNull
-    public Transient getIsTransient() {
-        return isTransient;
     }
 
     @Nullable
@@ -87,9 +81,7 @@ public class ComponentPropertyDescriptor {
         private String propertyName;
         private String defaultValue;
 
-        private Transient isTransient;
         private TypeDescriptor propertyType;
-
         private WhenDefinition whenDefinition;
 
         private List<AutocompleteContext> autocompleteContexts = new ArrayList<>();
@@ -120,11 +112,6 @@ public class ComponentPropertyDescriptor {
             return this;
         }
 
-        public Builder isTransient(Transient isTransient) {
-            this.isTransient = isTransient;
-            return this;
-        }
-
         public Builder when(WhenDefinition whenDefinition) {
             this.whenDefinition = whenDefinition;
             return this;
@@ -146,7 +133,6 @@ public class ComponentPropertyDescriptor {
 
             ComponentPropertyDescriptor descriptor = new ComponentPropertyDescriptor();
             descriptor.hintValue = hintValue;
-            descriptor.isTransient = isTransient;
             descriptor.displayName = displayName;
             descriptor.propertyName = propertyName;
             descriptor.defaultValue = defaultValue;

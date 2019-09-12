@@ -15,7 +15,6 @@ public class SamplePropertyDescriptors {
     public static final ComponentPropertyDescriptor property1 =
             ComponentPropertyDescriptor.builder()
                     .type(stringTypeDescriptor)
-                    .isTransient(Transient.NO)
                     .propertyName("property1")
                     .displayName("Property 1 Name")
                     .defaultValue("")
@@ -24,7 +23,6 @@ public class SamplePropertyDescriptors {
     public static final ComponentPropertyDescriptor property2 =
             ComponentPropertyDescriptor.builder()
                     .type(stringTypeDescriptor)
-                    .isTransient(Transient.NO)
                     .propertyName("property2")
                     .displayName("Property 2 Name")
                     .defaultValue("")
@@ -33,7 +31,6 @@ public class SamplePropertyDescriptors {
     public static final ComponentPropertyDescriptor property3 =
             ComponentPropertyDescriptor.builder()
                     .type(stringTypeDescriptor)
-                    .isTransient(Transient.NO)
                     .propertyName("property3")
                     .displayName("Property 3 Name")
                     .defaultValue("")
@@ -42,7 +39,6 @@ public class SamplePropertyDescriptors {
     public static final ComponentPropertyDescriptor property5 =
             ComponentPropertyDescriptor.builder()
                     .type(stringTypeDescriptor)
-                    .isTransient(Transient.NO)
                     .propertyName("property5")
                     .displayName("Property 5 Name")
                     .defaultValue("")
@@ -51,7 +47,6 @@ public class SamplePropertyDescriptors {
     public static final ComponentPropertyDescriptor property6 =
             ComponentPropertyDescriptor.builder()
                     .type(integerTypeDescriptor)
-                    .isTransient(Transient.NO)
                     .propertyName("property6")
                     .displayName("Property 6 Name")
                     .defaultValue("0")
@@ -66,7 +61,6 @@ public class SamplePropertyDescriptors {
     public static final ComponentPropertyDescriptor property4 =
             ComponentPropertyDescriptor.builder()
                     .type(componentNode2TypeDescriptor)
-                    .isTransient(Transient.NO)
                     .propertyName("property4")
                     .displayName("Property 4 Name")
                     .defaultValue(null)
@@ -75,7 +69,6 @@ public class SamplePropertyDescriptors {
     public static final ComponentPropertyDescriptor property7 =
             ComponentPropertyDescriptor.builder()
                     .type(componentNode2ShareableTypeDescriptor)
-                    .isTransient(Transient.NO)
                     .propertyName("property7")
                     .displayName("Property 7 Name")
                     .build();
@@ -83,7 +76,6 @@ public class SamplePropertyDescriptors {
     public static final ComponentPropertyDescriptor property8 =
             ComponentPropertyDescriptor.builder()
                     .type(mapTypeDescriptor)
-                    .isTransient(Transient.NO)
                     .propertyName("property8")
                     .displayName("Property 8 Name")
                     .build();
