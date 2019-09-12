@@ -12,7 +12,6 @@ import com.reedelk.plugin.graph.FlowSnapshot;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Collections;
 
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
@@ -33,7 +32,7 @@ public class FlowAndSubflowMetadataPanel extends DisposablePanel implements Disp
     }
 
     private void initialize() {
-        DisposablePanel propertiesPanel = new PropertiesPanelHolder(null, Collections.emptyList(), null);
+        DisposablePanel propertiesPanel = new DisposablePanel();
 
         InputField<String> titleField = createTitleInputField();
         FormBuilder.get()
