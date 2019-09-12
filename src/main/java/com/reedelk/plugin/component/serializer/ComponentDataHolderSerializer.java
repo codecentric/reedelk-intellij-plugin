@@ -53,39 +53,44 @@ public class ComponentDataHolderSerializer {
         if (dataHolder.has(propertyName)) {
             Object data = dataHolder.get(propertyName);
             if (isTypeObject(data)) {
-                processTypeObject(jsonObject, propertyDescriptor, propertyName, (TypeObject) data);
+                processTypeObject(propertyDescriptor, jsonObject, (TypeObject) data);
             } else {
-                putData(jsonObject, propertyName, data);
+                putData(propertyDescriptor, jsonObject, data);
             }
         }
     }
 
-    private static void processTypeObject(@NotNull JSONObject jsonObject,
-                                          @NotNull ComponentPropertyDescriptor propertyDescriptor,
-                                          @NotNull String propertyName,
+    private static void processTypeObject(@NotNull ComponentPropertyDescriptor propertyDescriptor,
+                                          @NotNull JSONObject jsonObject,
                                           @NotNull TypeObject data) {
         TypeObjectDescriptor propertyType = propertyDescriptor.getPropertyType();
         if (Shared.YES.equals(propertyType.getShared())) {
             JSONObject refObject = JsonObjectFactory.newJSONObject();
             String ref = data.get(JsonParser.Component.configRef());
             JsonParser.Component.configRef(ref, refObject);
-            putData(jsonObject, propertyName, refObject);
-
+            putData(propertyDescriptor, jsonObject, refObject);
         } else {
-            // We don't have to put the implementor name if it is not shared
+            // We DO NOT have to put the implementor name if the object is not shared.
             JSONObject object = JsonObjectFactory.newJSONObject();
             serialize(propertyType, data, object);
-            putData(jsonObject, propertyName, object);
+            putData(propertyDescriptor, jsonObject, object);
         }
     }
 
-    private static void putData(@NotNull JSONObject jsonObject,
-                                @NotNull String propertyName,
+    private static void putData(@NotNull ComponentPropertyDescriptor propertyDescriptor,
+                                @NotNull JSONObject jsonObject,
                                 @Nullable Object data) {
-        Stream.of(data)
-                .filter(ExcludeEmptyMaps)
-                .filter(ExcludeEmptyObjects)
-                .forEach(filteredData -> jsonObject.put(propertyName, filteredData));
+        String propertyName = propertyDescriptor.getPropertyName();
+        Transient isTransient = propertyDescriptor.getIsTransient();
+
+        // We only serialize if the property is NOT transient.
+        // If it is transient it should not be put in the final JSON.
+        if (Transient.NO.equals(isTransient)) {
+            Stream.of(data)
+                    .filter(ExcludeEmptyMaps)
+                    .filter(ExcludeEmptyObjects)
+                    .forEach(filteredData -> jsonObject.put(propertyName, filteredData));
+        }
     }
 
     private static boolean isTypeObject(Object data) {

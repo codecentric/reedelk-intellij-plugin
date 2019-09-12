@@ -1,15 +1,17 @@
 package com.reedelk.plugin.component.scanner.property;
 
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
+import com.reedelk.plugin.component.domain.Transient;
 import com.reedelk.plugin.component.scanner.ComponentAnalyzerContext;
-import com.reedelk.runtime.api.annotation.Hint;
 import io.github.classgraph.FieldInfo;
 
-public class PropertyHintHandler implements Handler {
+public class TransientHandler implements Handler {
     @Override
     public void handle(FieldInfo propertyInfo, ComponentPropertyDescriptor.Builder builder, ComponentAnalyzerContext context) {
-        String hintValue =
-                PropertyScannerUtils.getAnnotationValueOrDefault(propertyInfo, Hint.class, null);
-        builder.hintValue(hintValue);
+        Transient isTransient =
+                propertyInfo.hasAnnotation(com.reedelk.runtime.api.annotation.Transient.class.getName()) ?
+                        Transient.YES :
+                        Transient.NO;
+        builder.isTransient(isTransient);
     }
 }

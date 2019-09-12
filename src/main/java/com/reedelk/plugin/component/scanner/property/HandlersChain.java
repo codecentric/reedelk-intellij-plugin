@@ -10,14 +10,15 @@ import java.util.List;
 public class HandlersChain {
 
     private static final List<Handler> HANDLERS = Arrays.asList(
-            new PropertyNameHandler(),
-            new PropertyTypeHandler(),
-            new PropertyWhenHandler(),
-            new PropertyHintHandler(),
-            new PropertyVariableHandler(),
-            new PropertyDisplayNameHandler(),
-            new PropertyDefaultValueHandler(),
-            new PropertyAutocompleteContextHandler());
+            new NameHandler(),
+            new TypeHandler(),
+            new WhenHandler(),
+            new HintHandler(),
+            new VariableHandler(),
+            new TransientHandler(),
+            new DisplayNameHandler(),
+            new DefaultValueHandler(),
+            new AutocompleteContextHandler());
 
     public static ComponentPropertyDescriptor descriptor(FieldInfo propertyInfo, ComponentAnalyzerContext context) {
         ComponentPropertyDescriptor.Builder builder = ComponentPropertyDescriptor.builder();

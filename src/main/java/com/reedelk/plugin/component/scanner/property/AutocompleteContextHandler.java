@@ -8,9 +8,9 @@ import com.reedelk.runtime.api.annotation.AutocompleteContexts;
 import com.reedelk.runtime.api.annotation.AutocompleteType;
 import io.github.classgraph.*;
 
-public class PropertyAutocompleteContextHandler implements Handler {
+public class AutocompleteContextHandler implements Handler {
 
-    private static final Logger LOG = Logger.getInstance(PropertyAutocompleteContextHandler.class);
+    private static final Logger LOG = Logger.getInstance(AutocompleteContextHandler.class);
 
     @Override
     public void handle(FieldInfo propertyInfo, ComponentPropertyDescriptor.Builder builder, ComponentAnalyzerContext context) {

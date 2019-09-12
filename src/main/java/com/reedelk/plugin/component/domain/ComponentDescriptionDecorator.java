@@ -29,6 +29,7 @@ public class ComponentDescriptionDecorator implements ComponentDescriptor {
         descriptionDescriptor = ComponentPropertyDescriptor.builder()
                 .propertyName(Implementor.description())
                 .type(typeDescriptor)
+                .isTransient(Transient.NO)
                 .hintValue(Hint.COMPONENT_DESCRIPTION)
                 .displayName(DESCRIPTION_PROPERTY_DISPLAY_NAME)
                 .defaultValue(wrapped.getDisplayName())

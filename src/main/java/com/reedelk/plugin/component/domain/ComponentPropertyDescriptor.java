@@ -17,6 +17,7 @@ public class ComponentPropertyDescriptor {
     private String propertyName;
     private String defaultValue;
 
+    private Transient isTransient;
     private TypeDescriptor propertyType;
 
     private final List<WhenDefinition> whenDefinitions = new ArrayList<>();
@@ -43,6 +44,11 @@ public class ComponentPropertyDescriptor {
     @Nullable
     public String getHintValue() {
         return hintValue;
+    }
+
+    @NotNull
+    public Transient getIsTransient() {
+        return isTransient;
     }
 
     @Nullable
@@ -80,19 +86,15 @@ public class ComponentPropertyDescriptor {
         private String propertyName;
         private String defaultValue;
 
+        private Transient isTransient;
         private TypeDescriptor propertyType;
 
         private List<WhenDefinition> whenDefinitions = new ArrayList<>();
         private List<AutocompleteContext> autocompleteContexts = new ArrayList<>();
         private List<VariableDefinition> variableDefinitions = new ArrayList<>();
 
-        public Builder displayName(String displayName) {
-            this.displayName = displayName;
-            return this;
-        }
-
-        public Builder defaultValue(String defaultValue) {
-            this.defaultValue = defaultValue;
+        public Builder type(TypeDescriptor type) {
+            this.propertyType = type;
             return this;
         }
 
@@ -101,23 +103,23 @@ public class ComponentPropertyDescriptor {
             return this;
         }
 
+        public Builder displayName(String displayName) {
+            this.displayName = displayName;
+            return this;
+        }
+
         public Builder propertyName(String propertyName) {
             this.propertyName = propertyName;
             return this;
         }
 
-        public Builder type(TypeDescriptor type) {
-            this.propertyType = type;
+        public Builder defaultValue(String defaultValue) {
+            this.defaultValue = defaultValue;
             return this;
         }
 
-        public Builder context(AutocompleteContext autocompleteContext) {
-            this.autocompleteContexts.add(autocompleteContext);
-            return this;
-        }
-
-        public Builder variable(VariableDefinition variableDefinition) {
-            this.variableDefinitions.add(variableDefinition);
+        public Builder isTransient(Transient isTransient) {
+            this.isTransient = isTransient;
             return this;
         }
 
@@ -126,16 +128,27 @@ public class ComponentPropertyDescriptor {
             return this;
         }
 
+        public Builder variable(VariableDefinition variableDefinition) {
+            this.variableDefinitions.add(variableDefinition);
+            return this;
+        }
+
+        public Builder context(AutocompleteContext autocompleteContext) {
+            this.autocompleteContexts.add(autocompleteContext);
+            return this;
+        }
+
         public ComponentPropertyDescriptor build() {
             checkState(propertyName != null, "property name");
             checkState(propertyType != null, "property type");
 
             ComponentPropertyDescriptor descriptor = new ComponentPropertyDescriptor();
+            descriptor.hintValue = hintValue;
+            descriptor.isTransient = isTransient;
             descriptor.displayName = displayName;
             descriptor.propertyName = propertyName;
             descriptor.defaultValue = defaultValue;
             descriptor.propertyType = propertyType;
-            descriptor.hintValue = hintValue;
             descriptor.whenDefinitions.addAll(whenDefinitions);
             descriptor.autocompleteContexts.addAll(autocompleteContexts);
             descriptor.variableDefinitions.addAll(variableDefinitions);

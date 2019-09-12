@@ -1,9 +1,6 @@
 package com.reedelk.plugin.configuration;
 
-import com.reedelk.plugin.component.domain.Collapsible;
-import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
-import com.reedelk.plugin.component.domain.Shared;
-import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
+import com.reedelk.plugin.component.domain.*;
 import com.reedelk.plugin.component.serializer.ConfigurationSerializer;
 import com.reedelk.plugin.fixture.ComponentNode1;
 import com.reedelk.plugin.fixture.ComponentNode2;
@@ -100,30 +97,34 @@ class SerializerTest {
 
     private ComponentPropertyDescriptor hostProperty =
             ComponentPropertyDescriptor.builder()
-                    .propertyName("host")
                     .type(stringTypeDescriptor)
+                    .isTransient(Transient.NO)
+                    .propertyName("host")
                     .displayName("Host")
                     .build();
 
     private ComponentPropertyDescriptor portProperty =
             ComponentPropertyDescriptor.builder()
-                    .propertyName("port")
                     .type(integerTypeDescriptor)
+                    .isTransient(Transient.NO)
+                    .propertyName("port")
                     .displayName("Port")
                     .build();
 
     private ComponentPropertyDescriptor keepAlive =
             ComponentPropertyDescriptor.builder()
-                    .propertyName("keepAlive")
                     .type(booleanTypeDescriptor)
+                    .isTransient(Transient.NO)
+                    .propertyName("keepAlive")
                     .displayName("Keep Alive")
                     .build();
 
 
     private ComponentPropertyDescriptor algorithm =
             ComponentPropertyDescriptor.builder()
-                    .propertyName("algorithm")
                     .type(stringTypeDescriptor)
+                    .isTransient(Transient.NO)
+                    .propertyName("algorithm")
                     .displayName("Algorithm")
                     .build();
 
@@ -134,22 +135,25 @@ class SerializerTest {
 
     private ComponentPropertyDescriptor keyStoreConfigDescriptor =
             ComponentPropertyDescriptor.builder()
-                    .propertyName("keyStoreConfig")
                     .type(keyStoreConfigObjectType)
+                    .isTransient(Transient.NO)
+                    .propertyName("keyStoreConfig")
                     .displayName("Key store config")
                     .build();
 
     private ComponentPropertyDescriptor userName =
             ComponentPropertyDescriptor.builder()
-                    .propertyName("userName")
                     .type(stringTypeDescriptor)
+                    .isTransient(Transient.NO)
+                    .propertyName("userName")
                     .displayName("User Name")
                     .build();
 
     private ComponentPropertyDescriptor password =
             ComponentPropertyDescriptor.builder()
-                    .propertyName("password")
                     .type(stringTypeDescriptor)
+                    .isTransient(Transient.NO)
+                    .propertyName("password")
                     .displayName("Password")
                     .build();
 
@@ -161,8 +165,9 @@ class SerializerTest {
 
     private ComponentPropertyDescriptor securityConfigDescriptor =
             ComponentPropertyDescriptor.builder()
-                    .propertyName("securityConfig")
                     .type(securityConfigObjectType)
+                    .isTransient(Transient.NO)
+                    .propertyName("securityConfig")
                     .displayName("Security config")
                     .build();
 

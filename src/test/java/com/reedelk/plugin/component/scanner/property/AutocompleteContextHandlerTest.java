@@ -13,9 +13,9 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
-public class PropertyAutocompleteContextHandlerTest extends AbstractScannerTest {
+public class AutocompleteContextHandlerTest extends AbstractScannerTest {
 
-    private PropertyAutocompleteContextHandler handler = new PropertyAutocompleteContextHandler();
+    private AutocompleteContextHandler handler = new AutocompleteContextHandler();
 
     @Test
     void shouldCorrectlyMapAutocompleteContextsAnnotations() {
