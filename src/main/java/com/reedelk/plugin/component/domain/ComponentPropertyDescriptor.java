@@ -7,7 +7,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -19,8 +18,8 @@ public class ComponentPropertyDescriptor {
     private String defaultValue;
 
     private TypeDescriptor propertyType;
-    private WhenDefinition whenDefinition;
 
+    private final List<WhenDefinition> whenDefinitions = new ArrayList<>();
     private final List<VariableDefinition> variableDefinitions = new ArrayList<>();
     private final List<AutocompleteContext> autocompleteContexts = new ArrayList<>();
 
@@ -54,8 +53,8 @@ public class ComponentPropertyDescriptor {
     }
 
     @NotNull
-    public Optional<WhenDefinition> getWhenDefinition() {
-        return Optional.ofNullable(whenDefinition);
+    public List<WhenDefinition> getWhenDefinitions() {
+        return whenDefinitions;
     }
 
     @NotNull
@@ -82,8 +81,8 @@ public class ComponentPropertyDescriptor {
         private String defaultValue;
 
         private TypeDescriptor propertyType;
-        private WhenDefinition whenDefinition;
 
+        private List<WhenDefinition> whenDefinitions = new ArrayList<>();
         private List<AutocompleteContext> autocompleteContexts = new ArrayList<>();
         private List<VariableDefinition> variableDefinitions = new ArrayList<>();
 
@@ -113,7 +112,7 @@ public class ComponentPropertyDescriptor {
         }
 
         public Builder when(WhenDefinition whenDefinition) {
-            this.whenDefinition = whenDefinition;
+            this.whenDefinitions.add(whenDefinition);
             return this;
         }
 
@@ -137,7 +136,7 @@ public class ComponentPropertyDescriptor {
             descriptor.propertyName = propertyName;
             descriptor.defaultValue = defaultValue;
             descriptor.propertyType = propertyType;
-            descriptor.whenDefinition = whenDefinition;
+            descriptor.whenDefinitions.addAll(whenDefinitions);
             descriptor.autocompleteContexts.addAll(autocompleteContexts);
             descriptor.variableDefinitions.addAll(variableDefinitions);
             return descriptor;
