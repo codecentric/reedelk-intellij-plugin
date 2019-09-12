@@ -39,8 +39,7 @@ public class TypeScriptPropertyRenderer extends AbstractTypePropertyRenderer {
                             @NotNull ContainerContext context) {
 
         // Apply visibility condition for the Script input.
-        propertyDescriptor.getWhenDefinition().ifPresent(definition ->
-                applyWhenVisibility(definition, context, rendered));
+        applyWhenVisibility(propertyDescriptor.getWhenDefinitions(), context, rendered);
 
         // Add the component to the parent container.
         FormBuilder.get()
