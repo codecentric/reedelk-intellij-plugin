@@ -1,15 +1,19 @@
 package com.reedelk.plugin.component.scanner.property;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.WhenDefinition;
 import com.reedelk.plugin.component.scanner.ComponentAnalyzerContext;
 import com.reedelk.runtime.api.annotation.When;
+import com.reedelk.runtime.api.annotation.Whens;
 import io.github.classgraph.AnnotationInfo;
 import io.github.classgraph.AnnotationParameterValue;
 import io.github.classgraph.AnnotationParameterValueList;
 import io.github.classgraph.FieldInfo;
 
 public class WhenHandler implements Handler {
+
+    private static final Logger LOG = Logger.getInstance(WhenHandler.class);
 
     @Override
     public void handle(FieldInfo propertyInfo, ComponentPropertyDescriptor.Builder builder, ComponentAnalyzerContext context) {
@@ -19,6 +23,22 @@ public class WhenHandler implements Handler {
             AnnotationInfo info = propertyInfo.getAnnotationInfo(When.class.getName());
             WhenDefinition variableDefinition = processWhenInfo(info);
             builder.when(variableDefinition);
+        }
+
+        // More than one 'when' definition
+        boolean hasWhenAnnotations = propertyInfo.hasAnnotation(Whens.class.getName());
+        if (hasWhenAnnotations) {
+            AnnotationInfo annotationInfo = propertyInfo.getAnnotationInfo(Whens.class.getName());
+            AnnotationParameterValueList whensAnnotationList = annotationInfo.getParameterValues();
+            Object[] annotationInfos = (Object[]) whensAnnotationList.get(0).getValue();
+            for (Object info : annotationInfos) {
+                try {
+                    WhenDefinition whenDefinition = processWhenInfo((AnnotationInfo) info);
+                    builder.when(whenDefinition);
+                } catch (Exception e) {
+                    LOG.warn(String.format("Could not process AutocompleteVariables info for property named '%s'", propertyInfo.getName()), e);
+                }
+            }
         }
     }
 
