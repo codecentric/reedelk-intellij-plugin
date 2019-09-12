@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -19,8 +20,8 @@ public class ComponentPropertyDescriptor {
 
     private Transient isTransient;
     private TypeDescriptor propertyType;
+    private WhenDefinition whenDefinition;
 
-    private final List<WhenDefinition> whenDefinitions = new ArrayList<>();
     private final List<VariableDefinition> variableDefinitions = new ArrayList<>();
     private final List<AutocompleteContext> autocompleteContexts = new ArrayList<>();
 
@@ -59,8 +60,8 @@ public class ComponentPropertyDescriptor {
     }
 
     @NotNull
-    public List<WhenDefinition> getWhenDefinitions() {
-        return whenDefinitions;
+    public Optional<WhenDefinition> getWhenDefinition() {
+        return Optional.ofNullable(whenDefinition);
     }
 
     @NotNull
@@ -89,7 +90,8 @@ public class ComponentPropertyDescriptor {
         private Transient isTransient;
         private TypeDescriptor propertyType;
 
-        private List<WhenDefinition> whenDefinitions = new ArrayList<>();
+        private WhenDefinition whenDefinition;
+
         private List<AutocompleteContext> autocompleteContexts = new ArrayList<>();
         private List<VariableDefinition> variableDefinitions = new ArrayList<>();
 
@@ -124,7 +126,7 @@ public class ComponentPropertyDescriptor {
         }
 
         public Builder when(WhenDefinition whenDefinition) {
-            this.whenDefinitions.add(whenDefinition);
+            this.whenDefinition = whenDefinition;
             return this;
         }
 
@@ -149,7 +151,7 @@ public class ComponentPropertyDescriptor {
             descriptor.propertyName = propertyName;
             descriptor.defaultValue = defaultValue;
             descriptor.propertyType = propertyType;
-            descriptor.whenDefinitions.addAll(whenDefinitions);
+            descriptor.whenDefinition = whenDefinition;
             descriptor.autocompleteContexts.addAll(autocompleteContexts);
             descriptor.variableDefinitions.addAll(variableDefinitions);
             return descriptor;

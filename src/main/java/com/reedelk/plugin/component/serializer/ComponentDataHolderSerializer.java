@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -32,18 +33,17 @@ public class ComponentDataHolderSerializer {
     private static void serialize(@NotNull ComponentDataHolder componentData,
                                   @NotNull JSONObject parent,
                                   @NotNull List<ComponentPropertyDescriptor> propertiesDescriptors) {
-        propertiesDescriptors.forEach(propertyDescriptor -> {
-            List<WhenDefinition> whenDefinitions = propertyDescriptor.getWhenDefinitions();
-            if (whenDefinitions.isEmpty()) {
-                serialize(componentData, parent, propertyDescriptor);
-            } else {
-                // We just serialize if and only if all
-                // the when conditions are satisfied.
-                if (areAllSatisfied(whenDefinitions, componentData)) {
+        for (ComponentPropertyDescriptor propertyDescriptor : propertiesDescriptors) {
+            Optional<WhenDefinition> maybeWhenDefinition = propertyDescriptor.getWhenDefinition();
+            if (maybeWhenDefinition.isPresent()) {
+                // We just serialize if and only if all the when conditions are satisfied.
+                if (areAllSatisfied(maybeWhenDefinition.get(), componentData)) {
                     serialize(componentData, parent, propertyDescriptor);
                 }
+            } else {
+                serialize(componentData, parent, propertyDescriptor);
             }
-        });
+        }
     }
 
     private static void serialize(@NotNull ComponentDataHolder dataHolder,
@@ -97,17 +97,11 @@ public class ComponentDataHolderSerializer {
         return data instanceof TypeObject;
     }
 
-    private static boolean areAllSatisfied(List<WhenDefinition> whenDefinitions, ComponentDataHolder dataHolder) {
-        boolean satisfied = true;
-        for (WhenDefinition definition : whenDefinitions) {
-            String propertyName = definition.getPropertyName();
-            String propertyValue = definition.getPropertyValue();
-            Object value = dataHolder.get(propertyName);
-            if (!(value != null && value.toString().equals(propertyValue))) {
-                satisfied = false;
-            }
-        }
-        return satisfied;
+    private static boolean areAllSatisfied(WhenDefinition when, ComponentDataHolder dataHolder) {
+        String propertyName = when.getPropertyName();
+        String propertyValue = when.getPropertyValue();
+        Object value = dataHolder.get(propertyName);
+        return !(value != null && value.toString().equals(propertyValue));
     }
 
     // Empty Maps are excluded from serialization

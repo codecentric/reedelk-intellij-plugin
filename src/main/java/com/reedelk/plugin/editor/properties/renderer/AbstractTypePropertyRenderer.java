@@ -8,8 +8,8 @@ import com.reedelk.plugin.editor.properties.widget.JComponentHolder;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.util.Arrays;
-import java.util.List;
+
+import static java.util.Arrays.stream;
 
 abstract class AbstractTypePropertyRenderer implements TypePropertyRenderer {
 
@@ -19,11 +19,11 @@ abstract class AbstractTypePropertyRenderer implements TypePropertyRenderer {
                             @NotNull ComponentPropertyDescriptor descriptor,
                             @NotNull ContainerContext context) {
 
-
         JLabel propertyTitleLabel = new JLabel(descriptor.getDisplayName() + ":");
 
         // Apply visibility conditions to the label and the rendered component
-        applyWhenVisibilityConditions(descriptor.getWhenDefinitions(), context, rendered, propertyTitleLabel);
+        descriptor.getWhenDefinition().ifPresent(definition ->
+                applyWhenVisibility(definition, context, rendered, propertyTitleLabel));
 
         // Add the component and its property title label to the
         // parent container.
@@ -36,17 +36,17 @@ abstract class AbstractTypePropertyRenderer implements TypePropertyRenderer {
 
     }
 
-    // TODO: Is the following true? You might have multiple conditions????
-    void applyWhenVisibilityConditions(List<WhenDefinition> whenDefinitions, ContainerContext context, JComponent... components) {
-        whenDefinitions.forEach(whenDefinition -> {
-            String propertyName = whenDefinition.getPropertyName();
-            String propertyValue = whenDefinition.getPropertyValue();
-            Object actualPropertyValue = context.propertyValueFrom(propertyName);
+    void applyWhenVisibility(WhenDefinition when, ContainerContext context, JComponent... components) {
+        String propertyName = when.getPropertyName();
+        String propertyValue = when.getPropertyValue();
+        Object actualPropertyValue = context.propertyValueFrom(propertyName);
 
-            setVisible(isConditionSatisfied(propertyValue, actualPropertyValue), components);
+        boolean conditionSatisfied = isConditionSatisfied(propertyValue, actualPropertyValue);
+        setVisible(conditionSatisfied, components);
 
-            context.subscribeOnPropertyChange(whenDefinition.getPropertyName(), value ->
-                    setVisible(isConditionSatisfied(propertyValue, value), components));
+        context.subscribeOnPropertyChange(propertyName, value -> {
+            boolean satisfied = isConditionSatisfied(propertyValue, value);
+            setVisible(satisfied, components);
         });
     }
 
@@ -55,7 +55,7 @@ abstract class AbstractTypePropertyRenderer implements TypePropertyRenderer {
     }
 
     private void setVisible(boolean visible, JComponent... components) {
-        Arrays.stream(components).forEach(component -> {
+        stream(components).forEach(component -> {
             component.setVisible(visible);
             component.repaint();
             component.revalidate();

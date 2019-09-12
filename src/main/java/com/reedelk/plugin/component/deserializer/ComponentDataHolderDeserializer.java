@@ -41,8 +41,8 @@ public class ComponentDataHolderDeserializer {
             JSONObject nestedJsonObject = componentJsonObject.getJSONObject(descriptor.getPropertyName());
 
             if (YES.equals(propertyType.getShared())) {
-                // The config is shareable, therefore we just set the reference value
-                // pointing to the shared config.
+                // The config is shareable, therefore we just set the
+                // reference value pointing to the shared config.
                 if (nestedJsonObject.has(JsonParser.Component.configRef())) {
                     String configRef = JsonParser.Component.configRef(nestedJsonObject);
                     nestedObject.set(JsonParser.Component.configRef(), configRef);
