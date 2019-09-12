@@ -215,8 +215,7 @@ public class TypeObjectPropertyRenderer extends AbstractTypePropertyRenderer {
 
         // If the property has any 'when' condition, we apply listener/s to make it
         // visible (or not) when the condition is met (or not).
-        descriptor.getWhenDefinition().ifPresent(when ->
-                applyWhenVisibility(when, context, wrappedRenderedComponent));
+        applyWhenVisibility(descriptor.getWhenDefinitions(), context, wrappedRenderedComponent);
 
         // Add the component to the parent container.
         FormBuilder.get()
