@@ -10,7 +10,6 @@ import java.util.function.BiFunction;
 
 import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
 import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
-import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
 public class IsConditionSatisfied {
 
@@ -24,20 +23,18 @@ public class IsConditionSatisfied {
     private static final ConditionEvaluator EVALUATOR_NULL =
             (wanted, actual) -> Objects.isNull(actual);
     private static final ConditionEvaluator EVALUATOR_BLANK =
-            (wanted, actual) -> actual instanceof String && isBlank((String) actual);
+            (wanted, actual) -> actual == null || actual instanceof String && isBlank((String) actual);
     private static final ConditionEvaluator EVALUATOR_NOT_BLANK =
-            (wanted, actual) -> actual instanceof String && isNotBlank((String) actual);
+            (wanted, actual) -> !EVALUATOR_BLANK.apply(wanted, actual);
     private static final ConditionEvaluator EVALUATOR_DEFAULT =
             (wanted, actual) -> actual != null && actual.toString().equals(wanted);
 
     private static final ConditionEvaluator EVALUATOR_TYPE_OBJECT = (wantedJson, typeObject) -> {
         TypeObject actualTypeObject = (TypeObject) typeObject;
         JSONObject whenDefinition = new JSONObject(wantedJson);
-        return whenDefinition.keySet().stream().anyMatch(key -> {
+        return whenDefinition.keySet().stream().allMatch(key -> {
             String expectedValue = whenDefinition.getString(key);
-            return When.PROPERTY_NOT_PRESENT.equals(expectedValue) ?
-                    !actualTypeObject.has(key) :
-                    evaluate(expectedValue, actualTypeObject.get(key));
+            return evaluate(expectedValue, actualTypeObject.get(key));
         });
     };
 
