@@ -2,14 +2,16 @@ package com.reedelk.plugin.component.type.unknown;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBLabel;
+import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.editor.properties.renderer.AbstractNodePropertiesRenderer;
 import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 import com.reedelk.plugin.editor.properties.widget.FormBuilder;
-import com.reedelk.plugin.editor.properties.widget.PropertiesPanelHolder;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.runtime.commons.JsonParser;
+
+import java.awt.*;
 
 public class UnknownPropertiesRenderer extends AbstractNodePropertiesRenderer {
 
@@ -21,10 +23,10 @@ public class UnknownPropertiesRenderer extends AbstractNodePropertiesRenderer {
     public DisposablePanel render(GraphNode node) {
         ComponentData componentData = node.componentData();
         String unknownImplementorClazz = componentData.get(JsonParser.Implementor.name());
-        PropertiesPanelHolder propertiesPanel = new PropertiesPanelHolder(componentData, snapshot);
+        DisposablePanel propertiesPanel = new DisposablePanel(new GridLayout());
 
         FormBuilder.get()
-                .addLabel("Unknown implementor", propertiesPanel)
+                .addLabel(Labels.UNKNOWN_COMPONENT, propertiesPanel)
                 .addLastField(new JBLabel(unknownImplementorClazz), propertiesPanel);
 
         return propertiesPanel;

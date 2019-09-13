@@ -2,7 +2,6 @@ package com.reedelk.plugin.editor.properties.widget;
 
 import com.intellij.util.ui.JBUI;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class FormBuilder {
@@ -85,7 +84,7 @@ public class FormBuilder {
      * Adds a JLabel with the given string to the label column
      */
     public FormBuilder addLabel(String s, Container parent) {
-        JLabel c = new JLabel(s + ":");
+        PropertyTitleLabel c = new PropertyTitleLabel(s);
         addLabel(c, parent);
         return this;
     }

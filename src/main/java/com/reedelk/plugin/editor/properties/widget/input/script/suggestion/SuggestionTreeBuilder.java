@@ -107,7 +107,7 @@ public class SuggestionTreeBuilder {
             }
 
             if (listener != null) {
-                panelContext.subscribeOnPropertyChange(propertyName, listener);
+                panelContext.subscribePropertyChange(propertyName, listener);
             }
         });
     }

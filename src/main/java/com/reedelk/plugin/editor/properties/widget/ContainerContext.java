@@ -12,12 +12,14 @@ public interface ContainerContext {
 
     <T> T propertyValueFrom(String propertyName);
 
-    void subscribeOnPropertyChange(String propertyName, InputChangeListener<?> inputChangeListener);
+    void subscribePropertyChange(String propertyName, InputChangeListener<?> inputChangeListener);
 
     Optional<ComponentPropertyDescriptor> getPropertyDescriptor(Predicate<ComponentPropertyDescriptor> filter);
 
     void addComponent(JComponentHolder componentHolder);
 
     Optional<JComponent> getComponentMatchingMetadata(BiPredicate<String, String> keyValuePredicate);
+
+    <T> void notifyPropertyChanged(String propertyName, T object);
 
 }

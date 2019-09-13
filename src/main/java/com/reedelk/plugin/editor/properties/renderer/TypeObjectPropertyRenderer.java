@@ -1,9 +1,8 @@
 package com.reedelk.plugin.editor.properties.renderer;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.ui.awt.RelativePoint;
 import com.reedelk.plugin.commons.Labels;
+import com.reedelk.plugin.commons.PopupUtils;
 import com.reedelk.plugin.component.domain.ComponentDataHolder;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeDescriptor;
@@ -15,6 +14,7 @@ import com.reedelk.plugin.editor.properties.configuration.ActionDeleteConfigurat
 import com.reedelk.plugin.editor.properties.configuration.ConfigControlPanel;
 import com.reedelk.plugin.editor.properties.widget.*;
 import com.reedelk.plugin.editor.properties.widget.input.ConfigSelector;
+import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.service.module.ConfigService;
 import com.reedelk.plugin.service.module.impl.ConfigMetadata;
 import com.reedelk.runtime.api.commons.StringUtils;
@@ -25,8 +25,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-import static com.intellij.openapi.ui.MessageType.WARNING;
-import static com.intellij.openapi.ui.popup.Balloon.Position;
 import static com.reedelk.plugin.component.domain.Shared.NO;
 import static com.reedelk.plugin.component.domain.Shared.YES;
 import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
@@ -52,7 +50,7 @@ public class TypeObjectPropertyRenderer extends AbstractTypePropertyRenderer {
                              @NotNull ContainerContext context) {
         TypeObjectDescriptor objectDescriptor = descriptor.getPropertyType();
         return YES.equals(objectDescriptor.getShared()) ?
-                renderShareable(module, descriptor, accessor) :
+                renderShareable(module, descriptor, accessor, context) :
                 renderInline(module, accessor, objectDescriptor);
     }
 
@@ -73,12 +71,15 @@ public class TypeObjectPropertyRenderer extends AbstractTypePropertyRenderer {
 
     @NotNull
     private JComponent renderInline(Module module, PropertyAccessor propertyAccessor, TypeObjectDescriptor objectDescriptor) {
-        List<ComponentPropertyDescriptor> objectProperties = objectDescriptor.getObjectProperties();
-
-        // The accessor of type object returns a TypeObject map, if it  is empty...
+        // The accessor of type object returns a TypeObject map.
         ComponentDataHolder dataHolder = propertyAccessor.get();
 
-        PropertiesPanelHolder propertiesPanel = new PropertiesPanelHolder(dataHolder, objectProperties, propertyAccessor.getSnapshot());
+        FlowSnapshot snapshot = propertyAccessor.getSnapshot();
+
+        List<ComponentPropertyDescriptor> objectProperties = objectDescriptor.getObjectProperties();
+
+        PropertiesPanelHolder propertiesPanel = new PropertiesPanelHolder(dataHolder, objectProperties, snapshot);
+
         objectProperties.forEach(objectProperty -> {
 
             String propertyName = objectProperty.getPropertyName();
@@ -98,7 +99,7 @@ public class TypeObjectPropertyRenderer extends AbstractTypePropertyRenderer {
     }
 
     @NotNull
-    private JComponent renderShareable(Module module, ComponentPropertyDescriptor descriptor, PropertyAccessor propertyAccessor) {
+    private JComponent renderShareable(Module module, ComponentPropertyDescriptor descriptor, PropertyAccessor propertyAccessor, ContainerContext context) {
         // The Config Selector Combo
         ConfigSelector selector = new ConfigSelector();
 
@@ -126,7 +127,7 @@ public class TypeObjectPropertyRenderer extends AbstractTypePropertyRenderer {
 
             @Override
             public void onAddedConfigurationError(Exception exception, ConfigMetadata metadata) {
-                displayErrorPopup(exception, configControlPanel);
+                PopupUtils.error(exception, configControlPanel);
             }
         });
 
@@ -139,12 +140,12 @@ public class TypeObjectPropertyRenderer extends AbstractTypePropertyRenderer {
 
             @Override
             public void onDeletedConfigurationError(Exception exception, ConfigMetadata configMetadata) {
-                displayErrorPopup(exception, configControlPanel);
+                PopupUtils.error(exception, configControlPanel);
             }
         });
 
         configControlPanel.setEditActionListener((exception, metadata) ->
-                displayErrorPopup(exception, configControlPanel));
+                PopupUtils.error(exception, configControlPanel));
 
         String configReference = dataHolder.get(JsonParser.Component.configRef());
         ConfigMetadata matchingMetadata =
@@ -156,6 +157,9 @@ public class TypeObjectPropertyRenderer extends AbstractTypePropertyRenderer {
         selector.addSelectListener(selectedMetadata -> {
             configControlPanel.onSelect(selectedMetadata);
             configRefAccessor.set(selectedMetadata.getId());
+            // If the selection has changed, we must notify all the
+            // context subscribers that the property has changed.
+            context.notifyPropertyChanged(descriptor.getPropertyName(), dataHolder);
         });
 
         JPanel wrapper = new DisposablePanel();
@@ -163,15 +167,6 @@ public class TypeObjectPropertyRenderer extends AbstractTypePropertyRenderer {
         wrapper.add(selector, CENTER);
         wrapper.add(configControlPanel, EAST);
         return wrapper;
-    }
-
-    // TODO: Extract in an utility class to show error messages...
-    private void displayErrorPopup(Exception exception, ConfigControlPanel configControlPanel) {
-        String errorMessage = exception.getMessage();
-        String content = String.format(Labels.BALLOON_EDIT_CONFIG_ERROR, errorMessage);
-        JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(content, WARNING, null)
-                .createBalloon()
-                .show(RelativePoint.getCenterOf(configControlPanel), Position.above);
     }
 
     private ConfigMetadata updateMetadataOnSelector(Module module, ConfigSelector selector, ComponentPropertyDescriptor typeObjectDescriptor, String targetReference) {
@@ -193,7 +188,6 @@ public class TypeObjectPropertyRenderer extends AbstractTypePropertyRenderer {
 
     private ConfigMetadata findMatchingMetadata(List<ConfigMetadata> configsMetadata, String reference) {
         if (StringUtils.isBlank(reference)) return UNSELECTED_CONFIG;
-
         return configsMetadata.stream()
                 .filter(configMetadata -> configMetadata.getId().equals(reference))
                 .findFirst()

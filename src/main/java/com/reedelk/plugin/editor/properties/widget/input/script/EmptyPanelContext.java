@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 class EmptyPanelContext implements ContainerContext {
 
     @Override
-    public void subscribeOnPropertyChange(String propertyName, InputChangeListener<?> inputChangeListener) {
+    public void subscribePropertyChange(String propertyName, InputChangeListener<?> inputChangeListener) {
         throw new UnsupportedOperationException();
     }
 
@@ -34,6 +34,11 @@ class EmptyPanelContext implements ContainerContext {
 
     @Override
     public Optional<JComponent> getComponentMatchingMetadata(BiPredicate<String, String> keyValuePredicate) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public <T> void notifyPropertyChanged(String propertyName, T object) {
         throw new UnsupportedOperationException();
     }
 }

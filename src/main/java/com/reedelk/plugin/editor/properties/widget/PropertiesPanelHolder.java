@@ -7,6 +7,8 @@ import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.reedelk.plugin.editor.properties.widget.input.InputChangeListener;
 import com.reedelk.plugin.graph.FlowSnapshot;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,20 +17,29 @@ import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
+import static com.intellij.util.ui.JBUI.Borders;
+
 public class PropertiesPanelHolder extends DisposablePanel implements ContainerContext {
 
-    private final List<JComponentHolder> componentHolders = new ArrayList<>();
-
-    private final Map<String, List<InputChangeListener>> propertyChangeListeners = new HashMap<>();
-    private final Map<String, PropertyAccessor> propertyAccessors = new HashMap<>();
-
-    private final List<ComponentPropertyDescriptor> descriptors;
-    private final ComponentDataHolder dataHolder;
     private final FlowSnapshot snapshot;
+    private final ComponentDataHolder dataHolder;
 
+    private final List<JComponentHolder> componentHolders = new ArrayList<>();
+    private final List<ComponentPropertyDescriptor> descriptors = new ArrayList<>();
 
-    public PropertiesPanelHolder(ComponentDataHolder dataHolder, FlowSnapshot snapshot) {
-        this(dataHolder, Collections.emptyList(), snapshot);
+    private final Map<String, PropertyAccessor> propertyAccessors = new HashMap<>();
+    private final Map<String, List<InputChangeListener>> propertyChangeListeners = new HashMap<>();
+
+    public PropertiesPanelHolder(@NotNull ComponentDataHolder dataHolder,
+                                 @NotNull List<ComponentPropertyDescriptor> descriptors,
+                                 @Nullable FlowSnapshot snapshot) {
+        this.snapshot = snapshot;
+        this.dataHolder = dataHolder;
+        this.descriptors.addAll(descriptors);
+
+        setLayout(new GridBagLayout());
+        setBorder(Borders.emptyRight(10));
+        initAccessors();
     }
 
     /**
@@ -39,19 +50,8 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
         this(dataHolder, descriptors, null);
     }
 
-    public PropertiesPanelHolder(ComponentDataHolder dataHolder, List<ComponentPropertyDescriptor> descriptors, FlowSnapshot snapshot) {
-        super(new GridBagLayout());
-        setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
-
-        this.snapshot = snapshot;
-        this.dataHolder = dataHolder;
-        this.descriptors = descriptors;
-
-        initAccessors();
-    }
-
     @Override
-    public void subscribeOnPropertyChange(String propertyName, InputChangeListener<?> inputChangeListener) {
+    public void subscribePropertyChange(String propertyName, InputChangeListener inputChangeListener) {
         List<InputChangeListener> changeListenersForProperty =
                 propertyChangeListeners.getOrDefault(propertyName, new ArrayList<>());
         changeListenersForProperty.add(inputChangeListener);
@@ -83,6 +83,13 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
         return Optional.empty();
     }
 
+    @Override
+    public <T> void notifyPropertyChanged(String propertyName, T object) {
+        if (propertyChangeListeners.containsKey(propertyName)) {
+            propertyChangeListeners.get(propertyName)
+                    .forEach(inputChangeListener -> inputChangeListener.onChange(object));
+        }
+    }
 
     public PropertyAccessor getAccessor(String propertyName) {
         return this.propertyAccessors.get(propertyName);
@@ -97,7 +104,7 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
             String propertyName = propertyDescriptor.getPropertyName();
             TypeDescriptor propertyType = propertyDescriptor.getPropertyType();
             PropertyAccessor propertyAccessor = getAccessor(propertyName, propertyType, dataHolder);
-            PropertyChangeNotifierDecorator propertyAccessorWrapper = new PropertyChangeNotifierDecorator(propertyAccessor);
+            PropertyAccessor propertyAccessorWrapper = new PropertyChangeNotifierDecorator(this, propertyAccessor);
             propertyAccessors.put(propertyName, propertyAccessorWrapper);
         });
     }
@@ -109,43 +116,5 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
                 .dataHolder(dataHolder)
                 .snapshot(snapshot)
                 .build();
-    }
-
-    /**
-     * Decorator which notifies all the listeners of a specific property
-     * change that a property has been changed.
-     */
-    class PropertyChangeNotifierDecorator implements PropertyAccessor {
-
-        private final PropertyAccessor wrapped;
-
-        PropertyChangeNotifierDecorator(PropertyAccessor wrapped) {
-            this.wrapped = wrapped;
-        }
-
-        @Override
-        public FlowSnapshot getSnapshot() {
-            return wrapped.getSnapshot();
-        }
-
-        @Override
-        public <T> void set(T object) {
-            wrapped.set(object);
-            String propertyName = wrapped.getProperty();
-            if (propertyChangeListeners.containsKey(propertyName)) {
-                propertyChangeListeners.get(propertyName)
-                        .forEach(inputChangeListener -> inputChangeListener.onChange(object));
-            }
-        }
-
-        @Override
-        public <T> T get() {
-            return wrapped.get();
-        }
-
-        @Override
-        public String getProperty() {
-            return wrapped.getProperty();
-        }
     }
 }
