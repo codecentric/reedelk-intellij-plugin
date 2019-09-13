@@ -67,6 +67,7 @@ public abstract class InputField<T> extends JBTextField implements DocumentListe
         }
     }
 
+    // TODO: Fix this code, it is horrible
     private void paintHint(Graphics g) {
         if (getText().length() == 0) {
             int h = getHeight();
