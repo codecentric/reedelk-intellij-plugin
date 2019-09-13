@@ -121,8 +121,7 @@ public class TypeObjectPropertyRenderer extends AbstractTypePropertyRenderer {
             public void onAddedConfiguration(ConfigMetadata addedConfiguration) {
                 ConfigMetadata matchingMetadata =
                         updateMetadataOnSelector(module, selector, descriptor, addedConfiguration.getId());
-                configControlPanel.onSelect(matchingMetadata);
-                configRefAccessor.set(matchingMetadata.getId());
+                updateSelectedConfig(matchingMetadata, configControlPanel, configRefAccessor, context, descriptor, dataHolder);
             }
 
             @Override
@@ -135,6 +134,8 @@ public class TypeObjectPropertyRenderer extends AbstractTypePropertyRenderer {
             @Override
             public void onDeletedConfiguration(ConfigMetadata deletedConfiguration) {
                 ConfigMetadata matchingMetadata = updateMetadataOnSelector(module, selector, descriptor, deletedConfiguration.getId());
+                // When we delete a config, we just update the UI, the value of
+                // the referenced config will be therefore 'unresolved'.
                 configControlPanel.onSelect(matchingMetadata);
             }
 
@@ -154,19 +155,22 @@ public class TypeObjectPropertyRenderer extends AbstractTypePropertyRenderer {
 
         // We add the listener after, so that the first time we
         // don't update the graph json with the same info.
-        selector.addSelectListener(selectedMetadata -> {
-            configControlPanel.onSelect(selectedMetadata);
-            configRefAccessor.set(selectedMetadata.getId());
-            // If the selection has changed, we must notify all the
-            // context subscribers that the property has changed.
-            context.notifyPropertyChanged(descriptor.getPropertyName(), dataHolder);
-        });
+        selector.addSelectListener(selectedMetadata ->
+                updateSelectedConfig(selectedMetadata, configControlPanel, configRefAccessor, context, descriptor, dataHolder));
 
         JPanel wrapper = new DisposablePanel();
         wrapper.setLayout(new BorderLayout());
         wrapper.add(selector, CENTER);
         wrapper.add(configControlPanel, EAST);
         return wrapper;
+    }
+
+    private void updateSelectedConfig(ConfigMetadata matchingMetadata, ConfigControlPanel configControlPanel, PropertyAccessor configRefAccessor, ContainerContext context, ComponentPropertyDescriptor descriptor, ComponentDataHolder dataHolder) {
+        configControlPanel.onSelect(matchingMetadata);
+        configRefAccessor.set(matchingMetadata.getId());
+        // If the selection has changed, we must notify all the
+        // context subscribers that the property has changed.
+        context.notifyPropertyChanged(descriptor.getPropertyName(), dataHolder);
     }
 
     private ConfigMetadata updateMetadataOnSelector(Module module, ConfigSelector selector, ComponentPropertyDescriptor typeObjectDescriptor, String targetReference) {
