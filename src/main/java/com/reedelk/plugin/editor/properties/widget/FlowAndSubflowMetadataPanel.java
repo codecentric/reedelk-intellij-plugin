@@ -1,7 +1,6 @@
 package com.reedelk.plugin.editor.properties.widget;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.commons.Labels.Hint;
 import com.reedelk.plugin.editor.properties.widget.input.InputChangeListener;
@@ -13,6 +12,7 @@ import com.reedelk.plugin.graph.FlowSnapshot;
 import javax.swing.*;
 import java.awt.*;
 
+import static com.intellij.util.ui.JBUI.Borders;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 
@@ -23,7 +23,7 @@ public class FlowAndSubflowMetadataPanel extends DisposablePanel implements Disp
     public FlowAndSubflowMetadataPanel(FlowSnapshot snapshot) {
         this.snapshot = snapshot;
         initialize();
-        setBorder(JBUI.Borders.empty(10));
+        setBorder(Borders.empty(10));
     }
 
     @Override
@@ -32,7 +32,7 @@ public class FlowAndSubflowMetadataPanel extends DisposablePanel implements Disp
     }
 
     private void initialize() {
-        DisposablePanel propertiesPanel = new DisposablePanel();
+        DisposablePanel propertiesPanel = new DisposablePanel(new GridBagLayout());
 
         InputField<String> titleField = createTitleInputField();
         FormBuilder.get()
