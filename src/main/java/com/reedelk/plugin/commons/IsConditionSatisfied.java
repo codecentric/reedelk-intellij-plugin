@@ -30,6 +30,8 @@ public class IsConditionSatisfied {
                     matches = !actualPropertyValue.has(key);
                 } else if (When.BLANK.equals(expectedValue)) {
                     matches = whenIsBlank(actualPropertyValue, key);
+                } else {
+                    matches = expectedValue.equals(actualPropertyValue.get(key));
                 }
             }
             return matches;
