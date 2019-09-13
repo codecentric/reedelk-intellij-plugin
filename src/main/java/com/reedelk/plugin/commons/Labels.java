@@ -66,4 +66,6 @@ public class Labels {
 
     public static final String ACTION_MAP_TABLE_ADD = "Add";
     public static final String ACTION_MAP_TABLE_REMOVE = "Remove";
+
+    public static final String UNKNOWN_COMPONENT = "Unknown component";
 }
