@@ -305,4 +305,61 @@ class IsConditionSatisfiedTest {
             assertThat(actual).isFalse();
         }
     }
+
+    @Nested
+    @DisplayName("Condition is compare value")
+    class CompareValue {
+
+        @Test
+        void shouldReturnTrueWhenWantedIsEqualToStringValue() {
+            // Given
+            String wantedPropertyValue = "HTTPS";
+            String actualPropertyValue = "HTTPS";
+
+            // When
+            boolean actual = IsConditionSatisfied.of(wantedPropertyValue, actualPropertyValue);
+
+            // Then
+            assertThat(actual).isTrue();
+        }
+
+        @Test
+        void shouldReturnFalseWhenWantedIsNotEqualToStringValue() {
+            // Given
+            String wantedPropertyValue = "HTTPS";
+            String actualPropertyValue = "HTTP";
+
+            // When
+            boolean actual = IsConditionSatisfied.of(wantedPropertyValue, actualPropertyValue);
+
+            // Then
+            assertThat(actual).isFalse();
+        }
+
+        @Test
+        void shouldReturnTrueWhenWantedIsEqualToIntValue() {
+            // Given
+            String wantedPropertyValue = "1";
+            int actualPropertyValue = 1;
+
+            // When
+            boolean actual = IsConditionSatisfied.of(wantedPropertyValue, actualPropertyValue);
+
+            // Then
+            assertThat(actual).isTrue();
+        }
+
+        @Test
+        void shouldReturnFalseWhenWantedIsNotEqualToIntValue() {
+            // Given
+            String wantedPropertyValue = "1";
+            int actualPropertyValue = 3;
+
+            // When
+            boolean actual = IsConditionSatisfied.of(wantedPropertyValue, actualPropertyValue);
+
+            // Then
+            assertThat(actual).isFalse();
+        }
+    }
 }
