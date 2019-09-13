@@ -1,7 +1,6 @@
 package com.reedelk.plugin.editor.properties.renderer;
 
 import com.reedelk.plugin.commons.AtLeastOneWhenConditionIsTrue;
-import com.reedelk.plugin.commons.IsConditionSatisfied;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.WhenDefinition;
 import com.reedelk.plugin.editor.properties.widget.ContainerContext;
@@ -14,6 +13,7 @@ import javax.swing.*;
 import java.util.List;
 
 import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.groupingBy;
 
 abstract class AbstractTypePropertyRenderer implements TypePropertyRenderer {
 
@@ -51,15 +51,16 @@ abstract class AbstractTypePropertyRenderer implements TypePropertyRenderer {
         boolean isVisible = AtLeastOneWhenConditionIsTrue.of(whens, context::propertyValueFrom);
         setVisible(isVisible, components);
 
+        // We need to group all the when definitions by property.
         // Apply on change listener
-        whens.forEach(when -> {
-            String propertyName = when.getPropertyName();
-            String wantedPropertyValue = when.getPropertyValue();
-            context.subscribePropertyChange(propertyName, actualPropertyValue -> {
-                boolean satisfied = IsConditionSatisfied.of(wantedPropertyValue, actualPropertyValue);
-                setVisible(satisfied, components);
-            });
-        });
+        whens.stream()
+                .collect(groupingBy(WhenDefinition::getPropertyName))
+                .forEach((propertyName, whensForPropertyName) ->
+                        context.subscribePropertyChange(propertyName, newValue -> {
+                            boolean shouldBeVisible =
+                                    AtLeastOneWhenConditionIsTrue.of(whensForPropertyName, pName -> newValue);
+                            setVisible(shouldBeVisible, components);
+                        }));
     }
 
     /**
