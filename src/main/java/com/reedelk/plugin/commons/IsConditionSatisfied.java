@@ -1,59 +1,63 @@
 package com.reedelk.plugin.commons;
 
 import com.reedelk.runtime.api.annotation.When;
-import com.reedelk.runtime.api.commons.StringUtils;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.BiFunction;
+
 import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
+import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
+import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
 public class IsConditionSatisfied {
 
     public static boolean of(String wantedPropertyValue, Object actualPropertyValue) {
-        if (When.NULL.equals(wantedPropertyValue)) {
-            return actualPropertyValue == null;
-        } else if (When.BLANK.equals(wantedPropertyValue)) {
-            return isBlank(actualPropertyValue);
-        } else if (actualPropertyValue instanceof TypeObject) {
-            return isConditionSatisfied(wantedPropertyValue, (TypeObject) actualPropertyValue);
+        return evaluate(wantedPropertyValue, actualPropertyValue);
+    }
+
+    interface ConditionEvaluator extends BiFunction<String, Object, Boolean> {
+    }
+
+    private static final ConditionEvaluator EVALUATOR_NULL =
+            (wanted, actual) -> Objects.isNull(actual);
+    private static final ConditionEvaluator EVALUATOR_BLANK =
+            (wanted, actual) -> actual instanceof String && isBlank((String) actual);
+    private static final ConditionEvaluator EVALUATOR_NOT_BLANK =
+            (wanted, actual) -> actual instanceof String && isNotBlank((String) actual);
+    private static final ConditionEvaluator EVALUATOR_DEFAULT =
+            (wanted, actual) -> actual != null && actual.toString().equals(wanted);
+
+    private static final ConditionEvaluator EVALUATOR_TYPE_OBJECT = (wantedJson, typeObject) -> {
+        TypeObject actualTypeObject = (TypeObject) typeObject;
+        JSONObject whenDefinition = new JSONObject(wantedJson);
+        return whenDefinition.keySet().stream().anyMatch(key -> {
+            String expectedValue = whenDefinition.getString(key);
+            return When.PROPERTY_NOT_PRESENT.equals(expectedValue) ?
+                    !actualTypeObject.has(key) :
+                    evaluate(expectedValue, actualTypeObject.get(key));
+        });
+    };
+
+    private static final Map<String, ConditionEvaluator> EVALUATOR_MAP;
+
+    static {
+        Map<String, ConditionEvaluator> tmp = new HashMap<>();
+        tmp.put(When.NULL, EVALUATOR_NULL);
+        tmp.put(When.BLANK, EVALUATOR_BLANK);
+        tmp.put(When.NOT_BLANK, EVALUATOR_NOT_BLANK);
+        EVALUATOR_MAP = tmp;
+    }
+
+    private static boolean evaluate(String wanted, Object actual) {
+        if (EVALUATOR_MAP.containsKey(wanted)) {
+            return EVALUATOR_MAP.get(wanted).apply(wanted, actual);
+        } else if (actual instanceof TypeObject) {
+            return EVALUATOR_TYPE_OBJECT.apply(wanted, actual);
         } else {
-            return actualPropertyValue != null && actualPropertyValue.toString().equals(wantedPropertyValue);
+            return EVALUATOR_DEFAULT.apply(wanted, actual);
         }
-    }
-
-    private static boolean isConditionSatisfied(String wantedPropertyValue, TypeObject actualPropertyValue) {
-        try {
-            boolean matches = true;
-            JSONObject whenObjectDefinition = new JSONObject(wantedPropertyValue);
-            for (String key : whenObjectDefinition.keySet()) {
-                Object expectedValue = whenObjectDefinition.get(key);
-                if (When.PROPERTY_NOT_PRESENT.equals(expectedValue)) {
-                    matches = !actualPropertyValue.has(key);
-                } else if (When.BLANK.equals(expectedValue)) {
-                    matches = whenIsBlank(actualPropertyValue, key);
-                } else {
-                    matches = expectedValue.equals(actualPropertyValue.get(key));
-                }
-            }
-            return matches;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    private static boolean whenIsBlank(TypeObject typeObject, String key) {
-        if (typeObject.has(key)) {
-            Object actualValue = typeObject.get(key);
-            return StringUtils.isBlank((String) actualValue);
-        } else {
-            return false;
-        }
-    }
-
-    private static boolean isString(Object value) {
-        return value instanceof String;
-    }
-
-    private static boolean isBlank(Object value) {
-        return isString(value) && StringUtils.isBlank((String) value);
     }
 }

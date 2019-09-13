@@ -25,6 +25,7 @@ class IsConditionSatisfiedTest {
         assertThat(actual).isTrue();
     }
 
+
     @Test
     void shouldReturnTrueWhenWantedIsBlankAndActualIsTypeObjectWithBlankProperty() {
         // Given
