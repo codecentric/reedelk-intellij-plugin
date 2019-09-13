@@ -101,6 +101,30 @@ public class GenericComponentSerializerTest extends AbstractGraphTest {
         JSONAssert.assertEquals(expectedJson, actualJson, true);
     }
 
+    // We expect that properties with not selected type object reference are not serialized.
+    @Test
+    void shouldCorrectlySerializeGenericComponentWithEmptyTypeObjectReference() {
+        // Given
+        ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
+                .propertyDescriptors(asList(property1, property7))
+                .fullyQualifiedName(ComponentNode1.class.getName())
+                .build());
+
+        TypeObjectDescriptor.TypeObject property7Object = componentNode2ShareableTypeDescriptor.newInstance();
+        property7Object.set("configRef", "");
+
+        GraphNode componentNode = new GenericComponentNode(componentData);
+        componentData.set("property1", "first property");
+        componentData.set("property7", property7Object);
+
+        // When
+        String actualJson = serialize(componentNode);
+
+        // Then
+        String expectedJson = WithTypeObjectReferenceMissing.json();
+        JSONAssert.assertEquals(expectedJson, actualJson, true);
+    }
+
     @Test
     void shouldCorrectlySerializeGenericComponentWithNotEmptyMapProperty() {
         // Given

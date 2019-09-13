@@ -77,6 +77,13 @@ public class Json {
             }
         },
 
+        WithTypeObjectReferenceMissing {
+            @Override
+            public String path() {
+                return "flow/generic_component_with_type_object_reference_missing.json";
+            }
+        },
+
         WithNotEmptyMapProperty {
             @Override
             public String path() {
