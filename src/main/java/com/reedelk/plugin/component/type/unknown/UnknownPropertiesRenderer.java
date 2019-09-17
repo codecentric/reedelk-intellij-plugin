@@ -23,7 +23,7 @@ public class UnknownPropertiesRenderer extends AbstractNodePropertiesRenderer {
     public DisposablePanel render(GraphNode node) {
         ComponentData componentData = node.componentData();
         String unknownImplementorClazz = componentData.get(JsonParser.Implementor.name());
-        DisposablePanel propertiesPanel = new DisposablePanel(new GridLayout());
+        DisposablePanel propertiesPanel = new DisposablePanel(new GridBagLayout());
 
         FormBuilder.get()
                 .addLabel(Labels.UNKNOWN_COMPONENT, propertiesPanel)
