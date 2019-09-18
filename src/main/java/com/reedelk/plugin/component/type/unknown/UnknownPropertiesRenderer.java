@@ -9,9 +9,10 @@ import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 import com.reedelk.plugin.editor.properties.widget.FormBuilder;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
-import com.reedelk.runtime.commons.JsonParser;
 
 import java.awt.*;
+
+import static com.reedelk.runtime.commons.JsonParser.Implementor;
 
 public class UnknownPropertiesRenderer extends AbstractNodePropertiesRenderer {
 
@@ -22,7 +23,7 @@ public class UnknownPropertiesRenderer extends AbstractNodePropertiesRenderer {
     @Override
     public DisposablePanel render(GraphNode node) {
         ComponentData componentData = node.componentData();
-        String unknownImplementorClazz = componentData.get(JsonParser.Implementor.name());
+        String unknownImplementorClazz = componentData.get(Implementor.name());
         DisposablePanel propertiesPanel = new DisposablePanel(new GridBagLayout());
 
         FormBuilder.get()
