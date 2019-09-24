@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.util.List;
 
-public class TypeScriptInlinePropertyRenderer extends AbstractTypePropertyRenderer {
+public class TypeDynamicValuePropertyRenderer extends AbstractTypePropertyRenderer {
 
     @NotNull
     @Override

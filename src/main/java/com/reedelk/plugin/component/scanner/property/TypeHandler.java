@@ -2,13 +2,17 @@ package com.reedelk.plugin.component.scanner.property;
 
 import com.reedelk.plugin.commons.GetAnnotationValue;
 import com.reedelk.plugin.commons.MapUtils;
-import com.reedelk.plugin.component.domain.Collapsible;
-import com.reedelk.plugin.component.domain.Shared;
 import com.reedelk.plugin.component.domain.*;
 import com.reedelk.plugin.component.scanner.ComponentAnalyzerContext;
 import com.reedelk.plugin.component.scanner.UnsupportedType;
-import com.reedelk.runtime.api.annotation.*;
+import com.reedelk.runtime.api.annotation.Combo;
+import com.reedelk.runtime.api.annotation.DisplayName;
+import com.reedelk.runtime.api.annotation.File;
+import com.reedelk.runtime.api.annotation.TabGroup;
 import com.reedelk.runtime.api.commons.StringUtils;
+import com.reedelk.runtime.api.script.DynamicMap;
+import com.reedelk.runtime.api.script.DynamicValue;
+import com.reedelk.runtime.api.script.Script;
 import io.github.classgraph.*;
 
 import java.util.List;
@@ -42,10 +46,13 @@ public class TypeHandler implements Handler {
     }
 
     private TypeDescriptor processKnownType(Class<?> clazz, FieldInfo fieldInfo) {
-        if (isScript(fieldInfo, clazz)) {
+        if (isScript(clazz)) {
             return new TypeScriptDescriptor();
-        } else if (isScriptInline(fieldInfo, clazz)) {
-            return new TypeScriptInlineDescriptor();
+        } else if (isDynamicValue(clazz)) {
+            return new TypeDynamicValueDescriptor();
+        } else if (isDynamicMap(clazz)) {
+            String tabGroup = getAnnotationValueOrDefault(fieldInfo, TabGroup.class, null);
+            return new TypeDynamicMapDescriptor(tabGroup);
         } else if (isFile(fieldInfo, clazz)) {
             return new TypeFileDescriptor();
         } else if (isCombo(fieldInfo, clazz)) {
@@ -113,23 +120,18 @@ public class TypeHandler implements Handler {
         return new TypeEnumDescriptor(nameAndDisplayName, defaultEnumValue);
     }
 
-    /**
-     * A property is a Script if and only if it has @Script annotation
-     * AND its type is String.
-     */
-    private boolean isScript(FieldInfo fieldInfo, Class<?> clazz) {
-        return fieldInfo.hasAnnotation(Script.class.getName()) &&
-                String.class.equals(clazz);
+    private boolean isScript(Class<?> clazz) {
+        return Script.class.equals(clazz);
     }
 
-    /**
-     * A property is an inline Script if and only if it has @ScriptInline annotation
-     * AND its type is String.
-     */
-    private boolean isScriptInline(FieldInfo fieldInfo, Class<?> clazz) {
-        return fieldInfo.hasAnnotation(ScriptInline.class.getName()) &&
-                String.class.equals(clazz);
+    private boolean isDynamicValue(Class<?> clazz) {
+        return DynamicValue.class.equals(clazz);
     }
+
+    private boolean isDynamicMap(Class<?> clazz) {
+        return DynamicMap.class.equals(clazz);
+    }
+
 
     /**
      * A property is a File if and only if it has @File annotation

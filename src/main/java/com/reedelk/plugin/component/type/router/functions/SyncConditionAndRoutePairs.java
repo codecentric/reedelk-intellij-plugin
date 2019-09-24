@@ -37,7 +37,7 @@ public class SyncConditionAndRoutePairs {
             // The last successor is always otherwise.
             if (i == numberOfSuccessors - 1) {
                 // Last element is always the default condition
-                updatedConditions.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION, successor));
+                updatedConditions.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION.getBody(), successor));
                 continue;
             }
 

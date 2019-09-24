@@ -2,6 +2,9 @@ package com.reedelk.plugin.converter;
 
 import com.reedelk.plugin.component.domain.TypeDescriptor;
 import com.reedelk.plugin.component.type.unknown.UnknownPropertyType;
+import com.reedelk.runtime.api.script.DynamicMap;
+import com.reedelk.runtime.api.script.DynamicValue;
+import com.reedelk.runtime.api.script.Script;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -11,8 +14,6 @@ import java.util.Map;
 
 import static com.reedelk.plugin.component.domain.TypeComboDescriptor.TypeCombo;
 import static com.reedelk.plugin.component.domain.TypeFileDescriptor.TypeFile;
-import static com.reedelk.plugin.component.domain.TypeScriptDescriptor.TypeScript;
-import static com.reedelk.plugin.component.domain.TypeScriptInlineDescriptor.TypeScriptInline;
 import static java.lang.String.format;
 
 public class ValueConverterFactory {
@@ -44,8 +45,9 @@ public class ValueConverterFactory {
 
         tmp.put(TypeFile.class, new FileConverter());
         tmp.put(TypeCombo.class, new ComboConverter());
-        tmp.put(TypeScript.class, new ScriptConverter());
-        tmp.put(TypeScriptInline.class, new ScriptConverter());
+        tmp.put(Script.class, new ScriptConverter());
+        tmp.put(DynamicMap.class, new DynamicMapConverter());
+        tmp.put(DynamicValue.class, new DynamicValueConverter());
 
         CONVERTER = Collections.unmodifiableMap(tmp);
     }

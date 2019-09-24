@@ -31,7 +31,8 @@ public class PropertyAccessorFactory {
         tmp.put(TypeObjectDescriptor.class, DefaultPropertyAccessor.class);
         tmp.put(TypeScriptDescriptor.class, DefaultPropertyAccessor.class);
         tmp.put(TypePrimitiveDescriptor.class, DefaultPropertyAccessor.class);
-        tmp.put(TypeScriptInlineDescriptor.class, DefaultPropertyAccessor.class);
+        tmp.put(TypeDynamicMapDescriptor.class, DefaultPropertyAccessor.class);
+        tmp.put(TypeDynamicValueDescriptor.class, DefaultPropertyAccessor.class);
         ACCESSOR_MAP = tmp;
     }
 

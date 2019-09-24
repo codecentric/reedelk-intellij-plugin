@@ -1,12 +1,14 @@
 package com.reedelk.plugin.component.domain;
 
+import com.reedelk.runtime.api.script.Script;
+
 public class TypeScriptDescriptor implements TypeDescriptor {
 
     private final String defaultScript = "";
 
     @Override
     public Class<?> type() {
-        return TypeScript.class;
+        return Script.class;
     }
 
     @Override
@@ -14,6 +16,4 @@ public class TypeScriptDescriptor implements TypeDescriptor {
         return defaultScript;
     }
 
-    public static class TypeScript {
-    }
 }
