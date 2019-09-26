@@ -5,8 +5,8 @@ import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.VariableDefinition;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.widget.ContainerContext;
+import com.reedelk.plugin.editor.properties.widget.input.script.DynamicValueField;
 import com.reedelk.plugin.editor.properties.widget.input.script.ScriptContextManager;
-import com.reedelk.plugin.editor.properties.widget.input.script.ScriptInputInlineField;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -24,8 +24,8 @@ public class TypeDynamicValuePropertyRenderer extends AbstractTypePropertyRender
         List<VariableDefinition> variableDefinitions = propertyDescriptor.getVariableDefinitions();
         ScriptContextManager scriptContext = new ScriptContextManager(module, context, variableDefinitions);
 
-        ScriptInputInlineField field =
-                new ScriptInputInlineField(module, scriptContext, propertyDescriptor.getHintValue());
+        DynamicValueField field =
+                new DynamicValueField(module, scriptContext, propertyDescriptor.getHintValue());
         field.setValue(propertyAccessor.get());
         field.addListener(propertyAccessor::set);
         return field;

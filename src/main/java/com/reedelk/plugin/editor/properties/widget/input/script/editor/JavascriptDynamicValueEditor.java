@@ -33,7 +33,7 @@ import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.WEST;
 import static java.util.Collections.singletonList;
 
-public class JavascriptEditorInline extends DisposablePanel implements JavascriptEditor, DocumentListener {
+public class JavascriptDynamicValueEditor extends DisposablePanel implements JavascriptEditor, DocumentListener {
 
     private final boolean notViewer = false;
     private final boolean singleLineMode = true;
@@ -47,9 +47,9 @@ public class JavascriptEditorInline extends DisposablePanel implements Javascrip
     private InputChangeListener<String> listener;
     private StringInputField textInputField;
 
-    public JavascriptEditorInline(@NotNull Project project,
-                                  @NotNull ScriptContextManager contextManager,
-                                  String hint) {
+    public JavascriptDynamicValueEditor(@NotNull Project project,
+                                        @NotNull ScriptContextManager contextManager,
+                                        String hint) {
 
         this.project = project;
         document = EditorFactory.getInstance().createDocument("");
@@ -151,10 +151,10 @@ public class JavascriptEditorInline extends DisposablePanel implements Javascrip
 
     private void switchComponent(DisposablePanel visible, DisposablePanel invisible) {
         SwingUtilities.invokeLater(() -> {
-            JavascriptEditorInline.this.add(visible, CENTER);
+            JavascriptDynamicValueEditor.this.add(visible, CENTER);
             visible.requestFocus();
-            JavascriptEditorInline.this.remove(invisible);
-            JavascriptEditorInline.this.revalidate();
+            JavascriptDynamicValueEditor.this.remove(invisible);
+            JavascriptDynamicValueEditor.this.revalidate();
         });
     }
 
