@@ -79,5 +79,4 @@ public class ValueConverterFactory {
         throw new IllegalStateException(
                 format("Input Type '%s' does not have suitable converter", typeClazz.getName()));
     }
-
 }
