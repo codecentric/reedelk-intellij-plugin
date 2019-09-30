@@ -71,7 +71,7 @@ public class SyncConditionAndRoutePairs {
                 .stream()
                 .filter(routerConditionRoutePair ->
                         routerConditionRoutePair.getNext() == target &&
-                                !routerConditionRoutePair.getCondition().equals(Router.DEFAULT_CONDITION))
+                                !Router.DEFAULT_CONDITION.getBody().equals(routerConditionRoutePair.getCondition()))
                 .findFirst();
     }
 
@@ -79,7 +79,7 @@ public class SyncConditionAndRoutePairs {
         if (i < routerConditionRoutePairs.size()) {
             RouterConditionRoutePair pair = routerConditionRoutePairs.get(i);
             if (!alreadyUsedNodes.contains(pair.getNext()) &&
-                    !pair.getCondition().equals(Router.DEFAULT_CONDITION)) {
+                    !Router.DEFAULT_CONDITION.getBody().equals(pair.getCondition())) {
                 return Optional.of(pair);
             }
         }

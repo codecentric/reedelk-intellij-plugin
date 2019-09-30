@@ -4,6 +4,7 @@ import com.reedelk.runtime.api.annotation.Default;
 import com.reedelk.runtime.api.annotation.ESBComponent;
 import com.reedelk.runtime.api.annotation.Property;
 import com.reedelk.runtime.api.component.ProcessorSync;
+import com.reedelk.runtime.api.message.FlowContext;
 import com.reedelk.runtime.api.message.Message;
 
 
@@ -24,12 +25,10 @@ public class TestComponent implements ProcessorSync {
     @Default
     private int propertyWithMissingDefaultValue;
 
-
     private int notExposedProperty;
 
-
     @Override
-    public Message apply(Message message) {
+    public Message apply(Message message, FlowContext flowContext) {
         return new Message();
     }
 
@@ -52,4 +51,5 @@ public class TestComponent implements ProcessorSync {
     public void setNotExposedProperty(int notExposedProperty) {
         this.notExposedProperty = notExposedProperty;
     }
+
 }

@@ -2,8 +2,10 @@ package com.reedelk.plugin.component.type.router;
 
 import com.reedelk.plugin.AbstractGraphTest;
 import com.reedelk.plugin.component.domain.ComponentData;
+import com.reedelk.plugin.fixture.Json;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.runtime.commons.JsonParser;
+import com.reedelk.runtime.component.Router;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +15,6 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import java.util.List;
 
 import static com.reedelk.plugin.component.type.router.RouterNode.DATA_CONDITION_ROUTE_PAIRS;
-import static com.reedelk.plugin.fixture.Json.Router;
 import static java.util.Arrays.asList;
 
 public class RouterSerializerTest extends AbstractGraphTest {
@@ -55,7 +56,7 @@ public class RouterSerializerTest extends AbstractGraphTest {
         List<RouterConditionRoutePair> routerConditionPairs = asList(
                 new RouterConditionRoutePair("1 == 1", componentNode3),
                 new RouterConditionRoutePair("1 != 0", componentNode2),
-                new RouterConditionRoutePair(com.reedelk.runtime.component.Router.DEFAULT_CONDITION, componentNode5));
+                new RouterConditionRoutePair(Router.DEFAULT_CONDITION.getBody(), componentNode5));
 
         ComponentData component = routerNode1.componentData();
         component.set(DATA_CONDITION_ROUTE_PAIRS, routerConditionPairs);
@@ -70,7 +71,7 @@ public class RouterSerializerTest extends AbstractGraphTest {
         JSONObject serializedObject = sequence.getJSONObject(0);
 
         String actualJson = serializedObject.toString(2);
-        String expectedJson = Router.Sample.json();
+        String expectedJson = Json.Router.Sample.json();
         JSONAssert.assertEquals(expectedJson, actualJson, true);
     }
 

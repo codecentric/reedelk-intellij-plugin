@@ -34,13 +34,13 @@ class FlowSerializerTest extends AbstractGraphTest {
         routerNode1.addToScope(routerNode2);
 
         List<RouterConditionRoutePair> routerNode1Conditions = new ArrayList<>();
-        routerNode1Conditions.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION, flowReferenceNode1));
+        routerNode1Conditions.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION.getBody(), flowReferenceNode1));
         routerNode1.componentData().set(RouterNode.DATA_CONDITION_ROUTE_PAIRS, routerNode1Conditions);
         flowReferenceNode1.componentData().set("ref", "dee1d69e-e749-4cd5-9134-8f8615be1d40");
 
         routerNode2.addToScope(flowReferenceNode2);
         List<RouterConditionRoutePair> routerNode2Conditions = new ArrayList<>();
-        routerNode2Conditions.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION, flowReferenceNode2));
+        routerNode2Conditions.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION.getBody(), flowReferenceNode2));
         routerNode2.componentData().set(RouterNode.DATA_CONDITION_ROUTE_PAIRS, routerNode2Conditions);
         flowReferenceNode2.componentData().set("ref", "e2a81295-c2eb-48b2-a2b1-6b1e740cdd24");
 
@@ -70,13 +70,13 @@ class FlowSerializerTest extends AbstractGraphTest {
         routerNode1.addToScope(componentNode2);
 
         List<RouterConditionRoutePair> routerNode1Conditions = new ArrayList<>();
-        routerNode1Conditions.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION, flowReferenceNode1));
+        routerNode1Conditions.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION.getBody(), flowReferenceNode1));
         routerNode1.componentData().set(RouterNode.DATA_CONDITION_ROUTE_PAIRS, routerNode1Conditions);
         flowReferenceNode1.componentData().set("ref", "dee1d69e-e749-4cd5-9134-8f8615be1d40");
 
         routerNode2.addToScope(flowReferenceNode2);
         List<RouterConditionRoutePair> routerNode2Conditions = new ArrayList<>();
-        routerNode2Conditions.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION, flowReferenceNode2));
+        routerNode2Conditions.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION.getBody(), flowReferenceNode2));
         routerNode2.componentData().set(RouterNode.DATA_CONDITION_ROUTE_PAIRS, routerNode2Conditions);
         flowReferenceNode2.componentData().set("ref", "e2a81295-c2eb-48b2-a2b1-6b1e740cdd24");
 
