@@ -1,7 +1,9 @@
 package com.reedelk.plugin.editor.properties.renderer;
 
 import com.reedelk.plugin.component.domain.TypeDescriptor;
-import com.reedelk.runtime.api.script.*;
+import com.reedelk.runtime.api.script.DynamicMap;
+import com.reedelk.runtime.api.script.DynamicValue;
+import com.reedelk.runtime.api.script.Script;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -37,19 +39,15 @@ public class TypeRendererFactory {
 
         tmp.put(TypeFile.class, new TypeFilePropertyRenderer());
         tmp.put(TypeCombo.class, new TypeComboPropertyRenderer());
+
         tmp.put(TypeObject.class, new TypeObjectPropertyRenderer());
-        tmp.put(Script.class, new TypeScriptPropertyRenderer());
 
         tmp.put(Map.class, new TypeMapPropertyRenderer());
-
         tmp.put(UnknownType.class, new UnknownPropertyRenderer());
 
+        tmp.put(Script.class, new TypeScriptPropertyRenderer());
         tmp.put(DynamicMap.class, new TypeDynamicMapPropertyRenderer());
-        tmp.put(DynamicString.class, new TypeDynamicValuePropertyRenderer());
-        tmp.put(DynamicObject.class, new TypeDynamicValuePropertyRenderer());
-        tmp.put(DynamicInteger.class, new TypeDynamicValuePropertyRenderer());
-        tmp.put(DynamicBoolean.class, new TypeDynamicValuePropertyRenderer());
-        tmp.put(DynamicByteArray.class, new TypeDynamicValuePropertyRenderer());
+        tmp.put(DynamicValue.class, new TypeDynamicValuePropertyRenderer());
 
         RENDERER = tmp;
     }

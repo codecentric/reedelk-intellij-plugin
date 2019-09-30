@@ -45,12 +45,7 @@ public class ValueConverterFactory {
         tmp.put(TypeCombo.class, new ComboConverter());
         tmp.put(Script.class, new ScriptConverter());
         tmp.put(DynamicMap.class, new DynamicMapConverter());
-
-        tmp.put(DynamicString.class, new DynamicValueConverter());
-        tmp.put(DynamicObject.class, new DynamicValueConverter());
-        tmp.put(DynamicInteger.class, new DynamicValueConverter());
-        tmp.put(DynamicBoolean.class, new DynamicValueConverter());
-        tmp.put(DynamicByteArray.class, new DynamicValueConverter());
+        tmp.put(DynamicValue.class, new DynamicValueConverter());
 
         CONVERTER = Collections.unmodifiableMap(tmp);
     }
@@ -67,6 +62,13 @@ public class ValueConverterFactory {
         return CONVERTER.keySet()
                 .stream()
                 .anyMatch(aClass -> aClass.getName().equals(clazzFullyQualifiedName));
+    }
+
+    public static boolean isDynamicValue(String fullyQualifiedName) {
+        return DynamicObject.class.getName().equals(fullyQualifiedName) ||
+                DynamicInteger.class.getName().equals(fullyQualifiedName) ||
+                DynamicBoolean.class.getName().equals(fullyQualifiedName) ||
+                DynamicByteArray.class.getName().equals(fullyQualifiedName);
     }
 
     @SuppressWarnings("unchecked")

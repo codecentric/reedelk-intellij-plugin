@@ -11,7 +11,6 @@ import com.reedelk.runtime.api.annotation.File;
 import com.reedelk.runtime.api.annotation.TabGroup;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.script.DynamicMap;
-import com.reedelk.runtime.api.script.DynamicValue;
 import com.reedelk.runtime.api.script.Script;
 import io.github.classgraph.*;
 
@@ -20,6 +19,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.reedelk.plugin.component.scanner.property.PropertyScannerUtils.*;
+import static com.reedelk.plugin.converter.ValueConverterFactory.isDynamicValue;
 import static com.reedelk.plugin.converter.ValueConverterFactory.isKnownType;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
@@ -34,12 +34,10 @@ public class TypeHandler implements Handler {
         if (typeSignature instanceof BaseTypeSignature) {
             TypeDescriptor typeDescriptor = processKnownType(((BaseTypeSignature) typeSignature).getType(), propertyInfo);
             builder.type(typeDescriptor);
-
         } else if (typeSignature instanceof ClassRefTypeSignature) {
             ClassRefTypeSignature classRef = (ClassRefTypeSignature) typeSignature;
             TypeDescriptor typeDescriptor = processClassRefType(classRef, propertyInfo, context);
             builder.type(typeDescriptor);
-
         } else {
             throw new UnsupportedType(typeSignature.getClass());
         }
@@ -48,8 +46,6 @@ public class TypeHandler implements Handler {
     private TypeDescriptor processKnownType(Class<?> clazz, FieldInfo fieldInfo) {
         if (isScript(clazz)) {
             return new TypeScriptDescriptor();
-        } else if (isDynamicValue(clazz)) {
-            return new TypeDynamicValueDescriptor();
         } else if (isDynamicMap(clazz)) {
             String tabGroup = getAnnotationValueOrDefault(fieldInfo, TabGroup.class, null);
             return new TypeDynamicMapDescriptor(tabGroup);
@@ -72,22 +68,23 @@ public class TypeHandler implements Handler {
         String fullyQualifiedClassName = typeSignature.getFullyQualifiedClassName();
         if (isKnownType(fullyQualifiedClassName)) {
             try {
-                return processKnownType(Class.forName(fullyQualifiedClassName), fieldInfo);
+                Class<?> typeClazz = Class.forName(fullyQualifiedClassName);
+                return processKnownType(typeClazz, fieldInfo);
             } catch (ClassNotFoundException e) {
                 // if it is a known type, then the class must be resolvable.
                 // Otherwise the @PropertyValueConverterFactory class would not even compile.
                 throw new UnsupportedType(fullyQualifiedClassName);
             }
+        } else if (isDynamicValue(fullyQualifiedClassName)) {
+            return new TypeDynamicValueDescriptor();
         } else if (isEnumeration(fullyQualifiedClassName, context)) {
             return processEnumType(typeSignature, context);
-
         } else {
             // We check that we can resolve class info. If we can, then
             ClassInfo classInfo = context.getClassInfo(fullyQualifiedClassName);
             if (classInfo == null) {
                 throw new UnsupportedType(typeSignature.getClass());
             }
-
             Shared shared = isShareable(classInfo);
             Collapsible collapsible = isCollapsible(classInfo);
             ComponentPropertyAnalyzer propertyAnalyzer = new ComponentPropertyAnalyzer(context);
@@ -120,32 +117,11 @@ public class TypeHandler implements Handler {
         return new TypeEnumDescriptor(nameAndDisplayName, defaultEnumValue);
     }
 
-    private boolean isScript(Class<?> clazz) {
-        return Script.class.equals(clazz);
-    }
-
-    private boolean isDynamicValue(Class<?> clazz) {
-        return DynamicValue.class.equals(clazz);
-    }
-
-    private boolean isDynamicMap(Class<?> clazz) {
-        return DynamicMap.class.equals(clazz);
-    }
-
-
-    /**
-     * A property is a File if and only if it has @File annotation
-     * AND its type is String.
-     */
     private boolean isFile(FieldInfo fieldInfo, Class<?> clazz) {
         return fieldInfo.hasAnnotation(File.class.getName()) &&
                 String.class.equals(clazz);
     }
 
-    /**
-     * A property is a Combo if and only if it has @Combo annotation
-     * AND its type is String.
-     */
     private boolean isCombo(FieldInfo fieldInfo, Class<?> clazz) {
         return fieldInfo.hasAnnotation(Combo.class.getName()) &&
                 String.class.equals(clazz);
@@ -153,6 +129,14 @@ public class TypeHandler implements Handler {
 
     private boolean isMap(Class<?> clazz) {
         return Map.class.equals(clazz);
+    }
+
+    private boolean isScript(Class<?> clazz) {
+        return Script.class.equals(clazz);
+    }
+
+    private boolean isDynamicMap(Class<?> clazz) {
+        return DynamicMap.class.equals(clazz);
     }
 
     private Shared isShareable(ClassInfo classInfo) {
