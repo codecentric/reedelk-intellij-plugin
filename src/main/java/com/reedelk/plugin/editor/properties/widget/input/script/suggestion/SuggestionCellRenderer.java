@@ -7,8 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import static com.intellij.icons.AllIcons.Nodes;
-import static com.reedelk.plugin.editor.properties.widget.input.script.suggestion.SuggestionType.PROPERTY;
-import static com.reedelk.plugin.editor.properties.widget.input.script.suggestion.SuggestionType.VARIABLE;
+import static com.reedelk.plugin.editor.properties.widget.input.script.suggestion.SuggestionType.*;
 
 public class SuggestionCellRenderer implements ListCellRenderer<Suggestion> {
 
@@ -38,10 +37,10 @@ public class SuggestionCellRenderer implements ListCellRenderer<Suggestion> {
 
             if (VARIABLE.equals(value.getSuggestionType())) {
                 label.setIcon(Nodes.Field);
-
             } else if (PROPERTY.equals(value.getSuggestionType())) {
                 label.setIcon(Nodes.Property);
-
+            } else if (FUNCTION.equals(value.getSuggestionType())) {
+                label.setIcon(Nodes.Function);
             } else {
                 label.setIcon(Nodes.EmptyNode);
             }
