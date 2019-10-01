@@ -70,7 +70,7 @@ public class SuggestionTreeBuilder {
 
         suggestionTree = new SuggestionTree();
         PredefinedMessageSuggestions.SUGGESTIONS.forEach(suggestionTree::insert);
-        PredefinedJavascriptSuggestions.KEYWORDS.forEach(suggestionTree::insert);
+        PredefinedScriptSuggestions.KEYWORDS.forEach(suggestionTree::insert);
 
         Set<ContextVariable> contextVariables = new HashSet<>();
 

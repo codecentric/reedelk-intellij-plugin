@@ -6,10 +6,10 @@ import java.util.List;
 public class PredefinedMessageSuggestions {
 
     public static final List<SuggestionToken> SUGGESTIONS = Arrays.asList(
-            new SuggestionToken("payload", SuggestionType.VARIABLE),
             new SuggestionToken("message", SuggestionType.VARIABLE),
+            new SuggestionToken("message.payload()", SuggestionType.FUNCTION),
             new SuggestionToken("attributes", SuggestionType.VARIABLE),
             new SuggestionToken("message.content", SuggestionType.PROPERTY),
             new SuggestionToken("message.attributes", SuggestionType.PROPERTY),
-            new SuggestionToken("message.content.data", SuggestionType.PROPERTY));
+            new SuggestionToken("message.content.data()", SuggestionType.FUNCTION));
 }

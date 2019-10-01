@@ -83,8 +83,8 @@ public class ScriptEditorDefault extends DisposablePanel implements ScriptEditor
                 new EditorWordSuggestionClient(project, contextManager));
 
 
-        JavascriptEditorContextPanel contextPanel =
-                new JavascriptEditorContextPanel(contextManager.getVariables());
+        ScriptEditorContextPanel contextPanel =
+                new ScriptEditorContextPanel(contextManager.getVariables());
 
         JComponent editorComponent = editor.getComponent();
 

@@ -17,7 +17,7 @@ import java.util.Set;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 
-class JavascriptEditorContextPanel extends DisposablePanel {
+class ScriptEditorContextPanel extends DisposablePanel {
 
     private final Border panelBorder = BorderFactory.createMatteBorder(1, 1, 1, 0,
             Colors.SCRIPT_EDITOR_CONTEXT_PANEL_BORDER);
@@ -26,7 +26,7 @@ class JavascriptEditorContextPanel extends DisposablePanel {
             JBUI.Borders.customLine(Colors.SCRIPT_EDITOR_CONTEXT_PANEL_BORDER_BOTTOM, 0, 0, 1, 0),
             JBUI.Borders.empty(5));
 
-    JavascriptEditorContextPanel(Set<ScriptContextManager.ContextVariable> contextVariables) {
+    ScriptEditorContextPanel(Set<ScriptContextManager.ContextVariable> contextVariables) {
         setLayout(new BorderLayout());
         setBorder(panelBorder);
 
