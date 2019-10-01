@@ -18,7 +18,7 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import java.util.Optional;
 
-public class TypeMapPropertyRenderer implements TypePropertyRenderer {
+public class MapPropertyRenderer implements TypePropertyRenderer {
 
     @NotNull
     @Override

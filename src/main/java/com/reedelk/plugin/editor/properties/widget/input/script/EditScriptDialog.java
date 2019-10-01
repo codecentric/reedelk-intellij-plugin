@@ -3,8 +3,8 @@ package com.reedelk.plugin.editor.properties.widget.input.script;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.reedelk.plugin.commons.Labels;
-import com.reedelk.plugin.editor.properties.widget.input.script.editor.JavascriptEditor;
-import com.reedelk.plugin.editor.properties.widget.input.script.editor.JavascriptEditorDefault;
+import com.reedelk.plugin.editor.properties.widget.input.script.editor.ScriptEditor;
+import com.reedelk.plugin.editor.properties.widget.input.script.editor.ScriptEditorDefault;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,7 +13,7 @@ import java.util.Collections;
 
 public class EditScriptDialog extends DialogWrapper {
 
-    private JavascriptEditor editor;
+    private ScriptEditor editor;
 
     // An editor without extra context variables (just the default ones)
     // - such as the one used in the Router component or in the Logger component -
@@ -28,7 +28,7 @@ public class EditScriptDialog extends DialogWrapper {
         setTitle(Labels.DIALOG_TITLE_EDIT_SCRIPT);
         setResizable(true);
 
-        editor = new JavascriptEditorDefault(module.getProject(), context);
+        editor = new ScriptEditorDefault(module.getProject(), context);
         editor.setValue(initialValue);
 
         init();

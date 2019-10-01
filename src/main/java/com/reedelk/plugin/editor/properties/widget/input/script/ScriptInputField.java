@@ -8,8 +8,8 @@ import com.intellij.ui.components.JBPanel;
 import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 import com.reedelk.plugin.editor.properties.widget.input.InputChangeListener;
-import com.reedelk.plugin.editor.properties.widget.input.script.editor.JavascriptEditor;
-import com.reedelk.plugin.editor.properties.widget.input.script.editor.JavascriptEditorDefault;
+import com.reedelk.plugin.editor.properties.widget.input.script.editor.ScriptEditor;
+import com.reedelk.plugin.editor.properties.widget.input.script.editor.ScriptEditorDefault;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -29,7 +29,7 @@ public class ScriptInputField extends DisposablePanel implements DocumentListene
 
 
     private InputChangeListener<String> listener;
-    private JavascriptEditor editor;
+    private ScriptEditor editor;
     private String value = "";
 
     public ScriptInputField(@NotNull Module module,
@@ -39,8 +39,8 @@ public class ScriptInputField extends DisposablePanel implements DocumentListene
 
         JPanel openEditorBtn = new OpenEditorButton();
 
-        this.editor = new JavascriptEditorDefault(module.getProject(), context);
-        this.editor.addListener(listener);
+        this.editor = new ScriptEditorDefault(module.getProject(), context);
+        //this.editor.setListener(listener);
 
         setLayout(new BorderLayout());
         add(openEditorBtn, NORTH);
@@ -62,7 +62,7 @@ public class ScriptInputField extends DisposablePanel implements DocumentListene
 
     public void addListener(InputChangeListener<String> listener) {
         this.listener = listener;
-        this.editor.addListener(listener);
+        // this.editor.setListener(listener);
     }
 
     public void setValue(Object o) {

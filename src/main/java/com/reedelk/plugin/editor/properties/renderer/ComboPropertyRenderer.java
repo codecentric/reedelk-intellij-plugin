@@ -14,7 +14,7 @@ import java.awt.*;
 
 import static java.awt.BorderLayout.WEST;
 
-public class TypeComboPropertyRenderer extends AbstractTypePropertyRenderer {
+public class ComboPropertyRenderer extends AbstractTypePropertyRenderer {
 
     @NotNull
     @Override

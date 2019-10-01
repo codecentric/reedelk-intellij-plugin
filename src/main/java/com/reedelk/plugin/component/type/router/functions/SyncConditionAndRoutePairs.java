@@ -37,7 +37,7 @@ public class SyncConditionAndRoutePairs {
             // The last successor is always otherwise.
             if (i == numberOfSuccessors - 1) {
                 // Last element is always the default condition
-                updatedConditions.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION.getBody(), successor));
+                updatedConditions.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION.getValue(), successor));
                 continue;
             }
 
@@ -71,7 +71,7 @@ public class SyncConditionAndRoutePairs {
                 .stream()
                 .filter(routerConditionRoutePair ->
                         routerConditionRoutePair.getNext() == target &&
-                                !Router.DEFAULT_CONDITION.getBody().equals(routerConditionRoutePair.getCondition()))
+                                !Router.DEFAULT_CONDITION.getValue().equals(routerConditionRoutePair.getCondition()))
                 .findFirst();
     }
 
@@ -79,7 +79,7 @@ public class SyncConditionAndRoutePairs {
         if (i < routerConditionRoutePairs.size()) {
             RouterConditionRoutePair pair = routerConditionRoutePairs.get(i);
             if (!alreadyUsedNodes.contains(pair.getNext()) &&
-                    !Router.DEFAULT_CONDITION.getBody().equals(pair.getCondition())) {
+                    !Router.DEFAULT_CONDITION.getValue().equals(pair.getCondition())) {
                 return Optional.of(pair);
             }
         }

@@ -1,16 +1,16 @@
 package com.reedelk.plugin.component.domain;
 
-import com.reedelk.runtime.api.script.DynamicMap;
+public class TypeDynamicMapDescriptor<T> extends TypeMapDescriptor {
 
-public class TypeDynamicMapDescriptor extends TypeMapDescriptor {
+    private final Class<T> typeClazz;
 
-    public TypeDynamicMapDescriptor(String tabGroup) {
+    public TypeDynamicMapDescriptor(Class<T> typeClazz, String tabGroup) {
         super(tabGroup);
+        this.typeClazz = typeClazz;
     }
 
     @Override
     public Class<?> type() {
-        return DynamicMap.class;
+        return typeClazz;
     }
-
 }

@@ -99,7 +99,7 @@ public class RouterNode extends AbstractScopedGraphNode {
             graph.add(this, placeholder);
             addToScope(placeholder);
 
-            routerConditionRoutePairs.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION.getBody(), placeholder));
+            routerConditionRoutePairs.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION.getValue(), placeholder));
         }
 
         List<RouterConditionRoutePair> updatedConditions =

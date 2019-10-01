@@ -1,14 +1,19 @@
 package com.reedelk.plugin.component.domain;
 
-import com.reedelk.runtime.api.script.DynamicValue;
+import com.reedelk.runtime.api.script.dynamicvalue.DynamicValue;
 
-public class TypeDynamicValueDescriptor implements TypeDescriptor {
+public class TypeDynamicValueDescriptor<T extends DynamicValue> implements TypeDescriptor {
 
-    private final String defaultValue = "";
+    private final String defaultValue = null;
+    private final Class<T> typeClazz;
+
+    public TypeDynamicValueDescriptor(Class<T> typeClazz) {
+        this.typeClazz = typeClazz;
+    }
 
     @Override
     public Class<?> type() {
-        return DynamicValue.class;
+        return typeClazz;
     }
 
     @Override

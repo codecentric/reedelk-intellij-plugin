@@ -32,7 +32,7 @@ import static com.reedelk.runtime.commons.JsonParser.Config;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.EAST;
 
-public class TypeObjectPropertyRenderer extends AbstractTypePropertyRenderer {
+public class ObjectPropertyRenderer extends AbstractTypePropertyRenderer {
 
     private static final ConfigMetadata UNSELECTED_CONFIG;
     static {

@@ -1,12 +1,14 @@
 package com.reedelk.plugin.editor.properties.renderer;
 
 import com.reedelk.plugin.component.domain.TypeDescriptor;
-import com.reedelk.runtime.api.script.DynamicMap;
-import com.reedelk.runtime.api.script.DynamicValue;
 import com.reedelk.runtime.api.script.Script;
+import com.reedelk.runtime.api.script.dynamicmap.DynamicStringMap;
+import com.reedelk.runtime.api.script.dynamicvalue.DynamicByteArray;
+import com.reedelk.runtime.api.script.dynamicvalue.DynamicInteger;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,19 +39,21 @@ public class TypeRendererFactory {
         tmp.put(BigInteger.class, new BigIntegerPropertyRenderer());
         tmp.put(BigDecimal.class, new BigDecimalPropertyRenderer());
 
-        tmp.put(TypeFile.class, new TypeFilePropertyRenderer());
-        tmp.put(TypeCombo.class, new TypeComboPropertyRenderer());
+        tmp.put(TypeFile.class, new FilePropertyRenderer());
+        tmp.put(TypeCombo.class, new ComboPropertyRenderer());
 
-        tmp.put(TypeObject.class, new TypeObjectPropertyRenderer());
+        tmp.put(TypeObject.class, new ObjectPropertyRenderer());
 
-        tmp.put(Map.class, new TypeMapPropertyRenderer());
+        tmp.put(Map.class, new MapPropertyRenderer());
         tmp.put(UnknownType.class, new UnknownPropertyRenderer());
 
         tmp.put(Script.class, new TypeScriptPropertyRenderer());
-        tmp.put(DynamicMap.class, new TypeDynamicMapPropertyRenderer());
-        tmp.put(DynamicValue.class, new TypeDynamicValuePropertyRenderer());
 
-        RENDERER = tmp;
+        tmp.put(DynamicStringMap.class, new DynamicMapPropertyRenderer());
+        tmp.put(DynamicInteger.class, new DynamicIntegerPropertyRenderer());
+        tmp.put(DynamicByteArray.class, new DynamicByteArrayPropertyRenderer());
+
+        RENDERER = Collections.unmodifiableMap(tmp);
     }
 
     public static TypeRendererFactory get() {
@@ -59,8 +63,7 @@ public class TypeRendererFactory {
     public TypePropertyRenderer from(TypeDescriptor propertyType) {
         if (RENDERER.containsKey(propertyType.type())) {
             return RENDERER.get(propertyType.type());
-        } else {
-            throw new IllegalArgumentException("Could not find renderer for type: " + propertyType);
         }
+        throw new IllegalArgumentException("Could not find renderer for type: " + propertyType.type());
     }
 }

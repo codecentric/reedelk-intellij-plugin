@@ -9,7 +9,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import com.intellij.util.ThrowableRunnable;
 import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
-import com.reedelk.plugin.editor.properties.widget.input.InputChangeListener;
+import com.reedelk.plugin.editor.properties.widget.input.script.DynamicValueField;
 import com.reedelk.plugin.editor.properties.widget.input.script.ScriptContextManager;
 import com.reedelk.plugin.editor.properties.widget.input.script.suggestion.SuggestionDropDownDecorator;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +20,7 @@ import java.awt.*;
 import static com.reedelk.plugin.editor.properties.widget.input.script.editor.EditorConstants.JAVASCRIPT_FILE_TYPE;
 import static java.awt.BorderLayout.CENTER;
 
-public class JavascriptEditorDefault extends DisposablePanel implements JavascriptEditor {
+public class ScriptEditorDefault extends DisposablePanel implements ScriptEditor {
 
     private static final boolean HORIZONTAL = false;
 
@@ -39,6 +39,11 @@ public class JavascriptEditorDefault extends DisposablePanel implements Javascri
         return editor.getComponent();
     }
 
+    @Override
+    public void setListener(DynamicValueField.OnChangeListener listener) {
+
+    }
+
     public void setValue(String value) {
         try {
             WriteCommandAction.writeCommandAction(project).run((ThrowableRunnable<Throwable>) () -> {
@@ -49,10 +54,6 @@ public class JavascriptEditorDefault extends DisposablePanel implements Javascri
         }
     }
 
-    @Override
-    public void addListener(InputChangeListener<String> listener) {
-
-    }
 
     public String getValue() {
         return document.getText();
@@ -68,7 +69,7 @@ public class JavascriptEditorDefault extends DisposablePanel implements Javascri
         }
     }
 
-    public JavascriptEditorDefault(
+    public ScriptEditorDefault(
             @NotNull Project project,
             @NotNull ScriptContextManager contextManager) {
 

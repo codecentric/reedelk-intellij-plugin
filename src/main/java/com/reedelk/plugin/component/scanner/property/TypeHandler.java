@@ -7,11 +7,8 @@ import com.reedelk.plugin.component.scanner.ComponentAnalyzerContext;
 import com.reedelk.plugin.component.scanner.UnsupportedType;
 import com.reedelk.runtime.api.annotation.Combo;
 import com.reedelk.runtime.api.annotation.DisplayName;
-import com.reedelk.runtime.api.annotation.File;
 import com.reedelk.runtime.api.annotation.TabGroup;
 import com.reedelk.runtime.api.commons.StringUtils;
-import com.reedelk.runtime.api.script.DynamicMap;
-import com.reedelk.runtime.api.script.Script;
 import io.github.classgraph.*;
 
 import java.util.List;
@@ -19,7 +16,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.reedelk.plugin.component.scanner.property.PropertyScannerUtils.*;
-import static com.reedelk.plugin.converter.ValueConverterFactory.isDynamicValue;
 import static com.reedelk.plugin.converter.ValueConverterFactory.isKnownType;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
@@ -34,10 +30,12 @@ public class TypeHandler implements Handler {
         if (typeSignature instanceof BaseTypeSignature) {
             TypeDescriptor typeDescriptor = processKnownType(((BaseTypeSignature) typeSignature).getType(), propertyInfo);
             builder.type(typeDescriptor);
+
         } else if (typeSignature instanceof ClassRefTypeSignature) {
             ClassRefTypeSignature classRef = (ClassRefTypeSignature) typeSignature;
             TypeDescriptor typeDescriptor = processClassRefType(classRef, propertyInfo, context);
             builder.type(typeDescriptor);
+
         } else {
             throw new UnsupportedType(typeSignature.getClass());
         }
@@ -46,39 +44,46 @@ public class TypeHandler implements Handler {
     private TypeDescriptor processKnownType(Class<?> clazz, FieldInfo fieldInfo) {
         if (isScript(clazz)) {
             return new TypeScriptDescriptor();
-        } else if (isDynamicMap(clazz)) {
-            String tabGroup = getAnnotationValueOrDefault(fieldInfo, TabGroup.class, null);
-            return new TypeDynamicMapDescriptor(tabGroup);
+
         } else if (isFile(fieldInfo, clazz)) {
             return new TypeFileDescriptor();
+
         } else if (isCombo(fieldInfo, clazz)) {
             boolean editable = getAnnotationParameterValueOrDefault(fieldInfo, Combo.class, "editable", false);
             Object[] comboValues = getAnnotationParameterValueOrDefault(fieldInfo, Combo.class, "comboValues", new String[]{});
             List<String> items = stream(comboValues).map(value -> (String) value).collect(toList());
             return new TypeComboDescriptor(editable, items.toArray(new String[]{}));
+
         } else if (isMap(clazz)) {
             String tabGroup = getAnnotationValueOrDefault(fieldInfo, TabGroup.class, null);
             return new TypeMapDescriptor(tabGroup);
+
         } else {
             return new TypePrimitiveDescriptor(clazz);
         }
     }
 
+    @SuppressWarnings("unchecked")
     private TypeDescriptor processClassRefType(ClassRefTypeSignature typeSignature, FieldInfo fieldInfo, ComponentAnalyzerContext context) {
         String fullyQualifiedClassName = typeSignature.getFullyQualifiedClassName();
-        if (isKnownType(fullyQualifiedClassName)) {
-            try {
-                Class<?> typeClazz = Class.forName(fullyQualifiedClassName);
-                return processKnownType(typeClazz, fieldInfo);
-            } catch (ClassNotFoundException e) {
-                // if it is a known type, then the class must be resolvable.
-                // Otherwise the @PropertyValueConverterFactory class would not even compile.
-                throw new UnsupportedType(fullyQualifiedClassName);
-            }
-        } else if (isDynamicValue(fullyQualifiedClassName)) {
-            return new TypeDynamicValueDescriptor();
+
+        if (isDynamicValue(fullyQualifiedClassName)) {
+            Class<?> clazz = clazzByFullyQualifiedName(fullyQualifiedClassName);
+            return new TypeDynamicValueDescriptor(clazz);
+
+        } else if (isDynamicMap(fullyQualifiedClassName)) {
+            String tabGroup = getAnnotationValueOrDefault(fieldInfo, TabGroup.class, null);
+            Class<?> clazz = clazzByFullyQualifiedName(fullyQualifiedClassName);
+            return new TypeDynamicMapDescriptor(clazz, tabGroup);
+
         } else if (isEnumeration(fullyQualifiedClassName, context)) {
             return processEnumType(typeSignature, context);
+
+            // e.g string
+        } else if (isKnownType(fullyQualifiedClassName)) {
+            Class<?> clazz = clazzByFullyQualifiedName(fullyQualifiedClassName);
+            return processKnownType(clazz, fieldInfo);
+
         } else {
             // We check that we can resolve class info. If we can, then
             ClassInfo classInfo = context.getClassInfo(fullyQualifiedClassName);
@@ -115,37 +120,5 @@ public class TypeHandler implements Handler {
         String defaultEnumValue = MapUtils.getFirstKeyOrDefault(nameAndDisplayName, StringUtils.EMPTY);
 
         return new TypeEnumDescriptor(nameAndDisplayName, defaultEnumValue);
-    }
-
-    private boolean isFile(FieldInfo fieldInfo, Class<?> clazz) {
-        return fieldInfo.hasAnnotation(File.class.getName()) &&
-                String.class.equals(clazz);
-    }
-
-    private boolean isCombo(FieldInfo fieldInfo, Class<?> clazz) {
-        return fieldInfo.hasAnnotation(Combo.class.getName()) &&
-                String.class.equals(clazz);
-    }
-
-    private boolean isMap(Class<?> clazz) {
-        return Map.class.equals(clazz);
-    }
-
-    private boolean isScript(Class<?> clazz) {
-        return Script.class.equals(clazz);
-    }
-
-    private boolean isDynamicMap(Class<?> clazz) {
-        return DynamicMap.class.equals(clazz);
-    }
-
-    private Shared isShareable(ClassInfo classInfo) {
-        return classInfo.hasAnnotation(com.reedelk.runtime.api.annotation.Shared.class.getName()) ?
-                Shared.YES : Shared.NO;
-    }
-
-    private Collapsible isCollapsible(ClassInfo classInfo) {
-        return classInfo.hasAnnotation(com.reedelk.runtime.api.annotation.Collapsible.class.getName()) ?
-                Collapsible.YES : Collapsible.NO;
     }
 }

@@ -54,6 +54,10 @@ public abstract class InputField<T> extends JBTextField implements DocumentListe
         setText(valueAsString);
     }
 
+    public T getValue() {
+        return converter.from(getText());
+    }
+
     public void addListener(InputChangeListener<T> changeListener) {
         this.listener = changeListener;
     }

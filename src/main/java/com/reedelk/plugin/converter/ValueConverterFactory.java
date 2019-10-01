@@ -2,7 +2,10 @@ package com.reedelk.plugin.converter;
 
 import com.reedelk.plugin.component.domain.TypeDescriptor;
 import com.reedelk.plugin.component.type.unknown.UnknownPropertyType;
-import com.reedelk.runtime.api.script.*;
+import com.reedelk.runtime.api.script.Script;
+import com.reedelk.runtime.api.script.dynamicmap.DynamicStringMap;
+import com.reedelk.runtime.api.script.dynamicvalue.DynamicByteArray;
+import com.reedelk.runtime.api.script.dynamicvalue.DynamicInteger;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -39,13 +42,19 @@ public class ValueConverterFactory {
         tmp.put(BigInteger.class, new BigIntegerConverter());
         tmp.put(BigDecimal.class, new BigDecimalConverter());
 
-        tmp.put(Map.class, new MapConverter());
-
         tmp.put(TypeFile.class, new FileConverter());
         tmp.put(TypeCombo.class, new ComboConverter());
+
+        tmp.put(Map.class, new MapConverter());
+
         tmp.put(Script.class, new ScriptConverter());
-        tmp.put(DynamicMap.class, new DynamicMapConverter());
-        tmp.put(DynamicValue.class, new DynamicValueConverter());
+
+        // Dynamic value
+        tmp.put(DynamicByteArray.class, new DynamicByteArrayConverter());
+        tmp.put(DynamicInteger.class, new DynamicIntegerConverter());
+
+        // Dynamic map
+        tmp.put(DynamicStringMap.class, new DynamicStringMapConverter());
 
         CONVERTER = Collections.unmodifiableMap(tmp);
     }
@@ -62,13 +71,6 @@ public class ValueConverterFactory {
         return CONVERTER.keySet()
                 .stream()
                 .anyMatch(aClass -> aClass.getName().equals(clazzFullyQualifiedName));
-    }
-
-    public static boolean isDynamicValue(String fullyQualifiedName) {
-        return DynamicObject.class.getName().equals(fullyQualifiedName) ||
-                DynamicInteger.class.getName().equals(fullyQualifiedName) ||
-                DynamicBoolean.class.getName().equals(fullyQualifiedName) ||
-                DynamicByteArray.class.getName().equals(fullyQualifiedName);
     }
 
     @SuppressWarnings("unchecked")
