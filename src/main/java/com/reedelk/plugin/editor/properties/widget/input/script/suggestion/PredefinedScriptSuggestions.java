@@ -3,9 +3,9 @@ package com.reedelk.plugin.editor.properties.widget.input.script.suggestion;
 import java.util.Arrays;
 import java.util.List;
 
-public class PredefinedScriptSuggestions {
+class PredefinedScriptSuggestions {
 
-    public static final List<SuggestionToken> KEYWORDS = Arrays.asList(
+    static final List<SuggestionToken> KEYWORDS = Arrays.asList(
             new SuggestionToken("abstract", SuggestionType.LANGUAGE),
             new SuggestionToken("arguments", SuggestionType.LANGUAGE),
             new SuggestionToken("await", SuggestionType.LANGUAGE),
