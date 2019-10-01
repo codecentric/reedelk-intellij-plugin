@@ -30,5 +30,4 @@ public class BigDecimalConverter implements ValueConverter<BigDecimal> {
                 null :
                 object.getBigDecimal(propertyName);
     }
-
 }

@@ -40,7 +40,7 @@ public class SuggestionCellRenderer implements ListCellRenderer<Suggestion> {
             } else if (PROPERTY.equals(value.getSuggestionType())) {
                 label.setIcon(Nodes.Property);
             } else if (FUNCTION.equals(value.getSuggestionType())) {
-                label.setIcon(Nodes.Function);
+                label.setIcon(Nodes.Method);
             } else {
                 label.setIcon(Nodes.EmptyNode);
             }

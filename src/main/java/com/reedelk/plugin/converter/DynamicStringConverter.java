@@ -1,6 +1,6 @@
 package com.reedelk.plugin.converter;
 
-public class DynamicByteArrayConverter extends AbstractDynamicConverter<String> {
+public class DynamicStringConverter extends AbstractDynamicConverter<String> {
 
     private StringConverter delegate = new StringConverter();
 

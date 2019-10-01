@@ -28,5 +28,4 @@ public class IntegerConverter implements ValueConverter<Integer> {
                 null :
                 object.getInt(propertyName);
     }
-
 }

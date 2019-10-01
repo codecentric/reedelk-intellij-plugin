@@ -4,8 +4,7 @@ import com.reedelk.plugin.component.domain.TypeDescriptor;
 import com.reedelk.plugin.component.type.unknown.UnknownPropertyType;
 import com.reedelk.runtime.api.script.Script;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicStringMap;
-import com.reedelk.runtime.api.script.dynamicvalue.DynamicByteArray;
-import com.reedelk.runtime.api.script.dynamicvalue.DynamicInteger;
+import com.reedelk.runtime.api.script.dynamicvalue.*;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -43,8 +42,20 @@ public class ValueConverterFactory {
         tmp.put(TypeCombo.class, new ComboConverter());
         tmp.put(Map.class, new MapConverter());
         tmp.put(Script.class, new ScriptConverter());
+
+        // Dynamic value types
+        tmp.put(DynamicBigDecimal.class, new DynamicBigDecimalConverter());
+        tmp.put(DynamicBigInteger.class, new DynamicBigIntegerConverter());
+        tmp.put(DynamicBoolean.class, new DynamicBooleanConverter());
         tmp.put(DynamicByteArray.class, new DynamicByteArrayConverter());
+        tmp.put(DynamicDouble.class, new DynamicDoubleConverter());
+        tmp.put(DynamicFloat.class, new DynamicFloatConverter());
         tmp.put(DynamicInteger.class, new DynamicIntegerConverter());
+        tmp.put(DynamicLong.class, new DynamicLongConverter());
+        tmp.put(DynamicObject.class, new DynamicObjectConverter());
+        tmp.put(DynamicString.class, new DynamicStringConverter());
+
+        // Dynamic map types
         tmp.put(DynamicStringMap.class, new DynamicStringMapConverter());
         CONVERTER = Collections.unmodifiableMap(tmp);
     }

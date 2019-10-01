@@ -28,5 +28,4 @@ public class DoubleConverter implements ValueConverter<Double> {
                 null :
                 object.getDouble(propertyName);
     }
-
 }
