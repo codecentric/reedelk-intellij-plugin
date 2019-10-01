@@ -57,6 +57,7 @@ public class ValueConverterFactory {
 
         // Dynamic map types
         tmp.put(DynamicStringMap.class, new DynamicStringMapConverter());
+
         CONVERTER = Collections.unmodifiableMap(tmp);
     }
 

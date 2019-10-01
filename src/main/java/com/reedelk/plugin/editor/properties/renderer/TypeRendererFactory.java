@@ -3,8 +3,7 @@ package com.reedelk.plugin.editor.properties.renderer;
 import com.reedelk.plugin.component.domain.TypeDescriptor;
 import com.reedelk.runtime.api.script.Script;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicStringMap;
-import com.reedelk.runtime.api.script.dynamicvalue.DynamicByteArray;
-import com.reedelk.runtime.api.script.dynamicvalue.DynamicInteger;
+import com.reedelk.runtime.api.script.dynamicvalue.*;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -39,13 +38,28 @@ public class TypeRendererFactory {
         tmp.put(BigDecimal.class, new BigDecimalPropertyRenderer());
         tmp.put(TypeFile.class, new FilePropertyRenderer());
         tmp.put(TypeCombo.class, new ComboPropertyRenderer());
-        tmp.put(TypeObject.class, new ObjectPropertyRenderer());
         tmp.put(Map.class, new MapPropertyRenderer());
+        tmp.put(Script.class, new ScriptPropertyRenderer());
+
+        tmp.put(TypeObject.class, new ObjectPropertyRenderer());
         tmp.put(UnknownType.class, new UnknownPropertyRenderer());
-        tmp.put(Script.class, new TypeScriptPropertyRenderer());
-        tmp.put(DynamicStringMap.class, new DynamicMapPropertyRenderer());
-        tmp.put(DynamicInteger.class, new DynamicIntegerPropertyRenderer());
+
+        // Dynamic value types
+        tmp.put(DynamicBigDecimal.class, new DynamicBigDecimalPropertyRenderer());
+        tmp.put(DynamicBigInteger.class, new DynamicBigIntegerPropertyRenderer());
+        tmp.put(DynamicBoolean.class, new DynamicBooleanPropertyRenderer());
         tmp.put(DynamicByteArray.class, new DynamicByteArrayPropertyRenderer());
+        tmp.put(DynamicDouble.class, new DynamicDoublePropertyRenderer());
+        tmp.put(DynamicFloat.class, new DynamicFloatPropertyRenderer());
+        tmp.put(DynamicInteger.class, new DynamicIntegerPropertyRenderer());
+        tmp.put(DynamicLong.class, new DynamicLongPropertyRenderer());
+        tmp.put(DynamicObject.class, new DynamicObjectPropertyRenderer());
+        tmp.put(DynamicString.class, new DynamicStringPropertyRenderer());
+
+        // Dynamic map types
+        tmp.put(DynamicStringMap.class, new DynamicMapPropertyRenderer());
+
+
         RENDERER = Collections.unmodifiableMap(tmp);
     }
 

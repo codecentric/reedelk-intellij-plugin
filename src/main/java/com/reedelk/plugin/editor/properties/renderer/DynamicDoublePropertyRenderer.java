@@ -1,6 +1,6 @@
 package com.reedelk.plugin.editor.properties.renderer;
 
-import com.reedelk.plugin.editor.properties.widget.input.IntegerInputField;
+import com.reedelk.plugin.editor.properties.widget.input.DoubleInputField;
 import com.reedelk.plugin.editor.properties.widget.input.script.DynamicValueField;
 import com.reedelk.plugin.editor.properties.widget.input.script.InputFieldAdapter;
 
@@ -8,13 +8,13 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 
-public class DynamicIntegerPropertyRenderer extends AbstractDynamicPropertyRenderer {
+public class DynamicDoublePropertyRenderer extends AbstractDynamicPropertyRenderer {
 
     @Override
     protected InputFieldAdapter inputFieldAdapter(String hint) {
         return new InputFieldAdapter() {
 
-            private IntegerInputField inputField = new IntegerInputField(hint);
+            private DoubleInputField inputField = new DoubleInputField(hint);
 
             @Override
             public Object getValue() {
@@ -33,7 +33,7 @@ public class DynamicIntegerPropertyRenderer extends AbstractDynamicPropertyRende
 
             @Override
             public void setValue(Object value) {
-                inputField.setValue((Integer) value);
+                inputField.setValue((Double) value);
             }
 
             @Override

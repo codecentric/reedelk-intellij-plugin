@@ -21,11 +21,11 @@ import static com.reedelk.plugin.commons.Icons.MapType.RemoveItem;
 import static com.reedelk.plugin.commons.Labels.ACTION_MAP_TABLE_ADD;
 import static com.reedelk.plugin.commons.Labels.ACTION_MAP_TABLE_REMOVE;
 
-class TypeMapTabContainer extends JBPanel {
+class MapTabContainer extends JBPanel {
 
     private static final String[] COLUMN_NAMES = {"Key", "Value"};
 
-    TypeMapTabContainer(PropertyAccessor propertyAccessor) {
+    MapTabContainer(PropertyAccessor propertyAccessor) {
         MapTableColumnModel columnModel = new MapTableColumnModel();
         MapAwareTableModel tableModel = new MapAwareTableModel(propertyAccessor);
         PropertyTable propertyTable = new PropertyTable(tableModel, columnModel);

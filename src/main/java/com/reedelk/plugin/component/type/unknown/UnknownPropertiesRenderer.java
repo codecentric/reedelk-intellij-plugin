@@ -4,7 +4,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBLabel;
 import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.component.domain.ComponentData;
-import com.reedelk.plugin.editor.properties.renderer.AbstractNodePropertiesRenderer;
+import com.reedelk.plugin.editor.properties.renderer.AbstractPropertiesRenderer;
 import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 import com.reedelk.plugin.editor.properties.widget.FormBuilder;
 import com.reedelk.plugin.graph.FlowSnapshot;
@@ -14,7 +14,7 @@ import java.awt.*;
 
 import static com.reedelk.runtime.commons.JsonParser.Implementor;
 
-public class UnknownPropertiesRenderer extends AbstractNodePropertiesRenderer {
+public class UnknownPropertiesRenderer extends AbstractPropertiesRenderer {
 
     public UnknownPropertiesRenderer(FlowSnapshot snapshot, Module module) {
         super(snapshot, module);

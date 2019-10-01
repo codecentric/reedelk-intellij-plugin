@@ -5,7 +5,7 @@ import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
-import com.reedelk.plugin.editor.properties.renderer.AbstractNodePropertiesRenderer;
+import com.reedelk.plugin.editor.properties.renderer.AbstractPropertiesRenderer;
 import com.reedelk.plugin.editor.properties.renderer.TypePropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.TypeRendererFactory;
 import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.util.List;
 
-public class GenericComponentPropertiesRenderer extends AbstractNodePropertiesRenderer {
+public class GenericComponentPropertiesRenderer extends AbstractPropertiesRenderer {
 
     public GenericComponentPropertiesRenderer(FlowSnapshot snapshot, Module module) {
         super(snapshot, module);

@@ -5,7 +5,7 @@ import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.component.domain.Collapsible;
 import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
-import com.reedelk.plugin.editor.properties.renderer.NodePropertiesRendererFactory;
+import com.reedelk.plugin.editor.properties.renderer.PropertiesRendererFactory;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +30,7 @@ public class ContainerFactory {
     }
 
     public static DisposableScrollPane createPropertiesPanel(Module module, ComponentData componentData, FlowSnapshot snapshot, GraphNode node) {
-        DisposablePanel propertiesPanel = NodePropertiesRendererFactory.get()
+        DisposablePanel propertiesPanel = PropertiesRendererFactory.get()
                 .component(componentData)
                 .snapshot(snapshot)
                 .module(module)

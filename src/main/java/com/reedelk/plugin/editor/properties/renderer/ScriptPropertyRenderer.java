@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.util.List;
 
-public class TypeScriptPropertyRenderer extends AbstractTypePropertyRenderer {
+public class ScriptPropertyRenderer extends AbstractTypePropertyRenderer {
 
     @NotNull
     @Override

@@ -1,20 +1,21 @@
 package com.reedelk.plugin.editor.properties.renderer;
 
-import com.reedelk.plugin.editor.properties.widget.input.IntegerInputField;
+import com.reedelk.plugin.editor.properties.widget.input.BigIntegerInputField;
 import com.reedelk.plugin.editor.properties.widget.input.script.DynamicValueField;
 import com.reedelk.plugin.editor.properties.widget.input.script.InputFieldAdapter;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.math.BigInteger;
 
-public class DynamicIntegerPropertyRenderer extends AbstractDynamicPropertyRenderer {
+public class DynamicBigIntegerPropertyRenderer extends AbstractDynamicPropertyRenderer {
 
     @Override
     protected InputFieldAdapter inputFieldAdapter(String hint) {
         return new InputFieldAdapter() {
 
-            private IntegerInputField inputField = new IntegerInputField(hint);
+            private BigIntegerInputField inputField = new BigIntegerInputField(hint);
 
             @Override
             public Object getValue() {
@@ -33,7 +34,7 @@ public class DynamicIntegerPropertyRenderer extends AbstractDynamicPropertyRende
 
             @Override
             public void setValue(Object value) {
-                inputField.setValue((Integer) value);
+                inputField.setValue((BigInteger) value);
             }
 
             @Override

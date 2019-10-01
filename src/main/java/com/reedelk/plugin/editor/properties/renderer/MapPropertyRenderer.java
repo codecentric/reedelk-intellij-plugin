@@ -47,7 +47,7 @@ public class MapPropertyRenderer implements TypePropertyRenderer {
             return tabbed;
         });
 
-        JComponent content = new TypeMapTabContainer(propertyAccessor);
+        JComponent content = new MapTabContainer(propertyAccessor);
 
         tabbedPane.addTab(propertyDescriptor.getDisplayName(), content);
         return tabbedPane;

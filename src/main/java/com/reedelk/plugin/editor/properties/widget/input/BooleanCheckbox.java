@@ -28,9 +28,12 @@ public class BooleanCheckbox extends JBCheckBox implements ActionListener {
         }
     }
 
-    public void setValue(Object value) {
-        String valueAsString = converter.toText(value);
-        setSelected(Boolean.parseBoolean(valueAsString));
+    public void setValue(Boolean value) {
+        setSelected(value);
+    }
+
+    public boolean getValue() {
+        return isSelected();
     }
 
     public void addListener(InputChangeListener<Boolean> listener) {
