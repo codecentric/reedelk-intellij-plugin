@@ -23,7 +23,6 @@ public class TypeRendererFactory {
 
     static {
         Map<Class<?>, TypePropertyRenderer> tmp = new HashMap<>();
-
         tmp.put(int.class, new IntegerPropertyRenderer());
         tmp.put(Integer.class, new IntegerPropertyRenderer());
         tmp.put(long.class, new LongPropertyRenderer());
@@ -38,21 +37,15 @@ public class TypeRendererFactory {
         tmp.put(String.class, new StringPropertyRenderer());
         tmp.put(BigInteger.class, new BigIntegerPropertyRenderer());
         tmp.put(BigDecimal.class, new BigDecimalPropertyRenderer());
-
         tmp.put(TypeFile.class, new FilePropertyRenderer());
         tmp.put(TypeCombo.class, new ComboPropertyRenderer());
-
         tmp.put(TypeObject.class, new ObjectPropertyRenderer());
-
         tmp.put(Map.class, new MapPropertyRenderer());
         tmp.put(UnknownType.class, new UnknownPropertyRenderer());
-
         tmp.put(Script.class, new TypeScriptPropertyRenderer());
-
         tmp.put(DynamicStringMap.class, new DynamicMapPropertyRenderer());
         tmp.put(DynamicInteger.class, new DynamicIntegerPropertyRenderer());
         tmp.put(DynamicByteArray.class, new DynamicByteArrayPropertyRenderer());
-
         RENDERER = Collections.unmodifiableMap(tmp);
     }
 

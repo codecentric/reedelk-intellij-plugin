@@ -25,7 +25,6 @@ public class ValueConverterFactory {
 
     static {
         Map<Class<?>, ValueConverter<?>> tmp = new HashMap<>();
-
         tmp.put(int.class, new IntegerConverter());
         tmp.put(Integer.class, new IntegerConverter());
         tmp.put(long.class, new LongConverter());
@@ -36,26 +35,17 @@ public class ValueConverterFactory {
         tmp.put(Double.class, new DoubleConverter());
         tmp.put(boolean.class, new BooleanConverter());
         tmp.put(Boolean.class, new BooleanConverter());
-
         tmp.put(Enum.class, new EnumConverter());
         tmp.put(String.class, new StringConverter());
         tmp.put(BigInteger.class, new BigIntegerConverter());
         tmp.put(BigDecimal.class, new BigDecimalConverter());
-
         tmp.put(TypeFile.class, new FileConverter());
         tmp.put(TypeCombo.class, new ComboConverter());
-
         tmp.put(Map.class, new MapConverter());
-
         tmp.put(Script.class, new ScriptConverter());
-
-        // Dynamic value
         tmp.put(DynamicByteArray.class, new DynamicByteArrayConverter());
         tmp.put(DynamicInteger.class, new DynamicIntegerConverter());
-
-        // Dynamic map
         tmp.put(DynamicStringMap.class, new DynamicStringMapConverter());
-
         CONVERTER = Collections.unmodifiableMap(tmp);
     }
 
