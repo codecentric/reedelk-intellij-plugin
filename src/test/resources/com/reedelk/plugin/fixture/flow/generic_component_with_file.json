@@ -1,0 +1,5 @@
+{
+  "implementor": "com.reedelk.plugin.fixture.ComponentNode1",
+  "booleanProperty": false,
+  "fileProperty": "metadata/schema/person.schema.json"
+}

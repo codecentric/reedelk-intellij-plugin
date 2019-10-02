@@ -1,10 +1,12 @@
 package com.reedelk.plugin.component.type.generic;
 
+import com.google.common.collect.ImmutableMap;
 import com.reedelk.plugin.component.domain.*;
 import com.reedelk.plugin.fixture.ComponentNode2;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Map;
 
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.Primitives.*;
 import static java.util.Arrays.asList;
@@ -127,7 +129,24 @@ public class SamplePropertyDescriptors {
 
     }
 
+    /**
+     * tmp.put(Enum.class, new EnumConverter());
+     * <p>
+     * tmp.put(TypeFileDescriptor.TypeFile .class, new FileConverter());
+     * tmp.put(TypeComboDescriptor.TypeCombo .class, new ComboConverter());
+     */
+
     static class SpecialTypes {
+
+        private static final Map<String, String> valueAndDisplayMap = ImmutableMap.of("NONE", "No config", "CERT", "Certificate");
+        public static final TypeDescriptor enumTypeDescriptor = new TypeEnumDescriptor(valueAndDisplayMap, "NONE");
+
+        public static final ComponentPropertyDescriptor enumProperty =
+                ComponentPropertyDescriptor.builder()
+                        .type(enumTypeDescriptor)
+                        .propertyName("enumProperty")
+                        .displayName("Enum property")
+                        .build();
 
         public static final TypeDescriptor mapTypeDescriptor = new TypeMapDescriptor("Headers");
 
@@ -137,6 +156,34 @@ public class SamplePropertyDescriptors {
                         .propertyName("mapProperty")
                         .displayName("Map property")
                         .build();
+
+        public static final TypeDescriptor scriptTypeDescriptor = new TypeScriptDescriptor();
+
+        public static final ComponentPropertyDescriptor scriptProperty =
+                ComponentPropertyDescriptor.builder()
+                        .type(scriptTypeDescriptor)
+                        .propertyName("scriptProperty")
+                        .displayName("Script property")
+                        .build();
+
+        public static final TypeDescriptor comboTypeDescriptor = new TypeComboDescriptor(true, new String[]{"one", "two", "three"});
+
+        public static final ComponentPropertyDescriptor comboProperty =
+                ComponentPropertyDescriptor.builder()
+                        .type(comboTypeDescriptor)
+                        .propertyName("comboProperty")
+                        .displayName("Combo property")
+                        .build();
+
+        public static final TypeDescriptor fileTypeDescriptor = new TypeFileDescriptor();
+
+        public static final ComponentPropertyDescriptor fileProperty =
+                ComponentPropertyDescriptor.builder()
+                        .type(fileTypeDescriptor)
+                        .propertyName("fileProperty")
+                        .displayName("File property")
+                        .build();
+
     }
 
     static class TypeObjects {
@@ -164,15 +211,4 @@ public class SamplePropertyDescriptors {
                         .build();
 
     }
-
-
-    /**
-     tmp.put(Enum.class, new EnumConverter());
-
-     tmp.put(TypeFileDescriptor.TypeFile .class, new FileConverter());
-     tmp.put(TypeComboDescriptor.TypeCombo .class, new ComboConverter());
-     tmp.put(Map .class, new MapConverter());
-     tmp.put(Script .class, new ScriptConverter());
-
-     */
 }

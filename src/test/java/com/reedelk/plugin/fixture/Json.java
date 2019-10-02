@@ -103,6 +103,34 @@ public class Json {
             public String path() {
                 return "flow/generic_component_with_empty_map.json";
             }
+        },
+
+        WithScriptProperty {
+            @Override
+            public String path() {
+                return "flow/generic_component_with_script.json";
+            }
+        },
+
+        WithComboProperty {
+            @Override
+            public String path() {
+                return "flow/generic_component_with_combo.json";
+            }
+        },
+
+        WithFileProperty {
+            @Override
+            public String path() {
+                return "flow/generic_component_with_file.json";
+            }
+        },
+
+        WithEnumProperty {
+            @Override
+            public String path() {
+                return "flow/generic_component_with_enum.json";
+            }
         }
     }
 

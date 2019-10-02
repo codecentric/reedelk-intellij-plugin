@@ -177,6 +177,11 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
             String expectedJson = Json.GenericComponent.WithTypeObjectReferenceMissing.json();
             JSONAssert.assertEquals(expectedJson, actualJson, true);
         }
+    }
+
+    @Nested
+    @DisplayName("Component map properties are serialized correctly")
+    class TypeMapPropertiesSerialization {
 
         @Test
         void shouldCorrectlySerializeGenericComponentWithNotEmptyMapProperty() {
@@ -206,7 +211,6 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
         @Test
         void shouldNotSerializeGenericComponentPropertyWithEmptyMap() {
             // Given
-
             Map<String, Object> myMap = new HashMap<>();
 
             ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
@@ -223,6 +227,106 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
 
             // Then
             String expectedJson = Json.GenericComponent.WithEmptyMapProperty.json();
+            JSONAssert.assertEquals(expectedJson, actualJson, true);
+        }
+    }
+
+    @Nested
+    @DisplayName("Component script properties are serialized correctly")
+    class TypeScriptPropertiesSerialization {
+
+        @Test
+        void shouldCorrectlySerializeGenericComponentWithScriptProperty() {
+            // Given
+            ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
+                    .propertyDescriptors(asList(Primitives.stringProperty, SpecialTypes.scriptProperty))
+                    .fullyQualifiedName(ComponentNode1.class.getName())
+                    .build());
+
+            GraphNode componentNode = new GenericComponentNode(componentData);
+            componentData.set("stringProperty", "string prop");
+            componentData.set("scriptProperty", "#[message.attributes]");
+
+            // When
+            String actualJson = serialize(componentNode);
+
+            // Then
+            String expectedJson = Json.GenericComponent.WithScriptProperty.json();
+            JSONAssert.assertEquals(expectedJson, actualJson, true);
+        }
+    }
+
+    @Nested
+    @DisplayName("Component combo properties are serialized correctly")
+    class TypeComboPropertiesSerialization {
+
+        @Test
+        void shouldCorrectlySerializeGenericComponentWithComboProperty() {
+            // Given
+            ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
+                    .propertyDescriptors(asList(Primitives.doubleObjectProperty, SpecialTypes.comboProperty))
+                    .fullyQualifiedName(ComponentNode1.class.getName())
+                    .build());
+
+            GraphNode componentNode = new GenericComponentNode(componentData);
+            componentData.set("doubleObjectProperty", new Double("23491.23432"));
+            componentData.set("comboProperty", "two");
+
+            // When
+            String actualJson = serialize(componentNode);
+
+            // Then
+            String expectedJson = Json.GenericComponent.WithComboProperty.json();
+            JSONAssert.assertEquals(expectedJson, actualJson, true);
+        }
+    }
+
+    @Nested
+    @DisplayName("Component file properties are serialized correctly")
+    class TypeFilePropertiesSerialization {
+
+        @Test
+        void shouldCorrectlySerializeGenericComponentWithFileProperty() {
+            // Given
+            ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
+                    .propertyDescriptors(asList(Primitives.booleanProperty, SpecialTypes.fileProperty))
+                    .fullyQualifiedName(ComponentNode1.class.getName())
+                    .build());
+
+            GraphNode componentNode = new GenericComponentNode(componentData);
+            componentData.set("booleanProperty", false);
+            componentData.set("fileProperty", "metadata/schema/person.schema.json");
+
+            // When
+            String actualJson = serialize(componentNode);
+
+            // Then
+            String expectedJson = Json.GenericComponent.WithFileProperty.json();
+            JSONAssert.assertEquals(expectedJson, actualJson, true);
+        }
+    }
+
+    @Nested
+    @DisplayName("Component enum properties are serialized correctly")
+    class TypeEnumPropertiesSerialization {
+
+        @Test
+        void shouldCorrectlySerializeGenericComponentWithEnumProperty() {
+            // Given
+            ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
+                    .propertyDescriptors(asList(Primitives.floatProperty, SpecialTypes.enumProperty))
+                    .fullyQualifiedName(ComponentNode1.class.getName())
+                    .build());
+
+            GraphNode componentNode = new GenericComponentNode(componentData);
+            componentData.set("floatProperty", 2483.002f);
+            componentData.set("enumProperty", "CERT");
+
+            // When
+            String actualJson = serialize(componentNode);
+
+            // Then
+            String expectedJson = Json.GenericComponent.WithEnumProperty.json();
             JSONAssert.assertEquals(expectedJson, actualJson, true);
         }
     }
