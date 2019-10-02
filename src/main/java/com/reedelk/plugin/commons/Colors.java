@@ -7,6 +7,9 @@ import java.awt.*;
 
 public class Colors {
 
+    private Colors() {
+    }
+
     public static final JBColor PROPERTIES_EMPTY_SELECTION_BACKGROUND = new JBColor(new Color(237, 237, 237), new Color(237, 237, 237));
     public static final JBColor PROPERTIES_EMPTY_SELECTION_TEXT = new JBColor(new Color(153, 153, 153), new Color(153, 153, 153));
 

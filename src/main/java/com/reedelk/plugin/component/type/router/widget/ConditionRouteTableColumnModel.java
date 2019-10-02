@@ -15,7 +15,7 @@ import static com.reedelk.runtime.commons.JsonParser.Implementor;
 
 class ConditionRouteTableColumnModel extends DefaultTableColumnModel {
 
-    private final int EDIT_COLUMN_WIDTH = 22;
+    private static final int EDIT_COLUMN_WIDTH = 22;
 
     ConditionRouteTableColumnModel() {
         // Column 0 (Edit)

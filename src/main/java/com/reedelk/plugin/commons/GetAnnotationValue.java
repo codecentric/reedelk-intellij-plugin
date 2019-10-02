@@ -5,6 +5,9 @@ import io.github.classgraph.FieldInfo;
 
 public class GetAnnotationValue {
 
+    private GetAnnotationValue() {
+    }
+
     public static String getOrDefault(FieldInfo fieldInfo, Class<?> annotationClazz, String defaultValue) {
         AnnotationInfo annotationInfo = fieldInfo.getAnnotationInfo(annotationClazz.getName());
         if (annotationInfo != null) {

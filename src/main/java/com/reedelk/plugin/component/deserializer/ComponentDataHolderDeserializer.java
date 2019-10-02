@@ -13,6 +13,9 @@ import static com.reedelk.plugin.component.domain.Shared.YES;
 
 public class ComponentDataHolderDeserializer {
 
+    private ComponentDataHolderDeserializer() {
+    }
+
     public static void deserialize(@NotNull JSONObject componentJsonObject,
                                    @NotNull ComponentDataHolder componentData,
                                    @NotNull ComponentPropertyDescriptor propertyDescriptor) {

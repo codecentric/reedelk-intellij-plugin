@@ -10,6 +10,9 @@ import static com.intellij.openapi.ui.popup.Balloon.Position;
 
 public class PopupUtils {
 
+    private PopupUtils() {
+    }
+
     public static void error(Exception exception, JComponent component) {
         String errorMessage = exception.getMessage();
         String content = String.format(Labels.BALLOON_EDIT_CONFIG_ERROR, errorMessage);

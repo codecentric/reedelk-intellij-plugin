@@ -18,6 +18,9 @@ import static java.lang.String.format;
 
 public class ValueConverterFactory {
 
+    private ValueConverterFactory() {
+    }
+
     private static final ValueConverter<Object> UNKNOWN_TYPE_CONVERTER = new UnknownTypeConverter();
 
     private static final Map<Class<?>, ValueConverter<?>> CONVERTER;

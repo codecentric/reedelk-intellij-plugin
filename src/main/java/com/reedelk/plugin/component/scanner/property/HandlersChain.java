@@ -9,6 +9,9 @@ import java.util.List;
 
 public class HandlersChain {
 
+    private HandlersChain() {
+    }
+
     private static final List<Handler> HANDLERS = Arrays.asList(
             new NameHandler(),
             new TypeHandler(),

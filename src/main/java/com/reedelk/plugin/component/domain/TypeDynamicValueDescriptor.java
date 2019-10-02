@@ -4,7 +4,7 @@ import com.reedelk.runtime.api.script.dynamicvalue.DynamicValue;
 
 public class TypeDynamicValueDescriptor<T extends DynamicValue> implements TypeDescriptor {
 
-    private final String defaultValue = null;
+    private static final String defaultValue = null;
     private final Class<T> typeClazz;
 
     public TypeDynamicValueDescriptor(Class<T> typeClazz) {

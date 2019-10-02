@@ -2,7 +2,7 @@ package com.reedelk.plugin.component.domain;
 
 public class TypeFileDescriptor implements TypeDescriptor {
 
-    private final String defaultFile = null;
+    private static final String defaultFile = null;
 
     @Override
     public Class<?> type() {
@@ -14,6 +14,6 @@ public class TypeFileDescriptor implements TypeDescriptor {
         return defaultFile;
     }
 
-    public static class TypeFile {
+    public interface TypeFile {
     }
 }

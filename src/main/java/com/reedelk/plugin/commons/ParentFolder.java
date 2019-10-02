@@ -5,6 +5,9 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 
 public class ParentFolder {
 
+    private ParentFolder() {
+    }
+
     public static String of(String fileUrl) {
         VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(fileUrl);
         if (file != null) {

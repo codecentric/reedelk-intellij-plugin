@@ -30,7 +30,7 @@ public class TypeComboDescriptor implements TypeDescriptor {
         return comboValues;
     }
 
-    public static class TypeCombo {
+    public interface TypeCombo {
 
     }
 }

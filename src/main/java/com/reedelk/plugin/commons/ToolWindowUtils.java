@@ -7,6 +7,9 @@ import com.reedelk.plugin.editor.properties.PropertiesPanelToolWindowFactory;
 
 public class ToolWindowUtils {
 
+    private ToolWindowUtils() {
+    }
+
     public static class ComponentProperties {
 
         private ComponentProperties() {

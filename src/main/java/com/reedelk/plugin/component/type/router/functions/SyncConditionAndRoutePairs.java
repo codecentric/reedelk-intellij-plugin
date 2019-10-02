@@ -19,10 +19,10 @@ public class SyncConditionAndRoutePairs {
     }
 
     public static List<RouterConditionRoutePair> getUpdatedPairs(FlowGraph graph, RouterNode routerNode, List<RouterConditionRoutePair> oldConditions) {
-        checkState(oldConditions.size() >= 1, format("Expected numbers of condition pairs >= 1 but %d were found", oldConditions.size()));
+        checkState(!oldConditions.isEmpty(), format("Expected numbers of condition pairs >= 1 but %d were found", oldConditions.size()));
 
         List<GraphNode> successors = graph.successors(routerNode);
-        checkState(successors.size() >= 1, format("Expected at least one successor for router node but %d were found", successors.size()));
+        checkState(!successors.isEmpty(), format("Expected at least one successor for router node but %d were found", successors.size()));
 
         int numberOfSuccessors = successors.size();
 

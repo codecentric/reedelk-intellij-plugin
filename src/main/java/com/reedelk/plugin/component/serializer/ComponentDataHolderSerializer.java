@@ -18,6 +18,9 @@ import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObjec
 
 public class ComponentDataHolderSerializer {
 
+    private ComponentDataHolderSerializer() {
+    }
+
     public static void serialize(@NotNull ComponentData componentData,
                                  @NotNull JSONObject parent) {
         List<ComponentPropertyDescriptor> propertiesDescriptors = componentData.getPropertiesDescriptors();

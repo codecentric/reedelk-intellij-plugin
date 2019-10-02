@@ -5,6 +5,9 @@ import com.reedelk.runtime.component.Router;
 
 public class IsDefaultRoute {
 
+    private IsDefaultRoute() {
+    }
+
     public static boolean of(GraphNode source, GraphNode target) {
         return ListConditionRoutePairs.of(source.componentData())
                 .stream()

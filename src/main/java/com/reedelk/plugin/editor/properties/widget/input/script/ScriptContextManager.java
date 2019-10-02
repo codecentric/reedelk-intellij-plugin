@@ -83,7 +83,7 @@ public class ScriptContextManager implements SuggestionProvider, InputChangeList
 
     public static class ContextVariable {
         public final String name;
-        public String type;
+        public final String type;
 
         public ContextVariable(String name, String type) {
             this.name = name;

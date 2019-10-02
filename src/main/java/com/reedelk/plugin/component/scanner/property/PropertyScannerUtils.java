@@ -18,6 +18,9 @@ class PropertyScannerUtils {
 
     private static final String ANNOTATION_DEFAULT_PARAM_NAME = "value";
 
+    private PropertyScannerUtils() {
+    }
+
     @SuppressWarnings("unchecked")
     static <T> T getAnnotationValueOrDefault(FieldInfo fieldInfo, Class<?> annotationClazz, T defaultValue) {
         if (!fieldInfo.hasAnnotation(annotationClazz.getName())) {

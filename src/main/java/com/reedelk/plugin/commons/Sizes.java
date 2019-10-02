@@ -4,6 +4,9 @@ import java.awt.*;
 
 public class Sizes {
 
+    private Sizes() {
+    }
+
     public static class Table {
         private Table() {
         }
