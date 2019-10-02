@@ -138,6 +138,13 @@ public class Json {
             public String path() {
                 return "flow/generic_component_dynamic_types.json";
             }
+        },
+
+        DynamicTypesWithScript {
+            @Override
+            public String path() {
+                return "flow/generic_component_dynamic_types_with_script.json";
+            }
         }
     }
 
