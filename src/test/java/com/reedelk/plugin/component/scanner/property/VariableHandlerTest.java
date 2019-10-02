@@ -4,7 +4,10 @@ import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeDescriptor;
 import com.reedelk.plugin.component.domain.VariableDefinition;
 import com.reedelk.plugin.component.scanner.AbstractScannerTest;
+import com.reedelk.plugin.component.scanner.ComponentAnalyzerContext;
+import io.github.classgraph.ClassInfo;
 import io.github.classgraph.FieldInfo;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -16,16 +19,26 @@ class VariableHandlerTest extends AbstractScannerTest {
 
     private VariableHandler handler = new VariableHandler();
 
+    private static ClassInfo componentClassInfo;
+    private static ComponentAnalyzerContext context;
+
+    @BeforeAll
+    static void beforeAll() {
+        ScanContext scanContext = scan(ComponentWithAutocompleteVariables.class);
+        context = scanContext.context;
+        componentClassInfo = scanContext.targetComponentClassInfo;
+    }
+
     @Test
     void shouldCorrectlyMapAutocompleteVariablesAnnotations() {
         // Given
-        FieldInfo scriptField = getTargetComponentClassInfo().getFieldInfo("script");
+        FieldInfo scriptField = componentClassInfo.getFieldInfo("script");
 
         // When
         ComponentPropertyDescriptor.Builder builder = ComponentPropertyDescriptor.builder();
         builder.propertyName("notRelevantPropertyName").type(new NotRelevantPropertyType());
 
-        handler.handle(scriptField, builder, context());
+        handler.handle(scriptField, builder, context);
 
         // Then
         ComponentPropertyDescriptor descriptor = builder.build();
@@ -34,11 +47,6 @@ class VariableHandlerTest extends AbstractScannerTest {
 
         assertExistsAutocompleteVariableMatching(variables, "input", "inputContext", "{}");
         assertExistsAutocompleteVariableMatching(variables, "output", "outputContext", "{}");
-    }
-
-    @Override
-    protected Class targetComponentClazz() {
-        return ComponentWithAutocompleteVariables.class;
     }
 
     private void assertExistsAutocompleteVariableMatching(List<VariableDefinition> collection, String expectedVariableName, String expectedContextName, String expectedInitValue) {

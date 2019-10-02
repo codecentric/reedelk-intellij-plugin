@@ -3,6 +3,7 @@ package com.reedelk.plugin.assertion.component;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeDescriptor;
 
+import static com.reedelk.plugin.assertion.component.TypeDescriptorMatchers.TypeDescriptorMatcher;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ComponentPropertyDescriptorAssertion {
@@ -31,6 +32,12 @@ public class ComponentPropertyDescriptorAssertion {
     public ComponentPropertyDescriptorAssertion hasType(TypeDescriptor descriptor) {
         TypeDescriptor propertyType = propertyDescriptor.getPropertyType();
         assertThat(propertyType).isEqualTo(descriptor);
+        return this;
+    }
+
+    public ComponentPropertyDescriptorAssertion hasType(TypeDescriptorMatcher matcher) {
+        TypeDescriptor propertyType = propertyDescriptor.getPropertyType();
+        assertThat(matcher.matches(propertyType)).isTrue();
         return this;
     }
 }

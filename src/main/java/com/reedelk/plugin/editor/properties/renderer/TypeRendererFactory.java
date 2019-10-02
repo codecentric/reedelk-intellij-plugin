@@ -59,7 +59,6 @@ public class TypeRendererFactory {
         // Dynamic map types
         tmp.put(DynamicStringMap.class, new DynamicMapPropertyRenderer());
 
-
         RENDERER = Collections.unmodifiableMap(tmp);
     }
 

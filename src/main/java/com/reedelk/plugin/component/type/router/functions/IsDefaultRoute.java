@@ -9,7 +9,7 @@ public class IsDefaultRoute {
         return ListConditionRoutePairs.of(source.componentData())
                 .stream()
                 .anyMatch(routerConditionRoutePair ->
-                        Router.DEFAULT_CONDITION.equals(routerConditionRoutePair.getCondition()) &&
+                        Router.DEFAULT_CONDITION.getValue().equals(routerConditionRoutePair.getCondition()) &&
                                 routerConditionRoutePair.getNext() == target);
     }
 }

@@ -36,12 +36,18 @@ class ComponentAnalyzerTest extends AbstractScannerTest {
     @Mock
     private ComponentPropertyDescriptor descriptor3;
 
+
     private ComponentAnalyzer analyzer;
+    private ClassInfo componentClassInfo;
+
 
     @BeforeEach
     void setUp() {
-        super.setUp();
-        ComponentAnalyzerContext context = spy(context());
+        ScanContext scanContext = scan(TestComponent.class);
+
+        componentClassInfo = scanContext.targetComponentClassInfo;
+
+        ComponentAnalyzerContext context = spy(scanContext.context);
 
         doReturn(mockIcon)
                 .when(context)
@@ -60,7 +66,7 @@ class ComponentAnalyzerTest extends AbstractScannerTest {
     @Test
     void shouldCorrectlyAnalyzeClassInfo() {
         // Given
-        ClassInfo testComponentClassInfo = getTargetComponentClassInfo();
+        ClassInfo testComponentClassInfo = componentClassInfo;
 
         // When
         ComponentDescriptor descriptor = analyzer.analyze(testComponentClassInfo);
@@ -74,10 +80,5 @@ class ComponentAnalyzerTest extends AbstractScannerTest {
                 .hasDisplayName("Test Component")
                 .hasClass(ComponentClass.PROCESSOR)
                 .hasFullyQualifiedName(TestComponent.class.getName());
-    }
-
-    @Override
-    protected Class targetComponentClazz() {
-        return TestComponent.class;
     }
 }

@@ -4,8 +4,11 @@ import com.reedelk.plugin.component.domain.AutocompleteContext;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeDescriptor;
 import com.reedelk.plugin.component.scanner.AbstractScannerTest;
+import com.reedelk.plugin.component.scanner.ComponentAnalyzerContext;
 import com.reedelk.runtime.api.annotation.AutocompleteType;
+import io.github.classgraph.ClassInfo;
 import io.github.classgraph.FieldInfo;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -13,20 +16,30 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
-public class AutocompleteContextHandlerTest extends AbstractScannerTest {
+class AutocompleteContextHandlerTest extends AbstractScannerTest {
 
     private AutocompleteContextHandler handler = new AutocompleteContextHandler();
+
+    private static ClassInfo componentClassInfo;
+    private static ComponentAnalyzerContext context;
+
+    @BeforeAll
+    static void beforeAll() {
+        ScanContext scanContext = scan(ComponentWithAutocompleteContexts.class);
+        context = scanContext.context;
+        componentClassInfo = scanContext.targetComponentClassInfo;
+    }
 
     @Test
     void shouldCorrectlyMapAutocompleteContextsAnnotations() {
         // Given
-        FieldInfo scriptField = getTargetComponentClassInfo().getFieldInfo("script");
+        FieldInfo scriptField = componentClassInfo.getFieldInfo("script");
 
         // When
         ComponentPropertyDescriptor.Builder builder = ComponentPropertyDescriptor.builder();
         builder.propertyName("notRelevantPropertyName").type(new NotRelevantPropertyType());
 
-        handler.handle(scriptField, builder, context());
+        handler.handle(scriptField, builder, context);
 
         // Then
         ComponentPropertyDescriptor descriptor = builder.build();
@@ -36,11 +49,6 @@ public class AutocompleteContextHandlerTest extends AbstractScannerTest {
         assertExistsAutocompleteContextMatching(contexts, "inputContext", "script", AutocompleteType.JSON_SCHEMA, null);
         assertExistsAutocompleteContextMatching(contexts, "inputContextWithInlineSchema", "script", AutocompleteType.JSON_SCHEMA, "metadata/person.schema.json");
         assertExistsAutocompleteContextMatching(contexts, "anotherContext", "script", AutocompleteType.TOKENS, "metadata/autocomplete.txt");
-    }
-
-    @Override
-    protected Class targetComponentClazz() {
-        return ComponentWithAutocompleteContexts.class;
     }
 
     private void assertExistsAutocompleteContextMatching(List<AutocompleteContext> collection,

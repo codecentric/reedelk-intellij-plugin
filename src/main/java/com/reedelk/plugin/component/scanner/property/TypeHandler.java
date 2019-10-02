@@ -79,7 +79,7 @@ public class TypeHandler implements Handler {
         } else if (isEnumeration(fullyQualifiedClassName, context)) {
             return processEnumType(typeSignature, context);
 
-            // e.g string
+            // For example: String, Integer, Float ...
         } else if (isKnownType(fullyQualifiedClassName)) {
             Class<?> clazz = clazzByFullyQualifiedName(fullyQualifiedClassName);
             return processKnownType(clazz, fieldInfo);
