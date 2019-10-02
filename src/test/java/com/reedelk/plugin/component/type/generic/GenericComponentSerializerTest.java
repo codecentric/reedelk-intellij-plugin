@@ -331,6 +331,51 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
         }
     }
 
+    @Nested
+    @DisplayName("Component Dynamic properties are serialized correctly")
+    class TypeDynamicPropertiesSerialization {
+
+        ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+                .propertyDescriptors(asList(
+                        DynamicTypes.dynamicBigDecimalProperty,
+                        DynamicTypes.dynamicBigIntegerProperty,
+                        DynamicTypes.dynamicBooleanProperty,
+                        DynamicTypes.dynamicByteArrayProperty,
+                        DynamicTypes.dynamicDoubleProperty,
+                        DynamicTypes.dynamicFloatProperty,
+                        DynamicTypes.dynamicIntegerProperty,
+                        DynamicTypes.dynamicLongProperty,
+                        DynamicTypes.dynamicObjectProperty,
+                        DynamicTypes.dynamicStringProperty))
+                .fullyQualifiedName(ComponentNode1.class.getName())
+                .build();
+
+        @Test
+        void shouldCorrectlySerializeDynamicTypeProperties() {
+            // Given
+            ComponentData componentData = new ComponentData(descriptor);
+            componentData.set("dynamicBigDecimalProperty", new BigDecimal("44.001"));
+            componentData.set("dynamicBigIntegerProperty", new BigInteger("8811823843"));
+            componentData.set("dynamicBooleanProperty", Boolean.TRUE);
+            componentData.set("dynamicByteArrayProperty", "byte array string");
+            componentData.set("dynamicDoubleProperty", new Double("4523.234"));
+            componentData.set("dynamicFloatProperty", new Float("7843.12"));
+            componentData.set("dynamicIntegerProperty", new Integer("3"));
+            componentData.set("dynamicLongProperty", new Long("99933322"));
+            componentData.set("dynamicObjectProperty", "my object string");
+            componentData.set("dynamicStringProperty", "my dynamic string");
+
+            GraphNode componentNode = new GenericComponentNode(componentData);
+
+            // When
+            String actualJson = serialize(componentNode);
+
+            // Then
+            String expectedJson = Json.GenericComponent.DynamicTypes.json();
+            JSONAssert.assertEquals(expectedJson, actualJson, true);
+        }
+    }
+
     private String serialize(GraphNode componentNode) {
         FlowGraph graph = provider.createGraph();
         graph.root(root);

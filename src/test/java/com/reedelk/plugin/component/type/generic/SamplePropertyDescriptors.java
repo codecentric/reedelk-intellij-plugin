@@ -3,6 +3,7 @@ package com.reedelk.plugin.component.type.generic;
 import com.google.common.collect.ImmutableMap;
 import com.reedelk.plugin.component.domain.*;
 import com.reedelk.plugin.fixture.ComponentNode2;
+import com.reedelk.runtime.api.script.dynamicvalue.*;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -14,6 +15,7 @@ import static java.util.Arrays.asList;
 public class SamplePropertyDescriptors {
 
     public static class Primitives {
+
         public static final TypeDescriptor integerTypeDescriptor = new TypePrimitiveDescriptor(int.class);
         public static final TypeDescriptor integerObjectTypeDescriptor = new TypePrimitiveDescriptor(Integer.class);
         public static final TypeDescriptor longTypeDescriptor = new TypePrimitiveDescriptor(long.class);
@@ -123,23 +125,100 @@ public class SamplePropertyDescriptors {
 
     static class DynamicTypes {
 
+        public static final TypeDescriptor dynamicBigDecimalTypeDescriptor = new TypeDynamicValueDescriptor<>(DynamicBigDecimal.class);
+        public static final TypeDescriptor dynamicBigIntegerTypeDescriptor = new TypeDynamicValueDescriptor<>(DynamicBigInteger.class);
+        public static final TypeDescriptor dynamicBooleanTypeDescriptor = new TypeDynamicValueDescriptor<>(DynamicBoolean.class);
+        public static final TypeDescriptor dynamicByteArrayTypeDescriptor = new TypeDynamicValueDescriptor<>(DynamicByteArray.class);
+        public static final TypeDescriptor dynamicDoubleTypeDescriptor = new TypeDynamicValueDescriptor<>(DynamicDouble.class);
+        public static final TypeDescriptor dynamicFloatTypeDescriptor = new TypeDynamicValueDescriptor<>(DynamicFloat.class);
+        public static final TypeDescriptor dynamicIntegerTypeDescriptor = new TypeDynamicValueDescriptor<>(DynamicInteger.class);
+        public static final TypeDescriptor dynamicLongTypeDescriptor = new TypeDynamicValueDescriptor<>(DynamicLong.class);
+        public static final TypeDescriptor dynamicObjectTypeDescriptor = new TypeDynamicValueDescriptor<>(DynamicObject.class);
+        public static final TypeDescriptor dynamicStringTypeDescriptor = new TypeDynamicValueDescriptor<>(DynamicString.class);
+
+        public static final ComponentPropertyDescriptor dynamicBigDecimalProperty =
+                ComponentPropertyDescriptor.builder()
+                        .type(dynamicBigDecimalTypeDescriptor)
+                        .propertyName("dynamicBigDecimalProperty")
+                        .displayName("Dynamic Big Decimal property")
+                        .build();
+
+        public static final ComponentPropertyDescriptor dynamicBigIntegerProperty =
+                ComponentPropertyDescriptor.builder()
+                        .type(dynamicBigIntegerTypeDescriptor)
+                        .propertyName("dynamicBigIntegerProperty")
+                        .displayName("Dynamic Big Integer property")
+                        .build();
+
+        public static final ComponentPropertyDescriptor dynamicBooleanProperty =
+                ComponentPropertyDescriptor.builder()
+                        .type(dynamicBooleanTypeDescriptor)
+                        .propertyName("dynamicBooleanProperty")
+                        .displayName("Dynamic Boolean property")
+                        .build();
+
+        public static final ComponentPropertyDescriptor dynamicByteArrayProperty =
+                ComponentPropertyDescriptor.builder()
+                        .type(dynamicByteArrayTypeDescriptor)
+                        .propertyName("dynamicByteArrayProperty")
+                        .displayName("Dynamic Byte Array property")
+                        .build();
+
+        public static final ComponentPropertyDescriptor dynamicDoubleProperty =
+                ComponentPropertyDescriptor.builder()
+                        .type(dynamicDoubleTypeDescriptor)
+                        .propertyName("dynamicDoubleProperty")
+                        .displayName("Dynamic Double property")
+                        .build();
+
+        public static final ComponentPropertyDescriptor dynamicFloatProperty =
+                ComponentPropertyDescriptor.builder()
+                        .type(dynamicFloatTypeDescriptor)
+                        .propertyName("dynamicFloatProperty")
+                        .displayName("Dynamic Float property")
+                        .build();
+
+        public static final ComponentPropertyDescriptor dynamicIntegerProperty =
+                ComponentPropertyDescriptor.builder()
+                        .type(dynamicIntegerTypeDescriptor)
+                        .propertyName("dynamicIntegerProperty")
+                        .displayName("Dynamic Integer property")
+                        .build();
+
+        public static final ComponentPropertyDescriptor dynamicLongProperty =
+                ComponentPropertyDescriptor.builder()
+                        .type(dynamicLongTypeDescriptor)
+                        .propertyName("dynamicLongProperty")
+                        .displayName("Dynamic Long property")
+                        .build();
+
+        public static final ComponentPropertyDescriptor dynamicObjectProperty =
+                ComponentPropertyDescriptor.builder()
+                        .type(dynamicObjectTypeDescriptor)
+                        .propertyName("dynamicObjectProperty")
+                        .displayName("Dynamic Object property")
+                        .build();
+
+        public static final ComponentPropertyDescriptor dynamicStringProperty =
+                ComponentPropertyDescriptor.builder()
+                        .type(dynamicStringTypeDescriptor)
+                        .propertyName("dynamicStringProperty")
+                        .displayName("Dynamic String property")
+                        .build();
     }
 
     static class DynamicMapTypes {
 
     }
 
-    /**
-     * tmp.put(Enum.class, new EnumConverter());
-     * <p>
-     * tmp.put(TypeFileDescriptor.TypeFile .class, new FileConverter());
-     * tmp.put(TypeComboDescriptor.TypeCombo .class, new ComboConverter());
-     */
-
     static class SpecialTypes {
 
         private static final Map<String, String> valueAndDisplayMap = ImmutableMap.of("NONE", "No config", "CERT", "Certificate");
         public static final TypeDescriptor enumTypeDescriptor = new TypeEnumDescriptor(valueAndDisplayMap, "NONE");
+        public static final TypeDescriptor mapTypeDescriptor = new TypeMapDescriptor("Headers");
+        public static final TypeDescriptor scriptTypeDescriptor = new TypeScriptDescriptor();
+        public static final TypeDescriptor comboTypeDescriptor = new TypeComboDescriptor(true, new String[]{"one", "two", "three"});
+        public static final TypeDescriptor fileTypeDescriptor = new TypeFileDescriptor();
 
         public static final ComponentPropertyDescriptor enumProperty =
                 ComponentPropertyDescriptor.builder()
@@ -148,16 +227,12 @@ public class SamplePropertyDescriptors {
                         .displayName("Enum property")
                         .build();
 
-        public static final TypeDescriptor mapTypeDescriptor = new TypeMapDescriptor("Headers");
-
         public static final ComponentPropertyDescriptor mapProperty =
                 ComponentPropertyDescriptor.builder()
                         .type(mapTypeDescriptor)
                         .propertyName("mapProperty")
                         .displayName("Map property")
                         .build();
-
-        public static final TypeDescriptor scriptTypeDescriptor = new TypeScriptDescriptor();
 
         public static final ComponentPropertyDescriptor scriptProperty =
                 ComponentPropertyDescriptor.builder()
@@ -166,8 +241,6 @@ public class SamplePropertyDescriptors {
                         .displayName("Script property")
                         .build();
 
-        public static final TypeDescriptor comboTypeDescriptor = new TypeComboDescriptor(true, new String[]{"one", "two", "three"});
-
         public static final ComponentPropertyDescriptor comboProperty =
                 ComponentPropertyDescriptor.builder()
                         .type(comboTypeDescriptor)
@@ -175,15 +248,12 @@ public class SamplePropertyDescriptors {
                         .displayName("Combo property")
                         .build();
 
-        public static final TypeDescriptor fileTypeDescriptor = new TypeFileDescriptor();
-
         public static final ComponentPropertyDescriptor fileProperty =
                 ComponentPropertyDescriptor.builder()
                         .type(fileTypeDescriptor)
                         .propertyName("fileProperty")
                         .displayName("File property")
                         .build();
-
     }
 
     static class TypeObjects {

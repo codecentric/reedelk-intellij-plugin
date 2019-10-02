@@ -131,6 +131,13 @@ public class Json {
             public String path() {
                 return "flow/generic_component_with_enum.json";
             }
+        },
+
+        DynamicTypes {
+            @Override
+            public String path() {
+                return "flow/generic_component_dynamic_types.json";
+            }
         }
     }
 
