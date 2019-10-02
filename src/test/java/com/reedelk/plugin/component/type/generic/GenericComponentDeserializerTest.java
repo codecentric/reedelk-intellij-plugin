@@ -1,5 +1,6 @@
 package com.reedelk.plugin.component.type.generic;
 
+import com.google.common.collect.ImmutableMap;
 import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.component.domain.ComponentDefaultDescriptor;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
@@ -17,8 +18,8 @@ import org.mockito.quality.Strictness;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.DynamicTypes;
-import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.Primitives;
+import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.*;
+import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.Primitives.stringProperty;
 import static com.reedelk.plugin.fixture.Json.GenericComponent;
 import static java.util.Arrays.asList;
 
@@ -84,6 +85,189 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
                     .hasDataWithValue("bigIntegerProperty", new BigInteger("88923423423"))
                     .hasDataWithValue("bigDecimalProperty", new BigDecimal("1.001"))
                     .and().nodesCountIs(2);
+        }
+    }
+
+    @Nested
+    @DisplayName("Component type object properties are de-serialized correctly")
+    class TypeObjectsPropertiesDeserialization {
+
+        @Test
+        void shouldCorrectlyDeserializeTypeObject() {
+            // Given
+            ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+                    .propertyDescriptors(asList(stringProperty, TypeObjects.typeObjectProperty))
+                    .fullyQualifiedName(ComponentNode1.class.getName())
+                    .build();
+
+            GenericComponentNode node = createGraphNodeInstance(GenericComponentNode.class, descriptor);
+
+            mockContextInstantiateGraphNode(node);
+
+            JSONObject genericComponentDefinition = new JSONObject(GenericComponent.WithTypeObject.json());
+
+            // When
+            GraphNode lastNode = deserializer.deserialize(root, genericComponentDefinition);
+
+            // Then
+            PluginAssertion.assertThat(graph)
+                    .node(lastNode).is(node)
+                    .hasDataWithValue("stringProperty", "yet another string property")
+                    .hasTypeObject("typeObjectProperty")
+                    .hasDataWithValue("stringProperty", "sample string property")
+                    .hasDataWithValue("integerObjectProperty", new Integer("255"))
+                    .and().and().nodesCountIs(2);
+        }
+    }
+
+    @Nested
+    @DisplayName("Component map properties are de-serialized correctly")
+    class TypeMapPropertiesDeserialization {
+
+        @Test
+        void shouldCorrectlyDeserializeGenericComponentWithMapProperty() {
+            // Given
+            ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+                    .propertyDescriptors(asList(stringProperty, SpecialTypes.mapProperty))
+                    .fullyQualifiedName(ComponentNode1.class.getName())
+                    .build();
+
+            GenericComponentNode node = createGraphNodeInstance(GenericComponentNode.class, descriptor);
+
+            mockContextInstantiateGraphNode(node);
+
+            JSONObject genericComponentDefinition = new JSONObject(GenericComponent.WithNotEmptyMapProperty.json());
+
+            // When
+            GraphNode lastNode = deserializer.deserialize(root, genericComponentDefinition);
+
+            // Then
+            PluginAssertion.assertThat(graph)
+                    .node(lastNode).is(node)
+                    .hasDataWithValue("stringProperty", "first property")
+                    .hasDataWithValue("mapProperty", ImmutableMap.of("key1", "value1", "key2", 3))
+                    .and().nodesCountIs(2);
+        }
+    }
+
+    @Nested
+    @DisplayName("Component script properties are de-serialized correctly")
+    class TypeScriptPropertiesDeserialization {
+
+        @Test
+        void shouldCorrectlyDeserializeGenericComponentWithScriptProperty() {
+            // Given
+            ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+                    .propertyDescriptors(asList(stringProperty, SpecialTypes.scriptProperty))
+                    .fullyQualifiedName(ComponentNode1.class.getName())
+                    .build();
+
+            GenericComponentNode node = createGraphNodeInstance(GenericComponentNode.class, descriptor);
+
+            mockContextInstantiateGraphNode(node);
+
+            JSONObject genericComponentDefinition = new JSONObject(GenericComponent.WithScriptProperty.json());
+
+            // When
+            GraphNode lastNode = deserializer.deserialize(root, genericComponentDefinition);
+
+            // Then
+            PluginAssertion.assertThat(graph)
+                    .node(lastNode).is(node)
+                    .hasDataWithValue("stringProperty", "string prop")
+                    .hasDataWithValue("scriptProperty", "#[message.attributes]")
+                    .and().nodesCountIs(2);
+        }
+    }
+
+    @Nested
+    @DisplayName("Component combo properties are de-serialized correctly")
+    class TypeComboPropertiesDeserialization {
+
+        @Test
+        void shouldCorrectlyDeserializeGenericComponentWithComboProperty() {
+            // Given
+            ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+                    .propertyDescriptors(asList(Primitives.doubleObjectProperty, SpecialTypes.comboProperty))
+                    .fullyQualifiedName(ComponentNode1.class.getName())
+                    .build();
+
+            GenericComponentNode node = createGraphNodeInstance(GenericComponentNode.class, descriptor);
+
+            mockContextInstantiateGraphNode(node);
+
+            JSONObject genericComponentDefinition = new JSONObject(GenericComponent.WithComboProperty.json());
+
+            // When
+            GraphNode lastNode = deserializer.deserialize(root, genericComponentDefinition);
+
+            // Then
+            PluginAssertion.assertThat(graph)
+                    .node(lastNode).is(node)
+                    .hasDataWithValue("doubleObjectProperty", new Double("23491.23432"))
+                    .hasDataWithValue("comboProperty", "two")
+                    .and().nodesCountIs(2);
+        }
+    }
+
+    @Nested
+    @DisplayName("Component file properties are de-serialized correctly")
+    class TypeFilePropertiesDeserialization {
+
+        @Test
+        void shouldCorrectlyDeserializeGenericComponentWithFileProperty() {
+            // Given
+            ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+                    .propertyDescriptors(asList(Primitives.booleanProperty, SpecialTypes.fileProperty))
+                    .fullyQualifiedName(ComponentNode1.class.getName())
+                    .build();
+
+            GenericComponentNode node = createGraphNodeInstance(GenericComponentNode.class, descriptor);
+
+            mockContextInstantiateGraphNode(node);
+
+            JSONObject genericComponentDefinition = new JSONObject(GenericComponent.WithFileProperty.json());
+
+            // When
+            GraphNode lastNode = deserializer.deserialize(root, genericComponentDefinition);
+
+            // Then
+            PluginAssertion.assertThat(graph)
+                    .node(lastNode).is(node)
+                    .hasDataWithValue("booleanProperty", false)
+                    .hasDataWithValue("fileProperty", "metadata/schema/person.schema.json")
+                    .and().nodesCountIs(2);
+        }
+    }
+
+    @Nested
+    @DisplayName("Component enum properties are de-serialized correctly")
+    class TypeEnumPropertiesDeserialization {
+
+        @Test
+        void shouldCorrectlyDeserializeGenericComponentWithEnumProperty() {
+            // Given
+            ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+                    .propertyDescriptors(asList(Primitives.floatProperty, SpecialTypes.enumProperty))
+                    .fullyQualifiedName(ComponentNode1.class.getName())
+                    .build();
+
+            GenericComponentNode node = createGraphNodeInstance(GenericComponentNode.class, descriptor);
+
+            mockContextInstantiateGraphNode(node);
+
+            JSONObject genericComponentDefinition = new JSONObject(GenericComponent.WithEnumProperty.json());
+
+            // When
+            GraphNode lastNode = deserializer.deserialize(root, genericComponentDefinition);
+
+            // Then
+            PluginAssertion.assertThat(graph)
+                    .node(lastNode).is(node)
+                    .hasDataWithValue("floatProperty", 2483.002f)
+                    .hasDataWithValue("enumProperty", "CERT")
+                    .and().nodesCountIs(2);
+
         }
     }
 

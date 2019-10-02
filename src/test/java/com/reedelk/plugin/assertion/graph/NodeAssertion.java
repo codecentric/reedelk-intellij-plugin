@@ -1,6 +1,7 @@
 package com.reedelk.plugin.assertion.graph;
 
 import com.reedelk.plugin.component.domain.ComponentData;
+import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.graph.node.GraphNode;
 
 import java.math.BigDecimal;
@@ -32,6 +33,12 @@ public class NodeAssertion {
             assertThat(actualValue).isEqualTo(propertyValue);
         }
         return this;
+    }
+
+    public TypeObjectAssertion hasTypeObject(String propertyName) {
+        ComponentData component = this.node.componentData();
+        Object actualValue = component.get(propertyName);
+        return new TypeObjectAssertion((TypeObjectDescriptor.TypeObject) actualValue, this);
     }
 
     public FlowGraphAssertion and() {
