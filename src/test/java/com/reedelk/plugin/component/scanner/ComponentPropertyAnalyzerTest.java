@@ -5,6 +5,7 @@ import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.assertion.component.TypeDescriptorMatchers;
 import com.reedelk.plugin.component.domain.*;
 import com.reedelk.plugin.component.scanner.property.ComponentPropertyAnalyzer;
+import com.reedelk.runtime.api.script.dynamicmap.DynamicStringMap;
 import com.reedelk.runtime.api.script.dynamicvalue.*;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.FieldInfo;
@@ -424,6 +425,23 @@ class ComponentPropertyAnalyzerTest extends AbstractScannerTest {
                 TypeDescriptorMatchers.ofDynamicType(typeDynamicString));
     }
 
+    // Dynamic map types
+
+    @Test
+    void shouldCorrectlyAnalyzeDynamicStringMapProperty() {
+        // Given
+        TypeDynamicMapDescriptor<DynamicStringMap> typeDynamicMapDescriptor =
+                new TypeDynamicMapDescriptor<>(DynamicStringMap.class, "My dynamic string map");
+
+        // Expect
+        assertThatExistProperty(
+                "dynamicStringMapProperty",
+                "Dynamic string map",
+                null,
+                TypeDescriptorMatchers.ofDynamicMapType(typeDynamicMapDescriptor));
+    }
+
+    // Special cases
 
     @Test
     void shouldCorrectlyReturnEmptyOptionalForNotExposedProperty() {

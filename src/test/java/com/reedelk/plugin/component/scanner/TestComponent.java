@@ -133,6 +133,8 @@ public class TestComponent implements ProcessorSync {
     private DynamicString dynamicStringProperty;
 
     // Dynamic map types
+    @TabGroup("My dynamic string map")
+    @Property("Dynamic string map")
     private DynamicStringMap dynamicStringMapProperty;
 
     // Special cases

@@ -29,12 +29,6 @@ public class ComponentPropertyDescriptorAssertion {
         return this;
     }
 
-    public ComponentPropertyDescriptorAssertion hasType(TypeDescriptor descriptor) {
-        TypeDescriptor propertyType = propertyDescriptor.getPropertyType();
-        assertThat(propertyType).isEqualTo(descriptor);
-        return this;
-    }
-
     public ComponentPropertyDescriptorAssertion hasType(TypeDescriptorMatcher matcher) {
         TypeDescriptor propertyType = propertyDescriptor.getPropertyType();
         assertThat(matcher.matches(propertyType)).isTrue();

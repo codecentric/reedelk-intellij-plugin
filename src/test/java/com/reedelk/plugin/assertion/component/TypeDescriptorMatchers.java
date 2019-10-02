@@ -1,10 +1,12 @@
 package com.reedelk.plugin.assertion.component;
 
 import com.reedelk.plugin.component.domain.*;
+import com.reedelk.runtime.api.script.dynamicmap.DynamicMap;
 import com.reedelk.runtime.api.script.dynamicvalue.DynamicValue;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 
 public class TypeDescriptorMatchers {
 
@@ -67,8 +69,7 @@ public class TypeDescriptorMatchers {
                 TypeMapDescriptor actual = (TypeMapDescriptor) given;
                 String expectedTabGroup = expected.getTabGroup().get();
                 String actualTabGroup = actual.getTabGroup().get();
-                return same(expected, actual) &&
-                        expectedTabGroup.equals(actualTabGroup);
+                return same(expected, actual) && expectedTabGroup.equals(actualTabGroup);
             }
             return false;
         };
@@ -95,17 +96,28 @@ public class TypeDescriptorMatchers {
         };
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T extends DynamicMap<?>> TypeDescriptorMatcher ofDynamicMapType(TypeDynamicMapDescriptor<T> expected) {
+        return given -> {
+            if (given instanceof TypeDynamicMapDescriptor<?>) {
+                TypeDynamicMapDescriptor<T> actual = (TypeDynamicMapDescriptor<T>) given;
+                String expectedTabGroup = expected.getTabGroup().get();
+                String actualTabGroup = actual.getTabGroup().get();
+                return same(expected, actual) && expectedTabGroup.equals(actualTabGroup);
+            }
+            return false;
+        };
+    }
+
     private static boolean same(TypeDescriptor expected, TypeDescriptor actual) {
         Class<?> expectedClazzType = expected.type();
         Class<?> actualClazzType = actual.type();
         Object expectedDefaultValue = expected.defaultValue();
         Object actualDefaultValue = actual.defaultValue();
-        return expectedClazzType.equals(actualClazzType) &&
-                same(expectedDefaultValue, actualDefaultValue);
+        return expectedClazzType.equals(actualClazzType) && same(expectedDefaultValue, actualDefaultValue);
     }
 
     private static boolean same(Object expected, Object actual) {
-        if (expected == null) return actual == null;
-        return expected.equals(actual);
+        return Objects.equals(expected, actual);
     }
 }
