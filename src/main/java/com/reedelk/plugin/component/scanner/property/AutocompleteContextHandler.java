@@ -44,7 +44,11 @@ public class AutocompleteContextHandler implements Handler {
     private AutocompleteContext processAutocompleteContextInfo(AnnotationInfo info, String propertyName) {
         String contextName = (String) getParameterValue(info, "name");
         String file = (String) getParameterValue(info, "file");
-        AnnotationEnumValue type = (AnnotationEnumValue) getParameterValue(info, "type");
+        Object autocompleteType = getParameterValue(info, "type");
+        if (autocompleteType == null) {
+            throw new IllegalStateException(String.format("Autocomplete context type for property name=%s must not be null", propertyName));
+        }
+        AnnotationEnumValue type = (AnnotationEnumValue) autocompleteType;
         return new AutocompleteContext(contextName, AutocompleteType.valueOf(type.getValueName()), propertyName, file);
     }
 

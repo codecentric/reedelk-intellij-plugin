@@ -27,14 +27,16 @@ public class FilePropertyRenderer extends AbstractTypePropertyRenderer {
                              @NotNull PropertyAccessor propertyAccessor,
                              @NotNull ContainerContext context) {
 
-        String resourcesFolder = ModuleUtils.getResourcesFolder(module).get();
+
+        String resourcesFolder = ModuleUtils.getResourcesFolder(module)
+                .orElseThrow(() -> new IllegalStateException("The project must have a resource folder defined in the project."));
 
         FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, true, true, false, false) {
             @Override
-            public void validateSelectedFiles(VirtualFile[] files) throws Exception {
+            public void validateSelectedFiles(VirtualFile[] files) {
                 // The file needs to belong to the current module!!!
                 if (!files[0].getPresentableUrl().startsWith(resourcesFolder)) {
-                    throw new Exception("A file must be selected from your project/resources folder");
+                    throw new IllegalArgumentException("A file must be selected from your project/resources folder");
                 }
             }
         };
@@ -43,12 +45,9 @@ public class FilePropertyRenderer extends AbstractTypePropertyRenderer {
 
         TextFieldWithBrowse choseFile = new TextFieldWithBrowse();
 
-        ModuleUtils.getResourcesFolder(module)
-                .ifPresent(resourcesFolderPath ->
-                        choseFile.setText(propertyAccessor.get()));
+        choseFile.setText(propertyAccessor.get());
 
-
-        choseFile.addBrowseFolderListener(
+        choseFile.addCustomBrowseFolderListener(
                 new TextBrowseFolderListener(descriptor, module.getProject(), resourcesFolder, propertyAccessor));
 
         return choseFile;
@@ -74,7 +73,7 @@ public class FilePropertyRenderer extends AbstractTypePropertyRenderer {
             super((ActionListener) null);
         }
 
-        void addBrowseFolderListener(@NotNull TextBrowseFolderListener listener) {
+        void addCustomBrowseFolderListener(@NotNull TextBrowseFolderListener listener) {
             listener.setOwnerComponent(this);
             addActionListener(listener);
             installPathCompletion(listener.getFileChooserDescriptor());
