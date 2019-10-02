@@ -3,172 +3,228 @@ package com.reedelk.plugin.component.type.generic;
 import com.reedelk.plugin.AbstractGraphTest;
 import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.component.domain.ComponentDefaultDescriptor;
+import com.reedelk.plugin.component.domain.ComponentDescriptor;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.fixture.ComponentNode1;
+import com.reedelk.plugin.fixture.Json;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.*;
-import static com.reedelk.plugin.fixture.Json.GenericComponent.*;
+import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.Primitives.stringProperty;
 import static com.reedelk.plugin.graph.serializer.AbstractSerializer.UntilNoSuccessors;
 import static java.util.Arrays.asList;
 
-public class GenericComponentSerializerTest extends AbstractGraphTest {
+class GenericComponentSerializerTest extends AbstractGraphTest {
 
     private static final UntilNoSuccessors UNTIL_NO_SUCCESSORS = new UntilNoSuccessors();
 
-    private GenericComponentSerializer serializer;
+    private static GenericComponentSerializer serializer;
 
-    @BeforeEach
-    protected void setUp() {
-        super.setUp();
+    @BeforeAll
+    static void beforeAll() {
         serializer = new GenericComponentSerializer();
     }
 
-    @Test
-    void shouldCorrectlySerializeGenericComponent() {
-        // Given
-        ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
-                .propertyDescriptors(asList(property1, property2, property3))
+    @Nested
+    @DisplayName("Component primitives types are serialized correctly")
+    class PrimitiveTypesSerialization {
+
+        ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+                .propertyDescriptors(asList(
+                        Primitives.integerProperty,
+                        Primitives.integerObjectProperty,
+                        Primitives.longProperty,
+                        Primitives.longObjectProperty,
+                        Primitives.floatProperty,
+                        Primitives.floatObjectProperty,
+                        Primitives.doubleProperty,
+                        Primitives.doubleObjectProperty,
+                        Primitives.booleanProperty,
+                        Primitives.booleanObjectProperty,
+                        stringProperty,
+                        Primitives.bigIntegerProperty,
+                        Primitives.bigDecimalProperty))
                 .fullyQualifiedName(ComponentNode1.class.getName())
-                .build());
+                .build();
 
-        GraphNode componentNode = new GenericComponentNode(componentData);
-        componentData.set("property1", "first property");
-        componentData.set("property2", "second property");
-        componentData.set("property3", "third property");
+        @Test
+        void shouldCorrectlySerializePrimitiveTypesValues() {
+            // Given
+            ComponentData componentData = new ComponentData(descriptor);
+            componentData.set("integerProperty", 234923);
+            componentData.set("integerObjectProperty", new Integer("998829743"));
+            componentData.set("longProperty", 913281L);
+            componentData.set("longObjectProperty", new Long("55663"));
+            componentData.set("floatProperty", 123.234f);
+            componentData.set("floatObjectProperty", new Float("7843.12"));
+            componentData.set("doubleProperty", 234.234d);
+            componentData.set("doubleObjectProperty", new Double("11.88877"));
+            componentData.set("booleanProperty", true);
+            componentData.set("booleanObjectProperty", Boolean.FALSE);
+            componentData.set("stringProperty", "my text sample");
+            componentData.set("bigIntegerProperty", new BigInteger("88923423423"));
+            componentData.set("bigDecimalProperty", new BigDecimal("1.001"));
 
-        // When
-        String actualJson = serialize(componentNode);
+            GraphNode componentNode = new GenericComponentNode(componentData);
 
-        // Then
-        String expectedJson = Sample.json();
-        JSONAssert.assertEquals(expectedJson, actualJson, true);
+            // When
+            String actualJson = serialize(componentNode);
+
+            // Then
+            String expectedJson = Json.GenericComponent.Primitives.json();
+            JSONAssert.assertEquals(expectedJson, actualJson, true);
+        }
+
+        @Test
+        void shouldCorrectlySkipSerializationOfNullPrimitiveTypesValues() {
+            // Given
+            ComponentData componentData = new ComponentData(descriptor);
+            GraphNode componentNode = new GenericComponentNode(componentData);
+
+            // When
+            String actualJson = serialize(componentNode);
+
+            // Then
+            String expectedJson = Json.GenericComponent.PrimitivesNull.json();
+            JSONAssert.assertEquals(expectedJson, actualJson, true);
+        }
     }
 
-    @Test
-    void shouldCorrectlySerializeGenericComponentWithTypeObject() {
-        // Given
-        ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
-                .propertyDescriptors(asList(property1, property4))
-                .fullyQualifiedName(ComponentNode1.class.getName())
-                .build());
+    @Nested
+    @DisplayName("Component type object properties are serialized correctly")
+    class TypeObjectsPropertiesSerialization {
 
-        TypeObjectDescriptor.TypeObject property4Object = componentNode2TypeDescriptor.newInstance();
-        property4Object.set("property5", "property five");
-        property4Object.set("property6", 255);
+        @Test
+        void shouldCorrectlySerializeTypeObject() {
+            // Given
+            ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
+                    .propertyDescriptors(asList(stringProperty, TypeObjects.typeObjectProperty))
+                    .fullyQualifiedName(ComponentNode1.class.getName())
+                    .build());
 
-        GraphNode componentNode = new GenericComponentNode(componentData);
-        componentData.set("property1", "first property");
-        componentData.set("property4", property4Object);
+            TypeObjectDescriptor.TypeObject typeObjectInstance = TypeObjects.typeObjectDescriptor.newInstance();
+            typeObjectInstance.set("stringProperty", "sample string property");
+            typeObjectInstance.set("integerObjectProperty", new Integer("255"));
 
-        // When
-        String actualJson = serialize(componentNode);
+            GraphNode componentNode = new GenericComponentNode(componentData);
+            componentData.set("stringProperty", "yet another string property");
+            componentData.set("typeObjectProperty", typeObjectInstance);
 
-        // Then
-        String expectedJson = WithTypeObject.json();
-        JSONAssert.assertEquals(expectedJson, actualJson, true);
-    }
+            // When
+            String actualJson = serialize(componentNode);
 
-    @Test
-    void shouldCorrectlySerializeGenericComponentWithTypeObjectReference() {
-        // Given
-        ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
-                .propertyDescriptors(asList(property1, property7))
-                .fullyQualifiedName(ComponentNode1.class.getName())
-                .build());
+            // Then
+            String expectedJson = Json.GenericComponent.WithTypeObject.json();
+            JSONAssert.assertEquals(expectedJson, actualJson, true);
+        }
 
-        TypeObjectDescriptor.TypeObject property7Object = componentNode2ShareableTypeDescriptor.newInstance();
-        property7Object.set("configRef", "4ba1b6a0-9644-11e9-bc42-526af7764f64");
+        @Test
+        void shouldCorrectlySerializeGenericComponentWithTypeObjectReference() {
+            // Given
+            ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
+                    .propertyDescriptors(asList(Primitives.booleanProperty, TypeObjects.typeObjectSharedProperty))
+                    .fullyQualifiedName(ComponentNode1.class.getName())
+                    .build());
 
-        GraphNode componentNode = new GenericComponentNode(componentData);
-        componentData.set("property1", "first property");
-        componentData.set("property7", property7Object);
+            TypeObjectDescriptor.TypeObject typeObjectSharedInstance = TypeObjects.typeObjectSharedDescriptor.newInstance();
+            typeObjectSharedInstance.set("configRef", "4ba1b6a0-9644-11e9-bc42-526af7764f64");
 
-        // When
-        String actualJson = serialize(componentNode);
+            GraphNode componentNode = new GenericComponentNode(componentData);
+            componentData.set("booleanProperty", true);
+            componentData.set("typeObjectSharedProperty", typeObjectSharedInstance);
 
-        // Then
-        String expectedJson = WithTypeObjectReference.json();
-        JSONAssert.assertEquals(expectedJson, actualJson, true);
-    }
+            // When
+            String actualJson = serialize(componentNode);
 
-    // We expect that properties with not selected type object reference are not serialized.
-    @Test
-    void shouldCorrectlySerializeGenericComponentWithEmptyTypeObjectReference() {
-        // Given
-        ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
-                .propertyDescriptors(asList(property1, property7))
-                .fullyQualifiedName(ComponentNode1.class.getName())
-                .build());
+            // Then
+            String expectedJson = Json.GenericComponent.WithTypeObjectReference.json();
+            JSONAssert.assertEquals(expectedJson, actualJson, true);
+        }
 
-        TypeObjectDescriptor.TypeObject property7Object = componentNode2ShareableTypeDescriptor.newInstance();
-        property7Object.set("configRef", "");
+        // We expect that properties with an empty config reference are not serialized.
+        @Test
+        void shouldCorrectlySerializeGenericComponentWithEmptyTypeObjectReference() {
+            // Given
+            ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
+                    .propertyDescriptors(asList(Primitives.booleanProperty, TypeObjects.typeObjectSharedProperty))
+                    .fullyQualifiedName(ComponentNode1.class.getName())
+                    .build());
 
-        GraphNode componentNode = new GenericComponentNode(componentData);
-        componentData.set("property1", "first property");
-        componentData.set("property7", property7Object);
+            TypeObjectDescriptor.TypeObject typeObjectSharedInstance = TypeObjects.typeObjectSharedDescriptor.newInstance();
+            typeObjectSharedInstance.set("configRef", "");
 
-        // When
-        String actualJson = serialize(componentNode);
+            GraphNode componentNode = new GenericComponentNode(componentData);
+            componentData.set("booleanProperty", true);
+            componentData.set("typeObjectSharedProperty", typeObjectSharedInstance);
 
-        // Then
-        String expectedJson = WithTypeObjectReferenceMissing.json();
-        JSONAssert.assertEquals(expectedJson, actualJson, true);
-    }
+            // When
+            String actualJson = serialize(componentNode);
 
-    @Test
-    void shouldCorrectlySerializeGenericComponentWithNotEmptyMapProperty() {
-        // Given
-        Map<String, Object> myMap = new HashMap<>();
-        myMap.put("key1", "value1");
-        myMap.put("key2", 3);
+            // Then
+            String expectedJson = Json.GenericComponent.WithTypeObjectReferenceMissing.json();
+            JSONAssert.assertEquals(expectedJson, actualJson, true);
+        }
 
-        ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
-                .propertyDescriptors(asList(property1, property8))
-                .fullyQualifiedName(ComponentNode1.class.getName())
-                .build());
+        @Test
+        void shouldCorrectlySerializeGenericComponentWithNotEmptyMapProperty() {
+            // Given
+            Map<String, Object> myMap = new HashMap<>();
+            myMap.put("key1", "value1");
+            myMap.put("key2", 3);
 
-        GraphNode componentNode = new GenericComponentNode(componentData);
-        componentData.set("property1", "first property");
-        componentData.set("property8", myMap);
+            ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
+                    .propertyDescriptors(asList(Primitives.stringProperty, SpecialTypes.mapProperty))
+                    .fullyQualifiedName(ComponentNode1.class.getName())
+                    .build());
 
-        // When
-        String actualJson = serialize(componentNode);
+            GraphNode componentNode = new GenericComponentNode(componentData);
+            componentData.set("stringProperty", "first property");
+            componentData.set("mapProperty", myMap);
 
-        // Then
-        String expectedJson = WithNotEmptyMapProperty.json();
-        JSONAssert.assertEquals(expectedJson, actualJson, true);
-    }
+            // When
+            String actualJson = serialize(componentNode);
 
-    @Test
-    void shouldNotSerializeGenericComponentPropertyWithEmptyMap() {
-        // Given
-        Map<String, Object> myMap = new HashMap<>();
+            // Then
+            String expectedJson = Json.GenericComponent.WithNotEmptyMapProperty.json();
+            JSONAssert.assertEquals(expectedJson, actualJson, true);
+        }
 
-        ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
-                .propertyDescriptors(asList(property1, property8))
-                .fullyQualifiedName(ComponentNode1.class.getName())
-                .build());
 
-        GraphNode componentNode = new GenericComponentNode(componentData);
-        componentData.set("property1", "first property");
-        componentData.set("property8", myMap);
+        @Test
+        void shouldNotSerializeGenericComponentPropertyWithEmptyMap() {
+            // Given
 
-        // When
-        String actualJson = serialize(componentNode);
+            Map<String, Object> myMap = new HashMap<>();
 
-        // Then
-        String expectedJson = WithEmptyMapProperty.json();
-        JSONAssert.assertEquals(expectedJson, actualJson, true);
+            ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
+                    .propertyDescriptors(asList(Primitives.stringProperty, SpecialTypes.mapProperty))
+                    .fullyQualifiedName(ComponentNode1.class.getName())
+                    .build());
+
+            GraphNode componentNode = new GenericComponentNode(componentData);
+            componentData.set("stringProperty", "first property");
+            componentData.set("mapProperty", myMap);
+
+            // When
+            String actualJson = serialize(componentNode);
+
+            // Then
+            String expectedJson = Json.GenericComponent.WithEmptyMapProperty.json();
+            JSONAssert.assertEquals(expectedJson, actualJson, true);
+        }
     }
 
     private String serialize(GraphNode componentNode) {

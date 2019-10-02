@@ -3,6 +3,8 @@ package com.reedelk.plugin.assertion.graph;
 import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.graph.node.GraphNode;
 
+import java.math.BigDecimal;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class NodeAssertion {
@@ -23,7 +25,12 @@ public class NodeAssertion {
     public NodeAssertion hasDataWithValue(String propertyName, Object propertyValue) {
         ComponentData component = this.node.componentData();
         Object actualValue = component.get(propertyName);
-        assertThat(actualValue).isEqualTo(propertyValue);
+        if (propertyValue instanceof BigDecimal) {
+            int comparison = ((BigDecimal) propertyValue).compareTo((BigDecimal) actualValue);
+            assertThat(comparison).isEqualTo(0);
+        } else {
+            assertThat(actualValue).isEqualTo(propertyValue);
+        }
         return this;
     }
 

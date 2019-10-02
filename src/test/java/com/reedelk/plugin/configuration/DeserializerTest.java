@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
-import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.*;
+import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.Primitives;
 import static com.reedelk.plugin.fixture.Json.Configuration.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -184,7 +184,7 @@ class DeserializerTest {
 
     private final ComponentPropertyDescriptor host =
             ComponentPropertyDescriptor.builder()
-                    .type(stringTypeDescriptor)
+                    .type(Primitives.stringTypeDescriptor)
                     .propertyName("host")
                     .displayName("Host")
                     .defaultValue("localhost")
@@ -192,7 +192,7 @@ class DeserializerTest {
 
     private final ComponentPropertyDescriptor port =
             ComponentPropertyDescriptor.builder()
-                    .type(integerTypeDescriptor)
+                    .type(Primitives.integerTypeDescriptor)
                     .propertyName("port")
                     .displayName("Port")
                     .defaultValue("8080")
@@ -200,7 +200,7 @@ class DeserializerTest {
 
     private final ComponentPropertyDescriptor keepAlive =
             ComponentPropertyDescriptor.builder()
-                    .type(booleanTypeDescriptor)
+                    .type(Primitives.booleanTypeDescriptor)
                     .propertyName("keepAlive")
                     .displayName("Keep Alive")
                     .defaultValue("true")
@@ -208,21 +208,21 @@ class DeserializerTest {
 
     private final ComponentPropertyDescriptor userName =
             ComponentPropertyDescriptor.builder()
-                    .type(stringTypeDescriptor)
+                    .type(Primitives.stringTypeDescriptor)
                     .propertyName("userName")
                     .displayName("User Name")
                     .build();
 
     private final ComponentPropertyDescriptor password =
             ComponentPropertyDescriptor.builder()
-                    .type(stringTypeDescriptor)
+                    .type(Primitives.stringTypeDescriptor)
                     .propertyName("password")
                     .displayName("Password")
                     .build();
 
     private final ComponentPropertyDescriptor algorithm =
             ComponentPropertyDescriptor.builder()
-                    .type(stringTypeDescriptor)
+                    .type(Primitives.stringTypeDescriptor)
                     .propertyName("algorithm")
                     .displayName("Algorithm")
                     .build();

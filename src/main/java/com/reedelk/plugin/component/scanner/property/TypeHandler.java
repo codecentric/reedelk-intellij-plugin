@@ -27,10 +27,13 @@ public class TypeHandler implements Handler {
     public void handle(FieldInfo propertyInfo, ComponentPropertyDescriptor.Builder builder, ComponentAnalyzerContext context) {
         TypeSignature typeSignature = propertyInfo.getTypeDescriptor();
 
+        // Primitive
         if (typeSignature instanceof BaseTypeSignature) {
-            TypeDescriptor typeDescriptor = processKnownType(((BaseTypeSignature) typeSignature).getType(), propertyInfo);
+            Class<?> clazz = ((BaseTypeSignature) typeSignature).getType();
+            TypeDescriptor typeDescriptor = new TypePrimitiveDescriptor(clazz);
             builder.type(typeDescriptor);
 
+            // Non primitive (which might internally be a primitive e.g String or BigDecimal.
         } else if (typeSignature instanceof ClassRefTypeSignature) {
             ClassRefTypeSignature classRef = (ClassRefTypeSignature) typeSignature;
             TypeDescriptor typeDescriptor = processClassRefType(classRef, propertyInfo, context);
@@ -38,28 +41,6 @@ public class TypeHandler implements Handler {
 
         } else {
             throw new UnsupportedType(typeSignature.getClass());
-        }
-    }
-
-    private TypeDescriptor processKnownType(Class<?> clazz, FieldInfo fieldInfo) {
-        if (isScript(clazz)) {
-            return new TypeScriptDescriptor();
-
-        } else if (isFile(fieldInfo, clazz)) {
-            return new TypeFileDescriptor();
-
-        } else if (isCombo(fieldInfo, clazz)) {
-            boolean editable = getAnnotationParameterValueOrDefault(fieldInfo, Combo.class, "editable", false);
-            Object[] comboValues = getAnnotationParameterValueOrDefault(fieldInfo, Combo.class, "comboValues", new String[]{});
-            List<String> items = stream(comboValues).map(value -> (String) value).collect(toList());
-            return new TypeComboDescriptor(editable, items.toArray(new String[]{}));
-
-        } else if (isMap(clazz)) {
-            String tabGroup = getAnnotationValueOrDefault(fieldInfo, TabGroup.class, null);
-            return new TypeMapDescriptor(tabGroup);
-
-        } else {
-            return new TypePrimitiveDescriptor(clazz);
         }
     }
 
@@ -84,6 +65,7 @@ public class TypeHandler implements Handler {
             Class<?> clazz = clazzByFullyQualifiedName(fullyQualifiedClassName);
             return processKnownType(clazz, fieldInfo);
 
+            // We check that it is a user defined object type (with Implementor)
         } else {
             // We check that we can resolve class info. If we can, then
             ClassInfo classInfo = context.getClassInfo(fullyQualifiedClassName);
@@ -120,5 +102,23 @@ public class TypeHandler implements Handler {
         String defaultEnumValue = MapUtils.getFirstKeyOrDefault(nameAndDisplayName, StringUtils.EMPTY);
 
         return new TypeEnumDescriptor(nameAndDisplayName, defaultEnumValue);
+    }
+
+    private TypeDescriptor processKnownType(Class<?> clazz, FieldInfo fieldInfo) {
+        if (isScript(clazz)) {
+            return new TypeScriptDescriptor();
+        } else if (isFile(fieldInfo, clazz)) {
+            return new TypeFileDescriptor();
+        } else if (isCombo(fieldInfo, clazz)) {
+            boolean editable = getAnnotationParameterValueOrDefault(fieldInfo, Combo.class, "editable", false);
+            Object[] comboValues = getAnnotationParameterValueOrDefault(fieldInfo, Combo.class, "comboValues", new String[]{});
+            List<String> items = stream(comboValues).map(value -> (String) value).collect(toList());
+            return new TypeComboDescriptor(editable, items.toArray(new String[]{}));
+        } else if (isMap(clazz)) {
+            String tabGroup = getAnnotationValueOrDefault(fieldInfo, TabGroup.class, null);
+            return new TypeMapDescriptor(tabGroup);
+        } else {
+            return new TypePrimitiveDescriptor(clazz);
+        }
     }
 }

@@ -1,7 +1,7 @@
 {
   "implementor": "com.reedelk.plugin.fixture.ComponentNode1",
-  "property1": "first property",
-  "property8": {
+  "stringProperty": "first property",
+  "mapProperty": {
     "key1": "value1",
     "key2": 3
   }

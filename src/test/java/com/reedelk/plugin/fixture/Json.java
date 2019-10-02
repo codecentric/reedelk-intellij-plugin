@@ -56,10 +56,17 @@ public class Json {
     }
 
     public enum GenericComponent implements DataProvider {
-        Sample() {
+        Primitives() {
             @Override
             public String path() {
-                return "flow/generic_component_sample.json";
+                return "flow/generic_component_primitives.json";
+            }
+        },
+
+        PrimitivesNull() {
+            @Override
+            public String path() {
+                return "flow/generic_component_primitives_null.json";
             }
         },
 

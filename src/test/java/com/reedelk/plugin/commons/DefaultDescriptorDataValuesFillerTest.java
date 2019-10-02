@@ -5,8 +5,7 @@ import com.reedelk.plugin.service.module.impl.ConfigMetadata;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.integerTypeDescriptor;
-import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.stringTypeDescriptor;
+import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.Primitives;
 import static com.reedelk.runtime.commons.JsonParser.Component;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -45,7 +44,7 @@ class DefaultDescriptorDataValuesFillerTest {
                 ComponentPropertyDescriptor.builder()
                         .displayName("Address")
                         .propertyName("address")
-                        .type(stringTypeDescriptor)
+                        .type(Primitives.stringTypeDescriptor)
                         .build();
 
         // When
@@ -157,7 +156,7 @@ class DefaultDescriptorDataValuesFillerTest {
     private final ComponentPropertyDescriptor namePropertyDescriptor =
             ComponentPropertyDescriptor.builder()
                     .propertyName("name")
-                    .type(stringTypeDescriptor)
+                    .type(Primitives.stringTypeDescriptor)
                     .displayName("Your name")
                     .defaultValue("Test name")
                     .build();
@@ -165,7 +164,7 @@ class DefaultDescriptorDataValuesFillerTest {
     private final ComponentPropertyDescriptor surnamePropertyDescriptor =
             ComponentPropertyDescriptor.builder()
                     .propertyName("surname")
-                    .type(stringTypeDescriptor)
+                    .type(Primitives.stringTypeDescriptor)
                     .displayName("Your surname")
                     .defaultValue("Test surname")
                     .build();
@@ -173,7 +172,7 @@ class DefaultDescriptorDataValuesFillerTest {
     private final ComponentPropertyDescriptor zipCodePropertyDescriptor =
             ComponentPropertyDescriptor.builder()
                     .propertyName("zipCode")
-                    .type(integerTypeDescriptor)
+                    .type(Primitives.integerTypeDescriptor)
                     .displayName("ZIP Code")
                     .defaultValue("23411")
                     .build();

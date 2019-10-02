@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
-import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.*;
+import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.Primitives;
 import static com.reedelk.plugin.fixture.Json.Configuration.*;
 import static com.reedelk.runtime.commons.JsonParser.Config;
 
@@ -100,21 +100,21 @@ class SerializerTest {
 
     private ComponentPropertyDescriptor hostProperty =
             ComponentPropertyDescriptor.builder()
-                    .type(stringTypeDescriptor)
+                    .type(Primitives.stringTypeDescriptor)
                     .propertyName("host")
                     .displayName("Host")
                     .build();
 
     private ComponentPropertyDescriptor portProperty =
             ComponentPropertyDescriptor.builder()
-                    .type(integerTypeDescriptor)
+                    .type(Primitives.integerTypeDescriptor)
                     .propertyName("port")
                     .displayName("Port")
                     .build();
 
     private ComponentPropertyDescriptor keepAlive =
             ComponentPropertyDescriptor.builder()
-                    .type(booleanTypeDescriptor)
+                    .type(Primitives.booleanTypeDescriptor)
                     .propertyName("keepAlive")
                     .displayName("Keep Alive")
                     .build();
@@ -122,7 +122,7 @@ class SerializerTest {
 
     private ComponentPropertyDescriptor algorithm =
             ComponentPropertyDescriptor.builder()
-                    .type(stringTypeDescriptor)
+                    .type(Primitives.stringTypeDescriptor)
                     .propertyName("algorithm")
                     .displayName("Algorithm")
                     .build();
@@ -141,14 +141,14 @@ class SerializerTest {
 
     private ComponentPropertyDescriptor userName =
             ComponentPropertyDescriptor.builder()
-                    .type(stringTypeDescriptor)
+                    .type(Primitives.stringTypeDescriptor)
                     .propertyName("userName")
                     .displayName("User Name")
                     .build();
 
     private ComponentPropertyDescriptor password =
             ComponentPropertyDescriptor.builder()
-                    .type(stringTypeDescriptor)
+                    .type(Primitives.stringTypeDescriptor)
                     .propertyName("password")
                     .displayName("Password")
                     .build();

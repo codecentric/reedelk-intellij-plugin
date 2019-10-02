@@ -1,8 +1,8 @@
 {
   "implementor": "com.reedelk.plugin.fixture.ComponentNode1",
-  "property1": "first property",
-  "property4": {
-    "property5": "property five",
-    "property6": 255
+  "stringProperty": "yet another string property",
+  "typeObjectProperty": {
+    "stringProperty": "sample string property",
+    "integerObjectProperty": 255
   }
 }
