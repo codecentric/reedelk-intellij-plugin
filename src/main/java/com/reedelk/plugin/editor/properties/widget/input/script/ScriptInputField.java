@@ -1,8 +1,6 @@
 package com.reedelk.plugin.editor.properties.widget.input.script;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.editor.event.DocumentEvent;
-import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBPanel;
 import com.reedelk.plugin.commons.Labels;
@@ -22,7 +20,7 @@ import static com.reedelk.plugin.commons.Icons.Script;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 
-public class ScriptInputField extends DisposablePanel implements DocumentListener, Disposable {
+public class ScriptInputField extends DisposablePanel implements Disposable {
 
     private final Module module;
     private final ScriptContextManager context;
@@ -36,24 +34,15 @@ public class ScriptInputField extends DisposablePanel implements DocumentListene
                             @NotNull ScriptContextManager context) {
         this.module = module;
         this.context = context;
+        this.editor = new ScriptEditorDefault(module.getProject(), context);
 
         JPanel openEditorBtn = new OpenEditorButton();
-
-        this.editor = new ScriptEditorDefault(module.getProject(), context);
-        //this.editor.setListener(listener);
 
         setLayout(new BorderLayout());
         add(openEditorBtn, NORTH);
         add(editor.getComponent(), CENTER);
     }
 
-    @Override
-    public void documentChanged(@NotNull DocumentEvent event) {
-        if (listener != null) {
-            listener.onChange(event.getDocument().getText());
-        }
-        value = event.getDocument().getText();
-    }
 
     @Override
     public void dispose() {
@@ -62,7 +51,7 @@ public class ScriptInputField extends DisposablePanel implements DocumentListene
 
     public void addListener(InputChangeListener<String> listener) {
         this.listener = listener;
-        // this.editor.setListener(listener);
+        this.editor.setListener(newValue -> listener.onChange((String) newValue));
     }
 
     public void setValue(Object o) {

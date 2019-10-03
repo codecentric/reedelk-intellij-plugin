@@ -1,5 +1,6 @@
 package com.reedelk.plugin.editor.properties.widget.input.script.editor;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -22,6 +23,8 @@ import static com.reedelk.plugin.editor.properties.widget.input.script.editor.Ed
 import static java.util.Collections.singletonList;
 
 public class DynamicValueScriptEditor implements ScriptEditor, DocumentListener {
+
+    private static final Logger LOG = Logger.getInstance(DynamicValueScriptEditor.class);
 
     private final boolean notViewer = false;
     private final boolean singleLineMode = true;
@@ -61,11 +64,12 @@ public class DynamicValueScriptEditor implements ScriptEditor, DocumentListener 
 
     @Override
     public void setValue(String value) {
+        if (value == null) return;
         try {
             String script = ScriptUtils.unwrap(value);
             writeCommandAction(project).run(() -> document.setText(script));
         } catch (Throwable throwable) {
-            throwable.printStackTrace();
+            LOG.error(String.format("Could not write value [%s] to document", value), throwable);
         }
     }
 
