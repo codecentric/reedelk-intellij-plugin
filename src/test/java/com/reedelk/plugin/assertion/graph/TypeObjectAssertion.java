@@ -26,6 +26,11 @@ public class TypeObjectAssertion {
         return this;
     }
 
+    public TypeObjectAssertion isEmpty() {
+        assertThat(typeObject.keys()).isEmpty();
+        return this;
+    }
+
     public NodeAssertion and() {
         return parent;
     }

@@ -174,7 +174,7 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
             String actualJson = serialize(componentNode);
 
             // Then
-            String expectedJson = Json.GenericComponent.WithTypeObjectReferenceMissing.json();
+            String expectedJson = Json.GenericComponent.WithTypeObjectMissing.json();
             JSONAssert.assertEquals(expectedJson, actualJson, true);
         }
     }

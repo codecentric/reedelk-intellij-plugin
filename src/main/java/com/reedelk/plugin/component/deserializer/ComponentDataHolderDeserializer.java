@@ -43,17 +43,25 @@ public class ComponentDataHolderDeserializer {
 
             JSONObject nestedJsonObject = componentJsonObject.getJSONObject(descriptor.getPropertyName());
 
-            if (YES.equals(propertyType.getShared())) {
+            // If the property is present in the JSON but it is an empty object we
+            // still fill up instances of type object for object properties recursively.
+            // This is needed, to enable the UI to fill up the values in the
+            // Type Object properties when the user edits a value.
+            // This happens for instance when we have a JSON object like the following:
+            // {
+            //      "configuration": {}
+            // }
+            if (nestedJsonObject.isEmpty()) {
+                addEmptyInstancesForTypeObject(componentData, descriptor);
+
+            } else if (YES.equals(propertyType.getShared())) {
                 // The config is shareable, therefore we just set the
                 // reference value pointing to the shared config.
                 if (nestedJsonObject.has(JsonParser.Component.configRef())) {
                     String configRef = JsonParser.Component.configRef(nestedJsonObject);
                     nestedObject.set(JsonParser.Component.configRef(), configRef);
                     componentData.set(descriptor.getPropertyName(), nestedObject);
-                } else {
-                    throw new IllegalStateException("Expected config ref for @Shared configuration");
                 }
-
             } else {
                 // The config is not shareable, hence we deserialize the object right away.
                 propertyType.getObjectProperties()
@@ -67,11 +75,11 @@ public class ComponentDataHolderDeserializer {
             // Instances of type object for object properties recursively.
             // This is needed, to enable the UI to fill up the values in the
             // Type Object properties when the user edits a value.
-            addEmptyObjectsInstancesForTypeObject(componentData, descriptor);
+            addEmptyInstancesForTypeObject(componentData, descriptor);
         }
     }
 
-    private static void addEmptyObjectsInstancesForTypeObject(ComponentDataHolder dataHolder, ComponentPropertyDescriptor descriptor) {
+    private static void addEmptyInstancesForTypeObject(ComponentDataHolder dataHolder, ComponentPropertyDescriptor descriptor) {
         if (descriptor.getPropertyType() instanceof TypeObjectDescriptor) {
             TypeObjectDescriptor propertyObjectType = descriptor.getPropertyType();
             TypeObjectDescriptor.TypeObject typeObject = propertyObjectType.newInstance();
@@ -79,7 +87,7 @@ public class ComponentDataHolderDeserializer {
             // From now on, the subtree contains null objects.
             propertyObjectType.getObjectProperties()
                     .forEach(propertyDescriptor ->
-                            addEmptyObjectsInstancesForTypeObject(typeObject, propertyDescriptor));
+                            addEmptyInstancesForTypeObject(typeObject, propertyDescriptor));
         }
     }
 }

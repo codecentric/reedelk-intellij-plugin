@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.*;
+import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.Primitives.booleanProperty;
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.Primitives.stringProperty;
 import static com.reedelk.plugin.fixture.Json.GenericComponent;
 import static java.util.Arrays.asList;
@@ -116,6 +117,86 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
                     .hasTypeObject("typeObjectProperty")
                     .hasDataWithValue("stringProperty", "sample string property")
                     .hasDataWithValue("integerObjectProperty", new Integer("255"))
+                    .and().and().nodesCountIs(2);
+        }
+
+        @Test
+        void shouldCorrectlyDeserializeSharedTypeObjectWithReference() {
+            // Given
+            ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+                    .propertyDescriptors(asList(booleanProperty, TypeObjects.typeObjectSharedProperty))
+                    .fullyQualifiedName(ComponentNode1.class.getName())
+                    .build();
+
+            GenericComponentNode node = createGraphNodeInstance(GenericComponentNode.class, descriptor);
+
+            mockContextInstantiateGraphNode(node);
+
+            JSONObject genericComponentDefinition = new JSONObject(GenericComponent.WithTypeObjectReference.json());
+
+            // When
+            GraphNode lastNode = deserializer.deserialize(root, genericComponentDefinition);
+
+            // Then
+            PluginAssertion.assertThat(graph)
+                    .node(lastNode).is(node)
+                    .hasDataWithValue("booleanProperty", true)
+                    .hasTypeObject("typeObjectSharedProperty")
+                    .hasDataWithValue("configRef", "4ba1b6a0-9644-11e9-bc42-526af7764f64")
+                    .and().and().nodesCountIs(2);
+        }
+
+        // We expected empty objects still be created in the de-serialized data structure.
+        @Test
+        void shouldCorrectlyDeserializeSharedEmptyTypeObject() {
+            // Given
+            ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+                    .propertyDescriptors(asList(booleanProperty, TypeObjects.typeObjectSharedProperty))
+                    .fullyQualifiedName(ComponentNode1.class.getName())
+                    .build();
+
+            GenericComponentNode node = createGraphNodeInstance(GenericComponentNode.class, descriptor);
+
+            mockContextInstantiateGraphNode(node);
+
+            JSONObject genericComponentDefinition = new JSONObject(GenericComponent.WithTypeObjectEmpty.json());
+
+            // When
+            GraphNode lastNode = deserializer.deserialize(root, genericComponentDefinition);
+
+            // Then
+            PluginAssertion.assertThat(graph)
+                    .node(lastNode).is(node)
+                    .hasDataWithValue("booleanProperty", true)
+                    .hasTypeObject("typeObjectSharedProperty")
+                    .isEmpty()
+                    .and().and().nodesCountIs(2);
+        }
+
+        // We expected empty objects still be created in the de-serialized data structure.
+        @Test
+        void shouldCorrectlyDeserializeMissingSharedTypeObject() {
+            // Given
+            ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+                    .propertyDescriptors(asList(booleanProperty, TypeObjects.typeObjectSharedProperty))
+                    .fullyQualifiedName(ComponentNode1.class.getName())
+                    .build();
+
+            GenericComponentNode node = createGraphNodeInstance(GenericComponentNode.class, descriptor);
+
+            mockContextInstantiateGraphNode(node);
+
+            JSONObject genericComponentDefinition = new JSONObject(GenericComponent.WithTypeObjectMissing.json());
+
+            // When
+            GraphNode lastNode = deserializer.deserialize(root, genericComponentDefinition);
+
+            // Then
+            PluginAssertion.assertThat(graph)
+                    .node(lastNode).is(node)
+                    .hasDataWithValue("booleanProperty", true)
+                    .hasTypeObject("typeObjectSharedProperty")
+                    .isEmpty()
                     .and().and().nodesCountIs(2);
         }
     }
