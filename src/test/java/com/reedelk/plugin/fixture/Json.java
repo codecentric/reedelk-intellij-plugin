@@ -197,6 +197,13 @@ public class Json {
             }
         },
 
+        SampleWithoutBoolean() {
+            @Override
+            public String path() {
+                return "configuration/configuration_sample_without_boolean.json";
+            }
+        },
+
         NestedConfig() {
             @Override
             public String path() {

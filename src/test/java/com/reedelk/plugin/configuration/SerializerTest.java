@@ -73,7 +73,7 @@ class SerializerTest {
     }
 
     @Test
-    void shouldSerializeEmptyObjects() {
+    void shouldNotSerializeEmptyObjects() {
         // Given
         TypeObject keyStoreConfig = new TypeObject(ComponentNode3.class.getName());
         TypeObject securityConfig = new TypeObject(ComponentNode2.class.getName());
@@ -95,6 +95,26 @@ class SerializerTest {
 
         // Then
         String expectedJson = SampleWithEmptyConfig.json();
+        JSONAssert.assertEquals(expectedJson, actualJson, true);
+    }
+
+    @Test
+    void shouldNotSerializeBooleanWhenValueIsFalse() {
+        // Given
+        TypeObject httpConfigType = new TypeObject(ComponentNode1.class.getName());
+        httpConfigType.set(Config.id(), "38add40d-6a29-4e9e-9620-2bf165276204");
+        httpConfigType.set(Config.title(), "HTTP Configuration");
+        httpConfigType.set("host", "192.168.1.32");
+        httpConfigType.set("port", 9190);
+        httpConfigType.set("keepAlive", false);
+
+        ConfigMetadata metadata = new ConfigMetadata(httpConfigType, configObjectDescriptor);
+
+        // When
+        String actualJson = ConfigurationSerializer.serialize(metadata);
+
+        // Then
+        String expectedJson = SampleWithoutBoolean.json();
         JSONAssert.assertEquals(expectedJson, actualJson, true);
     }
 
