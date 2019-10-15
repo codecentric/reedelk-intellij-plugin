@@ -21,15 +21,21 @@ public class NumericDocumentFilter extends DocumentFilter {
         sb.insert(offset, string);
 
         if (sb.length() == 1 && sb.toString().equals("-")) {
-            super.insertString(fb, offset, "-", attr);
+            super.insertString(fb, offset, string, attr);
         } else if (sb.length() == 1 && sb.toString().equals("+")) {
-            super.insertString(fb, offset, "+", attr);
+            super.insertString(fb, offset, string, attr);
+        } else if (sb.length() == 1 && sb.toString().equals("$")) {
+            super.insertString(fb, offset, string, attr);
+        } else if (sb.length() == 2 && sb.toString().equals("${")) {
+            super.insertString(fb, offset, string, attr);
+        } else if (sb.toString().endsWith("}")) {
+            super.insertString(fb, offset, string, attr);
+        } else if (sb.length() > 2 && sb.toString().startsWith("${") && !sb.toString().contains("}")) {
+            super.insertString(fb, offset, string, attr);
         } else if (sb.length() == 0) {
-            super.insertString(fb, offset, "0", attr);
+            super.insertString(fb, offset, string, attr);
         } else if (tester.test(sb.toString())) {
             super.insertString(fb, offset, string, attr);
-        } else {
-            // warn the user and don't allow the insert
         }
     }
 
@@ -45,12 +51,18 @@ public class NumericDocumentFilter extends DocumentFilter {
             super.replace(fb, offset, length, text, attrs);
         } else if (sb.length() == 1 && sb.toString().equals("+")) {
             super.replace(fb, offset, length, text, attrs);
+        } else if (sb.length() == 1 && sb.toString().equals("$")) {
+            super.replace(fb, offset, length, text, attrs);
+        } else if (sb.length() == 2 && sb.toString().equals("${")) {
+            super.replace(fb, offset, length, text, attrs);
+        } else if (sb.toString().endsWith("}")) {
+            super.replace(fb, offset, length, text, attrs);
+        } else if (sb.length() > 2 && sb.toString().startsWith("${") && !sb.toString().contains("}")) {
+            super.replace(fb, offset, length, text, attrs);
         } else if (sb.length() == 0) {
             super.replace(fb, offset, length, text, attrs);
         } else if (tester.test(sb.toString())) {
             super.replace(fb, offset, length, text, attrs);
-        } else {
-            // warn the user and don't allow the insert
         }
     }
 
@@ -65,12 +77,18 @@ public class NumericDocumentFilter extends DocumentFilter {
             super.remove(fb, offset, length);
         } else if (sb.length() == 1 && sb.toString().equals("+")) {
             super.remove(fb, offset, length);
+        } else if (sb.length() == 1 && sb.toString().equals("$")) {
+            super.remove(fb, offset, length);
+        } else if (sb.length() == 2 && sb.toString().equals("${")) {
+            super.remove(fb, offset, length);
+        } else if (sb.toString().endsWith("}")) {
+            super.remove(fb, offset, length);
+        } else if (sb.length() > 2 && sb.toString().startsWith("${") && !sb.toString().contains("}")) {
+            super.remove(fb, offset, length);
         } else if (sb.length() == 0) {
             super.remove(fb, offset, length);
         } else if (tester.test(sb.toString())) {
             super.remove(fb, offset, length);
-        } else {
-            // warn the user and don't allow the insert
         }
     }
 

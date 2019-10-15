@@ -4,6 +4,7 @@ import com.reedelk.plugin.component.domain.ComponentDataHolder;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeDescriptor;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
+import com.reedelk.plugin.converter.ValueConverter;
 import com.reedelk.plugin.converter.ValueConverterFactory;
 import com.reedelk.runtime.commons.JsonParser;
 import org.jetbrains.annotations.NotNull;
@@ -24,9 +25,8 @@ public class ComponentDataHolderDeserializer {
         if (propertyType instanceof TypeObjectDescriptor) {
             deserializeTypeObject(componentJsonObject, componentData, propertyDescriptor, (TypeObjectDescriptor) propertyType);
         } else {
-            Object propertyValue = ValueConverterFactory
-                    .forType(propertyType)
-                    .from(propertyDescriptor.getPropertyName(), componentJsonObject);
+            ValueConverter<?> converter = ValueConverterFactory.forType(propertyType);
+            Object propertyValue = converter.from(propertyDescriptor.getPropertyName(), componentJsonObject);
             componentData.set(propertyDescriptor.getPropertyName(), propertyValue);
         }
     }
