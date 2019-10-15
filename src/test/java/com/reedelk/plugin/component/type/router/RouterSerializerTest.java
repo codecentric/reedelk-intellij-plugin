@@ -56,7 +56,7 @@ public class RouterSerializerTest extends AbstractGraphTest {
         List<RouterConditionRoutePair> routerConditionPairs = asList(
                 new RouterConditionRoutePair("1 == 1", componentNode3),
                 new RouterConditionRoutePair("1 != 0", componentNode2),
-                new RouterConditionRoutePair(Router.DEFAULT_CONDITION.getValue(), componentNode5));
+                new RouterConditionRoutePair(Router.DEFAULT_CONDITION.value(), componentNode5));
 
         ComponentData component = routerNode1.componentData();
         component.set(DATA_CONDITION_ROUTE_PAIRS, routerConditionPairs);

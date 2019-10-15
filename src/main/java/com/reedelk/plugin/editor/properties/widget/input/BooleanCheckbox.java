@@ -1,8 +1,6 @@
 package com.reedelk.plugin.editor.properties.widget.input;
 
 import com.intellij.ui.components.JBCheckBox;
-import com.reedelk.plugin.converter.BooleanConverter;
-import com.reedelk.plugin.converter.ValueConverter;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -10,9 +8,7 @@ import java.awt.event.ActionListener;
 
 public class BooleanCheckbox extends JBCheckBox implements ActionListener {
 
-    private final ValueConverter<Boolean> converter = new BooleanConverter();
-
-    private InputChangeListener<Boolean> listener;
+    private InputChangeListener listener;
 
     public BooleanCheckbox() {
         addActionListener(this);
@@ -36,7 +32,7 @@ public class BooleanCheckbox extends JBCheckBox implements ActionListener {
         return isSelected();
     }
 
-    public void addListener(InputChangeListener<Boolean> listener) {
+    public void addListener(InputChangeListener listener) {
         this.listener = listener;
     }
 }

@@ -2,6 +2,7 @@ package com.reedelk.plugin.editor.properties.configuration;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBPanel;
+import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.DefaultDescriptorDataValuesFiller;
 import com.reedelk.plugin.commons.Labels.Hint;
 import com.reedelk.plugin.commons.Labels.PropertiesPanelConfig;
@@ -67,7 +68,7 @@ class ConfigPropertiesPanel extends DisposablePanel {
 
         ConfigMetadataHeaderPanel(ConfigMetadata configMetadata, boolean isNewConfig) {
             super(new GridBagLayout());
-            setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
+            setBorder(JBUI.Borders.emptyRight(10));
             init(configMetadata, isNewConfig);
         }
 
@@ -77,7 +78,7 @@ class ConfigPropertiesPanel extends DisposablePanel {
             StringInputField configFileInputField = new StringInputField(Hint.CONFIG_FILE_TITLE);
             configFileInputField.setEnabled(isNewConfig);
             configFileInputField.setValue(configMetadata.getFileName());
-            configFileInputField.addListener(configMetadata::setFileName);
+            configFileInputField.addListener(value -> configMetadata.setFileName((String) value));
             FormBuilder.get()
                     .addLabel(PropertiesPanelConfig.FIELD_CONFIG_FILE, this)
                     .addLastField(configFileInputField, this);
@@ -85,7 +86,7 @@ class ConfigPropertiesPanel extends DisposablePanel {
             // Config Title input title
             StringInputField configTitleInputField = new StringInputField(Hint.CONFIG_TITLE);
             configTitleInputField.setValue(configMetadata.getTitle());
-            configTitleInputField.addListener(configMetadata::setTitle);
+            configTitleInputField.addListener(value -> configMetadata.setTitle((String) value));
             FormBuilder.get()
                     .addLabel(PropertiesPanelConfig.FIELD_CONFIG_TITLE, this)
                     .addLastField(configTitleInputField, this);

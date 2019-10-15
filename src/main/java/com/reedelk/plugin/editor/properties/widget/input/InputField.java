@@ -9,14 +9,17 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.PlainDocument;
 import java.awt.*;
 
+import static java.awt.RenderingHints.KEY_TEXT_ANTIALIASING;
+import static java.awt.RenderingHints.VALUE_TEXT_ANTIALIAS_ON;
+
 public abstract class InputField<T> extends JBTextField implements DocumentListener {
 
     final PlainDocument document;
 
-    private final ValueConverter<T> converter;
+    private final ValueConverter<?> converter;
     private final String hint;
 
-    private InputChangeListener<T> listener;
+    private InputChangeListener listener;
 
     InputField(String hint) {
         setForeground(JBColor.DARK_GRAY);
@@ -29,9 +32,7 @@ public abstract class InputField<T> extends JBTextField implements DocumentListe
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        if (hint != null) {
-            paintHint(g);
-        }
+        paintHint(g);
     }
 
     @Override
@@ -54,28 +55,30 @@ public abstract class InputField<T> extends JBTextField implements DocumentListe
         setText(valueAsString);
     }
 
-    public T getValue() {
+    public Object getValue() {
         return converter.from(getText());
     }
 
-    public void addListener(InputChangeListener<T> changeListener) {
+    public void addListener(InputChangeListener changeListener) {
         this.listener = changeListener;
     }
 
-    protected abstract ValueConverter<T> getConverter();
+    protected abstract ValueConverter<?> getConverter();
 
     private void notifyListener() {
         if (listener != null) {
-            T objectValue = converter.from(getText());
-            listener.onChange(objectValue);
+            Object converted = converter.from(getText());
+            listener.onChange(converted);
         }
     }
 
     // TODO: Fix this code, it is horrible
     private void paintHint(Graphics g) {
-        if (getText().length() == 0) {
+        // Hint is painted if and only if it is not
+        // null and the text it is empty.
+        if (hint != null && getText().length() == 0) {
             int h = getHeight();
-            ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            ((Graphics2D) g).setRenderingHint(KEY_TEXT_ANTIALIASING, VALUE_TEXT_ANTIALIAS_ON);
             Insets ins = getInsets();
             FontMetrics fm = g.getFontMetrics();
             int c0 = getBackground().getRGB();

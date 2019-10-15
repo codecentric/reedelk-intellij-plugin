@@ -12,7 +12,7 @@ public interface ContainerContext {
 
     <T> T propertyValueFrom(String propertyName);
 
-    void subscribePropertyChange(String propertyName, InputChangeListener<?> inputChangeListener);
+    void subscribePropertyChange(String propertyName, InputChangeListener inputChangeListener);
 
     Optional<ComponentPropertyDescriptor> getPropertyDescriptor(Predicate<ComponentPropertyDescriptor> filter);
 

@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.properties.widget.input;
 
-import com.reedelk.plugin.converter.LongConverter;
 import com.reedelk.plugin.converter.ValueConverter;
+import com.reedelk.plugin.converter.ValueConverterFactory;
 import com.reedelk.plugin.editor.properties.widget.NumericDocumentFilter;
 
 import javax.swing.text.DocumentFilter;
@@ -26,7 +26,7 @@ public class LongInputField extends NumericInputField<Long> {
 
     @Override
     protected ValueConverter<Long> getConverter() {
-        return new LongConverter();
+        return ValueConverterFactory.forType(Long.class);
     }
 
 }

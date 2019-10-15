@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.properties.widget.input;
 
-import com.reedelk.plugin.converter.IntegerConverter;
 import com.reedelk.plugin.converter.ValueConverter;
+import com.reedelk.plugin.converter.ValueConverterFactory;
 import com.reedelk.plugin.editor.properties.widget.NumericDocumentFilter;
 
 import javax.swing.text.DocumentFilter;
@@ -26,7 +26,6 @@ public class IntegerInputField extends NumericInputField<Integer> {
 
     @Override
     protected ValueConverter<Integer> getConverter() {
-        return new IntegerConverter();
+        return ValueConverterFactory.forType(Integer.class);
     }
-
 }

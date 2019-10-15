@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.properties.widget.input;
 
-import com.reedelk.plugin.converter.BigIntegerConverter;
 import com.reedelk.plugin.converter.ValueConverter;
+import com.reedelk.plugin.converter.ValueConverterFactory;
 import com.reedelk.plugin.editor.properties.widget.NumericDocumentFilter;
 
 import javax.swing.text.DocumentFilter;
@@ -27,6 +27,6 @@ public class BigIntegerInputField extends NumericInputField<BigInteger> {
 
     @Override
     protected ValueConverter<BigInteger> getConverter() {
-        return new BigIntegerConverter();
+        return ValueConverterFactory.forType(BigInteger.class);
     }
 }

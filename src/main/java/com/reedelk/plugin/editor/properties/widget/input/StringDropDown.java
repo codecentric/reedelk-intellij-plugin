@@ -11,7 +11,7 @@ import static java.util.Arrays.stream;
 
 public class StringDropDown extends ComboBox<String> implements ItemListener {
 
-    private InputChangeListener<String> listener;
+    private InputChangeListener listener;
 
     public StringDropDown(String[] items, boolean editable) {
         Arrays.sort(items); // sort ascending order
@@ -33,7 +33,7 @@ public class StringDropDown extends ComboBox<String> implements ItemListener {
         }
     }
 
-    public void addListener(InputChangeListener<String> changeListener) {
+    public void addListener(InputChangeListener changeListener) {
         this.listener = changeListener;
     }
 

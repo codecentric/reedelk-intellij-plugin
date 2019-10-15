@@ -1,6 +1,6 @@
 package com.reedelk.plugin.editor.properties.widget.input;
 
-public interface InputChangeListener<T> {
+public interface InputChangeListener {
 
-    void onChange(T value);
+    void onChange(Object value);
 }

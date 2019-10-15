@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 class EmptyPanelContext implements ContainerContext {
 
     @Override
-    public void subscribePropertyChange(String propertyName, InputChangeListener<?> inputChangeListener) {
+    public void subscribePropertyChange(String propertyName, InputChangeListener inputChangeListener) {
         throw new UnsupportedOperationException();
     }
 

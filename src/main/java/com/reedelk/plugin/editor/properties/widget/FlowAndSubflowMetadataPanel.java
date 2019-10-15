@@ -52,7 +52,7 @@ public class FlowAndSubflowMetadataPanel extends DisposablePanel implements Disp
     private InputField<String> createTitleInputField() {
         FlowGraph graph = snapshot.getGraphOrThrowIfAbsent();
         return createStringInputField(graph.title(), Hint.FLOW_SUBFLOW_TITLE, value -> {
-            graph.setTitle(value);
+            graph.setTitle((String) value);
             snapshot.onDataChange();
         });
     }
@@ -60,12 +60,12 @@ public class FlowAndSubflowMetadataPanel extends DisposablePanel implements Disp
     private InputField<String> createDescriptionInputField() {
         FlowGraph graph = snapshot.getGraphOrThrowIfAbsent();
         return createStringInputField(graph.description(), Hint.FLOW_SUBFLOW_DESCRIPTION, value -> {
-            graph.setDescription(value);
+            graph.setDescription((String) value);
             snapshot.onDataChange();
         });
     }
 
-    private InputField<String> createStringInputField(String value, String hint, InputChangeListener<String> changeListener) {
+    private InputField<String> createStringInputField(String value, String hint, InputChangeListener changeListener) {
         InputField<String> inputField = new StringInputField(hint);
         inputField.setValue(value);
         inputField.addListener(changeListener);

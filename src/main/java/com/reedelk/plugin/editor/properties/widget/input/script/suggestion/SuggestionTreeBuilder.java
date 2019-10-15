@@ -29,13 +29,13 @@ import static com.reedelk.plugin.editor.properties.widget.input.script.ScriptCon
 import static com.reedelk.plugin.editor.properties.widget.input.script.suggestion.SuggestionType.PROPERTY;
 import static com.reedelk.plugin.editor.properties.widget.input.script.suggestion.SuggestionType.VARIABLE;
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
-import static com.reedelk.runtime.commons.Preconditions.checkState;
+import static java.util.Objects.requireNonNull;
 
 public class SuggestionTreeBuilder {
 
     private Module module;
     private SuggestionTree suggestionTree;
-    private InputChangeListener<?> listener;
+    private InputChangeListener listener;
     private ContainerContext panelContext;
     private List<VariableDefinition> variableDefinitions;
 
@@ -58,15 +58,15 @@ public class SuggestionTreeBuilder {
         return this;
     }
 
-    public SuggestionTreeBuilder contextPropertyListener(InputChangeListener<?> listener) {
+    public SuggestionTreeBuilder contextPropertyListener(InputChangeListener listener) {
         this.listener = listener;
         return this;
     }
 
     public SuggestionTreeBuilderResult build() {
-        checkState(module != null, "module");
-        checkState(panelContext != null, "panelContext");
-        checkState(variableDefinitions != null, "variableDefinitions");
+        requireNonNull(module, "module");
+        requireNonNull(panelContext, "panelContext");
+        requireNonNull(variableDefinitions, "variableDefinitions");
 
         suggestionTree = new SuggestionTree();
         PredefinedMessageSuggestions.SUGGESTIONS.forEach(suggestionTree::insert);

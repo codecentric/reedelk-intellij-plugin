@@ -27,21 +27,21 @@ public class ValueConverterFactory {
 
     static {
         Map<Class<?>, ValueConverter<?>> tmp = new HashMap<>();
-        tmp.put(int.class, new IntegerConverter());
-        tmp.put(Integer.class, new IntegerConverter());
-        tmp.put(long.class, new LongConverter());
-        tmp.put(Long.class, new LongConverter());
-        tmp.put(float.class, new FloatConverter());
-        tmp.put(Float.class, new FloatConverter());
-        tmp.put(double.class, new DoubleConverter());
-        tmp.put(Double.class, new DoubleConverter());
-        tmp.put(boolean.class, new BooleanConverter());
-        tmp.put(Boolean.class, new BooleanConverter());
-        tmp.put(Enum.class, new EnumConverter());
-        tmp.put(String.class, new StringConverter());
-        tmp.put(BigInteger.class, new BigIntegerConverter());
-        tmp.put(BigDecimal.class, new BigDecimalConverter());
-        tmp.put(TypeFile.class, new FileConverter());
+        tmp.put(int.class, new ConfigPropertyAwareConverter(new IntegerConverter()));
+        tmp.put(Integer.class, new ConfigPropertyAwareConverter(new IntegerConverter()));
+        tmp.put(long.class, new ConfigPropertyAwareConverter(new LongConverter()));
+        tmp.put(Long.class, new ConfigPropertyAwareConverter(new LongConverter()));
+        tmp.put(float.class, new ConfigPropertyAwareConverter(new FloatConverter()));
+        tmp.put(Float.class, new ConfigPropertyAwareConverter(new FloatConverter()));
+        tmp.put(double.class, new ConfigPropertyAwareConverter(new DoubleConverter()));
+        tmp.put(Double.class, new ConfigPropertyAwareConverter(new DoubleConverter()));
+        tmp.put(boolean.class, new ConfigPropertyAwareConverter(new BooleanConverter()));
+        tmp.put(Boolean.class, new ConfigPropertyAwareConverter(new BooleanConverter()));
+        tmp.put(Enum.class, new ConfigPropertyAwareConverter(new EnumConverter()));
+        tmp.put(String.class, new ConfigPropertyAwareConverter(new StringConverter()));
+        tmp.put(BigInteger.class, new ConfigPropertyAwareConverter(new BigIntegerConverter()));
+        tmp.put(BigDecimal.class, new ConfigPropertyAwareConverter(new BigDecimalConverter()));
+        tmp.put(TypeFile.class, new ConfigPropertyAwareConverter(new FileConverter()));
         tmp.put(TypeCombo.class, new ComboConverter());
         tmp.put(Map.class, new MapConverter());
         tmp.put(Script.class, new ScriptConverter());
@@ -79,7 +79,7 @@ public class ValueConverterFactory {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> ValueConverter<T> forType(Class<T> typeClazz) {
+    public static <T> ValueConverter<T> forType(Class<T> typeClazz) {
         if (CONVERTER.containsKey(typeClazz)) {
             return (ValueConverter<T>) CONVERTER.get(typeClazz);
         }

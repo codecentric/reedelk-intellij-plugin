@@ -26,7 +26,7 @@ public class ScriptInputField extends DisposablePanel implements Disposable {
     private final ScriptContextManager context;
 
 
-    private InputChangeListener<String> listener;
+    private InputChangeListener listener;
     private ScriptEditor editor;
     private String value = "";
 
@@ -49,9 +49,9 @@ public class ScriptInputField extends DisposablePanel implements Disposable {
         this.editor.dispose();
     }
 
-    public void addListener(InputChangeListener<String> listener) {
+    public void addListener(InputChangeListener listener) {
         this.listener = listener;
-        this.editor.setListener(newValue -> listener.onChange((String) newValue));
+        this.editor.setListener(listener::onChange);
     }
 
     public void setValue(Object o) {

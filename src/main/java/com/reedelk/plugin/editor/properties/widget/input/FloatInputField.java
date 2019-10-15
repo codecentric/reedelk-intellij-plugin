@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.properties.widget.input;
 
-import com.reedelk.plugin.converter.FloatConverter;
 import com.reedelk.plugin.converter.ValueConverter;
+import com.reedelk.plugin.converter.ValueConverterFactory;
 import com.reedelk.plugin.editor.properties.widget.NumericDocumentFilter;
 
 import javax.swing.text.DocumentFilter;
@@ -26,6 +26,6 @@ public class FloatInputField extends NumericInputField<Float> {
 
     @Override
     protected ValueConverter<Float> getConverter() {
-        return new FloatConverter();
+        return ValueConverterFactory.forType(Float.class);
     }
 }

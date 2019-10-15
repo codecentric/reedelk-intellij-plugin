@@ -18,7 +18,7 @@ import static java.util.stream.Collectors.toList;
 public class EnumDropDown extends ComboBox<KeyValue> implements ItemListener {
 
     private final List<KeyValue> keyValues;
-    private InputChangeListener<String> listener;
+    private InputChangeListener listener;
 
     public EnumDropDown(Map<String, String> valueAndDisplayNameMap) {
         this.keyValues = valueAndDisplayNameMap
@@ -44,7 +44,7 @@ public class EnumDropDown extends ComboBox<KeyValue> implements ItemListener {
         }
     }
 
-    public void addListener(InputChangeListener<String> changeListener) {
+    public void addListener(InputChangeListener changeListener) {
         this.listener = changeListener;
     }
 
