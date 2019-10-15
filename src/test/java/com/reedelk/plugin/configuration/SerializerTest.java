@@ -30,7 +30,7 @@ class SerializerTest {
         httpConfigType.set(Config.title(), "HTTP Configuration");
         httpConfigType.set("host", "192.168.1.32");
         httpConfigType.set("port", 9190);
-        httpConfigType.set("keepAlive", false);
+        httpConfigType.set("keepAlive", true);
 
         ConfigMetadata metadata = new ConfigMetadata(httpConfigType, configObjectDescriptor);
 
@@ -84,7 +84,7 @@ class SerializerTest {
         httpConfigType.set(Config.title(), "HTTP Configuration");
         httpConfigType.set("host", "192.168.1.32");
         httpConfigType.set("port", 9190);
-        httpConfigType.set("keepAlive", false);
+        httpConfigType.set("keepAlive", true);
         httpConfigType.set("securityConfig", securityConfig);
 
 

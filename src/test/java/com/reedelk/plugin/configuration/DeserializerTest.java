@@ -45,7 +45,7 @@ class DeserializerTest {
                 .hasKeyWithValue("title", "HTTP Configuration")
                 .hasKeyWithValue("host", "192.168.1.32")
                 .hasKeyWithValue("port", 9190)
-                .hasKeyWithValue("keepAlive", false);
+                .hasKeyWithValue("keepAlive", true);
     }
 
     @Test

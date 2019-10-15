@@ -80,7 +80,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
                     .hasDataWithValue("doubleProperty", 234.234d)
                     .hasDataWithValue("doubleObjectProperty", new Double("11.88877"))
                     .hasDataWithValue("booleanProperty", true)
-                    .hasDataWithValue("booleanObjectProperty", Boolean.FALSE)
+                    .hasDataWithValue("booleanObjectProperty", Boolean.TRUE)
                     .hasDataWithValue("stringProperty", "my text sample")
                     .hasDataWithValue("bigIntegerProperty", new BigInteger("88923423423"))
                     .hasDataWithValue("bigDecimalProperty", new BigDecimal("1.001"))
@@ -234,7 +234,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
             // Then
             PluginAssertion.assertThat(graph)
                     .node(lastNode).is(node)
-                    .hasDataWithValue("booleanProperty", false)
+                    .hasDataWithValue("booleanProperty", true)
                     .hasDataWithValue("fileProperty", "metadata/schema/person.schema.json")
                     .and().nodesCountIs(2);
         }

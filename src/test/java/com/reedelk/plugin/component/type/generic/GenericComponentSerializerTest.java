@@ -73,7 +73,7 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
             componentData.set("doubleProperty", 234.234d);
             componentData.set("doubleObjectProperty", new Double("11.88877"));
             componentData.set("booleanProperty", true);
-            componentData.set("booleanObjectProperty", Boolean.FALSE);
+            componentData.set("booleanObjectProperty", Boolean.TRUE);
             componentData.set("stringProperty", "my text sample");
             componentData.set("bigIntegerProperty", new BigInteger("88923423423"));
             componentData.set("bigDecimalProperty", new BigDecimal("1.001"));
@@ -294,7 +294,7 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
                     .build());
 
             GraphNode componentNode = new GenericComponentNode(componentData);
-            componentData.set("booleanProperty", false);
+            componentData.set("booleanProperty", true);
             componentData.set("fileProperty", "metadata/schema/person.schema.json");
 
             // When

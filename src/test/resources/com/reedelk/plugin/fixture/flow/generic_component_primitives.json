@@ -9,7 +9,7 @@
   "doubleProperty": 234.234,
   "doubleObjectProperty": 11.88877,
   "booleanProperty": true,
-  "booleanObjectProperty": false,
+  "booleanObjectProperty": true,
   "stringProperty": "my text sample",
   "bigIntegerProperty": 88923423423,
   "bigDecimalProperty": 1.001
