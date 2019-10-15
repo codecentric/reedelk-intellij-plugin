@@ -14,6 +14,7 @@ import java.util.Map;
 import static com.reedelk.plugin.component.domain.TypeComboDescriptor.TypeCombo;
 import static com.reedelk.plugin.component.domain.TypeFileDescriptor.TypeFile;
 import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
+import static com.reedelk.plugin.component.domain.TypePasswordDescriptor.TypePassword;
 import static com.reedelk.plugin.component.type.unknown.UnknownPropertyType.UnknownType;
 
 public class TypeRendererFactory {
@@ -32,14 +33,16 @@ public class TypeRendererFactory {
         tmp.put(Double.class, new DoublePropertyRenderer());
         tmp.put(boolean.class, new BooleanPropertyRenderer());
         tmp.put(Boolean.class, new BooleanPropertyRenderer());
-        tmp.put(Enum.class, new EnumPropertyRenderer());
-        tmp.put(String.class, new StringPropertyRenderer());
         tmp.put(BigInteger.class, new BigIntegerPropertyRenderer());
         tmp.put(BigDecimal.class, new BigDecimalPropertyRenderer());
-        tmp.put(TypeFile.class, new FilePropertyRenderer());
-        tmp.put(TypeCombo.class, new ComboPropertyRenderer());
+
+        tmp.put(Enum.class, new EnumPropertyRenderer());
+        tmp.put(String.class, new StringPropertyRenderer());
         tmp.put(Map.class, new MapPropertyRenderer());
         tmp.put(Script.class, new ScriptPropertyRenderer());
+        tmp.put(TypeFile.class, new FilePropertyRenderer());
+        tmp.put(TypeCombo.class, new ComboPropertyRenderer());
+        tmp.put(TypePassword.class, new PasswordPropertyRenderer());
 
         tmp.put(TypeObject.class, new ObjectPropertyRenderer());
         tmp.put(UnknownType.class, new UnknownPropertyRenderer());

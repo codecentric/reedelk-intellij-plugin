@@ -30,6 +30,7 @@ public class PropertyAccessorFactory {
         tmp.put(TypeComboDescriptor.class, DefaultPropertyAccessor.class);
         tmp.put(TypeObjectDescriptor.class, DefaultPropertyAccessor.class);
         tmp.put(TypeScriptDescriptor.class, DefaultPropertyAccessor.class);
+        tmp.put(TypePasswordDescriptor.class, DefaultPropertyAccessor.class);
         tmp.put(TypePrimitiveDescriptor.class, DefaultPropertyAccessor.class);
         tmp.put(TypeDynamicMapDescriptor.class, DefaultPropertyAccessor.class);
         tmp.put(TypeDynamicValueDescriptor.class, DefaultPropertyAccessor.class);

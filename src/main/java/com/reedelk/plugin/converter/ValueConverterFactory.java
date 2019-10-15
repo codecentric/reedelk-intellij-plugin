@@ -14,6 +14,7 @@ import java.util.Map;
 
 import static com.reedelk.plugin.component.domain.TypeComboDescriptor.TypeCombo;
 import static com.reedelk.plugin.component.domain.TypeFileDescriptor.TypeFile;
+import static com.reedelk.plugin.component.domain.TypePasswordDescriptor.TypePassword;
 import static java.lang.String.format;
 
 public class ValueConverterFactory {
@@ -45,6 +46,7 @@ public class ValueConverterFactory {
         tmp.put(String.class, new StringConverter());
         tmp.put(TypeFile.class, new FileConverter());
         tmp.put(TypeCombo.class, new ComboConverter());
+        tmp.put(TypePassword.class, new PasswordConverter());
         tmp.put(Map.class, new MapConverter());
         tmp.put(Script.class, new ScriptConverter());
 

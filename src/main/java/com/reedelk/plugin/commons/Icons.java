@@ -82,4 +82,13 @@ public class Icons {
         public static final Icon AddItem = IconLoader.getIcon("/icons/map-item-add.png");
         public static final Icon RemoveItem = IconLoader.getIcon("/icons/map-item-remove.png");
     }
+
+    public static class Misc {
+
+        private Misc() {
+        }
+
+        public static final Icon ShowPassword = IconLoader.getIcon("/icons/show_password.png");
+        public static final Icon HidePassword = IconLoader.getIcon("/icons/hide_password.png");
+    }
 }

@@ -107,6 +107,8 @@ public class TypeHandler implements Handler {
     private TypeDescriptor processKnownType(Class<?> clazz, FieldInfo fieldInfo) {
         if (isScript(clazz)) {
             return new TypeScriptDescriptor();
+        } else if (isPassword(fieldInfo, clazz)) {
+            return new TypePasswordDescriptor();
         } else if (isFile(fieldInfo, clazz)) {
             return new TypeFileDescriptor();
         } else if (isCombo(fieldInfo, clazz)) {

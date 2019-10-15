@@ -6,6 +6,7 @@ import com.reedelk.plugin.component.scanner.ComponentAnalyzerContext;
 import com.reedelk.plugin.component.scanner.UnsupportedType;
 import com.reedelk.runtime.api.annotation.Combo;
 import com.reedelk.runtime.api.annotation.File;
+import com.reedelk.runtime.api.annotation.Password;
 import com.reedelk.runtime.api.script.Script;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicMap;
 import com.reedelk.runtime.api.script.dynamicvalue.DynamicValue;
@@ -119,6 +120,11 @@ class PropertyScannerUtils {
                 String.class.equals(clazz);
     }
 
+    static boolean isPassword(FieldInfo fieldInfo, Class<?> clazz) {
+        return fieldInfo.hasAnnotation(Password.class.getName()) &&
+                String.class.equals(clazz);
+    }
+
     static boolean isMap(Class<?> clazz) {
         return Map.class.equals(clazz);
     }
@@ -136,5 +142,4 @@ class PropertyScannerUtils {
         return classInfo.hasAnnotation(com.reedelk.runtime.api.annotation.Collapsible.class.getName()) ?
                 Collapsible.YES : Collapsible.NO;
     }
-
 }

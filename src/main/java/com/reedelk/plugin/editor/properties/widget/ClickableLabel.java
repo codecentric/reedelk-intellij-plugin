@@ -1,5 +1,7 @@
 package com.reedelk.plugin.editor.properties.widget;
 
+import com.reedelk.runtime.api.commons.StringUtils;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -19,7 +21,7 @@ public class ClickableLabel extends JLabel implements MouseListener {
     }
 
     public ClickableLabel(Icon icon, Icon disabledIcon, OnClickAction action) {
-        this("", icon, disabledIcon, IconAlignment.LEFT, action);
+        this(StringUtils.EMPTY, icon, disabledIcon, IconAlignment.LEFT, action);
     }
 
     public ClickableLabel(String text, Icon icon, Icon disabledIcon, OnClickAction action) {
