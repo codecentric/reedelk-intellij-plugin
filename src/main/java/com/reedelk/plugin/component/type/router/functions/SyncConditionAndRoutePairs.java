@@ -4,6 +4,7 @@ import com.reedelk.plugin.component.type.router.RouterConditionRoutePair;
 import com.reedelk.plugin.component.type.router.RouterNode;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
+import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.component.Router;
 
 import java.util.*;
@@ -13,7 +14,7 @@ import static java.lang.String.format;
 
 public class SyncConditionAndRoutePairs {
 
-    private static final String EMPTY_CONDITION = "";
+    private static final String EMPTY_CONDITION = StringUtils.EMPTY;
 
     private SyncConditionAndRoutePairs() {
     }
@@ -37,7 +38,7 @@ public class SyncConditionAndRoutePairs {
             // The last successor is always otherwise.
             if (i == numberOfSuccessors - 1) {
                 // Last element is always the default condition
-                updatedConditions.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION.getValue(), successor));
+                updatedConditions.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION.value(), successor));
                 continue;
             }
 
@@ -71,7 +72,7 @@ public class SyncConditionAndRoutePairs {
                 .stream()
                 .filter(routerConditionRoutePair ->
                         routerConditionRoutePair.getNext() == target &&
-                                !Router.DEFAULT_CONDITION.getValue().equals(routerConditionRoutePair.getCondition()))
+                                !Router.DEFAULT_CONDITION.value().equals(routerConditionRoutePair.getCondition()))
                 .findFirst();
     }
 
@@ -79,7 +80,7 @@ public class SyncConditionAndRoutePairs {
         if (i < routerConditionRoutePairs.size()) {
             RouterConditionRoutePair pair = routerConditionRoutePairs.get(i);
             if (!alreadyUsedNodes.contains(pair.getNext()) &&
-                    !Router.DEFAULT_CONDITION.getValue().equals(pair.getCondition())) {
+                    !Router.DEFAULT_CONDITION.value().equals(pair.getCondition())) {
                 return Optional.of(pair);
             }
         }
