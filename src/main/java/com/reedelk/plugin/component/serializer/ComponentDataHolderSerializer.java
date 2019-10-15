@@ -95,6 +95,7 @@ public class ComponentDataHolderSerializer {
         Stream.of(data)
                 .filter(ExcludeEmptyMaps)
                 .filter(ExcludeEmptyObjects)
+                .filter(ExcludeBooleanFalse)
                 .forEach(filteredData -> jsonObject.put(propertyName, filteredData));
     }
 
@@ -105,6 +106,16 @@ public class ComponentDataHolderSerializer {
         if (data instanceof Map) {
             Map dataMap = (Map) data;
             return !dataMap.isEmpty();
+        }
+        return true;
+    };
+
+    /**
+     * Boolean values with 'false' are excluded from serialization.
+     */
+    private static final Predicate<Object> ExcludeBooleanFalse = data -> {
+        if (data instanceof Boolean) {
+            return (Boolean) data;
         }
         return true;
     };

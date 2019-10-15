@@ -46,10 +46,12 @@ public class ConfigurationDeserializer {
         dataHolder.set(Config.id(), jsonDefinition.getString(Config.id()));
         dataHolder.set(Config.title(), jsonDefinition.getString(Config.title()));
         dataHolder.set(Implementor.name(), jsonDefinition.getString(Implementor.name()));
-        propertyType.getObjectProperties().forEach(descriptor ->
-                ComponentDataHolderDeserializer.deserialize(jsonDefinition, dataHolder, descriptor));
+
+        propertyType
+                .getObjectProperties()
+                .forEach(descriptor -> ComponentDataHolderDeserializer.deserialize(jsonDefinition, dataHolder, descriptor));
+
         return Optional.of(dataHolder);
 
     }
-
 }
