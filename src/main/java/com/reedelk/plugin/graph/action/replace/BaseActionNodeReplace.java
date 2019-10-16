@@ -40,7 +40,7 @@ abstract class BaseActionNodeReplace implements Action {
             graph.add(to, successor);
         }
 
-        // We must remove the from
+        // We must remove the from node from the graph
         graph.remove(from);
     }
 }
