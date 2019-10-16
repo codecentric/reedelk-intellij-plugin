@@ -53,4 +53,29 @@ class FlowActionNodeReplaceTest extends AbstractGraphTest {
                 .successorsOf(placeholderNode).isOnly(componentNode1).and()
                 .successorsOf(componentNode1).isEmpty();
     }
+
+    @Test
+    void shouldCorrectlyReplaceNodeAfterForkPreservingTheIndex() {
+        // Given
+        FlowGraph graph = provider.createGraph();
+        graph.root(root);
+        graph.add(root, forkNode1);
+        graph.add(forkNode1, componentNode1);
+        graph.add(forkNode1, componentNode2);
+
+        FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
+
+        // When
+        FlowActionNodeReplace action = new FlowActionNodeReplace(componentNode1, placeholderNode);
+
+        action.execute(modifiableGraph);
+
+        // Then
+        PluginAssertion.assertThat(modifiableGraph)
+                .isChanged()
+                .nodesCountIs(4)
+                .root().is(root).and()
+                .successorsOf(forkNode1).isAtIndex(placeholderNode, 0).and()
+                .successorsOf(forkNode1).isAtIndex(componentNode2, 1);
+    }
 }

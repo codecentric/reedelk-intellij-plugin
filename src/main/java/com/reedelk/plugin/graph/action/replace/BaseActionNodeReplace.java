@@ -35,8 +35,11 @@ abstract class BaseActionNodeReplace implements Action {
             // If the predecessor is a ScopedNode, then we must
             // replace it in the same position index of the 'from' node.
             if (predecessor instanceof ScopedGraphNode) {
+
                 int index = GetSuccessorIndex.ofScopedNode(graph, (ScopedGraphNode) predecessor, from);
+
                 graph.add(predecessor, to, index);
+
             } else {
                 graph.add(predecessor, to);
             }
