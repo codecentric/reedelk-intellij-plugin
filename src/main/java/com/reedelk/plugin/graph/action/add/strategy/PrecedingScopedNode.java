@@ -1,6 +1,5 @@
 package com.reedelk.plugin.graph.action.add.strategy;
 
-import com.reedelk.plugin.commons.Half;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.action.Strategy;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -18,31 +17,51 @@ import java.util.List;
  */
 public class PrecedingScopedNode implements Strategy {
 
-    private static final int NODE_TOP_BOTTOM_WEIGHT = 4;
+    private static final int NODE_TOP_BOTTOM_MARGIN = 20;
 
     private final ScopedGraphNode closestPrecedingNode;
     private final Graphics2D graphics;
     private final FlowGraph graph;
     private final Point dropPoint;
 
-    public PrecedingScopedNode(@NotNull FlowGraph graph, @NotNull Point dropPoint, @NotNull ScopedGraphNode scopedNode, @NotNull Graphics2D graphics) {
+    PrecedingScopedNode(@NotNull FlowGraph graph, @NotNull Point dropPoint, @NotNull ScopedGraphNode scopedNode, @NotNull Graphics2D graphics) {
         this.closestPrecedingNode = scopedNode;
         this.dropPoint = dropPoint;
         this.graphics = graphics;
         this.graph = graph;
     }
 
+    // We must find where the drop point is for each successor of preceding the scoped node.
+    // The preceding scope node might have 'n' children, therefore for each children we need to find
+    // the exact point where the  drop point is. For a given child, the drop point might be:
+    // * In the topmost area: in this case the node must be added above the current child.
+    // * In the center area: in this case the node must be added before the current child.
+    // * In the bottom area: in this case the node must be added below the current child and above the next child.
+    // Special cases are considered when the drop point is at the top of the topmost child
+    // or at the bottom of the bottommost child.
+    //
+    // |-----------| yTopScopeBound (if successorIndex == 0)
+    // |           |
+    // |-----------| yTopTopBound
+    // |   top-0   |
+    // |-----------| yCenterTopBound == yTopBottomBound
+    // |  center-0 |
+    // |-----------| yCenterBottomBound == yBottomTopBound
+    // |  bottom-0 |
+    // |-----------| yBottomBottomBound == yTopTopBound
+    // |   top-1   |
+    // |-----------| yCenterTopBound == yTopBottomBound
+    // |  center-1 |
+    // |-----------| yCenterBottomBound == yBottomTopBound
+    // |  bottom-1 |
+    // |-----------| yBottomBottomBound
+    // |           |
+    // |-----------| yBottomScopeBound (if successor index == successors.length - 1)
     @Override
     public void execute(GraphNode node) {
         List<GraphNode> successors = graph.successors(closestPrecedingNode);
         for (int successorIndex = 0; successorIndex < successors.size(); successorIndex++) {
-            // |-----------| yTopTopBound
-            // |    top    |
-            // |-----------| yCenterTopBound == yTopBottomBound
-            // |   center  |
-            // |-----------| yCenterBottomBound == yBottomTopBound
-            // |  bottom   |
-            // |-----------| yBottomBottomBound
+
             GraphNode successor = successors.get(successorIndex);
 
             // Adds a node at index "successorIndex", the existing nodes are shifted down.
@@ -53,7 +72,7 @@ public class PrecedingScopedNode implements Strategy {
                     FindFirstNodeOutsideScope.of(graph, closestPrecedingNode)
                             .ifPresent(firstNodeOutsideScope -> graph.add(node, firstNodeOutsideScope));
                 }
-                break;
+                break; // we stop if we find an area matching the position.
 
                 // Replaces the first node at index "successorIndex".
             } else if (isInsideCenterArea(successor, dropPoint)) {
@@ -63,7 +82,7 @@ public class PrecedingScopedNode implements Strategy {
                     graph.add(node, successor);
                     closestPrecedingNode.addToScope(node);
                 }
-                break;
+                break; // we stop if we find an area matching the position.
 
                 // Adds a node next to the current index. Existing nodes at "successorIndex + 1" are shifted down.
             } else if (isInsideBottomArea(successors, successorIndex, closestPrecedingNode, dropPoint)) {
@@ -73,18 +92,28 @@ public class PrecedingScopedNode implements Strategy {
                     FindFirstNodeOutsideScope.of(graph, closestPrecedingNode)
                             .ifPresent(firstNodeOutsideScope -> graph.add(node, firstNodeOutsideScope));
                 }
-                break;
+                break; // we stop if we find an area matching the position.
             }
         }
     }
 
-    // |-----------| yTopScopeBound
+    // |-----------| yTopScopeBound (if successorIndex == 0)
     // |           |
     // |           |
-    // |-----------| yTopTopBound
-    // |    top    |
+    // |   top-0   |
     // |-----------| yCenterTopBound == yTopBottomBound
-    // |   center  |
+    // |  center-0 |
+    // |-----------| yCenterBottomBound == yBottomTopBound
+    // |  bottom-0 |
+    // |-----------| yBottomBottomBound == yTopTopBound
+    // |   top-1   |
+    // |-----------| yCenterTopBound == yTopBottomBound
+    // |  center-1 |
+    // |-----------| yCenterBottomBound == yBottomTopBound
+    // |  bottom-1 |
+    // |           |
+    // |           |
+    // |-----------| yBottomScopeBound (if successor index == successors.length - 1)
     private boolean isInsideTopArea(List<GraphNode> successors, int successorIndex, ScopedGraphNode closestPrecedingNode, Point dropPoint) {
         GraphNode current = successors.get(successorIndex);
         // Topmost element
@@ -102,13 +131,23 @@ public class PrecedingScopedNode implements Strategy {
         }
     }
 
-    // |   center  |
+    // |-----------| yTopScopeBound (if successorIndex == 0)
+    // |           |
+    // |           |
+    // |   top-0   |
+    // |-----------| yCenterTopBound == yTopBottomBound
+    // |  center-0 |
     // |-----------| yCenterBottomBound == yBottomTopBound
-    // |  bottom   |
-    // |-----------| yBottomBottomBound
+    // |  bottom-0 |
+    // |-----------| yBottomBottomBound == yTopTopBound
+    // |   top-1   |
+    // |-----------| yCenterTopBound == yTopBottomBound
+    // |  center-1 |
+    // |-----------| yCenterBottomBound == yBottomTopBound
+    // |  bottom-1 |
     // |           |
     // |           |
-    // |-----------| yBottomScopeBound
+    // |-----------| yBottomScopeBound (if successor index == successors.length - 1)
     private boolean isInsideBottomArea(List<GraphNode> successors, int successorIndex, ScopedGraphNode closestPrecedingNode, Point dropPoint) {
         GraphNode current = successors.get(successorIndex);
         // Lowermost element bottom area: between yBottomTopBound and the bottom of the scope rectangle
@@ -132,27 +171,23 @@ public class PrecedingScopedNode implements Strategy {
     }
 
     private static int yTopBottomBoundOf(GraphNode node, Graphics2D graphics) {
-        int height = node.height(graphics);
-        int halfHeight = Half.of(height);
-        return node.y() - (halfHeight - Math.floorDiv(height, NODE_TOP_BOTTOM_WEIGHT));
+        int topHeight = node.topHalfHeight(graphics);
+        return node.y() - (topHeight - NODE_TOP_BOTTOM_MARGIN);
     }
 
     private static int yBottomTopBoundOf(GraphNode node, Graphics2D graphics) {
-        int height = node.height(graphics);
-        int halfHeight = Half.of(height);
-        return node.y() + (halfHeight - Math.floorDiv(height, NODE_TOP_BOTTOM_WEIGHT));
+        int bottomHeight = node.bottomHalfHeight(graphics);
+        return node.y() + (bottomHeight - NODE_TOP_BOTTOM_MARGIN);
     }
 
     private static int yCenterTopBound(GraphNode node, Graphics2D graphics) {
-        int height = node.height(graphics);
-        int halfHeight = Half.of(height);
-        return node.y() - (halfHeight - Math.floorDiv(height, NODE_TOP_BOTTOM_WEIGHT));
+        int topHalfHeight = node.topHalfHeight(graphics);
+        return node.y() - (topHalfHeight - NODE_TOP_BOTTOM_MARGIN);
     }
 
     private static int yCenterBottomBound(GraphNode node, Graphics2D graphics) {
-        int height = node.height(graphics);
-        int halfHeight = Half.of(height);
-        return node.y() + (halfHeight - Math.floorDiv(height, NODE_TOP_BOTTOM_WEIGHT));
+        int bottomHeight = node.bottomHalfHeight(graphics);
+        return node.y() + (bottomHeight - NODE_TOP_BOTTOM_MARGIN);
     }
 
     private static int scopeMaxYBound(FlowGraph graph, ScopedGraphNode scopedGraphNode, Graphics2D graphics) {
