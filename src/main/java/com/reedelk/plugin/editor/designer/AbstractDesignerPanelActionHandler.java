@@ -14,6 +14,7 @@ import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.action.Action;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.GraphNodeFactory;
+import com.reedelk.runtime.component.Placeholder;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -47,26 +48,32 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
     @Override
     public void onMove(Graphics2D graphics, GraphNode selected, Point dragPoint, ImageObserver observer) {
         Point dropPoint = new Point(dragPoint.x, dragPoint.y);
-        Action addAction = getAddAction(dropPoint, selected, graphics, observer);
-        Action actionRemove = getRemoveAction(selected);
+        GraphNode placeHolderNode = GraphNodeFactory.get(module, Placeholder.class.getName());
 
-        MoveActionHandler handler = new MoveActionHandler(
-                module,
-                snapshot,
-                graphics,
-                selected,
-                dragPoint,
-                addAction,
-                actionRemove);
+        Action actionRemove = getActionRemove(placeHolderNode);
+        Action actionReplace = getActionReplace(selected, placeHolderNode);
+        Action actionAdd = getActionAdd(selected, dropPoint, graphics, observer);
+
+        MoveActionHandler handler = MoveActionHandler.builder()
+                .module(module)
+                .snapshot(snapshot)
+                .graphics(graphics)
+                .movedNode(selected)
+                .movePoint(dragPoint)
+                .actionAdd(actionAdd)
+                .actionRemove(actionRemove)
+                .actionReplace(actionReplace)
+                .replacementNode(placeHolderNode)
+                .build();
 
         handler.handle();
     }
 
     @Override
     public void onRemove(GraphNode nodeToRemove) {
-        Action removeAction = getRemoveAction(nodeToRemove);
+        Action actionRemove = getActionRemove(nodeToRemove);
         RemoveActionHandler handler =
-                new RemoveActionHandler(module, snapshot, removeAction);
+                new RemoveActionHandler(module, snapshot, actionRemove);
         handler.handle();
     }
 
@@ -92,7 +99,7 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
 
             LOG.info(format("Node Dropped [%s], drop point [x: %d, y: %d]", PrintFlowInfo.name(nodeToAdd), dropPoint.x, dropPoint.y));
 
-            Action addAction = getAddAction(dropPoint, nodeToAdd, graphics, observer);
+            Action addAction = getActionAdd(nodeToAdd, dropPoint, graphics, observer);
 
             DropActionHandler handler = new DropActionHandler(module, snapshot, addAction);
 
@@ -112,9 +119,11 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
         return Optional.empty();
     }
 
-    protected abstract Action getAddAction(Point dropPoint, GraphNode nodeToAdd, Graphics2D graphics, ImageObserver observer);
+    protected abstract Action getActionAdd(GraphNode nodeToAdd, Point dropPoint, Graphics2D graphics, ImageObserver observer);
 
-    protected abstract Action getRemoveAction(GraphNode nodeToRemove);
+    protected abstract Action getActionRemove(GraphNode nodeToRemove);
+
+    protected abstract Action getActionReplace(GraphNode nodeFrom, GraphNode nodeTo);
 
     private Optional<ComponentDescriptor> getComponentDescriptorFrom(DropTargetDropEvent dropEvent) {
         Transferable transferable = dropEvent.getTransferable();

@@ -26,12 +26,13 @@ public class FlowRemoveRootStrategy implements Strategy {
         // we cannot remove the root node, and we add a placeholder node.
         if (!successors.isEmpty()) {
 
-            // If we remove the root, we need to replace
-            // it with the placeholder.
+            // If we remove the root, we need to replace it with the placeholder.
             GraphNode placeholder = placeholderProvider.get();
 
+            // Set the new root.
             graph.root(placeholder);
 
+            // Root node MUST have only one successor.
             graph.add(placeholder, successors.get(0));
         }
 

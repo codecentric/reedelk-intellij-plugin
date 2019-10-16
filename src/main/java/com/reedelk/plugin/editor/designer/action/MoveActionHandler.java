@@ -16,29 +16,19 @@ import java.util.Optional;
 
 public class MoveActionHandler {
 
-    private final FlowSnapshot snapshot;
-    private final Graphics2D graphics;
-    private final GraphNode selected;
-    private final Point movePoint;
-    private final Module module;
+    private FlowSnapshot snapshot;
+    private Graphics2D graphics;
+    private Point movePoint;
+    private Module module;
 
-    private final Action actionRemove;
-    private final Action actionAdd;
+    private GraphNode replacementNode;
+    private GraphNode movedNode;
 
-    public MoveActionHandler(@NotNull Module module,
-                             @NotNull FlowSnapshot snapshot,
-                             @NotNull Graphics2D graphics,
-                             @NotNull GraphNode selected,
-                             @NotNull Point movePoint,
-                             @NotNull Action actionAdd,
-                             @NotNull Action actionRemove) {
-        this.selected = selected;
-        this.actionAdd = actionAdd;
-        this.actionRemove = actionRemove;
-        this.movePoint = movePoint;
-        this.snapshot = snapshot;
-        this.graphics = graphics;
-        this.module = module;
+    private Action actionReplace;
+    private Action actionRemove;
+    private Action actionAdd;
+
+    private MoveActionHandler() {
     }
 
     public void handle() {
@@ -49,39 +39,140 @@ public class MoveActionHandler {
         // Create a method inside selected to check if given coordinates are within hover area.
         // this logic should be encapsulated there
         boolean withinX =
-                dragX > selected.x() - Half.of(selected.width(graphics)) &&
-                        dragX < selected.x() + Half.of(selected.width(graphics));
+                dragX > movedNode.x() - Half.of(movedNode.width(graphics)) &&
+                        dragX < movedNode.x() + Half.of(movedNode.width(graphics));
 
         boolean withinY =
-                dragY > selected.y() - Half.of(selected.height(graphics)) &&
-                        dragY < selected.y() + Half.of(selected.height(graphics));
+                dragY > movedNode.y() - Half.of(movedNode.height(graphics)) &&
+                        dragY < movedNode.y() + Half.of(movedNode.height(graphics));
 
         if (withinX && withinY) return;
 
-        // 1. Copy the original graph
-        FlowGraph copy = snapshot.getGraphOrThrowIfAbsent();
 
-        // 2. Remove the dropped node from the copy graph
+        FlowGraph originalGraph = snapshot.getGraphOrThrowIfAbsent();
+
+        // Copy the original graph
+        FlowGraph copy = originalGraph.copy();
+
+        // Remove the dropped node from the copy graph
+        actionReplace.execute(copy);
+
+        // Remove the replaced node from any scope it might belong to
+        Optional<ScopedGraphNode> selectedScope = FindScope.of(copy, movedNode);
+        selectedScope.ifPresent(scopedNode -> {
+            scopedNode.removeFromScope(movedNode);
+            scopedNode.addToScope(replacementNode);
+        });
+
+        // Add the node. We must decorate the copy with the change aware
+        // decorator to understand later on if the graph was actually
+        // changed as a result of the ADD node action.
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
 
-        actionRemove.execute(modifiableGraph);
-
-        // 3. Remove the dropped node from any scope it might belong to
-        Optional<ScopedGraphNode> selectedScope = FindScope.of(modifiableGraph, selected);
-        selectedScope.ifPresent(scopedNode -> scopedNode.removeFromScope(selected));
-
-        // 4. Add the node
+        // Add the node
         actionAdd.execute(modifiableGraph);
 
-        // 5. If the copy of the graph was changed, then update the graph
-        // TODO: IF REMOVED BUT NOT ADDED, then should not be changed... but now if we remove, and then we cannot add the node for some reason the snapshot is still updated which is not necessary
+        // If the copy of the graph was changed, then update the snapshot
+        // with the new graph, otherwise keep the original graph.
         if (modifiableGraph.isChanged()) {
+
+            // Must remove the replaced node
+            actionRemove.execute(modifiableGraph);
+
             modifiableGraph.commit(module);
+
             snapshot.updateSnapshot(this, modifiableGraph);
 
         } else {
-            // 6. Add back the node to the scope if the original graph was not changed.
-            selectedScope.ifPresent(scopedNode -> scopedNode.addToScope(selected));
+
+            // Add back the node to the scope and remove replacementNode
+            // if the original graph did not change.
+            selectedScope.ifPresent(scopedNode -> {
+                scopedNode.addToScope(movedNode);
+                scopedNode.removeFromScope(replacementNode);
+            });
+
+            snapshot.updateSnapshot(this, originalGraph);
+        }
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+
+        private FlowSnapshot snapshot;
+        private Graphics2D graphics;
+        private GraphNode movedNode;
+        private GraphNode replacementNode;
+        private Point movePoint;
+        private Module module;
+
+        private Action actionReplace;
+        private Action actionRemove;
+        private Action actionAdd;
+
+        public Builder snapshot(@NotNull FlowSnapshot snapshot) {
+            this.snapshot = snapshot;
+            return this;
+        }
+
+        public Builder graphics(@NotNull Graphics2D graphics) {
+            this.graphics = graphics;
+            return this;
+        }
+
+        public Builder movedNode(@NotNull GraphNode movedNode) {
+            this.movedNode = movedNode;
+            return this;
+        }
+
+        public Builder replacementNode(@NotNull GraphNode replacementNode) {
+            this.replacementNode = replacementNode;
+            return this;
+        }
+
+        public Builder movePoint(@NotNull Point movePoint) {
+            this.movePoint = movePoint;
+            return this;
+        }
+
+        public Builder module(@NotNull Module module) {
+            this.module = module;
+            return this;
+        }
+
+        public Builder actionReplace(@NotNull Action actionReplace) {
+            this.actionReplace = actionReplace;
+            return this;
+        }
+
+        public Builder actionAdd(@NotNull Action actionAdd) {
+            this.actionAdd = actionAdd;
+            return this;
+        }
+
+        public Builder actionRemove(@NotNull Action actionRemove) {
+            this.actionRemove = actionRemove;
+            return this;
+        }
+
+        public MoveActionHandler build() {
+            MoveActionHandler handler = new MoveActionHandler();
+            handler.snapshot = snapshot;
+            handler.graphics = graphics;
+            handler.movePoint = movePoint;
+            handler.module = module;
+
+            handler.replacementNode = replacementNode;
+            handler.movedNode = movedNode;
+
+            handler.actionReplace = actionReplace;
+            handler.actionRemove = actionRemove;
+            handler.actionAdd = actionAdd;
+
+            return handler;
         }
     }
 }
