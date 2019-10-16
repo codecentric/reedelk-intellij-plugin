@@ -1,8 +1,10 @@
 package com.reedelk.plugin.graph.action.replace;
 
+import com.reedelk.plugin.commons.GetSuccessorIndex;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.action.Action;
 import com.reedelk.plugin.graph.node.GraphNode;
+import com.reedelk.plugin.graph.node.ScopedGraphNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +32,16 @@ abstract class BaseActionNodeReplace implements Action {
         // Remove predecessors edges incoming to 'from'
         // Add predecessors incoming to 'to'
         for (GraphNode predecessor : predecessors) {
+            // If the predecessor is a ScopedNode, then we must
+            // replace it in the same position index of the 'from' node.
+            if (predecessor instanceof ScopedGraphNode) {
+                int index = GetSuccessorIndex.ofScopedNode(graph, (ScopedGraphNode) predecessor, from);
+                graph.add(predecessor, to, index);
+            } else {
+                graph.add(predecessor, to);
+            }
+
             graph.remove(predecessor, from);
-            graph.add(predecessor, to);
         }
 
         // The same as above but with outgoing

@@ -1,5 +1,6 @@
 package com.reedelk.plugin.graph.action.remove.strategy;
 
+import com.reedelk.plugin.commons.GetSuccessorIndex;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.action.Strategy;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -66,7 +67,7 @@ public class RemoveGraphNodeStrategy implements Strategy {
     }
 
     private void removeSuccessorOfScopedNode(GraphNode toRemove, ScopedGraphNode predecessor, GraphNode successor) {
-        int index = getToBeRemovedNodeIndex(predecessor, toRemove);
+        int index = GetSuccessorIndex.ofScopedNode(graph, predecessor, toRemove);
 
         graph.remove(predecessor, toRemove);
         FindScope.of(graph, toRemove)
@@ -86,16 +87,5 @@ public class RemoveGraphNodeStrategy implements Strategy {
         }
 
         graph.remove(toRemove);
-    }
-
-    private int getToBeRemovedNodeIndex(ScopedGraphNode scopedPredecessor, GraphNode toRemove) {
-        List<GraphNode> successors = graph.successors(scopedPredecessor);
-        for (int i = 0; i < successors.size(); i++) {
-            if (successors.get(i) == toRemove) return i;
-        }
-        // This is the case where we need to find a toRemove index
-        // for a scoped predecessor without successors in the scope.
-        // In this case, the index is just 0 since it is the first to be connected.
-        return 0;
     }
 }
