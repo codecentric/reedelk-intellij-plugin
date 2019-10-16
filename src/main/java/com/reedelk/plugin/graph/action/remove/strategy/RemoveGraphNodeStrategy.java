@@ -36,7 +36,7 @@ public class RemoveGraphNodeStrategy implements Strategy {
             graph.remove(toRemove);
 
         } else {
-            // This is a node with at least  one predecessor. We must connect predecessors
+            // This is a node with at least one predecessor. We must connect predecessors
             // with the node to remove successors.
             for (GraphNode predecessor : predecessors) {
                 if (predecessor instanceof ScopedGraphNode) {
