@@ -9,6 +9,8 @@ import java.awt.image.ImageObserver;
 
 public interface Drawable {
 
+    boolean isDraggable();
+
     void drag(int x, int y);
 
     void dragging();

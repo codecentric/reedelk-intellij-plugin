@@ -131,8 +131,14 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
     }
 
     @Override
+    public boolean isDraggable() {
+        // scope node is not draggable yet.
+        return false;
+    }
+
+    @Override
     public void drag(int x, int y) {
-        // scoped node is not draggable yet.
+        // scope node is not draggable yet.
     }
 
     @Override

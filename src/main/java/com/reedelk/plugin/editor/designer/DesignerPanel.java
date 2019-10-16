@@ -149,7 +149,7 @@ public abstract class DesignerPanel extends JBPanel implements
 
     @Override
     public void mouseDragged(MouseEvent event) {
-        if (selected != null) {
+        if (selected != null && selected.isDraggable()) {
             dragging = true;
             selected.dragging();
             selected.drag(event.getX() - offsetX, event.getY() - offsetY);

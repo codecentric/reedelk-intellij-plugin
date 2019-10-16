@@ -158,6 +158,12 @@ public abstract class AbstractGraphNode implements GraphNode {
     }
 
     @Override
+    public boolean isDraggable() {
+        // INBOUND Components cannot be dragged.
+        return ComponentClass.INBOUND != getComponentClass();
+    }
+
+    @Override
     public void drag(int x, int y) {
         draggedX = x;
         draggedY = y;
