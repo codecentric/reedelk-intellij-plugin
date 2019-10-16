@@ -86,8 +86,7 @@ public class PrecedingNodeWithOneSuccessor implements Strategy {
         }
 
         if (lastInnerMostScope != null) {
-            ListLastNodesOfScope
-                    .from(graph, lastInnerMostScope)
+            ListLastNodesOfScope.from(graph, lastInnerMostScope)
                     .forEach(lastNodeOfScope -> {
                         graph.add(lastNodeOfScope, node);
                         graph.remove(lastNodeOfScope, successorOfClosestPrecedingNode);
