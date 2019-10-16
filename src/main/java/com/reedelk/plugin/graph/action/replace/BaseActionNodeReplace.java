@@ -42,8 +42,5 @@ abstract class BaseActionNodeReplace implements Action {
 
         // We must remove the from
         graph.remove(from);
-
-        // Set the position of the replaced node.
-        to.setPosition(from.x(), from.y());
     }
 }

@@ -7,15 +7,15 @@ import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.action.Action;
 import org.jetbrains.annotations.NotNull;
 
-public class DropActionHandler {
+public class AddActionHandler {
 
     private final FlowSnapshot snapshot;
     private final Action addAction;
     private final Module module;
 
-    public DropActionHandler(@NotNull Module module,
-                             @NotNull FlowSnapshot snapshot,
-                             @NotNull Action addAction) {
+    public AddActionHandler(@NotNull Module module,
+                            @NotNull FlowSnapshot snapshot,
+                            @NotNull Action addAction) {
         this.addAction = addAction;
         this.snapshot = snapshot;
         this.module = module;

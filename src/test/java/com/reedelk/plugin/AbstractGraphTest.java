@@ -7,6 +7,7 @@ import com.reedelk.plugin.component.domain.ComponentDescriptor;
 import com.reedelk.plugin.component.type.flowreference.FlowReferenceNode;
 import com.reedelk.plugin.component.type.fork.ForkNode;
 import com.reedelk.plugin.component.type.generic.GenericComponentNode;
+import com.reedelk.plugin.component.type.placeholder.PlaceholderNode;
 import com.reedelk.plugin.component.type.router.RouterNode;
 import com.reedelk.plugin.component.type.stop.StopNode;
 import com.reedelk.plugin.fixture.*;
@@ -14,10 +15,7 @@ import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowGraphImpl;
 import com.reedelk.plugin.graph.FlowGraphProvider;
 import com.reedelk.plugin.graph.node.GraphNode;
-import com.reedelk.runtime.component.FlowReference;
-import com.reedelk.runtime.component.Fork;
-import com.reedelk.runtime.component.Router;
-import com.reedelk.runtime.component.Stop;
+import com.reedelk.runtime.component.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -72,6 +70,9 @@ public abstract class AbstractGraphTest {
     protected FlowReferenceNode flowReferenceNode1;
     protected FlowReferenceNode flowReferenceNode2;
 
+    // Placeholder
+    protected PlaceholderNode placeholderNode;
+
     protected TestAwareGraphProvider provider;
 
 
@@ -109,6 +110,8 @@ public abstract class AbstractGraphTest {
 
         flowReferenceNode1 = createGraphNodeInstance(FlowReference.class, FlowReferenceNode.class);
         flowReferenceNode2 = createGraphNodeInstance(FlowReference.class, FlowReferenceNode.class);
+
+        placeholderNode = createGraphNodeInstance(Placeholder.class, PlaceholderNode.class);
     }
 
     protected static <T extends GraphNode> T createGraphNodeInstance(Class componentClazz, Class<T> graphNodeClazz, ComponentClass componentClass) {

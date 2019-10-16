@@ -7,7 +7,7 @@ import com.reedelk.plugin.commons.PrintFlowInfo;
 import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
-import com.reedelk.plugin.editor.designer.action.DropActionHandler;
+import com.reedelk.plugin.editor.designer.action.AddActionHandler;
 import com.reedelk.plugin.editor.designer.action.MoveActionHandler;
 import com.reedelk.plugin.editor.designer.action.RemoveActionHandler;
 import com.reedelk.plugin.graph.FlowSnapshot;
@@ -46,8 +46,7 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
     }
 
     @Override
-    public void onMove(Graphics2D graphics, GraphNode selected, Point dragPoint, ImageObserver observer) {
-        Point dropPoint = new Point(dragPoint.x, dragPoint.y);
+    public void onMove(Graphics2D graphics, GraphNode selected, Point dropPoint, ImageObserver observer) {
         GraphNode placeHolderNode = GraphNodeFactory.get(module, Placeholder.class.getName());
 
         Action actionRemove = getActionRemove(placeHolderNode);
@@ -59,7 +58,7 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
                 .snapshot(snapshot)
                 .graphics(graphics)
                 .movedNode(selected)
-                .movePoint(dragPoint)
+                .dropPoint(dropPoint)
                 .actionAdd(actionAdd)
                 .actionRemove(actionRemove)
                 .actionReplace(actionReplace)
@@ -101,7 +100,7 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
 
             Action addAction = getActionAdd(nodeToAdd, dropPoint, graphics, observer);
 
-            DropActionHandler handler = new DropActionHandler(module, snapshot, addAction);
+            AddActionHandler handler = new AddActionHandler(module, snapshot, addAction);
 
             boolean handled = handler.handle();
 

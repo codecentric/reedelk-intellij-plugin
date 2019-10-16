@@ -18,7 +18,7 @@ public class MoveActionHandler {
 
     private FlowSnapshot snapshot;
     private Graphics2D graphics;
-    private Point movePoint;
+    private Point dropPoint;
     private Module module;
 
     private GraphNode replacementNode;
@@ -32,22 +32,11 @@ public class MoveActionHandler {
     }
 
     public void handle() {
-        int dragX = movePoint.x;
-        int dragY = movePoint.y;
 
-        // If outside the current selected area, then we consider the drop as effective.
-        // Create a method inside selected to check if given coordinates are within hover area.
-        // this logic should be encapsulated there
-        boolean withinX =
-                dragX > movedNode.x() - Half.of(movedNode.width(graphics)) &&
-                        dragX < movedNode.x() + Half.of(movedNode.width(graphics));
-
-        boolean withinY =
-                dragY > movedNode.y() - Half.of(movedNode.height(graphics)) &&
-                        dragY < movedNode.y() + Half.of(movedNode.height(graphics));
-
-        if (withinX && withinY) return;
-
+        if (isDropPointInsideCurrentSelectedNode(dropPoint.x, dropPoint.y)) {
+            // We don't move anything if we drop the node within its box boundaries.
+            return;
+        }
 
         FlowGraph originalGraph = snapshot.getGraphOrThrowIfAbsent();
 
@@ -56,6 +45,10 @@ public class MoveActionHandler {
 
         // Remove the dropped node from the copy graph
         actionReplace.execute(copy);
+
+        // Set the position of the replaced node equal to the moved node.
+        // This way the ADD action can properly compute the new position of the moved node.
+        replacementNode.setPosition(movedNode.x(), movedNode.y());
 
         // Remove the replaced node from any scope it might belong to
         Optional<ScopedGraphNode> selectedScope = FindScope.of(copy, movedNode);
@@ -102,19 +95,28 @@ public class MoveActionHandler {
 
     public static class Builder {
 
+        private GraphNode replacementNode;
         private FlowSnapshot snapshot;
         private Graphics2D graphics;
         private GraphNode movedNode;
-        private GraphNode replacementNode;
-        private Point movePoint;
+        private Point dropPoint;
         private Module module;
-
         private Action actionReplace;
         private Action actionRemove;
         private Action actionAdd;
 
-        public Builder snapshot(@NotNull FlowSnapshot snapshot) {
-            this.snapshot = snapshot;
+        public Builder module(@NotNull Module module) {
+            this.module = module;
+            return this;
+        }
+
+        public Builder dropPoint(@NotNull Point dropPoint) {
+            this.dropPoint = dropPoint;
+            return this;
+        }
+
+        public Builder actionAdd(@NotNull Action actionAdd) {
+            this.actionAdd = actionAdd;
             return this;
         }
 
@@ -128,28 +130,8 @@ public class MoveActionHandler {
             return this;
         }
 
-        public Builder replacementNode(@NotNull GraphNode replacementNode) {
-            this.replacementNode = replacementNode;
-            return this;
-        }
-
-        public Builder movePoint(@NotNull Point movePoint) {
-            this.movePoint = movePoint;
-            return this;
-        }
-
-        public Builder module(@NotNull Module module) {
-            this.module = module;
-            return this;
-        }
-
-        public Builder actionReplace(@NotNull Action actionReplace) {
-            this.actionReplace = actionReplace;
-            return this;
-        }
-
-        public Builder actionAdd(@NotNull Action actionAdd) {
-            this.actionAdd = actionAdd;
+        public Builder snapshot(@NotNull FlowSnapshot snapshot) {
+            this.snapshot = snapshot;
             return this;
         }
 
@@ -158,21 +140,45 @@ public class MoveActionHandler {
             return this;
         }
 
+        public Builder actionReplace(@NotNull Action actionReplace) {
+            this.actionReplace = actionReplace;
+            return this;
+        }
+
+        public Builder replacementNode(@NotNull GraphNode replacementNode) {
+            this.replacementNode = replacementNode;
+            return this;
+        }
+
         public MoveActionHandler build() {
             MoveActionHandler handler = new MoveActionHandler();
+            handler.replacementNode = replacementNode;
+            handler.dropPoint = dropPoint;
+            handler.movedNode = movedNode;
             handler.snapshot = snapshot;
             handler.graphics = graphics;
-            handler.movePoint = movePoint;
             handler.module = module;
-
-            handler.replacementNode = replacementNode;
-            handler.movedNode = movedNode;
-
             handler.actionReplace = actionReplace;
             handler.actionRemove = actionRemove;
             handler.actionAdd = actionAdd;
-
             return handler;
         }
+    }
+
+    /**
+     * Checks whether the drop point is inside the current selected box node.
+     * The box for a selected node is within X center +(-) half width and
+     * Y center +(-) half height.
+     *
+     * @return true if the drop point is within the moved node box, false if it is outside.
+     */
+    private boolean isDropPointInsideCurrentSelectedNode(int dropX, int dropY) {
+        boolean withinX =
+                dropX > movedNode.x() - Half.of(movedNode.width(graphics)) &&
+                        dropX < movedNode.x() + Half.of(movedNode.width(graphics));
+        boolean withinY =
+                dropY > movedNode.y() - Half.of(movedNode.height(graphics)) &&
+                        dropY < movedNode.y() + Half.of(movedNode.height(graphics));
+        return withinX && withinY;
     }
 }
