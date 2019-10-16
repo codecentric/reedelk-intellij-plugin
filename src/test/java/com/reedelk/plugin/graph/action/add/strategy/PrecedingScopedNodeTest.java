@@ -93,7 +93,7 @@ class PrecedingScopedNodeTest extends AbstractGraphTest {
         @Test
         void shouldAddSuccessorOnCenterAreaOfExistingAndReplaceIt() {
             // Given
-            Point componentNode2DropPoint = new Point(210, 70);
+            Point componentNode2DropPoint = new Point(210, 145);
 
             FlowGraph graph = provider.createGraph();
             graph.root(root);
@@ -101,9 +101,9 @@ class PrecedingScopedNodeTest extends AbstractGraphTest {
             graph.add(routerNode1, componentNode1);
             routerNode1.addToScope(componentNode1);
 
-            root.setPosition(55, 75);
-            routerNode1.setPosition(195, 75);
-            componentNode1.setPosition(335, 75);
+            root.setPosition(65, 155);
+            routerNode1.setPosition(215, 155);
+            componentNode1.setPosition(365, 155);
 
             PrecedingScopedNode strategy =
                     new PrecedingScopedNode(graph, componentNode2DropPoint, routerNode1, graphics);
