@@ -142,7 +142,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
                     .node(lastNode).is(node)
                     .hasDataWithValue("booleanProperty", true)
                     .hasTypeObject("typeObjectSharedProperty")
-                    .hasDataWithValue("configRef", "4ba1b6a0-9644-11e9-bc42-526af7764f64")
+                    .hasDataWithValue("ref", "4ba1b6a0-9644-11e9-bc42-526af7764f64")
                     .and().and().nodesCountIs(2);
         }
 
@@ -160,6 +160,33 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
             mockContextInstantiateGraphNode(node);
 
             JSONObject genericComponentDefinition = new JSONObject(GenericComponent.WithTypeObjectEmpty.json());
+
+            // When
+            GraphNode lastNode = deserializer.deserialize(root, genericComponentDefinition);
+
+            // Then
+            PluginAssertion.assertThat(graph)
+                    .node(lastNode).is(node)
+                    .hasDataWithValue("booleanProperty", true)
+                    .hasTypeObject("typeObjectSharedProperty")
+                    .isEmpty()
+                    .and().and().nodesCountIs(2);
+        }
+
+        // We expect empty objects still be created in the de-serialized data structure.
+        @Test
+        void shouldCorrectlyDeserializeSharedTypeObjectWhenReferencePropertyNotPresent() {
+            // Given
+            ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+                    .propertyDescriptors(asList(booleanProperty, TypeObjects.typeObjectSharedProperty))
+                    .fullyQualifiedName(ComponentNode1.class.getName())
+                    .build();
+
+            GenericComponentNode node = createGraphNodeInstance(GenericComponentNode.class, descriptor);
+
+            mockContextInstantiateGraphNode(node);
+
+            JSONObject genericComponentDefinition = new JSONObject(GenericComponent.WithTypeObjectReferenceNotPresent.json());
 
             // When
             GraphNode lastNode = deserializer.deserialize(root, genericComponentDefinition);

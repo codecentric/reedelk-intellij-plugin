@@ -57,10 +57,14 @@ public class ComponentDataHolderDeserializer {
             } else if (YES.equals(propertyType.getShared())) {
                 // The config is shareable, therefore we just set the
                 // reference value pointing to the shared config.
-                if (nestedJsonObject.has(JsonParser.Component.configRef())) {
-                    String configRef = JsonParser.Component.configRef(nestedJsonObject);
-                    nestedObject.set(JsonParser.Component.configRef(), configRef);
+                if (nestedJsonObject.has(JsonParser.Component.ref())) {
+                    String reference = JsonParser.Component.ref(nestedJsonObject);
+                    nestedObject.set(JsonParser.Component.ref(), reference);
                     componentData.set(descriptor.getPropertyName(), nestedObject);
+                } else {
+                    // The nested JSON object does not have a component "ref" property inside it.
+                    // We still must add empty instances for the type object.
+                    addEmptyInstancesForTypeObject(componentData, descriptor);
                 }
             } else {
                 // The config is not shareable, hence we deserialize the object right away.

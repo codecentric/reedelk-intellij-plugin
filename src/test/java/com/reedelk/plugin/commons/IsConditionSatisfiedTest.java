@@ -1,6 +1,7 @@
 package com.reedelk.plugin.commons;
 
 import com.reedelk.runtime.api.annotation.When;
+import com.reedelk.runtime.commons.JsonParser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -115,9 +116,9 @@ class IsConditionSatisfiedTest {
         @Test
         void shouldReturnTrueWhenWantedIsPropertyWithBlankValueAndActualIsTypeObjectWithEmptyString() {
             // Given
-            String wantedPropertyValue = "{'configRef': '" + When.BLANK + "'}";
+            String wantedPropertyValue = "{'ref': '" + When.BLANK + "'}";
             TypeObject actualPropertyValue = new TypeObject();
-            actualPropertyValue.set("configRef", "");
+            actualPropertyValue.set(JsonParser.Component.ref(), "");
 
             // When
             boolean actual = IsConditionSatisfied.of(wantedPropertyValue, actualPropertyValue);
@@ -129,9 +130,9 @@ class IsConditionSatisfiedTest {
         @Test
         void shouldReturnTrueWhenWantedIsPropertyWithBlankValueAndActualIsTypeObjectWithNullString() {
             // Given
-            String wantedPropertyValue = "{'configRef': '" + When.BLANK + "'}";
+            String wantedPropertyValue = "{'ref': '" + When.BLANK + "'}";
             TypeObject actualPropertyValue = new TypeObject();
-            actualPropertyValue.set("configRef", null);
+            actualPropertyValue.set(JsonParser.Component.ref(), null);
 
             // When
             boolean actual = IsConditionSatisfied.of(wantedPropertyValue, actualPropertyValue);
@@ -143,7 +144,7 @@ class IsConditionSatisfiedTest {
         @Test
         void shouldReturnTrueWhenWantedIsPropertyWithBlankValueAndActualIsTypeObjectWithoutProperty() {
             // Given
-            String wantedPropertyValue = "{'configRef': '" + When.BLANK + "'}";
+            String wantedPropertyValue = "{'ref': '" + When.BLANK + "'}";
             TypeObject actualPropertyValue = new TypeObject();
 
             // When
@@ -156,9 +157,9 @@ class IsConditionSatisfiedTest {
         @Test
         void shouldReturnFalseWhenWantedIsPropertyWithBlankValueAndActualIsTypeObjectWithNotEmptyStringProperty() {
             // Given
-            String wantedPropertyValue = "{'configRef': '" + When.BLANK + "'}";
+            String wantedPropertyValue = "{'ref': '" + When.BLANK + "'}";
             TypeObject actualPropertyValue = new TypeObject();
-            actualPropertyValue.set("configRef", "aabbccdd");
+            actualPropertyValue.set(JsonParser.Component.ref(), "aabbccdd");
 
             // When
             boolean actual = IsConditionSatisfied.of(wantedPropertyValue, actualPropertyValue);
@@ -214,9 +215,9 @@ class IsConditionSatisfiedTest {
         @Test
         void shouldReturnFalseWhenWantedIsPropertyWithNotBlankValueAndActualIsTypeObjectWithEmptyString() {
             // Given
-            String wantedPropertyValue = "{'configRef': '" + When.NOT_BLANK + "'}";
+            String wantedPropertyValue = "{'ref': '" + When.NOT_BLANK + "'}";
             TypeObject actualPropertyValue = new TypeObject();
-            actualPropertyValue.set("configRef", "");
+            actualPropertyValue.set(JsonParser.Component.ref(), "");
 
             // When
             boolean actual = IsConditionSatisfied.of(wantedPropertyValue, actualPropertyValue);
@@ -228,9 +229,9 @@ class IsConditionSatisfiedTest {
         @Test
         void shouldReturnFalseWhenWantedIsPropertyWithNotBlankValueAndActualIsTypeObjectWithNullString() {
             // Given
-            String wantedPropertyValue = "{'configRef': '" + When.NOT_BLANK + "'}";
+            String wantedPropertyValue = "{'ref': '" + When.NOT_BLANK + "'}";
             TypeObject actualPropertyValue = new TypeObject();
-            actualPropertyValue.set("configRef", null);
+            actualPropertyValue.set(JsonParser.Component.ref(), null);
 
             // When
             boolean actual = IsConditionSatisfied.of(wantedPropertyValue, actualPropertyValue);
@@ -242,7 +243,7 @@ class IsConditionSatisfiedTest {
         @Test
         void shouldReturnFalseWhenWantedIsPropertyWithNotBlankValueAndActualIsTypeObjectWithoutProperty() {
             // Given
-            String wantedPropertyValue = "{'configRef': '" + When.NOT_BLANK + "'}";
+            String wantedPropertyValue = "{'ref': '" + When.NOT_BLANK + "'}";
             TypeObject actualPropertyValue = new TypeObject();
 
             // When
@@ -255,9 +256,9 @@ class IsConditionSatisfiedTest {
         @Test
         void shouldReturnTrueWhenWantedIsPropertyWithNotBlankValueAndActualIsTypeObjectWithNotEmptyStringProperty() {
             // Given
-            String wantedPropertyValue = "{'configRef': '" + When.NOT_BLANK + "'}";
+            String wantedPropertyValue = "{'ref': '" + When.NOT_BLANK + "'}";
             TypeObject actualPropertyValue = new TypeObject();
-            actualPropertyValue.set("configRef", "aabbccdd");
+            actualPropertyValue.set(JsonParser.Component.ref(), "aabbccdd");
 
             // When
             boolean actual = IsConditionSatisfied.of(wantedPropertyValue, actualPropertyValue);

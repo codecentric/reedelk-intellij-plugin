@@ -108,9 +108,9 @@ public class ObjectPropertyRenderer extends AbstractTypePropertyRenderer {
         ComponentDataHolder dataHolder = propertyAccessor.get();
 
         // We create the accessor for the config reference
-        PropertyAccessor configRefAccessor = PropertyAccessorFactory.get()
+        PropertyAccessor refAccessor = PropertyAccessorFactory.get()
                 .typeDescriptor(descriptor.getPropertyType())
-                .propertyName(JsonParser.Component.configRef())
+                .propertyName(JsonParser.Component.ref())
                 .snapshot(propertyAccessor.getSnapshot())
                 .dataHolder(dataHolder)
                 .build();
@@ -121,7 +121,7 @@ public class ObjectPropertyRenderer extends AbstractTypePropertyRenderer {
             public void onAddedConfiguration(ConfigMetadata addedConfiguration) {
                 ConfigMetadata matchingMetadata =
                         updateMetadataOnSelector(module, selector, descriptor, addedConfiguration.getId());
-                updateSelectedConfig(matchingMetadata, configControlPanel, configRefAccessor, context, descriptor, dataHolder);
+                updateSelectedConfig(matchingMetadata, configControlPanel, refAccessor, context, descriptor, dataHolder);
             }
 
             @Override
@@ -148,15 +148,15 @@ public class ObjectPropertyRenderer extends AbstractTypePropertyRenderer {
         configControlPanel.setEditActionListener((exception, metadata) ->
                 PopupUtils.error(exception, configControlPanel));
 
-        String configReference = dataHolder.get(JsonParser.Component.configRef());
+        String reference = dataHolder.get(JsonParser.Component.ref());
         ConfigMetadata matchingMetadata =
-                updateMetadataOnSelector(module, selector, descriptor, configReference);
+                updateMetadataOnSelector(module, selector, descriptor, reference);
         configControlPanel.onSelect(matchingMetadata);
 
         // We add the listener after, so that the first time we
         // don't update the graph json with the same info.
         selector.addSelectListener(selectedMetadata ->
-                updateSelectedConfig(selectedMetadata, configControlPanel, configRefAccessor, context, descriptor, dataHolder));
+                updateSelectedConfig(selectedMetadata, configControlPanel, refAccessor, context, descriptor, dataHolder));
 
         JPanel wrapper = new DisposablePanel();
         wrapper.setLayout(new BorderLayout());
@@ -165,9 +165,9 @@ public class ObjectPropertyRenderer extends AbstractTypePropertyRenderer {
         return wrapper;
     }
 
-    private void updateSelectedConfig(ConfigMetadata matchingMetadata, ConfigControlPanel configControlPanel, PropertyAccessor configRefAccessor, ContainerContext context, ComponentPropertyDescriptor descriptor, ComponentDataHolder dataHolder) {
+    private void updateSelectedConfig(ConfigMetadata matchingMetadata, ConfigControlPanel configControlPanel, PropertyAccessor referenceAccessor, ContainerContext context, ComponentPropertyDescriptor descriptor, ComponentDataHolder dataHolder) {
         configControlPanel.onSelect(matchingMetadata);
-        configRefAccessor.set(matchingMetadata.getId());
+        referenceAccessor.set(matchingMetadata.getId());
         // If the selection has changed, we must notify all the
         // context subscribers that the property has changed.
         context.notifyPropertyChanged(descriptor.getPropertyName(), dataHolder);

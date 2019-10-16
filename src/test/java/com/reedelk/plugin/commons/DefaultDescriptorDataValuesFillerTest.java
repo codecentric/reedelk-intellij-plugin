@@ -145,12 +145,11 @@ class DefaultDescriptorDataValuesFillerTest {
         // Then
         TypeObjectDescriptor.TypeObject configuration = testDataHolder.get("configuration");
 
-        assertThat(configuration.keys()).containsExactly(Component.configRef());
+        assertThat(configuration.keys()).containsExactly(Component.ref());
 
-        String configReference = configuration.get(Component.configRef());
-        assertThat(configReference).isEqualTo(TypeObjectDescriptor.TypeObject.DEFAULT_CONFIG_REF);
+        String reference = configuration.get(Component.ref());
+        assertThat(reference).isEqualTo(TypeObjectDescriptor.TypeObject.DEFAULT_CONFIG_REF);
     }
-
 
 
     private final ComponentPropertyDescriptor namePropertyDescriptor =

@@ -91,6 +91,13 @@ public class Json {
             }
         },
 
+        WithTypeObjectReferenceNotPresent {
+            @Override
+            public String path() {
+                return "flow/generic_component_with_type_object_reference_not_present.json";
+            }
+        },
+
         WithTypeObjectMissing {
             @Override
             public String path() {

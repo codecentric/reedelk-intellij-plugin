@@ -38,7 +38,7 @@ public class DefaultDescriptorDataValuesFiller {
         TypeObject nested = propertyType.newInstance();
         if (YES.equals(propertyType.getShared())) {
             // If the property is shareable, we initialize it with default config ref
-            nested.set(Component.configRef(), TypeObject.DEFAULT_CONFIG_REF);
+            nested.set(Component.ref(), TypeObject.DEFAULT_CONFIG_REF);
             dataHolder.set(propertyName, nested);
         } else {
             // Recursively fill the content of this object

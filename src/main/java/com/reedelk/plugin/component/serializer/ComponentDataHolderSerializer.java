@@ -71,13 +71,13 @@ public class ComponentDataHolderSerializer {
                                           @NotNull TypeObject data) {
         TypeObjectDescriptor propertyType = propertyDescriptor.getPropertyType();
         if (Shared.YES.equals(propertyType.getShared())) {
-            String ref = data.get(JsonParser.Component.configRef());
+            String ref = data.get(JsonParser.Component.ref());
             // An object reference is ONLY serialized when it is present and it is NOT blank.
-            // e.g. the following reference '"configRef": ""' it is not serialized.
-            // e.g. the following reference '"configRef": "aabbff11233"' it is serialized.
+            // e.g. the following reference '"ref": ""' it is not serialized.
+            // e.g. the following reference '"ref": "aabbff11233"' it is serialized.
             if (StringUtils.isNotBlank(ref)) {
                 JSONObject refObject = JsonObjectFactory.newJSONObject();
-                JsonParser.Component.configRef(ref, refObject);
+                JsonParser.Component.ref(ref, refObject);
                 putData(propertyDescriptor, jsonObject, refObject);
             }
         } else {

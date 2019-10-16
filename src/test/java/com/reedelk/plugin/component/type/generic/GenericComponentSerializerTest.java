@@ -140,7 +140,7 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
                     .build());
 
             TypeObjectDescriptor.TypeObject typeObjectSharedInstance = TypeObjects.typeObjectSharedDescriptor.newInstance();
-            typeObjectSharedInstance.set("configRef", "4ba1b6a0-9644-11e9-bc42-526af7764f64");
+            typeObjectSharedInstance.set("ref", "4ba1b6a0-9644-11e9-bc42-526af7764f64");
 
             GraphNode componentNode = new GenericComponentNode(componentData);
             componentData.set("booleanProperty", true);
@@ -164,7 +164,7 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
                     .build());
 
             TypeObjectDescriptor.TypeObject typeObjectSharedInstance = TypeObjects.typeObjectSharedDescriptor.newInstance();
-            typeObjectSharedInstance.set("configRef", "");
+            typeObjectSharedInstance.set("ref", "");
 
             GraphNode componentNode = new GenericComponentNode(componentData);
             componentData.set("booleanProperty", true);
