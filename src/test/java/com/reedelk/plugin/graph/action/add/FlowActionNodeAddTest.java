@@ -105,7 +105,7 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
 
     @Nested
     @DisplayName("Adding a node after root")
-    class FlowActionNodeAddAfterRoot {
+    class AddNodeAfterRoot {
 
         @Test
         void shouldAddComponentAfterRoot() {
@@ -910,6 +910,93 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                         .and().node(forkNode3).scopeIsEmpty()
                         .and().successorsOf(componentNode3).isOnly(componentNode2)
                         .and().successorsOf(componentNode2).isEmpty();
+            }
+
+            @Test
+            void shouldNotAddNodeAtTheBottomWhenDropPointDoesNotFallBetweenAnyScopeTopBottomBoundaries() {
+                // Given
+                FlowGraph graph = provider.createGraph();
+                graph.root(root);
+                graph.add(root, forkNode1);
+                graph.add(forkNode1, forkNode2);
+                graph.add(forkNode1, componentNode1);
+                graph.add(forkNode2, componentNode2);
+
+                forkNode1.addToScope(forkNode2);
+                forkNode1.addToScope(componentNode1);
+                forkNode2.addToScope(componentNode2);
+
+                root.setPosition(65, 215);
+                forkNode1.setPosition(195, 215);
+                forkNode2.setPosition(325, 160);
+                componentNode1.setPosition(325, 305);
+                componentNode2.setPosition(455, 160);
+
+                mockDefaultNodeHeight(root);
+                mockDefaultNodeHeight(forkNode1);
+                mockDefaultNodeHeight(forkNode2);
+                mockDefaultNodeHeight(componentNode1);
+                mockDefaultNodeHeight(componentNode2);
+
+                // When we drop the node outside any scope
+                Point dropPoint = new Point(523, 297);
+
+                FlowGraphChangeAware changeAwareGraph = new FlowGraphChangeAware(graph);
+                FlowGraph updatedGraph = addDrawableToGraph(changeAwareGraph, componentNode3, dropPoint);
+
+                // Then
+                PluginAssertion.assertThat(changeAwareGraph)
+                        .isNotChanged()
+                        .nodesCountIs(5)
+                        .root().is(root)
+                        .and().successorsOf(root).isOnly(forkNode1)
+                        .and().successorsOf(forkNode1).areExactly(forkNode2, componentNode1)
+                        .and().node(forkNode1).scopeContainsExactly(forkNode2, componentNode1)
+                        .and().successorsOf(forkNode2).isOnly(componentNode2)
+                        .and().successorsOf(componentNode2).isEmpty();
+            }
+
+            @Test
+            void shouldAddNodeRightOutsideTheScopesWhenDroppedAtTheBottom() {
+                // Given
+                FlowGraph graph = provider.createGraph();
+                graph.root(root);
+                graph.add(root, forkNode1);
+                graph.add(forkNode1, forkNode2);
+                graph.add(forkNode1, componentNode1);
+                graph.add(forkNode2, componentNode2);
+
+                forkNode1.addToScope(forkNode2);
+                forkNode1.addToScope(componentNode1);
+                forkNode2.addToScope(componentNode2);
+
+                root.setPosition(65, 215);
+                forkNode1.setPosition(195, 215);
+                forkNode2.setPosition(325, 160);
+                componentNode1.setPosition(325, 305);
+                componentNode2.setPosition(455, 160);
+
+                mockDefaultNodeHeight(root);
+                mockDefaultNodeHeight(forkNode1);
+                mockDefaultNodeHeight(forkNode2);
+                mockDefaultNodeHeight(componentNode1);
+                mockDefaultNodeHeight(componentNode2);
+
+                // When we drop the node outside any scope
+                Point dropPoint = new Point(556, 293);
+
+                FlowGraphChangeAware changeAwareGraph = new FlowGraphChangeAware(graph);
+                addDrawableToGraph(changeAwareGraph, componentNode3, dropPoint);
+
+                // Then
+                PluginAssertion.assertThat(changeAwareGraph)
+                        .nodesCountIs(6)
+                        .root().is(root)
+                        .and().successorsOf(root).isOnly(forkNode1)
+                        .and().successorsOf(forkNode1).areExactly(forkNode2, componentNode1)
+                        .and().node(forkNode1).scopeContainsExactly(forkNode2, componentNode1)
+                        .and().successorsOf(forkNode2).isOnly(componentNode2)
+                        .and().successorsOf(componentNode2).isOnly(componentNode3);
             }
         }
 

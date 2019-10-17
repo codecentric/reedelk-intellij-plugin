@@ -10,6 +10,7 @@ import java.awt.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Stack;
 import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.toList;
@@ -111,31 +112,31 @@ public class FindClosestPrecedingNode {
                 if (liesBetweenTopAndBottomOf(precedingNode, dropY, graphics)) {
                     return Optional.of(precedingNode);
                 }
+            }
+        }
 
-                // If the preceding node belongs to a scope and the drop point lies in that scope,
-                // then the not satisfied condition above apply. Otherwise if we dropped the node
-                // right outside the scope and the preceding node is the last node of the scope it
-                // belongs to, then we check that the drop point is between the top and bottom
-                // boundaries of the scope.
-                Optional<ScopedGraphNode> scope = FindScope.of(graph, precedingNode);
-                if (scope.isPresent()) {
-                    ScopedGraphNode scopedGraphNode = scope.get();
-                    ScopeBoundaries scopeBoundaries = scopedGraphNode.getScopeBoundaries(graph, graphics);
+        for (GraphNode precedingNode : precedingNodes) {
+            // If the preceding node belongs to a scope and the drop point lies in that scope,
+            // then the not satisfied condition above apply. Otherwise if we dropped the node
+            // right outside the scope and the preceding node is the last node of the scope it
+            // belongs to, then we check that the drop point is between the top and bottom
+            // boundaries of the scope.
+            Stack<ScopedGraphNode> scopes = FindScopes.of(graph, precedingNode);
+            ScopedGraphNode lastScopeBeforeDropPoint = null;
+            while (!scopes.empty()) {
+                lastScopeBeforeDropPoint = scopes.pop();
+                ScopeBoundaries boundaries = lastScopeBeforeDropPoint.getScopeBoundaries(graph, graphics);
+                if (dropX <= boundaries.getX() + boundaries.getWidth()) {
+                    break;
+                }
+            }
+            if (lastScopeBeforeDropPoint != null) {
+                // Check if drop point is between top and bottom boundaries of the scope.
+                ScopeBoundaries boundaries = lastScopeBeforeDropPoint.getScopeBoundaries(graph, graphics);
+                if (dropY > boundaries.getY() && dropY < boundaries.getY() + boundaries.getHeight()) {
 
-                    // Check if we dropped the node right outside the scope
-                    if (dropX > scopeBoundaries.getX() + scopeBoundaries.getWidth()) {
-
-                        // if the preceding node  is the last node of the scope:
-                        if (ListLastNodesOfScope.from(graph, scopedGraphNode).contains(precedingNode)) {
-
-                            // Check if drop point is between top and bottom boundaries of the scope.
-                            if (dropY > scopeBoundaries.getY() && dropY < scopeBoundaries.getY() + scopeBoundaries.getHeight()) {
-
-                                // Conditions satisfied and the preceding node is the closest preceding node found.
-                                return Optional.of(precedingNode);
-                            }
-                        }
-                    }
+                    // Conditions satisfied and the preceding node is the closest preceding node found.
+                    return Optional.of(precedingNode);
                 }
             }
         }
