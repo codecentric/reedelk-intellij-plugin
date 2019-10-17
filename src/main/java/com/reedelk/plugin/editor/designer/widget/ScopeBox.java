@@ -21,16 +21,16 @@ import java.util.Set;
 //  ----------------
 //  |          C5  |
 //  |     C2       |
-//    C1           |
+//    S1           |
 //  |     C3       |
 //  |          C4  |
 //  ----------------
 public abstract class ScopeBox {
 
-    private final int IN_BETWEEN_SCOPES_PADDING = 5;
-    private final int LEFT_PADDING = 3;
-    private final int MID_BOTTOM_LEFT_PADDING = 30;
-    private final int MID_TOP_LEFT_PADDING = 20;
+    private static final int LEFT_PADDING = 3;
+    private static final int MID_TOP_LEFT_PADDING = 20;
+    private static final int MID_BOTTOM_LEFT_PADDING = 30;
+    private static final int IN_BETWEEN_SCOPES_PADDING = 5;
 
     private Stroke stroke;
     private JBColor boundariesColor;

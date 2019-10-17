@@ -11,16 +11,21 @@ public class CountMaxScopes {
     }
 
     public static int of(ScopedGraphNode scope, GraphNode target) {
-        return countMaxNestedScopes(scope, target, 0);
+        if (target instanceof ScopedGraphNode) {
+            // If the target is a scope itself, it counts as a scope as well.
+            return maxNestedScopes(scope, target, 1);
+        } else {
+            return maxNestedScopes(scope, target, 0);
+        }
     }
 
-    private static int countMaxNestedScopes(ScopedGraphNode scopedNode, GraphNode target, int max) {
+    private static int maxNestedScopes(ScopedGraphNode scopedNode, GraphNode target, int max) {
         Collection<GraphNode> scope = scopedNode.getScope();
         if (scope.contains(target)) return max + 1;
         int currentMax = max;
         for (GraphNode node : scope) {
             if (node instanceof ScopedGraphNode) {
-                int nestedMax = countMaxNestedScopes((ScopedGraphNode) node, target, max + 1);
+                int nestedMax = maxNestedScopes((ScopedGraphNode) node, target, max + 1);
                 if (nestedMax > currentMax) {
                     currentMax = nestedMax;
                 }

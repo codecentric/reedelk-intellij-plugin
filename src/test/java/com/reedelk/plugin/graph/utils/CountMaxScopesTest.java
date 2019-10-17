@@ -42,7 +42,7 @@ class CountMaxScopesTest extends AbstractGraphTest {
     }
 
     @Test
-    void shouldReturnTwoWhenTwoNestedScopes() {
+    void shouldReturnThreeWhenThreeNestedScopes() {
         // Given
         routerNode1.addToScope(routerNode2);
         routerNode2.addToScope(routerNode3);
@@ -51,7 +51,7 @@ class CountMaxScopesTest extends AbstractGraphTest {
         int actual = CountMaxScopes.of(routerNode1, routerNode3);
 
         // Then
-        assertThat(actual).isEqualTo(2);
+        assertThat(actual).isEqualTo(3);
     }
 
     @Test
@@ -81,7 +81,13 @@ class CountMaxScopesTest extends AbstractGraphTest {
         int actual = CountMaxScopes.of(routerNode1, forkNode1);
 
         // Then
-        assertThat(actual).isEqualTo(2);
+        assertThat(actual).isEqualTo(3);
+
+        // When
+        actual = CountMaxScopes.of(routerNode1, forkNode2);
+
+        // Then
+        assertThat(actual).isEqualTo(4);
     }
 
     @Test
