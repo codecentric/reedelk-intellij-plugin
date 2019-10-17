@@ -1,5 +1,8 @@
 package com.reedelk.plugin.graph.node;
 
+/**
+ * Boundaries of the scope. X and Y are TOP-LEFT coordinates of the scope boundaries.
+ */
 public class ScopeBoundaries {
 
     private int x;

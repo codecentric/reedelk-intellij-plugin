@@ -214,7 +214,22 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
 
     // We also need to draw a connection between the end of scope to the next successor.
     // We draw this arrow only if the last drawables of this scope connect
-    // arrows in the next scope
+    // arrows in the next scope. If this scope runs parallel to another scope
+    // which continues before the next scope, then we must not draw the end of scope arrow.
+    // Example:
+    // |---------------------------------|
+    // |     |-------------              |
+    // |     |    | -> N1 |              |
+    // |     | S2 |       |  // no arrow |
+    // |     |    | -> N2 |              |
+    // |     |-------------              |
+    // |  S1 |                           | -> N7
+    // |     |-------------              |
+    // |     |    | -> N3 |              |
+    // |     | S3 |       | -> N5 -> N6  |
+    // |     |    | -> N4 |              |
+    // |     |-------------              |
+    // |----------------------------------
     private void drawEndOfScopeArrow(FlowGraph graph, Graphics2D graphics) {
         FindFirstNodeOutsideScope.of(graph, this).ifPresent(firstNodeOutsideScope -> {
             if (IsLastScopeBeforeNode.of(graph, AbstractScopedGraphNode.this, firstNodeOutsideScope)) {
