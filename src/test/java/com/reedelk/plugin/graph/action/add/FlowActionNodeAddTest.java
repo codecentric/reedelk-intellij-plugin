@@ -160,7 +160,7 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
     class ScopeTests {
 
         @Test
-        void shouldAddDrawableAtTheEndOfScope() {
+        void shouldAddNodeAtTheEndOfScope() {
             // Given
             FlowGraph graph = provider.createGraph();
             graph.root(root);
@@ -169,21 +169,22 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
             graph.add(componentNode1, componentNode3);
             routerNode1.addToScope(componentNode1);
 
-            root.setPosition(50, 100);
-            routerNode1.setPosition(100, 100);
-            componentNode1.setPosition(150, 50);
-            componentNode3.setPosition(200, 100); // not in routerNode1 node's scope
+            root.setPosition(65, 155);
+            routerNode1.setPosition(215, 155);
+            componentNode1.setPosition(365, 155);
+            componentNode3.setPosition(500, 155); // not in routerNode1 node's scope
 
-            Point dropPoint = new Point(170, 55); // componentNode2 gets moved next to componentNode1
+            mockDefaultNodeHeight(root);
+            mockDefaultNodeHeight(routerNode1);
+            mockDefaultNodeHeight(componentNode1);
+            mockDefaultNodeHeight(componentNode3);
+
+            Point dropPoint = new Point(419, 147); // componentNode2 is dropped next to componentNode1
 
             // When
             FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode2, dropPoint);
 
             // Then
-
-            // We verify that the router does not get connected to the successor
-            // of the moved element because it is outside the scope.
-            // By definition a Router node cannot connect other nodes outside the scope.
             PluginAssertion.assertThat(updatedGraph)
                     .nodesCountIs(5)
                     .successorsOf(routerNode1).isOnly(componentNode1)
