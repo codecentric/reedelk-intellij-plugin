@@ -128,7 +128,7 @@ public abstract class AbstractGraphTest {
     }
 
     private static final int DEFAULT_TOP_HEIGHT = 70;
-    private static final int DEFAULT_BOTTOM_HEIGHT = 50;
+    private static final int DEFAULT_BOTTOM_HEIGHT = 40;
     protected static final int DEFAULT_HEIGHT = DEFAULT_TOP_HEIGHT + DEFAULT_BOTTOM_HEIGHT;
 
     protected void mockDefaultNodeHeight(GraphNode node) {

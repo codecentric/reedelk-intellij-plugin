@@ -36,8 +36,9 @@ public class FindClosestPrecedingNode {
     private static Predicate<GraphNode> byPrecedingNodesOnX(FlowGraph graph, int dropX, Graphics2D graphics) {
         return preceding -> {
 
-            // The drop point is before/after the center of the node or the center + next node position.
-            if (dropX <= preceding.x() || dropX >= preceding.x() + preceding.width(graphics) + Half.of(preceding.width(graphics))) {
+            // The drop point is before the center of the preceding node or
+            // after the center of the next node which is (Half.of(preceding.width(graphics)) * 2).
+            if (dropX <= preceding.x() || dropX >= preceding.x() + Half.of(preceding.width(graphics)) * 2) {
                 return false;
             }
 
@@ -105,8 +106,18 @@ public class FindClosestPrecedingNode {
                 if (dropY >= scopeBoundaries.getY() && dropY <= scopeBoundaries.getY() + scopeBoundaries.getHeight()) {
                     return Optional.of(precedingNode);
                 }
-
             } else {
+                // If the drop point Y lies between the top and bottom edges of
+                // the current node, then we stop and immediately return this node.
+                if (liesBetweenTopAndBottom(precedingNode, dropY, graphics)) {
+                    return Optional.of(precedingNode);
+                }
+
+                // Otherwise we must compute the closed node on Y. This is
+                // needed when for instance we put a node right after a scoped
+                // node with two successors at the top and one at the bottom.
+                // If the node is put right below and after a scope boundary,
+                // then we must add it even if it does not lie between the topmost node.
                 int delta = Math.abs(precedingNode.y() - dropY);
                 if (delta < minY) {
                     closestPrecedingNode = precedingNode;
@@ -121,5 +132,11 @@ public class FindClosestPrecedingNode {
             }
         }
         return Optional.ofNullable(closestPrecedingNode);
+    }
+
+    private static boolean liesBetweenTopAndBottom(GraphNode preceding, final int dropY, final Graphics2D graphics) {
+        int topHalfHeight = preceding.topHalfHeight(graphics);
+        int bottomHalfHeight = preceding.bottomHalfHeight(graphics);
+        return dropY >= preceding.y() - topHalfHeight && dropY < preceding.y() + bottomHalfHeight;
     }
 }

@@ -13,6 +13,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
@@ -21,6 +23,7 @@ import static com.reedelk.plugin.component.domain.ComponentClass.INBOUND;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
 
+@MockitoSettings(strictness = Strictness.LENIENT)
 class FlowActionNodeAddTest extends AbstractGraphTest {
 
     @Mock
@@ -112,7 +115,7 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
             root.setPosition(65, 150);
 
             // Drop the component next  to the root
-            Point dropPoint = new Point(195, 150);
+            Point dropPoint = new Point(194, 150);
 
             // When
             FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, componentNode1, dropPoint);
@@ -463,7 +466,13 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
             componentNode1.setPosition(535, 160);
             componentNode2.setPosition(535, 270);
 
-            Point dropPoint = new Point(608, 195);
+            mockDefaultNodeHeight(root);
+            mockDefaultNodeHeight(routerNode1);
+            mockDefaultNodeHeight(routerNode2);
+            mockDefaultNodeHeight(componentNode1);
+            mockDefaultNodeHeight(componentNode2);
+
+            Point dropPoint = new Point(609, 193);
 
             // When
             FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
@@ -692,6 +701,13 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                 forkNode3.setPosition(470, 278);
                 componentNode2.setPosition(615, 223);
 
+                mockDefaultNodeHeight(root);
+                mockDefaultNodeHeight(forkNode1);
+                mockDefaultNodeHeight(forkNode2);
+                mockDefaultNodeHeight(forkNode3);
+                mockDefaultNodeHeight(componentNode1);
+                mockDefaultNodeHeight(componentNode2);
+
                 // When we drop the node between fork 2 and fork 1 node scope
                 Point dropPoint = new Point(544, 191);
                 FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
@@ -819,6 +835,13 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                 forkNode3.setPosition(470, 278);
                 componentNode2.setPosition(615, 223);
 
+                mockDefaultNodeHeight(root);
+                mockDefaultNodeHeight(forkNode1);
+                mockDefaultNodeHeight(forkNode2);
+                mockDefaultNodeHeight(forkNode3);
+                mockDefaultNodeHeight(componentNode1);
+                mockDefaultNodeHeight(componentNode2);
+
                 // When we drop the node outside any scope
                 Point dropPoint = new Point(566, 185);
                 FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
@@ -880,6 +903,48 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                         .and().node(routerNode2).scopeContainsExactly(componentNode2);
             }
         }
+    }
+
+    @Nested
+    @DisplayName("Preceding node without successor")
+    class PrecedingNodeWithoutSuccessor {
+
+        @Test
+        void shouldCorrectlyAddNodeWhenDroppedAboveTheLastNode() {
+            // Given
+            FlowGraph graph = provider.createGraph();
+            graph.root(root);
+            graph.add(root, forkNode1);
+            graph.add(forkNode1, componentNode1);
+            graph.add(forkNode1, componentNode2);
+            graph.add(componentNode1, componentNode3);
+            graph.add(componentNode2, componentNode3);
+
+            root.setPosition(65, 195);
+            forkNode1.setPosition(195, 195);
+            componentNode1.setPosition(325, 155);
+            componentNode2.setPosition(325, 265);
+            componentNode3.setPosition(460, 195);
+
+            // Drop it right after componentNode3
+            Point dropPoint = new Point(505, 132);
+
+            // When
+            FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, componentNode4, dropPoint);
+
+            // Then
+            PluginAssertion.assertThat(modifiableGraph)
+                    .isChanged()
+                    .nodesCountIs(6)
+                    .root().is(root)
+                    .and().successorsOf(root).isOnly(forkNode1)
+                    .and().successorsOf(forkNode1).areExactly(componentNode1, componentNode2)
+                    .and().successorsOf(componentNode1).isOnly(componentNode3)
+                    .and().successorsOf(componentNode2).isOnly(componentNode3)
+                    .and().successorsOf(componentNode3).isOnly(componentNode4)
+                    .and().successorsOf(componentNode4).isEmpty();
+        }
+
     }
 
     private FlowGraphChangeAware addDrawableToGraph(FlowGraph graph, GraphNode dropped, Point dropPoint) {
