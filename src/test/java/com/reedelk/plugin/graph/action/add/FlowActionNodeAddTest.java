@@ -491,6 +491,49 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
         }
 
         @Test
+        void shouldAddNodeRightAfterScopeWhenTopContainsTwoSuccessorsAndBottomJustOneAndDropPointIsAtTheBottom() {
+            // Given
+            FlowGraph graph = provider.createGraph();
+            graph.root(root);
+            graph.add(root, forkNode1);
+            graph.add(forkNode1, componentNode1);
+            graph.add(forkNode1, componentNode3);
+            graph.add(componentNode1, componentNode2);
+
+            forkNode1.addToScope(componentNode1);
+            forkNode1.addToScope(componentNode2);
+            forkNode1.addToScope(componentNode3);
+
+            root.setPosition(65, 195);
+            forkNode1.setPosition(195, 195);
+            componentNode1.setPosition(325, 155);
+            componentNode2.setPosition(455, 155);
+            componentNode3.setPosition(325, 265);
+
+            mockDefaultNodeHeight(root);
+            mockDefaultNodeHeight(forkNode1);
+            mockDefaultNodeHeight(componentNode1);
+            mockDefaultNodeHeight(componentNode2);
+            mockDefaultNodeHeight(componentNode3);
+
+            Point dropPoint = new Point(549, 272);
+
+            // When
+            FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode4, dropPoint);
+
+            // Then
+            PluginAssertion.assertThat(updatedGraph)
+                    .root().is(root)
+                    .and().successorsOf(root).isOnly(forkNode1)
+                    .and().successorsOf(forkNode1).areExactly(componentNode1, componentNode3)
+                    .and().successorsOf(componentNode1).isOnly(componentNode2)
+                    .and().successorsOf(componentNode2).isOnly(componentNode4)
+                    .and().successorsOf(componentNode3).isOnly(componentNode4)
+                    .and().successorsOf(componentNode4).isEmpty()
+                    .and().node(forkNode1).scopeContainsExactly(componentNode1, componentNode2, componentNode3);
+        }
+
+        @Test
         void shouldAddNodeInsideScopeWhenUpperNodeIsOutsideNestedScope() {
             // Given
             FlowGraph graph = provider.createGraph();
@@ -945,6 +988,28 @@ class FlowActionNodeAddTest extends AbstractGraphTest {
                     .and().successorsOf(componentNode4).isEmpty();
         }
 
+        @Test
+        void shouldNotAddNodeWhenDroppedBelowTheNodeHeight() {
+            // Given
+            FlowGraph graph = provider.createGraph();
+            graph.root(root);
+            graph.add(root, componentNode1);
+
+            root.setPosition(65, 150);
+            componentNode1.setPosition(195, 150);
+
+            Point dropPoint = new Point(268, 201);
+
+            // When
+            FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, componentNode2, dropPoint);
+
+            // Then
+            PluginAssertion.assertThat(modifiableGraph)
+                    .isNotChanged()
+                    .nodesCountIs(2)
+                    .root().is(root)
+                    .and().successorsOf(root).isOnly(componentNode1);
+        }
     }
 
     private FlowGraphChangeAware addDrawableToGraph(FlowGraph graph, GraphNode dropped, Point dropPoint) {
