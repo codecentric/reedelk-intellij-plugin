@@ -17,7 +17,8 @@ import java.util.List;
  */
 public class PrecedingScopedNode implements Strategy {
 
-    private static final int NODE_TOP_BOTTOM_MARGIN = 20;
+    private static final int NODE_TOP_MARGIN_PERCENT = 25;
+    private static final int NODE_BOTTOM_MARGIN_PERCENT = 30;
 
     private final ScopedGraphNode closestPrecedingNode;
     private final Graphics2D graphics;
@@ -171,23 +172,21 @@ public class PrecedingScopedNode implements Strategy {
     }
 
     private static int yTopBottomBoundOf(GraphNode node, Graphics2D graphics) {
-        int topHeight = node.topHalfHeight(graphics);
-        return node.y() - (topHeight - NODE_TOP_BOTTOM_MARGIN);
+        int topHalfHeight = node.topHalfHeight(graphics);
+        return (node.y() - topHalfHeight) + getByPercent(topHalfHeight, NODE_TOP_MARGIN_PERCENT);
     }
 
     private static int yBottomTopBoundOf(GraphNode node, Graphics2D graphics) {
-        int bottomHeight = node.bottomHalfHeight(graphics);
-        return node.y() + (bottomHeight - NODE_TOP_BOTTOM_MARGIN);
+        int bottomHalfHeight = node.bottomHalfHeight(graphics);
+        return (node.y() + bottomHalfHeight) - getByPercent(bottomHalfHeight, NODE_BOTTOM_MARGIN_PERCENT);
     }
 
     private static int yCenterTopBound(GraphNode node, Graphics2D graphics) {
-        int topHalfHeight = node.topHalfHeight(graphics);
-        return node.y() - (topHalfHeight - NODE_TOP_BOTTOM_MARGIN);
+        return yTopBottomBoundOf(node, graphics);
     }
 
     private static int yCenterBottomBound(GraphNode node, Graphics2D graphics) {
-        int bottomHeight = node.bottomHalfHeight(graphics);
-        return node.y() + (bottomHeight - NODE_TOP_BOTTOM_MARGIN);
+        return yBottomTopBoundOf(node, graphics);
     }
 
     private static int scopeMaxYBound(FlowGraph graph, ScopedGraphNode scopedGraphNode, Graphics2D graphics) {
@@ -198,5 +197,9 @@ public class PrecedingScopedNode implements Strategy {
     private static int scopeMinYBound(FlowGraph graph, ScopedGraphNode scopedGraphNode, Graphics2D graphics) {
         ScopeBoundaries boundaries = scopedGraphNode.getScopeBoundaries(graph, graphics);
         return boundaries.getY();
+    }
+
+    private static int getByPercent(int value, int percent) {
+        return Math.round(((float) value / (float) 100) * percent);
     }
 }

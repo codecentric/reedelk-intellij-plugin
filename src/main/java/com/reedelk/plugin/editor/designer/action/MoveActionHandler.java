@@ -46,10 +46,6 @@ public class MoveActionHandler {
         // Remove the dropped node from the copy graph
         actionReplace.execute(copy);
 
-        // Set the position of the replaced node equal to the moved node.
-        // This way the ADD action can properly compute the new position of the moved node.
-        replacementNode.setPosition(movedNode.x(), movedNode.y());
-
         // Remove the replaced node from any scope it might belong to
         Optional<ScopedGraphNode> selectedScope = FindScope.of(copy, movedNode);
         selectedScope.ifPresent(scopedNode -> {
@@ -173,12 +169,10 @@ public class MoveActionHandler {
      * @return true if the drop point is within the moved node box, false if it is outside.
      */
     private boolean isDropPointInsideCurrentSelectedNode(int dropX, int dropY) {
-        boolean withinX =
-                dropX > movedNode.x() - Half.of(movedNode.width(graphics)) &&
-                        dropX < movedNode.x() + Half.of(movedNode.width(graphics));
-        boolean withinY =
-                dropY > movedNode.y() - Half.of(movedNode.height(graphics)) &&
-                        dropY < movedNode.y() + Half.of(movedNode.height(graphics));
+        boolean withinX = dropX > movedNode.x() - Half.of(movedNode.width(graphics)) &&
+                dropX < movedNode.x() + Half.of(movedNode.width(graphics));
+        boolean withinY = dropY > movedNode.y() - movedNode.topHalfHeight(graphics) &&
+                dropY < movedNode.y() + movedNode.bottomHalfHeight(graphics);
         return withinX && withinY;
     }
 }
