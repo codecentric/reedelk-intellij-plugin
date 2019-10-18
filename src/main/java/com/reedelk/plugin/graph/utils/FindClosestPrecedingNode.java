@@ -37,6 +37,11 @@ public class FindClosestPrecedingNode {
     private static Predicate<GraphNode> byPrecedingNodesOnX(FlowGraph graph, int dropX, Graphics2D graphics) {
         return preceding -> {
 
+            if (graph.successors(preceding).isEmpty()) {
+                // If it is the last one it is good enough that it is beyond it.
+                return dropX > preceding.x();
+            }
+
             // The drop point is before the center of the preceding node or
             // after the center of the next node which is (Half.of(preceding.width(graphics)) * 2).
             if (dropX <= preceding.x() || dropX >= preceding.x() + Half.of(preceding.width(graphics)) * 2) {

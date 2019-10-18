@@ -2,7 +2,7 @@ package com.reedelk.plugin.commons;
 
 public class DebugControls {
 
-    private static final boolean ALL_ENABLED = true;
+    private static final boolean ALL_ENABLED = false;
 
     public static class Designer {
         public static boolean SHOW_BOX = ALL_ENABLED || false;
