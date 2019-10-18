@@ -88,7 +88,6 @@ public class FindClosestPrecedingNode {
         };
     }
 
-    // If there are two on the same Y we pick the closest on X
     private static Optional<GraphNode> findClosestOnYAxis(List<GraphNode> precedingNodes, int dropY, int dropX, FlowGraph graph, Graphics2D graphics) {
 
         for (GraphNode precedingNode : precedingNodes) {
@@ -119,7 +118,7 @@ public class FindClosestPrecedingNode {
 
             // If the preceding node belongs to a scope and the drop point lies in
             // the same exact scope, then the not satisfied condition (liesBetweenTopAndBottomOf)
-            // above apply.
+            // above apply and we don't keep proceeding.
             Optional<ScopedGraphNode> scopeOfPrecedingNode = FindScope.of(graph, precedingNode);
             if (scopeOfPrecedingNode.isPresent()) {
                 ScopeBoundaries boundaries = scopeOfPrecedingNode.get().getScopeBoundaries(graph, graphics);
@@ -130,22 +129,15 @@ public class FindClosestPrecedingNode {
 
             // If we dropped the node right outside the scope and the preceding node is the last
             // node of the scope it belongs to, then we check that the drop point is between the
-            // top and bottom boundaries of the scope.
+            // top and bottom boundaries of the outer scope.
             Stack<ScopedGraphNode> scopes = FindScopes.of(graph, precedingNode);
-            ScopedGraphNode lastScopeBeforeDropPoint = null;
             while (!scopes.empty()) {
-                lastScopeBeforeDropPoint = scopes.pop();
+                ScopedGraphNode lastScopeBeforeDropPoint = scopes.pop();
                 ScopeBoundaries boundaries = lastScopeBeforeDropPoint.getScopeBoundaries(graph, graphics);
-                if (dropX <= boundaries.getX() + boundaries.getWidth()) {
-                    break;
-                }
-            }
-            if (lastScopeBeforeDropPoint != null) {
-                // Check if drop point is between top and bottom boundaries of the scope.
-                ScopeBoundaries boundaries = lastScopeBeforeDropPoint.getScopeBoundaries(graph, graphics);
-                if (dropY > boundaries.getY() && dropY < boundaries.getY() + boundaries.getHeight()) {
-                    // Conditions satisfied and the preceding node is the closest preceding node found.
-                    return Optional.of(precedingNode);
+                if (dropX >= boundaries.getX() + boundaries.getWidth()) {
+                    if (dropY > boundaries.getY() && dropY < boundaries.getY() + boundaries.getHeight()) {
+                        return Optional.of(precedingNode);
+                    }
                 }
             }
         }
