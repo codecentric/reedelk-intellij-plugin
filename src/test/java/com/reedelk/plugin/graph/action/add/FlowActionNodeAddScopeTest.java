@@ -766,50 +766,6 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
     }
 
     @Test
-    void shouldNotAddNodeAtTheBottomWhenDropPointDoesNotFallBetweenAnyScopeTopBottomBoundaries() {
-        // Given
-        FlowGraph graph = provider.createGraph();
-        graph.root(root);
-        graph.add(root, forkNode1);
-        graph.add(forkNode1, forkNode2);
-        graph.add(forkNode1, componentNode1);
-        graph.add(forkNode2, componentNode2);
-
-        forkNode1.addToScope(forkNode2);
-        forkNode1.addToScope(componentNode1);
-        forkNode2.addToScope(componentNode2);
-
-        root.setPosition(65, 215);
-        forkNode1.setPosition(195, 215);
-        forkNode2.setPosition(325, 160);
-        componentNode1.setPosition(325, 305);
-        componentNode2.setPosition(455, 160);
-
-        mockDefaultNodeHeight(root);
-        mockDefaultNodeHeight(forkNode1);
-        mockDefaultNodeHeight(forkNode2);
-        mockDefaultNodeHeight(componentNode1);
-        mockDefaultNodeHeight(componentNode2);
-
-        // When we drop the node outside any scope
-        Point dropPoint = new Point(523, 297);
-
-        FlowGraphChangeAware changeAwareGraph = new FlowGraphChangeAware(graph);
-        FlowGraph updatedGraph = addDrawableToGraph(changeAwareGraph, componentNode3, dropPoint);
-
-        // Then
-        PluginAssertion.assertThat(changeAwareGraph)
-                .isNotChanged()
-                .nodesCountIs(5)
-                .root().is(root)
-                .and().successorsOf(root).isOnly(forkNode1)
-                .and().successorsOf(forkNode1).areExactly(forkNode2, componentNode1)
-                .and().node(forkNode1).scopeContainsExactly(forkNode2, componentNode1)
-                .and().successorsOf(forkNode2).isOnly(componentNode2)
-                .and().successorsOf(componentNode2).isEmpty();
-    }
-
-    @Test
     void shouldAddNodeRightOutsideTheScopesWhenDroppedAtTheBottom() {
         // Given
         FlowGraph graph = provider.createGraph();
@@ -1065,47 +1021,5 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
                 .and().successorsOf(componentNode3).isOnly(componentNode1)
                 .and().successorsOf(componentNode2).isEmpty()
                 .and().successorsOf(componentNode1).isEmpty();
-    }
-
-    @Test
-    void shouldNotAddNodeWhenInTheSameScopeButOutsideTopAndBottomOfNode() {
-        // Given
-        FlowGraph graph = provider.createGraph();
-        graph.root(root);
-        graph.add(root, routerNode1);
-        graph.add(routerNode1, componentNode1);
-        graph.add(routerNode1, componentNode2);
-        graph.add(componentNode2, componentNode3);
-
-        routerNode1.addToScope(componentNode1);
-        routerNode1.addToScope(componentNode2);
-        routerNode1.addToScope(componentNode3);
-
-        root.setPosition(65, 262);
-        routerNode1.setPosition(215, 262);
-        componentNode1.setPosition(365, 155);
-        componentNode2.setPosition(365, 400);
-        componentNode3.setPosition(495, 400);
-
-        mockNodeHeight(root, 70, 40);
-        mockNodeHeight(routerNode1, 70, 25);
-        mockNodeHeight(componentNode1, 70, 175);
-        mockNodeHeight(componentNode2, 70, 40);
-        mockNodeHeight(componentNode3, 70, 40);
-
-        Point dropPoint = new Point(533, 130);
-
-        // When
-        FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, componentNode4, dropPoint);
-
-        // Then
-        PluginAssertion.assertThat(modifiableGraph)
-                .isNotChanged()
-                .nodesCountIs(5)
-                .root().is(root)
-                .and().successorsOf(root).isOnly(routerNode1)
-                .and().successorsOf(routerNode1).areExactly(componentNode1, componentNode2)
-                .and().successorsOf(componentNode2).isOnly(componentNode3)
-                .and().successorsOf(componentNode3).isEmpty();
     }
 }
