@@ -58,4 +58,29 @@ class FlowActionNodeAddNodeAfterRootTest extends BaseFlowActionNodeAddTest {
                 .and().successorsOf(componentNode1).isOnly(componentNode2)
                 .and().successorsOf(componentNode2).isEmpty();
     }
+
+    @Test
+    void shouldAddNodeAfterLastEvenWhenItIsFarAwayOnXAxis() {
+        // Given
+        FlowGraph graph = provider.createGraph();
+        graph.root(root);
+        graph.add(root, componentNode1);
+
+        root.setPosition(65, 150);
+        componentNode1.setPosition(195, 150);
+
+        Point dropPoint = new Point(596, 131);
+
+        // When
+        FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, componentNode2, dropPoint);
+
+        // Then
+        PluginAssertion.assertThat(modifiableGraph)
+                .isChanged()
+                .nodesCountIs(3)
+                .root().is(root)
+                .and().successorsOf(root).isOnly(componentNode1)
+                .and().successorsOf(componentNode1).isOnly(componentNode2)
+                .and().successorsOf(componentNode2).isEmpty();
+    }
 }
