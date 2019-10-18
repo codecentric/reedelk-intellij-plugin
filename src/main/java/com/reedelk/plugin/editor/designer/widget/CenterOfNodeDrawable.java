@@ -41,6 +41,16 @@ public class CenterOfNodeDrawable {
                 g2.drawString(coords, x + 3, y + Math.round(textHeight) - 3);
             });
         }
+
+        if (DebugControls.Designer.SHOW_HEIGHTS) {
+            draw(node -> {
+                String height = String.format("[Half T:%d, B:%d]", node.topHalfHeight(g2), node.bottomHalfHeight(g2));
+                double textHeight = g2.getFontMetrics().getStringBounds(height, g2).getHeight();
+                int x = node.x() - Half.of(node.width(g2));
+                int y = node.y() - node.topHalfHeight(g2);
+                g2.drawString(height, x + 3, y + Math.round(textHeight) * 2 - 3);
+            });
+        }
     }
 
     public void draw(Consumer<GraphNode> drawFunction) {

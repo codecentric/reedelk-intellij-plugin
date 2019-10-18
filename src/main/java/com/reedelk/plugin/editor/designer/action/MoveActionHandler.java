@@ -1,7 +1,6 @@
 package com.reedelk.plugin.editor.designer.action;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.plugin.commons.Half;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowGraphChangeAware;
 import com.reedelk.plugin.graph.FlowSnapshot;
@@ -11,14 +10,11 @@ import com.reedelk.plugin.graph.node.ScopedGraphNode;
 import com.reedelk.plugin.graph.utils.FindScope;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
 import java.util.Optional;
 
 public class MoveActionHandler {
 
     private FlowSnapshot snapshot;
-    private Graphics2D graphics;
-    private Point dropPoint;
     private Module module;
 
     private GraphNode replacementNode;
@@ -32,11 +28,6 @@ public class MoveActionHandler {
     }
 
     public void handle() {
-
-        if (isDropPointInsideCurrentSelectedNode(dropPoint.x, dropPoint.y)) {
-            // We don't move anything if we drop the node within its box boundaries.
-            return;
-        }
 
         FlowGraph originalGraph = snapshot.getGraphOrThrowIfAbsent();
 
@@ -93,9 +84,7 @@ public class MoveActionHandler {
 
         private GraphNode replacementNode;
         private FlowSnapshot snapshot;
-        private Graphics2D graphics;
         private GraphNode movedNode;
-        private Point dropPoint;
         private Module module;
         private Action actionReplace;
         private Action actionRemove;
@@ -106,18 +95,8 @@ public class MoveActionHandler {
             return this;
         }
 
-        public Builder dropPoint(@NotNull Point dropPoint) {
-            this.dropPoint = dropPoint;
-            return this;
-        }
-
         public Builder actionAdd(@NotNull Action actionAdd) {
             this.actionAdd = actionAdd;
-            return this;
-        }
-
-        public Builder graphics(@NotNull Graphics2D graphics) {
-            this.graphics = graphics;
             return this;
         }
 
@@ -149,30 +128,13 @@ public class MoveActionHandler {
         public MoveActionHandler build() {
             MoveActionHandler handler = new MoveActionHandler();
             handler.replacementNode = replacementNode;
-            handler.dropPoint = dropPoint;
             handler.movedNode = movedNode;
             handler.snapshot = snapshot;
-            handler.graphics = graphics;
             handler.module = module;
             handler.actionReplace = actionReplace;
             handler.actionRemove = actionRemove;
             handler.actionAdd = actionAdd;
             return handler;
         }
-    }
-
-    /**
-     * Checks whether the drop point is inside the current selected box node.
-     * The box for a selected node is within X center +(-) half width and
-     * Y center +(-) half height.
-     *
-     * @return true if the drop point is within the moved node box, false if it is outside.
-     */
-    private boolean isDropPointInsideCurrentSelectedNode(int dropX, int dropY) {
-        boolean withinX = dropX > movedNode.x() - Half.of(movedNode.width(graphics)) &&
-                dropX < movedNode.x() + Half.of(movedNode.width(graphics));
-        boolean withinY = dropY > movedNode.y() - movedNode.topHalfHeight(graphics) &&
-                dropY < movedNode.y() + movedNode.bottomHalfHeight(graphics);
-        return withinX && withinY;
     }
 }

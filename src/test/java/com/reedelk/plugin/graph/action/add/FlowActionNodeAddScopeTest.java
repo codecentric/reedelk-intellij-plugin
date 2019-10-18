@@ -947,4 +947,165 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
                 .root().is(root)
                 .and().successorsOf(root).isOnly(componentNode1);
     }
+
+    @Test
+    void shouldCorrectlyAddNodeAtTheTopOfScopedNodeChild() {
+        // Given
+        FlowGraph graph = provider.createGraph();
+        graph.root(root);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, componentNode1);
+        graph.add(routerNode1, componentNode2);
+
+        routerNode1.addToScope(componentNode1);
+        routerNode1.addToScope(componentNode2);
+
+        root.setPosition(65, 262);
+        routerNode1.setPosition(215, 262);
+        componentNode1.setPosition(365, 155);
+        componentNode2.setPosition(365, 400);
+
+        mockNodeHeight(root, 70, 40);
+        mockNodeHeight(routerNode1, 70, 25);
+        mockNodeHeight(componentNode1, 70, 175);
+        mockNodeHeight(componentNode2, 70, 40);
+
+        Point dropPoint = new Point(331, 101);
+
+        // When
+        FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
+
+        // Then
+        PluginAssertion.assertThat(modifiableGraph)
+                .isChanged()
+                .nodesCountIs(5)
+                .root().is(root)
+                .and().successorsOf(root).isOnly(routerNode1)
+                .and().successorsOf(routerNode1).areExactly(componentNode1, componentNode2, componentNode3)
+                .and().successorsOf(componentNode1).isEmpty()
+                .and().successorsOf(componentNode2).isEmpty()
+                .and().successorsOf(componentNode3).isEmpty();
+    }
+
+    @Test
+    void shouldCorrectlyAddNodeAtTheBottomOfScopedNodeChild() {
+        // Given
+        FlowGraph graph = provider.createGraph();
+        graph.root(root);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, componentNode1);
+        graph.add(routerNode1, componentNode2);
+
+        routerNode1.addToScope(componentNode1);
+        routerNode1.addToScope(componentNode2);
+
+        root.setPosition(65, 262);
+        routerNode1.setPosition(215, 262);
+        componentNode1.setPosition(365, 155);
+        componentNode2.setPosition(365, 400);
+
+        mockNodeHeight(root, 70, 40);
+        mockNodeHeight(routerNode1, 70, 25);
+        mockNodeHeight(componentNode1, 70, 175);
+        mockNodeHeight(componentNode2, 70, 40);
+
+        Point dropPoint = new Point(336, 296);
+
+        // When
+        FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
+
+        // Then
+        PluginAssertion.assertThat(modifiableGraph)
+                .isChanged()
+                .nodesCountIs(5)
+                .root().is(root)
+                .and().successorsOf(root).isOnly(routerNode1)
+                .and().successorsOf(routerNode1).areExactly(componentNode1, componentNode2, componentNode3)
+                .and().successorsOf(routerNode1).isAtIndex(componentNode3, 1)
+                .and().successorsOf(componentNode1).isEmpty()
+                .and().successorsOf(componentNode2).isEmpty()
+                .and().successorsOf(componentNode3).isEmpty();
+    }
+
+    @Test
+    void shouldCorrectlyAddNodeBeforeScopedNodeChild() {
+        // Given
+        FlowGraph graph = provider.createGraph();
+        graph.root(root);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, componentNode1);
+        graph.add(routerNode1, componentNode2);
+
+        routerNode1.addToScope(componentNode1);
+        routerNode1.addToScope(componentNode2);
+
+        root.setPosition(65, 262);
+        routerNode1.setPosition(215, 262);
+        componentNode1.setPosition(365, 155);
+        componentNode2.setPosition(365, 400);
+
+        mockNodeHeight(root, 70, 40);
+        mockNodeHeight(routerNode1, 70, 25);
+        mockNodeHeight(componentNode1, 70, 175);
+        mockNodeHeight(componentNode2, 70, 40);
+
+        Point dropPoint = new Point(326, 192);
+
+        // When
+        FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
+
+        // Then
+        PluginAssertion.assertThat(modifiableGraph)
+                .isChanged()
+                .nodesCountIs(5)
+                .root().is(root)
+                .and().successorsOf(root).isOnly(routerNode1)
+                .and().successorsOf(routerNode1).areExactly(componentNode2, componentNode3)
+                .and().successorsOf(routerNode1).isAtIndex(componentNode3, 0)
+                .and().successorsOf(componentNode3).isOnly(componentNode1)
+                .and().successorsOf(componentNode2).isEmpty()
+                .and().successorsOf(componentNode1).isEmpty();
+    }
+
+    @Test
+    void shouldNotAddNodeWhenInTheSameScopeButOutsideTopAndBottomOfNode() {
+        // Given
+        FlowGraph graph = provider.createGraph();
+        graph.root(root);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, componentNode1);
+        graph.add(routerNode1, componentNode2);
+        graph.add(componentNode2, componentNode3);
+
+        routerNode1.addToScope(componentNode1);
+        routerNode1.addToScope(componentNode2);
+        routerNode1.addToScope(componentNode3);
+
+        root.setPosition(65, 262);
+        routerNode1.setPosition(215, 262);
+        componentNode1.setPosition(365, 155);
+        componentNode2.setPosition(365, 400);
+        componentNode3.setPosition(495, 400);
+
+        mockNodeHeight(root, 70, 40);
+        mockNodeHeight(routerNode1, 70, 25);
+        mockNodeHeight(componentNode1, 70, 175);
+        mockNodeHeight(componentNode2, 70, 40);
+        mockNodeHeight(componentNode3, 70, 40);
+
+        Point dropPoint = new Point(533, 130);
+
+        // When
+        FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, componentNode4, dropPoint);
+
+        // Then
+        PluginAssertion.assertThat(modifiableGraph)
+                .isNotChanged()
+                .nodesCountIs(5)
+                .root().is(root)
+                .and().successorsOf(root).isOnly(routerNode1)
+                .and().successorsOf(routerNode1).areExactly(componentNode1, componentNode2)
+                .and().successorsOf(componentNode2).isOnly(componentNode3)
+                .and().successorsOf(componentNode3).isEmpty();
+    }
 }
