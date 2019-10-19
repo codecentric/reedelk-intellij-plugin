@@ -76,7 +76,9 @@ public class ConfigServiceImpl implements ConfigService {
             executeWriteCommand(() -> {
                 // Write the serialized config
                 VirtualFile directoryIfMissing = VfsUtil.createDirectoryIfMissing(configDir);
-                // TODO: Fix null pointer
+                if (directoryIfMissing == null) {
+                    throw new IOException(String.format("Could not create config directory=[%s] to store configuration named=[%s]", configDir, newConfig.getFileName()));
+                }
                 VirtualFile childData = directoryIfMissing.createChildData(null, newConfig.getFileName());
                 VfsUtil.saveText(childData, serializedConfig);
             });
