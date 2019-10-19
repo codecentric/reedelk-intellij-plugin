@@ -1,11 +1,11 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.4.4'
+    id 'org.jetbrains.intellij' version '0.4.10'
     id "org.sonarqube" version "2.7"
     id "jacoco"
 }
 
-group 'com.esb'
+group 'com.reedelk'
 version '1.0.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
@@ -44,4 +44,7 @@ patchPluginXml {
     changeNotes """
       Reedelk ESB IntelliJ designer<br>
       <em>First Release</em>"""
+
+    sinceBuild '183'
+    untilBuild '194'
 }
