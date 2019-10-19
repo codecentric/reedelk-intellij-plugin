@@ -11,7 +11,7 @@ import static com.reedelk.runtime.commons.ModuleProperties.Config;
 
 public class ModuleUtils {
 
-    private static final String PROJECT_RESOURCES_FOLDER = "src/main/resources";
+    private static final String PROJECT_RESOURCES_FOLDER = Paths.get("src", "main", "resources").toString();
 
     private ModuleUtils() {
     }
@@ -34,9 +34,5 @@ public class ModuleUtils {
         return pathsList.stream()
                 .filter(sourcesUrls -> sourcesUrls.endsWith(PROJECT_RESOURCES_FOLDER))
                 .findFirst();
-    }
-
-    public static String getModuleRoot(Module module) {
-        return ModuleRootManager.getInstance(module).getContentRoots()[0].getPresentableUrl();
     }
 }
