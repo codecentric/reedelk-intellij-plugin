@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 
 import static com.reedelk.plugin.service.project.DesignerSelectionManager.CurrentSelectionListener;
-import static org.apache.commons.lang3.StringUtils.isBlank;
+import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
 
 /**
  * Centralizes updates of the graph coming from:
