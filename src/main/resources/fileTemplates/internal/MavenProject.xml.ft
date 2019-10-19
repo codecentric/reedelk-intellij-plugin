@@ -18,6 +18,7 @@
     <packaging>bundle</packaging>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.target>${javaVersion}</maven.compiler.target>
         <maven.compiler.source>${javaVersion}</maven.compiler.source>
     </properties>
