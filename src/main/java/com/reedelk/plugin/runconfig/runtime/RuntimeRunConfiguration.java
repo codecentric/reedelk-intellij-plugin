@@ -12,7 +12,7 @@ import com.intellij.openapi.util.JDOMExternalizerUtil;
 import com.reedelk.plugin.commons.NetworkUtils;
 import com.reedelk.plugin.service.project.SourceChangeService;
 import com.reedelk.plugin.service.project.ToolWindowService;
-import org.apache.commons.lang3.StringUtils;
+import com.reedelk.runtime.api.commons.StringUtils;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
