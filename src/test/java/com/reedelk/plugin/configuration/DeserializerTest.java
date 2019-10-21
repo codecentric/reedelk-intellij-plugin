@@ -182,6 +182,34 @@ class DeserializerTest {
         assertThat(deserialized).isEmpty();
     }
 
+    @Test
+    void shouldCorrectlyDeserializeConfigWithoutTitle() {
+        // Given
+        TypeObjectDescriptor httpConfigType = new TypeObjectDescriptor(
+                ComponentNode1.class.getName(),
+                asList(host, port, keepAlive),
+                Shared.NO,
+                Collapsible.NO);
+
+        String json = SampleWithoutTitle.json();
+
+        // When
+        Optional<ComponentDataHolder> deserialized = ConfigurationDeserializer.deserialize(json, httpConfigType);
+
+        // Then
+        assertThat(deserialized).isPresent();
+
+        ComponentDataHolder dataHolder = deserialized.get();
+
+        PluginAssertion.assertThat(dataHolder)
+                .containsExactly("implementor", "id", "host", "port", "keepAlive")
+                .hasKeyWithValue("implementor", "com.reedelk.plugin.fixture.ComponentNode1")
+                .hasKeyWithValue("id", "38add40d-6a29-4e9e-9620-2bf165276204")
+                .hasKeyWithValue("host", "192.168.1.32")
+                .hasKeyWithValue("port", 9190)
+                .hasKeyWithValue("keepAlive", true);
+    }
+
     private final ComponentPropertyDescriptor host =
             ComponentPropertyDescriptor.builder()
                     .type(Primitives.stringTypeDescriptor)

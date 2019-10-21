@@ -8,6 +8,7 @@ import com.reedelk.runtime.api.commons.StringUtils;
 import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Optional;
 
 public class ConfigSelector extends ComboBox<ConfigMetadata> implements ItemListener {
 
@@ -37,7 +38,8 @@ public class ConfigSelector extends ComboBox<ConfigMetadata> implements ItemList
     private class ConfigMetadataRenderer extends ListCellRendererWrapper<ConfigMetadata> {
         @Override
         public void customize(JList list, ConfigMetadata value, int index, boolean selected, boolean hasFocus) {
-            StringBuilder renderedValue = new StringBuilder(value.getTitle());
+            String configTitle = Optional.ofNullable(value.getTitle()).orElse(StringUtils.EMPTY);
+            StringBuilder renderedValue = new StringBuilder(configTitle);
             if (renderedValue.length() == 0) {
                 renderedValue.append(value.getId());
             }

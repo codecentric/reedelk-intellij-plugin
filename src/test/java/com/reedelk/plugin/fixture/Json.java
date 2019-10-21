@@ -204,6 +204,13 @@ public class Json {
             }
         },
 
+        SampleWithoutTitle() {
+            @Override
+            public String path() {
+                return "configuration/configuration_sample_without_title.json";
+            }
+        },
+
         SampleWithEmptyConfig() {
             @Override
             public String path() {
