@@ -5,6 +5,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.EditorFontType;
 import com.intellij.openapi.editor.event.DocumentListener;
+import com.intellij.openapi.editor.impl.EditorComponentImpl;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Colors;
@@ -29,6 +30,11 @@ public class SuggestionDropDownDecorator {
     private DefaultListModel<Suggestion> suggestionListModel = new DefaultListModel<>();
     private JBList<Suggestion> listComp = new JBList<>(suggestionListModel);
     private boolean disableTextEvent;
+    private OnEditDoneCallback editDoneCallback;
+
+    public interface OnEditDoneCallback {
+        void onEditFinish();
+    }
 
     private SuggestionDropDownDecorator(@NotNull JTextComponent invoker,
                                         @NotNull Document document,
@@ -54,17 +60,20 @@ public class SuggestionDropDownDecorator {
         popupMenu.setBorder(JBUI.Borders.empty());
         popupMenu.add(listComp, BorderLayout.WEST);
 
-
         this.document = document;
         document.addDocumentListener(new SuggestionDocumentListener(popupMenu));
         initInvokerKeyListeners(this.invoker);
     }
 
-    public static void decorate(Editor editor, Document document, SuggestionClient suggestionClient) {
-        JTextComponent component = (JTextComponent) editor.getContentComponent();
+    public void addOnEditDoneListener(OnEditDoneCallback editDoneCallback) {
+        this.editDoneCallback = editDoneCallback;
+    }
+
+    public static SuggestionDropDownDecorator decorate(Editor editor, Document document, SuggestionClient suggestionClient) {
+        EditorComponentImpl component = (EditorComponentImpl) editor.getContentComponent();
         EditorColorsScheme colorsScheme = editor.getColorsScheme();
         Font dropDownFont = colorsScheme.getFont(EditorFontType.PLAIN);
-        new SuggestionDropDownDecorator(component, document, suggestionClient, dropDownFont);
+        return new SuggestionDropDownDecorator(component, document, suggestionClient, dropDownFont);
     }
 
     class SuggestionDocumentListener implements DocumentListener {
@@ -114,6 +123,9 @@ public class SuggestionDropDownDecorator {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == VK_ENTER) {
+                    if (!popupMenu.isVisible()) {
+                        if (editDoneCallback != null) editDoneCallback.onEditFinish();
+                    }
                     selectFromList(e);
                 } else if (e.getKeyCode() == VK_UP) {
                     moveUp(e);

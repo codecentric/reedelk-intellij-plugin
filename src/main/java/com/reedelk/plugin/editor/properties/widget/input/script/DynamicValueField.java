@@ -2,23 +2,19 @@ package com.reedelk.plugin.editor.properties.widget.input.script;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.util.ui.JBUI;
-import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.Fonts;
 import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.editor.properties.widget.ClickableLabel;
+import com.reedelk.plugin.editor.properties.widget.ContainerFactory;
 import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 import com.reedelk.plugin.editor.properties.widget.input.script.editor.DynamicValueScriptEditor;
 import com.reedelk.plugin.editor.properties.widget.input.script.editor.ScriptEditor;
 import com.reedelk.runtime.api.commons.ScriptUtils;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
 import java.awt.*;
 
-import static com.intellij.util.ui.JBUI.emptyInsets;
 import static java.awt.BorderLayout.CENTER;
-import static java.awt.BorderLayout.WEST;
 
 public class DynamicValueField extends DisposablePanel {
 
@@ -33,6 +29,8 @@ public class DynamicValueField extends DisposablePanel {
         this.inputFieldAdapter = inputFieldAdapter;
 
         this.editor = new DynamicValueScriptEditor(module.getProject(), context);
+        this.editor.addOnEditDone(DynamicValueField.this::requestFocusInWindow); // remove the focus when we are done
+
         this.scriptContainer = createScriptModePanel(editor.getComponent());
         this.inputFieldContainer = createInputFieldContainer();
 
@@ -67,7 +65,7 @@ public class DynamicValueField extends DisposablePanel {
                     switchComponent(inputFieldContainer, scriptContainer);
                     listener.onChange(inputFieldAdapter.getValue());
                 });
-        return layoutWith(codeIcon, editorComponent);
+        return ContainerFactory.createLabelNextToComponent(codeIcon, editorComponent);
     }
 
     private DisposablePanel createInputFieldContainer() {
@@ -77,10 +75,10 @@ public class DynamicValueField extends DisposablePanel {
                     String script = ScriptUtils.asScript(editor.getValue());
                     listener.onChange(script);
                 });
-        inputFieldAdapter.setMargin(emptyInsets());
+        inputFieldAdapter.setMargin(JBUI.emptyInsets());
         inputFieldAdapter.setBorder(JBUI.Borders.empty());
-        inputFieldAdapter.setFont(Fonts.ScriptEditor.SCRIPT_EDITOR);
-        return layoutWith(textIcon, inputFieldAdapter.getComponent());
+        inputFieldAdapter.setFont(Fonts.ScriptEditor.DYNAMIC_FIELD_FONT_SIZE);
+        return ContainerFactory.createLabelNextToComponent(textIcon, inputFieldAdapter.getComponent());
     }
 
     private void switchComponent(DisposablePanel visible, DisposablePanel invisible) {
@@ -92,40 +90,9 @@ public class DynamicValueField extends DisposablePanel {
         });
     }
 
-    private DisposablePanel layoutWith(JLabel icon, JComponent body) {
-        Border iconOutside = JBUI.Borders.customLine(Colors.SCRIPT_EDITOR_INLINE_ICON_BORDER, 1, 1, 1, 0);
-        Border iconInside = JBUI.Borders.empty(0, 4);
-        CompoundBorder iconBorder = new CompoundBorder(iconOutside, iconInside);
-        icon.setBorder(iconBorder);
-
-        Border bodyOutside = JBUI.Borders.customLine(Colors.SCRIPT_EDITOR_INLINE_ICON_BORDER, 1, 1, 1, 1);
-        Border bodyInside = JBUI.Borders.empty(0, 2);
-        CompoundBorder bodyBorder = new CompoundBorder(bodyOutside, bodyInside);
-        body.setBorder(bodyBorder);
-
-        return new Focusable(icon, body);
-    }
-
     public void addListener(OnChangeListener listener) {
         this.listener = listener;
         this.inputFieldAdapter.addListener(listener);
         this.editor.setListener(listener);
-    }
-
-    class Focusable extends DisposablePanel {
-
-        private final JComponent body;
-
-        Focusable(JLabel icon, JComponent body) {
-            super(new BorderLayout());
-            add(icon, WEST);
-            add(body, CENTER);
-            this.body = body;
-        }
-
-        @Override
-        public void requestFocus() {
-            body.requestFocus();
-        }
     }
 }

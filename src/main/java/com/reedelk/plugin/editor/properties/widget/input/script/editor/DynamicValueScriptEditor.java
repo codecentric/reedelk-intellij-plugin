@@ -5,6 +5,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.EditorSettings;
+import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.ex.EditorEx;
@@ -13,12 +14,14 @@ import com.reedelk.plugin.editor.properties.widget.input.script.DynamicValueFiel
 import com.reedelk.plugin.editor.properties.widget.input.script.ScriptContextManager;
 import com.reedelk.plugin.editor.properties.widget.input.script.suggestion.SuggestionDropDownDecorator;
 import com.reedelk.runtime.api.commons.ScriptUtils;
+import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
 import static com.intellij.openapi.command.WriteCommandAction.writeCommandAction;
 import static com.intellij.util.ui.JBUI.Borders;
+import static com.reedelk.plugin.commons.Fonts.ScriptEditor.SCRIPT_EDITOR_FONT_SIZE;
 import static com.reedelk.plugin.editor.properties.widget.input.script.editor.EditorConstants.JAVASCRIPT_FILE_TYPE;
 import static java.util.Collections.singletonList;
 
@@ -33,24 +36,34 @@ public class DynamicValueScriptEditor implements ScriptEditor, DocumentListener 
     private EditorEx editor;
     private Document document;
     private DynamicValueField.OnChangeListener listener;
+    private SuggestionDropDownDecorator decorate;
 
     public DynamicValueScriptEditor(@NotNull Project project,
                                     @NotNull ScriptContextManager contextManager) {
 
         this.project = project;
 
-        document = EditorFactory.getInstance().createDocument("");
+        document = EditorFactory.getInstance().createDocument(StringUtils.EMPTY);
         document.addDocumentListener(this);
 
         editor = (EditorEx) EditorFactory.getInstance()
                 .createEditor(document, project, JAVASCRIPT_FILE_TYPE, notViewer);
         editor.setOneLineMode(singleLineMode);
         editor.setBorder(Borders.empty());
+        editor.getScrollPane().setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        EditorColorsScheme colorsScheme = editor.getColorsScheme();
+        colorsScheme.setEditorFontSize(SCRIPT_EDITOR_FONT_SIZE);
 
         configureSettings(editor.getSettings());
 
-        SuggestionDropDownDecorator
+        decorate = SuggestionDropDownDecorator
                 .decorate(editor, document, new EditorWordSuggestionClient(project, contextManager));
+    }
+
+    @Override
+    public void addOnEditDone(SuggestionDropDownDecorator.OnEditDoneCallback editDoneCallback) {
+        decorate.addOnEditDoneListener(editDoneCallback);
     }
 
     @Override

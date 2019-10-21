@@ -68,4 +68,6 @@ public class Labels {
     public static final String ACTION_MAP_TABLE_REMOVE = "Remove";
 
     public static final String UNKNOWN_COMPONENT = "Unknown component";
+
+    public static final String ROUTER_TABLE_CONTAINER_TITLE = "Condition and route definitions";
 }

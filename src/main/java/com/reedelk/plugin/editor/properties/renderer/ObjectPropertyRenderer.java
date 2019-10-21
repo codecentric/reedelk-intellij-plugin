@@ -209,7 +209,7 @@ public class ObjectPropertyRenderer extends AbstractTypePropertyRenderer {
         TypeObjectDescriptor objectDescriptor = descriptor.getPropertyType();
 
         DisposablePanel wrappedRenderedComponent =
-                ContainerFactory.createObjectTypeContainer(descriptor.getDisplayName(), objectDescriptor, rendered);
+                ContainerFactory.createObjectTypeContainer(rendered, objectDescriptor, descriptor.getDisplayName());
 
         // If the property has any 'when' condition, we apply listener/s to make it
         // visible (or not) when the condition is met (or not).

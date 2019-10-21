@@ -17,8 +17,8 @@ import java.util.List;
  */
 public class PrecedingScopedNode implements Strategy {
 
-    private static final int NODE_TOP_MARGIN_PERCENT = 25;
-    private static final int NODE_BOTTOM_MARGIN_PERCENT = 30;
+    private static final int NODE_TOP_MARGIN_PERCENT = 35;
+    private static final int NODE_BOTTOM_MARGIN_PERCENT = 40;
 
     private final ScopedGraphNode closestPrecedingNode;
     private final Graphics2D graphics;

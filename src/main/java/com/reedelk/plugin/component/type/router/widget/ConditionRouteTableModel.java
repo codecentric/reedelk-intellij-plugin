@@ -4,6 +4,7 @@ import com.reedelk.plugin.component.type.router.RouterConditionRoutePair;
 import com.reedelk.plugin.editor.properties.widget.PropertyTable;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
+import com.reedelk.runtime.api.commons.ScriptUtils;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
@@ -41,7 +42,7 @@ public class ConditionRouteTableModel extends AbstractTableModel implements Prop
     @Override
     public boolean isCellEditable(int row, int col) {
         // row 0 and column 0 is not editable (this is the default route)
-        return !(row == conditionRouteList.size() - 1 && col == 1);
+        return !(row == conditionRouteList.size() - 1 && col == 0) && !(col == 1);
     }
 
     @Override
@@ -49,10 +50,10 @@ public class ConditionRouteTableModel extends AbstractTableModel implements Prop
         Object returnValue = "";
         RouterConditionRoutePair conditionRoute = conditionRouteList.get(rowIndex);
         switch (columnIndex) {
-            case 1:
-                returnValue = conditionRoute.getCondition();
+            case 0:
+                returnValue = ScriptUtils.unwrap(conditionRoute.getCondition());
                 break;
-            case 2:
+            case 1:
                 returnValue = conditionRoute.getNext();
                 break;
         }
@@ -63,10 +64,10 @@ public class ConditionRouteTableModel extends AbstractTableModel implements Prop
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
         RouterConditionRoutePair conditionRoute = conditionRouteList.get(rowIndex);
         switch (columnIndex) {
-            case 1:
-                conditionRoute.setCondition((String) value);
+            case 0:
+                conditionRoute.setCondition(ScriptUtils.asScript((String) value));
                 break;
-            case 2:
+            case 1:
                 conditionRoute.setNext((GraphNode) value);
                 break;
         }

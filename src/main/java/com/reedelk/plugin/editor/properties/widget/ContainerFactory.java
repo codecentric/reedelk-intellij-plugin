@@ -2,6 +2,7 @@ package com.reedelk.plugin.editor.properties.widget;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.util.ui.JBUI;
+import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.component.domain.Collapsible;
 import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
@@ -11,22 +12,76 @@ import com.reedelk.plugin.graph.node.GraphNode;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 import java.awt.*;
 
-import static java.awt.BorderLayout.CENTER;
-import static java.awt.BorderLayout.NORTH;
+import static java.awt.BorderLayout.*;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS;
 
 public class ContainerFactory {
 
-    public static DisposablePanel createObjectTypeContainer(
-            @NotNull String displayName,
-            @NotNull TypeObjectDescriptor descriptor,
-            @NotNull JComponent renderedComponent) {
+    public static DisposablePanel createLabelNextToComponent(JLabel label, JComponent body) {
+        return createLabelNextToComponent(label, body, true);
+    }
 
+    public static DisposablePanel createLabelNextToComponent(JLabel label, JComponent body, boolean outerBorder) {
+        Border iconBorder;
+        if (outerBorder) {
+            Border iconOutside = JBUI.Borders.customLine(Colors.SCRIPT_EDITOR_INLINE_ICON_BORDER, 1, 1, 1, 0);
+            Border iconInside = JBUI.Borders.empty(0, 4);
+            iconBorder = new CompoundBorder(iconOutside, iconInside);
+        } else {
+            Border iconOutside = JBUI.Borders.customLine(Colors.SCRIPT_EDITOR_INLINE_ICON_BORDER, 0, 0, 0, 1);
+            Border iconInside = JBUI.Borders.empty(0, 4);
+            iconBorder = new CompoundBorder(iconOutside, iconInside);
+        }
+
+        label.setBorder(iconBorder);
+
+        Border bodyBorder;
+        if (outerBorder) {
+            Border bodyOutside = JBUI.Borders.customLine(Colors.SCRIPT_EDITOR_INLINE_ICON_BORDER, 1, 1, 1, 1);
+            Border bodyInside = JBUI.Borders.empty(0, 2);
+            bodyBorder = new CompoundBorder(bodyOutside, bodyInside);
+        } else {
+            bodyBorder = JBUI.Borders.empty(0, 2);
+        }
+        body.setBorder(bodyBorder);
+
+        return new Focusable(label, body);
+    }
+
+    private static class Focusable extends DisposablePanel {
+
+        private final JComponent body;
+
+        Focusable(JLabel icon, JComponent body) {
+            super(new BorderLayout());
+            add(icon, WEST);
+            add(body, CENTER);
+            this.body = body;
+        }
+
+        @Override
+        public void requestFocus() {
+            body.requestFocus();
+        }
+    }
+
+    public static DisposablePanel createObjectTypeContainer(
+            @NotNull JComponent renderedComponent,
+            @NotNull TypeObjectDescriptor descriptor,
+            @NotNull String title) {
         return Collapsible.YES.equals(descriptor.getCollapsible()) ?
-                new CollapsibleObjectTypeContainer(renderedComponent, displayName) :
-                new DefaultObjectTypeContainer(renderedComponent, displayName);
+                new CollapsibleObjectTypeContainer(renderedComponent, title) :
+                createObjectTypeContainer(renderedComponent, title);
+    }
+
+    public static DisposablePanel createObjectTypeContainer(
+            @NotNull JComponent renderedComponent,
+            @NotNull String title) {
+        return new DefaultObjectTypeContainer(renderedComponent, title);
     }
 
     public static DisposableScrollPane createPropertiesPanel(Module module, ComponentData componentData, FlowSnapshot snapshot, GraphNode node) {

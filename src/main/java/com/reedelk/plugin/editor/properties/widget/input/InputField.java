@@ -3,6 +3,7 @@ package com.reedelk.plugin.editor.properties.widget.input;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBTextField;
 import com.reedelk.plugin.converter.ValueConverter;
+import com.reedelk.runtime.api.commons.StringUtils;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -14,6 +15,8 @@ import static java.awt.RenderingHints.VALUE_TEXT_ANTIALIAS_ON;
 
 public abstract class InputField<T> extends JBTextField implements DocumentListener {
 
+    private final Color hintColor;
+
     final PlainDocument document;
 
     private final ValueConverter<?> converter;
@@ -23,10 +26,16 @@ public abstract class InputField<T> extends JBTextField implements DocumentListe
 
     InputField(String hint) {
         setForeground(JBColor.DARK_GRAY);
-        converter = getConverter();
-        document = (PlainDocument) getDocument();
-        document.addDocumentListener(this);
+        this.converter = getConverter();
+        this.document = (PlainDocument) getDocument();
+        this.document.addDocumentListener(this);
         this.hint = hint;
+
+        int c0 = getBackground().getRGB();
+        int c1 = getForeground().getRGB();
+        int m = 0xfefefefe;
+        int c2 = ((c0 & m) >>> 1) + ((c1 & m) >>> 1);
+        hintColor = new Color(c2, true);
     }
 
     @Override
@@ -72,20 +81,14 @@ public abstract class InputField<T> extends JBTextField implements DocumentListe
         }
     }
 
-    // TODO: Fix this code, it is horrible
     private void paintHint(Graphics g) {
-        // Hint is painted if and only if it is not
-        // null and the text it is empty.
-        if (hint != null && getText().length() == 0) {
+        // Hint is painted if and only if it is present
+        if (StringUtils.isNotBlank(hint) && getText().length() == 0) {
             int h = getHeight();
             ((Graphics2D) g).setRenderingHint(KEY_TEXT_ANTIALIASING, VALUE_TEXT_ANTIALIAS_ON);
             Insets ins = getInsets();
             FontMetrics fm = g.getFontMetrics();
-            int c0 = getBackground().getRGB();
-            int c1 = getForeground().getRGB();
-            int m = 0xfefefefe;
-            int c2 = ((c0 & m) >>> 1) + ((c1 & m) >>> 1);
-            g.setColor(new Color(c2, true));
+            g.setColor(hintColor);
             g.drawString(hint, ins.left + 5, h / 2 + fm.getAscent() / 2 - 2);
         }
     }

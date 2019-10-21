@@ -28,6 +28,7 @@ public class ScriptEditorDefault extends DisposablePanel implements ScriptEditor
     private static final Logger LOG = Logger.getInstance(DynamicValueScriptEditor.class);
 
     private static final boolean HORIZONTAL = false;
+    private final SuggestionDropDownDecorator decorate;
     private DynamicValueField.OnChangeListener listener;
 
     private static class Dimensions {
@@ -52,7 +53,7 @@ public class ScriptEditorDefault extends DisposablePanel implements ScriptEditor
         this.editor = (EditorEx) EditorFactory.getInstance()
                 .createEditor(document, project, JAVASCRIPT_FILE_TYPE, false);
 
-        SuggestionDropDownDecorator.decorate(editor, document,
+        this.decorate = SuggestionDropDownDecorator.decorate(editor, document,
                 new EditorWordSuggestionClient(project, contextManager));
 
         ScriptEditorContextPanel contextPanel =
@@ -79,6 +80,11 @@ public class ScriptEditorDefault extends DisposablePanel implements ScriptEditor
             String script = ScriptUtils.asScript(event.getDocument().getText());
             listener.onChange(script);
         }
+    }
+
+    @Override
+    public void addOnEditDone(SuggestionDropDownDecorator.OnEditDoneCallback editDoneCallback) {
+        decorate.addOnEditDoneListener(editDoneCallback);
     }
 
     @Override
