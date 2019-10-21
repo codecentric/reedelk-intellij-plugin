@@ -8,8 +8,7 @@ import javax.swing.table.TableModel;
 
 public class DisposableTable extends JBTable implements Disposable {
 
-
-    public DisposableTable(TableModel tableModel, TableColumnModel tableColumnModel) {
+    DisposableTable(TableModel tableModel, TableColumnModel tableColumnModel) {
         super(tableModel, tableColumnModel);
     }
 

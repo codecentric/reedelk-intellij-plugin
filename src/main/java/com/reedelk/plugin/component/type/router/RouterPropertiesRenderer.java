@@ -40,13 +40,11 @@ public class RouterPropertiesRenderer extends GenericComponentPropertiesRenderer
 
         ScriptContextManager scriptContextManager = new ScriptContextManager(module, new EmptyContainerContext(), Collections.emptyList());
 
-
         ComponentData componentData = routerNode.componentData();
         List<RouterConditionRoutePair> conditionRoutePairList = componentData.get(DATA_CONDITION_ROUTE_PAIRS);
 
         ConditionRouteTableModel model = new ConditionRouteTableModel(conditionRoutePairList, snapshot);
         RouterRouteTable routerRouteTable = new RouterRouteTable(module, model, scriptContextManager);
-
         DisposablePanel routerTableContainer = ContainerFactory.createObjectTypeContainer(routerRouteTable, Labels.ROUTER_TABLE_CONTAINER_TITLE);
 
         DisposablePanel container = new DisposablePanel();
