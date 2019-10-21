@@ -1,13 +1,12 @@
 package com.reedelk.plugin.editor.properties.widget;
 
-import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
 import com.reedelk.plugin.commons.Sizes;
 
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
-public class PropertyTable extends JBScrollPane {
+public class PropertyTable extends DisposableScrollPane {
 
     private final JBTable table;
     private final PropertyTableModel tableModel;
@@ -17,14 +16,10 @@ public class PropertyTable extends JBScrollPane {
 
         this.tableModel = tableModel;
 
-        table = new JBTable(tableModel, tableColumnModel);
+        table = new DisposableTable(tableModel, tableColumnModel);
         table.setFillsViewportHeight(true);
         table.setRowHeight(Sizes.Table.ROW_HEIGHT);
         setViewportView(table);
-    }
-
-    public JBTable getTable() {
-        return table;
     }
 
     public void addEmptyRow() {

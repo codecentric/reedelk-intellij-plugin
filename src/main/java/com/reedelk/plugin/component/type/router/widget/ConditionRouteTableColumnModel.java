@@ -1,5 +1,6 @@
 package com.reedelk.plugin.component.type.router.widget;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.editor.properties.widget.ClickableLabel;
@@ -18,14 +19,20 @@ import java.util.EventObject;
 
 import static com.reedelk.runtime.commons.JsonParser.Implementor;
 
-class ConditionRouteTableColumnModel extends DefaultTableColumnModel {
+class ConditionRouteTableColumnModel extends DefaultTableColumnModel implements Disposable {
 
-    ConditionRouteTableColumnModel(JComponent parent, ConditionRouteTableModel model, Module module, ScriptContextManager scriptContextManager) {
+    private final ConditionCellRenderer cellRenderer;
+    private final ConditionCellEditor conditionCellEditor;
+
+    ConditionRouteTableColumnModel(JComponent parent, Module module, ScriptContextManager scriptContextManager) {
+        cellRenderer = new ConditionCellRenderer(module, scriptContextManager);
+        conditionCellEditor = new ConditionCellEditor(parent, module, scriptContextManager);
+
         // Column 0 (Condition)
         TableColumn conditionColumn = new TableColumn(0);
         conditionColumn.setHeaderValue(ConditionRouteColumns.COLUMN_NAMES[1]);
-        conditionColumn.setCellRenderer(new ConditionCellRenderer(module, scriptContextManager));
-        conditionColumn.setCellEditor(new ConditionCellEditor(parent, module, scriptContextManager));
+        conditionColumn.setCellRenderer(cellRenderer);
+        conditionColumn.setCellEditor(conditionCellEditor);
         addColumn(conditionColumn);
 
         // Column 1 (Route)
@@ -33,6 +40,12 @@ class ConditionRouteTableColumnModel extends DefaultTableColumnModel {
         routeColumn.setHeaderValue(ConditionRouteColumns.COLUMN_NAMES[1]);
         routeColumn.setCellRenderer(new RoutesCellRenderer());
         addColumn(routeColumn);
+    }
+
+    @Override
+    public void dispose() {
+        if (cellRenderer != null) cellRenderer.dispose();
+        if (conditionCellEditor != null) conditionCellEditor.dispose();
     }
 
     class RoutesCellRenderer extends DefaultTableCellRenderer {
@@ -44,7 +57,7 @@ class ConditionRouteTableColumnModel extends DefaultTableColumnModel {
         }
     }
 
-    class ConditionCellEditor implements TableCellEditor {
+    private class ConditionCellEditor implements TableCellEditor, Disposable {
 
         private final DynamicValueScriptEditor editor;
         private CellEditorListener listener;
@@ -53,7 +66,6 @@ class ConditionRouteTableColumnModel extends DefaultTableColumnModel {
         ConditionCellEditor(JComponent parent, Module module, ScriptContextManager scriptContextManager) {
             this.editor = new DynamicValueScriptEditor(module.getProject(), scriptContextManager);
             this.editor.addOnEditDone(parent::requestFocusInWindow);
-
             JLabel codeIcon = new ClickableLabel(Icons.Script.Code, Icons.Script.Code, () -> {
             });
             content = ContainerFactory.createLabelNextToComponent(codeIcon, editor.getComponent(), false);
@@ -99,10 +111,15 @@ class ConditionRouteTableColumnModel extends DefaultTableColumnModel {
         public void removeCellEditorListener(CellEditorListener l) {
             this.listener = l;
         }
+
+        @Override
+        public void dispose() {
+            if (editor != null) editor.dispose();
+        }
     }
 
 
-    private class ConditionCellRenderer implements TableCellRenderer {
+    private class ConditionCellRenderer implements TableCellRenderer, Disposable {
 
         private final DynamicValueScriptEditor editor;
         private DisposablePanel content;
@@ -118,6 +135,11 @@ class ConditionRouteTableColumnModel extends DefaultTableColumnModel {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             this.editor.setValue((String) value);
             return content;
+        }
+
+        @Override
+        public void dispose() {
+            if (editor != null) editor.dispose();
         }
     }
 }
