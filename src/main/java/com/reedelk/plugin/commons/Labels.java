@@ -70,4 +70,5 @@ public class Labels {
     public static final String UNKNOWN_COMPONENT = "Unknown component";
 
     public static final String ROUTER_TABLE_CONTAINER_TITLE = "Condition and route definitions";
+
 }

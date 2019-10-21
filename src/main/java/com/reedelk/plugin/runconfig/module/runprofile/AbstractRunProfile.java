@@ -49,8 +49,10 @@ abstract class AbstractRunProfile implements RunProfileState {
         String moduleJarFilePath = getModuleJarFile(mavenProject);
 
         RunnerAndConfigurationSettings configSettings = RunManager.getInstance(project).findConfigurationByName(runtimeConfigName);
-        if (configSettings == null)
+        if (configSettings == null) {
             throw new ExecutionException("Could not find config with name = " + runtimeConfigName + ", check module run configuration");
+        }
+
         RuntimeRunConfiguration runtimeRunConfiguration = (RuntimeRunConfiguration) configSettings.getConfiguration();
 
         this.port = Integer.parseInt(runtimeRunConfiguration.getRuntimePort());
