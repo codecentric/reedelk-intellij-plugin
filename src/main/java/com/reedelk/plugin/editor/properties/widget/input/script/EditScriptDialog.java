@@ -3,33 +3,28 @@ package com.reedelk.plugin.editor.properties.widget.input.script;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.reedelk.plugin.commons.Labels;
-import com.reedelk.plugin.editor.properties.widget.input.script.editor.ScriptEditor;
 import com.reedelk.plugin.editor.properties.widget.input.script.editor.ScriptEditorDefault;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.Collections;
+import java.awt.*;
 
 public class EditScriptDialog extends DialogWrapper {
 
-    private ScriptEditor editor;
+    private static final Dimension DEFAULT_SCRIPT_DIMENSION = new Dimension(600, 400);
 
-    // An editor without extra context variables (just the default ones)
-    // - such as the one used in the Router component or in the Logger component -
-    public EditScriptDialog(@NotNull Module module, @NotNull String initialValue) {
-        this(module, initialValue, new ScriptContextManager(module, new EmptyPanelContext(), Collections.emptyList()));
-    }
+    private ScriptEditorDefault editor;
 
     EditScriptDialog(@NotNull Module module,
-                     @NotNull String initialValue,
-                     @NotNull ScriptContextManager context) {
+                     @NotNull ScriptContextManager context, String initialValue) {
         super(module.getProject(), false);
         setTitle(Labels.DIALOG_TITLE_EDIT_SCRIPT);
         setResizable(true);
 
         editor = new ScriptEditorDefault(module.getProject(), context);
         editor.setValue(initialValue);
+        editor.getComponent().setPreferredSize(DEFAULT_SCRIPT_DIMENSION);
 
         init();
     }
@@ -45,7 +40,7 @@ public class EditScriptDialog extends DialogWrapper {
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
-        return editor.getComponent();
+        return editor;
     }
 
     @Override

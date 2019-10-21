@@ -46,7 +46,7 @@ public class Labels {
 
     public static final String ROUTER_DEFAULT_ROUTE = "otherwise";
 
-    public static final String SCRIPT_EDITOR_CONTEXT_VARS_TITLE = "Context variables";
+    public static final String SCRIPT_EDITOR_CONTEXT_VARS_TITLE = "Editor variables";
     public static final String SCRIPT_EDITOR_BTN_OPEN_EDITOR = "Open Editor";
 
     public static final String FILE_CHOOSER_TITLE = "Choose File";

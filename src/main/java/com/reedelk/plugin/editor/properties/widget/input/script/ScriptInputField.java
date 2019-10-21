@@ -6,7 +6,6 @@ import com.intellij.ui.components.JBPanel;
 import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 import com.reedelk.plugin.editor.properties.widget.input.InputChangeListener;
-import com.reedelk.plugin.editor.properties.widget.input.script.editor.ScriptEditor;
 import com.reedelk.plugin.editor.properties.widget.input.script.editor.ScriptEditorDefault;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,7 +26,7 @@ public class ScriptInputField extends DisposablePanel implements Disposable {
 
 
     private InputChangeListener listener;
-    private ScriptEditor editor;
+    private ScriptEditorDefault editor;
     private String value = "";
 
     public ScriptInputField(@NotNull Module module,
@@ -40,7 +39,7 @@ public class ScriptInputField extends DisposablePanel implements Disposable {
 
         setLayout(new BorderLayout());
         add(openEditorBtn, NORTH);
-        add(editor.getComponent(), CENTER);
+        add(editor, CENTER);
     }
 
 
@@ -81,7 +80,7 @@ public class ScriptInputField extends DisposablePanel implements Disposable {
     class OpenScriptEditorDialog extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
-            EditScriptDialog dialog = new EditScriptDialog(module, value, context);
+            EditScriptDialog dialog = new EditScriptDialog(module, context, editor.getValue());
             if (dialog.showAndGet()) {
                 value = dialog.getValue();
                 listener.onChange(value);

@@ -14,6 +14,7 @@ import com.reedelk.plugin.editor.properties.widget.input.script.DynamicValueFiel
 import com.reedelk.plugin.editor.properties.widget.input.script.ScriptContextManager;
 import com.reedelk.plugin.editor.properties.widget.input.script.suggestion.SuggestionDropDownDecorator;
 import com.reedelk.runtime.api.commons.ScriptUtils;
+import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -46,8 +47,7 @@ public class ScriptEditorDefault extends DisposablePanel implements ScriptEditor
             @NotNull ScriptContextManager contextManager) {
 
         this.project = project;
-        this.document = EditorFactory.getInstance().createDocument("");
-        this.document = EditorFactory.getInstance().createDocument("");
+        this.document = EditorFactory.getInstance().createDocument(StringUtils.EMPTY);
         this.document.addDocumentListener(this);
 
         this.editor = (EditorEx) EditorFactory.getInstance()
@@ -69,7 +69,6 @@ public class ScriptEditorDefault extends DisposablePanel implements ScriptEditor
         splitter.setDividerMouseZoneSize(Dimensions.DIVIDER_MOUSE_ZONE_WIDTH);
 
         setLayout(new BorderLayout());
-        setPreferredSize(new Dimension(1000, 600));
         add(splitter, CENTER);
     }
 

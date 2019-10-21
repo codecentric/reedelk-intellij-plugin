@@ -8,22 +8,16 @@ public enum Type {
             return "Object";
         }
     },
-    MAP {
-        @Override
-        public String displayName() {
-            return "Map";
-        }
-    },
     MESSAGE {
         @Override
         public String displayName() {
             return "Message";
         }
     },
-    ANY {
+    CONTEXT {
         @Override
         public String displayName() {
-            return "Any";
+            return "FlowContext";
         }
     };
 
