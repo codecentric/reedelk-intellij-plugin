@@ -26,7 +26,6 @@ public class ForkSerializer extends AbstractScopedNodeSerializer {
 
         Implementor.name(componentData.getFullyQualifiedName(), forkObject);
 
-        // TODO: If  thread pool size from the component is null, this one trows an exception
         Integer threadPoolSize = componentData.get(Fork.threadPoolSize());
 
         Fork.threadPoolSize(threadPoolSize, forkObject);

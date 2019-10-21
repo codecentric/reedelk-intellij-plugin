@@ -34,12 +34,15 @@ public class ForkDeserializer extends AbstractNodeDeserializer {
 
         // Set description
         if (componentDefinition.has(Implementor.description())) {
-            componentData.set(Implementor.description(), Implementor.description(componentDefinition));
+            String description = Implementor.description(componentDefinition);
+            componentData.set(Implementor.description(), description);
         }
 
-        int threadPoolSize = Fork.threadPoolSize(componentDefinition);
-
-        componentData.set(Fork.threadPoolSize(), threadPoolSize);
+        // Set thread pool size
+        if (componentDefinition.has(Fork.threadPoolSize())) {
+            Integer threadPoolSize = Fork.threadPoolSize(componentDefinition);
+            componentData.set(Fork.threadPoolSize(), threadPoolSize);
+        }
 
         graph.add(parent, forkNode);
 
