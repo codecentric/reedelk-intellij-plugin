@@ -12,7 +12,7 @@ import java.awt.*;
 
 public class EditScriptDialog extends DialogWrapper {
 
-    private static final Dimension DEFAULT_SCRIPT_DIMENSION = new Dimension(600, 400);
+    private static final Dimension DEFAULT_SCRIPT_DIMENSION = new Dimension(700, 400);
 
     private ScriptEditorDefault editor;
 
