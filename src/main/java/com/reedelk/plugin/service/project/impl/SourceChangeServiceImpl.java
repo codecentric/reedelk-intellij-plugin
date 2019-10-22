@@ -12,10 +12,13 @@ import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.Function;
 import com.reedelk.plugin.service.project.SourceChangeService;
+import com.reedelk.runtime.commons.FileExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.SystemIndependent;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -23,7 +26,7 @@ import static java.util.Arrays.stream;
 
 public class SourceChangeServiceImpl implements SourceChangeService, BulkFileListener, ModuleListener, Disposable {
 
-    private static final String JAVA_SOURCE_EXTENSION = "java";
+    private static final String SRC_DIRECTORY = "src";
 
     private static final Boolean CHANGED = true;
     private static final Boolean UNCHANGED = false;
@@ -74,7 +77,7 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
         events.stream()
                 .map(VFileEvent::getFile)
                 .forEach(file -> {
-                    if (isJavaSource(file)) {
+                    if (isNotHotSwappableSource(file)) {
                         isModuleSourceChange(file).ifPresent(this::setToChangedMatching);
                     }
                 });
@@ -82,9 +85,8 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
 
     @Override
     public void moduleAdded(@NotNull Project project, @NotNull Module module) {
-        @SystemIndependent String moduleFilePath = module.getModuleFilePath();
-        File moduleFilePathFile = new File(moduleFilePath);
-        moduleNameRootPathMap.putIfAbsent(module.getName(), moduleFilePathFile.getParent());
+        Path src = getModuleSrcDirectory(module);
+        moduleNameRootPathMap.putIfAbsent(module.getName(), src.toString());
     }
 
     @Override
@@ -100,9 +102,8 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
             moduleNameRootPathMap.remove(oldModuleName);
 
             // Add new name
-            @SystemIndependent String moduleFilePath = module.getModuleFilePath();
-            File moduleFilePathFile = new File(moduleFilePath);
-            moduleNameRootPathMap.putIfAbsent(module.getName(), moduleFilePathFile.getParent());
+            Path src = getModuleSrcDirectory(module);
+            moduleNameRootPathMap.putIfAbsent(module.getName(), src.toString());
 
             // Remove from module name
             Set<BiKey> biKeys = runtimeModuleNameChangedMap.keySet();
@@ -125,14 +126,17 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
         return Optional.empty();
     }
 
-    private boolean isJavaSource(VirtualFile file) {
-        return hasExtension(file, JAVA_SOURCE_EXTENSION);
+    // Flows, Subflows and Flow config are hot-swappable. Everything else, not.
+    private boolean isNotHotSwappableSource(VirtualFile file) {
+        return hasNotExtension(file, FileExtension.FLOW.value()) &&
+                hasNotExtension(file, FileExtension.SUBFLOW.value()) &&
+                hasNotExtension(file, FileExtension.FLOW_CONFIG.value());
     }
 
-    private static boolean hasExtension(VirtualFile file, String extensionToTest) {
-        return file != null &&
-                file.getExtension() != null &&
-                file.getExtension().equals(extensionToTest);
+    private static boolean hasNotExtension(VirtualFile file, String extensionToTest) {
+        return file == null ||
+                file.getExtension() == null ||
+                !file.getExtension().equals(extensionToTest);
     }
 
     private void setToChangedMatching(String moduleName) {
@@ -141,6 +145,13 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
                 entry.setValue(CHANGED);
             }
         }
+    }
+
+    private Path getModuleSrcDirectory(Module module) {
+        @SystemIndependent String moduleFilePath = module.getModuleFilePath();
+        File moduleFilePathFile = new File(moduleFilePath);
+        String parent = moduleFilePathFile.getParent();
+        return Paths.get(parent, SRC_DIRECTORY);
     }
 
     class RegisterModuleConsumer implements Consumer<Module> {

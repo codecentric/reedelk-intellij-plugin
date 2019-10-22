@@ -25,6 +25,7 @@ import javax.swing.tree.TreeModel;
 import java.awt.*;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import static java.awt.BorderLayout.CENTER;
@@ -85,8 +86,8 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
 
     private void updateComponents(VirtualFile file) {
         if (file != null) {
-            Module module = ModuleUtil.findModuleForFile(file, project);
-            updateComponents(module);
+            Optional.ofNullable(ModuleUtil.findModuleForFile(file, project))
+                    .ifPresent(this::updateComponents);
         }
     }
 
