@@ -35,7 +35,7 @@
         <internalFileTemplate name="Maven Project"/>
 
         <stepsBeforeRunProvider
-                implementation="com.reedelk.plugin.runconfig.module.beforetask.ModuelBuilderBeforeTaskProvider"/>
+                implementation="com.reedelk.plugin.runconfig.module.beforetask.ModuleBuilderBeforeTaskProvider"/>
 
         <!-- Module Builder -->
         <moduleBuilder builderClass="com.reedelk.plugin.builder.ModuleBuilder" id="ESB_MODULE_BUILDER"

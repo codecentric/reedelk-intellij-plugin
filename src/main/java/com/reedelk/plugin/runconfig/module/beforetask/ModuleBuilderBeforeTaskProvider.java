@@ -22,7 +22,7 @@ import org.jetbrains.idea.maven.utils.MavenLog;
 
 import javax.swing.*;
 
-public class ModuelBuilderBeforeTaskProvider extends BeforeRunTaskProvider<ModuleBuilderBeforeTask> {
+public class ModuleBuilderBeforeTaskProvider extends BeforeRunTaskProvider<ModuleBuilderBeforeTask> {
 
     public static final Key<ModuleBuilderBeforeTask> ID = Key.create("ESBModule.BeforeRunTask");
 
