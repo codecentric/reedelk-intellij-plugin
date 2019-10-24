@@ -1,25 +1,27 @@
 package com.reedelk.plugin.editor.properties.widget.input;
 
-import com.intellij.openapi.ui.ComboBox;
+import com.reedelk.plugin.editor.properties.widget.ComboDropdownSuggestion;
+import com.reedelk.runtime.api.commons.StringUtils;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.Arrays;
 
-import static java.util.Arrays.stream;
-
-public class StringDropDown extends ComboBox<String> implements ItemListener {
+public class StringDropDown extends JComboBox<String> implements ItemListener {
 
     private InputChangeListener listener;
 
-    public StringDropDown(String[] items, boolean editable) {
-        Arrays.sort(items); // sort ascending order
-
-        DefaultComboBoxModel<String> comboModel = new DefaultComboBoxModel<>();
-        stream(items).forEach(comboModel::addElement);
-        setModel(comboModel);
+    public StringDropDown(String[] items, boolean editable, String prototype) {
+        super(items);
         setEditable(editable);
+        if (editable) {
+            JTextField field = (JTextField) getEditor().getEditorComponent();
+            field.setText(StringUtils.EMPTY);
+            field.addKeyListener(new ComboDropdownSuggestion(this));
+        }
+        if (prototype != null) {
+            setPrototypeDisplayValue(prototype);
+        }
         addItemListener(this);
     }
 

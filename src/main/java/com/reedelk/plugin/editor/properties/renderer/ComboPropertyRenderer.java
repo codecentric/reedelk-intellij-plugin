@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 
 import static java.awt.BorderLayout.WEST;
 
@@ -30,10 +31,12 @@ public class ComboPropertyRenderer extends AbstractTypePropertyRenderer {
             propertyAccessor.set(propertyDescriptor.getDefaultValue());
         }
 
+        String prototype = typeComboDescriptor.getPrototype();
         boolean editable = typeComboDescriptor.isEditable();
         String[] comboValues = typeComboDescriptor.getComboValues();
 
-        StringDropDown dropDown = new StringDropDown(comboValues, editable);
+        Arrays.sort(comboValues); // sort ascending order
+        StringDropDown dropDown = new StringDropDown(comboValues, editable, prototype);
         dropDown.setValue(propertyAccessor.get());
         dropDown.addListener(propertyAccessor::set);
 

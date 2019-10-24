@@ -118,7 +118,7 @@ public class TypeHandler implements Handler {
             String[] items = stream(comboValues).map(value -> (String) value).toArray(String[]::new);
             return new TypeComboDescriptor(editable, items);
         } else if (isMimeTypeCombo(fieldInfo, clazz)) {
-            return new TypeComboDescriptor(true, MimeType.ALL_MIME_TYPES);
+            return new TypeComboDescriptor(true, MimeType.ALL_MIME_TYPES, MimeType.MIME_TYPE_PROTOTYPE);
         } else if (isMap(clazz)) {
             String tabGroup = getAnnotationValueOrDefault(fieldInfo, TabGroup.class, null);
             return new TypeMapDescriptor(tabGroup);
