@@ -9,6 +9,7 @@ import com.reedelk.runtime.api.annotation.Combo;
 import com.reedelk.runtime.api.annotation.DisplayName;
 import com.reedelk.runtime.api.annotation.TabGroup;
 import com.reedelk.runtime.api.commons.StringUtils;
+import com.reedelk.runtime.api.message.content.MimeType;
 import io.github.classgraph.*;
 
 import java.util.List;
@@ -114,8 +115,10 @@ public class TypeHandler implements Handler {
         } else if (isCombo(fieldInfo, clazz)) {
             boolean editable = getAnnotationParameterValueOrDefault(fieldInfo, Combo.class, "editable", false);
             Object[] comboValues = getAnnotationParameterValueOrDefault(fieldInfo, Combo.class, "comboValues", new String[]{});
-            List<String> items = stream(comboValues).map(value -> (String) value).collect(toList());
-            return new TypeComboDescriptor(editable, items.toArray(new String[]{}));
+            String[] items = stream(comboValues).map(value -> (String) value).toArray(String[]::new);
+            return new TypeComboDescriptor(editable, items);
+        } else if (isMimeTypeCombo(fieldInfo, clazz)) {
+            return new TypeComboDescriptor(true, MimeType.ALL_MIME_TYPES);
         } else if (isMap(clazz)) {
             String tabGroup = getAnnotationValueOrDefault(fieldInfo, TabGroup.class, null);
             return new TypeMapDescriptor(tabGroup);

@@ -6,6 +6,7 @@ import com.reedelk.plugin.component.scanner.ComponentAnalyzerContext;
 import com.reedelk.plugin.component.scanner.UnsupportedType;
 import com.reedelk.runtime.api.annotation.Combo;
 import com.reedelk.runtime.api.annotation.File;
+import com.reedelk.runtime.api.annotation.MimeTypeCombo;
 import com.reedelk.runtime.api.annotation.Password;
 import com.reedelk.runtime.api.script.Script;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicMap;
@@ -112,6 +113,11 @@ class PropertyScannerUtils {
 
     static boolean isFile(FieldInfo fieldInfo, Class<?> clazz) {
         return fieldInfo.hasAnnotation(File.class.getName()) &&
+                String.class.equals(clazz);
+    }
+
+    static boolean isMimeTypeCombo(FieldInfo fieldInfo, Class<?> clazz) {
+        return fieldInfo.hasAnnotation(MimeTypeCombo.class.getName()) &&
                 String.class.equals(clazz);
     }
 
