@@ -1,7 +1,6 @@
 package com.reedelk.plugin.editor.properties.widget.input;
 
 import com.reedelk.plugin.editor.properties.widget.ComboDropdownSuggestion;
-import com.reedelk.runtime.api.commons.StringUtils;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
@@ -16,7 +15,6 @@ public class StringDropDown extends JComboBox<String> implements ItemListener {
         setEditable(editable);
         if (editable) {
             JTextField field = (JTextField) getEditor().getEditorComponent();
-            field.setText(StringUtils.EMPTY);
             field.addKeyListener(new ComboDropdownSuggestion(this));
         }
         if (prototype != null) {

@@ -37,9 +37,6 @@ public class ComboDropdownSuggestion extends KeyAdapter {
                     comboBox.hidePopup();
                 } else {
                     setSuggestionModel(comboBox, m, text);
-                    if (comboBox.getComponentPopupMenu() != null) {
-                        comboBox.getComponentPopupMenu().pack();
-                    }
                     comboBox.showPopup();
                 }
             }
