@@ -7,17 +7,17 @@ import com.reedelk.plugin.component.scanner.ComponentAnalyzerContext;
 import com.reedelk.plugin.component.scanner.UnsupportedType;
 import com.reedelk.runtime.api.annotation.Combo;
 import com.reedelk.runtime.api.annotation.DisplayName;
+import com.reedelk.runtime.api.annotation.MimeTypeCombo;
 import com.reedelk.runtime.api.annotation.TabGroup;
-import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.message.content.MimeType;
 import io.github.classgraph.*;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static com.reedelk.plugin.component.scanner.property.PropertyScannerUtils.*;
 import static com.reedelk.plugin.converter.ValueConverterFactory.isKnownType;
+import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
+import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -100,7 +100,7 @@ public class TypeHandler implements Handler {
 
         // Default enum value is the first key. Its default value can be overridden
         // on the property definition with the @Default annotation.
-        String defaultEnumValue = MapUtils.getFirstKeyOrDefault(nameAndDisplayName, StringUtils.EMPTY);
+        String defaultEnumValue = MapUtils.getFirstKeyOrDefault(nameAndDisplayName, EMPTY);
 
         return new TypeEnumDescriptor(nameAndDisplayName, defaultEnumValue);
     }
@@ -108,20 +108,34 @@ public class TypeHandler implements Handler {
     private TypeDescriptor processKnownType(Class<?> clazz, FieldInfo fieldInfo) {
         if (isScript(clazz)) {
             return new TypeScriptDescriptor();
+
         } else if (isPassword(fieldInfo, clazz)) {
             return new TypePasswordDescriptor();
+
         } else if (isFile(fieldInfo, clazz)) {
             return new TypeFileDescriptor();
+
         } else if (isCombo(fieldInfo, clazz)) {
             boolean editable = getAnnotationParameterValueOrDefault(fieldInfo, Combo.class, "editable", false);
             Object[] comboValues = getAnnotationParameterValueOrDefault(fieldInfo, Combo.class, "comboValues", new String[]{});
             String[] items = stream(comboValues).map(value -> (String) value).toArray(String[]::new);
             return new TypeComboDescriptor(editable, items);
+
         } else if (isMimeTypeCombo(fieldInfo, clazz)) {
-            return new TypeComboDescriptor(true, MimeType.ALL_MIME_TYPES, MimeType.MIME_TYPE_PROTOTYPE);
+            List<String> predefinedMimeTypes = Arrays.asList(MimeType.ALL_MIME_TYPES);
+            String additionalMimeTypes = getAnnotationParameterValueOrDefault(fieldInfo, MimeTypeCombo.class, "additionalTypes", EMPTY);
+            if (isNotBlank(additionalMimeTypes)) {
+                String[] additionalTypes = additionalMimeTypes.split(",");
+                predefinedMimeTypes = new ArrayList<>(predefinedMimeTypes);
+                predefinedMimeTypes.addAll(Arrays.asList(additionalTypes));
+            }
+            String[] comboMimeTypesArray = predefinedMimeTypes.toArray(new String[]{});
+            return new TypeComboDescriptor(true, comboMimeTypesArray, MimeType.MIME_TYPE_PROTOTYPE);
+
         } else if (isMap(clazz)) {
             String tabGroup = getAnnotationValueOrDefault(fieldInfo, TabGroup.class, null);
             return new TypeMapDescriptor(tabGroup);
+
         } else {
             return new TypePrimitiveDescriptor(clazz);
         }

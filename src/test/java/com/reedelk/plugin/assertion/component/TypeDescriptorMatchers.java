@@ -55,7 +55,10 @@ public class TypeDescriptorMatchers {
                 boolean actualEditable = actual.isEditable();
                 String[] expectedComboValues = expected.getComboValues();
                 String[] actualComboValues = actual.getComboValues();
+                String expectedPrototype = expected.getPrototype();
+                String actualPrototype = actual.getPrototype();
                 return same(expected, actual) &&
+                        same(expectedPrototype, actualPrototype) &&
                         expectedEditable == actualEditable &&
                         Arrays.equals(expectedComboValues, actualComboValues);
             }

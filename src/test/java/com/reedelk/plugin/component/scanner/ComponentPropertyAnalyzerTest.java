@@ -5,6 +5,7 @@ import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.assertion.component.TypeDescriptorMatchers;
 import com.reedelk.plugin.component.domain.*;
 import com.reedelk.plugin.component.scanner.property.ComponentPropertyAnalyzer;
+import com.reedelk.runtime.api.message.content.MimeType;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicStringMap;
 import com.reedelk.runtime.api.script.dynamicvalue.*;
 import io.github.classgraph.ClassInfo;
@@ -14,8 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static com.reedelk.plugin.assertion.component.TypeDescriptorMatchers.TypeDescriptorMatcher;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -439,6 +439,42 @@ class ComponentPropertyAnalyzerTest extends AbstractScannerTest {
                 "Dynamic string map",
                 null,
                 TypeDescriptorMatchers.ofDynamicMapType(typeDynamicMapDescriptor));
+    }
+
+    // Mime Type Combo
+
+    @Test
+    void shouldCorrectlyAnalyzeMimeTypeComboProperty() {
+        // Given
+        TypeComboDescriptor typeComboDescriptor =
+                new TypeComboDescriptor(true, MimeType.ALL_MIME_TYPES, MimeType.MIME_TYPE_PROTOTYPE);
+
+        // Expect
+        assertThatExistProperty(
+                "mimeType",
+                "Mime type",
+                "*/*",
+                TypeDescriptorMatchers.ofTypeCombo(typeComboDescriptor));
+    }
+
+    @Test
+    void shouldCorrectlyAnalyzeMimeTypeCustomComboProperty() {
+        // Given
+        List<String> predefinedMimeTypes = new ArrayList<>(Arrays.asList(MimeType.ALL_MIME_TYPES));
+        predefinedMimeTypes.add("img/xyz");
+        predefinedMimeTypes.add("audio/mp13");
+        String[] comboMimeTypesArray = predefinedMimeTypes.toArray(new String[]{});
+
+        // Given
+        TypeComboDescriptor typeComboDescriptor =
+                new TypeComboDescriptor(true, comboMimeTypesArray, MimeType.MIME_TYPE_PROTOTYPE);
+
+        // Expect
+        assertThatExistProperty(
+                "mimeTypeCustom",
+                "Mime type with additional types",
+                "img/xyz",
+                TypeDescriptorMatchers.ofTypeCombo(typeComboDescriptor));
     }
 
     // Special cases

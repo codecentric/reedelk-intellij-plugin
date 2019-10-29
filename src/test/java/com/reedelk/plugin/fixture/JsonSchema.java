@@ -29,7 +29,7 @@ public enum JsonSchema {
 
     public String json() {
         URL url = Json.class.getResource(FIXTURE_BASE_PATH + path());
-        return FileUtils.readFrom(url);
+        return FileUtils.ReadFromURL.asString(url);
     }
 
     private static final String FIXTURE_BASE_PATH = "/com/reedelk/plugin/fixture/schema/";

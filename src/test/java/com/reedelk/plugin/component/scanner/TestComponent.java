@@ -4,6 +4,7 @@ import com.reedelk.runtime.api.annotation.*;
 import com.reedelk.runtime.api.component.ProcessorSync;
 import com.reedelk.runtime.api.message.FlowContext;
 import com.reedelk.runtime.api.message.Message;
+import com.reedelk.runtime.api.message.content.MimeType;
 import com.reedelk.runtime.api.script.Script;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicStringMap;
 import com.reedelk.runtime.api.script.dynamicvalue.*;
@@ -148,6 +149,17 @@ public class TestComponent implements ProcessorSync {
     @Property("Property object with missing default value")
     private Double doubleObjectPropertyWithoutDefaultValue;
 
+    @Property("Mime type")
+    @MimeTypeCombo
+    @Default(MimeType.ANY_MIME_TYPE)
+    private String mimeType;
+
+    @Property("Mime type with additional types")
+    @Default("img/xyz")
+    @MimeTypeCombo(additionalTypes = "img/xyz,audio/mp13")
+    private String mimeTypeCustom;
+
+
     private int notExposedProperty;
 
     @Override
@@ -281,5 +293,13 @@ public class TestComponent implements ProcessorSync {
 
     public void setDoubleObjectPropertyWithoutDefaultValue(Double doubleObjectPropertyWithoutDefaultValue) {
         this.doubleObjectPropertyWithoutDefaultValue = doubleObjectPropertyWithoutDefaultValue;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
+
+    public void setMimeTypeCustom(String mimeTypeCustom) {
+        this.mimeTypeCustom = mimeTypeCustom;
     }
 }

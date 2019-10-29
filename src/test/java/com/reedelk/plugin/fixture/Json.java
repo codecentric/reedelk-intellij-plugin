@@ -14,7 +14,7 @@ public class Json {
 
         default String json() {
             URL url = Json.class.getResource(FLOW_FIXTURE_BASE_PATH + path());
-            return FileUtils.readFrom(url);
+            return FileUtils.ReadFromURL.asString(url);
         }
     }
 
