@@ -8,6 +8,8 @@ import java.util.List;
 
 public abstract class AbstractText {
 
+    private final String prototypeText = "XXXXXX";
+
     private final HorizontalAlignment horizontalAlignment;
     private final VerticalAlignment verticalAlignment;
     private final Font font;
@@ -65,13 +67,12 @@ public abstract class AbstractText {
     }
 
     public int height(Graphics2D graphics) {
-        int height = 0;
-        if (getText() != null && !getText().isEmpty()) {
-            Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(getText().get(0), graphics);
-            List<String> textAsLines = getText();
-            height = (int) stringBounds.getHeight() * textAsLines.size();
-        }
-        return height;
+        Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(prototypeText, graphics);
+        List<String> textAsLines = getText();
+
+        // Even if the text is empty, we always keep the space for one line.
+        int numberOfTextLines = textAsLines.isEmpty() ? 1 : textAsLines.size();
+        return (int) stringBounds.getHeight() * numberOfTextLines;
     }
 
     public void selected() {

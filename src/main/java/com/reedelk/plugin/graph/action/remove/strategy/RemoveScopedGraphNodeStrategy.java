@@ -39,7 +39,7 @@ public class RemoveScopedGraphNodeStrategy implements com.reedelk.plugin.graph.a
                 "Before removing a scoped node remove all the nodes belonging to its own (and nested) scope/s");
 
         // Then we just remove it as a normal node.
-        Strategy strategy = new RemoveGraphNodeStrategy(graph);
+        Strategy strategy = new RemoveGraphNodeStrategy(graph, placeholderProvider);
         strategy.execute(scopeToRemove);
     }
 
@@ -56,7 +56,7 @@ public class RemoveScopedGraphNodeStrategy implements com.reedelk.plugin.graph.a
                 removeNestedScopesNodes((ScopedGraphNode) nodeToRemove);
 
                 // Remove the current scoped node
-                Strategy strategy = new RemoveGraphNodeStrategy(graph);
+                Strategy strategy = new RemoveGraphNodeStrategy(graph, placeholderProvider);
                 strategy.execute(nodeToRemove);
             } else {
                 FlowActionNodeRemove action = new FlowActionNodeRemove(nodeToRemove, placeholderProvider);

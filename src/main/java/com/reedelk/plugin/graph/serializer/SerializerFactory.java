@@ -6,6 +6,7 @@ import com.reedelk.plugin.component.type.generic.GenericComponentSerializer;
 import com.reedelk.plugin.component.type.placeholder.PlaceholderSerializer;
 import com.reedelk.plugin.component.type.router.RouterSerializer;
 import com.reedelk.plugin.component.type.stop.StopSerializer;
+import com.reedelk.plugin.component.type.trycatch.TryCatchSerializer;
 import com.reedelk.plugin.component.type.unknown.UnknownSerializer;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.runtime.api.exception.ESBException;
@@ -29,6 +30,7 @@ public class SerializerFactory {
         tmp.put(Fork.class.getName(), ForkSerializer.class);
         tmp.put(Router.class.getName(), RouterSerializer.class);
         tmp.put(Unknown.class.getName(), UnknownSerializer.class);
+        tmp.put(TryCatch.class.getName(), TryCatchSerializer.class);
         tmp.put(Placeholder.class.getName(), PlaceholderSerializer.class);
         tmp.put(FlowReference.class.getName(), FlowReferenceSerializer.class);
         COMPONENT_SERIALIZER_MAP = Collections.unmodifiableMap(tmp);
@@ -66,5 +68,4 @@ public class SerializerFactory {
             throw new ESBException(e);
         }
     }
-
 }

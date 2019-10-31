@@ -16,9 +16,11 @@ import static com.reedelk.runtime.commons.Preconditions.checkState;
 public class RemoveGraphNodeStrategy implements Strategy {
 
     private final FlowGraph graph;
+    private final PlaceholderProvider placeholderProvider;
 
-    public RemoveGraphNodeStrategy(@NotNull FlowGraph graph) {
+    public RemoveGraphNodeStrategy(@NotNull FlowGraph graph, @NotNull PlaceholderProvider placeholderProvider) {
         this.graph = graph;
+        this.placeholderProvider = placeholderProvider;
     }
 
     @Override
@@ -87,5 +89,7 @@ public class RemoveGraphNodeStrategy implements Strategy {
         }
 
         graph.remove(toRemove);
+
+        predecessor.onRemoved(placeholderProvider, graph, toRemove, index);
     }
 }

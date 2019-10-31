@@ -32,12 +32,6 @@ public class ForkDeserializer extends AbstractNodeDeserializer {
 
         ComponentData componentData = forkNode.componentData();
 
-        // Set description
-        if (componentDefinition.has(Implementor.description())) {
-            String description = Implementor.description(componentDefinition);
-            componentData.set(Implementor.description(), description);
-        }
-
         // Set thread pool size
         if (componentDefinition.has(Fork.threadPoolSize())) {
             Integer threadPoolSize = Fork.threadPoolSize(componentDefinition);

@@ -1,8 +1,10 @@
 package com.reedelk.plugin.graph.action.add.strategy;
 
+import com.reedelk.plugin.commons.GetSuccessorIndex;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.action.Strategy;
 import com.reedelk.plugin.graph.node.GraphNode;
+import com.reedelk.plugin.graph.node.ScopedGraphNode;
 import com.reedelk.plugin.graph.utils.FindScope;
 
 import java.util.List;
@@ -34,7 +36,16 @@ public class ReplaceNodeStrategy implements Strategy {
             graph.root(replacement);
         }
 
-        predecessorsOfPlaceHolder.forEach(predecessor -> graph.add(predecessor, replacement));
+        if (isPredecessorScopedNode(predecessorsOfPlaceHolder)) {
+            // If the predecessors is only one and it is a scoped node we must
+            // replace the 'replacement' at the index of the 'toBeReplaced' node.
+            ScopedGraphNode predecessorScopedGraphNode = (ScopedGraphNode) predecessorsOfPlaceHolder.get(0);
+            int index = GetSuccessorIndex.ofScopedNode(graph, predecessorScopedGraphNode, toBeReplaced);
+            graph.add(predecessorScopedGraphNode, replacement, index);
+        } else {
+            predecessorsOfPlaceHolder.forEach(predecessor -> graph.add(predecessor, replacement));
+        }
+
 
         List<GraphNode> successorsOfPlaceHolder = graph.successors(toBeReplaced);
         successorsOfPlaceHolder.forEach(successor -> graph.add(replacement, successor));
@@ -48,5 +59,9 @@ public class ReplaceNodeStrategy implements Strategy {
 
         // Remove the placeholder node from the graph (including inbound/outbound edges)
         graph.remove(toBeReplaced);
+    }
+
+    private static boolean isPredecessorScopedNode(List<GraphNode> predecessors) {
+        return predecessors.size() == 1 && predecessors.get(0) instanceof ScopedGraphNode;
     }
 }

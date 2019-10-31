@@ -67,7 +67,9 @@ public class PrecedingScopedNode implements Strategy {
 
             // Adds a node at index "successorIndex", the existing nodes are shifted down.
             if (isInsideTopArea(successors, successorIndex, closestPrecedingNode, dropPoint)) {
-                if (closestPrecedingNode.isSuccessorAllowed(graph, node, successorIndex)) {
+                // Node -> successorIndex
+                // The other ones are shifted down
+                if (closestPrecedingNode.isSuccessorAllowedTop(graph, node, successorIndex)) {
                     graph.add(closestPrecedingNode, node, successorIndex);
                     closestPrecedingNode.addToScope(node);
                     FindFirstNodeOutsideScope.of(graph, closestPrecedingNode)
@@ -77,7 +79,7 @@ public class PrecedingScopedNode implements Strategy {
 
                 // Replaces the first node at index "successorIndex".
             } else if (isInsideCenterArea(successor, dropPoint)) {
-                if (closestPrecedingNode.isSuccessorAllowed(graph, closestPrecedingNode, successorIndex)) {
+                if (closestPrecedingNode.isSuccessorAllowedBefore(graph, node, successorIndex)) {
                     graph.remove(closestPrecedingNode, successor);
                     graph.add(closestPrecedingNode, node, successorIndex);
                     graph.add(node, successor);
@@ -87,7 +89,7 @@ public class PrecedingScopedNode implements Strategy {
 
                 // Adds a node next to the current index. Existing nodes at "successorIndex + 1" are shifted down.
             } else if (isInsideBottomArea(successors, successorIndex, closestPrecedingNode, dropPoint)) {
-                if (closestPrecedingNode.isSuccessorAllowed(graph, node, successorIndex + 1)) {
+                if (closestPrecedingNode.isSuccessorAllowedBottom(graph, node, successorIndex + 1)) {
                     graph.add(closestPrecedingNode, node, successorIndex + 1);
                     closestPrecedingNode.addToScope(node);
                     FindFirstNodeOutsideScope.of(graph, closestPrecedingNode)

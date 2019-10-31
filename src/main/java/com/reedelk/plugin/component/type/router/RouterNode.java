@@ -1,6 +1,6 @@
 package com.reedelk.plugin.component.type.router;
 
-import com.intellij.openapi.module.Module;
+import com.reedelk.plugin.commons.AddPlaceholder;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.Half;
 import com.reedelk.plugin.commons.Labels;
@@ -12,15 +12,13 @@ import com.reedelk.plugin.editor.designer.AbstractScopedGraphNode;
 import com.reedelk.plugin.editor.designer.widget.VerticalDivider;
 import com.reedelk.plugin.editor.designer.widget.VerticalDividerArrows;
 import com.reedelk.plugin.graph.FlowGraph;
+import com.reedelk.plugin.graph.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.node.GraphNode;
-import com.reedelk.plugin.graph.node.GraphNodeFactory;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
-import com.reedelk.runtime.component.Placeholder;
 import com.reedelk.runtime.component.Router;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
-import java.util.ArrayList;
 import java.util.List;
 
 public class RouterNode extends AbstractScopedGraphNode {
@@ -72,34 +70,23 @@ public class RouterNode extends AbstractScopedGraphNode {
         return NODE_WIDTH;
     }
 
+    // A RouterNode cannot have a node added below the "otherwise" node.
     @Override
-    public boolean isSuccessorAllowed(FlowGraph graph, GraphNode successor, int index) {
+    public boolean isSuccessorAllowedBottom(FlowGraph graph, GraphNode successor, int index) {
         List<GraphNode> successors = graph.successors(this);
         return index < successors.size();
     }
 
     @Override
-    public void commit(FlowGraph graph, Module module) {
-        // TODO: Extract this function
-
+    public void commit(FlowGraph graph, PlaceholderProvider placeholderProvider) {
         List<RouterConditionRoutePair> routerConditionRoutePairs =
                 ListConditionRoutePairs.of(componentData());
 
         // If the scope is empty, the router node always  has  a placeholder
         // because a router node must have at least  one component in it.
         if (getScope().isEmpty()) {
-            GraphNode placeholder = GraphNodeFactory.get(module, Placeholder.class.getName());
-            graph.add(placeholder);
-            List<GraphNode> successors = graph.successors(this);
-            List<GraphNode> toRemove = new ArrayList<>(successors);
-            toRemove.forEach(node -> {
-                graph.remove(RouterNode.this, node);
-                graph.add(placeholder, node);
-            });
-            graph.add(this, placeholder);
-            addToScope(placeholder);
-
-            routerConditionRoutePairs.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION.value(), placeholder));
+            GraphNode addedPlaceholder = AddPlaceholder.to(placeholderProvider, graph, this, 0);
+            routerConditionRoutePairs.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION.value(), addedPlaceholder));
         }
 
         List<RouterConditionRoutePair> updatedConditions =

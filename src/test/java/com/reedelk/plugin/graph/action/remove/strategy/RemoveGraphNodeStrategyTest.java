@@ -17,7 +17,7 @@ class RemoveGraphNodeStrategyTest extends AbstractGraphTest {
         super.setUp();
         this.graph = provider.createGraph();
         this.graph.root(root);
-        this.strategy = new RemoveGraphNodeStrategy(graph);
+        this.strategy = new RemoveGraphNodeStrategy(graph, () -> placeholderNode);
     }
 
     @Test

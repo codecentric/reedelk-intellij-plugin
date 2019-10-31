@@ -6,11 +6,8 @@ import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.action.Action;
 import com.reedelk.plugin.graph.action.add.FlowActionNodeAdd;
 import com.reedelk.plugin.graph.action.remove.FlowActionNodeRemove;
-import com.reedelk.plugin.graph.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.action.replace.FlowActionNodeReplace;
 import com.reedelk.plugin.graph.node.GraphNode;
-import com.reedelk.plugin.graph.node.GraphNodeFactory;
-import com.reedelk.runtime.component.Placeholder;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -29,8 +26,6 @@ public class FlowDesignerPanelActionHandler extends AbstractDesignerPanelActionH
 
     @Override
     protected Action getActionRemove(GraphNode nodeToRemove) {
-        PlaceholderProvider placeholderProvider =
-                () -> GraphNodeFactory.get(module, Placeholder.class.getName());
         return new FlowActionNodeRemove(nodeToRemove, placeholderProvider);
     }
 

@@ -11,6 +11,7 @@ import com.reedelk.plugin.component.type.generic.GenericComponentNode;
 import com.reedelk.plugin.component.type.placeholder.PlaceholderNode;
 import com.reedelk.plugin.component.type.router.RouterNode;
 import com.reedelk.plugin.component.type.stop.StopNode;
+import com.reedelk.plugin.component.type.trycatch.TryCatchNode;
 import com.reedelk.plugin.component.type.unknown.UnknownNode;
 import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.runtime.component.*;
@@ -31,6 +32,7 @@ public class GraphNodeFactory {
         tmp.put(Fork.class.getName(), ForkNode.class);
         tmp.put(Router.class.getName(), RouterNode.class);
         tmp.put(Unknown.class.getName(), UnknownNode.class);
+        tmp.put(TryCatch.class.getName(), TryCatchNode.class);
         tmp.put(Placeholder.class.getName(), PlaceholderNode.class);
         tmp.put(FlowReference.class.getName(), FlowReferenceNode.class);
         COMPONENT_DRAWABLE_MAP = tmp;

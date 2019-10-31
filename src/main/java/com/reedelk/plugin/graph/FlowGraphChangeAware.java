@@ -1,6 +1,6 @@
 package com.reedelk.plugin.graph;
 
-import com.intellij.openapi.module.Module;
+import com.reedelk.plugin.graph.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.node.GraphNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -131,8 +131,8 @@ public class FlowGraphChangeAware implements FlowGraph {
         return changed;
     }
 
-    public void commit(Module module) {
+    public void commit(PlaceholderProvider placeholderProvider) {
         wrapped.breadthFirstTraversal(node ->
-                node.commit(FlowGraphChangeAware.this, module));
+                node.commit(FlowGraphChangeAware.this, placeholderProvider));
     }
 }

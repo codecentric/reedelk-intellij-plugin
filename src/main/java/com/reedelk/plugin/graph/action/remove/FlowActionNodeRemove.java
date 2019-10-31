@@ -51,7 +51,7 @@ public class FlowActionNodeRemove implements Action {
             // This is a node with at most one successor, otherwise it
             // would be a scoped graph node.
             checkState(successors.size() <= 1, "Expected at most one successor");
-            strategy = new RemoveGraphNodeStrategy(graph);
+            strategy = new RemoveGraphNodeStrategy(graph, placeholderProvider);
         }
 
         strategy.execute(toRemove);

@@ -1,10 +1,10 @@
 package com.reedelk.plugin.editor.designer.action;
 
-import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowGraphChangeAware;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.action.Action;
+import com.reedelk.plugin.graph.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
 import com.reedelk.plugin.graph.utils.FindScope;
@@ -14,12 +14,10 @@ import java.util.Optional;
 
 public class MoveActionHandler {
 
+    private PlaceholderProvider placeholderProvider;
     private FlowSnapshot snapshot;
-    private Module module;
-
     private GraphNode replacementNode;
     private GraphNode movedNode;
-
     private Action actionReplace;
     private Action actionRemove;
     private Action actionAdd;
@@ -59,7 +57,7 @@ public class MoveActionHandler {
             // Must remove the replaced node
             actionRemove.execute(modifiableGraph);
 
-            modifiableGraph.commit(module);
+            modifiableGraph.commit(placeholderProvider);
 
             snapshot.updateSnapshot(this, modifiableGraph);
 
@@ -82,16 +80,16 @@ public class MoveActionHandler {
 
     public static class Builder {
 
-        private GraphNode replacementNode;
+        private PlaceholderProvider placeholderProvider;
         private FlowSnapshot snapshot;
+        private GraphNode replacementNode;
         private GraphNode movedNode;
-        private Module module;
         private Action actionReplace;
         private Action actionRemove;
         private Action actionAdd;
 
-        public Builder module(@NotNull Module module) {
-            this.module = module;
+        public Builder placeholderProvider(@NotNull PlaceholderProvider placeholderProvider) {
+            this.placeholderProvider = placeholderProvider;
             return this;
         }
 
@@ -127,13 +125,13 @@ public class MoveActionHandler {
 
         public MoveActionHandler build() {
             MoveActionHandler handler = new MoveActionHandler();
+            handler.placeholderProvider = placeholderProvider;
             handler.replacementNode = replacementNode;
-            handler.movedNode = movedNode;
-            handler.snapshot = snapshot;
-            handler.module = module;
             handler.actionReplace = actionReplace;
             handler.actionRemove = actionRemove;
             handler.actionAdd = actionAdd;
+            handler.movedNode = movedNode;
+            handler.snapshot = snapshot;
             return handler;
         }
     }

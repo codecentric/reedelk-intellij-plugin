@@ -14,6 +14,7 @@ import com.reedelk.plugin.editor.designer.action.RemoveActionHandler;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.action.Action;
+import com.reedelk.plugin.graph.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.GraphNodeFactory;
 import com.reedelk.runtime.component.Placeholder;
@@ -40,32 +41,35 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
 
     private static final Logger LOG = Logger.getInstance(AbstractDesignerPanelActionHandler.class);
 
+    protected final PlaceholderProvider placeholderProvider;
     protected final FlowSnapshot snapshot;
     protected final Module module;
 
     protected AbstractDesignerPanelActionHandler(@NotNull Module module,
                                                  @NotNull FlowSnapshot snapshot) {
+        this.placeholderProvider = () -> GraphNodeFactory.get(module, Placeholder.class.getName());
         this.snapshot = snapshot;
         this.module = module;
+
     }
 
     @Override
     public void onMove(Graphics2D graphics, GraphNode selected, Point dropPoint, ImageObserver observer) {
         DimensionAwareDecorator placeHolderNode =
-                new DimensionAwareDecorator(GraphNodeFactory.get(module, Placeholder.class.getName()), selected);
+                new DimensionAwareDecorator(placeholderProvider.get(), selected);
 
         Action actionRemove = getActionRemove(placeHolderNode);
         Action actionReplace = getActionReplace(selected, placeHolderNode);
         Action actionAdd = getActionAdd(selected, dropPoint, graphics, observer);
 
         MoveActionHandler handler = builder()
-                .module(module)
                 .snapshot(snapshot)
                 .movedNode(selected)
                 .actionAdd(actionAdd)
                 .actionRemove(actionRemove)
                 .actionReplace(actionReplace)
                 .replacementNode(placeHolderNode)
+                .placeholderProvider(placeholderProvider)
                 .build();
 
         handler.handle();
@@ -75,7 +79,7 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
     public void onRemove(GraphNode nodeToRemove) {
         Action actionRemove = getActionRemove(nodeToRemove);
         RemoveActionHandler handler =
-                new RemoveActionHandler(module, snapshot, actionRemove);
+                new RemoveActionHandler(placeholderProvider, snapshot, actionRemove);
         handler.handle();
     }
 
@@ -103,7 +107,7 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
 
             Action addAction = getActionAdd(nodeToAdd, dropPoint, graphics, observer);
 
-            AddActionHandler handler = new AddActionHandler(module, snapshot, addAction);
+            AddActionHandler handler = new AddActionHandler(placeholderProvider, snapshot, addAction);
 
             boolean handled = handler.handle();
 

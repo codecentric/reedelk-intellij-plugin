@@ -8,6 +8,7 @@ import com.reedelk.plugin.component.type.generic.GenericComponentPropertiesRende
 import com.reedelk.plugin.component.type.placeholder.PlaceholderPropertiesRenderer;
 import com.reedelk.plugin.component.type.router.RouterPropertiesRenderer;
 import com.reedelk.plugin.component.type.stop.StopPropertiesRenderer;
+import com.reedelk.plugin.component.type.trycatch.TryCatchPropertiesRenderer;
 import com.reedelk.plugin.component.type.unknown.UnknownPropertiesRenderer;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.runtime.api.exception.ESBException;
@@ -31,6 +32,7 @@ public class PropertiesRendererFactory {
         tmp.put(Fork.class.getName(), ForkPropertiesRenderer.class);
         tmp.put(Router.class.getName(), RouterPropertiesRenderer.class);
         tmp.put(Unknown.class.getName(), UnknownPropertiesRenderer.class);
+        tmp.put(TryCatch.class.getName(), TryCatchPropertiesRenderer.class);
         tmp.put(Placeholder.class.getName(), PlaceholderPropertiesRenderer.class);
         tmp.put(FlowReference.class.getName(), FlowReferencePropertiesRenderer.class);
         RENDERER = Collections.unmodifiableMap(tmp);
@@ -81,5 +83,4 @@ public class PropertiesRendererFactory {
             throw new ESBException(e);
         }
     }
-
 }
