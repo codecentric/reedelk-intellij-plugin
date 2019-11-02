@@ -57,8 +57,6 @@ public class MoveActionHandler {
             // Must remove the replaced node
             actionRemove.execute(modifiableGraph);
 
-            modifiableGraph.commit(placeholderProvider);
-
             snapshot.updateSnapshot(this, modifiableGraph);
 
         } else {

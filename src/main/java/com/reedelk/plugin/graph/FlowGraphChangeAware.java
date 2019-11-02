@@ -1,6 +1,5 @@
 package com.reedelk.plugin.graph;
 
-import com.reedelk.plugin.graph.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.node.GraphNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -131,8 +130,4 @@ public class FlowGraphChangeAware implements FlowGraph {
         return changed;
     }
 
-    public void commit(PlaceholderProvider placeholderProvider) {
-        wrapped.breadthFirstTraversal(node ->
-                node.commit(FlowGraphChangeAware.this, placeholderProvider));
-    }
 }

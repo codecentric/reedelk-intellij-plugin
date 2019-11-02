@@ -1,6 +1,7 @@
 package com.reedelk.plugin.graph.layout;
 
 import com.reedelk.plugin.commons.Half;
+import com.reedelk.plugin.commons.IsPredecessorScopedNode;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopeBoundaries;
@@ -149,6 +150,6 @@ public class FlowGraphLayout {
             return false;
         }
         List<GraphNode> predecessor = graph.predecessors(nodes.get(0));
-        return predecessor.size() == 1 && predecessor.get(0) instanceof ScopedGraphNode;
+        return IsPredecessorScopedNode.of(predecessor);
     }
 }

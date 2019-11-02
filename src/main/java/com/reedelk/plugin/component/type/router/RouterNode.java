@@ -78,7 +78,7 @@ public class RouterNode extends AbstractScopedGraphNode {
     }
 
     @Override
-    public void commit(FlowGraph graph, PlaceholderProvider placeholderProvider) {
+    public void onNodeAdded(FlowGraph graph, PlaceholderProvider placeholderProvider) {
         List<RouterConditionRoutePair> routerConditionRoutePairs =
                 ListConditionRoutePairs.of(componentData());
 

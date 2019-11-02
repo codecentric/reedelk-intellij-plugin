@@ -14,5 +14,4 @@ public interface Strategy {
         // For Inbound components a strategy needs to replace this method.
         return !INBOUND.equals(node.getComponentClass());
     }
-
 }

@@ -1,5 +1,6 @@
 package com.reedelk.plugin.graph.utils;
 
+import com.reedelk.plugin.commons.IsPredecessorScopedNode;
 import com.reedelk.plugin.component.type.stop.StopNode;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -20,7 +21,7 @@ public class FindRelatedScopeOfStopNode {
     public static GraphNode find(FlowGraph graph, StopNode stopNode) {
 
         List<GraphNode> predecessors = graph.predecessors(stopNode);
-        if (predecessors.get(0) instanceof ScopedGraphNode) {
+        if (IsPredecessorScopedNode.of(predecessors)) {
             return predecessors.get(0);
         }
 

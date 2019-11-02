@@ -76,7 +76,7 @@ public class TryCatchNode extends AbstractScopedGraphNode {
     // contain any node in the scope. We must add two placeholders for
     // the try and the catch flows.
     @Override
-    public void commit(FlowGraph graph, PlaceholderProvider placeholderProvider) {
+    public void onNodeAdded(FlowGraph graph, PlaceholderProvider placeholderProvider) {
         if (getScope().isEmpty()) {
             AddPlaceholder.to(placeholderProvider, graph, this, 0);
             AddPlaceholder.to(placeholderProvider, graph, this, 1);

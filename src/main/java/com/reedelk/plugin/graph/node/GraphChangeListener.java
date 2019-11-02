@@ -3,7 +3,7 @@ package com.reedelk.plugin.graph.node;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.action.remove.strategy.PlaceholderProvider;
 
-public interface GraphOperationListener {
+public interface GraphChangeListener {
 
     default boolean isSuccessorAllowedTop(FlowGraph graph, GraphNode successor, int index) {
         return true;
@@ -20,13 +20,10 @@ public interface GraphOperationListener {
     /**
      * Called when all the changes have been made.
      */
-    default void commit(FlowGraph graph, PlaceholderProvider placeholderProvider) {
+    default void onNodeAdded(FlowGraph graph, PlaceholderProvider placeholderProvider) {
     }
 
     // Called when a successor of a scoped node has been removed from the given index
-    default void onSuccessorRemoved(PlaceholderProvider placeholderProvider,
-                                    FlowGraph graph,
-                                    GraphNode removedNode,
-                                    int index) {
+    default void onSuccessorRemoved(PlaceholderProvider placeholderProvider, FlowGraph graph, GraphNode removedNode, int index) {
     }
 }

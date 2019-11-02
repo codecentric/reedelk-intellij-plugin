@@ -9,19 +9,18 @@ import org.jetbrains.annotations.NotNull;
 
 public class RemoveActionHandler {
 
-    private final PlaceholderProvider placeholderProvider;
     private final FlowSnapshot snapshot;
     private final Action removeAction;
 
     public RemoveActionHandler(@NotNull PlaceholderProvider placeholderProvider,
                                @NotNull FlowSnapshot snapshot,
                                @NotNull Action removeAction) {
-        this.placeholderProvider = placeholderProvider;
         this.removeAction = removeAction;
         this.snapshot = snapshot;
     }
 
     public void handle() {
+
         FlowGraph graph = snapshot.getGraphOrThrowIfAbsent();
 
         FlowGraph copy = graph.copy();
@@ -32,9 +31,8 @@ public class RemoveActionHandler {
 
         if (modifiableGraph.isChanged()) {
 
-            modifiableGraph.commit(placeholderProvider);
-
             snapshot.updateSnapshot(this, modifiableGraph);
+
         }
     }
 }

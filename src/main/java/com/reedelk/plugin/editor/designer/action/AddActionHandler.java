@@ -22,6 +22,7 @@ public class AddActionHandler {
     }
 
     public boolean handle() {
+
         FlowGraph copy = snapshot.getGraphOrThrowIfAbsent();
 
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
@@ -29,8 +30,6 @@ public class AddActionHandler {
         addAction.execute(modifiableGraph);
 
         if (modifiableGraph.isChanged()) {
-
-            modifiableGraph.commit(placeholderProvider);
 
             snapshot.updateSnapshot(this, modifiableGraph);
 
