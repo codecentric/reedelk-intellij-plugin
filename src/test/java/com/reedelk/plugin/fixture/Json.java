@@ -187,6 +187,15 @@ public class Json {
         }
     }
 
+    public enum TryCatch implements DataProvider {
+        Sample() {
+            @Override
+            public String path() {
+                return "flow/trycatch_sample.json";
+            }
+        }
+    }
+
     public enum FlowReference implements DataProvider {
         Sample() {
             @Override

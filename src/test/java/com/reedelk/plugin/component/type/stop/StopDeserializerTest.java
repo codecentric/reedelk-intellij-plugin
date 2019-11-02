@@ -4,12 +4,9 @@ import com.reedelk.plugin.graph.deserializer.AbstractNodeDeserializerTest;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@MockitoSettings(strictness = Strictness.LENIENT)
 public class StopDeserializerTest extends AbstractNodeDeserializerTest {
 
     private StopDeserializer deserializer;

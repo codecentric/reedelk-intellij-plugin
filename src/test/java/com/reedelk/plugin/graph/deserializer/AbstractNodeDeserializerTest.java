@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mock;
 
 import static java.util.Arrays.stream;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.lenient;
 
 public abstract class AbstractNodeDeserializerTest extends AbstractGraphTest {
 
@@ -36,6 +36,7 @@ public abstract class AbstractNodeDeserializerTest extends AbstractGraphTest {
         mockContextInstantiateGraphNode(stopNode1, stopNode2, stopNode3);
         mockContextInstantiateGraphNode(forkNode1, forkNode2, forkNode3);
         mockContextInstantiateGraphNode(routerNode1, routerNode2, routerNode3, routerNode4, routerNode5);
+        mockContextInstantiateGraphNode(tryCatchNode1);
         mockContextInstantiateGraphNode(flowReferenceNode1, flowReferenceNode2);
 
         graph = provider.createGraph();
@@ -51,7 +52,7 @@ public abstract class AbstractNodeDeserializerTest extends AbstractGraphTest {
             remaining = stream(graphNodes, 1, graphNodes.length)
                     .toArray(GraphNode[]::new);
         }
-        doReturn(firstNodeToBeReturned, (Object[]) remaining)
+        lenient().doReturn(firstNodeToBeReturned, (Object[]) remaining)
                 .when(context)
                 .instantiateGraphNode(fullyQualifiedName);
     }

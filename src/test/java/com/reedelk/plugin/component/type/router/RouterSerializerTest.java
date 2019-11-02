@@ -74,5 +74,4 @@ public class RouterSerializerTest extends AbstractGraphTest {
         String expectedJson = Json.Router.Sample.json();
         JSONAssert.assertEquals(expectedJson, actualJson, true);
     }
-
 }

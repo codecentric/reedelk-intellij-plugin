@@ -7,8 +7,6 @@ import com.reedelk.plugin.graph.node.GraphNode;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 
 import java.util.List;
 
@@ -16,7 +14,6 @@ import static com.reedelk.plugin.fixture.Json.Router;
 import static com.reedelk.runtime.commons.JsonParser.Implementor;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@MockitoSettings(strictness = Strictness.LENIENT)
 class RouterDeserializerTest extends AbstractNodeDeserializerTest {
 
     private RouterDeserializer deserializer;

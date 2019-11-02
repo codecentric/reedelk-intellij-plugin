@@ -3,12 +3,9 @@ package com.reedelk.plugin.graph.deserializer;
 import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.graph.FlowGraph;
 import org.junit.jupiter.api.Test;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 
 import static com.reedelk.plugin.fixture.Json.CompleteFlow;
 
-@MockitoSettings(strictness = Strictness.LENIENT)
 class FlowDeserializerTest extends AbstractNodeDeserializerTest {
 
     @Test

@@ -10,6 +10,7 @@ import com.reedelk.plugin.component.type.generic.GenericComponentNode;
 import com.reedelk.plugin.component.type.placeholder.PlaceholderNode;
 import com.reedelk.plugin.component.type.router.RouterNode;
 import com.reedelk.plugin.component.type.stop.StopNode;
+import com.reedelk.plugin.component.type.trycatch.TryCatchNode;
 import com.reedelk.plugin.fixture.*;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowGraphImpl;
@@ -30,7 +31,8 @@ import static com.reedelk.plugin.component.domain.ComponentClass.INBOUND;
 import static com.reedelk.plugin.component.domain.ComponentClass.PROCESSOR;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.spy;
 
 @ExtendWith(MockitoExtension.class)
 public abstract class AbstractGraphTest {
@@ -69,6 +71,9 @@ public abstract class AbstractGraphTest {
     protected RouterNode routerNode3;
     protected RouterNode routerNode4;
     protected RouterNode routerNode5;
+
+    // TryCatch
+    protected TryCatchNode tryCatchNode1;
 
     // Flow Reference
     protected FlowReferenceNode flowReferenceNode1;
@@ -112,6 +117,8 @@ public abstract class AbstractGraphTest {
         routerNode4 = createGraphNodeInstance(Router.class, RouterNode.class);
         routerNode5 = createGraphNodeInstance(Router.class, RouterNode.class);
 
+        tryCatchNode1 = createGraphNodeInstance(TryCatch.class, TryCatchNode.class);
+
         flowReferenceNode1 = createGraphNodeInstance(FlowReference.class, FlowReferenceNode.class);
         flowReferenceNode2 = createGraphNodeInstance(FlowReference.class, FlowReferenceNode.class);
 
@@ -144,9 +151,9 @@ public abstract class AbstractGraphTest {
     }
 
     protected void mockNodeHeight(GraphNode node, int topHeight, int bottomHeight) {
-        doReturn(topHeight + bottomHeight).when(node).height(graphics);
-        doReturn(topHeight).when(node).topHalfHeight(graphics);
-        doReturn(bottomHeight).when(node).bottomHalfHeight(graphics);
+        lenient().doReturn(topHeight + bottomHeight).when(node).height(graphics);
+        lenient().doReturn(topHeight).when(node).topHalfHeight(graphics);
+        lenient().doReturn(bottomHeight).when(node).bottomHalfHeight(graphics);
     }
 
     private static <T extends GraphNode> T createGraphNodeInstance(Class componentClazz, Class<T> graphNodeClazz) {

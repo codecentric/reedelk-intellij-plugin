@@ -12,8 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -24,7 +22,6 @@ import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptor
 import static com.reedelk.plugin.fixture.Json.GenericComponent;
 import static java.util.Arrays.asList;
 
-@MockitoSettings(strictness = Strictness.LENIENT)
 class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
 
     private GenericComponentDeserializer deserializer;

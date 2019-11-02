@@ -6,12 +6,9 @@ import com.reedelk.plugin.graph.node.GraphNode;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 
 import static com.reedelk.plugin.fixture.Json.FlowReference;
 
-@MockitoSettings(strictness = Strictness.LENIENT)
 class FlowReferenceDeserializerTest extends AbstractNodeDeserializerTest {
 
     private FlowReferenceDeserializer deserializer;
