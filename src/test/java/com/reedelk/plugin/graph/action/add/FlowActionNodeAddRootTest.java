@@ -33,7 +33,7 @@ class FlowActionNodeAddRootTest extends BaseFlowActionNodeAddTest {
         Point dropPoint = new Point(20, 20);
 
         // When
-        FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, root, dropPoint);
+        FlowGraphChangeAware modifiableGraph = addNodeToGraph(graph, root, dropPoint);
 
         // Then
         PluginAssertion.assertThat(modifiableGraph)
@@ -53,7 +53,7 @@ class FlowActionNodeAddRootTest extends BaseFlowActionNodeAddTest {
         Point dropPoint = new Point(10, 20); // x drop point smaller than the root x coordinate.
 
         // When
-        FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, rootReplacement, dropPoint);
+        FlowGraphChangeAware modifiableGraph = addNodeToGraph(graph, rootReplacement, dropPoint);
 
         // Then
         PluginAssertion.assertThat(modifiableGraph)
@@ -77,7 +77,7 @@ class FlowActionNodeAddRootTest extends BaseFlowActionNodeAddTest {
         Point dropPoint = new Point(56, 129);
 
         // When
-        FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, rootReplacement, dropPoint);
+        FlowGraphChangeAware modifiableGraph = addNodeToGraph(graph, rootReplacement, dropPoint);
 
         // Then
         PluginAssertion.assertThat(modifiableGraph)

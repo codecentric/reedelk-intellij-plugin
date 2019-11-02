@@ -10,6 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import java.util.Optional;
+
 class FlowActionNodeRemoveTest extends AbstractGraphTest {
 
     @Mock
@@ -77,8 +79,8 @@ class FlowActionNodeRemoveTest extends AbstractGraphTest {
 
     class TestPlaceholderProvider implements PlaceholderProvider {
         @Override
-        public PlaceholderNode get() {
-            return mockPlaceholder;
+        public Optional<PlaceholderNode> get() {
+            return Optional.of(mockPlaceholder);
         }
     }
 }

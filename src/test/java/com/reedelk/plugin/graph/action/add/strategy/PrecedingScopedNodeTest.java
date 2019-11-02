@@ -6,14 +6,10 @@ import com.reedelk.plugin.graph.FlowGraph;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import java.awt.*;
 
 class PrecedingScopedNodeTest extends AbstractGraphTest {
-
-    @Mock
-    private Graphics2D graphics;
 
     @DisplayName("Scope node with successor inside scope")
     @Nested

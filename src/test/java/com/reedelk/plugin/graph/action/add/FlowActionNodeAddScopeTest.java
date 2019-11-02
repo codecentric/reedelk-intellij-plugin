@@ -39,7 +39,7 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
         Point dropPoint = new Point(419, 147); // componentNode2 is dropped next to componentNode1
 
         // When
-        FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode2, dropPoint);
+        FlowGraph updatedGraph = addNodeToGraph(graph, componentNode2, dropPoint);
 
         // Then
         PluginAssertion.assertThat(updatedGraph)
@@ -75,7 +75,7 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
         Point dropPoint = new Point(310, 14);
 
         // When
-        FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
+        FlowGraph updatedGraph = addNodeToGraph(graph, componentNode3, dropPoint);
 
         // Then
         PluginAssertion.assertThat(updatedGraph)
@@ -119,7 +119,7 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
         Point dropPoint = new Point(479, 196);
 
         // When
-        FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode5, dropPoint);
+        FlowGraph updatedGraph = addNodeToGraph(graph, componentNode5, dropPoint);
 
         // Then
         PluginAssertion.assertThat(updatedGraph)
@@ -173,7 +173,7 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
 
 
         // When
-        FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode7, dropPoint);
+        FlowGraph updatedGraph = addNodeToGraph(graph, componentNode7, dropPoint);
 
         // Then
         PluginAssertion.assertThat(updatedGraph)
@@ -228,7 +228,7 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
         Point dropPoint = new Point(669, 61);
 
         // When
-        FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode8, dropPoint);
+        FlowGraph updatedGraph = addNodeToGraph(graph, componentNode8, dropPoint);
 
         PluginAssertion.assertThat(updatedGraph)
                 .root().is(root)
@@ -261,7 +261,7 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
         Point dropPoint = new Point(386, 52);
 
         // When
-        FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode2, dropPoint);
+        FlowGraph updatedGraph = addNodeToGraph(graph, componentNode2, dropPoint);
 
         // Then
         PluginAssertion.assertThat(updatedGraph)
@@ -291,7 +291,7 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
         Point dropPoint = new Point(478, 45);
 
         // When
-        FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
+        FlowGraph updatedGraph = addNodeToGraph(graph, componentNode3, dropPoint);
 
         // Then
         PluginAssertion.assertThat(updatedGraph)
@@ -333,7 +333,7 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
         Point dropPoint = new Point(609, 193);
 
         // When
-        FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
+        FlowGraph updatedGraph = addNodeToGraph(graph, componentNode3, dropPoint);
 
         // Then
         PluginAssertion.assertThat(updatedGraph)
@@ -377,7 +377,7 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
         Point dropPoint = new Point(549, 272);
 
         // When
-        FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode4, dropPoint);
+        FlowGraph updatedGraph = addNodeToGraph(graph, componentNode4, dropPoint);
 
         // Then
         PluginAssertion.assertThat(updatedGraph)
@@ -421,7 +421,7 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
         Point dropPoint = new Point(421, 211);
 
         // When
-        FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode4, dropPoint);
+        FlowGraph updatedGraph = addNodeToGraph(graph, componentNode4, dropPoint);
 
         // Then
         PluginAssertion.assertThat(updatedGraph)
@@ -454,7 +454,7 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
         Point dropPoint = new Point(142, 127);
 
         // When
-        FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode2, dropPoint);
+        FlowGraph updatedGraph = addNodeToGraph(graph, componentNode2, dropPoint);
 
         // Then
         PluginAssertion.assertThat(updatedGraph)
@@ -488,7 +488,7 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
         Point dropPoint = new Point(423, 147);
 
         // When
-        FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
+        FlowGraph updatedGraph = addNodeToGraph(graph, componentNode3, dropPoint);
 
         // Then
         PluginAssertion.assertThat(updatedGraph)
@@ -522,7 +522,7 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
         Point dropPoint = new Point(454, 132);
 
         // When
-        FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
+        FlowGraph updatedGraph = addNodeToGraph(graph, componentNode3, dropPoint);
 
         // Then
         PluginAssertion.assertThat(updatedGraph)
@@ -560,7 +560,7 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
         Point dropPoint = new Point(583, 61);
 
         // When
-        FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode4, dropPoint);
+        FlowGraph updatedGraph = addNodeToGraph(graph, componentNode4, dropPoint);
 
         // Then
         PluginAssertion.assertThat(updatedGraph)
@@ -607,7 +607,7 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
 
         // When we drop the node between fork 2 and fork 1 node scope
         Point dropPoint = new Point(533, 302);
-        FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
+        FlowGraph updatedGraph = addNodeToGraph(graph, componentNode3, dropPoint);
 
         // Then
         PluginAssertion.assertThat(updatedGraph)
@@ -657,7 +657,7 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
 
         // When we drop the node at the end of fork 2 node scope
         Point dropPoint = new Point(527, 329);
-        FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
+        FlowGraph updatedGraph = addNodeToGraph(graph, componentNode3, dropPoint);
 
         // Then
         PluginAssertion.assertThat(updatedGraph)
@@ -699,7 +699,7 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
 
         // When we drop the node at the end of fork 3 node scope
         Point dropPoint = new Point(529, 282);
-        FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
+        FlowGraph updatedGraph = addNodeToGraph(graph, componentNode3, dropPoint);
 
         // Then
         PluginAssertion.assertThat(updatedGraph)
@@ -748,7 +748,7 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
 
         // When we drop the node outside any scope
         Point dropPoint = new Point(566, 185);
-        FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
+        FlowGraph updatedGraph = addNodeToGraph(graph, componentNode3, dropPoint);
 
         // Then
         PluginAssertion.assertThat(updatedGraph)
@@ -795,7 +795,7 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
         Point dropPoint = new Point(556, 293);
 
         FlowGraphChangeAware changeAwareGraph = new FlowGraphChangeAware(graph);
-        addDrawableToGraph(changeAwareGraph, componentNode3, dropPoint);
+        addNodeToGraph(changeAwareGraph, componentNode3, dropPoint);
 
         // Then
         PluginAssertion.assertThat(changeAwareGraph)
@@ -831,7 +831,7 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
         Point dropPoint = new Point(739, 154);
 
         // When
-        FlowGraph updatedGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
+        FlowGraph updatedGraph = addNodeToGraph(graph, componentNode3, dropPoint);
 
         // Then
         PluginAssertion.assertThat(updatedGraph)
@@ -866,7 +866,7 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
         Point dropPoint = new Point(505, 132);
 
         // When
-        FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, componentNode4, dropPoint);
+        FlowGraphChangeAware modifiableGraph = addNodeToGraph(graph, componentNode4, dropPoint);
 
         // Then
         PluginAssertion.assertThat(modifiableGraph)
@@ -894,7 +894,7 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
         Point dropPoint = new Point(268, 201);
 
         // When
-        FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, componentNode2, dropPoint);
+        FlowGraphChangeAware modifiableGraph = addNodeToGraph(graph, componentNode2, dropPoint);
 
         // Then
         PluginAssertion.assertThat(modifiableGraph)
@@ -929,7 +929,7 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
         Point dropPoint = new Point(331, 101);
 
         // When
-        FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
+        FlowGraphChangeAware modifiableGraph = addNodeToGraph(graph, componentNode3, dropPoint);
 
         // Then
         PluginAssertion.assertThat(modifiableGraph)
@@ -968,7 +968,7 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
         Point dropPoint = new Point(336, 296);
 
         // When
-        FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
+        FlowGraphChangeAware modifiableGraph = addNodeToGraph(graph, componentNode3, dropPoint);
 
         // Then
         PluginAssertion.assertThat(modifiableGraph)
@@ -1008,7 +1008,7 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
         Point dropPoint = new Point(326, 192);
 
         // When
-        FlowGraphChangeAware modifiableGraph = addDrawableToGraph(graph, componentNode3, dropPoint);
+        FlowGraphChangeAware modifiableGraph = addNodeToGraph(graph, componentNode3, dropPoint);
 
         // Then
         PluginAssertion.assertThat(modifiableGraph)

@@ -7,6 +7,8 @@ import com.reedelk.plugin.graph.action.Strategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 class RemoveGraphNodeStrategyTest extends AbstractGraphTest {
 
     private FlowGraph graph;
@@ -17,7 +19,7 @@ class RemoveGraphNodeStrategyTest extends AbstractGraphTest {
         super.setUp();
         this.graph = provider.createGraph();
         this.graph.root(root);
-        this.strategy = new RemoveGraphNodeStrategy(graph, () -> placeholderNode);
+        this.strategy = new RemoveGraphNodeStrategy(graph, () -> Optional.of(placeholderNode));
     }
 
     @Test

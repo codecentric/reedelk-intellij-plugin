@@ -22,19 +22,23 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 
 import static com.reedelk.plugin.component.domain.ComponentClass.INBOUND;
 import static com.reedelk.plugin.component.domain.ComponentClass.PROCESSOR;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public abstract class AbstractGraphTest {
 
     @Mock
     protected Graphics2D graphics;
+    @Mock
+    protected FontMetrics fontMetrics;
 
     protected GraphNode root;
     protected GraphNode componentNode1;
@@ -112,6 +116,10 @@ public abstract class AbstractGraphTest {
         flowReferenceNode2 = createGraphNodeInstance(FlowReference.class, FlowReferenceNode.class);
 
         placeholderNode = createGraphNodeInstance(Placeholder.class, PlaceholderNode.class);
+
+        Rectangle2D sampleTextBounds = new Rectangle(0, 0, 40, 6);
+        lenient().doReturn(fontMetrics).when(graphics).getFontMetrics();
+        lenient().doReturn(sampleTextBounds).when(fontMetrics).getStringBounds(anyString(), any(Graphics2D.class));
     }
 
     protected static <T extends GraphNode> T createGraphNodeInstance(Class componentClazz, Class<T> graphNodeClazz, ComponentClass componentClass) {

@@ -8,6 +8,8 @@ import com.reedelk.plugin.graph.action.Strategy;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import java.util.Optional;
+
 class FlowRemoveRootStrategyTest extends AbstractGraphTest {
 
     @Mock
@@ -50,8 +52,8 @@ class FlowRemoveRootStrategyTest extends AbstractGraphTest {
 
     private class TestPlaceholderProvider implements PlaceholderProvider {
         @Override
-        public PlaceholderNode get() {
-            return mockPlaceholder;
+        public Optional<PlaceholderNode> get() {
+            return Optional.of(mockPlaceholder);
         }
     }
 }

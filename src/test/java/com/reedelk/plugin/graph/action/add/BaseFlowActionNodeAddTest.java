@@ -14,7 +14,7 @@ abstract class BaseFlowActionNodeAddTest extends AbstractGraphTest {
     @Mock
     private ImageObserver observer;
 
-    FlowGraphChangeAware addDrawableToGraph(FlowGraph graph, GraphNode dropped, Point dropPoint) {
+    FlowGraphChangeAware addNodeToGraph(FlowGraph graph, GraphNode dropped, Point dropPoint) {
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
         FlowActionNodeAdd action = new FlowActionNodeAdd(dropPoint, dropped, graphics, observer);
         action.execute(modifiableGraph);
