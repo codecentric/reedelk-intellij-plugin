@@ -51,5 +51,4 @@ class TryCatchSerializerTest extends AbstractGraphTest {
         String expectedJson = TryCatch.Sample.json();
         JSONAssert.assertEquals(expectedJson, actualJson, true);
     }
-
 }
