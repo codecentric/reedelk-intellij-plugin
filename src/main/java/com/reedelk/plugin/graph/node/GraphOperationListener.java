@@ -23,6 +23,10 @@ public interface GraphOperationListener {
     default void commit(FlowGraph graph, PlaceholderProvider placeholderProvider) {
     }
 
-    default void onRemoved(PlaceholderProvider placeholderProvider, FlowGraph graph, GraphNode removedNode, int index) {
+    // Called when a successor of a scoped node has been removed from the given index
+    default void onSuccessorRemoved(PlaceholderProvider placeholderProvider,
+                                    FlowGraph graph,
+                                    GraphNode removedNode,
+                                    int index) {
     }
 }

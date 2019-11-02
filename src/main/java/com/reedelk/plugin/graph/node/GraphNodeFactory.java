@@ -59,7 +59,7 @@ public class GraphNodeFactory {
         try {
             return (T) componentNodeClazz.getConstructor(ComponentData.class).newInstance(componentData);
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getCause());
         }
     }
 

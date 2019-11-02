@@ -21,12 +21,13 @@ import java.util.Set;
 
 public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
 
+    protected final Icon icon;
+    protected final RemoveComponentIcon removeComponentIcon;
+
+    private final Arrow solidArrow;
     private final ComponentData componentData;
     private final ScopeBox selectedNodeScopeBox;
     private final ScopeBox unselectedNodeScopeBox;
-    protected final RemoveComponentIcon removeComponentIcon;
-
-    protected final Icon icon;
 
     // x and y represent the center position
     // of this Node on the canvas.
@@ -39,9 +40,10 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
 
     public AbstractScopedGraphNode(ComponentData componentData) {
         this.componentData = componentData;
+        this.solidArrow = new Arrow();
         this.icon = new Icon(componentData);
-        this.removeComponentIcon = new RemoveComponentIcon();
         this.selectedNodeScopeBox = new SelectedScopeBox();
+        this.removeComponentIcon = new RemoveComponentIcon();
         this.unselectedNodeScopeBox = new UnselectedScopeBox();
     }
 
@@ -241,8 +243,7 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
                 Point target = firstNodeOutsideScope.getTargetArrowEnd();
                 Point source = new Point(boundaries.getX() + boundaries.getWidth(), target.y);
 
-                Arrow arrow = new Arrow(source, target);
-                arrow.draw(graphics);
+                solidArrow.draw(source, target, graphics);
             }
         });
     }

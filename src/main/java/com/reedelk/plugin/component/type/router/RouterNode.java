@@ -83,10 +83,10 @@ public class RouterNode extends AbstractScopedGraphNode {
                 ListConditionRoutePairs.of(componentData());
 
         // If the scope is empty, the router node always  has  a placeholder
-        // because a router node must have at least  one component in it.
+        // because a router node must have at least one component in it. The indes is therefore always 0.
         if (getScope().isEmpty()) {
-            GraphNode addedPlaceholder = AddPlaceholder.to(placeholderProvider, graph, this, 0);
-            routerConditionRoutePairs.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION.value(), addedPlaceholder));
+            AddPlaceholder.to(placeholderProvider, graph, this, 0)
+                    .ifPresent(addedPlaceholder -> routerConditionRoutePairs.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION.value(), addedPlaceholder)));
         }
 
         List<RouterConditionRoutePair> updatedConditions =

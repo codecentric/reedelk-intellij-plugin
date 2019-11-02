@@ -10,8 +10,9 @@ import java.util.List;
 
 public class VerticalDividerArrows {
 
+    private final Arrow solidArrow = new Arrow();
     private final int verticalDividerXOffset;
-    private OnProcessSuccessor callback;
+    private final OnProcessSuccessor callback;
 
     public VerticalDividerArrows(int verticalDividerXOffset, OnProcessSuccessor callback) {
         this.verticalDividerXOffset = verticalDividerXOffset;
@@ -19,7 +20,7 @@ public class VerticalDividerArrows {
     }
 
     public VerticalDividerArrows(int verticalDividerXOffset) {
-        this.verticalDividerXOffset = verticalDividerXOffset;
+        this(verticalDividerXOffset, null);
     }
 
     public void draw(ScopedGraphNode parent, FlowGraph graph, Graphics2D graphics) {
@@ -38,8 +39,7 @@ public class VerticalDividerArrows {
             Point targetBaryCenter = successor.getTargetArrowEnd();
             Point sourceBaryCenter = new Point(verticalX, targetBaryCenter.y);
 
-            Arrow arrow = new Arrow(sourceBaryCenter, targetBaryCenter);
-            arrow.draw(graphics);
+            solidArrow.draw(sourceBaryCenter, targetBaryCenter, graphics);
 
             if (callback != null) {
                 callback.onProcess(parent, successor, graphics);

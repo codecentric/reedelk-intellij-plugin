@@ -23,11 +23,12 @@ public abstract class AbstractGraphNode implements GraphNode {
 
     public static final int NODE_WIDTH = 130;
 
-    private final ComponentData componentData;
-
     protected final Icon icon;
+
+    private final Arrow solidArrow;
     private final Icon draggedIcon;
     private final SelectedBox selectedBox;
+    private final ComponentData componentData;
     private final RemoveComponentIcon removeComponentIcon;
 
     // x and y represent the center position of this Node on the canvas.
@@ -43,9 +44,10 @@ public abstract class AbstractGraphNode implements GraphNode {
 
     public AbstractGraphNode(ComponentData componentData) {
         this.componentData = componentData;
+        this.solidArrow = new Arrow();
         this.icon = new Icon(componentData);
-        this.draggedIcon = new Icon(componentData);
         this.selectedBox = new SelectedBox();
+        this.draggedIcon = new Icon(componentData);
         this.removeComponentIcon = new RemoveComponentIcon();
     }
 
@@ -232,8 +234,7 @@ public abstract class AbstractGraphNode implements GraphNode {
         graph.successors(this).forEach(successor -> {
             Point thisNodeArrowStart = getSourceArrowStart();
             Point successorNodeArrowEnd = successor.getTargetArrowEnd();
-            Arrow arrow = new Arrow(thisNodeArrowStart, successorNodeArrowEnd);
-            arrow.draw(graphics);
+            solidArrow.draw(thisNodeArrowStart, successorNodeArrowEnd, graphics);
         });
     }
 }

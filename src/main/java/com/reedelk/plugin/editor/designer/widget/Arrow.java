@@ -10,17 +10,18 @@ public class Arrow {
     private static final int ARROW_SIZE = 10;
     private static final double ARROW_ANGLE = Math.PI / 5.0d;
 
-    private final Stroke STROKE = new BasicStroke(1f);
-    private final Point source;
-    private final Point target;
+    private final Stroke stroke;
 
-    public Arrow(final Point source, final Point target) {
-        this.source = source;
-        this.target = target;
+    public Arrow() {
+        this.stroke = new BasicStroke(1f);
     }
 
-    public void draw(Graphics2D graphics) {
-        graphics.setStroke(STROKE);
+    public Arrow(final Stroke stroke) {
+        this.stroke = stroke;
+    }
+
+    public void draw(Point source, Point target, Graphics2D graphics) {
+        graphics.setStroke(stroke);
         graphics.setColor(Colors.DESIGNER_ARROW);
 
         final double startx = source.getX();

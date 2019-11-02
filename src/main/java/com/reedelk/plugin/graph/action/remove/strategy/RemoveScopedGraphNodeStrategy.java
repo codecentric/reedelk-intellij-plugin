@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import static com.reedelk.runtime.commons.Preconditions.checkState;
@@ -59,7 +60,7 @@ public class RemoveScopedGraphNodeStrategy implements com.reedelk.plugin.graph.a
                 Strategy strategy = new RemoveGraphNodeStrategy(graph, placeholderProvider);
                 strategy.execute(nodeToRemove);
             } else {
-                FlowActionNodeRemove action = new FlowActionNodeRemove(nodeToRemove, placeholderProvider);
+                FlowActionNodeRemove action = new FlowActionNodeRemove(nodeToRemove, Optional::empty);
                 action.execute(graph);
             }
         }

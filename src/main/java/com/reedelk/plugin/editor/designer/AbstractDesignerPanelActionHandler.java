@@ -47,7 +47,7 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
 
     protected AbstractDesignerPanelActionHandler(@NotNull Module module,
                                                  @NotNull FlowSnapshot snapshot) {
-        this.placeholderProvider = () -> GraphNodeFactory.get(module, Placeholder.class.getName());
+        this.placeholderProvider = () -> Optional.of(GraphNodeFactory.get(module, Placeholder.class.getName()));
         this.snapshot = snapshot;
         this.module = module;
 
@@ -56,7 +56,7 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
     @Override
     public void onMove(Graphics2D graphics, GraphNode selected, Point dropPoint, ImageObserver observer) {
         DimensionAwareDecorator placeHolderNode =
-                new DimensionAwareDecorator(placeholderProvider.get(), selected);
+                new DimensionAwareDecorator(placeholderProvider.get().get(), selected);
 
         Action actionRemove = getActionRemove(placeHolderNode);
         Action actionReplace = getActionReplace(selected, placeHolderNode);
