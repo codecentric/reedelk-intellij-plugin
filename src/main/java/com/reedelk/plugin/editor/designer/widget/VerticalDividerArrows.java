@@ -10,12 +10,13 @@ import java.util.List;
 
 public class VerticalDividerArrows {
 
-    private final Arrow solidArrow = new Arrow();
+    private final Arrow solidArrow;
     private final int verticalDividerXOffset;
     private final OnProcessSuccessor callback;
 
     public VerticalDividerArrows(int verticalDividerXOffset, OnProcessSuccessor callback) {
         this.verticalDividerXOffset = verticalDividerXOffset;
+        this.solidArrow = new Arrow();
         this.callback = callback;
     }
 
