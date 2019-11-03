@@ -4,7 +4,6 @@ import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowGraphChangeAware;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.action.Action;
-import com.reedelk.plugin.graph.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
 import com.reedelk.plugin.graph.utils.FindScope;
@@ -14,7 +13,6 @@ import java.util.Optional;
 
 public class MoveActionHandler {
 
-    private PlaceholderProvider placeholderProvider;
     private FlowSnapshot snapshot;
     private GraphNode replacementNode;
     private GraphNode movedNode;
@@ -78,18 +76,14 @@ public class MoveActionHandler {
 
     public static class Builder {
 
-        private PlaceholderProvider placeholderProvider;
-        private FlowSnapshot snapshot;
-        private GraphNode replacementNode;
-        private GraphNode movedNode;
-        private Action actionReplace;
-        private Action actionRemove;
         private Action actionAdd;
+        private Action actionRemove;
+        private Action actionReplace;
 
-        public Builder placeholderProvider(@NotNull PlaceholderProvider placeholderProvider) {
-            this.placeholderProvider = placeholderProvider;
-            return this;
-        }
+        private FlowSnapshot snapshot;
+
+        private GraphNode movedNode;
+        private GraphNode replacementNode;
 
         public Builder actionAdd(@NotNull Action actionAdd) {
             this.actionAdd = actionAdd;
@@ -123,7 +117,6 @@ public class MoveActionHandler {
 
         public MoveActionHandler build() {
             MoveActionHandler handler = new MoveActionHandler();
-            handler.placeholderProvider = placeholderProvider;
             handler.replacementNode = replacementNode;
             handler.actionReplace = actionReplace;
             handler.actionRemove = actionRemove;

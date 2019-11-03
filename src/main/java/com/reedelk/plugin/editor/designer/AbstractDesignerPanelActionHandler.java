@@ -69,7 +69,6 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
                 .actionRemove(actionRemove)
                 .actionReplace(actionReplace)
                 .replacementNode(placeHolderNode)
-                .placeholderProvider(placeholderProvider)
                 .build();
 
         handler.handle();
@@ -78,8 +77,7 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
     @Override
     public void onRemove(GraphNode nodeToRemove) {
         Action actionRemove = getActionRemove(nodeToRemove);
-        RemoveActionHandler handler =
-                new RemoveActionHandler(placeholderProvider, snapshot, actionRemove);
+        RemoveActionHandler handler = new RemoveActionHandler(snapshot, actionRemove);
         handler.handle();
     }
 
@@ -107,7 +105,7 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
 
             Action addAction = getActionAdd(nodeToAdd, dropPoint, graphics, observer);
 
-            AddActionHandler handler = new AddActionHandler(placeholderProvider, snapshot, addAction);
+            AddActionHandler handler = new AddActionHandler(snapshot, addAction);
 
             boolean handled = handler.handle();
 

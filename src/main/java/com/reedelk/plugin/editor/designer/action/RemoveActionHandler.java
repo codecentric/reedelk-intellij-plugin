@@ -4,7 +4,6 @@ import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowGraphChangeAware;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.action.Action;
-import com.reedelk.plugin.graph.action.remove.strategy.PlaceholderProvider;
 import org.jetbrains.annotations.NotNull;
 
 public class RemoveActionHandler {
@@ -12,8 +11,7 @@ public class RemoveActionHandler {
     private final FlowSnapshot snapshot;
     private final Action removeAction;
 
-    public RemoveActionHandler(@NotNull PlaceholderProvider placeholderProvider,
-                               @NotNull FlowSnapshot snapshot,
+    public RemoveActionHandler(@NotNull FlowSnapshot snapshot,
                                @NotNull Action removeAction) {
         this.removeAction = removeAction;
         this.snapshot = snapshot;

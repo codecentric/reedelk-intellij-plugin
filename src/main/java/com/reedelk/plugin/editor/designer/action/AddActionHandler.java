@@ -4,19 +4,15 @@ import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowGraphChangeAware;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.action.Action;
-import com.reedelk.plugin.graph.action.remove.strategy.PlaceholderProvider;
 import org.jetbrains.annotations.NotNull;
 
 public class AddActionHandler {
 
-    private final PlaceholderProvider placeholderProvider;
     private final FlowSnapshot snapshot;
     private final Action addAction;
 
-    public AddActionHandler(@NotNull PlaceholderProvider placeholderProvider,
-                            @NotNull FlowSnapshot snapshot,
+    public AddActionHandler(@NotNull FlowSnapshot snapshot,
                             @NotNull Action addAction) {
-        this.placeholderProvider = placeholderProvider;
         this.addAction = addAction;
         this.snapshot = snapshot;
     }

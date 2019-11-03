@@ -61,9 +61,10 @@ public class TryCatchNode extends AbstractScopedGraphNode {
     }
 
     @Override
-    public void onSuccessorRemoved(PlaceholderProvider placeholderProvider, FlowGraph graph, GraphNode removedNode, int index) {
+    public void onSuccessorRemoved(FlowGraph graph, GraphNode removedNode, int index, PlaceholderProvider placeholderProvider) {
         // If we remove a node as a successor of this scoped node, if the number
-        // of successors is lower than 2 it means that
+        // of successors is lower than 2 it means that there is either no flow specified
+        // for the try block or the catch block or for both.
         if (graph.successors(this).size() < 2) {
             // If index == 0 we removed try
             // If index == 1 we removed catch
@@ -76,7 +77,7 @@ public class TryCatchNode extends AbstractScopedGraphNode {
     // contain any node in the scope. We must add two placeholders for
     // the try and the catch flows.
     @Override
-    public void onNodeAdded(FlowGraph graph, PlaceholderProvider placeholderProvider) {
+    public void onAdded(FlowGraph graph, PlaceholderProvider placeholderProvider) {
         if (getScope().isEmpty()) {
             AddPlaceholder.to(placeholderProvider, graph, this, 0);
             AddPlaceholder.to(placeholderProvider, graph, this, 1);

@@ -3,6 +3,7 @@ package com.reedelk.plugin.graph.action.add.strategy;
 import com.reedelk.plugin.component.type.placeholder.PlaceholderNode;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.action.Strategy;
+import com.reedelk.plugin.graph.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +17,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 public abstract class StrategyBuilder {
 
+    protected PlaceholderProvider placeholderProvider;
     protected ImageObserver observer;
     protected Graphics2D graphics;
     protected FlowGraph graph;
@@ -41,13 +43,18 @@ public abstract class StrategyBuilder {
         return this;
     }
 
+    public StrategyBuilder placeholderProvider(PlaceholderProvider placeholderProvider) {
+        this.placeholderProvider = placeholderProvider;
+        return this;
+    }
+
     @NotNull
     public abstract Strategy build();
 
     @NotNull
     Strategy getStrategyForClosestPrecedingNode(GraphNode precedingNode) {
         if (graph.successors(precedingNode).isEmpty()) {
-            return new PrecedingNodeWithoutSuccessor(graph, dropPoint, precedingNode, graphics);
+            return new PrecedingNodeWithoutSuccessor(graph, dropPoint, precedingNode, graphics, placeholderProvider);
 
         } else if (precedingNode instanceof ScopedGraphNode) {
             ScopedGraphNode scopedGraphNode = (ScopedGraphNode) precedingNode;
@@ -90,5 +97,4 @@ public abstract class StrategyBuilder {
         List<GraphNode> successors = graph.successors(closestPrecedingNode);
         return successors.size() == 1 && !closestPrecedingNode.scopeContains(successors.get(0));
     }
-
 }

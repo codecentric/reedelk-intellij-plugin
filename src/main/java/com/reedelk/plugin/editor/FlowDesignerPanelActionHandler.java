@@ -21,7 +21,7 @@ public class FlowDesignerPanelActionHandler extends AbstractDesignerPanelActionH
 
     @Override
     protected Action getActionAdd(GraphNode nodeToAdd, Point dropPoint, Graphics2D graphics, ImageObserver observer) {
-        return new FlowActionNodeAdd(dropPoint, nodeToAdd, graphics, observer);
+        return new FlowActionNodeAdd(dropPoint, nodeToAdd, graphics, observer, placeholderProvider);
     }
 
     @Override

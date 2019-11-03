@@ -4,9 +4,11 @@ import com.reedelk.plugin.commons.GetSuccessorIndex;
 import com.reedelk.plugin.commons.IsPredecessorScopedNode;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.action.Strategy;
+import com.reedelk.plugin.graph.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
 import com.reedelk.plugin.graph.utils.FindScope;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -17,12 +19,16 @@ import static com.reedelk.runtime.commons.Preconditions.checkState;
  */
 public class ReplaceNodeStrategy implements Strategy {
 
-    private final FlowGraph graph;
+    private final PlaceholderProvider placeholderProvider;
     private final GraphNode toBeReplaced;
+    private final FlowGraph graph;
 
-    ReplaceNodeStrategy(FlowGraph graph, GraphNode toBeReplaced) {
-        this.graph = graph;
+    ReplaceNodeStrategy(@NotNull FlowGraph graph,
+                        @NotNull GraphNode toBeReplaced,
+                        @NotNull PlaceholderProvider placeholderProvider) {
+        this.placeholderProvider = placeholderProvider;
         this.toBeReplaced = toBeReplaced;
+        this.graph = graph;
     }
 
     @Override
@@ -43,22 +49,41 @@ public class ReplaceNodeStrategy implements Strategy {
             ScopedGraphNode predecessorScopedGraphNode = (ScopedGraphNode) predecessorsOfPlaceHolder.get(0);
             int index = GetSuccessorIndex.ofScopedNode(graph, predecessorScopedGraphNode, toBeReplaced);
             graph.add(predecessorScopedGraphNode, replacement, index);
+
+            List<GraphNode> successorsOfPlaceHolder = graph.successors(toBeReplaced);
+            successorsOfPlaceHolder.forEach(successor -> graph.add(replacement, successor));
+
+            // If the placeholder belongs to a scope, we must
+            // remove it from the scope and add the replacement to the scope.
+            FindScope.of(graph, toBeReplaced).ifPresent(scopeNode -> {
+                scopeNode.addToScope(replacement);
+                scopeNode.removeFromScope(toBeReplaced);
+            });
+
+            // Remove the placeholder node from the graph (including inbound/outbound edges)
+            graph.remove(toBeReplaced);
+
+            replacement.onAdded(graph, placeholderProvider);
+            predecessorScopedGraphNode.onSuccessorAdded(graph, replacement, index);
+
         } else {
             predecessorsOfPlaceHolder.forEach(predecessor -> graph.add(predecessor, replacement));
+
+            List<GraphNode> successorsOfPlaceHolder = graph.successors(toBeReplaced);
+            successorsOfPlaceHolder.forEach(successor -> graph.add(replacement, successor));
+
+            // If the placeholder belongs to a scope, we must
+            // remove it from the scope and add the replacement to the scope.
+            FindScope.of(graph, toBeReplaced).ifPresent(scopeNode -> {
+                scopeNode.addToScope(replacement);
+                scopeNode.removeFromScope(toBeReplaced);
+            });
+
+            // Remove the placeholder node from the graph (including inbound/outbound edges)
+            graph.remove(toBeReplaced);
+
+            replacement.onAdded(graph, placeholderProvider);
+            predecessorsOfPlaceHolder.forEach(node -> node.onSuccessorAdded(graph, replacement));
         }
-
-
-        List<GraphNode> successorsOfPlaceHolder = graph.successors(toBeReplaced);
-        successorsOfPlaceHolder.forEach(successor -> graph.add(replacement, successor));
-
-        // If the placeholder belongs to a scope, we must
-        // remove it from the scope and add the replacement to the scope.
-        FindScope.of(graph, toBeReplaced).ifPresent(scopeNode -> {
-            scopeNode.addToScope(replacement);
-            scopeNode.removeFromScope(toBeReplaced);
-        });
-
-        // Remove the placeholder node from the graph (including inbound/outbound edges)
-        graph.remove(toBeReplaced);
     }
 }

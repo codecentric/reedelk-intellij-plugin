@@ -18,12 +18,32 @@ public interface GraphChangeListener {
     }
 
     /**
-     * Called when all the changes have been made.
+     * Called on a ScopedGraphNode or a GraphNode when it has been added to the graph.
      */
-    default void onNodeAdded(FlowGraph graph, PlaceholderProvider placeholderProvider) {
+    default void onAdded(FlowGraph graph, PlaceholderProvider placeholderProvider) {
     }
 
-    // Called when a successor of a scoped node has been removed from the given index
-    default void onSuccessorRemoved(PlaceholderProvider placeholderProvider, FlowGraph graph, GraphNode removedNode, int index) {
+    /*
+     * This is an event called only when a successor is added to GraphNode.
+     */
+    default void onSuccessorAdded(FlowGraph graph, GraphNode addedNode) {
+    }
+
+    /**
+     * * This is an event called only when a successor is added to GraphNode.
+     */
+    default void onSuccessorAdded(FlowGraph graph, GraphNode addedNode, int index) {
+    }
+
+    /*
+     * This is an event called only when a successor is removed from a GraphNode.
+     */
+    default void onSuccessorRemoved(FlowGraph graph, GraphNode removedNode, PlaceholderProvider placeholderProvider) {
+    }
+
+    /**
+     * This is an event called only when a successor is removed from a ScopedGraphNode.
+     */
+    default void onSuccessorRemoved(FlowGraph graph, GraphNode removedNode, int index, PlaceholderProvider placeholderProvider) {
     }
 }

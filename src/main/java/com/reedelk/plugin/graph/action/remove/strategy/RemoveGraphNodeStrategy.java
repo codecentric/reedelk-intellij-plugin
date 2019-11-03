@@ -90,6 +90,6 @@ public class RemoveGraphNodeStrategy implements Strategy {
 
         graph.remove(toRemove);
 
-        predecessor.onSuccessorRemoved(placeholderProvider, graph, toRemove, index);
+        predecessor.onSuccessorRemoved(graph, toRemove, index, placeholderProvider);
     }
 }

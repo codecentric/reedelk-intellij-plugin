@@ -8,7 +8,6 @@ import com.reedelk.plugin.graph.utils.FindClosestPrecedingNode;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -33,11 +32,10 @@ public class SubFlowStrategyBuilder extends StrategyBuilder {
 
         } else if (isOverlappingAnyPlaceHolder(graph, dropPoint)) {
             GraphNode overlappingPlaceholder = getOverlappingPlaceholder(graph, dropPoint);
-            return new ReplaceNodeStrategy(graph, overlappingPlaceholder);
+            return new ReplaceNodeStrategy(graph, overlappingPlaceholder, placeholderProvider);
 
         } else {
-            Optional<GraphNode> closestPrecedingNode = FindClosestPrecedingNode.of(graph, dropPoint, graphics);
-            return closestPrecedingNode
+            return FindClosestPrecedingNode.of(graph, dropPoint, graphics)
                     .map(this::getStrategyForClosestPrecedingNode)
                     .orElseGet(NoOpStrategy::new);
         }

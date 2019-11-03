@@ -78,21 +78,36 @@ public class RouterNode extends AbstractScopedGraphNode {
     }
 
     @Override
-    public void onNodeAdded(FlowGraph graph, PlaceholderProvider placeholderProvider) {
-        List<RouterConditionRoutePair> routerConditionRoutePairs =
-                ListConditionRoutePairs.of(componentData());
+    public void onSuccessorRemoved(FlowGraph graph, GraphNode removedNode, int index, PlaceholderProvider placeholderProvider) {
+        // If we just removed a successor and the scope is empty, it means that the
+        // router node does not have any successor. Since we always want to have a placeholder
+        // and never an empty node following a router, we add the placeholder.
+        if (getScope().isEmpty()) {
+            AddPlaceholder.to(placeholderProvider, graph, this, index);
+        }
+        updateConditionRoutePairs(graph);
+    }
+
+    @Override
+    public void onSuccessorAdded(FlowGraph graph, GraphNode addedNode, int index) {
+        updateConditionRoutePairs(graph);
+    }
+
+    /**
+     * Callback invoked when this node has been added to the graph.
+     */
+    @Override
+    public void onAdded(FlowGraph graph, PlaceholderProvider placeholderProvider) {
+        List<RouterConditionRoutePair> routerConditionRoutePairs = ListConditionRoutePairs.of(componentData());
 
         // If the scope is empty, the router node always  has  a placeholder
-        // because a router node must have at least one component in it. The indes is therefore always 0.
+        // because a router node must have at least one component in it. The index is therefore always 0.
         if (getScope().isEmpty()) {
             AddPlaceholder.to(placeholderProvider, graph, this, 0)
                     .ifPresent(addedPlaceholder -> routerConditionRoutePairs.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION.value(), addedPlaceholder)));
         }
 
-        List<RouterConditionRoutePair> updatedConditions =
-                SyncConditionAndRoutePairs.getUpdatedPairs(graph, this, routerConditionRoutePairs);
-        ComponentData component = componentData();
-        component.set(DATA_CONDITION_ROUTE_PAIRS, updatedConditions);
+        updateConditionRoutePairs(graph);
     }
 
     @Override
@@ -101,6 +116,13 @@ public class RouterNode extends AbstractScopedGraphNode {
         int topRightY = y() - icon.topHalfHeight(graphics) + Half.of(removeComponentIcon.height());
         removeComponentIcon.setPosition(topRightX, topRightY);
         removeComponentIcon.draw(graphics, observer);
+    }
+
+    private void updateConditionRoutePairs(FlowGraph graph) {
+        List<RouterConditionRoutePair> routerConditionRoutePairs = ListConditionRoutePairs.of(componentData());
+        List<RouterConditionRoutePair> updatedConditions = SyncConditionAndRoutePairs.getUpdatedPairs(graph, this, routerConditionRoutePairs);
+        ComponentData component = componentData();
+        component.set(DATA_CONDITION_ROUTE_PAIRS, updatedConditions);
     }
 
     class RouterOnProcessSuccessor implements VerticalDividerArrows.OnProcessSuccessor {

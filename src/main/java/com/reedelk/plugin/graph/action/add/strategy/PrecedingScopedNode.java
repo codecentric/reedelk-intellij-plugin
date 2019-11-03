@@ -74,6 +74,8 @@ public class PrecedingScopedNode implements Strategy {
                     closestPrecedingNode.addToScope(node);
                     FindFirstNodeOutsideScope.of(graph, closestPrecedingNode)
                             .ifPresent(firstNodeOutsideScope -> graph.add(node, firstNodeOutsideScope));
+
+                    closestPrecedingNode.onSuccessorAdded(graph, node, successorIndex);
                 }
                 break; // we stop if we find an area matching the position.
 
@@ -84,6 +86,8 @@ public class PrecedingScopedNode implements Strategy {
                     graph.add(closestPrecedingNode, node, successorIndex);
                     graph.add(node, successor);
                     closestPrecedingNode.addToScope(node);
+
+                    closestPrecedingNode.onSuccessorAdded(graph, node, successorIndex);
                 }
                 break; // we stop if we find an area matching the position.
 
@@ -94,6 +98,8 @@ public class PrecedingScopedNode implements Strategy {
                     closestPrecedingNode.addToScope(node);
                     FindFirstNodeOutsideScope.of(graph, closestPrecedingNode)
                             .ifPresent(firstNodeOutsideScope -> graph.add(node, firstNodeOutsideScope));
+
+                    closestPrecedingNode.onSuccessorAdded(graph, node, successorIndex);
                 }
                 break; // we stop if we find an area matching the position.
             }
