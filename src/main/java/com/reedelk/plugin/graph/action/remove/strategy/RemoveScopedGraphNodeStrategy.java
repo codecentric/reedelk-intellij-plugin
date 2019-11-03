@@ -16,12 +16,10 @@ import static com.reedelk.runtime.commons.Preconditions.checkState;
 
 public class RemoveScopedGraphNodeStrategy implements com.reedelk.plugin.graph.action.Strategy {
 
-    private final PlaceholderProvider placeholderProvider;
+    private final PlaceholderProvider absentPlaceholderProvider = Optional::empty;
     private final FlowGraph graph;
 
-    public RemoveScopedGraphNodeStrategy(@NotNull FlowGraph graph,
-                                         @NotNull PlaceholderProvider placeholderProvider) {
-        this.placeholderProvider = placeholderProvider;
+    public RemoveScopedGraphNodeStrategy(@NotNull FlowGraph graph) {
         this.graph = graph;
     }
 
@@ -40,7 +38,7 @@ public class RemoveScopedGraphNodeStrategy implements com.reedelk.plugin.graph.a
                 "Before removing a scoped node remove all the nodes belonging to its own (and nested) scope/s");
 
         // Then we just remove it as a normal node.
-        Strategy strategy = new RemoveGraphNodeStrategy(graph, placeholderProvider);
+        Strategy strategy = new RemoveGraphNodeStrategy(graph, absentPlaceholderProvider);
         strategy.execute(scopeToRemove);
     }
 
@@ -57,10 +55,10 @@ public class RemoveScopedGraphNodeStrategy implements com.reedelk.plugin.graph.a
                 removeNestedScopesNodes((ScopedGraphNode) nodeToRemove);
 
                 // Remove the current scoped node
-                Strategy strategy = new RemoveGraphNodeStrategy(graph, placeholderProvider);
+                Strategy strategy = new RemoveGraphNodeStrategy(graph, absentPlaceholderProvider);
                 strategy.execute(nodeToRemove);
             } else {
-                FlowActionNodeRemove action = new FlowActionNodeRemove(nodeToRemove, Optional::empty);
+                FlowActionNodeRemove action = new FlowActionNodeRemove(nodeToRemove, absentPlaceholderProvider);
                 action.execute(graph);
             }
         }

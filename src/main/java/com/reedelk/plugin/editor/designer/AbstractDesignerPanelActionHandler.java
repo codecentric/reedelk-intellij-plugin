@@ -50,7 +50,6 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
         this.placeholderProvider = () -> Optional.of(GraphNodeFactory.get(module, Placeholder.class.getName()));
         this.snapshot = snapshot;
         this.module = module;
-
     }
 
     @Override

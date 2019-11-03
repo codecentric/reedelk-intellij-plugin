@@ -41,11 +41,11 @@ public class SubFlowActionNodeRemove implements Action {
         if (predecessors.isEmpty()) {
             // If the predecessor of the node to remove is empty,
             // we are removing root node.
-            strategy = new SubflowRemoveRootStrategy(graph, placeholderProvider);
+            strategy = new SubflowRemoveRootStrategy(graph);
 
         } else if (toRemove instanceof ScopedGraphNode) {
             // Handle ScopedGraphNode
-            strategy = new RemoveScopedGraphNodeStrategy(graph, placeholderProvider);
+            strategy = new RemoveScopedGraphNodeStrategy(graph);
 
         } else {
             // This is a node with at most one successor, otherwise it

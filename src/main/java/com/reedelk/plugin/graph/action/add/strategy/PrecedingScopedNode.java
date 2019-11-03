@@ -2,6 +2,7 @@ package com.reedelk.plugin.graph.action.add.strategy;
 
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.action.Strategy;
+import com.reedelk.plugin.graph.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopeBoundaries;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
@@ -20,12 +21,18 @@ public class PrecedingScopedNode implements Strategy {
     private static final int NODE_TOP_MARGIN_PERCENT = 35;
     private static final int NODE_BOTTOM_MARGIN_PERCENT = 40;
 
+    private final PlaceholderProvider placeholderProvider;
     private final ScopedGraphNode closestPrecedingNode;
     private final Graphics2D graphics;
     private final FlowGraph graph;
     private final Point dropPoint;
 
-    PrecedingScopedNode(@NotNull FlowGraph graph, @NotNull Point dropPoint, @NotNull ScopedGraphNode scopedNode, @NotNull Graphics2D graphics) {
+    PrecedingScopedNode(@NotNull FlowGraph graph,
+                        @NotNull Point dropPoint,
+                        @NotNull ScopedGraphNode scopedNode,
+                        @NotNull Graphics2D graphics,
+                        @NotNull PlaceholderProvider placeholderProvider) {
+        this.placeholderProvider = placeholderProvider;
         this.closestPrecedingNode = scopedNode;
         this.dropPoint = dropPoint;
         this.graphics = graphics;
@@ -76,6 +83,9 @@ public class PrecedingScopedNode implements Strategy {
                             .ifPresent(firstNodeOutsideScope -> graph.add(node, firstNodeOutsideScope));
 
                     closestPrecedingNode.onSuccessorAdded(graph, node, successorIndex);
+                    if (node instanceof ScopedGraphNode) {
+                        node.onAdded(graph, placeholderProvider);
+                    }
                 }
                 break; // we stop if we find an area matching the position.
 
@@ -88,6 +98,9 @@ public class PrecedingScopedNode implements Strategy {
                     closestPrecedingNode.addToScope(node);
 
                     closestPrecedingNode.onSuccessorAdded(graph, node, successorIndex);
+                    if (node instanceof ScopedGraphNode) {
+                        node.onAdded(graph, placeholderProvider);
+                    }
                 }
                 break; // we stop if we find an area matching the position.
 
@@ -100,6 +113,9 @@ public class PrecedingScopedNode implements Strategy {
                             .ifPresent(firstNodeOutsideScope -> graph.add(node, firstNodeOutsideScope));
 
                     closestPrecedingNode.onSuccessorAdded(graph, node, successorIndex);
+                    if (node instanceof ScopedGraphNode) {
+                        node.onAdded(graph, placeholderProvider);
+                    }
                 }
                 break; // we stop if we find an area matching the position.
             }

@@ -23,8 +23,13 @@ public abstract class StrategyBuilder {
     protected FlowGraph graph;
     protected Point dropPoint;
 
-    public StrategyBuilder observer(ImageObserver observer) {
-        this.observer = observer;
+    public StrategyBuilder graph(FlowGraph graph) {
+        this.graph = graph;
+        return this;
+    }
+
+    public StrategyBuilder dropPoint(Point dropPoint) {
+        this.dropPoint = dropPoint;
         return this;
     }
 
@@ -33,13 +38,8 @@ public abstract class StrategyBuilder {
         return this;
     }
 
-    public StrategyBuilder graph(FlowGraph graph) {
-        this.graph = graph;
-        return this;
-    }
-
-    public StrategyBuilder dropPoint(Point dropPoint) {
-        this.dropPoint = dropPoint;
+    public StrategyBuilder observer(ImageObserver observer) {
+        this.observer = observer;
         return this;
     }
 
@@ -59,9 +59,9 @@ public abstract class StrategyBuilder {
         } else if (precedingNode instanceof ScopedGraphNode) {
             ScopedGraphNode scopedGraphNode = (ScopedGraphNode) precedingNode;
             if (hasOnlyOneSuccessorOutsideScope(scopedGraphNode, graph)) {
-                return new PrecedingNodeWithOneSuccessor(graph, dropPoint, scopedGraphNode, graphics);
+                return new PrecedingNodeWithOneSuccessor(graph, dropPoint, scopedGraphNode, graphics, placeholderProvider);
             } else {
-                return new PrecedingScopedNode(graph, dropPoint, scopedGraphNode, graphics);
+                return new PrecedingScopedNode(graph, dropPoint, scopedGraphNode, graphics, placeholderProvider);
             }
 
         } else {
@@ -69,7 +69,7 @@ public abstract class StrategyBuilder {
             // a node in the flow must have at most one successor.
             checkState(graph.successors(precedingNode).size() == 1,
                     "Successors size MUST be 1, otherwise it must be a Scoped Node");
-            return new PrecedingNodeWithOneSuccessor(graph, dropPoint, precedingNode, graphics);
+            return new PrecedingNodeWithOneSuccessor(graph, dropPoint, precedingNode, graphics, placeholderProvider);
         }
     }
 

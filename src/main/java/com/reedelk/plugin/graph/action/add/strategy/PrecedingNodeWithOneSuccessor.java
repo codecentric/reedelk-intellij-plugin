@@ -3,6 +3,7 @@ package com.reedelk.plugin.graph.action.add.strategy;
 import com.reedelk.plugin.commons.Half;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.action.Strategy;
+import com.reedelk.plugin.graph.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopeBoundaries;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
@@ -20,12 +21,18 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class PrecedingNodeWithOneSuccessor implements Strategy {
 
+    private final PlaceholderProvider placeholderProvider;
     private final GraphNode precedingNode;
     private final Graphics2D graphics;
     private final FlowGraph graph;
     private final Point dropPoint;
 
-    PrecedingNodeWithOneSuccessor(@NotNull FlowGraph graph, @NotNull Point dropPoint, @NotNull GraphNode precedingNode, @NotNull Graphics2D graphics) {
+    PrecedingNodeWithOneSuccessor(@NotNull FlowGraph graph,
+                                  @NotNull Point dropPoint,
+                                  @NotNull GraphNode precedingNode,
+                                  @NotNull Graphics2D graphics,
+                                  @NotNull PlaceholderProvider placeholderProvider) {
+        this.placeholderProvider = placeholderProvider;
         this.precedingNode = precedingNode;
         this.dropPoint = dropPoint;
         this.graphics = graphics;
@@ -50,6 +57,8 @@ public class PrecedingNodeWithOneSuccessor implements Strategy {
                 FindScope.of(graph, precedingNode)
                         .ifPresent(scopedGraphNode ->
                                 scopedGraphNode.addToScope(node));
+
+                node.onAdded(graph, placeholderProvider);
             }
         } else {
             // They belong to different scopes

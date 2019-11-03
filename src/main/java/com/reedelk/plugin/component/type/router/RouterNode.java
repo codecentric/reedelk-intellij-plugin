@@ -20,6 +20,7 @@ import com.reedelk.runtime.component.Router;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class RouterNode extends AbstractScopedGraphNode {
 
@@ -83,9 +84,17 @@ public class RouterNode extends AbstractScopedGraphNode {
         // router node does not have any successor. Since we always want to have a placeholder
         // and never an empty node following a router, we add the placeholder.
         if (getScope().isEmpty()) {
-            AddPlaceholder.to(placeholderProvider, graph, this, index);
+            // We just update conditions -> route  pairs if and only if a node was added. A node
+            // might have not been added when a successor has been removed when we remove
+            // this scoped node itself. In this case the placeholder provider does not add
+            // any placeholder since we are removing the containing scope.
+            AddPlaceholder.to(placeholderProvider, graph, this, index)
+                    .ifPresent((Consumer<GraphNode>) node -> updateConditionRoutePairs(graph));
+        } else {
+            // If the scope is not empty, we need to update the condition -> route pairs since
+            // they might have been changed after removing a successor.
+            updateConditionRoutePairs(graph);
         }
-        updateConditionRoutePairs(graph);
     }
 
     @Override

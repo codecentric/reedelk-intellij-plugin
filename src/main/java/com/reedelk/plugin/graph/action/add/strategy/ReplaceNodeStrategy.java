@@ -64,6 +64,7 @@ public class ReplaceNodeStrategy implements Strategy {
             graph.remove(toBeReplaced);
 
             replacement.onAdded(graph, placeholderProvider);
+
             predecessorScopedGraphNode.onSuccessorAdded(graph, replacement, index);
 
         } else {
@@ -83,7 +84,7 @@ public class ReplaceNodeStrategy implements Strategy {
             graph.remove(toBeReplaced);
 
             replacement.onAdded(graph, placeholderProvider);
-            predecessorsOfPlaceHolder.forEach(node -> node.onSuccessorAdded(graph, replacement));
+
         }
     }
 }

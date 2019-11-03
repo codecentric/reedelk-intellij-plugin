@@ -15,6 +15,7 @@ import com.reedelk.plugin.fixture.*;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowGraphImpl;
 import com.reedelk.plugin.graph.FlowGraphProvider;
+import com.reedelk.plugin.graph.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.runtime.component.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.reedelk.plugin.component.domain.ComponentClass.INBOUND;
@@ -84,6 +86,8 @@ public abstract class AbstractGraphTest {
 
     protected TestAwareGraphProvider provider;
 
+    protected PlaceholderProvider placeholderProvider;
+
 
     @BeforeEach
     protected void setUp() {
@@ -123,6 +127,8 @@ public abstract class AbstractGraphTest {
         flowReferenceNode2 = createGraphNodeInstance(FlowReference.class, FlowReferenceNode.class);
 
         placeholderNode = createGraphNodeInstance(Placeholder.class, PlaceholderNode.class);
+
+        placeholderProvider = () -> Optional.of(placeholderNode);
 
         Rectangle2D sampleTextBounds = new Rectangle(0, 0, 40, 6);
         lenient().doReturn(fontMetrics).when(graphics).getFontMetrics();
