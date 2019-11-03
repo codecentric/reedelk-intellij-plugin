@@ -2,19 +2,12 @@ package com.reedelk.plugin.graph.action.remove.strategy;
 
 import com.reedelk.plugin.AbstractGraphTest;
 import com.reedelk.plugin.assertion.PluginAssertion;
-import com.reedelk.plugin.component.type.placeholder.PlaceholderNode;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.action.Strategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-
-import java.util.Optional;
 
 class RemoveScopedGraphNodeStrategyTest extends AbstractGraphTest {
-
-    @Mock
-    private PlaceholderNode mockPlaceholder;
 
     private FlowGraph graph;
     private Strategy strategy;
@@ -24,7 +17,7 @@ class RemoveScopedGraphNodeStrategyTest extends AbstractGraphTest {
         super.setUp();
         this.graph = provider.createGraph();
         this.graph.root(root);
-        this.strategy = new RemoveScopedGraphNodeStrategy(graph, new TestPlaceholderProvider());
+        this.strategy = new RemoveScopedGraphNodeStrategy(graph);
     }
 
     @Test
@@ -82,12 +75,5 @@ class RemoveScopedGraphNodeStrategyTest extends AbstractGraphTest {
                 .root().is(root)
                 .and().successorsOf(root).isOnly(componentNode3)
                 .and().successorsOf(componentNode3).isEmpty();
-    }
-
-    class TestPlaceholderProvider implements PlaceholderProvider {
-        @Override
-        public Optional<PlaceholderNode> get() {
-            return Optional.of(mockPlaceholder);
-        }
     }
 }

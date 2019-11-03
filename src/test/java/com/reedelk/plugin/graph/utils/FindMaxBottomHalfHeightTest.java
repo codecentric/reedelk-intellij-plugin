@@ -6,12 +6,9 @@ import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@MockitoSettings(strictness = Strictness.LENIENT)
 class FindMaxBottomHalfHeightTest extends AbstractGraphTest {
 
     private GraphNode UNTIL_LAST_NODE = null;

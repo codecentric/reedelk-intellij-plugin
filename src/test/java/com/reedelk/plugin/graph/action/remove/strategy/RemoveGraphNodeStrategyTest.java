@@ -4,6 +4,7 @@ import com.reedelk.plugin.AbstractGraphTest;
 import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.action.Strategy;
+import com.reedelk.plugin.testutils.AddRouterConditions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -83,6 +84,8 @@ class RemoveGraphNodeStrategyTest extends AbstractGraphTest {
         routerNode1.addToScope(componentNode1);
         routerNode1.addToScope(componentNode2);
 
+        AddRouterConditions.addConditionRoutePairs(routerNode1, "otherwise", componentNode1, "1 != 1", componentNode2);
+
         // When
         strategy.execute(componentNode1);
 
@@ -111,6 +114,8 @@ class RemoveGraphNodeStrategyTest extends AbstractGraphTest {
         routerNode1.addToScope(componentNode2);
         routerNode1.addToScope(componentNode3);
 
+        AddRouterConditions.addConditionRoutePairs(routerNode1, "otherwise", componentNode1, "1 != 1", componentNode2);
+
         // When
         strategy.execute(componentNode2);
 
@@ -137,6 +142,8 @@ class RemoveGraphNodeStrategyTest extends AbstractGraphTest {
         routerNode1.addToScope(componentNode1);
         routerNode1.addToScope(componentNode2);
 
+        AddRouterConditions.addConditionRoutePairs(routerNode1, "otherwise", componentNode1, "1 != 1", componentNode2);
+
         // When
         strategy.execute(componentNode1);
 
@@ -154,8 +161,37 @@ class RemoveGraphNodeStrategyTest extends AbstractGraphTest {
     void shouldRemoveNodeWithScopedNodePredecessorWhenOutsideScopeAndSuccessor() {
         // Given
         graph.add(root, routerNode1);
-        graph.add(routerNode1, componentNode1);
+        graph.add(routerNode1, placeholderNode);
+        graph.add(placeholderNode, componentNode1);
         graph.add(componentNode1, componentNode2);
+
+        routerNode1.addToScope(placeholderNode);
+
+        AddRouterConditions.addConditionRoutePairs(routerNode1, "otherwise", placeholderNode);
+
+        // When
+        strategy.execute(componentNode1);
+
+        // Then
+        PluginAssertion.assertThat(graph)
+                .nodesCountIs(4)
+                .root().is(root)
+                .and().successorsOf(root).isOnly(routerNode1)
+                .and().node(routerNode1).scopeContainsExactly(placeholderNode)
+                .and().successorsOf(placeholderNode).isOnly(componentNode2)
+                .and().successorsOf(componentNode2).isEmpty();
+    }
+
+    @Test
+    void shouldRemoveNodeWithScopedNodePredecessorWhenOutsideScopeAndNoSuccessor() {
+        // Given
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, placeholderNode);
+        graph.add(placeholderNode, componentNode1);
+
+        routerNode1.addToScope(placeholderNode);
+
+        AddRouterConditions.addConditionRoutePairs(routerNode1, "otherwise", placeholderNode);
 
         // When
         strategy.execute(componentNode1);
@@ -165,27 +201,8 @@ class RemoveGraphNodeStrategyTest extends AbstractGraphTest {
                 .nodesCountIs(3)
                 .root().is(root)
                 .and().successorsOf(root).isOnly(routerNode1)
-                .and().node(routerNode1).scopeIsEmpty()
-                .and().successorsOf(routerNode1).isOnly(componentNode2)
-                .and().successorsOf(componentNode2).isEmpty();
-    }
-
-    @Test
-    void shouldRemoveNodeWithScopedNodePredecessorWhenOutsideScopeAndNoSuccessor() {
-        // Given
-        graph.add(root, routerNode1);
-        graph.add(routerNode1, componentNode1);
-
-        // When
-        strategy.execute(componentNode1);
-
-        // Then
-        PluginAssertion.assertThat(graph)
-                .nodesCountIs(2)
-                .root().is(root)
-                .and().successorsOf(root).isOnly(routerNode1)
-                .and().node(routerNode1).scopeIsEmpty()
-                .and().successorsOf(routerNode1).isEmpty();
+                .and().node(routerNode1).scopeContainsExactly(placeholderNode)
+                .and().successorsOf(placeholderNode).isEmpty();
     }
 
     @Test

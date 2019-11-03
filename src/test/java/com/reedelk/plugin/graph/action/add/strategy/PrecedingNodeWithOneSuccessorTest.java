@@ -4,14 +4,10 @@ import com.reedelk.plugin.AbstractGraphTest;
 import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.graph.FlowGraph;
 import org.junit.jupiter.api.Test;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 
 import java.awt.*;
 
-@MockitoSettings(strictness = Strictness.LENIENT)
 class PrecedingNodeWithOneSuccessorTest extends AbstractGraphTest {
-
 
     @Test
     void shouldAddSuccessorInsideScope() {
@@ -29,7 +25,7 @@ class PrecedingNodeWithOneSuccessorTest extends AbstractGraphTest {
         componentNode1.setPosition(330, 155);
 
         PrecedingNodeWithOneSuccessor strategy =
-                new PrecedingNodeWithOneSuccessor(graph, componentNode2DropPoint, forkNode1, graphics);
+                new PrecedingNodeWithOneSuccessor(graph, componentNode2DropPoint, forkNode1, graphics, placeholderProvider);
 
         // When
         strategy.execute(componentNode2);
@@ -60,7 +56,7 @@ class PrecedingNodeWithOneSuccessorTest extends AbstractGraphTest {
         componentNode1.setPosition(330, 155);
 
         PrecedingNodeWithOneSuccessor strategy =
-                new PrecedingNodeWithOneSuccessor(graph, componentNode2DropPoint, forkNode1, graphics);
+                new PrecedingNodeWithOneSuccessor(graph, componentNode2DropPoint, forkNode1, graphics, placeholderProvider);
 
         // When
         strategy.execute(componentNode2);

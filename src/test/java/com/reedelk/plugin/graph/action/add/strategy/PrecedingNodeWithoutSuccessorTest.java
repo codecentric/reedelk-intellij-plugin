@@ -28,7 +28,7 @@ class PrecedingNodeWithoutSuccessorTest extends AbstractGraphTest {
             forkNode1.setPosition(195, 158);
 
             PrecedingNodeWithoutSuccessor strategy =
-                    new PrecedingNodeWithoutSuccessor(graph, componentNode1DropPoint, forkNode1, graphics);
+                    new PrecedingNodeWithoutSuccessor(graph, componentNode1DropPoint, forkNode1, graphics, placeholderProvider);
 
             // When
             strategy.execute(componentNode1);
@@ -56,7 +56,7 @@ class PrecedingNodeWithoutSuccessorTest extends AbstractGraphTest {
             forkNode1.setPosition(195, 158);
 
             PrecedingNodeWithoutSuccessor strategy =
-                    new PrecedingNodeWithoutSuccessor(graph, componentNode1DropPoint, forkNode1, graphics);
+                    new PrecedingNodeWithoutSuccessor(graph, componentNode1DropPoint, forkNode1, graphics, placeholderProvider);
 
             // When
             strategy.execute(componentNode1);

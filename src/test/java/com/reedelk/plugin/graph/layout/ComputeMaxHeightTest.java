@@ -8,13 +8,10 @@ import com.reedelk.plugin.graph.node.ScopedGraphNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Compute Max Height Tests")
-@MockitoSettings(strictness = Strictness.LENIENT)
 class ComputeMaxHeightTest extends AbstractGraphTest {
 
     @BeforeEach

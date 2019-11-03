@@ -4,12 +4,9 @@ import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowGraphChangeAware;
 import org.junit.jupiter.api.Test;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 
 import java.awt.*;
 
-@MockitoSettings(strictness = Strictness.LENIENT)
 class FlowActionNodeAddNodeAfterRootTest extends BaseFlowActionNodeAddTest {
 
     @Test

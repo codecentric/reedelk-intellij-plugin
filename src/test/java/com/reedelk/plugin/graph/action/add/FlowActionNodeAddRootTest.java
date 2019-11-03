@@ -8,14 +8,11 @@ import com.reedelk.plugin.graph.FlowGraphChangeAware;
 import com.reedelk.plugin.graph.node.GraphNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 
 import java.awt.*;
 
 import static com.reedelk.plugin.component.domain.ComponentClass.INBOUND;
 
-@MockitoSettings(strictness = Strictness.LENIENT)
 class FlowActionNodeAddRootTest extends BaseFlowActionNodeAddTest {
 
     private GraphNode rootReplacement;

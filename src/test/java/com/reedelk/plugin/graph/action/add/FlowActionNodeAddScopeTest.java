@@ -4,16 +4,14 @@ import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowGraphChangeAware;
 import com.reedelk.plugin.graph.node.ScopeBoundaries;
+import com.reedelk.plugin.testutils.AddRouterConditions;
 import org.junit.jupiter.api.Test;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 
 import java.awt.*;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 
-@MockitoSettings(strictness = Strictness.LENIENT)
 class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
 
     @Test
@@ -70,6 +68,9 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
         componentNode1.setPosition(335, 80);
         routerNode2.setPosition(480, 80);
         componentNode2.setPosition(625, 80);
+
+        AddRouterConditions.addConditionRoutePairs(routerNode1, "otherwise", componentNode1);
+        AddRouterConditions.addConditionRoutePairs(routerNode2, "otherwise", componentNode2);
 
         // We drop the new node on top of the 'otherwise'
         Point dropPoint = new Point(310, 14);
@@ -921,6 +922,8 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
         componentNode1.setPosition(365, 155);
         componentNode2.setPosition(365, 400);
 
+        AddRouterConditions.addConditionRoutePairs(routerNode1, "1 != 2", componentNode1, "otherwise", componentNode2);
+
         mockNodeHeight(root, 70, 40);
         mockNodeHeight(routerNode1, 70, 25);
         mockNodeHeight(componentNode1, 70, 175);
@@ -959,6 +962,8 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
         routerNode1.setPosition(215, 262);
         componentNode1.setPosition(365, 155);
         componentNode2.setPosition(365, 400);
+
+        AddRouterConditions.addConditionRoutePairs(routerNode1, "1 != 2", componentNode1, "otherwise", componentNode2);
 
         mockNodeHeight(root, 70, 40);
         mockNodeHeight(routerNode1, 70, 25);
@@ -999,6 +1004,8 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
         routerNode1.setPosition(215, 262);
         componentNode1.setPosition(365, 155);
         componentNode2.setPosition(365, 400);
+
+        AddRouterConditions.addConditionRoutePairs(routerNode1, "1 != 2", componentNode1, "otherwise", componentNode2);
 
         mockNodeHeight(root, 70, 40);
         mockNodeHeight(routerNode1, 70, 25);

@@ -3,6 +3,7 @@ package com.reedelk.plugin.graph.action.add.strategy;
 import com.reedelk.plugin.AbstractGraphTest;
 import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.graph.FlowGraph;
+import com.reedelk.plugin.testutils.AddRouterConditions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -30,8 +31,10 @@ class PrecedingScopedNodeTest extends AbstractGraphTest {
             routerNode1.setPosition(195, 75);
             componentNode1.setPosition(335, 75);
 
+            AddRouterConditions.addConditionRoutePairs(routerNode1, "1 != 2", componentNode1, "otherwise", componentNode1);
+
             PrecedingScopedNode strategy =
-                    new PrecedingScopedNode(graph, componentNode2DropPoint, routerNode1, graphics);
+                    new PrecedingScopedNode(graph, componentNode2DropPoint, routerNode1, graphics, placeholderProvider);
 
             // When
             strategy.execute(componentNode2);
@@ -66,8 +69,10 @@ class PrecedingScopedNodeTest extends AbstractGraphTest {
             componentNode1.setPosition(335, 75);
             componentNode2.setPosition(450, 75);
 
+            AddRouterConditions.addConditionRoutePairs(routerNode1, "otherwise", componentNode1);
+
             PrecedingScopedNode strategy =
-                    new PrecedingScopedNode(graph, componentNode3DropPoint, routerNode1, graphics);
+                    new PrecedingScopedNode(graph, componentNode3DropPoint, routerNode1, graphics, placeholderProvider);
 
             // When
             strategy.execute(componentNode3);
@@ -101,8 +106,10 @@ class PrecedingScopedNodeTest extends AbstractGraphTest {
             routerNode1.setPosition(215, 155);
             componentNode1.setPosition(365, 155);
 
+            AddRouterConditions.addConditionRoutePairs(routerNode1, "otherwise", componentNode1);
+
             PrecedingScopedNode strategy =
-                    new PrecedingScopedNode(graph, componentNode2DropPoint, routerNode1, graphics);
+                    new PrecedingScopedNode(graph, componentNode2DropPoint, routerNode1, graphics, placeholderProvider);
 
             // When
             strategy.execute(componentNode2);
@@ -139,7 +146,7 @@ class PrecedingScopedNodeTest extends AbstractGraphTest {
 
             // When
             PrecedingScopedNode strategy =
-                    new PrecedingScopedNode(graph, componentNode3DropPoint, forkNode1, graphics);
+                    new PrecedingScopedNode(graph, componentNode3DropPoint, forkNode1, graphics, placeholderProvider);
 
             // Then
             strategy.execute(componentNode3);
@@ -181,7 +188,7 @@ class PrecedingScopedNodeTest extends AbstractGraphTest {
             componentNode3.setPosition(390, 145);
 
             PrecedingScopedNode strategy =
-                    new PrecedingScopedNode(graph, componentNode4DropPoint, forkNode1, graphics);
+                    new PrecedingScopedNode(graph, componentNode4DropPoint, forkNode1, graphics, placeholderProvider);
 
             // Then
             strategy.execute(componentNode4);
