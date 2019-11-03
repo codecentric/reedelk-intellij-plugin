@@ -2,18 +2,11 @@ package com.reedelk.plugin.graph.action.remove.strategy;
 
 import com.reedelk.plugin.AbstractGraphTest;
 import com.reedelk.plugin.assertion.PluginAssertion;
-import com.reedelk.plugin.component.type.placeholder.PlaceholderNode;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.action.Strategy;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-
-import java.util.Optional;
 
 class SubflowRemoveRootStrategyTest extends AbstractGraphTest {
-
-    @Mock
-    private PlaceholderNode mockPlaceholder;
 
     @Test
     void shouldRemoveRootAndSetSuccessorAsNewRoot() {
@@ -87,12 +80,5 @@ class SubflowRemoveRootStrategyTest extends AbstractGraphTest {
         PluginAssertion.assertThat(graph)
                 .root().is(componentNode3)
                 .and().successorsOf(componentNode3).isEmpty();
-    }
-
-    private class TestPlaceholderProvider implements PlaceholderProvider {
-        @Override
-        public Optional<PlaceholderNode> get() {
-            return Optional.of(mockPlaceholder);
-        }
     }
 }

@@ -86,4 +86,38 @@ class FlowActionNodeRemoveTest extends AbstractGraphTest {
                 .node(routerNode1).scopeContainsExactly(placeholderNode1).and()
                 .successorsOf(placeholderNode1).isEmpty();
     }
+
+    @Test
+    void shouldRemoveForkNestedIntoTryCatchAsFirstChildAndAddPlaceholder() {
+        // Given
+        FlowGraph graph = provider.createGraph();
+        graph.root(root);
+        graph.add(root, tryCatchNode1);
+        graph.add(tryCatchNode1, forkNode1);
+        graph.add(tryCatchNode1, componentNode1);
+        graph.add(forkNode1, componentNode2);
+        graph.add(componentNode1, componentNode3);
+        graph.add(componentNode2, componentNode3);
+
+        tryCatchNode1.addToScope(forkNode1);
+        tryCatchNode1.addToScope(componentNode1);
+        forkNode1.addToScope(componentNode2);
+
+        FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
+
+        // When
+        FlowActionNodeRemove action = new FlowActionNodeRemove(forkNode1, placeholderProvider);
+        action.execute(modifiableGraph);
+
+        // Then
+        PluginAssertion.assertThat(modifiableGraph)
+                .isChanged()
+                .nodesCountIs(5)
+                .root().is(root).and()
+                .successorsOf(root).isOnly(tryCatchNode1).and()
+                .successorsOf(tryCatchNode1).areExactly(placeholderNode1, componentNode1).and()
+                .node(tryCatchNode1).scopeContainsExactly(placeholderNode1, componentNode1).and()
+                .successorsOf(placeholderNode1).isOnly(componentNode3).and()
+                .successorsOf(componentNode1).isOnly(componentNode3);
+    }
 }
