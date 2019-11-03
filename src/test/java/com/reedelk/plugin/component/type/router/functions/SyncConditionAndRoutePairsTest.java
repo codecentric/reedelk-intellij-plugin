@@ -114,7 +114,7 @@ class SyncConditionAndRoutePairsTest extends AbstractGraphTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenRouterConditionPairsIsEmpty() {
+    void shouldSetDefaultOtherwiseConditionWhenOnlyOneSuccessor() {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
@@ -123,10 +123,12 @@ class SyncConditionAndRoutePairsTest extends AbstractGraphTest {
 
         List<RouterConditionRoutePair> current = new ArrayList<>();
 
+        List<RouterConditionRoutePair> updatedPairs =
+                SyncConditionAndRoutePairs.getUpdatedPairs(graph, routerNode1, current);
+
         // When
-        assertThrows(IllegalStateException.class,
-                () -> SyncConditionAndRoutePairs.getUpdatedPairs(graph, routerNode1, current),
-                "Expected numbers of condition pairs >= 1 but 0 were found");
+        assertThat(updatedPairs).hasSize(1);
+        assertThatExistsPairWith(updatedPairs, "otherwise", componentNode1);
     }
 
     @Test

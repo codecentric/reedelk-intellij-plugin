@@ -20,8 +20,6 @@ public class SyncConditionAndRoutePairs {
     }
 
     public static List<RouterConditionRoutePair> getUpdatedPairs(FlowGraph graph, RouterNode routerNode, List<RouterConditionRoutePair> oldConditions) {
-        checkState(!oldConditions.isEmpty(), format("Expected numbers of condition pairs >= 1 but %d were found", oldConditions.size()));
-
         List<GraphNode> successors = graph.successors(routerNode);
         checkState(!successors.isEmpty(), format("Expected at least one successor for router node but %d were found", successors.size()));
 
@@ -29,6 +27,12 @@ public class SyncConditionAndRoutePairs {
 
         // Compute new router condition/s
         List<RouterConditionRoutePair> updatedConditions = new LinkedList<>();
+
+        if (numberOfSuccessors == 1) {
+            // If we only have 1 successor, then it must be Default condition.
+            updatedConditions.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION.value(), successors.get(0)));
+            return updatedConditions;
+        }
 
         Collection<GraphNode> alreadyUsedNodes = new HashSet<>();
 

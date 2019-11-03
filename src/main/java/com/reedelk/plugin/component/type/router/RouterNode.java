@@ -15,7 +15,6 @@ import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
-import com.reedelk.runtime.component.Router;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
@@ -107,16 +106,14 @@ public class RouterNode extends AbstractScopedGraphNode {
      */
     @Override
     public void onAdded(FlowGraph graph, PlaceholderProvider placeholderProvider) {
-        List<RouterConditionRoutePair> routerConditionRoutePairs = ListConditionRoutePairs.of(componentData());
-
         // If the scope is empty, the router node always  has  a placeholder
         // because a router node must have at least one component in it. The index is therefore always 0.
         if (getScope().isEmpty()) {
             AddPlaceholder.to(placeholderProvider, graph, this, 0)
-                    .ifPresent(addedPlaceholder -> routerConditionRoutePairs.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION.value(), addedPlaceholder)));
+                    .ifPresent(addedPlaceholder -> updateConditionRoutePairs(graph));
+        } else {
+            updateConditionRoutePairs(graph);
         }
-
-        updateConditionRoutePairs(graph);
     }
 
     @Override

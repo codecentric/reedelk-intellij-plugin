@@ -73,6 +73,10 @@ public class PrecedingNodeWithOneSuccessor implements Strategy {
             graph.add(closestPrecedingNode, node);
             graph.add(node, successorOfClosestPrecedingNode);
             graph.remove(closestPrecedingNode, successorOfClosestPrecedingNode);
+
+            if (node instanceof ScopedGraphNode) {
+                node.onAdded(graph, placeholderProvider);
+            }
             return;
         }
 
