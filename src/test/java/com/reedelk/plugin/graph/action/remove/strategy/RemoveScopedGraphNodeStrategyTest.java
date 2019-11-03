@@ -17,7 +17,7 @@ class RemoveScopedGraphNodeStrategyTest extends AbstractGraphTest {
         super.setUp();
         this.graph = provider.createGraph();
         this.graph.root(root);
-        this.strategy = new RemoveScopedGraphNodeStrategy(graph);
+        this.strategy = new RemoveScopedGraphNodeStrategy(graph, placeholderProvider);
     }
 
     @Test

@@ -90,6 +90,8 @@ public class RemoveGraphNodeStrategy implements Strategy {
 
         graph.remove(toRemove);
 
+        // TODO: This is  wrong: if I remove a fork node, first successor of a Try/Catch
+        // this is a problem.
         predecessor.onSuccessorRemoved(graph, toRemove, index, placeholderProvider);
     }
 }

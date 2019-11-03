@@ -19,7 +19,7 @@ class FlowActionNodeReplaceTest extends AbstractGraphTest {
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
 
         // When
-        FlowActionNodeReplace action = new FlowActionNodeReplace(componentNode1, placeholderNode);
+        FlowActionNodeReplace action = new FlowActionNodeReplace(componentNode1, placeholderNode1);
         action.execute(modifiableGraph);
 
         // Then
@@ -27,8 +27,8 @@ class FlowActionNodeReplaceTest extends AbstractGraphTest {
                 .isChanged()
                 .nodesCountIs(3)
                 .root().is(root).and()
-                .successorsOf(root).isOnly(placeholderNode).and()
-                .successorsOf(placeholderNode).isOnly(componentNode2).and()
+                .successorsOf(root).isOnly(placeholderNode1).and()
+                .successorsOf(placeholderNode1).isOnly(componentNode2).and()
                 .successorsOf(componentNode2).isEmpty();
     }
 
@@ -42,15 +42,15 @@ class FlowActionNodeReplaceTest extends AbstractGraphTest {
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
 
         // When
-        FlowActionNodeReplace action = new FlowActionNodeReplace(root, placeholderNode);
+        FlowActionNodeReplace action = new FlowActionNodeReplace(root, placeholderNode1);
         action.execute(modifiableGraph);
 
         // Then
         PluginAssertion.assertThat(modifiableGraph)
                 .isChanged()
                 .nodesCountIs(2)
-                .root().is(placeholderNode).and()
-                .successorsOf(placeholderNode).isOnly(componentNode1).and()
+                .root().is(placeholderNode1).and()
+                .successorsOf(placeholderNode1).isOnly(componentNode1).and()
                 .successorsOf(componentNode1).isEmpty();
     }
 
@@ -66,7 +66,7 @@ class FlowActionNodeReplaceTest extends AbstractGraphTest {
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
 
         // When
-        FlowActionNodeReplace action = new FlowActionNodeReplace(componentNode1, placeholderNode);
+        FlowActionNodeReplace action = new FlowActionNodeReplace(componentNode1, placeholderNode1);
 
         action.execute(modifiableGraph);
 
@@ -75,7 +75,7 @@ class FlowActionNodeReplaceTest extends AbstractGraphTest {
                 .isChanged()
                 .nodesCountIs(4)
                 .root().is(root).and()
-                .successorsOf(forkNode1).isAtIndex(placeholderNode, 0).and()
+                .successorsOf(forkNode1).isAtIndex(placeholderNode1, 0).and()
                 .successorsOf(forkNode1).isAtIndex(componentNode2, 1);
     }
 }

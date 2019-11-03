@@ -45,7 +45,7 @@ public class FlowActionNodeRemove implements Action {
 
         } else if (toRemove instanceof ScopedGraphNode) {
             // Handle ScopedGraphNode
-            strategy = new RemoveScopedGraphNodeStrategy(graph);
+            strategy = new RemoveScopedGraphNodeStrategy(graph, placeholderProvider);
 
         } else {
             // This is a node with at most one successor, otherwise it

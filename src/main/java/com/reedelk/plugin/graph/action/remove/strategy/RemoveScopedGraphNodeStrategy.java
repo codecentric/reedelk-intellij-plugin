@@ -17,10 +17,12 @@ import static com.reedelk.runtime.commons.Preconditions.checkState;
 public class RemoveScopedGraphNodeStrategy implements com.reedelk.plugin.graph.action.Strategy {
 
     private final PlaceholderProvider absentPlaceholderProvider = Optional::empty;
+    private final PlaceholderProvider placeholderProvider;
     private final FlowGraph graph;
 
-    public RemoveScopedGraphNodeStrategy(@NotNull FlowGraph graph) {
+    public RemoveScopedGraphNodeStrategy(@NotNull FlowGraph graph, PlaceholderProvider placeholderProvider) {
         this.graph = graph;
+        this.placeholderProvider = placeholderProvider;
     }
 
     @Override
@@ -38,7 +40,13 @@ public class RemoveScopedGraphNodeStrategy implements com.reedelk.plugin.graph.a
                 "Before removing a scoped node remove all the nodes belonging to its own (and nested) scope/s");
 
         // Then we just remove it as a normal node.
-        Strategy strategy = new RemoveGraphNodeStrategy(graph, absentPlaceholderProvider);
+        // We must use in this case the original placeholder provider so that the notified
+        // predecessors of the node being removed are provided with the correct original placeholder
+        // provider. This for instance is needed when we remove a ScopedGraphNode which is the first
+        // successor of another ScopedGraphNode. When we remove the nested ScopedGraphNode and we
+        // notify the parent ScopedGraphNode we must use the original placeholder provider since
+        // the parent is not being removed.
+        Strategy strategy = new RemoveGraphNodeStrategy(graph, placeholderProvider);
         strategy.execute(scopeToRemove);
     }
 

@@ -20,7 +20,7 @@ class RemoveGraphNodeStrategyTest extends AbstractGraphTest {
         super.setUp();
         this.graph = provider.createGraph();
         this.graph.root(root);
-        this.strategy = new RemoveGraphNodeStrategy(graph, () -> Optional.of(placeholderNode));
+        this.strategy = new RemoveGraphNodeStrategy(graph, () -> Optional.of(placeholderNode1));
     }
 
     @Test
@@ -161,13 +161,13 @@ class RemoveGraphNodeStrategyTest extends AbstractGraphTest {
     void shouldRemoveNodeWithScopedNodePredecessorWhenOutsideScopeAndSuccessor() {
         // Given
         graph.add(root, routerNode1);
-        graph.add(routerNode1, placeholderNode);
-        graph.add(placeholderNode, componentNode1);
+        graph.add(routerNode1, placeholderNode1);
+        graph.add(placeholderNode1, componentNode1);
         graph.add(componentNode1, componentNode2);
 
-        routerNode1.addToScope(placeholderNode);
+        routerNode1.addToScope(placeholderNode1);
 
-        AddRouterConditions.addConditionRoutePairs(routerNode1, "otherwise", placeholderNode);
+        AddRouterConditions.addConditionRoutePairs(routerNode1, "otherwise", placeholderNode1);
 
         // When
         strategy.execute(componentNode1);
@@ -177,8 +177,8 @@ class RemoveGraphNodeStrategyTest extends AbstractGraphTest {
                 .nodesCountIs(4)
                 .root().is(root)
                 .and().successorsOf(root).isOnly(routerNode1)
-                .and().node(routerNode1).scopeContainsExactly(placeholderNode)
-                .and().successorsOf(placeholderNode).isOnly(componentNode2)
+                .and().node(routerNode1).scopeContainsExactly(placeholderNode1)
+                .and().successorsOf(placeholderNode1).isOnly(componentNode2)
                 .and().successorsOf(componentNode2).isEmpty();
     }
 
@@ -186,12 +186,12 @@ class RemoveGraphNodeStrategyTest extends AbstractGraphTest {
     void shouldRemoveNodeWithScopedNodePredecessorWhenOutsideScopeAndNoSuccessor() {
         // Given
         graph.add(root, routerNode1);
-        graph.add(routerNode1, placeholderNode);
-        graph.add(placeholderNode, componentNode1);
+        graph.add(routerNode1, placeholderNode1);
+        graph.add(placeholderNode1, componentNode1);
 
-        routerNode1.addToScope(placeholderNode);
+        routerNode1.addToScope(placeholderNode1);
 
-        AddRouterConditions.addConditionRoutePairs(routerNode1, "otherwise", placeholderNode);
+        AddRouterConditions.addConditionRoutePairs(routerNode1, "otherwise", placeholderNode1);
 
         // When
         strategy.execute(componentNode1);
@@ -201,8 +201,8 @@ class RemoveGraphNodeStrategyTest extends AbstractGraphTest {
                 .nodesCountIs(3)
                 .root().is(root)
                 .and().successorsOf(root).isOnly(routerNode1)
-                .and().node(routerNode1).scopeContainsExactly(placeholderNode)
-                .and().successorsOf(placeholderNode).isEmpty();
+                .and().node(routerNode1).scopeContainsExactly(placeholderNode1)
+                .and().successorsOf(placeholderNode1).isEmpty();
     }
 
     @Test

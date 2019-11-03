@@ -13,10 +13,12 @@ import static com.reedelk.runtime.commons.Preconditions.checkState;
 
 public class SubflowRemoveRootStrategy implements Strategy {
 
+    private final PlaceholderProvider placeholderProvider;
     private final FlowGraph graph;
 
-    public SubflowRemoveRootStrategy(@NotNull FlowGraph graph) {
+    public SubflowRemoveRootStrategy(@NotNull FlowGraph graph, @NotNull PlaceholderProvider placeholderProvider) {
         this.graph = graph;
+        this.placeholderProvider = placeholderProvider;
     }
 
     @Override
@@ -37,7 +39,7 @@ public class SubflowRemoveRootStrategy implements Strategy {
 
         if (root instanceof ScopedGraphNode) {
             RemoveScopedGraphNodeStrategy removeScopedGraphNodeStrategy =
-                    new RemoveScopedGraphNodeStrategy(graph);
+                    new RemoveScopedGraphNodeStrategy(graph, placeholderProvider);
             removeScopedGraphNodeStrategy.execute(root);
         } else {
             graph.remove(root);

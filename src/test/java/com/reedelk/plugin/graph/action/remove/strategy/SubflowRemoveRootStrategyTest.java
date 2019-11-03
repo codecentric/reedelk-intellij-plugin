@@ -23,7 +23,7 @@ class SubflowRemoveRootStrategyTest extends AbstractGraphTest {
         graph.add(root, componentNode1);
 
         // When
-        Strategy strategy = new SubflowRemoveRootStrategy(graph);
+        Strategy strategy = new SubflowRemoveRootStrategy(graph, placeholderProvider);
         strategy.execute(root);
 
         // Then
@@ -40,7 +40,7 @@ class SubflowRemoveRootStrategyTest extends AbstractGraphTest {
         graph.root(root);
 
         // When
-        Strategy strategy = new SubflowRemoveRootStrategy(graph);
+        Strategy strategy = new SubflowRemoveRootStrategy(graph, placeholderProvider);
         strategy.execute(root);
 
         // Then
@@ -59,7 +59,7 @@ class SubflowRemoveRootStrategyTest extends AbstractGraphTest {
         forkNode1.addToScope(componentNode2);
 
         // When
-        Strategy strategy = new SubflowRemoveRootStrategy(graph);
+        Strategy strategy = new SubflowRemoveRootStrategy(graph, placeholderProvider);
         strategy.execute(forkNode1);
 
         // Then
@@ -80,7 +80,7 @@ class SubflowRemoveRootStrategyTest extends AbstractGraphTest {
         forkNode1.addToScope(componentNode2);
 
         // When
-        Strategy strategy = new SubflowRemoveRootStrategy(graph);
+        Strategy strategy = new SubflowRemoveRootStrategy(graph, placeholderProvider);
         strategy.execute(forkNode1);
 
         // Then

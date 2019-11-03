@@ -2,28 +2,11 @@ package com.reedelk.plugin.graph.action.remove;
 
 import com.reedelk.plugin.AbstractGraphTest;
 import com.reedelk.plugin.assertion.PluginAssertion;
-import com.reedelk.plugin.component.type.placeholder.PlaceholderNode;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowGraphChangeAware;
-import com.reedelk.plugin.graph.action.remove.strategy.PlaceholderProvider;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-
-import java.util.Optional;
 
 class FlowActionNodeRemoveTest extends AbstractGraphTest {
-
-    @Mock
-    private PlaceholderNode mockPlaceholder;
-
-    private TestPlaceholderProvider testPlaceholderProvider;
-
-    @BeforeEach
-    protected void setUp() {
-        super.setUp();
-        this.testPlaceholderProvider = new TestPlaceholderProvider();
-    }
 
     @Test
     void shouldRemoveNodeFromScope() {
@@ -38,7 +21,7 @@ class FlowActionNodeRemoveTest extends AbstractGraphTest {
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
 
         // When
-        FlowActionNodeRemove action = new FlowActionNodeRemove(componentNode1, testPlaceholderProvider);
+        FlowActionNodeRemove action = new FlowActionNodeRemove(componentNode1, placeholderProvider);
         action.execute(modifiableGraph);
 
         // Then
@@ -64,7 +47,7 @@ class FlowActionNodeRemoveTest extends AbstractGraphTest {
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
 
         // When
-        FlowActionNodeRemove action = new FlowActionNodeRemove(forkNode2, testPlaceholderProvider);
+        FlowActionNodeRemove action = new FlowActionNodeRemove(forkNode2, placeholderProvider);
         action.execute(modifiableGraph);
 
         // Then
@@ -77,10 +60,30 @@ class FlowActionNodeRemoveTest extends AbstractGraphTest {
                 .node(forkNode1).scopeIsEmpty();
     }
 
-    class TestPlaceholderProvider implements PlaceholderProvider {
-        @Override
-        public Optional<PlaceholderNode> get() {
-            return Optional.of(mockPlaceholder);
-        }
+    @Test
+    void shouldRemoveOnlySuccessorOfRouterAndAddPlaceholder() {
+        // Given
+        FlowGraph graph = provider.createGraph();
+        graph.root(root);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, componentNode1);
+
+        routerNode1.addToScope(componentNode1);
+
+        FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(graph);
+
+        // When
+        FlowActionNodeRemove action = new FlowActionNodeRemove(componentNode1, placeholderProvider);
+        action.execute(modifiableGraph);
+
+        // Then
+        PluginAssertion.assertThat(modifiableGraph)
+                .isChanged()
+                .nodesCountIs(3)
+                .root().is(root).and()
+                .successorsOf(root).isOnly(routerNode1).and()
+                .successorsOf(routerNode1).isOnly(placeholderNode1).and()
+                .node(routerNode1).scopeContainsExactly(placeholderNode1).and()
+                .successorsOf(placeholderNode1).isEmpty();
     }
 }
