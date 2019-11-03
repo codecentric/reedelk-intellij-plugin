@@ -1052,11 +1052,13 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
                 .nodesCountIs(3)
                 .root().is(root)
                 .and().successorsOf(root).isOnly(routerNode1)
-                .and().successorsOf(routerNode1).isAtIndex(placeholderNode, 0)
-                .and().successorsOf(placeholderNode).isEmpty()
-                .and().node(routerNode1).hasDataWithValue("conditionRoutePairs",
-                ComponentDataValueMatchers.ofRouterConditionPairs(
-                        singletonList(new RouterConditionRoutePair("otherwise", placeholderNode))));
+                .and().successorsOf(routerNode1).isAtIndex(placeholderNode1, 0)
+                .and().successorsOf(placeholderNode1).isEmpty()
+                .and().node(routerNode1)
+                .scopeContainsExactly(placeholderNode1)
+                .hasDataWithValue("conditionRoutePairs",
+                        ComponentDataValueMatchers.ofRouterConditionPairs(
+                                singletonList(new RouterConditionRoutePair("otherwise", placeholderNode1))));
     }
 
     @Test
@@ -1080,11 +1082,67 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
                 .nodesCountIs(4)
                 .root().is(root)
                 .and().successorsOf(root).isOnly(routerNode1)
-                .and().successorsOf(routerNode1).isAtIndex(placeholderNode, 0)
-                .and().successorsOf(placeholderNode).isOnly(componentNode1)
+                .and().successorsOf(routerNode1).isAtIndex(placeholderNode1, 0)
+                .and().successorsOf(placeholderNode1).isOnly(componentNode1)
                 .and().successorsOf(componentNode1).isEmpty()
-                .and().node(routerNode1).hasDataWithValue("conditionRoutePairs",
-                ComponentDataValueMatchers.ofRouterConditionPairs(
-                        singletonList(new RouterConditionRoutePair("otherwise", placeholderNode))));
+                .and().node(routerNode1)
+                .scopeContainsExactly(placeholderNode1)
+                .hasDataWithValue("conditionRoutePairs",
+                        ComponentDataValueMatchers.ofRouterConditionPairs(
+                                singletonList(new RouterConditionRoutePair("otherwise", placeholderNode1))));
+    }
+
+    @Test
+    void shouldCorrectlyAddTryCatchNodeToNodeWithoutSuccessors() {
+        // Given
+        FlowGraph graph = provider.createGraph();
+        graph.root(root);
+
+        root.setPosition(65, 150);
+
+        Point dropPoint = new Point(192, 128);
+
+        // When
+        FlowGraphChangeAware modifiableGraph = addNodeToGraph(graph, tryCatchNode1, dropPoint);
+
+        // Then: we expect 2 placeholders of the try-catch node to be added.
+        PluginAssertion.assertThat(modifiableGraph)
+                .isChanged()
+                .nodesCountIs(4)
+                .root().is(root)
+                .and().successorsOf(root).isOnly(tryCatchNode1)
+                .and().successorsOf(tryCatchNode1).isAtIndex(placeholderNode1, 0)
+                .and().successorsOf(tryCatchNode1).isAtIndex(placeholderNode2, 1)
+                .and().successorsOf(placeholderNode1).isEmpty()
+                .and().successorsOf(placeholderNode2).isEmpty()
+                .and().node(tryCatchNode1).scopeContainsExactly(placeholderNode1, placeholderNode2);
+    }
+
+    @Test
+    void shouldCorrectlyAddTryCatchNodeToNodeWithOneSuccessor() {
+        // Given
+        FlowGraph graph = provider.createGraph();
+        graph.root(root);
+        graph.add(root, componentNode1);
+
+        root.setPosition(65, 150);
+        componentNode1.setPosition(195, 150);
+
+        Point dropPoint = new Point(145, 127);
+
+        // When
+        FlowGraphChangeAware modifiableGraph = addNodeToGraph(graph, tryCatchNode1, dropPoint);
+
+        // Then: we expect 2 placeholders of the try-catch node to be added.
+        PluginAssertion.assertThat(modifiableGraph)
+                .isChanged()
+                .nodesCountIs(5)
+                .root().is(root)
+                .and().successorsOf(root).isOnly(tryCatchNode1)
+                .and().successorsOf(tryCatchNode1).isAtIndex(placeholderNode1, 0)
+                .and().successorsOf(tryCatchNode1).isAtIndex(placeholderNode2, 1)
+                .and().successorsOf(placeholderNode1).isOnly(componentNode1)
+                .and().successorsOf(placeholderNode2).isOnly(componentNode1)
+                .and().node(tryCatchNode1).scopeContainsExactly(placeholderNode1, placeholderNode2);
     }
 }

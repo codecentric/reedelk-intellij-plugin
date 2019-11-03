@@ -48,5 +48,4 @@ public class FlowGraphAssertion {
         assertThat(graph.nodes()).contains(node);
         return this;
     }
-
 }

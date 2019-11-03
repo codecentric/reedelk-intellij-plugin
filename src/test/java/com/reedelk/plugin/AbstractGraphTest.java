@@ -43,6 +43,8 @@ public abstract class AbstractGraphTest {
     protected Graphics2D graphics;
     @Mock
     protected FontMetrics fontMetrics;
+    @Mock
+    protected PlaceholderProvider placeholderProvider;
 
     protected GraphNode root;
     protected GraphNode componentNode1;
@@ -82,11 +84,10 @@ public abstract class AbstractGraphTest {
     protected FlowReferenceNode flowReferenceNode2;
 
     // Placeholder
-    protected PlaceholderNode placeholderNode;
+    protected PlaceholderNode placeholderNode1;
+    protected PlaceholderNode placeholderNode2;
 
     protected TestAwareGraphProvider provider;
-
-    protected PlaceholderProvider placeholderProvider;
 
 
     @BeforeEach
@@ -126,9 +127,10 @@ public abstract class AbstractGraphTest {
         flowReferenceNode1 = createGraphNodeInstance(FlowReference.class, FlowReferenceNode.class);
         flowReferenceNode2 = createGraphNodeInstance(FlowReference.class, FlowReferenceNode.class);
 
-        placeholderNode = createGraphNodeInstance(Placeholder.class, PlaceholderNode.class);
+        placeholderNode1 = createGraphNodeInstance(Placeholder.class, PlaceholderNode.class);
+        placeholderNode2 = createGraphNodeInstance(Placeholder.class, PlaceholderNode.class);
 
-        placeholderProvider = () -> Optional.of(placeholderNode);
+        lenient().doReturn(Optional.of(placeholderNode1), Optional.of(placeholderNode2)).when(placeholderProvider).get();
 
         Rectangle2D sampleTextBounds = new Rectangle(0, 0, 40, 6);
         lenient().doReturn(fontMetrics).when(graphics).getFontMetrics();
