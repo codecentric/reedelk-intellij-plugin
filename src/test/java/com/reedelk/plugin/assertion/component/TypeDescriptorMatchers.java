@@ -11,7 +11,7 @@ import java.util.Objects;
 public class TypeDescriptorMatchers {
 
     public interface TypeDescriptorMatcher {
-        boolean matches(TypeDescriptor given);
+        boolean matches(TypeDescriptor actual);
     }
 
     public static TypeDescriptorMatcher ofPrimitiveType(TypePrimitiveDescriptor expected) {

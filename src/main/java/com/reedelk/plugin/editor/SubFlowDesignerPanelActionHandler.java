@@ -21,7 +21,7 @@ public class SubFlowDesignerPanelActionHandler extends AbstractDesignerPanelActi
 
     @Override
     protected Action getActionAdd(GraphNode nodeToAdd, Point dropPoint, Graphics2D graphics, ImageObserver observer) {
-        return new SubFlowActionNodeAdd(dropPoint, nodeToAdd, graphics, observer);
+        return new SubFlowActionNodeAdd(dropPoint, nodeToAdd, graphics, observer, placeholderProvider);
     }
 
     @Override

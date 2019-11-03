@@ -40,8 +40,8 @@ public class FlowActionNodeAdd implements Action {
     public void execute(FlowGraph graph) {
         Strategy strategy = FlowStrategyBuilder.create()
                 .placeholderProvider(placeholderProvider)
-                .observer(observer)
                 .dropPoint(dropPoint)
+                .observer(observer)
                 .graphics(graphics)
                 .graph(graph)
                 .build();

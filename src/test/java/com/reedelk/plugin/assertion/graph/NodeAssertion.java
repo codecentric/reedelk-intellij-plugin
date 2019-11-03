@@ -6,6 +6,7 @@ import com.reedelk.plugin.graph.node.GraphNode;
 
 import java.math.BigDecimal;
 
+import static com.reedelk.plugin.assertion.component.ComponentDataValueMatchers.ComponentDataValueMatcher;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class NodeAssertion {
@@ -32,6 +33,13 @@ public class NodeAssertion {
         } else {
             assertThat(actualValue).isEqualTo(propertyValue);
         }
+        return this;
+    }
+
+    public NodeAssertion hasDataWithValue(String propertyName, ComponentDataValueMatcher matcher) {
+        ComponentData component = this.node.componentData();
+        Object actualValue = component.get(propertyName);
+        assertThat(matcher.matches(actualValue)).isTrue();
         return this;
     }
 

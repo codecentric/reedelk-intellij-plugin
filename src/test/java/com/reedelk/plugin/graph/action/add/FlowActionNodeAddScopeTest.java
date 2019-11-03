@@ -1,6 +1,8 @@
 package com.reedelk.plugin.graph.action.add;
 
 import com.reedelk.plugin.assertion.PluginAssertion;
+import com.reedelk.plugin.assertion.component.ComponentDataValueMatchers;
+import com.reedelk.plugin.component.type.router.RouterConditionRoutePair;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowGraphChangeAware;
 import com.reedelk.plugin.graph.node.ScopeBoundaries;
@@ -9,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 
+import static java.util.Collections.singletonList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 
@@ -1028,5 +1031,60 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
                 .and().successorsOf(componentNode3).isOnly(componentNode1)
                 .and().successorsOf(componentNode2).isEmpty()
                 .and().successorsOf(componentNode1).isEmpty();
+    }
+
+    @Test
+    void shouldCorrectlyAddRouterNodeWithPlaceholderWhenRouterAddedToNodeWithoutSuccessor() {
+        // Given
+        FlowGraph graph = provider.createGraph();
+        graph.root(root);
+
+        root.setPosition(65, 150);
+
+        Point dropPoint = new Point(193, 120);
+
+        // When
+        FlowGraphChangeAware modifiableGraph = addNodeToGraph(graph, routerNode1, dropPoint);
+
+        // Then
+        PluginAssertion.assertThat(modifiableGraph)
+                .isChanged()
+                .nodesCountIs(3)
+                .root().is(root)
+                .and().successorsOf(root).isOnly(routerNode1)
+                .and().successorsOf(routerNode1).isAtIndex(placeholderNode, 0)
+                .and().successorsOf(placeholderNode).isEmpty()
+                .and().node(routerNode1).hasDataWithValue("conditionRoutePairs",
+                ComponentDataValueMatchers.ofRouterConditionPairs(
+                        singletonList(new RouterConditionRoutePair("otherwise", placeholderNode))));
+    }
+
+    @Test
+    void shouldCorrectlyAddRouterNodeWithPlaceholderWhenRouterAddedToNodeWithSuccessor() {
+        // Given
+        FlowGraph graph = provider.createGraph();
+        graph.root(root);
+        graph.add(root, componentNode1);
+
+        root.setPosition(65, 150);
+        componentNode1.setPosition(195, 150);
+
+        Point dropPoint = new Point(147, 126);
+
+        // When
+        FlowGraphChangeAware modifiableGraph = addNodeToGraph(graph, routerNode1, dropPoint);
+
+        // Then
+        PluginAssertion.assertThat(modifiableGraph)
+                .isChanged()
+                .nodesCountIs(4)
+                .root().is(root)
+                .and().successorsOf(root).isOnly(routerNode1)
+                .and().successorsOf(routerNode1).isAtIndex(placeholderNode, 0)
+                .and().successorsOf(placeholderNode).isOnly(componentNode1)
+                .and().successorsOf(componentNode1).isEmpty()
+                .and().node(routerNode1).hasDataWithValue("conditionRoutePairs",
+                ComponentDataValueMatchers.ofRouterConditionPairs(
+                        singletonList(new RouterConditionRoutePair("otherwise", placeholderNode))));
     }
 }
