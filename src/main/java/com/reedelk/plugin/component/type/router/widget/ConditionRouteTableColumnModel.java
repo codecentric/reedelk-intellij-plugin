@@ -9,6 +9,7 @@ import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 import com.reedelk.plugin.editor.properties.widget.input.script.ScriptContextManager;
 import com.reedelk.plugin.editor.properties.widget.input.script.editor.DynamicValueScriptEditor;
 import com.reedelk.plugin.graph.node.GraphNode;
+import com.reedelk.runtime.api.commons.StringUtils;
 
 import javax.swing.*;
 import javax.swing.event.CellEditorListener;
@@ -52,8 +53,12 @@ class ConditionRouteTableColumnModel extends DefaultTableColumnModel implements 
         @Override
         protected void setValue(Object value) {
             GraphNode node = (GraphNode) value;
+            StringBuilder routeDisplayName = new StringBuilder(node.componentData().getDisplayName());
             String description = node.componentData().get(Implementor.description());
-            setText(description);
+            if (StringUtils.isNotBlank(description)) {
+                routeDisplayName.append(" (").append(description).append(")");
+            }
+            setText(routeDisplayName.toString());
         }
     }
 

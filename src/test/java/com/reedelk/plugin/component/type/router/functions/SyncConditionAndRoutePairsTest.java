@@ -31,7 +31,7 @@ class SyncConditionAndRoutePairsTest extends AbstractGraphTest {
 
         // When
         List<RouterConditionRoutePair> updatedPairs =
-                SyncConditionAndRoutePairs.getUpdatedPairs(graph, routerNode1, current);
+                SyncConditionAndRoutePairs.from(graph, routerNode1, current);
 
         // Then
         assertThat(updatedPairs).hasSize(2);
@@ -55,7 +55,7 @@ class SyncConditionAndRoutePairsTest extends AbstractGraphTest {
 
         // When
         List<RouterConditionRoutePair> updatedPairs =
-                SyncConditionAndRoutePairs.getUpdatedPairs(graph, routerNode1, current);
+                SyncConditionAndRoutePairs.from(graph, routerNode1, current);
 
         // Then
         assertThat(updatedPairs).hasSize(3);
@@ -81,7 +81,7 @@ class SyncConditionAndRoutePairsTest extends AbstractGraphTest {
 
         // When
         List<RouterConditionRoutePair> updatedPairs =
-                SyncConditionAndRoutePairs.getUpdatedPairs(graph, routerNode1, current);
+                SyncConditionAndRoutePairs.from(graph, routerNode1, current);
 
         // Then
         assertThat(updatedPairs).hasSize(3);
@@ -105,7 +105,7 @@ class SyncConditionAndRoutePairsTest extends AbstractGraphTest {
 
         // When
         List<RouterConditionRoutePair> updatedPairs =
-                SyncConditionAndRoutePairs.getUpdatedPairs(graph, routerNode1, current);
+                SyncConditionAndRoutePairs.from(graph, routerNode1, current);
 
         // Then
         assertThat(updatedPairs).hasSize(2);
@@ -124,7 +124,7 @@ class SyncConditionAndRoutePairsTest extends AbstractGraphTest {
         List<RouterConditionRoutePair> current = new ArrayList<>();
 
         List<RouterConditionRoutePair> updatedPairs =
-                SyncConditionAndRoutePairs.getUpdatedPairs(graph, routerNode1, current);
+                SyncConditionAndRoutePairs.from(graph, routerNode1, current);
 
         // When
         assertThat(updatedPairs).hasSize(1);
@@ -143,7 +143,7 @@ class SyncConditionAndRoutePairsTest extends AbstractGraphTest {
 
         // When
         assertThrows(IllegalStateException.class,
-                () -> SyncConditionAndRoutePairs.getUpdatedPairs(graph, routerNode1, current),
+                () -> SyncConditionAndRoutePairs.from(graph, routerNode1, current),
                 "Expected at least one successor for router node but 0 were found");
 
     }

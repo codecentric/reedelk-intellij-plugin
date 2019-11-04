@@ -126,7 +126,7 @@ public class RouterNode extends AbstractScopedGraphNode {
 
     private void updateConditionRoutePairs(FlowGraph graph) {
         List<RouterConditionRoutePair> routerConditionRoutePairs = ListConditionRoutePairs.of(componentData());
-        List<RouterConditionRoutePair> updatedConditions = SyncConditionAndRoutePairs.getUpdatedPairs(graph, this, routerConditionRoutePairs);
+        List<RouterConditionRoutePair> updatedConditions = SyncConditionAndRoutePairs.from(graph, this, routerConditionRoutePairs);
         ComponentData component = componentData();
         component.set(DATA_CONDITION_ROUTE_PAIRS, updatedConditions);
     }
