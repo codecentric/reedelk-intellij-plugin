@@ -12,6 +12,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.concurrency.Semaphore;
 import com.reedelk.plugin.commons.Icons;
+import com.reedelk.plugin.commons.NotificationUtils;
 import com.reedelk.plugin.maven.MavenPackageGoal;
 import com.reedelk.plugin.runconfig.module.ModuleRunConfiguration;
 import com.reedelk.plugin.runconfig.module.runner.ModuleUnDeployExecutor;
@@ -21,6 +22,10 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.utils.MavenLog;
 
 import javax.swing.*;
+
+import static com.reedelk.plugin.commons.Messages.ModuleRunConfiguration.ERROR_MODULE_NOT_SELECTED;
+import static com.reedelk.plugin.commons.Messages.ModuleRunConfiguration.ERROR_RUNTIME_NOT_SELECTED;
+import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
 
 public class ModuleBuilderBeforeTaskProvider extends BeforeRunTaskProvider<ModuleBuilderBeforeTask> {
 
@@ -65,14 +70,11 @@ public class ModuleBuilderBeforeTaskProvider extends BeforeRunTaskProvider<Modul
         return runConfiguration instanceof ModuleRunConfiguration;
     }
 
-
     @Override
     public boolean executeTask(DataContext context, @NotNull RunConfiguration configuration, @NotNull ExecutionEnvironment env, @NotNull ModuleBuilderBeforeTask task) {
 
         if (!(configuration instanceof ModuleRunConfiguration)) return false;
 
-
-        // We should also skip this step if there are no files changed in the src directory
 
         // We skip this step if the executor is Un-Deploy
         if (ModuleUnDeployExecutor.EXECUTOR_ID.equals(env.getExecutor().getId())) {
@@ -81,6 +83,20 @@ public class ModuleBuilderBeforeTaskProvider extends BeforeRunTaskProvider<Modul
 
         ModuleRunConfiguration moduleRunConfiguration = (ModuleRunConfiguration) configuration;
 
+        // Notify error if the module is not selected (or not valid) in the current Runtime Configuration.
+        if (isBlank(moduleRunConfiguration.getModuleName())) {
+            String errorMessage = ERROR_MODULE_NOT_SELECTED.format(moduleRunConfiguration.getName());
+            Project project = env.getProject();
+            SwingUtilities.invokeLater(() -> NotificationUtils.notifyError(errorMessage, project));
+            return false;
+        }
+
+        if (isBlank(moduleRunConfiguration.getRuntimeConfigName())) {
+            String errorMessage = ERROR_RUNTIME_NOT_SELECTED.format(moduleRunConfiguration.getName());
+            Project project = env.getProject();
+            SwingUtilities.invokeLater(() -> NotificationUtils.notifyError(errorMessage, project));
+            return false;
+        }
 
         final Semaphore targetDone = new Semaphore();
         final boolean[] result = new boolean[]{true};

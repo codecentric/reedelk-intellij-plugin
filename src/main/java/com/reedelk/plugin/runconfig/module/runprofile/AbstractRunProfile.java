@@ -19,6 +19,8 @@ import org.jetbrains.idea.maven.project.MavenProject;
 import java.io.File;
 import java.util.Optional;
 
+import static com.reedelk.plugin.commons.Messages.ModuleRunConfiguration.ERROR_GENERIC_MODULE_NOT_SELECTED;
+import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
 import static java.lang.String.format;
 
 abstract class AbstractRunProfile implements RunProfileState {
@@ -39,6 +41,12 @@ abstract class AbstractRunProfile implements RunProfileState {
     @Nullable
     @Override
     public ExecutionResult execute(Executor executor, @NotNull ProgramRunner runner) throws ExecutionException {
+
+        if (isBlank(moduleName)) {
+            String actionName = executor.getActionName();
+            String errorMessage = ERROR_GENERIC_MODULE_NOT_SELECTED.format(actionName);
+            throw new ExecutionException(errorMessage);
+        }
 
         Optional<MavenProject> optionalMavenProject = MavenUtils.getMavenProject(project, moduleName);
         if (!optionalMavenProject.isPresent()) {
