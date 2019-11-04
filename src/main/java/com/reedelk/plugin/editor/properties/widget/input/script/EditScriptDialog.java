@@ -22,7 +22,7 @@ public class EditScriptDialog extends DialogWrapper {
         setTitle(Labels.DIALOG_TITLE_EDIT_SCRIPT);
         setResizable(true);
 
-        editor = new ScriptEditorDefault(module.getProject(), context);
+        editor = new ScriptEditorDefault(module.getProject(), context, true);
         editor.setValue(initialValue);
         editor.getComponent().setPreferredSize(DEFAULT_SCRIPT_DIMENSION);
 

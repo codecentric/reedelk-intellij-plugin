@@ -44,7 +44,8 @@ public class ScriptEditorDefault extends DisposablePanel implements ScriptEditor
 
     public ScriptEditorDefault(
             @NotNull Project project,
-            @NotNull ScriptContextManager contextManager) {
+            @NotNull ScriptContextManager contextManager,
+            boolean showContextVariablesPanel) {
 
         this.project = project;
         this.document = EditorFactory.getInstance().createDocument(StringUtils.EMPTY);
@@ -56,20 +57,26 @@ public class ScriptEditorDefault extends DisposablePanel implements ScriptEditor
         this.decorate = SuggestionDropDownDecorator.decorate(editor, document,
                 new EditorWordSuggestionClient(project, contextManager));
 
-        ScriptEditorContextPanel contextPanel =
-                new ScriptEditorContextPanel(contextManager.getVariables());
+
 
         JComponent editorComponent = editor.getComponent();
 
-        ThreeComponentsSplitter splitter = new ThreeComponentsSplitter(HORIZONTAL);
-        splitter.setFirstComponent(contextPanel);
-        splitter.setLastComponent(editorComponent);
-        splitter.setDividerWidth(Dimensions.DIVIDER_WIDTH);
-        splitter.setFirstSize(Dimensions.EDITOR_CONTEXT_VARIABLES_SIZE);
-        splitter.setDividerMouseZoneSize(Dimensions.DIVIDER_MOUSE_ZONE_WIDTH);
-
         setLayout(new BorderLayout());
-        add(splitter, CENTER);
+
+        if (showContextVariablesPanel) {
+            ScriptEditorContextPanel contextPanel = new ScriptEditorContextPanel(contextManager.getVariables());
+
+            ThreeComponentsSplitter splitter = new ThreeComponentsSplitter(HORIZONTAL);
+            splitter.setFirstComponent(contextPanel);
+            splitter.setLastComponent(editorComponent);
+            splitter.setDividerWidth(Dimensions.DIVIDER_WIDTH);
+            splitter.setFirstSize(Dimensions.EDITOR_CONTEXT_VARIABLES_SIZE);
+            splitter.setDividerMouseZoneSize(Dimensions.DIVIDER_MOUSE_ZONE_WIDTH);
+            add(splitter, CENTER);
+
+        } else {
+            add(editorComponent, CENTER);
+        }
     }
 
     @Override

@@ -33,7 +33,7 @@ public class ScriptInputField extends DisposablePanel implements Disposable {
                             @NotNull ScriptContextManager context) {
         this.module = module;
         this.context = context;
-        this.editor = new ScriptEditorDefault(module.getProject(), context);
+        this.editor = new ScriptEditorDefault(module.getProject(), context, false);
 
         JPanel openEditorBtn = new OpenEditorButton();
 
