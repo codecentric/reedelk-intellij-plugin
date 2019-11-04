@@ -16,7 +16,7 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
-public class ComponentAnalyzer {
+class ComponentAnalyzer {
 
     private final ComponentPropertyAnalyzer propertyAnalyzer;
     private final ComponentAnalyzerContext context;
@@ -26,7 +26,7 @@ public class ComponentAnalyzer {
         this.context = context;
     }
 
-    public ComponentDescriptor analyze(ClassInfo classInfo) {
+    ComponentDescriptor analyze(ClassInfo classInfo) {
         String displayName = getComponentDisplayName(classInfo);
         ComponentClass componentClass = getComponentClass(classInfo);
         List<ComponentPropertyDescriptor> propertiesDescriptor = analyzeProperties(classInfo);
