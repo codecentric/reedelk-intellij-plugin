@@ -37,7 +37,7 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
     private final Project project;
     private final DefaultMutableTreeNode root;
 
-    public PalettePanel(Project project) {
+    PalettePanel(Project project) {
         super(new BorderLayout());
 
         this.project = project;
@@ -150,6 +150,13 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
     private static final Predicate<ComponentDescriptor> ExcludeHiddenComponent =
             componentDescriptor -> !componentDescriptor.isHidden();
 
+    // A module might not have any component if for instance all its components are hidden.
+    // This is why in this method we filter all the component descriptors which are not hidden.
     private static final Predicate<ComponentsPackage> ExcludeModuleWithoutComponents =
-            componentsPackage -> !componentsPackage.getModuleComponents().isEmpty();
+            componentsPackage -> !componentsPackage.getModuleComponents()
+                    .stream()
+                    .filter(componentDescriptor -> !componentDescriptor.isHidden())
+                    .collect(toList())
+                    .isEmpty();
+
 }
