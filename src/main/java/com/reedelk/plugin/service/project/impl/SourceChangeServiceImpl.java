@@ -128,7 +128,8 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
 
     // Flows, Subflows and Flow config are hot-swappable. Everything else, not.
     private boolean isNotHotSwappableSource(VirtualFile file) {
-        return hasNotExtension(file, FileExtension.FLOW.value()) &&
+        return !file.isDirectory() &&
+                hasNotExtension(file, FileExtension.FLOW.value()) &&
                 hasNotExtension(file, FileExtension.SUBFLOW.value()) &&
                 hasNotExtension(file, FileExtension.FLOW_CONFIG.value());
     }
