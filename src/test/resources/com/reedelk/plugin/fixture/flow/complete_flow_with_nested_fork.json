@@ -6,13 +6,11 @@
     },
     {
       "implementor": "com.reedelk.runtime.component.Fork",
-      "threadPoolSize": 3,
       "fork": [
         {
           "next": [
             {
               "implementor": "com.reedelk.runtime.component.Fork",
-              "threadPoolSize": 3,
               "fork": [
                 {
                   "next": [
@@ -29,7 +27,6 @@
           "next": [
             {
               "implementor": "com.reedelk.runtime.component.Fork",
-              "threadPoolSize": 3,
               "fork": [
                 {
                   "next": [

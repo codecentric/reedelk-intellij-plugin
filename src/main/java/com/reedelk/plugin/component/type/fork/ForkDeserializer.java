@@ -1,6 +1,5 @@
 package com.reedelk.plugin.component.type.fork;
 
-import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.component.type.stop.StopNode;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.deserializer.AbstractNodeDeserializer;
@@ -29,14 +28,6 @@ public class ForkDeserializer extends AbstractNodeDeserializer {
         String name = Implementor.name(componentDefinition);
 
         ForkNode forkNode = context.instantiateGraphNode(name);
-
-        ComponentData componentData = forkNode.componentData();
-
-        // Set thread pool size
-        if (componentDefinition.has(Fork.threadPoolSize())) {
-            Integer threadPoolSize = Fork.threadPoolSize(componentDefinition);
-            componentData.set(Fork.threadPoolSize(), threadPoolSize);
-        }
 
         graph.add(parent, forkNode);
 

@@ -6,7 +6,6 @@
     },
     {
       "implementor": "com.reedelk.runtime.component.Fork",
-      "threadPoolSize": 3,
       "fork": [
       ]
     },

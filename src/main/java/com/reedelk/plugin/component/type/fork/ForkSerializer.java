@@ -26,10 +26,6 @@ public class ForkSerializer extends AbstractScopedNodeSerializer {
 
         Implementor.name(componentData.getFullyQualifiedName(), forkObject);
 
-        Integer threadPoolSize = componentData.get(Fork.threadPoolSize());
-
-        Fork.threadPoolSize(threadPoolSize, forkObject);
-
         List<GraphNode> successorsOfFork = graph.successors(forkNode);
 
         JSONArray forkArrayObject = new JSONArray();

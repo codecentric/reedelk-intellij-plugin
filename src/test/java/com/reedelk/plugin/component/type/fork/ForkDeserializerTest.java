@@ -36,8 +36,7 @@ class ForkDeserializerTest extends AbstractNodeDeserializerTest {
                 .and().successorsOf(componentNode1).isOnly(componentNode4)
                 .and().successorsOf(componentNode2).isOnly(stopNode1)
                 .and().successorsOf(componentNode4).isOnly(stopNode1)
-                .and().nodesCountIs(7)
-                .node(forkNode1).hasDataWithValue("threadPoolSize", 3);
+                .and().nodesCountIs(7);
     }
 
 }

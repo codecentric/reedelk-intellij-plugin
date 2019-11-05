@@ -43,8 +43,6 @@ public class ForkSerializerTest extends AbstractGraphTest {
         forkNode1.addToScope(componentNode3);
         forkNode1.addToScope(componentNode4);
 
-        forkNode1.componentData().set("threadPoolSize", 3);
-
         // When
         serializer.serialize(graph, sequence, forkNode1, componentNode5);
 

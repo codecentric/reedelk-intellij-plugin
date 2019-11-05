@@ -1,12 +1,10 @@
 package com.reedelk.plugin.graph.serializer;
 
 import com.reedelk.plugin.AbstractGraphTest;
-import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.component.type.router.RouterConditionRoutePair;
 import com.reedelk.plugin.component.type.router.RouterNode;
 import com.reedelk.plugin.fixture.Json;
 import com.reedelk.plugin.graph.FlowGraph;
-import com.reedelk.runtime.commons.JsonParser;
 import com.reedelk.runtime.component.Router;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -96,9 +94,6 @@ class FlowSerializerTest extends AbstractGraphTest {
         graph.root(root);
         graph.add(root, forkNode1);
         graph.add(forkNode1, componentNode1);
-
-        ComponentData componentData = forkNode1.componentData();
-        componentData.set(JsonParser.Fork.threadPoolSize(), 3);
 
         // When
         String actualJson = FlowSerializer.serialize(graph);
