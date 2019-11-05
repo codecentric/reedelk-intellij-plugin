@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ComputeLayerWidthSumPrecedingTest extends AbstractGraphTest {
 
-    public final int forkNodeWidth = 130;
+    private final int forkNodeWidth = 130;
 
     @Mock
     private Graphics2D graphics2D;
