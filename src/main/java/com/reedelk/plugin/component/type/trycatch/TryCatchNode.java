@@ -1,6 +1,7 @@
 package com.reedelk.plugin.component.type.trycatch;
 
 import com.reedelk.plugin.commons.AddPlaceholder;
+import com.reedelk.plugin.commons.Labels.Placeholder;
 import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.component.type.trycatch.widget.TryCatchVerticalDivider;
 import com.reedelk.plugin.component.type.trycatch.widget.TryCatchVerticalDividerArrows;
@@ -69,7 +70,7 @@ public class TryCatchNode extends AbstractScopedGraphNode {
             // If index == 0 we removed try
             // If index == 1 we removed catch
             // In both cases we must add a placeholder node.
-            String description = index == 0 ? "Try subflow" : "Catch subflow";
+            String description = index == 0 ? Placeholder.DESCRIPTION_TRY_CATCH_TRY : Placeholder.DESCRIPTION_TRY_CATCH_CATCH;
             AddPlaceholder.to(placeholderProvider, description, graph, this, index);
         }
     }
@@ -80,8 +81,8 @@ public class TryCatchNode extends AbstractScopedGraphNode {
     @Override
     public void onAdded(FlowGraph graph, PlaceholderProvider placeholderProvider) {
         if (getScope().isEmpty()) {
-            AddPlaceholder.to(placeholderProvider, "Try subflow", graph, this, 0);
-            AddPlaceholder.to(placeholderProvider, "Catch subflow", graph, this, 1);
+            AddPlaceholder.to(placeholderProvider, Placeholder.DESCRIPTION_TRY_CATCH_TRY, graph, this, 0);
+            AddPlaceholder.to(placeholderProvider, Placeholder.DESCRIPTION_TRY_CATCH_CATCH, graph, this, 1);
         }
     }
 

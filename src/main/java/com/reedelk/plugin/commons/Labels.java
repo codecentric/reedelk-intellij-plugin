@@ -28,6 +28,8 @@ public class Labels {
         }
 
         public static final String DESCRIPTION_ROUTER_OTHERWISE = "Otherwise subflow";
+        public static final String DESCRIPTION_TRY_CATCH_TRY = "Try subflow";
+        public static final String DESCRIPTION_TRY_CATCH_CATCH = "Catch subflow";
     }
 
     public static final String TOOL_WINDOW_FLOW_PROPERTIES_TITLE = "Flow Properties";
