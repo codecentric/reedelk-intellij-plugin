@@ -11,10 +11,10 @@ import java.awt.image.ImageObserver;
 
 public class ForkNode extends AbstractScopedGraphNode {
 
-    public static final int NODE_HEIGHT = 140;
-    public static final int NODE_WIDTH = 130;
+    private final int nodeHeight = 140;
+    private final int nodeWidth = 130;
+    private final int verticalDividerXOffset = 7;
 
-    private static final int VERTICAL_DIVIDER_X_OFFSET = 7;
     private final VerticalDivider verticalDivider;
     private final VerticalDividerArrows verticalDividerArrows;
 
@@ -22,7 +22,7 @@ public class ForkNode extends AbstractScopedGraphNode {
     public ForkNode(ComponentData componentData) {
         super(componentData);
         this.verticalDivider = new VerticalDivider(this);
-        this.verticalDividerArrows = new VerticalDividerArrows(VERTICAL_DIVIDER_X_OFFSET);
+        this.verticalDividerArrows = new VerticalDividerArrows(verticalDividerXOffset);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class ForkNode extends AbstractScopedGraphNode {
     @Override
     public void setPosition(int x, int y) {
         super.setPosition(x, y);
-        verticalDivider.setPosition(x - VERTICAL_DIVIDER_X_OFFSET, y);
+        verticalDivider.setPosition(x - verticalDividerXOffset, y);
     }
 
     @Override
@@ -45,12 +45,12 @@ public class ForkNode extends AbstractScopedGraphNode {
 
     @Override
     public int height(Graphics2D graphics) {
-        return NODE_HEIGHT;
+        return nodeHeight;
     }
 
     @Override
     public int width(Graphics2D graphics) {
-        return NODE_WIDTH;
+        return nodeWidth;
     }
 
 }

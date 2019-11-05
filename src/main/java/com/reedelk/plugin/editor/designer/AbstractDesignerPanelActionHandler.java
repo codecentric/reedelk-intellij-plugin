@@ -14,10 +14,10 @@ import com.reedelk.plugin.editor.designer.action.RemoveActionHandler;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.action.Action;
+import com.reedelk.plugin.graph.action.remove.strategy.DefaultPlaceholderProvider;
 import com.reedelk.plugin.graph.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.GraphNodeFactory;
-import com.reedelk.runtime.component.Placeholder;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -47,7 +47,7 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
 
     protected AbstractDesignerPanelActionHandler(@NotNull Module module,
                                                  @NotNull FlowSnapshot snapshot) {
-        this.placeholderProvider = () -> Optional.of(GraphNodeFactory.get(module, Placeholder.class.getName()));
+        this.placeholderProvider = new DefaultPlaceholderProvider(module);
         this.snapshot = snapshot;
         this.module = module;
     }

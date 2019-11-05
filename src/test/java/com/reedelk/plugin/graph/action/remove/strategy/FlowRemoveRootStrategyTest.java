@@ -55,5 +55,10 @@ class FlowRemoveRootStrategyTest extends AbstractGraphTest {
         public Optional<PlaceholderNode> get() {
             return Optional.of(mockPlaceholder);
         }
+
+        @Override
+        public Optional<PlaceholderNode> get(String description) {
+            return Optional.of(mockPlaceholder);
+        }
     }
 }

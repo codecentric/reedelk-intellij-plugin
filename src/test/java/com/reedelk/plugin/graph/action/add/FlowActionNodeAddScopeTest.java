@@ -1145,4 +1145,41 @@ class FlowActionNodeAddScopeTest extends BaseFlowActionNodeAddTest {
                 .and().successorsOf(placeholderNode2).isOnly(componentNode1)
                 .and().node(tryCatchNode1).scopeContainsExactly(placeholderNode1, placeholderNode2);
     }
+
+    @Test
+    void shouldCorrectlyAddTryCatchScopeRightAfterRouterScopeWithSuccessor() {
+        // Given
+        FlowGraph graph = provider.createGraph();
+        graph.root(root);
+        graph.add(root, routerNode1);
+        graph.add(routerNode1, componentNode1);
+        graph.add(componentNode1, componentNode2);
+
+        routerNode1.addToScope(componentNode1);
+
+        root.setPosition(65, 155);
+        routerNode1.setPosition(215, 155);
+        componentNode1.setPosition(365, 155);
+        componentNode2.setPosition(500, 155);
+
+        Point dropPoint = new Point(448, 131);
+
+        // When
+        FlowGraphChangeAware modifiableGraph = addNodeToGraph(graph, tryCatchNode1, dropPoint);
+
+        // Then
+        PluginAssertion.assertThat(modifiableGraph)
+                .isChanged()
+                .nodesCountIs(7)
+                .root().is(root)
+                .and().successorsOf(root).isOnly(routerNode1)
+                .and().successorsOf(routerNode1).isAtIndex(componentNode1, 0)
+                .and().node(routerNode1).scopeContainsExactly(componentNode1)
+                .and().successorsOf(componentNode1).isOnly(tryCatchNode1)
+                .and().successorsOf(tryCatchNode1).isAtIndex(placeholderNode1, 0)
+                .and().successorsOf(tryCatchNode1).isAtIndex(placeholderNode2, 1)
+                .and().node(tryCatchNode1).scopeContainsExactly(placeholderNode1, placeholderNode2)
+                .and().successorsOf(placeholderNode1).isOnly(componentNode2)
+                .and().successorsOf(placeholderNode2).isOnly(componentNode2);
+    }
 }

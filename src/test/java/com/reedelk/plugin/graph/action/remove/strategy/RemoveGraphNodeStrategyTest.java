@@ -2,6 +2,7 @@ package com.reedelk.plugin.graph.action.remove.strategy;
 
 import com.reedelk.plugin.AbstractGraphTest;
 import com.reedelk.plugin.assertion.PluginAssertion;
+import com.reedelk.plugin.component.type.placeholder.PlaceholderNode;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.action.Strategy;
 import com.reedelk.plugin.testutils.AddRouterConditions;
@@ -20,7 +21,17 @@ class RemoveGraphNodeStrategyTest extends AbstractGraphTest {
         super.setUp();
         this.graph = provider.createGraph();
         this.graph.root(root);
-        this.strategy = new RemoveGraphNodeStrategy(graph, () -> Optional.of(placeholderNode1));
+        this.strategy = new RemoveGraphNodeStrategy(graph, new PlaceholderProvider() {
+            @Override
+            public Optional<PlaceholderNode> get() {
+                return Optional.of(placeholderNode1);
+            }
+
+            @Override
+            public Optional<PlaceholderNode> get(String description) {
+                return Optional.of(placeholderNode1);
+            }
+        });
     }
 
     @Test

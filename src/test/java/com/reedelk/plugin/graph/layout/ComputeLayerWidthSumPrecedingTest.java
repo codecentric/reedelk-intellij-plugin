@@ -1,7 +1,6 @@
 package com.reedelk.plugin.graph.layout;
 
 import com.reedelk.plugin.AbstractGraphTest;
-import com.reedelk.plugin.component.type.fork.ForkNode;
 import com.reedelk.plugin.editor.designer.AbstractGraphNode;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -17,6 +16,8 @@ import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ComputeLayerWidthSumPrecedingTest extends AbstractGraphTest {
+
+    public final int forkNodeWidth = 130;
 
     @Mock
     private Graphics2D graphics2D;
@@ -173,8 +174,8 @@ class ComputeLayerWidthSumPrecedingTest extends AbstractGraphTest {
         // Then
         assertThat(widthSum).isEqualTo(
                 AbstractGraphNode.NODE_WIDTH +
-                        ForkNode.NODE_WIDTH +
-                        ForkNode.NODE_WIDTH);
+                        forkNodeWidth +
+                        forkNodeWidth);
     }
 
     @Test
@@ -207,7 +208,7 @@ class ComputeLayerWidthSumPrecedingTest extends AbstractGraphTest {
         // Then
         assertThat(widthSum).isEqualTo(
                 AbstractGraphNode.NODE_WIDTH +
-                        ForkNode.NODE_WIDTH + HORIZONTAL_PADDING +
-                        ForkNode.NODE_WIDTH);
+                        forkNodeWidth + HORIZONTAL_PADDING +
+                        forkNodeWidth);
     }
 }

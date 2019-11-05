@@ -114,6 +114,12 @@ public class PrecedingNodeWithOneSuccessor implements Strategy {
         if (currentScope != null) {
             currentScope.addToScope(node);
         }
+
+        // We must notify the newly added node that it has been added
+        // to the graph. This allows ScopedGraphNodes to add for instance
+        // additional nodes next to them such as 'Placeholders' to let the
+        // user know that they work only if they have successor nodes after them.
+        node.onAdded(graph, placeholderProvider);
     }
 
     private boolean withinYBounds(int dropY, GraphNode node) {

@@ -9,14 +9,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 import static com.reedelk.runtime.commons.Preconditions.checkState;
 
 public class RemoveScopedGraphNodeStrategy implements com.reedelk.plugin.graph.action.Strategy {
 
-    private final PlaceholderProvider absentPlaceholderProvider = Optional::empty;
+    private final PlaceholderProvider absentPlaceholderProvider = new AbsentPlaceholderProvider();
     private final PlaceholderProvider placeholderProvider;
     private final FlowGraph graph;
 

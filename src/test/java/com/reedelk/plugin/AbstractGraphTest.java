@@ -21,6 +21,7 @@ import com.reedelk.runtime.component.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.awt.*;
@@ -131,6 +132,7 @@ public abstract class AbstractGraphTest {
         placeholderNode2 = createGraphNodeInstance(Placeholder.class, PlaceholderNode.class);
 
         lenient().doReturn(Optional.of(placeholderNode1), Optional.of(placeholderNode2)).when(placeholderProvider).get();
+        lenient().doReturn(Optional.of(placeholderNode1), Optional.of(placeholderNode2)).when(placeholderProvider).get(Mockito.anyString());
 
         Rectangle2D sampleTextBounds = new Rectangle(0, 0, 40, 6);
         lenient().doReturn(fontMetrics).when(graphics).getFontMetrics();

@@ -69,7 +69,8 @@ public class TryCatchNode extends AbstractScopedGraphNode {
             // If index == 0 we removed try
             // If index == 1 we removed catch
             // In both cases we must add a placeholder node.
-            AddPlaceholder.to(placeholderProvider, graph, this, index);
+            String description = index == 0 ? "Try subflow" : "Catch subflow";
+            AddPlaceholder.to(placeholderProvider, description, graph, this, index);
         }
     }
 
@@ -79,8 +80,8 @@ public class TryCatchNode extends AbstractScopedGraphNode {
     @Override
     public void onAdded(FlowGraph graph, PlaceholderProvider placeholderProvider) {
         if (getScope().isEmpty()) {
-            AddPlaceholder.to(placeholderProvider, graph, this, 0);
-            AddPlaceholder.to(placeholderProvider, graph, this, 1);
+            AddPlaceholder.to(placeholderProvider, "Try subflow", graph, this, 0);
+            AddPlaceholder.to(placeholderProvider, "Catch subflow", graph, this, 1);
         }
     }
 

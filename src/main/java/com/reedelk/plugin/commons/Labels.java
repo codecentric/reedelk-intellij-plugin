@@ -23,6 +23,13 @@ public class Labels {
         public static final String CONFIG_TITLE = "My Listener Configuration";
     }
 
+    public class Placeholder {
+        private Placeholder() {
+        }
+
+        public static final String DESCRIPTION_ROUTER_OTHERWISE = "Otherwise subflow";
+    }
+
     public static final String TOOL_WINDOW_FLOW_PROPERTIES_TITLE = "Flow Properties";
 
     public static final String PROPERTIES_PANEL_SUBFLOW_TITLE = "Subflow";

@@ -14,6 +14,16 @@ public class AddPlaceholder {
     public static Optional<? extends GraphNode> to(PlaceholderProvider placeholderProvider, FlowGraph graph, ScopedGraphNode scopedGraphNode, int index) {
         Optional<GraphNode> firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedGraphNode);
         Optional<PlaceholderNode> maybePlaceholder = placeholderProvider.get();
+        return get(placeholderProvider, graph, scopedGraphNode, index, firstNodeOutsideScope, maybePlaceholder);
+    }
+
+    public static Optional<? extends GraphNode> to(PlaceholderProvider placeholderProvider, String placeholderDescription, FlowGraph graph, ScopedGraphNode scopedGraphNode, int index) {
+        Optional<GraphNode> firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedGraphNode);
+        Optional<PlaceholderNode> maybePlaceholder = placeholderProvider.get(placeholderDescription);
+        return get(placeholderProvider, graph, scopedGraphNode, index, firstNodeOutsideScope, maybePlaceholder);
+    }
+
+    private static Optional<? extends GraphNode> get(PlaceholderProvider placeholderProvider, FlowGraph graph, ScopedGraphNode scopedGraphNode, int index, Optional<GraphNode> firstNodeOutsideScope, Optional<PlaceholderNode> maybePlaceholder) {
         maybePlaceholder.ifPresent(placeholder -> {
             graph.add(placeholder);
             graph.add(scopedGraphNode, placeholder, index);

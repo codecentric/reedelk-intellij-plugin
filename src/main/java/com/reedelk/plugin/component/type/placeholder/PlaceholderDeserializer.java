@@ -1,5 +1,6 @@
 package com.reedelk.plugin.component.type.placeholder;
 
+import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.deserializer.AbstractNodeDeserializer;
 import com.reedelk.plugin.graph.deserializer.DeserializerContext;
@@ -21,9 +22,14 @@ public class PlaceholderDeserializer extends AbstractNodeDeserializer {
 
         GraphNode placeholderNode = context.instantiateGraphNode(name);
 
+        ComponentData componentData = placeholderNode.componentData();
+
+        if (jsonDefinition.has(Implementor.description())) {
+            componentData.set(Implementor.description(), Implementor.description(jsonDefinition));
+        }
+
         graph.add(parent, placeholderNode);
 
         return placeholderNode;
     }
-
 }
