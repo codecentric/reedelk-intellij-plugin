@@ -10,6 +10,7 @@ class PredefinedMessageSuggestions {
 
     static final List<SuggestionToken> SUGGESTIONS = Arrays.asList(
             new SuggestionToken("context", VARIABLE),
+            new SuggestionToken("context.correlationId", VARIABLE),
 
             new SuggestionToken("message", VARIABLE),
             new SuggestionToken("message.toString()", FUNCTION),
