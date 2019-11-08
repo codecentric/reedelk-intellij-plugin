@@ -1,17 +1,17 @@
 package com.reedelk.plugin.editor.designer;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.ui.components.JBScrollPane;
+import com.reedelk.plugin.editor.properties.widget.DisposableScrollPane;
 
 import java.awt.dnd.DropTarget;
 import java.util.TooManyListenersException;
 
-public class ScrollableDesignerPanel extends JBScrollPane {
+public class ScrollableDesignerPanel extends DisposableScrollPane {
 
     private static final Logger LOG = Logger.getInstance(ScrollableDesignerPanel.class);
 
     public ScrollableDesignerPanel(DesignerPanel designerPanel) {
-        super(designerPanel);
+        setViewportView(designerPanel);
 
         createVerticalScrollBar();
         setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_AS_NEEDED);

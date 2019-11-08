@@ -4,7 +4,6 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.AncestorListenerAdapter;
-import com.intellij.ui.components.JBPanel;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.DesignerWindowSizeCalculator;
@@ -14,6 +13,7 @@ import com.reedelk.plugin.component.scanner.ComponentListUpdateNotifier;
 import com.reedelk.plugin.editor.designer.widget.CenterOfNodeDrawable;
 import com.reedelk.plugin.editor.designer.widget.InfoPanel;
 import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
+import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.SnapshotListener;
 import com.reedelk.plugin.graph.layout.FlowGraphLayout;
@@ -39,7 +39,7 @@ import static com.reedelk.plugin.service.project.DesignerSelectionManager.Curren
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
-public abstract class DesignerPanel extends JBPanel implements
+public abstract class DesignerPanel extends DisposablePanel implements
         MouseMotionListener, MouseListener, DropTargetListener,
         SnapshotListener, DrawableListener, ComponentListUpdateNotifier {
 
@@ -59,6 +59,7 @@ public abstract class DesignerPanel extends JBPanel implements
 
     private GraphNode selected;
     private SelectableItem currentSelection;
+    private MessageBusConnection busConnection;
     private CenterOfNodeDrawable centerOfNodeDrawable;
     private CurrentSelectionListener componentSelectedPublisher;
     private CommitPropertiesListener commitPublisher;
@@ -83,21 +84,21 @@ public abstract class DesignerPanel extends JBPanel implements
         addMouseListener(this);
         addMouseMotionListener(this);
 
-        MessageBusConnection connect = module.getMessageBus().connect();
-        connect.subscribe(COMPONENT_LIST_UPDATE_TOPIC, this);
+        busConnection = module.getMessageBus().connect();
+        busConnection.subscribe(COMPONENT_LIST_UPDATE_TOPIC, this);
 
-        this.componentSelectedPublisher = module
+        componentSelectedPublisher = module
                 .getProject()
                 .getMessageBus()
                 .syncPublisher(CurrentSelectionListener.CURRENT_SELECTION_TOPIC);
 
-        this.commitPublisher = module
+        commitPublisher = module
                 .getProject()
                 .getMessageBus()
                 .syncPublisher(CommitPropertiesListener.COMMIT_TOPIC);
 
 
-        this.designerSelectionManager =
+        designerSelectionManager =
                 ServiceManager.getService(module.getProject(), DesignerSelectionManager.class);
 
         addAncestorListener();
@@ -307,6 +308,12 @@ public abstract class DesignerPanel extends JBPanel implements
                     SwingUtilities.invokeLater(() ->
                             select(defaultSelectedItem())));
         }
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        busConnection.disconnect();
     }
 
     @Override

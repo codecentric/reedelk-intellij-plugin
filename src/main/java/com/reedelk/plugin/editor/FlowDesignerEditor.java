@@ -10,6 +10,7 @@ import com.intellij.openapi.util.UserDataHolderBase;
 import com.reedelk.plugin.editor.designer.DesignerPanelActionHandler;
 import com.reedelk.plugin.editor.designer.FlowDesignerPanel;
 import com.reedelk.plugin.editor.designer.ScrollableDesignerPanel;
+import com.reedelk.plugin.editor.properties.widget.DisposableScrollPane;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.manager.GraphManager;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +22,7 @@ import java.beans.PropertyChangeListener;
 public class FlowDesignerEditor extends UserDataHolderBase implements DesignerEditor {
 
     private GraphManager manager;
-    private JComponent editor;
+    private DisposableScrollPane editor;
 
     FlowDesignerEditor(Module module, FlowSnapshot snapshot, GraphManager manager, DesignerPanelActionHandler actionHandler) {
         this.manager = manager;
@@ -121,6 +122,6 @@ public class FlowDesignerEditor extends UserDataHolderBase implements DesignerEd
     @Override
     public void dispose() {
         manager.dispose();
+        editor.dispose();
     }
-
 }
