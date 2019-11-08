@@ -26,7 +26,6 @@ public class FlowDesignerEditor extends UserDataHolderBase implements DesignerEd
 
     FlowDesignerEditor(Module module, FlowSnapshot snapshot, GraphManager manager, DesignerPanelActionHandler actionHandler) {
         this.manager = manager;
-
         FlowDesignerPanel flowDesignerPanel = new FlowDesignerPanel(module, snapshot, actionHandler);
         this.editor = new ScrollableDesignerPanel(flowDesignerPanel);
     }
