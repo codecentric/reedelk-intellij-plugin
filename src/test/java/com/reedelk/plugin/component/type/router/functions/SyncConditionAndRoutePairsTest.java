@@ -1,6 +1,7 @@
 package com.reedelk.plugin.component.type.router.functions;
 
 import com.reedelk.plugin.AbstractGraphTest;
+import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.component.type.router.RouterConditionRoutePair;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -12,6 +13,8 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 
 class SyncConditionAndRoutePairsTest extends AbstractGraphTest {
 
@@ -29,9 +32,11 @@ class SyncConditionAndRoutePairsTest extends AbstractGraphTest {
         current.add(new RouterConditionRoutePair("payload.name == 'Mark'", componentNode2));
         current.add(new RouterConditionRoutePair("otherwise", componentNode3));
 
+        mockRouterConditionRoutePairsWith(current);
+
         // When
         List<RouterConditionRoutePair> updatedPairs =
-                SyncConditionAndRoutePairs.from(graph, routerNode1, current);
+                SyncConditionAndRoutePairs.from(graph, routerNode1);
 
         // Then
         assertThat(updatedPairs).hasSize(2);
@@ -53,9 +58,11 @@ class SyncConditionAndRoutePairsTest extends AbstractGraphTest {
         current.add(new RouterConditionRoutePair("payload.name == 'John'", componentNode1));
         current.add(new RouterConditionRoutePair("otherwise", componentNode3));
 
+        mockRouterConditionRoutePairsWith(current);
+
         // When
         List<RouterConditionRoutePair> updatedPairs =
-                SyncConditionAndRoutePairs.from(graph, routerNode1, current);
+                SyncConditionAndRoutePairs.from(graph, routerNode1);
 
         // Then
         assertThat(updatedPairs).hasSize(3);
@@ -79,9 +86,11 @@ class SyncConditionAndRoutePairsTest extends AbstractGraphTest {
         current.add(new RouterConditionRoutePair("payload.name == 'Mark'", componentNode2));
         current.add(new RouterConditionRoutePair("otherwise", componentNode3));
 
+        mockRouterConditionRoutePairsWith(current);
+
         // When
         List<RouterConditionRoutePair> updatedPairs =
-                SyncConditionAndRoutePairs.from(graph, routerNode1, current);
+                SyncConditionAndRoutePairs.from(graph, routerNode1);
 
         // Then
         assertThat(updatedPairs).hasSize(3);
@@ -103,9 +112,11 @@ class SyncConditionAndRoutePairsTest extends AbstractGraphTest {
         current.add(new RouterConditionRoutePair("payload.name == 'John'", componentNode1));
         current.add(new RouterConditionRoutePair("otherwise", componentNode2));
 
+        mockRouterConditionRoutePairsWith(current);
+
         // When
         List<RouterConditionRoutePair> updatedPairs =
-                SyncConditionAndRoutePairs.from(graph, routerNode1, current);
+                SyncConditionAndRoutePairs.from(graph, routerNode1);
 
         // Then
         assertThat(updatedPairs).hasSize(2);
@@ -123,8 +134,10 @@ class SyncConditionAndRoutePairsTest extends AbstractGraphTest {
 
         List<RouterConditionRoutePair> current = new ArrayList<>();
 
+        mockRouterConditionRoutePairsWith(current);
+
         List<RouterConditionRoutePair> updatedPairs =
-                SyncConditionAndRoutePairs.from(graph, routerNode1, current);
+                SyncConditionAndRoutePairs.from(graph, routerNode1);
 
         // When
         assertThat(updatedPairs).hasSize(1);
@@ -143,9 +156,8 @@ class SyncConditionAndRoutePairsTest extends AbstractGraphTest {
 
         // When
         assertThrows(IllegalStateException.class,
-                () -> SyncConditionAndRoutePairs.from(graph, routerNode1, current),
+                () -> SyncConditionAndRoutePairs.from(graph, routerNode1),
                 "Expected at least one successor for router node but 0 were found");
-
     }
 
     private void assertThatExistsPairWith(List<RouterConditionRoutePair> pairs, String expectedCondition, GraphNode expectedNode) {
@@ -157,4 +169,9 @@ class SyncConditionAndRoutePairsTest extends AbstractGraphTest {
         fail(String.format("Could not find pair matching condition=%s, node=%s", expectedCondition, expectedNode));
     }
 
+    private void mockRouterConditionRoutePairsWith(List<RouterConditionRoutePair> current) {
+        ComponentData componentData = mock(ComponentData.class);
+        doReturn(current).when(componentData).get("conditionRoutePairs");
+        doReturn(componentData).when(routerNode1).componentData();
+    }
 }
