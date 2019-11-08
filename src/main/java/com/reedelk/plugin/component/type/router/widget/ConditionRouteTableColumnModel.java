@@ -2,7 +2,10 @@ package com.reedelk.plugin.component.type.router.widget;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
+import com.intellij.util.messages.MessageBusConnection;
+import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.Icons;
+import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
 import com.reedelk.plugin.editor.properties.widget.ClickableLabel;
 import com.reedelk.plugin.editor.properties.widget.ContainerFactory;
 import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
@@ -20,8 +23,9 @@ import java.util.EventObject;
 
 import static com.reedelk.runtime.commons.JsonParser.Implementor;
 
-class ConditionRouteTableColumnModel extends DefaultTableColumnModel implements Disposable {
+class ConditionRouteTableColumnModel extends DefaultTableColumnModel implements Disposable, CommitPropertiesListener {
 
+    private MessageBusConnection busConnection;
     private final ConditionCellRenderer cellRenderer;
     private final ConditionCellEditor conditionCellEditor;
 
@@ -41,12 +45,21 @@ class ConditionRouteTableColumnModel extends DefaultTableColumnModel implements 
         routeColumn.setHeaderValue(ConditionRouteColumns.COLUMN_NAMES[1]);
         routeColumn.setCellRenderer(new RoutesCellRenderer());
         addColumn(routeColumn);
+
+        busConnection = module.getProject().getMessageBus().connect();
+        busConnection.subscribe(CommitPropertiesListener.COMMIT_TOPIC, this);
     }
 
     @Override
     public void dispose() {
-        if (cellRenderer != null) cellRenderer.dispose();
-        if (conditionCellEditor != null) conditionCellEditor.dispose();
+        DisposableUtils.dispose(cellRenderer);
+        DisposableUtils.dispose(conditionCellEditor);
+        busConnection.disconnect();
+    }
+
+    @Override
+    public void onCommit() {
+        conditionCellEditor.stopCellEditing();
     }
 
     class RoutesCellRenderer extends DefaultTableCellRenderer {
@@ -84,7 +97,7 @@ class ConditionRouteTableColumnModel extends DefaultTableColumnModel implements 
 
         @Override
         public Object getCellEditorValue() {
-            return this.editor.getValue();
+            return editor.getValue();
         }
 
         @Override
@@ -99,27 +112,32 @@ class ConditionRouteTableColumnModel extends DefaultTableColumnModel implements 
 
         @Override
         public boolean stopCellEditing() {
-            this.listener.editingStopped(new ChangeEvent(this));
+            if (listener != null) {
+                listener.editingStopped(new ChangeEvent(this));
+            }
             return true;
         }
 
         @Override
         public void cancelCellEditing() {
+            if (listener != null) {
+                listener.editingStopped(new ChangeEvent(this));
+            }
         }
 
         @Override
-        public void addCellEditorListener(CellEditorListener l) {
-            this.listener = l;
+        public void addCellEditorListener(CellEditorListener listener) {
+            this.listener = listener;
         }
 
         @Override
-        public void removeCellEditorListener(CellEditorListener l) {
-            this.listener = l;
+        public void removeCellEditorListener(CellEditorListener listener) {
+            this.listener = listener;
         }
 
         @Override
         public void dispose() {
-            if (editor != null) editor.dispose();
+            DisposableUtils.dispose(editor);
         }
     }
 
@@ -144,7 +162,7 @@ class ConditionRouteTableColumnModel extends DefaultTableColumnModel implements 
 
         @Override
         public void dispose() {
-            if (editor != null) editor.dispose();
+            DisposableUtils.dispose(editor);
         }
     }
 }

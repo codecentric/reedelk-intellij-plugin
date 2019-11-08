@@ -7,7 +7,9 @@ import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.component.Router;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkState;
 import static java.lang.String.format;
@@ -19,75 +21,42 @@ public class SyncConditionAndRoutePairs {
     private SyncConditionAndRoutePairs() {
     }
 
-    public static List<RouterConditionRoutePair> from(FlowGraph graph, RouterNode routerNode, List<RouterConditionRoutePair> oldConditions) {
+    public static List<RouterConditionRoutePair> from(FlowGraph graph, RouterNode routerNode) {
         List<GraphNode> successors = graph.successors(routerNode);
         checkState(!successors.isEmpty(), format("Expected at least one successor for router node but %d were found", successors.size()));
 
-        int numberOfSuccessors = successors.size();
+        List<RouterConditionRoutePair> conditionAndRoutePairs = ListConditionRoutePairs.of(routerNode.componentData());
+        List<RouterConditionRoutePair> copy = new ArrayList<>(conditionAndRoutePairs);
 
-        // Compute new router condition/s
-        List<RouterConditionRoutePair> updatedConditions = new LinkedList<>();
+        // Just match up the successors
+        conditionAndRoutePairs.clear();
 
-        if (numberOfSuccessors == 1) {
-            // If we only have 1 successor, then it must be Default condition.
-            updatedConditions.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION.value(), successors.get(0)));
-            return updatedConditions;
-        }
+        for (int i = 0; i < successors.size(); i++) {
+            GraphNode node = successors.get(i);
 
-        Collection<GraphNode> alreadyUsedNodes = new HashSet<>();
-
-        for (int i = numberOfSuccessors - 1; i >= 0; i--) {
-            GraphNode successor = successors.get(i);
-
-            // The last successor is always otherwise.
-            if (i == numberOfSuccessors - 1) {
-                // Last element is always the default condition
-                updatedConditions.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION.value(), successor));
+            // The last one has always the default router condition.
+            if (i == successors.size() - 1) {
+                conditionAndRoutePairs.add(new RouterConditionRoutePair(Router.DEFAULT_CONDITION.value(), node));
                 continue;
             }
 
-            // We look for an existing pair having this successor already paired with a condition
-            Optional<RouterConditionRoutePair> targetPair = findTargetPair(successor, oldConditions);
+            Optional<RouterConditionRoutePair> targetPair = findTargetPair(node, copy);
             if (targetPair.isPresent()) {
-                alreadyUsedNodes.add(targetPair.get().getNext());
-                updatedConditions.add(new RouterConditionRoutePair(targetPair.get().getCondition(), successor));
-                continue;
+                conditionAndRoutePairs.add(targetPair.get());
+            } else {
+                conditionAndRoutePairs.add(new RouterConditionRoutePair(EMPTY_CONDITION, node));
             }
-
-            // We look for a condition not used yet at this successor's position
-            Optional<RouterConditionRoutePair> oneAtIndexNotUsedYet = findOneAtIndexNotUsedYet(i, oldConditions, alreadyUsedNodes);
-            if (oneAtIndexNotUsedYet.isPresent()) {
-                alreadyUsedNodes.add(oneAtIndexNotUsedYet.get().getNext());
-                updatedConditions.add(new RouterConditionRoutePair(oneAtIndexNotUsedYet.get().getCondition(), successor));
-                continue;
-            }
-
-            // Otherwise we create a new empty condition -> successor pair
-            updatedConditions.add(new RouterConditionRoutePair(EMPTY_CONDITION, successor));
         }
 
-        Collections.reverse(updatedConditions);
-        return updatedConditions;
+        return conditionAndRoutePairs;
 
     }
 
     private static Optional<RouterConditionRoutePair> findTargetPair(GraphNode target, List<RouterConditionRoutePair> oldConditions) {
-        return oldConditions
-                .stream()
+        return oldConditions.stream()
                 .filter(routerConditionRoutePair ->
                         routerConditionRoutePair.getNext() == target &&
                                 !Router.DEFAULT_CONDITION.value().equals(routerConditionRoutePair.getCondition()))
                 .findFirst();
-    }
-
-    private static Optional<RouterConditionRoutePair> findOneAtIndexNotUsedYet(int i, List<RouterConditionRoutePair> routerConditionRoutePairs, Collection<GraphNode> alreadyUsedNodes) {
-        if (i < routerConditionRoutePairs.size()) {
-            RouterConditionRoutePair pair = routerConditionRoutePairs.get(i);
-            if (!alreadyUsedNodes.contains(pair.getNext()) &&
-                    !Router.DEFAULT_CONDITION.value().equals(pair.getCondition())) {
-                return Optional.of(pair);
-            }
-        }
-        return Optional.empty();
     }
 }

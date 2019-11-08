@@ -13,8 +13,8 @@ import com.reedelk.runtime.component.Stop;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -76,7 +76,7 @@ public class RouterDeserializer extends AbstractNodeDeserializer {
         }
 
         // Build Condition -> Route pairs list
-        List<RouterConditionRoutePair> routerConditionRoutePairList = new LinkedList<>();
+        List<RouterConditionRoutePair> routerConditionRoutePairList = new ArrayList<>();
         routerData.set(DATA_CONDITION_ROUTE_PAIRS, routerConditionRoutePairList);
 
         for (Map.Entry<GraphNode, String> entry : nodeAndConditionMap.entrySet()) {
@@ -118,5 +118,4 @@ public class RouterDeserializer extends AbstractNodeDeserializer {
         }
         return currentNode;
     }
-
 }

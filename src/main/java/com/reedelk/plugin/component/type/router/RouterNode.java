@@ -7,7 +7,6 @@ import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.commons.Labels.Placeholder;
 import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.component.type.router.functions.IsDefaultRoute;
-import com.reedelk.plugin.component.type.router.functions.ListConditionRoutePairs;
 import com.reedelk.plugin.component.type.router.functions.SyncConditionAndRoutePairs;
 import com.reedelk.plugin.editor.designer.AbstractScopedGraphNode;
 import com.reedelk.plugin.editor.designer.widget.VerticalDivider;
@@ -126,8 +125,7 @@ public class RouterNode extends AbstractScopedGraphNode {
     }
 
     private void updateConditionRoutePairs(FlowGraph graph) {
-        List<RouterConditionRoutePair> routerConditionRoutePairs = ListConditionRoutePairs.of(componentData());
-        List<RouterConditionRoutePair> updatedConditions = SyncConditionAndRoutePairs.from(graph, this, routerConditionRoutePairs);
+        List<RouterConditionRoutePair> updatedConditions = SyncConditionAndRoutePairs.from(graph, this);
         ComponentData component = componentData();
         component.set(DATA_CONDITION_ROUTE_PAIRS, updatedConditions);
     }

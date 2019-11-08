@@ -3,9 +3,10 @@ package com.reedelk.plugin.editor.properties;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.AncestorListenerAdapter;
+import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.JBUI;
+import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.component.domain.ComponentData;
@@ -23,8 +24,9 @@ public class PropertiesPanel extends DisposablePanel implements CurrentSelection
     private final Project project;
 
     private Disposable currentPane;
-    private DesignerSelectionManager designerSelectionManager;
     private SelectableItem currentSelection;
+    private MessageBusConnection busConnection;
+    private DesignerSelectionManager designerSelectionManager;
 
     PropertiesPanel(@NotNull Project project) {
         setBorder(JBUI.Borders.empty());
@@ -36,17 +38,15 @@ public class PropertiesPanel extends DisposablePanel implements CurrentSelection
 
         setEmptySelection();
 
-        project.getMessageBus()
-                .connect().subscribe(CurrentSelectionListener.CURRENT_SELECTION_TOPIC, this);
+        busConnection = project.getMessageBus().connect();
+        busConnection.subscribe(CurrentSelectionListener.CURRENT_SELECTION_TOPIC, this);
     }
 
     @Override
     public void onSelection(SelectableItem selectedItem) {
         // We must Dispose the current content before
         // creating and assigning a new content.
-        if (currentPane != null) {
-            Disposer.dispose(currentPane);
-        }
+        DisposableUtils.dispose(currentPane);
 
         this.currentSelection = selectedItem;
 
@@ -66,9 +66,8 @@ public class PropertiesPanel extends DisposablePanel implements CurrentSelection
     @Override
     public void onUnSelected(SelectableItem unselected) {
         if (currentSelection == unselected) {
-            if (currentPane != null) {
-                Disposer.dispose(currentPane);
-            }
+            makeCurrentPaneInvisible();
+            DisposableUtils.dispose(currentPane);
             setEmptySelection();
             currentSelection = null;
         }
@@ -79,6 +78,12 @@ public class PropertiesPanel extends DisposablePanel implements CurrentSelection
         if (currentSelection != null) {
             onSelection(currentSelection);
         }
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        busConnection.disconnect();
     }
 
     private void createFlowOrSubflowContent(SelectableItem selectedItem) {
@@ -137,10 +142,8 @@ public class PropertiesPanel extends DisposablePanel implements CurrentSelection
             public void ancestorRemoved(AncestorEvent event) {
                 // Properties panel is collapsed, we need to clear
                 // the current content if present.
-                if (currentPane != null) {
-                    Disposer.dispose(currentPane);
-                    SwingUtilities.invokeLater(() -> removeAll());
-                }
+                DisposableUtils.dispose(currentPane);
+                SwingUtilities.invokeLater(() -> removeAll());
             }
         });
     }
@@ -148,5 +151,14 @@ public class PropertiesPanel extends DisposablePanel implements CurrentSelection
     private void setToolWindowTitle(String newToolWindowTitle) {
         ToolWindowUtils.ComponentProperties.get(project)
                 .setTitle(newToolWindowTitle);
+    }
+
+    // Before disposing it we hide the panel so that all the properties
+    // with an editor in it do not 'flicker' when the editor is being
+    // disposed.
+    private void makeCurrentPaneInvisible() {
+        if (currentPane instanceof JComponent) {
+            ((JComponent) currentPane).setVisible(false);
+        }
     }
 }

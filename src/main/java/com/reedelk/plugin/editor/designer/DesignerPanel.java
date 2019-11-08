@@ -13,6 +13,7 @@ import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.component.scanner.ComponentListUpdateNotifier;
 import com.reedelk.plugin.editor.designer.widget.CenterOfNodeDrawable;
 import com.reedelk.plugin.editor.designer.widget.InfoPanel;
+import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.SnapshotListener;
 import com.reedelk.plugin.graph.layout.FlowGraphLayout;
@@ -60,6 +61,7 @@ public abstract class DesignerPanel extends JBPanel implements
     private SelectableItem currentSelection;
     private CenterOfNodeDrawable centerOfNodeDrawable;
     private CurrentSelectionListener componentSelectedPublisher;
+    private CommitPropertiesListener commitPublisher;
 
     private InfoPanel errorFlowInfoPanel = new InfoPanel.FlowWithErrorInfoPanel();
     private InfoPanel buildingFlowInfoPanel = new InfoPanel.BuildingFlowInfoPanel();
@@ -88,6 +90,11 @@ public abstract class DesignerPanel extends JBPanel implements
                 .getProject()
                 .getMessageBus()
                 .syncPublisher(CurrentSelectionListener.CURRENT_SELECTION_TOPIC);
+
+        this.commitPublisher = module
+                .getProject()
+                .getMessageBus()
+                .syncPublisher(CommitPropertiesListener.COMMIT_TOPIC);
 
 
         this.designerSelectionManager =
@@ -229,8 +236,14 @@ public abstract class DesignerPanel extends JBPanel implements
         // A graph is valid if and only if it does not contain
         // errors and it is not null in the current snapshot.
         snapshot.applyOnValidGraph(graph -> {
-            // If the drop event was successful we select the newly
-            // added Graph Node.
+
+            // Save all the properties being edited in the properties panel before
+            // updating the graph with the add action. This is needed
+            // for instance to write values of the Router table into
+            // the graph before updating it.
+            commitPropertyPanel();
+
+            // If the drop event was successful we select the newly added Graph Node.
             actionHandler.onAdd(getGraphics2D(), dropEvent, DesignerPanel.this)
                     .ifPresent(addedNode -> {
                         unselect();
@@ -357,6 +370,16 @@ public abstract class DesignerPanel extends JBPanel implements
     private void select(SelectableItem selectableItem) {
         currentSelection = selectableItem;
         componentSelectedPublisher.onSelection(selectableItem);
+    }
+
+    /**
+     * Before executing an action which modifies the Graph we *MUST* commit
+     * all the pending changes not closed in the PropertiesPanel. For example
+     * the Router Condition -> Route table uses this event to commit the table's
+     * cell editor before dropping a new node into the graph.
+     */
+    private void commitPropertyPanel() {
+        commitPublisher.onCommit();
     }
 
     /**
