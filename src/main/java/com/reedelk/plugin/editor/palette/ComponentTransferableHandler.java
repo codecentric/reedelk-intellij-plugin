@@ -4,7 +4,11 @@ import com.reedelk.plugin.component.domain.ComponentDescriptor;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import java.awt.*;
 import java.awt.datatransfer.Transferable;
+
+import static com.reedelk.plugin.editor.designer.widget.Icon.Dimension.HALF_ICON_HEIGHT;
+import static com.reedelk.plugin.editor.designer.widget.Icon.Dimension.HALF_ICON_WIDTH;
 
 public class ComponentTransferableHandler extends TransferHandler {
 
@@ -24,6 +28,8 @@ public class ComponentTransferableHandler extends TransferHandler {
 
             ComponentDescriptor descriptor = (ComponentDescriptor) userObject;
 
+            setDragImage(descriptor);
+
             return new ComponentDescriptorTransferable(descriptor);
 
         } else {
@@ -31,5 +37,10 @@ public class ComponentTransferableHandler extends TransferHandler {
             return new EmptyTransferable();
 
         }
+    }
+
+    private void setDragImage(ComponentDescriptor descriptor) {
+        setDragImage(descriptor.getImage());
+        setDragImageOffset(new Point(-HALF_ICON_WIDTH, -HALF_ICON_HEIGHT));
     }
 }
