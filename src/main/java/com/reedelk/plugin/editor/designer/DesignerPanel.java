@@ -35,7 +35,9 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Optional;
 
+import static com.reedelk.plugin.editor.properties.CommitPropertiesListener.COMMIT_TOPIC;
 import static com.reedelk.plugin.service.project.DesignerSelectionManager.CurrentSelectionListener;
+import static com.reedelk.plugin.service.project.DesignerSelectionManager.CurrentSelectionListener.CURRENT_SELECTION_TOPIC;
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
@@ -73,33 +75,23 @@ public abstract class DesignerPanel extends DisposablePanel implements
     DesignerPanel(@NotNull Module module,
                   @NotNull FlowSnapshot snapshot,
                   @NotNull DesignerPanelActionHandler actionHandler) {
-        this.actionHandler = actionHandler;
         this.module = module;
+        this.actionHandler = actionHandler;
         this.snapshot = snapshot;
         this.snapshot.addListener(this);
 
         this.centerOfNodeDrawable = new CenterOfNodeDrawable(snapshot);
 
-
         addMouseListener(this);
         addMouseMotionListener(this);
 
-        busConnection = module.getMessageBus().connect();
-        busConnection.subscribe(COMPONENT_LIST_UPDATE_TOPIC, this);
+        this.busConnection = module.getMessageBus().connect();
+        this.busConnection.subscribe(COMPONENT_LIST_UPDATE_TOPIC, this);
 
-        componentSelectedPublisher = module
-                .getProject()
-                .getMessageBus()
-                .syncPublisher(CurrentSelectionListener.CURRENT_SELECTION_TOPIC);
+        this.componentSelectedPublisher = module.getProject().getMessageBus().syncPublisher(CURRENT_SELECTION_TOPIC);
+        this.commitPublisher = module.getProject().getMessageBus().syncPublisher(COMMIT_TOPIC);
 
-        commitPublisher = module
-                .getProject()
-                .getMessageBus()
-                .syncPublisher(CommitPropertiesListener.COMMIT_TOPIC);
-
-
-        designerSelectionManager =
-                ServiceManager.getService(module.getProject(), DesignerSelectionManager.class);
+        this.designerSelectionManager = ServiceManager.getService(module.getProject(), DesignerSelectionManager.class);
 
         addAncestorListener();
     }
