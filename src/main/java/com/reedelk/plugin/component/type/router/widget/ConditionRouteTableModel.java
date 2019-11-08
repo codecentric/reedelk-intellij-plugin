@@ -5,6 +5,7 @@ import com.reedelk.plugin.editor.properties.widget.PropertyTable;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.runtime.api.commons.ScriptUtils;
+import com.reedelk.runtime.api.commons.StringUtils;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
@@ -47,7 +48,7 @@ public class ConditionRouteTableModel extends AbstractTableModel implements Prop
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Object returnValue = "";
+        Object returnValue = StringUtils.EMPTY;
         RouterConditionRoutePair conditionRoute = conditionRouteList.get(rowIndex);
         switch (columnIndex) {
             case 0:
