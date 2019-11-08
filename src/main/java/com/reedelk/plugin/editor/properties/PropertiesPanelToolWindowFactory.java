@@ -23,11 +23,9 @@ public class PropertiesPanelToolWindowFactory implements ToolWindowFactory {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-        JBPanel panel = new PropertiesPanel(project);
-
+        final JBPanel panel = new PropertiesPanel(project);
         final ContentFactory contentFactory = ServiceManager.getService(ContentFactory.class);
         final Content content = contentFactory.createContent(panel, "", false);
-
         toolWindow.getContentManager().addContent(content);
     }
 }
