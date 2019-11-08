@@ -7,6 +7,7 @@ import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 import com.reedelk.plugin.editor.properties.widget.input.InputChangeListener;
 import com.reedelk.plugin.editor.properties.widget.input.script.editor.ScriptEditorDefault;
+import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -27,7 +28,7 @@ public class ScriptInputField extends DisposablePanel implements Disposable {
 
     private InputChangeListener listener;
     private ScriptEditorDefault editor;
-    private String value = "";
+    private String value = StringUtils.EMPTY;
 
     public ScriptInputField(@NotNull Module module,
                             @NotNull ScriptContextManager context) {
