@@ -24,7 +24,6 @@ import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.ImageObserver;
 import java.io.IOException;
@@ -33,7 +32,6 @@ import java.util.Optional;
 
 import static com.reedelk.plugin.editor.designer.action.MoveActionHandler.builder;
 import static com.reedelk.plugin.editor.palette.ComponentDescriptorTransferable.FLAVOR;
-import static java.awt.dnd.DnDConstants.ACTION_COPY_OR_MOVE;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
@@ -81,15 +79,9 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
     }
 
     @Override
-    public Optional<GraphNode> onAdd(Graphics2D graphics, DropTargetDropEvent dropEvent, ImageObserver observer) {
+    public Optional<GraphNode> onAdd(Graphics2D graphics, Point dropPoint, Transferable transferable, ImageObserver observer) {
 
-        Point dropPoint = dropEvent.getLocation();
-
-        Optional<ComponentDescriptor> optionalDescriptor = getComponentDescriptorFrom(dropEvent);
-
-        if (optionalDescriptor.isPresent()) {
-
-            ComponentDescriptor descriptor = optionalDescriptor.get();
+        return extractComponentDescription(transferable).map(descriptor -> {
 
             GraphNode nodeToAdd = GraphNodeFactory.get(descriptor);
 
@@ -106,37 +98,22 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
 
             AddActionHandler handler = new AddActionHandler(snapshot, addAction);
 
-            boolean handled = handler.handle();
+            return handler.handle() ? nodeToAdd : null;
 
-            if (handled) {
-
-                dropEvent.acceptDrop(ACTION_COPY_OR_MOVE);
-
-                return Optional.of(nodeToAdd);
-            }
-
-        }
-
-        dropEvent.rejectDrop();
-
-        return Optional.empty();
+        });
     }
-
-    protected abstract Action getActionAdd(GraphNode nodeToAdd, Point dropPoint, Graphics2D graphics, ImageObserver observer);
 
     protected abstract Action getActionRemove(GraphNode nodeToRemove);
 
     protected abstract Action getActionReplace(GraphNode nodeFrom, GraphNode nodeTo);
 
-    private Optional<ComponentDescriptor> getComponentDescriptorFrom(DropTargetDropEvent dropEvent) {
-        Transferable transferable = dropEvent.getTransferable();
-        DataFlavor[] transferDataFlavor = transferable.getTransferDataFlavors();
+    protected abstract Action getActionAdd(GraphNode nodeToAdd, Point dropPoint, Graphics2D graphics, ImageObserver observer);
 
+    private Optional<ComponentDescriptor> extractComponentDescription(Transferable transferable) {
+        DataFlavor[] transferDataFlavor = transferable.getTransferDataFlavors();
         if (asList(transferDataFlavor).contains(FLAVOR)) {
             try {
-                ComponentDescriptor descriptor =
-                        (ComponentDescriptor) transferable.getTransferData(FLAVOR);
-                return Optional.of(descriptor);
+                return Optional.of((ComponentDescriptor) transferable.getTransferData(FLAVOR));
             } catch (UnsupportedFlavorException | IOException e) {
                 LOG.error("Could not extract dropped component name", e);
             }

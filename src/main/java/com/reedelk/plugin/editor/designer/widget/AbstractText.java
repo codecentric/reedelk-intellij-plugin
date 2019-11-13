@@ -8,7 +8,7 @@ import java.util.List;
 
 public abstract class AbstractText {
 
-    private final String prototypeText = "XXXXXX";
+    private static final String prototypeText = "XXXXXX";
 
     private final HorizontalAlignment horizontalAlignment;
     private final VerticalAlignment verticalAlignment;
@@ -67,6 +67,11 @@ public abstract class AbstractText {
     }
 
     public int height(Graphics2D graphics) {
+        // We must set the font to the graphics object before measuring the string
+        // metrics, so that the metrics are correctly computed according to the font
+        // style and font size.
+        graphics.setFont(font);
+
         Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(prototypeText, graphics);
         List<String> textAsLines = getText();
 

@@ -10,9 +10,9 @@ import com.reedelk.plugin.commons.DesignerWindowSizeCalculator;
 import com.reedelk.plugin.commons.PrintFlowInfo;
 import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.component.scanner.ComponentListUpdateNotifier;
+import com.reedelk.plugin.editor.designer.hint.*;
 import com.reedelk.plugin.editor.designer.widget.CenterOfNodeDrawable;
 import com.reedelk.plugin.editor.designer.widget.InfoPanel;
-import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
 import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.SnapshotListener;
@@ -26,24 +26,23 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import java.awt.*;
-import java.awt.dnd.DropTargetDragEvent;
-import java.awt.dnd.DropTargetDropEvent;
-import java.awt.dnd.DropTargetEvent;
-import java.awt.dnd.DropTargetListener;
+import java.awt.dnd.DropTarget;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Optional;
 
-import static com.reedelk.plugin.editor.properties.CommitPropertiesListener.COMMIT_TOPIC;
+import static com.reedelk.plugin.editor.designer.DesignerDropTargetListener.DropActionListener;
+import static com.reedelk.plugin.editor.designer.widget.InfoPanel.BuildingFlowInfoPanel;
+import static com.reedelk.plugin.editor.designer.widget.InfoPanel.FlowWithErrorInfoPanel;
 import static com.reedelk.plugin.service.project.DesignerSelectionManager.CurrentSelectionListener;
 import static com.reedelk.plugin.service.project.DesignerSelectionManager.CurrentSelectionListener.CURRENT_SELECTION_TOPIC;
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
 public abstract class DesignerPanel extends DisposablePanel implements
-        MouseMotionListener, MouseListener, DropTargetListener,
-        SnapshotListener, DrawableListener, ComponentListUpdateNotifier {
+        MouseMotionListener, MouseListenerAdapter, SnapshotListener,
+        DropActionListener, HintResultListener, DrawableListener,
+        ComponentListUpdateNotifier {
 
     private static final Logger LOG = Logger.getInstance(DesignerPanel.class);
 
@@ -56,30 +55,36 @@ public abstract class DesignerPanel extends DisposablePanel implements
 
     private int offsetX;
     private int offsetY;
+    private boolean visible;
     private boolean dragging;
-    private boolean snapshotUpdated = false;
+    private boolean snapshotUpdated;
+
+    private HintResult hintResult = HintResult.EMPTY;
+    private HintRunnable hintCalculator; // TODO: This one should be removed and created a class to manage move operation
+    private HintDrawable hintDrawable;
 
     private GraphNode selected;
     private SelectableItem currentSelection;
     private MessageBusConnection busConnection;
     private CenterOfNodeDrawable centerOfNodeDrawable;
     private CurrentSelectionListener componentSelectedPublisher;
-    private CommitPropertiesListener commitPublisher;
 
-    private InfoPanel errorFlowInfoPanel = new InfoPanel.FlowWithErrorInfoPanel();
-    private InfoPanel buildingFlowInfoPanel = new InfoPanel.BuildingFlowInfoPanel();
+    private InfoPanel errorFlowInfoPanel = new FlowWithErrorInfoPanel();
+    private InfoPanel buildingFlowInfoPanel = new BuildingFlowInfoPanel();
 
-    private boolean visible = false;
+
     private DesignerSelectionManager designerSelectionManager;
+
 
     DesignerPanel(@NotNull Module module,
                   @NotNull FlowSnapshot snapshot,
                   @NotNull DesignerPanelActionHandler actionHandler) {
         this.module = module;
-        this.actionHandler = actionHandler;
         this.snapshot = snapshot;
-        this.snapshot.addListener(this);
+        this.actionHandler = actionHandler;
+        this.hintDrawable = new HintDrawable();
 
+        this.snapshot.addListener(this);
         this.centerOfNodeDrawable = new CenterOfNodeDrawable(snapshot);
 
         addMouseListener(this);
@@ -87,12 +92,10 @@ public abstract class DesignerPanel extends DisposablePanel implements
 
         this.busConnection = module.getMessageBus().connect();
         this.busConnection.subscribe(COMPONENT_LIST_UPDATE_TOPIC, this);
-
         this.componentSelectedPublisher = module.getProject().getMessageBus().syncPublisher(CURRENT_SELECTION_TOPIC);
-        this.commitPublisher = module.getProject().getMessageBus().syncPublisher(COMMIT_TOPIC);
-
         this.designerSelectionManager = ServiceManager.getService(module.getProject(), DesignerSelectionManager.class);
 
+        addDropTargetListener(module, snapshot, actionHandler);
         addAncestorListener();
     }
 
@@ -133,6 +136,8 @@ public abstract class DesignerPanel extends DisposablePanel implements
                     // Draw the arrows connecting the nodes
                     graph.breadthFirstTraversal(node -> node.drawArrows(graph, g2, DesignerPanel.this));
 
+                    hintDrawable.draw(graph, g2, hintResult, selected);
+
                     // Draw on top of everything dragged elements of the graph
                     graph.breadthFirstTraversal(node -> node.drawDrag(graph, g2, DesignerPanel.this));
 
@@ -150,10 +155,14 @@ public abstract class DesignerPanel extends DisposablePanel implements
     @Override
     public void mouseDragged(MouseEvent event) {
         if (selected != null && selected.isDraggable()) {
-            dragging = true;
-            selected.dragging();
+            if (!dragging) {
+                hintCalculator = HintRunnable.start(snapshot, getGraphics2D(), DesignerPanel.this, HintMode.MOVE);
+                dragging = true;
+                selected.dragging();
+            }
+            hintCalculator.point(event.getPoint());
             selected.drag(event.getX() - offsetX, event.getY() - offsetY);
-            repaint();
+            refresh();
         }
     }
 
@@ -197,20 +206,22 @@ public abstract class DesignerPanel extends DisposablePanel implements
             }
 
             // Repaint all nodes
-            repaint();
+            refresh();
         });
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
+    public void mouseReleased(MouseEvent event) {
         if (!dragging) return;
+
+        hintCalculator.stop();
 
         dragging = false;
 
         if (selected != null) {
 
-            int dragX = e.getX();
-            int dragY = e.getY();
+            int dragX = event.getX();
+            int dragY = event.getY();
 
             selected.drag(dragX, dragY);
             selected.drop();
@@ -219,35 +230,8 @@ public abstract class DesignerPanel extends DisposablePanel implements
 
             actionHandler.onMove(getGraphics2D(), selected, dragPoint, this);
 
-            SwingUtilities.invokeLater(this::repaint);
+            refresh();
         }
-    }
-
-    @Override
-    public void drop(DropTargetDropEvent dropEvent) {
-        // Drop operation can only be applied on a valid graph.
-        // A graph is valid if and only if it does not contain
-        // errors and it is not null in the current snapshot.
-        snapshot.applyOnValidGraph(graph -> {
-
-            // Save all the properties being edited in the properties panel before
-            // updating the graph with the add action. This is needed
-            // for instance to write values of the Router table into
-            // the graph before updating it.
-            commitPropertyPanel();
-
-            // If the drop event was successful we select the newly added Graph Node.
-            actionHandler.onAdd(getGraphics2D(), dropEvent, DesignerPanel.this)
-                    .ifPresent(addedNode -> {
-                        unselect();
-                        select(addedNode);
-                    });
-        });
-    }
-
-    @Override
-    public void removeComponent(GraphNode nodeToRemove) {
-        actionHandler.onRemove(nodeToRemove);
     }
 
     @Override
@@ -256,8 +240,8 @@ public abstract class DesignerPanel extends DisposablePanel implements
     }
 
     @Override
-    public void dragEnter(DropTargetDragEvent dtde) {
-        repaint();
+    public void removeComponent(GraphNode nodeToRemove) {
+        actionHandler.onRemove(nodeToRemove);
     }
 
     @Override
@@ -271,19 +255,22 @@ public abstract class DesignerPanel extends DisposablePanel implements
             // If nothing is already selected, we set as current selection
             // the default selected item.
             snapshot.applyOnGraph(graph -> {
-                        boolean isAnySelectionPresent =
-                                designerSelectionManager.getCurrentSelection().isPresent();
+
+                        boolean isAnySelectionPresent = designerSelectionManager.getCurrentSelection().isPresent();
                         if (!isAnySelectionPresent) {
                             select(defaultSelectedItem());
                         }
+
                     },
+
                     absentFlow -> unselect(),
+
                     flowWithError -> unselect());
 
             // When some graph data is changed we need to repaint the canvas.
             // This is needed for instance to refresh flow (or subflow) and
             // components descriptions properties.
-            SwingUtilities.invokeLater(this::repaint);
+            refresh();
         }
     }
 
@@ -297,8 +284,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
             // the selection would be bound to the old object before refreshing
             // the flow (or subflow) graph.
             snapshot.applyOnValidGraph(graph ->
-                    SwingUtilities.invokeLater(() ->
-                            select(defaultSelectedItem())));
+                    SwingUtilities.invokeLater(() -> select(defaultSelectedItem())));
         }
     }
 
@@ -309,33 +295,15 @@ public abstract class DesignerPanel extends DisposablePanel implements
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
-        // nothing to do
+    public void onNodeAdded(GraphNode addedNode) {
+        unselect();
+        select(addedNode);
     }
 
     @Override
-    public void mouseExited(MouseEvent e) {
-        // nothing to do
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        // nothing to do
-    }
-
-    @Override
-    public void dragExit(DropTargetEvent dte) {
-        // nothing to do
-    }
-
-    @Override
-    public void dragOver(DropTargetDragEvent dtde) {
-        // nothing to do
-    }
-
-    @Override
-    public void dropActionChanged(DropTargetDragEvent dtde) {
-        // nothing to do
+    public void onHintResult(HintResult hintResult) {
+        this.hintResult = hintResult;
+        refresh();
     }
 
     protected abstract void beforePaint(Graphics2D graphics);
@@ -372,25 +340,25 @@ public abstract class DesignerPanel extends DisposablePanel implements
     }
 
     /**
-     * Before executing an action which modifies the Graph we *MUST* commit
-     * all the pending changes not closed in the PropertiesPanel. For example
-     * the Router Condition -> Route table uses this event to commit the table's
-     * cell editor before dropping a new node into the graph.
-     */
-    private void commitPropertyPanel() {
-        commitPublisher.onCommit();
-    }
-
-    /**
      * If the graph has grown beyond the current window size,
      * (horizontally or vertically) we must  adapt the window size accordingly.
      */
     private void adjustWindowSize() {
         snapshot.applyOnValidGraph(graph ->
-                DesignerWindowSizeCalculator.from(graph, getGraphics2D()).ifPresent(dimension -> {
-                    setSize(dimension);
-                    setPreferredSize(dimension);
+                DesignerWindowSizeCalculator.from(graph, getGraphics2D()).ifPresent(updatedSize -> {
+                    setSize(updatedSize);
+                    setPreferredSize(updatedSize);
                 }));
+    }
+
+    private void addDropTargetListener(@NotNull Module module, @NotNull FlowSnapshot snapshot, @NotNull DesignerPanelActionHandler actionHandler) {
+        DesignerDropTargetListener dropTargetListener =
+                new DesignerDropTargetListener(module, snapshot, actionHandler, this, this, this);
+        new DropTarget(this, dropTargetListener);
+    }
+
+    private void refresh() {
+        SwingUtilities.invokeLater(this::repaint);
     }
 
     private void addAncestorListener() {

@@ -1,7 +1,6 @@
 package com.reedelk.plugin.commons;
 
 import com.reedelk.plugin.graph.node.GraphNode;
-import com.reedelk.plugin.graph.node.ScopedGraphNode;
 
 import java.util.List;
 
@@ -16,6 +15,6 @@ public class IsPredecessorScopedNode {
      */
     public static boolean of(List<GraphNode> predecessors) {
         return predecessors.size() == 1 &&
-                predecessors.get(0) instanceof ScopedGraphNode;
+                IsScopedGraphNode.of(predecessors.get(0));
     }
 }

@@ -11,11 +11,12 @@ import com.reedelk.plugin.graph.utils.FindFirstNodeOutsideScope;
 import java.awt.*;
 import java.util.List;
 
-import static com.reedelk.plugin.commons.Colors.DESIGNER_VERTICAL_DIVIDER;
+import static com.reedelk.plugin.commons.Colors.SCOPE_VERTICAL_DIVIDER;
 import static com.reedelk.runtime.commons.Preconditions.checkState;
 import static java.awt.BasicStroke.CAP_ROUND;
 import static java.awt.BasicStroke.JOIN_ROUND;
 
+// TODO: Can we make it with the same padding as the other ones?
 public class TryCatchVerticalDivider {
 
     private final Stroke strokeDefault = new BasicStroke(1.3f, CAP_ROUND, JOIN_ROUND);
@@ -38,10 +39,10 @@ public class TryCatchVerticalDivider {
         int count = 0;
         for (GraphNode successor : successors) {
             graphics.setStroke(count == 0 ? strokeDefault : strokeDashed);
-            graphics.setColor(DESIGNER_VERTICAL_DIVIDER);
+            graphics.setColor(SCOPE_VERTICAL_DIVIDER);
 
             int halfWidth = Half.of(scopedGraphNode.width(graphics));
-            int verticalX = x + halfWidth;
+            int verticalX = x + halfWidth - scopedGraphNode.verticalDividerXOffset();
             int maxHeight = ComputeMaxHeight.of(graph, graphics, successor, firstNodeOutsideScope);
             int verticalSeparatorMinY = currentTop + 3;
             int verticalSeparatorMaxY = currentTop + maxHeight - 3;

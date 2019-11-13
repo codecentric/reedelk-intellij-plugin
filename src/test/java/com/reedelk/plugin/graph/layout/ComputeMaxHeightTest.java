@@ -445,4 +445,25 @@ class ComputeMaxHeightTest extends AbstractGraphTest {
         // Then:
         assertThat(actual).isEqualTo(DEFAULT_HEIGHT + 220 + DEFAULT_HEIGHT + 5 + 5 + 5);
     }
+
+    @Test
+    void shouldComputeMaxHeightCorrectlyWhenScopedNodeFollowedByScopedNodeRightOutsideScope() {
+        // Given
+        FlowGraph graph = provider.createGraph();
+        graph.root(root);
+        graph.add(root, forkNode1);
+        graph.add(forkNode1, componentNode1);
+        graph.add(forkNode1, componentNode2);
+        graph.add(componentNode1, routerNode1);
+        graph.add(componentNode2, routerNode1);
+
+        forkNode1.addToScope(componentNode1);
+        forkNode1.addToScope(componentNode2);
+
+        // When
+        int actual = ComputeMaxHeight.of(graph, graphics, forkNode1, routerNode1);
+
+        // Then:
+        assertThat(actual).isEqualTo(DEFAULT_HEIGHT + DEFAULT_HEIGHT + 5 + 5);
+    }
 }

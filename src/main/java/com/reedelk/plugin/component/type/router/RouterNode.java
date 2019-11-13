@@ -1,9 +1,6 @@
 package com.reedelk.plugin.component.type.router;
 
-import com.reedelk.plugin.commons.AddPlaceholder;
-import com.reedelk.plugin.commons.Colors;
-import com.reedelk.plugin.commons.Half;
-import com.reedelk.plugin.commons.Labels;
+import com.reedelk.plugin.commons.*;
 import com.reedelk.plugin.commons.Labels.Placeholder;
 import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.component.type.router.functions.IsDefaultRoute;
@@ -21,12 +18,11 @@ import java.awt.image.ImageObserver;
 import java.util.List;
 import java.util.function.Consumer;
 
+import static com.reedelk.plugin.editor.designer.widget.VerticalDividerArrows.OnProcessSuccessor;
+
 public class RouterNode extends AbstractScopedGraphNode {
 
     public static final String DATA_CONDITION_ROUTE_PAIRS = "conditionRoutePairs";
-
-    private final int nodeHeight = 140;
-    private final int nodeWidth = 170;
 
     private final int verticalDividerXOffset = 45;
     private final int iconXOffset = 20;
@@ -38,7 +34,7 @@ public class RouterNode extends AbstractScopedGraphNode {
         super(componentData);
         this.verticalDivider = new VerticalDivider(this);
         this.verticalDividerArrows =
-                new VerticalDividerArrows(verticalDividerXOffset, new RouterOnProcessSuccessor());
+                new VerticalDividerArrows(verticalDividerXOffset, new AddOtherwiseRouteLabelOnVerticalDividerArrow());
     }
 
     @Override
@@ -51,7 +47,7 @@ public class RouterNode extends AbstractScopedGraphNode {
     public void setPosition(int x, int y) {
         super.setPosition(x, y);
         icon.setPosition(x - iconXOffset, y);
-        verticalDivider.setPosition(x - verticalDividerXOffset, y);
+        verticalDivider.setPosition(x, y);
     }
 
     @Override
@@ -62,12 +58,12 @@ public class RouterNode extends AbstractScopedGraphNode {
 
     @Override
     public int height(Graphics2D graphics) {
-        return nodeHeight;
+        return 140;
     }
 
     @Override
     public int width(Graphics2D graphics) {
-        return nodeWidth;
+        return 170;
     }
 
     // A RouterNode cannot have a node added below the "otherwise" node.
@@ -124,24 +120,32 @@ public class RouterNode extends AbstractScopedGraphNode {
         removeComponentIcon.draw(graphics, observer);
     }
 
+    @Override
+    public int verticalDividerXOffset() {
+        return verticalDividerXOffset;
+    }
+
     private void updateConditionRoutePairs(FlowGraph graph) {
         List<RouterConditionRoutePair> updatedConditions = SyncConditionAndRoutePairs.from(graph, this);
         ComponentData component = componentData();
         component.set(DATA_CONDITION_ROUTE_PAIRS, updatedConditions);
     }
 
-    class RouterOnProcessSuccessor implements VerticalDividerArrows.OnProcessSuccessor {
+    class AddOtherwiseRouteLabelOnVerticalDividerArrow implements OnProcessSuccessor {
 
-        private static final int DEFAULT_ROUTE_TEXT_LEFT_PADDING = 6;
-        private static final int DEFAULT_ROUTE_TEXT_TOP_PADDING = 14;
+        private static final int DEFAULT_ROUTE_TEXT_LEFT_PADDING = 9;
+        private static final int DEFAULT_ROUTE_TEXT_TOP_PADDING = -3;
 
         @Override
         public void onProcess(ScopedGraphNode parent, GraphNode successor, Graphics2D graphics) {
             if (IsDefaultRoute.of(parent, successor)) {
                 int halfWidth = Half.of(parent.width(graphics));
                 int verticalX = parent.x() - verticalDividerXOffset + halfWidth;
-                graphics.setColor(Colors.TEXT_DEFAULT_ROUTE);
+
                 Point targetArrowEnd = successor.getTargetArrowEnd();
+
+                graphics.setColor(Colors.TEXT_DEFAULT_ROUTE);
+                graphics.setFont(Fonts.Router.DEFAULT_ROUTE);
                 graphics.drawString(Labels.ROUTER_DEFAULT_ROUTE, verticalX + DEFAULT_ROUTE_TEXT_LEFT_PADDING,
                         targetArrowEnd.y + DEFAULT_ROUTE_TEXT_TOP_PADDING);
             }

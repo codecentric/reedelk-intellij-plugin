@@ -23,7 +23,7 @@ public class Colors {
     public static final Color SCRIPT_EDITOR_INLINE_ICON_BORDER = Color.LIGHT_GRAY;
 
     public static final JBColor DESIGNER_BG = JBColor.WHITE;
-    public static final JBColor DESIGNER_VERTICAL_DIVIDER = new JBColor(Gray._200, Gray._30);
+    public static final JBColor SCOPE_VERTICAL_DIVIDER = new JBColor(Gray._200, Gray._30);
     public static final JBColor DESIGNER_SELECTED_COMPONENT_BG = new JBColor(Gray._245, Gray._245);
     public static final JBColor DESIGNER_UNSELECTED_SCOPE_BOX_BOUNDARIES = new JBColor(Gray._235, Gray._30);
     public static final JBColor DESIGNER_SELECTED_SCOPE_BOX_BOUNDARIES = new JBColor(Gray._170, Gray._30);
@@ -43,5 +43,6 @@ public class Colors {
     public static final JBColor PALETTE_TEXT_UNSELECTED = JBColor.DARK_GRAY;
 
     public static final JBColor CONTAINER_OBJECT_TYPE_COLLAPSIBLE_BORDER = JBColor.LIGHT_GRAY;
+    public static final JBColor DROP_CIRCLE_HINT = new JBColor(new Color(224, 69, 67), new Color(224, 69, 67));
 
 }

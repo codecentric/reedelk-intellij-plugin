@@ -3,10 +3,7 @@ package com.reedelk.plugin.editor.designer;
 import com.reedelk.plugin.commons.Half;
 import com.reedelk.plugin.component.domain.ComponentClass;
 import com.reedelk.plugin.component.domain.ComponentData;
-import com.reedelk.plugin.editor.designer.widget.Arrow;
-import com.reedelk.plugin.editor.designer.widget.Icon;
-import com.reedelk.plugin.editor.designer.widget.RemoveComponentIcon;
-import com.reedelk.plugin.editor.designer.widget.SelectedBox;
+import com.reedelk.plugin.editor.designer.widget.*;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
@@ -47,7 +44,7 @@ public abstract class AbstractGraphNode implements GraphNode {
         this.solidArrow = new Arrow();
         this.icon = new Icon(componentData);
         this.selectedBox = new SelectedBox();
-        this.draggedIcon = new Icon(componentData);
+        this.draggedIcon = new IconDragging(componentData);
         this.removeComponentIcon = new RemoveComponentIcon();
     }
 
@@ -144,7 +141,7 @@ public abstract class AbstractGraphNode implements GraphNode {
 
     @Override
     public void drawArrows(FlowGraph graph, Graphics2D graphics, ImageObserver observer) {
-        _drawArrows(graph, graphics);
+        internalDrawArrows(graph, graphics);
     }
 
     @Override
@@ -217,7 +214,7 @@ public abstract class AbstractGraphNode implements GraphNode {
      * Draws connections between this node and the next one. If this is the last
      * node of the scope, don't draw any outgoing arrow.
      */
-    private void _drawArrows(FlowGraph graph, Graphics2D graphics) {
+    private void internalDrawArrows(FlowGraph graph, Graphics2D graphics) {
         Optional<ScopedGraphNode> wrappingScope = FindScope.of(graph, this);
         if (wrappingScope.isPresent()) {
             List<GraphNode> nodesBelongingWrappingScope = ListLastNodesOfScope.from(graph, wrappingScope.get());

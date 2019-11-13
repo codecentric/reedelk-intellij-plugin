@@ -15,19 +15,20 @@ import static java.awt.BasicStroke.JOIN_ROUND;
 
 public class VerticalDivider {
 
-    private final Stroke STROKE = new BasicStroke(1.3f, CAP_ROUND, JOIN_ROUND);
+    private final Color color;
+    private final Stroke stroke;
     private final ScopedGraphNode scopedGraphNode;
+
     private int x;
     private int y;
 
     public VerticalDivider(ScopedGraphNode scopedGraphNode) {
         this.scopedGraphNode = scopedGraphNode;
+        this.color = Colors.SCOPE_VERTICAL_DIVIDER;
+        this.stroke = new BasicStroke(1.3f, CAP_ROUND, JOIN_ROUND);
     }
 
     public void draw(FlowGraph graph, Graphics2D graphics) {
-        graphics.setStroke(STROKE);
-        graphics.setColor(Colors.DESIGNER_VERTICAL_DIVIDER);
-
         int padding = (ScopedGraphNode.VERTICAL_PADDING * 2) * 2;
 
         GraphNode firstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, scopedGraphNode).orElse(null);
@@ -39,10 +40,12 @@ public class VerticalDivider {
 
         int halfWidth = Half.of(scopedGraphNode.width(graphics));
 
-        int verticalX = x + halfWidth;
+        int verticalX = x + halfWidth - scopedGraphNode.verticalDividerXOffset();
         int verticalSeparatorMinY = y - halfScopeHeight;
         int verticalSeparatorMaxY = y + halfScopeHeight;
 
+        graphics.setColor(color);
+        graphics.setStroke(stroke);
         graphics.drawLine(verticalX, verticalSeparatorMinY, verticalX, verticalSeparatorMaxY);
     }
 

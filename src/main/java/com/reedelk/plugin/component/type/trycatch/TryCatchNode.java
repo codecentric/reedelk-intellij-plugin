@@ -15,8 +15,6 @@ import java.awt.image.ImageObserver;
 
 public class TryCatchNode extends AbstractScopedGraphNode {
 
-    private final int nodeWidth = 130;
-    private final int nodeHeight = 140;
     private final int verticalDividerXOffset = 7;
 
     private final TryCatchVerticalDivider verticalDivider;
@@ -43,7 +41,7 @@ public class TryCatchNode extends AbstractScopedGraphNode {
     @Override
     public void setPosition(int x, int y) {
         super.setPosition(x, y);
-        verticalDivider.setPosition(x - verticalDividerXOffset, y);
+        verticalDivider.setPosition(x, y);
         verticalDividerArrows.setPosition(x - verticalDividerXOffset, y);
     }
 
@@ -88,11 +86,16 @@ public class TryCatchNode extends AbstractScopedGraphNode {
 
     @Override
     public int height(Graphics2D graphics) {
-        return nodeHeight;
+        return 140;
     }
 
     @Override
     public int width(Graphics2D graphics) {
-        return nodeWidth;
+        return 130;
+    }
+
+    @Override
+    public int verticalDividerXOffset() {
+        return verticalDividerXOffset;
     }
 }

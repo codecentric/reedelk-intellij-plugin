@@ -20,4 +20,6 @@ public interface ScopedGraphNode extends GraphNode {
 
     ScopeBoundaries getScopeBoundaries(FlowGraph graph, Graphics2D graphics);
 
+    int verticalDividerXOffset();
+
 }
