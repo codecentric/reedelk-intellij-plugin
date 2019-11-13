@@ -1,4 +1,4 @@
-package com.reedelk.plugin.graph.action.add;
+package com.reedelk.plugin.editor.designer.action.add;
 
 import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.graph.FlowGraph;

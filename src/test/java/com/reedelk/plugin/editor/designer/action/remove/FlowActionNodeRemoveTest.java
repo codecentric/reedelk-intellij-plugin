@@ -1,8 +1,7 @@
-package com.reedelk.plugin.graph.action.remove;
+package com.reedelk.plugin.editor.designer.action.remove;
 
 import com.reedelk.plugin.AbstractGraphTest;
 import com.reedelk.plugin.assertion.PluginAssertion;
-import com.reedelk.plugin.editor.designer.action.remove.FlowActionNodeRemove;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowGraphChangeAware;
 import org.junit.jupiter.api.Test;
