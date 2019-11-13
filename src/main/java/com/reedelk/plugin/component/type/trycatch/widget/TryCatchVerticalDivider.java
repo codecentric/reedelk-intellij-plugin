@@ -16,7 +16,6 @@ import static com.reedelk.runtime.commons.Preconditions.checkState;
 import static java.awt.BasicStroke.CAP_ROUND;
 import static java.awt.BasicStroke.JOIN_ROUND;
 
-// TODO: Can we make it with the same padding as the other ones?
 public class TryCatchVerticalDivider {
 
     private final Stroke strokeDefault = new BasicStroke(1.3f, CAP_ROUND, JOIN_ROUND);
@@ -44,8 +43,8 @@ public class TryCatchVerticalDivider {
             int halfWidth = Half.of(scopedGraphNode.width(graphics));
             int verticalX = x + halfWidth - scopedGraphNode.verticalDividerXOffset();
             int maxHeight = ComputeMaxHeight.of(graph, graphics, successor, firstNodeOutsideScope);
-            int verticalSeparatorMinY = currentTop + 3;
-            int verticalSeparatorMaxY = currentTop + maxHeight - 3;
+            int verticalSeparatorMinY = currentTop + ScopedGraphNode.VERTICAL_PADDING;
+            int verticalSeparatorMaxY = currentTop + maxHeight - ScopedGraphNode.VERTICAL_PADDING;
 
             graphics.drawLine(verticalX, verticalSeparatorMinY, verticalX, verticalSeparatorMaxY);
 

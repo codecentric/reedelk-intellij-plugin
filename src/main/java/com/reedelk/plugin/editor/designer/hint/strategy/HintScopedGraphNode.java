@@ -32,7 +32,7 @@ public class HintScopedGraphNode extends HintGraphNode {
             // Draw last scope
             ScopeBoundaries scopeBoundaries = scopedGraphNode.getScopeBoundaries(graph, g2);
             if (hintPoint.x <= scopeBoundaries.getX() + scopeBoundaries.getWidth()) {
-                drawHintOnVerticalBar(graph, g2, scopedGraphNode);
+                drawVerticalBarHint(graph, g2, scopedGraphNode);
             } else {
                 super.draw(graph, g2, hintResult, selectedNode);
             }
@@ -44,7 +44,7 @@ public class HintScopedGraphNode extends HintGraphNode {
 
                 if (isInsideTopArea(graph, successors, successorIndex, scopedGraphNode, hintPoint, g2)) {
                     if (scopedGraphNode.isSuccessorAllowedTop(graph, hint, successorIndex)) {
-                        drawHintOnVerticalBar(graph, g2, scopedGraphNode);
+                        drawVerticalBarHint(graph, g2, scopedGraphNode);
 
                     }
                     return;
@@ -52,14 +52,14 @@ public class HintScopedGraphNode extends HintGraphNode {
                 if (isInsideCenterArea(successor, hintPoint, g2)) {
                     // Need to draw
                     if (selectedNode != successor) {
-                        drawHintAfterVerticalBar(g2, scopedGraphNode, successor);
+                        drawNodeAfterVerticalBarHint(g2, scopedGraphNode, successor);
                     }
                     return;
                 }
                 if (isInsideBottomArea(graph, successors, successorIndex, scopedGraphNode, hintPoint, g2)) {
                     if (scopedGraphNode.isSuccessorAllowedBottom(graph, hint, successorIndex + 1)) {
                         if (selectedNode != successor) {
-                            drawHintOnVerticalBar(graph, g2, scopedGraphNode);
+                            drawVerticalBarHint(graph, g2, scopedGraphNode);
                         }
                     }
                     return;
