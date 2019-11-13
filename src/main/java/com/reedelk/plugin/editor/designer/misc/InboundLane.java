@@ -17,8 +17,8 @@ import java.util.List;
 
 public class InboundLane {
 
+    private static final String INBOUND_STRING = "Event";
     private final Stroke dashed = new BasicStroke(0.7f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{3}, 0);
-    private final String INBOUND_STRING = "Event";
 
     private final InboundComponent inboundComponent;
     private final int topPadding;
