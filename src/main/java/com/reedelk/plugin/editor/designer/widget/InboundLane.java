@@ -6,6 +6,7 @@ import com.reedelk.plugin.commons.Fonts;
 import com.reedelk.plugin.commons.Half;
 import com.reedelk.plugin.commons.Images;
 import com.reedelk.plugin.editor.designer.AbstractGraphNode;
+import com.reedelk.plugin.editor.designer.text.AbstractText;
 import com.reedelk.plugin.graph.FlowGraph;
 
 import java.awt.*;

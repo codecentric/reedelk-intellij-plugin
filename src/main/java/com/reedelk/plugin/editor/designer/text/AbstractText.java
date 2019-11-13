@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.designer.widget;
+package com.reedelk.plugin.editor.designer.text;
 
 import com.reedelk.plugin.commons.Half;
 
@@ -18,7 +18,7 @@ public abstract class AbstractText {
     private int x;
     private int y;
 
-    AbstractText(Font font, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment) {
+    public AbstractText(Font font, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment) {
         this.horizontalAlignment = horizontalAlignment;
         this.verticalAlignment = verticalAlignment;
         this.font = font;

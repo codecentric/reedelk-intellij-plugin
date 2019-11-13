@@ -3,6 +3,7 @@ package com.reedelk.plugin.editor.designer.widget;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.Fonts;
 import com.reedelk.plugin.commons.Half;
+import com.reedelk.plugin.editor.designer.text.AbstractText;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.runtime.api.commons.StringUtils;
 

@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.designer.widget;
+package com.reedelk.plugin.editor.designer.scopebox;
 
 import com.reedelk.plugin.AbstractGraphTest;
 import com.reedelk.plugin.graph.FlowGraph;

@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.designer.widget;
+package com.reedelk.plugin.editor.designer.scopebox;
 
 import com.intellij.ui.JBColor;
 import com.reedelk.plugin.commons.Half;

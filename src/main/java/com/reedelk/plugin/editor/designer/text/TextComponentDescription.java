@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.designer.widget;
+package com.reedelk.plugin.editor.designer.text;
 
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.Fonts;

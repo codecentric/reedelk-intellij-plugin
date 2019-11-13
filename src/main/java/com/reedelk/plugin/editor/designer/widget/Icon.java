@@ -2,6 +2,8 @@ package com.reedelk.plugin.editor.designer.widget;
 
 import com.reedelk.plugin.commons.Half;
 import com.reedelk.plugin.component.domain.ComponentData;
+import com.reedelk.plugin.editor.designer.text.TextComponentDescription;
+import com.reedelk.plugin.editor.designer.text.TextComponentTitle;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
