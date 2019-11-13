@@ -16,7 +16,6 @@ public class ForkNode extends AbstractScopedGraphNode {
     private final VerticalDivider verticalDivider;
     private final VerticalDividerArrows verticalDividerArrows;
 
-
     public ForkNode(ComponentData componentData) {
         super(componentData);
         this.verticalDivider = new VerticalDivider(this);

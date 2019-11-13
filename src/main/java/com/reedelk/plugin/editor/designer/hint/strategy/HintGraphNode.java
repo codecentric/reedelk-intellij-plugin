@@ -9,21 +9,26 @@ import com.reedelk.plugin.graph.node.ScopeBoundaries;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
 import com.reedelk.plugin.graph.utils.FindScopes;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
+import java.awt.image.ImageObserver;
 import java.util.Stack;
 
 public class HintGraphNode extends BaseStrategy {
 
     @Override
-    public boolean applicable(@NotNull FlowGraph graph, @NotNull Graphics2D g2, @NotNull HintResult hintResult, @Nullable GraphNode selectedNode) {
+    public boolean applicable(@NotNull FlowGraph graph,
+                              @NotNull Graphics2D g2,
+                              @NotNull HintResult hintResult,
+                              @NotNull ImageObserver imageObserver) {
         return IsNotScopedGraphNode.of(hintResult.getHintNode());
     }
 
     @Override
-    public void draw(@NotNull FlowGraph graph, @NotNull Graphics2D g2, @NotNull HintResult hintResult, @Nullable GraphNode selectedNode) {
-
+    public void draw(@NotNull FlowGraph graph,
+                     @NotNull Graphics2D g2,
+                     @NotNull HintResult hintResult,
+                     @NotNull ImageObserver imageObserver) {
         GraphNode hintNode = hintResult.getHintNode();
 
         Stack<ScopedGraphNode> stackOfScopes = FindScopes.of(graph, hintNode);

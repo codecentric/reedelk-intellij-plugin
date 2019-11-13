@@ -1,6 +1,7 @@
 package com.reedelk.plugin.editor.designer;
 
 import com.reedelk.plugin.commons.Half;
+import com.reedelk.plugin.commons.IsPlaceholderNode;
 import com.reedelk.plugin.component.domain.ComponentClass;
 import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.editor.designer.arrow.Arrow;
@@ -212,6 +213,13 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
     @Override
     public Point getSourceArrowStart() {
         return icon.getSourceArrowStart();
+    }
+
+    @Override
+    public boolean isSuccessorAllowedBefore(FlowGraph graph, GraphNode successor, int index) {
+        // If the successor at 'index' is a Placeholder node, then we are not allowed to place the
+        // successor before. This is because a Placeholder can only be replaced.
+        return !IsPlaceholderNode.of(graph.successors(this).get(index));
     }
 
     @Override

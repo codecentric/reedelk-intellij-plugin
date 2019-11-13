@@ -36,7 +36,7 @@ public class SubFlowStrategyBuilder extends StrategyBuilder {
 
         } else {
             return FindClosestPrecedingNode.of(graph, dropPoint, graphics)
-                    .map(this::getStrategyForClosestPrecedingNode)
+                    .map(this::strategyFromClosestPrecedingNode)
                     .orElseGet(NoOpStrategy::new);
         }
     }

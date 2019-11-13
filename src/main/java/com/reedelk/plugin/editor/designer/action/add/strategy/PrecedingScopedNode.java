@@ -79,6 +79,7 @@ public class PrecedingScopedNode implements Strategy {
                 if (closestPrecedingNode.isSuccessorAllowedTop(graph, node, successorIndex)) {
                     graph.add(closestPrecedingNode, node, successorIndex);
                     closestPrecedingNode.addToScope(node);
+
                     FindFirstNodeOutsideScope.of(graph, closestPrecedingNode)
                             .ifPresent(firstNodeOutsideScope -> graph.add(node, firstNodeOutsideScope));
 
@@ -95,9 +96,10 @@ public class PrecedingScopedNode implements Strategy {
                     graph.remove(closestPrecedingNode, successor);
                     graph.add(closestPrecedingNode, node, successorIndex);
                     graph.add(node, successor);
-                    closestPrecedingNode.addToScope(node);
 
+                    closestPrecedingNode.addToScope(node);
                     closestPrecedingNode.onSuccessorAdded(graph, node, successorIndex);
+
                     if (IsScopedGraphNode.of(node)) {
                         node.onAdded(graph, placeholderProvider);
                     }
@@ -109,6 +111,7 @@ public class PrecedingScopedNode implements Strategy {
                 if (closestPrecedingNode.isSuccessorAllowedBottom(graph, node, successorIndex + 1)) {
                     graph.add(closestPrecedingNode, node, successorIndex + 1);
                     closestPrecedingNode.addToScope(node);
+
                     FindFirstNodeOutsideScope.of(graph, closestPrecedingNode)
                             .ifPresent(firstNodeOutsideScope -> graph.add(node, firstNodeOutsideScope));
 

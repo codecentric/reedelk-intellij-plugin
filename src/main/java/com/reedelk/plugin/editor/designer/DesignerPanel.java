@@ -142,7 +142,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
                     // Draw the arrows connecting the nodes
                     graph.breadthFirstTraversal(node -> node.drawArrows(graph, g2, DesignerPanel.this));
 
-                    hintDrawable.draw(graph, g2, hintResult, selected);
+                    hintDrawable.draw(graph, g2, hintResult, this);
 
                     // Draw on top of everything dragged elements of the graph
                     graph.breadthFirstTraversal(node -> node.drawDrag(graph, g2, DesignerPanel.this));

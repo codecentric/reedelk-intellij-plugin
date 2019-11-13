@@ -46,23 +46,23 @@ public class DesignerDropTargetListener implements DropTargetListener {
     }
 
     @Override
-    public void dragEnter(DropTargetDragEvent dropTargetEvent) {
-        Graphics2D graphics2D = (Graphics2D) dropTargetEvent.getDropTargetContext().getComponent().getGraphics();
+    public void dragEnter(DropTargetDragEvent event) {
+        Graphics2D graphics2D = (Graphics2D) event.getDropTargetContext().getComponent().getGraphics();
         hintCalculator = HintRunnable.start(snapshot, graphics2D, hintResultListenerListener);
     }
 
     @Override
-    public void dragOver(DropTargetDragEvent dropTargetDragEvent) {
-        hintCalculator.point(dropTargetDragEvent.getLocation());
+    public void dragOver(DropTargetDragEvent event) {
+        hintCalculator.point(event.getLocation());
     }
 
     @Override
-    public void dragExit(DropTargetEvent dropTargetEvent) {
+    public void dragExit(DropTargetEvent event) {
         hintCalculator.stop();
     }
 
     @Override
-    public void drop(DropTargetDropEvent dropEvent) {
+    public void drop(DropTargetDropEvent event) {
         hintCalculator.stop();
 
         // Drop operation can only be applied on a valid graph.
@@ -76,19 +76,19 @@ public class DesignerDropTargetListener implements DropTargetListener {
             // cell editor before dropping a new node into the graph.
             commitPublisher.onCommit();
 
-            Graphics2D g2 = (Graphics2D) dropEvent.getDropTargetContext().getComponent().getGraphics();
+            Graphics2D g2 = (Graphics2D) event.getDropTargetContext().getComponent().getGraphics();
 
             Optional<GraphNode> addedNode =
-                    actionHandler.onAdd(g2, dropEvent.getLocation(), dropEvent.getTransferable(), imageObserver);
+                    actionHandler.onAdd(g2, event.getLocation(), event.getTransferable(), imageObserver);
 
             // If the result of the action was a node added to the graph,
             // we must accept the DROP action and notify the listener about
             // the newly added node. Otherwise we reject the drop action.
             if (addedNode.isPresent()) {
-                dropEvent.acceptDrop(ACTION_COPY_OR_MOVE);
+                event.acceptDrop(ACTION_COPY_OR_MOVE);
                 dropActionListener.onNodeAdded(addedNode.get());
             } else {
-                dropEvent.rejectDrop();
+                event.rejectDrop();
             }
         });
     }

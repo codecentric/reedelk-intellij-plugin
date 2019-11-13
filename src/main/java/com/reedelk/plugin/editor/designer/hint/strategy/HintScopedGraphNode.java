@@ -7,9 +7,9 @@ import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopeBoundaries;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
+import java.awt.image.ImageObserver;
 import java.util.List;
 
 import static com.reedelk.plugin.commons.ScopeUtils.*;
@@ -17,53 +17,56 @@ import static com.reedelk.plugin.commons.ScopeUtils.*;
 public class HintScopedGraphNode extends HintGraphNode {
 
     @Override
-    public boolean applicable(@NotNull FlowGraph graph, @NotNull Graphics2D g2, @NotNull HintResult hintResult, @Nullable GraphNode selectedNode) {
+    public boolean applicable(@NotNull FlowGraph graph,
+                              @NotNull Graphics2D g2,
+                              @NotNull HintResult hintResult,
+                              @NotNull ImageObserver imageObserver) {
         return IsScopedGraphNode.of(hintResult.getHintNode());
     }
 
     @Override
-    public void draw(@NotNull FlowGraph graph, @NotNull Graphics2D g2, @NotNull HintResult hintResult, @Nullable GraphNode selectedNode) {
+    public void draw(@NotNull FlowGraph graph,
+                     @NotNull Graphics2D g2,
+                     @NotNull HintResult hintResult,
+                     @NotNull ImageObserver imageObserver) {
         // If scope is empty, the node must be the first one right outside the scope
         Point hintPoint = hintResult.getHintPoint();
-        GraphNode hint = hintResult.getHintNode();
-
-        ScopedGraphNode scopedGraphNode = (ScopedGraphNode) hint;
-        if (scopedGraphNode.getScope().isEmpty()) {
-            // Draw last scope
-            ScopeBoundaries scopeBoundaries = scopedGraphNode.getScopeBoundaries(graph, g2);
-            if (hintPoint.x <= scopeBoundaries.getX() + scopeBoundaries.getWidth()) {
-                drawVerticalBarHint(graph, g2, scopedGraphNode);
-            } else {
-                super.draw(graph, g2, hintResult, selectedNode);
-            }
-
+        ScopedGraphNode hint = (ScopedGraphNode) hintResult.getHintNode();
+        if (hint.getScope().isEmpty()) {
+            emptyScope(graph, g2, hintResult, hintPoint, hint, imageObserver);
         } else {
-            List<GraphNode> successors = graph.successors(scopedGraphNode);
-            for (int successorIndex = 0; successorIndex < successors.size(); successorIndex++) {
-                GraphNode successor = successors.get(successorIndex);
+            notEmptyScope(graph, g2, hintPoint, hint);
+        }
+    }
 
-                if (isInsideTopArea(graph, successors, successorIndex, scopedGraphNode, hintPoint, g2)) {
-                    if (scopedGraphNode.isSuccessorAllowedTop(graph, hint, successorIndex)) {
-                        drawVerticalBarHint(graph, g2, scopedGraphNode);
+    private void emptyScope(@NotNull FlowGraph graph, @NotNull Graphics2D g2, @NotNull HintResult hintResult, Point hintPoint, ScopedGraphNode scopedGraphNodeHint, ImageObserver imageObserver) {
+        ScopeBoundaries scopeBoundaries = scopedGraphNodeHint.getScopeBoundaries(graph, g2);
+        if (hintPoint.x <= scopeBoundaries.getX() + scopeBoundaries.getWidth()) {
+            drawVerticalBarHint(graph, g2, scopedGraphNodeHint);
+        } else {
+            super.draw(graph, g2, hintResult, imageObserver);
+        }
+    }
 
-                    }
-                    return;
+    private void notEmptyScope(@NotNull FlowGraph graph, @NotNull Graphics2D g2, Point hintPoint, ScopedGraphNode scopedGraphNodeHint) {
+        List<GraphNode> successors = graph.successors(scopedGraphNodeHint);
+        for (int successorIndex = 0; successorIndex < successors.size(); successorIndex++) {
+            GraphNode successor = successors.get(successorIndex);
+            if (isInsideTopArea(graph, successors, successorIndex, scopedGraphNodeHint, hintPoint, g2)) {
+                if (scopedGraphNodeHint.isSuccessorAllowedTop(graph, scopedGraphNodeHint, successorIndex)) {
+                    drawVerticalBarHint(graph, g2, scopedGraphNodeHint);
                 }
-                if (isInsideCenterArea(successor, hintPoint, g2)) {
-                    // Need to draw
-                    if (selectedNode != successor) {
-                        drawNodeAfterVerticalBarHint(g2, scopedGraphNode, successor);
-                    }
-                    return;
+                break;
+            } else if (isInsideCenterArea(successor, hintPoint, g2)) {
+                if (scopedGraphNodeHint.isSuccessorAllowedBefore(graph, scopedGraphNodeHint, successorIndex)) {
+                    drawNodeAfterVerticalBarHint(g2, scopedGraphNodeHint, successor);
                 }
-                if (isInsideBottomArea(graph, successors, successorIndex, scopedGraphNode, hintPoint, g2)) {
-                    if (scopedGraphNode.isSuccessorAllowedBottom(graph, hint, successorIndex + 1)) {
-                        if (selectedNode != successor) {
-                            drawVerticalBarHint(graph, g2, scopedGraphNode);
-                        }
-                    }
-                    return;
+                break;
+            } else if (isInsideBottomArea(graph, successors, successorIndex, scopedGraphNodeHint, hintPoint, g2)) {
+                if (scopedGraphNodeHint.isSuccessorAllowedBottom(graph, scopedGraphNodeHint, successorIndex + 1)) {
+                    drawVerticalBarHint(graph, g2, scopedGraphNodeHint);
                 }
+                break;
             }
         }
     }

@@ -44,8 +44,8 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
     protected final FlowSnapshot snapshot;
     protected final Module module;
 
-    protected AbstractDesignerPanelActionHandler(@NotNull Module module,
-                                                 @NotNull FlowSnapshot snapshot) {
+    AbstractDesignerPanelActionHandler(@NotNull Module module,
+                                       @NotNull FlowSnapshot snapshot) {
         this.placeholderProvider = new DefaultPlaceholderProvider(module);
         this.snapshot = snapshot;
         this.module = module;
@@ -82,7 +82,7 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
     @Override
     public Optional<GraphNode> onAdd(Graphics2D graphics, Point dropPoint, Transferable transferable, ImageObserver observer) {
 
-        return extractComponentDescription(transferable).map(descriptor -> {
+        return componentDescriptorOf(transferable).map(descriptor -> {
 
             GraphNode nodeToAdd = GraphNodeFactory.get(descriptor);
 
@@ -110,7 +110,7 @@ public abstract class AbstractDesignerPanelActionHandler implements DesignerPane
 
     protected abstract Action getActionAdd(GraphNode nodeToAdd, Point dropPoint, Graphics2D graphics, ImageObserver observer);
 
-    private Optional<ComponentDescriptor> extractComponentDescription(Transferable transferable) {
+    private Optional<ComponentDescriptor> componentDescriptorOf(Transferable transferable) {
         DataFlavor[] transferDataFlavor = transferable.getTransferDataFlavors();
         if (asList(transferDataFlavor).contains(FLAVOR)) {
             try {

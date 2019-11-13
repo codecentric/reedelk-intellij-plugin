@@ -53,7 +53,7 @@ public abstract class StrategyBuilder {
     public abstract Strategy build();
 
     @NotNull
-    Strategy getStrategyForClosestPrecedingNode(GraphNode precedingNode) {
+    Strategy strategyFromClosestPrecedingNode(GraphNode precedingNode) {
         if (graph.successors(precedingNode).isEmpty()) {
             return new PrecedingNodeWithoutSuccessor(graph, dropPoint, precedingNode, graphics, placeholderProvider);
 
