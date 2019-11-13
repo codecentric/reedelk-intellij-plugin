@@ -1,7 +1,6 @@
 package com.reedelk.plugin.editor.designer.dnd;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.plugin.editor.designer.hint.HintMode;
 import com.reedelk.plugin.editor.designer.hint.HintResultListener;
 import com.reedelk.plugin.editor.designer.hint.HintRunnable;
 import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
@@ -49,7 +48,7 @@ public class DesignerDropTargetListener implements DropTargetListener {
     @Override
     public void dragEnter(DropTargetDragEvent dropTargetEvent) {
         Graphics2D graphics2D = (Graphics2D) dropTargetEvent.getDropTargetContext().getComponent().getGraphics();
-        hintCalculator = HintRunnable.start(snapshot, graphics2D, hintResultListenerListener, HintMode.DROP);
+        hintCalculator = HintRunnable.start(snapshot, graphics2D, hintResultListenerListener);
     }
 
     @Override

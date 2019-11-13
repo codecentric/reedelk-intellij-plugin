@@ -14,7 +14,10 @@ import com.reedelk.plugin.editor.designer.debug.CenterOfNodeDrawable;
 import com.reedelk.plugin.editor.designer.dnd.DesignerDropTargetListener;
 import com.reedelk.plugin.editor.designer.dnd.DesignerPanelActionHandler;
 import com.reedelk.plugin.editor.designer.dnd.MouseListenerAdapter;
-import com.reedelk.plugin.editor.designer.hint.*;
+import com.reedelk.plugin.editor.designer.hint.HintDrawable;
+import com.reedelk.plugin.editor.designer.hint.HintResult;
+import com.reedelk.plugin.editor.designer.hint.HintResultListener;
+import com.reedelk.plugin.editor.designer.hint.HintRunnable;
 import com.reedelk.plugin.editor.designer.misc.InfoPanel;
 import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 import com.reedelk.plugin.graph.FlowSnapshot;
@@ -159,7 +162,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
     public void mouseDragged(MouseEvent event) {
         if (selected != null && selected.isDraggable()) {
             if (!dragging) {
-                hintCalculator = HintRunnable.start(snapshot, getGraphics2D(), DesignerPanel.this, HintMode.MOVE);
+                hintCalculator = HintRunnable.start(snapshot, getGraphics2D(), DesignerPanel.this);
                 dragging = true;
                 selected.dragging();
             }

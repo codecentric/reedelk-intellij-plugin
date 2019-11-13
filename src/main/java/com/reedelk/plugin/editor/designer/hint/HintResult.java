@@ -6,24 +6,18 @@ import java.awt.*;
 
 public class HintResult {
 
-    public static final HintResult EMPTY = new HintResult(null, null, null);
+    public static final HintResult EMPTY = new HintResult(null, null);
 
     private final Point hintPoint;
-    private final HintMode hintMode;
     private final GraphNode hintNode;
 
-    HintResult(GraphNode hintNode, Point hintPoint, HintMode hintMode) {
+    HintResult(GraphNode hintNode, Point hintPoint) {
         this.hintNode = hintNode;
-        this.hintMode = hintMode;
         this.hintPoint = hintPoint;
     }
 
     public GraphNode getHintNode() {
         return hintNode;
-    }
-
-    public HintMode getHintMode() {
-        return hintMode;
     }
 
     public Point getHintPoint() {

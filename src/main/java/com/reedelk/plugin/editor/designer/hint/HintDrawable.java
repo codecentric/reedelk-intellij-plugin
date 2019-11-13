@@ -1,6 +1,9 @@
 package com.reedelk.plugin.editor.designer.hint;
 
-import com.reedelk.plugin.editor.designer.hint.strategy.*;
+import com.reedelk.plugin.editor.designer.hint.strategy.EmptyHintNode;
+import com.reedelk.plugin.editor.designer.hint.strategy.HintGraphNode;
+import com.reedelk.plugin.editor.designer.hint.strategy.HintScopedGraphNode;
+import com.reedelk.plugin.editor.designer.hint.strategy.Strategy;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 
@@ -14,8 +17,6 @@ public class HintDrawable {
 
     private List<Strategy> MOVE_HINT_HANDLERS = unmodifiableList(asList(
             new EmptyHintNode(),
-            new HintGraphNodeEqualsSelectedNode(),
-            new HintGraphNodeSuccessorIsSelectedNode(),
             new HintGraphNode(),
             new HintScopedGraphNode()));
 
