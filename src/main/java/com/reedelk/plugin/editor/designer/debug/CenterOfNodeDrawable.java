@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.designer.misc;
+package com.reedelk.plugin.editor.designer.debug;
 
 import com.reedelk.plugin.commons.DebugControls;
 import com.reedelk.plugin.commons.Half;
