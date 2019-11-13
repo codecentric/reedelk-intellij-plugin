@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.designer;
+package com.reedelk.plugin.editor.designer.dnd;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;

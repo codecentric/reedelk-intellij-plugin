@@ -12,6 +12,7 @@ import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.component.scanner.ComponentListUpdateNotifier;
 import com.reedelk.plugin.editor.designer.dnd.DesignerDropTargetListener;
 import com.reedelk.plugin.editor.designer.dnd.DesignerPanelActionHandler;
+import com.reedelk.plugin.editor.designer.dnd.MouseListenerAdapter;
 import com.reedelk.plugin.editor.designer.hint.*;
 import com.reedelk.plugin.editor.designer.misc.CenterOfNodeDrawable;
 import com.reedelk.plugin.editor.designer.misc.InfoPanel;
