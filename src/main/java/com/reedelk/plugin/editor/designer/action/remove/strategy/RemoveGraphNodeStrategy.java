@@ -1,6 +1,7 @@
 package com.reedelk.plugin.editor.designer.action.remove.strategy;
 
 import com.reedelk.plugin.commons.GetSuccessorIndex;
+import com.reedelk.plugin.commons.IsScopedGraphNode;
 import com.reedelk.plugin.editor.designer.action.Strategy;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -42,7 +43,7 @@ public class RemoveGraphNodeStrategy implements Strategy {
             // This is a node with at least one predecessor. We must connect predecessors
             // with the node to remove successors.
             for (GraphNode predecessor : predecessors) {
-                if (predecessor instanceof ScopedGraphNode) {
+                if (IsScopedGraphNode.of(predecessor)) {
                     removeSuccessorOfScopedNode(toRemove, (ScopedGraphNode) predecessor, successor);
                 } else {
                     removeSuccessorOfNodeStrategy(toRemove, predecessor, successor);

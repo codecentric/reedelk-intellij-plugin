@@ -1,5 +1,6 @@
 package com.reedelk.plugin.graph.utils;
 
+import com.reedelk.plugin.commons.IsScopedGraphNode;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
@@ -26,7 +27,7 @@ public class CollectNodesBetween {
                 accumulator.add(successor);
             }
 
-            if (successor instanceof ScopedGraphNode) {
+            if (IsScopedGraphNode.of(successor)) {
                 FindFirstNodeOutsideScope.of(graph, (ScopedGraphNode) successor)
                         .ifPresent(node -> {
                             if (node != n2) accumulator.add(node);

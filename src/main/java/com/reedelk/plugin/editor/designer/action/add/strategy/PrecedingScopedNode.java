@@ -1,5 +1,6 @@
 package com.reedelk.plugin.editor.designer.action.add.strategy;
 
+import com.reedelk.plugin.commons.IsScopedGraphNode;
 import com.reedelk.plugin.editor.designer.action.Strategy;
 import com.reedelk.plugin.editor.designer.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.FlowGraph;
@@ -82,7 +83,7 @@ public class PrecedingScopedNode implements Strategy {
                             .ifPresent(firstNodeOutsideScope -> graph.add(node, firstNodeOutsideScope));
 
                     closestPrecedingNode.onSuccessorAdded(graph, node, successorIndex);
-                    if (node instanceof ScopedGraphNode) {
+                    if (IsScopedGraphNode.of(node)) {
                         node.onAdded(graph, placeholderProvider);
                     }
                 }
@@ -97,7 +98,7 @@ public class PrecedingScopedNode implements Strategy {
                     closestPrecedingNode.addToScope(node);
 
                     closestPrecedingNode.onSuccessorAdded(graph, node, successorIndex);
-                    if (node instanceof ScopedGraphNode) {
+                    if (IsScopedGraphNode.of(node)) {
                         node.onAdded(graph, placeholderProvider);
                     }
                 }
@@ -112,7 +113,7 @@ public class PrecedingScopedNode implements Strategy {
                             .ifPresent(firstNodeOutsideScope -> graph.add(node, firstNodeOutsideScope));
 
                     closestPrecedingNode.onSuccessorAdded(graph, node, successorIndex);
-                    if (node instanceof ScopedGraphNode) {
+                    if (IsScopedGraphNode.of(node)) {
                         node.onAdded(graph, placeholderProvider);
                     }
                 }

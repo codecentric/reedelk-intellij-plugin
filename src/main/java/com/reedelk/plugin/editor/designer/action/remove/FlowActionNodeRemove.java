@@ -1,5 +1,6 @@
 package com.reedelk.plugin.editor.designer.action.remove;
 
+import com.reedelk.plugin.commons.IsScopedGraphNode;
 import com.reedelk.plugin.editor.designer.action.Action;
 import com.reedelk.plugin.editor.designer.action.Strategy;
 import com.reedelk.plugin.editor.designer.action.remove.strategy.FlowRemoveRootStrategy;
@@ -8,7 +9,6 @@ import com.reedelk.plugin.editor.designer.action.remove.strategy.RemoveGraphNode
 import com.reedelk.plugin.editor.designer.action.remove.strategy.RemoveScopedGraphNodeStrategy;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
-import com.reedelk.plugin.graph.node.ScopedGraphNode;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -43,7 +43,7 @@ public class FlowActionNodeRemove implements Action {
             // we are removing root node.
             strategy = new FlowRemoveRootStrategy(graph, placeholderProvider);
 
-        } else if (toRemove instanceof ScopedGraphNode) {
+        } else if (IsScopedGraphNode.of(toRemove)) {
             // Handle ScopedGraphNode
             strategy = new RemoveScopedGraphNodeStrategy(graph, placeholderProvider);
 

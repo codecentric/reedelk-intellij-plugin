@@ -1,5 +1,6 @@
 package com.reedelk.plugin.graph.utils;
 
+import com.reedelk.plugin.commons.IsScopedGraphNode;
 import com.reedelk.plugin.component.type.stop.StopNode;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
@@ -25,7 +26,7 @@ class GraphNodeFilters {
     static class ScopedGraphNodes {
         static Collection<ScopedGraphNode> from(Collection<GraphNode> nodes) {
             return nodes.stream()
-                    .filter(n -> n instanceof ScopedGraphNode)
+                    .filter(IsScopedGraphNode::of)
                     .map(n -> (ScopedGraphNode) n)
                     .collect(toList());
         }

@@ -1,5 +1,6 @@
 package com.reedelk.plugin.editor.designer.action.remove.strategy;
 
+import com.reedelk.plugin.commons.IsScopedGraphNode;
 import com.reedelk.plugin.editor.designer.action.Strategy;
 import com.reedelk.plugin.editor.designer.action.remove.FlowActionNodeRemove;
 import com.reedelk.plugin.graph.FlowGraph;
@@ -58,7 +59,7 @@ public class RemoveScopedGraphNodeStrategy implements Strategy {
     private class RemoveScopeNodeConsumer implements Consumer<GraphNode> {
         @Override
         public void accept(GraphNode nodeToRemove) {
-            if (nodeToRemove instanceof ScopedGraphNode) {
+            if (IsScopedGraphNode.of(nodeToRemove)) {
                 removeNestedScopesNodes((ScopedGraphNode) nodeToRemove);
 
                 // Remove the current scoped node

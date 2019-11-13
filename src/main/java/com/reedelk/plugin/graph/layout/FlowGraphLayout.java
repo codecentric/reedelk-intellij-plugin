@@ -2,6 +2,7 @@ package com.reedelk.plugin.graph.layout;
 
 import com.reedelk.plugin.commons.Half;
 import com.reedelk.plugin.commons.IsPredecessorScopedNode;
+import com.reedelk.plugin.commons.IsScopedGraphNode;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopeBoundaries;
@@ -94,7 +95,7 @@ public class FlowGraphLayout {
 
                 node.setPosition(XCoordinate, YCoordinate);
 
-                if (node instanceof ScopedGraphNode) {
+                if (IsScopedGraphNode.of(node)) {
                     top += VERTICAL_PADDING; // top padding
                 }
 
@@ -109,7 +110,7 @@ public class FlowGraphLayout {
 
         // The common parent must be a scoped node since only
         // scoped nodes can have more than one successor
-        checkState(commonParent instanceof ScopedGraphNode);
+        checkState(IsScopedGraphNode.of(commonParent));
 
         Optional<GraphNode> optionalFirstNodeOutsideScope = FindFirstNodeOutsideScope.of(graph, (ScopedGraphNode) commonParent);
         GraphNode firstNodeOutsideScope = optionalFirstNodeOutsideScope.orElse(null);

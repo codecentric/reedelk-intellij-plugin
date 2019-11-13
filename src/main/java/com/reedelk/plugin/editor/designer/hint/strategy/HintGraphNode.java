@@ -1,6 +1,7 @@
 package com.reedelk.plugin.editor.designer.hint.strategy;
 
 import com.reedelk.plugin.commons.IsNotScopedGraphNode;
+import com.reedelk.plugin.commons.IsScopedGraphNode;
 import com.reedelk.plugin.editor.designer.hint.HintResult;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -41,7 +42,7 @@ public class HintGraphNode extends BaseStrategy {
                 // Hit point belongs to same scope
 
                 if (currentScope.scopeContains(hintNode)) {
-                    if (hintNode instanceof ScopedGraphNode) {
+                    if (IsScopedGraphNode.of(hintNode)) {
                         scopeBoundaries = ((ScopedGraphNode) hintNode).getScopeBoundaries(graph, g2);
                         drawEndOfScopeHint(g2, scopeBoundaries);
                     } else {

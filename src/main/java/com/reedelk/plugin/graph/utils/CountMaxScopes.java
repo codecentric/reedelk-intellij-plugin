@@ -1,5 +1,6 @@
 package com.reedelk.plugin.graph.utils;
 
+import com.reedelk.plugin.commons.IsScopedGraphNode;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
 
@@ -11,7 +12,7 @@ public class CountMaxScopes {
     }
 
     public static int of(ScopedGraphNode scope, GraphNode target) {
-        if (target instanceof ScopedGraphNode) {
+        if (IsScopedGraphNode.of(target)) {
             // If the target is a scope itself, it counts as a scope as well.
             return maxNestedScopes(scope, target, 1);
         } else {
@@ -24,7 +25,7 @@ public class CountMaxScopes {
         if (scope.contains(target)) return max + 1;
         int currentMax = max;
         for (GraphNode node : scope) {
-            if (node instanceof ScopedGraphNode) {
+            if (IsScopedGraphNode.of(node)) {
                 int nestedMax = maxNestedScopes((ScopedGraphNode) node, target, max + 1);
                 if (nestedMax > currentMax) {
                     currentMax = nestedMax;

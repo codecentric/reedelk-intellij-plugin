@@ -1,6 +1,7 @@
 package com.reedelk.plugin.graph.utils;
 
 import com.reedelk.plugin.commons.Half;
+import com.reedelk.plugin.commons.IsScopedGraphNode;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopeBoundaries;
@@ -48,7 +49,7 @@ public class FindClosestPrecedingNode {
                 return false;
             }
 
-            if (preceding instanceof ScopedGraphNode) {
+            if (IsScopedGraphNode.of(preceding)) {
                 // Boundaries + Max vicinity if it is empty.
                 // Otherwise we must check that it is the closes
                 // amongst all the nodes in the scope on the X axis.
@@ -103,7 +104,7 @@ public class FindClosestPrecedingNode {
             // eligible to be considered the closest preceding node.
             // This happens when you have two or more preceding nodes, at least one
             // of which is a scoped node.
-            if (precedingNode instanceof ScopedGraphNode) {
+            if (IsScopedGraphNode.of(precedingNode)) {
                 ScopedGraphNode scopedPrecedingNode = (ScopedGraphNode) precedingNode;
                 ScopeBoundaries scopeBoundaries = scopedPrecedingNode.getScopeBoundaries(graph, graphics);
                 if (dropY >= scopeBoundaries.getY() && dropY <= scopeBoundaries.getY() + scopeBoundaries.getHeight()) {

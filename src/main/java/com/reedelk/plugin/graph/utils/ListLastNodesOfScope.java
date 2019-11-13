@@ -1,5 +1,6 @@
 package com.reedelk.plugin.graph.utils;
 
+import com.reedelk.plugin.commons.IsScopedGraphNode;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
@@ -37,7 +38,7 @@ public class ListLastNodesOfScope {
         Set<GraphNode> allElements = new HashSet<>(scope);
         Set<GraphNode> nested = new HashSet<>();
         allElements.forEach(node -> {
-            if (node instanceof ScopedGraphNode) {
+            if (IsScopedGraphNode.of(node)) {
                 nested.addAll(collectAllNodesInsideScopesFrom((ScopedGraphNode) node));
             }
         });

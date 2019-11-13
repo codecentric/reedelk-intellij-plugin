@@ -1,5 +1,6 @@
 package com.reedelk.plugin.graph.layout;
 
+import com.reedelk.plugin.commons.IsScopedGraphNode;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
@@ -58,7 +59,7 @@ class ComputeMaxScopesEndingInEachLayer {
 
     private void compute(List<GraphNode> layer) {
         for (GraphNode layerNode : layer) {
-            if (layerNode instanceof ScopedGraphNode) {
+            if (IsScopedGraphNode.of(layerNode)) {
                 ScopedGraphNode scopeNode = (ScopedGraphNode) layerNode;
                 ListLastNodesOfScope.from(graph, scopeNode).forEach(lastNodeOfScope -> {
                     int layerIndex = FindContainingLayer.of(layers, lastNodeOfScope);

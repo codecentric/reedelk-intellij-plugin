@@ -1,8 +1,8 @@
 package com.reedelk.plugin.graph.utils;
 
+import com.reedelk.plugin.commons.IsScopedGraphNode;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
-import com.reedelk.plugin.graph.node.ScopedGraphNode;
 
 public class CountNestedScopes {
 
@@ -10,7 +10,7 @@ public class CountNestedScopes {
     }
 
     public static int of(FlowGraph graph, GraphNode target) {
-        if (target instanceof ScopedGraphNode) {
+        if (IsScopedGraphNode.of(target)) {
             return 1 + FindScope.of(graph, target)
                     .map(scopedNode -> of(graph, scopedNode))
                     .orElse(0);

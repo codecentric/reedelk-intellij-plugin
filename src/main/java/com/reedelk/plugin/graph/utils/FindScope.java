@@ -1,5 +1,6 @@
 package com.reedelk.plugin.graph.utils;
 
+import com.reedelk.plugin.commons.IsScopedGraphNode;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
@@ -14,7 +15,7 @@ public class FindScope {
     public static Optional<ScopedGraphNode> of(FlowGraph graph, GraphNode target) {
         return graph.nodes()
                 .stream()
-                .filter(node -> node instanceof ScopedGraphNode)
+                .filter(IsScopedGraphNode::of)
                 .map(node -> (ScopedGraphNode) node)
                 .filter(scopedNode -> scopedNode.scopeContains(target))
                 .findFirst();

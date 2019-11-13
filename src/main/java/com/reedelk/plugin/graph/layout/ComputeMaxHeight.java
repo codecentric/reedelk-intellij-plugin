@@ -1,5 +1,6 @@
 package com.reedelk.plugin.graph.layout;
 
+import com.reedelk.plugin.commons.IsScopedGraphNode;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
@@ -29,7 +30,7 @@ public class ComputeMaxHeight {
     private static int maxHeight(Graphics2D graphics, FlowGraph graph, GraphNode start, GraphNode end, int currentMax) {
         if (start == end) {
             return currentMax;
-        } else if (start instanceof ScopedGraphNode) {
+        } else if (IsScopedGraphNode.of(start)) {
             return maxHeightOfScopeSubtree(graphics, graph, (ScopedGraphNode) start, end, currentMax);
         } else {
             return maxHeightOfSubtree(graphics, graph, start, end, currentMax);

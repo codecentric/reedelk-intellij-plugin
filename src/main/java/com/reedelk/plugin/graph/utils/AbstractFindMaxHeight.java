@@ -1,6 +1,7 @@
 package com.reedelk.plugin.graph.utils;
 
 import com.reedelk.plugin.commons.Half;
+import com.reedelk.plugin.commons.IsScopedGraphNode;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.layout.ComputeMaxHeight;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -48,7 +49,7 @@ abstract class AbstractFindMaxHeight {
             // A scoped  node is ALWAYS at  the center of its  successors. Therefore
             // we don't need to find the top/bottom half height, but we just split its
             // maximum height in  half.
-            if (node instanceof ScopedGraphNode) {
+            if (IsScopedGraphNode.of(node)) {
                 GraphNode firstNodeOutside =
                         FindFirstNodeOutsideScope.of(graph, (ScopedGraphNode) node).orElse(null);
 

@@ -1,6 +1,7 @@
 package com.reedelk.plugin.editor.designer.action.add.strategy;
 
 import com.reedelk.plugin.commons.Half;
+import com.reedelk.plugin.commons.IsScopedGraphNode;
 import com.reedelk.plugin.editor.designer.action.Strategy;
 import com.reedelk.plugin.editor.designer.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.FlowGraph;
@@ -74,7 +75,7 @@ public class PrecedingNodeWithOneSuccessor implements Strategy {
             graph.add(node, successorOfClosestPrecedingNode);
             graph.remove(closestPrecedingNode, successorOfClosestPrecedingNode);
 
-            if (node instanceof ScopedGraphNode) {
+            if (IsScopedGraphNode.of(node)) {
                 node.onAdded(graph, placeholderProvider);
             }
             return;

@@ -1,5 +1,6 @@
 package com.reedelk.plugin.graph.serializer;
 
+import com.reedelk.plugin.commons.IsScopedGraphNode;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
@@ -15,7 +16,7 @@ public abstract class AbstractScopedNodeSerializer implements Serializer {
 
     @Override
     public void serialize(FlowGraph graph, JSONArray sequence, GraphNode node, GraphNode stop) {
-        checkState(node instanceof ScopedGraphNode, "Expected ScopedGraphNode");
+        checkState(IsScopedGraphNode.of(node), "Expected ScopedGraphNode");
 
         Optional<GraphNode> firstNodeOutsideScope = FindFirstNodeOutsideCurrentScope.of(graph, (ScopedGraphNode) node);
         GraphNode firstStop = firstNodeOutsideScope.orElse(stop);

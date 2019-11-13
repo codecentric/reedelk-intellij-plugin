@@ -1,5 +1,6 @@
 package com.reedelk.plugin.graph.utils;
 
+import com.reedelk.plugin.commons.IsScopedGraphNode;
 import com.reedelk.plugin.commons.StackUtils;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -30,7 +31,7 @@ public class FindScopes {
         }
 
         // The target node, if it is a scoped node, then it is on top of the stack.
-        if (target instanceof ScopedGraphNode) {
+        if (IsScopedGraphNode.of(target)) {
             toReturn.push((ScopedGraphNode) target);
         }
         return toReturn;

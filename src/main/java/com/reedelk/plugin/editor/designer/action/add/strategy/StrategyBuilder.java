@@ -1,5 +1,6 @@
 package com.reedelk.plugin.editor.designer.action.add.strategy;
 
+import com.reedelk.plugin.commons.IsScopedGraphNode;
 import com.reedelk.plugin.component.type.placeholder.PlaceholderNode;
 import com.reedelk.plugin.editor.designer.action.Strategy;
 import com.reedelk.plugin.editor.designer.action.remove.strategy.PlaceholderProvider;
@@ -56,7 +57,7 @@ public abstract class StrategyBuilder {
         if (graph.successors(precedingNode).isEmpty()) {
             return new PrecedingNodeWithoutSuccessor(graph, dropPoint, precedingNode, graphics, placeholderProvider);
 
-        } else if (precedingNode instanceof ScopedGraphNode) {
+        } else if (IsScopedGraphNode.of(precedingNode)) {
             ScopedGraphNode scopedGraphNode = (ScopedGraphNode) precedingNode;
             if (hasOnlyOneSuccessorOutsideScope(scopedGraphNode, graph)) {
                 return new PrecedingNodeWithOneSuccessor(graph, dropPoint, scopedGraphNode, graphics, placeholderProvider);

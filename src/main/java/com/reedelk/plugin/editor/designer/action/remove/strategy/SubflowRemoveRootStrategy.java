@@ -1,5 +1,6 @@
 package com.reedelk.plugin.editor.designer.action.remove.strategy;
 
+import com.reedelk.plugin.commons.IsScopedGraphNode;
 import com.reedelk.plugin.editor.designer.action.Strategy;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -26,18 +27,17 @@ public class SubflowRemoveRootStrategy implements Strategy {
         List<GraphNode> successors = graph.successors(root);
 
         if (!successors.isEmpty()) {
-            if (root instanceof ScopedGraphNode) {
+            if (IsScopedGraphNode.of(root)) {
                 // The new root is he first node outside the scope
                 FindFirstNodeOutsideScope.of(graph, (ScopedGraphNode) root)
                         .ifPresent(graph::root);
             } else {
-                checkState(successors.size() == 1,
-                        "Expected exactly one successor");
+                checkState(successors.size() == 1, "Expected exactly one successor");
                 graph.root(successors.get(0));
             }
         }
 
-        if (root instanceof ScopedGraphNode) {
+        if (IsScopedGraphNode.of(root)) {
             RemoveScopedGraphNodeStrategy removeScopedGraphNodeStrategy =
                     new RemoveScopedGraphNodeStrategy(graph, placeholderProvider);
             removeScopedGraphNodeStrategy.execute(root);

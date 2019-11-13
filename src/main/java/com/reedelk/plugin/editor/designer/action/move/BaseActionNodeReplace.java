@@ -1,6 +1,7 @@
 package com.reedelk.plugin.editor.designer.action.move;
 
 import com.reedelk.plugin.commons.GetSuccessorIndex;
+import com.reedelk.plugin.commons.IsScopedGraphNode;
 import com.reedelk.plugin.editor.designer.action.Action;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -34,7 +35,7 @@ abstract class BaseActionNodeReplace implements Action {
         for (GraphNode predecessor : predecessors) {
             // If the predecessor is a ScopedNode, then we must
             // replace it in the same position index of the 'from' node.
-            if (predecessor instanceof ScopedGraphNode) {
+            if (IsScopedGraphNode.of(predecessor)) {
 
                 int index = GetSuccessorIndex.ofScopedNode(graph, (ScopedGraphNode) predecessor, from);
 
