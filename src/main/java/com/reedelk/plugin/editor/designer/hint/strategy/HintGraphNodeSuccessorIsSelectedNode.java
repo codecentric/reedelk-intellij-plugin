@@ -65,6 +65,8 @@ public class HintGraphNodeSuccessorIsSelectedNode extends BaseStrategy {
                     }
                 }
             }
+        } else {
+            return;
         }
 
         if (IsScopedGraphNode.of(hintNode)) {
