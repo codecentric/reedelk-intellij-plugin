@@ -7,8 +7,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 
-import static com.reedelk.plugin.editor.designer.widget.Icon.Dimension.HALF_ICON_HEIGHT;
-import static com.reedelk.plugin.editor.designer.widget.Icon.Dimension.HALF_ICON_WIDTH;
+import static com.reedelk.plugin.editor.designer.icon.Icon.Dimension.HALF_ICON_HEIGHT;
+import static com.reedelk.plugin.editor.designer.icon.Icon.Dimension.HALF_ICON_WIDTH;
 
 public class ComponentTransferableHandler extends TransferHandler {
 

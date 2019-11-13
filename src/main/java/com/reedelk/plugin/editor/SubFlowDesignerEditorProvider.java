@@ -8,6 +8,7 @@ import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.reedelk.plugin.editor.designer.action.SubFlowDesignerPanelActionHandler;
 import com.reedelk.plugin.filetype.SubFlowFileType;
 import com.reedelk.plugin.graph.FlowGraphProvider;
 import com.reedelk.plugin.graph.FlowSnapshot;

@@ -1,6 +1,7 @@
 package com.reedelk.plugin.graph.action.add;
 
 import com.reedelk.plugin.AbstractGraphTest;
+import com.reedelk.plugin.editor.designer.action.add.FlowActionNodeAdd;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowGraphChangeAware;
 import com.reedelk.plugin.graph.node.GraphNode;

@@ -6,10 +6,10 @@ import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.component.type.router.functions.IsDefaultRoute;
 import com.reedelk.plugin.component.type.router.functions.SyncConditionAndRoutePairs;
 import com.reedelk.plugin.editor.designer.AbstractScopedGraphNode;
-import com.reedelk.plugin.editor.designer.widget.VerticalDivider;
-import com.reedelk.plugin.editor.designer.widget.VerticalDividerArrows;
+import com.reedelk.plugin.editor.designer.action.remove.strategy.PlaceholderProvider;
+import com.reedelk.plugin.editor.designer.arrow.VerticalDividerArrows;
+import com.reedelk.plugin.editor.designer.misc.VerticalDivider;
 import com.reedelk.plugin.graph.FlowGraph;
-import com.reedelk.plugin.graph.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
 
@@ -18,7 +18,7 @@ import java.awt.image.ImageObserver;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static com.reedelk.plugin.editor.designer.widget.VerticalDividerArrows.OnProcessSuccessor;
+import static com.reedelk.plugin.editor.designer.arrow.VerticalDividerArrows.OnProcessSuccessor;
 
 public class RouterNode extends AbstractScopedGraphNode {
 
@@ -115,9 +115,9 @@ public class RouterNode extends AbstractScopedGraphNode {
     @Override
     protected void drawRemoveComponentIcon(Graphics2D graphics, ImageObserver observer) {
         int topRightX = x() + Half.of(icon.width()) - iconXOffset;
-        int topRightY = y() - icon.topHalfHeight(graphics) + Half.of(removeComponentIcon.height());
-        removeComponentIcon.setPosition(topRightX, topRightY);
-        removeComponentIcon.draw(graphics, observer);
+        int topRightY = y() - icon.topHalfHeight(graphics) + Half.of(iconRemoveComponent.height());
+        iconRemoveComponent.setPosition(topRightX, topRightY);
+        iconRemoveComponent.draw(graphics, observer);
     }
 
     @Override

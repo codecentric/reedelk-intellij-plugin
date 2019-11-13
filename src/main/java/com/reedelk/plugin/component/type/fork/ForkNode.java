@@ -2,8 +2,8 @@ package com.reedelk.plugin.component.type.fork;
 
 import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.editor.designer.AbstractScopedGraphNode;
-import com.reedelk.plugin.editor.designer.widget.VerticalDivider;
-import com.reedelk.plugin.editor.designer.widget.VerticalDividerArrows;
+import com.reedelk.plugin.editor.designer.arrow.VerticalDividerArrows;
+import com.reedelk.plugin.editor.designer.misc.VerticalDivider;
 import com.reedelk.plugin.graph.FlowGraph;
 
 import java.awt.*;

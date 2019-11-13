@@ -1,7 +1,7 @@
 package com.reedelk.plugin.graph.node;
 
+import com.reedelk.plugin.editor.designer.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.FlowGraph;
-import com.reedelk.plugin.graph.action.remove.strategy.PlaceholderProvider;
 
 public interface GraphChangeListener {
 

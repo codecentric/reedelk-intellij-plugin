@@ -2,8 +2,9 @@ package com.reedelk.plugin.editor.designer;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.commons.Half;
-import com.reedelk.plugin.editor.designer.widget.FlowMetadata;
-import com.reedelk.plugin.editor.designer.widget.InboundLane;
+import com.reedelk.plugin.editor.designer.dnd.DesignerPanelActionHandler;
+import com.reedelk.plugin.editor.designer.misc.InboundLane;
+import com.reedelk.plugin.editor.designer.text.FlowMetadata;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.service.project.SelectableItem;

@@ -3,12 +3,12 @@ package com.reedelk.plugin.editor.designer;
 import com.reedelk.plugin.commons.Half;
 import com.reedelk.plugin.component.domain.ComponentClass;
 import com.reedelk.plugin.component.domain.ComponentData;
+import com.reedelk.plugin.editor.designer.arrow.Arrow;
+import com.reedelk.plugin.editor.designer.icon.Icon;
+import com.reedelk.plugin.editor.designer.icon.IconRemoveComponent;
 import com.reedelk.plugin.editor.designer.scopebox.ScopeBox;
 import com.reedelk.plugin.editor.designer.scopebox.SelectedScopeBox;
 import com.reedelk.plugin.editor.designer.scopebox.UnselectedScopeBox;
-import com.reedelk.plugin.editor.designer.widget.Arrow;
-import com.reedelk.plugin.editor.designer.widget.Icon;
-import com.reedelk.plugin.editor.designer.widget.RemoveComponentIcon;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopeBoundaries;
@@ -27,7 +27,7 @@ import java.util.Set;
 public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
 
     protected final Icon icon;
-    protected final RemoveComponentIcon removeComponentIcon;
+    protected final IconRemoveComponent iconRemoveComponent;
 
     private final Arrow solidArrow;
     private final ComponentData componentData;
@@ -48,7 +48,7 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
         this.solidArrow = new Arrow();
         this.icon = new Icon(componentData);
         this.selectedNodeScopeBox = new SelectedScopeBox();
-        this.removeComponentIcon = new RemoveComponentIcon();
+        this.iconRemoveComponent = new IconRemoveComponent();
         this.unselectedNodeScopeBox = new UnselectedScopeBox();
     }
 
@@ -177,7 +177,7 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
         }
         // The hand cursor over the remove icon is visible
         // if and only if the icon is selected.
-        if (selected && removeComponentIcon.withinBounds(x, y)) {
+        if (selected && iconRemoveComponent.withinBounds(x, y)) {
             listener.setTheCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
     }
@@ -188,7 +188,7 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
         int y = event.getY();
         // If the mouse x,y coordinates are within the remove icon,
         // and the component is currently selected, then we remove the component.
-        if (selected && removeComponentIcon.withinBounds(x, y)) {
+        if (selected && iconRemoveComponent.withinBounds(x, y)) {
             listener.removeComponent(this);
         }
     }
@@ -256,7 +256,7 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
     protected void drawRemoveComponentIcon(Graphics2D graphics, ImageObserver observer) {
         int topRightX = x() + Half.of(icon.width());
         int topRightY = y() - icon.topHalfHeight(graphics) + Icon.Dimension.TOP_PADDING;
-        removeComponentIcon.setPosition(topRightX, topRightY);
-        removeComponentIcon.draw(graphics, observer);
+        iconRemoveComponent.setPosition(topRightX, topRightY);
+        iconRemoveComponent.draw(graphics, observer);
     }
 }

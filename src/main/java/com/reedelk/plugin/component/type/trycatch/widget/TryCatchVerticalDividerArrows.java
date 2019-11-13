@@ -1,7 +1,7 @@
 package com.reedelk.plugin.component.type.trycatch.widget;
 
 import com.reedelk.plugin.commons.Half;
-import com.reedelk.plugin.editor.designer.widget.Arrow;
+import com.reedelk.plugin.editor.designer.arrow.Arrow;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;

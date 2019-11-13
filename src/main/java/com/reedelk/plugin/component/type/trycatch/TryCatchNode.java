@@ -6,8 +6,8 @@ import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.component.type.trycatch.widget.TryCatchVerticalDivider;
 import com.reedelk.plugin.component.type.trycatch.widget.TryCatchVerticalDividerArrows;
 import com.reedelk.plugin.editor.designer.AbstractScopedGraphNode;
+import com.reedelk.plugin.editor.designer.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.FlowGraph;
-import com.reedelk.plugin.graph.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.node.GraphNode;
 
 import java.awt.*;

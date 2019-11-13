@@ -2,7 +2,7 @@ package com.reedelk.plugin.editor.designer.hint.strategy;
 
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.Half;
-import com.reedelk.plugin.editor.designer.widget.Icon;
+import com.reedelk.plugin.editor.designer.icon.Icon;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopeBoundaries;
