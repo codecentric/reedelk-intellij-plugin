@@ -5,6 +5,7 @@ import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.utils.FindClosestPrecedingNode;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
@@ -33,7 +34,7 @@ public class HintRunnable implements Runnable {
         return hintCalculator;
     }
 
-    private HintRunnable(FlowSnapshot snapshot, Graphics2D graphics, HintResultListener listener) {
+    HintRunnable(FlowSnapshot snapshot, Graphics2D graphics, HintResultListener listener) {
         this.snapshot = snapshot;
         this.listener = listener;
         this.graphics = graphics;
@@ -47,25 +48,28 @@ public class HintRunnable implements Runnable {
 
                 long currentTime = System.currentTimeMillis();
 
+                // We only compute the hint result if and only if the last hint point
+                // has been the same for more than a predefined 'DELTA_ACTIVATION_TIME'.
+                // If we don't do that, we would need to compute the HintResult for each
+                // move event of the mouse, which would be very expensive and slow down the UI.
                 if (hintPoint != null && currentTime - lastTime > DELTA_ACTIVATION_TIME) {
 
                     synchronized (wait) {
 
-                        if (hintPoint == null) continue;
+                        if (hintPoint != null) {
 
-                        FlowGraph graph = snapshot.getGraphOrThrowIfAbsent();
-                        GraphNode root = graph.root();
+                            FlowGraph graph = snapshot.getGraphOrThrowIfAbsent();
 
-                        HintResult hint = FindClosestPrecedingNode.of(graph, hintPoint, graphics)
-                                .map(preceding -> preceding == root ?
-                                        HintResult.ROOT : HintResult.from(preceding, hintPoint))
-                                .orElseGet(() -> root != null &&
-                                        hintPoint.x <= root.x() &&
-                                        LiesBetweenTopAndBottom.of(root, hintPoint.y, graphics) ?
-                                        HintResult.ROOT : EMPTY);
+                            GraphNode root = graph.root();
 
-                        listener.onHintResult(hint);
-                        hintPoint = null;
+                            HintResult hint = computeHintResult(graph, root, hintPoint);
+
+                            listener.onHintResult(hint);
+
+                            hintPoint = null;
+
+                        }
+
                     }
                 }
 
@@ -89,5 +93,19 @@ public class HintRunnable implements Runnable {
 
     public void stop() {
         running = false;
+    }
+
+    @NotNull
+    HintResult computeHintResult(FlowGraph graph, GraphNode root, Point hintPoint) {
+        return FindClosestPrecedingNode.of(graph, hintPoint, graphics)
+                .map(preceding -> preceding == root ?
+                        HintResult.ROOT : HintResult.from(preceding, hintPoint))
+                .orElseGet(() -> isHintPointBeforeRootAndWithinTopAndBottom(root, hintPoint) ?
+                        HintResult.ROOT : EMPTY);
+    }
+
+    private boolean isHintPointBeforeRootAndWithinTopAndBottom(GraphNode root, Point hintPoint) {
+        return root != null && hintPoint.x <= root.x() &&
+                LiesBetweenTopAndBottom.of(root, hintPoint.y, graphics);
     }
 }

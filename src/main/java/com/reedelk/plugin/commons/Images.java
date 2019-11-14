@@ -59,18 +59,6 @@ public class Images {
         }
     }
 
-    public static class Misc {
-
-        private Misc() {
-        }
-
-        public static final Image LightningBolt;
-
-        static {
-            LightningBolt = loadImage("/icons/lightning-bolt.png");
-        }
-    }
-
     private static Image loadImage(String resourceName) {
         try {
             URL resource = Images.class.getResource(resourceName);

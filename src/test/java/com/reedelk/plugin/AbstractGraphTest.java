@@ -1,5 +1,6 @@
 package com.reedelk.plugin;
 
+import com.reedelk.plugin.commons.FontInfoProvider;
 import com.reedelk.plugin.component.domain.ComponentClass;
 import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.component.domain.ComponentDefaultDescriptor;
@@ -18,6 +19,7 @@ import com.reedelk.plugin.graph.FlowGraphImpl;
 import com.reedelk.plugin.graph.FlowGraphProvider;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.runtime.component.*;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -90,6 +92,10 @@ public abstract class AbstractGraphTest {
 
     protected TestAwareGraphProvider provider;
 
+    @BeforeAll
+    static void beforeAll() {
+        FontInfoProvider.TESTING = true;
+    }
 
     @BeforeEach
     protected void setUp() {
