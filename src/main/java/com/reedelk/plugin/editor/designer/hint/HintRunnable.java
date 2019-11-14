@@ -1,6 +1,9 @@
 package com.reedelk.plugin.editor.designer.hint;
 
+import com.reedelk.plugin.commons.LiesBetweenTopAndBottom;
+import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowSnapshot;
+import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.utils.FindClosestPrecedingNode;
 
 import java.awt.*;
@@ -13,7 +16,7 @@ import static com.reedelk.plugin.editor.designer.hint.HintResult.EMPTY;
 public class HintRunnable implements Runnable {
 
     private static final int WAIT_TIME = 5;
-    private static final int DELTA_ACTIVATION_TILE = 10;
+    private static final int DELTA_ACTIVATION_TIME = 10;
 
     private final Object wait = new Object();
     private final Graphics2D graphics;
@@ -39,25 +42,30 @@ public class HintRunnable implements Runnable {
     @Override
     public void run() {
         while (running) {
+
             try {
 
                 long currentTime = System.currentTimeMillis();
 
-                if (hintPoint != null && currentTime - lastTime > DELTA_ACTIVATION_TILE) {
+                if (hintPoint != null && currentTime - lastTime > DELTA_ACTIVATION_TIME) {
 
                     synchronized (wait) {
 
-                        if (hintPoint != null) {
+                        if (hintPoint == null) continue;
 
-                            HintResult hint = FindClosestPrecedingNode.of(snapshot.getGraphOrThrowIfAbsent(), hintPoint, graphics)
-                                    .map(hintNode -> new HintResult(hintNode, hintPoint))
-                                    .orElse(EMPTY);
+                        FlowGraph graph = snapshot.getGraphOrThrowIfAbsent();
+                        GraphNode root = graph.root();
 
-                            listener.onHintResult(hint);
+                        HintResult hint = FindClosestPrecedingNode.of(graph, hintPoint, graphics)
+                                .map(preceding -> preceding == root ?
+                                        HintResult.ROOT : HintResult.from(preceding, hintPoint))
+                                .orElseGet(() -> root != null &&
+                                        hintPoint.x <= root.x() &&
+                                        LiesBetweenTopAndBottom.of(root, hintPoint.y, graphics) ?
+                                        HintResult.ROOT : EMPTY);
 
-                            hintPoint = null;
-
-                        }
+                        listener.onHintResult(hint);
+                        hintPoint = null;
                     }
                 }
 
@@ -66,6 +74,7 @@ public class HintRunnable implements Runnable {
             } catch (InterruptedException e) {
                 running = false;
             }
+
         }
 
         listener.onHintResult(EMPTY);

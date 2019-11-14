@@ -12,16 +12,17 @@ import static java.util.Collections.unmodifiableList;
 
 public class HintDrawable {
 
-    private List<Strategy> MOVE_HINT_HANDLERS = unmodifiableList(asList(
-            new EmptyHintNode(),
-            new PlaceholderGraphNode(),
-            new HintGraphNode(),
-            new HintScopedGraphNode()));
+    private List<HintStrategy> MOVE_HINT_HANDLERS = unmodifiableList(asList(
+            new HintIsEmpty(),
+            new HintIsRoot(),
+            new HintIsPlaceholderGraphNode(),
+            new HintIsGraphNode(),
+            new HintIsScopedGraphNode()));
 
     public void draw(FlowGraph graph, Graphics2D g2, HintResult hintResult, ImageObserver imageObserver) {
         MOVE_HINT_HANDLERS.stream()
-                .filter(strategy -> strategy.applicable(graph, g2, hintResult, imageObserver))
+                .filter(strategy -> strategy.applicable(graph, hintResult, g2, imageObserver))
                 .findFirst()
-                .ifPresent(strategy -> strategy.draw(graph, g2, hintResult, imageObserver));
+                .ifPresent(strategy -> strategy.draw(graph, hintResult, g2, imageObserver));
     }
 }

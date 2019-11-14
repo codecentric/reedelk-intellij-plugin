@@ -14,20 +14,20 @@ import java.awt.*;
 import java.awt.image.ImageObserver;
 import java.util.Stack;
 
-public class HintGraphNode extends BaseStrategy {
+public class HintIsGraphNode extends BaseStrategy {
 
     @Override
     public boolean applicable(@NotNull FlowGraph graph,
-                              @NotNull Graphics2D g2,
                               @NotNull HintResult hintResult,
+                              @NotNull Graphics2D g2,
                               @NotNull ImageObserver imageObserver) {
         return IsNotScopedGraphNode.of(hintResult.getHintNode());
     }
 
     @Override
     public void draw(@NotNull FlowGraph graph,
-                     @NotNull Graphics2D g2,
                      @NotNull HintResult hintResult,
+                     @NotNull Graphics2D g2,
                      @NotNull ImageObserver imageObserver) {
         GraphNode hintNode = hintResult.getHintNode();
 

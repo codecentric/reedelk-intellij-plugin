@@ -13,7 +13,7 @@ import java.awt.*;
 import static com.reedelk.plugin.commons.Colors.HINT_COLOR;
 import static java.awt.BasicStroke.JOIN_MITER;
 
-abstract class BaseStrategy implements Strategy {
+abstract class BaseStrategy implements HintStrategy {
 
     private static final int NODE_HINT_HEIGHT = 15;
     private static final BasicStroke STROKE = new BasicStroke(3, BasicStroke.CAP_ROUND, JOIN_MITER, 10.0f, null, 0.0f);

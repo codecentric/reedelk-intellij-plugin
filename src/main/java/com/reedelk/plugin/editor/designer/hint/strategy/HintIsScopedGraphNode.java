@@ -14,20 +14,20 @@ import java.util.List;
 
 import static com.reedelk.plugin.commons.ScopeUtils.*;
 
-public class HintScopedGraphNode extends HintGraphNode {
+public class HintIsScopedGraphNode extends HintIsGraphNode {
 
     @Override
     public boolean applicable(@NotNull FlowGraph graph,
-                              @NotNull Graphics2D g2,
                               @NotNull HintResult hintResult,
+                              @NotNull Graphics2D g2,
                               @NotNull ImageObserver imageObserver) {
         return IsScopedGraphNode.of(hintResult.getHintNode());
     }
 
     @Override
     public void draw(@NotNull FlowGraph graph,
-                     @NotNull Graphics2D g2,
                      @NotNull HintResult hintResult,
+                     @NotNull Graphics2D g2,
                      @NotNull ImageObserver imageObserver) {
         // If scope is empty, the node must be the first one right outside the scope
         Point hintPoint = hintResult.getHintPoint();
@@ -44,7 +44,7 @@ public class HintScopedGraphNode extends HintGraphNode {
         if (hintPoint.x <= scopeBoundaries.getX() + scopeBoundaries.getWidth()) {
             drawVerticalBarHint(graph, g2, scopedGraphNodeHint);
         } else {
-            super.draw(graph, g2, hintResult, imageObserver);
+            super.draw(graph, hintResult, g2, imageObserver);
         }
     }
 

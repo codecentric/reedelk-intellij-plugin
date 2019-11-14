@@ -7,11 +7,16 @@ import java.awt.*;
 public class HintResult {
 
     public static final HintResult EMPTY = new HintResult(null, null);
+    public static final HintResult ROOT = new HintResult(null, null);
 
     private final Point hintPoint;
     private final GraphNode hintNode;
 
-    HintResult(GraphNode hintNode, Point hintPoint) {
+    public static HintResult from(GraphNode hintNode, Point hintPoint) {
+        return new HintResult(hintNode, hintPoint);
+    }
+
+    private HintResult(GraphNode hintNode, Point hintPoint) {
         this.hintNode = hintNode;
         this.hintPoint = hintPoint;
     }

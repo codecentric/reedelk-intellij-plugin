@@ -2,6 +2,7 @@ package com.reedelk.plugin.graph.utils;
 
 import com.reedelk.plugin.commons.Half;
 import com.reedelk.plugin.commons.IsScopedGraphNode;
+import com.reedelk.plugin.commons.LiesBetweenTopAndBottom;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopeBoundaries;
@@ -114,7 +115,7 @@ public class FindClosestPrecedingNode {
             } else {
                 // If the drop point Y lies between the top and bottom edges of
                 // the current node, then we stop and immediately return this node.
-                if (liesBetweenTopAndBottomOf(precedingNode, dropY, graphics)) {
+                if (LiesBetweenTopAndBottom.of(precedingNode, dropY, graphics)) {
                     return Optional.of(precedingNode);
                 }
             }
@@ -148,11 +149,5 @@ public class FindClosestPrecedingNode {
             }
         }
         return Optional.empty();
-    }
-
-    private static boolean liesBetweenTopAndBottomOf(GraphNode node, final int dropY, final Graphics2D graphics) {
-        int topHalfHeight = node.topHalfHeight(graphics);
-        int bottomHalfHeight = node.bottomHalfHeight(graphics);
-        return dropY >= node.y() - topHalfHeight && dropY < node.y() + bottomHalfHeight;
     }
 }

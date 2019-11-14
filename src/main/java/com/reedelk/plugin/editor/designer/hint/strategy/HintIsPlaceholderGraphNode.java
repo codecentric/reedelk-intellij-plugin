@@ -14,12 +14,12 @@ import static com.reedelk.plugin.commons.Images.Component.PlaceholderHintIcon;
 import static com.reedelk.plugin.editor.designer.icon.Icon.Dimension.HALF_ICON_WIDTH;
 import static com.reedelk.plugin.editor.designer.icon.Icon.Dimension.ICON_HEIGHT;
 
-public class PlaceholderGraphNode implements Strategy {
+public class HintIsPlaceholderGraphNode implements HintStrategy {
 
     @Override
     public boolean applicable(@NotNull FlowGraph graph,
-                              @NotNull Graphics2D g2,
                               @NotNull HintResult hintResult,
+                              @NotNull Graphics2D g2,
                               @NotNull ImageObserver imageObserver) {
 
         GraphNode hintNode = hintResult.getHintNode();
@@ -44,8 +44,8 @@ public class PlaceholderGraphNode implements Strategy {
 
     @Override
     public void draw(@NotNull FlowGraph graph,
-                     @NotNull Graphics2D g2,
                      @NotNull HintResult hintResult,
+                     @NotNull Graphics2D g2,
                      @NotNull ImageObserver imageObserver) {
         GraphNode hintNode = hintResult.getHintNode();
 

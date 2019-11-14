@@ -1,6 +1,8 @@
 package com.reedelk.plugin.graph.manager;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
@@ -18,8 +20,6 @@ import com.reedelk.plugin.editor.DesignerEditor;
 import com.reedelk.plugin.graph.*;
 import com.reedelk.plugin.graph.deserializer.DeserializationError;
 import org.jetbrains.annotations.NotNull;
-
-import javax.swing.*;
 
 import static com.reedelk.plugin.service.project.DesignerSelectionManager.CurrentSelectionListener;
 import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
@@ -87,7 +87,8 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
 
     @Override
     public void onComponentListUpdate(Module module) {
-        SwingUtilities.invokeLater(this::deserializeDocument);
+        ApplicationManager.getApplication()
+                .invokeLater(this::deserializeDocument, ModalityState.NON_MODAL);
     }
 
     @Override
@@ -110,12 +111,14 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
      * @param json the json string to be written in the document.
      */
     private void write(String json) {
-        try {
-            WriteCommandAction.writeCommandAction(module.getProject())
-                    .run((ThrowableRunnable<Throwable>) () -> document.setText(json));
-        } catch (Throwable throwable) {
-            LOG.error("Could not write Graph's JSON data", throwable);
-        }
+        ApplicationManager.getApplication().invokeLater(() -> {
+            try {
+                WriteCommandAction.writeCommandAction(module.getProject())
+                        .run((ThrowableRunnable<Throwable>) () -> document.setText(json));
+            } catch (Throwable throwable) {
+                LOG.error("Could not write Graph's JSON data", throwable);
+            }
+        }, ModalityState.NON_MODAL);
     }
 
     private void deserializeDocument() {
