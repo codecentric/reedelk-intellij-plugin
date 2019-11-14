@@ -33,14 +33,17 @@ public class HintIsScopedGraphNode extends HintIsGraphNode {
         Point hintPoint = hintResult.getHintPoint();
         ScopedGraphNode hint = (ScopedGraphNode) hintResult.getHintNode();
         if (hint.getScope().isEmpty()) {
-            emptyScope(graph, g2, hintResult, hintPoint, hint, imageObserver);
+            emptyScope(graph, g2, hintResult, imageObserver);
         } else {
             notEmptyScope(graph, g2, hintPoint, hint);
         }
     }
 
-    private void emptyScope(@NotNull FlowGraph graph, @NotNull Graphics2D g2, @NotNull HintResult hintResult, Point hintPoint, ScopedGraphNode scopedGraphNodeHint, ImageObserver imageObserver) {
-        ScopeBoundaries scopeBoundaries = scopedGraphNodeHint.getScopeBoundaries(graph, g2);
+    private void emptyScope(@NotNull FlowGraph graph, @NotNull Graphics2D g2, @NotNull HintResult hintResult,
+                            @NotNull ImageObserver imageObserver) {
+        Point hintPoint = hintResult.getHintPoint();
+        ScopedGraphNode scopedGraphNodeHint = ((ScopedGraphNode) hintResult.getHintNode());
+        ScopeBoundaries scopeBoundaries = ((ScopedGraphNode) hintResult.getHintNode()).getScopeBoundaries(graph, g2);
         if (hintPoint.x <= scopeBoundaries.getX() + scopeBoundaries.getWidth()) {
             drawVerticalBarHint(graph, g2, scopedGraphNodeHint);
         } else {

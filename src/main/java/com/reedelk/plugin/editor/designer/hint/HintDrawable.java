@@ -15,7 +15,8 @@ public class HintDrawable {
     private List<HintStrategy> MOVE_HINT_HANDLERS = unmodifiableList(asList(
             new HintIsEmpty(),
             new HintIsRoot(),
-            new HintIsPlaceholderGraphNode(),
+            new HintIsPredecessorOfPlaceholderNode(),
+            new HintIsPlaceholderNode(),
             new HintIsGraphNode(),
             new HintIsScopedGraphNode()));
 

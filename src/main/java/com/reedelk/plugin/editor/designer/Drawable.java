@@ -11,6 +11,8 @@ public interface Drawable {
 
     boolean isDraggable();
 
+    boolean isSelectable();
+
     void drag(int x, int y);
 
     void dragging();

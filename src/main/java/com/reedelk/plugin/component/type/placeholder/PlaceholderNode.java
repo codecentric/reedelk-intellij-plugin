@@ -20,11 +20,21 @@ public class PlaceholderNode extends AbstractGraphNode {
     }
 
     @Override
+    public boolean isDraggable() {
+        // Placeholders cannot be dragged.
+        return false;
+    }
+
+    @Override
+    public boolean isSelectable() {
+        // Placeholders cannot be selected.
+        return false;
+    }
+
+    @Override
     public void mouseMoved(DrawableListener listener, MouseEvent event) {
-        int x = event.getX();
-        int y = event.getY();
-        if (icon.contains(x, y)) {
-            listener.setTheCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        }
+        // we don't want to change the icon of the mouse
+        // pointer for placeholder nodes since they cannot
+        // be dragged or selected.
     }
 }

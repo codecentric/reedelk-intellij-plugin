@@ -31,8 +31,8 @@ public class HintIsGraphNode extends BaseStrategy {
                      @NotNull ImageObserver imageObserver) {
         GraphNode hintNode = hintResult.getHintNode();
 
-        Stack<ScopedGraphNode> stackOfScopes = FindScopes.of(graph, hintNode);
-        if (stackOfScopes.isEmpty()) {
+        Stack<ScopedGraphNode> hintNodeScopes = FindScopes.of(graph, hintNode);
+        if (hintNodeScopes.isEmpty()) {
             drawNodeHint(g2, hintNode);
             return;
         }
@@ -40,28 +40,49 @@ public class HintIsGraphNode extends BaseStrategy {
         Point hintPoint = hintResult.getHintPoint();
         ScopedGraphNode lastScope = null;
 
-        while (!stackOfScopes.isEmpty()) {
-            ScopedGraphNode currentScope = stackOfScopes.pop();
-            ScopeBoundaries scopeBoundaries = currentScope.getScopeBoundaries(graph, g2);
-            if (hintPoint.x <= scopeBoundaries.getX() + scopeBoundaries.getWidth()) {
-                // Hit point belongs to same scope
+        while (!hintNodeScopes.isEmpty()) {
+            ScopedGraphNode currentScope = hintNodeScopes.pop();
+            ScopeBoundaries currentScopeBoundaries = currentScope.getScopeBoundaries(graph, g2);
+
+            // If the hint point belongs to the current scope:
+            //
+            // 1. If the current point belongs to this scope and the hint node belongs to it as well,
+            //      then we draw the hint (which might be different if the hint node is a scoped node or not).
+
+            // 2. If the current point belongs to this scope but the hint node does not belong to it,
+            //      it means that it is probably in a nested scope, and we know that the previous scope met in the loop
+            //      is the last one before the hit point. We will use the last scope to draw the hint on its
+            //      rightmost scope's border.
+
+            if (hintPoint.x <= currentScopeBoundaries.getX() + currentScopeBoundaries.getWidth()) {
+
+                // The hint point the current scope.
 
                 if (currentScope.scopeContains(hintNode)) {
+                    // It might be a scoped graph node because this strategy is used by
+                    // a strategy handling scoped graph node as well.
                     if (IsScopedGraphNode.of(hintNode)) {
-                        scopeBoundaries = ((ScopedGraphNode) hintNode).getScopeBoundaries(graph, g2);
-                        drawEndOfScopeHint(g2, scopeBoundaries);
+                        currentScopeBoundaries = ((ScopedGraphNode) hintNode).getScopeBoundaries(graph, g2);
+                        drawEndOfScopeHint(g2, currentScopeBoundaries);
+
                     } else {
                         drawNodeHint(g2, hintNode);
                     }
+                    // The hint has been already drawn. We can stop here.
                     return;
                 }
+
+                // The scope before 'current scope' referenced in the 'lastScope' variable is
+                // the last scope before the hint point and therefore we must stop here.
                 break;
             }
 
             lastScope = currentScope;
         }
+
         if (lastScope != null) {
-            // Draw last scope
+            // The hint point is outside the 'last' scope. We draw a vertical bar overlapping
+            // the vertical bar of the rightmost scope's border.
             ScopeBoundaries scopeBoundaries = lastScope.getScopeBoundaries(graph, g2);
             drawEndOfScopeHint(g2, scopeBoundaries);
         }

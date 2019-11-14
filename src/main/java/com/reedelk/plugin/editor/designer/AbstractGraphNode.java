@@ -167,6 +167,11 @@ public abstract class AbstractGraphNode implements GraphNode {
     }
 
     @Override
+    public boolean isSelectable() {
+        return true;
+    }
+
+    @Override
     public void drag(int x, int y) {
         draggedX = x;
         draggedY = y;

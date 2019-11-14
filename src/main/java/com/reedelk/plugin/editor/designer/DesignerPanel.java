@@ -331,13 +331,14 @@ public abstract class DesignerPanel extends DisposablePanel implements
     }
 
     private void select(GraphNode node) {
-        // Display the Component Properties Tool Window
-        // if it is not visible already
-        ToolWindowUtils.ComponentProperties.show(module.getProject());
-        selected = node;
-        selected.selected();
-        currentSelection = new SelectableItemComponent(module, snapshot, selected);
-        select(currentSelection);
+        if (node.isSelectable()) {
+            // Display the Component Properties Tool Window if it is not visible already
+            ToolWindowUtils.ComponentProperties.show(module.getProject());
+            selected = node;
+            selected.selected();
+            currentSelection = new SelectableItemComponent(module, snapshot, selected);
+            select(currentSelection);
+        }
     }
 
     private void select(SelectableItem selectableItem) {
