@@ -5,6 +5,8 @@ import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.component.domain.ComponentClass;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
+import com.reedelk.plugin.editor.properties.widget.ContainerFactory;
+import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -30,9 +32,14 @@ public class PaletteComponentTreeRenderer implements TreeCellRenderer {
         this.typeIcon.setBorder(JBUI.Borders.empty(1, 0, 0, 3));
 
         this.renderer = new JPanel();
-        this.renderer.setLayout(new GridBagLayout());
-        this.renderer.add(typeIcon);
-        this.renderer.add(value);
+        this.renderer.setLayout(new BorderLayout());
+        this.renderer.add(typeIcon, BorderLayout.WEST);
+
+        DisposablePanel valueContainerLeftAligned = ContainerFactory.pushLeft(value);
+        valueContainerLeftAligned.setBackground(renderer.getBackground());
+        valueContainerLeftAligned.setOpaque(false);
+
+        this.renderer.add(valueContainerLeftAligned, BorderLayout.CENTER);
 
         this.defaultRenderer.setOpenIcon(Icons.Module);
         this.defaultRenderer.setClosedIcon(Icons.Module);
