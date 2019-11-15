@@ -9,11 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
-import static com.reedelk.plugin.commons.Images.Component.PlaceholderHintIcon;
-import static com.reedelk.plugin.editor.designer.icon.Icon.Dimension.HALF_ICON_WIDTH;
-import static com.reedelk.plugin.editor.designer.icon.Icon.Dimension.ICON_HEIGHT;
-
-public class HintIsPlaceholderNode implements HintStrategy {
+public class HintIsPlaceholderNode extends BaseStrategy {
 
     @Override
     public boolean applicable(@NotNull FlowGraph graph,
@@ -40,9 +36,6 @@ public class HintIsPlaceholderNode implements HintStrategy {
                      @NotNull ImageObserver imageObserver) {
 
         GraphNode hintNode = hintResult.getHintNode();
-        g2.drawImage(PlaceholderHintIcon,
-                hintNode.x() - HALF_ICON_WIDTH,
-                hintNode.y() - ICON_HEIGHT,
-                imageObserver);
+        drawPlaceholderHint(g2, hintNode, imageObserver);
     }
 }

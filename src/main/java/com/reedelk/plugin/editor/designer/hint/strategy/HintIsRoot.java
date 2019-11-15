@@ -11,10 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
-import static com.reedelk.plugin.commons.Images.Component.PlaceholderHintIcon;
-import static com.reedelk.plugin.editor.designer.icon.Icon.Dimension.HALF_ICON_WIDTH;
-import static com.reedelk.plugin.editor.designer.icon.Icon.Dimension.ICON_HEIGHT;
-
 public class HintIsRoot extends BaseStrategy {
 
     @Override
@@ -43,10 +39,8 @@ public class HintIsRoot extends BaseStrategy {
             if (IsPlaceholderNode.of(root)) {
                 // We draw the placeholder hint icon if and only if
                 // the root node is a Placeholder node.
-                g2.drawImage(PlaceholderHintIcon,
-                        root.x() - HALF_ICON_WIDTH,
-                        root.y() - ICON_HEIGHT,
-                        imageObserver);
+                drawPlaceholderHint(g2, root, imageObserver);
+
             } else {
                 drawNodeHintBefore(g2, root);
             }

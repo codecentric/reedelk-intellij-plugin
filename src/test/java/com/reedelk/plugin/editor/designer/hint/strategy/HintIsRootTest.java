@@ -10,9 +10,8 @@ import org.mockito.Spy;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
-import static com.reedelk.plugin.commons.Images.Component.PlaceholderHintIcon;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 
 class HintIsRootTest extends AbstractGraphTest {
 
@@ -48,7 +47,7 @@ class HintIsRootTest extends AbstractGraphTest {
     }
 
     @Test
-    void shouldDrawImageIfRootIsPlaceholder() {
+    void shouldDrawPlaceholderHintIfRootIsPlaceholder() {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(placeholderNode1);
@@ -58,7 +57,7 @@ class HintIsRootTest extends AbstractGraphTest {
         strategy.draw(graph, rootHint, graphics, imageObserver);
 
         // Then
-        verify(graphics).drawImage(eq(PlaceholderHintIcon), anyInt(), anyInt(), eq(imageObserver));
+        verify(strategy).drawPlaceholderHint(graphics, placeholderNode1, imageObserver);
     }
 
     @Test

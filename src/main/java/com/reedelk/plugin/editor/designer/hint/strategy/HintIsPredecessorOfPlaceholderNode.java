@@ -10,11 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
-import static com.reedelk.plugin.commons.Images.Component.PlaceholderHintIcon;
-import static com.reedelk.plugin.editor.designer.icon.Icon.Dimension.HALF_ICON_WIDTH;
-import static com.reedelk.plugin.editor.designer.icon.Icon.Dimension.ICON_HEIGHT;
-
-public class HintIsPredecessorOfPlaceholderNode implements HintStrategy {
+public class HintIsPredecessorOfPlaceholderNode extends BaseStrategy {
 
     @Override
     public boolean applicable(@NotNull FlowGraph graph,
@@ -45,9 +41,6 @@ public class HintIsPredecessorOfPlaceholderNode implements HintStrategy {
                 .filter(IsPlaceholderNode::of)
                 .filter(placeholder -> placeholder.contains(imageObserver, hintPoint.x, hintPoint.y))
                 .findFirst()
-                .ifPresent(node -> g2.drawImage(PlaceholderHintIcon,
-                        node.x() - HALF_ICON_WIDTH,
-                        node.y() - ICON_HEIGHT,
-                        imageObserver));
+                .ifPresent(node -> drawPlaceholderHint(g2, node, imageObserver));
     }
 }

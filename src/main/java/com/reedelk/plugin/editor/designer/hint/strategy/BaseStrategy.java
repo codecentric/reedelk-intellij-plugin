@@ -10,8 +10,12 @@ import com.reedelk.plugin.graph.node.ScopedGraphNode;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.awt.image.ImageObserver;
 
 import static com.reedelk.plugin.commons.Colors.HINT_COLOR;
+import static com.reedelk.plugin.commons.Images.Component.PlaceholderHintIcon;
+import static com.reedelk.plugin.editor.designer.icon.Icon.Dimension.HALF_ICON_WIDTH;
+import static com.reedelk.plugin.editor.designer.icon.Icon.Dimension.ICON_HEIGHT;
 import static java.awt.BasicStroke.JOIN_MITER;
 
 abstract class BaseStrategy implements HintStrategy {
@@ -67,6 +71,13 @@ abstract class BaseStrategy implements HintStrategy {
         int y1 = scopeBoundaries.getY();
         int y2 = scopeBoundaries.getY() + scopeBoundaries.getHeight();
         drawLine(g2, x, y1, x, y2);
+    }
+
+    void drawPlaceholderHint(@NotNull Graphics2D g2, @NotNull GraphNode node, @NotNull ImageObserver imageObserver) {
+        g2.drawImage(PlaceholderHintIcon,
+                node.x() - HALF_ICON_WIDTH,
+                node.y() - ICON_HEIGHT,
+                imageObserver);
     }
 
     private void drawLine(Graphics2D g2, int x1, int y1, int x2, int y2) {

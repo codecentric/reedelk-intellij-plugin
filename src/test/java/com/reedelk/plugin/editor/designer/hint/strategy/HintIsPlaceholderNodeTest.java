@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.image.ImageObserver;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 
 class HintIsPlaceholderNodeTest extends AbstractGraphTest {
 
@@ -65,5 +66,20 @@ class HintIsPlaceholderNodeTest extends AbstractGraphTest {
 
         // Then
         assertThat(actual).isFalse();
+    }
+
+    @Test
+    void shouldDrawCorrectlyPlaceholderHint() {
+        // Given
+        FlowGraph graph = provider.createGraph();
+        placeholderNode1.setPosition(65, 150);
+        mockDefaultNodeHeight(placeholderNode1);
+        HintResult result = HintResult.from(placeholderNode1, new Point(60, 140));
+
+        // When
+        strategy.draw(graph, result, graphics, imageObserver);
+
+        // Then
+        verify(strategy).drawPlaceholderHint(graphics, placeholderNode1, imageObserver);
     }
 }
