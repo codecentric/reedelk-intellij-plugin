@@ -13,24 +13,30 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Paths;
 
+import static com.reedelk.plugin.commons.Messages.RuntimeRun.ERROR_SDK_NOT_SELECTED;
 import static java.lang.String.format;
 
 public class RuntimeRunCommandLine extends JavaCommandLineState {
 
     private final RuntimeRunConfiguration configuration;
 
-    protected RuntimeRunCommandLine(@NotNull RuntimeRunConfiguration configuration, @NotNull ExecutionEnvironment environment) {
+    RuntimeRunCommandLine(@NotNull RuntimeRunConfiguration configuration, @NotNull ExecutionEnvironment environment) {
         super(environment);
         this.configuration = configuration;
     }
 
     @Override
     protected JavaParameters createJavaParameters() throws ExecutionException {
+
         JavaParameters javaParams = new JavaParameters();
 
         Project project = configuration.getProject();
 
         ProjectRootManager manager = ProjectRootManager.getInstance(project);
+
+        if (manager.getProjectSdk() == null) {
+            throw new ExecutionException(ERROR_SDK_NOT_SELECTED.format());
+        }
 
         javaParams.setJdk(manager.getProjectSdk());
 

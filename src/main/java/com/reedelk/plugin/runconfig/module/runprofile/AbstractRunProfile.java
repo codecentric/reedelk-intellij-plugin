@@ -19,7 +19,7 @@ import org.jetbrains.idea.maven.project.MavenProject;
 import java.io.File;
 import java.util.Optional;
 
-import static com.reedelk.plugin.commons.Messages.ModuleRunConfiguration.ERROR_GENERIC_MODULE_NOT_SELECTED;
+import static com.reedelk.plugin.commons.Messages.ModuleRun.*;
 import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
 import static java.lang.String.format;
 
@@ -50,7 +50,7 @@ abstract class AbstractRunProfile implements RunProfileState {
 
         Optional<MavenProject> optionalMavenProject = MavenUtils.getMavenProject(project, moduleName);
         if (!optionalMavenProject.isPresent()) {
-            throw new ExecutionException("Maven project could not be found");
+            throw new ExecutionException(ERROR_MAVEN_PROJECT_NOT_FOUND.format(moduleName));
         }
 
         MavenProject mavenProject = optionalMavenProject.get();
@@ -58,7 +58,7 @@ abstract class AbstractRunProfile implements RunProfileState {
 
         RunnerAndConfigurationSettings configSettings = RunManager.getInstance(project).findConfigurationByName(runtimeConfigName);
         if (configSettings == null) {
-            throw new ExecutionException("Could not find config with name = " + runtimeConfigName + ", check module run configuration");
+            throw new ExecutionException(ERROR_RUNTIME_CONFIG_NOT_FOUND.format(runtimeConfigName));
         }
 
         RuntimeRunConfiguration runtimeRunConfiguration = (RuntimeRunConfiguration) configSettings.getConfiguration();

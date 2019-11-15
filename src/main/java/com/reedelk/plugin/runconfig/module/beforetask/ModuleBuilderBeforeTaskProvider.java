@@ -23,8 +23,8 @@ import org.jetbrains.idea.maven.utils.MavenLog;
 
 import javax.swing.*;
 
-import static com.reedelk.plugin.commons.Messages.ModuleRunConfiguration.ERROR_MODULE_NOT_SELECTED;
-import static com.reedelk.plugin.commons.Messages.ModuleRunConfiguration.ERROR_RUNTIME_NOT_SELECTED;
+import static com.reedelk.plugin.commons.Messages.ModuleRun.ERROR_MODULE_NOT_SELECTED;
+import static com.reedelk.plugin.commons.Messages.ModuleRun.ERROR_RUNTIME_NOT_SELECTED;
 import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
 
 public class ModuleBuilderBeforeTaskProvider extends BeforeRunTaskProvider<ModuleBuilderBeforeTask> {
