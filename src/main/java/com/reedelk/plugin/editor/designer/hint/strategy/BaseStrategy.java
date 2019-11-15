@@ -74,10 +74,9 @@ abstract class BaseStrategy implements HintStrategy {
     }
 
     void drawPlaceholderHint(@NotNull Graphics2D g2, @NotNull GraphNode node, @NotNull ImageObserver imageObserver) {
-        g2.drawImage(PlaceholderHintIcon,
-                node.x() - HALF_ICON_WIDTH,
-                node.y() - ICON_HEIGHT,
-                imageObserver);
+        int x = node.x() - HALF_ICON_WIDTH;
+        int y = node.y() - ICON_HEIGHT;
+        g2.drawImage(PlaceholderHintIcon, x, y, imageObserver);
     }
 
     private void drawLine(Graphics2D g2, int x1, int y1, int x2, int y2) {
