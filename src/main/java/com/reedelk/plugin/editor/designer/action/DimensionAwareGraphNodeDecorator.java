@@ -5,6 +5,7 @@ import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.editor.designer.DrawableListener;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -23,7 +24,7 @@ class DimensionAwareGraphNodeDecorator implements GraphNode {
     private final GraphNode targetDimensionNode;
     private final GraphNode delegate;
 
-    DimensionAwareGraphNodeDecorator(GraphNode delegate, GraphNode targetDimensionNode) {
+    DimensionAwareGraphNodeDecorator(@NotNull GraphNode delegate, @NotNull GraphNode targetDimensionNode) {
         this.delegate = delegate;
         this.targetDimensionNode = targetDimensionNode;
     }

@@ -77,8 +77,8 @@ public class HintRunnable implements Runnable {
 
             } catch (InterruptedException e) {
                 running = false;
+                Thread.currentThread().interrupt();
             }
-
         }
 
         listener.onHintResult(EMPTY);

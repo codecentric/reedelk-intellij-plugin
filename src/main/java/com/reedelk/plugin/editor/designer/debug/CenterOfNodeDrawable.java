@@ -38,7 +38,7 @@ public class CenterOfNodeDrawable {
                 double textHeight = g2.getFontMetrics().getStringBounds(coords, g2).getHeight();
                 int x = node.x() - Half.of(node.width(g2));
                 int y = node.y() - node.topHalfHeight(g2);
-                g2.drawString(coords, x + 3, y + Math.round(textHeight) - 3);
+                g2.drawString(coords, (float) x + 3, (float) y + Math.round(textHeight) - 3);
             });
         }
 
@@ -48,7 +48,7 @@ public class CenterOfNodeDrawable {
                 double textHeight = g2.getFontMetrics().getStringBounds(height, g2).getHeight();
                 int x = node.x() - Half.of(node.width(g2));
                 int y = node.y() - node.topHalfHeight(g2);
-                g2.drawString(height, x + 3, y + Math.round(textHeight) * 2 - 3);
+                g2.drawString(height, (float) x + 3, (float) y + Math.round(textHeight) * 2 - 3);
             });
         }
     }

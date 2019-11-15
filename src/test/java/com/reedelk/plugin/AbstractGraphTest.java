@@ -94,7 +94,7 @@ public abstract class AbstractGraphTest {
 
     @BeforeAll
     static void beforeAll() {
-        FontInfoProvider.TESTING = true;
+        FontInfoProvider.testing();
     }
 
     @BeforeEach

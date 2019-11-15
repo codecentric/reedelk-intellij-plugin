@@ -41,6 +41,11 @@ intellij {
     plugins = ["maven"]
     version '2018.3.5'
 }
+
+jacoco {
+    toolVersion = "0.8.5"
+}
+
 patchPluginXml {
     changeNotes """
       Reedelk ESB IntelliJ designer<br>
