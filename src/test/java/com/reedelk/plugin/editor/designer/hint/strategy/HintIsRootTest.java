@@ -62,7 +62,7 @@ class HintIsRootTest extends AbstractGraphTest {
     }
 
     @Test
-    void shouldDrawNodeHintIfRootIsNormalNode() {
+    void shouldDrawNodeHintBeforeIfRootIsNormalNode() {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
@@ -73,5 +73,19 @@ class HintIsRootTest extends AbstractGraphTest {
 
         // Then
         verify(strategy).drawNodeHintBefore(graphics, root);
+    }
+
+    @Test
+    void shouldDrawNodeHintEndIfRootIsNormalNodeAndHintPointAfterRoot() {
+        // Given
+        FlowGraph graph = provider.createGraph();
+        graph.root(root);
+        HintResult rootHint = HintResult.from(root, new Point(154, 128));
+
+        // When
+        strategy.draw(graph, rootHint, graphics, imageObserver);
+
+        // Then
+        verify(strategy).drawNodeHintEnd(graphics, root);
     }
 }
