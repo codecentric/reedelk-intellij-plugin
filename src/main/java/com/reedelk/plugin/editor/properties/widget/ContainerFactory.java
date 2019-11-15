@@ -97,11 +97,19 @@ public class ContainerFactory {
     }
 
     public static DisposablePanel pushTop(JComponent component) {
-        DisposablePanel propertiesBoxContainer = new DisposablePanel();
-        propertiesBoxContainer.setLayout(new BorderLayout());
-        propertiesBoxContainer.add(component, NORTH);
-        propertiesBoxContainer.add(Box.createGlue(), CENTER);
-        return propertiesBoxContainer;
+        DisposablePanel panel = new DisposablePanel();
+        panel.setLayout(new BorderLayout());
+        panel.add(component, NORTH);
+        panel.add(Box.createGlue(), CENTER);
+        return panel;
+    }
+
+    public static DisposablePanel pushLeft(JComponent component) {
+        DisposablePanel panel = new DisposablePanel();
+        panel.setLayout(new BorderLayout());
+        panel.add(component, WEST);
+        panel.add(Box.createGlue(), CENTER);
+        return panel;
     }
 
     public static DisposableScrollPane makeItScrollable(DisposablePanel panel) {
