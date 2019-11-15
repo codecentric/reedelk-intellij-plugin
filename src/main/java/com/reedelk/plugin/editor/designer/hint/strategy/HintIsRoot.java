@@ -22,7 +22,8 @@ public class HintIsRoot extends BaseStrategy {
                               @NotNull HintResult hintResult,
                               @NotNull Graphics2D g2,
                               @NotNull ImageObserver imageObserver) {
-        return graph.predecessors(hintResult.getHintNode()).isEmpty();
+        return hintResult != HintResult.EMPTY &&
+                graph.predecessors(hintResult.getHintNode()).isEmpty();
     }
 
     @Override

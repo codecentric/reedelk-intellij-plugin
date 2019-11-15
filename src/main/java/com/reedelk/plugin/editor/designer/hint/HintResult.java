@@ -7,7 +7,6 @@ import java.awt.*;
 public class HintResult {
 
     public static final HintResult EMPTY = new HintResult(null, null);
-    public static final HintResult ROOT = new HintResult(null, null);
 
     private final Point hintPoint;
     private final GraphNode hintNode;

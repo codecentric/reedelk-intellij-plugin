@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Spy;
 
+import java.awt.*;
 import java.awt.image.ImageObserver;
 
 import static com.reedelk.plugin.commons.Images.Component.PlaceholderHintIcon;
@@ -24,9 +25,11 @@ class HintIsRootTest extends AbstractGraphTest {
     void shouldApplicableReturnTrue() {
         // Given
         FlowGraph graph = provider.createGraph();
+        graph.root(root);
+        HintResult rootHint = HintResult.from(root, new Point(2, 2));
 
         // When
-        boolean actual = strategy.applicable(graph, HintResult.ROOT, graphics, imageObserver);
+        boolean actual = strategy.applicable(graph, rootHint, graphics, imageObserver);
 
         // Then
         assertThat(actual).isTrue();
@@ -49,9 +52,10 @@ class HintIsRootTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(placeholderNode1);
+        HintResult rootHint = HintResult.from(placeholderNode1, new Point(2, 2));
 
         // When
-        strategy.draw(graph, HintResult.ROOT, graphics, imageObserver);
+        strategy.draw(graph, rootHint, graphics, imageObserver);
 
         // Then
         verify(graphics).drawImage(eq(PlaceholderHintIcon), anyInt(), anyInt(), eq(imageObserver));
@@ -62,11 +66,12 @@ class HintIsRootTest extends AbstractGraphTest {
         // Given
         FlowGraph graph = provider.createGraph();
         graph.root(root);
+        HintResult rootHint = HintResult.from(root, new Point(2, 2));
 
         // When
-        strategy.draw(graph, HintResult.ROOT, graphics, imageObserver);
+        strategy.draw(graph, rootHint, graphics, imageObserver);
 
         // Then
-        verify(strategy).drawNodeHintAfter(graphics, root);
+        verify(strategy).drawNodeHintBefore(graphics, root);
     }
 }

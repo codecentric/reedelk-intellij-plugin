@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Spy;
 
+import java.awt.*;
 import java.awt.image.ImageObserver;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,7 +38,7 @@ class HintIsEmptyTest extends AbstractGraphTest {
         FlowGraph graph = provider.createGraph();
 
         // When
-        boolean actual = strategy.applicable(graph, HintResult.ROOT, graphics, imageObserver);
+        boolean actual = strategy.applicable(graph, HintResult.from(root, new Point(3, 3)), graphics, imageObserver);
 
         // Then
         assertThat(actual).isFalse();

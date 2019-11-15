@@ -46,7 +46,7 @@ class HintRunnableTest extends AbstractGraphTest {
         HintResult hintResult = hintRunnable.computeHintResult(graph, root, hintPoint);
 
         // Then
-        assertThat(hintResult).isEqualTo(HintResult.ROOT);
+        assertThat(hintResult.getHintNode()).isEqualTo(root);
     }
 
     @Test
@@ -62,7 +62,7 @@ class HintRunnableTest extends AbstractGraphTest {
         HintResult hintResult = hintRunnable.computeHintResult(graph, root, hintPoint);
 
         // Then
-        assertThat(hintResult).isEqualTo(HintResult.ROOT);
+        assertThat(hintResult.getHintNode()).isEqualTo(root);
     }
 
     @Test
@@ -123,7 +123,7 @@ class HintRunnableTest extends AbstractGraphTest {
         HintResult hintResult = hintRunnable.computeHintResult(graph, root, hintPoint);
 
         // Then
-        assertThat(hintResult).isEqualTo(HintResult.ROOT);
+        assertThat(hintResult.getHintNode()).isEqualTo(root);
     }
 
     @Test
