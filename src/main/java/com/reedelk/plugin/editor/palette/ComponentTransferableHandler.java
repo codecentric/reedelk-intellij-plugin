@@ -1,5 +1,6 @@
 package com.reedelk.plugin.editor.palette;
 
+import com.intellij.openapi.util.SystemInfo;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
 
 import javax.swing.*;
@@ -41,6 +42,11 @@ public class ComponentTransferableHandler extends TransferHandler {
 
     private void setDragImage(ComponentDescriptor descriptor) {
         setDragImage(descriptor.getImage());
-        setDragImageOffset(new Point(-HALF_ICON_WIDTH, -HALF_ICON_HEIGHT));
+        if (SystemInfo.isMac) {
+            // On Mac the offset must be negative.
+            setDragImageOffset(new Point(-HALF_ICON_WIDTH, -HALF_ICON_HEIGHT));
+        } else {
+            setDragImageOffset(new Point(HALF_ICON_WIDTH, HALF_ICON_HEIGHT));
+        }
     }
 }
