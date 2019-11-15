@@ -33,7 +33,7 @@ public class HintIsGraphNode extends BaseStrategy {
 
         Stack<ScopedGraphNode> hintNodeScopes = FindScopes.of(graph, hintNode);
         if (hintNodeScopes.isEmpty()) {
-            drawNodeHint(g2, hintNode);
+            drawNodeHintAfter(g2, hintNode);
             return;
         }
 
@@ -66,7 +66,7 @@ public class HintIsGraphNode extends BaseStrategy {
                         drawEndOfScopeHint(g2, currentScopeBoundaries);
 
                     } else {
-                        drawNodeHint(g2, hintNode);
+                        drawNodeHintAfter(g2, hintNode);
                     }
                     // The hint has been already drawn. We can stop here.
                     return;

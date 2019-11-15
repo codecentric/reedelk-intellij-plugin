@@ -99,9 +99,9 @@ public class HintRunnable implements Runnable {
     HintResult computeHintResult(FlowGraph graph, GraphNode root, Point hintPoint) {
         return FindClosestPrecedingNode.of(graph, hintPoint, graphics)
                 .map(preceding -> preceding == root ?
-                        HintResult.ROOT : HintResult.from(preceding, hintPoint))
+                        HintResult.from(root, hintPoint) : HintResult.from(preceding, hintPoint))
                 .orElseGet(() -> isHintPointBeforeRootAndWithinTopAndBottom(root, hintPoint) ?
-                        HintResult.ROOT : EMPTY);
+                        HintResult.from(root, hintPoint) : EMPTY);
     }
 
     private boolean isHintPointBeforeRootAndWithinTopAndBottom(GraphNode root, Point hintPoint) {

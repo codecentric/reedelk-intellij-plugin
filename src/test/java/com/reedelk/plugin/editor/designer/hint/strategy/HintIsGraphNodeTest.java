@@ -60,7 +60,7 @@ class HintIsGraphNodeTest extends AbstractGraphTest {
         strategy.draw(graph, result, graphics, imageObserver);
 
         // Then
-        verify(strategy).drawNodeHint(graphics, componentNode1);
+        verify(strategy).drawNodeHintAfter(graphics, componentNode1);
     }
 
     @Test
@@ -114,7 +114,7 @@ class HintIsGraphNodeTest extends AbstractGraphTest {
         strategy.draw(graph, result, graphics, imageObserver);
 
         // Then
-        verify(strategy).drawNodeHint(graphics, componentNode1);
+        verify(strategy).drawNodeHintAfter(graphics, componentNode1);
     }
 
     @Test
@@ -141,6 +141,6 @@ class HintIsGraphNodeTest extends AbstractGraphTest {
         strategy.draw(graph, result, graphics, imageObserver);
 
         // Then
-        verify(strategy).drawNodeHint(graphics, componentNode1);
+        verify(strategy).drawNodeHintAfter(graphics, componentNode1);
     }
 }

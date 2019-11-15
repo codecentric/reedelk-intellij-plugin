@@ -1,6 +1,7 @@
 package com.reedelk.plugin.editor.designer.hint.strategy;
 
 import com.reedelk.plugin.commons.Half;
+import com.reedelk.plugin.editor.designer.AbstractGraphNode;
 import com.reedelk.plugin.editor.designer.icon.Icon;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -18,10 +19,26 @@ abstract class BaseStrategy implements HintStrategy {
     private static final int NODE_HINT_HEIGHT = 15;
     private static final BasicStroke STROKE = new BasicStroke(3, BasicStroke.CAP_ROUND, JOIN_MITER, 10.0f, null, 0.0f);
 
-    void drawNodeHint(@NotNull Graphics2D g2, @NotNull GraphNode hintNode) {
+    void drawNodeHintAfter(@NotNull Graphics2D g2, @NotNull GraphNode hintNode) {
         int x1 = hintNode.x() + Icon.Dimension.HALF_ICON_WIDTH + 5;
         int y1 = hintNode.y() - Icon.Dimension.HALF_ICON_HEIGHT - NODE_HINT_HEIGHT;
         int x2 = hintNode.x() + Icon.Dimension.HALF_ICON_WIDTH + 5;
+        int y2 = hintNode.y() - Icon.Dimension.HALF_ICON_HEIGHT + NODE_HINT_HEIGHT;
+        drawLine(g2, x1, y1, x2, y2);
+    }
+
+    void drawNodeHintEnd(@NotNull Graphics2D g2, @NotNull GraphNode hintNode) {
+        int x1 = AbstractGraphNode.NODE_WIDTH;
+        int y1 = hintNode.y() - Icon.Dimension.HALF_ICON_HEIGHT - NODE_HINT_HEIGHT;
+        int x2 = AbstractGraphNode.NODE_WIDTH;
+        int y2 = hintNode.y() - Icon.Dimension.HALF_ICON_HEIGHT + NODE_HINT_HEIGHT;
+        drawLine(g2, x1, y1, x2, y2);
+    }
+
+    void drawNodeHintBefore(@NotNull Graphics2D g2, @NotNull GraphNode hintNode) {
+        int x1 = hintNode.x() - Icon.Dimension.ICON_WIDTH + 5;
+        int y1 = hintNode.y() - Icon.Dimension.HALF_ICON_HEIGHT - NODE_HINT_HEIGHT;
+        int x2 = hintNode.x() - Icon.Dimension.ICON_WIDTH + 5;
         int y2 = hintNode.y() - Icon.Dimension.HALF_ICON_HEIGHT + NODE_HINT_HEIGHT;
         drawLine(g2, x1, y1, x2, y2);
     }

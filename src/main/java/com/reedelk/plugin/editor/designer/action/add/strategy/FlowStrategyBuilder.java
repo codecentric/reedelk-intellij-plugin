@@ -1,6 +1,7 @@
 package com.reedelk.plugin.editor.designer.action.add.strategy;
 
 import com.reedelk.plugin.commons.Half;
+import com.reedelk.plugin.commons.LiesBetweenTopAndBottom;
 import com.reedelk.plugin.editor.designer.action.Strategy;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -48,9 +49,8 @@ public class FlowStrategyBuilder extends StrategyBuilder {
     private static boolean isReplacingRoot(FlowGraph graph, Point dropPoint, Graphics2D graphics) {
         checkState(!graph.isEmpty(), "Expected a not empty graph");
         GraphNode root = graph.root();
-        return dropPoint.x <= root.x() + Half.of(root.width(graphics)) &&
-                dropPoint.y > root.y() - Half.of(root.height(graphics)) &&
-                dropPoint.y < root.y() + Half.of(root.height(graphics));
-
+        int halfWidth = Half.of(root.width(graphics));
+        return dropPoint.x <= root.x() + halfWidth &&
+                LiesBetweenTopAndBottom.of(root, dropPoint.y, graphics);
     }
 }

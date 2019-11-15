@@ -67,6 +67,6 @@ class HintIsRootTest extends AbstractGraphTest {
         strategy.draw(graph, HintResult.ROOT, graphics, imageObserver);
 
         // Then
-        verify(strategy).drawNodeHint(graphics, root);
+        verify(strategy).drawNodeHintAfter(graphics, root);
     }
 }
