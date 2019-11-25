@@ -14,7 +14,6 @@ import com.reedelk.plugin.editor.properties.widget.input.script.DynamicValueFiel
 import com.reedelk.plugin.editor.properties.widget.input.script.ScriptContextManager;
 import com.reedelk.plugin.editor.properties.widget.input.script.suggestion.SuggestionDropDownDecorator;
 import com.reedelk.runtime.api.commons.ScriptUtils;
-import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -42,22 +41,18 @@ public class ScriptEditorDefault extends DisposablePanel implements ScriptEditor
     protected EditorEx editor;
     protected Document document;
 
-    public ScriptEditorDefault(
-            @NotNull Project project,
-            @NotNull ScriptContextManager contextManager,
-            boolean showContextVariablesPanel) {
+    public ScriptEditorDefault(Project project,
+                               ScriptContextManager contextManager,
+                               Document document,
+                               boolean showContextVariablesPanel) {
 
-        this.project = project;
-        this.document = EditorFactory.getInstance().createDocument(StringUtils.EMPTY);
-        this.document.addDocumentListener(this);
+        this.project =  project;
 
         this.editor = (EditorEx) EditorFactory.getInstance()
                 .createEditor(document, project, JAVASCRIPT_FILE_TYPE, false);
 
         this.decorate = SuggestionDropDownDecorator.decorate(editor, document,
                 new EditorWordSuggestionClient(project, contextManager));
-
-
 
         JComponent editorComponent = editor.getComponent();
 
@@ -77,6 +72,7 @@ public class ScriptEditorDefault extends DisposablePanel implements ScriptEditor
         } else {
             add(editorComponent, CENTER);
         }
+
     }
 
     @Override

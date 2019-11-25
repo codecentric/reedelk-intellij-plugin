@@ -70,6 +70,7 @@ public class ClickableLabel extends JLabel implements MouseListener {
 
     }
 
+    // TODO: This is very wrong.
     public interface OnClickAction {
         void onClick();
     }

@@ -33,9 +33,15 @@ public class ScriptPropertyRenderer extends AbstractTypePropertyRenderer {
         List<VariableDefinition> variableDefinitions = propertyDescriptor.getVariableDefinitions();
         ScriptContextManager scriptContext = new ScriptContextManager(module, context, variableDefinitions);
 
-        ScriptSelector scriptSelector = new ScriptSelector(scripts);
+        ScriptControlPanel scriptControlPanel = new ScriptControlPanel(module, scriptContext);
 
-        ScriptControlPanel scriptControlPanel = new ScriptControlPanel();
+        ScriptSelector scriptSelector = new ScriptSelector(scripts);
+        scriptSelector.setSelectedItem(propertyAccessor.get());
+        scriptControlPanel.onSelect(propertyAccessor.get());
+        scriptSelector.addListener(value -> {
+            propertyAccessor.set(value);
+            scriptControlPanel.onSelect((String) value);
+        });
 
         JPanel container = new DisposablePanel();
         container.setLayout(new BorderLayout());
@@ -43,4 +49,18 @@ public class ScriptPropertyRenderer extends AbstractTypePropertyRenderer {
         container.add(scriptControlPanel, EAST);
         return container;
     }
+
+    /**
+    private ConfigMetadata findMatchingScript(List<ConfigMetadata> configsMetadata, String reference) {
+        if (StringUtils.isBlank(reference)) return UNSELECTED_CONFIG;
+        return configsMetadata.stream()
+                .filter(configMetadata -> configMetadata.getId().equals(reference))
+                .findFirst()
+                .orElseGet(() -> {
+                    TypeObjectDescriptor.TypeObject unselectedConfigDefinition = new TypeObjectDescriptor.TypeObject();
+                    unselectedConfigDefinition.set(JsonParser.Config.id(), reference);
+                    unselectedConfigDefinition.set(JsonParser.Config.title(), String.format("Unresolved (%s)", reference));
+                    return new ConfigMetadata(unselectedConfigDefinition);
+                });
+    }*/
 }

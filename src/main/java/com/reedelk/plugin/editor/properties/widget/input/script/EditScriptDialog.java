@@ -1,14 +1,22 @@
 package com.reedelk.plugin.editor.properties.widget.input.script;
 
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.reedelk.plugin.commons.Labels;
+import com.reedelk.plugin.commons.ModuleUtils;
 import com.reedelk.plugin.editor.properties.widget.input.script.editor.ScriptEditorDefault;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.nio.file.Paths;
+
+import static com.reedelk.runtime.commons.ModuleProperties.Script;
 
 public class EditScriptDialog extends DialogWrapper {
 
@@ -17,13 +25,17 @@ public class EditScriptDialog extends DialogWrapper {
     private ScriptEditorDefault editor;
 
     EditScriptDialog(@NotNull Module module,
-                     @NotNull ScriptContextManager context, String initialValue) {
+                     @NotNull ScriptContextManager context,
+                     String scriptFile) {
         super(module.getProject(), false);
         setTitle(Labels.DIALOG_TITLE_EDIT_SCRIPT);
         setResizable(true);
 
-        editor = new ScriptEditorDefault(module.getProject(), context, true);
-        editor.setValue(initialValue);
+        String resources = ModuleUtils.getResourcesFolder(module).orElseThrow(() -> new RuntimeException("error"));
+        VirtualFile file = VfsUtil.findFile(Paths.get(resources, Script.RESOURCE_DIRECTORY, scriptFile), true);
+        Document document = FileDocumentManager.getInstance().getDocument(file);
+
+        editor = new ScriptEditorDefault(module.getProject(), context, document, true);
         editor.getComponent().setPreferredSize(DEFAULT_SCRIPT_DIMENSION);
 
         init();
