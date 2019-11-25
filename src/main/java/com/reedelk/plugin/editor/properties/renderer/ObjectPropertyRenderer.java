@@ -158,11 +158,11 @@ public class ObjectPropertyRenderer extends AbstractTypePropertyRenderer {
         selector.addSelectListener(selectedMetadata ->
                 updateSelectedConfig(selectedMetadata, configControlPanel, refAccessor, context, descriptor, dataHolder));
 
-        JPanel wrapper = new DisposablePanel();
-        wrapper.setLayout(new BorderLayout());
-        wrapper.add(selector, CENTER);
-        wrapper.add(configControlPanel, EAST);
-        return wrapper;
+        JPanel container = new DisposablePanel();
+        container.setLayout(new BorderLayout());
+        container.add(selector, CENTER);
+        container.add(configControlPanel, EAST);
+        return container;
     }
 
     private void updateSelectedConfig(ConfigMetadata matchingMetadata, ConfigControlPanel configControlPanel, PropertyAccessor referenceAccessor, ContainerContext context, ComponentPropertyDescriptor descriptor, ComponentDataHolder dataHolder) {

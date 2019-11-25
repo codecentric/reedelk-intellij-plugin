@@ -2,7 +2,7 @@ package com.reedelk.plugin.editor.designer.action.add.strategy;
 
 import com.reedelk.plugin.commons.Half;
 import com.reedelk.plugin.commons.LiesBetweenTopAndBottom;
-import com.reedelk.plugin.editor.designer.action.Strategy;
+import com.reedelk.plugin.editor.designer.action.ActionStrategy;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.utils.FindClosestPrecedingNode;
@@ -23,22 +23,22 @@ public class FlowStrategyBuilder extends StrategyBuilder {
 
     @NotNull
     @Override
-    public Strategy build() {
+    public ActionStrategy build() {
 
         if (graph.isEmpty()) {
-            return new FlowAddRootStrategy(graph);
+            return new FlowAddRootActionStrategy(graph);
 
         } else if (isReplacingRoot(graph, dropPoint, graphics)) {
-            return new FlowReplaceRootStrategy(graph, placeholderProvider);
+            return new FlowReplaceRootActionStrategy(graph, placeholderProvider);
 
         } else if (isOverlappingAnyPlaceHolder(graph, dropPoint)) {
             GraphNode overlappingPlaceholder = getOverlappingPlaceholder(graph, dropPoint);
-            return new ReplaceNodeStrategy(graph, overlappingPlaceholder, placeholderProvider);
+            return new ReplaceNodeActionStrategy(graph, overlappingPlaceholder, placeholderProvider);
 
         } else {
             return FindClosestPrecedingNode.of(graph, dropPoint, graphics)
                     .map(this::strategyFromClosestPrecedingNode)
-                    .orElseGet(NoOpStrategy::new);
+                    .orElseGet(NoOpActionStrategy::new);
         }
     }
 

@@ -137,6 +137,10 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
     private boolean isNotHotSwappableSource(VirtualFile file) {
         return file != null &&
                 !file.isDirectory() &&
+                // TODO: Here must add a check that changed files must be in their respective folders.
+                //  For instance, if I change a .js but is not in the resources/scripts folder the module
+                //  MUST be recompiled!
+                hasNotExtension(file, FileExtension.SCRIPT.value()) &&
                 hasNotExtension(file, FileExtension.FLOW.value()) &&
                 hasNotExtension(file, FileExtension.SUBFLOW.value()) &&
                 hasNotExtension(file, FileExtension.FLOW_CONFIG.value());

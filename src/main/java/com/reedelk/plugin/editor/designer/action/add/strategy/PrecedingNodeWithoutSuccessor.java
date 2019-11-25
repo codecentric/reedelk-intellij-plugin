@@ -1,6 +1,6 @@
 package com.reedelk.plugin.editor.designer.action.add.strategy;
 
-import com.reedelk.plugin.editor.designer.action.Strategy;
+import com.reedelk.plugin.editor.designer.action.ActionStrategy;
 import com.reedelk.plugin.editor.designer.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -24,7 +24,7 @@ import java.util.Stack;
  * If the closest preceding node does not belong to a scope, then:
  * - Add the node as successor.
  */
-public class PrecedingNodeWithoutSuccessor implements Strategy {
+public class PrecedingNodeWithoutSuccessor implements ActionStrategy {
 
     private final PlaceholderProvider placeholderProvider;
     private final GraphNode closestPrecedingNode;

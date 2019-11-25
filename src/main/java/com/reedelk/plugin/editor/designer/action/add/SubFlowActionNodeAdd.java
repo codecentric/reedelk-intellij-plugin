@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.designer.action.add;
 
 import com.reedelk.plugin.editor.designer.action.Action;
-import com.reedelk.plugin.editor.designer.action.Strategy;
+import com.reedelk.plugin.editor.designer.action.ActionStrategy;
 import com.reedelk.plugin.editor.designer.action.add.strategy.SubFlowStrategyBuilder;
 import com.reedelk.plugin.editor.designer.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.FlowGraph;
@@ -33,7 +33,7 @@ public class SubFlowActionNodeAdd implements Action {
 
     @Override
     public void execute(FlowGraph graph) {
-        Strategy strategy = SubFlowStrategyBuilder.create()
+        ActionStrategy strategy = SubFlowStrategyBuilder.create()
                 .placeholderProvider(placeholderProvider)
                 .dropPoint(dropPoint)
                 .observer(observer)

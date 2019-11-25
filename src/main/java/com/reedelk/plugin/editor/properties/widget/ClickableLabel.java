@@ -43,28 +43,30 @@ public class ClickableLabel extends JLabel implements MouseListener {
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
-        this.action.onClick();
+    public void mouseClicked(MouseEvent event) {
+        if (action != null) {
+            action.onClick();
+        }
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) {
+    public void mouseEntered(MouseEvent event) {
         setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
     @Override
-    public void mouseExited(MouseEvent e) {
+    public void mouseExited(MouseEvent event) {
         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
 
 
     @Override
-    public void mousePressed(MouseEvent e) {
+    public void mousePressed(MouseEvent event) {
 
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
+    public void mouseReleased(MouseEvent event) {
 
     }
 

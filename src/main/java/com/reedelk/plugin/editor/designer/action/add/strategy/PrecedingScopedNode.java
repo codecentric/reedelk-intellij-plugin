@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.designer.action.add.strategy;
 
 import com.reedelk.plugin.commons.IsScopedGraphNode;
-import com.reedelk.plugin.editor.designer.action.Strategy;
+import com.reedelk.plugin.editor.designer.action.ActionStrategy;
 import com.reedelk.plugin.editor.designer.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -18,7 +18,7 @@ import static com.reedelk.plugin.commons.ScopeUtils.*;
  * Strategy which can be applied to preceding nodes of type ScopedGraphNode.
  * Note that only a scoped node might have more than one successor.
  */
-public class PrecedingScopedNode implements Strategy {
+public class PrecedingScopedNode implements ActionStrategy {
 
     private final PlaceholderProvider placeholderProvider;
     private final ScopedGraphNode closestPrecedingNode;

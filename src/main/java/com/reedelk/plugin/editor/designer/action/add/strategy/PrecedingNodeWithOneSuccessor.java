@@ -2,7 +2,7 @@ package com.reedelk.plugin.editor.designer.action.add.strategy;
 
 import com.reedelk.plugin.commons.Half;
 import com.reedelk.plugin.commons.IsScopedGraphNode;
-import com.reedelk.plugin.editor.designer.action.Strategy;
+import com.reedelk.plugin.editor.designer.action.ActionStrategy;
 import com.reedelk.plugin.editor.designer.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -20,7 +20,7 @@ import java.util.Stack;
 
 import static com.google.common.base.Preconditions.checkState;
 
-public class PrecedingNodeWithOneSuccessor implements Strategy {
+public class PrecedingNodeWithOneSuccessor implements ActionStrategy {
 
     private final PlaceholderProvider placeholderProvider;
     private final GraphNode precedingNode;

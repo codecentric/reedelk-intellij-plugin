@@ -1,13 +1,13 @@
 package com.reedelk.plugin.editor.designer.action.add.strategy;
 
-import com.reedelk.plugin.editor.designer.action.Strategy;
+import com.reedelk.plugin.editor.designer.action.ActionStrategy;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 
 /**
  * In a Subflow we don't replace the root node. We just add a node before.
  */
-public class SubFlowAddNewRoot implements Strategy {
+public class SubFlowAddNewRoot implements ActionStrategy {
 
     private final FlowGraph graph;
 

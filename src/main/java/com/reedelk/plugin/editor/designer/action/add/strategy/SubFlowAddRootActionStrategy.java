@@ -1,6 +1,6 @@
 package com.reedelk.plugin.editor.designer.action.add.strategy;
 
-import com.reedelk.plugin.editor.designer.action.Strategy;
+import com.reedelk.plugin.editor.designer.action.ActionStrategy;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 
@@ -8,11 +8,11 @@ import com.reedelk.plugin.graph.node.GraphNode;
  * A Subflow can only start with components which don't have
  * INBOUND class type.
  */
-public class SubFlowAddRootStrategy implements Strategy {
+public class SubFlowAddRootActionStrategy implements ActionStrategy {
 
     private final FlowGraph graph;
 
-    SubFlowAddRootStrategy(FlowGraph graph) {
+    SubFlowAddRootActionStrategy(FlowGraph graph) {
         this.graph = graph;
     }
 

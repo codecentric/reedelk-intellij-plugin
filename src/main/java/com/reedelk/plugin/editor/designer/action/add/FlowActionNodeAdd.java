@@ -2,7 +2,7 @@ package com.reedelk.plugin.editor.designer.action.add;
 
 
 import com.reedelk.plugin.editor.designer.action.Action;
-import com.reedelk.plugin.editor.designer.action.Strategy;
+import com.reedelk.plugin.editor.designer.action.ActionStrategy;
 import com.reedelk.plugin.editor.designer.action.add.strategy.FlowStrategyBuilder;
 import com.reedelk.plugin.editor.designer.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.FlowGraph;
@@ -38,7 +38,7 @@ public class FlowActionNodeAdd implements Action {
 
     @Override
     public void execute(FlowGraph graph) {
-        Strategy strategy = FlowStrategyBuilder.create()
+        ActionStrategy strategy = FlowStrategyBuilder.create()
                 .placeholderProvider(placeholderProvider)
                 .dropPoint(dropPoint)
                 .observer(observer)

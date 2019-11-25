@@ -2,7 +2,7 @@ package com.reedelk.plugin.editor.designer.action.remove.strategy;
 
 import com.reedelk.plugin.commons.GetSuccessorIndex;
 import com.reedelk.plugin.commons.IsScopedGraphNode;
-import com.reedelk.plugin.editor.designer.action.Strategy;
+import com.reedelk.plugin.editor.designer.action.ActionStrategy;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
@@ -14,12 +14,12 @@ import java.util.Optional;
 
 import static com.reedelk.runtime.commons.Preconditions.checkState;
 
-public class RemoveGraphNodeStrategy implements Strategy {
+public class RemoveGraphNodeActionStrategy implements ActionStrategy {
 
     private final FlowGraph graph;
     private final PlaceholderProvider placeholderProvider;
 
-    public RemoveGraphNodeStrategy(@NotNull FlowGraph graph, @NotNull PlaceholderProvider placeholderProvider) {
+    public RemoveGraphNodeActionStrategy(@NotNull FlowGraph graph, @NotNull PlaceholderProvider placeholderProvider) {
         this.graph = graph;
         this.placeholderProvider = placeholderProvider;
     }
@@ -34,7 +34,7 @@ public class RemoveGraphNodeStrategy implements Strategy {
         if (predecessors.isEmpty()) {
             // It is the first node of the graph we don't have to connect any predecessor
             // with the current node successors. If the node to remove is  a scoped node
-            // then it must be a node with empty scope. Otherwise the RemoveScopedGraphNodeStrategy
+            // then it must be a node with empty scope. Otherwise the RemoveScopedGraphNodeActionStrategy
             // means that it has not been called beforehand.
             checkState(successors.size() <= 1, "Expected at most one successor");
             graph.remove(toRemove);

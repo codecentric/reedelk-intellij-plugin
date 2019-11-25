@@ -13,7 +13,7 @@ public class ActionDeleteConfiguration extends ActionableCommandButton {
     private final Module module;
     private DeleteCompleteListener listener;
 
-    public ActionDeleteConfiguration(@NotNull Module module) {
+    ActionDeleteConfiguration(@NotNull Module module) {
         super("Delete", Delete, DeleteDisabled);
         this.module = module;
     }

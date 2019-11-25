@@ -74,6 +74,8 @@
         <toolWindow id="componentPropertiesToolWindow" anchor="bottom"
                     factoryClass="com.reedelk.plugin.editor.properties.PropertiesPanelToolWindowFactory"/>
 
+        <moduleService serviceInterface="com.reedelk.plugin.service.module.ScriptService"
+                       serviceImplementation="com.reedelk.plugin.service.module.impl.ScriptServiceImpl"/>
     </extensions>
 
     <actions>

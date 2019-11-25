@@ -11,9 +11,9 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 
-public class FlowDesignerPanelActionHandler extends AbstractDesignerPanelActionHandler {
+public class DesignerPanelFlowActionHandler extends DesignerPanelAbstractActionHandler {
 
-    public FlowDesignerPanelActionHandler(@NotNull Module module, @NotNull FlowSnapshot snapshot) {
+    public DesignerPanelFlowActionHandler(@NotNull Module module, @NotNull FlowSnapshot snapshot) {
         super(module, snapshot);
     }
 

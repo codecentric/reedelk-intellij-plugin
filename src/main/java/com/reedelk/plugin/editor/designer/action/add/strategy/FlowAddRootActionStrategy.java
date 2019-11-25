@@ -1,16 +1,16 @@
 package com.reedelk.plugin.editor.designer.action.add.strategy;
 
-import com.reedelk.plugin.editor.designer.action.Strategy;
+import com.reedelk.plugin.editor.designer.action.ActionStrategy;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 
 import static com.reedelk.plugin.component.domain.ComponentClass.INBOUND;
 
-public class FlowAddRootStrategy implements Strategy {
+public class FlowAddRootActionStrategy implements ActionStrategy {
 
     private final FlowGraph graph;
 
-    FlowAddRootStrategy(FlowGraph graph) {
+    FlowAddRootActionStrategy(FlowGraph graph) {
         this.graph = graph;
     }
 

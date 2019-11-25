@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.designer.action.remove.strategy;
 
 import com.reedelk.plugin.commons.IsScopedGraphNode;
-import com.reedelk.plugin.editor.designer.action.Strategy;
+import com.reedelk.plugin.editor.designer.action.ActionStrategy;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
@@ -12,12 +12,12 @@ import java.util.List;
 
 import static com.reedelk.runtime.commons.Preconditions.checkState;
 
-public class SubflowRemoveRootStrategy implements Strategy {
+public class SubflowRemoveRootActionStrategy implements ActionStrategy {
 
     private final PlaceholderProvider placeholderProvider;
     private final FlowGraph graph;
 
-    public SubflowRemoveRootStrategy(@NotNull FlowGraph graph, @NotNull PlaceholderProvider placeholderProvider) {
+    public SubflowRemoveRootActionStrategy(@NotNull FlowGraph graph, @NotNull PlaceholderProvider placeholderProvider) {
         this.graph = graph;
         this.placeholderProvider = placeholderProvider;
     }
@@ -38,8 +38,8 @@ public class SubflowRemoveRootStrategy implements Strategy {
         }
 
         if (IsScopedGraphNode.of(root)) {
-            RemoveScopedGraphNodeStrategy removeScopedGraphNodeStrategy =
-                    new RemoveScopedGraphNodeStrategy(graph, placeholderProvider);
+            RemoveScopedGraphNodeActionStrategy removeScopedGraphNodeStrategy =
+                    new RemoveScopedGraphNodeActionStrategy(graph, placeholderProvider);
             removeScopedGraphNodeStrategy.execute(root);
         } else {
             graph.remove(root);

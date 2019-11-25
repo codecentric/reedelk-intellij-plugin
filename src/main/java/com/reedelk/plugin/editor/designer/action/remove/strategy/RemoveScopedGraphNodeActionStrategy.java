@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.designer.action.remove.strategy;
 
 import com.reedelk.plugin.commons.IsScopedGraphNode;
-import com.reedelk.plugin.editor.designer.action.Strategy;
+import com.reedelk.plugin.editor.designer.action.ActionStrategy;
 import com.reedelk.plugin.editor.designer.action.remove.FlowActionNodeRemove;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -14,13 +14,13 @@ import java.util.function.Consumer;
 
 import static com.reedelk.runtime.commons.Preconditions.checkState;
 
-public class RemoveScopedGraphNodeStrategy implements Strategy {
+public class RemoveScopedGraphNodeActionStrategy implements ActionStrategy {
 
     private final PlaceholderProvider absentPlaceholderProvider = new AbsentPlaceholderProvider();
     private final PlaceholderProvider placeholderProvider;
     private final FlowGraph graph;
 
-    public RemoveScopedGraphNodeStrategy(@NotNull FlowGraph graph, PlaceholderProvider placeholderProvider) {
+    public RemoveScopedGraphNodeActionStrategy(@NotNull FlowGraph graph, PlaceholderProvider placeholderProvider) {
         this.graph = graph;
         this.placeholderProvider = placeholderProvider;
     }
@@ -46,7 +46,7 @@ public class RemoveScopedGraphNodeStrategy implements Strategy {
         // successor of another ScopedGraphNode. When we remove the nested ScopedGraphNode and we
         // notify the parent ScopedGraphNode we must use the original placeholder provider since
         // the parent is not being removed.
-        Strategy strategy = new RemoveGraphNodeStrategy(graph, placeholderProvider);
+        ActionStrategy strategy = new RemoveGraphNodeActionStrategy(graph, placeholderProvider);
         strategy.execute(scopeToRemove);
     }
 
@@ -63,7 +63,7 @@ public class RemoveScopedGraphNodeStrategy implements Strategy {
                 removeNestedScopesNodes((ScopedGraphNode) nodeToRemove);
 
                 // Remove the current scoped node
-                Strategy strategy = new RemoveGraphNodeStrategy(graph, absentPlaceholderProvider);
+                ActionStrategy strategy = new RemoveGraphNodeActionStrategy(graph, absentPlaceholderProvider);
                 strategy.execute(nodeToRemove);
             } else {
                 FlowActionNodeRemove action = new FlowActionNodeRemove(nodeToRemove, absentPlaceholderProvider);

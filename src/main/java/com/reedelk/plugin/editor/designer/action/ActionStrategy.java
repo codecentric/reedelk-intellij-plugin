@@ -4,7 +4,7 @@ import com.reedelk.plugin.graph.node.GraphNode;
 
 import static com.reedelk.plugin.component.domain.ComponentClass.INBOUND;
 
-public interface Strategy {
+public interface ActionStrategy {
 
     void execute(GraphNode node);
 

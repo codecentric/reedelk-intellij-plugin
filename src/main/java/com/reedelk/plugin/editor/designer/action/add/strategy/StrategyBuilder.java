@@ -2,7 +2,7 @@ package com.reedelk.plugin.editor.designer.action.add.strategy;
 
 import com.reedelk.plugin.commons.IsScopedGraphNode;
 import com.reedelk.plugin.component.type.placeholder.PlaceholderNode;
-import com.reedelk.plugin.editor.designer.action.Strategy;
+import com.reedelk.plugin.editor.designer.action.ActionStrategy;
 import com.reedelk.plugin.editor.designer.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -50,10 +50,10 @@ public abstract class StrategyBuilder {
     }
 
     @NotNull
-    public abstract Strategy build();
+    public abstract ActionStrategy build();
 
     @NotNull
-    Strategy strategyFromClosestPrecedingNode(GraphNode precedingNode) {
+    ActionStrategy strategyFromClosestPrecedingNode(GraphNode precedingNode) {
         if (graph.successors(precedingNode).isEmpty()) {
             return new PrecedingNodeWithoutSuccessor(graph, dropPoint, precedingNode, graphics, placeholderProvider);
 

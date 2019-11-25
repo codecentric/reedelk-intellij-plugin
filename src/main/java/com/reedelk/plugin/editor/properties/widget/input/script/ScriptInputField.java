@@ -19,6 +19,7 @@ import java.awt.event.MouseEvent;
 import static com.reedelk.plugin.commons.Icons.Script;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
+import static javax.swing.BorderFactory.createEmptyBorder;
 
 public class ScriptInputField extends DisposablePanel implements Disposable {
 
@@ -36,10 +37,10 @@ public class ScriptInputField extends DisposablePanel implements Disposable {
         this.context = context;
         this.editor = new ScriptEditorDefault(module.getProject(), context, false);
 
-        JPanel openEditorBtn = new OpenEditorButton();
+        JPanel editScriptButton = new EditScriptButton();
 
         setLayout(new BorderLayout());
-        add(openEditorBtn, NORTH);
+        add(editScriptButton, NORTH);
         add(editor, CENTER);
     }
 
@@ -59,14 +60,13 @@ public class ScriptInputField extends DisposablePanel implements Disposable {
         this.editor.setValue(this.value);
     }
 
-    class OpenEditorButton extends JBPanel {
+    class EditScriptButton extends JBPanel {
 
-        private final Border BORDER_BTN_OPEN_EDITOR =
-                BorderFactory.createEmptyBorder(3, 0, 10, 0);
+        private final Border BORDER_BTN_OPEN_EDITOR = createEmptyBorder(3, 0, 10, 0);
 
         private JLabel openEditorBtn;
 
-        OpenEditorButton() {
+        EditScriptButton() {
             openEditorBtn = new JLabel(Labels.SCRIPT_EDITOR_BTN_OPEN_EDITOR);
             openEditorBtn.setIcon(Script.Edit);
             openEditorBtn.setDisabledIcon(Script.EditDisabled);

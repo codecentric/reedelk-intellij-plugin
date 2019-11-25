@@ -2,22 +2,22 @@ package com.reedelk.plugin.editor.designer.action.remove.strategy;
 
 import com.reedelk.plugin.AbstractGraphTest;
 import com.reedelk.plugin.assertion.PluginAssertion;
-import com.reedelk.plugin.editor.designer.action.Strategy;
+import com.reedelk.plugin.editor.designer.action.ActionStrategy;
 import com.reedelk.plugin.graph.FlowGraph;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class RemoveScopedGraphNodeStrategyTest extends AbstractGraphTest {
+class RemoveScopedGraphNodeActionStrategyTest extends AbstractGraphTest {
 
     private FlowGraph graph;
-    private Strategy strategy;
+    private ActionStrategy strategy;
 
     @BeforeEach
     protected void setUp() {
         super.setUp();
         this.graph = provider.createGraph();
         this.graph.root(root);
-        this.strategy = new RemoveScopedGraphNodeStrategy(graph, placeholderProvider);
+        this.strategy = new RemoveScopedGraphNodeActionStrategy(graph, placeholderProvider);
     }
 
     @Test

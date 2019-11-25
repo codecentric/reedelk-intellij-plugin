@@ -2,7 +2,7 @@ package com.reedelk.plugin.editor.designer.action.add.strategy;
 
 import com.reedelk.plugin.commons.GetSuccessorIndex;
 import com.reedelk.plugin.commons.IsPredecessorScopedNode;
-import com.reedelk.plugin.editor.designer.action.Strategy;
+import com.reedelk.plugin.editor.designer.action.ActionStrategy;
 import com.reedelk.plugin.editor.designer.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -17,15 +17,15 @@ import static com.reedelk.runtime.commons.Preconditions.checkState;
 /**
  * Strategy which replaces a node with the given replacement node.
  */
-public class ReplaceNodeStrategy implements Strategy {
+public class ReplaceNodeActionStrategy implements ActionStrategy {
 
     private final PlaceholderProvider placeholderProvider;
     private final GraphNode toBeReplaced;
     private final FlowGraph graph;
 
-    ReplaceNodeStrategy(@NotNull FlowGraph graph,
-                        @NotNull GraphNode toBeReplaced,
-                        @NotNull PlaceholderProvider placeholderProvider) {
+    ReplaceNodeActionStrategy(@NotNull FlowGraph graph,
+                              @NotNull GraphNode toBeReplaced,
+                              @NotNull PlaceholderProvider placeholderProvider) {
         this.placeholderProvider = placeholderProvider;
         this.toBeReplaced = toBeReplaced;
         this.graph = graph;

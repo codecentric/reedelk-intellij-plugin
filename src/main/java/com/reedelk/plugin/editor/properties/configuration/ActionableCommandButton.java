@@ -16,7 +16,7 @@ public abstract class ActionableCommandButton extends ClickableLabel implements 
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
+    public void mouseClicked(MouseEvent event) {
         onClick(selectedMetadata);
     }
 

@@ -76,7 +76,7 @@ class MavenProjectBuilderHelper {
         private static void createDirectories(VirtualFile root) {
             createDirectory(root, BASE_RESOURCE_FOLDER + Flow.RESOURCE_DIRECTORY);
             createDirectory(root, BASE_RESOURCE_FOLDER + Config.RESOURCE_DIRECTORY);
-            createDirectory(root, BASE_RESOURCE_FOLDER + Metadata.RESOURCE_DIRECTORY);
+            createDirectory(root, BASE_RESOURCE_FOLDER + Script.RESOURCE_DIRECTORY);
         }
 
         private static void createDirectory(VirtualFile root, String suffix) {

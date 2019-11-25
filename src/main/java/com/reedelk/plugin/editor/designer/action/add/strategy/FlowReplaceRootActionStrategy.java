@@ -6,9 +6,9 @@ import com.reedelk.plugin.graph.node.GraphNode;
 
 import static com.reedelk.plugin.component.domain.ComponentClass.INBOUND;
 
-public class FlowReplaceRootStrategy extends ReplaceNodeStrategy {
+public class FlowReplaceRootActionStrategy extends ReplaceNodeActionStrategy {
 
-    FlowReplaceRootStrategy(FlowGraph graph, PlaceholderProvider placeholderProvider) {
+    FlowReplaceRootActionStrategy(FlowGraph graph, PlaceholderProvider placeholderProvider) {
         super(graph, graph.root(), placeholderProvider);
     }
 

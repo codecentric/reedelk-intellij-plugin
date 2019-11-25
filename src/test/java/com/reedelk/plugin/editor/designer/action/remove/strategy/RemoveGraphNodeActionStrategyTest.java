@@ -3,7 +3,7 @@ package com.reedelk.plugin.editor.designer.action.remove.strategy;
 import com.reedelk.plugin.AbstractGraphTest;
 import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.component.type.placeholder.PlaceholderNode;
-import com.reedelk.plugin.editor.designer.action.Strategy;
+import com.reedelk.plugin.editor.designer.action.ActionStrategy;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.testutils.AddRouterConditions;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,17 +11,17 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
-class RemoveGraphNodeStrategyTest extends AbstractGraphTest {
+class RemoveGraphNodeActionStrategyTest extends AbstractGraphTest {
 
     private FlowGraph graph;
-    private Strategy strategy;
+    private ActionStrategy strategy;
 
     @BeforeEach
     protected void setUp() {
         super.setUp();
         this.graph = provider.createGraph();
         this.graph.root(root);
-        this.strategy = new RemoveGraphNodeStrategy(graph, new PlaceholderProvider() {
+        this.strategy = new RemoveGraphNodeActionStrategy(graph, new PlaceholderProvider() {
             @Override
             public Optional<PlaceholderNode> get() {
                 return Optional.of(placeholderNode1);

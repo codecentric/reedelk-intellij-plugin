@@ -33,15 +33,15 @@ import static com.reedelk.plugin.editor.palette.ComponentDescriptorTransferable.
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
-public abstract class AbstractDesignerPanelActionHandler implements DesignerPanelActionHandler {
+public abstract class DesignerPanelAbstractActionHandler implements DesignerPanelActionHandler {
 
-    private static final Logger LOG = Logger.getInstance(AbstractDesignerPanelActionHandler.class);
+    private static final Logger LOG = Logger.getInstance(DesignerPanelAbstractActionHandler.class);
 
     protected final PlaceholderProvider placeholderProvider;
     protected final FlowSnapshot snapshot;
     protected final Module module;
 
-    AbstractDesignerPanelActionHandler(@NotNull Module module,
+    DesignerPanelAbstractActionHandler(@NotNull Module module,
                                        @NotNull FlowSnapshot snapshot) {
         this.placeholderProvider = new DefaultPlaceholderProvider(module);
         this.snapshot = snapshot;

@@ -2,11 +2,11 @@ package com.reedelk.plugin.editor.designer.action.remove.strategy;
 
 import com.reedelk.plugin.AbstractGraphTest;
 import com.reedelk.plugin.assertion.PluginAssertion;
-import com.reedelk.plugin.editor.designer.action.Strategy;
+import com.reedelk.plugin.editor.designer.action.ActionStrategy;
 import com.reedelk.plugin.graph.FlowGraph;
 import org.junit.jupiter.api.Test;
 
-class SubflowRemoveRootStrategyTest extends AbstractGraphTest {
+class SubflowRemoveRootActionStrategyTest extends AbstractGraphTest {
 
     @Test
     void shouldRemoveRootAndSetSuccessorAsNewRoot() {
@@ -16,7 +16,7 @@ class SubflowRemoveRootStrategyTest extends AbstractGraphTest {
         graph.add(root, componentNode1);
 
         // When
-        Strategy strategy = new SubflowRemoveRootStrategy(graph, placeholderProvider);
+        ActionStrategy strategy = new SubflowRemoveRootActionStrategy(graph, placeholderProvider);
         strategy.execute(root);
 
         // Then
@@ -33,7 +33,7 @@ class SubflowRemoveRootStrategyTest extends AbstractGraphTest {
         graph.root(root);
 
         // When
-        Strategy strategy = new SubflowRemoveRootStrategy(graph, placeholderProvider);
+        ActionStrategy strategy = new SubflowRemoveRootActionStrategy(graph, placeholderProvider);
         strategy.execute(root);
 
         // Then
@@ -52,7 +52,7 @@ class SubflowRemoveRootStrategyTest extends AbstractGraphTest {
         forkNode1.addToScope(componentNode2);
 
         // When
-        Strategy strategy = new SubflowRemoveRootStrategy(graph, placeholderProvider);
+        ActionStrategy strategy = new SubflowRemoveRootActionStrategy(graph, placeholderProvider);
         strategy.execute(forkNode1);
 
         // Then
@@ -73,7 +73,7 @@ class SubflowRemoveRootStrategyTest extends AbstractGraphTest {
         forkNode1.addToScope(componentNode2);
 
         // When
-        Strategy strategy = new SubflowRemoveRootStrategy(graph, placeholderProvider);
+        ActionStrategy strategy = new SubflowRemoveRootActionStrategy(graph, placeholderProvider);
         strategy.execute(forkNode1);
 
         // Then

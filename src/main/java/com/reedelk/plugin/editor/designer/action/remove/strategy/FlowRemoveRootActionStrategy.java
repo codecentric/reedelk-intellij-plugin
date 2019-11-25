@@ -1,20 +1,20 @@
 package com.reedelk.plugin.editor.designer.action.remove.strategy;
 
 import com.reedelk.plugin.commons.Labels.Placeholder;
-import com.reedelk.plugin.editor.designer.action.Strategy;
+import com.reedelk.plugin.editor.designer.action.ActionStrategy;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class FlowRemoveRootStrategy implements Strategy {
+public class FlowRemoveRootActionStrategy implements ActionStrategy {
 
     private final FlowGraph graph;
     private final PlaceholderProvider placeholderProvider;
 
-    public FlowRemoveRootStrategy(@NotNull FlowGraph graph,
-                                  @NotNull PlaceholderProvider placeholderProvider) {
+    public FlowRemoveRootActionStrategy(@NotNull FlowGraph graph,
+                                        @NotNull PlaceholderProvider placeholderProvider) {
         this.graph = graph;
         this.placeholderProvider = placeholderProvider;
     }

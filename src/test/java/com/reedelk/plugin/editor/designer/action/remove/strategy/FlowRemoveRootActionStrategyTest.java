@@ -3,14 +3,14 @@ package com.reedelk.plugin.editor.designer.action.remove.strategy;
 import com.reedelk.plugin.AbstractGraphTest;
 import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.component.type.placeholder.PlaceholderNode;
-import com.reedelk.plugin.editor.designer.action.Strategy;
+import com.reedelk.plugin.editor.designer.action.ActionStrategy;
 import com.reedelk.plugin.graph.FlowGraph;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import java.util.Optional;
 
-class FlowRemoveRootStrategyTest extends AbstractGraphTest {
+class FlowRemoveRootActionStrategyTest extends AbstractGraphTest {
 
     @Mock
     private PlaceholderNode mockPlaceholder;
@@ -23,7 +23,7 @@ class FlowRemoveRootStrategyTest extends AbstractGraphTest {
         graph.add(root, componentNode1);
 
         // When
-        Strategy strategy = new FlowRemoveRootStrategy(graph, new TestPlaceholderProvider());
+        ActionStrategy strategy = new FlowRemoveRootActionStrategy(graph, new TestPlaceholderProvider());
         strategy.execute(root);
 
         // Then
@@ -41,7 +41,7 @@ class FlowRemoveRootStrategyTest extends AbstractGraphTest {
         graph.root(root);
 
         // When
-        Strategy strategy = new FlowRemoveRootStrategy(graph, new TestPlaceholderProvider());
+        ActionStrategy strategy = new FlowRemoveRootActionStrategy(graph, new TestPlaceholderProvider());
         strategy.execute(root);
 
         // Then

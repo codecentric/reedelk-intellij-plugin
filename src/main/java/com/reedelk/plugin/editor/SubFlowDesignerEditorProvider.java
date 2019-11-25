@@ -8,7 +8,7 @@ import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.reedelk.plugin.editor.designer.action.SubFlowDesignerPanelActionHandler;
+import com.reedelk.plugin.editor.designer.action.DesignerPanelSubFlowActionHandler;
 import com.reedelk.plugin.filetype.SubFlowFileType;
 import com.reedelk.plugin.graph.FlowGraphProvider;
 import com.reedelk.plugin.graph.FlowSnapshot;
@@ -35,7 +35,7 @@ public class SubFlowDesignerEditorProvider implements FileEditorProvider, DumbAw
         FlowGraphProvider graphProvider = new FlowGraphProvider();
         GraphManager graphManager = new SubFlowGraphManager(module, file, snapshot, graphProvider);
 
-        SubFlowDesignerPanelActionHandler handler = new SubFlowDesignerPanelActionHandler(module, snapshot);
+        DesignerPanelSubFlowActionHandler handler = new DesignerPanelSubFlowActionHandler(module, snapshot);
         return new SubFlowDesignerEditor(module, snapshot, graphManager, handler);
     }
 

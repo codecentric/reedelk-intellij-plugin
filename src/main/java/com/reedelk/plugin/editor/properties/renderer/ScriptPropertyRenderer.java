@@ -5,14 +5,19 @@ import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.VariableDefinition;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.widget.ContainerContext;
-import com.reedelk.plugin.editor.properties.widget.FormBuilder;
-import com.reedelk.plugin.editor.properties.widget.JComponentHolder;
+import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 import com.reedelk.plugin.editor.properties.widget.input.script.ScriptContextManager;
-import com.reedelk.plugin.editor.properties.widget.input.script.ScriptInputField;
+import com.reedelk.plugin.editor.properties.widget.input.script.ScriptControlPanel;
+import com.reedelk.plugin.editor.properties.widget.input.script.ScriptSelector;
+import com.reedelk.plugin.service.module.ScriptService;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.List;
+
+import static java.awt.BorderLayout.CENTER;
+import static java.awt.BorderLayout.EAST;
 
 public class ScriptPropertyRenderer extends AbstractTypePropertyRenderer {
 
@@ -23,29 +28,19 @@ public class ScriptPropertyRenderer extends AbstractTypePropertyRenderer {
                              @NotNull PropertyAccessor propertyAccessor,
                              @NotNull ContainerContext context) {
 
+        List<String> scripts = ScriptService.getInstance(module).listAllScripts();
+
         List<VariableDefinition> variableDefinitions = propertyDescriptor.getVariableDefinitions();
         ScriptContextManager scriptContext = new ScriptContextManager(module, context, variableDefinitions);
 
-        ScriptInputField field = new ScriptInputField(module, scriptContext);
-        field.setValue(propertyAccessor.get());
-        field.addListener(propertyAccessor::set);
-        return field;
-    }
+        ScriptSelector scriptSelector = new ScriptSelector(scripts);
 
-    @Override
-    public void addToParent(@NotNull JComponent parent,
-                            @NotNull JComponent rendered,
-                            @NotNull ComponentPropertyDescriptor propertyDescriptor,
-                            @NotNull ContainerContext context) {
+        ScriptControlPanel scriptControlPanel = new ScriptControlPanel();
 
-        // Apply visibility condition for the Script input.
-        applyWhenVisibility(propertyDescriptor.getWhenDefinitions(), context, rendered);
-
-        // Add the component to the parent container.
-        FormBuilder.get()
-                .addLastField(rendered, parent);
-
-        // Add the component to the context.
-        context.addComponent(new JComponentHolder(rendered));
+        JPanel container = new DisposablePanel();
+        container.setLayout(new BorderLayout());
+        container.add(scriptSelector, CENTER);
+        container.add(scriptControlPanel, EAST);
+        return container;
     }
 }
