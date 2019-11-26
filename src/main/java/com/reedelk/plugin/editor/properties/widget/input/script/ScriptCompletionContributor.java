@@ -17,20 +17,19 @@ public class ScriptCompletionContributor extends CompletionContributor {
                     @Override
                     protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {
 
-
                         String text = parameters.getPosition().getText();
+
                         // Need to find space, or new line or it is  position 0
-
-
-                        boolean isDone = false;
                         int count = parameters.getOffset();
+                        if (count == 0) return;
+
                         int index;
                         while (true) {
-                            count--;
-                            if (count == 0) {
+                            if (count <= 0) {
                                 index = count;
                                 break;
                             }
+                            count--;
                             char c = text.charAt(count);
                             if (c == '\n' || c == ' ') {
                                 index = count + 1;

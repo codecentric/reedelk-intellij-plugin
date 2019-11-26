@@ -76,6 +76,7 @@ public class DynamicValueScriptEditor implements ScriptEditor, DocumentListener 
     public void setValue(String value) {
         if (value == null) return;
         try {
+            // TODO: This iswrong
             String script = ScriptUtils.unwrap(value);
             writeCommandAction(project).run(() -> document.setText(script));
         } catch (Throwable throwable) {
