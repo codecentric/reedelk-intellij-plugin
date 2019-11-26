@@ -7,8 +7,6 @@ import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.editor.properties.widget.ClickableLabel;
 import com.reedelk.plugin.editor.properties.widget.ContainerFactory;
 import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
-import com.reedelk.plugin.editor.properties.widget.input.script.editor.DynamicValueScriptEditor;
-import com.reedelk.plugin.editor.properties.widget.input.script.editor.ScriptEditor;
 import com.reedelk.runtime.api.commons.ScriptUtils;
 
 import javax.swing.*;

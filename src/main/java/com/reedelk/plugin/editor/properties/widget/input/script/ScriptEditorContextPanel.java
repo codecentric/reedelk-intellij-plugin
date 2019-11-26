@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.widget.input.script.editor;
+package com.reedelk.plugin.editor.properties.widget.input.script;
 
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.JBUI;

@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.widget.input.script.editor;
+package com.reedelk.plugin.editor.properties.widget.input.script;
 
 import com.intellij.codeInsight.AutoPopupController;
 import com.intellij.openapi.diagnostic.Logger;
@@ -16,7 +16,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
-import com.reedelk.plugin.editor.properties.widget.input.script.DynamicValueField;
 import com.reedelk.runtime.api.commons.ScriptUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +24,7 @@ import javax.swing.*;
 import static com.intellij.openapi.command.WriteCommandAction.writeCommandAction;
 import static com.intellij.util.ui.JBUI.Borders;
 import static com.reedelk.plugin.commons.Fonts.ScriptEditor.SCRIPT_EDITOR_FONT_SIZE;
-import static com.reedelk.plugin.editor.properties.widget.input.script.editor.EditorConstants.JAVASCRIPT_FILE_TYPE;
+import static com.reedelk.plugin.editor.properties.widget.input.script.EditorConstants.JAVASCRIPT_FILE_TYPE;
 import static java.util.Collections.singletonList;
 
 public class DynamicValueScriptEditor implements ScriptEditor, DocumentListener {

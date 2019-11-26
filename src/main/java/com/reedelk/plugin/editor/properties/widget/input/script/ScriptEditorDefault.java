@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.widget.input.script.editor;
+package com.reedelk.plugin.editor.properties.widget.input.script;
 
 import com.intellij.codeInsight.AutoPopupController;
 import com.intellij.openapi.diagnostic.Logger;
@@ -11,7 +11,6 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
-import com.reedelk.plugin.editor.properties.widget.input.script.DynamicValueField;
 import com.reedelk.runtime.api.commons.ScriptUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +18,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import static com.intellij.openapi.command.WriteCommandAction.writeCommandAction;
-import static com.reedelk.plugin.editor.properties.widget.input.script.editor.EditorConstants.JAVASCRIPT_FILE_TYPE;
+import static com.reedelk.plugin.editor.properties.widget.input.script.EditorConstants.JAVASCRIPT_FILE_TYPE;
 import static java.awt.BorderLayout.CENTER;
 
 public class ScriptEditorDefault extends DisposablePanel implements ScriptEditor, DocumentListener {

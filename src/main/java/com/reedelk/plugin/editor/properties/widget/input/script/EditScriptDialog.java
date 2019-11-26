@@ -8,7 +8,6 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.commons.ModuleUtils;
-import com.reedelk.plugin.editor.properties.widget.input.script.editor.ScriptEditorDefault;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
