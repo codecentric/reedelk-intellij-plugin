@@ -9,9 +9,9 @@ public class ScriptControlPanel extends DisposablePanel {
     private final ActionEditScript editAction;
     private final ActionAddScript addAction;
 
-    public ScriptControlPanel(Module module, ScriptContextManager contextManager) {
+    public ScriptControlPanel(Module module) {
         deleteAction = new ActionDeleteScript();
-        editAction = new ActionEditScript(module, contextManager);
+        editAction = new ActionEditScript(module);
         addAction = new ActionAddScript();
         add(editAction);
         add(deleteAction);

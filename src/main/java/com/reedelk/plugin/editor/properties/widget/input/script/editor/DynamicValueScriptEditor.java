@@ -1,5 +1,6 @@
 package com.reedelk.plugin.editor.properties.widget.input.script.editor;
 
+import com.intellij.codeInsight.AutoPopupController;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -9,12 +10,14 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.testFramework.LightVirtualFile;
 import com.reedelk.plugin.editor.properties.widget.input.script.DynamicValueField;
-import com.reedelk.plugin.editor.properties.widget.input.script.ScriptContextManager;
-import com.reedelk.plugin.editor.properties.widget.input.script.suggestion.SuggestionDropDownDecorator;
 import com.reedelk.runtime.api.commons.ScriptUtils;
-import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -36,18 +39,19 @@ public class DynamicValueScriptEditor implements ScriptEditor, DocumentListener 
     private EditorEx editor;
     private Document document;
     private DynamicValueField.OnChangeListener listener;
-    private SuggestionDropDownDecorator decorate;
 
-    public DynamicValueScriptEditor(@NotNull Project project,
-                                    @NotNull ScriptContextManager contextManager) {
+    public DynamicValueScriptEditor(@NotNull Module module)  {
 
-        this.project = project;
 
-        document = EditorFactory.getInstance().createDocument(StringUtils.EMPTY);
-        document.addDocumentListener(this);
+        this.project = module.getProject();
+
+        VirtualFile myVirtualFile = new LightVirtualFile("tmp.js", PlainTextFileType.INSTANCE, "super duper");
+        this.document = FileDocumentManager.getInstance().getDocument(myVirtualFile);
+        this.document.addDocumentListener(this);
 
         editor = (EditorEx) EditorFactory.getInstance()
-                .createEditor(document, project, JAVASCRIPT_FILE_TYPE, notViewer);
+                .createEditor(this.document, project, JAVASCRIPT_FILE_TYPE, notViewer);
+
         editor.setOneLineMode(singleLineMode);
         editor.setBorder(Borders.empty());
         editor.getScrollPane().setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -56,18 +60,12 @@ public class DynamicValueScriptEditor implements ScriptEditor, DocumentListener 
         colorsScheme.setEditorFontSize(SCRIPT_EDITOR_FONT_SIZE);
 
         configureSettings(editor.getSettings());
-
-        decorate = SuggestionDropDownDecorator
-                .decorate(editor, document, new EditorWordSuggestionClient(project, contextManager));
-    }
-
-    @Override
-    public void addOnEditDone(SuggestionDropDownDecorator.OnEditDoneCallback editDoneCallback) {
-        decorate.addOnEditDoneListener(editDoneCallback);
     }
 
     @Override
     public void documentChanged(@NotNull DocumentEvent event) {
+        AutoPopupController.getInstance(project).scheduleAutoPopup(editor);
+
         // Notify when script mode changed
         if (listener != null) {
             String script = ScriptUtils.asScript(event.getDocument().getText());

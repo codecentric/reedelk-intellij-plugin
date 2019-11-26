@@ -4,12 +4,10 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.DisposableUtils;
-import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
 import com.reedelk.plugin.editor.properties.widget.ClickableLabel;
 import com.reedelk.plugin.editor.properties.widget.ContainerFactory;
 import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
-import com.reedelk.plugin.editor.properties.widget.input.script.ScriptContextManager;
 import com.reedelk.plugin.editor.properties.widget.input.script.editor.DynamicValueScriptEditor;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.runtime.api.commons.StringUtils;
@@ -21,6 +19,7 @@ import javax.swing.table.*;
 import java.awt.*;
 import java.util.EventObject;
 
+import static com.reedelk.plugin.commons.Icons.Script;
 import static com.reedelk.runtime.commons.JsonParser.Implementor;
 
 class ConditionRouteTableColumnModel extends DefaultTableColumnModel implements Disposable, CommitPropertiesListener {
@@ -29,9 +28,9 @@ class ConditionRouteTableColumnModel extends DefaultTableColumnModel implements 
     private final ConditionCellRenderer cellRenderer;
     private final ConditionCellEditor conditionCellEditor;
 
-    ConditionRouteTableColumnModel(JComponent parent, Module module, ScriptContextManager scriptContextManager) {
-        cellRenderer = new ConditionCellRenderer(module, scriptContextManager);
-        conditionCellEditor = new ConditionCellEditor(parent, module, scriptContextManager);
+    ConditionRouteTableColumnModel(JComponent parent, Module module) {
+        cellRenderer = new ConditionCellRenderer(module);
+        conditionCellEditor = new ConditionCellEditor(module);
 
         // Column 0 (Condition)
         TableColumn conditionColumn = new TableColumn(0);
@@ -81,10 +80,9 @@ class ConditionRouteTableColumnModel extends DefaultTableColumnModel implements 
         private CellEditorListener listener;
         private DisposablePanel content;
 
-        ConditionCellEditor(JComponent parent, Module module, ScriptContextManager scriptContextManager) {
-            this.editor = new DynamicValueScriptEditor(module.getProject(), scriptContextManager);
-            this.editor.addOnEditDone(parent::requestFocusInWindow);
-            JLabel codeIcon = new ClickableLabel(Icons.Script.Code, Icons.Script.Code, () -> {
+        ConditionCellEditor(Module module) {
+            this.editor = new DynamicValueScriptEditor(module);
+            JLabel codeIcon = new ClickableLabel(Script.Code, Script.Code, () -> {
             });
             content = ContainerFactory.createLabelNextToComponent(codeIcon, editor.getComponent(), false);
         }
@@ -147,9 +145,9 @@ class ConditionRouteTableColumnModel extends DefaultTableColumnModel implements 
         private final DynamicValueScriptEditor editor;
         private DisposablePanel content;
 
-        ConditionCellRenderer(Module module, ScriptContextManager scriptContextManager) {
-            this.editor = new DynamicValueScriptEditor(module.getProject(), scriptContextManager);
-            JLabel codeIcon = new ClickableLabel(Icons.Script.Code, Icons.Script.Code, () -> {
+        ConditionCellRenderer(Module module) {
+            this.editor = new DynamicValueScriptEditor(module);
+            JLabel codeIcon = new ClickableLabel(Script.Code, Script.Code, () -> {
             });
             content = ContainerFactory.createLabelNextToComponent(codeIcon, editor.getComponent(), false);
         }

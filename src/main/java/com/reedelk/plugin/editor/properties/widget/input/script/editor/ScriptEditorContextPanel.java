@@ -5,14 +5,11 @@ import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
-import com.reedelk.plugin.editor.properties.widget.input.script.ScriptContextManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
-import java.util.Comparator;
-import java.util.Set;
 
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
@@ -26,7 +23,7 @@ class ScriptEditorContextPanel extends DisposablePanel {
             JBUI.Borders.customLine(Colors.SCRIPT_EDITOR_CONTEXT_PANEL_BORDER_BOTTOM, 0, 0, 1, 0),
             JBUI.Borders.empty(5));
 
-    ScriptEditorContextPanel(Set<ScriptContextManager.ContextVariable> contextVariables) {
+    ScriptEditorContextPanel() {
         setLayout(new BorderLayout());
         setBorder(panelBorder);
 
@@ -43,11 +40,8 @@ class ScriptEditorContextPanel extends DisposablePanel {
         BoxLayout boxLayout = new BoxLayout(panelVariablesWrapper, BoxLayout.PAGE_AXIS);
         panelVariablesWrapper.setLayout(boxLayout);
         panelVariablesWrapper.setBorder(JBUI.Borders.empty(5));
-        contextVariables
-                .stream()
-                .sorted(Comparator.comparing(contextVariable -> contextVariable.name))
-                .map(contextVariable -> new ContextVariableLabel(contextVariable.name, contextVariable.type))
-                .forEach(panelVariablesWrapper::add);
+        panelVariablesWrapper.add(new ContextVariableLabel("message", "Message"));
+        panelVariablesWrapper.add(new ContextVariableLabel("context", "Context"));
 
         JBScrollPane panelVariablesScrollPane = new JBScrollPane(panelVariablesWrapper);
         panelVariablesScrollPane.setBorder(JBUI.Borders.empty());

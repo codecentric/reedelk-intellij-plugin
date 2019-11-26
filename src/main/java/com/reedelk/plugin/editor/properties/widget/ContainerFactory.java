@@ -49,7 +49,11 @@ public class ContainerFactory {
         }
         body.setBorder(bodyBorder);
 
-        return new Focusable(label, body);
+
+        DisposablePanel wrapper = new DisposablePanel(new BorderLayout());
+        wrapper.add(label, WEST);
+        wrapper.add(body, CENTER);
+        return wrapper;
     }
 
     private static class Focusable extends DisposablePanel {

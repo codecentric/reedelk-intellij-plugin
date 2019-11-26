@@ -25,7 +25,6 @@ public class EditScriptDialog extends DialogWrapper {
     private ScriptEditorDefault editor;
 
     EditScriptDialog(@NotNull Module module,
-                     @NotNull ScriptContextManager context,
                      String scriptFile) {
         super(module.getProject(), false);
         setTitle(Labels.DIALOG_TITLE_EDIT_SCRIPT);
@@ -35,8 +34,10 @@ public class EditScriptDialog extends DialogWrapper {
         VirtualFile file = VfsUtil.findFile(Paths.get(resources, Script.RESOURCE_DIRECTORY, scriptFile), true);
         Document document = FileDocumentManager.getInstance().getDocument(file);
 
-        editor = new ScriptEditorDefault(module.getProject(), context, document, true);
+
+        editor = new ScriptEditorDefault(module.getProject(), document, true);
         editor.getComponent().setPreferredSize(DEFAULT_SCRIPT_DIMENSION);
+
 
         init();
     }

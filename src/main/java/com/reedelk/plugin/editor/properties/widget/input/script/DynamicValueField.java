@@ -25,11 +25,10 @@ public class DynamicValueField extends DisposablePanel {
     private DisposablePanel inputFieldContainer;
     private OnChangeListener listener;
 
-    public DynamicValueField(Module module, ScriptContextManager context, InputFieldAdapter inputFieldAdapter) {
+    public DynamicValueField(Module module, InputFieldAdapter inputFieldAdapter) {
         this.inputFieldAdapter = inputFieldAdapter;
 
-        this.editor = new DynamicValueScriptEditor(module.getProject(), context);
-        this.editor.addOnEditDone(DynamicValueField.this::requestFocusInWindow); // remove the focus when we are done
+        this.editor = new DynamicValueScriptEditor(module);
 
         this.scriptContainer = createScriptModePanel(editor.getComponent());
         this.inputFieldContainer = createInputFieldContainer();

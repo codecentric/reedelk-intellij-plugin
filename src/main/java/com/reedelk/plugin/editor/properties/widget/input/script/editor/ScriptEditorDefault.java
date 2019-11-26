@@ -1,5 +1,6 @@
 package com.reedelk.plugin.editor.properties.widget.input.script.editor;
 
+import com.intellij.codeInsight.AutoPopupController;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -11,8 +12,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 import com.reedelk.plugin.editor.properties.widget.input.script.DynamicValueField;
-import com.reedelk.plugin.editor.properties.widget.input.script.ScriptContextManager;
-import com.reedelk.plugin.editor.properties.widget.input.script.suggestion.SuggestionDropDownDecorator;
 import com.reedelk.runtime.api.commons.ScriptUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +27,6 @@ public class ScriptEditorDefault extends DisposablePanel implements ScriptEditor
     private static final Logger LOG = Logger.getInstance(DynamicValueScriptEditor.class);
 
     private static final boolean HORIZONTAL = false;
-    private final SuggestionDropDownDecorator decorate;
     private DynamicValueField.OnChangeListener listener;
 
     private static class Dimensions {
@@ -41,28 +39,23 @@ public class ScriptEditorDefault extends DisposablePanel implements ScriptEditor
     protected EditorEx editor;
     protected Document document;
 
-    public ScriptEditorDefault(Project project,
-                               ScriptContextManager contextManager,
-                               Document document,
-                               boolean showContextVariablesPanel) {
+    public ScriptEditorDefault(Project project, Document document, boolean showContextVariablesPanel) {
 
         this.project =  project;
 
+        document.addDocumentListener(this);
+
         this.editor = (EditorEx) EditorFactory.getInstance()
                 .createEditor(document, project, JAVASCRIPT_FILE_TYPE, false);
-
-        this.decorate = SuggestionDropDownDecorator.decorate(editor, document,
-                new EditorWordSuggestionClient(project, contextManager));
-
+        this.editor.setOneLineMode(false);
         JComponent editorComponent = editor.getComponent();
 
         setLayout(new BorderLayout());
 
+        // TODO: Use decorator instead.
         if (showContextVariablesPanel) {
-            ScriptEditorContextPanel contextPanel = new ScriptEditorContextPanel(contextManager.getVariables());
-
             ThreeComponentsSplitter splitter = new ThreeComponentsSplitter(HORIZONTAL);
-            splitter.setFirstComponent(contextPanel);
+            splitter.setFirstComponent(new ScriptEditorContextPanel());
             splitter.setLastComponent(editorComponent);
             splitter.setDividerWidth(Dimensions.DIVIDER_WIDTH);
             splitter.setFirstSize(Dimensions.EDITOR_CONTEXT_VARIABLES_SIZE);
@@ -77,16 +70,12 @@ public class ScriptEditorDefault extends DisposablePanel implements ScriptEditor
 
     @Override
     public void documentChanged(@NotNull DocumentEvent event) {
+        AutoPopupController.getInstance(project).scheduleAutoPopup(editor);
         if (listener != null) {
             // Notify when script mode changed
             String script = ScriptUtils.asScript(event.getDocument().getText());
             listener.onChange(script);
         }
-    }
-
-    @Override
-    public void addOnEditDone(SuggestionDropDownDecorator.OnEditDoneCallback editDoneCallback) {
-        decorate.addOnEditDoneListener(editDoneCallback);
     }
 
     @Override

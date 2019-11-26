@@ -76,6 +76,8 @@
 
         <moduleService serviceInterface="com.reedelk.plugin.service.module.ScriptService"
                        serviceImplementation="com.reedelk.plugin.service.module.impl.ScriptServiceImpl"/>
+
+        <completion.contributor language="TEXT" implementationClass="com.reedelk.plugin.editor.properties.widget.input.script.ScriptCompletionContributor"/>
     </extensions>
 
     <actions>

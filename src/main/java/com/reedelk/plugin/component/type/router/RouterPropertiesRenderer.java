@@ -12,13 +12,11 @@ import com.reedelk.plugin.editor.properties.widget.ContainerFactory;
 import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 import com.reedelk.plugin.editor.properties.widget.JComponentHolder;
 import com.reedelk.plugin.editor.properties.widget.input.InputChangeListener;
-import com.reedelk.plugin.editor.properties.widget.input.script.ScriptContextManager;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiPredicate;
@@ -38,13 +36,11 @@ public class RouterPropertiesRenderer extends GenericComponentPropertiesRenderer
     public DisposablePanel render(GraphNode routerNode) {
         DisposablePanel genericProperties = super.render(routerNode);
 
-        ScriptContextManager scriptContextManager = new ScriptContextManager(module, new EmptyContainerContext(), Collections.emptyList());
-
         ComponentData componentData = routerNode.componentData();
         List<RouterConditionRoutePair> conditionRoutePairList = componentData.get(DATA_CONDITION_ROUTE_PAIRS);
 
         ConditionRouteTableModel model = new ConditionRouteTableModel(conditionRoutePairList, snapshot);
-        RouterRouteTable routerRouteTable = new RouterRouteTable(module, model, scriptContextManager);
+        RouterRouteTable routerRouteTable = new RouterRouteTable(module, model);
         DisposablePanel routerTableContainer = ContainerFactory.createObjectTypeContainer(routerRouteTable, Labels.ROUTER_TABLE_CONTAINER_TITLE);
 
         DisposablePanel container = new DisposablePanel();

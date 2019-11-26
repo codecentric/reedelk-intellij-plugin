@@ -5,11 +5,7 @@ import com.reedelk.plugin.editor.properties.widget.input.script.DynamicValueFiel
 
 import javax.swing.*;
 
-import static com.reedelk.plugin.editor.properties.widget.input.script.suggestion.SuggestionDropDownDecorator.OnEditDoneCallback;
-
 public interface ScriptEditor extends Disposable {
-
-    void addOnEditDone(OnEditDoneCallback editDoneCallback);
 
     JComponent getComponent();
 
