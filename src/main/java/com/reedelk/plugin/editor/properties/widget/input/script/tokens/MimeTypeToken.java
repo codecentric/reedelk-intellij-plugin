@@ -1,5 +1,6 @@
 package com.reedelk.plugin.editor.properties.widget.input.script.tokens;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 public class MimeTypeToken implements Token {
@@ -11,6 +12,10 @@ public class MimeTypeToken implements Token {
 
     @Override
     public Collection<Token> children() {
-        return null;
+        return Arrays.asList(
+                new LeafToken("getSubType()"),
+                new LeafToken("getCharset()"),
+                new LeafToken("getPrimaryType()"),
+                new LeafToken("getFileExtensions()"));
     }
 }

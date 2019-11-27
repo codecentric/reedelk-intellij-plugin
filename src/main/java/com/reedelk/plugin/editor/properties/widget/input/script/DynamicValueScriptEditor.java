@@ -43,8 +43,10 @@ public class DynamicValueScriptEditor implements ScriptEditor, DocumentListener 
 
 
         this.project = module.getProject();
+        // TODO: This virtual file should be initialized with the default field value if the default
+        // TODO: field value is a script!!
 
-        VirtualFile myVirtualFile = new LightVirtualFile("tmp.js", PlainTextFileType.INSTANCE, "super duper");
+        VirtualFile myVirtualFile = new LightVirtualFile("tmp.js", PlainTextFileType.INSTANCE, "");
         this.document = FileDocumentManager.getInstance().getDocument(myVirtualFile);
         this.document.addDocumentListener(this);
 
