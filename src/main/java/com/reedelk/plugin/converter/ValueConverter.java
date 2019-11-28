@@ -2,12 +2,12 @@ package com.reedelk.plugin.converter;
 
 import org.json.JSONObject;
 
-public interface ValueConverter<ConvertedType> {
+public interface ValueConverter<T> {
 
     String toText(Object value);
 
-    ConvertedType from(String value);
+    T from(String value);
 
-    ConvertedType from(String propertyName, JSONObject object);
+    T from(String propertyName, JSONObject object);
 
 }

@@ -11,7 +11,7 @@ import java.awt.image.ImageObserver;
 
 public class ForkNode extends AbstractScopedGraphNode {
 
-    private final int verticalDividerXOffset = 7;
+    private static final int VERTICAL_DIVIDER_X_OFFSET = 7;
 
     private final VerticalDivider verticalDivider;
     private final VerticalDividerArrows verticalDividerArrows;
@@ -19,7 +19,7 @@ public class ForkNode extends AbstractScopedGraphNode {
     public ForkNode(ComponentData componentData) {
         super(componentData);
         this.verticalDivider = new VerticalDivider(this);
-        this.verticalDividerArrows = new VerticalDividerArrows(verticalDividerXOffset);
+        this.verticalDividerArrows = new VerticalDividerArrows(VERTICAL_DIVIDER_X_OFFSET);
     }
 
     @Override
@@ -52,6 +52,6 @@ public class ForkNode extends AbstractScopedGraphNode {
 
     @Override
     public int verticalDividerXOffset() {
-        return verticalDividerXOffset;
+        return VERTICAL_DIVIDER_X_OFFSET;
     }
 }

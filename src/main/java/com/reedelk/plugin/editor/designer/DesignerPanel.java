@@ -52,7 +52,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
 
     private static final Logger LOG = Logger.getInstance(DesignerPanel.class);
 
-    final int TOP_PADDING = 80;
+    static final int TOP_PADDING = 80;
 
     protected FlowSnapshot snapshot;
 

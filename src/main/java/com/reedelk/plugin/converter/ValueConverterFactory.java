@@ -68,7 +68,7 @@ public class ValueConverterFactory {
         CONVERTER = Collections.unmodifiableMap(tmp);
     }
 
-    public static ValueConverter<?> forType(TypeDescriptor typeDescriptor) {
+    public static ValueConverter forType(TypeDescriptor typeDescriptor) {
         if (typeDescriptor instanceof UnknownPropertyType) {
             return UNKNOWN_TYPE_CONVERTER;
         } else {

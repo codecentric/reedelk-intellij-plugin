@@ -24,8 +24,8 @@ public class RouterNode extends AbstractScopedGraphNode {
 
     public static final String DATA_CONDITION_ROUTE_PAIRS = "conditionRoutePairs";
 
-    private final int verticalDividerXOffset = 45;
-    private final int iconXOffset = 20;
+    private static final int VERTICAL_DIVIDER_X_OFFSET = 45;
+    private static final int ICON_X_OFFSET = 20;
 
     private final VerticalDivider verticalDivider;
     private final VerticalDividerArrows verticalDividerArrows;
@@ -34,7 +34,7 @@ public class RouterNode extends AbstractScopedGraphNode {
         super(componentData);
         this.verticalDivider = new VerticalDivider(this);
         this.verticalDividerArrows =
-                new VerticalDividerArrows(verticalDividerXOffset, new AddOtherwiseRouteLabelOnVerticalDividerArrow());
+                new VerticalDividerArrows(VERTICAL_DIVIDER_X_OFFSET, new AddOtherwiseRouteLabelOnVerticalDividerArrow());
     }
 
     @Override
@@ -46,7 +46,7 @@ public class RouterNode extends AbstractScopedGraphNode {
     @Override
     public void setPosition(int x, int y) {
         super.setPosition(x, y);
-        icon.setPosition(x - iconXOffset, y);
+        icon.setPosition(x - ICON_X_OFFSET, y);
         verticalDivider.setPosition(x, y);
     }
 
@@ -114,7 +114,7 @@ public class RouterNode extends AbstractScopedGraphNode {
 
     @Override
     protected void drawRemoveComponentIcon(Graphics2D graphics, ImageObserver observer) {
-        int topRightX = x() + Half.of(icon.width()) - iconXOffset;
+        int topRightX = x() + Half.of(icon.width()) - ICON_X_OFFSET;
         int topRightY = y() - icon.topHalfHeight(graphics) + Half.of(iconRemoveComponent.height());
         iconRemoveComponent.setPosition(topRightX, topRightY);
         iconRemoveComponent.draw(graphics, observer);
@@ -122,7 +122,7 @@ public class RouterNode extends AbstractScopedGraphNode {
 
     @Override
     public int verticalDividerXOffset() {
-        return verticalDividerXOffset;
+        return VERTICAL_DIVIDER_X_OFFSET;
     }
 
     private void updateConditionRoutePairs(FlowGraph graph) {
@@ -140,7 +140,7 @@ public class RouterNode extends AbstractScopedGraphNode {
         public void onProcess(ScopedGraphNode parent, GraphNode successor, Graphics2D graphics) {
             if (IsDefaultRoute.of(parent, successor)) {
                 int halfWidth = Half.of(parent.width(graphics));
-                int verticalX = parent.x() - verticalDividerXOffset + halfWidth;
+                int verticalX = parent.x() - VERTICAL_DIVIDER_X_OFFSET + halfWidth;
 
                 Point targetArrowEnd = successor.getTargetArrowEnd();
 

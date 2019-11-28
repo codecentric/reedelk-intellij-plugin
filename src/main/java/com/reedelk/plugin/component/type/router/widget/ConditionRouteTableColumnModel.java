@@ -28,7 +28,7 @@ class ConditionRouteTableColumnModel extends DefaultTableColumnModel implements 
     private final ConditionCellRenderer cellRenderer;
     private final ConditionCellEditor conditionCellEditor;
 
-    ConditionRouteTableColumnModel(JComponent parent, Module module) {
+    ConditionRouteTableColumnModel(Module module) {
         cellRenderer = new ConditionCellRenderer(module);
         conditionCellEditor = new ConditionCellEditor(module);
 

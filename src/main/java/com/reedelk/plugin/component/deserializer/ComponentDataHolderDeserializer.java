@@ -48,9 +48,7 @@ public class ComponentDataHolderDeserializer {
             // This is needed, to enable the UI to fill up the values in the
             // Type Object properties when the user edits a value.
             // This happens for instance when we have a JSON object like the following:
-            // {
-            //      "configuration": {}
-            // }
+            // "configuration": {}
             if (nestedJsonObject.isEmpty()) {
                 addEmptyInstancesForTypeObject(componentData, descriptor);
 

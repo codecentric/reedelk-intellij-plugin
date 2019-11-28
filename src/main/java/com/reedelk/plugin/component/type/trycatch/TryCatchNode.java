@@ -15,7 +15,7 @@ import java.awt.image.ImageObserver;
 
 public class TryCatchNode extends AbstractScopedGraphNode {
 
-    private final int verticalDividerXOffset = 7;
+    private static final int VERTICAL_DIVIDER_X_OFFSET = 7;
 
     private final TryCatchVerticalDivider verticalDivider;
     private final TryCatchVerticalDividerArrows verticalDividerArrows;
@@ -42,7 +42,7 @@ public class TryCatchNode extends AbstractScopedGraphNode {
     public void setPosition(int x, int y) {
         super.setPosition(x, y);
         verticalDivider.setPosition(x, y);
-        verticalDividerArrows.setPosition(x - verticalDividerXOffset, y);
+        verticalDividerArrows.setPosition(x - VERTICAL_DIVIDER_X_OFFSET, y);
     }
 
     // A try/catch node can ONLY have two successors. When one of these
@@ -96,6 +96,6 @@ public class TryCatchNode extends AbstractScopedGraphNode {
 
     @Override
     public int verticalDividerXOffset() {
-        return verticalDividerXOffset;
+        return VERTICAL_DIVIDER_X_OFFSET;
     }
 }

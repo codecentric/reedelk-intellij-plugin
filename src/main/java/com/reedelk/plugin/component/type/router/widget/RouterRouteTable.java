@@ -15,7 +15,7 @@ public class RouterRouteTable extends DisposablePanel {
 
     public RouterRouteTable(Module module, ConditionRouteTableModel model) {
 
-        TableColumnModel tableColumnModel = new ConditionRouteTableColumnModel(this, module);
+        TableColumnModel tableColumnModel = new ConditionRouteTableColumnModel(module);
         PropertyTable propertyTable = new PropertyTable(model, tableColumnModel);
 
         setLayout(new BorderLayout());

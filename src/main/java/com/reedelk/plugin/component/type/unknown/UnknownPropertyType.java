@@ -14,6 +14,6 @@ public class UnknownPropertyType implements TypeDescriptor {
         throw new UnsupportedOperationException();
     }
 
-    public static class UnknownType {
+    public interface UnknownType {
     }
 }
