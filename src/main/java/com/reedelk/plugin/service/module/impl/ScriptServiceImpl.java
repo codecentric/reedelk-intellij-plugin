@@ -82,7 +82,10 @@ public class ScriptServiceImpl implements ScriptService {
     public void addScript(String scriptFileName) {
         if (ScriptUtils.isEmpty(scriptFileName)) {
             // Throw new exception here...
-            throw new ESBException(String.format("Script cannot be empty %s", scriptFileName));
+            publisher.onAddError(new ESBException(
+                    String.format("Script cannot be empty %s", scriptFileName)),
+                    new ScriptResource(scriptFileName, scriptFileName));
+            return;
         }
 
         if (!scriptFileName.endsWith("." + FileExtension.SCRIPT.value())) {
