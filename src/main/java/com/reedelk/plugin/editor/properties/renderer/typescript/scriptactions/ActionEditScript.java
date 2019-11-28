@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.renderer.typescript;
+package com.reedelk.plugin.editor.properties.renderer.typescript.scriptactions;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.editor.properties.commons.ClickableLabel;

@@ -20,7 +20,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import static com.intellij.openapi.command.WriteCommandAction.writeCommandAction;
-import static com.reedelk.plugin.editor.properties.renderer.typescript.EditorConstants.JAVASCRIPT_FILE_TYPE;
+import static com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditorConstants.JAVASCRIPT_FILE_TYPE;
 import static java.awt.BorderLayout.CENTER;
 
 public class ScriptEditorDefault extends DisposablePanel implements ScriptEditor, DocumentListener {
