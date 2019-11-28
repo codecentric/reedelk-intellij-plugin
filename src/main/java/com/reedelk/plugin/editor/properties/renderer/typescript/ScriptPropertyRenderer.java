@@ -26,13 +26,13 @@ public class ScriptPropertyRenderer extends AbstractPropertyTypeRenderer {
                              @NotNull PropertyAccessor propertyAccessor,
                              @NotNull ContainerContext context) {
 
-        List<String> scripts = ScriptService.getInstance(module).listAllScripts();
+        List<String> scripts = ScriptService.getInstance(module).getScripts();
 
         ScriptActionsPanel scriptActionsPanel = new ScriptActionsPanel(module);
+        scriptActionsPanel.onSelect(propertyAccessor.get()); // we set the current selected script.
 
         ScriptSelectorCombo scriptSelectorCombo = new ScriptSelectorCombo(scripts);
         scriptSelectorCombo.setSelectedItem(propertyAccessor.get());
-        scriptActionsPanel.onSelect(propertyAccessor.get());
         scriptSelectorCombo.addListener(value -> {
             propertyAccessor.set(value);
             scriptActionsPanel.onSelect((String) value);

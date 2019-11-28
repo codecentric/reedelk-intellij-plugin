@@ -20,7 +20,7 @@ public class ScriptServiceImpl implements ScriptService {
     }
 
     @Override
-    public List<String> listAllScripts() {
+    public List<String> getScripts() {
 
         String scriptsFolder = ModuleUtils.getResourcesFolder(module)
                 .map(resourcesFolder -> resourcesFolder + Script.RESOURCE_DIRECTORY)

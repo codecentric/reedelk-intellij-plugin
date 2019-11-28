@@ -1,6 +1,8 @@
 package com.reedelk.plugin.editor.properties.renderer.typeobject;
 
 import com.intellij.ui.JBColor;
+import com.intellij.ui.components.JBPanel;
+import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
@@ -100,5 +102,22 @@ class CollapsibleObjectTypeContainer extends DisposablePanel {
                 collapsed = true;
             }
         });
+    }
+
+    class HorizontalSeparator extends JBPanel {
+
+        HorizontalSeparator(JBColor color) {
+            setLayout(new GridBagLayout());
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.gridwidth = GridBagConstraints.REMAINDER;
+            gbc.weightx = 1;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+
+            JSeparator jSeparator = new JSeparator();
+            jSeparator.setForeground(color);
+            add(jSeparator, gbc);
+
+            setBorder(JBUI.Borders.empty(2, 5, 0, 0));
+        }
     }
 }

@@ -11,5 +11,8 @@ public interface ScriptService {
         return ModuleServiceManager.getService(module, ScriptService.class);
     }
 
-    List<String> listAllScripts();
+    /**
+     * @return all the scripts from the resources/scripts folder.
+     */
+    List<String> getScripts();
 }
