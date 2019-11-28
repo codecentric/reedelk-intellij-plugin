@@ -6,7 +6,7 @@ import com.reedelk.plugin.service.module.impl.ConfigMetadata;
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 
-public abstract class ActionableCommandButton extends ClickableLabel implements ConfigSelector.SelectListener {
+public abstract class ActionableCommandButton extends ClickableLabel implements ConfigSelectorCombo.SelectListener {
 
     private ConfigMetadata selectedMetadata;
 

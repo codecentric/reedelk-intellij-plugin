@@ -34,7 +34,7 @@ public class ConfigServiceImpl implements ConfigService {
 
     @Override
     @NotNull
-    public List<ConfigMetadata> listConfigsBy(@NotNull TypeObjectDescriptor typeObjectDescriptor) {
+    public List<ConfigMetadata> getConfigurationsBy(@NotNull TypeObjectDescriptor typeObjectDescriptor) {
         List<ConfigMetadata> configs = new ArrayList<>();
         ModuleRootManager.getInstance(module).getFileIndex().iterateContent(fileOrDir -> {
             if (FileExtension.FLOW_CONFIG.value().equals(fileOrDir.getExtension())) {

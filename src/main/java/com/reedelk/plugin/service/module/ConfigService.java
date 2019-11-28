@@ -15,7 +15,7 @@ public interface ConfigService {
         return ModuleServiceManager.getService(module, ConfigService.class);
     }
 
-    List<ConfigMetadata> listConfigsBy(TypeObjectDescriptor typeObjectDescriptor);
+    List<ConfigMetadata> getConfigurationsBy(TypeObjectDescriptor typeObjectDescriptor);
 
     void saveConfig(ConfigMetadata updatedConfig) throws Exception;
 

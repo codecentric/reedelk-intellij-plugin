@@ -13,7 +13,7 @@ import com.reedelk.plugin.editor.properties.renderer.PropertyTypeRendererFactory
 import com.reedelk.plugin.editor.properties.renderer.typeobject.configuration.ActionAddConfiguration;
 import com.reedelk.plugin.editor.properties.renderer.typeobject.configuration.ActionDeleteConfiguration;
 import com.reedelk.plugin.editor.properties.renderer.typeobject.configuration.ConfigControlPanel;
-import com.reedelk.plugin.editor.properties.renderer.typeobject.configuration.ConfigSelector;
+import com.reedelk.plugin.editor.properties.renderer.typeobject.configuration.ConfigSelectorCombo;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.service.module.ConfigService;
 import com.reedelk.plugin.service.module.impl.ConfigMetadata;
@@ -101,7 +101,7 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
     @NotNull
     private JComponent renderShareable(Module module, ComponentPropertyDescriptor descriptor, PropertyAccessor propertyAccessor, ContainerContext context) {
         // The Config Selector Combo
-        ConfigSelector selector = new ConfigSelector();
+        ConfigSelectorCombo selector = new ConfigSelectorCombo();
 
         // The accessor of type object returns a TypeObject map
         // Since the object is shareable, it will contain a config reference.
@@ -149,8 +149,7 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
                 PopupUtils.error(exception, configControlPanel));
 
         String reference = dataHolder.get(JsonParser.Component.ref());
-        ConfigMetadata matchingMetadata =
-                updateMetadataOnSelector(module, selector, descriptor, reference);
+        ConfigMetadata matchingMetadata = updateMetadataOnSelector(module, selector, descriptor, reference);
         configControlPanel.onSelect(matchingMetadata);
 
         // We add the listener after, so that the first time we
@@ -173,18 +172,17 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
         context.notifyPropertyChanged(descriptor.getPropertyName(), dataHolder);
     }
 
-    private ConfigMetadata updateMetadataOnSelector(Module module, ConfigSelector selector, ComponentPropertyDescriptor typeObjectDescriptor, String targetReference) {
-        List<ConfigMetadata> configMetadata =
-                ConfigService.getInstance(module).listConfigsBy(typeObjectDescriptor.getPropertyType());
-        configMetadata.add(UNSELECTED_CONFIG);
+    private ConfigMetadata updateMetadataOnSelector(Module module, ConfigSelectorCombo selector, ComponentPropertyDescriptor typeObjectDescriptor, String targetReference) {
+        List<ConfigMetadata> allConfigurations = ConfigService.getInstance(module).getConfigurationsBy(typeObjectDescriptor.getPropertyType());
+        allConfigurations.add(UNSELECTED_CONFIG);
 
-        ConfigMetadata matchingMetadata = findMatchingMetadata(configMetadata, targetReference);
-        if (!configMetadata.contains(matchingMetadata)) {
-            configMetadata.add(matchingMetadata);
+        ConfigMetadata matchingMetadata = findMatchingMetadata(allConfigurations, targetReference);
+        if (!allConfigurations.contains(matchingMetadata)) {
+            allConfigurations.add(matchingMetadata);
         }
 
         DefaultComboBoxModel<ConfigMetadata> metadata = new DefaultComboBoxModel<>();
-        configMetadata.forEach(metadata::addElement);
+        allConfigurations.forEach(metadata::addElement);
         selector.setModel(metadata);
         selector.setSelectedItem(matchingMetadata);
         return matchingMetadata;

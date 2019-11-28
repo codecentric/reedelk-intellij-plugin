@@ -20,22 +20,25 @@ public class ScriptServiceImpl implements ScriptService {
     }
 
     @Override
-    public List<String> getScripts() {
+    public List<ScriptResource> getScripts() {
 
         String scriptsFolder = ModuleUtils.getResourcesFolder(module)
                 .map(resourcesFolder -> resourcesFolder + Script.RESOURCE_DIRECTORY)
                 .orElseThrow(() -> new IllegalStateException("The project must have a resource folder defined in the project."));
 
-        List<String> scripts = new ArrayList<>();
+        List<ScriptResource> scripts = new ArrayList<>();
         ModuleRootManager.getInstance(module).getFileIndex().iterateContent(fileOrDir -> {
             if (FileExtension.SCRIPT.value().equals(fileOrDir.getExtension())) {
                 if (fileOrDir.getPresentableUrl().startsWith(scriptsFolder)) {
+                    // We keep the path from .../resource/scripts to the end.
+                    // The script root is therefore /resource/scripts.
                     String substring = fileOrDir.getPresentableUrl().substring(scriptsFolder.length() + 1);
-                    scripts.add(substring);
+                    scripts.add(new ScriptResource(substring));
                 }
             }
             return true;
         });
+
         return scripts;
     }
 }

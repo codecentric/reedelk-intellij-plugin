@@ -8,11 +8,15 @@ import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.renderer.AbstractPropertyTypeRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typescript.scriptactions.ScriptActionsPanel;
 import com.reedelk.plugin.service.module.ScriptService;
+import com.reedelk.plugin.service.module.impl.ScriptResource;
+import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.EAST;
@@ -26,7 +30,7 @@ public class ScriptPropertyRenderer extends AbstractPropertyTypeRenderer {
                              @NotNull PropertyAccessor propertyAccessor,
                              @NotNull ContainerContext context) {
 
-        List<String> scripts = ScriptService.getInstance(module).getScripts();
+        List<ScriptResource> scripts = ScriptService.getInstance(module).getScripts();
 
         ScriptActionsPanel scriptActionsPanel = new ScriptActionsPanel(module);
         scriptActionsPanel.onSelect(propertyAccessor.get()); // we set the current selected script.
@@ -43,5 +47,23 @@ public class ScriptPropertyRenderer extends AbstractPropertyTypeRenderer {
         container.add(scriptSelectorCombo, CENTER);
         container.add(scriptActionsPanel, EAST);
         return container;
+    }
+
+    private ScriptResource findResourceMatching(List<ScriptResource> scriptResources, String path) {
+        if (StringUtils.isBlank(path)) return ScriptSelectorCombo.UNSELECTED;
+        return scriptResources.stream()
+                .filter(new Predicate<ScriptResource>() {
+                    @Override
+                    public boolean test(ScriptResource scriptResource) {
+                        return scriptResource.getPath().equals(path);
+                    }
+                }).findFirst()
+                .orElseGet(new Supplier<ScriptResource>() {
+                    @Override
+                    public ScriptResource get() {
+                        ScriptResource unknownResource = new ScriptResource(path);
+                        return unknownResource;
+                    }
+                });
     }
 }

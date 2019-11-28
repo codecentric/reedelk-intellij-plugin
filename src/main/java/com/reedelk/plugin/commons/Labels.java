@@ -57,7 +57,6 @@ public class Labels {
     public static final String ROUTER_DEFAULT_ROUTE = "otherwise";
 
     public static final String SCRIPT_EDITOR_CONTEXT_VARS_TITLE = "Editor variables";
-    public static final String SCRIPT_EDITOR_BTN_OPEN_EDITOR = "Open Editor";
 
     public static final String FILE_CHOOSER_TITLE = "Choose File";
 
@@ -73,6 +72,8 @@ public class Labels {
 
     public static final String BALLOON_EDIT_CONFIG_ERROR = "<p><b>An error has occurred:</b><p>%s</p>";
     public static final String CONFIG_NOT_SELECTED_ITEM = "<Not selected>";
+    public static final String SCRIPT_NOT_SELECTED_ITEM = "<Not selected>";
+    public static final String SCRIPT_NOT_KNOWN = "<Unknown>";
 
     public static final String ACTION_MAP_TABLE_ADD = "Add";
     public static final String ACTION_MAP_TABLE_REMOVE = "Remove";

@@ -34,6 +34,7 @@ public class ConfigMetadata implements ComponentDataHolder {
         return new ArrayList<>(data.keys());
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T get(String key) {
         return data.has(key) ? (T) data.get(key) : null;
