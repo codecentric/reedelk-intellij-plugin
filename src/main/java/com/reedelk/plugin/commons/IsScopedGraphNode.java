@@ -5,6 +5,9 @@ import com.reedelk.plugin.graph.node.ScopedGraphNode;
 
 public class IsScopedGraphNode {
 
+    private IsScopedGraphNode() {
+    }
+
     public static boolean of(GraphNode node) {
         return node instanceof ScopedGraphNode;
     }

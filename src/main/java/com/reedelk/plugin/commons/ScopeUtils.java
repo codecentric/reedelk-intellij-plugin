@@ -10,6 +10,9 @@ import java.util.List;
 
 public class ScopeUtils {
 
+    private ScopeUtils() {
+    }
+
     private static final int NODE_TOP_MARGIN_PERCENT = 35;
     private static final int NODE_BOTTOM_MARGIN_PERCENT = 40;
 

@@ -10,18 +10,18 @@ public class FontInfoProvider {
      * slows down test execution and therefore, this flag can be used to
      * use a default and predefined font for test purposes only.
      */
-    private static boolean TESTING = false;
+    private static boolean testing = false;
 
     private static final int DEFAULT_TEST_FONT_SIZE = 13;
     private static final String DEFAULT_TEST_FONT_NAME = "Sans Serif";
 
-    private static FontInfoProvider INSTANCE;
+    private static FontInfoProvider instance;
 
     private final String fontName;
     private final int fontSize;
 
     private FontInfoProvider() {
-        if (TESTING) {
+        if (testing) {
             fontName = DEFAULT_TEST_FONT_NAME;
             fontSize = DEFAULT_TEST_FONT_SIZE;
         } else {
@@ -39,13 +39,13 @@ public class FontInfoProvider {
     }
 
     public static void testing() {
-        TESTING = true;
+        testing = true;
     }
 
     static synchronized FontInfoProvider getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new FontInfoProvider();
+        if (instance == null) {
+            instance = new FontInfoProvider();
         }
-        return INSTANCE;
+        return instance;
     }
 }

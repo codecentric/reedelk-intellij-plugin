@@ -50,7 +50,7 @@ public class ComponentIconAndImageProvider {
 
     // From last slash until the dot before the png extension.
     private static String getMapKeyFromResourcePath(String resourcePath) {
-        int lastSlash = resourcePath.lastIndexOf("/");
+        int lastSlash = resourcePath.lastIndexOf('/');
         return resourcePath.substring(lastSlash + 1, resourcePath.length() - 4);
     }
 

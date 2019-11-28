@@ -5,6 +5,9 @@ import com.reedelk.plugin.graph.node.GraphNode;
 
 public class IsPlaceholderNode {
 
+    private IsPlaceholderNode() {
+    }
+
     public static boolean of(GraphNode node) {
         return node instanceof PlaceholderNode;
     }

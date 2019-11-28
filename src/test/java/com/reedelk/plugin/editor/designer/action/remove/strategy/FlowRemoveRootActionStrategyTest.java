@@ -5,6 +5,7 @@ import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.component.type.placeholder.PlaceholderNode;
 import com.reedelk.plugin.editor.designer.action.ActionStrategy;
 import com.reedelk.plugin.graph.FlowGraph;
+import com.reedelk.plugin.graph.node.GraphNode;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
@@ -52,12 +53,12 @@ class FlowRemoveRootActionStrategyTest extends AbstractGraphTest {
 
     private class TestPlaceholderProvider implements PlaceholderProvider {
         @Override
-        public Optional<PlaceholderNode> get() {
+        public Optional<GraphNode> get() {
             return Optional.of(mockPlaceholder);
         }
 
         @Override
-        public Optional<PlaceholderNode> get(String description) {
+        public Optional<GraphNode> get(String description) {
             return Optional.of(mockPlaceholder);
         }
     }

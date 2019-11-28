@@ -6,6 +6,9 @@ import java.awt.*;
 
 public class LiesBetweenTopAndBottom {
 
+    private LiesBetweenTopAndBottom() {
+    }
+
     public static boolean of(GraphNode node, final int dropY, final Graphics2D graphics) {
         int topHalfHeight = node.topHalfHeight(graphics);
         int bottomHalfHeight = node.bottomHalfHeight(graphics);

@@ -6,6 +6,9 @@ import java.util.List;
 
 public class IsPredecessorScopedNode {
 
+    private IsPredecessorScopedNode() {
+    }
+
     /**
      * If a node has as predecessor a ScopedNode, then its predecessors
      * must be at most 1 and of type ScopedGraphNode.

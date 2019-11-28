@@ -10,13 +10,15 @@ public class GetAnnotationValue {
 
     public static String getOrDefault(FieldInfo fieldInfo, Class<?> annotationClazz, String defaultValue) {
         AnnotationInfo annotationInfo = fieldInfo.getAnnotationInfo(annotationClazz.getName());
-        if (annotationInfo != null) {
-            if (annotationInfo.getParameterValues() != null) {
-                if (!annotationInfo.getParameterValues().isEmpty()) {
-                    return (String) annotationInfo.getParameterValues().get(0).getValue();
-                }
-            }
+        if (areParameterValuesNotNull(annotationInfo)) {
+            return (String) annotationInfo.getParameterValues().get(0).getValue();
         }
         return defaultValue;
+    }
+
+    private static boolean areParameterValuesNotNull(AnnotationInfo annotationInfo) {
+        return annotationInfo != null &&
+                annotationInfo.getParameterValues() != null &&
+                !annotationInfo.getParameterValues().isEmpty();
     }
 }

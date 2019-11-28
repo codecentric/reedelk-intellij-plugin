@@ -2,7 +2,7 @@ package com.reedelk.plugin.component.domain;
 
 public class TypePasswordDescriptor implements TypeDescriptor {
 
-    private static final String defaultPassword = null;
+    private static final String DEFAULT_PASSWORD = null;
 
     @Override
     public Class<?> type() {
@@ -11,7 +11,7 @@ public class TypePasswordDescriptor implements TypeDescriptor {
 
     @Override
     public Object defaultValue() {
-        return defaultPassword;
+        return DEFAULT_PASSWORD;
     }
 
     public interface TypePassword {

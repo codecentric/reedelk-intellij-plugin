@@ -4,7 +4,7 @@ import com.reedelk.runtime.api.script.Script;
 
 public class TypeScriptDescriptor implements TypeDescriptor {
 
-    private static final String defaultScript = null;
+    private static final String DEFAULT_SCRIPT = null;
 
     @Override
     public Class<?> type() {
@@ -13,7 +13,7 @@ public class TypeScriptDescriptor implements TypeDescriptor {
 
     @Override
     public Object defaultValue() {
-        return defaultScript;
+        return DEFAULT_SCRIPT;
     }
 
 }

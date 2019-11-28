@@ -4,7 +4,7 @@ import com.reedelk.runtime.api.script.dynamicvalue.DynamicValue;
 
 public class TypeDynamicValueDescriptor<T extends DynamicValue> implements TypeDescriptor {
 
-    private static final String defaultValue = null;
+    private static final String DEFAULT_VALUE = null;
     private final Class<T> typeClazz;
 
     public TypeDynamicValueDescriptor(Class<T> typeClazz) {
@@ -18,7 +18,7 @@ public class TypeDynamicValueDescriptor<T extends DynamicValue> implements TypeD
 
     @Override
     public Object defaultValue() {
-        return defaultValue;
+        return DEFAULT_VALUE;
     }
 
 }

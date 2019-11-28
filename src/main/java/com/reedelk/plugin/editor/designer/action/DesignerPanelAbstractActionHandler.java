@@ -7,7 +7,6 @@ import com.reedelk.plugin.commons.PrintFlowInfo;
 import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
-import com.reedelk.plugin.component.type.placeholder.PlaceholderNode;
 import com.reedelk.plugin.editor.designer.action.add.AddActionHandler;
 import com.reedelk.plugin.editor.designer.action.move.MoveActionHandler;
 import com.reedelk.plugin.editor.designer.action.remove.RemoveActionHandler;
@@ -50,7 +49,7 @@ public abstract class DesignerPanelAbstractActionHandler implements DesignerPane
 
     @Override
     public void onMove(Graphics2D graphics, GraphNode selected, Point dropPoint, ImageObserver observer) {
-        PlaceholderNode placeholderNode = placeholderProvider.get()
+        GraphNode placeholderNode = placeholderProvider.get()
                 .orElseThrow(() -> new IllegalStateException("Expected Placeholder to provide a not empty placeholder"));
 
         DimensionAwareGraphNodeDecorator placeHolderNode =

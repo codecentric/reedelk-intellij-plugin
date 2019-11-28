@@ -2,6 +2,7 @@ package com.reedelk.plugin.editor.designer.action.remove.strategy;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.component.type.placeholder.PlaceholderNode;
+import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.GraphNodeFactory;
 import com.reedelk.runtime.component.Placeholder;
 import org.jetbrains.annotations.NotNull;
@@ -19,13 +20,13 @@ public class DefaultPlaceholderProvider implements PlaceholderProvider {
     }
 
     @Override
-    public Optional<PlaceholderNode> get() {
+    public Optional<GraphNode> get() {
         PlaceholderNode placeholderNode = GraphNodeFactory.get(module, Placeholder.class.getName());
         return Optional.of(placeholderNode);
     }
 
     @Override
-    public Optional<PlaceholderNode> get(String description) {
+    public Optional<GraphNode> get(String description) {
         PlaceholderNode placeholderNode = GraphNodeFactory.get(module, Placeholder.class.getName());
         placeholderNode.componentData().set(Implementor.description(), description);
         return Optional.of(placeholderNode);
