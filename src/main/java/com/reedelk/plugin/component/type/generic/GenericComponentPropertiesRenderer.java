@@ -5,9 +5,9 @@ import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
-import com.reedelk.plugin.editor.properties.renderer.AbstractPropertiesRenderer;
-import com.reedelk.plugin.editor.properties.renderer.TypePropertyRenderer;
-import com.reedelk.plugin.editor.properties.renderer.TypeRendererFactory;
+import com.reedelk.plugin.editor.properties.renderer.AbstractComponentPropertiesRenderer;
+import com.reedelk.plugin.editor.properties.renderer.PropertyTypeRenderer;
+import com.reedelk.plugin.editor.properties.renderer.PropertyTypeRendererFactory;
 import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 import com.reedelk.plugin.editor.properties.widget.PropertiesPanelHolder;
 import com.reedelk.plugin.graph.FlowSnapshot;
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.util.List;
 
-public class GenericComponentPropertiesRenderer extends AbstractPropertiesRenderer {
+public class GenericComponentPropertiesRenderer extends AbstractComponentPropertiesRenderer {
 
     public GenericComponentPropertiesRenderer(FlowSnapshot snapshot, Module module) {
         super(snapshot, module);
@@ -46,7 +46,7 @@ public class GenericComponentPropertiesRenderer extends AbstractPropertiesRender
 
             TypeDescriptor propertyType = descriptor.getPropertyType();
 
-            TypePropertyRenderer renderer = TypeRendererFactory.get().from(propertyType);
+            PropertyTypeRenderer renderer = PropertyTypeRendererFactory.get().from(propertyType);
 
             JComponent renderedComponent = renderer.render(module, descriptor, propertyAccessor, propertiesPanel);
 

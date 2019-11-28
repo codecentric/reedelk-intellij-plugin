@@ -3,9 +3,9 @@ package com.reedelk.plugin.editor.properties.widget;
 import com.intellij.openapi.Disposable;
 import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.commons.Labels.Hint;
-import com.reedelk.plugin.editor.properties.widget.input.InputChangeListener;
-import com.reedelk.plugin.editor.properties.widget.input.InputField;
-import com.reedelk.plugin.editor.properties.widget.input.StringInputField;
+import com.reedelk.plugin.editor.properties.renderer.commons.InputChangeListener;
+import com.reedelk.plugin.editor.properties.renderer.commons.InputField;
+import com.reedelk.plugin.editor.properties.renderer.commons.StringInputField;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowSnapshot;
 

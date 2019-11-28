@@ -6,7 +6,7 @@ import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.component.domain.Collapsible;
 import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
-import com.reedelk.plugin.editor.properties.renderer.PropertiesRendererFactory;
+import com.reedelk.plugin.editor.properties.renderer.ComponentPropertiesRendererFactory;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
 import org.jetbrains.annotations.NotNull;
@@ -56,23 +56,6 @@ public class ContainerFactory {
         return wrapper;
     }
 
-    private static class Focusable extends DisposablePanel {
-
-        private final JComponent body;
-
-        Focusable(JLabel icon, JComponent body) {
-            super(new BorderLayout());
-            add(icon, WEST);
-            add(body, CENTER);
-            this.body = body;
-        }
-
-        @Override
-        public void requestFocus() {
-            body.requestFocus();
-        }
-    }
-
     public static DisposablePanel createObjectTypeContainer(
             @NotNull JComponent renderedComponent,
             @NotNull TypeObjectDescriptor descriptor,
@@ -89,7 +72,7 @@ public class ContainerFactory {
     }
 
     public static DisposableScrollPane createPropertiesPanel(Module module, ComponentData componentData, FlowSnapshot snapshot, GraphNode node) {
-        DisposablePanel propertiesPanel = PropertiesRendererFactory.get()
+        DisposablePanel propertiesPanel = ComponentPropertiesRendererFactory.get()
                 .component(componentData)
                 .snapshot(snapshot)
                 .module(module)

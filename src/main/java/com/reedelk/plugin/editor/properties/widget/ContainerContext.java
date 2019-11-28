@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.properties.widget;
 
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
-import com.reedelk.plugin.editor.properties.widget.input.InputChangeListener;
+import com.reedelk.plugin.editor.properties.renderer.commons.InputChangeListener;
 
 import javax.swing.*;
 import java.util.Optional;
