@@ -1,6 +1,8 @@
 package com.reedelk.plugin.editor.properties.renderer.typeobject.configuration;
 
 import com.intellij.openapi.module.Module;
+import com.reedelk.plugin.commons.Labels;
+import com.reedelk.plugin.editor.properties.commons.DialogConfirmAction;
 import com.reedelk.plugin.service.module.ConfigService;
 import com.reedelk.plugin.service.module.impl.ConfigMetadata;
 import org.jetbrains.annotations.NotNull;
@@ -22,8 +24,11 @@ public class ActionDeleteConfiguration extends ActionableCommandButton {
     protected void onClick(@NotNull ConfigMetadata selectedMetadata) {
         if (!selectedMetadata.isRemovable()) return;
 
-        DialogRemoveConfiguration dialogRemoveConfiguration = new DialogRemoveConfiguration(module);
-        if (dialogRemoveConfiguration.showAndGet()) {
+        DialogConfirmAction dialogConfirmDelete = new DialogConfirmAction(
+                module,
+                Labels.DIALOG_TITLE_DELETE_CONFIGURATION,
+                Labels.DIALOG_MESSAGE_DELETE_CONFIRM);
+        if (dialogConfirmDelete.showAndGet()) {
             try {
                 ConfigService.getInstance(module).removeConfig(selectedMetadata);
                 if (listener != null) {

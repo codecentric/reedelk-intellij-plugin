@@ -1,8 +1,9 @@
 package com.reedelk.plugin.editor.properties.renderer.typescript.scriptactions;
 
 import com.intellij.openapi.module.Module;
+import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
-import com.reedelk.plugin.editor.properties.renderer.typescript.ScriptPropertyRenderer;
+import com.reedelk.plugin.editor.properties.commons.DialogConfirmAction;
 import com.reedelk.plugin.service.module.ScriptService;
 import com.reedelk.plugin.service.module.impl.ScriptResource;
 
@@ -10,7 +11,6 @@ import java.awt.event.MouseEvent;
 
 import static com.reedelk.plugin.commons.Icons.Config.Delete;
 import static com.reedelk.plugin.commons.Icons.Config.DeleteDisabled;
-import static com.reedelk.plugin.editor.properties.renderer.typescript.ScriptSelectorCombo.UNSELECTED;
 
 class ActionDeleteScript extends ClickableLabel {
 
@@ -22,20 +22,20 @@ class ActionDeleteScript extends ClickableLabel {
         this.module = module;
     }
 
-
-    // TODO: Add confirm dialog
     @Override
     public void mouseClicked(MouseEvent event) {
-        ScriptService.getInstance(module).removeScript(selected.getPath());
+        DialogConfirmAction dialogConfirmDelete = new DialogConfirmAction(
+                module,
+                Labels.DIALOG_TITLE_DELETE_SCRIPT,
+                Labels.DIALOG_MESSAGE_DELETE_SCRIPT);
+
+        if (dialogConfirmDelete.showAndGet()) {
+            ScriptService.getInstance(module).removeScript(selected.getPath());
+        }
     }
 
     public void onSelect(ScriptResource value) {
-        if (value instanceof ScriptPropertyRenderer.NotFoundScriptResource || value == UNSELECTED) {
-            // We disable the button if it the script resource is not found or not selected.
-            setEnabled(false);
-        } else {
-            setEnabled(true);
-        }
+        setEnabled(value.isRemovable());
         this.selected = value;
     }
 }

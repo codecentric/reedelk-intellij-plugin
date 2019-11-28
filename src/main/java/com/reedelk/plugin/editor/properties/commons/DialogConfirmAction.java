@@ -1,26 +1,28 @@
-package com.reedelk.plugin.editor.properties.renderer.typeobject.configuration;
+package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.reedelk.plugin.commons.Labels;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class DialogRemoveConfiguration extends DialogWrapper {
+public class DialogConfirmAction extends DialogWrapper {
 
-    DialogRemoveConfiguration(@NotNull Module module) {
+    private final String confirmActionMessage;
+
+    public DialogConfirmAction(@NotNull Module module, String confirmDialogTitle, String confirmActionMessage) {
         super(module.getProject(), false);
-        setTitle(Labels.DIALOG_TITLE_DELETE_CONFIGURATION);
+        this.confirmActionMessage = confirmActionMessage;
+        setTitle(confirmDialogTitle);
         init();
     }
 
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
-        JLabel confirmLabel = new JLabel(Labels.DIALOG_MESSAGE_DELETE_CONFIRM);
+        JLabel confirmLabel = new JLabel(confirmActionMessage);
         confirmLabel.setIcon(AllIcons.General.WarningDialog);
         return confirmLabel;
     }

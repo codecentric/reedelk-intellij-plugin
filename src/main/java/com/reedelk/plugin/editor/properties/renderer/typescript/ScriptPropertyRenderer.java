@@ -61,8 +61,19 @@ public class ScriptPropertyRenderer extends AbstractPropertyTypeRenderer {
     }
 
     public class NotFoundScriptResource extends ScriptResource {
+
         NotFoundScriptResource(String path) {
             super(path, "Not found");
+        }
+
+        @Override
+        public boolean isEditable() {
+            return false;
+        }
+
+        @Override
+        public boolean isRemovable() {
+            return false;
         }
     }
 }

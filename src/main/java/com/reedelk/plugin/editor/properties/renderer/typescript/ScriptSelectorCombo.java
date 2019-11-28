@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ScriptSelectorCombo extends ComboBox<ScriptResource> implements ItemListener {
 
-    public static final ScriptResource UNSELECTED = new ScriptResource(StringUtils.EMPTY, Labels.SCRIPT_NOT_SELECTED_ITEM);
+    public static final ScriptResource UNSELECTED = new UnselectedScriptResource();
 
     private InputChangeListener listener;
 
@@ -50,6 +50,23 @@ public class ScriptSelectorCombo extends ComboBox<ScriptResource> implements Ite
             } else {
                 setText(value.getDisplayName() + " (" + value.getPath() + ")");
             }
+        }
+    }
+
+    static class UnselectedScriptResource extends ScriptResource {
+
+        UnselectedScriptResource() {
+            super(StringUtils.EMPTY, Labels.SCRIPT_NOT_SELECTED_ITEM);
+        }
+
+        @Override
+        public boolean isEditable() {
+            return false;
+        }
+
+        @Override
+        public boolean isRemovable() {
+            return false;
         }
     }
 }

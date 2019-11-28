@@ -47,7 +47,7 @@ public class Labels {
     public static final String DIALOG_TITLE_EDIT_CONFIGURATION = "Edit Configuration";
     public static final String DIALOG_TITLE_DELETE_CONFIGURATION = "Delete Configuration";
 
-    public static final String DIALOG_TITLE_EDIT_SCRIPT = "Edit Script";
+
 
     public static final String DIALOG_BTN_ADD_CONFIGURATION = "Add";
     public static final String DIALOG_BTN_SAVE_CONFIGURATION = "Save";
@@ -73,9 +73,15 @@ public class Labels {
 
     public static final String BALLOON_EDIT_CONFIG_ERROR = "<p><b>An error has occurred:</b><p>%s</p>";
     public static final String CONFIG_NOT_SELECTED_ITEM = "<Not selected>";
+
     public static final String SCRIPT_NOT_SELECTED_ITEM = "<Not selected>";
     public static final String SCRIPT_NOT_KNOWN = "<Unknown>";
     public static final String ADD_SCRIPT = "Add New Script";
+
+    public static final String DIALOG_TITLE_DELETE_SCRIPT = "Delete Script";
+    public static final String DIALOG_MESSAGE_DELETE_SCRIPT = "Are you sure you want to delete the selected script?";
+
+    public static final String DIALOG_TITLE_EDIT_SCRIPT = "Edit Script";
 
     public static final String ACTION_MAP_TABLE_ADD = "Add";
     public static final String ACTION_MAP_TABLE_REMOVE = "Remove";

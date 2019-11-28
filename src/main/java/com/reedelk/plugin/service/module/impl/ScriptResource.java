@@ -17,4 +17,12 @@ public class ScriptResource {
     public String getDisplayName() {
         return displayName;
     }
+
+    public boolean isEditable() {
+        return true;
+    }
+
+    public boolean isRemovable() {
+        return true;
+    }
 }
