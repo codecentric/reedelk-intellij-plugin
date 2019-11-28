@@ -11,7 +11,7 @@ public class ScriptActionsPanel extends DisposablePanel {
     private transient final ActionAddScript addAction;
 
     public ScriptActionsPanel(Module module) {
-        deleteAction = new ActionDeleteScript();
+        deleteAction = new ActionDeleteScript(module);
         editAction = new ActionEditScript(module);
         addAction = new ActionAddScript(module);
         add(editAction);
@@ -21,5 +21,6 @@ public class ScriptActionsPanel extends DisposablePanel {
 
     public void onSelect(ScriptResource value) {
         editAction.onSelect(value);
+        deleteAction.onSelect(value);
     }
 }

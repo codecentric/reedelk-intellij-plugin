@@ -18,4 +18,6 @@ public interface ScriptService {
     List<ScriptResource> getScripts();
 
     void addScript(String scriptFileName);
+
+    void removeScript(String scriptFileName);
 }

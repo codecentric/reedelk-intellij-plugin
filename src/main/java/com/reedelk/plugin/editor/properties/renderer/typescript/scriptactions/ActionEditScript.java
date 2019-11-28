@@ -22,16 +22,6 @@ class ActionEditScript extends ClickableLabel implements ClickableLabel.OnClickA
         this.module = module;
     }
 
-    public void onSelect(ScriptResource value) {
-        if (value instanceof ScriptPropertyRenderer.NotFoundScriptResource || value == UNSELECTED) {
-            // We disable the button if it the script resource is not found or not selected.
-            setEnabled(false);
-        } else {
-            setEnabled(true);
-        }
-        this.selected = value;
-    }
-
     @Override
     public void mouseClicked(MouseEvent event) {
         // We only show the dialog if the button is enabled.
@@ -47,5 +37,15 @@ class ActionEditScript extends ClickableLabel implements ClickableLabel.OnClickA
     @Override
     public void onClick() {
 
+    }
+
+    public void onSelect(ScriptResource value) {
+        if (value instanceof ScriptPropertyRenderer.NotFoundScriptResource || value == UNSELECTED) {
+            // We disable the button if it the script resource is not found or not selected.
+            setEnabled(false);
+        } else {
+            setEnabled(true);
+        }
+        this.selected = value;
     }
 }

@@ -13,6 +13,7 @@ import com.reedelk.runtime.api.exception.ESBException;
 import com.reedelk.runtime.commons.FileExtension;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -83,5 +84,21 @@ public class ScriptServiceImpl implements ScriptService {
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
+    }
+
+    @Override
+    public void removeScript(String scriptFileName) {
+        ModuleUtils.getScriptsFolder(module).ifPresent(scriptsDirectory -> {
+            VirtualFile file = VfsUtil.findFile(Paths.get(scriptsDirectory, scriptFileName), true);
+            if (file != null) {
+                try {
+                    WriteCommandAction
+                            .writeCommandAction(module.getProject())
+                            .run((ThrowableRunnable<Throwable>) () -> file.delete(null));
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            }
+        });
     }
 }
