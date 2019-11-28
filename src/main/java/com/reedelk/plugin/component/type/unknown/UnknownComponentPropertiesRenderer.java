@@ -4,9 +4,9 @@ import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBLabel;
 import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.component.domain.ComponentData;
+import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
+import com.reedelk.plugin.editor.properties.commons.FormBuilder;
 import com.reedelk.plugin.editor.properties.renderer.AbstractComponentPropertiesRenderer;
-import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
-import com.reedelk.plugin.editor.properties.widget.FormBuilder;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
 

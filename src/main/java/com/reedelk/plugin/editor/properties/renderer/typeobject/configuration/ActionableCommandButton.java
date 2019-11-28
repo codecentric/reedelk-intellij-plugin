@@ -1,6 +1,6 @@
 package com.reedelk.plugin.editor.properties.renderer.typeobject.configuration;
 
-import com.reedelk.plugin.editor.properties.widget.ClickableLabel;
+import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 import com.reedelk.plugin.service.module.impl.ConfigMetadata;
 
 import javax.swing.*;

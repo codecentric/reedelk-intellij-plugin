@@ -1,6 +1,6 @@
 package com.reedelk.plugin.editor.designer;
 
-import com.reedelk.plugin.editor.properties.widget.DisposableScrollPane;
+import com.reedelk.plugin.editor.properties.commons.DisposableScrollPane;
 
 public class ScrollableDesignerPanel extends DisposableScrollPane {
 

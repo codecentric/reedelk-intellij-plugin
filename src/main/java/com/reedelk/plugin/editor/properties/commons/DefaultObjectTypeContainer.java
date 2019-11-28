@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.widget;
+package com.reedelk.plugin.editor.properties.commons;
 
 import javax.swing.*;
 import javax.swing.border.Border;

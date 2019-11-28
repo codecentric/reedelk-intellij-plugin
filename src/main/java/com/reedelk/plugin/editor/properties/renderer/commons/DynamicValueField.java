@@ -4,11 +4,11 @@ import com.intellij.openapi.module.Module;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Fonts;
 import com.reedelk.plugin.commons.Icons;
+import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
+import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
+import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.renderer.typedynamicvalue.DynamicValueScriptEditor;
 import com.reedelk.plugin.editor.properties.renderer.typescript.ScriptEditor;
-import com.reedelk.plugin.editor.properties.widget.ClickableLabel;
-import com.reedelk.plugin.editor.properties.widget.ContainerFactory;
-import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 import com.reedelk.runtime.api.commons.ScriptUtils;
 
 import javax.swing.*;

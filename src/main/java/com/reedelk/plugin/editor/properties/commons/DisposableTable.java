@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.widget;
+package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.ui.table.JBTable;

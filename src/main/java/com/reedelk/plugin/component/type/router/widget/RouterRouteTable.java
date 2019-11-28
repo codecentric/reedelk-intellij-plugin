@@ -1,8 +1,8 @@
 package com.reedelk.plugin.component.type.router.widget;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
-import com.reedelk.plugin.editor.properties.widget.PropertyTable;
+import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
+import com.reedelk.plugin.editor.properties.commons.PropertyTable;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;

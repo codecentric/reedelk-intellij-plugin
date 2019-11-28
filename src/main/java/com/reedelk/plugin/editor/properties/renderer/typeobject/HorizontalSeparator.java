@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.widget;
+package com.reedelk.plugin.editor.properties.renderer.typeobject;
 
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
@@ -7,9 +7,9 @@ import com.intellij.util.ui.JBUI;
 import javax.swing.*;
 import java.awt.*;
 
-public class HorizontalSeparator extends JBPanel {
+class HorizontalSeparator extends JBPanel {
 
-    public HorizontalSeparator(JBColor color) {
+    HorizontalSeparator(JBColor color) {
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;

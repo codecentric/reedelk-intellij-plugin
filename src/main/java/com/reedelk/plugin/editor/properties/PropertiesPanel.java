@@ -10,7 +10,7 @@ import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.component.domain.ComponentData;
-import com.reedelk.plugin.editor.properties.widget.*;
+import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.plugin.service.project.*;
 import org.jetbrains.annotations.NotNull;
 

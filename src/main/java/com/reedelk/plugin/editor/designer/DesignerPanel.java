@@ -19,7 +19,7 @@ import com.reedelk.plugin.editor.designer.hint.HintResult;
 import com.reedelk.plugin.editor.designer.hint.HintResultListener;
 import com.reedelk.plugin.editor.designer.hint.HintRunnable;
 import com.reedelk.plugin.editor.designer.misc.InfoPanel;
-import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
+import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.SnapshotListener;
 import com.reedelk.plugin.graph.layout.FlowGraphLayout;

@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.widget;
+package com.reedelk.plugin.editor.properties.commons;
 
 import com.reedelk.runtime.api.commons.StringUtils;
 
@@ -9,7 +9,7 @@ import java.awt.event.MouseListener;
 
 public class ClickableLabel extends JLabel implements MouseListener {
 
-    enum IconAlignment {
+    public enum IconAlignment {
         LEFT,
         RIGHT
     }

@@ -2,9 +2,9 @@ package com.reedelk.plugin.editor.properties.renderer.typemap;
 
 import com.intellij.ui.components.JBPanel;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
-import com.reedelk.plugin.editor.properties.widget.ClickableLabel;
-import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
-import com.reedelk.plugin.editor.properties.widget.PropertyTable;
+import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
+import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
+import com.reedelk.plugin.editor.properties.commons.PropertyTable;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableColumnModel;

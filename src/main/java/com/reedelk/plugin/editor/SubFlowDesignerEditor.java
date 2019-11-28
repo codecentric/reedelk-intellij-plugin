@@ -10,7 +10,7 @@ import com.intellij.openapi.util.UserDataHolderBase;
 import com.reedelk.plugin.editor.designer.ScrollableDesignerPanel;
 import com.reedelk.plugin.editor.designer.SubFlowDesignerPanel;
 import com.reedelk.plugin.editor.designer.dnd.DesignerPanelActionHandler;
-import com.reedelk.plugin.editor.properties.widget.DisposableScrollPane;
+import com.reedelk.plugin.editor.properties.commons.DisposableScrollPane;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.manager.GraphManager;
 import org.jetbrains.annotations.NotNull;

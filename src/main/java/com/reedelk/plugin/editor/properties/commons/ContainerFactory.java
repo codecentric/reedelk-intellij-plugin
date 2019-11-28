@@ -1,11 +1,9 @@
-package com.reedelk.plugin.editor.properties.widget;
+package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Colors;
-import com.reedelk.plugin.component.domain.Collapsible;
 import com.reedelk.plugin.component.domain.ComponentData;
-import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.editor.properties.renderer.ComponentPropertiesRendererFactory;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -54,15 +52,6 @@ public class ContainerFactory {
         wrapper.add(label, WEST);
         wrapper.add(body, CENTER);
         return wrapper;
-    }
-
-    public static DisposablePanel createObjectTypeContainer(
-            @NotNull JComponent renderedComponent,
-            @NotNull TypeObjectDescriptor descriptor,
-            @NotNull String title) {
-        return Collapsible.YES.equals(descriptor.getCollapsible()) ?
-                new CollapsibleObjectTypeContainer(renderedComponent, title) :
-                createObjectTypeContainer(renderedComponent, title);
     }
 
     public static DisposablePanel createObjectTypeContainer(

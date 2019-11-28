@@ -1,7 +1,7 @@
 package com.reedelk.plugin.component.type.router.widget;
 
 import com.reedelk.plugin.component.type.router.RouterConditionRoutePair;
-import com.reedelk.plugin.editor.properties.widget.PropertyTable;
+import com.reedelk.plugin.editor.properties.commons.PropertyTable;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.runtime.api.commons.ScriptUtils;

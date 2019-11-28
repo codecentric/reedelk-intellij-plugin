@@ -12,13 +12,13 @@ import com.reedelk.plugin.component.domain.TypeDescriptor;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessorFactory;
+import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
+import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
+import com.reedelk.plugin.editor.properties.commons.FormBuilder;
+import com.reedelk.plugin.editor.properties.commons.PropertiesPanelHolder;
 import com.reedelk.plugin.editor.properties.renderer.PropertyTypeRenderer;
 import com.reedelk.plugin.editor.properties.renderer.PropertyTypeRendererFactory;
 import com.reedelk.plugin.editor.properties.renderer.commons.StringInputField;
-import com.reedelk.plugin.editor.properties.widget.ContainerFactory;
-import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
-import com.reedelk.plugin.editor.properties.widget.FormBuilder;
-import com.reedelk.plugin.editor.properties.widget.PropertiesPanelHolder;
 import com.reedelk.plugin.service.module.impl.ConfigMetadata;
 
 import javax.swing.*;

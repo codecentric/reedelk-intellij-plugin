@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer.typescript;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.plugin.editor.properties.widget.ClickableLabel;
+import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 
 import java.awt.event.MouseEvent;
 

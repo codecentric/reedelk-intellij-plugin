@@ -1,6 +1,6 @@
 package com.reedelk.plugin.editor.properties.renderer.typescript;
 
-import com.reedelk.plugin.editor.properties.widget.ClickableLabel;
+import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 
 import static com.reedelk.plugin.commons.Icons.Config.Add;
 

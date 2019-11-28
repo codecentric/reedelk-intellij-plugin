@@ -5,8 +5,8 @@ import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.component.domain.ComponentClass;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
-import com.reedelk.plugin.editor.properties.widget.ContainerFactory;
-import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
+import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
+import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

@@ -3,10 +3,10 @@ package com.reedelk.plugin.editor.properties.renderer;
 import com.reedelk.plugin.commons.AtLeastOneWhenConditionIsTrue;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.WhenDefinition;
-import com.reedelk.plugin.editor.properties.widget.ContainerContext;
-import com.reedelk.plugin.editor.properties.widget.FormBuilder;
-import com.reedelk.plugin.editor.properties.widget.JComponentHolder;
-import com.reedelk.plugin.editor.properties.widget.PropertyTitleLabel;
+import com.reedelk.plugin.editor.properties.commons.ContainerContext;
+import com.reedelk.plugin.editor.properties.commons.FormBuilder;
+import com.reedelk.plugin.editor.properties.commons.JComponentHolder;
+import com.reedelk.plugin.editor.properties.commons.PropertyTitleLabel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

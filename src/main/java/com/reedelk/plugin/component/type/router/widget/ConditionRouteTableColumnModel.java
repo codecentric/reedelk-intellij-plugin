@@ -5,10 +5,10 @@ import com.intellij.openapi.module.Module;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
+import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
+import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
+import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.renderer.typedynamicvalue.DynamicValueScriptEditor;
-import com.reedelk.plugin.editor.properties.widget.ClickableLabel;
-import com.reedelk.plugin.editor.properties.widget.ContainerFactory;
-import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.runtime.api.commons.StringUtils;
 

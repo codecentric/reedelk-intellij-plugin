@@ -3,12 +3,10 @@ package com.reedelk.plugin.editor.properties.renderer.typeobject;
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.commons.PopupUtils;
-import com.reedelk.plugin.component.domain.ComponentDataHolder;
-import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
-import com.reedelk.plugin.component.domain.TypeDescriptor;
-import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
+import com.reedelk.plugin.component.domain.*;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessorFactory;
+import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.plugin.editor.properties.renderer.AbstractPropertyTypeRenderer;
 import com.reedelk.plugin.editor.properties.renderer.PropertyTypeRenderer;
 import com.reedelk.plugin.editor.properties.renderer.PropertyTypeRendererFactory;
@@ -16,7 +14,6 @@ import com.reedelk.plugin.editor.properties.renderer.typeobject.configuration.Ac
 import com.reedelk.plugin.editor.properties.renderer.typeobject.configuration.ActionDeleteConfiguration;
 import com.reedelk.plugin.editor.properties.renderer.typeobject.configuration.ConfigControlPanel;
 import com.reedelk.plugin.editor.properties.renderer.typeobject.configuration.ConfigSelector;
-import com.reedelk.plugin.editor.properties.widget.*;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.service.module.ConfigService;
 import com.reedelk.plugin.service.module.impl.ConfigMetadata;
@@ -212,7 +209,7 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
         TypeObjectDescriptor objectDescriptor = descriptor.getPropertyType();
 
         DisposablePanel wrappedRenderedComponent =
-                ContainerFactory.createObjectTypeContainer(rendered, objectDescriptor, descriptor.getDisplayName());
+                createObjectTypeContainer(rendered, objectDescriptor, descriptor.getDisplayName());
 
         // If the property has any 'when' condition, we apply listener/s to make it
         // visible (or not) when the condition is met (or not).
@@ -221,5 +218,14 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
         // Add the component to the parent container.
         FormBuilder.get()
                 .addLastField(wrappedRenderedComponent, parent);
+    }
+
+    private DisposablePanel createObjectTypeContainer(
+            @NotNull JComponent renderedComponent,
+            @NotNull TypeObjectDescriptor descriptor,
+            @NotNull String title) {
+        return Collapsible.YES.equals(descriptor.getCollapsible()) ?
+                new CollapsibleObjectTypeContainer(renderedComponent, title) :
+                ContainerFactory.createObjectTypeContainer(renderedComponent, title);
     }
 }

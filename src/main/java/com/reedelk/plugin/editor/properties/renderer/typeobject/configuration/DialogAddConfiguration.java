@@ -4,7 +4,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
-import com.reedelk.plugin.editor.properties.widget.ContainerFactory;
+import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
 import com.reedelk.plugin.service.module.impl.ConfigMetadata;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

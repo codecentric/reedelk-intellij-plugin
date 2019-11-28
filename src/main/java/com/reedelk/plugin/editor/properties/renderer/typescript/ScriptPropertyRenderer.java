@@ -3,9 +3,9 @@ package com.reedelk.plugin.editor.properties.renderer.typescript;
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
+import com.reedelk.plugin.editor.properties.commons.ContainerContext;
+import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.renderer.AbstractPropertyTypeRenderer;
-import com.reedelk.plugin.editor.properties.widget.ContainerContext;
-import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 import com.reedelk.plugin.service.module.ScriptService;
 import org.jetbrains.annotations.NotNull;
 

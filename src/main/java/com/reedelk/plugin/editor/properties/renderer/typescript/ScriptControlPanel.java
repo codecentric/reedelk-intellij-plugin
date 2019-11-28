@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer.typescript;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
+import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 
 public class ScriptControlPanel extends DisposablePanel {
 

@@ -7,10 +7,10 @@ import com.reedelk.plugin.commons.Sizes;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeMapDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
+import com.reedelk.plugin.editor.properties.commons.ContainerContext;
+import com.reedelk.plugin.editor.properties.commons.FormBuilder;
+import com.reedelk.plugin.editor.properties.commons.JComponentHolder;
 import com.reedelk.plugin.editor.properties.renderer.PropertyTypeRenderer;
-import com.reedelk.plugin.editor.properties.widget.ContainerContext;
-import com.reedelk.plugin.editor.properties.widget.FormBuilder;
-import com.reedelk.plugin.editor.properties.widget.JComponentHolder;
 import com.reedelk.runtime.api.annotation.TabGroup;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,7 +1,9 @@
-package com.reedelk.plugin.editor.properties.widget;
+package com.reedelk.plugin.editor.properties.renderer.typeobject;
 
 import com.intellij.ui.JBColor;
 import com.reedelk.plugin.commons.Colors;
+import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
+import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -11,7 +13,7 @@ import java.awt.*;
 import static com.intellij.icons.AllIcons.General.ArrowDown;
 import static com.intellij.icons.AllIcons.General.ArrowRight;
 import static com.intellij.util.ui.JBUI.Borders;
-import static com.reedelk.plugin.editor.properties.widget.ClickableLabel.IconAlignment;
+import static com.reedelk.plugin.editor.properties.commons.ClickableLabel.IconAlignment;
 import static java.awt.BorderLayout.*;
 
 class CollapsibleObjectTypeContainer extends DisposablePanel {

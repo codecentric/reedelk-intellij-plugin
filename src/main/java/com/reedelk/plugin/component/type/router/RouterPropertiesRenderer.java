@@ -6,8 +6,8 @@ import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.component.type.generic.GenericComponentPropertiesRenderer;
 import com.reedelk.plugin.component.type.router.widget.ConditionRouteTableModel;
 import com.reedelk.plugin.component.type.router.widget.RouterRouteTable;
-import com.reedelk.plugin.editor.properties.widget.ContainerFactory;
-import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
+import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
+import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
 

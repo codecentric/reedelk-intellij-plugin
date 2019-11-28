@@ -3,9 +3,9 @@ package com.reedelk.plugin.editor.properties.renderer.typepassword;
 import com.intellij.ui.components.JBPasswordField;
 import com.reedelk.plugin.converter.ValueConverter;
 import com.reedelk.plugin.converter.ValueConverterFactory;
+import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
+import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.renderer.commons.InputChangeListener;
-import com.reedelk.plugin.editor.properties.widget.ClickableLabel;
-import com.reedelk.plugin.editor.properties.widget.DisposablePanel;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
