@@ -16,4 +16,6 @@ public interface ScriptService {
      * @return all the scripts from the resources/scripts folder.
      */
     List<ScriptResource> getScripts();
+
+    void addScript(String scriptFileName);
 }

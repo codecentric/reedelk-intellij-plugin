@@ -60,9 +60,7 @@ public class ConfigServiceImpl implements ConfigService {
 
     @Override
     public void addConfig(@NotNull ConfigMetadata newConfig) throws IOException {
-        // Serialize the config
-        String serializedConfig = ConfigurationSerializer.serialize(newConfig);
-
+        // TODO: What if the dierctory does not  exists!?? It should be created here!! Fixit
         Optional<String> maybeConfigDirectory = getConfigDirectory();
         if (maybeConfigDirectory.isPresent()) {
             String configDir = maybeConfigDirectory.get();
@@ -74,12 +72,16 @@ public class ConfigServiceImpl implements ConfigService {
             }
 
             executeWriteCommand(() -> {
-                // Write the serialized config
+
+                // Create the directory
                 VirtualFile directoryIfMissing = VfsUtil.createDirectoryIfMissing(configDir);
                 if (directoryIfMissing == null) {
                     throw new IOException(String.format("Could not create config directory=[%s] to store configuration named=[%s]", configDir, newConfig.getFileName()));
                 }
                 VirtualFile childData = directoryIfMissing.createChildData(null, newConfig.getFileName());
+
+                // Serialize the config
+                String serializedConfig = ConfigurationSerializer.serialize(newConfig);
                 VfsUtil.saveText(childData, serializedConfig);
             });
         }

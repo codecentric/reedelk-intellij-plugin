@@ -13,7 +13,7 @@ public class ScriptActionsPanel extends DisposablePanel {
     public ScriptActionsPanel(Module module) {
         deleteAction = new ActionDeleteScript();
         editAction = new ActionEditScript(module);
-        addAction = new ActionAddScript();
+        addAction = new ActionAddScript(module);
         add(editAction);
         add(deleteAction);
         add(addAction);

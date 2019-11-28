@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.reedelk.runtime.commons.ModuleProperties.Config;
+import static com.reedelk.runtime.commons.ModuleProperties.Script;
 
 public class ModuleUtils {
 
@@ -20,6 +21,12 @@ public class ModuleUtils {
         Optional<String> resourcesFolder = getResourcesFolder(module);
         return resourcesFolder.map(resources ->
                 Paths.get(resources, Config.RESOURCE_DIRECTORY).toString());
+    }
+
+    public static Optional<String> getScriptsFolder(Module module) {
+        Optional<String> resourcesFolder = getResourcesFolder(module);
+        return resourcesFolder.map(resources ->
+                Paths.get(resources, Script.RESOURCE_DIRECTORY).toString());
     }
 
     public static Optional<String> getResourcesFolder(Module module) {

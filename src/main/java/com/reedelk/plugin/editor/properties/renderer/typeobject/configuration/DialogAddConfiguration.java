@@ -13,7 +13,7 @@ import javax.swing.*;
 
 public class DialogAddConfiguration extends DialogWrapper {
 
-    private final boolean NEW_CONFIG = true;
+    private static final boolean NEW_CONFIG = true;
 
     private final TypeObjectDescriptor objectDescriptor;
     private final ConfigMetadata newConfigMetadata;

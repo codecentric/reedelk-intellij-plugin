@@ -1,7 +1,6 @@
 package com.reedelk.plugin.editor.properties.renderer.typeobject.configuration;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.plugin.commons.JsonObjectFactory;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.service.module.ConfigService;
 import com.reedelk.plugin.service.module.impl.ConfigMetadata;
@@ -35,11 +34,8 @@ public class ActionAddConfiguration extends ActionableCommandButton {
         // We ignore the selected. Create new config object.
 
         TypeObjectDescriptor.TypeObject configTypeObject = new TypeObjectDescriptor.TypeObject(typeDescriptor.getTypeFullyQualifiedName());
-        JsonObjectFactory.newJSONObject();
-
         configTypeObject.set(Config.id(), UUID.randomUUID().toString());
         configTypeObject.set(Config.title(), DEFAULT_NEW_CONFIG_TITLE);
-
 
         ConfigMetadata newConfig = new NewConfigMetadata(DEFAULT_CONFIG_FILE_NAME, configTypeObject, typeDescriptor);
 

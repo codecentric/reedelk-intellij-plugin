@@ -2,6 +2,7 @@ package com.reedelk.plugin.commons;
 
 public class Labels {
 
+
     private Labels() {
     }
 
@@ -74,6 +75,7 @@ public class Labels {
     public static final String CONFIG_NOT_SELECTED_ITEM = "<Not selected>";
     public static final String SCRIPT_NOT_SELECTED_ITEM = "<Not selected>";
     public static final String SCRIPT_NOT_KNOWN = "<Unknown>";
+    public static final String ADD_SCRIPT = "Add New Script";
 
     public static final String ACTION_MAP_TABLE_ADD = "Add";
     public static final String ACTION_MAP_TABLE_REMOVE = "Remove";
