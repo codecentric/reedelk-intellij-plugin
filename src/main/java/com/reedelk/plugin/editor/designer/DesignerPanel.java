@@ -54,30 +54,28 @@ public abstract class DesignerPanel extends DisposablePanel implements
 
     static final int TOP_PADDING = 80;
 
-    protected FlowSnapshot snapshot;
+    protected transient final FlowSnapshot snapshot;
 
-    private final Module module;
-    private final DesignerPanelActionHandler actionHandler;
+    private transient final Module module;
+    private transient final DesignerPanelActionHandler actionHandler;
+
+    private transient HintResult hintResult = HintResult.EMPTY;
+    private transient HintRunnable hintCalculator; // TODO: This one should be removed and created a class to manage move operation
+    private transient HintDrawable hintDrawable;
+
+    private transient GraphNode selected;
+    private transient SelectableItem currentSelection;
+    private transient MessageBusConnection busConnection;
+    private transient CenterOfNodeDrawable centerOfNodeDrawable;
+    private transient CurrentSelectionListener componentSelectedPublisher;
+    private transient InfoPanel errorFlowInfoPanel = new FlowWithErrorInfoPanel();
+    private transient InfoPanel buildingFlowInfoPanel = new BuildingFlowInfoPanel();
 
     private int offsetX;
     private int offsetY;
     private boolean visible;
     private boolean dragging;
     private boolean snapshotUpdated;
-
-    private HintResult hintResult = HintResult.EMPTY;
-    private HintRunnable hintCalculator; // TODO: This one should be removed and created a class to manage move operation
-    private HintDrawable hintDrawable;
-
-    private GraphNode selected;
-    private SelectableItem currentSelection;
-    private MessageBusConnection busConnection;
-    private CenterOfNodeDrawable centerOfNodeDrawable;
-    private CurrentSelectionListener componentSelectedPublisher;
-
-    private InfoPanel errorFlowInfoPanel = new FlowWithErrorInfoPanel();
-    private InfoPanel buildingFlowInfoPanel = new BuildingFlowInfoPanel();
-
 
     private DesignerSelectionManager designerSelectionManager;
 

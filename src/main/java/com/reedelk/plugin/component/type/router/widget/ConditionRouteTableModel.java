@@ -12,8 +12,8 @@ import java.util.List;
 
 public class ConditionRouteTableModel extends AbstractTableModel implements PropertyTable.PropertyTableModel {
 
-    private final FlowSnapshot snapshot;
-    private final List<RouterConditionRoutePair> conditionRouteList;
+    private transient final FlowSnapshot snapshot;
+    private transient final List<RouterConditionRoutePair> conditionRouteList;
 
     public ConditionRouteTableModel(List<RouterConditionRoutePair> conditionRouteList, FlowSnapshot snapshot) {
         this.conditionRouteList = conditionRouteList;
@@ -43,7 +43,7 @@ public class ConditionRouteTableModel extends AbstractTableModel implements Prop
     @Override
     public boolean isCellEditable(int row, int col) {
         // row 0 and column 0 is not editable (this is the default route)
-        return !(row == conditionRouteList.size() - 1 && col == 0) && !(col == 1);
+        return !(row == conditionRouteList.size() - 1 && col == 0) && col != 1;
     }
 
     @Override
