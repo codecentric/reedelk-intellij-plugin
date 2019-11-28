@@ -9,6 +9,7 @@ import static com.intellij.util.ui.JBUI.Borders;
 import static java.awt.BorderLayout.CENTER;
 
 class DefaultObjectTypeContainer extends DisposablePanel {
+
     DefaultObjectTypeContainer(JComponent renderedComponent, String displayName) {
         Border outsideMargin = Borders.emptyTop(3);
         Border titledBorder = BorderFactory.createTitledBorder(displayName);
