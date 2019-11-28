@@ -2,7 +2,6 @@ package com.reedelk.plugin.commons;
 
 public class Labels {
 
-
     private Labels() {
     }
 
@@ -71,12 +70,13 @@ public class Labels {
 
     public static final String WIZARD_RUNTIME_STEP_ADD_NEW_CONFIG = "<Add new configuration>";
 
-    public static final String BALLOON_EDIT_CONFIG_ERROR = "<p><b>An error has occurred:</b><p>%s</p>";
+    public static final String BALLOON_ERROR = "<p><b>Error:</b><p>%s</p>";
     public static final String CONFIG_NOT_SELECTED_ITEM = "<Not selected>";
 
     public static final String SCRIPT_NOT_SELECTED_ITEM = "<Not selected>";
     public static final String SCRIPT_NOT_FOUND = "Not found";
     public static final String ADD_SCRIPT = "Add New Script";
+    public static final String SCRIPT_WARNING_RETURN_KEYWORD = "A script must include a 'return' keyword to return the wanted value.";
 
     public static final String DIALOG_TITLE_DELETE_SCRIPT = "Delete Script";
     public static final String DIALOG_MESSAGE_DELETE_SCRIPT = "Are you sure you want to delete the selected script?";

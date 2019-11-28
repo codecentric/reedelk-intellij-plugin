@@ -82,8 +82,8 @@ public class ScriptServiceImpl implements ScriptService {
     public void addScript(String scriptFileName) {
         if (ScriptUtils.isEmpty(scriptFileName)) {
             // Throw new exception here...
-            publisher.onAddError(new ESBException(
-                    String.format("Script cannot be empty %s", scriptFileName)),
+            publisher.onAddError(
+                    new ESBException("The script file name must not be empty"),
                     new ScriptResource(scriptFileName, scriptFileName));
             return;
         }

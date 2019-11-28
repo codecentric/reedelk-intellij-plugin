@@ -3,11 +3,16 @@ package com.reedelk.plugin.editor.properties.renderer.typescript.scriptactions;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
+import com.intellij.ui.components.JBLabel;
+import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditor;
 
 import java.awt.*;
 
+import static com.intellij.icons.AllIcons.General.BalloonInformation;
 import static java.awt.BorderLayout.CENTER;
+import static java.awt.BorderLayout.SOUTH;
+import static javax.swing.SwingConstants.LEFT;
 
 class ScriptEditorDefault extends ScriptEditor {
 
@@ -32,5 +37,8 @@ class ScriptEditorDefault extends ScriptEditor {
         setPreferredSize(DEFAULT_SCRIPT_DIMENSION);
         setLayout(new BorderLayout());
         add(splitter, CENTER);
+
+        JBLabel warn = new JBLabel(Labels.SCRIPT_WARNING_RETURN_KEYWORD, BalloonInformation, LEFT);
+        add(warn, SOUTH);
     }
 }
