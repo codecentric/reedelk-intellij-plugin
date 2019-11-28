@@ -22,14 +22,14 @@ public class DynamicValueField extends DisposablePanel {
     private ScriptEditor editor;
     private DisposablePanel scriptContainer;
     private DisposablePanel inputFieldContainer;
-    private OnChangeListener listener;
+    private ScriptEditorChangeListener listener;
 
     public DynamicValueField(Module module, DynamicValueInputFieldAdapter inputFieldAdapter) {
         this.inputFieldAdapter = inputFieldAdapter;
 
         this.editor = new DynamicValueScriptEditor(module);
 
-        this.scriptContainer = createScriptModePanel(editor.getComponent());
+        this.scriptContainer = createScriptModePanel(editor);
         this.inputFieldContainer = createInputFieldContainer();
 
         setBorder(JBUI.Borders.empty(0, 3));
@@ -51,10 +51,6 @@ public class DynamicValueField extends DisposablePanel {
     public void dispose() {
         super.dispose();
         editor.dispose();
-    }
-
-    public interface OnChangeListener {
-        void onChange(Object newValue);
     }
 
     private DisposablePanel createScriptModePanel(JComponent editorComponent) {
@@ -88,9 +84,9 @@ public class DynamicValueField extends DisposablePanel {
         });
     }
 
-    public void addListener(OnChangeListener listener) {
+    public void addListener(ScriptEditorChangeListener listener) {
         this.listener = listener;
-        this.inputFieldAdapter.addListener(listener);
         this.editor.setListener(listener);
+        this.inputFieldAdapter.addListener(listener);
     }
 }

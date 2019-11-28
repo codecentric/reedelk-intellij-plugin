@@ -13,14 +13,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
 import java.nio.file.Paths;
 
 import static com.reedelk.runtime.commons.ModuleProperties.Script;
 
 public class EditScriptDialog extends DialogWrapper {
-
-    private static final Dimension DEFAULT_SCRIPT_DIMENSION = new Dimension(700, 400);
 
     private ScriptEditor editor;
 
@@ -29,13 +26,12 @@ public class EditScriptDialog extends DialogWrapper {
         setTitle(Labels.DIALOG_TITLE_EDIT_SCRIPT);
         setResizable(true);
 
+        // TODO: Check for nul file
         String resources = ModuleUtils.getResourcesFolder(module).orElseThrow(() -> new RuntimeException("error"));
         VirtualFile file = VfsUtil.findFile(Paths.get(resources, Script.RESOURCE_DIRECTORY, scriptFile), true);
         Document document = FileDocumentManager.getInstance().getDocument(file);
 
-        editor = new ScriptEditorDefault(module.getProject(), document, true);
-        editor.getComponent().setPreferredSize(DEFAULT_SCRIPT_DIMENSION);
-
+        editor = new ScriptEditorDefault(module, document);
 
         init();
     }
@@ -51,7 +47,7 @@ public class EditScriptDialog extends DialogWrapper {
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
-        return editor.getComponent();
+        return editor;
     }
 
     @Override

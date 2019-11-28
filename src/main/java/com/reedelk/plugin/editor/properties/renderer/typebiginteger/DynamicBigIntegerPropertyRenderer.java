@@ -1,8 +1,8 @@
 package com.reedelk.plugin.editor.properties.renderer.typebiginteger;
 
 import com.reedelk.plugin.editor.properties.renderer.AbstractDynamicPropertyTypeRenderer;
-import com.reedelk.plugin.editor.properties.renderer.commons.DynamicValueField;
 import com.reedelk.plugin.editor.properties.renderer.commons.DynamicValueInputFieldAdapter;
+import com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditorChangeListener;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -48,7 +48,7 @@ public class DynamicBigIntegerPropertyRenderer extends AbstractDynamicPropertyTy
             }
 
             @Override
-            public void addListener(DynamicValueField.OnChangeListener listener) {
+            public void addListener(ScriptEditorChangeListener listener) {
                 inputField.addListener(listener::onChange);
             }
         };

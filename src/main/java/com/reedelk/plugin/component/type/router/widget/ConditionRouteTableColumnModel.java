@@ -85,7 +85,7 @@ class ConditionRouteTableColumnModel extends DefaultTableColumnModel implements 
             this.editor = new DynamicValueScriptEditor(module);
             JLabel codeIcon = new ClickableLabel(Script.Code, Script.Code, () -> {
             });
-            content = ContainerFactory.createLabelNextToComponent(codeIcon, editor.getComponent(), false);
+            content = ContainerFactory.createLabelNextToComponent(codeIcon, editor, false);
         }
 
         @Override
@@ -148,9 +148,10 @@ class ConditionRouteTableColumnModel extends DefaultTableColumnModel implements 
 
         ConditionCellRenderer(Module module) {
             this.editor = new DynamicValueScriptEditor(module);
+            // TODO: Fix this clickable label!!!
             JLabel codeIcon = new ClickableLabel(Script.Code, Script.Code, () -> {
             });
-            content = ContainerFactory.createLabelNextToComponent(codeIcon, editor.getComponent(), false);
+            content = ContainerFactory.createLabelNextToComponent(codeIcon, editor, false);
         }
 
         @Override

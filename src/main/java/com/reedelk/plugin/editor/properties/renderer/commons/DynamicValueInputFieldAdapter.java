@@ -18,5 +18,5 @@ public interface DynamicValueInputFieldAdapter {
 
     void setBorder(Border border);
 
-    void addListener(DynamicValueField.OnChangeListener listener);
+    void addListener(ScriptEditorChangeListener listener);
 }

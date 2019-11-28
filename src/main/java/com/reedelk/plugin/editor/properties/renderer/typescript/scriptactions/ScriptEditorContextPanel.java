@@ -16,26 +16,26 @@ import static java.awt.BorderLayout.NORTH;
 
 class ScriptEditorContextPanel extends DisposablePanel {
 
-    private final Border panelBorder = BorderFactory.createMatteBorder(1, 1, 1, 0,
+    private static final Border MATTE_BORDER = BorderFactory.createMatteBorder(1, 1, 1, 0,
             Colors.SCRIPT_EDITOR_CONTEXT_PANEL_BORDER);
-
-    private final Border panelTitleBorder = new CompoundBorder(
+    private static final Border COMPOUND_BORDER = new CompoundBorder(
             JBUI.Borders.customLine(Colors.SCRIPT_EDITOR_CONTEXT_PANEL_BORDER_BOTTOM, 0, 0, 1, 0),
             JBUI.Borders.empty(5));
 
     ScriptEditorContextPanel() {
         setLayout(new BorderLayout());
-        setBorder(panelBorder);
+        setBorder(MATTE_BORDER);
 
         JLabel panelTitle = new JLabel(Labels.SCRIPT_EDITOR_CONTEXT_VARS_TITLE);
         JPanel panelTitleWrapper = new JPanel();
         panelTitleWrapper.setBackground(Colors.SCRIPT_EDITOR_CONTEXT_PANEL_TITLE_BG);
-        panelTitleWrapper.setBorder(panelTitleBorder);
+        panelTitleWrapper.setBorder(COMPOUND_BORDER);
         panelTitleWrapper.setLayout(new BorderLayout());
         panelTitleWrapper.add(panelTitle, NORTH);
         add(panelTitleWrapper, NORTH);
 
 
+        // TODO: Should not be hardcoded the contextvariables!
         JPanel panelVariablesWrapper = new DisposablePanel();
         BoxLayout boxLayout = new BoxLayout(panelVariablesWrapper, BoxLayout.PAGE_AXIS);
         panelVariablesWrapper.setLayout(boxLayout);
