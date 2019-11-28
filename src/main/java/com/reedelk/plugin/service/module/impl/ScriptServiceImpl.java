@@ -33,7 +33,7 @@ public class ScriptServiceImpl implements ScriptService {
                     // We keep the path from .../resource/scripts to the end.
                     // The script root is therefore /resource/scripts.
                     String substring = fileOrDir.getPresentableUrl().substring(scriptsFolder.length() + 1);
-                    scripts.add(new ScriptResource(substring));
+                    scripts.add(new ScriptResource(substring, fileOrDir.getNameWithoutExtension()));
                 }
             }
             return true;

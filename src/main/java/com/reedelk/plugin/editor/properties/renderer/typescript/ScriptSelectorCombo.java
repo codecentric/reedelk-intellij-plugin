@@ -12,9 +12,9 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.List;
 
-class ScriptSelectorCombo extends ComboBox<ScriptResource> implements ItemListener {
+public class ScriptSelectorCombo extends ComboBox<ScriptResource> implements ItemListener {
 
-    static final ScriptResource UNSELECTED = new ScriptResource(StringUtils.EMPTY);
+    public static final ScriptResource UNSELECTED = new ScriptResource(StringUtils.EMPTY, Labels.SCRIPT_NOT_SELECTED_ITEM);
 
     private InputChangeListener listener;
 
@@ -32,7 +32,7 @@ class ScriptSelectorCombo extends ComboBox<ScriptResource> implements ItemListen
     public void itemStateChanged(ItemEvent event) {
         if (event.getStateChange() == ItemEvent.SELECTED) {
             if (listener != null) {
-                String item = (String) event.getItem();
+                ScriptResource item = (ScriptResource) event.getItem();
                 listener.onChange(item);
             }
         }
@@ -45,10 +45,10 @@ class ScriptSelectorCombo extends ComboBox<ScriptResource> implements ItemListen
     private class ScriptSelectorRenderer extends ListCellRendererWrapper<ScriptResource> {
         @Override
         public void customize(JList list, ScriptResource value, int index, boolean selected, boolean hasFocus) {
-            if (value == UNSELECTED) {
-                setText(Labels.SCRIPT_NOT_SELECTED_ITEM);
+            if (StringUtils.isBlank(value.getPath())) {
+                setText(value.getDisplayName());
             } else {
-                setText(value.getPath());
+                setText(value.getDisplayName() + " (" + value.getPath() + ")");
             }
         }
     }

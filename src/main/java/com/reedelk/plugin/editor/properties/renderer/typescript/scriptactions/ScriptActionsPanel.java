@@ -2,6 +2,7 @@ package com.reedelk.plugin.editor.properties.renderer.typescript.scriptactions;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
+import com.reedelk.plugin.service.module.impl.ScriptResource;
 
 public class ScriptActionsPanel extends DisposablePanel {
 
@@ -18,7 +19,7 @@ public class ScriptActionsPanel extends DisposablePanel {
         add(addAction);
     }
 
-    public void onSelect(String value) {
+    public void onSelect(ScriptResource value) {
         editAction.onSelect(value);
     }
 }
