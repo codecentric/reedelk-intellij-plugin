@@ -30,17 +30,17 @@ public class ScriptPropertyRenderer extends AbstractPropertyTypeRenderer {
 
         ScriptActionsPanel scriptActionsPanel = new ScriptActionsPanel(module);
 
-        ScriptSelector scriptSelector = new ScriptSelector(scripts);
-        scriptSelector.setSelectedItem(propertyAccessor.get());
+        ScriptSelectorCombo scriptSelectorCombo = new ScriptSelectorCombo(scripts);
+        scriptSelectorCombo.setSelectedItem(propertyAccessor.get());
         scriptActionsPanel.onSelect(propertyAccessor.get());
-        scriptSelector.addListener(value -> {
+        scriptSelectorCombo.addListener(value -> {
             propertyAccessor.set(value);
             scriptActionsPanel.onSelect((String) value);
         });
 
         JPanel container = new DisposablePanel();
         container.setLayout(new BorderLayout());
-        container.add(scriptSelector, CENTER);
+        container.add(scriptSelectorCombo, CENTER);
         container.add(scriptActionsPanel, EAST);
         return container;
     }

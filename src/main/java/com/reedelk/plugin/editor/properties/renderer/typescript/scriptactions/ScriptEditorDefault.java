@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.renderer.typescript;
+package com.reedelk.plugin.editor.properties.renderer.typescript.scriptactions;
 
 import com.intellij.codeInsight.AutoPopupController;
 import com.intellij.openapi.diagnostic.Logger;
@@ -12,6 +12,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.renderer.commons.DynamicValueField;
+import com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditor;
 import com.reedelk.plugin.editor.properties.renderer.typedynamicvalue.DynamicValueScriptEditor;
 import com.reedelk.runtime.api.commons.ScriptUtils;
 import org.jetbrains.annotations.NotNull;
@@ -40,7 +41,7 @@ public class ScriptEditorDefault extends DisposablePanel implements ScriptEditor
     protected EditorEx editor;
     protected Document document;
 
-    public ScriptEditorDefault(Project project, Document document, boolean showContextVariablesPanel) {
+    ScriptEditorDefault(Project project, Document document, boolean showContextVariablesPanel) {
 
         this.project =  project;
 

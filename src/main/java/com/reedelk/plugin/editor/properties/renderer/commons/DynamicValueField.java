@@ -8,7 +8,6 @@ import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.renderer.typedynamicvalue.DynamicValueScriptEditor;
-import com.reedelk.plugin.editor.properties.renderer.typescript.ScriptEditor;
 import com.reedelk.runtime.api.commons.ScriptUtils;
 
 import javax.swing.*;

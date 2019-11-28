@@ -1,7 +1,6 @@
-package com.reedelk.plugin.editor.properties.renderer.typescript;
+package com.reedelk.plugin.editor.properties.renderer.commons;
 
 import com.intellij.openapi.Disposable;
-import com.reedelk.plugin.editor.properties.renderer.commons.DynamicValueField;
 
 import javax.swing.*;
 

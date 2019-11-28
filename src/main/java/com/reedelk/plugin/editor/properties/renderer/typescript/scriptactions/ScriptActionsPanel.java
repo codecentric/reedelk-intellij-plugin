@@ -5,9 +5,9 @@ import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 
 public class ScriptActionsPanel extends DisposablePanel {
 
-    private final ActionDeleteScript deleteAction;
-    private final ActionEditScript editAction;
-    private final ActionAddScript addAction;
+    private transient final ActionDeleteScript deleteAction;
+    private transient final ActionEditScript editAction;
+    private transient final ActionAddScript addAction;
 
     public ScriptActionsPanel(Module module) {
         deleteAction = new ActionDeleteScript();

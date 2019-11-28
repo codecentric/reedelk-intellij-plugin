@@ -8,11 +8,11 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.List;
 
-public class ScriptSelector extends ComboBox<String> implements ItemListener {
+public class ScriptSelectorCombo extends ComboBox<String> implements ItemListener {
 
     private InputChangeListener listener;
 
-    public ScriptSelector(List<String> scripts) {
+    public ScriptSelectorCombo(List<String> scripts) {
         DefaultComboBoxModel<String> comboModel = new DefaultComboBoxModel<>();
         scripts.forEach(comboModel::addElement);
         setModel(comboModel);

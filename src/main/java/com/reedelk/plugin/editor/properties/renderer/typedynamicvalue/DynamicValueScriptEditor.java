@@ -17,7 +17,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
 import com.reedelk.plugin.editor.properties.renderer.commons.DynamicValueField;
-import com.reedelk.plugin.editor.properties.renderer.typescript.ScriptEditor;
+import com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditor;
 import com.reedelk.runtime.api.commons.ScriptUtils;
 import org.jetbrains.annotations.NotNull;
 

@@ -8,6 +8,7 @@ import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
 import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
+import com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditor;
 import com.reedelk.plugin.editor.properties.renderer.typedynamicvalue.DynamicValueScriptEditor;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.runtime.api.commons.StringUtils;
@@ -76,7 +77,7 @@ class ConditionRouteTableColumnModel extends DefaultTableColumnModel implements 
 
     private class ConditionCellEditor implements TableCellEditor, Disposable {
 
-        private final DynamicValueScriptEditor editor;
+        private final ScriptEditor editor;
         private CellEditorListener listener;
         private DisposablePanel content;
 

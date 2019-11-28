@@ -8,7 +8,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.commons.ModuleUtils;
-import com.reedelk.plugin.editor.properties.renderer.typescript.ScriptEditorDefault;
+import com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,7 +22,7 @@ public class EditScriptDialog extends DialogWrapper {
 
     private static final Dimension DEFAULT_SCRIPT_DIMENSION = new Dimension(700, 400);
 
-    private ScriptEditorDefault editor;
+    private ScriptEditor editor;
 
     EditScriptDialog(@NotNull Module module, String scriptFile) {
         super(module.getProject(), false);
@@ -51,7 +51,7 @@ public class EditScriptDialog extends DialogWrapper {
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
-        return editor;
+        return editor.getComponent();
     }
 
     @Override
