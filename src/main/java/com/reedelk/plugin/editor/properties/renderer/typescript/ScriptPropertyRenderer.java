@@ -1,6 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer.typescript;
 
 import com.intellij.openapi.module.Module;
+import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
@@ -63,7 +64,7 @@ public class ScriptPropertyRenderer extends AbstractPropertyTypeRenderer {
     public class NotFoundScriptResource extends ScriptResource {
 
         NotFoundScriptResource(String path) {
-            super(path, "Not found");
+            super(path, Labels.SCRIPT_NOT_FOUND);
         }
 
         @Override

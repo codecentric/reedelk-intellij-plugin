@@ -75,7 +75,7 @@ public class Labels {
     public static final String CONFIG_NOT_SELECTED_ITEM = "<Not selected>";
 
     public static final String SCRIPT_NOT_SELECTED_ITEM = "<Not selected>";
-    public static final String SCRIPT_NOT_KNOWN = "<Unknown>";
+    public static final String SCRIPT_NOT_FOUND = "Not found";
     public static final String ADD_SCRIPT = "Add New Script";
 
     public static final String DIALOG_TITLE_DELETE_SCRIPT = "Delete Script";

@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ScriptSelectorCombo extends ComboBox<ScriptResource> implements ItemListener {
 
-    public static final ScriptResource UNSELECTED = new UnselectedScriptResource();
+    static final ScriptResource UNSELECTED = new UnselectedScriptResource();
 
     private InputChangeListener listener;
 
