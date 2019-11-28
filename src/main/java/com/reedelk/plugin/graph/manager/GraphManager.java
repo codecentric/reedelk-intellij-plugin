@@ -110,7 +110,7 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
      *
      * @param json the json string to be written in the document.
      */
-    private void write(String json) {
+    private void write(@NotNull String json) {
         ApplicationManager.getApplication().invokeLater(() -> {
             try {
                 WriteCommandAction.writeCommandAction(module.getProject())

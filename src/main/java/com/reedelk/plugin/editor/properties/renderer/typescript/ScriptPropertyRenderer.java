@@ -1,7 +1,9 @@
 package com.reedelk.plugin.editor.properties.renderer.typescript;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.Labels;
+import com.reedelk.plugin.commons.PopupUtils;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
@@ -15,12 +17,16 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
+import java.util.Collection;
 
+import static com.reedelk.plugin.service.module.impl.ScriptServiceImpl.ScriptResourceChangeListener;
+import static com.reedelk.plugin.service.module.impl.ScriptServiceImpl.TOPIC_SCRIPT_RESOURCE;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.EAST;
 
 public class ScriptPropertyRenderer extends AbstractPropertyTypeRenderer {
+
+    private static final ScriptResource UNSELECTED = new UnselectedScriptResource();
 
     @NotNull
     @Override
@@ -29,33 +35,70 @@ public class ScriptPropertyRenderer extends AbstractPropertyTypeRenderer {
                              @NotNull PropertyAccessor propertyAccessor,
                              @NotNull ContainerContext context) {
 
-        List<ScriptResource> scripts = ScriptService.getInstance(module).getScripts();
-
-        ScriptResource resourceMatching = findResourceMatching(scripts, propertyAccessor.get());
-        // Unknown Script has been found.
-        if (!scripts.contains(resourceMatching)) {
-            scripts.add(resourceMatching);
-        }
-
-        ScriptActionsPanel scriptActionsPanel = new ScriptActionsPanel(module);
-        scriptActionsPanel.onSelect(resourceMatching); // we set the current selected script.
-
-        ScriptSelectorCombo scriptSelectorCombo = new ScriptSelectorCombo(scripts);
-        scriptSelectorCombo.setSelectedItem(resourceMatching);
-        scriptSelectorCombo.addListener(value -> {
-            propertyAccessor.set(((ScriptResource)value).getPath());
-            scriptActionsPanel.onSelect((ScriptResource)value);
-        });
-
-        JPanel container = new DisposablePanel();
-        container.setLayout(new BorderLayout());
-        container.add(scriptSelectorCombo, CENTER);
-        container.add(scriptActionsPanel, EAST);
-        return container;
+        ScriptInput panel = new ScriptInput(module, propertyAccessor);
+        ScriptService.getInstance(module).fetchScriptResources();
+        return panel;
     }
 
-    private ScriptResource findResourceMatching(List<ScriptResource> scriptResources, String path) {
-        if (StringUtils.isBlank(path)) return ScriptSelectorCombo.UNSELECTED;
+    class ScriptInput extends DisposablePanel implements ScriptResourceChangeListener {
+
+        private final MessageBusConnection connect;
+        private final PropertyAccessor propertyAccessor;
+        private final ScriptActionsPanel scriptActionsPanel;
+        private final ScriptSelectorCombo scriptSelectorCombo;
+
+        ScriptInput(Module module, PropertyAccessor propertyAccessor) {
+            this.propertyAccessor = propertyAccessor;
+            this.scriptActionsPanel = new ScriptActionsPanel(module);
+            this.scriptSelectorCombo = new ScriptSelectorCombo();
+
+            this.connect = module.getMessageBus().connect();
+            this.connect.subscribe(TOPIC_SCRIPT_RESOURCE, this);
+
+            setLayout(new BorderLayout());
+            add(scriptSelectorCombo, CENTER);
+            add(scriptActionsPanel, EAST);
+        }
+
+        @Override
+        public void onScriptResources(Collection<ScriptResource> scriptResources) {
+            DefaultComboBoxModel<ScriptResource> comboModel = new DefaultComboBoxModel<>();
+            comboModel.addElement(UNSELECTED);
+            scriptResources.forEach(comboModel::addElement);
+            scriptSelectorCombo.setModel(comboModel);
+
+            ScriptResource resourceMatching = findResourceMatching(scriptResources, propertyAccessor.get());
+            if (!scriptResources.contains(resourceMatching)) {
+                scriptResources.add(resourceMatching);
+            }
+            scriptActionsPanel.onSelect(resourceMatching);
+            scriptSelectorCombo.setSelectedItem(resourceMatching);
+
+            scriptSelectorCombo.addListener(value -> {
+                propertyAccessor.set(((ScriptResource) value).getPath());
+                scriptActionsPanel.onSelect((ScriptResource) value);
+            });
+        }
+
+        @Override
+        public void onAddError(Exception exception, ScriptResource resource) {
+            PopupUtils.error(exception, scriptActionsPanel);
+        }
+
+        @Override
+        public void onRemoveError(Exception exception, ScriptResource resource) {
+            PopupUtils.error(exception, scriptActionsPanel);
+        }
+
+        @Override
+        public void dispose() {
+            super.dispose();
+            connect.disconnect();
+        }
+    }
+
+    private ScriptResource findResourceMatching(Collection<ScriptResource> scriptResources, String path) {
+        if (StringUtils.isBlank(path)) return UNSELECTED;
         return scriptResources.stream()
                 .filter(scriptResource -> scriptResource.getPath().equals(path)).findFirst()
                 .orElseGet(() -> new NotFoundScriptResource(path));
@@ -65,6 +108,23 @@ public class ScriptPropertyRenderer extends AbstractPropertyTypeRenderer {
 
         NotFoundScriptResource(String path) {
             super(path, Labels.SCRIPT_NOT_FOUND);
+        }
+
+        @Override
+        public boolean isEditable() {
+            return false;
+        }
+
+        @Override
+        public boolean isRemovable() {
+            return false;
+        }
+    }
+
+    static class UnselectedScriptResource extends ScriptResource {
+
+        UnselectedScriptResource() {
+            super(StringUtils.EMPTY, Labels.SCRIPT_NOT_SELECTED_ITEM);
         }
 
         @Override
