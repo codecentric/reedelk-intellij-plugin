@@ -48,29 +48,23 @@ public class ConditionRouteTableModel extends AbstractTableModel implements Prop
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Object returnValue = StringUtils.EMPTY;
         RouterConditionRoutePair conditionRoute = conditionRouteList.get(rowIndex);
-        switch (columnIndex) {
-            case 0:
-                returnValue = ScriptUtils.unwrap(conditionRoute.getCondition());
-                break;
-            case 1:
-                returnValue = conditionRoute.getNext();
-                break;
+        if (columnIndex == 0) {
+            return ScriptUtils.unwrap(conditionRoute.getCondition());
+        } else if (columnIndex == 1) {
+            return conditionRoute.getNext();
+        } else {
+            return StringUtils.EMPTY;
         }
-        return returnValue;
     }
 
     @Override
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
         RouterConditionRoutePair conditionRoute = conditionRouteList.get(rowIndex);
-        switch (columnIndex) {
-            case 0:
-                conditionRoute.setCondition(ScriptUtils.asScript((String) value));
-                break;
-            case 1:
-                conditionRoute.setNext((GraphNode) value);
-                break;
+        if (columnIndex == 0) {
+            conditionRoute.setCondition(ScriptUtils.asScript((String) value));
+        } else if (columnIndex == 1) {
+            conditionRoute.setNext((GraphNode) value);
         }
         snapshot.onDataChange();
     }

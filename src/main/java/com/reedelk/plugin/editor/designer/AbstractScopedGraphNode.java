@@ -176,25 +176,25 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
 
     @Override
     public void mouseMoved(DrawableListener listener, MouseEvent event) {
-        int x = event.getX();
-        int y = event.getY();
-        if (icon.contains(x, y)) {
+        int eventX = event.getX();
+        int eventY = event.getY();
+        if (icon.contains(eventX, eventY)) {
             listener.setTheCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
         // The hand cursor over the remove icon is visible
         // if and only if the icon is selected.
-        if (selected && iconRemoveComponent.withinBounds(x, y)) {
+        if (selected && iconRemoveComponent.withinBounds(eventX, eventY)) {
             listener.setTheCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
     }
 
     @Override
     public void mousePressed(DrawableListener listener, MouseEvent event) {
-        int x = event.getX();
-        int y = event.getY();
+        int eventX = event.getX();
+        int eventY = event.getY();
         // If the mouse x,y coordinates are within the remove icon,
         // and the component is currently selected, then we remove the component.
-        if (selected && iconRemoveComponent.withinBounds(x, y)) {
+        if (selected && iconRemoveComponent.withinBounds(eventX, eventY)) {
             listener.removeComponent(this);
         }
     }
