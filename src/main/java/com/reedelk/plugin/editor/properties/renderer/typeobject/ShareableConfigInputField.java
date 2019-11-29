@@ -2,6 +2,7 @@ package com.reedelk.plugin.editor.properties.renderer.typeobject;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.util.messages.MessageBusConnection;
+import com.reedelk.plugin.commons.PopupUtils;
 import com.reedelk.plugin.component.domain.ComponentDataHolder;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
@@ -25,11 +26,13 @@ import java.util.List;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.service.module.impl.ConfigServiceImpl.TOPIC_CONFIG_CHANGE;
+import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.EAST;
 
 class ShareableConfigInputField extends DisposablePanel implements ConfigServiceImpl.ConfigChangeListener {
 
+    private final Module module;
     private final ContainerContext context;
     private final MessageBusConnection connect;
     private final PropertyAccessor propertyAccessor;
@@ -45,6 +48,7 @@ class ShareableConfigInputField extends DisposablePanel implements ConfigService
                               @NotNull PropertyAccessor propertyAccessor,
                               @NotNull ContainerContext context) {
 
+        this.module = module;
         this.referenceDataHolder = referenceDataHolder;
         this.context = context;
         this.descriptor = descriptor;
@@ -71,7 +75,34 @@ class ShareableConfigInputField extends DisposablePanel implements ConfigService
         updateWith(configurations, matchingMetadata);
     }
 
-    //  TODO: Handle the errors
+    @Override
+    public void onAddSuccess(ConfigMetadata configMetadata) {
+        propertyAccessor.set(configMetadata.getId());
+        ConfigService.getInstance(module).fetchConfigurationsBy(descriptor.getPropertyType());
+    }
+
+    @Override
+    public void onRemoveSuccess() {
+        // Nothing is selected.
+        propertyAccessor.set(EMPTY);
+        ConfigService.getInstance(module).fetchConfigurationsBy(descriptor.getPropertyType());
+    }
+
+    @Override
+    public void onAddError(Exception exception) {
+        PopupUtils.error(exception, configActionsPanel);
+    }
+
+    @Override
+    public void onRemoveError(Exception exception) {
+        PopupUtils.error(exception, configActionsPanel);
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        connect.disconnect();
+    }
 
     private void updateWith(Collection<ConfigMetadata> configMetadata, ConfigMetadata selected) {
         // Prepare model
@@ -98,7 +129,6 @@ class ShareableConfigInputField extends DisposablePanel implements ConfigService
                 configActionsPanel.onSelect((ConfigMetadata) value);
                 // If the selection has changed, we must notify all the
                 // context subscribers that the property has changed.
-
 
                 // TODO: there should be a way to notify the parent that the child property has changed.
                 context.notifyPropertyChanged(descriptor.getPropertyName(), referenceDataHolder);

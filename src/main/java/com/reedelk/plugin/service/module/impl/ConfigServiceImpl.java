@@ -10,6 +10,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.messages.Topic;
+import com.reedelk.plugin.commons.FileUtils;
 import com.reedelk.plugin.commons.ModuleUtils;
 import com.reedelk.plugin.component.deserializer.ConfigurationDeserializer;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
@@ -43,7 +44,7 @@ public class ConfigServiceImpl implements ConfigService {
         ReadAction.nonBlocking(() -> {
             List<ConfigMetadata> configs = new ArrayList<>();
             ModuleRootManager.getInstance(module).getFileIndex().iterateContent(fileOrDir -> {
-                if (FileExtension.FLOW_CONFIG.value().equals(fileOrDir.getExtension())) {
+                if (FileExtension.CONFIG.value().equals(fileOrDir.getExtension())) {
                     getConfigurationFrom(fileOrDir, typeObjectDescriptor).ifPresent(configs::add);
                 }
                 return true;
@@ -74,12 +75,13 @@ public class ConfigServiceImpl implements ConfigService {
 
         try {
 
-            // TODO: What if the dierctory does not  exists!?? It should be created here!! Fixit
+            // TODO: What if the directory does not  exists!?? It should be created here!! Fixit
             Optional<String> maybeConfigDirectory = getConfigDirectory();
             if (maybeConfigDirectory.isPresent()) {
                 String configDir = maybeConfigDirectory.get();
 
-                final VirtualFile configFile = VfsUtil.findFile(Paths.get(configDir, newConfig.getFileName()), true);
+                String finalFileName = FileUtils.appendExtensionToFileName(newConfig.getFileName(), FileExtension.CONFIG);
+                final VirtualFile configFile = VfsUtil.findFile(Paths.get(configDir, finalFileName), true);
                 if (configFile != null) {
                     throw new IOException(String.format("A configuration file named %s exists already. " +
                             "Please use a different file name.", newConfig.getFileName()));

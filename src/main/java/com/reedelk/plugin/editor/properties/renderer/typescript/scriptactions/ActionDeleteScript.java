@@ -34,7 +34,7 @@ class ActionDeleteScript extends ClickableLabel {
         }
     }
 
-    public void onSelect(ScriptResource value) {
+    void onSelect(ScriptResource value) {
         setEnabled(value.isRemovable());
         this.selected = value;
     }

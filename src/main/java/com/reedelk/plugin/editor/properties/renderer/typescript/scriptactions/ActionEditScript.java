@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent;
 import static com.reedelk.plugin.commons.Icons.Config.Edit;
 import static com.reedelk.plugin.commons.Icons.Config.EditDisabled;
 
-class ActionEditScript extends ClickableLabel implements ClickableLabel.OnClickAction {
+class ActionEditScript extends ClickableLabel {
 
     private final Module module;
 
@@ -28,12 +28,7 @@ class ActionEditScript extends ClickableLabel implements ClickableLabel.OnClickA
         }
     }
 
-    @Override
-    public void onClick() {
-
-    }
-
-    public void onSelect(ScriptResource value) {
+    void onSelect(ScriptResource value) {
         setEnabled(value.isEditable());
         this.selected = value;
     }

@@ -143,7 +143,7 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
                 hasNotExtension(file, FileExtension.SCRIPT.value()) &&
                 hasNotExtension(file, FileExtension.FLOW.value()) &&
                 hasNotExtension(file, FileExtension.SUBFLOW.value()) &&
-                hasNotExtension(file, FileExtension.FLOW_CONFIG.value());
+                hasNotExtension(file, FileExtension.CONFIG.value());
     }
 
     private static boolean hasNotExtension(VirtualFile file, String extensionToTest) {
