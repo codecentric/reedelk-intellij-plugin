@@ -95,8 +95,9 @@ public class ConfigServiceImpl implements ConfigService {
                     final VirtualFile configFile = VfsUtil.findFile(Paths.get(configsFolder, finalFileName), true);
                     if (configFile != null) {
                         PluginException exception =
-                                new PluginException(message("config.error.add.file.exists.already", newConfig.getFileName()));
+                                new PluginException(message("config.error.add.file.exists.already", finalFileName));
                         publisher.onAddError(exception);
+                        return;
                     }
 
                     try {
@@ -104,13 +105,13 @@ public class ConfigServiceImpl implements ConfigService {
                         VirtualFile configDirectoryVf = VfsUtil.createDirectoryIfMissing(configsFolder);
                         if (configDirectoryVf == null) {
                             PluginException exception =
-                                    new PluginException(message("config.error.add.config.dir.not.created", newConfig.getFileName()));
+                                    new PluginException(message("config.error.add.config.dir.not.created", finalFileName));
                             publisher.onAddError(exception);
                             return;
                         }
 
                         // Create new config file.
-                        VirtualFile childData = configDirectoryVf.createChildData(null, newConfig.getFileName());
+                        VirtualFile childData = configDirectoryVf.createChildData(null, finalFileName);
 
                         // Serialize the config
                         String serializedConfig = ConfigurationSerializer.serialize(newConfig);
