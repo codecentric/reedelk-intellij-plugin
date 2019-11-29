@@ -6,20 +6,17 @@ import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.service.module.impl.ConfigMetadata;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
-import java.util.List;
-
 public interface ConfigService {
 
     static ConfigService getInstance(@NotNull Module module) {
         return ModuleServiceManager.getService(module, ConfigService.class);
     }
 
-    List<ConfigMetadata> getConfigurationsBy(TypeObjectDescriptor typeObjectDescriptor);
+    void fetchConfigurationsBy(TypeObjectDescriptor typeObjectDescriptor);
 
-    void saveConfig(ConfigMetadata updatedConfig) throws Exception;
+    void saveConfig(ConfigMetadata updatedConfig);
 
-    void addConfig(ConfigMetadata newConfig) throws IOException;
+    void addConfig(ConfigMetadata newConfig);
 
-    void removeConfig(ConfigMetadata toBeRemovedConfig) throws Exception;
+    void removeConfig(ConfigMetadata toBeRemovedConfig);
 }

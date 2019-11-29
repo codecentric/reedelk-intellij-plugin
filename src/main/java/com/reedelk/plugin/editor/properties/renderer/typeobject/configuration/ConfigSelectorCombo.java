@@ -2,6 +2,7 @@ package com.reedelk.plugin.editor.properties.renderer.typeobject.configuration;
 
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.ListCellRendererWrapper;
+import com.reedelk.plugin.editor.properties.renderer.commons.InputChangeListener;
 import com.reedelk.plugin.service.module.impl.ConfigMetadata;
 import com.reedelk.runtime.api.commons.StringUtils;
 
@@ -12,7 +13,7 @@ import java.util.Optional;
 
 public class ConfigSelectorCombo extends ComboBox<ConfigMetadata> implements ItemListener {
 
-    private SelectListener listener;
+    private InputChangeListener listener;
 
     public ConfigSelectorCombo() {
         setRenderer(new ConfigMetadataRenderer());
@@ -23,16 +24,18 @@ public class ConfigSelectorCombo extends ComboBox<ConfigMetadata> implements Ite
     public void itemStateChanged(ItemEvent event) {
         if (event.getStateChange() == ItemEvent.SELECTED) {
             ConfigMetadata item = (ConfigMetadata) event.getItem();
-            if (listener != null) listener.onSelect(item);
+            if (listener != null) {
+                listener.onChange(item);
+            }
         }
     }
 
-    public void addSelectListener(SelectListener listener) {
-        this.listener = listener;
+    public void removeListener() {
+        this.listener = null;
     }
 
-    public interface SelectListener {
-        void onSelect(ConfigMetadata configMetadata);
+    public void addListener(InputChangeListener changeListener) {
+        this.listener = changeListener;
     }
 
     private class ConfigMetadataRenderer extends ListCellRendererWrapper<ConfigMetadata> {

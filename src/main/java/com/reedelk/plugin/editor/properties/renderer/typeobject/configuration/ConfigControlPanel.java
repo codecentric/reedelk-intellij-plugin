@@ -20,18 +20,6 @@ public class ConfigControlPanel extends DisposablePanel {
         add(addAction);
     }
 
-    public void setAddActionListener(ActionAddConfiguration.AddCompleteListener completeListener) {
-        addAction.addListener(completeListener);
-    }
-
-    public void setEditActionListener(ActionEditConfiguration.EditCompleteListener completeListener) {
-        editAction.addListener(completeListener);
-    }
-
-    public void setDeleteActionListener(ActionDeleteConfiguration.DeleteCompleteListener completeListener) {
-        deleteAction.addListener(completeListener);
-    }
-
     public void onSelect(ConfigMetadata matchingMetadata) {
         editAction.onSelect(matchingMetadata);
         deleteAction.onSelect(matchingMetadata);

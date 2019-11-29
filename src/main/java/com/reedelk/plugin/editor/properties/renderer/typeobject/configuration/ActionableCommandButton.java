@@ -6,7 +6,7 @@ import com.reedelk.plugin.service.module.impl.ConfigMetadata;
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 
-public abstract class ActionableCommandButton extends ClickableLabel implements ConfigSelectorCombo.SelectListener {
+public abstract class ActionableCommandButton extends ClickableLabel {
 
     private ConfigMetadata selectedMetadata;
 
@@ -19,7 +19,6 @@ public abstract class ActionableCommandButton extends ClickableLabel implements 
         onClick(selectedMetadata);
     }
 
-    @Override
     public void onSelect(ConfigMetadata configMetadata) {
         this.selectedMetadata = configMetadata;
     }

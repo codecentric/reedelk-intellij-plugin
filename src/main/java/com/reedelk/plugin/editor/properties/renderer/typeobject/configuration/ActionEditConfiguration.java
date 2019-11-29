@@ -14,8 +14,6 @@ public class ActionEditConfiguration extends ActionableCommandButton {
     private final Module module;
     private final TypeObjectDescriptor typeDescriptor;
 
-    private EditCompleteListener listener;
-
     ActionEditConfiguration(@NotNull Module module,
                             @NotNull TypeObjectDescriptor typeDescriptor) {
         super("Edit", Edit, EditDisabled);
@@ -25,16 +23,10 @@ public class ActionEditConfiguration extends ActionableCommandButton {
 
     @Override
     protected void onClick(@NotNull ConfigMetadata selectedMetadata) {
-        if (!selectedMetadata.isEditable()) return;
-
-        DialogEditConfiguration dialogEditConfiguration = new DialogEditConfiguration(module, typeDescriptor, selectedMetadata);
-        if (dialogEditConfiguration.showAndGet()) {
-            try {
+        if (selectedMetadata.isEditable()) {
+            DialogEditConfiguration dialogEditConfiguration = new DialogEditConfiguration(module, typeDescriptor, selectedMetadata);
+            if (dialogEditConfiguration.showAndGet()) {
                 ConfigService.getInstance(module).saveConfig(selectedMetadata);
-            } catch (Exception exception) {
-                if (listener != null) {
-                    listener.onEditConfigurationError(exception, selectedMetadata);
-                }
             }
         }
     }
@@ -43,13 +35,5 @@ public class ActionEditConfiguration extends ActionableCommandButton {
     public void onSelect(ConfigMetadata configMetadata) {
         super.onSelect(configMetadata);
         setEnabled(configMetadata.isEditable());
-    }
-
-    public void addListener(EditCompleteListener listener) {
-        this.listener = listener;
-    }
-
-    public interface EditCompleteListener {
-        void onEditConfigurationError(Exception exception, ConfigMetadata metadata);
     }
 }

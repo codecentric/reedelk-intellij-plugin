@@ -13,7 +13,6 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 public class ActionDeleteConfiguration extends ActionableCommandButton {
 
     private final Module module;
-    private DeleteCompleteListener listener;
 
     ActionDeleteConfiguration(@NotNull Module module) {
         super("Delete", Delete, DeleteDisabled);
@@ -26,19 +25,10 @@ public class ActionDeleteConfiguration extends ActionableCommandButton {
 
         DialogConfirmAction dialogConfirmDelete =
                 new DialogConfirmAction(module,
-                message("config.dialog.delete.title"),
-                message("config.dialog.delete.confirm.message"));
+                        message("config.dialog.delete.title"),
+                        message("config.dialog.delete.confirm.message"));
         if (dialogConfirmDelete.showAndGet()) {
-            try {
-                ConfigService.getInstance(module).removeConfig(selectedMetadata);
-                if (listener != null) {
-                    listener.onDeletedConfiguration(selectedMetadata);
-                }
-            } catch (Exception exception) {
-                if (listener != null) {
-                    listener.onDeletedConfigurationError(exception, selectedMetadata);
-                }
-            }
+            ConfigService.getInstance(module).removeConfig(selectedMetadata);
         }
     }
 
@@ -48,13 +38,4 @@ public class ActionDeleteConfiguration extends ActionableCommandButton {
         setEnabled(configMetadata.isRemovable());
     }
 
-    public void addListener(DeleteCompleteListener listener) {
-        this.listener = listener;
-    }
-
-    public interface DeleteCompleteListener {
-        void onDeletedConfiguration(ConfigMetadata deletedConfig);
-
-        void onDeletedConfigurationError(Exception exception, ConfigMetadata configMetadata);
-    }
 }
