@@ -1,5 +1,6 @@
 package com.reedelk.plugin.commons;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.IconLoader;
 
 import javax.swing.*;
@@ -18,7 +19,7 @@ public class Icons {
     public static final Icon ModuleUnDeployDisabled = IconLoader.getIcon("/icons/undeploy-16x-blue-disabled.png");
     public static final Icon FileTypeFlow = IconLoader.getIcon("/icons/icon-flow-file-16x.png");
     public static final Icon FileTypeSubFlow = IconLoader.getIcon("/icons/icon-subflow-file-16x.png");
-    public static final Icon FileTypeFlowConfig = IconLoader.getIcon("/icons/icon-flow-config-file-16x.png");
+    public static final Icon FileTypeConfig = AllIcons.Actions.Annotate;
 
     private Icons() {
     }
