@@ -1,8 +1,6 @@
 package com.reedelk.plugin.graph.manager;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
@@ -89,8 +87,9 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
 
     @Override
     public void onComponentListUpdate(Module module) {
-        ApplicationManager.getApplication()
-                .invokeLater(this::deserializeDocument, ModalityState.NON_MODAL);
+        // When the component list is updated, we MUST deserialize so that
+        // unknown components are correctly resolved and visualized in the Designer.
+        deserializeDocument();
     }
 
     @Override

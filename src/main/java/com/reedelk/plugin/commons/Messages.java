@@ -10,6 +10,7 @@ public class Messages {
     }
 
     interface FormattedMessage {
+        String format();
         String format(Object... args);
     }
 
@@ -31,6 +32,11 @@ public class Messages {
         public String format(Object... args) {
             return formatMessage(msg, args);
         }
+
+        @Override
+        public String format() {
+            return msg;
+        }
     }
 
     public enum RuntimeRun implements FormattedMessage {
@@ -46,6 +52,11 @@ public class Messages {
         @Override
         public String format(Object... args) {
             return formatMessage(msg, args);
+        }
+
+        @Override
+        public String format() {
+            return msg;
         }
     }
 
@@ -72,6 +83,11 @@ public class Messages {
         public String format(Object... args) {
             return formatMessage(msg, args);
         }
+
+        @Override
+        public String format() {
+            return msg;
+        }
     }
 
     public enum Misc implements FormattedMessage {
@@ -88,6 +104,34 @@ public class Messages {
         @Override
         public String format(Object... args) {
             return formatMessage(msg, args);
+        }
+
+        @Override
+        public String format() {
+            return msg;
+        }
+    }
+
+    public enum Flow implements FormattedMessage {
+
+        BUILDING_FLOW("Building flow ..."),
+        ERROR_TITLE("The flow contains error, and it can not not be displayed."),
+        ERROR_MESSAGE("Flow error message: %s");
+
+        private String msg;
+
+        Flow(String msg) {
+            this.msg = msg;
+        }
+
+        @Override
+        public String format(Object... args) {
+            return formatMessage(msg, args);
+        }
+
+        @Override
+        public String format() {
+            return msg;
         }
     }
 

@@ -18,7 +18,8 @@ import com.reedelk.plugin.editor.designer.hint.HintDrawable;
 import com.reedelk.plugin.editor.designer.hint.HintResult;
 import com.reedelk.plugin.editor.designer.hint.HintResultListener;
 import com.reedelk.plugin.editor.designer.hint.HintRunnable;
-import com.reedelk.plugin.editor.designer.misc.InfoPanel;
+import com.reedelk.plugin.editor.designer.misc.BuildingFlowInfoPanel;
+import com.reedelk.plugin.editor.designer.misc.FlowWithErrorInfoPanel;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.SnapshotListener;
@@ -38,8 +39,6 @@ import java.awt.event.MouseMotionListener;
 import java.util.Optional;
 
 import static com.reedelk.plugin.editor.designer.dnd.DesignerDropTargetListener.DropActionListener;
-import static com.reedelk.plugin.editor.designer.misc.InfoPanel.BuildingFlowInfoPanel;
-import static com.reedelk.plugin.editor.designer.misc.InfoPanel.FlowWithErrorInfoPanel;
 import static com.reedelk.plugin.service.project.DesignerSelectionManager.CurrentSelectionListener;
 import static com.reedelk.plugin.service.project.DesignerSelectionManager.CurrentSelectionListener.CURRENT_SELECTION_TOPIC;
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
@@ -68,8 +67,8 @@ public abstract class DesignerPanel extends DisposablePanel implements
     private transient MessageBusConnection busConnection;
     private transient CenterOfNodeDrawable centerOfNodeDrawable;
     private transient CurrentSelectionListener componentSelectedPublisher;
-    private transient InfoPanel errorFlowInfoPanel = new FlowWithErrorInfoPanel();
-    private transient InfoPanel buildingFlowInfoPanel = new BuildingFlowInfoPanel();
+    private transient FlowWithErrorInfoPanel errorFlowInfoPanel = new FlowWithErrorInfoPanel();
+    private transient BuildingFlowInfoPanel buildingFlowInfoPanel = new BuildingFlowInfoPanel();
 
     private int offsetX;
     private int offsetY;
@@ -151,7 +150,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
 
                 absentFlow -> buildingFlowInfoPanel.draw(g2, this, this),
 
-                flowWithError -> errorFlowInfoPanel.draw(g2, this, this));
+                flowWithError -> errorFlowInfoPanel.draw(flowWithError, g2, this, this));
 
         g2.dispose();
     }

@@ -2,14 +2,11 @@ package com.reedelk.plugin.editor.designer.text;
 
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.Fonts;
+import com.reedelk.plugin.commons.SplitTextInLines;
 import com.reedelk.plugin.component.domain.ComponentData;
-import com.reedelk.runtime.api.commons.StringUtils;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TextComponentTitle extends AbstractText {
@@ -25,16 +22,7 @@ public class TextComponentTitle extends AbstractText {
 
     @Override
     protected List<String> getText() {
-        if (StringUtils.isBlank(title)) {
-            return Collections.emptyList();
-        }
-
-        List<String> matchList = new ArrayList<>();
-        Matcher regexMatcher = REGEX.matcher(title);
-        while (regexMatcher.find()) {
-            matchList.add(regexMatcher.group());
-        }
-        return matchList;
+        return SplitTextInLines.from(title, REGEX);
     }
 
     @Override

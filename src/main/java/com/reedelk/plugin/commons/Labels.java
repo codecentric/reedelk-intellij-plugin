@@ -46,8 +46,6 @@ public class Labels {
     public static final String DIALOG_TITLE_EDIT_CONFIGURATION = "Edit Configuration";
     public static final String DIALOG_TITLE_DELETE_CONFIGURATION = "Delete Configuration";
 
-
-
     public static final String DIALOG_BTN_ADD_CONFIGURATION = "Add";
     public static final String DIALOG_BTN_SAVE_CONFIGURATION = "Save";
     public static final String DIALOG_BTN_SAVE_SCRIPT = "Save";
@@ -59,9 +57,6 @@ public class Labels {
     public static final String SCRIPT_EDITOR_CONTEXT_VARS_TITLE = "Context variables";
 
     public static final String FILE_CHOOSER_TITLE = "Choose File";
-
-    public static final String DESIGNER_INFO_BUILDING_FLOW = "Building flow ...";
-    public static final String DESIGNER_INFO_FLOW_CONTAINS_ERRORS = "The flow contains error, and it can not not be displayed.";
 
     public static final String ACTION_CREATE_FLOW_FILE_TITLE = "Reedelk flow file";
     public static final String ACTION_CREATE_FLOW_FILE_DESCRIPTION = "Create a new Reedelk flow file";

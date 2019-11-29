@@ -42,11 +42,11 @@ public class FlowSnapshot {
 
     public void applyOnGraph(@NotNull Consumer<FlowGraph> validGraphConsumer,
                              @NotNull Consumer<Void> emptyGraphConsumer,
-                             @NotNull Consumer<FlowGraph> errorGraphConsumer) {
+                             @NotNull Consumer<ErrorFlowGraph> errorGraphConsumer) {
         if (graph == null) {
             emptyGraphConsumer.accept(null);
         } else if (graph.isError()) {
-            errorGraphConsumer.accept(graph);
+            errorGraphConsumer.accept((ErrorFlowGraph) graph);
         } else {
             validGraphConsumer.accept(graph);
         }
