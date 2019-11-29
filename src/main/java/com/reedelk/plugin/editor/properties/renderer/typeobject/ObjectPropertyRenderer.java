@@ -1,7 +1,6 @@
 package com.reedelk.plugin.editor.properties.renderer.typeobject;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.commons.PopupUtils;
 import com.reedelk.plugin.component.domain.*;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
@@ -28,6 +27,7 @@ import java.util.List;
 import static com.reedelk.plugin.component.domain.Shared.NO;
 import static com.reedelk.plugin.component.domain.Shared.YES;
 import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.commons.JsonParser.Config;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.EAST;
@@ -38,7 +38,7 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
     static {
         TypeObject unselectedConfigDefinition = new TypeObject();
         unselectedConfigDefinition.set(Config.id(), TypeObject.DEFAULT_CONFIG_REF);
-        unselectedConfigDefinition.set(Config.title(), Labels.CONFIG_NOT_SELECTED_ITEM);
+        unselectedConfigDefinition.set(Config.title(), message("config.not.selected"));
         UNSELECTED_CONFIG = new ConfigMetadata(unselectedConfigDefinition);
     }
 

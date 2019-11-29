@@ -2,7 +2,6 @@ package com.reedelk.plugin.component.type.unknown;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBLabel;
-import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.FormBuilder;
@@ -12,6 +11,7 @@ import com.reedelk.plugin.graph.node.GraphNode;
 
 import java.awt.*;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.commons.JsonParser.Implementor;
 
 public class UnknownComponentPropertiesRenderer extends AbstractComponentPropertiesRenderer {
@@ -27,7 +27,7 @@ public class UnknownComponentPropertiesRenderer extends AbstractComponentPropert
         DisposablePanel propertiesPanel = new DisposablePanel(new GridBagLayout());
 
         FormBuilder.get()
-                .addLabel(Labels.UNKNOWN_COMPONENT, propertiesPanel)
+                .addLabel(message("component.unknown"), propertiesPanel)
                 .addLastField(new JBLabel(unknownImplementorClazz), propertiesPanel);
 
         return propertiesPanel;

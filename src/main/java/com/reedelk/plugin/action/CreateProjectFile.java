@@ -17,30 +17,31 @@ import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.util.IncorrectOperationException;
 import com.reedelk.plugin.commons.Icons;
-import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.commons.Template;
 import org.apache.velocity.runtime.parser.ParseException;
 
 import java.util.Properties;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
+
 public class CreateProjectFile extends CreateFileFromTemplateAction implements DumbAware {
 
     public CreateProjectFile() {
-        super(Labels.ACTION_CREATE_FLOW_FILE_TITLE,
-                Labels.ACTION_CREATE_FLOW_FILE_DESCRIPTION,
+        super(message("action.create.flow.title"),
+                message("action.create.flow.description"),
                 Icons.FileTypeFlow);
     }
 
     @Override
     protected void buildDialog(Project project, PsiDirectory directory, CreateFileFromTemplateDialog.Builder builder) {
-        builder.setTitle(Labels.ACTION_CREATE_FLOW_FILE_TITLE)
-                .addKind(Labels.ACTION_CREATE_FLOW_KIND, Icons.FileTypeFlow, Template.ProjectFile.FLOW)
-                .addKind(Labels.ACTION_CREATE_SUBFLOW_KIND, Icons.FileTypeSubFlow, Template.ProjectFile.SUBFLOW);
+        builder.setTitle(message("action.create.flow.title"))
+                .addKind(message("action.create.kind.flow"), Icons.FileTypeFlow, Template.ProjectFile.FLOW)
+                .addKind(message("action.create.kind.subflow"), Icons.FileTypeSubFlow, Template.ProjectFile.SUBFLOW);
     }
 
     @Override
     protected String getActionName(PsiDirectory directory, String newName, String templateName) {
-        return Labels.ACTION_CREATE_FLOW_FILE_TITLE;
+        return message("action.create.flow.name");
     }
 
     @Override

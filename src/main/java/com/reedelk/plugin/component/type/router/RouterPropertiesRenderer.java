@@ -1,12 +1,10 @@
 package com.reedelk.plugin.component.type.router;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.component.type.generic.GenericComponentPropertiesRenderer;
 import com.reedelk.plugin.component.type.router.widget.ConditionRouteTableModel;
 import com.reedelk.plugin.component.type.router.widget.RouterRouteTable;
-import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -15,6 +13,8 @@ import java.awt.*;
 import java.util.List;
 
 import static com.reedelk.plugin.component.type.router.RouterNode.DATA_CONDITION_ROUTE_PAIRS;
+import static com.reedelk.plugin.editor.properties.commons.ContainerFactory.createObjectTypeContainer;
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 
@@ -33,7 +33,8 @@ public class RouterPropertiesRenderer extends GenericComponentPropertiesRenderer
 
         ConditionRouteTableModel model = new ConditionRouteTableModel(conditionRoutePairList, snapshot);
         RouterRouteTable routerRouteTable = new RouterRouteTable(module, model);
-        DisposablePanel routerTableContainer = ContainerFactory.createObjectTypeContainer(routerRouteTable, Labels.ROUTER_TABLE_CONTAINER_TITLE);
+        DisposablePanel routerTableContainer =
+                createObjectTypeContainer(routerRouteTable, message("router.table.container.title"));
 
         DisposablePanel container = new DisposablePanel();
         container.setLayout(new BorderLayout());

@@ -12,7 +12,6 @@ import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.util.ui.UI;
-import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.commons.RuntimeComboManager;
 import com.reedelk.plugin.validator.RuntimeHomeValidator;
 import com.reedelk.plugin.validator.Validator;
@@ -28,6 +27,7 @@ import java.util.List;
 import static com.intellij.openapi.util.text.StringUtil.commonPrefixLength;
 import static com.intellij.openapi.util.text.StringUtil.isEmptyOrSpaces;
 import static com.intellij.uiDesigner.core.GridConstraints.*;
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.util.Collections.singletonList;
 
 public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable, ItemListener {
@@ -54,11 +54,9 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
             addRuntimePanel.setVisible(false);
         }
         moduleBuilder = builder;
-        runtimeComboManager = new RuntimeComboManager(
-                runtimeCombo,
-                project,
-                singletonList(Labels.WIZARD_RUNTIME_STEP_ADD_NEW_CONFIG),
-                this);
+        runtimeComboManager =
+                new RuntimeComboManager(runtimeCombo, project,
+                singletonList(message("runtimeBuilder.add.new.config")), this);
         runtimeConfigNameChanged(runtimeComboManager.getRuntimeConfigName());
         createInputWithBrowse(wizardContext, moduleBuilder);
     }
@@ -75,7 +73,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
             moduleBuilder.setRuntimeHomeDirectory(runtimeHomeDirectoryBrowse.getText());
             moduleBuilder.createRuntimeConfig(true);
         } else {
-            if (Labels.WIZARD_RUNTIME_STEP_ADD_NEW_CONFIG.equals(runtimeComboManager.getRuntimeConfigName())) {
+            if (message("runtimeBuilder.add.new.config").equals(runtimeComboManager.getRuntimeConfigName())) {
                 moduleBuilder.setRuntimeConfigName(runtimeConfigNameTextField.getText());
                 moduleBuilder.setRuntimeHomeDirectory(runtimeHomeDirectoryBrowse.getText());
                 moduleBuilder.createRuntimeConfig(true);
@@ -125,7 +123,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
     }
 
     private void runtimeConfigNameChanged(String newRuntimeConfigName) {
-        if (Labels.WIZARD_RUNTIME_STEP_ADD_NEW_CONFIG.equals(newRuntimeConfigName)) {
+        if (message("runtimeBuilder.add.new.config").equals(newRuntimeConfigName)) {
             addRuntimePanel.setVisible(true);
         } else {
             addRuntimePanel.setVisible(false);

@@ -3,7 +3,6 @@ package com.reedelk.plugin.editor.properties.renderer.typescript.scriptactions;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Colors;
-import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 
 import javax.swing.*;
@@ -11,6 +10,7 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 
@@ -26,7 +26,7 @@ class ScriptEditorContextPanel extends DisposablePanel {
         setLayout(new BorderLayout());
         setBorder(MATTE_BORDER);
 
-        JLabel panelTitle = new JLabel(Labels.SCRIPT_EDITOR_CONTEXT_VARS_TITLE);
+        JLabel panelTitle = new JLabel(message("script.editor.context.vars.title"));
         JPanel panelTitleWrapper = new JPanel();
         panelTitleWrapper.setBackground(Colors.SCRIPT_EDITOR_CONTEXT_PANEL_TITLE_BG);
         panelTitleWrapper.setBorder(COMPOUND_BORDER);

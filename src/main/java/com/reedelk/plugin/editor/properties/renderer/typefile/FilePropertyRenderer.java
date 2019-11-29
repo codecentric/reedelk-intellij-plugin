@@ -7,7 +7,6 @@ import com.intellij.openapi.ui.ComponentWithBrowseButton;
 import com.intellij.openapi.ui.TextComponentAccessor;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.commons.ModuleUtils;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
@@ -18,6 +17,8 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
+
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class FilePropertyRenderer extends AbstractPropertyTypeRenderer {
 
@@ -42,7 +43,7 @@ public class FilePropertyRenderer extends AbstractPropertyTypeRenderer {
             }
         };
 
-        descriptor.setTitle(Labels.FILE_CHOOSER_TITLE);
+        descriptor.setTitle(message("properties.type.file.choose.file"));
 
         TextFieldWithBrowse choseFile = new TextFieldWithBrowse();
 

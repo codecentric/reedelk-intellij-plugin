@@ -1,6 +1,9 @@
 package com.reedelk.plugin.component.type.router;
 
-import com.reedelk.plugin.commons.*;
+import com.reedelk.plugin.commons.AddPlaceholder;
+import com.reedelk.plugin.commons.Colors;
+import com.reedelk.plugin.commons.Fonts;
+import com.reedelk.plugin.commons.Half;
 import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.component.type.router.functions.IsDefaultRoute;
 import com.reedelk.plugin.component.type.router.functions.SyncConditionAndRoutePairs;
@@ -146,7 +149,7 @@ public class RouterNode extends AbstractScopedGraphNode {
 
                 graphics.setColor(Colors.TEXT_DEFAULT_ROUTE);
                 graphics.setFont(Fonts.Router.DEFAULT_ROUTE);
-                graphics.drawString(Labels.ROUTER_DEFAULT_ROUTE, verticalX + DEFAULT_ROUTE_TEXT_LEFT_PADDING,
+                graphics.drawString(message("router.default.route.name"), verticalX + DEFAULT_ROUTE_TEXT_LEFT_PADDING,
                         targetArrowEnd.y + DEFAULT_ROUTE_TEXT_TOP_PADDING);
             }
         }

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.reedelk.plugin.component.domain.Shared.YES;
+import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 
 public class TypeObjectDescriptor implements TypeDescriptor {
 
@@ -65,7 +66,7 @@ public class TypeObjectDescriptor implements TypeDescriptor {
 
     public static class TypeObject implements ComponentDataHolder {
 
-        public static final String DEFAULT_CONFIG_REF = "";
+        public static final String DEFAULT_CONFIG_REF = EMPTY;
 
         private Map<String, Object> objectDataHolder = new HashMap<>();
 

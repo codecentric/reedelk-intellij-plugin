@@ -18,8 +18,7 @@ import java.util.function.Consumer;
 
 import static com.reedelk.plugin.commons.Icons.MapType.AddItem;
 import static com.reedelk.plugin.commons.Icons.MapType.RemoveItem;
-import static com.reedelk.plugin.commons.Labels.ACTION_MAP_TABLE_ADD;
-import static com.reedelk.plugin.commons.Labels.ACTION_MAP_TABLE_REMOVE;
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 class MapTabContainer extends JBPanel {
 
@@ -40,8 +39,8 @@ class MapTabContainer extends JBPanel {
     class TableActionPanel extends DisposablePanel {
         TableActionPanel(PropertyTable table) {
             setLayout(new FlowLayout(FlowLayout.LEFT));
-            add(new ClickableLabel(ACTION_MAP_TABLE_ADD, AddItem, AddItem, table::addEmptyRow));
-            add(new ClickableLabel(ACTION_MAP_TABLE_REMOVE, RemoveItem, RemoveItem, table::removeSelectedRow));
+            add(new ClickableLabel(message("properties.type.map.table.add"), AddItem, AddItem, table::addEmptyRow));
+            add(new ClickableLabel(message("properties.type.map.table.remove"), RemoveItem, RemoveItem, table::removeSelectedRow));
         }
     }
 
