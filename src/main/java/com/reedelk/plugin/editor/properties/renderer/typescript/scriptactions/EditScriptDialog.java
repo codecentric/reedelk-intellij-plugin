@@ -54,8 +54,8 @@ public class EditScriptDialog extends DialogWrapper {
     @Override
     public void dispose() {
         super.dispose();
-        if (this.editor != null) {
-            this.editor.dispose();
+        if (editor != null) {
+            editor.dispose();
         }
     }
 }
