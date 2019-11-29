@@ -2,7 +2,6 @@ package com.reedelk.plugin.editor.properties.renderer.typescript;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.util.messages.MessageBusConnection;
-import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.commons.PopupUtils;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
@@ -19,6 +18,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;
 
+import static com.reedelk.plugin.commons.Messages.Script;
 import static com.reedelk.plugin.service.module.impl.ScriptServiceImpl.ScriptResourceChangeListener;
 import static com.reedelk.plugin.service.module.impl.ScriptServiceImpl.TOPIC_SCRIPT_RESOURCE;
 import static java.awt.BorderLayout.CENTER;
@@ -26,7 +26,7 @@ import static java.awt.BorderLayout.EAST;
 
 public class ScriptPropertyRenderer extends AbstractPropertyTypeRenderer {
 
-    private static final ScriptResource UNSELECTED = new UnselectedScriptResource();
+    private static final ScriptResource UNSELECTED_SCRIPT_RESOURCE = new UnselectedScriptResource();
 
     @NotNull
     @Override
@@ -63,7 +63,7 @@ public class ScriptPropertyRenderer extends AbstractPropertyTypeRenderer {
         @Override
         public void onScriptResources(Collection<ScriptResource> scriptResources) {
             DefaultComboBoxModel<ScriptResource> comboModel = new DefaultComboBoxModel<>();
-            comboModel.addElement(UNSELECTED);
+            comboModel.addElement(UNSELECTED_SCRIPT_RESOURCE);
             scriptResources.forEach(comboModel::addElement);
             scriptSelectorCombo.setModel(comboModel);
 
@@ -81,12 +81,12 @@ public class ScriptPropertyRenderer extends AbstractPropertyTypeRenderer {
         }
 
         @Override
-        public void onAddError(Exception exception, ScriptResource resource) {
+        public void onAddError(Exception exception) {
             PopupUtils.error(exception, scriptActionsPanel);
         }
 
         @Override
-        public void onRemoveError(Exception exception, ScriptResource resource) {
+        public void onRemoveError(Exception exception) {
             PopupUtils.error(exception, scriptActionsPanel);
         }
 
@@ -98,7 +98,7 @@ public class ScriptPropertyRenderer extends AbstractPropertyTypeRenderer {
     }
 
     private ScriptResource findResourceMatching(Collection<ScriptResource> scriptResources, String path) {
-        if (StringUtils.isBlank(path)) return UNSELECTED;
+        if (StringUtils.isBlank(path)) return UNSELECTED_SCRIPT_RESOURCE;
         return scriptResources.stream()
                 .filter(scriptResource -> scriptResource.getPath().equals(path)).findFirst()
                 .orElseGet(() -> new NotFoundScriptResource(path));
@@ -107,7 +107,7 @@ public class ScriptPropertyRenderer extends AbstractPropertyTypeRenderer {
     public class NotFoundScriptResource extends ScriptResource {
 
         NotFoundScriptResource(String path) {
-            super(path, Labels.SCRIPT_NOT_FOUND);
+            super(path, Script.NOT_FOUND.format());
         }
 
         @Override
@@ -124,7 +124,7 @@ public class ScriptPropertyRenderer extends AbstractPropertyTypeRenderer {
     static class UnselectedScriptResource extends ScriptResource {
 
         UnselectedScriptResource() {
-            super(StringUtils.EMPTY, Labels.SCRIPT_NOT_SELECTED_ITEM);
+            super(StringUtils.EMPTY, Script.NOT_SELECTED.format());
         }
 
         @Override

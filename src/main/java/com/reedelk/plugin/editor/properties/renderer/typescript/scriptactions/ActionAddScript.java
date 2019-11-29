@@ -22,7 +22,7 @@ class ActionAddScript extends ClickableLabel {
     public void mouseClicked(MouseEvent event) {
         DialogAddScript dialogAddScript = new DialogAddScript(module.getProject());
         if (dialogAddScript.showAndGet()) {
-            ScriptService.getInstance(module).addScript(dialogAddScript.getScriptFileName());
+            ScriptService.getInstance(module).addScript(dialogAddScript.getScriptFileNameWithPathToAdd());
         }
     }
 }

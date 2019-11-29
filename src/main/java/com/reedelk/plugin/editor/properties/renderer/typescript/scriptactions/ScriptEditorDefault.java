@@ -4,12 +4,12 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import com.intellij.ui.components.JBLabel;
-import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditor;
 
 import java.awt.*;
 
 import static com.intellij.icons.AllIcons.General.BalloonInformation;
+import static com.reedelk.plugin.commons.Messages.Script;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.SOUTH;
 import static javax.swing.SwingConstants.LEFT;
@@ -38,7 +38,7 @@ class ScriptEditorDefault extends ScriptEditor {
         setLayout(new BorderLayout());
         add(splitter, CENTER);
 
-        JBLabel warn = new JBLabel(Labels.SCRIPT_WARNING_RETURN_KEYWORD, BalloonInformation, LEFT);
+        JBLabel warn = new JBLabel(Script.DIALOG_EDIT_WARNING_RETURN_KEYWORD.format(), BalloonInformation, LEFT);
         add(warn, SOUTH);
     }
 }

@@ -48,4 +48,47 @@ public class Messages {
             return formatMessage(msg, args);
         }
     }
+
+    public enum Script implements FormattedMessage {
+
+        ERROR_REMOVE("Could not remove script named=[%s]: %s"),
+        ERROR_FILE_NAME_EMPTY("The script file name must not be empty."),
+        NOT_FOUND("Not found"),
+        NOT_SELECTED("<Not selected>"),
+        DIALOG_EDIT_TITLE("Edit Script"),
+        DIALOG_DELETE_TITLE("Delete Script"),
+        DIALOG_ADD_NEW_TITLE("Add New Script"),
+        DIALOG_EDIT_WARNING_RETURN_KEYWORD("Script must include the 'return' keyword to return the expected value from its evaluation."),
+        DIALOG_DELETE_CONFIRM_MESSAGE("Are you sure you want to delete the selected script?");
+
+
+        private String msg;
+
+        Script(String msg) {
+            this.msg = msg;
+        }
+
+        @Override
+        public String format(Object... args) {
+            return formatMessage(msg, args);
+        }
+    }
+
+    public enum Misc implements FormattedMessage {
+
+        COULD_NOT_CREATE_DIRECTORY("Could not create directory=[%s]"),
+        FILE_NAME_NOT_EMPTY("File name must not be empty");
+
+        private String msg;
+
+        Misc(String msg) {
+            this.msg = msg;
+        }
+
+        @Override
+        public String format(Object... args) {
+            return formatMessage(msg, args);
+        }
+    }
+
 }

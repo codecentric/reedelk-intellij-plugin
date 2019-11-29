@@ -8,10 +8,11 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
 import com.intellij.util.messages.Topic;
+import com.reedelk.plugin.commons.FileUtils;
 import com.reedelk.plugin.commons.ModuleUtils;
+import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.service.module.ScriptService;
-import com.reedelk.runtime.api.commons.ScriptUtils;
-import com.reedelk.runtime.api.exception.ESBException;
+import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.FileExtension;
 
 import java.io.IOException;
@@ -19,10 +20,11 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 
-import static com.reedelk.runtime.commons.ModuleProperties.Script;
+import static com.reedelk.plugin.commons.Messages.Misc.COULD_NOT_CREATE_DIRECTORY;
+import static com.reedelk.plugin.commons.Messages.Script.ERROR_FILE_NAME_EMPTY;
+import static com.reedelk.plugin.commons.Messages.Script.ERROR_REMOVE;
 
 public class ScriptServiceImpl implements ScriptService {
 
@@ -32,10 +34,10 @@ public class ScriptServiceImpl implements ScriptService {
         default void onScriptResources(Collection<ScriptResource> scriptResources) {
         }
 
-        default void onAddError(Exception exception, ScriptResource resource) {
+        default void onAddError(Exception exception) {
         }
 
-        default void onRemoveError(Exception exception, ScriptResource resource) {
+        default void onRemoveError(Exception exception) {
         }
     }
 
@@ -53,76 +55,76 @@ public class ScriptServiceImpl implements ScriptService {
     @Override
     public void fetchScriptResources() {
 
-        String scriptsFolder = ModuleUtils.getResourcesFolder(module)
-                .map(resourcesFolder -> resourcesFolder + Script.RESOURCE_DIRECTORY)
-                .orElseThrow(() -> new IllegalStateException("The project must have a resource folder defined in the project."));
+        // If the scripts folder is empty, it means that there is no resources folder created
+        // in the current project, therefore no action is required.
+        ModuleUtils.getScriptsFolder(module).ifPresent(scriptsFolder -> {
+            // We access the index, therefore we must wait to access.
+            ReadAction.nonBlocking(() -> {
 
-        // We access the index, therefore we must wait to access.
-        ReadAction.nonBlocking(() -> {
-
-            List<ScriptResource> scripts = new ArrayList<>();
-            ModuleRootManager.getInstance(module).getFileIndex().iterateContent(fileOrDir -> {
-                if (FileExtension.SCRIPT.value().equals(fileOrDir.getExtension())) {
-                    if (fileOrDir.getPresentableUrl().startsWith(scriptsFolder)) {
-                        // We keep the path from .../resource/scripts to the end.
-                        // The script root is therefore /resource/scripts.
-                        String substring = fileOrDir.getPresentableUrl().substring(scriptsFolder.length() + 1);
-                        scripts.add(new ScriptResource(substring, fileOrDir.getNameWithoutExtension()));
+                List<ScriptResource> scripts = new ArrayList<>();
+                ModuleRootManager.getInstance(module).getFileIndex().iterateContent(fileOrDir -> {
+                    if (FileExtension.SCRIPT.value().equals(fileOrDir.getExtension())) {
+                        if (fileOrDir.getPresentableUrl().startsWith(scriptsFolder)) {
+                            // We keep the path from .../resource/scripts to the end.
+                            // The script root is therefore /resource/scripts.
+                            String substring = fileOrDir.getPresentableUrl().substring(scriptsFolder.length() + 1);
+                            scripts.add(new ScriptResource(substring, fileOrDir.getNameWithoutExtension()));
+                        }
                     }
-                }
-                return true;
-            });
+                    return true;
+                });
 
-            publisher.onScriptResources(scripts);
-        }).submit(executor);
+                publisher.onScriptResources(scripts);
 
-    }
-
-    @Override
-    public void addScript(String scriptFileName) {
-        if (ScriptUtils.isEmpty(scriptFileName)) {
-            // Throw new exception here...
-            publisher.onAddError(
-                    new ESBException("The script file name must not be empty"),
-                    new ScriptResource(scriptFileName, scriptFileName));
-            return;
-        }
-
-        if (!scriptFileName.endsWith("." + FileExtension.SCRIPT.value())) {
-            scriptFileName += "." + FileExtension.SCRIPT.value();
-        }
-
-        final String finalScriptFileName = scriptFileName;
-
-        Optional<String> scriptsDirectory = ModuleUtils.getScriptsFolder(module);
-
-        WriteCommandAction.runWriteCommandAction(module.getProject(), () -> {
-            try {
-                // Create the directory
-                VirtualFile directoryIfMissing = VfsUtil.createDirectoryIfMissing(scriptsDirectory.get());
-                if (directoryIfMissing == null) {
-                    throw new IOException(String.format("Could not create scripts directory=[%s] to store script file named=[%s]", scriptsDirectory.get(), finalScriptFileName));
-                }
-                directoryIfMissing.createChildData(null, finalScriptFileName);
-            } catch (IOException e) {
-                publisher.onAddError(e, new ScriptResource(finalScriptFileName, finalScriptFileName));
-            }
+            }).submit(executor);
         });
     }
 
     @Override
+    public void addScript(String scriptFileName) {
+        if (StringUtils.isBlank(scriptFileName)) {
+            publisher.onAddError(new PluginException(ERROR_FILE_NAME_EMPTY.format()));
+            return;
+        }
+
+        final String finalScriptFileName = FileUtils.appendExtensionToFileName(scriptFileName, FileExtension.SCRIPT);
+
+        // If the scripts folder is empty, it means that there is no resources folder created
+        // in the current project, therefore no action is required.
+        ModuleUtils.getScriptsFolder(module).ifPresent(scriptsDirectory ->
+                WriteCommandAction.runWriteCommandAction(module.getProject(), () -> {
+                    try {
+                        // Create the scripts directory if does not exists already.
+                        VirtualFile directoryVirtualFile = VfsUtil.createDirectoryIfMissing(scriptsDirectory);
+                        if (directoryVirtualFile == null) {
+                            PluginException error = new PluginException(COULD_NOT_CREATE_DIRECTORY.format(scriptsDirectory));
+                            publisher.onAddError(error);
+                            return;
+                        }
+
+                        // Create the script file
+                        directoryVirtualFile.createChildData(null, finalScriptFileName);
+                    } catch (IOException e) {
+                        publisher.onAddError(e);
+                    }
+                }));
+    }
+
+    @Override
     public void removeScript(String scriptFileName) {
-        WriteCommandAction.runWriteCommandAction(module.getProject(), () ->
-                ModuleUtils.getScriptsFolder(module).ifPresent(scriptsDirectory -> {
+        ModuleUtils.getScriptsFolder(module).ifPresent(scriptsDirectory ->
+                WriteCommandAction.runWriteCommandAction(module.getProject(), () -> {
                     final VirtualFile file = VfsUtil.findFile(Paths.get(scriptsDirectory, scriptFileName), true);
                     if (file == null) {
-                        publisher.onRemoveError(new Exception("asdf"), new ScriptResource(scriptFileName, scriptFileName));
+                        // The file to remove does not exists.
                         return;
                     }
+
                     try {
                         file.delete(null);
-                    } catch (IOException e) {
-                        publisher.onRemoveError(e, new ScriptResource(scriptFileName, scriptFileName));
+                    } catch (IOException exception) {
+                        String errorMessage = ERROR_REMOVE.format(scriptFileName, exception.getMessage());
+                        publisher.onRemoveError(new PluginException(errorMessage, exception));
                     }
                 }));
     }

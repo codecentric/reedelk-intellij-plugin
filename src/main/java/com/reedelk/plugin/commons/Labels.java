@@ -56,7 +56,7 @@ public class Labels {
 
     public static final String ROUTER_DEFAULT_ROUTE = "otherwise";
 
-    public static final String SCRIPT_EDITOR_CONTEXT_VARS_TITLE = "Editor variables";
+    public static final String SCRIPT_EDITOR_CONTEXT_VARS_TITLE = "Context variables";
 
     public static final String FILE_CHOOSER_TITLE = "Choose File";
 
@@ -73,15 +73,6 @@ public class Labels {
     public static final String BALLOON_ERROR = "<p><b>Error:</b><p>%s</p>";
     public static final String CONFIG_NOT_SELECTED_ITEM = "<Not selected>";
 
-    public static final String SCRIPT_NOT_SELECTED_ITEM = "<Not selected>";
-    public static final String SCRIPT_NOT_FOUND = "Not found";
-    public static final String ADD_SCRIPT = "Add New Script";
-    public static final String SCRIPT_WARNING_RETURN_KEYWORD = "A script must include a 'return' keyword to return the wanted value.";
-
-    public static final String DIALOG_TITLE_DELETE_SCRIPT = "Delete Script";
-    public static final String DIALOG_MESSAGE_DELETE_SCRIPT = "Are you sure you want to delete the selected script?";
-
-    public static final String DIALOG_TITLE_EDIT_SCRIPT = "Edit Script";
 
     public static final String ACTION_MAP_TABLE_ADD = "Add";
     public static final String ACTION_MAP_TABLE_REMOVE = "Remove";

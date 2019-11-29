@@ -18,14 +18,12 @@ public class ModuleUtils {
     }
 
     public static Optional<String> getConfigsFolder(Module module) {
-        Optional<String> resourcesFolder = getResourcesFolder(module);
-        return resourcesFolder.map(resources ->
+        return getResourcesFolder(module).map(resources ->
                 Paths.get(resources, Config.RESOURCE_DIRECTORY).toString());
     }
 
     public static Optional<String> getScriptsFolder(Module module) {
-        Optional<String> resourcesFolder = getResourcesFolder(module);
-        return resourcesFolder.map(resources ->
+        return getResourcesFolder(module).map(resources ->
                 Paths.get(resources, Script.RESOURCE_DIRECTORY).toString());
     }
 

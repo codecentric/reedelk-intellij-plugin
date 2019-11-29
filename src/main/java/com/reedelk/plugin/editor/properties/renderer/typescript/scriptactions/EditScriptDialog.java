@@ -7,6 +7,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.reedelk.plugin.commons.Labels;
+import com.reedelk.plugin.commons.Messages;
 import com.reedelk.plugin.commons.ModuleUtils;
 import com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditor;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +24,7 @@ public class EditScriptDialog extends DialogWrapper {
 
     EditScriptDialog(@NotNull Module module, String scriptFile) {
         super(module.getProject(), false);
-        setTitle(Labels.DIALOG_TITLE_EDIT_SCRIPT);
+        setTitle(Messages.Script.DIALOG_EDIT_TITLE.format());
         setResizable(true);
 
         // TODO: Check for nul file

@@ -22,10 +22,6 @@ class ActionEditScript extends ClickableLabel implements ClickableLabel.OnClickA
 
     @Override
     public void mouseClicked(MouseEvent event) {
-        // We only show the dialog if the button is enabled.
-        // Otherwise it means that nothing has been selected or that
-        // the current selected item is a script not found in the
-        // project's resources folder.
         if (selected.isEditable()) {
             EditScriptDialog dialog = new EditScriptDialog(module, selected.getPath());
             dialog.show();
