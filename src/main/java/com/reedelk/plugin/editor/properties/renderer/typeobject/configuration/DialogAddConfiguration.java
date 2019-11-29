@@ -2,7 +2,6 @@ package com.reedelk.plugin.editor.properties.renderer.typeobject.configuration;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
 import com.reedelk.plugin.service.module.impl.ConfigMetadata;
@@ -10,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class DialogAddConfiguration extends DialogWrapper {
 
@@ -27,7 +28,7 @@ public class DialogAddConfiguration extends DialogWrapper {
         this.newConfigMetadata = newConfig;
         this.module = module;
 
-        setTitle(Labels.DIALOG_TITLE_ADD_CONFIGURATION);
+        setTitle(message("config.dialog.add.title"));
         init();
     }
 
@@ -35,7 +36,7 @@ public class DialogAddConfiguration extends DialogWrapper {
     @Override
     protected Action getOKAction() {
         Action okAction = super.getOKAction();
-        okAction.putValue(Action.NAME, Labels.DIALOG_BTN_ADD_CONFIGURATION);
+        okAction.putValue(Action.NAME, message("config.dialog.add.btn.add"));
         return okAction;
     }
 

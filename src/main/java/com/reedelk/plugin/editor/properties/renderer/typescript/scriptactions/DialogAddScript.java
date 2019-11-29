@@ -13,7 +13,6 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
-import static com.reedelk.plugin.commons.Labels.DIALOG_BTN_ADD_CONFIGURATION;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class DialogAddScript extends DialogWrapper {
@@ -31,7 +30,7 @@ public class DialogAddScript extends DialogWrapper {
     @Override
     protected Action getOKAction() {
         Action okAction = super.getOKAction();
-        okAction.putValue(Action.NAME, DIALOG_BTN_ADD_CONFIGURATION);
+        okAction.putValue(Action.NAME, message("script.dialog.add.btn.add"));
         return okAction;
     }
 

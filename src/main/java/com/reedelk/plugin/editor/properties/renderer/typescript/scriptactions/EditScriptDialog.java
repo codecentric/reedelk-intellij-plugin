@@ -6,7 +6,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.commons.ModuleUtils;
 import com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditor;
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +40,7 @@ public class EditScriptDialog extends DialogWrapper {
     @Override
     protected Action getOKAction() {
         Action okAction = super.getOKAction();
-        okAction.putValue(Action.NAME, Labels.DIALOG_BTN_SAVE_SCRIPT);
+        okAction.putValue(Action.NAME, message("script.dialog.edit.btn.edit"));
         return okAction;
     }
 
