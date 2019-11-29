@@ -13,13 +13,15 @@ import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThrowableRunnable;
-import com.intellij.util.concurrency.SwingWorker;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.component.scanner.ComponentListUpdateNotifier;
 import com.reedelk.plugin.editor.DesignerEditor;
+import com.reedelk.plugin.executor.PluginExecutor;
 import com.reedelk.plugin.graph.*;
 import com.reedelk.plugin.graph.deserializer.DeserializationError;
 import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
 
 import static com.reedelk.plugin.service.project.DesignerSelectionManager.CurrentSelectionListener;
 import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
@@ -94,8 +96,8 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
     @Override
     public void onDataChange() {
         FlowGraph updatedGraph = snapshot.getGraphOrThrowIfAbsent();
-        String json = serialize(updatedGraph);
-        write(json);
+        String serializedGraphJson = serialize(updatedGraph);
+        write(serializedGraphJson);
     }
 
     @Override
@@ -111,19 +113,16 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
      * @param json the json string to be written in the document.
      */
     private void write(@NotNull String json) {
-        ApplicationManager.getApplication().invokeLater(() -> {
-            try {
-                WriteCommandAction.writeCommandAction(module.getProject())
-                        .run((ThrowableRunnable<Throwable>) () -> document.setText(json));
-            } catch (Throwable throwable) {
-                LOG.error("Could not write Graph's JSON data", throwable);
-            }
-        }, ModalityState.NON_MODAL);
+        try {
+            WriteCommandAction.writeCommandAction(module.getProject())
+                    .run((ThrowableRunnable<Throwable>) () -> document.setText(json));
+        } catch (Throwable throwable) {
+            LOG.error("Could not write Graph's JSON data", throwable);
+        }
     }
 
     private void deserializeDocument() {
-        // We only deserialize if the document is present and the text
-        // is not empty.
+        // We only deserialize if the document is present and the text is not empty.
         if (document != null && !isBlank(document.getText())) {
             deserializeGraphAndNotify();
         }
@@ -134,37 +133,37 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
     protected abstract FlowGraph deserialize(Module module, Document document, FlowGraphProvider graphProvider) throws DeserializationError;
 
     private void deserializeGraphAndNotify() {
-        new DeserializeGraphAndNotify().start();
+        PluginExecutor.getInstance().submit(new DeserializeGraphAndNotify());
     }
 
-    private class DeserializeGraphAndNotify extends SwingWorker {
+    private class DeserializeGraphAndNotify implements Runnable {
+
         @Override
-        public FlowGraph construct() {
+        public void run() {
             // Background Thread. We are assuming that deserialization
             // of the graph from JSON is a lengthy operation.
             try {
-                return deserialize(module, document, graphProvider);
-            } catch (DeserializationError e) {
-                LOG.warn("Deserialization error", e);
-                return new ErrorFlowGraph(e);
+                FlowGraph deSerializedGraph = deserialize(module, document, graphProvider);
+                update(deSerializedGraph);
             } catch (Exception e) {
-                LOG.warn("Error", e);
-                return new ErrorFlowGraph(e);
+                LOG.warn("Deserialization error", e);
+                update(new ErrorFlowGraph(e));
             }
+
         }
 
-        @Override
-        public void finished() {
-            // AWT Thread dispatch
-            FlowGraph graph = (FlowGraph) get();
-            snapshot.updateSnapshot(GraphManager.this, graph);
-            // We refresh the current selection only if the graph is not in error.
-            if (!graph.isError()) {
-                // When we deserialize the document we must refresh the current selection,
-                // so that the Properties panel always references the correct and latest
-                // graph data.
-                currentSelectionPublisher.refresh();
-            }
+        private void update(FlowGraph deSerializedGraph) {
+            // Must dispatch on the UI-Thread.
+            SwingUtilities.invokeLater(() -> {
+                snapshot.updateSnapshot(GraphManager.this, deSerializedGraph);
+                // We refresh the current selection only if the graph is not in error.
+                if (!deSerializedGraph.isError()) {
+                    // When we deserialize the document we must refresh the current selection,
+                    // so that the Properties panel always references the correct and latest
+                    // graph data.
+                    currentSelectionPublisher.refresh();
+                }
+            });
         }
     }
 }

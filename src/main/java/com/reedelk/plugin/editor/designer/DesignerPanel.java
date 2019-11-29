@@ -259,12 +259,10 @@ public abstract class DesignerPanel extends DisposablePanel implements
             // If nothing is already selected, we set as current selection
             // the default selected item.
             snapshot.applyOnGraph(graph -> {
-
                         boolean isAnySelectionPresent = designerSelectionManager.getCurrentSelection().isPresent();
                         if (!isAnySelectionPresent) {
                             select(defaultSelectedItem());
                         }
-
                     },
 
                     absentFlow -> unselect(),

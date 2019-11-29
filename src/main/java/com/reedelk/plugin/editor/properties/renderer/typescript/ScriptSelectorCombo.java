@@ -29,23 +29,23 @@ public class ScriptSelectorCombo extends ComboBox<ScriptResource> implements Ite
         }
     }
 
-    public void removeListener() {
+    void removeListener() {
         this.listener = null;
     }
 
-    public void addListener(InputChangeListener changeListener) {
+    void addListener(InputChangeListener changeListener) {
         this.listener = changeListener;
     }
 
     private class ScriptSelectorRenderer extends ListCellRendererWrapper<ScriptResource> {
         @Override
         public void customize(JList list, ScriptResource value, int index, boolean selected, boolean hasFocus) {
-            if (value == null) {
-                setText("Loading ...");
-            } else if (StringUtils.isBlank(value.getPath())) {
-                setText(value.getDisplayName());
-            } else {
-                setText(value.getDisplayName() + " (" + value.getPath() + ")");
+            if (value != null) {
+                if (StringUtils.isBlank(value.getPath())) {
+                    setText(value.getDisplayName());
+                } else {
+                    setText(value.getDisplayName() + " (" + value.getPath() + ")");
+                }
             }
         }
     }

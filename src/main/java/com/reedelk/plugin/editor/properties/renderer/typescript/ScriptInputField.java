@@ -84,23 +84,27 @@ public class ScriptInputField extends DisposablePanel implements ScriptServiceIm
     }
 
     private void updateWith(Collection<ScriptResource> scriptResources, ScriptResource selected) {
-        // We must remove any previous listener.
-        scriptSelectorCombo.removeListener();
-
-        // Update the model
+        // Prepare model
         DefaultComboBoxModel<ScriptResource> comboModel = new DefaultComboBoxModel<>();
         scriptResources.forEach(comboModel::addElement);
         if (!scriptResources.contains(selected)) {
             comboModel.addElement(selected);
         }
-        scriptSelectorCombo.setModel(comboModel);
-        scriptSelectorCombo.setSelectedItem(selected);
-        scriptActionsPanel.onSelect(selected);
 
-        // Add back the listener
-        scriptSelectorCombo.addListener(value -> {
-            propertyAccessor.set(((ScriptResource) value).getPath());
-            scriptActionsPanel.onSelect((ScriptResource) value);
+        SwingUtilities.invokeLater(() -> {
+            // We must remove any previous listener.
+            scriptSelectorCombo.removeListener();
+
+            // Update the model
+            scriptSelectorCombo.setModel(comboModel);
+            scriptSelectorCombo.setSelectedItem(selected);
+            scriptActionsPanel.onSelect(selected);
+
+            // Add back the listener
+            scriptSelectorCombo.addListener(value -> {
+                propertyAccessor.set(((ScriptResource) value).getPath());
+                scriptActionsPanel.onSelect((ScriptResource) value);
+            });
         });
     }
 
