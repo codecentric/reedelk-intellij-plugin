@@ -29,6 +29,10 @@ public class ScriptSelectorCombo extends ComboBox<ScriptResource> implements Ite
         }
     }
 
+    public void removeListener() {
+        this.listener = null;
+    }
+
     public void addListener(InputChangeListener changeListener) {
         this.listener = changeListener;
     }

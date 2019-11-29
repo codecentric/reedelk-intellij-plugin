@@ -6,11 +6,11 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.concurrency.SequentialTaskExecutor;
 import com.intellij.util.messages.Topic;
 import com.reedelk.plugin.commons.FileUtils;
 import com.reedelk.plugin.commons.ModuleUtils;
 import com.reedelk.plugin.exception.PluginException;
+import com.reedelk.plugin.executor.PluginExecutor;
 import com.reedelk.plugin.service.module.ScriptService;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.FileExtension;
@@ -20,29 +20,12 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 import static com.reedelk.plugin.commons.Messages.Misc.COULD_NOT_CREATE_DIRECTORY;
 import static com.reedelk.plugin.commons.Messages.Script.ERROR_FILE_NAME_EMPTY;
 import static com.reedelk.plugin.commons.Messages.Script.ERROR_REMOVE;
 
 public class ScriptServiceImpl implements ScriptService {
-
-    private static final ExecutorService executor = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("Script Resource");
-
-    public interface ScriptResourceChangeListener {
-        default void onScriptResources(Collection<ScriptResource> scriptResources) {
-        }
-
-        default void onAddError(Exception exception) {
-        }
-
-        default void onRemoveError(Exception exception) {
-        }
-    }
-
-    public static final Topic<ScriptResourceChangeListener> TOPIC_SCRIPT_RESOURCE =
-            new Topic<>("Script Resource Change", ScriptResourceChangeListener.class);
 
     private final ScriptResourceChangeListener publisher;
     private final Module module;
@@ -62,13 +45,13 @@ public class ScriptServiceImpl implements ScriptService {
             ReadAction.nonBlocking(() -> {
 
                 List<ScriptResource> scripts = new ArrayList<>();
-                ModuleRootManager.getInstance(module).getFileIndex().iterateContent(fileOrDir -> {
-                    if (FileExtension.SCRIPT.value().equals(fileOrDir.getExtension())) {
-                        if (fileOrDir.getPresentableUrl().startsWith(scriptsFolder)) {
+                ModuleRootManager.getInstance(module).getFileIndex().iterateContent(scriptFile -> {
+                    if (FileExtension.SCRIPT.value().equals(scriptFile.getExtension())) {
+                        if (scriptFile.getPresentableUrl().startsWith(scriptsFolder)) {
                             // We keep the path from .../resource/scripts to the end.
                             // The script root is therefore /resource/scripts.
-                            String substring = fileOrDir.getPresentableUrl().substring(scriptsFolder.length() + 1);
-                            scripts.add(new ScriptResource(substring, fileOrDir.getNameWithoutExtension()));
+                            String substring = scriptFile.getPresentableUrl().substring(scriptsFolder.length() + 1);
+                            scripts.add(new ScriptResource(substring, scriptFile.getNameWithoutExtension()));
                         }
                     }
                     return true;
@@ -76,7 +59,7 @@ public class ScriptServiceImpl implements ScriptService {
 
                 publisher.onScriptResources(scripts);
 
-            }).submit(executor);
+            }).submit(PluginExecutor.getInstance());
         });
     }
 
@@ -103,9 +86,10 @@ public class ScriptServiceImpl implements ScriptService {
                         }
 
                         // Create the script file
-                        directoryVirtualFile.createChildData(null, finalScriptFileName);
-                    } catch (IOException e) {
-                        publisher.onAddError(e);
+                        VirtualFile addedScriptVf = directoryVirtualFile.createChildData(null, finalScriptFileName);
+                        publisher.onAddSuccess(new ScriptResource(finalScriptFileName, addedScriptVf.getNameWithoutExtension()));
+                    } catch (IOException exception) {
+                        publisher.onAddError(exception);
                     }
                 }));
     }
@@ -122,10 +106,24 @@ public class ScriptServiceImpl implements ScriptService {
 
                     try {
                         file.delete(null);
+                        publisher.onRemoveSuccess();
                     } catch (IOException exception) {
                         String errorMessage = ERROR_REMOVE.format(scriptFileName, exception.getMessage());
                         publisher.onRemoveError(new PluginException(errorMessage, exception));
                     }
                 }));
     }
+
+
+    public interface ScriptResourceChangeListener {
+        default void onScriptResources(Collection<ScriptResource> scriptResources) {}
+        default void onAddSuccess(ScriptResource resource) {}
+        default void onAddError(Exception exception) {}
+        default void onRemoveSuccess() {}
+        default void onRemoveError(Exception exception) {}
+    }
+
+    public static final Topic<ScriptResourceChangeListener> TOPIC_SCRIPT_RESOURCE =
+            new Topic<>("Script Resource Change", ScriptResourceChangeListener.class);
+
 }
