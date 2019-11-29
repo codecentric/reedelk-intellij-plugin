@@ -8,13 +8,13 @@ public class ScriptResourceUtil {
      * Input: /test/something/myscript -> Output: test/something/myscript.js
      * Input: test/something/myscript -> Output: test/something/myscript.js
      * Input: myscript -> Output: myscript.js
+     * Input: test/ -> Output test
      */
     public static String normalize(String scriptFileName) {
-        String fileNameWithExtension = FileUtils.appendExtensionToFileName(scriptFileName, FileExtension.SCRIPT);
-        if (fileNameWithExtension.startsWith("/")) {
-            return fileNameWithExtension.substring(1);
-        } else {
-            return fileNameWithExtension;
+        String result = FileUtils.appendExtensionToFileName(scriptFileName, FileExtension.SCRIPT);
+        if (result.startsWith("/")) {
+            result = result.substring(1);
         }
+        return result;
     }
 }

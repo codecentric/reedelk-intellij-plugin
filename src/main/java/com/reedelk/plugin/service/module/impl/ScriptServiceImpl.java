@@ -71,11 +71,12 @@ public class ScriptServiceImpl implements ScriptService {
         }
 
         if (scriptFileName.endsWith("/")) {
+            // The entered script file name was: dir1/dir2/
             publisher.onAddError(new PluginException(message("file.name.not.empty")));
             return;
         }
 
-        final Path finalScriptFileNamePath = Paths.get(ScriptResourceUtil.normalize(scriptFileName));
+        Path normalizedScriptFilePath = Paths.get(ScriptResourceUtil.normalize(scriptFileName));
 
         // If the scripts folder is empty, it means that there is no resources folder created
         // in the current project, therefore no action is required.
@@ -84,7 +85,7 @@ public class ScriptServiceImpl implements ScriptService {
                     try {
                         String directoryUpToScriptFile = scriptsDirectory;
 
-                        Path parent = finalScriptFileNamePath.getParent();
+                        Path parent = normalizedScriptFilePath.getParent();
                         if (parent != null) {
                             // The script file name is: dir1/dir2/my_script.js
                             // We must concatenate: src/main/resource to dir1/dir2.
@@ -100,9 +101,9 @@ public class ScriptServiceImpl implements ScriptService {
                         }
 
                         // Create the script file
-                        String scriptFileNameWithExtension = finalScriptFileNamePath.getFileName().toString();
+                        String scriptFileNameWithExtension = normalizedScriptFilePath.getFileName().toString();
                         VirtualFile addedScriptVf = directoryVirtualFile.createChildData(null, scriptFileNameWithExtension);
-                        publisher.onAddSuccess(new ScriptResource(finalScriptFileNamePath.toString(), addedScriptVf.getNameWithoutExtension()));
+                        publisher.onAddSuccess(new ScriptResource(normalizedScriptFilePath.toString(), addedScriptVf.getNameWithoutExtension()));
 
                     } catch (IOException exception) {
                         publisher.onAddError(exception);
