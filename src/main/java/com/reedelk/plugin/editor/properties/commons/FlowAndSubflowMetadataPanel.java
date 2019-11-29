@@ -1,7 +1,6 @@
 package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.openapi.Disposable;
-import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.editor.properties.renderer.commons.InputChangeListener;
 import com.reedelk.plugin.editor.properties.renderer.commons.InputField;
 import com.reedelk.plugin.editor.properties.renderer.commons.StringInputField;
@@ -36,12 +35,12 @@ public class FlowAndSubflowMetadataPanel extends DisposablePanel implements Disp
 
         InputField<String> titleField = createTitleInputField();
         FormBuilder.get()
-                .addLabel(Labels.FLOW_GRAPH_TAB_TITLE, propertiesPanel)
+                .addLabel(message("flow.metadata.title"), propertiesPanel)
                 .addLastField(titleField, propertiesPanel);
 
         InputField<String> descriptionField = createDescriptionInputField();
         FormBuilder.get()
-                .addLabel(Labels.FLOW_GRAPH_TAB_DESCRIPTION, propertiesPanel)
+                .addLabel(message("flow.metadata.description"), propertiesPanel)
                 .addLastField(descriptionField, propertiesPanel);
 
         setLayout(new BorderLayout());

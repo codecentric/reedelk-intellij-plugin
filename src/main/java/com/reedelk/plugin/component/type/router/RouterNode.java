@@ -1,7 +1,6 @@
 package com.reedelk.plugin.component.type.router;
 
 import com.reedelk.plugin.commons.*;
-import com.reedelk.plugin.commons.Labels.Placeholder;
 import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.component.type.router.functions.IsDefaultRoute;
 import com.reedelk.plugin.component.type.router.functions.SyncConditionAndRoutePairs;
@@ -19,6 +18,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import static com.reedelk.plugin.editor.designer.arrow.VerticalDividerArrows.OnProcessSuccessor;
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class RouterNode extends AbstractScopedGraphNode {
 
@@ -83,7 +83,7 @@ public class RouterNode extends AbstractScopedGraphNode {
             // might have not been added when a successor has been removed when we remove
             // this scoped node itself. In this case the placeholder provider does not add
             // any placeholder since we are removing the containing scope.
-            AddPlaceholder.to(placeholderProvider, Placeholder.DESCRIPTION_ROUTER_OTHERWISE, graph, this, index)
+            AddPlaceholder.to(placeholderProvider, message("placeholder.description.router.otherwise"), graph, this, index)
                     .ifPresent((Consumer<GraphNode>) node -> updateConditionRoutePairs(graph));
         } else {
             // If the scope is not empty, we need to update the condition -> route pairs since
@@ -105,7 +105,7 @@ public class RouterNode extends AbstractScopedGraphNode {
         // If the scope is empty, the router node always  has  a placeholder
         // because a router node must have at least one component in it. The index is therefore always 0.
         if (getScope().isEmpty()) {
-            AddPlaceholder.to(placeholderProvider, Placeholder.DESCRIPTION_ROUTER_OTHERWISE, graph, this, 0)
+            AddPlaceholder.to(placeholderProvider, message("placeholder.description.router.otherwise"), graph, this, 0)
                     .ifPresent(addedPlaceholder -> updateConditionRoutePairs(graph));
         } else {
             updateConditionRoutePairs(graph);

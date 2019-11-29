@@ -7,7 +7,6 @@ import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.DisposableUtils;
-import com.reedelk.plugin.commons.Labels;
 import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.editor.properties.commons.*;
@@ -17,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.service.project.DesignerSelectionManager.CurrentSelectionListener;
 
 public class PropertiesPanel extends DisposablePanel implements CurrentSelectionListener {
@@ -90,8 +90,8 @@ public class PropertiesPanel extends DisposablePanel implements CurrentSelection
         FlowAndSubflowMetadataPanel panel = new FlowAndSubflowMetadataPanel(selectedItem.getSnapshot());
 
         String toolWindowTitle = selectedItem instanceof SelectableItemFlow ?
-                Labels.PROPERTIES_PANEL_FLOW_TITLE :
-                Labels.PROPERTIES_PANEL_SUBFLOW_TITLE;
+                message("properties.panel.flow.title") :
+                message("properties.panel.subflow.title");
         setToolWindowTitle(toolWindowTitle);
 
         updateContent(panel);

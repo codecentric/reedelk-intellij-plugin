@@ -5,26 +5,6 @@ public class Labels {
     private Labels() {
     }
 
-
-    public class Placeholder {
-        private Placeholder() {
-        }
-
-        public static final String DESCRIPTION_ROUTER_OTHERWISE = "Otherwise subflow";
-        public static final String DESCRIPTION_TRY_CATCH_TRY = "Try subflow";
-        public static final String DESCRIPTION_TRY_CATCH_CATCH = "Catch subflow";
-        public static final String DESCRIPTION_INBOUND = "Inbound component";
-    }
-
-    public static final String TOOL_WINDOW_FLOW_PROPERTIES_TITLE = "Flow Properties";
-
-    public static final String PROPERTIES_PANEL_SUBFLOW_TITLE = "Subflow";
-    public static final String PROPERTIES_PANEL_FLOW_TITLE = "Flow";
-    public static final String PROPERTIES_PANEL_NOTHING_SELECTED = "There are no flow components selected";
-
-    public static final String FLOW_GRAPH_TAB_TITLE = "Title";
-    public static final String FLOW_GRAPH_TAB_DESCRIPTION = "Description";
-
     public static final String DIALOG_TITLE_ADD_CONFIGURATION = "Add Configuration";
     public static final String DIALOG_TITLE_EDIT_CONFIGURATION = "Edit Configuration";
     public static final String DIALOG_TITLE_DELETE_CONFIGURATION = "Delete Configuration";

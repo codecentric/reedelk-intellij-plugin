@@ -1,12 +1,13 @@
 package com.reedelk.plugin.editor.designer.action.remove.strategy;
 
-import com.reedelk.plugin.commons.Labels.Placeholder;
 import com.reedelk.plugin.editor.designer.action.ActionStrategy;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class FlowRemoveRootActionStrategy implements ActionStrategy {
 
@@ -28,7 +29,7 @@ public class FlowRemoveRootActionStrategy implements ActionStrategy {
         if (!successors.isEmpty()) {
 
             // If we remove the root, we need to replace it with the placeholder.
-            placeholderProvider.get(Placeholder.DESCRIPTION_INBOUND).ifPresent(placeholder -> {
+            placeholderProvider.get(message("placeholder.description.inbound")).ifPresent(placeholder -> {
                 // Set the new root.
                 graph.root(placeholder);
 

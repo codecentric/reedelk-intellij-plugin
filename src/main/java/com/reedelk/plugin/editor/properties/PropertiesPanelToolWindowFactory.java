@@ -8,8 +8,9 @@ import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.reedelk.plugin.commons.Icons;
-import com.reedelk.plugin.commons.Labels;
 import org.jetbrains.annotations.NotNull;
+
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class PropertiesPanelToolWindowFactory implements ToolWindowFactory {
 
@@ -17,7 +18,7 @@ public class PropertiesPanelToolWindowFactory implements ToolWindowFactory {
 
     @Override
     public void init(ToolWindow window) {
-        window.setStripeTitle(Labels.TOOL_WINDOW_FLOW_PROPERTIES_TITLE);
+        window.setStripeTitle(message("toolwindow.flow.properties.title"));
         window.setIcon(Icons.ToolWindow.Properties);
     }
 

@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+// TODO: Fix me and fixme with the callbacks of this class which are horrible!
 public class ClickableLabel extends JLabel implements MouseListener {
 
     public enum IconAlignment {
