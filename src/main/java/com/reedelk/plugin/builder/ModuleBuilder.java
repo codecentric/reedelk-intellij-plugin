@@ -13,7 +13,6 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.reedelk.plugin.commons.Icons;
-import com.reedelk.plugin.commons.Label;
 import com.reedelk.plugin.runconfig.module.ModuleRunConfigurationBuilder;
 import com.reedelk.plugin.runconfig.runtime.RuntimeRunConfigurationBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +22,8 @@ import org.jetbrains.idea.maven.utils.MavenUtil;
 import org.jetbrains.idea.maven.wizards.MavenModuleBuilder;
 
 import javax.swing.*;
+
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class ModuleBuilder extends MavenModuleBuilder {
 
@@ -85,17 +86,17 @@ public class ModuleBuilder extends MavenModuleBuilder {
 
     @Override
     public String getName() {
-        return Label.MODULE_BUILDER_NAME.get();
+        return message("moduleBuilder.name");
     }
 
     @Override
     public String getPresentableName() {
-        return Label.MODULE_BUILDER_NAME.get();
+        return message("moduleBuilder.displayName");
     }
 
     @Override
     public String getDescription() {
-        return Label.MODULE_BUILDER_DESCRIPTION.get();
+        return message("moduleBuilder.description");
     }
 
     @Nullable
@@ -119,9 +120,9 @@ public class ModuleBuilder extends MavenModuleBuilder {
 
     private MavenId defaultMavenId() {
         return new MavenId(
-                Label.DEFAULT_GROUP_ID.get(),
-                Label.DEFAULT_ARTIFACT_ID.get(),
-                Label.DEFAULT_VERSION.get());
+                message("moduleBuilder.maven.defaultGroupId"),
+                message("moduleBuilder.maven.defaultArtifactId"),
+                message("moduleBuilder.maven.defaultVersion"));
     }
 
     public void setRuntimeConfigName(String runtimeConfigName) {
