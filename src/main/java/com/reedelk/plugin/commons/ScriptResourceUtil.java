@@ -8,7 +8,6 @@ public class ScriptResourceUtil {
      * Input: /test/something/myscript -> Output: test/something/myscript.js
      * Input: test/something/myscript -> Output: test/something/myscript.js
      * Input: myscript -> Output: myscript.js
-     * Input: test/ -> Output test
      */
     public static String normalize(String scriptFileName) {
         String result = FileUtils.appendExtensionToFileName(scriptFileName, FileExtension.SCRIPT);
