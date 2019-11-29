@@ -71,6 +71,8 @@ class ShareableConfigInputField extends DisposablePanel implements ConfigService
         updateWith(configurations, matchingMetadata);
     }
 
+    //  TODO: Handle the errors
+
     private void updateWith(Collection<ConfigMetadata> configMetadata, ConfigMetadata selected) {
         // Prepare model
         List<ConfigMetadata> updatedConfigurations = new ArrayList<>(configMetadata);
@@ -86,7 +88,6 @@ class ShareableConfigInputField extends DisposablePanel implements ConfigService
             configSelectorCombo.removeListener();
 
             // Update the model
-
             configSelectorCombo.setModel(comboModel);
             configSelectorCombo.setSelectedItem(selected);
             configActionsPanel.onSelect(selected);
@@ -97,6 +98,8 @@ class ShareableConfigInputField extends DisposablePanel implements ConfigService
                 configActionsPanel.onSelect((ConfigMetadata) value);
                 // If the selection has changed, we must notify all the
                 // context subscribers that the property has changed.
+
+
                 // TODO: there should be a way to notify the parent that the child property has changed.
                 context.notifyPropertyChanged(descriptor.getPropertyName(), referenceDataHolder);
             });

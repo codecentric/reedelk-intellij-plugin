@@ -2,20 +2,20 @@ package com.reedelk.plugin.editor.properties.renderer.typeobject.configuration;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
+import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 import com.reedelk.plugin.service.module.ConfigService;
 import com.reedelk.plugin.service.module.impl.ConfigMetadata;
 import com.reedelk.plugin.service.module.impl.NewConfigMetadata;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.event.MouseEvent;
 import java.util.UUID;
 
 import static com.reedelk.plugin.commons.Icons.Config.Add;
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.commons.JsonParser.Config;
 
-public class ActionAddConfiguration extends ActionableCommandButton {
-
-    private static final String DEFAULT_CONFIG_FILE_NAME = "test_config.fconfig";
-    private static final String DEFAULT_NEW_CONFIG_TITLE = "New configuration";
+public class ActionAddConfiguration extends ClickableLabel {
 
     private final TypeObjectDescriptor typeDescriptor;
     private final Module module;
@@ -27,14 +27,13 @@ public class ActionAddConfiguration extends ActionableCommandButton {
     }
 
     @Override
-    protected void onClick(ConfigMetadata selectedMetadata) {
+    public void mouseClicked(MouseEvent event) {
         // We ignore the selected. Create new config object.
         TypeObjectDescriptor.TypeObject configTypeObject = new TypeObjectDescriptor.TypeObject(typeDescriptor.getTypeFullyQualifiedName());
         configTypeObject.set(Config.id(), UUID.randomUUID().toString());
-        configTypeObject.set(Config.title(), DEFAULT_NEW_CONFIG_TITLE);
+        configTypeObject.set(Config.title(), message("config.field.title.default"));
 
-        ConfigMetadata newConfig = new NewConfigMetadata(DEFAULT_CONFIG_FILE_NAME, configTypeObject, typeDescriptor);
-
+        ConfigMetadata newConfig = new NewConfigMetadata(message("config.field.file.default"), configTypeObject, typeDescriptor);
         DialogAddConfiguration dialogAddConfiguration = new DialogAddConfiguration(module, typeDescriptor, newConfig);
 
         if (dialogAddConfiguration.showAndGet()) {

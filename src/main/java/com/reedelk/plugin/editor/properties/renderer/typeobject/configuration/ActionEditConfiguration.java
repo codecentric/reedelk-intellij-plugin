@@ -2,14 +2,19 @@ package com.reedelk.plugin.editor.properties.renderer.typeobject.configuration;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
+import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 import com.reedelk.plugin.service.module.ConfigService;
 import com.reedelk.plugin.service.module.impl.ConfigMetadata;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.event.MouseEvent;
+
 import static com.reedelk.plugin.commons.Icons.Config.Edit;
 import static com.reedelk.plugin.commons.Icons.Config.EditDisabled;
 
-public class ActionEditConfiguration extends ActionableCommandButton {
+public class ActionEditConfiguration extends ClickableLabel {
+
+    private ConfigMetadata selected;
 
     private final Module module;
     private final TypeObjectDescriptor typeDescriptor;
@@ -22,18 +27,17 @@ public class ActionEditConfiguration extends ActionableCommandButton {
     }
 
     @Override
-    protected void onClick(@NotNull ConfigMetadata selectedMetadata) {
-        if (selectedMetadata.isEditable()) {
-            DialogEditConfiguration dialogEditConfiguration = new DialogEditConfiguration(module, typeDescriptor, selectedMetadata);
+    public void mouseClicked(MouseEvent event) {
+        if (selected.isEditable()) {
+            DialogEditConfiguration dialogEditConfiguration = new DialogEditConfiguration(module, typeDescriptor, selected);
             if (dialogEditConfiguration.showAndGet()) {
-                ConfigService.getInstance(module).saveConfig(selectedMetadata);
+                ConfigService.getInstance(module).saveConfig(selected);
             }
         }
     }
 
-    @Override
-    public void onSelect(ConfigMetadata configMetadata) {
-        super.onSelect(configMetadata);
-        setEnabled(configMetadata.isEditable());
+    void onSelect(ConfigMetadata selected) {
+        this.selected = selected;
+        setEnabled(this.selected.isEditable());
     }
 }
