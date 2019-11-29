@@ -1,7 +1,5 @@
 package com.reedelk.plugin.component.domain;
 
-import com.reedelk.plugin.commons.Labels.Hint;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -9,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.commons.JsonParser.Implementor;
 
 /**
@@ -29,7 +28,7 @@ public class ComponentDescriptionDecorator implements ComponentDescriptor {
         descriptionDescriptor = ComponentPropertyDescriptor.builder()
                 .propertyName(Implementor.description())
                 .type(typeDescriptor)
-                .hintValue(Hint.COMPONENT_DESCRIPTION)
+                .hintValue(message("component.description.hint"))
                 .displayName(DESCRIPTION_PROPERTY_DISPLAY_NAME)
                 .defaultValue(wrapped.getDisplayName())
                 .build();

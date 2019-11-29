@@ -2,7 +2,6 @@ package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.openapi.Disposable;
 import com.reedelk.plugin.commons.Labels;
-import com.reedelk.plugin.commons.Labels.Hint;
 import com.reedelk.plugin.editor.properties.renderer.commons.InputChangeListener;
 import com.reedelk.plugin.editor.properties.renderer.commons.InputField;
 import com.reedelk.plugin.editor.properties.renderer.commons.StringInputField;
@@ -13,6 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import static com.intellij.util.ui.JBUI.Borders;
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 
@@ -51,7 +51,7 @@ public class FlowAndSubflowMetadataPanel extends DisposablePanel implements Disp
 
     private InputField<String> createTitleInputField() {
         FlowGraph graph = snapshot.getGraphOrThrowIfAbsent();
-        return createStringInputField(graph.title(), Hint.FLOW_SUBFLOW_TITLE, value -> {
+        return createStringInputField(graph.title(), message("flow.title.hint"), value -> {
             graph.setTitle((String) value);
             snapshot.onDataChange();
         });
@@ -59,7 +59,7 @@ public class FlowAndSubflowMetadataPanel extends DisposablePanel implements Disp
 
     private InputField<String> createDescriptionInputField() {
         FlowGraph graph = snapshot.getGraphOrThrowIfAbsent();
-        return createStringInputField(graph.description(), Hint.FLOW_SUBFLOW_DESCRIPTION, value -> {
+        return createStringInputField(graph.description(), message("flow.description.hint"), value -> {
             graph.setDescription((String) value);
             snapshot.onDataChange();
         });

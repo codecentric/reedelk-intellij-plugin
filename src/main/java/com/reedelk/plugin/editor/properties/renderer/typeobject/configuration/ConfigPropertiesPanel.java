@@ -4,8 +4,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.DefaultDescriptorDataValuesFiller;
-import com.reedelk.plugin.commons.Labels.Hint;
-import com.reedelk.plugin.commons.Labels.PropertiesPanelConfig;
 import com.reedelk.plugin.component.domain.ComponentDataHolder;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeDescriptor;
@@ -25,6 +23,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 
@@ -75,20 +74,20 @@ class ConfigPropertiesPanel extends DisposablePanel {
         private void init(ConfigMetadata configMetadata, boolean isNewConfig) {
 
             // Config File Name input field
-            StringInputField configFileInputField = new StringInputField(Hint.CONFIG_FILE_TITLE);
+            StringInputField configFileInputField = new StringInputField(message("config.field.file.hint"));
             configFileInputField.setEnabled(isNewConfig);
             configFileInputField.setValue(configMetadata.getFileName());
             configFileInputField.addListener(value -> configMetadata.setFileName((String) value));
             FormBuilder.get()
-                    .addLabel(PropertiesPanelConfig.FIELD_CONFIG_FILE, this)
+                    .addLabel(message("config.field.file"), this)
                     .addLastField(configFileInputField, this);
 
             // Config Title input title
-            StringInputField configTitleInputField = new StringInputField(Hint.CONFIG_TITLE);
+            StringInputField configTitleInputField = new StringInputField(message("config.field.title.hint"));
             configTitleInputField.setValue(configMetadata.getTitle());
             configTitleInputField.addListener(value -> configMetadata.setTitle((String) value));
             FormBuilder.get()
-                    .addLabel(PropertiesPanelConfig.FIELD_CONFIG_TITLE, this)
+                    .addLabel(message("config.field.title"), this)
                     .addLastField(configTitleInputField, this);
 
             // Add Separator at the bottom
