@@ -24,6 +24,9 @@ import java.util.Properties;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
+/**
+ * TODO: This one  creates flow and sublfows. We must put them inside the resources/flow and so  on.
+ */
 public class CreateProjectFile extends CreateFileFromTemplateAction implements DumbAware {
 
     public CreateProjectFile() {

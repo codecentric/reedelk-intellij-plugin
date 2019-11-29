@@ -42,7 +42,7 @@ public class FlowWithErrorInfoPanel extends BaseInfoPanel {
 
         @Override
         protected Color getColor() {
-            return Colors.PROPERTIES_EMPTY_SELECTION_TEXT;
+            return Colors.FOREGROUND_TEXT;
         }
 
         @Override

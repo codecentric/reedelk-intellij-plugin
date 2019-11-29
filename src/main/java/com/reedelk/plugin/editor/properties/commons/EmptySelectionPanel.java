@@ -25,7 +25,7 @@ public class EmptySelectionPanel extends DisposablePanel {
 
         toolWindow.setTitle(EMPTY);
         JLabel noSelectionLabel = new JLabel(message("properties.panel.nothing.selected"));
-        noSelectionLabel.setForeground(Colors.PROPERTIES_EMPTY_SELECTION_TEXT);
+        noSelectionLabel.setForeground(Colors.FOREGROUND_TEXT);
         add(noSelectionLabel);
     }
 }

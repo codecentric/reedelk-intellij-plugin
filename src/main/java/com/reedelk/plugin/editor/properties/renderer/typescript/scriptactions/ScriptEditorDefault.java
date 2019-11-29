@@ -20,7 +20,7 @@ class ScriptEditorDefault extends ScriptEditor {
     private static final int DIVIDER_MOUSE_ZONE_WIDTH = 4;
     private static final int EDITOR_CONTEXT_VARIABLES_SIZE = 170;
 
-    private static final Dimension DEFAULT_SCRIPT_DIMENSION = new Dimension(800, 400);
+    static final Dimension DEFAULT_SCRIPT_DIMENSION = new Dimension(800, 400);
     private static final boolean HORIZONTAL = false;
 
     ScriptEditorDefault(Module module, Document document) {

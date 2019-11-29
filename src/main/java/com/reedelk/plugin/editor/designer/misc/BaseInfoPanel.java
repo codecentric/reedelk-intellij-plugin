@@ -34,7 +34,7 @@ public abstract class BaseInfoPanel {
 
         Rectangle2D stringBounds = g2.getFontMetrics().getStringBounds(infoText, g2);
 
-        g2.setColor(Colors.PROPERTIES_EMPTY_SELECTION_TEXT);
+        g2.setColor(Colors.FOREGROUND_TEXT);
         g2.drawImage(infoIcon, topLeftX, topLeftY, parent);
 
         int left = Half.of(parent.getWidth()) - Half.of(stringBounds.getWidth());
