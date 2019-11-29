@@ -4,12 +4,11 @@ import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.Topic;
-import com.reedelk.plugin.commons.FileUtils;
 import com.reedelk.plugin.commons.ModuleUtils;
+import com.reedelk.plugin.commons.ScriptResourceUtil;
 import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.executor.PluginExecutor;
 import com.reedelk.plugin.service.module.ScriptService;
@@ -17,6 +16,7 @@ import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.FileExtension;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -69,17 +69,30 @@ public class ScriptServiceImpl implements ScriptService {
             publisher.onAddError(new PluginException(message("file.name.not.empty")));
             return;
         }
-        // TODO: Fix that if I add mytest/script/stuff.js should create directory for me!
 
-        final String finalScriptFileName = FileUtils.appendExtensionToFileName(scriptFileName, FileExtension.SCRIPT);
+        if (scriptFileName.endsWith("/")) {
+            publisher.onAddError(new PluginException(message("file.name.not.empty")));
+            return;
+        }
+
+        final Path finalScriptFileNamePath = Paths.get(ScriptResourceUtil.normalize(scriptFileName));
 
         // If the scripts folder is empty, it means that there is no resources folder created
         // in the current project, therefore no action is required.
         ModuleUtils.getScriptsFolder(module).ifPresent(scriptsDirectory ->
                 WriteCommandAction.runWriteCommandAction(module.getProject(), () -> {
                     try {
+                        String directoryUpToScriptFile = scriptsDirectory;
+
+                        Path parent = finalScriptFileNamePath.getParent();
+                        if (parent != null) {
+                            // The script file name is: dir1/dir2/my_script.js
+                            // We must concatenate: src/main/resource to dir1/dir2.
+                            directoryUpToScriptFile = Paths.get(directoryUpToScriptFile, parent.toString()).toString();
+                        }
+
                         // Create the scripts directory if does not exists already.
-                        VirtualFile directoryVirtualFile = VfsUtil.createDirectoryIfMissing(scriptsDirectory);
+                        VirtualFile directoryVirtualFile = VfsUtil.createDirectoryIfMissing(directoryUpToScriptFile);
                         if (directoryVirtualFile == null) {
                             PluginException error = new PluginException(message("directory.error.create", scriptsDirectory));
                             publisher.onAddError(error);
@@ -87,9 +100,10 @@ public class ScriptServiceImpl implements ScriptService {
                         }
 
                         // Create the script file
-                        String realFile = FileUtil.toSystemIndependentName(finalScriptFileName);
-                        VirtualFile addedScriptVf = directoryVirtualFile.createChildData(null, realFile);
-                        publisher.onAddSuccess(new ScriptResource(finalScriptFileName, addedScriptVf.getNameWithoutExtension()));
+                        String scriptFileNameWithExtension = finalScriptFileNamePath.getFileName().toString();
+                        VirtualFile addedScriptVf = directoryVirtualFile.createChildData(null, scriptFileNameWithExtension);
+                        publisher.onAddSuccess(new ScriptResource(finalScriptFileNamePath.toString(), addedScriptVf.getNameWithoutExtension()));
+
                     } catch (IOException exception) {
                         publisher.onAddError(exception);
                     }
@@ -115,7 +129,6 @@ public class ScriptServiceImpl implements ScriptService {
                     }
                 }));
     }
-
 
     public interface ScriptResourceChangeListener {
         default void onScriptResources(Collection<ScriptResource> scriptResources) {}
