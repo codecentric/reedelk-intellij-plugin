@@ -89,6 +89,11 @@ class ShareableConfigInputField extends DisposablePanel implements ConfigService
     }
 
     @Override
+    public void onSaveError(Exception exception) {
+        PopupUtils.error(exception, configActionsPanel);
+    }
+
+    @Override
     public void onAddError(Exception exception) {
         PopupUtils.error(exception, configActionsPanel);
     }

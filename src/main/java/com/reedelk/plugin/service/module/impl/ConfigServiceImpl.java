@@ -15,6 +15,7 @@ import com.reedelk.plugin.commons.ModuleUtils;
 import com.reedelk.plugin.component.deserializer.ConfigurationDeserializer;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.component.serializer.ConfigurationSerializer;
+import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.executor.PluginExecutor;
 import com.reedelk.plugin.service.module.ConfigService;
 import com.reedelk.runtime.commons.FileExtension;
@@ -27,7 +28,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import static com.reedelk.runtime.commons.Preconditions.checkState;
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class ConfigServiceImpl implements ConfigService {
 
@@ -55,74 +56,96 @@ public class ConfigServiceImpl implements ConfigService {
 
     @Override
     public void saveConfig(@NotNull ConfigMetadata updatedConfig) {
-        try {
+        WriteCommandAction.runWriteCommandAction(module.getProject(), () -> {
             VirtualFile file = VfsUtil.findFile(Paths.get(updatedConfig.getConfigFile()), true);
-            checkState(file != null, "Expected file not found");
+            if (file == null) {
+                PluginException exception =
+                        new PluginException(message("config.error.save.file.not.found",
+                                updatedConfig.getId(),
+                                updatedConfig.getConfigFile()));
+                publisher.onSaveError(exception);
+                return;
+            }
 
             Document document = FileDocumentManager.getInstance().getDocument(file);
-            checkState(document != null,
-                    String.format("Expected document for file %s to be found", updatedConfig.getConfigFile()));
+            if (document == null) {
+                PluginException exception =
+                        new PluginException(message("config.error.save.document.not.found",
+                                updatedConfig.getId(),
+                                updatedConfig.getConfigFile()));
+                publisher.onSaveError(exception);
+                return;
+            }
 
-            String serializedConfig = ConfigurationSerializer.serialize(updatedConfig);
-            executeWriteCommand(() -> document.setText(serializedConfig));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            try {
+                String serializedConfig = ConfigurationSerializer.serialize(updatedConfig);
+                document.setText(serializedConfig);
+            } catch (Exception thrown) {
+                publisher.onSaveError(thrown);
+            }
+        });
     }
 
     @Override
     public void addConfig(@NotNull ConfigMetadata newConfig) {
+        ModuleUtils.getConfigsFolder(module).ifPresent(configsFolder ->
+                WriteCommandAction.runWriteCommandAction(module.getProject(), () -> {
 
-        try {
-
-            // TODO: What if the directory does not  exists!?? It should be created here!! Fixit
-            Optional<String> maybeConfigDirectory = getConfigDirectory();
-            if (maybeConfigDirectory.isPresent()) {
-                String configDir = maybeConfigDirectory.get();
-
-                String finalFileName = FileUtils.appendExtensionToFileName(newConfig.getFileName(), FileExtension.CONFIG);
-                final VirtualFile configFile = VfsUtil.findFile(Paths.get(configDir, finalFileName), true);
-                if (configFile != null) {
-                    throw new IOException(String.format("A configuration file named %s exists already. " +
-                            "Please use a different file name.", newConfig.getFileName()));
-                }
-
-                executeWriteCommand(() -> {
-
-                    // Create the directory
-                    VirtualFile directoryIfMissing = VfsUtil.createDirectoryIfMissing(configDir);
-                    if (directoryIfMissing == null) {
-                        throw new IOException(String.format("Could not create config directory=[%s] to store configuration named=[%s]", configDir, newConfig.getFileName()));
+                    String finalFileName = FileUtils.appendExtensionToFileName(newConfig.getFileName(), FileExtension.CONFIG);
+                    final VirtualFile configFile = VfsUtil.findFile(Paths.get(configsFolder, finalFileName), true);
+                    if (configFile != null) {
+                        PluginException exception =
+                                new PluginException(message("config.error.add.file.exists.already", newConfig.getFileName()));
+                        publisher.onAddError(exception);
                     }
-                    VirtualFile childData = directoryIfMissing.createChildData(null, newConfig.getFileName());
 
-                    // Serialize the config
-                    String serializedConfig = ConfigurationSerializer.serialize(newConfig);
-                    VfsUtil.saveText(childData, serializedConfig);
-                });
-            }
+                    try {
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                        VirtualFile configDirectoryVf = VfsUtil.createDirectoryIfMissing(configsFolder);
+                        if (configDirectoryVf == null) {
+                            PluginException exception =
+                                    new PluginException(message("config.error.add.config.dir.not.created", newConfig.getFileName()));
+                            publisher.onAddError(exception);
+                            return;
+                        }
+
+                        // Create new config file.
+                        VirtualFile childData = configDirectoryVf.createChildData(null, newConfig.getFileName());
+
+                        // Serialize the config
+                        String serializedConfig = ConfigurationSerializer.serialize(newConfig);
+                        VfsUtil.saveText(childData, serializedConfig);
+                        publisher.onAddSuccess(newConfig);
+
+                    } catch (IOException exception) {
+                        publisher.onAddError(exception);
+                    }
+                }));
     }
 
     @Override
-    public void removeConfig(@NotNull ConfigMetadata toBeRemovedConfig) {
-        try {
-            VirtualFile file = VfsUtil.findFile(Paths.get(toBeRemovedConfig.getConfigFile()), true);
-            if (file != null) {
-                executeWriteCommand(() -> file.delete(null));
+    public void removeConfig(@NotNull ConfigMetadata toRemove) {
+        WriteCommandAction.runWriteCommandAction(module.getProject(), () -> {
+            final VirtualFile file = VfsUtil.findFile(Paths.get(toRemove.getConfigFile()), true);
+            if (file == null) {
+                // The config file to be removed does not exists.
+                return;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            try {
+                file.delete(null);
+                publisher.onRemoveSuccess();
+            } catch (IOException exception) {
+                String errorMessage = message("config.error.remove", toRemove.getId(), exception.getMessage());
+                publisher.onRemoveError(new PluginException(errorMessage, exception));
+            }
+        });
     }
 
     public interface ConfigChangeListener {
         default void onConfigs(Collection<ConfigMetadata> configurations) {}
         default void onAddSuccess(ConfigMetadata configuration) {}
         default void onAddError(Exception exception) {}
+        default void onSaveError(Exception exception) {}
         default void onRemoveSuccess() {}
         default void onRemoveError(Exception exception) {}
     }
@@ -150,9 +173,5 @@ public class ConfigServiceImpl implements ConfigService {
         WriteCommandAction
                 .writeCommandAction(module.getProject())
                 .run(runnable);
-    }
-
-    private Optional<String> getConfigDirectory() {
-        return ModuleUtils.getConfigsFolder(module);
     }
 }

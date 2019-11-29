@@ -82,16 +82,17 @@ public class ScriptServiceImpl implements ScriptService {
         // in the current project, therefore no action is required.
         ModuleUtils.getScriptsFolder(module).ifPresent(scriptsDirectory ->
                 WriteCommandAction.runWriteCommandAction(module.getProject(), () -> {
+
+                    String directoryUpToScriptFile = scriptsDirectory;
+
+                    Path parent = normalizedScriptFilePath.getParent();
+                    if (parent != null) {
+                        // The script file name is: dir1/dir2/my_script.js
+                        // We must concatenate: src/main/resource to dir1/dir2.
+                        directoryUpToScriptFile = Paths.get(directoryUpToScriptFile, parent.toString()).toString();
+                    }
+
                     try {
-                        String directoryUpToScriptFile = scriptsDirectory;
-
-                        Path parent = normalizedScriptFilePath.getParent();
-                        if (parent != null) {
-                            // The script file name is: dir1/dir2/my_script.js
-                            // We must concatenate: src/main/resource to dir1/dir2.
-                            directoryUpToScriptFile = Paths.get(directoryUpToScriptFile, parent.toString()).toString();
-                        }
-
                         // Create the scripts directory if does not exists already.
                         VirtualFile directoryVirtualFile = VfsUtil.createDirectoryIfMissing(directoryUpToScriptFile);
                         if (directoryVirtualFile == null) {
@@ -117,7 +118,7 @@ public class ScriptServiceImpl implements ScriptService {
                 WriteCommandAction.runWriteCommandAction(module.getProject(), () -> {
                     final VirtualFile file = VfsUtil.findFile(Paths.get(scriptsDirectory, scriptFileName), true);
                     if (file == null) {
-                        // The file to remove does not exists.
+                        // The script file to be removed does not exists.
                         return;
                     }
 
