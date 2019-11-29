@@ -4,6 +4,7 @@ import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.Topic;
@@ -19,11 +20,10 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
-import static com.reedelk.plugin.commons.Messages.Misc.COULD_NOT_CREATE_DIRECTORY;
-import static com.reedelk.plugin.commons.Messages.Script.ERROR_FILE_NAME_EMPTY;
-import static com.reedelk.plugin.commons.Messages.Script.ERROR_REMOVE;
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class ScriptServiceImpl implements ScriptService {
 
@@ -57,7 +57,7 @@ public class ScriptServiceImpl implements ScriptService {
                     return true;
                 });
 
-                publisher.onScriptResources(scripts);
+                publisher.onScriptResources(Collections.unmodifiableList(scripts));
 
             }).submit(PluginExecutor.getInstance());
         });
@@ -66,9 +66,10 @@ public class ScriptServiceImpl implements ScriptService {
     @Override
     public void addScript(String scriptFileName) {
         if (StringUtils.isBlank(scriptFileName)) {
-            publisher.onAddError(new PluginException(ERROR_FILE_NAME_EMPTY.format()));
+            publisher.onAddError(new PluginException(message("file.name.not.empty")));
             return;
         }
+        // TODO: Fix that if I add mytest/script/stuff.js should create directory for me!
 
         final String finalScriptFileName = FileUtils.appendExtensionToFileName(scriptFileName, FileExtension.SCRIPT);
 
@@ -80,13 +81,14 @@ public class ScriptServiceImpl implements ScriptService {
                         // Create the scripts directory if does not exists already.
                         VirtualFile directoryVirtualFile = VfsUtil.createDirectoryIfMissing(scriptsDirectory);
                         if (directoryVirtualFile == null) {
-                            PluginException error = new PluginException(COULD_NOT_CREATE_DIRECTORY.format(scriptsDirectory));
+                            PluginException error = new PluginException(message("directory.error.create", scriptsDirectory));
                             publisher.onAddError(error);
                             return;
                         }
 
                         // Create the script file
-                        VirtualFile addedScriptVf = directoryVirtualFile.createChildData(null, finalScriptFileName);
+                        String realFile = FileUtil.toSystemIndependentName(finalScriptFileName);
+                        VirtualFile addedScriptVf = directoryVirtualFile.createChildData(null, realFile);
                         publisher.onAddSuccess(new ScriptResource(finalScriptFileName, addedScriptVf.getNameWithoutExtension()));
                     } catch (IOException exception) {
                         publisher.onAddError(exception);
@@ -108,7 +110,7 @@ public class ScriptServiceImpl implements ScriptService {
                         file.delete(null);
                         publisher.onRemoveSuccess();
                     } catch (IOException exception) {
-                        String errorMessage = ERROR_REMOVE.format(scriptFileName, exception.getMessage());
+                        String errorMessage = message("script.error.remove", scriptFileName, exception.getMessage());
                         publisher.onRemoveError(new PluginException(errorMessage, exception));
                     }
                 }));

@@ -23,13 +23,12 @@ import org.jetbrains.idea.maven.utils.MavenLog;
 
 import javax.swing.*;
 
-import static com.reedelk.plugin.commons.Messages.ModuleRun.ERROR_MODULE_NOT_SELECTED;
-import static com.reedelk.plugin.commons.Messages.ModuleRun.ERROR_RUNTIME_NOT_SELECTED;
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
 
 public class ModuleBuilderBeforeTaskProvider extends BeforeRunTaskProvider<ModuleBuilderBeforeTask> {
 
-    public static final Key<ModuleBuilderBeforeTask> ID = Key.create("ESBModule.BeforeRunTask");
+    private static final Key<ModuleBuilderBeforeTask> ID = Key.create("ESBModule.BeforeRunTask");
 
     @Override
     public Key<ModuleBuilderBeforeTask> getId() {
@@ -85,14 +84,14 @@ public class ModuleBuilderBeforeTaskProvider extends BeforeRunTaskProvider<Modul
 
         // Notify error if the module is not selected (or not valid) in the current Runtime Configuration.
         if (isBlank(moduleRunConfiguration.getModuleName())) {
-            String errorMessage = ERROR_MODULE_NOT_SELECTED.format(moduleRunConfiguration.getName());
+            String errorMessage = message("module.run.error.module.not.selected", moduleRunConfiguration.getName());
             Project project = env.getProject();
             SwingUtilities.invokeLater(() -> NotificationUtils.notifyError(errorMessage, project));
             return false;
         }
 
         if (isBlank(moduleRunConfiguration.getRuntimeConfigName())) {
-            String errorMessage = ERROR_RUNTIME_NOT_SELECTED.format(moduleRunConfiguration.getName());
+            String errorMessage = message("module.run.error.runtime.not.selected", moduleRunConfiguration.getName());
             Project project = env.getProject();
             SwingUtilities.invokeLater(() -> NotificationUtils.notifyError(errorMessage, project));
             return false;

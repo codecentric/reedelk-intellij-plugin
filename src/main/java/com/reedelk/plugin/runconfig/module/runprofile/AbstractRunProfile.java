@@ -13,15 +13,12 @@ import com.reedelk.plugin.runconfig.runtime.RuntimeRunConfiguration;
 import com.reedelk.plugin.service.project.ToolWindowService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.idea.maven.model.MavenId;
 import org.jetbrains.idea.maven.project.MavenProject;
 
-import java.io.File;
 import java.util.Optional;
 
-import static com.reedelk.plugin.commons.Messages.ModuleRun.*;
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
-import static java.lang.String.format;
 
 abstract class AbstractRunProfile implements RunProfileState {
 
@@ -44,21 +41,21 @@ abstract class AbstractRunProfile implements RunProfileState {
 
         if (isBlank(moduleName)) {
             String actionName = executor.getActionName();
-            String errorMessage = ERROR_GENERIC_MODULE_NOT_SELECTED.format(actionName);
+            String errorMessage = message("module.run.error.module.generic.not.selected", actionName);
             throw new ExecutionException(errorMessage);
         }
 
         Optional<MavenProject> optionalMavenProject = MavenUtils.getMavenProject(project, moduleName);
         if (!optionalMavenProject.isPresent()) {
-            throw new ExecutionException(ERROR_MAVEN_PROJECT_NOT_FOUND.format(moduleName));
+            throw new ExecutionException(message("module.run.error.maven.project.not.found", moduleName));
         }
 
         MavenProject mavenProject = optionalMavenProject.get();
-        String moduleJarFilePath = getModuleJarFile(mavenProject);
+        String moduleJarFilePath = MavenUtils.getModuleJarFile(mavenProject);
 
         RunnerAndConfigurationSettings configSettings = RunManager.getInstance(project).findConfigurationByName(runtimeConfigName);
         if (configSettings == null) {
-            throw new ExecutionException(ERROR_RUNTIME_CONFIG_NOT_FOUND.format(runtimeConfigName));
+            throw new ExecutionException(message("module.run.error.runtime.config.not.found", runtimeConfigName));
         }
 
         RuntimeRunConfiguration runtimeRunConfiguration = (RuntimeRunConfiguration) configSettings.getConfiguration();
@@ -83,14 +80,5 @@ abstract class AbstractRunProfile implements RunProfileState {
         return ToolWindowManager
                 .getInstance(project)
                 .getToolWindow(toolWindowId);
-    }
-
-    private String getModuleJarFile(MavenProject mavenProject) {
-        String targetDir = mavenProject.getBuildDirectory();
-        MavenId mavenId = mavenProject.getMavenId();
-        return format("file:%s" + File.separator + "%s-%s.jar",
-                targetDir,
-                mavenId.getArtifactId(),
-                mavenId.getVersion());
     }
 }

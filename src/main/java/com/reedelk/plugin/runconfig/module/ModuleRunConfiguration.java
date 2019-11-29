@@ -29,7 +29,7 @@ public class ModuleRunConfiguration extends RunConfigurationBase implements
     private String runtimeConfigName;
     private String moduleName;
 
-    protected ModuleRunConfiguration(@NotNull Project project, @Nullable ConfigurationFactory factory, @Nullable String name) {
+    ModuleRunConfiguration(@NotNull Project project, @Nullable ConfigurationFactory factory, @Nullable String name) {
         super(project, factory, name);
     }
 
@@ -76,19 +76,19 @@ public class ModuleRunConfiguration extends RunConfigurationBase implements
         JDOMExternalizerUtil.writeField(element, MODULE_NAME, moduleName);
     }
 
-    public String getRuntimeConfigName() {
-        return runtimeConfigName;
-    }
-
     public void setRuntimeConfigName(String runtimePath) {
         this.runtimeConfigName = runtimePath;
     }
 
-    public void setModule(String moduleName) {
-        this.moduleName = moduleName;
+    public String getRuntimeConfigName() {
+        return runtimeConfigName;
     }
 
     public String getModuleName() {
         return moduleName;
+    }
+
+    public void setModule(String moduleName) {
+        this.moduleName = moduleName;
     }
 }

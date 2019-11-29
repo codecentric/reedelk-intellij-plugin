@@ -7,6 +7,7 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.util.Optional;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
 
 public class FileUtils {
@@ -26,7 +27,7 @@ public class FileUtils {
 
     public static String appendExtensionToFileName(String fileName, FileExtension extension) {
         if (isBlank(fileName)) {
-            throw new PluginException(Messages.Misc.FILE_NAME_NOT_EMPTY.format());
+            throw new PluginException(message("file.name.not.empty"));
         }
         return fileName.endsWith("." + extension.value()) ?
                 fileName :

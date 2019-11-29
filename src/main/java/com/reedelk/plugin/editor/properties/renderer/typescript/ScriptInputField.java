@@ -2,7 +2,6 @@ package com.reedelk.plugin.editor.properties.renderer.typescript;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.util.messages.MessageBusConnection;
-import com.reedelk.plugin.commons.Messages;
 import com.reedelk.plugin.commons.PopupUtils;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
@@ -10,20 +9,23 @@ import com.reedelk.plugin.editor.properties.renderer.typescript.scriptactions.Sc
 import com.reedelk.plugin.service.module.ScriptService;
 import com.reedelk.plugin.service.module.impl.ScriptResource;
 import com.reedelk.plugin.service.module.impl.ScriptServiceImpl;
-import com.reedelk.runtime.api.commons.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.service.module.impl.ScriptServiceImpl.TOPIC_SCRIPT_RESOURCE;
+import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
+import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.EAST;
 
 public class ScriptInputField extends DisposablePanel implements ScriptServiceImpl.ScriptResourceChangeListener {
 
     private static final ScriptResource UNSELECTED_SCRIPT_RESOURCE = new UnselectedScriptResource();
-
 
     private transient final Module module;
     private transient final MessageBusConnection connect;
@@ -63,7 +65,7 @@ public class ScriptInputField extends DisposablePanel implements ScriptServiceIm
     @Override
     public void onRemoveSuccess() {
         // Nothing is selected.
-        propertyAccessor.set(StringUtils.EMPTY);
+        propertyAccessor.set(EMPTY);
         ScriptService.getInstance(module).fetchScriptResources();
     }
 
@@ -85,11 +87,15 @@ public class ScriptInputField extends DisposablePanel implements ScriptServiceIm
 
     private void updateWith(Collection<ScriptResource> scriptResources, ScriptResource selected) {
         // Prepare model
-        DefaultComboBoxModel<ScriptResource> comboModel = new DefaultComboBoxModel<>();
-        scriptResources.forEach(comboModel::addElement);
-        if (!scriptResources.contains(selected)) {
-            comboModel.addElement(selected);
+        List<ScriptResource> updatedResources = new ArrayList<>(scriptResources);
+        updatedResources.add(UNSELECTED_SCRIPT_RESOURCE);
+        if (!updatedResources.contains(selected)) {
+            // The selected resource might be an Unknown script resource object created
+            // on the fly by 'findResourceMatching' function.
+            updatedResources.add(selected);
         }
+        DefaultComboBoxModel<ScriptResource> comboModel = new DefaultComboBoxModel<>();
+        updatedResources.forEach(comboModel::addElement);
 
         SwingUtilities.invokeLater(() -> {
             // We must remove any previous listener.
@@ -109,7 +115,7 @@ public class ScriptInputField extends DisposablePanel implements ScriptServiceIm
     }
 
     private ScriptResource findResourceMatching(Collection<ScriptResource> scriptResources, String path) {
-        if (StringUtils.isBlank(path)) return UNSELECTED_SCRIPT_RESOURCE;
+        if (isBlank(path)) return UNSELECTED_SCRIPT_RESOURCE;
         return scriptResources.stream()
                 .filter(scriptResource -> scriptResource.getPath().equals(path)).findFirst()
                 .orElseGet(() -> new NotFoundScriptResource(path));
@@ -118,7 +124,7 @@ public class ScriptInputField extends DisposablePanel implements ScriptServiceIm
     public class NotFoundScriptResource extends ScriptResource {
 
         NotFoundScriptResource(String path) {
-            super(path, Messages.Script.NOT_FOUND.format());
+            super(path, message("script.not.found"));
         }
 
         @Override
@@ -135,7 +141,7 @@ public class ScriptInputField extends DisposablePanel implements ScriptServiceIm
     static class UnselectedScriptResource extends ScriptResource {
 
         UnselectedScriptResource() {
-            super(StringUtils.EMPTY, Messages.Script.NOT_SELECTED.format());
+            super(EMPTY, message("script.not.selected"));
         }
 
         @Override

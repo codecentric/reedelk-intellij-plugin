@@ -10,7 +10,7 @@ import java.awt.event.MouseEvent;
 
 import static com.reedelk.plugin.commons.Icons.Config.Delete;
 import static com.reedelk.plugin.commons.Icons.Config.DeleteDisabled;
-import static com.reedelk.plugin.commons.Messages.Script;
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 class ActionDeleteScript extends ClickableLabel {
 
@@ -24,10 +24,10 @@ class ActionDeleteScript extends ClickableLabel {
 
     @Override
     public void mouseClicked(MouseEvent event) {
-        DialogConfirmAction dialogConfirmDelete = new DialogConfirmAction(
-                module,
-                Script.DIALOG_DELETE_TITLE.format(),
-                Script.DIALOG_DELETE_CONFIRM_MESSAGE.format());
+        DialogConfirmAction dialogConfirmDelete =
+                new DialogConfirmAction(module,
+                message("script.dialog.delete.title"),
+                message("script.dialog.delete.confirm.message"));
 
         if (dialogConfirmDelete.showAndGet()) {
             ScriptService.getInstance(module).removeScript(selected.getPath());

@@ -7,7 +7,6 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.reedelk.plugin.commons.Labels;
-import com.reedelk.plugin.commons.Messages;
 import com.reedelk.plugin.commons.ModuleUtils;
 import com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditor;
 import org.jetbrains.annotations.NotNull;
@@ -16,23 +15,24 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.nio.file.Paths;
 
-import static com.reedelk.runtime.commons.ModuleProperties.Script;
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class EditScriptDialog extends DialogWrapper {
 
     private ScriptEditor editor;
 
-    EditScriptDialog(@NotNull Module module, String scriptFile) {
+    EditScriptDialog(@NotNull Module module, String scriptFilePathAndName) {
         super(module.getProject(), false);
-        setTitle(Messages.Script.DIALOG_EDIT_TITLE.format());
+        setTitle(message("script.dialog.edit.title"));
         setResizable(true);
 
-        // TODO: Check for nul file
-        String resources = ModuleUtils.getResourcesFolder(module).orElseThrow(() -> new RuntimeException("error"));
-        VirtualFile file = VfsUtil.findFile(Paths.get(resources, Script.RESOURCE_DIRECTORY, scriptFile), true);
-        Document document = FileDocumentManager.getInstance().getDocument(file);
-
-        editor = new ScriptEditorDefault(module, document);
+        ModuleUtils.getScriptsFolder(module).ifPresent(scriptsFolder -> {
+            VirtualFile scriptVirtualFile = VfsUtil.findFile(Paths.get(scriptsFolder, scriptFilePathAndName), true);
+            if (scriptVirtualFile != null) {
+                Document document = FileDocumentManager.getInstance().getDocument(scriptVirtualFile);
+                editor = new ScriptEditorDefault(module, document);
+            }
+        });
 
         init();
     }
@@ -48,6 +48,7 @@ public class EditScriptDialog extends DialogWrapper {
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
+        // TODO: If editor is null, then error  center  panel.
         return editor;
     }
 
@@ -57,9 +58,5 @@ public class EditScriptDialog extends DialogWrapper {
         if (this.editor != null) {
             this.editor.dispose();
         }
-    }
-
-    public String getValue() {
-        return editor.getValue();
     }
 }

@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Paths;
 
-import static com.reedelk.plugin.commons.Messages.RuntimeRun.ERROR_SDK_NOT_SELECTED;
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.lang.String.format;
 
 public class RuntimeRunCommandLine extends JavaCommandLineState {
@@ -35,7 +35,7 @@ public class RuntimeRunCommandLine extends JavaCommandLineState {
         ProjectRootManager manager = ProjectRootManager.getInstance(project);
 
         if (manager.getProjectSdk() == null) {
-            throw new ExecutionException(ERROR_SDK_NOT_SELECTED.format());
+            throw new ExecutionException(message("runtime.run.error.sdk.not.selected"));
         }
 
         javaParams.setJdk(manager.getProjectSdk());

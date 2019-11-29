@@ -10,12 +10,12 @@ import java.awt.*;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static com.reedelk.plugin.commons.Messages.Flow;
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class FlowWithErrorInfoPanel extends BaseInfoPanel {
 
     public FlowWithErrorInfoPanel() {
-        super(Flow.ERROR_TITLE.format(), Images.Flow.Error);
+        super(message("flow.error.title"), Images.Flow.Error);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class FlowWithErrorInfoPanel extends BaseInfoPanel {
                                          @NotNull JComponent parent,
                                          int yCoordinateStart) {
         super.drawAdditionalMessage(graph, g2, parent, yCoordinateStart);
-        String message = Flow.ERROR_MESSAGE.format(graph.getError().getMessage());
+        String message = message("flow.error.message", graph.getError().getMessage());
         FlowErrorText flowErrorText = new FlowErrorText(message);
         flowErrorText.setPosition(Half.of(parent.getWidth()), yCoordinateStart);
         flowErrorText.draw(g2);

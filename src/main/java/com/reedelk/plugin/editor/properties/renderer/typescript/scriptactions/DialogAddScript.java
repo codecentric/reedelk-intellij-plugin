@@ -6,7 +6,7 @@ import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.FormBuilder;
 import com.reedelk.plugin.editor.properties.renderer.commons.InputField;
 import com.reedelk.plugin.editor.properties.renderer.commons.StringInputField;
-import org.apache.commons.lang3.StringUtils;
+import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,7 +14,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import static com.reedelk.plugin.commons.Labels.DIALOG_BTN_ADD_CONFIGURATION;
-import static com.reedelk.plugin.commons.Messages.Script;
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class DialogAddScript extends DialogWrapper {
 
@@ -22,7 +22,7 @@ public class DialogAddScript extends DialogWrapper {
 
     DialogAddScript(@Nullable Project project) {
         super(project, false);
-        setTitle(Script.DIALOG_ADD_NEW_TITLE.format());
+        setTitle(message("script.dialog.add.title"));
         setResizable(false);
         init();
     }
