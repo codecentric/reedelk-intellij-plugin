@@ -7,8 +7,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
-import static com.reedelk.runtime.commons.ModuleProperties.Config;
-import static com.reedelk.runtime.commons.ModuleProperties.Script;
+import static com.reedelk.runtime.commons.ModuleProperties.*;
 
 public class ModuleUtils {
 
@@ -16,10 +15,14 @@ public class ModuleUtils {
 
     private ModuleUtils() {
     }
-
     public static Optional<String> getConfigsFolder(Module module) {
         return getResourcesFolder(module).map(resources ->
                 Paths.get(resources, Config.RESOURCE_DIRECTORY).toString());
+    }
+
+    public static Optional<String> getFlowsFolder(Module module) {
+        return getResourcesFolder(module).map(resources ->
+                Paths.get(resources, Flow.RESOURCE_DIRECTORY).toString());
     }
 
     public static Optional<String> getScriptsFolder(Module module) {
