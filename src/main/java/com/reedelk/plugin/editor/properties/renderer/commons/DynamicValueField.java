@@ -3,7 +3,6 @@ package com.reedelk.plugin.editor.properties.renderer.commons;
 import com.intellij.openapi.module.Module;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Fonts;
-import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
@@ -13,6 +12,8 @@ import com.reedelk.runtime.api.commons.ScriptUtils;
 import javax.swing.*;
 import java.awt.*;
 
+import static com.reedelk.plugin.commons.Icons.Script.Code;
+import static com.reedelk.plugin.commons.Icons.Script.Edit;
 import static java.awt.BorderLayout.CENTER;
 
 public class DynamicValueField extends DisposablePanel {
@@ -54,8 +55,7 @@ public class DynamicValueField extends DisposablePanel {
     }
 
     private DisposablePanel createScriptModePanel(JComponent editorComponent) {
-        JLabel codeIcon = new ClickableLabel(Icons.Script.Code, Icons.Script.Code,
-                () -> {
+        JLabel codeIcon = new ClickableLabel(Code, () -> {
                     switchComponent(inputFieldContainer, scriptContainer);
                     listener.onChange(inputFieldAdapter.getValue());
                 });
@@ -63,8 +63,7 @@ public class DynamicValueField extends DisposablePanel {
     }
 
     private DisposablePanel createInputFieldContainer() {
-        JLabel textIcon = new ClickableLabel(Icons.Script.Edit, Icons.Script.Edit,
-                () -> {
+        JLabel textIcon = new ClickableLabel(Edit, () -> {
                     switchComponent(scriptContainer, inputFieldContainer);
                     String script = ScriptUtils.asScript(editor.getValue());
                     listener.onChange(script);

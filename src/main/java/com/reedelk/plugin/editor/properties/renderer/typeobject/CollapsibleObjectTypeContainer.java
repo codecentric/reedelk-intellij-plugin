@@ -15,7 +15,7 @@ import java.awt.*;
 import static com.intellij.icons.AllIcons.General.ArrowDown;
 import static com.intellij.icons.AllIcons.General.ArrowRight;
 import static com.intellij.util.ui.JBUI.Borders;
-import static com.reedelk.plugin.editor.properties.commons.ClickableLabel.IconAlignment;
+import static com.reedelk.plugin.editor.properties.commons.ClickableLabel.IconAlignment.RIGHT;
 import static java.awt.BorderLayout.*;
 
 class CollapsibleObjectTypeContainer extends DisposablePanel {
@@ -93,7 +93,7 @@ class CollapsibleObjectTypeContainer extends DisposablePanel {
     }
 
     private JLabel createSwitch(Icon icon, String displayName) {
-        return new ClickableLabel(displayName, icon, icon, IconAlignment.RIGHT, () -> {
+        return new ClickableLabel(displayName, icon, RIGHT, () -> {
             if (collapsed) {
                 unCollapse();
                 collapsed = false;

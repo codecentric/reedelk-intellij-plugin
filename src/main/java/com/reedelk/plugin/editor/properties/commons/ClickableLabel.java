@@ -7,35 +7,37 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-// TODO: Fix me and fixme with the callbacks of this class which are horrible!
 public class ClickableLabel extends JLabel implements MouseListener {
-
-    public enum IconAlignment {
-        LEFT,
-        RIGHT
-    }
 
     private final OnClickAction action;
 
-    public ClickableLabel(String text, Icon icon, Icon disabledIcon) {
-        this(text, icon, disabledIcon, null);
+    public ClickableLabel(Icon icon, OnClickAction action) {
+        this(StringUtils.EMPTY, icon, null, IconAlignment.LEFT, action);
     }
 
     public ClickableLabel(Icon icon, Icon disabledIcon, OnClickAction action) {
         this(StringUtils.EMPTY, icon, disabledIcon, IconAlignment.LEFT, action);
     }
 
+    public ClickableLabel(String text, Icon icon, OnClickAction action) {
+        this(text, icon, null, IconAlignment.LEFT, action);
+    }
+
     public ClickableLabel(String text, Icon icon, Icon disabledIcon, OnClickAction action) {
         this(text, icon, disabledIcon, IconAlignment.LEFT, action);
     }
+    public ClickableLabel(String text, Icon icon, IconAlignment iconAlignment, OnClickAction action) {
+        this(text, icon, null, iconAlignment, action);
+    }
 
-    public ClickableLabel(String text, Icon icon, Icon disabledIcon, IconAlignment iconAlignment, OnClickAction action) {
+    private ClickableLabel(String text, Icon icon, Icon disabledIcon, IconAlignment iconAlignment, OnClickAction action) {
         setText(text);
         setIcon(icon);
-        setDisabledIcon(disabledIcon);
         addMouseListener(this);
         this.action = action;
-
+        if (disabledIcon != null) {
+            setDisabledIcon(disabledIcon);
+        }
         if (iconAlignment.equals(IconAlignment.LEFT)) {
             setHorizontalTextPosition(SwingConstants.RIGHT); // Icon pushed to the left
         } else {
@@ -60,19 +62,20 @@ public class ClickableLabel extends JLabel implements MouseListener {
         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
 
-
     @Override
     public void mousePressed(MouseEvent event) {
-
     }
 
     @Override
     public void mouseReleased(MouseEvent event) {
-
     }
 
-    // TODO: This is very wrong.
     public interface OnClickAction {
         void onClick();
+    }
+
+    public enum IconAlignment {
+        LEFT,
+        RIGHT
     }
 }

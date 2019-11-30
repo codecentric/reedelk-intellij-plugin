@@ -39,8 +39,8 @@ class MapTabContainer extends JBPanel {
     class TableActionPanel extends DisposablePanel {
         TableActionPanel(PropertyTable table) {
             setLayout(new FlowLayout(FlowLayout.LEFT));
-            add(new ClickableLabel(message("properties.type.map.table.add"), AddItem, AddItem, table::addEmptyRow));
-            add(new ClickableLabel(message("properties.type.map.table.remove"), RemoveItem, RemoveItem, table::removeSelectedRow));
+            add(new ClickableLabel(message("properties.type.map.table.add"), AddItem, table::addEmptyRow));
+            add(new ClickableLabel(message("properties.type.map.table.remove"), RemoveItem, table::removeSelectedRow));
         }
     }
 

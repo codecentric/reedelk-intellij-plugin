@@ -5,7 +5,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
-import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditor;
@@ -82,16 +81,15 @@ class ConditionRouteTableColumnModel extends DefaultTableColumnModel implements 
         private DisposablePanel content;
 
         ConditionCellEditor(Module module) {
+            JLabel codeIcon = new JLabel(Script.Code);
             this.editor = new DynamicValueScriptEditor(module);
-            JLabel codeIcon = new ClickableLabel(Script.Code, Script.Code, () -> {
-            });
-            content = ContainerFactory.createLabelNextToComponent(codeIcon, editor, false);
+            this.content = ContainerFactory.createLabelNextToComponent(codeIcon, editor, false);
         }
 
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            editor.setValue((String) value);
-            return content;
+            this.editor.setValue((String) value);
+            return this.content;
         }
 
         @Override
@@ -143,26 +141,24 @@ class ConditionRouteTableColumnModel extends DefaultTableColumnModel implements 
 
     private class ConditionCellRenderer implements TableCellRenderer, Disposable {
 
-        private final DynamicValueScriptEditor editor;
         private DisposablePanel content;
+        private final DynamicValueScriptEditor editor;
 
         ConditionCellRenderer(Module module) {
+            JLabel codeIcon = new JLabel(Script.Code);
             this.editor = new DynamicValueScriptEditor(module);
-            // TODO: Fix this clickable label!!!
-            JLabel codeIcon = new ClickableLabel(Script.Code, Script.Code, () -> {
-            });
-            content = ContainerFactory.createLabelNextToComponent(codeIcon, editor, false);
+            this.content = ContainerFactory.createLabelNextToComponent(codeIcon, editor, false);
         }
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             this.editor.setValue((String) value);
-            return content;
+            return this.content;
         }
 
         @Override
         public void dispose() {
-            DisposableUtils.dispose(editor);
+            DisposableUtils.dispose(this.editor);
         }
     }
 }

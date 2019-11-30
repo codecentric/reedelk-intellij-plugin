@@ -2,26 +2,77 @@ package com.reedelk.plugin.editor.properties.renderer.typeobject.configuration;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
+import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
+import com.reedelk.plugin.editor.properties.commons.DialogConfirmAction;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
+import com.reedelk.plugin.service.module.ConfigService;
 import com.reedelk.plugin.service.module.impl.ConfigMetadata;
+import com.reedelk.plugin.service.module.impl.NewConfigMetadata;
+import com.reedelk.runtime.commons.JsonParser;
+
+import java.util.UUID;
+
+import static com.reedelk.plugin.commons.Icons.Config.*;
+import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class ConfigControlPanel extends DisposablePanel {
 
-    private final ActionDeleteConfiguration deleteAction;
-    private final ActionEditConfiguration editAction;
-    private final ActionAddConfiguration addAction;
+    private transient final Module module;
+    private transient ConfigMetadata selected;
+    private transient final ClickableLabel editAction;
+    private transient final ClickableLabel deleteAction;
+    private transient final TypeObjectDescriptor typeDescriptor;
 
     public ConfigControlPanel(Module module, TypeObjectDescriptor typeDescriptor) {
-        deleteAction = new ActionDeleteConfiguration(module);
-        editAction = new ActionEditConfiguration(module, typeDescriptor);
-        addAction = new ActionAddConfiguration(module, typeDescriptor);
+        this.module = module;
+        this.typeDescriptor = typeDescriptor;
+        deleteAction = new ClickableLabel("Delete", Delete, DeleteDisabled, this::deleteConfiguration);
+        editAction = new ClickableLabel("Edit", Edit, EditDisabled, this::editConfiguration);
+        ClickableLabel addAction = new ClickableLabel("Add", Add, this::addConfiguration);
         add(editAction);
-        add(deleteAction);
         add(addAction);
+        add(deleteAction);
     }
 
-    public void onSelect(ConfigMetadata matchingMetadata) {
-        editAction.onSelect(matchingMetadata);
-        deleteAction.onSelect(matchingMetadata);
+    public void onSelect(ConfigMetadata newSelected) {
+        this.selected = newSelected;
+        this.editAction.setEnabled(newSelected.isEditable());
+        this.deleteAction.setEnabled(newSelected.isRemovable());
+    }
+
+    private void addConfiguration() {
+        // We ignore the selected. Create new config object.
+        TypeObject configTypeObject = new TypeObject(typeDescriptor.getTypeFullyQualifiedName());
+        configTypeObject.set(JsonParser.Config.id(), UUID.randomUUID().toString());
+        configTypeObject.set(JsonParser.Config.title(), message("config.field.title.default"));
+
+        ConfigMetadata newConfig = new NewConfigMetadata(message("config.field.file.default"), configTypeObject, typeDescriptor);
+        DialogAddConfiguration dialogAddConfiguration = new DialogAddConfiguration(module, typeDescriptor, newConfig);
+
+        if (dialogAddConfiguration.showAndGet()) {
+            ConfigService.getInstance(module).addConfig(newConfig);
+        }
+    }
+
+    private void editConfiguration() {
+        if (selected.isEditable()) {
+            DialogEditConfiguration dialogEditConfiguration = new DialogEditConfiguration(module, typeDescriptor, selected);
+            if (dialogEditConfiguration.showAndGet()) {
+                ConfigService.getInstance(module).saveConfig(selected);
+            }
+        }
+    }
+
+    private void deleteConfiguration() {
+        if (selected.isRemovable()) {
+            DialogConfirmAction dialogConfirmDelete =
+                    new DialogConfirmAction(module,
+                            message("config.dialog.delete.title"),
+                            message("config.dialog.delete.confirm.message"));
+            if (dialogConfirmDelete.showAndGet()) {
+                ConfigService.getInstance(module).removeConfig(selected);
+            }
+        }
     }
 }

@@ -31,7 +31,7 @@ public class PasswordInputField extends DisposablePanel implements DocumentListe
         passwordField.getDocument().addDocumentListener(this);
         char defaultEchoChar = passwordField.getEchoChar();
 
-        showPassword = new ClickableLabel(ShowPassword, ShowPassword, () ->
+        showPassword = new ClickableLabel(ShowPassword, () ->
                 SwingUtilities.invokeLater(() -> {
                     if (isPasswordHidden) {
                         showPassword.setIcon(HidePassword);
