@@ -26,7 +26,7 @@ public class PasswordInputField extends DisposablePanel implements DocumentListe
 
     private boolean isPasswordHidden = true;
 
-    public PasswordInputField() {
+    PasswordInputField() {
         passwordField = new JBPasswordField();
         passwordField.getDocument().addDocumentListener(this);
         char defaultEchoChar = passwordField.getEchoChar();
