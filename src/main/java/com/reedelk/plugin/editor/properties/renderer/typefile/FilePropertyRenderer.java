@@ -50,19 +50,19 @@ public class FilePropertyRenderer extends AbstractPropertyTypeRenderer {
         choseFile.setText(propertyAccessor.get());
 
         choseFile.addCustomBrowseFolderListener(
-                new TextBrowseFolderListener(descriptor, module.getProject(), resourcesFolder, propertyAccessor));
+                new TextBrowseFolderListener(descriptor, module.getProject(), choseFile, resourcesFolder, propertyAccessor));
 
         return choseFile;
     }
 
 
     class TextBrowseFolderListener extends ComponentWithBrowseButton.BrowseFolderActionListener<JTextField> {
-        TextBrowseFolderListener(@NotNull FileChooserDescriptor fileChooserDescriptor, @Nullable Project project, String boh, PropertyAccessor propertyAccessor) {
-            super(null, null, null, project, fileChooserDescriptor, new FileComponentPropertyAccessor(boh, propertyAccessor));
-        }
-
-        void setOwnerComponent(@NotNull TextFieldWithBrowseButton component) {
-            myTextComponent = component;
+        TextBrowseFolderListener(@NotNull FileChooserDescriptor fileChooserDescriptor,
+                                 @Nullable Project project,
+                                 @NotNull ComponentWithBrowseButton textField,
+                                 String boh,
+                                 PropertyAccessor propertyAccessor) {
+            super(null, null, textField, project, fileChooserDescriptor, new FileComponentPropertyAccessor(boh, propertyAccessor));
         }
 
         FileChooserDescriptor getFileChooserDescriptor() {
@@ -76,7 +76,6 @@ public class FilePropertyRenderer extends AbstractPropertyTypeRenderer {
         }
 
         void addCustomBrowseFolderListener(@NotNull TextBrowseFolderListener listener) {
-            listener.setOwnerComponent(this);
             addActionListener(listener);
             installPathCompletion(listener.getFileChooserDescriptor());
         }

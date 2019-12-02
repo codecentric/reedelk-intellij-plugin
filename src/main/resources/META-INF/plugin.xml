@@ -5,13 +5,9 @@
 
     <description>
         <![CDATA[
-    <p>1.0.0-SNAPSHOT</p>
+    <p>1.0.0</p>
     <ul>
-        <li>First Release</li>
-    </ul>
-    <p>1.0.0-SNAPSHOT</p>
-    <ul>
-        <li>First Release</li>
+        <li>Added default 'Hello World' flow template add when a new Reedelk ESB project is created</li>
     </ul>
     ]]>
     </description>
