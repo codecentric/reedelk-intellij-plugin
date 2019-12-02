@@ -1,7 +1,6 @@
 package com.reedelk.plugin.editor;
 
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
-import com.intellij.codeHighlighting.HighlightingPass;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorLocation;
 import com.intellij.openapi.fileEditor.FileEditorState;
@@ -86,19 +85,7 @@ public class FlowDesignerEditor extends UserDataHolderBase implements DesignerEd
     @Nullable
     @Override
     public BackgroundEditorHighlighter getBackgroundHighlighter() {
-        return new BackgroundEditorHighlighter() {
-            @NotNull
-            @Override
-            public HighlightingPass[] createPassesForEditor() {
-                return new HighlightingPass[0];
-            }
-
-            @NotNull
-            @Override
-            public HighlightingPass[] createPassesForVisibleArea() {
-                return HighlightingPass.EMPTY_ARRAY;
-            }
-        };
+        return null;
     }
 
     @Nullable
