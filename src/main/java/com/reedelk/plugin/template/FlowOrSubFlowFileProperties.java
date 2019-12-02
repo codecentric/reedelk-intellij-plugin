@@ -8,11 +8,22 @@ import java.util.UUID;
 
 public class FlowOrSubFlowFileProperties extends Properties {
 
+    public FlowOrSubFlowFileProperties(String id, String title, String description, String configId) {
+        put("id", id);
+        put("title", title);
+        put("configId", configId);
+        put("description", description);
+    }
+
     public FlowOrSubFlowFileProperties(String fileName, String templateName) {
-        String defaultTitle = DefaultFlowOrSubflowTitle.from(fileName);
-        String defaultDescription = DefaultFlowOrSubflowDescription.from(fileName, templateName);
-        put("id", UUID.randomUUID().toString());
-        put("title", defaultTitle);
-        put("description", defaultDescription);
+        this(UUID.randomUUID().toString(),
+                DefaultFlowOrSubflowTitle.from(fileName),
+                DefaultFlowOrSubflowDescription.from(fileName, templateName));
+    }
+
+    public FlowOrSubFlowFileProperties(String id, String title, String description) {
+        put("id", id);
+        put("title", title);
+        put("description", description);
     }
 }

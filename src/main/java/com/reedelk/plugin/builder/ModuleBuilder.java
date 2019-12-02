@@ -42,7 +42,8 @@ public class ModuleBuilder extends MavenModuleBuilder {
         super.setupRootModel(rootModel);
         final Project project = rootModel.getProject();
 
-        VirtualFile root = LocalFileSystem.getInstance().findFileByPath(getContentEntryPath());
+        String contentEntryPath = getContentEntryPath();
+        VirtualFile root = LocalFileSystem.getInstance().findFileByPath(contentEntryPath);
 
         if (createRuntimeConfig) {
             // Create Runtime Run Configuration
@@ -65,12 +66,18 @@ public class ModuleBuilder extends MavenModuleBuilder {
         final String sdkVersion = rootModel.getSdkName();
 
         MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> {
+
+            // Create maven pom files
             MavenProjectBuilderHelper projectBuilder = new MavenProjectBuilderHelper();
             try {
                 projectBuilder.configure(project, projectId, parentId, root, sdkVersion);
             } catch (Throwable throwable) {
                 LOG.error("Error while configuring Maven project", throwable);
             }
+
+            // Create Hello world flows
+            DefaultProjectBuilderHelper defaultProjectBuilderHelper = new DefaultProjectBuilderHelper(project, root);
+            defaultProjectBuilderHelper.run();
         });
     }
 

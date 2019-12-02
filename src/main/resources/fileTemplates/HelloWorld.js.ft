@@ -1,0 +1,9 @@
+var attributes = message.attributes();
+var pathParams = attributes.pathParams;
+
+if (pathParams.containsKey('name')) {
+    var name = pathParams.get('name');
+    return 'Hello World ' + name + '!';
+} else {
+    return 'Hello World!';
+}

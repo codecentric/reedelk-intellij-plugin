@@ -1,0 +1,10 @@
+{
+  "id": "${id}",
+  "title": "${title}",
+  "implementor": "com.reedelk.rest.configuration.listener.ListenerConfiguration",
+  "host": "localhost",
+  "port": 8080,
+  "protocol": "HTTP",
+  "basePath": "/api",
+  "keepAlive": true
+}

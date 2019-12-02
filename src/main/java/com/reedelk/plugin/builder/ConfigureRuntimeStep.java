@@ -143,8 +143,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
             }
         });
         JPanel runtimeChooserPanel = UI.PanelFactory.panel(runtimeHomeDirectoryBrowse).
-                withComment("Select ESB runtime home directory this project will be using. " +
-                        "The runtime will be used to provide a default configuration for this project.")
+                withComment(message("runtimeBuilder.runtime.home.directory"))
                 .createPanel();
         addRuntimePanel.add(runtimeChooserPanel, CHOOSE_RUNTIME_INPUT_GRID_CONSTRAINTS);
     }

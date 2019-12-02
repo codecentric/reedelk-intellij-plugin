@@ -3,7 +3,6 @@ package com.reedelk.plugin.builder;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -13,14 +12,9 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.model.MavenConstants;
 import org.jetbrains.idea.maven.model.MavenId;
 
-import java.io.IOException;
 import java.util.Properties;
 
-import static com.reedelk.runtime.commons.ModuleProperties.*;
-
 class MavenProjectBuilderHelper {
-
-    private static final Logger LOG = Logger.getInstance(MavenProjectBuilderHelper.class);
 
     void configure(Project project, MavenId projectId, @Nullable MavenId parentId, VirtualFile root, String sdkVersion) throws Throwable {
         if (parentId == null) {
@@ -50,8 +44,6 @@ class MavenProjectBuilderHelper {
                 VfsUtil.saveText(pomFile, text);
             }
         });
-
-        ProjectDirectoryGenerator.createDirectories(root);
     }
 
     class MavenProjectProperties extends Properties {
@@ -66,25 +58,6 @@ class MavenProjectBuilderHelper {
             this(projectId, sdkVersion);
             setProperty("parentId", parentId.getArtifactId());
             setProperty("parentVersion", parentId.getVersion());
-        }
-    }
-
-    private static class ProjectDirectoryGenerator {
-
-        private static final String BASE_RESOURCE_FOLDER = "/src/main/resources";
-
-        private static void createDirectories(VirtualFile root) {
-            createDirectory(root, BASE_RESOURCE_FOLDER + Flow.RESOURCE_DIRECTORY);
-            createDirectory(root, BASE_RESOURCE_FOLDER + Config.RESOURCE_DIRECTORY);
-            createDirectory(root, BASE_RESOURCE_FOLDER + Script.RESOURCE_DIRECTORY);
-        }
-
-        private static void createDirectory(VirtualFile root, String suffix) {
-            try {
-                VfsUtil.createDirectories(root.getPath() + suffix);
-            } catch (IOException e) {
-                LOG.info(String.format("Could not create project directory for root=%s and suffix=%s", root.getPath(), suffix), e);
-            }
         }
     }
 }
