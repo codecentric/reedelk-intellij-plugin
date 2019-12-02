@@ -51,7 +51,7 @@ public class DefaultProjectBuilderHelper {
                 String description = "Returns 'Hello world' text from GET /api/message";
                 FlowOrSubFlowFileProperties propertiesValues =
                         new FlowOrSubFlowFileProperties(flowId, title, description, configId);
-                createFromTemplate("HelloWorldFlow.flow", propertiesValues, flowsDir);
+                createFromTemplate("HelloWorld.flow", propertiesValues, flowsDir);
             });
         });
     }
