@@ -1,4 +1,6 @@
-package com.reedelk.plugin.component.domain;
+package com.reedelk.plugin.service.module.impl;
+
+import com.reedelk.plugin.component.domain.ComponentDescriptor;
 
 import java.util.Collections;
 import java.util.List;
@@ -22,11 +24,15 @@ public class ComponentsPackage {
         return name;
     }
 
-    public List<ComponentDescriptor> getModuleComponents() {
+    public synchronized List<ComponentDescriptor> getModuleComponents() {
         return Collections.unmodifiableList(moduleComponents);
     }
 
-    public Optional<ComponentDescriptor> getModuleComponent(String fullyQualifiedName) {
+    public synchronized  void addAll(List<ComponentDescriptor> flowControlComponents) {
+        this.moduleComponents.addAll(flowControlComponents);
+    }
+
+    synchronized Optional<ComponentDescriptor> getModuleComponent(String fullyQualifiedName) {
         return moduleComponents.stream()
                 .filter(descriptor -> descriptor.getFullyQualifiedName().equals(fullyQualifiedName))
                 .findFirst();

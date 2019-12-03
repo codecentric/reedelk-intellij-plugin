@@ -1,4 +1,4 @@
-package com.reedelk.plugin.commons;
+package com.reedelk.plugin.template;
 
 public class Template {
 
@@ -21,5 +21,16 @@ public class Template {
 
         public static final String FLOW = "FlowFile";
         public static final String SUBFLOW = "SubflowFile";
+    }
+
+    public class HelloWorld {
+
+        private HelloWorld() {
+        }
+
+        public static final String FLOW = "HelloWorld.flow";
+        public static final String SCRIPT = "HelloWorld.js";
+        public static final String CONFIG = "DefaultListener.fconfig";
+
     }
 }

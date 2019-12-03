@@ -17,8 +17,8 @@ import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.util.IncorrectOperationException;
 import com.reedelk.plugin.commons.Icons;
-import com.reedelk.plugin.commons.Template;
 import com.reedelk.plugin.template.FlowOrSubFlowFileProperties;
+import com.reedelk.plugin.template.Template;
 
 import java.util.Properties;
 

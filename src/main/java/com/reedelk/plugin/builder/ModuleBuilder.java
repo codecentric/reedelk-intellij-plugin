@@ -67,15 +67,11 @@ public class ModuleBuilder extends MavenModuleBuilder {
 
         MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> {
 
-            // Create maven pom files
+            // Create Maven project files
             MavenProjectBuilderHelper projectBuilder = new MavenProjectBuilderHelper();
-            try {
-                projectBuilder.configure(project, projectId, parentId, root, sdkVersion);
-            } catch (Throwable throwable) {
-                LOG.error("Error while configuring Maven project", throwable);
-            }
+            projectBuilder.configure(project, projectId, parentId, root, sdkVersion);
 
-            // Create Hello world flows
+            // Create Hello world flow and config
             DefaultProjectBuilderHelper defaultProjectBuilderHelper = new DefaultProjectBuilderHelper(project, root);
             defaultProjectBuilderHelper.run();
         });

@@ -1,5 +1,7 @@
 package com.reedelk.plugin.commons;
 
+import com.reedelk.plugin.template.Template;
+
 public class DefaultFlowOrSubflowDescription {
 
     private DefaultFlowOrSubflowDescription() {

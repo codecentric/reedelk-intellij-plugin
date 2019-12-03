@@ -11,10 +11,10 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.MavenUtils;
 import com.reedelk.plugin.commons.ModuleInfo;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
-import com.reedelk.plugin.component.domain.ComponentsPackage;
 import com.reedelk.plugin.component.scanner.ComponentListUpdateNotifier;
 import com.reedelk.plugin.component.scanner.ComponentScanner;
 import com.reedelk.plugin.component.type.unknown.UnknownComponentDescriptorWrapper;
+import com.reedelk.plugin.executor.PluginExecutor;
 import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.runtime.component.Stop;
 import com.reedelk.runtime.component.Unknown;
@@ -23,7 +23,6 @@ import org.jetbrains.idea.maven.project.MavenImportListener;
 import org.jetbrains.idea.maven.project.MavenProject;
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
@@ -42,13 +41,6 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
     private ComponentsPackage moduleComponents;
 
-
-    /**
-     * The constructor loads the system components. Synchronously.
-     * All the other components are loaded asynchronously.
-     *
-     * @param module the module this service is referring to.
-     */
     public ComponentServiceImpl(Project project, Module module) {
         this.module = module;
         this.project = project;
@@ -60,10 +52,11 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         connection.subscribe(CompilerTopics.COMPILATION_STATUS, this);
 
         this.publisher = messageBus.syncPublisher(ComponentListUpdateNotifier.COMPONENT_LIST_UPDATE_TOPIC);
-        this.systemComponents = scanSystemComponents();
+        this.systemComponents = new ComponentsPackage(SYSTEM_COMPONENTS_MODULE_NAME, new ArrayList<>());
 
-        asyncUpdateModuleComponents();
-        asyncScanClasspathComponents();
+        asyncUpdateSystemComponents();
+        asyncUpdateMavenDependenciesComponents();
+        asyncUpdateModuleCustomComponents();
     }
 
     @Override
@@ -103,24 +96,21 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
     @Override
     public void importFinished(@NotNull Collection<MavenProject> importedProjects, @NotNull List<Module> newModules) {
-        asyncScanClasspathComponents();
+        asyncUpdateMavenDependenciesComponents();
     }
 
     @Override
     public void compilationFinished(boolean aborted, int errors, int warnings, @NotNull CompileContext compileContext) {
         if (!aborted && errors == 0) {
-            asyncUpdateModuleComponents();
+            asyncUpdateModuleCustomComponents();
         }
     }
 
-    private void asyncScanClasspathComponents() {
-        CompletableFuture.runAsync(() -> {
+    private void asyncUpdateMavenDependenciesComponents() {
+        PluginExecutor.getInstance().submit(() -> {
             // Remove all jars before reimporting them
             mavenJarComponentsMap.clear();
-
-
             MavenUtils.getMavenProject(module.getProject(), module.getName()).ifPresent(mavenProject -> {
-
                 mavenProject.getDependencies().stream()
                         .filter(artifact -> ModuleInfo.isModule(artifact.getFile()))
                         .map(artifact -> artifact.getFile().getPath()).collect(Collectors.toList())
@@ -133,12 +123,11 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
                 publisher.onComponentListUpdate(module);
             });
-
         });
     }
 
-    private void asyncUpdateModuleComponents() {
-        CompletableFuture.runAsync(() -> {
+    private void asyncUpdateModuleCustomComponents() {
+        PluginExecutor.getInstance().submit(() -> {
             String[] modulePaths = ModuleRootManager.getInstance(module)
                     .orderEntries()
                     .withoutSdk()
@@ -146,21 +135,24 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                     .productionOnly()
                     .classes()
                     .getUrls();
-
             stream(modulePaths).forEach(modulePath -> {
                 List<ComponentDescriptor> components = componentScanner.from(modulePath);
-                String moduleName = MavenUtils.getMavenProject(project, module.getName()).get().getDisplayName();
-                moduleComponents = new ComponentsPackage(moduleName, components);
+                MavenUtils.getMavenProject(project, module.getName()).ifPresent(mavenProject -> {
+                    String moduleName = mavenProject.getDisplayName();
+                    moduleComponents = new ComponentsPackage(moduleName, components);
+                });
             });
 
             publisher.onComponentListUpdate(module);
         });
     }
 
+    private void asyncUpdateSystemComponents() {
+        PluginExecutor.getInstance().submit(() -> {
+            List<ComponentDescriptor> flowControlComponents = componentScanner.from(Stop.class.getPackage());
+            this.systemComponents.addAll(flowControlComponents);
 
-    private ComponentsPackage scanSystemComponents() {
-        List<ComponentDescriptor> flowControlComponents = componentScanner.from(Stop.class.getPackage());
-        return new ComponentsPackage(SYSTEM_COMPONENTS_MODULE_NAME, flowControlComponents);
+        });
     }
 
     private Optional<ComponentDescriptor> findComponentMatching(Collection<ComponentsPackage> descriptors, String fullyQualifiedName) {
