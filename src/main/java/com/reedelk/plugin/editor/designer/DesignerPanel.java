@@ -1,6 +1,5 @@
 package com.reedelk.plugin.editor.designer;
 
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.AncestorListenerAdapter;
@@ -96,7 +95,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
         this.busConnection = module.getMessageBus().connect();
         this.busConnection.subscribe(COMPONENT_LIST_UPDATE_TOPIC, this);
         this.componentSelectedPublisher = module.getProject().getMessageBus().syncPublisher(CURRENT_SELECTION_TOPIC);
-        this.designerSelectionManager = ServiceManager.getService(module.getProject(), DesignerSelectionManager.class);
+        this.designerSelectionManager = module.getProject().getComponent(DesignerSelectionManager.class);
 
         addDropTargetListener(module, snapshot, actionHandler);
         addAncestorListener();

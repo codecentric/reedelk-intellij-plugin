@@ -1,7 +1,6 @@
 package com.reedelk.plugin.editor.properties;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.util.messages.MessageBusConnection;
@@ -32,9 +31,9 @@ public class PropertiesPanel extends DisposablePanel implements CurrentSelection
         setBorder(JBUI.Borders.empty());
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setupAncestorListener();
+
         this.project = project;
-        this.designerSelectionManager =
-                ServiceManager.getService(project, DesignerSelectionManager.class);
+        this.designerSelectionManager = project.getComponent(DesignerSelectionManager.class);
 
         setEmptySelection();
 
