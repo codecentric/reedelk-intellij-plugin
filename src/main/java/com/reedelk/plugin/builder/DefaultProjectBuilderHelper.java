@@ -1,6 +1,7 @@
 package com.reedelk.plugin.builder;
 
 import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.reedelk.plugin.message.ReedelkBundle;
@@ -13,7 +14,7 @@ import java.util.UUID;
 import static com.reedelk.plugin.commons.Defaults.BASE_RESOURCE_FOLDER;
 import static com.reedelk.runtime.commons.ModuleProperties.*;
 
-public class DefaultProjectBuilderHelper extends AbstractProjectBuilderHelper {
+class DefaultProjectBuilderHelper extends AbstractProjectBuilderHelper {
 
     private final Project project;
     private final VirtualFile root;
@@ -23,7 +24,7 @@ public class DefaultProjectBuilderHelper extends AbstractProjectBuilderHelper {
         this.root = root;
     }
 
-    public void run() {
+    void configure() {
         WriteCommandAction.runWriteCommandAction(project, () -> {
             String configId = UUID.randomUUID().toString();
 
@@ -45,7 +46,8 @@ public class DefaultProjectBuilderHelper extends AbstractProjectBuilderHelper {
                 String description = ReedelkBundle.message("hello.world.sample.flow.description");
                 FlowOrSubFlowFileProperties propertiesValues =
                         new FlowOrSubFlowFileProperties(flowId, title, description, configId);
-                createFromTemplate(project, HelloWorld.FLOW, propertiesValues, flowsDir);
+                createFromTemplate(project, HelloWorld.FLOW, propertiesValues, flowsDir)
+                        .ifPresent(virtualFile -> FileEditorManager.getInstance(project).openFile(virtualFile, true));
             });
         });
     }

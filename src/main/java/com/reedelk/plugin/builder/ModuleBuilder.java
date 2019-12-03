@@ -3,7 +3,6 @@ package com.reedelk.plugin.builder;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.JavaModuleType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbAwareRunnable;
@@ -13,6 +12,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.reedelk.plugin.commons.Icons;
+import com.reedelk.plugin.commons.ReedelkPluginUtil;
 import com.reedelk.plugin.runconfig.module.ModuleRunConfigurationBuilder;
 import com.reedelk.plugin.runconfig.runtime.RuntimeRunConfigurationBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -26,8 +26,6 @@ import javax.swing.*;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class ModuleBuilder extends MavenModuleBuilder {
-
-    private static final Logger LOG = Logger.getInstance(ModuleBuilder.class);
 
     private boolean createRuntimeConfig;
     private String runtimeConfigName;
@@ -66,14 +64,15 @@ public class ModuleBuilder extends MavenModuleBuilder {
         final String sdkVersion = rootModel.getSdkName();
 
         MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> {
-
             // Create Maven project files
             MavenProjectBuilderHelper projectBuilder = new MavenProjectBuilderHelper();
             projectBuilder.configure(project, projectId, parentId, root, sdkVersion);
+        });
 
+        ReedelkPluginUtil.runWhenInitialized(project, () -> {
             // Create Hello world flow and config
             DefaultProjectBuilderHelper defaultProjectBuilderHelper = new DefaultProjectBuilderHelper(project, root);
-            defaultProjectBuilderHelper.run();
+            defaultProjectBuilderHelper.configure();
         });
     }
 

@@ -17,26 +17,28 @@ abstract class AbstractProjectBuilderHelper {
 
     private static final Logger LOG = Logger.getInstance(MavenProjectBuilderHelper.class);
 
-    void createFromTemplate(Project project, String templateName, Properties templateProperties, VirtualFile destinationDir, String fileName) {
+    Optional<VirtualFile> createFromTemplate(Project project, String templateName, Properties templateProperties, VirtualFile destinationDir, String fileName) {
         FileTemplateManager manager = FileTemplateManager.getInstance(project);
         FileTemplate fileTemplate = manager.getInternalTemplate(templateName);
         try {
-            String scriptText = fileTemplate.getText(templateProperties);
-            VirtualFile scriptFile = destinationDir.findOrCreateChildData(this, fileName);
-            VfsUtil.saveText(scriptFile, scriptText);
+            String fileText = fileTemplate.getText(templateProperties);
+            VirtualFile file = destinationDir.findOrCreateChildData(this, fileName);
+            VfsUtil.saveText(file, fileText);
+            return Optional.of(file);
         } catch (IOException exception) {
             String message = message("moduleBuilder.hello.world.template.error", templateName, exception.getMessage());
             LOG.warn(message, exception);
+            return Optional.empty();
         }
     }
 
-    void createFromTemplate(Project project, String templateName, Properties templateProperties, VirtualFile destinationDir) {
-        createFromTemplate(project, templateName, templateProperties, destinationDir, templateName);
+    Optional<VirtualFile> createFromTemplate(Project project, String templateName, Properties templateProperties, VirtualFile destinationDir) {
+        return createFromTemplate(project, templateName, templateProperties, destinationDir, templateName);
     }
 
-    void createFromTemplate(Project project, String templateName, VirtualFile destinationDir) {
+    Optional<VirtualFile> createFromTemplate(Project project, String templateName, VirtualFile destinationDir) {
         Properties emptyProperties = new Properties();
-        createFromTemplate(project, templateName, emptyProperties, destinationDir);
+        return createFromTemplate(project, templateName, emptyProperties, destinationDir);
     }
 
     Optional<VirtualFile> createDirectory(VirtualFile root, String suffix) {
