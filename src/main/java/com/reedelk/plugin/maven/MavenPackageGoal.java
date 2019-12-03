@@ -1,5 +1,7 @@
 package com.reedelk.plugin.maven;
 
+import com.intellij.execution.process.ProcessAdapter;
+import com.intellij.execution.process.ProcessEvent;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
@@ -23,9 +25,9 @@ public class MavenPackageGoal {
 
     private final Project project;
     private final String moduleName;
-    private Callback callback;
+    private final Callback callback;
 
-    public MavenPackageGoal(@NotNull Project project, @NotNull String moduleName, @Nullable Callback callback) {
+    public MavenPackageGoal(@NotNull Project project, @NotNull String moduleName, @NotNull Callback callback) {
         this.project = project;
         this.moduleName = moduleName;
         this.callback = callback;
@@ -43,9 +45,7 @@ public class MavenPackageGoal {
             MavenPackageTask task = new MavenPackageTask(project, mavenProject);
             task.queue();
         } else {
-            if (callback != null) {
-                callback.onComplete(false);
-            }
+            callback.onComplete(false);
         }
     }
 
@@ -60,17 +60,10 @@ public class MavenPackageGoal {
 
         @Override
         public void run(@NotNull ProgressIndicator indicator) {
-            boolean result = false;
             try {
-                final MavenExplicitProfiles explicitProfiles =
-                        MavenProjectsManager.getInstance(project).getExplicitProfiles();
-
-                final MavenRunnerSettings mavenRunnerSettings =
-                        new MavenRunnerSettings();
-
-                final MavenGeneralSettings mavenGeneralSettings =
-                        new MavenGeneralSettings();
-
+                final MavenExplicitProfiles explicitProfiles = MavenProjectsManager.getInstance(project).getExplicitProfiles();
+                final MavenRunnerSettings mavenRunnerSettings = new MavenRunnerSettings();
+                final MavenGeneralSettings mavenGeneralSettings = new MavenGeneralSettings();
                 final MavenRunnerParameters params = new MavenRunnerParameters(
                         true,
                         mavenProject.getDirectory(),
@@ -80,17 +73,20 @@ public class MavenPackageGoal {
                         explicitProfiles.getDisabledProfiles());
 
                 final MavenRunner mavenRunner = MavenRunner.getInstance(project);
-
-                result = mavenRunner.runBatch(Collections.singletonList(params),
+                mavenRunner.runBatch(Collections.singletonList(params),
                         mavenGeneralSettings,
                         mavenRunnerSettings,
                         TasksBundle.message("maven.tasks.executing"),
-                        indicator);
+                        indicator,
+                        processHandler -> processHandler.addProcessListener(new ProcessAdapter() {
+                            @Override
+                            public void processTerminated(@NotNull ProcessEvent event) {
+                                callback.onComplete(event.getExitCode() == 0);
+                            }
+                        }));
 
-            } finally {
-                if (callback != null) {
-                    callback.onComplete(result);
-                }
+            } catch (Exception e) {
+                callback.onComplete(false);
             }
         }
 

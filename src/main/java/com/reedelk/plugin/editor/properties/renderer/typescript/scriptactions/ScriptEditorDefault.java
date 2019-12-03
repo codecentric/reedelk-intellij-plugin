@@ -4,6 +4,8 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import com.intellij.ui.components.JBLabel;
+import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
+import com.reedelk.plugin.editor.properties.commons.DisposableThreeComponentsSplitter;
 import com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditor;
 
 import java.awt.*;
@@ -14,7 +16,7 @@ import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.SOUTH;
 import static javax.swing.SwingConstants.LEFT;
 
-class ScriptEditorDefault extends ScriptEditor {
+class ScriptEditorDefault extends DisposablePanel {
 
     private static final int DIVIDER_WIDTH = 0;
     private static final int DIVIDER_MOUSE_ZONE_WIDTH = 4;
@@ -24,10 +26,9 @@ class ScriptEditorDefault extends ScriptEditor {
     private static final boolean HORIZONTAL = false;
 
     ScriptEditorDefault(Module module, Document document) {
-        super(module, document);
         ScriptEditor editor = new ScriptEditor(module, document);
 
-        ThreeComponentsSplitter splitter = new ThreeComponentsSplitter(HORIZONTAL);
+        ThreeComponentsSplitter splitter = new DisposableThreeComponentsSplitter(HORIZONTAL);
         splitter.setFirstComponent(new ScriptEditorContextPanel());
         splitter.setLastComponent(editor);
         splitter.setDividerWidth(DIVIDER_WIDTH);

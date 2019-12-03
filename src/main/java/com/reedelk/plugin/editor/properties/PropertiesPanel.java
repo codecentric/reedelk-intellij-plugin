@@ -57,8 +57,6 @@ public class PropertiesPanel extends DisposablePanel implements CurrentSelection
             createFlowComponentContent(selectedItem);
         } else if (selectedItem instanceof SelectableItemFlow || selectedItem instanceof SelectableItemSubflow) {
             createFlowOrSubflowContent(selectedItem);
-        } else {
-            throw new IllegalStateException("Unknown selectable item");
         }
     }
 

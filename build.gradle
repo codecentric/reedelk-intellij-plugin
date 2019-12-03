@@ -39,7 +39,7 @@ test {
 }
 
 intellij {
-    plugins = ["maven"]
+    plugins = ["maven", "java"]
     version '2019.3'
 }
 

@@ -372,7 +372,6 @@ public abstract class DesignerPanel extends DisposablePanel implements
 
             @Override
             public void ancestorRemoved(AncestorEvent event) {
-                unselect();
                 visible = false;
             }
         });

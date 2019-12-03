@@ -9,38 +9,37 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.ModuleUtils;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
-import com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.nio.file.Paths;
+import java.util.function.Function;
 
 import static com.reedelk.plugin.commons.Colors.FOREGROUND_TEXT;
 import static com.reedelk.plugin.commons.Icons.Script.ScriptLoadError;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
+import static java.util.Optional.ofNullable;
 import static javax.swing.SwingConstants.CENTER;
 
 public class EditScriptDialog extends DialogWrapper {
 
     private final String scriptFilePathAndName;
-    private ScriptEditor editor;
+    private final DisposablePanel editorPanel;
 
 
     EditScriptDialog(@NotNull Module module, String scriptFilePathAndName) {
         super(module.getProject(), false);
         setTitle(message("script.dialog.edit.title"));
         setResizable(true);
-        this.scriptFilePathAndName = scriptFilePathAndName;
 
-        ModuleUtils.getScriptsFolder(module).ifPresent(scriptsFolder -> {
-            VirtualFile scriptVirtualFile = VfsUtil.findFile(Paths.get(scriptsFolder, scriptFilePathAndName), true);
-            if (scriptVirtualFile != null) {
-                Document document = FileDocumentManager.getInstance().getDocument(scriptVirtualFile);
-                editor = new ScriptEditorDefault(module, document);
-            }
-        });
+        this.scriptFilePathAndName = scriptFilePathAndName;
+        this.editorPanel = ModuleUtils.getScriptsFolder(module)
+                .flatMap(scriptsFolder -> ofNullable(VfsUtil.findFile(Paths.get(scriptsFolder, scriptFilePathAndName), true))).map((Function<VirtualFile, DisposablePanel>) scriptVirtualFile -> {
+                    Document document = FileDocumentManager.getInstance().getDocument(scriptVirtualFile);
+                    return new ScriptEditorDefault(module, document);
+                }).orElse(null);
 
         init();
     }
@@ -56,7 +55,7 @@ public class EditScriptDialog extends DialogWrapper {
     @NotNull
     @Override
     protected Action[] createActions() {
-        if (editor == null) {
+        if (editorPanel == null) {
             return new Action[]{getCancelAction()};
         } else {
             return new Action[]{getOKAction(), getCancelAction()};
@@ -66,16 +65,16 @@ public class EditScriptDialog extends DialogWrapper {
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
-        return editor == null ?
-                new EditorErrorPanel(scriptFilePathAndName):
-                editor;
+        return editorPanel == null ?
+                new EditorErrorPanel(scriptFilePathAndName) :
+                editorPanel;
     }
 
     @Override
     public void dispose() {
         super.dispose();
-        if (editor != null) {
-            editor.dispose();
+        if (editorPanel != null) {
+            editorPanel.dispose();
         }
     }
 
