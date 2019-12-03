@@ -291,6 +291,11 @@ public abstract class DesignerPanel extends DisposablePanel implements
     @Override
     public void dispose() {
         super.dispose();
+        // Before disposing the Panel, we must un-select the current selection, otherwise
+        // the properties panel would still show the properties of the latest selected component.
+        if (currentSelection != null) {
+            componentSelectedPublisher.onUnSelected(currentSelection);
+        }
         busConnection.disconnect();
     }
 
