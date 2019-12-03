@@ -1,4 +1,4 @@
-package com.reedelk.plugin.commons;
+package com.reedelk.plugin.maven;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
