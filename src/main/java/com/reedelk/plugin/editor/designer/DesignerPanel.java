@@ -95,7 +95,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
         this.busConnection = module.getMessageBus().connect();
         this.busConnection.subscribe(COMPONENT_LIST_UPDATE_TOPIC, this);
         this.componentSelectedPublisher = module.getProject().getMessageBus().syncPublisher(CURRENT_SELECTION_TOPIC);
-        this.designerSelectionManager = module.getProject().getComponent(DesignerSelectionManager.class);
+        this.designerSelectionManager = DesignerSelectionManager.getInstance(module.getProject());
 
         addDropTargetListener(module, snapshot, actionHandler);
         addAncestorListener();

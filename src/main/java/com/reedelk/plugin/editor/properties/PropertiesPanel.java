@@ -33,7 +33,7 @@ public class PropertiesPanel extends DisposablePanel implements CurrentSelection
         setupAncestorListener();
 
         this.project = project;
-        this.designerSelectionManager = project.getComponent(DesignerSelectionManager.class);
+        this.designerSelectionManager = DesignerSelectionManager.getInstance(project);
 
         setEmptySelection();
 
