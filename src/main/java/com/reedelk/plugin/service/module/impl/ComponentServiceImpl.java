@@ -118,26 +118,22 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
             // Remove all jars before reimporting them
             mavenJarComponentsMap.clear();
 
-            List<String> esbModuleJarPaths = ModuleRootManager.getInstance(module)
-                    .orderEntries()
-                    .withoutSdk()
-                    .withoutDepModules()
-                    .librariesOnly()
-                    .classes()
-                    .getPathsList()
-                    .getPathList()
-                    .stream()
-                    .filter(ModuleInfo::isModule)
-                    .collect(Collectors.toList());
 
-            esbModuleJarPaths.forEach(jarFilePath -> {
-                List<ComponentDescriptor> components = componentScanner.from(jarFilePath);
-                String moduleName = ModuleInfo.getModuleName(jarFilePath);
-                ComponentsPackage descriptor = new ComponentsPackage(moduleName, components);
-                mavenJarComponentsMap.put(jarFilePath, descriptor);
+            MavenUtils.getMavenProject(module.getProject(), module.getName()).ifPresent(mavenProject -> {
+
+                mavenProject.getDependencies().stream()
+                        .filter(artifact -> ModuleInfo.isModule(artifact.getFile()))
+                        .map(artifact -> artifact.getFile().getPath()).collect(Collectors.toList())
+                        .forEach(jarFilePath -> {
+                            List<ComponentDescriptor> components = componentScanner.from(jarFilePath);
+                            String moduleName = ModuleInfo.getModuleName(jarFilePath);
+                            ComponentsPackage descriptor = new ComponentsPackage(moduleName, components);
+                            mavenJarComponentsMap.put(jarFilePath, descriptor);
+                        });
+
+                publisher.onComponentListUpdate(module);
             });
 
-            publisher.onComponentListUpdate(module);
         });
     }
 

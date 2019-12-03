@@ -13,6 +13,16 @@ public class ModuleInfo {
     private ModuleInfo() {
     }
 
+    public static boolean isModule(File jarFile) {
+        try {
+            Attributes attributes = getManifestAttributesOf(jarFile);
+            String isEsbModule = attributes.getValue(Bundle.MODULE_HEADER_NAME);
+            return Boolean.parseBoolean(isEsbModule);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public static boolean isModule(String jarFilePath) {
         try {
             Attributes attributes = getManifestAttributesOf(jarFilePath);
@@ -29,6 +39,13 @@ public class ModuleInfo {
             return attributes.getValue("Bundle-SymbolicName");
         } catch (Exception e) {
             return "UnknownSymbolicName";
+        }
+    }
+
+    private static Attributes getManifestAttributesOf(File file) throws IOException {
+        try (JarFile jarFile = new JarFile(file)) {
+            Manifest manifest = jarFile.getManifest();
+            return manifest.getMainAttributes();
         }
     }
 
