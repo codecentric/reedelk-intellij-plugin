@@ -40,7 +40,7 @@ test {
 
 intellij {
     plugins = ["maven"]
-    version '2018.3.5'
+    version '2019.3'
 }
 
 jacoco {
