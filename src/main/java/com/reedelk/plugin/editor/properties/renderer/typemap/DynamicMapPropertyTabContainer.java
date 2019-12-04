@@ -3,24 +3,16 @@ package com.reedelk.plugin.editor.properties.renderer.typemap;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.commons.DisposableUtils;
-import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.commons.VectorUtils;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
-import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
-import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
-import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
-import com.reedelk.plugin.editor.properties.commons.PropertyTable;
-import com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditor;
-import com.reedelk.plugin.editor.properties.renderer.typedynamicvalue.DynamicValueScriptEditor;
+import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.runtime.api.commons.ScriptUtils;
-import com.reedelk.runtime.api.commons.StringUtils;
 
 import javax.swing.*;
-import javax.swing.event.CellEditorListener;
-import javax.swing.event.ChangeEvent;
-import javax.swing.table.*;
+import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.util.EventObject;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -53,6 +45,7 @@ class DynamicMapPropertyTabContainer extends DisposablePanel {
         }
     }
 
+    // TODO: The serialization/deserialization order is wrong.  Fixit
     class MapAwareTableModel extends DefaultTableModel implements PropertyTable.PropertyTableModel {
 
         private final PropertyAccessor accessor;
@@ -112,12 +105,12 @@ class DynamicMapPropertyTabContainer extends DisposablePanel {
 
     class MapTableColumnModel extends DefaultTableColumnModel implements Disposable {
 
-        private DynamicMapCellEditor cellEditor;
-        private DynamicMapCellRenderer cellRenderer;
+        private TableDynamicCellEditor cellEditor;
+        private TableDynamicCellRenderer cellRenderer;
 
         MapTableColumnModel(Module  module) {
-            this.cellEditor = new DynamicMapCellEditor(module);
-            this.cellRenderer = new DynamicMapCellRenderer(module);
+            this.cellEditor = new TableDynamicCellEditor(module);
+            this.cellRenderer = new TableDynamicCellRenderer(module);
 
             // Column 1 (the map key)
             TableColumn keyColumn = new TableColumn(0);
@@ -136,94 +129,6 @@ class DynamicMapPropertyTabContainer extends DisposablePanel {
         public void dispose() {
             DisposableUtils.dispose(cellRenderer);
             DisposableUtils.dispose(cellEditor);
-        }
-    }
-
-    private class DynamicMapCellEditor implements TableCellEditor, Disposable {
-
-        private final ScriptEditor editor;
-        private CellEditorListener listener;
-        private DisposablePanel content;
-
-        DynamicMapCellEditor(Module module) {
-            JLabel codeIcon = new JLabel(Icons.Script.Code);
-            this.editor = new DynamicValueScriptEditor(module);
-            this.content = ContainerFactory.createLabelNextToComponent(codeIcon, editor, false);
-        }
-
-        @Override
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            this.editor.setValue(value == null ? StringUtils.EMPTY : (String) value);
-            return this.content;
-        }
-
-        @Override
-        public Object getCellEditorValue() {
-            return editor.getValue();
-        }
-
-        @Override
-        public boolean isCellEditable(EventObject anEvent) {
-            return true;
-        }
-
-        @Override
-        public boolean shouldSelectCell(EventObject anEvent) {
-            return true;
-        }
-
-        @Override
-        public boolean stopCellEditing() {
-            if (listener != null) {
-                listener.editingStopped(new ChangeEvent(this));
-            }
-            return true;
-        }
-
-        @Override
-        public void cancelCellEditing() {
-            if (listener != null) {
-                listener.editingStopped(new ChangeEvent(this));
-            }
-        }
-
-        @Override
-        public void addCellEditorListener(CellEditorListener listener) {
-            this.listener = listener;
-        }
-
-        @Override
-        public void removeCellEditorListener(CellEditorListener listener) {
-            this.listener = listener;
-        }
-
-        @Override
-        public void dispose() {
-            DisposableUtils.dispose(editor);
-        }
-    }
-
-
-    private class DynamicMapCellRenderer implements TableCellRenderer, Disposable {
-
-        private DisposablePanel content;
-        private final DynamicValueScriptEditor editor;
-
-        DynamicMapCellRenderer(Module module) {
-            JLabel codeIcon = new JLabel(Icons.Script.Code);
-            this.editor = new DynamicValueScriptEditor(module);
-            this.content = ContainerFactory.createLabelNextToComponent(codeIcon, editor, false);
-        }
-
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            this.editor.setValue(value == null ? StringUtils.EMPTY : (String) value);
-            return this.content;
-        }
-
-        @Override
-        public void dispose() {
-            DisposableUtils.dispose(this.editor);
         }
     }
 }
