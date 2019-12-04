@@ -19,7 +19,7 @@ import com.reedelk.plugin.editor.properties.renderer.typeinteger.DynamicIntegerP
 import com.reedelk.plugin.editor.properties.renderer.typeinteger.IntegerPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typelong.DynamicLongPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typelong.LongPropertyRenderer;
-import com.reedelk.plugin.editor.properties.renderer.typemap.DynamicMapPropertyRenderer;
+import com.reedelk.plugin.editor.properties.renderer.typemap.DynamicStringMapPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typemap.MapPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typeobject.DynamicObjectPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typeobject.ObjectPropertyRenderer;
@@ -87,7 +87,7 @@ public class PropertyTypeRendererFactory {
         tmp.put(DynamicString.class, new DynamicStringPropertyRenderer());
 
         // Dynamic map types
-        tmp.put(DynamicStringMap.class, new DynamicMapPropertyRenderer());
+        tmp.put(DynamicStringMap.class, new DynamicStringMapPropertyRenderer());
 
         RENDERER = Collections.unmodifiableMap(tmp);
     }

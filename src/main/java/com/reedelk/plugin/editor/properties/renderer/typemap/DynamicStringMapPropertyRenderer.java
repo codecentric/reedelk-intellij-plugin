@@ -5,7 +5,7 @@ import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 
 import javax.swing.*;
 
-public class DynamicMapPropertyRenderer extends BaseMapPropertyRenderer {
+public class DynamicStringMapPropertyRenderer extends BaseMapPropertyRenderer {
 
     @Override
     protected JComponent getMapTabContainer(Module module, PropertyAccessor propertyAccessor) {
