@@ -99,6 +99,8 @@ public abstract class DesignerPanel extends DisposablePanel implements
 
         addDropTargetListener(module, snapshot, actionHandler);
         addAncestorListener();
+
+        select(defaultSelectedItem());
     }
 
     @Override
@@ -109,7 +111,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
 
         g2.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
 
-        snapshot.applyOnGraph(graph -> {
+        snapshot.applyOnGraph(flowGraph -> {
 
                     // Set the canvas background
                     setBackground(Colors.DESIGNER_BG);
@@ -120,11 +122,11 @@ public abstract class DesignerPanel extends DisposablePanel implements
 
                         LOG.info("Graph changed");
 
-                        FlowGraphLayout.compute(graph, g2, TOP_PADDING);
+                        FlowGraphLayout.compute(flowGraph, g2, TOP_PADDING);
 
                         adjustWindowSize();
 
-                        PrintFlowInfo.debug(graph);
+                        PrintFlowInfo.debug(flowGraph);
 
                         snapshotUpdated = false;
 
@@ -133,15 +135,15 @@ public abstract class DesignerPanel extends DisposablePanel implements
                     beforePaint(g2);
 
                     // Draw the graph nodes
-                    graph.breadthFirstTraversal(node -> node.draw(graph, g2, DesignerPanel.this));
+                    flowGraph.breadthFirstTraversal(node -> node.draw(flowGraph, g2, DesignerPanel.this));
 
                     // Draw the arrows connecting the nodes
-                    graph.breadthFirstTraversal(node -> node.drawArrows(graph, g2, DesignerPanel.this));
+                    flowGraph.breadthFirstTraversal(node -> node.drawArrows(flowGraph, g2, DesignerPanel.this));
 
-                    hintDrawable.draw(graph, g2, hintResult, this);
+                    hintDrawable.draw(flowGraph, g2, hintResult, this);
 
                     // Draw on top of everything dragged elements of the graph
-                    graph.breadthFirstTraversal(node -> node.drawDrag(graph, g2, DesignerPanel.this));
+                    flowGraph.breadthFirstTraversal(node -> node.drawDrag(flowGraph, g2, DesignerPanel.this));
 
                     centerOfNodeDrawable.draw(g2);
 
