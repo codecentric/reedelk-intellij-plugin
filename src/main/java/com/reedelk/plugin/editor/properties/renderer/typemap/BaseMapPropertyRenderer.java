@@ -2,12 +2,12 @@ package com.reedelk.plugin.editor.properties.renderer.typemap;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.JBColor;
-import com.intellij.ui.components.JBTabbedPane;
 import com.reedelk.plugin.commons.Sizes;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeMapDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
+import com.reedelk.plugin.editor.properties.commons.DisposableTabbedPane;
 import com.reedelk.plugin.editor.properties.commons.FormBuilder;
 import com.reedelk.plugin.editor.properties.commons.JComponentHolder;
 import com.reedelk.plugin.editor.properties.renderer.PropertyTypeRenderer;
@@ -29,10 +29,10 @@ abstract class BaseMapPropertyRenderer implements PropertyTypeRenderer {
                              @NotNull ContainerContext context) {
 
         // Map properties are grouped together into a  Tabbed Pane.
-        Optional<JBTabbedPane> groupTabbedPane = getGroupTabbedPane(propertyDescriptor, context);
+        Optional<DisposableTabbedPane> groupTabbedPane = getGroupTabbedPane(propertyDescriptor, context);
 
-        JBTabbedPane tabbedPane = groupTabbedPane.orElseGet(() -> {
-            JBTabbedPane tabbed = new JBTabbedPane(JTabbedPane.LEFT);
+        DisposableTabbedPane tabbedPane = groupTabbedPane.orElseGet(() -> {
+            DisposableTabbedPane tabbed = new DisposableTabbedPane(JTabbedPane.LEFT);
             tabbed.setPreferredSize(Sizes.TabbedPane.HEIGHT);
 
             TypeMapDescriptor propertyType = propertyDescriptor.getPropertyType();
@@ -62,7 +62,7 @@ abstract class BaseMapPropertyRenderer implements PropertyTypeRenderer {
         // If exists a group tabbed pane, then we don't add it to the parent
         // because it has been already added to the tabbed pane above in the
         // render method.
-        Optional<JBTabbedPane> groupTabbedPane = getGroupTabbedPane(descriptor, context);
+        Optional<DisposableTabbedPane> groupTabbedPane = getGroupTabbedPane(descriptor, context);
         if (groupTabbedPane.isPresent()) {
             return;
         }
@@ -82,7 +82,7 @@ abstract class BaseMapPropertyRenderer implements PropertyTypeRenderer {
 
     protected abstract JComponent getMapTabContainer(Module module, PropertyAccessor propertyAccessor);
 
-    private Optional<JBTabbedPane> getGroupTabbedPane(ComponentPropertyDescriptor propertyDescriptor, ContainerContext context) {
+    private Optional<DisposableTabbedPane> getGroupTabbedPane(ComponentPropertyDescriptor propertyDescriptor, ContainerContext context) {
         TypeMapDescriptor propertyType = propertyDescriptor.getPropertyType();
         Optional<String> tabGroup = propertyType.getTabGroup();
         if (tabGroup.isPresent()) {
@@ -94,7 +94,7 @@ abstract class BaseMapPropertyRenderer implements PropertyTypeRenderer {
                             TabGroup.class.getName().equals(key) && tabGroup.get().equals(value));
             // Exists a group of tabbed pane matching the TabGroup annotation's value.
             if (componentMatchingMetadata.isPresent()) {
-                JBTabbedPane matchingTabbedPane = (JBTabbedPane) componentMatchingMetadata.get();
+                DisposableTabbedPane matchingTabbedPane = (DisposableTabbedPane) componentMatchingMetadata.get();
                 return Optional.of(matchingTabbedPane);
             }
         }

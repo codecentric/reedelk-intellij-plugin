@@ -110,7 +110,7 @@ class DynamicMapPropertyTabContainer extends DisposablePanel {
         }
     }
 
-    class MapTableColumnModel extends DefaultTableColumnModel {
+    class MapTableColumnModel extends DefaultTableColumnModel implements Disposable {
 
         private DynamicMapCellEditor cellEditor;
         private DynamicMapCellRenderer cellRenderer;
@@ -130,6 +130,12 @@ class DynamicMapPropertyTabContainer extends DisposablePanel {
             valueColumn.setCellRenderer(cellRenderer);
             valueColumn.setCellEditor(cellEditor);
             addColumn(valueColumn);
+        }
+
+        @Override
+        public void dispose() {
+            DisposableUtils.dispose(cellRenderer);
+            DisposableUtils.dispose(cellEditor);
         }
     }
 
