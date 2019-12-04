@@ -1,6 +1,8 @@
 package com.reedelk.plugin.graph.manager;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
@@ -10,7 +12,6 @@ import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.component.scanner.ComponentListUpdateNotifier;
 import com.reedelk.plugin.editor.DesignerEditor;
@@ -111,13 +112,10 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
      *
      * @param json the json string to be written in the document.
      */
-    private void write(@NotNull String json) {
-        try {
-            WriteCommandAction.writeCommandAction(module.getProject())
-                    .run((ThrowableRunnable<Throwable>) () -> document.setText(json));
-        } catch (Throwable throwable) {
-            LOG.error("Could not write Graph's JSON data", throwable);
-        }
+    private void write(final @NotNull String json) {
+        ApplicationManager.getApplication().invokeLater(() ->
+                WriteCommandAction.runWriteCommandAction(module.getProject(),
+                        () -> document.setText(json)), ModalityState.NON_MODAL);
     }
 
     private void deserializeDocument() {

@@ -1,6 +1,5 @@
 package com.reedelk.plugin.editor.properties.renderer.typemap;
 
-import com.intellij.ui.components.JBPanel;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
@@ -20,11 +19,11 @@ import static com.reedelk.plugin.commons.Icons.MapType.AddItem;
 import static com.reedelk.plugin.commons.Icons.MapType.RemoveItem;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
-class MapTabContainer extends JBPanel {
+class MapPropertyTabContainer extends DisposablePanel {
 
     private static final String[] COLUMN_NAMES = {"Key", "Value"};
 
-    MapTabContainer(PropertyAccessor propertyAccessor) {
+    MapPropertyTabContainer(PropertyAccessor propertyAccessor) {
         MapTableColumnModel columnModel = new MapTableColumnModel();
         MapAwareTableModel tableModel = new MapAwareTableModel(propertyAccessor);
         PropertyTable propertyTable = new PropertyTable(tableModel, columnModel);
