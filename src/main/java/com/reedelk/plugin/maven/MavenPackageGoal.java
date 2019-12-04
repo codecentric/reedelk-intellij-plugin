@@ -2,22 +2,22 @@ package com.reedelk.plugin.maven;
 
 import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
+import com.intellij.execution.process.ProcessHandler;
+import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.execution.ParametersListUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.idea.maven.execution.MavenRunConfigurationType;
 import org.jetbrains.idea.maven.execution.MavenRunner;
 import org.jetbrains.idea.maven.execution.MavenRunnerParameters;
-import org.jetbrains.idea.maven.execution.MavenRunnerSettings;
 import org.jetbrains.idea.maven.model.MavenExplicitProfiles;
-import org.jetbrains.idea.maven.project.MavenGeneralSettings;
 import org.jetbrains.idea.maven.project.MavenProject;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
 import org.jetbrains.idea.maven.tasks.TasksBundle;
 
-import java.util.Collections;
 import java.util.Optional;
 
 public class MavenPackageGoal {
@@ -37,8 +37,7 @@ public class MavenPackageGoal {
     }
 
     public void execute() {
-        Optional<MavenProject> mavenProjectOpt =
-                MavenUtils.getMavenProject(project, moduleName);
+        Optional<MavenProject> mavenProjectOpt = MavenUtils.getMavenProject(project, moduleName);
         if (mavenProjectOpt.isPresent()) {
             MavenProject mavenProject = mavenProjectOpt.get();
             MavenPackageTask task = new MavenPackageTask(project, mavenProject);
@@ -59,34 +58,29 @@ public class MavenPackageGoal {
 
         @Override
         public void run(@NotNull ProgressIndicator indicator) {
-            try {
-                final MavenExplicitProfiles explicitProfiles = MavenProjectsManager.getInstance(project).getExplicitProfiles();
-                final MavenRunnerSettings mavenRunnerSettings = new MavenRunnerSettings();
-                final MavenGeneralSettings mavenGeneralSettings = new MavenGeneralSettings();
-                final MavenRunnerParameters params = new MavenRunnerParameters(
-                        true,
-                        mavenProject.getDirectory(),
-                        mavenProject.getFile().getName(),
-                        ParametersListUtil.parse("package -DskipTests=true"),
-                        explicitProfiles.getEnabledProfiles(),
-                        explicitProfiles.getDisabledProfiles());
+            MavenExplicitProfiles explicitProfiles = MavenProjectsManager.getInstance(project).getExplicitProfiles();
+            MavenRunnerParameters params = new MavenRunnerParameters(
+                    true,
+                    mavenProject.getDirectory(),
+                    mavenProject.getFile().getName(),
+                    ParametersListUtil.parse("package -DskipTests=true"),
+                    explicitProfiles.getEnabledProfiles(),
+                    explicitProfiles.getDisabledProfiles());
 
-                final MavenRunner mavenRunner = MavenRunner.getInstance(project);
-                mavenRunner.runBatch(Collections.singletonList(params),
-                        mavenGeneralSettings,
-                        mavenRunnerSettings,
-                        TasksBundle.message("maven.tasks.executing"),
-                        indicator,
-                        processHandler -> processHandler.addProcessListener(new ProcessAdapter() {
-                            @Override
-                            public void processTerminated(@NotNull ProcessEvent event) {
-                                callback.onComplete(event.getExitCode() == 0);
-                            }
-                        }));
-
-            } catch (Exception e) {
-                callback.onComplete(false);
-            }
+            ProgramRunner.Callback myCallback = descriptor -> {
+                ProcessHandler handler = descriptor.getProcessHandler();
+                if (handler != null) {
+                    handler.addProcessListener(new ProcessAdapter() {
+                        @Override
+                        public void processTerminated(@NotNull ProcessEvent event) {
+                            callback.onComplete(event.getExitCode() == 0);
+                        }
+                    });
+                } else {
+                    callback.onComplete(false);
+                }
+            };
+            MavenRunConfigurationType.runConfiguration(myProject, params, myCallback);
         }
 
         @Override
