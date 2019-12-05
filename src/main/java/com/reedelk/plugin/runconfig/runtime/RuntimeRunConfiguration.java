@@ -4,14 +4,12 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.*;
 import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizerUtil;
 import com.reedelk.plugin.commons.NetworkUtils;
 import com.reedelk.plugin.service.project.SourceChangeService;
-import com.reedelk.plugin.service.project.ToolWindowService;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
@@ -78,11 +76,6 @@ public class RuntimeRunConfiguration extends RunConfigurationBase<RuntimeRunConf
         // Reset the state of the modules for this runtime
         SourceChangeService.getInstance(getProject()).reset(getName());
 
-        // Store the ToolWindowId associated to this RunConfig. It will be used
-        // later by a ModuleRun Configuration to switch to this tool window when a
-        // deploy/un-deploy action is completed.
-        ToolWindowService toolWindowService = ServiceManager.getService(getProject(), ToolWindowService.class);
-        toolWindowService.put(getName(), executor.getToolWindowId());
         return new RuntimeRunCommandLine(this, environment);
     }
 

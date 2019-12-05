@@ -42,9 +42,6 @@
         <applicationService serviceInterface="com.reedelk.plugin.service.application.HttpService"
                             serviceImplementation="com.reedelk.plugin.service.application.impl.HttpServiceImpl"/>
 
-        <projectService serviceInterface="com.reedelk.plugin.service.project.ToolWindowService"
-                        serviceImplementation="com.reedelk.plugin.service.project.impl.ToolWindowServiceImpl"/>
-
         <moduleService serviceInterface="com.reedelk.plugin.service.module.ComponentService"
                        serviceImplementation="com.reedelk.plugin.service.module.impl.ComponentServiceImpl"/>
 
