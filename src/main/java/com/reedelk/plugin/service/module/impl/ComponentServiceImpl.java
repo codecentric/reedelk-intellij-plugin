@@ -108,8 +108,11 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
     private void asyncUpdateMavenDependenciesComponents() {
         PluginExecutor.getInstance().submit(() -> {
-            // Remove all jars before reimporting them
+            // Remove all Component before updating them
             mavenJarComponentsMap.clear();
+            publisher.onComponentListUpdate(module);
+
+            // Update the components from maven project
             MavenUtils.getMavenProject(module.getProject(), module.getName()).ifPresent(mavenProject -> {
                 mavenProject.getDependencies().stream()
                         .filter(artifact -> ModuleInfo.isModule(artifact.getFile()))
@@ -119,9 +122,9 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                             String moduleName = ModuleInfo.getModuleName(jarFilePath);
                             ComponentsPackage descriptor = new ComponentsPackage(moduleName, components);
                             mavenJarComponentsMap.put(jarFilePath, descriptor);
-                        });
 
-                publisher.onComponentListUpdate(module);
+                            publisher.onComponentListUpdate(module);
+                        });
             });
         });
     }
