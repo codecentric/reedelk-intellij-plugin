@@ -334,7 +334,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
     private void select(GraphNode node) {
         if (node.isSelectable()) {
             // Display the Component Properties Tool Window if it is not visible already
-            ToolWindowUtils.ComponentProperties.show(module.getProject());
+            ToolWindowUtils.show(module.getProject());
             selected = node;
             selected.selected();
             currentSelection = new SelectableItemComponent(module, snapshot, selected);

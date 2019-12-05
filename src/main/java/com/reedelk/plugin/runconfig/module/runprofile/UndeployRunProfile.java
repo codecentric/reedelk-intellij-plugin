@@ -9,8 +9,6 @@ import com.reedelk.plugin.service.project.SourceChangeService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.project.MavenProject;
 
-import static java.lang.String.format;
-
 public class UndeployRunProfile extends AbstractRunProfile {
 
     public UndeployRunProfile(Project project, String moduleName, String runtimeConfigName) {
@@ -23,12 +21,9 @@ public class UndeployRunProfile extends AbstractRunProfile {
         RestService service = new RestService(project, module, address, port);
 
         // Un Deploy Module
-        service.delete(moduleFile);
+        service.delete(moduleFile, runtimeConfigName);
 
         SourceChangeService.getInstance(project).changed(runtimeConfigName, moduleName);
-
-        String message = format("Module <b>%s</b> uninstalled", moduleName);
-        switchToolWindowAndNotifyWithMessage(message);
 
         return null;
     }

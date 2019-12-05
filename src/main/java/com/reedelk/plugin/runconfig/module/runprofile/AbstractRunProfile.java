@@ -3,14 +3,9 @@ package com.reedelk.plugin.runconfig.module.runprofile;
 import com.intellij.execution.*;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.runners.ProgramRunner;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowManager;
-import com.reedelk.plugin.commons.NotificationUtils;
 import com.reedelk.plugin.maven.MavenUtils;
 import com.reedelk.plugin.runconfig.runtime.RuntimeRunConfiguration;
-import com.reedelk.plugin.service.project.ToolWindowService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.project.MavenProject;
@@ -68,17 +63,4 @@ abstract class AbstractRunProfile implements RunProfileState {
 
     protected abstract ExecutionResult execute(@NotNull MavenProject mavenProject, @NotNull String moduleFile) throws ExecutionException;
 
-
-    void switchToolWindowAndNotifyWithMessage(String message) {
-        ToolWindowService toolWindowService = ServiceManager.getService(project, ToolWindowService.class);
-        Optional<String> optionalToolWindowId = toolWindowService.get(runtimeConfigName);
-        optionalToolWindowId.ifPresent(toolWindowId -> getToolWindowById(toolWindowId).show(null));
-        optionalToolWindowId.ifPresent(toolWindowId -> NotificationUtils.notifyInfo(toolWindowId, message, project));
-    }
-
-    private ToolWindow getToolWindowById(String toolWindowId) {
-        return ToolWindowManager
-                .getInstance(project)
-                .getToolWindow(toolWindowId);
-    }
 }

@@ -6,6 +6,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.reedelk.plugin.commons.FlowErrorResponse;
+import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.maven.MavenPackageGoal;
 import com.reedelk.plugin.service.application.HttpResponse;
 import com.reedelk.plugin.service.application.HttpService;
@@ -17,6 +18,7 @@ import com.reedelk.runtime.rest.api.module.v1.ModulePOSTReq;
 import java.io.IOException;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
+import static java.lang.String.format;
 
 public class RestService {
 
@@ -38,7 +40,7 @@ public class RestService {
         this.module = module;
     }
 
-    void hotSwap(String moduleFile, String resourcesRootDirectory) throws ExecutionException {
+    void hotSwap(String moduleFile, String resourcesRootDirectory, String runtimeConfigName) throws ExecutionException {
         HotSwapPOSTReq req = new HotSwapPOSTReq();
         req.setModuleFilePath(moduleFile);
         req.setResourcesRootDirectory(resourcesRootDirectory);
@@ -60,7 +62,7 @@ public class RestService {
                     try {
                         // The  Maven package goal was successful. The .jar artifact is in the /target folder
                         // and we can deploy the package onto the ESB runtime.
-                        deploy(moduleFile);
+                        deploy(moduleFile, runtimeConfigName);
                     } catch (ExecutionException e) {
                         LOG.warn(message("module.run.error.maven.goal.package.failed", module.getName()));
                     }
@@ -69,26 +71,36 @@ public class RestService {
             packageGoal.execute();
         } else if (response.isNotSuccessful()) {
             handleNotSuccessfulResponse(response);
+        } else {
+            // Successful
+            String message = format("Module <b>%s</b> reloaded", module.getName());
+            ToolWindowUtils.switchToolWindowAndNotifyWithMessage(project, message, runtimeConfigName);
         }
     }
 
-    void deploy(String moduleFile) throws ExecutionException {
+    void deploy(String moduleFile, String runtimeConfigName) throws ExecutionException {
         ModulePOSTReq req = new ModulePOSTReq();
         req.setModuleFilePath(moduleFile);
         String json = InternalAPI.Module.V1.POST.Req.serialize(req);
         HttpResponse response = post(baseUrl + ApiPaths.module, json);
         if (response.isNotSuccessful()) {
             handleNotSuccessfulResponse(response);
+        } else {
+            String message = format("Module <b>%s</b> updated", module.getName());
+            ToolWindowUtils.switchToolWindowAndNotifyWithMessage(module.getProject(), message, runtimeConfigName);
         }
     }
 
-    public void delete(String moduleFile) throws ExecutionException {
+    public void delete(String moduleFile, String runtimeConfigName) throws ExecutionException {
         ModuleDELETEReq req = new ModuleDELETEReq();
         req.setModuleFilePath(moduleFile);
         String json = InternalAPI.Module.V1.DELETE.Req.serialize(req);
-        HttpResponse response = delete(baseUrl + ApiPaths.module, json);
+        HttpResponse response = _delete(baseUrl + ApiPaths.module, json);
         if (response.isNotSuccessful()) {
             handleNotSuccessfulResponse(response);
+        } else {
+            String message = format("Module <b>%s</b> uninstalled", module.getName());
+            ToolWindowUtils.switchToolWindowAndNotifyWithMessage(module.getProject(), message, runtimeConfigName);
         }
     }
 
@@ -101,7 +113,7 @@ public class RestService {
         }
     }
 
-    private HttpResponse delete(String url, String json) throws ExecutionException {
+    private HttpResponse _delete(String url, String json) throws ExecutionException {
         HttpService HttpService = ServiceManager.getService(HttpService.class);
         try {
             return HttpService.delete(url, json, HttpService.JSON);

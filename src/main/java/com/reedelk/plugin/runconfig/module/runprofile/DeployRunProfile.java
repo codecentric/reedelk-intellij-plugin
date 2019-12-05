@@ -12,8 +12,6 @@ import org.jetbrains.idea.maven.project.MavenProject;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static java.lang.String.format;
-
 public class DeployRunProfile extends AbstractRunProfile {
 
     public DeployRunProfile(Project project, String moduleName, String runtimeConfigName) {
@@ -29,21 +27,12 @@ public class DeployRunProfile extends AbstractRunProfile {
         if (SourceChangeService.getInstance(project).isHotSwap(runtimeConfigName, moduleName)) {
             String mavenDirectory = mavenProject.getDirectory();
             Path resourcesRootDirectory = Paths.get(mavenDirectory, "src", "main", "resources");
-
-            service.hotSwap(moduleFile, resourcesRootDirectory.toString());
-
-            String message = format("Module <b>%s</b> reloaded", moduleName);
-            switchToolWindowAndNotifyWithMessage(message);
-
+            service.hotSwap(moduleFile, resourcesRootDirectory.toString(), runtimeConfigName);
 
             // Otherwise we re-deploy the module
         } else {
-            service.deploy(moduleFile);
-
+            service.deploy(moduleFile, runtimeConfigName);
             SourceChangeService.getInstance(project).unchanged(runtimeConfigName, moduleName);
-
-            String message = format("Module <b>%s</b> updated", moduleName);
-            switchToolWindowAndNotifyWithMessage(message);
         }
 
         return null;
