@@ -1,4 +1,4 @@
-package com.reedelk.plugin.completion.token;
+package com.reedelk.plugin.service.application.impl.completion;
 
 public class LeafToken implements Token {
 

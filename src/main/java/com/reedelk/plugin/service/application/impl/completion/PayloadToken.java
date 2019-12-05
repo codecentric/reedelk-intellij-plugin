@@ -1,4 +1,4 @@
-package com.reedelk.plugin.completion.token;
+package com.reedelk.plugin.service.application.impl.completion;
 
 import java.util.Collection;
 

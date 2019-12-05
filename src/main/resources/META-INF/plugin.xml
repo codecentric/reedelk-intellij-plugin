@@ -39,6 +39,9 @@
                        order="first"/>
 
         <!-- Services -->
+        <applicationService serviceInterface="com.reedelk.plugin.service.application.CompletionService"
+                            serviceImplementation="com.reedelk.plugin.service.application.impl.CompletionServiceImpl"/>
+
         <moduleService serviceInterface="com.reedelk.plugin.service.module.HttpService"
                        serviceImplementation="com.reedelk.plugin.service.module.impl.HttpServiceImpl"/>
 
@@ -50,6 +53,9 @@
 
         <moduleService serviceInterface="com.reedelk.plugin.service.module.ConfigService"
                        serviceImplementation="com.reedelk.plugin.service.module.impl.ConfigServiceImpl"/>
+
+        <moduleService serviceInterface="com.reedelk.plugin.service.module.ScriptService"
+                       serviceImplementation="com.reedelk.plugin.service.module.impl.ScriptServiceImpl"/>
 
         <!-- Program Runner and Executors -->
         <programRunner implementation="com.reedelk.plugin.runconfig.module.runner.DeploymentRunner" order="first"/>
@@ -68,10 +74,8 @@
         <toolWindow id="ESB Component properties" anchor="bottom"
                     factoryClass="com.reedelk.plugin.editor.properties.PropertiesPanelToolWindowFactory"/>
 
-        <moduleService serviceInterface="com.reedelk.plugin.service.module.ScriptService"
-                       serviceImplementation="com.reedelk.plugin.service.module.impl.ScriptServiceImpl"/>
-
         <completion.contributor language="TEXT" implementationClass="com.reedelk.plugin.completion.ScriptCompletionContributor"/>
+
     </extensions>
 
     <actions>
