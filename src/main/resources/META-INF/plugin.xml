@@ -39,8 +39,8 @@
                        order="first"/>
 
         <!-- Services -->
-        <applicationService serviceInterface="com.reedelk.plugin.service.application.HttpService"
-                            serviceImplementation="com.reedelk.plugin.service.application.impl.HttpServiceImpl"/>
+        <moduleService serviceInterface="com.reedelk.plugin.service.module.HttpService"
+                       serviceImplementation="com.reedelk.plugin.service.module.impl.HttpServiceImpl"/>
 
         <moduleService serviceInterface="com.reedelk.plugin.service.module.ComponentService"
                        serviceImplementation="com.reedelk.plugin.service.module.impl.ComponentServiceImpl"/>
@@ -65,7 +65,7 @@
         <toolWindow id="ESB Components" anchor="right" icon="/icons/icon-16x-blue.png"
                     factoryClass="com.reedelk.plugin.editor.palette.PaletteFactory"/>
 
-        <toolWindow id="componentPropertiesToolWindow" anchor="bottom"
+        <toolWindow id="ESB Component properties" anchor="bottom"
                     factoryClass="com.reedelk.plugin.editor.properties.PropertiesPanelToolWindowFactory"/>
 
         <moduleService serviceInterface="com.reedelk.plugin.service.module.ScriptService"

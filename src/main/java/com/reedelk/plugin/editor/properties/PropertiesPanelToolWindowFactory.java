@@ -14,7 +14,7 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class PropertiesPanelToolWindowFactory implements ToolWindowFactory {
 
-    public static final String ID = "componentPropertiesToolWindow";
+    public static final String ID = "ESB Component properties";
 
     @Override
     public void init(ToolWindow window) {

@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.project;
+package com.reedelk.plugin.service.project.impl;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.graph.FlowSnapshot;

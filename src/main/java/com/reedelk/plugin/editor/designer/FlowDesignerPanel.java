@@ -7,8 +7,8 @@ import com.reedelk.plugin.editor.designer.misc.InboundLane;
 import com.reedelk.plugin.editor.designer.text.FlowMetadata;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowSnapshot;
-import com.reedelk.plugin.service.project.SelectableItem;
-import com.reedelk.plugin.service.project.SelectableItemFlow;
+import com.reedelk.plugin.service.project.impl.SelectableItem;
+import com.reedelk.plugin.service.project.impl.SelectableItemFlow;
 
 import java.awt.*;
 

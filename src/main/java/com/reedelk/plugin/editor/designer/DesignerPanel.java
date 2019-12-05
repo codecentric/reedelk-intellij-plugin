@@ -25,8 +25,8 @@ import com.reedelk.plugin.graph.SnapshotListener;
 import com.reedelk.plugin.graph.layout.FlowGraphLayout;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.project.DesignerSelectionManager;
-import com.reedelk.plugin.service.project.SelectableItem;
-import com.reedelk.plugin.service.project.SelectableItemComponent;
+import com.reedelk.plugin.service.project.impl.SelectableItem;
+import com.reedelk.plugin.service.project.impl.SelectableItemComponent;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

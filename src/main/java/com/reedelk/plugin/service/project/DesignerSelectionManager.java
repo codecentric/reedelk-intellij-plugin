@@ -2,6 +2,7 @@ package com.reedelk.plugin.service.project;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.Topic;
+import com.reedelk.plugin.service.project.impl.SelectableItem;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;

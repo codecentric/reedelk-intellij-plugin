@@ -5,8 +5,8 @@ import com.reedelk.plugin.commons.Half;
 import com.reedelk.plugin.editor.designer.dnd.DesignerPanelActionHandler;
 import com.reedelk.plugin.editor.designer.text.FlowMetadata;
 import com.reedelk.plugin.graph.FlowSnapshot;
-import com.reedelk.plugin.service.project.SelectableItem;
-import com.reedelk.plugin.service.project.SelectableItemSubflow;
+import com.reedelk.plugin.service.project.impl.SelectableItem;
+import com.reedelk.plugin.service.project.impl.SelectableItemSubflow;
 
 import java.awt.*;
 

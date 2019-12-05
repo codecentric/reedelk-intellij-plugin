@@ -13,7 +13,11 @@ import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.plugin.editor.properties.renderer.ComponentPropertiesRendererFactory;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
-import com.reedelk.plugin.service.project.*;
+import com.reedelk.plugin.service.project.DesignerSelectionManager;
+import com.reedelk.plugin.service.project.impl.SelectableItem;
+import com.reedelk.plugin.service.project.impl.SelectableItemComponent;
+import com.reedelk.plugin.service.project.impl.SelectableItemFlow;
+import com.reedelk.plugin.service.project.impl.SelectableItemSubflow;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

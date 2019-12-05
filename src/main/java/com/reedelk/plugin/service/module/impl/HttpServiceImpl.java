@@ -1,7 +1,6 @@
-package com.reedelk.plugin.service.application.impl;
+package com.reedelk.plugin.service.module.impl;
 
-import com.reedelk.plugin.service.application.HttpResponse;
-import com.reedelk.plugin.service.application.HttpService;
+import com.reedelk.plugin.service.module.HttpService;
 import okhttp3.*;
 
 import java.io.IOException;

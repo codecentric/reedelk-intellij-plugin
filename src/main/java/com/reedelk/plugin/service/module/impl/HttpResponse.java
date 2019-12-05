@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.application;
+package com.reedelk.plugin.service.module.impl;
 
 public class HttpResponse {
 

@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.project;
+package com.reedelk.plugin.service.project.impl;
 
 import com.reedelk.plugin.graph.FlowSnapshot;
 import org.jetbrains.annotations.NotNull;

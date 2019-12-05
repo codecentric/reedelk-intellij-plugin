@@ -4,7 +4,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.service.project.DesignerSelectionManager;
-import com.reedelk.plugin.service.project.SelectableItem;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;

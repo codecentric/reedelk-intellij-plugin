@@ -1,15 +1,14 @@
 package com.reedelk.plugin.runconfig.module.runprofile;
 
 import com.intellij.execution.ExecutionException;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.reedelk.plugin.commons.FlowErrorResponse;
 import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.maven.MavenPackageGoal;
-import com.reedelk.plugin.service.application.HttpResponse;
-import com.reedelk.plugin.service.application.HttpService;
+import com.reedelk.plugin.service.module.HttpService;
+import com.reedelk.plugin.service.module.impl.HttpResponse;
 import com.reedelk.runtime.rest.api.InternalAPI;
 import com.reedelk.runtime.rest.api.hotswap.v1.HotSwapPOSTReq;
 import com.reedelk.runtime.rest.api.module.v1.ModuleDELETEReq;
@@ -94,7 +93,7 @@ public class RestService {
         ModuleDELETEReq req = new ModuleDELETEReq();
         req.setModuleFilePath(moduleFile);
         String json = InternalAPI.Module.V1.DELETE.Req.serialize(req);
-        HttpResponse response = _delete(baseUrl + ApiPaths.module, json);
+        HttpResponse response = deleteInternal(baseUrl + ApiPaths.module, json);
         if (response.isNotSuccessful()) {
             handleNotSuccessfulResponse(response);
         } else {
@@ -104,18 +103,18 @@ public class RestService {
     }
 
     private HttpResponse post(String url, String json) throws ExecutionException {
-        HttpService HttpService = ServiceManager.getService(HttpService.class);
+        HttpService httpService = com.reedelk.plugin.service.module.HttpService.getInstance(module);
         try {
-            return HttpService.post(url, json, HttpService.JSON);
+            return httpService.post(url, json, HttpService.JSON);
         } catch (IOException e) {
             throw new ExecutionException(e);
         }
     }
 
-    private HttpResponse _delete(String url, String json) throws ExecutionException {
-        HttpService HttpService = ServiceManager.getService(HttpService.class);
+    private HttpResponse deleteInternal(String url, String json) throws ExecutionException {
+        HttpService httpService = HttpService.getInstance(module);
         try {
-            return HttpService.delete(url, json, HttpService.JSON);
+            return httpService.delete(url, json, HttpService.JSON);
         } catch (IOException e) {
             throw new ExecutionException(e);
         }
