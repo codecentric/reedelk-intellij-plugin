@@ -52,13 +52,12 @@ class ComponentAnalyzer {
     }
 
     private String getComponentDisplayName(ClassInfo componentClassInfo) {
-        if (componentClassInfo.hasAnnotation(ESBComponent.class.getName())) {
-            AnnotationInfo componentDisplayName = componentClassInfo.getAnnotationInfo(ESBComponent.class.getName());
-            AnnotationParameterValueList parameterValues = componentDisplayName.getParameterValues();
-            return (String) parameterValues.getValue("value");
-        } else {
-            return componentClassInfo.getSimpleName();
-        }
+        // The ClassInfo component descriptor *must* have the ESBComponent annotation if we get here.
+        AnnotationInfo componentDisplayName = componentClassInfo.getAnnotationInfo(ESBComponent.class.getName());
+        AnnotationParameterValueList parameterValues = componentDisplayName.getParameterValues();
+        return parameterValues.containsName("value") ?
+                (String) parameterValues.getValue("value") :
+                componentClassInfo.getSimpleName();
     }
 
     private boolean isHidden(ClassInfo componentClassInfo) {
