@@ -19,20 +19,18 @@ public class ToolWindowUtils {
     }
 
     public static void switchToolWindowAndNotifyWithMessage(Project project, String message, String runConfigName) {
-        ServiceManager.getService(project, ToolWindowService.class).get(runConfigName)
-                .ifPresent(toolWindowId -> {
-                    get(project, ToolWindowId.RUN).ifPresent(window ->
-                            stream(window.getContentManager().getContents()).forEach(content -> {
-                                if (StringUtils.isNotBlank(runConfigName)) {
-                                    if (runConfigName.equals(content.getDisplayName())) {
-                                        window.getContentManager().setSelectedContent(content, false);
-                                        window.show(() -> {
-                                            NotificationUtils.notifyInfo(toolWindowId, message, project);
-                                        });
-                                    }
-                                }
-                            }));
-                });
+        ServiceManager.getService(project, ToolWindowService.class).get(runConfigName).ifPresent(toolWindowId -> get(project, ToolWindowId.RUN).ifPresent(window -> {
+            NotificationUtils.notifyInfo(ToolWindowId.RUN, message, project);
+            stream(window.getContentManager().getContents()).forEach(content -> {
+                if (StringUtils.isNotBlank(runConfigName)) {
+                    if (runConfigName.equals(content.getDisplayName())) {
+                        window.getContentManager().setSelectedContent(content, false);
+                        window.show(() -> {
+                        });
+                    }
+                }
+            });
+        }));
     }
 
     public static void show(Project project) {

@@ -18,7 +18,6 @@ import com.reedelk.runtime.rest.api.module.v1.ModulePOSTReq;
 import java.io.IOException;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
-import static java.lang.String.format;
 
 public class RestService {
 
@@ -73,7 +72,7 @@ public class RestService {
             handleNotSuccessfulResponse(response);
         } else {
             // Successful
-            String message = format("Module <b>%s</b> reloaded", module.getName());
+            String message = message("module.run.updated", module.getName());
             ToolWindowUtils.switchToolWindowAndNotifyWithMessage(project, message, runtimeConfigName);
         }
     }
@@ -86,7 +85,7 @@ public class RestService {
         if (response.isNotSuccessful()) {
             handleNotSuccessfulResponse(response);
         } else {
-            String message = format("Module <b>%s</b> updated", module.getName());
+            String message = message("module.run.deployed", module.getName());
             ToolWindowUtils.switchToolWindowAndNotifyWithMessage(module.getProject(), message, runtimeConfigName);
         }
     }
@@ -99,7 +98,7 @@ public class RestService {
         if (response.isNotSuccessful()) {
             handleNotSuccessfulResponse(response);
         } else {
-            String message = format("Module <b>%s</b> uninstalled", module.getName());
+            String message = message("module.run.uninstalled", module.getName());
             ToolWindowUtils.switchToolWindowAndNotifyWithMessage(module.getProject(), message, runtimeConfigName);
         }
     }
