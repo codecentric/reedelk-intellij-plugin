@@ -4,6 +4,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.DisposableUtils;
+import com.reedelk.plugin.commons.TableColumnModelUtils;
 import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
 import com.reedelk.plugin.editor.properties.commons.*;
 
@@ -74,8 +75,7 @@ class DynamicMapPropertyTabContainer extends DisposablePanel {
 
         @Override
         public void onCommit() {
-            getColumn(0).getCellEditor().stopCellEditing();
-            getColumn(1).getCellEditor().stopCellEditing();
+            TableColumnModelUtils.onCommit(this);
         }
     }
 }

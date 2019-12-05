@@ -7,6 +7,7 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.reedelk.plugin.editor.properties.PropertiesPanelToolWindowFactory;
 import com.reedelk.runtime.api.commons.StringUtils;
 
+import javax.swing.*;
 import java.util.Optional;
 
 import static java.util.Arrays.stream;
@@ -17,17 +18,19 @@ public class ToolWindowUtils {
     }
 
     public static void switchToolWindowAndNotifyWithMessage(Project project, String message, String runConfigName) {
-        NotificationUtils.notifyInfo(ToolWindowId.RUN, message, project);
-        get(project, ToolWindowId.RUN).ifPresent(window ->
-                stream(window.getContentManager().getContents()).forEach(content -> {
-                    if (StringUtils.isNotBlank(runConfigName)) {
-                        if (runConfigName.equals(content.getDisplayName())) {
-                            window.getContentManager().setSelectedContent(content, false);
-                            window.show(() -> {
-                            });
+        SwingUtilities.invokeLater(() -> {
+            NotificationUtils.notifyInfo(ToolWindowId.RUN, message, project);
+            get(project, ToolWindowId.RUN).ifPresent(window ->
+                    stream(window.getContentManager().getContents()).forEach(content -> {
+                        if (StringUtils.isNotBlank(runConfigName)) {
+                            if (runConfigName.equals(content.getDisplayName())) {
+                                window.getContentManager().setSelectedContent(content, false);
+                                window.show(() -> {
+                                });
+                            }
                         }
-                    }
-                }));
+                    }));
+        });
     }
 
     public static void show(Project project) {

@@ -4,6 +4,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.DisposableUtils;
+import com.reedelk.plugin.commons.TableColumnModelUtils;
 import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
 import com.reedelk.plugin.editor.properties.commons.TableDynamicCellEditor;
 import com.reedelk.plugin.editor.properties.commons.TableDynamicCellRenderer;
@@ -52,7 +53,7 @@ class ConditionRouteTableColumnModel extends DefaultTableColumnModel implements 
 
     @Override
     public void onCommit() {
-        conditionCellEditor.stopCellEditing();
+        TableColumnModelUtils.onCommit(this);
     }
 
     class RoutesCellRenderer extends DefaultTableCellRenderer {

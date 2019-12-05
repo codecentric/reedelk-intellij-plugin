@@ -2,6 +2,7 @@ package com.reedelk.plugin.editor.properties.renderer.typemap;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.util.messages.MessageBusConnection;
+import com.reedelk.plugin.commons.TableColumnModelUtils;
 import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
 import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
@@ -65,8 +66,7 @@ class MapPropertyTabContainer extends DisposablePanel {
 
         @Override
         public void onCommit() {
-            getColumn(0).getCellEditor().stopCellEditing();
-            getColumn(1).getCellEditor().stopCellEditing();
+            TableColumnModelUtils.onCommit(this);
         }
     }
 }
