@@ -1,12 +1,7 @@
 package com.reedelk.plugin.editor.properties.commons;
 
-import com.intellij.openapi.module.Module;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Colors;
-import com.reedelk.plugin.component.domain.ComponentData;
-import com.reedelk.plugin.editor.properties.renderer.ComponentPropertiesRendererFactory;
-import com.reedelk.plugin.graph.FlowSnapshot;
-import com.reedelk.plugin.graph.node.GraphNode;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -23,7 +18,7 @@ public class ContainerFactory {
         return createLabelNextToComponent(label, body, true);
     }
 
-    public static DisposablePanel createLabelNextToComponent(JLabel label, JComponent body, boolean outerBorder) {
+    static DisposablePanel createLabelNextToComponent(JLabel label, JComponent body, boolean outerBorder) {
         Border iconBorder;
         if (outerBorder) {
             Border iconOutside = JBUI.Borders.customLine(Colors.SCRIPT_EDITOR_INLINE_ICON_BORDER, 1, 1, 1, 0);
@@ -58,18 +53,6 @@ public class ContainerFactory {
             @NotNull JComponent renderedComponent,
             @NotNull String title) {
         return new DefaultObjectTypeContainer(renderedComponent, title);
-    }
-
-    public static DisposableScrollPane createPropertiesPanel(Module module, ComponentData componentData, FlowSnapshot snapshot, GraphNode node) {
-        DisposablePanel propertiesPanel = ComponentPropertiesRendererFactory.get()
-                .component(componentData)
-                .snapshot(snapshot)
-                .module(module)
-                .build()
-                .render(node);
-        DisposablePanel propertiesBoxContainer = pushTop(propertiesPanel);
-        propertiesBoxContainer.setBorder(JBUI.Borders.empty(10));
-        return makeItScrollable(propertiesBoxContainer);
     }
 
     public static DisposablePanel pushTop(JComponent component) {

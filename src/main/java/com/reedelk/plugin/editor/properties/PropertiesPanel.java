@@ -1,6 +1,7 @@
 package com.reedelk.plugin.editor.properties;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.util.messages.MessageBusConnection;
@@ -9,6 +10,9 @@ import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.editor.properties.commons.*;
+import com.reedelk.plugin.editor.properties.renderer.ComponentPropertiesRendererFactory;
+import com.reedelk.plugin.graph.FlowSnapshot;
+import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.project.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -100,8 +104,7 @@ public class PropertiesPanel extends DisposablePanel implements CurrentSelection
         // of the component currently selected.
         ComponentData componentData = selectedItem.getSelectedNode().componentData();
 
-        DisposableScrollPane propertiesPanel =
-                ContainerFactory.createPropertiesPanel(selectedItem.getModule(),
+        DisposableScrollPane propertiesPanel = createPropertiesPanel(selectedItem.getModule(),
                         componentData,
                         selectedItem.getSnapshot(),
                         selectedItem.getSelectedNode());
@@ -111,6 +114,18 @@ public class PropertiesPanel extends DisposablePanel implements CurrentSelection
 
         updateContent(propertiesPanel);
         this.currentPane = propertiesPanel;
+    }
+
+    private DisposableScrollPane createPropertiesPanel(Module module, ComponentData componentData, FlowSnapshot snapshot, GraphNode node) {
+        DisposablePanel propertiesPanel = ComponentPropertiesRendererFactory.get()
+                .component(componentData)
+                .snapshot(snapshot)
+                .module(module)
+                .build()
+                .render(node);
+        DisposablePanel propertiesBoxContainer = ContainerFactory.pushTop(propertiesPanel);
+        propertiesBoxContainer.setBorder(JBUI.Borders.empty(10));
+        return ContainerFactory.makeItScrollable(propertiesBoxContainer);
     }
 
     private void setEmptySelection() {
