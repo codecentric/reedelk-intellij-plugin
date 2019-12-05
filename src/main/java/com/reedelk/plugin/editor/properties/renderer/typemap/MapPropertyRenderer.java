@@ -32,6 +32,6 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
         }
 
         // Return the content
-        return new MapPropertyTabContainer(tableModel);
+        return new MapPropertyTabContainer(module, tableModel);
     }
 }

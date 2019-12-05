@@ -1,5 +1,8 @@
 package com.reedelk.plugin.editor.properties.renderer.typemap;
 
+import com.intellij.openapi.module.Module;
+import com.intellij.util.messages.MessageBusConnection;
+import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
 import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.PropertyTable;
@@ -15,9 +18,11 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 class MapPropertyTabContainer extends DisposablePanel {
 
+    private MessageBusConnection busConnection;
+
     private static final String[] COLUMN_NAMES = {"Key", "Value"};
 
-    MapPropertyTabContainer(PropertyTable.PropertyTableModel tableModel) {
+    MapPropertyTabContainer(Module module, PropertyTable.PropertyTableModel tableModel) {
         MapTableColumnModel columnModel = new MapTableColumnModel();
         PropertyTable propertyTable = new PropertyTable(tableModel, columnModel);
 
@@ -26,6 +31,15 @@ class MapPropertyTabContainer extends DisposablePanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         add(actionPanel);
         add(propertyTable);
+
+        busConnection = module.getProject().getMessageBus().connect();
+        busConnection.subscribe(CommitPropertiesListener.COMMIT_TOPIC, columnModel);
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        busConnection.disconnect();
     }
 
     class TableActionPanel extends DisposablePanel {
@@ -36,7 +50,7 @@ class MapPropertyTabContainer extends DisposablePanel {
         }
     }
 
-    class MapTableColumnModel extends DefaultTableColumnModel {
+    class MapTableColumnModel extends DefaultTableColumnModel implements CommitPropertiesListener {
         MapTableColumnModel() {
             // Column 1 (the map key)
             TableColumn keyColumn = new TableColumn(0);
@@ -47,6 +61,12 @@ class MapPropertyTabContainer extends DisposablePanel {
             TableColumn valueColumn = new TableColumn(1);
             valueColumn.setHeaderValue(COLUMN_NAMES[1]);
             addColumn(valueColumn);
+        }
+
+        @Override
+        public void onCommit() {
+            getColumn(0).getCellEditor().stopCellEditing();
+            getColumn(1).getCellEditor().stopCellEditing();
         }
     }
 }

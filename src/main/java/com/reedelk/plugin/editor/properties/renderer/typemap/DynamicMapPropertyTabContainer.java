@@ -2,7 +2,9 @@ package com.reedelk.plugin.editor.properties.renderer.typemap;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
+import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.DisposableUtils;
+import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
 import com.reedelk.plugin.editor.properties.commons.*;
 
 import javax.swing.*;
@@ -37,8 +39,9 @@ class DynamicMapPropertyTabContainer extends DisposablePanel {
         }
     }
 
-    class MapTableColumnModel extends DefaultTableColumnModel implements Disposable {
+    class MapTableColumnModel extends DefaultTableColumnModel implements Disposable, CommitPropertiesListener {
 
+        private MessageBusConnection busConnection;
         private TableDynamicCellEditor cellEditor;
         private TableDynamicCellRenderer cellRenderer;
 
@@ -57,12 +60,21 @@ class DynamicMapPropertyTabContainer extends DisposablePanel {
             valueColumn.setCellRenderer(cellRenderer);
             valueColumn.setCellEditor(cellEditor);
             addColumn(valueColumn);
+
+            busConnection = module.getProject().getMessageBus().connect();
+            busConnection.subscribe(CommitPropertiesListener.COMMIT_TOPIC, this);
         }
 
         @Override
         public void dispose() {
+            busConnection.disconnect();
             DisposableUtils.dispose(cellRenderer);
             DisposableUtils.dispose(cellEditor);
+        }
+
+        @Override
+        public void onCommit() {
+            this.cellEditor.stopCellEditing();
         }
     }
 }
