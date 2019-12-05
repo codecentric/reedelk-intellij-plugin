@@ -9,4 +9,6 @@ public class Defaults {
     public static final String DEFAULT_ADMIN_HOST_PARAM_NAME = "admin.console.address";
 
     public static final String BASE_RESOURCE_FOLDER = "/src/main/resources";
+
+    public static final String DEFAULT_DYNAMIC_VALUE_SCRIPT_VIRTUAL_FILE_NAME = "tmp.js";
 }

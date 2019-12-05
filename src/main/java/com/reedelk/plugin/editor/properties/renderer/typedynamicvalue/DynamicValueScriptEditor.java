@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 
 import static com.intellij.util.ui.JBUI.Borders;
+import static com.reedelk.plugin.commons.Defaults.DEFAULT_DYNAMIC_VALUE_SCRIPT_VIRTUAL_FILE_NAME;
 import static com.reedelk.plugin.commons.Fonts.ScriptEditor.SCRIPT_EDITOR_FONT_SIZE;
 import static java.util.Collections.singletonList;
 
@@ -26,7 +27,7 @@ public class DynamicValueScriptEditor extends ScriptEditor {
     }
 
     private static Document emptyDocument() {
-        VirtualFile myVirtualFile = new LightVirtualFile("tmp.js", PlainTextFileType.INSTANCE, StringUtils.EMPTY);
+        VirtualFile myVirtualFile = new LightVirtualFile(DEFAULT_DYNAMIC_VALUE_SCRIPT_VIRTUAL_FILE_NAME, PlainTextFileType.INSTANCE, StringUtils.EMPTY);
         return FileDocumentManager.getInstance().getDocument(myVirtualFile);
     }
 
