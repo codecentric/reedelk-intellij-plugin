@@ -2,6 +2,7 @@ package com.reedelk.plugin.editor.properties.renderer.typemap;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
+import com.intellij.ui.components.JBTextField;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.TableColumnModelUtils;
@@ -53,6 +54,7 @@ class DynamicMapPropertyTabContainer extends DisposablePanel {
             // Column 1 (the map key)
             TableColumn keyColumn = new TableColumn(0);
             keyColumn.setHeaderValue(COLUMN_NAMES[0]);
+            keyColumn.setCellEditor(new DefaultCellEditor(new JBTextField()));
             addColumn(keyColumn);
 
             // Column 2 (the map value)

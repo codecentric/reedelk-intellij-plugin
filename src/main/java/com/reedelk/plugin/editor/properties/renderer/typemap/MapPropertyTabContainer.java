@@ -1,6 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer.typemap;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.ui.components.JBTextField;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.TableColumnModelUtils;
 import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
@@ -56,11 +57,13 @@ class MapPropertyTabContainer extends DisposablePanel {
             // Column 1 (the map key)
             TableColumn keyColumn = new TableColumn(0);
             keyColumn.setHeaderValue(COLUMN_NAMES[0]);
+            keyColumn.setCellEditor(new DefaultCellEditor(new JBTextField()));
             addColumn(keyColumn);
 
             // Column 2 (the map value)
             TableColumn valueColumn = new TableColumn(1);
             valueColumn.setHeaderValue(COLUMN_NAMES[1]);
+            valueColumn.setCellEditor(new DefaultCellEditor(new JBTextField()));
             addColumn(valueColumn);
         }
 

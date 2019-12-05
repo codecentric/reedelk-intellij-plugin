@@ -11,8 +11,10 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.concurrency.Semaphore;
+import com.intellij.util.messages.MessageBus;
 import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.commons.NotificationUtils;
+import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
 import com.reedelk.plugin.maven.MavenPackageGoal;
 import com.reedelk.plugin.runconfig.module.ModuleRunConfiguration;
 import com.reedelk.plugin.runconfig.module.runner.ModuleUnDeployExecutor;
@@ -23,6 +25,7 @@ import org.jetbrains.idea.maven.utils.MavenLog;
 
 import javax.swing.*;
 
+import static com.reedelk.plugin.editor.properties.CommitPropertiesListener.COMMIT_TOPIC;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
 
@@ -102,6 +105,12 @@ public class ModuleBuilderBeforeTaskProvider extends BeforeRunTaskProvider<Modul
 
         try {
             ApplicationManager.getApplication().invokeAndWait(() -> {
+
+                // We must commit so that listeners e.g Tables can fire "stopCellEditing" to write
+                // the values into the DataHolders so that they can be written into the document.
+                MessageBus messageBus = env.getProject().getMessageBus();
+                CommitPropertiesListener publisher = messageBus.syncPublisher(COMMIT_TOPIC);
+                publisher.onCommit();
 
                 // By saving all documents we force the File listener
                 // to commit all files. This way we know if we can hot swap or not.
