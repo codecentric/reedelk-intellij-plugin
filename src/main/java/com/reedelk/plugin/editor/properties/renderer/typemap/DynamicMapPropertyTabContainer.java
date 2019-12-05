@@ -74,7 +74,8 @@ class DynamicMapPropertyTabContainer extends DisposablePanel {
 
         @Override
         public void onCommit() {
-            this.cellEditor.stopCellEditing();
+            getColumn(0).getCellEditor().stopCellEditing();
+            getColumn(1).getCellEditor().stopCellEditing();
         }
     }
 }
