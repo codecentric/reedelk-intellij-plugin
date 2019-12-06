@@ -1,7 +1,7 @@
 package com.reedelk.plugin.completion;
 
 import com.intellij.codeInsight.completion.*;
-import com.intellij.codeInsight.lookup.LookupElement;
+import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.PlainTextTokenTypes;
 import com.intellij.util.ProcessingContext;
@@ -9,7 +9,6 @@ import com.reedelk.plugin.service.application.CompletionService;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Optional;
 
 public class ScriptCompletionContributor extends CompletionContributor {
@@ -26,8 +25,13 @@ public class ScriptCompletionContributor extends CompletionContributor {
         protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {
             findLastToken(parameters.getPosition().getText(), parameters.getOffset()).ifPresent(lastToken -> {
                 CompletionService instance = CompletionService.getInstance();
-                List<LookupElement> lookupElements = instance.completionTokensOf(lastToken);
-                lookupElements.forEach(result::addElement);
+                instance.completionTokensOf(lastToken)
+                        .ifPresent(strings -> strings.forEach(suggestion -> {
+                            LookupElementBuilder elementBuilder = LookupElementBuilder.create(suggestion.getToken())
+                                    .withTypeText(suggestion.getTypeName())
+                                    .withIcon(suggestion.getType().icon());
+                            result.addElement(elementBuilder);
+                        }));
             });
         }
     }
