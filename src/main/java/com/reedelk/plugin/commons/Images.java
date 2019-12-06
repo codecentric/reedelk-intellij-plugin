@@ -27,10 +27,10 @@ public class Images {
         public static final Image PlaceholderHintIcon;
 
         static {
-            DefaultComponent = loadImage("/icons/default-component.png");
-            RemoveComponent = loadImage("/icons/remove-component-icon.png");
-            InboundPlaceholderIcon = loadImage("/icons/inbound-placeholder-icon.png");
-            PlaceholderHintIcon = loadImage("/icons/placeholder-hint.png");
+            DefaultComponent = loadImage("/images/default-component.png");
+            RemoveComponent = loadImage("/images/remove-component-icon.png");
+            InboundPlaceholderIcon = loadImage("/images/inbound-placeholder-icon.png");
+            PlaceholderHintIcon = loadImage("/images/placeholder-hint.png");
         }
 
         private static final Map<String, Image> KEY_IMAGE_MAP = new HashMap<>();
@@ -54,8 +54,8 @@ public class Images {
         public static final Image Loading;
 
         static {
-            Error = loadImage("/icons/flow-error.png");
-            Loading = loadImage("/icons/flow-loading.png");
+            Error = loadImage("/images/flow-error.png");
+            Loading = loadImage("/images/flow-loading.png");
         }
     }
 

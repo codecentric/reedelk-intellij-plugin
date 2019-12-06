@@ -64,9 +64,9 @@ public class PaletteComponentTreeRenderer implements TreeCellRenderer {
                 }
 
                 if (ComponentType.INBOUND.equals(descriptor.getComponentType())) {
-                    typeIcon.setIcon(Icons.Component.InboundTypeComponent);
+                    typeIcon.setIcon(Icons.Component.Inbound);
                 } else {
-                    typeIcon.setIcon(Icons.Component.ProcessorTypeComponent);
+                    typeIcon.setIcon(Icons.Component.Processor);
                 }
                 return renderer;
             }

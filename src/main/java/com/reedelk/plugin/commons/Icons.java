@@ -29,9 +29,9 @@ public class Icons {
         private Component() {
         }
 
-        public static final Icon DefaultComponent = IconLoader.getIcon("/icons/default-component-icon.png");
-        public static final Icon InboundTypeComponent = IconLoader.getIcon("/icons/inbound-type-component.png");
-        public static final Icon ProcessorTypeComponent = IconLoader.getIcon("/icons/processor-type-component.png");
+        public static final Icon Default = IconLoader.getIcon("/icons/default-component-icon.png");
+        public static final Icon Inbound = IconLoader.getIcon("/icons/inbound-type-component.png");
+        public static final Icon Processor = IconLoader.getIcon("/icons/processor-type-component.png");
 
         private static final Map<String, Icon> KEY_ICON_MAP = new HashMap<>();
 
@@ -40,7 +40,7 @@ public class Icons {
         }
 
         public static Icon get(String key) {
-            return KEY_ICON_MAP.getOrDefault(key, DefaultComponent);
+            return KEY_ICON_MAP.getOrDefault(key, Default);
         }
     }
 
