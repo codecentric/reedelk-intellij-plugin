@@ -32,14 +32,15 @@ import static java.awt.BorderLayout.EAST;
 
 class ShareableConfigInputField extends DisposablePanel implements ConfigServiceImpl.ConfigChangeListener {
 
-    private final Module module;
-    private final ContainerContext context;
-    private final MessageBusConnection connect;
-    private final PropertyAccessor propertyAccessor;
-    private final ConfigSelectorCombo configSelectorCombo;
+    private final transient Module module;
+    private final transient ContainerContext context;
+    private final transient MessageBusConnection connect;
+    private final transient PropertyAccessor propertyAccessor;
+    private final transient ComponentPropertyDescriptor descriptor;
+    private final transient ComponentDataHolder referenceDataHolder;
+
     private final ConfigControlPanel configActionsPanel;
-    private final ComponentPropertyDescriptor descriptor;
-    private final ComponentDataHolder referenceDataHolder;
+    private final ConfigSelectorCombo configSelectorCombo;
 
 
     ShareableConfigInputField(@NotNull Module module,

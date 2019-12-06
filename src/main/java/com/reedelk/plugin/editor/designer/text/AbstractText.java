@@ -8,7 +8,7 @@ import java.util.List;
 
 public abstract class AbstractText {
 
-    private static final String prototypeText = "XXXXXX";
+    private static final String PROTOTYPE_TEXT = "XXXXXX";
 
     private final HorizontalAlignment horizontalAlignment;
     private final VerticalAlignment verticalAlignment;
@@ -72,7 +72,7 @@ public abstract class AbstractText {
         // style and font size.
         graphics.setFont(font);
 
-        Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(prototypeText, graphics);
+        Rectangle2D stringBounds = graphics.getFontMetrics().getStringBounds(PROTOTYPE_TEXT, graphics);
         List<String> textAsLines = getText();
 
         // Even if the text is empty, we always keep the space for one line.

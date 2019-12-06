@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 
 public class BooleanCheckbox extends JBCheckBox implements ActionListener {
 
-    private InputChangeListener listener;
+    private transient InputChangeListener listener;
 
     public BooleanCheckbox() {
         addActionListener(this);

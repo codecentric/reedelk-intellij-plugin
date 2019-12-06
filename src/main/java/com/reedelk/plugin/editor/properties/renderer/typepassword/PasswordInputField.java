@@ -17,12 +17,10 @@ import static com.reedelk.plugin.commons.Icons.Misc.ShowPassword;
 
 public class PasswordInputField extends DisposablePanel implements DocumentListener {
 
-    private ValueConverter<?> converter = ValueConverterFactory.forType(String.class);
-
-    private JBPasswordField passwordField;
+    private transient ValueConverter<?> converter = ValueConverterFactory.forType(String.class);
+    private transient InputChangeListener listener;
     private ClickableLabel showPassword;
-
-    private InputChangeListener listener;
+    private JBPasswordField passwordField;
 
     private boolean isPasswordHidden = true;
 

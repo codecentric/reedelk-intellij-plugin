@@ -18,12 +18,12 @@ import static java.awt.BorderLayout.CENTER;
 
 public class DynamicValueField extends DisposablePanel {
 
-    private final DynamicValueInputFieldAdapter inputFieldAdapter;
+    private final transient DynamicValueInputFieldAdapter inputFieldAdapter;
 
     private ScriptEditor editor;
     private DisposablePanel scriptContainer;
     private DisposablePanel inputFieldContainer;
-    private ScriptEditorChangeListener listener;
+    private transient ScriptEditorChangeListener listener;
 
     public DynamicValueField(Module module, DynamicValueInputFieldAdapter inputFieldAdapter) {
         this.inputFieldAdapter = inputFieldAdapter;

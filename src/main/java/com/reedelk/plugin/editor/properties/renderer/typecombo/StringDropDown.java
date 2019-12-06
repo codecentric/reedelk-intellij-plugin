@@ -8,7 +8,7 @@ import java.awt.event.ItemListener;
 
 public class StringDropDown extends JComboBox<String> implements ItemListener {
 
-    private InputChangeListener listener;
+    private transient InputChangeListener listener;
 
     public StringDropDown(String[] items, boolean editable, String prototype) {
         super(items);

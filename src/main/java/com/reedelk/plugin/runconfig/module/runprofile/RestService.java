@@ -24,8 +24,8 @@ public class RestService {
     private static final String BASE_ADMIN_CONSOLE_URL_TEMPLATE = "http://%s:%d/api";
 
     private interface ApiPaths {
-        String module = "/module";
-        String hotswap = "/hotswap";
+        String MODULE = "/module";
+        String HOT_SWAP = "/hotswap";
     }
 
     private final Module module;
@@ -45,7 +45,7 @@ public class RestService {
 
         String json = InternalAPI.HotSwap.V1.POST.Req.serialize(req);
 
-        HttpResponse response = post(baseUrl + ApiPaths.hotswap, json);
+        HttpResponse response = post(baseUrl + ApiPaths.HOT_SWAP, json);
         if (response.isNotFound()) {
             // The module we tried to Hot Swap was not installed
             // in the Runtime, therefore we must re-package the module
@@ -80,7 +80,7 @@ public class RestService {
         ModulePOSTReq req = new ModulePOSTReq();
         req.setModuleFilePath(moduleFile);
         String json = InternalAPI.Module.V1.POST.Req.serialize(req);
-        HttpResponse response = post(baseUrl + ApiPaths.module, json);
+        HttpResponse response = post(baseUrl + ApiPaths.MODULE, json);
         if (response.isNotSuccessful()) {
             handleNotSuccessfulResponse(response);
         } else {
@@ -93,7 +93,7 @@ public class RestService {
         ModuleDELETEReq req = new ModuleDELETEReq();
         req.setModuleFilePath(moduleFile);
         String json = InternalAPI.Module.V1.DELETE.Req.serialize(req);
-        HttpResponse response = deleteInternal(baseUrl + ApiPaths.module, json);
+        HttpResponse response = deleteInternal(baseUrl + ApiPaths.MODULE, json);
         if (response.isNotSuccessful()) {
             handleNotSuccessfulResponse(response);
         } else {

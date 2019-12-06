@@ -19,10 +19,11 @@ public abstract class InputField<T> extends JBTextField implements DocumentListe
 
     final PlainDocument document;
 
-    private final ValueConverter<?> converter;
+
+    private final transient ValueConverter<?> converter;
     private final String hint;
 
-    private InputChangeListener listener;
+    private transient InputChangeListener listener;
 
     InputField(String hint) {
         setForeground(JBColor.DARK_GRAY);

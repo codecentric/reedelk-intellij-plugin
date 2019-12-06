@@ -11,8 +11,8 @@ import java.awt.event.FocusListener;
 
 public class PropertyTable extends DisposableScrollPane {
 
-    private final JBTable table;
-    private final PropertyTableModel tableModel;
+    private final transient JBTable table;
+    private final transient PropertyTableModel tableModel;
 
     public PropertyTable(PropertyTableModel tableModel, TableColumnModel tableColumnModel) {
         setPreferredSize(Sizes.Table.HEIGHT);

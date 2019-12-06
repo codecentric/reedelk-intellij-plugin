@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public class ConfigSelectorCombo extends ComboBox<ConfigMetadata> implements ItemListener {
 
-    private InputChangeListener listener;
+    private transient InputChangeListener listener;
 
     public ConfigSelectorCombo() {
         setRenderer(new ConfigMetadataRenderer());

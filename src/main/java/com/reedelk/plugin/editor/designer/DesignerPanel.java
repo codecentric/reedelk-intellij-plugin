@@ -65,17 +65,16 @@ public abstract class DesignerPanel extends DisposablePanel implements
     private transient SelectableItem currentSelection;
     private transient MessageBusConnection busConnection;
     private transient CenterOfNodeDrawable centerOfNodeDrawable;
+    private transient DesignerSelectionManager designerSelectionManager;
     private transient CurrentSelectionListener componentSelectedPublisher;
     private transient FlowWithErrorInfoPanel errorFlowInfoPanel = new FlowWithErrorInfoPanel();
     private transient BuildingFlowInfoPanel buildingFlowInfoPanel = new BuildingFlowInfoPanel();
 
     private int offsetX;
     private int offsetY;
-    private boolean visible;
+    private boolean isVisible;
     private boolean dragging;
     private boolean snapshotUpdated;
-
-    private DesignerSelectionManager designerSelectionManager;
 
 
     DesignerPanel(@NotNull Module module,
@@ -251,7 +250,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
     @Override
     public void onDataChange() {
         snapshotUpdated = true;
-        if (visible) {
+        if (isVisible) {
             // If it is visible and nothing is selected, we need to set default
             // selection. The first time we open the designer, we  need to wait
             // for the background Thread to deserialize the graph. When the
@@ -278,7 +277,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
 
     @Override
     public void onComponentListUpdate(Module module) {
-        if (visible) {
+        if (isVisible) {
             // When the component list is updated or we click on the 'compile' button
             // the graph is de-serialized to apply changes and refresh properties
             // which might have been changed from custom Java components. Therefore
@@ -374,12 +373,12 @@ public abstract class DesignerPanel extends DisposablePanel implements
             @Override
             public void ancestorAdded(AncestorEvent event) {
                 snapshot.applyOnValidGraph(graph -> select(defaultSelectedItem()));
-                visible = true;
+                isVisible = true;
             }
 
             @Override
             public void ancestorRemoved(AncestorEvent event) {
-                visible = false;
+                isVisible = false;
             }
         });
     }

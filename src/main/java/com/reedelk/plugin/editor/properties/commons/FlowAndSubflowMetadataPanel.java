@@ -17,7 +17,7 @@ import static java.awt.BorderLayout.NORTH;
 
 public class FlowAndSubflowMetadataPanel extends DisposablePanel implements Disposable {
 
-    private final FlowSnapshot snapshot;
+    private final transient FlowSnapshot snapshot;
 
     public FlowAndSubflowMetadataPanel(FlowSnapshot snapshot) {
         this.snapshot = snapshot;

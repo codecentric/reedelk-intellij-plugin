@@ -11,7 +11,7 @@ import java.util.List;
 
 public class SubflowSelector extends ComboBox<SubflowMetadata> implements ItemListener {
 
-    private SelectListener listener;
+    private transient SelectListener listener;
 
     public SubflowSelector(List<SubflowMetadata> subflowsMetadata) {
         setRenderer(new SubflowMetadataRenderer());

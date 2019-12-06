@@ -18,8 +18,8 @@ import static java.util.stream.Collectors.toList;
 
 public class EnumDropDown extends ComboBox<KeyValue> implements ItemListener {
 
-    private final List<KeyValue> keyValues;
-    private InputChangeListener listener;
+    private final transient List<KeyValue> keyValues;
+    private transient InputChangeListener listener;
 
     public EnumDropDown(Map<String, String> valueAndDisplayNameMap) {
         this.keyValues = valueAndDisplayNameMap

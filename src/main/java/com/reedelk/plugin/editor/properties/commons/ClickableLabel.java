@@ -1,5 +1,6 @@
 package com.reedelk.plugin.editor.properties.commons;
 
+import com.intellij.ui.components.JBLabel;
 import com.reedelk.runtime.api.commons.StringUtils;
 
 import javax.swing.*;
@@ -7,9 +8,9 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class ClickableLabel extends JLabel implements MouseListener {
+public class ClickableLabel extends JBLabel implements MouseListener {
 
-    private final OnClickAction action;
+    private final transient OnClickAction action;
 
     public ClickableLabel(Icon icon, OnClickAction action) {
         this(StringUtils.EMPTY, icon, null, IconAlignment.LEFT, action);
@@ -64,10 +65,12 @@ public class ClickableLabel extends JLabel implements MouseListener {
 
     @Override
     public void mousePressed(MouseEvent event) {
+        // not used
     }
 
     @Override
     public void mouseReleased(MouseEvent event) {
+        // not used
     }
 
     public interface OnClickAction {

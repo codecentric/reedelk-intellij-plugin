@@ -43,9 +43,9 @@ class DynamicMapPropertyTabContainer extends DisposablePanel {
 
     class MapTableColumnModel extends DefaultTableColumnModel implements Disposable, CommitPropertiesListener {
 
-        private MessageBusConnection busConnection;
-        private TableDynamicCellEditor cellEditor;
-        private TableDynamicCellRenderer cellRenderer;
+        private transient  MessageBusConnection busConnection;
+        private transient TableDynamicCellEditor cellEditor;
+        private transient TableDynamicCellRenderer cellRenderer;
 
         MapTableColumnModel(Module  module) {
             this.cellEditor = new TableDynamicCellEditor(module);

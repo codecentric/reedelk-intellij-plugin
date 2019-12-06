@@ -20,7 +20,7 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 class MapPropertyTabContainer extends DisposablePanel {
 
-    private MessageBusConnection busConnection;
+    private transient MessageBusConnection busConnection;
 
     private static final String[] COLUMN_NAMES = {"Key", "Value"};
 

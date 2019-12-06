@@ -12,7 +12,7 @@ import java.awt.event.ItemListener;
 
 public class ScriptSelectorCombo extends ComboBox<ScriptResource> implements ItemListener {
 
-    private InputChangeListener listener;
+    private transient InputChangeListener listener;
 
     ScriptSelectorCombo() {
         setRenderer(new ScriptSelectorRenderer());

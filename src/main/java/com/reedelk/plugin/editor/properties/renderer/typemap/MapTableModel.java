@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 
 public class MapTableModel extends DefaultTableModel implements PropertyTable.PropertyTableModel {
 
-    private final Consumer<Vector<Vector>> dataUpdater;
+    private final transient Consumer<Vector<Vector>> dataUpdater;
 
     MapTableModel(Consumer<Vector<Vector>> dataUpdater) {
         super(0, 2); // a Map table has two columns
