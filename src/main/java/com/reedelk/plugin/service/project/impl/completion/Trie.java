@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.application.impl.completion;
+package com.reedelk.plugin.service.project.impl.completion;
 
 import java.util.ArrayList;
 import java.util.List;

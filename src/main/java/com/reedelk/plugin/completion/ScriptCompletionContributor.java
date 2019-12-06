@@ -5,7 +5,7 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.PlainTextTokenTypes;
 import com.intellij.util.ProcessingContext;
-import com.reedelk.plugin.service.application.CompletionService;
+import com.reedelk.plugin.service.project.CompletionService;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,7 +24,7 @@ public class ScriptCompletionContributor extends CompletionContributor {
         @Override
         protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {
             findLastToken(parameters.getPosition().getText(), parameters.getOffset()).ifPresent(lastToken -> {
-                CompletionService instance = CompletionService.getInstance();
+                CompletionService instance = CompletionService.getInstance(parameters.getEditor().getProject());
                 instance.completionTokensOf(lastToken)
                         .ifPresent(strings -> strings.forEach(suggestion -> {
                             LookupElementBuilder elementBuilder = LookupElementBuilder.create(suggestion.getToken())

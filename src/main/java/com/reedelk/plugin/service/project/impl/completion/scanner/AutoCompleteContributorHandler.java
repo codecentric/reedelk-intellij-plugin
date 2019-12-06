@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.application.impl.completion.scanner;
+package com.reedelk.plugin.service.project.impl.completion.scanner;
 
 public class AutoCompleteContributorHandler {
 
