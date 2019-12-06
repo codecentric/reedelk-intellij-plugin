@@ -23,16 +23,6 @@ public class ModuleInfo {
         }
     }
 
-    public static boolean isModule(String jarFilePath) {
-        try {
-            Attributes attributes = getManifestAttributesOf(jarFilePath);
-            String isEsbModule = attributes.getValue(Bundle.MODULE_HEADER_NAME);
-            return Boolean.parseBoolean(isEsbModule);
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     public static String getModuleName(String jarFilePath) {
         try {
             Attributes attributes = getManifestAttributesOf(jarFilePath);
