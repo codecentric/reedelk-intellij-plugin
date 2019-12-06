@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class CompletionServiceTest {
 
     @Test
-    void shouldCorrectlyParse() {
+    void shouldCorrectlyParseSuggestionWithTypeAndTypeName() {
         // Given
         String suggestionTokenDefinition = "message[FUNCTION:Message]";
 
@@ -25,5 +25,22 @@ class CompletionServiceTest {
         assertThat(parsedSuggestion.getLeft()).isEqualTo("message");
         assertThat(parsedSuggestion.getMiddle()).isEqualTo(SuggestionType.FUNCTION);
         assertThat(parsedSuggestion.getRight()).isEqualTo("Message");
+    }
+
+    @Test
+    void shouldCorrectlyParseSuggestionWithTypeAndTypeNameArray() {
+        // Given
+        String suggestionTokenDefinition = "message[VARIABLE:Message[]]";
+
+        // When
+        Optional<Triple<String, SuggestionType, String>> parsed = CompletionService.parseSuggestionToken(suggestionTokenDefinition);
+
+        // Then
+        assertThat(parsed).isPresent();
+
+        Triple<String, SuggestionType, String> parsedSuggestion = parsed.get();
+        assertThat(parsedSuggestion.getLeft()).isEqualTo("message");
+        assertThat(parsedSuggestion.getMiddle()).isEqualTo(SuggestionType.VARIABLE);
+        assertThat(parsedSuggestion.getRight()).isEqualTo("Message[]");
     }
 }

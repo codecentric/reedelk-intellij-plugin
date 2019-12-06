@@ -18,7 +18,7 @@ public interface CompletionService {
 
     Optional<List<Suggestion>> completionTokensOf(String token);
 
-    Pattern MATCH_SUGGESTION = Pattern.compile("(.*)\\[(.*):(.*)]");
+    Pattern MATCH_SUGGESTION = Pattern.compile("(.*)\\[(.*):(.*)]$");
 
     static Optional<Triple<String, SuggestionType,String>> parseSuggestionToken(String suggestionTokenDefinition) {
         Matcher matcher = MATCH_SUGGESTION.matcher(suggestionTokenDefinition);
