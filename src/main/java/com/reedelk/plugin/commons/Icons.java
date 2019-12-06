@@ -11,14 +11,14 @@ public class Icons {
 
     public static final String PNG_EXTENSION = "png";
 
-    public static final Icon Module = IconLoader.getIcon("/icons/icon-16x-blue.png");
-    public static final Icon Runtime = IconLoader.getIcon("/icons/play-16x-red.png");
-    public static final Icon ModuleDeploy = IconLoader.getIcon("/icons/deploy-16x-blue-disabled.png");
-    public static final Icon ModuleDeployDisabled = IconLoader.getIcon("/icons/deploy-16x-blue-disabled.png");
-    public static final Icon ModuleUnDeploy = IconLoader.getIcon("/icons/undeploy-16x-blue-disabled.png");
-    public static final Icon ModuleUnDeployDisabled = IconLoader.getIcon("/icons/undeploy-16x-blue-disabled.png");
-    public static final Icon FileTypeFlow = IconLoader.getIcon("/icons/icon-flow-file-16x.png");
-    public static final Icon FileTypeSubFlow = IconLoader.getIcon("/icons/icon-subflow-file-16x.png");
+    public static final Icon Module = IconLoader.getIcon("/icons/ModulePackage.png");
+    public static final Icon Runtime = IconLoader.getIcon("/icons/Runtime.png");
+    public static final Icon ModuleDeploy = IconLoader.getIcon("/icons/ModuleDeploy.png");
+    public static final Icon ModuleDeployDisabled = IconLoader.getIcon("/icons/ModuleDeploy.png");
+    public static final Icon ModuleUnDeploy = IconLoader.getIcon("/icons/ModuleUndeploy.png");
+    public static final Icon ModuleUnDeployDisabled = IconLoader.getIcon("/icons/ModuleUndeploy.png");
+    public static final Icon FileTypeFlow = IconLoader.getIcon("/icons/FileTypeFlow.png");
+    public static final Icon FileTypeSubFlow = IconLoader.getIcon("/icons/FileTypeSubflow.png");
     public static final Icon FileTypeConfig = AllIcons.Actions.Annotate;
 
     private Icons() {
@@ -29,9 +29,9 @@ public class Icons {
         private Component() {
         }
 
-        public static final Icon Default = IconLoader.getIcon("/icons/default-component-icon.png");
-        public static final Icon Inbound = IconLoader.getIcon("/icons/inbound-type-component.png");
-        public static final Icon Processor = IconLoader.getIcon("/icons/processor-type-component.png");
+        public static final Icon Default = IconLoader.getIcon("/icons/ComponentDefault.png");
+        public static final Icon Inbound = IconLoader.getIcon("/icons/ComponentInbound.png");
+        public static final Icon Processor = IconLoader.getIcon("/icons/ComponentProcessor.png");
 
         private static final Map<String, Icon> KEY_ICON_MAP = new HashMap<>();
 
@@ -51,7 +51,7 @@ public class Icons {
         }
 
         public static final Icon Code = AllIcons.Json.Object;
-        public static final Icon ScriptLoadError = IconLoader.getIcon("/icons/script-load-error.png");
+        public static final Icon ScriptLoadError = IconLoader.getIcon("/icons/ScriptLoadError.png");
     }
 
     public static class ToolWindow {
@@ -59,7 +59,7 @@ public class Icons {
         private ToolWindow() {
         }
 
-        public static final Icon Properties = IconLoader.getIcon("/icons/toolbar-properties.png");
+        public static final Icon Properties = IconLoader.getIcon("/icons/ToolBarProperties.png");
     }
 
     public static class Misc {
@@ -67,7 +67,7 @@ public class Icons {
         private Misc() {
         }
 
-        public static final Icon ShowPassword = IconLoader.getIcon("/icons/show_password.png");
-        public static final Icon HidePassword = IconLoader.getIcon("/icons/hide_password.png");
+        public static final Icon ShowPassword = IconLoader.getIcon("/icons/PasswordShow.png");
+        public static final Icon HidePassword = IconLoader.getIcon("/icons/PasswordHide.png");
     }
 }
