@@ -24,25 +24,21 @@ public class ComponentScanner {
         ScanResult scanResult = instantiateScanner()
                 .whitelistPaths(PackageToPath.convert(targetPackage.getName()))
                 .scan();
-
-        List<ComponentDescriptor> packageComponentDescriptors = processScanResult(scanResult);
-
+        List<ComponentDescriptor> descriptors = componentDescriptorsFrom(scanResult);
         // Unknown components are filtered out
-        return filterOutUnknownClassComponents(packageComponentDescriptors);
+        return filterOutUnknownClassComponents(descriptors);
     }
 
     public List<ComponentDescriptor> from(String targetPath) {
         ScanResult scanResult = instantiateScanner()
                 .overrideClasspath(targetPath)
                 .scan();
-
-        List<ComponentDescriptor> targetPathComponentDescriptors = processScanResult(scanResult);
-
+        List<ComponentDescriptor> descriptors = componentDescriptorsFrom(scanResult);
         // Unknown components are filtered out
-        return filterOutUnknownClassComponents(targetPathComponentDescriptors);
+        return filterOutUnknownClassComponents(descriptors);
     }
 
-    private List<ComponentDescriptor> processScanResult(ScanResult scanResult) {
+    private List<ComponentDescriptor> componentDescriptorsFrom(ScanResult scanResult) {
         ClassInfoList classInfoList = scanResult.getClassesWithAnnotation(ESBComponent.class.getName());
         List<ComponentDescriptor> componentDescriptors = new ArrayList<>();
         classInfoList.forEach(classInfo -> {

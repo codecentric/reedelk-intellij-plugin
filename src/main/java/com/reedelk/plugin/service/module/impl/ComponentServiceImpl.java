@@ -23,9 +23,9 @@ import org.jetbrains.idea.maven.project.MavenImportListener;
 import org.jetbrains.idea.maven.project.MavenProject;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toList;
 
 public class ComponentServiceImpl implements ComponentService, MavenImportListener, CompilationStatusListener {
 
@@ -108,24 +108,25 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
     private void asyncUpdateMavenDependenciesComponents() {
         PluginExecutor.getInstance().submit(() -> {
-            // Remove all Component before updating them
+            // Remove all components before updating them
             mavenJarComponentsMap.clear();
             publisher.onComponentListUpdate(module);
 
-            // Update the components from maven project
+            // Update the components definitions from maven project
             MavenUtils.getMavenProject(module.getProject(), module.getName()).ifPresent(mavenProject -> {
                 mavenProject.getDependencies().stream()
                         .filter(artifact -> ModuleInfo.isModule(artifact.getFile()))
-                        .map(artifact -> artifact.getFile().getPath()).collect(Collectors.toList())
+                        .map(artifact -> artifact.getFile().getPath()).collect(toList())
                         .forEach(jarFilePath -> {
                             List<ComponentDescriptor> components = componentScanner.from(jarFilePath);
                             String moduleName = ModuleInfo.getModuleName(jarFilePath);
                             ComponentsPackage descriptor = new ComponentsPackage(moduleName, components);
                             mavenJarComponentsMap.put(jarFilePath, descriptor);
-
                             publisher.onComponentListUpdate(module);
                         });
             });
+
+            // Update the Scripts
         });
     }
 

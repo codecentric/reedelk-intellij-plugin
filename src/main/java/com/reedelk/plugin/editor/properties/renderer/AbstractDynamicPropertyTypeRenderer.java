@@ -17,8 +17,7 @@ public abstract class AbstractDynamicPropertyTypeRenderer extends AbstractProper
     public JComponent render(@NotNull Module module, @NotNull ComponentPropertyDescriptor propertyDescriptor, @NotNull PropertyAccessor propertyAccessor, @NotNull ContainerContext context) {
         String hint = propertyDescriptor.getHintValue();
 
-        DynamicValueField field =
-                new DynamicValueField(module, inputFieldAdapter(hint));
+        DynamicValueField field = new DynamicValueField(module, inputFieldAdapter(hint));
         field.setValue(propertyAccessor.get());
         field.addListener(propertyAccessor::set);
         return field;

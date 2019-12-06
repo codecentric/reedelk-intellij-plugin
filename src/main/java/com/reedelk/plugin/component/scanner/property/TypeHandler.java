@@ -34,7 +34,7 @@ public class TypeHandler implements Handler {
             TypeDescriptor typeDescriptor = new TypePrimitiveDescriptor(clazz);
             builder.type(typeDescriptor);
 
-            // Non primitive (which might internally be a primitive e.g String or BigDecimal.
+            // Non primitive: String, BigDecimal, DynamicString, ...
         } else if (typeSignature instanceof ClassRefTypeSignature) {
             ClassRefTypeSignature classRef = (ClassRefTypeSignature) typeSignature;
             TypeDescriptor typeDescriptor = processClassRefType(classRef, propertyInfo, context);
