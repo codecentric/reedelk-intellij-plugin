@@ -1,5 +1,6 @@
 package com.reedelk.plugin.editor.palette;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
@@ -71,10 +72,12 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
         // components have been updated.
         VirtualFile[] selectedFiles = FileEditorManager.getInstance(project).getSelectedFiles();
         if (selectedFiles.length > 0) {
-            Module selectedFileModule = ModuleUtil.findModuleForFile(selectedFiles[0], project);
-            if (module == selectedFileModule) {
-                updateComponents(module);
-            }
+            ApplicationManager.getApplication().runReadAction(() -> {
+                Module selectedFileModule = ModuleUtil.findModuleForFile(selectedFiles[0], project);
+                if (module == selectedFileModule) {
+                    updateComponents(module);
+                }
+            });
         }
     }
 
