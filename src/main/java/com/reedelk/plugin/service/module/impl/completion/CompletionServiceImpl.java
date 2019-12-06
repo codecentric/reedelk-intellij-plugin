@@ -27,6 +27,8 @@ import static java.util.stream.Collectors.toList;
 //  it would not make sense to loop through all the objects here again  in order  to fetch
 //  the components properties' contribution annotations. This service should subscribe to the ComponentUpdated
 //  and then loop through the updated component to actually register in the tree the stuff.
+//  The logic should also update the tree as a Whole, without keep writing in it. and synchronize its access to access
+//  the rebuilt tree.
 public class CompletionServiceImpl implements CompletionService, MavenImportListener, CompilationStatusListener {
 
     private final Trie trie;
