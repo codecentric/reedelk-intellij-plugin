@@ -48,12 +48,6 @@ class PropertyScannerUtils {
         return parameterValue == null ? defaultValue : (T) parameterValue;
     }
 
-    private static Object getParameterValue(AnnotationInfo info, String parameterName) {
-        AnnotationParameterValueList parameterValues = info.getParameterValues();
-        AnnotationParameterValue parameterValue = parameterValues.get(parameterName);
-        return parameterValue == null ? parameterValue : parameterValue.getValue();
-    }
-
     /**
      * Returns a new Predicate which filters FieldInfo's having type the target
      * class name specified in the argument of this function.
@@ -85,17 +79,17 @@ class PropertyScannerUtils {
                 .anyMatch(info -> info.getName().equals(Enum.class.getName()));
     }
 
-    static boolean isDynamicValue(String fullyQualifiedName) {
+    static boolean isDynamicValue(Class<?> clazz) {
         try {
-            return DynamicValue.class.equals(clazzByFullyQualifiedName(fullyQualifiedName).getSuperclass());
+            return DynamicValue.class.equals(clazz.getSuperclass());
         } catch (UnsupportedType exception) {
             return false;
         }
     }
 
-    static boolean isDynamicMap(String fullyQualifiedName) {
+    static boolean isDynamicMap(Class<?> clazz) {
         try {
-            return DynamicMap.class.equals(clazzByFullyQualifiedName(fullyQualifiedName).getSuperclass());
+            return DynamicMap.class.equals(clazz.getSuperclass());
         } catch (UnsupportedType exception) {
             return false;
         }
@@ -147,5 +141,11 @@ class PropertyScannerUtils {
     static Collapsible isCollapsible(ClassInfo classInfo) {
         return classInfo.hasAnnotation(com.reedelk.runtime.api.annotation.Collapsible.class.getName()) ?
                 Collapsible.YES : Collapsible.NO;
+    }
+
+    private static Object getParameterValue(AnnotationInfo info, String parameterName) {
+        AnnotationParameterValueList parameterValues = info.getParameterValues();
+        AnnotationParameterValue parameterValue = parameterValues.get(parameterName);
+        return parameterValue == null ? parameterValue : parameterValue.getValue();
     }
 }

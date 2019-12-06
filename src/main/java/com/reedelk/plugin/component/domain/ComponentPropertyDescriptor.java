@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -18,6 +19,7 @@ public class ComponentPropertyDescriptor {
     private String defaultValue;
 
     private TypeDescriptor propertyType;
+    private AutoCompleteContributorDefinition autoCompleteContributorDefinition;
 
     private final List<WhenDefinition> whenDefinitions = new ArrayList<>();
 
@@ -56,6 +58,11 @@ public class ComponentPropertyDescriptor {
     }
 
     @NotNull
+    public Optional<AutoCompleteContributorDefinition> getAutoCompleteContributorDefinition() {
+        return Optional.ofNullable(autoCompleteContributorDefinition);
+    }
+
+    @NotNull
     @SuppressWarnings("unchecked")
     public <T extends TypeDescriptor> T getPropertyType() {
         return (T) propertyType;
@@ -69,6 +76,7 @@ public class ComponentPropertyDescriptor {
         private String defaultValue;
 
         private TypeDescriptor propertyType;
+        private AutoCompleteContributorDefinition autoCompleteContributorDefinition;
 
         private List<WhenDefinition> whenDefinitions = new ArrayList<>();
 
@@ -102,6 +110,11 @@ public class ComponentPropertyDescriptor {
             return this;
         }
 
+        public Builder autoCompleteContributor(AutoCompleteContributorDefinition autoCompleteContributorDefinition) {
+            this.autoCompleteContributorDefinition =  autoCompleteContributorDefinition;
+            return this;
+        }
+
         public ComponentPropertyDescriptor build() {
             checkState(propertyName != null, "property name");
             checkState(propertyType != null, "property type");
@@ -112,6 +125,7 @@ public class ComponentPropertyDescriptor {
             descriptor.propertyName = propertyName;
             descriptor.defaultValue = defaultValue;
             descriptor.propertyType = propertyType;
+            descriptor.autoCompleteContributorDefinition = autoCompleteContributorDefinition;
             descriptor.whenDefinitions.addAll(whenDefinitions);
             return descriptor;
         }

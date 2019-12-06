@@ -45,30 +45,20 @@ public class TypeHandler implements Handler {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private TypeDescriptor processClassRefType(ClassRefTypeSignature typeSignature, FieldInfo fieldInfo, ComponentAnalyzerContext context) {
         String fullyQualifiedClassName = typeSignature.getFullyQualifiedClassName();
 
-        if (isDynamicValue(fullyQualifiedClassName)) {
-            Class<?> clazz = clazzByFullyQualifiedName(fullyQualifiedClassName);
-            return new TypeDynamicValueDescriptor(clazz);
-
-        } else if (isDynamicMap(fullyQualifiedClassName)) {
-            String tabGroup = getAnnotationValueOrDefault(fieldInfo, TabGroup.class, null);
-            Class<?> clazz = clazzByFullyQualifiedName(fullyQualifiedClassName);
-            return new TypeDynamicMapDescriptor(clazz, tabGroup);
-
-        } else if (isEnumeration(fullyQualifiedClassName, context)) {
+        if (isEnumeration(fullyQualifiedClassName, context)) {
             return processEnumType(typeSignature, context);
 
-            // For example: String, Integer, Float ...
+            // For example: String, Integer, Float, DynamicString ...
         } else if (isKnownType(fullyQualifiedClassName)) {
             Class<?> clazz = clazzByFullyQualifiedName(fullyQualifiedClassName);
             return processKnownType(clazz, fieldInfo);
 
-            // We check that it is a user defined object type (with Implementor)
         } else {
-            // We check that we can resolve class info. If we can, then
+            // We check that it is a user defined object type (with Implementor).
+            // We check that we can resolve class info. If we can, then ..
             ClassInfo classInfo = context.getClassInfo(fullyQualifiedClassName);
             if (classInfo == null) {
                 throw new UnsupportedType(typeSignature.getClass());
@@ -105,8 +95,16 @@ public class TypeHandler implements Handler {
         return new TypeEnumDescriptor(nameAndDisplayName, defaultEnumValue);
     }
 
+    @SuppressWarnings("unchecked")
     private TypeDescriptor processKnownType(Class<?> clazz, FieldInfo fieldInfo) {
-        if (isScript(clazz)) {
+        if (isDynamicValue(clazz)) {
+            return new TypeDynamicValueDescriptor(clazz);
+
+        } else if (isDynamicMap(clazz)) {
+            String tabGroup = getAnnotationValueOrDefault(fieldInfo, TabGroup.class, null);
+            return new TypeDynamicMapDescriptor(clazz, tabGroup);
+
+        } else if (isScript(clazz)) {
             return new TypeScriptDescriptor();
 
         } else if (isPassword(fieldInfo, clazz)) {
