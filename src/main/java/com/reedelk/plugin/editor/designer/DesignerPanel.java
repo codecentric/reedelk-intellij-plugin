@@ -6,9 +6,9 @@ import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.DesignerWindowSizeCalculator;
-import com.reedelk.plugin.commons.PrintFlowInfo;
 import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.editor.designer.debug.CenterOfNodeDrawable;
+import com.reedelk.plugin.editor.designer.debug.PrintFlowInfo;
 import com.reedelk.plugin.editor.designer.dnd.DesignerDropTargetListener;
 import com.reedelk.plugin.editor.designer.dnd.DesignerPanelActionHandler;
 import com.reedelk.plugin.editor.designer.dnd.MouseListenerAdapter;
@@ -118,8 +118,6 @@ public abstract class DesignerPanel extends DisposablePanel implements
                     // We compute again the graph layout if and
                     // only if the graph snapshot it was updated.
                     if (snapshotUpdated) {
-
-                        LOG.info("Graph changed");
 
                         FlowGraphLayout.compute(flowGraph, g2, TOP_PADDING);
 

@@ -1,6 +1,7 @@
-package com.reedelk.plugin.commons;
+package com.reedelk.plugin.editor.designer.debug;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.reedelk.plugin.commons.DebugControls;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 
@@ -17,13 +18,15 @@ public class PrintFlowInfo {
     }
 
     public static void debug(FlowGraph graph) {
-        StringBuilder infoBuilder = new StringBuilder("\n-------------------- Flow Info --------------------");
-        graph.breadthFirstTraversal(node -> {
-            infoBuilder.append("\n - ");
-            buildNodeInfo(graph, node, infoBuilder);
-        });
-        infoBuilder.append("\n");
-        LOG.info(infoBuilder.toString());
+        if (DebugControls.Designer.LOG_FLOW_INFO) {
+            StringBuilder infoBuilder = new StringBuilder("\n-------------------- Graph changed: flow info --------------------");
+            graph.breadthFirstTraversal(node -> {
+                infoBuilder.append("\n - ");
+                buildNodeInfo(graph, node, infoBuilder);
+            });
+            infoBuilder.append("\n");
+            LOG.info(infoBuilder.toString());
+        }
     }
 
     private static void buildNodeInfo(FlowGraph graph, GraphNode node, StringBuilder infoBuilder) {
