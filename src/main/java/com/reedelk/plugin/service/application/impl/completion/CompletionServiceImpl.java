@@ -28,6 +28,8 @@ public class CompletionServiceImpl implements CompletionService {
         return initializing ? Optional.empty() : trie.findByPrefix(token);
     }
 
+    // TODO: Update the Scripts when maven imported and analyze fields
+
     private void initialize() {
         tokensFrom("message");
         tokensFrom("context");

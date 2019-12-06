@@ -125,8 +125,6 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                             publisher.onComponentListUpdate(module);
                         });
             });
-
-            // TODO: Update the Scripts
         });
     }
 
@@ -155,7 +153,6 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         PluginExecutor.getInstance().submit(() -> {
             List<ComponentDescriptor> flowControlComponents = componentScanner.from(Stop.class.getPackage());
             this.systemComponents.addAll(flowControlComponents);
-
         });
     }
 
