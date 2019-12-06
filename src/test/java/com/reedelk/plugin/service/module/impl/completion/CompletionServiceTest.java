@@ -1,7 +1,6 @@
-package com.reedelk.plugin.service.application;
+package com.reedelk.plugin.service.module.impl.completion;
 
 import com.reedelk.plugin.service.module.CompletionService;
-import com.reedelk.plugin.service.module.impl.completion.SuggestionType;
 import org.apache.commons.lang3.tuple.Triple;
 import org.junit.jupiter.api.Test;
 
