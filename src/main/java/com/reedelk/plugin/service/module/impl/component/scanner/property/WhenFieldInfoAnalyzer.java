@@ -4,11 +4,11 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.WhenDefinition;
 import com.reedelk.plugin.message.ReedelkBundle;
+import com.reedelk.plugin.service.module.impl.commons.ScannerUtil;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentAnalyzerContext;
 import com.reedelk.runtime.api.annotation.When;
 import com.reedelk.runtime.api.annotation.Whens;
 import io.github.classgraph.AnnotationInfo;
-import io.github.classgraph.AnnotationParameterValue;
 import io.github.classgraph.AnnotationParameterValueList;
 import io.github.classgraph.FieldInfo;
 
@@ -45,14 +45,8 @@ public class WhenFieldInfoAnalyzer implements FieldInfoAnalyzer {
     }
 
     private WhenDefinition processWhenInfo(AnnotationInfo info) {
-        String propertyName = getParameterValue(info, "propertyName");
-        String propertyValue = getParameterValue(info, "propertyValue");
+        String propertyName = ScannerUtil.getStringParameterValue(info, "propertyName");
+        String propertyValue = ScannerUtil.getStringParameterValue(info, "propertyValue");
         return new WhenDefinition(propertyName, propertyValue);
-    }
-
-    private String getParameterValue(AnnotationInfo info, String parameterName) {
-        AnnotationParameterValueList parameterValues = info.getParameterValues();
-        AnnotationParameterValue parameterValue = parameterValues.get(parameterName);
-        return parameterValue != null ? (String) parameterValue.getValue() : null;
     }
 }

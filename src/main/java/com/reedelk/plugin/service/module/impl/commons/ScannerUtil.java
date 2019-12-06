@@ -1,13 +1,10 @@
-package com.reedelk.plugin.service.module.impl.component.scanner.property;
+package com.reedelk.plugin.service.module.impl.commons;
 
 import com.reedelk.plugin.component.domain.Collapsible;
 import com.reedelk.plugin.component.domain.Shared;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentAnalyzerContext;
 import com.reedelk.plugin.service.module.impl.component.scanner.UnsupportedType;
-import com.reedelk.runtime.api.annotation.Combo;
-import com.reedelk.runtime.api.annotation.File;
-import com.reedelk.runtime.api.annotation.MimeTypeCombo;
-import com.reedelk.runtime.api.annotation.Password;
+import com.reedelk.runtime.api.annotation.*;
 import com.reedelk.runtime.api.script.Script;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicMap;
 import com.reedelk.runtime.api.script.dynamicvalue.DynamicValue;
@@ -16,15 +13,35 @@ import io.github.classgraph.*;
 import java.util.Map;
 import java.util.function.Predicate;
 
-class PropertyScannerUtils {
+public class ScannerUtil {
 
     private static final String ANNOTATION_DEFAULT_PARAM_NAME = "value";
 
-    private PropertyScannerUtils() {
+    private ScannerUtil() {
     }
 
+    public static boolean hasAnnotation(FieldInfo fieldInfo, Class<?> clazz) {
+        return fieldInfo.hasAnnotation(clazz.getName());
+    }
+
+    public static boolean hasNotAnnotation(FieldInfo fieldInfo, Class<?> clazz) {
+        return !hasAnnotation(fieldInfo, clazz);
+    }
+
+    public static boolean isVisibleProperty(FieldInfo fieldInfo) {
+        return hasAnnotation(fieldInfo, Property.class) &&
+                hasNotAnnotation(fieldInfo, Hidden.class);
+    }
+
+    public static String getStringParameterValue(AnnotationInfo info, String parameterName) {
+        AnnotationParameterValueList parameterValues = info.getParameterValues();
+        AnnotationParameterValue parameterValue = parameterValues.get(parameterName);
+        return parameterValue != null ? (String) parameterValue.getValue() : null;
+    }
+
+
     @SuppressWarnings("unchecked")
-    static <T> T getAnnotationValueOrDefault(FieldInfo fieldInfo, Class<?> annotationClazz, T defaultValue) {
+    public static <T> T getAnnotationValueOrDefault(FieldInfo fieldInfo, Class<?> annotationClazz, T defaultValue) {
         if (!fieldInfo.hasAnnotation(annotationClazz.getName())) {
             return defaultValue;
         }
@@ -36,7 +53,7 @@ class PropertyScannerUtils {
     }
 
     @SuppressWarnings("unchecked")
-    static <T> T getAnnotationParameterValueOrDefault(FieldInfo fieldInfo, Class<?> annotationClazz, String annotationParamName, T defaultValue) {
+    public static <T> T getAnnotationParameterValueOrDefault(FieldInfo fieldInfo, Class<?> annotationClazz, String annotationParamName, T defaultValue) {
         if (!fieldInfo.hasAnnotation(annotationClazz.getName())) {
             return defaultValue;
         }
@@ -52,7 +69,7 @@ class PropertyScannerUtils {
      * Returns a new Predicate which filters FieldInfo's having type the target
      * class name specified in the argument of this function.
      */
-    static Predicate<FieldInfo> filterByFullyQualifiedClassNameType(String targetFullyQualifiedClassName) {
+    public static Predicate<FieldInfo> filterByFullyQualifiedClassNameType(String targetFullyQualifiedClassName) {
         return fieldInfo -> {
             TypeSignature typeDescriptor = fieldInfo.getTypeDescriptor();
             if (typeDescriptor instanceof ClassRefTypeSignature) {
@@ -67,7 +84,7 @@ class PropertyScannerUtils {
     /**
      * Returns true  if the given class info is of type enumeration, false otherwise.
      */
-    static boolean isEnumeration(String fullyQualifiedClassName, ComponentAnalyzerContext context) {
+    public static boolean isEnumeration(String fullyQualifiedClassName, ComponentAnalyzerContext context) {
         ClassInfo classInfo = context.getClassInfo(fullyQualifiedClassName);
         if (classInfo == null) return false;
 
@@ -79,7 +96,7 @@ class PropertyScannerUtils {
                 .anyMatch(info -> info.getName().equals(Enum.class.getName()));
     }
 
-    static boolean isDynamicValue(Class<?> clazz) {
+    public static boolean isDynamicValue(Class<?> clazz) {
         try {
             return DynamicValue.class.equals(clazz.getSuperclass());
         } catch (UnsupportedType exception) {
@@ -87,7 +104,7 @@ class PropertyScannerUtils {
         }
     }
 
-    static boolean isDynamicMap(Class<?> clazz) {
+    public static boolean isDynamicMap(Class<?> clazz) {
         try {
             return DynamicMap.class.equals(clazz.getSuperclass());
         } catch (UnsupportedType exception) {
@@ -95,7 +112,7 @@ class PropertyScannerUtils {
         }
     }
 
-    static Class<?> clazzByFullyQualifiedName(String fullyQualifiedClassName) {
+    public static Class<?> clazzByFullyQualifiedName(String fullyQualifiedClassName) {
         try {
             return Class.forName(fullyQualifiedClassName);
         } catch (ClassNotFoundException e) {
@@ -105,40 +122,40 @@ class PropertyScannerUtils {
         }
     }
 
-    static boolean isFile(FieldInfo fieldInfo, Class<?> clazz) {
+    public static boolean isFile(FieldInfo fieldInfo, Class<?> clazz) {
         return fieldInfo.hasAnnotation(File.class.getName()) &&
                 String.class.equals(clazz);
     }
 
-    static boolean isMimeTypeCombo(FieldInfo fieldInfo, Class<?> clazz) {
+    public static boolean isMimeTypeCombo(FieldInfo fieldInfo, Class<?> clazz) {
         return fieldInfo.hasAnnotation(MimeTypeCombo.class.getName()) &&
                 String.class.equals(clazz);
     }
 
-    static boolean isCombo(FieldInfo fieldInfo, Class<?> clazz) {
+    public static boolean isCombo(FieldInfo fieldInfo, Class<?> clazz) {
         return fieldInfo.hasAnnotation(Combo.class.getName()) &&
                 String.class.equals(clazz);
     }
 
-    static boolean isPassword(FieldInfo fieldInfo, Class<?> clazz) {
+    public static boolean isPassword(FieldInfo fieldInfo, Class<?> clazz) {
         return fieldInfo.hasAnnotation(Password.class.getName()) &&
                 String.class.equals(clazz);
     }
 
-    static boolean isMap(Class<?> clazz) {
+    public static boolean isMap(Class<?> clazz) {
         return Map.class.equals(clazz);
     }
 
-    static boolean isScript(Class<?> clazz) {
+    public static boolean isScript(Class<?> clazz) {
         return Script.class.equals(clazz);
     }
 
-    static Shared isShareable(ClassInfo classInfo) {
+    public static Shared isShareable(ClassInfo classInfo) {
         return classInfo.hasAnnotation(com.reedelk.runtime.api.annotation.Shared.class.getName()) ?
                 Shared.YES : Shared.NO;
     }
 
-    static Collapsible isCollapsible(ClassInfo classInfo) {
+    public static Collapsible isCollapsible(ClassInfo classInfo) {
         return classInfo.hasAnnotation(com.reedelk.runtime.api.annotation.Collapsible.class.getName()) ?
                 Collapsible.YES : Collapsible.NO;
     }

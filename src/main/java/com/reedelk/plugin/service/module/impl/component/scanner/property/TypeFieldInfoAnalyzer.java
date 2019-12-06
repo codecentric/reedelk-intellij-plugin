@@ -15,7 +15,7 @@ import io.github.classgraph.*;
 import java.util.*;
 
 import static com.reedelk.plugin.converter.ValueConverterFactory.isKnownType;
-import static com.reedelk.plugin.service.module.impl.component.scanner.property.PropertyScannerUtils.*;
+import static com.reedelk.plugin.service.module.impl.commons.ScannerUtil.*;
 import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 import static java.util.Arrays.stream;
