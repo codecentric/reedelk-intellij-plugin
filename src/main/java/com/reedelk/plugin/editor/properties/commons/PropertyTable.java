@@ -3,8 +3,11 @@ package com.reedelk.plugin.editor.properties.commons;
 import com.intellij.ui.table.JBTable;
 import com.reedelk.plugin.commons.Sizes;
 
+import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 public class PropertyTable extends DisposableScrollPane {
 
@@ -19,6 +22,7 @@ public class PropertyTable extends DisposableScrollPane {
         table = new DisposableTable(tableModel, tableColumnModel);
         table.setFillsViewportHeight(true);
         table.setRowHeight(Sizes.Table.ROW_HEIGHT);
+        table.addFocusListener(new ClearSelectionFocusListener());
         setViewportView(table);
     }
 
@@ -55,6 +59,25 @@ public class PropertyTable extends DisposableScrollPane {
 
         default void removeRow(int row) {
             throw new UnsupportedOperationException();
+        }
+    }
+
+
+    class ClearSelectionFocusListener implements FocusListener {
+
+        @Override
+        public void focusGained(FocusEvent e) {
+
+        }
+
+        @Override
+        public void focusLost(FocusEvent e) {
+            if (table != null) {
+                ListSelectionModel selectionModel = table.getSelectionModel();
+                if (selectionModel != null) {
+                    selectionModel.clearSelection();
+                }
+            }
         }
     }
 }
