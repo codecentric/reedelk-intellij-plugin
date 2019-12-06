@@ -12,7 +12,9 @@ import com.reedelk.runtime.commons.JsonParser;
 
 import java.util.UUID;
 
-import static com.reedelk.plugin.commons.Icons.Config.*;
+import static com.intellij.icons.AllIcons.Actions.EditSource;
+import static com.intellij.icons.AllIcons.General.Add;
+import static com.intellij.icons.AllIcons.General.Remove;
 import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
@@ -27,9 +29,9 @@ public class ConfigControlPanel extends DisposablePanel {
     public ConfigControlPanel(Module module, TypeObjectDescriptor typeDescriptor) {
         this.module = module;
         this.typeDescriptor = typeDescriptor;
-        deleteAction = new ClickableLabel("Delete", Delete, DeleteDisabled, this::deleteConfiguration);
-        editAction = new ClickableLabel("Edit", Edit, EditDisabled, this::editConfiguration);
-        ClickableLabel addAction = new ClickableLabel("Add", Add, this::addConfiguration);
+        deleteAction = new ClickableLabel(message("config.actions.btn.delete"), Remove, Remove, this::deleteConfiguration);
+        editAction = new ClickableLabel(message("config.actions.btn.edit"), EditSource, EditSource, this::editConfiguration);
+        ClickableLabel addAction = new ClickableLabel(message("config.actions.btn.add"), Add, Add, this::addConfiguration);
         add(editAction);
         add(addAction);
         add(deleteAction);

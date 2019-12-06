@@ -2,8 +2,8 @@ package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
+import com.intellij.ui.components.JBLabel;
 import com.reedelk.plugin.commons.DisposableUtils;
-import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.editor.properties.renderer.typedynamicvalue.DynamicValueScriptEditor;
 import com.reedelk.runtime.api.commons.StringUtils;
 
@@ -11,13 +11,15 @@ import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
+import static com.reedelk.plugin.commons.Icons.Script.Code;
+
 public class TableDynamicCellRenderer implements TableCellRenderer, Disposable {
 
     private final DisposablePanel content;
     private final DynamicValueScriptEditor editor;
 
     public TableDynamicCellRenderer(Module module) {
-        JLabel codeIcon = new JLabel(Icons.Script.Code);
+        JLabel codeIcon = new JBLabel(Code);
         this.editor = new DynamicValueScriptEditor(module);
         this.content = ContainerFactory.createLabelNextToComponent(codeIcon, editor, false);
     }

@@ -12,8 +12,8 @@ import com.reedelk.runtime.api.commons.ScriptUtils;
 import javax.swing.*;
 import java.awt.*;
 
+import static com.intellij.icons.AllIcons.Actions.EditSource;
 import static com.reedelk.plugin.commons.Icons.Script.Code;
-import static com.reedelk.plugin.commons.Icons.Script.Edit;
 import static java.awt.BorderLayout.CENTER;
 
 public class DynamicValueField extends DisposablePanel {
@@ -63,7 +63,7 @@ public class DynamicValueField extends DisposablePanel {
     }
 
     private DisposablePanel createInputFieldContainer() {
-        JLabel textIcon = new ClickableLabel(Edit, () -> {
+        JLabel textIcon = new ClickableLabel(EditSource, () -> {
                     switchComponent(scriptContainer, inputFieldContainer);
                     String script = ScriptUtils.asScript(editor.getValue());
                     listener.onChange(script);

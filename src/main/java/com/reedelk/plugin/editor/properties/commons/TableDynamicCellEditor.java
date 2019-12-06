@@ -3,7 +3,6 @@ package com.reedelk.plugin.editor.properties.commons;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.commons.DisposableUtils;
-import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditor;
 import com.reedelk.plugin.editor.properties.renderer.typedynamicvalue.DynamicValueScriptEditor;
 import com.reedelk.runtime.api.commons.StringUtils;
@@ -15,6 +14,8 @@ import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.util.EventObject;
 
+import static com.reedelk.plugin.commons.Icons.Script.Code;
+
 public class TableDynamicCellEditor implements TableCellEditor, Disposable {
 
     private final ScriptEditor editor;
@@ -22,7 +23,7 @@ public class TableDynamicCellEditor implements TableCellEditor, Disposable {
     private CellEditorListener listener;
 
     public TableDynamicCellEditor(Module module) {
-        JLabel codeIcon = new JLabel(Icons.Script.Code);
+        JLabel codeIcon = new JLabel(Code);
         this.editor = new DynamicValueScriptEditor(module);
         this.content = ContainerFactory.createLabelNextToComponent(codeIcon, editor, false);
     }

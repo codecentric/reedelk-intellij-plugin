@@ -44,25 +44,13 @@ public class Icons {
         }
     }
 
-    public static class Config {
-
-        private Config() {
-        }
-
-        public static final Icon Add = IconLoader.getIcon("/icons/config-add.png");
-        public static final Icon Delete = IconLoader.getIcon("/icons/config-delete.png");
-        public static final Icon DeleteDisabled = IconLoader.getIcon("/icons/config-delete-disabled.png");
-        public static final Icon Edit = IconLoader.getIcon("/icons/config-edit.png");
-        public static final Icon EditDisabled = IconLoader.getIcon("/icons/config-edit-disabled.png");
-    }
 
     public static class Script {
 
         private Script() {
         }
 
-        public static final Icon Edit = IconLoader.getIcon("/icons/script-edit.png");
-        public static final Icon Code = IconLoader.getIcon("/icons/code.png");
+        public static final Icon Code = AllIcons.Json.Object;
         public static final Icon ScriptLoadError = IconLoader.getIcon("/icons/script-load-error.png");
     }
 
@@ -72,15 +60,6 @@ public class Icons {
         }
 
         public static final Icon Properties = IconLoader.getIcon("/icons/toolbar-properties.png");
-    }
-
-    public static class MapType {
-
-        private MapType() {
-        }
-
-        public static final Icon AddItem = IconLoader.getIcon("/icons/map-item-add.png");
-        public static final Icon RemoveItem = IconLoader.getIcon("/icons/map-item-remove.png");
     }
 
     public static class Misc {

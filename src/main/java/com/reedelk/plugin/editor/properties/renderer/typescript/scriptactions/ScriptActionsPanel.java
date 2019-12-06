@@ -7,7 +7,9 @@ import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.service.module.ScriptService;
 import com.reedelk.plugin.service.module.impl.ScriptResource;
 
-import static com.reedelk.plugin.commons.Icons.Config.*;
+import static com.intellij.icons.AllIcons.Actions.EditSource;
+import static com.intellij.icons.AllIcons.General.Add;
+import static com.intellij.icons.AllIcons.General.Remove;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class ScriptActionsPanel extends DisposablePanel {
@@ -19,9 +21,9 @@ public class ScriptActionsPanel extends DisposablePanel {
 
     public ScriptActionsPanel(Module module) {
         this.module = module;
-        deleteAction = new ClickableLabel("Delete", Delete, DeleteDisabled, this::deleteScript);
-        editAction = new ClickableLabel("Edit", Edit, EditDisabled, this::editScript);
-        ClickableLabel addAction = new ClickableLabel("Add", Add, this::addScript);
+        deleteAction = new ClickableLabel(message("script.actions.btn.delete"), Remove, Remove, this::deleteScript);
+        editAction = new ClickableLabel(message("script.actions.btn.edit"), EditSource, EditSource, this::editScript);
+        ClickableLabel addAction = new ClickableLabel(message("script.actions.btn.add"), Add, Add, this::addScript);
         add(editAction);
         add(addAction);
         add(deleteAction);
