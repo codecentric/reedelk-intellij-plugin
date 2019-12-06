@@ -13,9 +13,9 @@ import com.intellij.ui.treeStructure.SimpleTree;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
-import com.reedelk.plugin.component.scanner.ComponentListUpdateNotifier;
 import com.reedelk.plugin.service.module.ComponentService;
-import com.reedelk.plugin.service.module.impl.ComponentsPackage;
+import com.reedelk.plugin.service.module.impl.component.ComponentsPackage;
+import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpdateNotifier;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

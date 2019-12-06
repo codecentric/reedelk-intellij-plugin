@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.palette;
 
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
-import com.reedelk.plugin.service.module.impl.ComponentsPackage;
+import com.reedelk.plugin.service.module.impl.component.ComponentsPackage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
