@@ -28,12 +28,12 @@ import static com.reedelk.plugin.service.project.DesignerSelectionManager.Curren
 
 public class PropertiesPanel extends DisposablePanel implements CurrentSelectionListener {
 
-    private final Project project;
+    private final transient Project project;
 
-    private Disposable currentPane;
-    private SelectableItem currentSelection;
-    private MessageBusConnection busConnection;
-    private DesignerSelectionManager designerSelectionManager;
+    private transient Disposable currentPane;
+    private transient SelectableItem currentSelection;
+    private transient MessageBusConnection busConnection;
+    private transient DesignerSelectionManager designerSelectionManager;
 
     PropertiesPanel(@NotNull Project project) {
         setBorder(JBUI.Borders.empty());
@@ -159,7 +159,7 @@ public class PropertiesPanel extends DisposablePanel implements CurrentSelection
                 // Properties panel is collapsed, we need to clear
                 // the current content if present.
                 DisposableUtils.dispose(currentPane);
-                SwingUtilities.invokeLater(() -> removeAll());
+                SwingUtilities.invokeLater(PropertiesPanel.this::removeAll);
             }
         });
     }

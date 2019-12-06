@@ -14,9 +14,9 @@ import java.awt.*;
 
 public class FlowDesignerPanel extends DesignerPanel {
 
-    private transient final InboundLane inboundLane;
-    private transient final FlowMetadata flowMetadata;
-    private transient final SelectableItem nothingSelectedItem;
+    private final transient InboundLane inboundLane;
+    private final transient FlowMetadata flowMetadata;
+    private final transient SelectableItem nothingSelectedItem;
 
     public FlowDesignerPanel(Module module, FlowSnapshot snapshot, DesignerPanelActionHandler actionHandler) {
         super(module, snapshot, actionHandler);

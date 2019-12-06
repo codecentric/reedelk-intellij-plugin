@@ -17,10 +17,10 @@ public class AutoCompleteContributorScanner {
         ScanResult scanResult = instantiateScanner()
                 .overrideClasspath(targetPath)
                 .scan();
-        return scanAutoCompleteContributors(scanResult);
+        return scanClassesWithAutoCompleteContributors(scanResult);
     }
 
-    private List<String> scanAutoCompleteContributors(ScanResult scanResult) {
+    private List<String> scanClassesWithAutoCompleteContributors(ScanResult scanResult) {
         ClassInfoList classInfoList = scanResult.getClassesWithAnnotation(AutoCompleteContributor.class.getName());
         List<String> contributions = new ArrayList<>();
         classInfoList.forEach(classInfo -> {
@@ -28,6 +28,10 @@ public class AutoCompleteContributorScanner {
             contributions.addAll(getStringListParameterValue(annotationInfo, "contributions"));
         });
         return contributions;
+    }
+
+    private List<String> scanComponentsPropertiesWithAutoCompleteContributors(ScanResult scanResult) {
+        return new ArrayList<>();
     }
 
     private List<String> getStringListParameterValue(AnnotationInfo info, String parameterName) {

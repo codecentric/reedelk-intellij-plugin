@@ -12,8 +12,8 @@ import java.util.List;
 
 public class ConditionRouteTableModel extends AbstractTableModel implements PropertyTable.PropertyTableModel {
 
-    private transient final FlowSnapshot snapshot;
-    private transient final List<RouterConditionRoutePair> conditionRouteList;
+    private final transient FlowSnapshot snapshot;
+    private final transient List<RouterConditionRoutePair> conditionRouteList;
 
     public ConditionRouteTableModel(List<RouterConditionRoutePair> conditionRouteList, FlowSnapshot snapshot) {
         this.conditionRouteList = conditionRouteList;

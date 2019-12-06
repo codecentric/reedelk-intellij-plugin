@@ -12,8 +12,8 @@ import java.awt.*;
 
 public class SubFlowDesignerPanel extends DesignerPanel {
 
-    private transient final FlowMetadata flowMetadata;
-    private transient final SelectableItem nothingSelectedItem;
+    private final transient FlowMetadata flowMetadata;
+    private final transient SelectableItem nothingSelectedItem;
 
     public SubFlowDesignerPanel(Module module, FlowSnapshot snapshot, DesignerPanelActionHandler actionHandler) {
         super(module, snapshot, actionHandler);

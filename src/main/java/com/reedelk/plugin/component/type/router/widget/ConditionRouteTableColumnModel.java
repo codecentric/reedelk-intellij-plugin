@@ -19,9 +19,9 @@ import static com.reedelk.runtime.commons.JsonParser.Implementor;
 
 class ConditionRouteTableColumnModel extends DefaultTableColumnModel implements Disposable, CommitPropertiesListener {
 
-    private transient final MessageBusConnection busConnection;
-    private transient final TableDynamicCellRenderer cellRenderer;
-    private transient final TableDynamicCellEditor conditionCellEditor;
+    private final transient MessageBusConnection busConnection;
+    private final transient TableDynamicCellRenderer cellRenderer;
+    private final transient TableDynamicCellEditor conditionCellEditor;
 
     ConditionRouteTableColumnModel(Module module) {
         cellRenderer = new TableDynamicCellRenderer(module);

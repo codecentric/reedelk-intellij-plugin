@@ -52,10 +52,10 @@ public abstract class DesignerPanel extends DisposablePanel implements
 
     static final int TOP_PADDING = 80;
 
-    protected transient final FlowSnapshot snapshot;
+    protected final transient FlowSnapshot snapshot;
 
-    private transient final Module module;
-    private transient final DesignerPanelActionHandler actionHandler;
+    private final transient Module module;
+    private final transient DesignerPanelActionHandler actionHandler;
 
     private transient HintResult hintResult = HintResult.EMPTY;
     private transient HintRunnable hintCalculator; // TODO: This one should be removed and created a class to manage move operation

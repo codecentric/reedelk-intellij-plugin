@@ -34,9 +34,9 @@ import static java.util.stream.Collectors.toList;
 
 public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier, FileEditorManagerListener {
 
-    private final Tree tree;
-    private final Project project;
-    private final DefaultMutableTreeNode root;
+    private final transient Tree tree;
+    private final transient Project project;
+    private final transient DefaultMutableTreeNode root;
 
     PalettePanel(Project project) {
         super(new BorderLayout());

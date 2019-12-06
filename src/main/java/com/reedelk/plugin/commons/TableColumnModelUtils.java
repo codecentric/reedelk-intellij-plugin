@@ -7,6 +7,9 @@ import java.util.Enumeration;
 
 public class TableColumnModelUtils {
 
+    private TableColumnModelUtils() {
+    }
+
     public static void onCommit(TableColumnModel tableColumnModel) {
         Enumeration<TableColumn> columns = tableColumnModel.getColumns();
         while (columns.hasMoreElements()) {

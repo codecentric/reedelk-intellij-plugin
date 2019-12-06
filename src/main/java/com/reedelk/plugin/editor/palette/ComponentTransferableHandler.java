@@ -17,6 +17,7 @@ public class ComponentTransferableHandler extends TransferHandler {
         return COPY_OR_MOVE;
     }
 
+    @Override
     protected Transferable createTransferable(JComponent source) {
 
         JTree tree = (JTree) source;
