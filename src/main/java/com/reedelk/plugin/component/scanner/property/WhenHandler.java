@@ -4,6 +4,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.WhenDefinition;
 import com.reedelk.plugin.component.scanner.ComponentAnalyzerContext;
+import com.reedelk.plugin.message.ReedelkBundle;
 import com.reedelk.runtime.api.annotation.When;
 import com.reedelk.runtime.api.annotation.Whens;
 import io.github.classgraph.AnnotationInfo;
@@ -35,9 +36,9 @@ public class WhenHandler implements Handler {
                 try {
                     WhenDefinition whenDefinition = processWhenInfo((AnnotationInfo) info);
                     builder.when(whenDefinition);
-                } catch (Exception e) {
-                    // TODO: Hardcodedstring
-                    LOG.warn(String.format("Could not process When annotation info for property named '%s'", propertyInfo.getName()), e);
+                } catch (Exception exception) {
+                    String message = ReedelkBundle.message("component.scanner.error.when.annotation", propertyInfo.getName());
+                    LOG.warn(message, exception);
                 }
             }
         }
