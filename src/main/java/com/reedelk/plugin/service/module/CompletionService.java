@@ -1,9 +1,9 @@
-package com.reedelk.plugin.service.project;
+package com.reedelk.plugin.service.module;
 
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
-import com.reedelk.plugin.service.project.impl.completion.Suggestion;
-import com.reedelk.plugin.service.project.impl.completion.SuggestionType;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleServiceManager;
+import com.reedelk.plugin.service.module.impl.completion.Suggestion;
+import com.reedelk.plugin.service.module.impl.completion.SuggestionType;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.NotNull;
@@ -15,10 +15,9 @@ import java.util.regex.Pattern;
 
 public interface CompletionService {
 
-    static CompletionService getInstance(@NotNull Project project) {
-        return ServiceManager.getService(project, CompletionService.class);
+    static CompletionService getInstance(@NotNull Module module) {
+        return ModuleServiceManager.getService(module, CompletionService.class);
     }
-
 
     Optional<List<Suggestion>> completionTokensOf(String token);
 

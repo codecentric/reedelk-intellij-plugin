@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutorService;
 public class PluginExecutor {
 
     private static final ExecutorService executor =
-            SequentialTaskExecutor.createSequentialApplicationPoolExecutor("Script Resource");
+            SequentialTaskExecutor.createSequentialApplicationPoolExecutor("Reedelk Plugin Executor");
 
     public static ExecutorService getInstance() {
         return executor;

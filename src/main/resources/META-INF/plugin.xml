@@ -38,9 +38,6 @@
         <moduleBuilder builderClass="com.reedelk.plugin.builder.ModuleBuilder" id="ESB_MODULE_BUILDER" order="first"/>
 
         <!-- Services -->
-        <projectService serviceInterface="com.reedelk.plugin.service.project.CompletionService"
-                        serviceImplementation="com.reedelk.plugin.service.project.impl.completion.CompletionServiceImpl"/>
-
         <moduleService serviceInterface="com.reedelk.plugin.service.module.HttpService"
                        serviceImplementation="com.reedelk.plugin.service.module.impl.HttpServiceImpl"/>
 
@@ -55,6 +52,9 @@
 
         <moduleService serviceInterface="com.reedelk.plugin.service.module.ScriptService"
                        serviceImplementation="com.reedelk.plugin.service.module.impl.ScriptServiceImpl"/>
+
+        <moduleService serviceInterface="com.reedelk.plugin.service.module.CompletionService"
+                       serviceImplementation="com.reedelk.plugin.service.module.impl.completion.CompletionServiceImpl"/>
 
         <!-- Program Runner and Executors -->
         <programRunner implementation="com.reedelk.plugin.runconfig.module.runner.DeploymentRunner" order="first"/>

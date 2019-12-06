@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.project.impl.completion;
+package com.reedelk.plugin.service.module.impl.completion;
 
 public class Suggestion {
 

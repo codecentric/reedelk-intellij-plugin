@@ -26,7 +26,7 @@ public class ModuleInfo {
     public static String getModuleName(String jarFilePath) {
         try {
             Attributes attributes = getManifestAttributesOf(jarFilePath);
-            return attributes.getValue("Bundle-SymbolicName");
+            return attributes.getValue(Bundle.MODULE_SYMBOLIC_NAME);
         } catch (Exception e) {
             return "UnknownSymbolicName";
         }
