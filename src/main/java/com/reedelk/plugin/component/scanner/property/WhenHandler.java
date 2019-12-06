@@ -36,7 +36,8 @@ public class WhenHandler implements Handler {
                     WhenDefinition whenDefinition = processWhenInfo((AnnotationInfo) info);
                     builder.when(whenDefinition);
                 } catch (Exception e) {
-                    LOG.warn(String.format("Could not process AutocompleteVariables info for property named '%s'", propertyInfo.getName()), e);
+                    // TODO: Hardcodedstring
+                    LOG.warn(String.format("Could not process When annotation info for property named '%s'", propertyInfo.getName()), e);
                 }
             }
         }

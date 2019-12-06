@@ -1,5 +1,6 @@
 package com.reedelk.plugin.service.application.impl;
 
+import com.reedelk.plugin.executor.PluginExecutor;
 import com.reedelk.plugin.message.SuggestionsBundle;
 import com.reedelk.plugin.service.application.CompletionService;
 import com.reedelk.plugin.service.application.impl.completion.Suggestion;
@@ -13,14 +14,20 @@ public class CompletionServiceImpl implements CompletionService {
 
     private final Trie trie;
 
+    private boolean initializing;
+
     public CompletionServiceImpl() {
         this.trie = new Trie();
-        initialize();
+        PluginExecutor.getInstance().submit(() -> {
+            initializing = true;
+            initialize();
+            initializing = false;
+        });
     }
 
     @Override
     public Optional<List<Suggestion>> completionTokensOf(String token) {
-        return trie.findByPrefix(token);
+        return initializing ? Optional.empty() : trie.findByPrefix(token);
     }
 
     private void initialize() {

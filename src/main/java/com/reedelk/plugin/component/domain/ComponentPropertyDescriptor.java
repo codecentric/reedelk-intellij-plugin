@@ -20,8 +20,6 @@ public class ComponentPropertyDescriptor {
     private TypeDescriptor propertyType;
 
     private final List<WhenDefinition> whenDefinitions = new ArrayList<>();
-    private final List<VariableDefinition> variableDefinitions = new ArrayList<>();
-    private final List<AutocompleteContext> autocompleteContexts = new ArrayList<>();
 
 
     private ComponentPropertyDescriptor() {
@@ -58,16 +56,6 @@ public class ComponentPropertyDescriptor {
     }
 
     @NotNull
-    public List<AutocompleteContext> getAutocompleteContexts() {
-        return autocompleteContexts;
-    }
-
-    @NotNull
-    public List<VariableDefinition> getVariableDefinitions() {
-        return variableDefinitions;
-    }
-
-    @NotNull
     @SuppressWarnings("unchecked")
     public <T extends TypeDescriptor> T getPropertyType() {
         return (T) propertyType;
@@ -83,8 +71,6 @@ public class ComponentPropertyDescriptor {
         private TypeDescriptor propertyType;
 
         private List<WhenDefinition> whenDefinitions = new ArrayList<>();
-        private List<AutocompleteContext> autocompleteContexts = new ArrayList<>();
-        private List<VariableDefinition> variableDefinitions = new ArrayList<>();
 
         public Builder type(TypeDescriptor type) {
             this.propertyType = type;
@@ -116,16 +102,6 @@ public class ComponentPropertyDescriptor {
             return this;
         }
 
-        public Builder variable(VariableDefinition variableDefinition) {
-            this.variableDefinitions.add(variableDefinition);
-            return this;
-        }
-
-        public Builder context(AutocompleteContext autocompleteContext) {
-            this.autocompleteContexts.add(autocompleteContext);
-            return this;
-        }
-
         public ComponentPropertyDescriptor build() {
             checkState(propertyName != null, "property name");
             checkState(propertyType != null, "property type");
@@ -137,8 +113,6 @@ public class ComponentPropertyDescriptor {
             descriptor.defaultValue = defaultValue;
             descriptor.propertyType = propertyType;
             descriptor.whenDefinitions.addAll(whenDefinitions);
-            descriptor.autocompleteContexts.addAll(autocompleteContexts);
-            descriptor.variableDefinitions.addAll(variableDefinitions);
             return descriptor;
         }
     }
