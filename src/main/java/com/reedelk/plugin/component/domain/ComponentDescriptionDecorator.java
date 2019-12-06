@@ -51,8 +51,8 @@ public class ComponentDescriptionDecorator implements ComponentDescriptor {
     }
 
     @Override
-    public ComponentClass getComponentClass() {
-        return wrapped.getComponentClass();
+    public ComponentType getComponentType() {
+        return wrapped.getComponentType();
     }
 
     @Override

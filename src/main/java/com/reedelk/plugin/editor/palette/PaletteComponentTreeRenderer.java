@@ -3,8 +3,8 @@ package com.reedelk.plugin.editor.palette;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.Icons;
-import com.reedelk.plugin.component.domain.ComponentClass;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
+import com.reedelk.plugin.component.domain.ComponentType;
 import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 
@@ -63,7 +63,7 @@ public class PaletteComponentTreeRenderer implements TreeCellRenderer {
                     this.value.setForeground(Colors.PALETTE_TEXT_UNSELECTED);
                 }
 
-                if (ComponentClass.INBOUND.equals(descriptor.getComponentClass())) {
+                if (ComponentType.INBOUND.equals(descriptor.getComponentType())) {
                     typeIcon.setIcon(Icons.Component.InboundTypeComponent);
                 } else {
                     typeIcon.setIcon(Icons.Component.ProcessorTypeComponent);

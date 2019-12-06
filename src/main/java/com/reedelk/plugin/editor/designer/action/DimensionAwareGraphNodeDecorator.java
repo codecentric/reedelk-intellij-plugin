@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.designer.action;
 
-import com.reedelk.plugin.component.domain.ComponentClass;
 import com.reedelk.plugin.component.domain.ComponentData;
+import com.reedelk.plugin.component.domain.ComponentType;
 import com.reedelk.plugin.editor.designer.DrawableListener;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -115,7 +115,7 @@ class DimensionAwareGraphNodeDecorator implements GraphNode {
     }
 
     @Override
-    public ComponentClass getComponentClass() {
+    public ComponentType getComponentClass() {
         return delegate.getComponentClass();
     }
 

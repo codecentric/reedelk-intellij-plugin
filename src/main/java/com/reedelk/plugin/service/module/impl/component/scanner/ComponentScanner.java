@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.reedelk.plugin.component.domain.ComponentClass.UNKNOWN;
+import static com.reedelk.plugin.component.domain.ComponentType.UNKNOWN;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 
@@ -63,7 +63,7 @@ public class ComponentScanner {
 
     private static List<ComponentDescriptor> filterOutUnknownClassComponents(List<ComponentDescriptor> componentDescriptorList) {
         return componentDescriptorList.stream()
-                .filter(descriptor -> !UNKNOWN.equals(descriptor.getComponentClass()))
+                .filter(descriptor -> !UNKNOWN.equals(descriptor.getComponentType()))
                 .collect(Collectors.toList());
     }
 }

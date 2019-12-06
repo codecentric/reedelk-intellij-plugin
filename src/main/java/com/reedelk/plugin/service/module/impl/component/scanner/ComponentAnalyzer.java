@@ -1,9 +1,9 @@
 package com.reedelk.plugin.service.module.impl.component.scanner;
 
-import com.reedelk.plugin.component.domain.ComponentClass;
 import com.reedelk.plugin.component.domain.ComponentDefaultDescriptor;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
+import com.reedelk.plugin.component.domain.ComponentType;
 import com.reedelk.plugin.service.module.impl.component.scanner.property.ComponentPropertyAnalyzer;
 import com.reedelk.runtime.api.annotation.ESBComponent;
 import com.reedelk.runtime.api.annotation.Hidden;
@@ -28,12 +28,12 @@ class ComponentAnalyzer {
 
     ComponentDescriptor analyze(ClassInfo classInfo) {
         String displayName = getComponentDisplayName(classInfo);
-        ComponentClass componentClass = getComponentClass(classInfo);
+        ComponentType componentType = getComponentType(classInfo);
         List<ComponentPropertyDescriptor> propertiesDescriptor = analyzeProperties(classInfo);
         return ComponentDefaultDescriptor.create()
                 .displayName(displayName)
                 .hidden(isHidden(classInfo))
-                .componentClass(componentClass)
+                .componentType(componentType)
                 .fullyQualifiedName(classInfo.getName())
                 .propertyDescriptors(propertiesDescriptor)
                 .icon(context.getImageByComponentQualifiedName(classInfo.getName()))
@@ -64,8 +64,8 @@ class ComponentAnalyzer {
         return componentClassInfo.hasAnnotation(Hidden.class.getName());
     }
 
-    private ComponentClass getComponentClass(ClassInfo classInfo) {
-        ComponentClassAnalyzer analyzer = new ComponentClassAnalyzer(classInfo);
+    private ComponentType getComponentType(ClassInfo classInfo) {
+        ComponentTypeAnalyzer analyzer = new ComponentTypeAnalyzer(classInfo);
         return analyzer.analyze();
     }
 }

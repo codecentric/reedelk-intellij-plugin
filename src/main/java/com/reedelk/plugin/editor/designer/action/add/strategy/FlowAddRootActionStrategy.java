@@ -4,7 +4,7 @@ import com.reedelk.plugin.editor.designer.action.ActionStrategy;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 
-import static com.reedelk.plugin.component.domain.ComponentClass.INBOUND;
+import static com.reedelk.plugin.component.domain.ComponentType.INBOUND;
 
 public class FlowAddRootActionStrategy implements ActionStrategy {
 

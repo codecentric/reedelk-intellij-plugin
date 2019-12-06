@@ -1,8 +1,8 @@
 package com.reedelk.plugin.component.type.unknown;
 
-import com.reedelk.plugin.component.domain.ComponentClass;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
+import com.reedelk.plugin.component.domain.ComponentType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,8 +38,8 @@ public class UnknownComponentDescriptorWrapper implements ComponentDescriptor {
     }
 
     @Override
-    public ComponentClass getComponentClass() {
-        return wrapped.getComponentClass();
+    public ComponentType getComponentType() {
+        return wrapped.getComponentType();
     }
 
     @Override

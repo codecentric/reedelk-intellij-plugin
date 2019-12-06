@@ -1,29 +1,29 @@
 package com.reedelk.plugin.service.module.impl.component.scanner;
 
-import com.reedelk.plugin.component.domain.ComponentClass;
+import com.reedelk.plugin.component.domain.ComponentType;
 import com.reedelk.runtime.api.component.*;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
 
-class ComponentClassAnalyzer {
+class ComponentTypeAnalyzer {
 
     private final ClassInfo classInfo;
 
-    ComponentClassAnalyzer(ClassInfo classInfo) {
+    ComponentTypeAnalyzer(ClassInfo classInfo) {
         this.classInfo = classInfo;
     }
 
-    ComponentClass analyze() {
+    ComponentType analyze() {
         if (isInbound(classInfo)) {
-            return ComponentClass.INBOUND;
+            return ComponentType.INBOUND;
         } else if (isProcessor(classInfo)) {
-            return ComponentClass.PROCESSOR;
+            return ComponentType.PROCESSOR;
         } else if (isComponent(classInfo)) {
-            return ComponentClass.COMPONENT;
+            return ComponentType.COMPONENT;
         } else if (isJoin(classInfo)) {
-            return ComponentClass.JOIN;
+            return ComponentType.JOIN;
         } else {
-            return ComponentClass.UNKNOWN;
+            return ComponentType.UNKNOWN;
         }
     }
 

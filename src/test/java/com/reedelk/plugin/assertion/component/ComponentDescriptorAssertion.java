@@ -1,8 +1,8 @@
 package com.reedelk.plugin.assertion.component;
 
-import com.reedelk.plugin.component.domain.ComponentClass;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
+import com.reedelk.plugin.component.domain.ComponentType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,8 +54,8 @@ public class ComponentDescriptorAssertion {
         return this;
     }
 
-    public ComponentDescriptorAssertion hasClass(ComponentClass expectedClass) {
-        assertThat(componentDescriptor.getComponentClass()).isEqualTo(expectedClass);
+    public ComponentDescriptorAssertion hasClass(ComponentType expectedClass) {
+        assertThat(componentDescriptor.getComponentType()).isEqualTo(expectedClass);
         return this;
     }
 

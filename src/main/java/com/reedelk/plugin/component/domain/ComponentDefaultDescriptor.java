@@ -15,7 +15,7 @@ public class ComponentDefaultDescriptor implements ComponentDescriptor {
     private Image image;
     private String displayName;
     private String fullyQualifiedName;
-    private ComponentClass componentClass;
+    private ComponentType componentType;
     private List<ComponentPropertyDescriptor> componentPropertyDescriptors = new ArrayList<>();
 
     private ComponentDefaultDescriptor() {
@@ -37,8 +37,8 @@ public class ComponentDefaultDescriptor implements ComponentDescriptor {
     }
 
     @Override
-    public ComponentClass getComponentClass() {
-        return componentClass;
+    public ComponentType getComponentType() {
+        return componentType;
     }
 
     @Override
@@ -76,7 +76,7 @@ public class ComponentDefaultDescriptor implements ComponentDescriptor {
         private Image image;
         private String displayName;
         private String fullyQualifiedName;
-        private ComponentClass componentClass;
+        private ComponentType componentType;
         private List<ComponentPropertyDescriptor> componentPropertyDescriptors = new ArrayList<>();
 
         public Builder propertyDescriptors(List<ComponentPropertyDescriptor> componentPropertyDescriptors) {
@@ -89,8 +89,8 @@ public class ComponentDefaultDescriptor implements ComponentDescriptor {
             return this;
         }
 
-        public Builder componentClass(ComponentClass componentClass) {
-            this.componentClass = componentClass;
+        public Builder componentType(ComponentType componentType) {
+            this.componentType = componentType;
             return this;
         }
 
@@ -120,7 +120,7 @@ public class ComponentDefaultDescriptor implements ComponentDescriptor {
             descriptor.image = image;
             descriptor.hidden = hidden;
             descriptor.displayName = displayName;
-            descriptor.componentClass = componentClass;
+            descriptor.componentType = componentType;
             descriptor.fullyQualifiedName = fullyQualifiedName;
             descriptor.componentPropertyDescriptors.addAll(componentPropertyDescriptors);
             return descriptor;

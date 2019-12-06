@@ -20,7 +20,7 @@ public interface ComponentDescriptor {
 
     String getFullyQualifiedName();
 
-    ComponentClass getComponentClass();
+    ComponentType getComponentType();
 
     List<ComponentPropertyDescriptor> getPropertiesDescriptors();
 

@@ -4,7 +4,7 @@ import com.reedelk.plugin.editor.designer.action.remove.strategy.PlaceholderProv
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 
-import static com.reedelk.plugin.component.domain.ComponentClass.INBOUND;
+import static com.reedelk.plugin.component.domain.ComponentType.INBOUND;
 
 public class FlowReplaceRootActionStrategy extends ReplaceNodeActionStrategy {
 

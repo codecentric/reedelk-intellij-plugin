@@ -1,8 +1,8 @@
 package com.reedelk.plugin.editor.designer;
 
 import com.reedelk.plugin.commons.Half;
-import com.reedelk.plugin.component.domain.ComponentClass;
 import com.reedelk.plugin.component.domain.ComponentData;
+import com.reedelk.plugin.component.domain.ComponentType;
 import com.reedelk.plugin.editor.designer.arrow.Arrow;
 import com.reedelk.plugin.editor.designer.icon.Icon;
 import com.reedelk.plugin.editor.designer.icon.IconDragging;
@@ -163,7 +163,7 @@ public abstract class AbstractGraphNode implements GraphNode {
     @Override
     public boolean isDraggable() {
         // INBOUND Components cannot be dragged.
-        return ComponentClass.INBOUND != getComponentClass();
+        return ComponentType.INBOUND != getComponentClass();
     }
 
     @Override
@@ -203,7 +203,7 @@ public abstract class AbstractGraphNode implements GraphNode {
     }
 
     @Override
-    public ComponentClass getComponentClass() {
+    public ComponentType getComponentClass() {
         return componentData.getComponentClass();
     }
 

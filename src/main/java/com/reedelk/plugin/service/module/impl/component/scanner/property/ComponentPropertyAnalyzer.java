@@ -23,7 +23,7 @@ public class ComponentPropertyAnalyzer {
     }
 
     private ComponentPropertyDescriptor analyzeProperty(FieldInfo propertyInfo) {
-        return HandlersChain.descriptor(propertyInfo, context);
+        return FieldInfoAnalyzers.descriptor(propertyInfo, context);
     }
 
     private boolean isVisibleProperty(FieldInfo fieldInfo) {

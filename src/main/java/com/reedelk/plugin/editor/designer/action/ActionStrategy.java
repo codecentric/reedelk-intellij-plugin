@@ -2,7 +2,7 @@ package com.reedelk.plugin.editor.designer.action;
 
 import com.reedelk.plugin.graph.node.GraphNode;
 
-import static com.reedelk.plugin.component.domain.ComponentClass.INBOUND;
+import static com.reedelk.plugin.component.domain.ComponentType.INBOUND;
 
 public interface ActionStrategy {
 

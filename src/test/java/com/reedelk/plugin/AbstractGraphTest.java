@@ -1,10 +1,10 @@
 package com.reedelk.plugin;
 
 import com.reedelk.plugin.commons.FontInfoProvider;
-import com.reedelk.plugin.component.domain.ComponentClass;
 import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.component.domain.ComponentDefaultDescriptor;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
+import com.reedelk.plugin.component.domain.ComponentType;
 import com.reedelk.plugin.component.type.flowreference.FlowReferenceNode;
 import com.reedelk.plugin.component.type.fork.ForkNode;
 import com.reedelk.plugin.component.type.generic.GenericComponentNode;
@@ -32,8 +32,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.reedelk.plugin.component.domain.ComponentClass.INBOUND;
-import static com.reedelk.plugin.component.domain.ComponentClass.PROCESSOR;
+import static com.reedelk.plugin.component.domain.ComponentType.INBOUND;
+import static com.reedelk.plugin.component.domain.ComponentType.PROCESSOR;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
@@ -145,10 +145,10 @@ public abstract class AbstractGraphTest {
         lenient().doReturn(sampleTextBounds).when(fontMetrics).getStringBounds(anyString(), any(Graphics2D.class));
     }
 
-    protected static <T extends GraphNode> T createGraphNodeInstance(Class componentClazz, Class<T> graphNodeClazz, ComponentClass componentClass) {
+    protected static <T extends GraphNode> T createGraphNodeInstance(Class componentClazz, Class<T> graphNodeClazz, ComponentType componentType) {
         ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
                 .fullyQualifiedName(componentClazz.getName())
-                .componentClass(componentClass)
+                .componentType(componentType)
                 .build();
         return createGraphNodeInstance(graphNodeClazz, descriptor);
     }

@@ -1,9 +1,9 @@
 package com.reedelk.plugin.service.module.impl.component.scanner;
 
 import com.reedelk.plugin.assertion.PluginAssertion;
-import com.reedelk.plugin.component.domain.ComponentClass;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
+import com.reedelk.plugin.component.domain.ComponentType;
 import com.reedelk.plugin.service.module.impl.component.scanner.property.ComponentPropertyAnalyzer;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.FieldInfo;
@@ -78,7 +78,7 @@ class ComponentAnalyzerTest extends AbstractScannerTest {
                 .hasIcon(mockIcon)
                 .hasImage(mockImage)
                 .hasDisplayName("Test Component")
-                .hasClass(ComponentClass.PROCESSOR)
+                .hasClass(ComponentType.PROCESSOR)
                 .hasFullyQualifiedName(TestComponent.class.getName());
     }
 }

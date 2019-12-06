@@ -12,9 +12,9 @@ import io.github.classgraph.AnnotationParameterValue;
 import io.github.classgraph.AnnotationParameterValueList;
 import io.github.classgraph.FieldInfo;
 
-public class WhenHandler implements Handler {
+public class WhenFieldInfoAnalyzer implements FieldInfoAnalyzer {
 
-    private static final Logger LOG = Logger.getInstance(WhenHandler.class);
+    private static final Logger LOG = Logger.getInstance(WhenFieldInfoAnalyzer.class);
 
     @Override
     public void handle(FieldInfo propertyInfo, ComponentPropertyDescriptor.Builder builder, ComponentAnalyzerContext context) {

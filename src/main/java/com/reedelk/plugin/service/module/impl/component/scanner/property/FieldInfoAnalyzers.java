@@ -7,22 +7,22 @@ import io.github.classgraph.FieldInfo;
 import java.util.Arrays;
 import java.util.List;
 
-public class HandlersChain {
+public class FieldInfoAnalyzers {
 
-    private HandlersChain() {
+    private FieldInfoAnalyzers() {
     }
 
-    private static final List<Handler> HANDLERS = Arrays.asList(
-            new NameHandler(),
-            new TypeHandler(),
-            new WhenHandler(),
-            new HintHandler(),
-            new DisplayNameHandler(),
-            new DefaultValueHandler());
+    private static final List<FieldInfoAnalyzer> FIELD_INFO_ANALYZERS = Arrays.asList(
+            new NameFieldInfoAnalyzer(),
+            new TypeFieldInfoAnalyzer(),
+            new WhenFieldInfoAnalyzer(),
+            new HintFieldInfoAnalyzer(),
+            new DisplayNameFieldInfoAnalyzer(),
+            new DefaultValueFieldInfoAnalyzer());
 
     public static ComponentPropertyDescriptor descriptor(FieldInfo propertyInfo, ComponentAnalyzerContext context) {
         ComponentPropertyDescriptor.Builder builder = ComponentPropertyDescriptor.builder();
-        HANDLERS.forEach(handler -> handler.handle(propertyInfo, builder, context));
+        FIELD_INFO_ANALYZERS.forEach(handler -> handler.handle(propertyInfo, builder, context));
         return builder.build();
     }
 }

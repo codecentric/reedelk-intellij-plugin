@@ -29,8 +29,6 @@ public class CompletionServiceImpl implements CompletionService, MavenImportList
     private final Project project;
     private final Module module;
 
-    private boolean initializing;
-
     public CompletionServiceImpl(Project project, Module module) {
         this.project = project;
         this.module = module;
@@ -42,16 +40,12 @@ public class CompletionServiceImpl implements CompletionService, MavenImportList
         connection.subscribe(CompilerTopics.COMPILATION_STATUS, this);
 
         this.trie = new Trie();
-        PluginExecutor.getInstance().submit(() -> {
-            initializing = true;
-            initialize();
-            initializing = false;
-        });
+        PluginExecutor.getInstance().submit(this::initialize);
     }
 
     @Override
     public Optional<List<Suggestion>> completionTokensOf(String token) {
-        return initializing ? Optional.empty() : trie.findByPrefix(token);
+        return trie.findByPrefix(token);
     }
 
     @Override
@@ -62,8 +56,8 @@ public class CompletionServiceImpl implements CompletionService, MavenImportList
     private AutoCompleteContributorScanner scanner = new AutoCompleteContributorScanner();
 
     private void initialize() {
-        registerSuggestionContribution("message");
-        registerSuggestionContribution("context");
+        registerDefaultSuggestionContribution("message");
+        registerDefaultSuggestionContribution("context");
 
         MavenUtils.getMavenProject(module.getProject(), module.getName()).ifPresent(mavenProject -> {
             mavenProject.getDependencies().stream()
@@ -76,7 +70,7 @@ public class CompletionServiceImpl implements CompletionService, MavenImportList
         });
     }
 
-    private void registerSuggestionContribution(String suggestionContributor) {
+    private void registerDefaultSuggestionContribution(String suggestionContributor) {
         String[] tokens = SuggestionsBundle.message(suggestionContributor).split(",");
         Arrays.stream(tokens).forEach(suggestionTokenDefinition ->
                 CompletionService.parseSuggestionToken(suggestionTokenDefinition).ifPresent(parsed ->

@@ -5,7 +5,7 @@ import com.reedelk.plugin.service.module.impl.component.scanner.ComponentAnalyze
 import com.reedelk.runtime.api.annotation.Hint;
 import io.github.classgraph.FieldInfo;
 
-public class HintHandler implements Handler {
+public class HintFieldInfoAnalyzer implements FieldInfoAnalyzer {
     @Override
     public void handle(FieldInfo propertyInfo, ComponentPropertyDescriptor.Builder builder, ComponentAnalyzerContext context) {
         String hintValue =

@@ -1,6 +1,6 @@
 package com.reedelk.plugin.component.domain;
 
-public enum ComponentClass {
+public enum ComponentType {
 
     INBOUND,
     PROCESSOR,

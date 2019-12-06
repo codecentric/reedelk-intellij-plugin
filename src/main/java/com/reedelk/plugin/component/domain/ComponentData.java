@@ -61,8 +61,8 @@ public class ComponentData implements ComponentDataHolder {
         return descriptor.getIcon();
     }
 
-    public ComponentClass getComponentClass() {
-        return descriptor.getComponentClass();
+    public ComponentType getComponentClass() {
+        return descriptor.getComponentType();
     }
 
     public List<ComponentPropertyDescriptor> getPropertiesDescriptors() {

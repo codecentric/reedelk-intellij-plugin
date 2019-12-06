@@ -5,7 +5,7 @@ import com.reedelk.plugin.service.module.impl.component.scanner.ComponentAnalyze
 import com.reedelk.runtime.api.annotation.Property;
 import io.github.classgraph.FieldInfo;
 
-public class DisplayNameHandler implements Handler {
+public class DisplayNameFieldInfoAnalyzer implements FieldInfoAnalyzer {
 
     @Override
     public void handle(FieldInfo propertyInfo, ComponentPropertyDescriptor.Builder builder, ComponentAnalyzerContext context) {

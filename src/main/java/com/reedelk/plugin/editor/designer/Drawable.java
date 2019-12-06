@@ -1,6 +1,6 @@
 package com.reedelk.plugin.editor.designer;
 
-import com.reedelk.plugin.component.domain.ComponentClass;
+import com.reedelk.plugin.component.domain.ComponentType;
 import com.reedelk.plugin.graph.FlowGraph;
 
 import java.awt.*;
@@ -43,7 +43,7 @@ public interface Drawable {
 
     int height(Graphics2D graphics);
 
-    ComponentClass getComponentClass();
+    ComponentType getComponentClass();
 
     boolean contains(ImageObserver observer, int x, int y);
 
