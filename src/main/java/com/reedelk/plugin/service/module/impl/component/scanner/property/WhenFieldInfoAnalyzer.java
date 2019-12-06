@@ -19,7 +19,7 @@ public class WhenFieldInfoAnalyzer implements FieldInfoAnalyzer {
     @Override
     public void handle(FieldInfo propertyInfo, ComponentPropertyDescriptor.Builder builder, ComponentAnalyzerContext context) {
         // Check if there is a single 'when' annotation
-        boolean hasWhenAnnotation = propertyInfo.hasAnnotation(When.class.getName());
+        boolean hasWhenAnnotation = ScannerUtil.hasAnnotation(propertyInfo, When.class);
         if (hasWhenAnnotation) {
             AnnotationInfo info = propertyInfo.getAnnotationInfo(When.class.getName());
             WhenDefinition variableDefinition = processWhenInfo(info);
@@ -27,7 +27,7 @@ public class WhenFieldInfoAnalyzer implements FieldInfoAnalyzer {
         }
 
         // More than one 'when' definition
-        boolean hasWhenAnnotations = propertyInfo.hasAnnotation(Whens.class.getName());
+        boolean hasWhenAnnotations = ScannerUtil.hasAnnotation(propertyInfo, Whens.class);
         if (hasWhenAnnotations) {
             AnnotationInfo annotationInfo = propertyInfo.getAnnotationInfo(Whens.class.getName());
             AnnotationParameterValueList whensAnnotationList = annotationInfo.getParameterValues();
@@ -45,8 +45,8 @@ public class WhenFieldInfoAnalyzer implements FieldInfoAnalyzer {
     }
 
     private WhenDefinition processWhenInfo(AnnotationInfo info) {
-        String propertyName = ScannerUtil.getStringParameterValue(info, "propertyName");
-        String propertyValue = ScannerUtil.getStringParameterValue(info, "propertyValue");
+        String propertyName = ScannerUtil.stringParameterValueFrom(info, "propertyName");
+        String propertyValue = ScannerUtil.stringParameterValueFrom(info, "propertyValue");
         return new WhenDefinition(propertyName, propertyValue);
     }
 }

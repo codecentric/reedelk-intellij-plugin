@@ -33,7 +33,7 @@ public class ScannerUtil {
                 hasNotAnnotation(fieldInfo, Hidden.class);
     }
 
-    public static String getStringParameterValue(AnnotationInfo info, String parameterName) {
+    public static String stringParameterValueFrom(AnnotationInfo info, String parameterName) {
         AnnotationParameterValueList parameterValues = info.getParameterValues();
         AnnotationParameterValue parameterValue = parameterValues.get(parameterName);
         return parameterValue != null ? (String) parameterValue.getValue() : null;
@@ -41,7 +41,7 @@ public class ScannerUtil {
 
 
     @SuppressWarnings("unchecked")
-    public static <T> T getAnnotationValueOrDefault(FieldInfo fieldInfo, Class<?> annotationClazz, T defaultValue) {
+    public static <T> T annotationValueOrDefaultFrom(FieldInfo fieldInfo, Class<?> annotationClazz, T defaultValue) {
         if (!fieldInfo.hasAnnotation(annotationClazz.getName())) {
             return defaultValue;
         }
@@ -53,7 +53,7 @@ public class ScannerUtil {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T getAnnotationParameterValueOrDefault(FieldInfo fieldInfo, Class<?> annotationClazz, String annotationParamName, T defaultValue) {
+    public static <T> T annotationParameterValueOrDefaultFrom(FieldInfo fieldInfo, Class<?> annotationClazz, String annotationParamName, T defaultValue) {
         if (!fieldInfo.hasAnnotation(annotationClazz.getName())) {
             return defaultValue;
         }
@@ -123,23 +123,19 @@ public class ScannerUtil {
     }
 
     public static boolean isFile(FieldInfo fieldInfo, Class<?> clazz) {
-        return fieldInfo.hasAnnotation(File.class.getName()) &&
-                String.class.equals(clazz);
+        return hasAnnotation(fieldInfo, File.class) && String.class.equals(clazz);
     }
 
     public static boolean isMimeTypeCombo(FieldInfo fieldInfo, Class<?> clazz) {
-        return fieldInfo.hasAnnotation(MimeTypeCombo.class.getName()) &&
-                String.class.equals(clazz);
+        return hasAnnotation(fieldInfo, MimeTypeCombo.class) && String.class.equals(clazz);
     }
 
     public static boolean isCombo(FieldInfo fieldInfo, Class<?> clazz) {
-        return fieldInfo.hasAnnotation(Combo.class.getName()) &&
-                String.class.equals(clazz);
+        return fieldInfo.hasAnnotation(Combo.class.getName()) && String.class.equals(clazz);
     }
 
     public static boolean isPassword(FieldInfo fieldInfo, Class<?> clazz) {
-        return fieldInfo.hasAnnotation(Password.class.getName()) &&
-                String.class.equals(clazz);
+        return hasAnnotation(fieldInfo, Password.class) && String.class.equals(clazz);
     }
 
     public static boolean isMap(Class<?> clazz) {
@@ -164,5 +160,9 @@ public class ScannerUtil {
         AnnotationParameterValueList parameterValues = info.getParameterValues();
         AnnotationParameterValue parameterValue = parameterValues.get(parameterName);
         return parameterValue == null ? parameterValue : parameterValue.getValue();
+    }
+
+    public static boolean isHidden(ClassInfo classInfo) {
+        return classInfo.hasAnnotation(Hidden.class.getName());
     }
 }

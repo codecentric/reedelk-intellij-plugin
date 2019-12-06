@@ -4,9 +4,9 @@ import com.reedelk.plugin.component.domain.ComponentDefaultDescriptor;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.ComponentType;
+import com.reedelk.plugin.service.module.impl.commons.ScannerUtil;
 import com.reedelk.plugin.service.module.impl.component.scanner.property.ComponentPropertyAnalyzer;
 import com.reedelk.runtime.api.annotation.ESBComponent;
-import com.reedelk.runtime.api.annotation.Hidden;
 import io.github.classgraph.AnnotationInfo;
 import io.github.classgraph.AnnotationParameterValueList;
 import io.github.classgraph.ClassInfo;
@@ -32,7 +32,7 @@ class ComponentAnalyzer {
         List<ComponentPropertyDescriptor> propertiesDescriptor = analyzeProperties(classInfo);
         return ComponentDefaultDescriptor.create()
                 .displayName(displayName)
-                .hidden(isHidden(classInfo))
+                .hidden(ScannerUtil.isHidden(classInfo))
                 .componentType(componentType)
                 .fullyQualifiedName(classInfo.getName())
                 .propertyDescriptors(propertiesDescriptor)
@@ -58,10 +58,6 @@ class ComponentAnalyzer {
         return parameterValues.containsName("value") ?
                 (String) parameterValues.getValue("value") :
                 componentClassInfo.getSimpleName();
-    }
-
-    private boolean isHidden(ClassInfo componentClassInfo) {
-        return componentClassInfo.hasAnnotation(Hidden.class.getName());
     }
 
     private ComponentType getComponentType(ClassInfo classInfo) {

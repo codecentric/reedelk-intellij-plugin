@@ -101,7 +101,7 @@ public class TypeFieldInfoAnalyzer implements FieldInfoAnalyzer {
             return new TypeDynamicValueDescriptor(clazz);
 
         } else if (isDynamicMap(clazz)) {
-            String tabGroup = getAnnotationValueOrDefault(fieldInfo, TabGroup.class, null);
+            String tabGroup = annotationValueOrDefaultFrom(fieldInfo, TabGroup.class, null);
             return new TypeDynamicMapDescriptor(clazz, tabGroup);
 
         } else if (isScript(clazz)) {
@@ -114,14 +114,14 @@ public class TypeFieldInfoAnalyzer implements FieldInfoAnalyzer {
             return new TypeFileDescriptor();
 
         } else if (isCombo(fieldInfo, clazz)) {
-            boolean editable = getAnnotationParameterValueOrDefault(fieldInfo, Combo.class, "editable", false);
-            Object[] comboValues = getAnnotationParameterValueOrDefault(fieldInfo, Combo.class, "comboValues", new String[]{});
+            boolean editable = annotationParameterValueOrDefaultFrom(fieldInfo, Combo.class, "editable", false);
+            Object[] comboValues = annotationParameterValueOrDefaultFrom(fieldInfo, Combo.class, "comboValues", new String[]{});
             String[] items = stream(comboValues).map(value -> (String) value).toArray(String[]::new);
             return new TypeComboDescriptor(editable, items);
 
         } else if (isMimeTypeCombo(fieldInfo, clazz)) {
             List<String> predefinedMimeTypes = Arrays.asList(MimeType.ALL_MIME_TYPES);
-            String additionalMimeTypes = getAnnotationParameterValueOrDefault(fieldInfo, MimeTypeCombo.class, "additionalTypes", EMPTY);
+            String additionalMimeTypes = annotationParameterValueOrDefaultFrom(fieldInfo, MimeTypeCombo.class, "additionalTypes", EMPTY);
             if (isNotBlank(additionalMimeTypes)) {
                 String[] additionalTypes = additionalMimeTypes.split(",");
                 predefinedMimeTypes = new ArrayList<>(predefinedMimeTypes);
@@ -131,7 +131,7 @@ public class TypeFieldInfoAnalyzer implements FieldInfoAnalyzer {
             return new TypeComboDescriptor(true, comboMimeTypesArray, MimeType.MIME_TYPE_PROTOTYPE);
 
         } else if (isMap(clazz)) {
-            String tabGroup = getAnnotationValueOrDefault(fieldInfo, TabGroup.class, null);
+            String tabGroup = annotationValueOrDefaultFrom(fieldInfo, TabGroup.class, null);
             return new TypeMapDescriptor(tabGroup);
 
         } else {
