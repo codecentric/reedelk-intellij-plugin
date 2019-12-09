@@ -11,8 +11,6 @@ import java.io.IOException;
 
 public interface HttpService {
 
-    MediaType JSON = MediaType.get("application/json; charset=utf-8");
-
     static HttpService getInstance(@NotNull Module module) {
         return ModuleServiceManager.getService(module, HttpService.class);
     }

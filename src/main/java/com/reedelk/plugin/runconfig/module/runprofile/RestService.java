@@ -13,20 +13,19 @@ import com.reedelk.runtime.rest.api.InternalAPI;
 import com.reedelk.runtime.rest.api.hotswap.v1.HotSwapPOSTReq;
 import com.reedelk.runtime.rest.api.module.v1.ModuleDELETEReq;
 import com.reedelk.runtime.rest.api.module.v1.ModulePOSTReq;
+import okhttp3.MediaType;
 
 import java.io.IOException;
 
+import static com.reedelk.plugin.commons.Defaults.RestApi;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class RestService {
 
+    private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
+
     private static final Logger LOG = Logger.getInstance(RestService.class);
     private static final String BASE_ADMIN_CONSOLE_URL_TEMPLATE = "http://%s:%d/api";
-
-    private interface ApiPaths {
-        String MODULE = "/module";
-        String HOT_SWAP = "/hotswap";
-    }
 
     private final Module module;
     private final String baseUrl;
@@ -45,7 +44,7 @@ public class RestService {
 
         String json = InternalAPI.HotSwap.V1.POST.Req.serialize(req);
 
-        HttpResponse response = post(baseUrl + ApiPaths.HOT_SWAP, json);
+        HttpResponse response = post(baseUrl + RestApi.HOT_SWAP, json);
         if (response.isNotFound()) {
             // The module we tried to Hot Swap was not installed
             // in the Runtime, therefore we must re-package the module
@@ -80,7 +79,7 @@ public class RestService {
         ModulePOSTReq req = new ModulePOSTReq();
         req.setModuleFilePath(moduleFile);
         String json = InternalAPI.Module.V1.POST.Req.serialize(req);
-        HttpResponse response = post(baseUrl + ApiPaths.MODULE, json);
+        HttpResponse response = post(baseUrl + RestApi.MODULE, json);
         if (response.isNotSuccessful()) {
             handleNotSuccessfulResponse(response);
         } else {
@@ -93,7 +92,7 @@ public class RestService {
         ModuleDELETEReq req = new ModuleDELETEReq();
         req.setModuleFilePath(moduleFile);
         String json = InternalAPI.Module.V1.DELETE.Req.serialize(req);
-        HttpResponse response = deleteInternal(baseUrl + ApiPaths.MODULE, json);
+        HttpResponse response = deleteInternal(baseUrl + RestApi.MODULE, json);
         if (response.isNotSuccessful()) {
             handleNotSuccessfulResponse(response);
         } else {
@@ -105,7 +104,7 @@ public class RestService {
     private HttpResponse post(String url, String json) throws ExecutionException {
         HttpService httpService = com.reedelk.plugin.service.module.HttpService.getInstance(module);
         try {
-            return httpService.post(url, json, HttpService.JSON);
+            return httpService.post(url, json, JSON);
         } catch (IOException e) {
             throw new ExecutionException(e);
         }
@@ -114,7 +113,7 @@ public class RestService {
     private HttpResponse deleteInternal(String url, String json) throws ExecutionException {
         HttpService httpService = HttpService.getInstance(module);
         try {
-            return httpService.delete(url, json, HttpService.JSON);
+            return httpService.delete(url, json, JSON);
         } catch (IOException e) {
             throw new ExecutionException(e);
         }

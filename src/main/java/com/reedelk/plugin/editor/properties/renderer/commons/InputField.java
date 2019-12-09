@@ -73,7 +73,7 @@ public abstract class InputField<T> extends JBTextField implements DocumentListe
         this.listener = changeListener;
     }
 
-    protected abstract ValueConverter<?> getConverter();
+    protected abstract ValueConverter getConverter();
 
     private void notifyListener() {
         if (listener != null) {

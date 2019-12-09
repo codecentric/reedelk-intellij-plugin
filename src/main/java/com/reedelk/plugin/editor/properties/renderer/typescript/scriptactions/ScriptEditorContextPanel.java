@@ -28,10 +28,10 @@ class ScriptEditorContextPanel extends DisposablePanel implements CompletionServ
             customLine(Colors.SCRIPT_EDITOR_CONTEXT_PANEL_BORDER_BOTTOM, 0, 0, 1, 0),
             empty(5));
 
-    private final Module module;
-    private final DisposablePanel panelVariablesWrapper;
+    private final transient Module module;
+    private final transient MessageBusConnection connect;
     private final String componentFullyQualifiedName;
-    private final MessageBusConnection connect;
+    private final DisposablePanel panelVariablesWrapper;
 
     ScriptEditorContextPanel(Module module, String componentFullyQualifiedName) {
         this.module = module;
