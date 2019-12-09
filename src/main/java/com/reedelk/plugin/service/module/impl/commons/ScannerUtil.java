@@ -32,7 +32,7 @@ public class ScannerUtil {
 
     public static boolean isVisibleProperty(FieldInfo fieldInfo) {
         return hasAnnotation(fieldInfo, Property.class) &&
-                hasNotAnnotation(fieldInfo, Hidden.class);
+                !hasAnnotation(fieldInfo, Hidden.class);
     }
 
     public static String stringParameterValueFrom(AnnotationInfo info, String parameterName) {
@@ -183,9 +183,5 @@ public class ScannerUtil {
         AnnotationParameterValueList parameterValues = info.getParameterValues();
         AnnotationParameterValue parameterValue = parameterValues.get(parameterName);
         return parameterValue == null ? parameterValue : parameterValue.getValue();
-    }
-
-    private static boolean hasNotAnnotation(FieldInfo fieldInfo, Class<?> clazz) {
-        return !hasAnnotation(fieldInfo, clazz);
     }
 }
