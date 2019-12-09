@@ -35,7 +35,7 @@ class ScriptEditorContextPanel extends DisposablePanel {
         add(panelTitleWrapper, NORTH);
 
 
-        // TODO: Should not be hardcoded the contextvariables!
+        // TODO: Should not be hardcoded the context variables!
         JPanel panelVariablesWrapper = new DisposablePanel();
         BoxLayout boxLayout = new BoxLayout(panelVariablesWrapper, BoxLayout.PAGE_AXIS);
         panelVariablesWrapper.setLayout(boxLayout);
@@ -49,7 +49,7 @@ class ScriptEditorContextPanel extends DisposablePanel {
     }
 
     static class ContextVariableLabel extends JLabel {
-        static final String template = "<html>%s: %s</html>";
+        static final String template = "<html>%s: %s</html>"; // TODO: Use Reedelk Bundle
 
         ContextVariableLabel(String name, String type) {
             super(String.format(template, name, type));

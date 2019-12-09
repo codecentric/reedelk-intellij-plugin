@@ -31,8 +31,9 @@ public class AutoCompleteContributorScanner {
 
     private ClassGraph instantiateScanner() {
         return new ClassGraph()
-                .enableFieldInfo()
+                .enableClassInfo()
                 .enableAnnotationInfo()
+                .ignoreMethodVisibility()
                 .ignoreFieldVisibility();
     }
 }

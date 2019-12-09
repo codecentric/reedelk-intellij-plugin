@@ -30,6 +30,8 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
 
     private final Map<String, Trie> componentTriesMap = new HashMap<>();
 
+    private boolean initInProgress = false;
+    private boolean updateInProgress = false;
 
     private AutoCompleteContributorScanner scanner = new AutoCompleteContributorScanner();
 
@@ -49,12 +51,14 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
         this.defaultComponentTrie = new Trie();
         this.customFunctionsTrie = new Trie();
         PluginExecutor.getInstance().submit(this::initialize);
-        updateComponents(module);
     }
-
 
     @Override
     public List<Suggestion> completionTokensOf(String componentFullyQualifiedName, String token) {
+        synchronized (this) {
+            if (initInProgress || updateInProgress) return Collections.emptyList();
+        }
+
         Optional<List<Suggestion>> componentSuggestions =
                 componentTriesMap.getOrDefault(componentFullyQualifiedName, defaultComponentTrie).findByPrefix(token);
         Optional<List<Suggestion>> customFunctionsSuggestions =
@@ -73,30 +77,41 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
     private void updateComponents(Module module) {
         // Add suggestions from
         PluginExecutor.getInstance().submit(() -> {
-            Collection<ComponentsPackage> componentsPackages = ComponentService.getInstance(module).getModulesDescriptors();
-            componentsPackages.forEach(componentsPackage -> componentsPackage.getModuleComponents()
-                    .forEach(descriptor -> descriptor.getPropertiesDescriptors().forEach(propertyDescriptor -> {
-                        propertyDescriptor.getAutoCompleteContributorDefinition().ifPresent(definition -> {
-                            String fullyQualifiedName = descriptor.getFullyQualifiedName();
-                            boolean context = definition.isContext();
-                            boolean message = definition.isMessage();
-                            List<String> contributions = definition.getContributions();
+            synchronized (this) {
+                updateInProgress = true;
+            }
+            internalUpdateComponents(module);
 
-                            final Trie trie = new Trie();
-                            if (message) {
-                                registerDefaultSuggestionContribution(trie, "message");
-                            }
-                            if (context) {
-                                registerDefaultSuggestionContribution(trie, "context");
-                            }
-                            contributions.forEach(customSuggestion ->
-                                    SuggestionDefinitionMatcher.of(customSuggestion).ifPresent(parsed ->
-                                            trie.insert(parsed.getMiddle(), parsed.getRight(), parsed.getLeft())));
-
-                            componentTriesMap.put(fullyQualifiedName, trie);
-                        });
-                    })));
+            synchronized (this) {
+                updateInProgress = false;
+            }
         });
+    }
+
+    private void internalUpdateComponents(Module module) {
+        Collection<ComponentsPackage> componentsPackages = ComponentService.getInstance(module).getModulesDescriptors();
+        componentsPackages.forEach(componentsPackage -> componentsPackage.getModuleComponents()
+                .forEach(descriptor -> descriptor.getPropertiesDescriptors().forEach(propertyDescriptor -> {
+                    propertyDescriptor.getAutoCompleteContributorDefinition().ifPresent(definition -> {
+                        String fullyQualifiedName = descriptor.getFullyQualifiedName();
+                        boolean context = definition.isContext();
+                        boolean message = definition.isMessage();
+                        List<String> contributions = definition.getContributions();
+
+                        final Trie trie = new Trie();
+                        if (message) {
+                            registerDefaultSuggestionContribution(trie, "message");
+                        }
+                        if (context) {
+                            registerDefaultSuggestionContribution(trie, "context");
+                        }
+                        contributions.forEach(customSuggestion ->
+                                SuggestionDefinitionMatcher.of(customSuggestion).ifPresent(parsed ->
+                                        trie.insert(parsed.getMiddle(), parsed.getRight(), parsed.getLeft())));
+
+                        componentTriesMap.put(fullyQualifiedName, trie);
+                    });
+                })));
     }
 
     private void registerDefaultSuggestionContribution(Trie trie, String suggestionContributor) {
@@ -107,17 +122,33 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
     }
 
     private void initialize() {
-        registerDefaultSuggestionContribution(defaultComponentTrie, "message");
-        registerDefaultSuggestionContribution(defaultComponentTrie, "context");
+        synchronized (this) {
+            initInProgress = true;
+        }
 
-        MavenUtils.getMavenProject(module.getProject(), module.getName()).ifPresent(mavenProject -> {
-            mavenProject.getDependencies().stream()
-                    .filter(artifact -> ModuleInfo.isModule(artifact.getFile()))
-                    .map(artifact -> artifact.getFile().getPath()).collect(toList())
-                    .forEach(jarFilePath ->
-                            scanner.from(jarFilePath).forEach(contribution ->
-                                    SuggestionDefinitionMatcher.of(contribution).ifPresent(parsed ->
-                                            customFunctionsTrie.insert(parsed.getMiddle(), parsed.getRight(), parsed.getLeft()))));
+        PluginExecutor.getInstance().submit(new Runnable() {
+            @Override
+            public void run() {
+                registerDefaultSuggestionContribution(defaultComponentTrie, "message");
+                registerDefaultSuggestionContribution(defaultComponentTrie, "context");
+
+                MavenUtils.getMavenProject(module.getProject(), module.getName()).ifPresent(mavenProject ->
+                        mavenProject.getDependencies().stream()
+                                .filter(artifact -> ModuleInfo.isModule(artifact.getFile()))
+                                .map(artifact -> artifact.getFile().getPath()).collect(toList())
+                                .forEach(jarFilePath -> {
+                                    scanner.from(jarFilePath).forEach(contribution ->
+                                            SuggestionDefinitionMatcher.of(contribution).ifPresent(parsed ->
+                                                    customFunctionsTrie.insert(parsed.getMiddle(), parsed.getRight(), parsed.getLeft())));
+                                }));
+
+                internalUpdateComponents(module);
+
+                synchronized (this) {
+                    initInProgress = false;
+                }
+            }
         });
+
     }
 }
