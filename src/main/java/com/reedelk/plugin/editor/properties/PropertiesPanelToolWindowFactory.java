@@ -8,13 +8,14 @@ import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.reedelk.plugin.commons.Icons;
+import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class PropertiesPanelToolWindowFactory implements ToolWindowFactory {
 
-    public static final String ID = "ESB Component properties";
+    public static final String ID = "com.reedelk.plugin.toolwindow.palette.component.properties";
 
     @Override
     public void init(ToolWindow window) {
@@ -26,7 +27,7 @@ public class PropertiesPanelToolWindowFactory implements ToolWindowFactory {
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         final JBPanel panel = new PropertiesPanel(project);
         final ContentFactory contentFactory = ServiceManager.getService(ContentFactory.class);
-        final Content content = contentFactory.createContent(panel, "", false);
+        final Content content = contentFactory.createContent(panel, StringUtils.EMPTY, false);
         toolWindow.getContentManager().addContent(content);
     }
 }

@@ -67,10 +67,10 @@
         <configurationType implementation="com.reedelk.plugin.runconfig.module.ModuleRunConfigurationType"/>
 
         <!-- Palette and Component properties tool window -->
-        <toolWindow id="ESB Components" anchor="right" icon="/icons/ModulePackageToolWindow.png"
+        <toolWindow id="com.reedelk.plugin.toolwindow.palette.components" anchor="right"
                     factoryClass="com.reedelk.plugin.editor.palette.PaletteToolWindowFactory"/>
 
-        <toolWindow id="ESB Component properties" anchor="bottom"
+        <toolWindow id="com.reedelk.plugin.toolwindow.palette.component.properties" anchor="bottom"
                     factoryClass="com.reedelk.plugin.editor.properties.PropertiesPanelToolWindowFactory"/>
 
         <completion.contributor language="TEXT" implementationClass="com.reedelk.plugin.completion.ScriptCompletionContributor"/>
