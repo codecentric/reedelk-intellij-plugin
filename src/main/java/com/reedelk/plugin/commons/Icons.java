@@ -60,7 +60,7 @@ public class Icons {
         }
 
         public static final Icon Properties = IconLoader.getIcon("/icons/ToolBarProperties.png");
-        public static final Icon Components = IconLoader.getIcon("/icons/ModulePackageToolWindow.png");
+        public static final Icon Components = AllIcons.Toolwindows.ToolWindowPalette;
     }
 
     public static class Misc {
