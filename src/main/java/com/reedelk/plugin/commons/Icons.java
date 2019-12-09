@@ -59,7 +59,7 @@ public class Icons {
         private ToolWindow() {
         }
 
-        public static final Icon Properties = IconLoader.getIcon("/icons/ToolBarProperties.png");
+        public static final Icon Properties = AllIcons.Toolwindows.ToolWindowStructure;
         public static final Icon Components = AllIcons.Toolwindows.ToolWindowPalette;
     }
 
