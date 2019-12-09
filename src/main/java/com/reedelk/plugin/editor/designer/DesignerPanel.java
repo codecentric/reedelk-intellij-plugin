@@ -24,9 +24,9 @@ import com.reedelk.plugin.graph.SnapshotListener;
 import com.reedelk.plugin.graph.layout.FlowGraphLayout;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpdateNotifier;
-import com.reedelk.plugin.service.project.DesignerSelectionManager;
-import com.reedelk.plugin.service.project.impl.SelectableItem;
-import com.reedelk.plugin.service.project.impl.SelectableItemComponent;
+import com.reedelk.plugin.service.project.DesignerSelectionService;
+import com.reedelk.plugin.service.project.impl.designerselection.SelectableItem;
+import com.reedelk.plugin.service.project.impl.designerselection.SelectableItemComponent;
 import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,7 +39,7 @@ import java.awt.event.MouseMotionListener;
 import java.util.Optional;
 
 import static com.reedelk.plugin.editor.designer.dnd.DesignerDropTargetListener.DropActionListener;
-import static com.reedelk.plugin.service.project.DesignerSelectionManager.CurrentSelectionListener;
+import static com.reedelk.plugin.service.project.DesignerSelectionService.CurrentSelectionListener;
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
@@ -65,7 +65,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
     private transient SelectableItem currentSelection;
     private transient MessageBusConnection busConnection;
     private transient CenterOfNodeDrawable centerOfNodeDrawable;
-    private transient DesignerSelectionManager designerSelectionManager;
+    private transient DesignerSelectionService designerSelectionService;
     private transient CurrentSelectionListener componentSelectedPublisher;
     private transient FlowWithErrorInfoPanel errorFlowInfoPanel = new FlowWithErrorInfoPanel();
     private transient BuildingFlowInfoPanel buildingFlowInfoPanel = new BuildingFlowInfoPanel();
@@ -94,7 +94,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
         this.busConnection = module.getMessageBus().connect();
         this.busConnection.subscribe(ReedelkTopics.COMPONENTS_UPDATE_EVENTS, this);
         this.componentSelectedPublisher = module.getProject().getMessageBus().syncPublisher(ReedelkTopics.CURRENT_COMPONENT_SELECTION_EVENTS);
-        this.designerSelectionManager = DesignerSelectionManager.getInstance(module.getProject());
+        this.designerSelectionService = DesignerSelectionService.getInstance(module.getProject());
 
         addDropTargetListener(module, snapshot, actionHandler);
         addAncestorListener();
@@ -256,7 +256,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
             // If nothing is already selected, we set as current selection
             // the default selected item.
             snapshot.applyOnGraph(graph -> {
-                        boolean isAnySelectionPresent = designerSelectionManager.getCurrentSelection().isPresent();
+                        boolean isAnySelectionPresent = designerSelectionService.getCurrentSelection().isPresent();
                         if (!isAnySelectionPresent) {
                             select(defaultSelectedItem());
                         }

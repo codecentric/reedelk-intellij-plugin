@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.project.impl;
+package com.reedelk.plugin.service.project.impl.sourcechange;
 
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.Disposable;

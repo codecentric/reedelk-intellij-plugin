@@ -13,11 +13,11 @@ import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.plugin.editor.properties.renderer.ComponentPropertiesRendererFactory;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
-import com.reedelk.plugin.service.project.DesignerSelectionManager;
-import com.reedelk.plugin.service.project.impl.SelectableItem;
-import com.reedelk.plugin.service.project.impl.SelectableItemComponent;
-import com.reedelk.plugin.service.project.impl.SelectableItemFlow;
-import com.reedelk.plugin.service.project.impl.SelectableItemSubflow;
+import com.reedelk.plugin.service.project.DesignerSelectionService;
+import com.reedelk.plugin.service.project.impl.designerselection.SelectableItem;
+import com.reedelk.plugin.service.project.impl.designerselection.SelectableItemComponent;
+import com.reedelk.plugin.service.project.impl.designerselection.SelectableItemFlow;
+import com.reedelk.plugin.service.project.impl.designerselection.SelectableItemSubflow;
 import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +25,7 @@ import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
-import static com.reedelk.plugin.service.project.DesignerSelectionManager.CurrentSelectionListener;
+import static com.reedelk.plugin.service.project.DesignerSelectionService.CurrentSelectionListener;
 
 public class PropertiesPanel extends DisposablePanel implements CurrentSelectionListener {
 
@@ -34,7 +34,7 @@ public class PropertiesPanel extends DisposablePanel implements CurrentSelection
     private transient Disposable currentPane;
     private transient SelectableItem currentSelection;
     private transient MessageBusConnection busConnection;
-    private transient DesignerSelectionManager designerSelectionManager;
+    private transient DesignerSelectionService designerSelectionService;
 
     PropertiesPanel(@NotNull Project project) {
         setBorder(JBUI.Borders.empty());
@@ -42,7 +42,7 @@ public class PropertiesPanel extends DisposablePanel implements CurrentSelection
         setupAncestorListener();
 
         this.project = project;
-        this.designerSelectionManager = DesignerSelectionManager.getInstance(project);
+        this.designerSelectionService = DesignerSelectionService.getInstance(project);
 
         setEmptySelection();
 
@@ -151,7 +151,7 @@ public class PropertiesPanel extends DisposablePanel implements CurrentSelection
         addAncestorListener(new AncestorListenerAdapter() {
             @Override
             public void ancestorAdded(AncestorEvent event) {
-                designerSelectionManager.getCurrentSelection()
+                designerSelectionService.getCurrentSelection()
                         .ifPresent(PropertiesPanel.this::onSelection);
             }
 

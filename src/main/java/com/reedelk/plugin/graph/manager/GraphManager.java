@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-import static com.reedelk.plugin.service.project.DesignerSelectionManager.CurrentSelectionListener;
+import static com.reedelk.plugin.service.project.DesignerSelectionService.CurrentSelectionListener;
 import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
 
 /**

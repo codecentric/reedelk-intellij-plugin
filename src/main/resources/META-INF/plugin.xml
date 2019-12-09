@@ -86,11 +86,11 @@
     <project-components>
         <component>
             <interface-class>com.reedelk.plugin.service.project.SourceChangeService</interface-class>
-            <implementation-class>com.reedelk.plugin.service.project.impl.SourceChangeServiceImpl</implementation-class>
+            <implementation-class>com.reedelk.plugin.service.project.impl.sourcechange.SourceChangeServiceImpl</implementation-class>
         </component>
         <component>
-            <interface-class>com.reedelk.plugin.service.project.DesignerSelectionManager</interface-class>
-            <implementation-class>com.reedelk.plugin.service.project.impl.DesignerSelectionManagerImpl
+            <interface-class>com.reedelk.plugin.service.project.DesignerSelectionService</interface-class>
+            <implementation-class>com.reedelk.plugin.service.project.impl.designerselection.DesignerSelectionServiceImpl
             </implementation-class>
         </component>
     </project-components>

@@ -1,21 +1,21 @@
-package com.reedelk.plugin.service.project.impl;
+package com.reedelk.plugin.service.project.impl.designerselection;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
-import com.reedelk.plugin.service.project.DesignerSelectionManager;
+import com.reedelk.plugin.service.project.DesignerSelectionService;
 import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public class DesignerSelectionManagerImpl implements DesignerSelectionManager, DesignerSelectionManager.CurrentSelectionListener, Disposable {
+public class DesignerSelectionServiceImpl implements DesignerSelectionService, DesignerSelectionService.CurrentSelectionListener, Disposable {
 
     private final MessageBusConnection connection;
 
     private SelectableItem currentSelection;
 
-    public DesignerSelectionManagerImpl(@NotNull Project project) {
+    public DesignerSelectionServiceImpl(@NotNull Project project) {
         this.connection = project.getMessageBus().connect();
         this.connection.subscribe(ReedelkTopics.CURRENT_COMPONENT_SELECTION_EVENTS, this);
     }

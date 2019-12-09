@@ -1,15 +1,15 @@
 package com.reedelk.plugin.service.project;
 
 import com.intellij.openapi.project.Project;
-import com.reedelk.plugin.service.project.impl.SelectableItem;
+import com.reedelk.plugin.service.project.impl.designerselection.SelectableItem;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public interface DesignerSelectionManager {
+public interface DesignerSelectionService {
 
-    static DesignerSelectionManager getInstance(@NotNull Project project) {
-        return project.getComponent(DesignerSelectionManager.class);
+    static DesignerSelectionService getInstance(@NotNull Project project) {
+        return project.getComponent(DesignerSelectionService.class);
     }
 
     Optional<SelectableItem> getCurrentSelection();
