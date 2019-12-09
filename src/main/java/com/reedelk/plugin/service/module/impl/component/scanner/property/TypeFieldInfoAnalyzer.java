@@ -86,7 +86,7 @@ public class TypeFieldInfoAnalyzer implements FieldInfoAnalyzer {
                 .stream()
                 .filter(filterByFullyQualifiedClassNameType(enumFullyQualifiedClassName))
                 .collect(toMap(FieldInfo::getName, fieldInfo ->
-                        ScannerUtil.getOrDefault(fieldInfo, DisplayName.class, fieldInfo.getName())));
+                        ScannerUtil.annotationValueOrDefaultFrom(fieldInfo, DisplayName.class, fieldInfo.getName())));
 
         // Default enum value is the first key. Its default value can be overridden
         // on the property definition with the @Default annotation.

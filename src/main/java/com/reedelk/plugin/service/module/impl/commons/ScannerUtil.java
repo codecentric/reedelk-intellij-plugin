@@ -33,20 +33,6 @@ public class ScannerUtil {
                 hasNotAnnotation(fieldInfo, Hidden.class);
     }
 
-    public static String getOrDefault(FieldInfo fieldInfo, Class<?> annotationClazz, String defaultValue) {
-        AnnotationInfo annotationInfo = fieldInfo.getAnnotationInfo(annotationClazz.getName());
-        if (areParameterValuesNotNull(annotationInfo)) {
-            return (String) annotationInfo.getParameterValues().get(0).getValue();
-        }
-        return defaultValue;
-    }
-
-    private static boolean areParameterValuesNotNull(AnnotationInfo annotationInfo) {
-        return annotationInfo != null &&
-                annotationInfo.getParameterValues() != null &&
-                !annotationInfo.getParameterValues().isEmpty();
-    }
-
     public static String stringParameterValueFrom(AnnotationInfo info, String parameterName) {
         AnnotationParameterValueList parameterValues = info.getParameterValues();
         AnnotationParameterValue parameterValue = parameterValues.get(parameterName);
@@ -60,6 +46,7 @@ public class ScannerUtil {
         }
         AnnotationInfo annotationInfo = fieldInfo.getAnnotationInfo(annotationClazz.getName());
         AnnotationParameterValueList parameterValues = annotationInfo.getParameterValues();
+        if (parameterValues == null) return defaultValue;
         return parameterValues.get(ANNOTATION_DEFAULT_PARAM_NAME) == null ?
                 defaultValue :
                 (T) parameterValues.getValue(ANNOTATION_DEFAULT_PARAM_NAME);
