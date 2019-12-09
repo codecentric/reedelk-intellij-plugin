@@ -17,7 +17,7 @@ public class SuggestionsBundle {
 
     private static Reference<ResourceBundle> ourBundle;
     @NonNls
-    public static final String BUNDLE = "messages.Suggestions";
+    private static final String BUNDLE = "messages.Suggestions";
 
     private SuggestionsBundle() {
     }

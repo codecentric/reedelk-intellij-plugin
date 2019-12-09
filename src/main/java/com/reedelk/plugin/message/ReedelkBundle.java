@@ -17,7 +17,7 @@ public class ReedelkBundle {
 
     private static Reference<ResourceBundle> ourBundle;
     @NonNls
-    public static final String BUNDLE = "messages.ReedelkBundle";
+    private static final String BUNDLE = "messages.ReedelkBundle";
 
     private ReedelkBundle() {
     }
