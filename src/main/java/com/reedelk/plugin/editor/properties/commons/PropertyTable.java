@@ -67,7 +67,7 @@ public class PropertyTable extends DisposableScrollPane {
 
         @Override
         public void focusGained(FocusEvent e) {
-
+            // nothing to do when focus is gained
         }
 
         @Override

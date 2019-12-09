@@ -21,6 +21,8 @@ public class Defaults {
 
 
     public static class RestApi {
+        private RestApi() {
+        }
         public static final String MODULE = "/module";
         public static final String HOT_SWAP = "/hotswap";
     }

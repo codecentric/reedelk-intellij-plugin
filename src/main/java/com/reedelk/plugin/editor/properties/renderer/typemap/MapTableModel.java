@@ -34,11 +34,6 @@ public class MapTableModel extends DefaultTableModel implements PropertyTable.Pr
     }
 
     @Override
-    public Object getValueAt(int row, int column) {
-        return super.getValueAt(row, column);
-    }
-
-    @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         return true;
     }

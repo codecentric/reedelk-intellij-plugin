@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 
 import static com.intellij.openapi.command.WriteCommandAction.writeCommandAction;
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.userdata.ScriptEditorKey.COMPONENT_FULLY_QUALIFIED_NAME;
 import static com.reedelk.plugin.userdata.ScriptEditorKey.MODULE_NAME;
 import static java.awt.BorderLayout.CENTER;
@@ -75,8 +76,8 @@ public class ScriptEditor extends DisposablePanel implements DocumentListener {
         try {
             String script = ScriptUtils.unwrap(value);
             writeCommandAction(module.getProject()).run(() -> document.setText(script));
-        } catch (Throwable throwable) {
-            LOG.error(String.format("Could not write value [%s] to document", value), throwable);
+        } catch (Exception exception) {
+            LOG.error(message("script.error.write", value, exception.getMessage(), exception));
         }
     }
 

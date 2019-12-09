@@ -16,6 +16,9 @@ public class Icon {
     private static final int ARROW_ICON_PADDING = 8;
 
     public static class Dimension {
+        private Dimension() {
+        }
+
         public static final int TOP_PADDING = 10;
         public static final int BOTTOM_PADDING = 10;
 

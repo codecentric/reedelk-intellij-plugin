@@ -20,21 +20,7 @@ public class NumericDocumentFilter extends DocumentFilter {
         sb.append(doc.getText(0, doc.getLength()));
         sb.insert(offset, string);
 
-        if (sb.length() == 1 && sb.toString().equals("-")) {
-            super.insertString(fb, offset, string, attr);
-        } else if (sb.length() == 1 && sb.toString().equals("+")) {
-            super.insertString(fb, offset, string, attr);
-        } else if (sb.length() == 1 && sb.toString().equals("$")) {
-            super.insertString(fb, offset, string, attr);
-        } else if (sb.length() == 2 && sb.toString().equals("${")) {
-            super.insertString(fb, offset, string, attr);
-        } else if (sb.toString().endsWith("}")) {
-            super.insertString(fb, offset, string, attr);
-        } else if (sb.length() > 2 && sb.toString().startsWith("${") && !sb.toString().contains("}")) {
-            super.insertString(fb, offset, string, attr);
-        } else if (sb.length() == 0) {
-            super.insertString(fb, offset, string, attr);
-        } else if (tester.test(sb.toString())) {
+        if (isAllowedForInsertionOrReplace(sb)) {
             super.insertString(fb, offset, string, attr);
         }
     }
@@ -47,21 +33,7 @@ public class NumericDocumentFilter extends DocumentFilter {
         sb.append(doc.getText(0, doc.getLength()));
         sb.replace(offset, offset + length, text);
 
-        if (sb.length() == 1 && sb.toString().equals("-")) {
-            super.replace(fb, offset, length, text, attrs);
-        } else if (sb.length() == 1 && sb.toString().equals("+")) {
-            super.replace(fb, offset, length, text, attrs);
-        } else if (sb.length() == 1 && sb.toString().equals("$")) {
-            super.replace(fb, offset, length, text, attrs);
-        } else if (sb.length() == 2 && sb.toString().equals("${")) {
-            super.replace(fb, offset, length, text, attrs);
-        } else if (sb.toString().endsWith("}")) {
-            super.replace(fb, offset, length, text, attrs);
-        } else if (sb.length() > 2 && sb.toString().startsWith("${") && !sb.toString().contains("}")) {
-            super.replace(fb, offset, length, text, attrs);
-        } else if (sb.length() == 0) {
-            super.replace(fb, offset, length, text, attrs);
-        } else if (tester.test(sb.toString())) {
+        if (isAllowedForInsertionOrReplace(sb)) {
             super.replace(fb, offset, length, text, attrs);
         }
     }
@@ -73,23 +45,20 @@ public class NumericDocumentFilter extends DocumentFilter {
         sb.append(doc.getText(0, doc.getLength()));
         sb.delete(offset, offset + length);
 
-        if (sb.length() == 1 && sb.toString().equals("-")) {
-            super.remove(fb, offset, length);
-        } else if (sb.length() == 1 && sb.toString().equals("+")) {
-            super.remove(fb, offset, length);
-        } else if (sb.length() == 1 && sb.toString().equals("$")) {
-            super.remove(fb, offset, length);
-        } else if (sb.length() == 2 && sb.toString().equals("${")) {
-            super.remove(fb, offset, length);
-        } else if (sb.toString().endsWith("}")) {
-            super.remove(fb, offset, length);
-        } else if (sb.length() > 2 && sb.toString().startsWith("${") && !sb.toString().contains("}")) {
-            super.remove(fb, offset, length);
-        } else if (sb.length() == 0) {
-            super.remove(fb, offset, length);
-        } else if (tester.test(sb.toString())) {
+        if (isAllowedForInsertionOrReplace(sb)) {
             super.remove(fb, offset, length);
         }
+    }
+
+    private boolean isAllowedForInsertionOrReplace(StringBuilder sb) {
+        return sb.length() == 1 && sb.toString().equals("-") ||
+                sb.length() == 1 && sb.toString().equals("+") ||
+                sb.length() == 1 && sb.toString().equals("$") ||
+                sb.length() == 2 && sb.toString().equals("${") ||
+                sb.toString().endsWith("}") ||
+                sb.length() > 2 && sb.toString().startsWith("${") && !sb.toString().contains("}") ||
+                sb.length() == 0 ||
+                tester.test(sb.toString());
     }
 
     public interface InputTest {

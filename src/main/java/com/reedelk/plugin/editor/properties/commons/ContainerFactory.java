@@ -14,6 +14,9 @@ import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS;
 
 public class ContainerFactory {
 
+    private ContainerFactory() {
+    }
+
     public static DisposablePanel createLabelNextToComponent(JLabel label, JComponent body) {
         return createLabelNextToComponent(label, body, true);
     }

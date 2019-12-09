@@ -9,11 +9,11 @@ public class DebugControls {
         private Designer() {
         }
 
-        public static final boolean LOG_FLOW_INFO = ALL_ENABLED || false;
-        public static final boolean SHOW_BOX = ALL_ENABLED || false;
-        public static final boolean SHOW_CENTER = ALL_ENABLED || false;
-        public static final boolean SHOW_COORDS = ALL_ENABLED || false;
-        public static final boolean SHOW_HEIGHTS = ALL_ENABLED || false;
+        public static final boolean LOG_FLOW_INFO = ALL_ENABLED;
+        public static final boolean SHOW_BOX = ALL_ENABLED;
+        public static final boolean SHOW_CENTER = ALL_ENABLED;
+        public static final boolean SHOW_COORDS = ALL_ENABLED;
+        public static final boolean SHOW_HEIGHTS = ALL_ENABLED;
     }
 
     private DebugControls() {
