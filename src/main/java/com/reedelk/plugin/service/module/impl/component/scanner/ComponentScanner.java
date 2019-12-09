@@ -3,7 +3,10 @@ package com.reedelk.plugin.service.module.impl.component.scanner;
 import com.intellij.openapi.diagnostic.Logger;
 import com.reedelk.plugin.commons.PackageToPath;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
+import com.reedelk.plugin.service.module.impl.commons.ScannerUtil;
+import com.reedelk.runtime.api.annotation.AutoCompleteContributor;
 import com.reedelk.runtime.api.annotation.ESBComponent;
+import io.github.classgraph.AnnotationInfo;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
@@ -33,6 +36,16 @@ public class ComponentScanner {
         List<ComponentDescriptor> descriptors = componentDescriptorsFrom(scanResult);
         // Unknown components are filtered out
         return filterOutUnknownClassComponents(descriptors);
+    }
+
+    public List<String> autoCompleteFrom(ScanResult scanResult) {
+        ClassInfoList classInfoList = scanResult.getClassesWithAnnotation(AutoCompleteContributor.class.getName());
+        List<String> contributions = new ArrayList<>();
+        classInfoList.forEach(classInfo -> {
+            AnnotationInfo annotationInfo = classInfo.getAnnotationInfo(AutoCompleteContributor.class.getName());
+            contributions.addAll(ScannerUtil.stringListParameterValueFrom(annotationInfo, "contributions"));
+        });
+        return contributions;
     }
 
     private List<ComponentDescriptor> componentDescriptorsFrom(ScanResult scanResult) {

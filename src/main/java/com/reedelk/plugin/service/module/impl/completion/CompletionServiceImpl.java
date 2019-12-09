@@ -8,6 +8,8 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.SuggestionDefinitionMatcher;
 import com.reedelk.plugin.component.domain.AutoCompleteContributorDefinition;
+import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
+import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.executor.PluginExecutor;
 import com.reedelk.plugin.message.SuggestionsBundle;
 import com.reedelk.plugin.service.module.CompletionService;
@@ -81,27 +83,10 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
     private void internalUpdateComponents(Module module) {
         Collection<ComponentsPackage> componentsPackages = ComponentService.getInstance(module).getModulesDescriptors();
         componentsPackages.forEach(componentsPackage -> componentsPackage.getModuleComponents()
-                .forEach(descriptor -> descriptor.getPropertiesDescriptors().forEach(propertyDescriptor -> {
-                    propertyDescriptor.getAutoCompleteContributorDefinition().ifPresent(definition -> {
-                        String fullyQualifiedName = descriptor.getFullyQualifiedName();
-                        boolean context = definition.isContext();
-                        boolean message = definition.isMessage();
-                        List<String> contributions = definition.getContributions();
-
-                        final Trie trie = new Trie();
-                        if (message) {
-                            registerDefaultSuggestionContribution(trie, "message");
-                        }
-                        if (context) {
-                            registerDefaultSuggestionContribution(trie, "context");
-                        }
-                        contributions.forEach(customSuggestion ->
-                                SuggestionDefinitionMatcher.of(customSuggestion).ifPresent(parsed ->
-                                        trie.insert(parsed.getMiddle(), parsed.getRight(), parsed.getLeft())));
-
-                        componentTriesMap.put(fullyQualifiedName, trie);
-                    });
-                })));
+                .forEach(descriptor -> {
+                    String fullyQualifiedName = descriptor.getFullyQualifiedName();
+                    addSuggestionFrom(fullyQualifiedName, descriptor.getPropertiesDescriptors());
+                }));
 
         Collection<AutoCompleteContributorDefinition> autoCompleteDefinitions =
                 ComponentService.getInstance(module).getAutoCompleteContributorDefinition();
@@ -112,7 +97,29 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
         }));
 
         onCompletionEvent.onCompletionsUpdated();
+    }
 
+    private void addSuggestionFrom(String fullyQualifiedName, List<ComponentPropertyDescriptor> propertyDescriptors) {
+        propertyDescriptors.forEach(propertyDescriptor -> {
+            if (propertyDescriptor.getPropertyType() instanceof TypeObjectDescriptor) {
+                TypeObjectDescriptor typeObjectDescriptor = propertyDescriptor.getPropertyType();
+                addSuggestionFrom(typeObjectDescriptor.getTypeFullyQualifiedName(),
+                        typeObjectDescriptor.getObjectProperties());
+            } else {
+                propertyDescriptor.getAutoCompleteContributorDefinition().ifPresent(definition -> {
+                    final Trie trie = new Trie();
+                    if (definition.isMessage()) registerDefaultSuggestionContribution(trie, "message");
+                    if (definition.isContext()) registerDefaultSuggestionContribution(trie, "context");
+                    if (definition.isError()) registerDefaultSuggestionContribution(trie, "error");
+
+                    List<String> contributions = definition.getContributions();
+                    contributions.forEach(customSuggestion ->
+                            SuggestionDefinitionMatcher.of(customSuggestion).ifPresent(parsed ->
+                                    trie.insert(parsed.getMiddle(), parsed.getRight(), parsed.getLeft())));
+                    componentTriesMap.put(fullyQualifiedName, trie);
+                });
+            }
+        });
     }
 
     private void registerDefaultSuggestionContribution(Trie trie, String suggestionContributor) {

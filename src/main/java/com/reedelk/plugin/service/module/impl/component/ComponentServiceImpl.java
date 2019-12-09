@@ -15,7 +15,6 @@ import com.reedelk.plugin.component.type.unknown.UnknownComponentDescriptorWrapp
 import com.reedelk.plugin.executor.PluginExecutor;
 import com.reedelk.plugin.maven.MavenUtils;
 import com.reedelk.plugin.service.module.ComponentService;
-import com.reedelk.plugin.service.module.impl.component.scanner.AutoCompleteContributorScanner;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpdateNotifier;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentScanner;
 import com.reedelk.plugin.topic.ReedelkTopics;
@@ -39,7 +38,6 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     private final Project project;
     private final ComponentListUpdateNotifier publisher;
     private final ComponentScanner componentScanner = new ComponentScanner();
-    private final AutoCompleteContributorScanner autoCompleteContributorScanner = new AutoCompleteContributorScanner();
 
     private final ComponentsPackage systemComponents;
     private final Map<String, ComponentsPackage> mavenJarComponentsMap = new HashMap<>();
@@ -137,9 +135,9 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                             ComponentsPackage descriptor = new ComponentsPackage(moduleName, components);
                             mavenJarComponentsMap.put(jarFilePath, descriptor);
 
-                            List<String> from = autoCompleteContributorScanner.from(scanResult);
+                            List<String> from = componentScanner.autoCompleteFrom(scanResult);
                             autoCompleteContributorDefinitions.add(
-                                    new AutoCompleteContributorDefinition(false, false, from));
+                                    new AutoCompleteContributorDefinition(from));
 
                             publisher.onComponentListUpdate(module);
                         });

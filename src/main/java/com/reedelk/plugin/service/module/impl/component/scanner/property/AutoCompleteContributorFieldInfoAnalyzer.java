@@ -18,11 +18,12 @@ public class AutoCompleteContributorFieldInfoAnalyzer implements FieldInfoAnalyz
             AnnotationInfo info = propertyInfo.getAnnotationInfo(AutoCompleteContributor.class.getName());
 
             boolean isMessage =  ScannerUtil.booleanParameterValueFrom(info, "message", true);
+            boolean isError =  ScannerUtil.booleanParameterValueFrom(info, "error", false);
             boolean isContext = ScannerUtil.booleanParameterValueFrom(info, "context", true);
             List<String> customContributions = ScannerUtil.stringListParameterValueFrom(info, "contributions");
 
             AutoCompleteContributorDefinition definition =
-                    new AutoCompleteContributorDefinition(isMessage, isContext, customContributions);
+                    new AutoCompleteContributorDefinition(isMessage, isError, isContext, customContributions);
             builder.autoComplete(definition);
         }
     }
