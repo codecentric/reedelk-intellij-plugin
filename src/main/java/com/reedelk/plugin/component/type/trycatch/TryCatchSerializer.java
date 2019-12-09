@@ -31,7 +31,7 @@ public class TryCatchSerializer extends AbstractScopedNodeSerializer {
 
         // Handle special cases where successor is 1 and it is equal to the stop node.
 
-        if (successorsOfTryCatch.size() == 0) {
+        if (successorsOfTryCatch.isEmpty()) {
             return tryCatchObject;
         }
 

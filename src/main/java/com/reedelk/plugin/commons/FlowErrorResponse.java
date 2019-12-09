@@ -7,6 +7,9 @@ import java.util.Optional;
 
 public class FlowErrorResponse {
 
+    private FlowErrorResponse() {
+    }
+
     public static Optional<FlowError> from(String httpResponseBody) {
         try {
             JSONObject object = new JSONObject(httpResponseBody);

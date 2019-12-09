@@ -42,8 +42,8 @@ public class TryCatchNode extends AbstractScopedGraphNode {
     @Override
     public void setPosition(int x, int y) {
         super.setPosition(x, y);
-        verticalDivider.setPosition(x, y);
-        verticalDividerArrows.setPosition(x - VERTICAL_DIVIDER_X_OFFSET, y);
+        verticalDivider.setXPosition(x);
+        verticalDividerArrows.setXPosition(x - VERTICAL_DIVIDER_X_OFFSET);
     }
 
     // A try/catch node can ONLY have two successors. When one of these

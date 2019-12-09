@@ -53,7 +53,7 @@ public class TryCatchVerticalDivider {
         }
     }
 
-    public void setPosition(int x, int y) {
+    public void setXPosition(int x) {
         this.x = x;
     }
 }

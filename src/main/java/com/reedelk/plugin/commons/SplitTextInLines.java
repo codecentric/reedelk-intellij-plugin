@@ -10,6 +10,9 @@ import java.util.regex.Pattern;
 
 public class SplitTextInLines {
 
+    private SplitTextInLines() {
+    }
+
     public static List<String> from(String text, Pattern regex) {
         if (StringUtils.isBlank(text)) {
             return Collections.emptyList();

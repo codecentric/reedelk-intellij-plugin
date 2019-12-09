@@ -4,6 +4,9 @@ import com.reedelk.runtime.commons.FileExtension;
 
 public class ScriptResourceUtil {
 
+    private ScriptResourceUtil() {
+    }
+
     /**
      * Input: /test/something/myscript -> Output: test/something/myscript.js
      * Input: test/something/myscript -> Output: test/something/myscript.js

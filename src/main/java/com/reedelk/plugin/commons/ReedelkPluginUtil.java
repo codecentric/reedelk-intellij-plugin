@@ -7,6 +7,9 @@ import com.intellij.util.DisposeAwareRunnable;
 
 public class ReedelkPluginUtil {
 
+    private ReedelkPluginUtil() {
+    }
+
     public static void runWhenInitialized(final Project project, final Runnable r) {
         if (project.isDisposed()) {
             // nothing to do.
