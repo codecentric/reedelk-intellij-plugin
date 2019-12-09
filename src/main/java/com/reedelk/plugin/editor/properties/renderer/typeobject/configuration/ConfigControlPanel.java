@@ -6,8 +6,8 @@ import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 import com.reedelk.plugin.editor.properties.commons.DialogConfirmAction;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.service.module.ConfigService;
-import com.reedelk.plugin.service.module.impl.ConfigMetadata;
-import com.reedelk.plugin.service.module.impl.NewConfigMetadata;
+import com.reedelk.plugin.service.module.impl.configuration.ConfigMetadata;
+import com.reedelk.plugin.service.module.impl.configuration.NewConfigMetadata;
 import com.reedelk.runtime.commons.JsonParser;
 
 import java.util.UUID;

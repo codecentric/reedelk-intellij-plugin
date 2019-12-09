@@ -8,7 +8,7 @@ import com.reedelk.plugin.component.serializer.ConfigurationSerializer;
 import com.reedelk.plugin.fixture.ComponentNode1;
 import com.reedelk.plugin.fixture.ComponentNode2;
 import com.reedelk.plugin.fixture.ComponentNode3;
-import com.reedelk.plugin.service.module.impl.ConfigMetadata;
+import com.reedelk.plugin.service.module.impl.configuration.ConfigMetadata;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 

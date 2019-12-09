@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.module.impl;
+package com.reedelk.plugin.service.module.impl.configuration;
 
 import com.reedelk.plugin.component.domain.ComponentDataHolder;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;

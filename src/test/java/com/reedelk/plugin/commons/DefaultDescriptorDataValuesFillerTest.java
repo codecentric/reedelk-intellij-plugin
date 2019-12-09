@@ -1,7 +1,7 @@
 package com.reedelk.plugin.commons;
 
 import com.reedelk.plugin.component.domain.*;
-import com.reedelk.plugin.service.module.impl.ConfigMetadata;
+import com.reedelk.plugin.service.module.impl.configuration.ConfigMetadata;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

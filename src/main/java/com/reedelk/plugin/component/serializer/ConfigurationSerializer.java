@@ -2,7 +2,7 @@ package com.reedelk.plugin.component.serializer;
 
 import com.reedelk.plugin.commons.JsonObjectFactory;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
-import com.reedelk.plugin.service.module.impl.ConfigMetadata;
+import com.reedelk.plugin.service.module.impl.configuration.ConfigMetadata;
 import com.reedelk.runtime.commons.JsonParser;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;

@@ -8,7 +8,7 @@ import com.reedelk.plugin.commons.FlowErrorResponse;
 import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.maven.MavenPackageGoal;
 import com.reedelk.plugin.service.module.HttpService;
-import com.reedelk.plugin.service.module.impl.HttpResponse;
+import com.reedelk.plugin.service.module.impl.http.HttpResponse;
 import com.reedelk.runtime.rest.api.InternalAPI;
 import com.reedelk.runtime.rest.api.hotswap.v1.HotSwapPOSTReq;
 import com.reedelk.runtime.rest.api.module.v1.ModuleDELETEReq;

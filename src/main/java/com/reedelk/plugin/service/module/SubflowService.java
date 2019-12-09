@@ -2,7 +2,7 @@ package com.reedelk.plugin.service.module;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleServiceManager;
-import com.reedelk.plugin.service.module.impl.SubflowMetadata;
+import com.reedelk.plugin.service.module.impl.subflow.SubflowMetadata;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

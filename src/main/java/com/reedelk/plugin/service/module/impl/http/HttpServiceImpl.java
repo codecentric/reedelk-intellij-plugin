@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.module.impl;
+package com.reedelk.plugin.service.module.impl.http;
 
 import com.reedelk.plugin.service.module.HttpService;
 import okhttp3.*;

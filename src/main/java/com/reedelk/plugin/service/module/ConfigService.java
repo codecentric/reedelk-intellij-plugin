@@ -3,7 +3,7 @@ package com.reedelk.plugin.service.module;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleServiceManager;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
-import com.reedelk.plugin.service.module.impl.ConfigMetadata;
+import com.reedelk.plugin.service.module.impl.configuration.ConfigMetadata;
 import org.jetbrains.annotations.NotNull;
 
 public interface ConfigService {

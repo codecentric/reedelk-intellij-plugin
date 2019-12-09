@@ -17,7 +17,7 @@ import com.reedelk.plugin.editor.properties.commons.PropertiesPanelHolder;
 import com.reedelk.plugin.editor.properties.renderer.PropertyTypeRenderer;
 import com.reedelk.plugin.editor.properties.renderer.PropertyTypeRendererFactory;
 import com.reedelk.plugin.editor.properties.renderer.commons.StringInputField;
-import com.reedelk.plugin.service.module.impl.ConfigMetadata;
+import com.reedelk.plugin.service.module.impl.configuration.ConfigMetadata;
 
 import javax.swing.*;
 import java.awt.*;

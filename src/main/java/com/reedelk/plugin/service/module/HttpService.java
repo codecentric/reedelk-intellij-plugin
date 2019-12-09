@@ -2,7 +2,7 @@ package com.reedelk.plugin.service.module;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleServiceManager;
-import com.reedelk.plugin.service.module.impl.HttpResponse;
+import com.reedelk.plugin.service.module.impl.http.HttpResponse;
 import okhttp3.MediaType;
 import org.jetbrains.annotations.NotNull;
 

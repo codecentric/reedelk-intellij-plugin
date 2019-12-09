@@ -6,7 +6,7 @@ import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DialogConfirmAction;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.service.module.ScriptService;
-import com.reedelk.plugin.service.module.impl.ScriptResource;
+import com.reedelk.plugin.service.module.impl.script.ScriptResource;
 
 import static com.intellij.icons.AllIcons.Actions.EditSource;
 import static com.intellij.icons.AllIcons.General.Add;

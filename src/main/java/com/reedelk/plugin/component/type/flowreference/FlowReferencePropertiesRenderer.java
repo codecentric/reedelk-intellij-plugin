@@ -12,7 +12,7 @@ import com.reedelk.plugin.editor.properties.commons.FormBuilder;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.SubflowService;
-import com.reedelk.plugin.service.module.impl.SubflowMetadata;
+import com.reedelk.plugin.service.module.impl.subflow.SubflowMetadata;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 

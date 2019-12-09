@@ -3,7 +3,7 @@ package com.reedelk.plugin.editor.properties.renderer.typeobject.configuration;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.reedelk.plugin.editor.properties.renderer.commons.InputChangeListener;
-import com.reedelk.plugin.service.module.impl.ConfigMetadata;
+import com.reedelk.plugin.service.module.impl.configuration.ConfigMetadata;
 import com.reedelk.runtime.api.commons.StringUtils;
 
 import javax.swing.*;

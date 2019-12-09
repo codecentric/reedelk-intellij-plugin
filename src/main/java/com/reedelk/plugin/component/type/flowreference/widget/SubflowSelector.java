@@ -2,7 +2,7 @@ package com.reedelk.plugin.component.type.flowreference.widget;
 
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.ListCellRendererWrapper;
-import com.reedelk.plugin.service.module.impl.SubflowMetadata;
+import com.reedelk.plugin.service.module.impl.subflow.SubflowMetadata;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
