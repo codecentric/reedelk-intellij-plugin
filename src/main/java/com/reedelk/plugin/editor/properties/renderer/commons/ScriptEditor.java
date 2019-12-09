@@ -26,9 +26,9 @@ public class ScriptEditor extends DisposablePanel implements DocumentListener {
 
     private static final Logger LOG = Logger.getInstance(ScriptEditor.class);
 
-    private transient final Module module;
-    private transient final EditorEx editor;
-    private transient final Document document;
+    private final transient Module module;
+    private final transient EditorEx editor;
+    private final transient Document document;
     private transient ScriptEditorChangeListener listener;
 
     public ScriptEditor(Module module, @NotNull Document document, ContainerContext context) {
@@ -85,5 +85,6 @@ public class ScriptEditor extends DisposablePanel implements DocumentListener {
     }
 
     protected void configure(EditorEx editor) {
+        // optionally add extra configuration to the editor.
     }
 }

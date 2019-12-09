@@ -1,6 +1,5 @@
 package com.reedelk.plugin.editor.designer;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.util.messages.MessageBusConnection;
@@ -47,8 +46,6 @@ public abstract class DesignerPanel extends DisposablePanel implements
         MouseMotionListener, MouseListenerAdapter, SnapshotListener,
         DropActionListener, HintResultListener, DrawableListener,
         ComponentListUpdateNotifier {
-
-    private static final Logger LOG = Logger.getInstance(DesignerPanel.class);
 
     static final int TOP_PADDING = 80;
 
@@ -185,14 +182,14 @@ public abstract class DesignerPanel extends DisposablePanel implements
             // Select the component under the current mouse coordinates
             int x = event.getX();
             int y = event.getY();
-            Optional<GraphNode> selected = graph.nodes()
+            Optional<GraphNode> toSelectNode = graph.nodes()
                     .stream()
                     .filter(node -> node.contains(DesignerPanel.this, x, y))
                     .findFirst();
 
-            if (selected.isPresent()) {
+            if (toSelectNode.isPresent()) {
 
-                GraphNode selectedNde = selected.get();
+                GraphNode selectedNde = toSelectNode.get();
 
                 unselect();
                 select(selectedNde);

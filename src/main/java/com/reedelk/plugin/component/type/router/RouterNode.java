@@ -118,7 +118,7 @@ public class RouterNode extends AbstractScopedGraphNode {
     @Override
     protected void drawRemoveComponentIcon(Graphics2D graphics, ImageObserver observer) {
         int topRightX = x() + Half.of(icon.width()) - ICON_X_OFFSET;
-        int topRightY = y() - icon.topHalfHeight(graphics) + Half.of(iconRemoveComponent.height());
+        int topRightY = y() - icon.topHalfHeight() + Half.of(iconRemoveComponent.height());
         iconRemoveComponent.setPosition(topRightX, topRightY);
         iconRemoveComponent.draw(graphics, observer);
     }

@@ -206,7 +206,7 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
 
     @Override
     public int topHalfHeight(Graphics2D graphics) {
-        return icon.topHalfHeight(graphics);
+        return icon.topHalfHeight();
     }
 
 
@@ -268,7 +268,7 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
 
     protected void drawRemoveComponentIcon(Graphics2D graphics, ImageObserver observer) {
         int topRightX = x() + Half.of(icon.width());
-        int topRightY = y() - icon.topHalfHeight(graphics) + Icon.Dimension.TOP_PADDING;
+        int topRightY = y() - icon.topHalfHeight() + Icon.Dimension.TOP_PADDING;
         iconRemoveComponent.setPosition(topRightX, topRightY);
         iconRemoveComponent.draw(graphics, observer);
     }

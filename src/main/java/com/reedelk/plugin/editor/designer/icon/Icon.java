@@ -96,7 +96,7 @@ public class Icon {
                 Dimension.BOTTOM_PADDING;
     }
 
-    public int topHalfHeight(Graphics2D graphics) {
+    public int topHalfHeight() {
         return Dimension.ICON_HEIGHT + Dimension.TOP_PADDING;
     }
 

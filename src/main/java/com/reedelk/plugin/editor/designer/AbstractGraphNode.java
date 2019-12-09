@@ -73,25 +73,25 @@ public abstract class AbstractGraphNode implements GraphNode {
 
     @Override
     public void mouseMoved(DrawableListener listener, MouseEvent event) {
-        int x = event.getX();
-        int y = event.getY();
-        if (icon.contains(x, y)) {
+        int mouseMovedX = event.getX();
+        int mouseMovedY = event.getY();
+        if (icon.contains(mouseMovedX, mouseMovedY)) {
             listener.setTheCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
         // The hand cursor over the remove icon is visible
         // if and only if the icon is selected.
-        if (selected && iconRemoveComponent.withinBounds(x, y)) {
+        if (selected && iconRemoveComponent.withinBounds(mouseMovedX, mouseMovedY)) {
             listener.setTheCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
     }
 
     @Override
     public void mousePressed(DrawableListener listener, MouseEvent event) {
-        int x = event.getX();
-        int y = event.getY();
+        int mousePressedX = event.getX();
+        int mousePressedY = event.getY();
         // If the mouse x,y coordinates are within the remove icon,
         // and the component is currently selected, then we remove the component.
-        if (selected && iconRemoveComponent.withinBounds(x, y)) {
+        if (selected && iconRemoveComponent.withinBounds(mousePressedX, mousePressedY)) {
             listener.removeComponent(this);
         }
     }
@@ -118,7 +118,7 @@ public abstract class AbstractGraphNode implements GraphNode {
 
     @Override
     public int topHalfHeight(Graphics2D graphics) {
-        return icon.topHalfHeight(graphics);
+        return icon.topHalfHeight();
     }
 
     @Override
@@ -214,7 +214,7 @@ public abstract class AbstractGraphNode implements GraphNode {
 
     protected void drawRemoveComponentIcon(Graphics2D graphics, ImageObserver observer) {
         int topRightX = x() + Half.of(icon.width());
-        int topRightY = y() - icon.topHalfHeight(graphics) + Icon.Dimension.TOP_PADDING;
+        int topRightY = y() - icon.topHalfHeight() + Icon.Dimension.TOP_PADDING;
         iconRemoveComponent.setPosition(topRightX, topRightY);
         iconRemoveComponent.draw(graphics, observer);
     }

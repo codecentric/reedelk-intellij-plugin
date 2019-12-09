@@ -13,7 +13,8 @@ import static com.reedelk.plugin.editor.designer.icon.Icon.Dimension.HALF_ICON_W
 
 public class ComponentTransferableHandler extends TransferHandler {
 
-    public int getSourceActions(JComponent Source) {
+    @Override
+    public int getSourceActions(JComponent source) {
         return COPY_OR_MOVE;
     }
 
