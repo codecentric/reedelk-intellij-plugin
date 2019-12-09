@@ -15,8 +15,11 @@ import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.ComponentsPackage;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpdateNotifier;
 import com.reedelk.plugin.topic.ReedelkTopics;
+import com.reedelk.runtime.api.commons.StringUtils;
 
 import java.util.*;
+
+import static java.util.stream.Collectors.toList;
 
 public class CompletionServiceImpl implements CompletionService, CompilationStatusListener, ComponentListUpdateNotifier {
 
@@ -42,6 +45,13 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
         this.defaultComponentTrie = new Trie();
         this.customFunctionsTrie = new Trie();
         PluginExecutor.getInstance().submit(this::initialize);
+    }
+
+    @Override
+    public List<Suggestion> contextVariablesOf(String componentFullyQualifiedName) {
+        return completionTokensOf(componentFullyQualifiedName, StringUtils.EMPTY).stream()
+                .filter(suggestion -> suggestion.getType() == SuggestionType.VARIABLE)
+                .collect(toList());
     }
 
     @Override

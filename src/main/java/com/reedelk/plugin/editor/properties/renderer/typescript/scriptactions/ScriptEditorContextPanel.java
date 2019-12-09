@@ -1,9 +1,11 @@
 package com.reedelk.plugin.editor.properties.renderer.typescript.scriptactions;
 
+import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
+import com.reedelk.plugin.service.module.CompletionService;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -22,7 +24,7 @@ class ScriptEditorContextPanel extends DisposablePanel {
             JBUI.Borders.customLine(Colors.SCRIPT_EDITOR_CONTEXT_PANEL_BORDER_BOTTOM, 0, 0, 1, 0),
             JBUI.Borders.empty(5));
 
-    ScriptEditorContextPanel() {
+    ScriptEditorContextPanel(Module module, String componentFullyQualifiedName) {
         setLayout(new BorderLayout());
         setBorder(MATTE_BORDER);
 
@@ -34,14 +36,13 @@ class ScriptEditorContextPanel extends DisposablePanel {
         panelTitleWrapper.add(panelTitle, NORTH);
         add(panelTitleWrapper, NORTH);
 
-
-        // TODO: Should not be hardcoded the context variables!
         JPanel panelVariablesWrapper = new DisposablePanel();
         BoxLayout boxLayout = new BoxLayout(panelVariablesWrapper, BoxLayout.PAGE_AXIS);
         panelVariablesWrapper.setLayout(boxLayout);
         panelVariablesWrapper.setBorder(JBUI.Borders.empty(5));
-        panelVariablesWrapper.add(new ContextVariableLabel("message", "Message"));
-        panelVariablesWrapper.add(new ContextVariableLabel("context", "Context"));
+
+        CompletionService.getInstance(module).contextVariablesOf(componentFullyQualifiedName).forEach(suggestion ->
+                panelVariablesWrapper.add(new ContextVariableLabel(suggestion.getToken(), suggestion.getTypeName())));
 
         JBScrollPane panelVariablesScrollPane = new JBScrollPane(panelVariablesWrapper);
         panelVariablesScrollPane.setBorder(JBUI.Borders.empty());

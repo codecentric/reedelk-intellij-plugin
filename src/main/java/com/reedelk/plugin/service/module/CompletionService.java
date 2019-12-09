@@ -13,6 +13,8 @@ public interface CompletionService {
         return ModuleServiceManager.getService(module, CompletionService.class);
     }
 
+    List<Suggestion> contextVariablesOf(String componentFullyQualifiedName);
+
     List<Suggestion> completionTokensOf(String componentFullyQualifiedName, String token);
 
 }
