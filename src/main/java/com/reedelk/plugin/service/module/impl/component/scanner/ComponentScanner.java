@@ -29,10 +29,7 @@ public class ComponentScanner {
         return filterOutUnknownClassComponents(descriptors);
     }
 
-    public List<ComponentDescriptor> from(String targetPath) {
-        ScanResult scanResult = instantiateScanner()
-                .overrideClasspath(targetPath)
-                .scan();
+    public List<ComponentDescriptor> from(ScanResult scanResult) {
         List<ComponentDescriptor> descriptors = componentDescriptorsFrom(scanResult);
         // Unknown components are filtered out
         return filterOutUnknownClassComponents(descriptors);
@@ -54,7 +51,13 @@ public class ComponentScanner {
         return componentDescriptors;
     }
 
-    private ClassGraph instantiateScanner() {
+    public static ScanResult scanResultFrom(String targetPath) {
+        return instantiateScanner()
+                .overrideClasspath(targetPath)
+                .scan();
+    }
+
+    private static ClassGraph instantiateScanner() {
         return new ClassGraph()
                 .enableFieldInfo()
                 .enableAnnotationInfo()

@@ -9,16 +9,19 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.ModuleInfo;
+import com.reedelk.plugin.component.domain.AutoCompleteContributorDefinition;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
 import com.reedelk.plugin.component.type.unknown.UnknownComponentDescriptorWrapper;
 import com.reedelk.plugin.executor.PluginExecutor;
 import com.reedelk.plugin.maven.MavenUtils;
 import com.reedelk.plugin.service.module.ComponentService;
+import com.reedelk.plugin.service.module.impl.component.scanner.AutoCompleteContributorScanner;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpdateNotifier;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentScanner;
 import com.reedelk.plugin.topic.ReedelkTopics;
 import com.reedelk.runtime.component.Stop;
 import com.reedelk.runtime.component.Unknown;
+import io.github.classgraph.ScanResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.project.MavenImportListener;
 import org.jetbrains.idea.maven.project.MavenProject;
@@ -36,9 +39,11 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     private final Project project;
     private final ComponentListUpdateNotifier publisher;
     private final ComponentScanner componentScanner = new ComponentScanner();
+    private final AutoCompleteContributorScanner autoCompleteContributorScanner = new AutoCompleteContributorScanner();
 
     private final ComponentsPackage systemComponents;
     private final Map<String, ComponentsPackage> mavenJarComponentsMap = new HashMap<>();
+    private final List<AutoCompleteContributorDefinition> autoCompleteContributorDefinitions = new ArrayList<>();
 
     private ComponentsPackage moduleComponents;
 
@@ -96,6 +101,11 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     }
 
     @Override
+    public Collection<AutoCompleteContributorDefinition> getAutoCompleteContributorDefinition() {
+        return Collections.unmodifiableList(autoCompleteContributorDefinitions) ;
+    }
+
+    @Override
     public void importFinished(@NotNull Collection<MavenProject> importedProjects, @NotNull List<Module> newModules) {
         asyncUpdateMavenDependenciesComponents();
     }
@@ -111,6 +121,8 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         PluginExecutor.getInstance().submit(() -> {
             // Remove all components before updating them
             mavenJarComponentsMap.clear();
+            autoCompleteContributorDefinitions.clear();
+
             publisher.onComponentListUpdate(module);
 
             // Update the components definitions from maven project
@@ -119,10 +131,16 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                         .filter(artifact -> ModuleInfo.isModule(artifact.getFile()))
                         .map(artifact -> artifact.getFile().getPath()).collect(toList())
                         .forEach(jarFilePath -> {
-                            List<ComponentDescriptor> components = componentScanner.from(jarFilePath);
+                            ScanResult scanResult = ComponentScanner.scanResultFrom(jarFilePath);
+                            List<ComponentDescriptor> components = componentScanner.from(scanResult);
                             String moduleName = ModuleInfo.getModuleName(jarFilePath);
                             ComponentsPackage descriptor = new ComponentsPackage(moduleName, components);
                             mavenJarComponentsMap.put(jarFilePath, descriptor);
+
+                            List<String> from = autoCompleteContributorScanner.from(scanResult);
+                            autoCompleteContributorDefinitions.add(
+                                    new AutoCompleteContributorDefinition(false, false, from));
+
                             publisher.onComponentListUpdate(module);
                         });
             });
@@ -139,7 +157,8 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                     .classes()
                     .getUrls();
             stream(modulePaths).forEach(modulePath -> {
-                List<ComponentDescriptor> components = componentScanner.from(modulePath);
+                ScanResult scanResult = ComponentScanner.scanResultFrom(modulePath);
+                List<ComponentDescriptor> components = componentScanner.from(scanResult);
                 MavenUtils.getMavenProject(project, module.getName()).ifPresent(mavenProject -> {
                     String moduleName = mavenProject.getDisplayName();
                     moduleComponents = new ComponentsPackage(moduleName, components);

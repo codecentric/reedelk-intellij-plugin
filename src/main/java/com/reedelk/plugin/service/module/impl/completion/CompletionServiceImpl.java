@@ -6,34 +6,25 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import com.reedelk.plugin.commons.ModuleInfo;
 import com.reedelk.plugin.commons.SuggestionDefinitionMatcher;
+import com.reedelk.plugin.component.domain.AutoCompleteContributorDefinition;
 import com.reedelk.plugin.executor.PluginExecutor;
-import com.reedelk.plugin.maven.MavenUtils;
 import com.reedelk.plugin.message.SuggestionsBundle;
 import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.ComponentService;
-import com.reedelk.plugin.service.module.impl.completion.scanner.AutoCompleteContributorScanner;
 import com.reedelk.plugin.service.module.impl.component.ComponentsPackage;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpdateNotifier;
 import com.reedelk.plugin.topic.ReedelkTopics;
 
 import java.util.*;
 
-import static java.util.stream.Collectors.toList;
-
 public class CompletionServiceImpl implements CompletionService, CompilationStatusListener, ComponentListUpdateNotifier {
 
     private final Trie defaultComponentTrie;
-    private final Trie customFunctionsTrie;
+    private Trie customFunctionsTrie;
     private final Module module;
 
     private final Map<String, Trie> componentTriesMap = new HashMap<>();
-
-    private boolean initInProgress = false;
-    private boolean updateInProgress = false;
-
-    private AutoCompleteContributorScanner scanner = new AutoCompleteContributorScanner();
 
 
     // Custom Functions are global so they are always present.
@@ -55,10 +46,6 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
 
     @Override
     public List<Suggestion> completionTokensOf(String componentFullyQualifiedName, String token) {
-        synchronized (this) {
-            if (initInProgress || updateInProgress) return Collections.emptyList();
-        }
-
         Optional<List<Suggestion>> componentSuggestions =
                 componentTriesMap.getOrDefault(componentFullyQualifiedName, defaultComponentTrie).findByPrefix(token);
         Optional<List<Suggestion>> customFunctionsSuggestions =
@@ -76,16 +63,7 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
 
     private void updateComponents(Module module) {
         // Add suggestions from
-        PluginExecutor.getInstance().submit(() -> {
-            synchronized (this) {
-                updateInProgress = true;
-            }
-            internalUpdateComponents(module);
-
-            synchronized (this) {
-                updateInProgress = false;
-            }
-        });
+        PluginExecutor.getInstance().submit(() -> internalUpdateComponents(module));
     }
 
     private void internalUpdateComponents(Module module) {
@@ -112,6 +90,15 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
                         componentTriesMap.put(fullyQualifiedName, trie);
                     });
                 })));
+
+        Collection<AutoCompleteContributorDefinition> autoCompleteDefinitions =
+                ComponentService.getInstance(module).getAutoCompleteContributorDefinition();
+        customFunctionsTrie = new Trie();
+        autoCompleteDefinitions.forEach(definition -> definition.getContributions().forEach(contribution -> {
+            SuggestionDefinitionMatcher.of(contribution).ifPresent(parsed ->
+                    customFunctionsTrie.insert(parsed.getMiddle(), parsed.getRight(), parsed.getLeft()));
+        }));
+
     }
 
     private void registerDefaultSuggestionContribution(Trie trie, String suggestionContributor) {
@@ -122,33 +109,10 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
     }
 
     private void initialize() {
-        synchronized (this) {
-            initInProgress = true;
-        }
-
-        PluginExecutor.getInstance().submit(new Runnable() {
-            @Override
-            public void run() {
-                registerDefaultSuggestionContribution(defaultComponentTrie, "message");
-                registerDefaultSuggestionContribution(defaultComponentTrie, "context");
-
-                MavenUtils.getMavenProject(module.getProject(), module.getName()).ifPresent(mavenProject ->
-                        mavenProject.getDependencies().stream()
-                                .filter(artifact -> ModuleInfo.isModule(artifact.getFile()))
-                                .map(artifact -> artifact.getFile().getPath()).collect(toList())
-                                .forEach(jarFilePath -> {
-                                    scanner.from(jarFilePath).forEach(contribution ->
-                                            SuggestionDefinitionMatcher.of(contribution).ifPresent(parsed ->
-                                                    customFunctionsTrie.insert(parsed.getMiddle(), parsed.getRight(), parsed.getLeft())));
-                                }));
-
-                internalUpdateComponents(module);
-
-                synchronized (this) {
-                    initInProgress = false;
-                }
-            }
+        PluginExecutor.getInstance().submit(() -> {
+            registerDefaultSuggestionContribution(defaultComponentTrie, "message");
+            registerDefaultSuggestionContribution(defaultComponentTrie, "context");
+            internalUpdateComponents(module);
         });
-
     }
 }
