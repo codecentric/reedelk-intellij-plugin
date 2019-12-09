@@ -19,6 +19,7 @@ import com.reedelk.runtime.api.commons.StringUtils;
 
 import java.util.*;
 
+import static com.reedelk.plugin.topic.ReedelkTopics.COMPLETION_EVENT_TOPIC;
 import static java.util.stream.Collectors.toList;
 
 public class CompletionServiceImpl implements CompletionService, CompilationStatusListener, ComponentListUpdateNotifier {
@@ -28,7 +29,7 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
     private final Module module;
 
     private final Map<String, Trie> componentTriesMap = new HashMap<>();
-
+    private OnCompletionEvent onCompletionEvent;
 
     // Custom Functions are global so they are always present.
     // Need to define default script suggestions and specific suggestions for
@@ -41,6 +42,7 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
         MessageBusConnection connection = messageBus.connect();
         connection.subscribe(CompilerTopics.COMPILATION_STATUS, this);
         connection.subscribe(ReedelkTopics.COMPONENTS_UPDATE_EVENTS, this);
+        this.onCompletionEvent = messageBus.syncPublisher(COMPLETION_EVENT_TOPIC);
 
         this.defaultComponentTrie = new Trie();
         this.customFunctionsTrie = new Trie();
@@ -108,6 +110,8 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
             SuggestionDefinitionMatcher.of(contribution).ifPresent(parsed ->
                     customFunctionsTrie.insert(parsed.getMiddle(), parsed.getRight(), parsed.getLeft()));
         }));
+
+        onCompletionEvent.onCompletionsUpdated();
 
     }
 

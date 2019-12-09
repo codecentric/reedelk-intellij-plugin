@@ -17,4 +17,8 @@ public interface CompletionService {
 
     List<Suggestion> completionTokensOf(String componentFullyQualifiedName, String token);
 
+    interface OnCompletionEvent {
+        void onCompletionsUpdated();
+    }
+
 }
