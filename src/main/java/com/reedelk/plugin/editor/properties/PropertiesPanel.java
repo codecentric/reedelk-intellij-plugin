@@ -60,7 +60,7 @@ public class PropertiesPanel extends DisposablePanel implements CurrentSelection
 
         // We display the tool window if an item is selected
         // and it is still not visible yet.
-        ToolWindowUtils.show(project);
+        ToolWindowUtils.showPropertiesPanelToolWindow(project);
 
         if (selectedItem instanceof SelectableItemComponent) {
             createFlowComponentContent(selectedItem);
@@ -166,7 +166,7 @@ public class PropertiesPanel extends DisposablePanel implements CurrentSelection
     }
 
     private void setToolWindowTitle(String newToolWindowTitle) {
-        ToolWindowUtils.get(project).setTitle(newToolWindowTitle);
+        ToolWindowUtils.setPropertiesPanelToolWindowTitle(project, newToolWindowTitle);
     }
 
     // Before disposing it we hide the panel so that all the properties

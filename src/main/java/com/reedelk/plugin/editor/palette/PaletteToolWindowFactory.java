@@ -11,6 +11,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class PaletteToolWindowFactory implements ToolWindowFactory {
 
+    public static final String ID = "ESB Components";
+
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         JBPanel panel = new PalettePanel(project);

@@ -5,6 +5,7 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
+import com.reedelk.plugin.editor.palette.PaletteToolWindowFactory;
 import com.reedelk.plugin.editor.properties.PropertiesPanelToolWindowFactory;
 import org.jetbrains.annotations.NotNull;
 
@@ -58,12 +59,16 @@ public class ToolWindowUtils {
                 .filter(content -> contentDisplayName.equals(content.getDisplayName())).findFirst();
     }
 
-    public static void show(Project project) {
-        ToolWindow toolWindow = get(project);
-        if (!toolWindow.isVisible()) {
-            toolWindow.show(() -> {
-            });
-        }
+    public static void setPropertiesPanelToolWindowTitle(Project project, String newToolWindowTitle) {
+        get(project, PropertiesPanelToolWindowFactory.ID).ifPresent(toolWindow -> toolWindow.setTitle(newToolWindowTitle));
+    }
+
+    public static void showPropertiesPanelToolWindow(Project project) {
+        get(project, PropertiesPanelToolWindowFactory.ID).ifPresent(ToolWindowUtils::show);
+    }
+
+    public static void showComponentsPaletteToolWindow(Project project) {
+        get(project, PaletteToolWindowFactory.ID).ifPresent(ToolWindowUtils::show);
     }
 
     public static Optional<ToolWindow> get(Project project, String id) {
@@ -74,5 +79,12 @@ public class ToolWindowUtils {
         return ToolWindowManager
                 .getInstance(project)
                 .getToolWindow(PropertiesPanelToolWindowFactory.ID);
+    }
+
+    private static void show(ToolWindow toolWindow) {
+        if (!toolWindow.isVisible()) {
+            toolWindow.show(() -> {
+            });
+        }
     }
 }

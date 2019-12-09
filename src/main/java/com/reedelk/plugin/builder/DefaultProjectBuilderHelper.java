@@ -4,6 +4,7 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.message.ReedelkBundle;
 import com.reedelk.plugin.template.ConfigProperties;
 import com.reedelk.plugin.template.FlowOrSubFlowFileProperties;
@@ -49,6 +50,8 @@ class DefaultProjectBuilderHelper extends AbstractProjectBuilderHelper {
                 createFromTemplate(project, HelloWorld.FLOW, propertiesValues, flowsDir)
                         .ifPresent(virtualFile -> FileEditorManager.getInstance(project).openFile(virtualFile, true));
             });
+
+            ToolWindowUtils.showComponentsPaletteToolWindow(project);
         });
     }
 }
