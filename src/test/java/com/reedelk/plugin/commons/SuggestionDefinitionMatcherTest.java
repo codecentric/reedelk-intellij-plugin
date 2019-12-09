@@ -1,6 +1,6 @@
-package com.reedelk.plugin.service.module.impl.completion;
+package com.reedelk.plugin.commons;
 
-import com.reedelk.plugin.service.module.CompletionService;
+import com.reedelk.plugin.service.module.impl.completion.SuggestionType;
 import org.apache.commons.lang3.tuple.Triple;
 import org.junit.jupiter.api.Test;
 
@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class CompletionServiceTest {
+class SuggestionDefinitionMatcherTest {
 
     @Test
     void shouldCorrectlyParseSuggestionWithTypeAndTypeName() {
@@ -16,7 +16,7 @@ class CompletionServiceTest {
         String suggestionTokenDefinition = "message[FUNCTION:Message]";
 
         // When
-        Optional<Triple<String, SuggestionType, String>> parsed = CompletionService.parseSuggestionToken(suggestionTokenDefinition);
+        Optional<Triple<String, SuggestionType, String>> parsed = SuggestionDefinitionMatcher.of(suggestionTokenDefinition);
 
         // Then
         assertThat(parsed).isPresent();
@@ -33,7 +33,7 @@ class CompletionServiceTest {
         String suggestionTokenDefinition = "message[VARIABLE:Message[]]";
 
         // When
-        Optional<Triple<String, SuggestionType, String>> parsed = CompletionService.parseSuggestionToken(suggestionTokenDefinition);
+        Optional<Triple<String, SuggestionType, String>> parsed = SuggestionDefinitionMatcher.of(suggestionTokenDefinition);
 
         // Then
         assertThat(parsed).isPresent();
