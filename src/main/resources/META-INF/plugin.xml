@@ -67,8 +67,8 @@
         <configurationType implementation="com.reedelk.plugin.runconfig.module.ModuleRunConfigurationType"/>
 
         <!-- Palette and Component properties tool window -->
-        <toolWindow id="ESB Components" anchor="right" icon="/icons/ModulePackage.png"
-                    factoryClass="com.reedelk.plugin.editor.palette.PaletteFactory"/>
+        <toolWindow id="ESB Components" anchor="right" icon="/icons/ModulePackageToolWindow.png"
+                    factoryClass="com.reedelk.plugin.editor.palette.PaletteToolWindowFactory"/>
 
         <toolWindow id="ESB Component properties" anchor="bottom"
                     factoryClass="com.reedelk.plugin.editor.properties.PropertiesPanelToolWindowFactory"/>
