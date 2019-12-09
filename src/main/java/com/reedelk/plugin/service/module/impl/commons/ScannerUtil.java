@@ -30,10 +30,6 @@ public class ScannerUtil {
         return fieldInfo.hasAnnotation(clazz.getName());
     }
 
-    public static boolean hasNotAnnotation(FieldInfo fieldInfo, Class<?> clazz) {
-        return !hasAnnotation(fieldInfo, clazz);
-    }
-
     public static boolean isVisibleProperty(FieldInfo fieldInfo) {
         return hasAnnotation(fieldInfo, Property.class) &&
                 hasNotAnnotation(fieldInfo, Hidden.class);
@@ -179,13 +175,17 @@ public class ScannerUtil {
                 Collapsible.YES : Collapsible.NO;
     }
 
+    public static boolean isHidden(ClassInfo classInfo) {
+        return classInfo.hasAnnotation(Hidden.class.getName());
+    }
+
     private static Object getParameterValue(AnnotationInfo info, String parameterName) {
         AnnotationParameterValueList parameterValues = info.getParameterValues();
         AnnotationParameterValue parameterValue = parameterValues.get(parameterName);
         return parameterValue == null ? parameterValue : parameterValue.getValue();
     }
 
-    public static boolean isHidden(ClassInfo classInfo) {
-        return classInfo.hasAnnotation(Hidden.class.getName());
+    private static boolean hasNotAnnotation(FieldInfo fieldInfo, Class<?> clazz) {
+        return !hasAnnotation(fieldInfo, clazz);
     }
 }

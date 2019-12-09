@@ -11,7 +11,6 @@ import com.reedelk.plugin.component.domain.AutoCompleteContributorDefinition;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.executor.PluginExecutor;
-import com.reedelk.plugin.message.SuggestionsBundle;
 import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.ComponentsPackage;
@@ -21,6 +20,7 @@ import com.reedelk.runtime.api.commons.StringUtils;
 
 import java.util.*;
 
+import static com.reedelk.plugin.message.SuggestionsBundle.DefaultSuggestions;
 import static com.reedelk.plugin.topic.ReedelkTopics.COMPLETION_EVENT_TOPIC;
 import static java.util.stream.Collectors.toList;
 
@@ -108,9 +108,9 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
             } else {
                 propertyDescriptor.getAutoCompleteContributorDefinition().ifPresent(definition -> {
                     final Trie trie = new Trie();
-                    if (definition.isMessage()) registerDefaultSuggestionContribution(trie, "message");
-                    if (definition.isContext()) registerDefaultSuggestionContribution(trie, "context");
-                    if (definition.isError()) registerDefaultSuggestionContribution(trie, "error");
+                    if (definition.isMessage()) registerDefaultSuggestionContribution(trie, DefaultSuggestions.MESSAGE);
+                    if (definition.isContext()) registerDefaultSuggestionContribution(trie, DefaultSuggestions.CONTEXT);
+                    if (definition.isError()) registerDefaultSuggestionContribution(trie, DefaultSuggestions.ERROR);
 
                     List<String> contributions = definition.getContributions();
                     contributions.forEach(customSuggestion ->
@@ -122,17 +122,16 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
         });
     }
 
-    private void registerDefaultSuggestionContribution(Trie trie, String suggestionContributor) {
-        String[] tokens = SuggestionsBundle.message(suggestionContributor).split(",");
-        Arrays.stream(tokens).forEach(suggestionTokenDefinition ->
+    private void registerDefaultSuggestionContribution(Trie trie, DefaultSuggestions defaultSuggestions) {
+        Arrays.stream(defaultSuggestions.tokens()).forEach(suggestionTokenDefinition ->
                 SuggestionDefinitionMatcher.of(suggestionTokenDefinition).ifPresent(parsed ->
                         trie.insert(parsed.getMiddle(), parsed.getRight(), parsed.getLeft())));
     }
 
     private void initialize() {
         PluginExecutor.getInstance().submit(() -> {
-            registerDefaultSuggestionContribution(defaultComponentTrie, "message");
-            registerDefaultSuggestionContribution(defaultComponentTrie, "context");
+            registerDefaultSuggestionContribution(defaultComponentTrie, DefaultSuggestions.MESSAGE);
+            registerDefaultSuggestionContribution(defaultComponentTrie, DefaultSuggestions.CONTEXT);
             internalUpdateComponents(module);
         });
     }

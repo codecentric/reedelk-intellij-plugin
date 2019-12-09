@@ -30,4 +30,20 @@ public class SuggestionsBundle {
         }
         return bundle;
     }
+
+    public enum DefaultSuggestions {
+        MESSAGE("message"),
+        CONTEXT("context"),
+        ERROR("error");
+
+        String name;
+
+        DefaultSuggestions(String name) {
+            this.name = name;
+        }
+
+        public String[] tokens() {
+            return SuggestionsBundle.message(name).split(",");
+        }
+    }
 }
