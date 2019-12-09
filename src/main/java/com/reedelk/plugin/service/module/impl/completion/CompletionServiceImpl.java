@@ -7,63 +7,108 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.ModuleInfo;
+import com.reedelk.plugin.commons.SuggestionDefinitionMatcher;
 import com.reedelk.plugin.executor.PluginExecutor;
 import com.reedelk.plugin.maven.MavenUtils;
 import com.reedelk.plugin.message.SuggestionsBundle;
 import com.reedelk.plugin.service.module.CompletionService;
+import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.completion.scanner.AutoCompleteContributorScanner;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.idea.maven.project.MavenImportListener;
-import org.jetbrains.idea.maven.project.MavenProject;
+import com.reedelk.plugin.service.module.impl.component.ComponentsPackage;
+import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpdateNotifier;
+import com.reedelk.plugin.topic.ReedelkTopics;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
-// TODO: You are already processing the properties in the component service. I think that
-//  it would not make sense to loop through all the objects here again  in order  to fetch
-//  the components properties' contribution annotations. This service should subscribe to the ComponentUpdated
-//  and then loop through the updated component to actually register in the tree the stuff.
-//  The logic should also update the tree as a Whole, without keep writing in it. and synchronize its access to access
-//  the rebuilt tree.
-public class CompletionServiceImpl implements CompletionService, MavenImportListener, CompilationStatusListener {
+public class CompletionServiceImpl implements CompletionService, CompilationStatusListener, ComponentListUpdateNotifier {
 
-    private final Trie trie;
-    private final Project project;
+    private final Trie defaultComponentTrie;
+    private final Trie customFunctionsTrie;
     private final Module module;
 
+    private final Map<String, Trie> componentTriesMap = new HashMap<>();
+
+
+    private AutoCompleteContributorScanner scanner = new AutoCompleteContributorScanner();
+
+
+    // Custom Functions are global so they are always present.
+    // Need to define default script suggestions and specific suggestions for
+    // Component by module, and component fully qualified name and property.
     public CompletionServiceImpl(Project project, Module module) {
-        this.project = project;
         this.module = module;
 
         MessageBus messageBus = project.getMessageBus();
 
         MessageBusConnection connection = messageBus.connect();
-        connection.subscribe(MavenImportListener.TOPIC, this);
         connection.subscribe(CompilerTopics.COMPILATION_STATUS, this);
+        connection.subscribe(ReedelkTopics.COMPONENTS_UPDATE_EVENTS, this);
 
-        this.trie = new Trie();
+        this.defaultComponentTrie = new Trie();
+        this.customFunctionsTrie = new Trie();
         PluginExecutor.getInstance().submit(this::initialize);
+        updateComponents(module);
+    }
+
+
+    @Override
+    public List<Suggestion> completionTokensOf(String componentFullyQualifiedName, String token) {
+        Optional<List<Suggestion>> componentSuggestions =
+                componentTriesMap.getOrDefault(componentFullyQualifiedName, defaultComponentTrie).findByPrefix(token);
+        Optional<List<Suggestion>> customFunctionsSuggestions =
+                customFunctionsTrie.findByPrefix(token);
+        List<Suggestion> results = new ArrayList<>();
+        componentSuggestions.ifPresent(results::addAll);
+        customFunctionsSuggestions.ifPresent(results::addAll);
+        return results;
     }
 
     @Override
-    public Optional<List<Suggestion>> completionTokensOf(String token) {
-        return trie.findByPrefix(token);
+    public void onComponentListUpdate(Module module) {
+        updateComponents(module);
     }
 
-    @Override
-    public void importFinished(@NotNull Collection<MavenProject> importedProjects, @NotNull List<Module> newModules) {
+    private void updateComponents(Module module) {
+        // Add suggestions from
+        PluginExecutor.getInstance().submit(() -> {
+            Collection<ComponentsPackage> componentsPackages = ComponentService.getInstance(module).getModulesDescriptors();
+            componentsPackages.forEach(componentsPackage -> componentsPackage.getModuleComponents()
+                    .forEach(descriptor -> descriptor.getPropertiesDescriptors().forEach(propertyDescriptor -> {
+                        propertyDescriptor.getAutoCompleteContributorDefinition().ifPresent(definition -> {
+                            String fullyQualifiedName = descriptor.getFullyQualifiedName();
+                            boolean context = definition.isContext();
+                            boolean message = definition.isMessage();
+                            List<String> contributions = definition.getContributions();
 
+                            final Trie trie = new Trie();
+                            if (message) {
+                                registerDefaultSuggestionContribution(trie, "message");
+                            }
+                            if (context) {
+                                registerDefaultSuggestionContribution(trie, "context");
+                            }
+                            contributions.forEach(customSuggestion ->
+                                    SuggestionDefinitionMatcher.of(customSuggestion).ifPresent(parsed ->
+                                            trie.insert(parsed.getMiddle(), parsed.getRight(), parsed.getLeft())));
+
+                            componentTriesMap.put(fullyQualifiedName, trie);
+                        });
+                    })));
+        });
     }
 
-    private AutoCompleteContributorScanner scanner = new AutoCompleteContributorScanner();
+    private void registerDefaultSuggestionContribution(Trie trie, String suggestionContributor) {
+        String[] tokens = SuggestionsBundle.message(suggestionContributor).split(",");
+        Arrays.stream(tokens).forEach(suggestionTokenDefinition ->
+                SuggestionDefinitionMatcher.of(suggestionTokenDefinition).ifPresent(parsed ->
+                        trie.insert(parsed.getMiddle(), parsed.getRight(), parsed.getLeft())));
+    }
 
     private void initialize() {
-        registerDefaultSuggestionContribution("message");
-        registerDefaultSuggestionContribution("context");
+        registerDefaultSuggestionContribution(defaultComponentTrie, "message");
+        registerDefaultSuggestionContribution(defaultComponentTrie, "context");
 
         MavenUtils.getMavenProject(module.getProject(), module.getName()).ifPresent(mavenProject -> {
             mavenProject.getDependencies().stream()
@@ -71,15 +116,8 @@ public class CompletionServiceImpl implements CompletionService, MavenImportList
                     .map(artifact -> artifact.getFile().getPath()).collect(toList())
                     .forEach(jarFilePath ->
                             scanner.from(jarFilePath).forEach(contribution ->
-                                    CompletionService.parseSuggestionToken(contribution).ifPresent(parsed ->
-                                            trie.insert(parsed.getMiddle(), parsed.getRight(), parsed.getLeft()))));
+                                    SuggestionDefinitionMatcher.of(contribution).ifPresent(parsed ->
+                                            customFunctionsTrie.insert(parsed.getMiddle(), parsed.getRight(), parsed.getLeft()))));
         });
-    }
-
-    private void registerDefaultSuggestionContribution(String suggestionContributor) {
-        String[] tokens = SuggestionsBundle.message(suggestionContributor).split(",");
-        Arrays.stream(tokens).forEach(suggestionTokenDefinition ->
-                CompletionService.parseSuggestionToken(suggestionTokenDefinition).ifPresent(parsed ->
-                        trie.insert(parsed.getMiddle(), parsed.getRight(), parsed.getLeft())));
     }
 }

@@ -9,7 +9,7 @@ import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.util.Key;
+import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.runtime.api.commons.ScriptUtils;
 import org.jetbrains.annotations.NotNull;
@@ -18,11 +18,11 @@ import java.awt.*;
 
 import static com.intellij.openapi.command.WriteCommandAction.writeCommandAction;
 import static com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditorConstants.JAVASCRIPT_FILE_TYPE;
+import static com.reedelk.plugin.userdata.ScriptEditorKey.COMPONENT_FULLY_QUALIFIED_NAME;
+import static com.reedelk.plugin.userdata.ScriptEditorKey.MODULE_NAME;
 import static java.awt.BorderLayout.CENTER;
 
 public class ScriptEditor extends DisposablePanel implements DocumentListener {
-
-    public static final Key<String> MODULE_NAME = Key.create("com.reedelk.plugin.editor.module.name");
 
     private static final Logger LOG = Logger.getInstance(ScriptEditor.class);
 
@@ -31,13 +31,13 @@ public class ScriptEditor extends DisposablePanel implements DocumentListener {
     private transient final Document document;
     private transient ScriptEditorChangeListener listener;
 
-
-    public ScriptEditor(@NotNull Module module, @NotNull Document document) {
+    public ScriptEditor(Module module, @NotNull Document document, ContainerContext context) {
         this.module = module;
         this.document = document;
         this.editor = (EditorEx) EditorFactory.getInstance()
                 .createEditor(document, module.getProject(), JAVASCRIPT_FILE_TYPE, false);
         this.editor.putUserData(MODULE_NAME, module.getName());
+        this.editor.putUserData(COMPONENT_FULLY_QUALIFIED_NAME, context.componentFullyQualifiedName());
         configure(this.editor);
 
         document.addDocumentListener(this);

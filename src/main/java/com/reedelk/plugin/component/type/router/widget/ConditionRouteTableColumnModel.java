@@ -6,6 +6,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.TableColumnModelUtils;
 import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
+import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.TableDynamicCellEditor;
 import com.reedelk.plugin.editor.properties.commons.TableDynamicCellRenderer;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -24,9 +25,9 @@ class ConditionRouteTableColumnModel extends DefaultTableColumnModel implements 
     private final transient TableDynamicCellRenderer cellRenderer;
     private final transient TableDynamicCellEditor conditionCellEditor;
 
-    ConditionRouteTableColumnModel(Module module) {
-        cellRenderer = new TableDynamicCellRenderer(module);
-        conditionCellEditor = new TableDynamicCellEditor(module);
+    ConditionRouteTableColumnModel(Module module, ContainerContext context) {
+        cellRenderer = new TableDynamicCellRenderer(module, context);
+        conditionCellEditor = new TableDynamicCellEditor(module, context);
 
         // Column 0 (Condition)
         TableColumn conditionColumn = new TableColumn(0);

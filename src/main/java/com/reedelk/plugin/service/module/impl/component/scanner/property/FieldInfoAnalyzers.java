@@ -18,7 +18,8 @@ public class FieldInfoAnalyzers {
             new WhenFieldInfoAnalyzer(),
             new HintFieldInfoAnalyzer(),
             new DisplayNameFieldInfoAnalyzer(),
-            new DefaultValueFieldInfoAnalyzer());
+            new DefaultValueFieldInfoAnalyzer(),
+            new AutoCompleteContributorFieldInfoAnalyzer());
 
     public static ComponentPropertyDescriptor descriptor(FieldInfo propertyInfo, ComponentAnalyzerContext context) {
         ComponentPropertyDescriptor.Builder builder = ComponentPropertyDescriptor.builder();

@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -16,8 +17,8 @@ public class ComponentPropertyDescriptor {
     private String displayName;
     private String propertyName;
     private String defaultValue;
-
     private TypeDescriptor propertyType;
+    private AutoCompleteContributorDefinition autoCompleteContributorDefinition;
 
     private final List<WhenDefinition> whenDefinitions = new ArrayList<>();
 
@@ -55,6 +56,10 @@ public class ComponentPropertyDescriptor {
         return whenDefinitions;
     }
 
+    public Optional<AutoCompleteContributorDefinition> getAutoCompleteContributorDefinition() {
+        return Optional.ofNullable(autoCompleteContributorDefinition);
+    }
+
     @NotNull
     @SuppressWarnings("unchecked")
     public <T extends TypeDescriptor> T getPropertyType() {
@@ -71,6 +76,7 @@ public class ComponentPropertyDescriptor {
         private TypeDescriptor propertyType;
 
         private List<WhenDefinition> whenDefinitions = new ArrayList<>();
+        private AutoCompleteContributorDefinition autoCompleteContributionsDefinition;
 
         public Builder type(TypeDescriptor type) {
             this.propertyType = type;
@@ -102,6 +108,10 @@ public class ComponentPropertyDescriptor {
             return this;
         }
 
+        public void autoComplete(AutoCompleteContributorDefinition definition) {
+            this.autoCompleteContributionsDefinition = definition;
+        }
+
         public ComponentPropertyDescriptor build() {
             checkState(propertyName != null, "property name");
             checkState(propertyType != null, "property type");
@@ -113,6 +123,7 @@ public class ComponentPropertyDescriptor {
             descriptor.defaultValue = defaultValue;
             descriptor.propertyType = propertyType;
             descriptor.whenDefinitions.addAll(whenDefinitions);
+            descriptor.autoCompleteContributorDefinition = autoCompleteContributionsDefinition;
             return descriptor;
         }
     }

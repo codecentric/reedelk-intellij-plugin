@@ -56,7 +56,8 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
 
         List<ComponentPropertyDescriptor> objectProperties = objectDescriptor.getObjectProperties();
 
-        PropertiesPanelHolder propertiesPanel = new PropertiesPanelHolder(dataHolder, objectProperties, snapshot);
+        PropertiesPanelHolder propertiesPanel = new PropertiesPanelHolder(
+                objectDescriptor.getTypeFullyQualifiedName(), dataHolder, objectProperties, snapshot);
 
         objectProperties.forEach(objectProperty -> {
 

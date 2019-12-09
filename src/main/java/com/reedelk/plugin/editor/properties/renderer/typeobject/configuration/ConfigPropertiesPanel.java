@@ -40,7 +40,8 @@ class ConfigPropertiesPanel extends DisposablePanel {
 
         ConfigMetadataHeaderPanel headerPanel = new ConfigMetadataHeaderPanel(configMetadata, isNewConfig);
 
-        ConfigPropertiesPanelHolder propertiesPanel = new ConfigPropertiesPanelHolder(configMetadata, descriptors);
+        ConfigPropertiesPanelHolder propertiesPanel =
+                new ConfigPropertiesPanelHolder(objectDescriptor.getTypeFullyQualifiedName(), configMetadata, descriptors);
 
         descriptors.forEach(propertyDescriptor -> {
 
@@ -97,8 +98,8 @@ class ConfigPropertiesPanel extends DisposablePanel {
 
     class ConfigPropertiesPanelHolder extends PropertiesPanelHolder {
 
-        ConfigPropertiesPanelHolder(ConfigMetadata configMetadata, List<ComponentPropertyDescriptor> descriptors) {
-            super(configMetadata, descriptors);
+        ConfigPropertiesPanelHolder(String componentFullyQualifiedName, ConfigMetadata configMetadata, List<ComponentPropertyDescriptor> descriptors) {
+            super(componentFullyQualifiedName, configMetadata, descriptors);
         }
 
         /**

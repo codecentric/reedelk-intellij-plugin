@@ -8,12 +8,16 @@ import com.intellij.openapi.project.Project;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.PlainTextTokenTypes;
 import com.intellij.util.ProcessingContext;
-import com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditor;
 import com.reedelk.plugin.service.module.CompletionService;
+import com.reedelk.plugin.service.module.impl.completion.Suggestion;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Optional;
+
+import static com.reedelk.plugin.userdata.ScriptEditorKey.COMPONENT_FULLY_QUALIFIED_NAME;
+import static com.reedelk.plugin.userdata.ScriptEditorKey.MODULE_NAME;
 
 public class ScriptCompletionContributor extends CompletionContributor {
 
@@ -27,26 +31,26 @@ public class ScriptCompletionContributor extends CompletionContributor {
 
         @Override
         protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {
-            String moduleName = parameters.getEditor().getUserData(ScriptEditor.MODULE_NAME);
+            String moduleName = parameters.getEditor().getUserData(MODULE_NAME);
+            String componentFullyQualifiedName = parameters.getEditor().getUserData(COMPONENT_FULLY_QUALIFIED_NAME);
             Project project = parameters.getEditor().getProject();
             if (moduleName != null && project != null) {
                 Module module = ModuleManager.getInstance(project).findModuleByName(moduleName);
                 if (module != null) {
-                    addCompletions(module, parameters, result);
+                    addCompletions(componentFullyQualifiedName, module, parameters, result);
                 }
             }
         }
 
-        private void addCompletions(Module module, CompletionParameters parameters, CompletionResultSet result) {
+        private void addCompletions(String componentFullyQualifiedName, Module module, CompletionParameters parameters, CompletionResultSet result) {
             String text = parameters.getPosition().getText();
             int offset = parameters.getOffset();
             findLastToken(text, offset).ifPresent(lastToken -> {
                 CompletionService instance = CompletionService.getInstance(module);
-                instance.completionTokensOf(lastToken).ifPresent(strings -> strings.forEach(suggestion -> {
-                    result.addElement(LookupElementBuilder.create(suggestion.getToken())
-                            .withTypeText(suggestion.getTypeName())
-                            .withIcon(suggestion.getType().icon()));
-                }));
+                List<Suggestion> suggestions = instance.completionTokensOf(componentFullyQualifiedName, lastToken);
+                suggestions.forEach(suggestion -> result.addElement(LookupElementBuilder.create(suggestion.getToken())
+                        .withTypeText(suggestion.getTypeName())
+                        .withIcon(suggestion.getType().icon())));
             });
         }
 

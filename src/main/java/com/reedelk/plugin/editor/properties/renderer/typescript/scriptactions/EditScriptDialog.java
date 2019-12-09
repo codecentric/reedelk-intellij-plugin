@@ -8,6 +8,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.ModuleUtils;
+import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,7 +30,7 @@ public class EditScriptDialog extends DialogWrapper {
     private final DisposablePanel editorPanel;
 
 
-    EditScriptDialog(@NotNull Module module, String scriptFilePathAndName) {
+    EditScriptDialog(@NotNull Module module, String scriptFilePathAndName, ContainerContext context) {
         super(module.getProject(), false);
         setTitle(message("script.dialog.edit.title"));
         setResizable(true);
@@ -38,7 +39,7 @@ public class EditScriptDialog extends DialogWrapper {
         this.editorPanel = ModuleUtils.getScriptsFolder(module)
                 .flatMap(scriptsFolder -> ofNullable(VfsUtil.findFile(Paths.get(scriptsFolder, scriptFilePathAndName), true))).map((Function<VirtualFile, DisposablePanel>) scriptVirtualFile -> {
                     Document document = FileDocumentManager.getInstance().getDocument(scriptVirtualFile);
-                    return new ScriptEditorDefault(module, document);
+                    return new ScriptEditorDefault(module, document, context);
                 }).orElse(null);
 
         init();

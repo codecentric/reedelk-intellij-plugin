@@ -22,9 +22,9 @@ public class TableDynamicCellEditor implements TableCellEditor, Disposable {
     private final DisposablePanel content;
     private CellEditorListener listener;
 
-    public TableDynamicCellEditor(Module module) {
+    public TableDynamicCellEditor(Module module, ContainerContext context) {
         JLabel codeIcon = new JLabel(Code);
-        this.editor = new DynamicValueScriptEditor(module);
+        this.editor = new DynamicValueScriptEditor(module, context);
         this.content = ContainerFactory.createLabelNextToComponent(codeIcon, editor, false);
     }
 

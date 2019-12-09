@@ -49,7 +49,7 @@ abstract class BaseMapPropertyRenderer implements PropertyTypeRenderer {
             return tabbed;
         });
 
-        JComponent content = getContent(module, propertyAccessor);
+        JComponent content = getContent(module, propertyAccessor, context);
         tabbedPane.addTab(propertyDescriptor.getDisplayName(), content);
         return tabbedPane;
     }
@@ -80,7 +80,7 @@ abstract class BaseMapPropertyRenderer implements PropertyTypeRenderer {
         context.addComponent(holder);
     }
 
-    protected abstract JComponent getContent(Module module, PropertyAccessor propertyAccessor);
+    protected abstract JComponent getContent(Module module, PropertyAccessor propertyAccessor, @NotNull ContainerContext context);
 
     private Optional<DisposableTabbedPane> getGroupTabbedPane(ComponentPropertyDescriptor propertyDescriptor, ContainerContext context) {
         TypeMapDescriptor propertyType = propertyDescriptor.getPropertyType();

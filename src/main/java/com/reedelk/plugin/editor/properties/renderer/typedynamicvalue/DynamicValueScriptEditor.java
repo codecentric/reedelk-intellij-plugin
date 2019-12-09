@@ -9,9 +9,9 @@ import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
+import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditor;
 import com.reedelk.runtime.api.commons.StringUtils;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
@@ -22,8 +22,8 @@ import static java.util.Collections.singletonList;
 
 public class DynamicValueScriptEditor extends ScriptEditor {
 
-    public DynamicValueScriptEditor(@NotNull Module module) {
-        super(module, emptyDocument());
+    public DynamicValueScriptEditor(Module module, ContainerContext context) {
+        super(module, emptyDocument(), context);
     }
 
     private static Document emptyDocument() {

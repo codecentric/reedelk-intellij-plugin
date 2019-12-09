@@ -15,12 +15,12 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 import java.util.function.BiPredicate;
-import java.util.function.Predicate;
 
 import static com.intellij.util.ui.JBUI.Borders;
 
 public class PropertiesPanelHolder extends DisposablePanel implements ContainerContext {
 
+    private final String componentFullyQualifiedName;
     private final transient FlowSnapshot snapshot;
     private final transient ComponentDataHolder dataHolder;
 
@@ -30,11 +30,13 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
     private final transient Map<String, PropertyAccessor> propertyAccessors = new HashMap<>();
     private final transient Map<String, List<InputChangeListener>> propertyChangeListeners = new HashMap<>();
 
-    public PropertiesPanelHolder(@NotNull ComponentDataHolder dataHolder,
+    public PropertiesPanelHolder(@NotNull String componentFullyQualifiedName,
+                                 @NotNull ComponentDataHolder dataHolder,
                                  @NotNull List<ComponentPropertyDescriptor> descriptors,
                                  @Nullable FlowSnapshot snapshot) {
         this.snapshot = snapshot;
         this.dataHolder = dataHolder;
+        this.componentFullyQualifiedName = componentFullyQualifiedName;
         this.descriptors.addAll(descriptors);
 
         setLayout(new GridBagLayout());
@@ -46,8 +48,8 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
      * Constructor used by a configuration panel Dialog. The configuration panel Dialog does not
      * immediately change the values on the Graph snapshot since it writes the values in a a config file.
      */
-    public PropertiesPanelHolder(ComponentDataHolder dataHolder, List<ComponentPropertyDescriptor> descriptors) {
-        this(dataHolder, descriptors, null);
+    public PropertiesPanelHolder(@NotNull String componentFullyQualifiedName, ComponentDataHolder dataHolder, List<ComponentPropertyDescriptor> descriptors) {
+        this(componentFullyQualifiedName, dataHolder, descriptors, null);
     }
 
     @Override
@@ -61,11 +63,6 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
     @Override
     public <T> T propertyValueFrom(String propertyName) {
         return propertyAccessors.get(propertyName).get();
-    }
-
-    @Override
-    public Optional<ComponentPropertyDescriptor> getPropertyDescriptor(Predicate<ComponentPropertyDescriptor> filter) {
-        return descriptors.stream().filter(filter).findFirst();
     }
 
     @Override
@@ -89,6 +86,11 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
             propertyChangeListeners.get(propertyName)
                     .forEach(inputChangeListener -> inputChangeListener.onChange(object));
         }
+    }
+
+    @Override
+    public String componentFullyQualifiedName() {
+        return componentFullyQualifiedName;
     }
 
     public PropertyAccessor getAccessor(String propertyName) {

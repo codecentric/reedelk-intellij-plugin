@@ -30,13 +30,13 @@ public class GenericComponentPropertiesRenderer extends AbstractComponentPropert
 
         List<ComponentPropertyDescriptor> descriptors = componentData.getPropertiesDescriptors();
 
-        return getDefaultPropertiesPanel(componentData, descriptors);
+        return getDefaultPropertiesPanel(componentData.getFullyQualifiedName(), componentData, descriptors);
     }
 
     @NotNull
-    protected PropertiesPanelHolder getDefaultPropertiesPanel(ComponentData componentData, List<ComponentPropertyDescriptor> descriptors) {
+    protected PropertiesPanelHolder getDefaultPropertiesPanel(String componentFullyQualifiedName, ComponentData componentData, List<ComponentPropertyDescriptor> descriptors) {
 
-        PropertiesPanelHolder propertiesPanel = new PropertiesPanelHolder(componentData, descriptors, snapshot);
+        PropertiesPanelHolder propertiesPanel = new PropertiesPanelHolder(componentFullyQualifiedName, componentData, descriptors, snapshot);
 
         descriptors.forEach(descriptor -> {
 

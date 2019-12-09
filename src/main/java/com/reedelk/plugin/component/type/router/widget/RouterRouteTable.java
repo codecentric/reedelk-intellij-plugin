@@ -1,6 +1,7 @@
 package com.reedelk.plugin.component.type.router.widget;
 
 import com.intellij.openapi.module.Module;
+import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.PropertyTable;
 
@@ -13,9 +14,9 @@ import static java.awt.BorderLayout.NORTH;
 
 public class RouterRouteTable extends DisposablePanel {
 
-    public RouterRouteTable(Module module, ConditionRouteTableModel model) {
+    public RouterRouteTable(Module module, ConditionRouteTableModel model, ContainerContext context) {
 
-        TableColumnModel tableColumnModel = new ConditionRouteTableColumnModel(module);
+        TableColumnModel tableColumnModel = new ConditionRouteTableColumnModel(module, context);
         PropertyTable propertyTable = new PropertyTable(model, tableColumnModel);
 
         setLayout(new BorderLayout());

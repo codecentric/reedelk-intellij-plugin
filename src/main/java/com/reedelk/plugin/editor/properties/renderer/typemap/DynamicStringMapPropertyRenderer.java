@@ -3,6 +3,7 @@ package com.reedelk.plugin.editor.properties.renderer.typemap;
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.commons.VectorUtils;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
+import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.runtime.api.commons.ScriptUtils;
 
 import javax.swing.*;
@@ -14,7 +15,7 @@ public class DynamicStringMapPropertyRenderer extends BaseMapPropertyRenderer {
 
     @SuppressWarnings("unchecked")
     @Override
-    protected JComponent getContent(Module module, PropertyAccessor propertyAccessor) {
+    protected JComponent getContent(Module module, PropertyAccessor propertyAccessor, ContainerContext context) {
         MapTableModel tableModel = new MapTableModel(vectors -> {
             // Model Update
             Map<String, String> updated = new LinkedHashMap<>();
@@ -33,6 +34,6 @@ public class DynamicStringMapPropertyRenderer extends BaseMapPropertyRenderer {
         }
 
         // Return the content
-        return new DynamicMapPropertyTabContainer(module, tableModel);
+        return new DynamicMapPropertyTabContainer(module, tableModel, context);
     }
 }

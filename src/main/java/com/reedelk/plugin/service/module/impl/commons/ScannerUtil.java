@@ -10,8 +10,14 @@ import com.reedelk.runtime.api.script.dynamicmap.DynamicMap;
 import com.reedelk.runtime.api.script.dynamicvalue.DynamicValue;
 import io.github.classgraph.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import static java.util.Arrays.stream;
+import static java.util.Collections.unmodifiableList;
 
 public class ScannerUtil {
 
@@ -37,6 +43,23 @@ public class ScannerUtil {
         AnnotationParameterValueList parameterValues = info.getParameterValues();
         AnnotationParameterValue parameterValue = parameterValues.get(parameterName);
         return parameterValue != null ? (String) parameterValue.getValue() : null;
+    }
+
+    public static List<String> stringListParameterValueFrom(AnnotationInfo info, String parameterName) {
+        AnnotationParameterValueList parameterValues = info.getParameterValues();
+        AnnotationParameterValue parameterValue = parameterValues.get(parameterName);
+        if (parameterValue == null) return unmodifiableList(new ArrayList<>());
+        Object[] array = (Object[]) parameterValue.getValue();
+        return array == null ?
+                unmodifiableList(new ArrayList<>()) :
+                stream(array).map(o -> (String) o).collect(Collectors.toList());
+    }
+
+    public static boolean booleanParameterValueFrom(AnnotationInfo info, String parameterName, boolean defaultValue) {
+        AnnotationParameterValueList parameterValues = info.getParameterValues();
+        if (parameterValues == null) return defaultValue;
+        AnnotationParameterValue parameterValue = parameterValues.get(parameterName);
+        return parameterValue == null ? defaultValue : (boolean) parameterValue.getValue();
     }
 
     @SuppressWarnings("unchecked")

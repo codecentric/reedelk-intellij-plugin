@@ -4,6 +4,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.PopupUtils;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
+import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.renderer.typescript.scriptactions.ScriptActionsPanel;
 import com.reedelk.plugin.service.module.ScriptService;
@@ -33,10 +34,10 @@ public class ScriptInputField extends DisposablePanel implements ScriptServiceIm
     private transient final ScriptActionsPanel scriptActionsPanel;
     private transient final ScriptSelectorCombo scriptSelectorCombo;
 
-    ScriptInputField(Module module, PropertyAccessor propertyAccessor) {
+    ScriptInputField(Module module, PropertyAccessor propertyAccessor, ContainerContext context) {
         this.module = module;
         this.propertyAccessor = propertyAccessor;
-        this.scriptActionsPanel = new ScriptActionsPanel(module);
+        this.scriptActionsPanel = new ScriptActionsPanel(module, context);
         this.scriptSelectorCombo = new ScriptSelectorCombo();
 
         this.connect = module.getMessageBus().connect();

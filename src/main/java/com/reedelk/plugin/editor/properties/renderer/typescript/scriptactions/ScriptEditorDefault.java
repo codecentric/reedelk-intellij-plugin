@@ -4,6 +4,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import com.intellij.ui.components.JBLabel;
+import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.DisposableThreeComponentsSplitter;
 import com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditor;
@@ -25,8 +26,8 @@ class ScriptEditorDefault extends DisposablePanel {
     static final Dimension DEFAULT_SCRIPT_DIMENSION = new Dimension(800, 400);
     private static final boolean HORIZONTAL = false;
 
-    ScriptEditorDefault(Module module, Document document) {
-        ScriptEditor editor = new ScriptEditor(module, document);
+    ScriptEditorDefault(Module module, Document document, ContainerContext context) {
+        ScriptEditor editor = new ScriptEditor(module, document, context);
 
         ThreeComponentsSplitter splitter = new DisposableThreeComponentsSplitter(HORIZONTAL);
         splitter.setFirstComponent(new ScriptEditorContextPanel());

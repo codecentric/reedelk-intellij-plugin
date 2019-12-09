@@ -2,10 +2,12 @@ package com.reedelk.plugin.component.type.router;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.component.domain.ComponentData;
+import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.type.generic.GenericComponentPropertiesRenderer;
 import com.reedelk.plugin.component.type.router.widget.ConditionRouteTableModel;
 import com.reedelk.plugin.component.type.router.widget.RouterRouteTable;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
+import com.reedelk.plugin.editor.properties.commons.PropertiesPanelHolder;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
 
@@ -26,13 +28,18 @@ public class RouterPropertiesRenderer extends GenericComponentPropertiesRenderer
 
     @Override
     public DisposablePanel render(GraphNode routerNode) {
-        DisposablePanel genericProperties = super.render(routerNode);
 
         ComponentData componentData = routerNode.componentData();
+
+        List<ComponentPropertyDescriptor> descriptors = componentData.getPropertiesDescriptors();
+
+        PropertiesPanelHolder genericProperties =
+                super.getDefaultPropertiesPanel(componentData.getFullyQualifiedName(), componentData, descriptors);
+
         List<RouterConditionRoutePair> conditionRoutePairList = componentData.get(DATA_CONDITION_ROUTE_PAIRS);
 
         ConditionRouteTableModel model = new ConditionRouteTableModel(conditionRoutePairList, snapshot);
-        RouterRouteTable routerRouteTable = new RouterRouteTable(module, model);
+        RouterRouteTable routerRouteTable = new RouterRouteTable(module, model, genericProperties);
         DisposablePanel routerTableContainer =
                 createObjectTypeContainer(routerRouteTable, message("router.table.container.title"));
 

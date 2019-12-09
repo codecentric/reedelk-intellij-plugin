@@ -23,8 +23,8 @@ class DynamicMapPropertyTabContainer extends DisposablePanel {
 
     private static final String[] COLUMN_NAMES = {"Key", "Value"};
 
-    DynamicMapPropertyTabContainer(Module module, PropertyTable.PropertyTableModel tableModel) {
-        MapTableColumnModel columnModel = new MapTableColumnModel(module);
+    DynamicMapPropertyTabContainer(Module module, PropertyTable.PropertyTableModel tableModel, ContainerContext context) {
+        MapTableColumnModel columnModel = new MapTableColumnModel(module, context);
         PropertyTable propertyTable = new PropertyTable(tableModel, columnModel);
 
         JPanel actionPanel = new TableActionPanel(propertyTable);
@@ -48,9 +48,9 @@ class DynamicMapPropertyTabContainer extends DisposablePanel {
         private transient TableDynamicCellEditor cellEditor;
         private transient TableDynamicCellRenderer cellRenderer;
 
-        MapTableColumnModel(Module  module) {
-            this.cellEditor = new TableDynamicCellEditor(module);
-            this.cellRenderer = new TableDynamicCellRenderer(module);
+        MapTableColumnModel(Module  module, ContainerContext context) {
+            this.cellEditor = new TableDynamicCellEditor(module, context);
+            this.cellRenderer = new TableDynamicCellRenderer(module, context);
 
             // Column 1 (the map key)
             TableColumn keyColumn = new TableColumn(0);

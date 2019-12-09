@@ -4,6 +4,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Fonts;
 import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
+import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.renderer.typedynamicvalue.DynamicValueScriptEditor;
@@ -25,10 +26,10 @@ public class DynamicValueField extends DisposablePanel {
     private DisposablePanel inputFieldContainer;
     private transient ScriptEditorChangeListener listener;
 
-    public DynamicValueField(Module module, DynamicValueInputFieldAdapter inputFieldAdapter) {
+    public DynamicValueField(Module module, DynamicValueInputFieldAdapter inputFieldAdapter, ContainerContext context) {
         this.inputFieldAdapter = inputFieldAdapter;
 
-        this.editor = new DynamicValueScriptEditor(module);
+        this.editor = new DynamicValueScriptEditor(module, context);
 
         this.scriptContainer = createScriptModePanel(editor);
         this.inputFieldContainer = createInputFieldContainer();
