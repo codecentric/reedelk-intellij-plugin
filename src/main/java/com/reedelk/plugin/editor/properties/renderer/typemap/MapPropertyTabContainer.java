@@ -8,6 +8,7 @@ import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
 import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.PropertyTable;
+import com.reedelk.plugin.topic.ReedelkTopics;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableColumnModel;
@@ -35,7 +36,7 @@ class MapPropertyTabContainer extends DisposablePanel {
         add(propertyTable);
 
         busConnection = module.getProject().getMessageBus().connect();
-        busConnection.subscribe(CommitPropertiesListener.COMMIT_TOPIC, columnModel);
+        busConnection.subscribe(ReedelkTopics.COMMIT_COMPONENT_PROPERTIES_EVENTS, columnModel);
     }
 
     @Override

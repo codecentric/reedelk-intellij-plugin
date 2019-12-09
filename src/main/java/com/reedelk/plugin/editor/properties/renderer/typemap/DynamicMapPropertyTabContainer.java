@@ -8,6 +8,7 @@ import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.TableColumnModelUtils;
 import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
 import com.reedelk.plugin.editor.properties.commons.*;
+import com.reedelk.plugin.topic.ReedelkTopics;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableColumnModel;
@@ -65,7 +66,7 @@ class DynamicMapPropertyTabContainer extends DisposablePanel {
             addColumn(valueColumn);
 
             busConnection = module.getProject().getMessageBus().connect();
-            busConnection.subscribe(CommitPropertiesListener.COMMIT_TOPIC, this);
+            busConnection.subscribe(ReedelkTopics.COMMIT_COMPONENT_PROPERTIES_EVENTS, this);
         }
 
         @Override

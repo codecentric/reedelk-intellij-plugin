@@ -1,7 +1,6 @@
 package com.reedelk.plugin.service.project;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.util.messages.Topic;
 import com.reedelk.plugin.service.project.impl.SelectableItem;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,8 +16,6 @@ public interface DesignerSelectionManager {
 
 
     interface CurrentSelectionListener {
-
-        Topic<CurrentSelectionListener> CURRENT_SELECTION_TOPIC = Topic.create("Designer Panel Selection", CurrentSelectionListener.class);
 
         void onSelection(SelectableItem selectedItem);
 

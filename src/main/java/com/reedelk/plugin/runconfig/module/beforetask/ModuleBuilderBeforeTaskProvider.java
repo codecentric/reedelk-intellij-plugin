@@ -25,8 +25,8 @@ import org.jetbrains.idea.maven.utils.MavenLog;
 
 import javax.swing.*;
 
-import static com.reedelk.plugin.editor.properties.CommitPropertiesListener.COMMIT_TOPIC;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
+import static com.reedelk.plugin.topic.ReedelkTopics.COMMIT_COMPONENT_PROPERTIES_EVENTS;
 import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
 
 public class ModuleBuilderBeforeTaskProvider extends BeforeRunTaskProvider<ModuleBuilderBeforeTask> {
@@ -109,7 +109,7 @@ public class ModuleBuilderBeforeTaskProvider extends BeforeRunTaskProvider<Modul
                 // We must commit so that listeners e.g Tables can fire "stopCellEditing" to write
                 // the values into the DataHolders so that they can be written into the document.
                 MessageBus messageBus = env.getProject().getMessageBus();
-                CommitPropertiesListener publisher = messageBus.syncPublisher(COMMIT_TOPIC);
+                CommitPropertiesListener publisher = messageBus.syncPublisher(COMMIT_COMPONENT_PROPERTIES_EVENTS);
                 publisher.onCommit();
 
                 // By saving all documents we force the File listener

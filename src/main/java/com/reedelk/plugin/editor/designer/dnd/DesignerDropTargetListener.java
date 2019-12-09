@@ -16,7 +16,7 @@ import java.awt.dnd.DropTargetListener;
 import java.awt.image.ImageObserver;
 import java.util.Optional;
 
-import static com.reedelk.plugin.editor.properties.CommitPropertiesListener.COMMIT_TOPIC;
+import static com.reedelk.plugin.topic.ReedelkTopics.COMMIT_COMPONENT_PROPERTIES_EVENTS;
 import static java.awt.dnd.DnDConstants.ACTION_COPY_OR_MOVE;
 
 public class DesignerDropTargetListener implements DropTargetListener {
@@ -37,7 +37,7 @@ public class DesignerDropTargetListener implements DropTargetListener {
                                       @NotNull DropActionListener dropActionListener,
                                       @NotNull HintResultListener hintResultListenerListener,
                                       @NotNull ImageObserver imageObserver) {
-        this.commitPublisher = module.getProject().getMessageBus().syncPublisher(COMMIT_TOPIC);
+        this.commitPublisher = module.getProject().getMessageBus().syncPublisher(COMMIT_COMPONENT_PROPERTIES_EVENTS);
         this.hintResultListenerListener = hintResultListenerListener;
         this.dropActionListener = dropActionListener;
         this.imageObserver = imageObserver;

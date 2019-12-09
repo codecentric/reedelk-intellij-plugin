@@ -9,6 +9,7 @@ import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
 import com.reedelk.plugin.editor.properties.commons.TableDynamicCellEditor;
 import com.reedelk.plugin.editor.properties.commons.TableDynamicCellRenderer;
 import com.reedelk.plugin.graph.node.GraphNode;
+import com.reedelk.plugin.topic.ReedelkTopics;
 import com.reedelk.runtime.api.commons.StringUtils;
 
 import javax.swing.table.DefaultTableCellRenderer;
@@ -41,7 +42,7 @@ class ConditionRouteTableColumnModel extends DefaultTableColumnModel implements 
         addColumn(routeColumn);
 
         busConnection = module.getProject().getMessageBus().connect();
-        busConnection.subscribe(CommitPropertiesListener.COMMIT_TOPIC, this);
+        busConnection.subscribe(ReedelkTopics.COMMIT_COMPONENT_PROPERTIES_EVENTS, this);
     }
 
     @Override

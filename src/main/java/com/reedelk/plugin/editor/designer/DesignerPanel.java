@@ -27,6 +27,7 @@ import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpd
 import com.reedelk.plugin.service.project.DesignerSelectionManager;
 import com.reedelk.plugin.service.project.impl.SelectableItem;
 import com.reedelk.plugin.service.project.impl.SelectableItemComponent;
+import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -39,7 +40,6 @@ import java.util.Optional;
 
 import static com.reedelk.plugin.editor.designer.dnd.DesignerDropTargetListener.DropActionListener;
 import static com.reedelk.plugin.service.project.DesignerSelectionManager.CurrentSelectionListener;
-import static com.reedelk.plugin.service.project.DesignerSelectionManager.CurrentSelectionListener.CURRENT_SELECTION_TOPIC;
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
@@ -92,8 +92,8 @@ public abstract class DesignerPanel extends DisposablePanel implements
         addMouseMotionListener(this);
 
         this.busConnection = module.getMessageBus().connect();
-        this.busConnection.subscribe(COMPONENT_LIST_UPDATE_TOPIC, this);
-        this.componentSelectedPublisher = module.getProject().getMessageBus().syncPublisher(CURRENT_SELECTION_TOPIC);
+        this.busConnection.subscribe(ReedelkTopics.COMPONENTS_UPDATE_EVENTS, this);
+        this.componentSelectedPublisher = module.getProject().getMessageBus().syncPublisher(ReedelkTopics.CURRENT_COMPONENT_SELECTION_EVENTS);
         this.designerSelectionManager = DesignerSelectionManager.getInstance(module.getProject());
 
         addDropTargetListener(module, snapshot, actionHandler);

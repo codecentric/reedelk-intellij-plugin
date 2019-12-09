@@ -1,8 +1,8 @@
 package com.reedelk.plugin.service.module.impl.component.scanner.property;
 
-import com.reedelk.plugin.commons.GetAnnotationValue;
 import com.reedelk.plugin.commons.MapUtils;
 import com.reedelk.plugin.component.domain.*;
+import com.reedelk.plugin.service.module.impl.commons.ScannerUtil;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentAnalyzerContext;
 import com.reedelk.plugin.service.module.impl.component.scanner.UnsupportedType;
 import com.reedelk.runtime.api.annotation.Combo;
@@ -86,7 +86,7 @@ public class TypeFieldInfoAnalyzer implements FieldInfoAnalyzer {
                 .stream()
                 .filter(filterByFullyQualifiedClassNameType(enumFullyQualifiedClassName))
                 .collect(toMap(FieldInfo::getName, fieldInfo ->
-                        GetAnnotationValue.getOrDefault(fieldInfo, DisplayName.class, fieldInfo.getName())));
+                        ScannerUtil.getOrDefault(fieldInfo, DisplayName.class, fieldInfo.getName())));
 
         // Default enum value is the first key. Its default value can be overridden
         // on the property definition with the @Default annotation.

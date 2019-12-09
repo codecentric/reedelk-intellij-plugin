@@ -16,6 +16,7 @@ import com.reedelk.plugin.maven.MavenUtils;
 import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpdateNotifier;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentScanner;
+import com.reedelk.plugin.topic.ReedelkTopics;
 import com.reedelk.runtime.component.Stop;
 import com.reedelk.runtime.component.Unknown;
 import org.jetbrains.annotations.NotNull;
@@ -51,7 +52,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         connection.subscribe(MavenImportListener.TOPIC, this);
         connection.subscribe(CompilerTopics.COMPILATION_STATUS, this);
 
-        this.publisher = messageBus.syncPublisher(ComponentListUpdateNotifier.COMPONENT_LIST_UPDATE_TOPIC);
+        this.publisher = messageBus.syncPublisher(ReedelkTopics.COMPONENTS_UPDATE_EVENTS);
         this.systemComponents = new ComponentsPackage(SYSTEM_COMPONENTS_MODULE_NAME, new ArrayList<>());
 
         asyncUpdateSystemComponents();

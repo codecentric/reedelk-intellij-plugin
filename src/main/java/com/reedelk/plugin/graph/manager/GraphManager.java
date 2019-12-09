@@ -18,6 +18,7 @@ import com.reedelk.plugin.executor.PluginExecutor;
 import com.reedelk.plugin.graph.*;
 import com.reedelk.plugin.graph.deserializer.DeserializationError;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpdateNotifier;
+import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -59,10 +60,10 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
         projectBusConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
 
         moduleBusConnection = module.getMessageBus().connect();
-        moduleBusConnection.subscribe(COMPONENT_LIST_UPDATE_TOPIC, this);
+        moduleBusConnection.subscribe(ReedelkTopics.COMPONENTS_UPDATE_EVENTS, this);
 
         currentSelectionPublisher = module.getProject().getMessageBus()
-                .syncPublisher(CurrentSelectionListener.CURRENT_SELECTION_TOPIC);
+                .syncPublisher(ReedelkTopics.CURRENT_COMPONENT_SELECTION_EVENTS);
     }
 
     @Override

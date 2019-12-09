@@ -17,6 +17,7 @@ import com.reedelk.plugin.component.domain.ComponentDescriptor;
 import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.ComponentsPackage;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpdateNotifier;
+import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -59,7 +60,7 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
         add(componentsTreeScrollPanel, CENTER);
 
         MessageBusConnection connect = project.getMessageBus().connect();
-        connect.subscribe(COMPONENT_LIST_UPDATE_TOPIC, this);
+        connect.subscribe(ReedelkTopics.COMPONENTS_UPDATE_EVENTS, this);
         connect.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
 
         updateComponentsForSelectedFile();

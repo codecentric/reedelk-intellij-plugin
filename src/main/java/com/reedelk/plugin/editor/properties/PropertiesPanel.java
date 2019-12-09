@@ -18,6 +18,7 @@ import com.reedelk.plugin.service.project.impl.SelectableItem;
 import com.reedelk.plugin.service.project.impl.SelectableItemComponent;
 import com.reedelk.plugin.service.project.impl.SelectableItemFlow;
 import com.reedelk.plugin.service.project.impl.SelectableItemSubflow;
+import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -46,7 +47,7 @@ public class PropertiesPanel extends DisposablePanel implements CurrentSelection
         setEmptySelection();
 
         busConnection = project.getMessageBus().connect();
-        busConnection.subscribe(CurrentSelectionListener.CURRENT_SELECTION_TOPIC, this);
+        busConnection.subscribe(ReedelkTopics.CURRENT_COMPONENT_SELECTION_EVENTS, this);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.service.project.DesignerSelectionManager;
+import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -16,7 +17,7 @@ public class DesignerSelectionManagerImpl implements DesignerSelectionManager, D
 
     public DesignerSelectionManagerImpl(@NotNull Project project) {
         this.connection = project.getMessageBus().connect();
-        this.connection.subscribe(CurrentSelectionListener.CURRENT_SELECTION_TOPIC, this);
+        this.connection.subscribe(ReedelkTopics.CURRENT_COMPONENT_SELECTION_EVENTS, this);
     }
 
     @Override
