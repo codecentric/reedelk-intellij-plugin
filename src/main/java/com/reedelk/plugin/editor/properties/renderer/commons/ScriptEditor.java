@@ -71,8 +71,7 @@ public class ScriptEditor extends DisposablePanel implements DocumentListener {
         return document.getText();
     }
 
-    public void setValue(String value) {
-        if (value == null) return; // TODO: Do I need this??!? What  if  value is   empty value!? check it
+    public void setValue(@NotNull String value) {
         try {
             String script = ScriptUtils.unwrap(value);
             writeCommandAction(module.getProject()).run(() -> document.setText(script));
