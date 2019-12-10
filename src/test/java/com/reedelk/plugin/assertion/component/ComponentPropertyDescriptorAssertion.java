@@ -42,7 +42,7 @@ public class ComponentPropertyDescriptorAssertion {
     public ComponentPropertyDescriptorAssertion hasAutoCompleteContributorDefinition(AutoCompleteContributorDefinitionMatcher matcher) {
         Optional<AutoCompleteContributorDefinition> definition = propertyDescriptor.getAutoCompleteContributorDefinition();
         assertThat(definition).isPresent();
-        assertThat(matcher.matches(definition.get()));
+        assertThat(matcher.matches(definition.get())).isTrue();
         return this;
     }
 
