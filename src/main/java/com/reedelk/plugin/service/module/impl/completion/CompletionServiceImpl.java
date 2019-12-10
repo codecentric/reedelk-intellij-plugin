@@ -6,7 +6,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import com.reedelk.plugin.component.domain.AutoCompleteContributorDefinition;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.executor.PluginExecutor;
@@ -25,28 +24,24 @@ import static java.util.stream.Collectors.toList;
 public class CompletionServiceImpl implements CompletionService, CompilationStatusListener, ComponentListUpdateNotifier {
 
     private final Module module;
-    private final Trie defaultComponentTrie;
+    private final Trie defaultComponentTrie = new Trie();
     private final Map<String, Trie> componentTriesMap = new HashMap<>();
+    private final MessageBus messageBus;
 
-    private Trie customFunctionsTrie;
-    private OnCompletionEvent onCompletionEvent;
+    private Trie customFunctionsTrie = new Trie();
 
     // Custom Functions are global so they are always present.
     // Need to define default script suggestions and specific suggestions for
     // Component by module, and component fully qualified name and property.
     public CompletionServiceImpl(Project project, Module module) {
         this.module = module;
-
-        MessageBus messageBus = project.getMessageBus();
+        this.messageBus = project.getMessageBus();
 
         MessageBusConnection connection = messageBus.connect();
         connection.subscribe(CompilerTopics.COMPILATION_STATUS, this);
         connection.subscribe(ReedelkTopics.COMPONENTS_UPDATE_EVENTS, this);
-        this.onCompletionEvent = messageBus.syncPublisher(COMPLETION_EVENT_TOPIC);
 
-        this.defaultComponentTrie = new Trie();
-        this.customFunctionsTrie = new Trie();
-        initialize();
+        PluginExecutor.getInstance().submit(this::initializeSuggestions);
     }
 
     @Override
@@ -58,10 +53,8 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
 
     @Override
     public List<Suggestion> completionTokensOf(String componentFullyQualifiedName, String token) {
-        Optional<List<Suggestion>> componentSuggestions =
-                componentTriesMap.getOrDefault(componentFullyQualifiedName, defaultComponentTrie).findByPrefix(token);
-        Optional<List<Suggestion>> customFunctionsSuggestions =
-                customFunctionsTrie.findByPrefix(token);
+        Optional<List<Suggestion>> componentSuggestions = componentTriesMap.getOrDefault(componentFullyQualifiedName, defaultComponentTrie).findByPrefix(token);
+        Optional<List<Suggestion>> customFunctionsSuggestions = customFunctionsTrie.findByPrefix(token);
         List<Suggestion> results = new ArrayList<>();
         componentSuggestions.ifPresent(results::addAll);
         customFunctionsSuggestions.ifPresent(results::addAll);
@@ -70,36 +63,51 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
 
     @Override
     public void onComponentListUpdate() {
-        PluginExecutor.getInstance().submit(this::internalUpdateComponents);
+        PluginExecutor.getInstance().submit(this::updateComponentsSuggestions);
     }
 
-    private void internalUpdateComponents() {
-        // Since we are updating we must clear the component tries map.
+    void updateComponentsSuggestions() {
+        // Since we are updating the suggestion trees for all the components we
+        // must empty the current component tree map.
         componentTriesMap.clear();
-        ComponentService.getInstance(module).getModuleComponents().forEach(componentsPackage ->
-                componentsPackage.getModuleComponents().forEach(descriptor -> {
-                    String fullyQualifiedName = descriptor.getFullyQualifiedName();
-                    addSuggestionFrom(fullyQualifiedName, descriptor.getPropertiesDescriptors());
+        getComponentService().getModuleComponents()
+                .forEach(componentsPackage -> componentsPackage.getModuleComponents()
+                        .forEach(descriptor -> {
+                            String fullyQualifiedName = descriptor.getFullyQualifiedName();
+                            addSuggestionFrom(fullyQualifiedName, descriptor.getPropertiesDescriptors());
+                        }));
+
+        // We throw away the old custom functions trie since again we are updating
+        // all the custom functions suggestions for all dependencies of this module.
+        customFunctionsTrie = new Trie();
+        getComponentService().getAutoCompleteContributorDefinition()
+                .forEach(definition -> definition.getContributions().forEach(contribution -> {
+                    customFunctionsTrie.insert(contribution);
                 }));
 
-        Collection<AutoCompleteContributorDefinition> autoCompleteDefinitions =
-                ComponentService.getInstance(module).getAutoCompleteContributorDefinition();
-        customFunctionsTrie = new Trie();
-        autoCompleteDefinitions.forEach(definition -> definition.getContributions().forEach(contribution -> {
-            customFunctionsTrie.insert(contribution);
-        }));
+        messageBus.syncPublisher(COMPLETION_EVENT_TOPIC).onCompletionsUpdated();
+    }
 
-        onCompletionEvent.onCompletionsUpdated();
+    private ComponentService getComponentService() {
+        return ComponentService.getInstance(module);
+    }
+
+    void initializeSuggestions() {
+        insertSuggestions(defaultComponentTrie, DefaultSuggestions.MESSAGE);
+        insertSuggestions(defaultComponentTrie, DefaultSuggestions.CONTEXT);
+        updateComponentsSuggestions();
     }
 
     private void addSuggestionFrom(String fullyQualifiedName, List<ComponentPropertyDescriptor> propertyDescriptors) {
-        propertyDescriptors.forEach(propertyDescriptor -> {
-            if (propertyDescriptor.getPropertyType() instanceof TypeObjectDescriptor) {
-                TypeObjectDescriptor typeObjectDescriptor = propertyDescriptor.getPropertyType();
-                addSuggestionFrom(typeObjectDescriptor.getTypeFullyQualifiedName(),
-                        typeObjectDescriptor.getObjectProperties());
+        propertyDescriptors.forEach(descriptor -> {
+            if (descriptor.getPropertyType() instanceof TypeObjectDescriptor) {
+                // If the property type is TypeObject, we must recursively add the
+                // suggestions for all the properties of this object.
+                TypeObjectDescriptor typeObjectDescriptor = descriptor.getPropertyType();
+                addSuggestionFrom(typeObjectDescriptor.getTypeFullyQualifiedName(), typeObjectDescriptor.getObjectProperties());
+
             } else {
-                propertyDescriptor.getAutoCompleteContributorDefinition().ifPresent(definition -> {
+                descriptor.getAutoCompleteContributorDefinition().ifPresent(definition -> {
                     final Trie componentTrie = new Trie();
                     if (definition.isMessage()) insertSuggestions(componentTrie, DefaultSuggestions.MESSAGE);
                     if (definition.isContext()) insertSuggestions(componentTrie, DefaultSuggestions.CONTEXT);
@@ -114,13 +122,5 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
 
     private void insertSuggestions(Trie trie, DefaultSuggestions defaultSuggestions) {
         Arrays.stream(defaultSuggestions.tokens()).forEach(trie::insert);
-    }
-
-    private void initialize() {
-        PluginExecutor.getInstance().submit(() -> {
-            insertSuggestions(defaultComponentTrie, DefaultSuggestions.MESSAGE);
-            insertSuggestions(defaultComponentTrie, DefaultSuggestions.CONTEXT);
-            internalUpdateComponents();
-        });
     }
 }
