@@ -10,7 +10,7 @@ public class AutoCompleteContributorDefinitionMatchers {
         boolean matches(AutoCompleteContributorDefinition actual);
     }
 
-    public static AutoCompleteContributorDefinitionMatcher has(boolean isMessage, boolean isContext, boolean isError, List<String> customContributions) {
+    public static AutoCompleteContributorDefinitionMatcher with(boolean isMessage, boolean isContext, boolean isError, List<String> customContributions) {
         return actual -> {
             boolean actualIsMessage = actual.isMessage();
             boolean actualIsContext = actual.isContext();

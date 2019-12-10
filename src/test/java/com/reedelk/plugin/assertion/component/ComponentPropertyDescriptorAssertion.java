@@ -45,4 +45,10 @@ public class ComponentPropertyDescriptorAssertion {
         assertThat(matcher.matches(definition.get()));
         return this;
     }
+
+    public ComponentPropertyDescriptorAssertion hasNotAutoCompleteContributorDefinition() {
+        Optional<AutoCompleteContributorDefinition> definition = propertyDescriptor.getAutoCompleteContributorDefinition();
+        assertThat(definition).isNotPresent();
+        return this;
+    }
 }

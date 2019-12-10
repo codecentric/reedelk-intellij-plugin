@@ -1,7 +1,6 @@
 package com.reedelk.plugin.service.module.impl.component.scanner.property;
 
 import com.reedelk.plugin.assertion.PluginAssertion;
-import com.reedelk.plugin.assertion.component.AutoCompleteContributorDefinitionMatchers;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeDynamicValueDescriptor;
 import com.reedelk.plugin.service.module.impl.component.scanner.AbstractScannerTest;
@@ -16,7 +15,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
+import static com.reedelk.plugin.assertion.component.AutoCompleteContributorDefinitionMatchers.with;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 
 @ExtendWith(MockitoExtension.class)
 class AutoCompleteContributorFieldInfoAnalyzerTest extends AbstractScannerTest {
@@ -35,11 +36,10 @@ class AutoCompleteContributorFieldInfoAnalyzerTest extends AbstractScannerTest {
     }
 
     @Test
-    void shouldCorrectlyCreateAutoCompleteContributorDefinition() {
+    void shouldCorrectlyCreateAutoCompleteContributorDefinitionWithCustomContributions() {
         // Given
-        String propertyName = "propertyWithAutoCompleteContributor";
-        FieldInfo propertyWithAutoCompleteContributor =
-                componentClassInfo.getFieldInfo(propertyName);
+        String propertyName = "propertyWithCustomContributions";
+        FieldInfo property = componentClassInfo.getFieldInfo(propertyName);
 
         ComponentPropertyDescriptor.Builder builder =
                 ComponentPropertyDescriptor.builder()
@@ -47,11 +47,87 @@ class AutoCompleteContributorFieldInfoAnalyzerTest extends AbstractScannerTest {
                         .type(new TypeDynamicValueDescriptor<>(DynamicString.class));
 
         // When
-        analyzer.handle(propertyWithAutoCompleteContributor, builder, context);
+        analyzer.handle(property, builder, context);
 
         // Then
+        PluginAssertion.assertThat(builder.build())
+                .hasAutoCompleteContributorDefinition(with(true,true,false,
+                        asList("messages[VARIABLE:Message[]]","messages.size()[FUNCTION:int]")));
+    }
 
-        PluginAssertion.assertThat(builder.build()).hasAutoCompleteContributorDefinition(
-                AutoCompleteContributorDefinitionMatchers.has(true, true, false, Arrays.asList("")));
+    @Test
+    void shouldCorrectlyCreateAutoCompleteContributorDefinitionWithoutMessageContributions() {
+        // Given
+        String propertyName = "propertyWithoutMessageContributions";
+        FieldInfo property = componentClassInfo.getFieldInfo(propertyName);
+
+        ComponentPropertyDescriptor.Builder builder =
+                ComponentPropertyDescriptor.builder()
+                        .propertyName(propertyName)
+                        .type(new TypeDynamicValueDescriptor<>(DynamicString.class));
+
+        // When
+        analyzer.handle(property, builder, context);
+
+        // Then
+        PluginAssertion.assertThat(builder.build())
+                .hasAutoCompleteContributorDefinition(with(false,true,false, emptyList()));
+    }
+
+    @Test
+    void shouldCorrectlyCreateAutoCompleteContributorDefinitionWithoutContextContributions() {
+        // Given
+        String propertyName = "propertyWithoutContextContributions";
+        FieldInfo property = componentClassInfo.getFieldInfo(propertyName);
+
+        ComponentPropertyDescriptor.Builder builder =
+                ComponentPropertyDescriptor.builder()
+                        .propertyName(propertyName)
+                        .type(new TypeDynamicValueDescriptor<>(DynamicString.class));
+
+        // When
+        analyzer.handle(property, builder, context);
+
+        // Then
+        PluginAssertion.assertThat(builder.build())
+                .hasAutoCompleteContributorDefinition(with(true,false,false, emptyList()));
+    }
+
+    @Test
+    void shouldCorrectlyCreateAutoCompleteContributorDefinitionWithErrorAndWithoutMessageContributions() {
+        // Given
+        String propertyName = "propertyWithErrorAndWithoutMessageContributions";
+        FieldInfo property = componentClassInfo.getFieldInfo(propertyName);
+
+        ComponentPropertyDescriptor.Builder builder =
+                ComponentPropertyDescriptor.builder()
+                        .propertyName(propertyName)
+                        .type(new TypeDynamicValueDescriptor<>(DynamicString.class));
+
+        // When
+        analyzer.handle(property, builder, context);
+
+        // Then
+        PluginAssertion.assertThat(builder.build())
+                .hasAutoCompleteContributorDefinition(with(false, true,true, emptyList()));
+    }
+
+    @Test
+    void shouldProvideEmptyAutoCompleteContributorWhenPropertyDoesNotHaveOne() {
+        // Given
+        String propertyName = "propertyWithoutAutoCompleteContributor";
+        FieldInfo property = componentClassInfo.getFieldInfo(propertyName);
+
+        ComponentPropertyDescriptor.Builder builder =
+                ComponentPropertyDescriptor.builder()
+                        .propertyName(propertyName)
+                        .type(new TypeDynamicValueDescriptor<>(DynamicString.class));
+
+        // When
+        analyzer.handle(property, builder, context);
+
+        // Then
+        PluginAssertion.assertThat(builder.build())
+                .hasNotAutoCompleteContributorDefinition();
     }
 }
