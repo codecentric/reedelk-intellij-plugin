@@ -1,11 +1,11 @@
 package com.reedelk.plugin.service.module.impl.completion;
 
+import com.reedelk.plugin.assertion.PluginAssertion;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
 
 class TrieTest {
 
@@ -24,10 +24,9 @@ class TrieTest {
         trie.insert(suggestionToken1);
 
         // Then
-        Suggestion expected = Suggestion.from("message", SuggestionType.VARIABLE, "Message");
-
         List<Suggestion> results = trie.findByPrefix("m");
-        assertThat(results).containsExactly(expected);
+        PluginAssertion.assertThat(results)
+                .containsOnly("message", SuggestionType.VARIABLE, "Message");
     }
 
     @Test
@@ -39,11 +38,11 @@ class TrieTest {
         trie.insert(asList(suggestionToken1, suggestionToken2));
 
         // Then
-        Suggestion expected1 = Suggestion.from("message", SuggestionType.VARIABLE, "Message");
-        Suggestion expected2 = Suggestion.from("multiply()", SuggestionType.FUNCTION, "int");
-
         List<Suggestion> results = trie.findByPrefix("m");
-        assertThat(results).containsExactlyInAnyOrder(expected1, expected2);
+        PluginAssertion.assertThat(results)
+                .contains("message", SuggestionType.VARIABLE, "Message")
+                .contains("multiply()", SuggestionType.FUNCTION, "int")
+                .hasSize(2);
     }
 
     @Test
@@ -55,12 +54,12 @@ class TrieTest {
         trie.insert(suggestionToken1, suggestionToken2, suggestionToken3, suggestionToken4, suggestionToken5);
 
         // Then
-        Suggestion expected1 = Suggestion.from("mimeType1()", SuggestionType.FUNCTION, "MimeType");
-        Suggestion expected2 = Suggestion.from("mimeType2()", SuggestionType.FUNCTION, "MimeType");
-        Suggestion expected3 = Suggestion.from("mimeType3()", SuggestionType.FUNCTION, "MimeType");
-
         List<Suggestion> results = trie.findByPrefix("message.mim");
-        assertThat(results).containsExactlyInAnyOrder(expected1, expected2, expected3);
+        PluginAssertion.assertThat(results)
+                .contains("mimeType1()", SuggestionType.FUNCTION, "MimeType")
+                .contains("mimeType2()", SuggestionType.FUNCTION, "MimeType")
+                .contains("mimeType3()", SuggestionType.FUNCTION, "MimeType")
+                .hasSize(3);
     }
 
     @Test
@@ -72,12 +71,12 @@ class TrieTest {
         trie.insert(suggestionToken1, suggestionToken2, suggestionToken3, suggestionToken4, suggestionToken5);
 
         // Then
-        Suggestion expected1 = Suggestion.from("mimeType1()", SuggestionType.FUNCTION, "MimeType");
-        Suggestion expected2 = Suggestion.from("mimeType2()", SuggestionType.FUNCTION, "MimeType");
-        Suggestion expected3 = Suggestion.from("mimeType3()", SuggestionType.FUNCTION, "MimeType");
-
         List<Suggestion> results = trie.findByPrefix("message.");
-        assertThat(results).containsExactlyInAnyOrder(expected1, expected2, expected3);
+        PluginAssertion.assertThat(results)
+                .contains("mimeType1()", SuggestionType.FUNCTION, "MimeType")
+                .contains("mimeType2()", SuggestionType.FUNCTION, "MimeType")
+                .contains("mimeType3()", SuggestionType.FUNCTION, "MimeType")
+                .hasSize(3);
     }
 
     @Test
@@ -90,7 +89,7 @@ class TrieTest {
 
         // Then
         List<Suggestion> results = trie.findByPrefix("message.mimeType1()");
-        assertThat(results).isEmpty();
+        PluginAssertion.assertThat(results).isEmpty();
     }
 
     @Test
@@ -104,9 +103,10 @@ class TrieTest {
         // Then
         List<Suggestion> results = trie.findByPrefix("");
 
-        Suggestion expected1 = Suggestion.from("message", SuggestionType.VARIABLE, "Message");
-        Suggestion expected2 = Suggestion.from("multiply()", SuggestionType.FUNCTION, "int");
-        assertThat(results).containsExactlyInAnyOrder(expected1, expected2);
+        PluginAssertion.assertThat(results)
+                .contains("message", SuggestionType.VARIABLE, "Message")
+                .contains("multiply()", SuggestionType.FUNCTION, "int")
+                .hasSize(2);
     }
 
     @Test
@@ -119,6 +119,6 @@ class TrieTest {
 
         // Then
         List<Suggestion> results = trie.findByPrefix("message.mimeType1(");
-        assertThat(results).isEmpty();
+        PluginAssertion.assertThat(results).isEmpty();
     }
 }
