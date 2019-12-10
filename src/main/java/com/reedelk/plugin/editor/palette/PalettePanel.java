@@ -15,7 +15,7 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
 import com.reedelk.plugin.service.module.ComponentService;
-import com.reedelk.plugin.service.module.impl.component.ComponentsPackage;
+import com.reedelk.plugin.service.module.impl.component.ModuleComponents;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpdateNotifier;
 import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
@@ -94,8 +94,8 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
     }
 
     private void updateComponents(Module module) {
-        Collection<ComponentsPackage> componentsPackages = ComponentService.getInstance(module).getModulesDescriptors();
-        List<DefaultMutableTreeNode> componentsTreeNodes = getComponentsPackagesTreeNodes(componentsPackages);
+        Collection<ModuleComponents> moduleComponents = ComponentService.getInstance(module).getModuleComponents();
+        List<DefaultMutableTreeNode> componentsTreeNodes = getComponentsPackagesTreeNodes(moduleComponents);
 
         SwingUtilities.invokeLater(() -> {
 
@@ -129,8 +129,8 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
     }
 
     @NotNull
-    static List<DefaultMutableTreeNode> getComponentsPackagesTreeNodes(Collection<ComponentsPackage> componentsPackages) {
-        return componentsPackages
+    static List<DefaultMutableTreeNode> getComponentsPackagesTreeNodes(Collection<ModuleComponents> moduleComponents) {
+        return moduleComponents
                 .stream()
                 .filter(ExcludeModuleWithoutComponents)
                 .map(PalettePanel::buildPackageTreeNode)
@@ -138,9 +138,9 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
     }
 
     @NotNull
-    static DefaultMutableTreeNode buildPackageTreeNode(ComponentsPackage componentsPackage) {
-        DefaultMutableTreeNode componentTreeNode = new DefaultMutableTreeNode(componentsPackage.getName());
-        componentsPackage
+    static DefaultMutableTreeNode buildPackageTreeNode(ModuleComponents moduleComponents) {
+        DefaultMutableTreeNode componentTreeNode = new DefaultMutableTreeNode(moduleComponents.getName());
+        moduleComponents
                 .getModuleComponents()
                 .stream()
                 .filter(ExcludeHiddenComponent)
@@ -154,8 +154,8 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
 
     // A module might not have any component if for instance all its components are hidden.
     // This is why in this method we filter all the component descriptors which are not hidden.
-    private static final Predicate<ComponentsPackage> ExcludeModuleWithoutComponents =
-            componentsPackage -> !componentsPackage.getModuleComponents()
+    private static final Predicate<ModuleComponents> ExcludeModuleWithoutComponents =
+            moduleComponents -> !moduleComponents.getModuleComponents()
                     .stream()
                     .filter(componentDescriptor -> !componentDescriptor.isHidden())
                     .collect(toList())

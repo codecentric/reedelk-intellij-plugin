@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.palette;
 
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
-import com.reedelk.plugin.service.module.impl.component.ComponentsPackage;
+import com.reedelk.plugin.service.module.impl.component.ModuleComponents;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,7 @@ class PalettePanelTest {
         @Test
         void shouldCorrectlyBuildPackageTreeNode() {
             // Given
-            ComponentsPackage module1 = new ComponentsPackage("Module1", asList(mockDescriptor1, mockDescriptor2));
+            ModuleComponents module1 = new ModuleComponents("Module1", asList(mockDescriptor1, mockDescriptor2));
 
             // When
             DefaultMutableTreeNode treeNode = PalettePanel.buildPackageTreeNode(module1);
@@ -54,7 +54,7 @@ class PalettePanelTest {
             doReturn(true)
                     .when(mockDescriptor2)
                     .isHidden();
-            ComponentsPackage module1 = new ComponentsPackage("Module1", asList(mockDescriptor1, mockDescriptor2));
+            ModuleComponents module1 = new ModuleComponents("Module1", asList(mockDescriptor1, mockDescriptor2));
 
             // When
             DefaultMutableTreeNode treeNode = PalettePanel.buildPackageTreeNode(module1);
@@ -69,13 +69,13 @@ class PalettePanelTest {
 
     @Nested
     @DisplayName("Get components packages tree nodes tests")
-    class GetComponentsPackagesTreeNodes {
+    class GetModuleComponentsTreeNodes {
 
         @Test
         void shouldCorrectlyReturnCorrectComponentsPackagesTreeNodes() {
             // Given
-            ComponentsPackage module1 = new ComponentsPackage("Module1", asList(mockDescriptor1, mockDescriptor2));
-            ComponentsPackage module2 = new ComponentsPackage("Module2", Collections.singletonList(mockDescriptor3));
+            ModuleComponents module1 = new ModuleComponents("Module1", asList(mockDescriptor1, mockDescriptor2));
+            ModuleComponents module2 = new ModuleComponents("Module2", Collections.singletonList(mockDescriptor3));
 
             // When
             List<DefaultMutableTreeNode> treeNodes =
@@ -91,8 +91,8 @@ class PalettePanelTest {
         @Test
         void shouldExcludeComponentsPackagesWithNoComponents() {
             // Given
-            ComponentsPackage module1 = new ComponentsPackage("Module1", asList(mockDescriptor1, mockDescriptor2));
-            ComponentsPackage module2 = new ComponentsPackage("Module2", Collections.emptyList());
+            ModuleComponents module1 = new ModuleComponents("Module1", asList(mockDescriptor1, mockDescriptor2));
+            ModuleComponents module2 = new ModuleComponents("Module2", Collections.emptyList());
 
             // When
             List<DefaultMutableTreeNode> treeNodes =

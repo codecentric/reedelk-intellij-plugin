@@ -6,14 +6,12 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import com.reedelk.plugin.commons.SuggestionDefinitionMatcher;
 import com.reedelk.plugin.component.domain.AutoCompleteContributorDefinition;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.executor.PluginExecutor;
 import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.ComponentService;
-import com.reedelk.plugin.service.module.impl.component.ComponentsPackage;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpdateNotifier;
 import com.reedelk.plugin.topic.ReedelkTopics;
 import com.reedelk.runtime.api.commons.StringUtils;
@@ -78,9 +76,8 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
     private void internalUpdateComponents() {
         // Since we are updating we must clear the component tries map.
         componentTriesMap.clear();
-        Collection<ComponentsPackage> componentsPackages = ComponentService.getInstance(module).getModulesDescriptors();
-        componentsPackages.forEach(componentsPackage -> componentsPackage.getModuleComponents()
-                .forEach(descriptor -> {
+        ComponentService.getInstance(module).getModuleComponents().forEach(componentsPackage ->
+                componentsPackage.getModuleComponents().forEach(descriptor -> {
                     String fullyQualifiedName = descriptor.getFullyQualifiedName();
                     addSuggestionFrom(fullyQualifiedName, descriptor.getPropertiesDescriptors());
                 }));
@@ -89,8 +86,7 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
                 ComponentService.getInstance(module).getAutoCompleteContributorDefinition();
         customFunctionsTrie = new Trie();
         autoCompleteDefinitions.forEach(definition -> definition.getContributions().forEach(contribution -> {
-            SuggestionDefinitionMatcher.of(contribution).ifPresent(parsed ->
-                    customFunctionsTrie.insert(parsed.getMiddle(), parsed.getRight(), parsed.getLeft()));
+            customFunctionsTrie.insert(contribution);
         }));
 
         onCompletionEvent.onCompletionsUpdated();
@@ -104,31 +100,26 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
                         typeObjectDescriptor.getObjectProperties());
             } else {
                 propertyDescriptor.getAutoCompleteContributorDefinition().ifPresent(definition -> {
-                    final Trie trie = new Trie();
-                    if (definition.isMessage()) registerDefaultSuggestionContribution(trie, DefaultSuggestions.MESSAGE);
-                    if (definition.isContext()) registerDefaultSuggestionContribution(trie, DefaultSuggestions.CONTEXT);
-                    if (definition.isError()) registerDefaultSuggestionContribution(trie, DefaultSuggestions.ERROR);
+                    final Trie componentTrie = new Trie();
+                    if (definition.isMessage()) insertSuggestions(componentTrie, DefaultSuggestions.MESSAGE);
+                    if (definition.isContext()) insertSuggestions(componentTrie, DefaultSuggestions.CONTEXT);
+                    if (definition.isError()) insertSuggestions(componentTrie, DefaultSuggestions.ERROR);
 
-                    List<String> contributions = definition.getContributions();
-                    contributions.forEach(customSuggestion ->
-                            SuggestionDefinitionMatcher.of(customSuggestion).ifPresent(parsed ->
-                                    trie.insert(parsed.getMiddle(), parsed.getRight(), parsed.getLeft())));
-                    componentTriesMap.put(fullyQualifiedName, trie);
+                    definition.getContributions().forEach(componentTrie::insert);
+                    componentTriesMap.put(fullyQualifiedName, componentTrie);
                 });
             }
         });
     }
 
-    private void registerDefaultSuggestionContribution(Trie trie, DefaultSuggestions defaultSuggestions) {
-        Arrays.stream(defaultSuggestions.tokens()).forEach(suggestionTokenDefinition ->
-                SuggestionDefinitionMatcher.of(suggestionTokenDefinition).ifPresent(parsed ->
-                        trie.insert(parsed.getMiddle(), parsed.getRight(), parsed.getLeft())));
+    private void insertSuggestions(Trie trie, DefaultSuggestions defaultSuggestions) {
+        Arrays.stream(defaultSuggestions.tokens()).forEach(trie::insert);
     }
 
     private void initialize() {
         PluginExecutor.getInstance().submit(() -> {
-            registerDefaultSuggestionContribution(defaultComponentTrie, DefaultSuggestions.MESSAGE);
-            registerDefaultSuggestionContribution(defaultComponentTrie, DefaultSuggestions.CONTEXT);
+            insertSuggestions(defaultComponentTrie, DefaultSuggestions.MESSAGE);
+            insertSuggestions(defaultComponentTrie, DefaultSuggestions.CONTEXT);
             internalUpdateComponents();
         });
     }

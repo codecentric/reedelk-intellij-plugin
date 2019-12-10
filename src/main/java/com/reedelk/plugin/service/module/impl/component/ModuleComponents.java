@@ -10,12 +10,12 @@ import java.util.Optional;
  * Represent an ESB Module.
  * An ESB Module is a container of components with a name.
  */
-public class ComponentsPackage {
+public class ModuleComponents {
 
     private final String name;
     private final List<ComponentDescriptor> moduleComponents;
 
-    public ComponentsPackage(String name, List<ComponentDescriptor> moduleComponents) {
+    public ModuleComponents(String name, List<ComponentDescriptor> moduleComponents) {
         this.name = name;
         this.moduleComponents = moduleComponents;
     }

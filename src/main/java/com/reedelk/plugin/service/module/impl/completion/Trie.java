@@ -1,5 +1,7 @@
 package com.reedelk.plugin.service.module.impl.completion;
 
+import com.reedelk.plugin.commons.SuggestionDefinitionMatcher;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -8,14 +10,8 @@ public class Trie {
 
     private TrieNode root = new TrieNode();
 
-    public void insert(SuggestionType type, String typeName, String word) {
-        TrieNode current = root;
-        for (int i = 0; i < word.length(); i++) {
-            current = current.getChildren().computeIfAbsent(word.charAt(i), c -> new TrieNode());
-        }
-        current.setType(type);
-        current.setTypeName(typeName);
-        current.setEndOfWord(true);
+    public void insert(String suggestionDefinition) {
+        SuggestionDefinitionMatcher.of(suggestionDefinition).ifPresent(parsed -> insert(parsed.getMiddle(), parsed.getRight(), parsed.getLeft()));
     }
 
     public Optional<List<Suggestion>> findByPrefix(String prefix) {
@@ -29,6 +25,16 @@ public class Trie {
 
     public void delete(String word) {
         delete(root, word, 0);
+    }
+
+    private void insert(SuggestionType type, String typeName, String word) {
+        TrieNode current = root;
+        for (int i = 0; i < word.length(); i++) {
+            current = current.getChildren().computeIfAbsent(word.charAt(i), c -> new TrieNode());
+        }
+        current.setType(type);
+        current.setTypeName(typeName);
+        current.setEndOfWord(true);
     }
 
     private Optional<TrieNode> find(String word) {

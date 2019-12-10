@@ -39,11 +39,11 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     private final ComponentListUpdateNotifier publisher;
     private final ComponentScanner componentScanner = new ComponentScanner();
 
-    private final ComponentsPackage systemComponents;
-    private final Map<String, ComponentsPackage> mavenJarComponentsMap = new HashMap<>();
+    private final ModuleComponents systemComponents;
+    private final Map<String, ModuleComponents> mavenJarComponentsMap = new HashMap<>();
     private final List<AutoCompleteContributorDefinition> autoCompleteContributorDefinitions = new ArrayList<>();
 
-    private ComponentsPackage moduleComponents;
+    private ModuleComponents moduleComponents;
 
     public ComponentServiceImpl(Project project, Module module) {
         this.module = module;
@@ -56,7 +56,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         connection.subscribe(CompilerTopics.COMPILATION_STATUS, this);
 
         this.publisher = messageBus.syncPublisher(ReedelkTopics.COMPONENTS_UPDATE_EVENTS);
-        this.systemComponents = new ComponentsPackage(SYSTEM_COMPONENTS_MODULE_NAME, new ArrayList<>());
+        this.systemComponents = new ModuleComponents(SYSTEM_COMPONENTS_MODULE_NAME, new ArrayList<>());
 
         asyncUpdateSystemComponents();
         asyncUpdateMavenDependenciesComponents();
@@ -91,8 +91,8 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     }
 
     @Override
-    public Collection<ComponentsPackage> getModulesDescriptors() {
-        List<ComponentsPackage> descriptors = new ArrayList<>(mavenJarComponentsMap.values());
+    public Collection<ModuleComponents> getModuleComponents() {
+        List<ModuleComponents> descriptors = new ArrayList<>(mavenJarComponentsMap.values());
         descriptors.add(systemComponents);
         if (moduleComponents != null) descriptors.add(moduleComponents);
         return Collections.unmodifiableCollection(descriptors);
@@ -132,7 +132,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                             ScanResult scanResult = ComponentScanner.scanResultFrom(jarFilePath);
                             List<ComponentDescriptor> components = componentScanner.from(scanResult);
                             String moduleName = ModuleInfo.getModuleName(jarFilePath);
-                            ComponentsPackage descriptor = new ComponentsPackage(moduleName, components);
+                            ModuleComponents descriptor = new ModuleComponents(moduleName, components);
                             mavenJarComponentsMap.put(jarFilePath, descriptor);
 
                             List<String> from = componentScanner.autoCompleteFrom(scanResult);
@@ -159,7 +159,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                 List<ComponentDescriptor> components = componentScanner.from(scanResult);
                 MavenUtils.getMavenProject(project, module.getName()).ifPresent(mavenProject -> {
                     String moduleName = mavenProject.getDisplayName();
-                    moduleComponents = new ComponentsPackage(moduleName, components);
+                    moduleComponents = new ModuleComponents(moduleName, components);
                 });
             });
 
@@ -174,8 +174,8 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         });
     }
 
-    private Optional<ComponentDescriptor> findComponentMatching(Collection<ComponentsPackage> descriptors, String fullyQualifiedName) {
-        for (ComponentsPackage descriptor : descriptors) {
+    private Optional<ComponentDescriptor> findComponentMatching(Collection<ModuleComponents> descriptors, String fullyQualifiedName) {
+        for (ModuleComponents descriptor : descriptors) {
             Optional<ComponentDescriptor> moduleComponent = descriptor.getModuleComponent(fullyQualifiedName);
             if (moduleComponent.isPresent()) {
                 return moduleComponent;
