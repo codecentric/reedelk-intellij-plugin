@@ -81,6 +81,8 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
     }
 
     private void internalUpdateComponents(Module module) {
+        // Since we are
+        componentTriesMap.clear();
         Collection<ComponentsPackage> componentsPackages = ComponentService.getInstance(module).getModulesDescriptors();
         componentsPackages.forEach(componentsPackage -> componentsPackage.getModuleComponents()
                 .forEach(descriptor -> {

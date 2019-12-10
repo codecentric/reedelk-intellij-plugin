@@ -6,7 +6,7 @@ import io.github.classgraph.ScanResult;
 
 public abstract class AbstractScannerTest {
 
-    protected static ScanContext scan(Class<?> targetComponentClazz) {
+    public static ScanContext scan(Class<?> targetComponentClazz) {
         ScanResult scanResult = new ClassGraph()
                 .whitelistPackages(targetComponentClazz.getPackage().getName())
                 .enableFieldInfo()

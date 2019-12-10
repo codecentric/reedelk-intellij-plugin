@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.module.impl.component.scanner;
+package com.reedelk.plugin.testutils;
 
 import com.reedelk.runtime.api.annotation.*;
 import com.reedelk.runtime.api.component.ProcessorSync;
@@ -158,6 +158,10 @@ public class TestComponent implements ProcessorSync {
     @Default("img/xyz")
     @MimeTypeCombo(additionalTypes = "img/xyz,audio/mp13")
     private String mimeTypeCustom;
+
+    @AutoCompleteContributor(message = false)
+    @Property("Property with autocomplete contributor")
+    private DynamicString propertyWithAutoCompleteContributor;
 
 
     private int notExposedProperty;

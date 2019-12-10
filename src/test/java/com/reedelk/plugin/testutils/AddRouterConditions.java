@@ -19,5 +19,4 @@ public class AddRouterConditions {
         pairs.add(new RouterConditionRoutePair(routeCondition1, routeNode1));
         pairs.add(new RouterConditionRoutePair(routeCondition2, routeNode2));
     }
-
 }

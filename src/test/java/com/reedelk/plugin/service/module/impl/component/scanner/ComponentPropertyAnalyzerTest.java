@@ -5,6 +5,7 @@ import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.assertion.component.TypeDescriptorMatchers;
 import com.reedelk.plugin.component.domain.*;
 import com.reedelk.plugin.service.module.impl.component.scanner.property.ComponentPropertyAnalyzer;
+import com.reedelk.plugin.testutils.TestComponent;
 import com.reedelk.runtime.api.message.content.MimeType;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicStringMap;
 import com.reedelk.runtime.api.script.dynamicvalue.*;

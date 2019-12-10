@@ -3,7 +3,6 @@ package com.reedelk.plugin.service.module.impl.component.scanner;
 import com.intellij.openapi.diagnostic.Logger;
 import com.reedelk.plugin.commons.PackageToPath;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
-import com.reedelk.plugin.service.module.impl.commons.ScannerUtil;
 import com.reedelk.runtime.api.annotation.AutoCompleteContributor;
 import com.reedelk.runtime.api.annotation.ESBComponent;
 import io.github.classgraph.AnnotationInfo;

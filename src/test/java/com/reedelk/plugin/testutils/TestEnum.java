@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.module.impl.component.scanner;
+package com.reedelk.plugin.testutils;
 
 import com.reedelk.runtime.api.annotation.DisplayName;
 

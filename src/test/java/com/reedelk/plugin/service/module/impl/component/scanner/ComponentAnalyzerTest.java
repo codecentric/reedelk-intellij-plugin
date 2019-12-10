@@ -5,6 +5,7 @@ import com.reedelk.plugin.component.domain.ComponentDescriptor;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.ComponentType;
 import com.reedelk.plugin.service.module.impl.component.scanner.property.ComponentPropertyAnalyzer;
+import com.reedelk.plugin.testutils.TestComponent;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.FieldInfo;
 import org.junit.jupiter.api.BeforeEach;

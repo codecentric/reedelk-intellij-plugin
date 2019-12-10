@@ -2,8 +2,8 @@ package com.reedelk.plugin.service.module.impl.component.scanner.property;
 
 import com.reedelk.plugin.commons.MapUtils;
 import com.reedelk.plugin.component.domain.*;
-import com.reedelk.plugin.service.module.impl.commons.ScannerUtil;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentAnalyzerContext;
+import com.reedelk.plugin.service.module.impl.component.scanner.ScannerUtil;
 import com.reedelk.plugin.service.module.impl.component.scanner.UnsupportedType;
 import com.reedelk.runtime.api.annotation.Combo;
 import com.reedelk.runtime.api.annotation.DisplayName;
@@ -15,7 +15,7 @@ import io.github.classgraph.*;
 import java.util.*;
 
 import static com.reedelk.plugin.converter.ValueConverterFactory.isKnownType;
-import static com.reedelk.plugin.service.module.impl.commons.ScannerUtil.*;
+import static com.reedelk.plugin.service.module.impl.component.scanner.ScannerUtil.*;
 import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 import static java.util.Arrays.stream;

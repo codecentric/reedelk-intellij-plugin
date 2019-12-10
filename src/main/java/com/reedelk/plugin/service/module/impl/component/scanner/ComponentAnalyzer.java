@@ -4,7 +4,6 @@ import com.reedelk.plugin.component.domain.ComponentDefaultDescriptor;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.ComponentType;
-import com.reedelk.plugin.service.module.impl.commons.ScannerUtil;
 import com.reedelk.plugin.service.module.impl.component.scanner.property.ComponentPropertyAnalyzer;
 import com.reedelk.runtime.api.annotation.ESBComponent;
 import io.github.classgraph.AnnotationInfo;

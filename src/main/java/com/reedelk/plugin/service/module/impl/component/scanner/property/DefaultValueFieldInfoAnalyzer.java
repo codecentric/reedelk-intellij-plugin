@@ -1,8 +1,8 @@
 package com.reedelk.plugin.service.module.impl.component.scanner.property;
 
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
-import com.reedelk.plugin.service.module.impl.commons.ScannerUtil;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentAnalyzerContext;
+import com.reedelk.plugin.service.module.impl.component.scanner.ScannerUtil;
 import com.reedelk.runtime.api.annotation.Default;
 import io.github.classgraph.FieldInfo;
 

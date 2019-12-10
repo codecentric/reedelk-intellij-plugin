@@ -1,9 +1,7 @@
-package com.reedelk.plugin.service.module.impl.commons;
+package com.reedelk.plugin.service.module.impl.component.scanner;
 
 import com.reedelk.plugin.component.domain.Collapsible;
 import com.reedelk.plugin.component.domain.Shared;
-import com.reedelk.plugin.service.module.impl.component.scanner.ComponentAnalyzerContext;
-import com.reedelk.plugin.service.module.impl.component.scanner.UnsupportedType;
 import com.reedelk.runtime.api.annotation.*;
 import com.reedelk.runtime.api.script.Script;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicMap;
