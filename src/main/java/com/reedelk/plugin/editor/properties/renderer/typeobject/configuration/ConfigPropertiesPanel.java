@@ -107,6 +107,7 @@ class ConfigPropertiesPanel extends DisposablePanel {
          * displayed in this panel goes to the configuration file and not in the graph
          * component's data (snapshot).
          */
+        @Override
         protected PropertyAccessor getAccessor(String propertyName, TypeDescriptor propertyType, ComponentDataHolder dataHolder) {
             return PropertyAccessorFactory.get()
                     .typeDescriptor(propertyType)

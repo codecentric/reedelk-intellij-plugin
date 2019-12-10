@@ -49,17 +49,31 @@ public class ConfigControlPanel extends DisposablePanel {
         configTypeObject.set(JsonParser.Config.id(), UUID.randomUUID().toString());
         configTypeObject.set(JsonParser.Config.title(), message("config.field.title.default"));
 
-        ConfigMetadata newConfig = new NewConfigMetadata(message("config.field.file.default"), configTypeObject, typeDescriptor);
-        DialogAddConfiguration dialogAddConfiguration = new DialogAddConfiguration(module, typeDescriptor, newConfig);
+        ConfigMetadata newConfigMetadata = new NewConfigMetadata(message("config.field.file.default"), configTypeObject, typeDescriptor);
+
+        ConfigurationDialog dialogAddConfiguration = ConfigurationDialog.builder()
+                .isNewConfig()
+                .module(module)
+                .objectDescriptor(typeDescriptor)
+                .configMetadata(newConfigMetadata)
+                .title(message("config.dialog.add.title"))
+                .okActionLabel(message("config.dialog.add.btn.add"))
+                .build();
 
         if (dialogAddConfiguration.showAndGet()) {
-            ConfigService.getInstance(module).addConfig(newConfig);
+            ConfigService.getInstance(module).addConfig(newConfigMetadata);
         }
     }
 
     private void editConfiguration() {
         if (selected.isEditable()) {
-            DialogEditConfiguration dialogEditConfiguration = new DialogEditConfiguration(module, typeDescriptor, selected);
+            ConfigurationDialog dialogEditConfiguration = ConfigurationDialog.builder()
+                    .module(module)
+                    .configMetadata(selected)
+                    .objectDescriptor(typeDescriptor)
+                    .title(message("config.dialog.edit.title"))
+                    .okActionLabel(message("config.dialog.edit.btn.edit"))
+                    .build();
             if (dialogEditConfiguration.showAndGet()) {
                 ConfigService.getInstance(module).saveConfig(selected);
             }
