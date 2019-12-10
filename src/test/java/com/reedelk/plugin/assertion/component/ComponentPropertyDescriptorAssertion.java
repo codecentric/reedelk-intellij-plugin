@@ -1,8 +1,12 @@
 package com.reedelk.plugin.assertion.component;
 
+import com.reedelk.plugin.component.domain.AutoCompleteContributorDefinition;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeDescriptor;
 
+import java.util.Optional;
+
+import static com.reedelk.plugin.assertion.component.AutoCompleteContributorDefinitionMatchers.AutoCompleteContributorDefinitionMatcher;
 import static com.reedelk.plugin.assertion.component.TypeDescriptorMatchers.TypeDescriptorMatcher;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,6 +36,13 @@ public class ComponentPropertyDescriptorAssertion {
     public ComponentPropertyDescriptorAssertion hasType(TypeDescriptorMatcher matcher) {
         TypeDescriptor propertyType = propertyDescriptor.getPropertyType();
         assertThat(matcher.matches(propertyType)).isTrue();
+        return this;
+    }
+
+    public ComponentPropertyDescriptorAssertion hasAutoCompleteContributorDefinition(AutoCompleteContributorDefinitionMatcher matcher) {
+        Optional<AutoCompleteContributorDefinition> definition = propertyDescriptor.getAutoCompleteContributorDefinition();
+        assertThat(definition).isPresent();
+        assertThat(matcher.matches(definition.get()));
         return this;
     }
 }

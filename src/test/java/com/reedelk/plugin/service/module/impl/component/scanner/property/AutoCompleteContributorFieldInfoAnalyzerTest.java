@@ -1,6 +1,7 @@
 package com.reedelk.plugin.service.module.impl.component.scanner.property;
 
-import com.reedelk.plugin.component.domain.AutoCompleteContributorDefinition;
+import com.reedelk.plugin.assertion.PluginAssertion;
+import com.reedelk.plugin.assertion.component.AutoCompleteContributorDefinitionMatchers;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeDynamicValueDescriptor;
 import com.reedelk.plugin.service.module.impl.component.scanner.AbstractScannerTest;
@@ -15,9 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.Arrays;
 
 @ExtendWith(MockitoExtension.class)
 class AutoCompleteContributorFieldInfoAnalyzerTest extends AbstractScannerTest {
@@ -51,14 +50,8 @@ class AutoCompleteContributorFieldInfoAnalyzerTest extends AbstractScannerTest {
         analyzer.handle(propertyWithAutoCompleteContributor, builder, context);
 
         // Then
-        Optional<AutoCompleteContributorDefinition> autoCompleteDefinition =
-                builder.build().getAutoCompleteContributorDefinition();
-        assertThat(autoCompleteDefinition).isPresent();
 
-        AutoCompleteContributorDefinition definition = autoCompleteDefinition.get();
-        assertThat(definition.isError()).isFalse();
-        assertThat(definition.isContext()).isTrue();
-        assertThat(definition.isMessage()).isTrue();
-        definition.getContributions();
+        PluginAssertion.assertThat(builder.build()).hasAutoCompleteContributorDefinition(
+                AutoCompleteContributorDefinitionMatchers.has(true, true, false, Arrays.asList("")));
     }
 }
