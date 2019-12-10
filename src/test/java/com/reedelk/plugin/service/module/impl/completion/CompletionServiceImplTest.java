@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -90,16 +91,8 @@ class CompletionServiceImplTest {
                 .type(new TypeDynamicValueDescriptor<>(DynamicString.class))
                 .autoComplete(autoCompleteContribution)
                 .build();
-        List<ComponentPropertyDescriptor> propertyDescriptors = Collections.singletonList(propertyDescriptor);
 
-        ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
-                .fullyQualifiedName(fullyQualifiedName)
-                .propertyDescriptors(propertyDescriptors)
-                .build();
-
-        List<ComponentDescriptor> componentDescriptors = Collections.singletonList(descriptor);
-
-        ModuleComponents moduleComponents = new ModuleComponents("my-module", componentDescriptors);
+        ModuleComponents moduleComponents = createModuleComponentsWith(fullyQualifiedName, propertyDescriptor);
         List<ModuleComponents> allComponents = Collections.singletonList(moduleComponents);
         doReturn(allComponents).when(mockComponentService).getModuleComponents();
 
@@ -114,6 +107,65 @@ class CompletionServiceImplTest {
                 .contains("messageCustom2", SuggestionType.VARIABLE, "MyType2")
                 .contains("messageCustom3", SuggestionType.VARIABLE, "MyType3")
                 .hasSize(3);
+    }
+
+    @Test
+    void shouldReturnCustomFunctionsSuggestions() {
+        // Given
+        AutoCompleteContributorDefinition utilsDefinitions = new AutoCompleteContributorDefinition(Arrays.asList(
+                "Util[VARIABLE:Util]",
+                "Util.tmpdir()[FUNCTION:String]",
+                "Util.uuid()[FUNCTION:String]"));
+
+        AutoCompleteContributorDefinition loggerDefinitions = new AutoCompleteContributorDefinition(Arrays.asList(
+                "Log[VARIABLE:Log]",
+                "Log.info('')[FUNCTION:void]",
+                "Log.debug('')[FUNCTION:void]",
+                "Log.warn('')[FUNCTION:void]",
+                "Log.error('')[FUNCTION:void]",
+                "Log.trace('')[FUNCTION:void]"));
+        List<AutoCompleteContributorDefinition> definitions =
+                Arrays.asList(loggerDefinitions, utilsDefinitions);
+
+        doReturn(Collections.emptyList()).when(mockComponentService).getModuleComponents();
+        doReturn(definitions).when(mockComponentService).getAutoCompleteContributorDefinition();
+
+        service.updateComponentsSuggestions();
+
+        // When
+        List<Suggestion> suggestions = service.completionTokensOf(COMPONENT_QUALIFIED_NAME, "Log.");
+
+        // Then
+        PluginAssertion.assertThat(suggestions)
+                .contains("info('')", SuggestionType.FUNCTION, "void")
+                .contains("debug('')", SuggestionType.FUNCTION, "void")
+                .contains("warn('')", SuggestionType.FUNCTION, "void")
+                .contains("error('')", SuggestionType.FUNCTION, "void")
+                .contains("trace('')", SuggestionType.FUNCTION, "void")
+                .hasSize(5);
+    }
+
+    @Test
+    void shouldUpdateComponentsSuggestionFireCompletionsUpdatedEvent() {
+        // Given
+        doReturn(Collections.emptyList()).when(mockComponentService).getModuleComponents();
+
+        // When
+        service.updateComponentsSuggestions();
+
+        // Then
+        // One time on initialization, the second time due  to the call above.
+        verify(service, times(2)).fireCompletionsUpdatedEvent();
+    }
+
+    private ModuleComponents createModuleComponentsWith(String componentFullyQualifiedName, ComponentPropertyDescriptor propertyDescriptor) {
+        List<ComponentPropertyDescriptor> propertyDescriptors = Collections.singletonList(propertyDescriptor);
+        ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+                .fullyQualifiedName(componentFullyQualifiedName)
+                .propertyDescriptors(propertyDescriptors)
+                .build();
+        List<ComponentDescriptor> componentDescriptors = Collections.singletonList(descriptor);
+        return new ModuleComponents("my-module", componentDescriptors);
     }
 
     class TestableCompletionService extends CompletionServiceImpl {
