@@ -131,7 +131,7 @@ public class RuntimeRunConfiguration extends RunConfigurationBase<RuntimeRunConf
     private static void checkPortAvailableOrThrow(String runtimeBindAddress, int runtimeBindPort) throws ExecutionException {
         boolean isPortAvailable = NetworkUtils.available(runtimeBindAddress, runtimeBindPort);
         if (!isPortAvailable) {
-            String message = message("runtime.run.error.port.in.use", runtimeBindPort);
+            String message = message("runtime.run.error.port.in.use", String.valueOf(runtimeBindPort));
             throw new ExecutionException(message);
         }
     }

@@ -28,11 +28,11 @@ public class ScriptInputField extends DisposablePanel implements ScriptServiceIm
 
     private static final ScriptResource UNSELECTED_SCRIPT_RESOURCE = new UnselectedScriptResource();
 
-    private transient final Module module;
-    private transient final MessageBusConnection connect;
-    private transient final PropertyAccessor propertyAccessor;
-    private transient final ScriptActionsPanel scriptActionsPanel;
-    private transient final ScriptSelectorCombo scriptSelectorCombo;
+    private final transient Module module;
+    private final transient MessageBusConnection connect;
+    private final transient PropertyAccessor propertyAccessor;
+    private final transient ScriptActionsPanel scriptActionsPanel;
+    private final transient ScriptSelectorCombo scriptSelectorCombo;
 
     ScriptInputField(Module module, PropertyAccessor propertyAccessor, ContainerContext context) {
         this.module = module;

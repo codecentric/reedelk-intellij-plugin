@@ -20,7 +20,7 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class ComponentScanner {
 
-    private final Logger LOG = Logger.getInstance(ComponentScanner.class);
+    private static final Logger LOG = Logger.getInstance(ComponentScanner.class);
 
     public List<ComponentDescriptor> from(Package targetPackage) {
         ScanResult scanResult = instantiateScanner()

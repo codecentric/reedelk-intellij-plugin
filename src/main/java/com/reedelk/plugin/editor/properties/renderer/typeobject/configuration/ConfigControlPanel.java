@@ -20,11 +20,12 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class ConfigControlPanel extends DisposablePanel {
 
-    private transient final Module module;
+    private final transient Module module;
+    private final transient ClickableLabel editAction;
+    private final transient ClickableLabel deleteAction;
+    private final transient TypeObjectDescriptor typeDescriptor;
+
     private transient ConfigMetadata selected;
-    private transient final ClickableLabel editAction;
-    private transient final ClickableLabel deleteAction;
-    private transient final TypeObjectDescriptor typeDescriptor;
 
     public ConfigControlPanel(Module module, TypeObjectDescriptor typeDescriptor) {
         this.module = module;

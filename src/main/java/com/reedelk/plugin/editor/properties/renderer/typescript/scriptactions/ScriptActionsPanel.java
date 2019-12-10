@@ -15,10 +15,10 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class ScriptActionsPanel extends DisposablePanel {
 
-    private transient final Module module;
-    private transient final ContainerContext context;
-    private transient final ClickableLabel editAction;
-    private transient final ClickableLabel deleteAction;
+    private final transient Module module;
+    private final transient ContainerContext context;
+    private final transient ClickableLabel editAction;
+    private final transient ClickableLabel deleteAction;
     private transient ScriptResource selected;
 
     public ScriptActionsPanel(Module module, ContainerContext context) {
