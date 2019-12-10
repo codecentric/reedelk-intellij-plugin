@@ -121,7 +121,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
             mavenJarComponentsMap.clear();
             autoCompleteContributorDefinitions.clear();
 
-            publisher.onComponentListUpdate(module);
+            publisher.onComponentListUpdate();
 
             // Update the components definitions from maven project
             MavenUtils.getMavenProject(module.getProject(), module.getName()).ifPresent(mavenProject -> {
@@ -139,7 +139,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                             autoCompleteContributorDefinitions.add(
                                     new AutoCompleteContributorDefinition(from));
 
-                            publisher.onComponentListUpdate(module);
+                            publisher.onComponentListUpdate();
                         });
             });
         });
@@ -163,7 +163,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                 });
             });
 
-            publisher.onComponentListUpdate(module);
+            publisher.onComponentListUpdate();
         });
     }
 

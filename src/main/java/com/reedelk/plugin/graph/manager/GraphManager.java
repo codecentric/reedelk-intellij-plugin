@@ -88,7 +88,7 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
     }
 
     @Override
-    public void onComponentListUpdate(Module module) {
+    public void onComponentListUpdate() {
         // When the component list is updated, we MUST deserialize so that
         // unknown components are correctly resolved and visualized in the Designer.
         deserializeDocument();

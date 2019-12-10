@@ -48,7 +48,7 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
 
         this.defaultComponentTrie = new Trie();
         this.customFunctionsTrie = new Trie();
-        PluginExecutor.getInstance().submit(this::initialize);
+        initialize();
     }
 
     @Override
@@ -71,17 +71,12 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
     }
 
     @Override
-    public void onComponentListUpdate(Module module) {
-        updateComponents(module);
+    public void onComponentListUpdate() {
+        PluginExecutor.getInstance().submit(this::internalUpdateComponents);
     }
 
-    private void updateComponents(Module module) {
-        // Add suggestions from
-        PluginExecutor.getInstance().submit(() -> internalUpdateComponents(module));
-    }
-
-    private void internalUpdateComponents(Module module) {
-        // Since we are
+    private void internalUpdateComponents() {
+        // Since we are updating we must clear the component tries map.
         componentTriesMap.clear();
         Collection<ComponentsPackage> componentsPackages = ComponentService.getInstance(module).getModulesDescriptors();
         componentsPackages.forEach(componentsPackage -> componentsPackage.getModuleComponents()
@@ -134,7 +129,7 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
         PluginExecutor.getInstance().submit(() -> {
             registerDefaultSuggestionContribution(defaultComponentTrie, DefaultSuggestions.MESSAGE);
             registerDefaultSuggestionContribution(defaultComponentTrie, DefaultSuggestions.CONTEXT);
-            internalUpdateComponents(module);
+            internalUpdateComponents();
         });
     }
 }

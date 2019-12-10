@@ -67,7 +67,7 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
     }
 
     @Override
-    public void onComponentListUpdate(Module module) {
+    public void onComponentListUpdate() {
         // We only update the components for this module if and only if
         // the current selected file belongs to the module for which the
         // components have been updated.
@@ -75,9 +75,7 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
         if (selectedFiles.length > 0) {
             ApplicationManager.getApplication().runReadAction(() -> {
                 Module selectedFileModule = ModuleUtil.findModuleForFile(selectedFiles[0], project);
-                if (module == selectedFileModule) {
-                    updateComponents(module);
-                }
+                updateComponents(selectedFileModule);
             });
         }
     }

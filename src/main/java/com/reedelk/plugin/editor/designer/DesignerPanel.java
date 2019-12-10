@@ -271,7 +271,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
     }
 
     @Override
-    public void onComponentListUpdate(Module module) {
+    public void onComponentListUpdate() {
         if (isVisible) {
             // When the component list is updated or we click on the 'compile' button
             // the graph is de-serialized to apply changes and refresh properties
