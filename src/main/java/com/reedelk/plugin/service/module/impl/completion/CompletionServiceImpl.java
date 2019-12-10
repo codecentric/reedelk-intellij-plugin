@@ -24,11 +24,11 @@ import static java.util.stream.Collectors.toList;
 
 public class CompletionServiceImpl implements CompletionService, CompilationStatusListener, ComponentListUpdateNotifier {
 
-    private final Trie defaultComponentTrie;
-    private Trie customFunctionsTrie;
     private final Module module;
-
+    private final Trie defaultComponentTrie;
     private final Map<String, Trie> componentTriesMap = new HashMap<>();
+
+    private Trie customFunctionsTrie;
     private OnCompletionEvent onCompletionEvent;
 
     // Custom Functions are global so they are always present.
