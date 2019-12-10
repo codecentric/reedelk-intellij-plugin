@@ -1,10 +1,13 @@
 package com.reedelk.plugin.service.module.impl.completion;
 
 import com.reedelk.plugin.commons.SuggestionDefinitionMatcher;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class Trie {
 
@@ -12,19 +15,29 @@ public class Trie {
 
     /**
      * Inserts a suggestion definition into the suggestion tree.
-     * @param suggestionDefinition A suggestion definition is a triple: suggestionToken[suggestionType:suggestionName], e.g: messages[VARIABLE:Message[]]
+     * @param suggestionDefinitions A suggestion definition is a triple: suggestionToken[suggestionType:suggestionName], e.g: messages[VARIABLE:Message[]]
      */
-    public void insert(String suggestionDefinition) {
-        SuggestionDefinitionMatcher.of(suggestionDefinition).ifPresent(parsed -> insert(parsed.getMiddle(), parsed.getRight(), parsed.getLeft()));
+    void insert(Collection<String> suggestionDefinitions) {
+        suggestionDefinitions.forEach(suggestionDefinition ->
+                SuggestionDefinitionMatcher.of(suggestionDefinition).ifPresent(parsed -> insert(parsed.getMiddle(), parsed.getRight(), parsed.getLeft())));
     }
 
-    public Optional<List<Suggestion>> findByPrefix(String prefix) {
-        return find(prefix).map(trieNode -> {
+    void insert(String ...suggestionDefinitions) {
+        Stream.of(suggestionDefinitions).forEach(suggestionDefinition ->
+                SuggestionDefinitionMatcher.of(suggestionDefinition).ifPresent(parsed -> insert(parsed.getMiddle(), parsed.getRight(), parsed.getLeft())));
+    }
+
+    @NotNull
+    List<Suggestion> findByPrefix(String prefix) {
+        return find(prefix).flatMap(trieNode -> {
+            if (trieNode.isEndOfWord()) {
+                return Optional.empty();
+            }
+
             int i = prefix.lastIndexOf('.');
             String toAppend = i == -1 ? prefix : prefix.substring(i + 1);
-            List<Suggestion> matches = allTokensFrom(toAppend, trieNode);
-            return Optional.of(matches);
-        }).orElse(Optional.empty());
+            return Optional.of(allTokensFrom(toAppend, trieNode));
+        }).orElse(new ArrayList<>());
     }
 
     public void delete(String word) {
@@ -85,17 +98,15 @@ public class Trie {
     private void recurse(String parent, TrieNode trieNode, List<Suggestion> results) {
         if (trieNode.getChildren().isEmpty()) {
             // End of token
-            Suggestion suggestion = new Suggestion(parent, trieNode.getType(), trieNode.getTypeName());
-            results.add(suggestion);
+            results.add(Suggestion.from(parent, trieNode.getType(), trieNode.getTypeName()));
             return;
         }
-        trieNode.getChildren().forEach((character, trieNode1) -> {
+        trieNode.getChildren().forEach((character, childTrieNode) -> {
             if (character != '.') {
                 String newValue = parent + character;
-                recurse(newValue, trieNode1, results);
+                recurse(newValue, childTrieNode, results);
             } else {
-                Suggestion suggestion = new Suggestion(parent, trieNode.getType(), trieNode.getTypeName());
-                results.add(suggestion);
+                results.add(Suggestion.from(parent, trieNode.getType(), trieNode.getTypeName()));
             }
         });
     }

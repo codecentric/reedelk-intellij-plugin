@@ -15,7 +15,10 @@ import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpd
 import com.reedelk.plugin.topic.ReedelkTopics;
 import com.reedelk.runtime.api.commons.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.reedelk.plugin.message.SuggestionsBundle.DefaultSuggestions;
 import static com.reedelk.plugin.topic.ReedelkTopics.COMPLETION_EVENT_TOPIC;
@@ -53,11 +56,10 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
 
     @Override
     public List<Suggestion> completionTokensOf(String componentFullyQualifiedName, String token) {
-        Optional<List<Suggestion>> componentSuggestions = componentTriesMap.getOrDefault(componentFullyQualifiedName, defaultComponentTrie).findByPrefix(token);
-        Optional<List<Suggestion>> customFunctionsSuggestions = customFunctionsTrie.findByPrefix(token);
-        List<Suggestion> results = new ArrayList<>();
-        componentSuggestions.ifPresent(results::addAll);
-        customFunctionsSuggestions.ifPresent(results::addAll);
+        List<Suggestion> componentSuggestions = componentTriesMap.getOrDefault(componentFullyQualifiedName, defaultComponentTrie).findByPrefix(token);
+        List<Suggestion> customFunctionsSuggestions = customFunctionsTrie.findByPrefix(token);
+        List<Suggestion> results = new ArrayList<>(componentSuggestions);
+        results.addAll(customFunctionsSuggestions);
         return results;
     }
 
@@ -81,9 +83,7 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
         // all the custom functions suggestions for all dependencies of this module.
         customFunctionsTrie = new Trie();
         getComponentService().getAutoCompleteContributorDefinition()
-                .forEach(definition -> definition.getContributions().forEach(contribution -> {
-                    customFunctionsTrie.insert(contribution);
-                }));
+                .forEach(definition -> customFunctionsTrie.insert(definition.getContributions()));
 
         messageBus.syncPublisher(COMPLETION_EVENT_TOPIC).onCompletionsUpdated();
     }
@@ -113,7 +113,7 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
                     if (definition.isContext()) insertSuggestions(componentTrie, DefaultSuggestions.CONTEXT);
                     if (definition.isError()) insertSuggestions(componentTrie, DefaultSuggestions.ERROR);
 
-                    definition.getContributions().forEach(componentTrie::insert);
+                    componentTrie.insert(definition.getContributions());
                     componentTriesMap.put(fullyQualifiedName, componentTrie);
                 });
             }
@@ -121,6 +121,6 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
     }
 
     private void insertSuggestions(Trie trie, DefaultSuggestions defaultSuggestions) {
-        Arrays.stream(defaultSuggestions.tokens()).forEach(trie::insert);
+        trie.insert(defaultSuggestions.tokens());
     }
 }
