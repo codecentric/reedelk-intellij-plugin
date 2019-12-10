@@ -25,5 +25,4 @@ public class RuntimeRunConfigurationFactory extends ConfigurationFactory {
     public String getName() {
         return FACTORY_NAME;
     }
-
 }
