@@ -43,4 +43,16 @@ class SuggestionDefinitionMatcherTest {
         assertThat(parsedSuggestion.getMiddle()).isEqualTo(SuggestionType.VARIABLE);
         assertThat(parsedSuggestion.getRight()).isEqualTo("Message[]");
     }
+
+    @Test
+    void shouldReturnEmptyWhenSuggestionIsNotWellFormed() {
+        // Given
+        String suggestionTokenDefinition = "message[]";
+
+        // When
+        Optional<Triple<String, SuggestionType, String>> parsed = SuggestionDefinitionMatcher.of(suggestionTokenDefinition);
+
+        // Then
+        assertThat(parsed).isNotPresent();
+    }
 }

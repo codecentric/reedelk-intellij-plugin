@@ -10,6 +10,10 @@ public class Trie {
 
     private TrieNode root = new TrieNode();
 
+    /**
+     * Inserts a suggestion definition into the suggestion tree.
+     * @param suggestionDefinition A suggestion definition is a triple: suggestionToken[suggestionType:suggestionName], e.g: messages[VARIABLE:Message[]]
+     */
     public void insert(String suggestionDefinition) {
         SuggestionDefinitionMatcher.of(suggestionDefinition).ifPresent(parsed -> insert(parsed.getMiddle(), parsed.getRight(), parsed.getLeft()));
     }
@@ -71,7 +75,6 @@ public class Trie {
         }
         return false;
     }
-
 
     private List<Suggestion> allTokensFrom(String parent, TrieNode trieNode) {
         List<Suggestion> results = new ArrayList<>();
