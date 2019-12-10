@@ -108,8 +108,9 @@ public class ComponentPropertyDescriptor {
             return this;
         }
 
-        public void autoComplete(AutoCompleteContributorDefinition definition) {
+        public Builder autoComplete(AutoCompleteContributorDefinition definition) {
             this.autoCompleteContributionsDefinition = definition;
+            return this;
         }
 
         public ComponentPropertyDescriptor build() {

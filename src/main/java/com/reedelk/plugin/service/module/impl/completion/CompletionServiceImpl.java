@@ -44,6 +44,10 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
         connection.subscribe(CompilerTopics.COMPILATION_STATUS, this);
         connection.subscribe(ReedelkTopics.COMPONENTS_UPDATE_EVENTS, this);
 
+        initializeAsync();
+    }
+
+    void initializeAsync() {
         PluginExecutor.getInstance().submit(this::initializeSuggestions);
     }
 
@@ -85,10 +89,10 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
         getComponentService().getAutoCompleteContributorDefinition()
                 .forEach(definition -> customFunctionsTrie.insert(definition.getContributions()));
 
-        messageBus.syncPublisher(COMPLETION_EVENT_TOPIC).onCompletionsUpdated();
+        fireCompletionsUpdatedEvent();
     }
 
-    private ComponentService getComponentService() {
+    ComponentService getComponentService() {
         return ComponentService.getInstance(module);
     }
 
@@ -96,6 +100,10 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
         insertSuggestions(defaultComponentTrie, DefaultSuggestions.MESSAGE);
         insertSuggestions(defaultComponentTrie, DefaultSuggestions.CONTEXT);
         updateComponentsSuggestions();
+    }
+
+    void fireCompletionsUpdatedEvent() {
+        messageBus.syncPublisher(COMPLETION_EVENT_TOPIC).onCompletionsUpdated();
     }
 
     private void addSuggestionFrom(String fullyQualifiedName, List<ComponentPropertyDescriptor> propertyDescriptors) {
