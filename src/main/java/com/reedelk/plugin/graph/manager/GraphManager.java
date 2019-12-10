@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.service.project.DesignerSelectionService.CurrentSelectionListener;
 import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
 
@@ -138,16 +139,15 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
 
         @Override
         public void run() {
-            // Background Thread. We are assuming that deserialization
-            // of the graph from JSON is a lengthy operation.
             try {
-                FlowGraph deSerializedGraph = deserialize(module, document, graphProvider);
-                update(deSerializedGraph);
-            } catch (Exception e) {
-                LOG.warn("Deserialization error", e);
-                update(new ErrorFlowGraph(e));
+                // We are assuming that deserialization of the graph from JSON is a lengthy operation.
+                // Therefore we execute it in a background thread.
+                FlowGraph deSerializedFlow = deserialize(module, document, graphProvider);
+                update(deSerializedFlow);
+            } catch (Exception exception) {
+                LOG.warn(message("graph.manager.error.deserialization", document.getText(), exception.getMessage()), exception);
+                update(new ErrorFlowGraph(exception));
             }
-
         }
 
         private void update(FlowGraph deSerializedGraph) {
