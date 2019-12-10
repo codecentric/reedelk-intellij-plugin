@@ -104,6 +104,7 @@ public class ScriptServiceImpl implements ScriptService {
                         // Create the script file
                         String scriptFileNameWithExtension = normalizedScriptFilePath.getFileName().toString();
                         VirtualFile addedScriptVf = directoryVirtualFile.createChildData(null, scriptFileNameWithExtension);
+                        VfsUtil.saveText(addedScriptVf, message("script.default.template"));
                         publisher.onAddSuccess(new ScriptResource(normalizedScriptFilePath.toString(), addedScriptVf.getNameWithoutExtension()));
 
                     } catch (IOException exception) {
