@@ -18,6 +18,8 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.util.Collections;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
+
 public class RuntimeRunConfiguration extends RunConfigurationBase<RuntimeRunConfiguration> implements ModuleRunProfile {
 
     private static final String PREFIX = "RuntimeRunConfiguration-";
@@ -26,8 +28,8 @@ public class RuntimeRunConfiguration extends RunConfigurationBase<RuntimeRunConf
     private static final String RUNTIME_HOME_DIRECTORY = PREFIX + "RuntimeHomeDirectory";
 
     private String vmOptions;
-    private String runtimePort = "9988";
-    private String runtimeBindAddress = "localhost";
+    private String runtimePort = message("runtime.run.default.port");
+    private String runtimeBindAddress = message("runtime.run.default.bindAddress");
     private String runtimeHomeDirectory;
 
     protected RuntimeRunConfiguration(@NotNull Project project, @Nullable ConfigurationFactory factory, @Nullable String name) {
@@ -46,9 +48,9 @@ public class RuntimeRunConfiguration extends RunConfigurationBase<RuntimeRunConf
     @Override
     public void checkConfiguration() throws RuntimeConfigurationException {
         super.checkConfiguration();
-        checkOrThrow(StringUtils.isNotBlank(runtimeHomeDirectory), "ESB Runtime home directory can not be empty");
-        checkOrThrow(new File(runtimeHomeDirectory).exists(), "ESB Runtime home directory must be present");
-        checkOrThrow(isNumberGreaterOrEqualToZero(runtimePort), "ESB Runtime port must be a number greater than zero");
+        checkOrThrow(StringUtils.isNotBlank(runtimeHomeDirectory), message("runtime.run.error.home.directory.empty"));
+        checkOrThrow(new File(runtimeHomeDirectory).exists(), message("runtime.run.error.home.directory.missing"));
+        checkOrThrow(isNumberGreaterOrEqualToZero(runtimePort), message("runtime.run.error.port.greater.than.zero"));
     }
 
     @Override
@@ -129,7 +131,8 @@ public class RuntimeRunConfiguration extends RunConfigurationBase<RuntimeRunConf
     private static void checkPortAvailableOrThrow(String runtimeBindAddress, int runtimeBindPort) throws ExecutionException {
         boolean isPortAvailable = NetworkUtils.available(runtimeBindAddress, runtimeBindPort);
         if (!isPortAvailable) {
-            throw new ExecutionException(String.format("Could not start runtime on port %s. The port is in use.", runtimeBindPort));
+            String message = message("runtime.run.error.port.in.use", runtimeBindPort);
+            throw new ExecutionException(message);
         }
     }
 }
