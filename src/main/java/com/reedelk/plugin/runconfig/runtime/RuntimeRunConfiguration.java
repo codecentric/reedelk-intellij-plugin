@@ -9,6 +9,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizerUtil;
 import com.reedelk.plugin.commons.NetworkUtils;
+import com.reedelk.plugin.service.project.PreferredRunConfigurationService;
 import com.reedelk.plugin.service.project.SourceChangeService;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.jdom.Element;
@@ -77,6 +78,9 @@ public class RuntimeRunConfiguration extends RunConfigurationBase<RuntimeRunConf
 
         // Reset the state of the modules for this runtime
         SourceChangeService.getInstance(getProject()).reset(getName());
+
+        PreferredRunConfigurationService.getInstance(getProject())
+                .setLastRuntimeRunConfiguration(getName());
 
         return new RuntimeRunCommandLine(this, environment);
     }

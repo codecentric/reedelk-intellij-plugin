@@ -61,7 +61,6 @@
         <executor implementation="com.reedelk.plugin.runconfig.module.runner.ModuleDeployExecutor"/>
         <executor implementation="com.reedelk.plugin.runconfig.module.runner.ModuleUnDeployExecutor"/>
 
-
         <!-- Run Configurations -->
         <configurationType implementation="com.reedelk.plugin.runconfig.runtime.RuntimeRunConfigurationType"/>
         <configurationType implementation="com.reedelk.plugin.runconfig.module.ModuleRunConfigurationType"/>
@@ -92,6 +91,10 @@
             <interface-class>com.reedelk.plugin.service.project.DesignerSelectionService</interface-class>
             <implementation-class>com.reedelk.plugin.service.project.impl.designerselection.DesignerSelectionServiceImpl
             </implementation-class>
+        </component>
+        <component>
+            <interface-class>com.reedelk.plugin.service.project.PreferredRunConfigurationService</interface-class>
+            <implementation-class>com.reedelk.plugin.service.project.impl.runconfiguration.PreferredRunConfigurationServiceImpl</implementation-class>
         </component>
     </project-components>
 

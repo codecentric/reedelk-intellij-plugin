@@ -14,6 +14,7 @@ import com.reedelk.plugin.runconfig.module.runner.ModuleDeployExecutor;
 import com.reedelk.plugin.runconfig.module.runner.ModuleUnDeployExecutor;
 import com.reedelk.plugin.runconfig.module.runprofile.DeployRunProfile;
 import com.reedelk.plugin.runconfig.module.runprofile.UndeployRunProfile;
+import com.reedelk.plugin.service.project.PreferredRunConfigurationService;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,6 +52,8 @@ public class ModuleRunConfiguration extends RunConfigurationBase implements
 
         // Deploy Executor
         if (ModuleDeployExecutor.EXECUTOR_ID.equals(executor.getId())) {
+            PreferredRunConfigurationService.getInstance(project)
+                    .setLastModuleRunConfiguration(getName());
             return new DeployRunProfile(project, moduleName, runtimeConfigName);
 
             // UnDeploy Executor
