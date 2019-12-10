@@ -24,13 +24,13 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.util.Optional.ofNullable;
 import static javax.swing.SwingConstants.CENTER;
 
-public class EditScriptDialog extends DialogWrapper {
+public class DialogEditScript extends DialogWrapper {
 
     private final String scriptFilePathAndName;
     private final DisposablePanel editorPanel;
 
 
-    EditScriptDialog(@NotNull Module module, String scriptFilePathAndName, ContainerContext context) {
+    DialogEditScript(@NotNull Module module, String scriptFilePathAndName, ContainerContext context) {
         super(module.getProject(), false);
         setTitle(message("script.dialog.edit.title"));
         setResizable(true);
