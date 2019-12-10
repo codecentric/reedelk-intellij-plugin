@@ -5,6 +5,7 @@ import com.reedelk.plugin.component.domain.ComponentDescriptor;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.ComponentType;
 import com.reedelk.plugin.service.module.impl.component.scanner.property.ComponentPropertyAnalyzer;
+import com.reedelk.plugin.testutils.ScannerTestUtils;
 import com.reedelk.plugin.testutils.TestComponent;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.FieldInfo;
@@ -22,7 +23,7 @@ import static java.util.Optional.of;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ComponentAnalyzerTest extends AbstractScannerTest {
+class ComponentAnalyzerTest {
 
     @Mock
     private ComponentPropertyAnalyzer propertyAnalyzer;
@@ -44,7 +45,7 @@ class ComponentAnalyzerTest extends AbstractScannerTest {
 
     @BeforeEach
     void setUp() {
-        ScanContext scanContext = scan(TestComponent.class);
+        ScannerTestUtils.ScanContext scanContext = ScannerTestUtils.scan(TestComponent.class);
 
         componentClassInfo = scanContext.targetComponentClassInfo;
 

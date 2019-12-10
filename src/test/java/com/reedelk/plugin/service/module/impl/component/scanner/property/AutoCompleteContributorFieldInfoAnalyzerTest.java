@@ -3,8 +3,8 @@ package com.reedelk.plugin.service.module.impl.component.scanner.property;
 import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeDynamicValueDescriptor;
-import com.reedelk.plugin.service.module.impl.component.scanner.AbstractScannerTest;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentAnalyzerContext;
+import com.reedelk.plugin.testutils.ScannerTestUtils;
 import com.reedelk.plugin.testutils.TestComponentWithAutoCompleteContributor;
 import com.reedelk.runtime.api.script.dynamicvalue.DynamicString;
 import io.github.classgraph.ClassInfo;
@@ -20,7 +20,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 @ExtendWith(MockitoExtension.class)
-class AutoCompleteContributorFieldInfoAnalyzerTest extends AbstractScannerTest {
+class AutoCompleteContributorFieldInfoAnalyzerTest {
 
     @Mock
     private ComponentAnalyzerContext context;
@@ -31,7 +31,7 @@ class AutoCompleteContributorFieldInfoAnalyzerTest extends AbstractScannerTest {
 
     @BeforeAll
     static void beforeAll() {
-        ScanContext scanContext = scan(TestComponentWithAutoCompleteContributor.class);
+        ScannerTestUtils.ScanContext scanContext = ScannerTestUtils.scan(TestComponentWithAutoCompleteContributor.class);
         componentClassInfo = scanContext.targetComponentClassInfo;
     }
 

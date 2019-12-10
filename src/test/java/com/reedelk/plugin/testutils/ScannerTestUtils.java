@@ -1,10 +1,11 @@
-package com.reedelk.plugin.service.module.impl.component.scanner;
+package com.reedelk.plugin.testutils;
 
+import com.reedelk.plugin.service.module.impl.component.scanner.ComponentAnalyzerContext;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 
-public abstract class AbstractScannerTest {
+public class ScannerTestUtils {
 
     public static ScanContext scan(Class<?> targetComponentClazz) {
         ScanResult scanResult = new ClassGraph()

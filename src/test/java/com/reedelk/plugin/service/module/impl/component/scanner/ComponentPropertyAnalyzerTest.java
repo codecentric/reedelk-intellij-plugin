@@ -5,6 +5,7 @@ import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.assertion.component.TypeDescriptorMatchers;
 import com.reedelk.plugin.component.domain.*;
 import com.reedelk.plugin.service.module.impl.component.scanner.property.ComponentPropertyAnalyzer;
+import com.reedelk.plugin.testutils.ScannerTestUtils;
 import com.reedelk.plugin.testutils.TestComponent;
 import com.reedelk.runtime.api.message.content.MimeType;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicStringMap;
@@ -21,14 +22,14 @@ import java.util.*;
 import static com.reedelk.plugin.assertion.component.TypeDescriptorMatchers.TypeDescriptorMatcher;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ComponentPropertyAnalyzerTest extends AbstractScannerTest {
+class ComponentPropertyAnalyzerTest {
 
     private static ComponentPropertyAnalyzer analyzer;
     private static ClassInfo componentClassInfo;
 
     @BeforeAll
     static void beforeAll() {
-        ScanContext scanContext = scan(TestComponent.class);
+        ScannerTestUtils.ScanContext scanContext = ScannerTestUtils.scan(TestComponent.class);
         analyzer = new ComponentPropertyAnalyzer(scanContext.context);
         componentClassInfo = scanContext.targetComponentClassInfo;
     }
