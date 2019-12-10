@@ -43,7 +43,7 @@ public class DialogAddScript extends DialogWrapper {
         InputField<String> field = new StringInputField(StringUtils.EMPTY);
         field.addListener(value -> scriptFileNameWithPathToAdd = (String) value);
         FormBuilder.get()
-                .addLabel("Script file name", panel)
+                .addLabel(message("script.dialog.add.label.file.name"), panel)
                 .addLastField(field, panel);
 
         panel.setPreferredSize(new Dimension(350, 0));
