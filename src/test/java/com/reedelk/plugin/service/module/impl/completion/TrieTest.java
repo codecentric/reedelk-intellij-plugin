@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class TrieTest {
@@ -35,8 +36,7 @@ class TrieTest {
         Trie trie = new Trie();
 
         // When
-        trie.insert(suggestionToken1);
-        trie.insert(suggestionToken2);
+        trie.insert(asList(suggestionToken1, suggestionToken2));
 
         // Then
         Suggestion expected1 = Suggestion.from("message", SuggestionType.VARIABLE, "Message");
@@ -52,11 +52,7 @@ class TrieTest {
         Trie trie = new Trie();
 
         // When
-        trie.insert(suggestionToken1);
-        trie.insert(suggestionToken2);
-        trie.insert(suggestionToken3);
-        trie.insert(suggestionToken4);
-        trie.insert(suggestionToken5);
+        trie.insert(suggestionToken1, suggestionToken2, suggestionToken3, suggestionToken4, suggestionToken5);
 
         // Then
         Suggestion expected1 = Suggestion.from("mimeType1()", SuggestionType.FUNCTION, "MimeType");
@@ -73,11 +69,7 @@ class TrieTest {
         Trie trie = new Trie();
 
         // When
-        trie.insert(suggestionToken1);
-        trie.insert(suggestionToken2);
-        trie.insert(suggestionToken3);
-        trie.insert(suggestionToken4);
-        trie.insert(suggestionToken5);
+        trie.insert(suggestionToken1, suggestionToken2, suggestionToken3, suggestionToken4, suggestionToken5);
 
         // Then
         Suggestion expected1 = Suggestion.from("mimeType1()", SuggestionType.FUNCTION, "MimeType");
@@ -94,14 +86,39 @@ class TrieTest {
         Trie trie = new Trie();
 
         // When
-        trie.insert(suggestionToken1);
-        trie.insert(suggestionToken2);
-        trie.insert(suggestionToken3);
-        trie.insert(suggestionToken4);
-        trie.insert(suggestionToken5);
+        trie.insert(suggestionToken1, suggestionToken2, suggestionToken3, suggestionToken4, suggestionToken5);
 
         // Then
         List<Suggestion> results = trie.findByPrefix("message.mimeType1()");
+        assertThat(results).isEmpty();
+    }
+
+    @Test
+    void shouldCorrectFindAllRootSuggestionsWhenPrefixIsEmptyString() {
+        // Given
+        Trie trie = new Trie();
+
+        // When
+        trie.insert(asList(suggestionToken1, suggestionToken2, suggestionToken3, suggestionToken4, suggestionToken5));
+
+        // Then
+        List<Suggestion> results = trie.findByPrefix("");
+
+        Suggestion expected1 = Suggestion.from("message", SuggestionType.VARIABLE, "Message");
+        Suggestion expected2 = Suggestion.from("multiply()", SuggestionType.FUNCTION, "int");
+        assertThat(results).containsExactlyInAnyOrder(expected1, expected2);
+    }
+
+    @Test
+    void shouldReturnEmptyWhenPrefixEndsWithOpenParenthesis() {
+        // Given
+        Trie trie = new Trie();
+
+        // When
+        trie.insert(suggestionToken1, suggestionToken2, suggestionToken3, suggestionToken4, suggestionToken5);
+
+        // Then
+        List<Suggestion> results = trie.findByPrefix("message.mimeType1(");
         assertThat(results).isEmpty();
     }
 }

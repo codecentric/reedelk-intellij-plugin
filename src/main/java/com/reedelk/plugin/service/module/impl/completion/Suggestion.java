@@ -44,4 +44,13 @@ public class Suggestion {
     public int hashCode() {
         return Objects.hash(token, typeName, type);
     }
+
+    @Override
+    public String toString() {
+        return "Suggestion{" +
+                "token='" + token + '\'' +
+                ", typeName='" + typeName + '\'' +
+                ", type=" + type +
+                '}';
+    }
 }

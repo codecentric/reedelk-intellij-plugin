@@ -11,6 +11,8 @@ import java.util.stream.Stream;
 
 public class Trie {
 
+    private static final List<Suggestion> EMPTY = new ArrayList<>();
+
     private TrieNode root = new TrieNode();
 
     /**
@@ -29,6 +31,7 @@ public class Trie {
 
     @NotNull
     List<Suggestion> findByPrefix(String prefix) {
+        if (prefix.endsWith("(")) return EMPTY;
         return find(prefix).flatMap(trieNode -> {
             if (trieNode.isEndOfWord()) {
                 return Optional.empty();
