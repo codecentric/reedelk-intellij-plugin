@@ -12,7 +12,7 @@ import com.reedelk.plugin.template.Template.HelloWorld;
 
 import java.util.UUID;
 
-import static com.reedelk.plugin.commons.Defaults.BASE_RESOURCE_FOLDER;
+import static com.reedelk.plugin.commons.Defaults.PROJECT_RESOURCES_FOLDER;
 import static com.reedelk.runtime.commons.ModuleProperties.*;
 
 class DefaultProjectBuilderHelper extends AbstractProjectBuilderHelper {
@@ -30,18 +30,18 @@ class DefaultProjectBuilderHelper extends AbstractProjectBuilderHelper {
             String configId = UUID.randomUUID().toString();
 
             // Script
-            createDirectory(root, BASE_RESOURCE_FOLDER + Script.RESOURCE_DIRECTORY).ifPresent(scriptDirectory ->
+            createDirectory(root, PROJECT_RESOURCES_FOLDER + Script.RESOURCE_DIRECTORY).ifPresent(scriptDirectory ->
                     createFromTemplate(project, HelloWorld.SCRIPT, scriptDirectory));
 
             // Config
-            createDirectory(root, BASE_RESOURCE_FOLDER + Config.RESOURCE_DIRECTORY).ifPresent(configDirectory -> {
+            createDirectory(root, PROJECT_RESOURCES_FOLDER + Config.RESOURCE_DIRECTORY).ifPresent(configDirectory -> {
                 String title = ReedelkBundle.message("hello.world.sample.config.title");
                 ConfigProperties configProperties = new ConfigProperties(configId, title);
                 createFromTemplate(project, HelloWorld.CONFIG, configProperties, configDirectory);
             });
 
             // Flow
-            createDirectory(root, BASE_RESOURCE_FOLDER + Flow.RESOURCE_DIRECTORY).ifPresent(flowsDir -> {
+            createDirectory(root, PROJECT_RESOURCES_FOLDER + Flow.RESOURCE_DIRECTORY).ifPresent(flowsDir -> {
                 String flowId = UUID.randomUUID().toString();
                 String title = ReedelkBundle.message("hello.world.sample.flow.title");
                 String description = ReedelkBundle.message("hello.world.sample.flow.description");

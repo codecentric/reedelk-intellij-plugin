@@ -7,15 +7,14 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
-import static com.reedelk.runtime.commons.ModuleProperties.Config;
-import static com.reedelk.runtime.commons.ModuleProperties.Script;
+import static com.reedelk.plugin.commons.Defaults.PROJECT_RESOURCES_FOLDER;
+import static com.reedelk.runtime.commons.ModuleProperties.*;
 
 public class ModuleUtils {
 
-    private static final String PROJECT_RESOURCES_FOLDER = Paths.get("src", "main", "resources").toString();
-
     private ModuleUtils() {
     }
+
     public static Optional<String> getConfigsFolder(Module module) {
         return getResourcesFolder(module).map(resources ->
                 Paths.get(resources, Config.RESOURCE_DIRECTORY).toString());
@@ -24,6 +23,16 @@ public class ModuleUtils {
     public static Optional<String> getScriptsFolder(Module module) {
         return getResourcesFolder(module).map(resources ->
                 Paths.get(resources, Script.RESOURCE_DIRECTORY).toString());
+    }
+
+    public static Optional<String> getFlowsFolder(Module module) {
+        return getResourcesFolder(module).map(resources ->
+                Paths.get(resources, Flow.RESOURCE_DIRECTORY).toString());
+    }
+
+    public static Optional<String> getSubFlowsFolder(Module module) {
+        return getResourcesFolder(module).map(resources ->
+                Paths.get(resources, Subflow.RESOURCE_DIRECTORY).toString());
     }
 
     public static Optional<String> getResourcesFolder(Module module) {

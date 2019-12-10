@@ -8,6 +8,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -43,7 +44,8 @@ abstract class AbstractProjectBuilderHelper {
 
     Optional<VirtualFile> createDirectory(VirtualFile root, String suffix) {
         try {
-            return Optional.ofNullable(VfsUtil.createDirectories(root.getPath() + suffix));
+            String finalDirectoryPath = Paths.get(root.getPath(), suffix).toString();
+            return Optional.ofNullable(VfsUtil.createDirectories(finalDirectoryPath));
         } catch (IOException exception) {
             String message = message("moduleBuilder.hello.world.create.dir.error", suffix, exception.getMessage());
             LOG.warn(message, exception);

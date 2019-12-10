@@ -11,8 +11,8 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.Function;
+import com.reedelk.plugin.commons.HotSwapUtils;
 import com.reedelk.plugin.service.project.SourceChangeService;
-import com.reedelk.runtime.commons.FileExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.SystemIndependent;
 import org.jetbrains.idea.maven.model.MavenConstants;
@@ -29,11 +29,13 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
 
     private static final boolean CHANGED = true;
     private static final boolean UNCHANGED = false;
+    private final Project project;
 
     private Map<String, String> moduleNameRootPathMap = new HashMap<>();
     private Map<BiKey, Boolean> runtimeModuleNameChangedMap = new HashMap<>();
 
     public SourceChangeServiceImpl(Project project) {
+        this.project = project;
         stream(ModuleManager.getInstance(project).getModules()).forEach(new RegisterModuleConsumer());
         project.getMessageBus().connect(this).subscribe(ProjectTopics.MODULES, this);
         project.getMessageBus().connect(this).subscribe(VirtualFileManager.VFS_CHANGES, this);
@@ -73,14 +75,12 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
 
     @Override
     public void after(@NotNull List<? extends VFileEvent> events) {
-        events.stream()
-                .map(VFileEvent::getFile)
-                .forEach(file -> {
-                    if (isNotHotSwappableSource(file)) {
-                        isModuleSRCChange(file).ifPresent(this::setToChangedMatching);
-                        isModulePOMChange(file).ifPresent(this::setToChangedMatching);
-                    }
-                });
+        events.stream().map(VFileEvent::getFile).forEach(file -> {
+            if (!isHotSwappableSource(file)) {
+                isModuleSRCChange(file).ifPresent(this::setToChangedMatching);
+                isModulePOMChange(file).ifPresent(this::setToChangedMatching);
+            }
+        });
     }
 
     @Override
@@ -132,24 +132,11 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
         return startsWith(virtualFile, MavenConstants.POM_XML);
     }
 
-    // Flows, Subflows, Flow config and directories are hot-swappable.
-    // Everything else, no.
-    private boolean isNotHotSwappableSource(VirtualFile file) {
-        return file != null &&
-                !file.isDirectory() &&
-                // TODO: Here must add a check that changed files must be in their respective folders.
-                //  For instance, if I change a .js but is not in the resources/scripts folder the module
-                //  MUST be recompiled!
-                hasNotExtension(file, FileExtension.SCRIPT.value()) &&
-                hasNotExtension(file, FileExtension.FLOW.value()) &&
-                hasNotExtension(file, FileExtension.SUBFLOW.value()) &&
-                hasNotExtension(file, FileExtension.CONFIG.value());
-    }
-
-    private static boolean hasNotExtension(VirtualFile file, String extensionToTest) {
-        return file == null ||
-                file.getExtension() == null ||
-                !file.getExtension().equals(extensionToTest);
+    // Flows, Subflows, Flow config and directories are hot-swappable. Everything else, is not hot-swappable.
+    private boolean isHotSwappableSource(VirtualFile file) {
+        return file != null && !file.isDirectory() &&
+                HotSwapUtils.hasHotSwappableExtension(file) &&
+                HotSwapUtils.isInsideHotSwappableFolder(project, file);
     }
 
     private void setToChangedMatching(String moduleName) {
