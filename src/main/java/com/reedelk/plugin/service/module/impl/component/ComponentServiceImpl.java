@@ -8,7 +8,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import com.reedelk.plugin.commons.ModuleInfo;
 import com.reedelk.plugin.component.domain.AutoCompleteContributorDefinition;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
 import com.reedelk.plugin.component.type.unknown.UnknownComponentDescriptorWrapper;
@@ -18,6 +17,7 @@ import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpdateNotifier;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentScanner;
 import com.reedelk.plugin.topic.ReedelkTopics;
+import com.reedelk.runtime.commons.ModuleUtils;
 import com.reedelk.runtime.component.Stop;
 import com.reedelk.runtime.component.Unknown;
 import io.github.classgraph.ScanResult;
@@ -126,12 +126,12 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
             // Update the components definitions from maven project
             MavenUtils.getMavenProject(module.getProject(), module.getName()).ifPresent(mavenProject -> {
                 mavenProject.getDependencies().stream()
-                        .filter(artifact -> ModuleInfo.isModule(artifact.getFile()))
+                        .filter(artifact -> ModuleUtils.isModule(artifact.getFile()))
                         .map(artifact -> artifact.getFile().getPath()).collect(toList())
                         .forEach(jarFilePath -> {
                             ScanResult scanResult = ComponentScanner.scanResultFrom(jarFilePath);
                             List<ComponentDescriptor> components = componentScanner.from(scanResult);
-                            String moduleName = ModuleInfo.getModuleName(jarFilePath);
+                            String moduleName = ModuleUtils.getModuleName(jarFilePath);
                             ModuleComponents descriptor = new ModuleComponents(moduleName, components);
                             mavenJarComponentsMap.put(jarFilePath, descriptor);
 

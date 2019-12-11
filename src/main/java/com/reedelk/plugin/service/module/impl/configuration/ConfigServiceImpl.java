@@ -11,7 +11,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.messages.Topic;
 import com.reedelk.plugin.commons.FileUtils;
-import com.reedelk.plugin.commons.ModuleUtils;
+import com.reedelk.plugin.commons.PluginModuleUtils;
 import com.reedelk.plugin.component.deserializer.ConfigurationDeserializer;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.component.serializer.ConfigurationSerializer;
@@ -88,7 +88,7 @@ public class ConfigServiceImpl implements ConfigService {
 
     @Override
     public void addConfig(@NotNull ConfigMetadata newConfig) {
-        ModuleUtils.getConfigsFolder(module).ifPresent(configsFolder ->
+        PluginModuleUtils.getConfigsFolder(module).ifPresent(configsFolder ->
                 WriteCommandAction.runWriteCommandAction(module.getProject(), () -> {
 
                     String finalFileName = FileUtils.appendExtensionToFileName(newConfig.getFileName(), FileExtension.CONFIG);

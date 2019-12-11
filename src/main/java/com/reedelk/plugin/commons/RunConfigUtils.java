@@ -44,7 +44,7 @@ public class RunConfigUtils {
     }
 
     @NotNull
-    private static Optional<? extends RunnerAndConfigurationSettings> createConfig(Project project, String configName, ConfigurationFactory[] factories) {
+    private static Optional<RunnerAndConfigurationSettings> createConfig(Project project, String configName, ConfigurationFactory[] factories) {
         if (factories.length != 0) {
             ConfigurationFactory factory = factories[0];
             return Optional.of(RunManager.getInstance(project).createConfiguration(configName, factory));

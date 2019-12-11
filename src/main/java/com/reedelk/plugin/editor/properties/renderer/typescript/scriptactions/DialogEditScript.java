@@ -7,7 +7,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.reedelk.plugin.commons.Colors;
-import com.reedelk.plugin.commons.ModuleUtils;
+import com.reedelk.plugin.commons.PluginModuleUtils;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +36,7 @@ public class DialogEditScript extends DialogWrapper {
         setResizable(true);
 
         this.scriptFilePathAndName = scriptFilePathAndName;
-        this.editorPanel = ModuleUtils.getScriptsFolder(module)
+        this.editorPanel = PluginModuleUtils.getScriptsFolder(module)
                 .flatMap(scriptsFolder -> ofNullable(VfsUtil.findFile(Paths.get(scriptsFolder, scriptFilePathAndName), true))).map((Function<VirtualFile, DisposablePanel>) scriptVirtualFile -> {
                     Document document = FileDocumentManager.getInstance().getDocument(scriptVirtualFile);
                     return new ScriptEditorDefault(module, document, context);

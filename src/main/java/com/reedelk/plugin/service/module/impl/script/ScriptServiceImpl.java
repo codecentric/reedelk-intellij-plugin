@@ -7,7 +7,7 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.Topic;
-import com.reedelk.plugin.commons.ModuleUtils;
+import com.reedelk.plugin.commons.PluginModuleUtils;
 import com.reedelk.plugin.commons.ScriptResourceUtil;
 import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.executor.PluginExecutor;
@@ -40,7 +40,7 @@ public class ScriptServiceImpl implements ScriptService {
 
         // If the scripts folder is empty, it means that there is no resources folder created
         // in the current project, therefore no action is required.
-        ModuleUtils.getScriptsFolder(module).ifPresent(scriptsFolder -> {
+        PluginModuleUtils.getScriptsFolder(module).ifPresent(scriptsFolder -> {
             // We access the index, therefore we must wait to access.
             ReadAction.nonBlocking(() -> {
 
@@ -80,7 +80,7 @@ public class ScriptServiceImpl implements ScriptService {
 
         // If the scripts folder is empty, it means that there is no resources folder created
         // in the current project, therefore no action is required.
-        ModuleUtils.getScriptsFolder(module).ifPresent(scriptsDirectory ->
+        PluginModuleUtils.getScriptsFolder(module).ifPresent(scriptsDirectory ->
                 WriteCommandAction.runWriteCommandAction(module.getProject(), () -> {
 
                     String directoryUpToScriptFile = scriptsDirectory;
@@ -115,7 +115,7 @@ public class ScriptServiceImpl implements ScriptService {
 
     @Override
     public void removeScript(String scriptFileName) {
-        ModuleUtils.getScriptsFolder(module).ifPresent(scriptsDirectory ->
+        PluginModuleUtils.getScriptsFolder(module).ifPresent(scriptsDirectory ->
                 WriteCommandAction.runWriteCommandAction(module.getProject(), () -> {
                     final VirtualFile file = VfsUtil.findFile(Paths.get(scriptsDirectory, scriptFileName), true);
                     if (file == null) {

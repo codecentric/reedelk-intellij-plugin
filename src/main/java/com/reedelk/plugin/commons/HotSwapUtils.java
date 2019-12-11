@@ -26,16 +26,16 @@ public class HotSwapUtils {
         if (moduleForFile == null) {
             return false;
         } else if (FileExtension.CONFIG.value().equals(extension)) {
-            return ModuleUtils.getConfigsFolder(moduleForFile).map(configsFolder ->
+            return PluginModuleUtils.getConfigsFolder(moduleForFile).map(configsFolder ->
                     file.getPath().startsWith(configsFolder)).orElse(false);
         } else if (FileExtension.FLOW.value().equals(extension)) {
-            return ModuleUtils.getFlowsFolder(moduleForFile).map(flowsFolder ->
+            return PluginModuleUtils.getFlowsFolder(moduleForFile).map(flowsFolder ->
                     file.getPath().startsWith(flowsFolder)).orElse(false);
         } else if (FileExtension.SUBFLOW.value().equals(extension)) {
-            return ModuleUtils.getSubFlowsFolder(moduleForFile).map(subFlowsFolder ->
+            return PluginModuleUtils.getSubFlowsFolder(moduleForFile).map(subFlowsFolder ->
                     file.getPath().startsWith(subFlowsFolder)).orElse(false);
         } else if (FileExtension.SCRIPT.value().equals(extension)) {
-            return ModuleUtils.getScriptsFolder(moduleForFile).map(scriptsFolder ->
+            return PluginModuleUtils.getScriptsFolder(moduleForFile).map(scriptsFolder ->
                     file.getPath().startsWith(scriptsFolder)).orElse(false);
         } else {
             return false;

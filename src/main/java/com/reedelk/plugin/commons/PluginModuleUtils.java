@@ -10,9 +10,9 @@ import java.util.Optional;
 import static com.reedelk.plugin.commons.Defaults.PROJECT_RESOURCES_FOLDER;
 import static com.reedelk.runtime.commons.ModuleProperties.*;
 
-public class ModuleUtils {
+public class PluginModuleUtils {
 
-    private ModuleUtils() {
+    private PluginModuleUtils() {
     }
 
     public static Optional<String> getConfigsFolder(Module module) {

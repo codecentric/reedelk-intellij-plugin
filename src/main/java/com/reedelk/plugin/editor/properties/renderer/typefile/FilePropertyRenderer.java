@@ -7,7 +7,7 @@ import com.intellij.openapi.ui.ComponentWithBrowseButton;
 import com.intellij.openapi.ui.TextComponentAccessor;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.reedelk.plugin.commons.ModuleUtils;
+import com.reedelk.plugin.commons.PluginModuleUtils;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
@@ -30,7 +30,7 @@ public class FilePropertyRenderer extends AbstractPropertyTypeRenderer {
                              @NotNull ContainerContext context) {
 
 
-        String resourcesFolder = ModuleUtils.getResourcesFolder(module)
+        String resourcesFolder = PluginModuleUtils.getResourcesFolder(module)
                 .orElseThrow(() -> new IllegalStateException("The project must have a resource folder defined in the project."));
 
         FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, true, true, false, false) {
