@@ -1,5 +1,6 @@
 package com.reedelk.plugin.commons;
 
+import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.reedelk.runtime.commons.FileExtension;
@@ -20,6 +21,8 @@ public class Defaults {
 
     public static final FileType JAVASCRIPT_FILE_TYPE =
             FileTypeManager.getInstance().getFileTypeByExtension(FileExtension.SCRIPT.value());
+
+    public static final Language JAVASCRIPT_LANGUAGE = Language.findLanguageByID("JavaScript");
 
 
     public static class RestApi {
