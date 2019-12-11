@@ -1,7 +1,7 @@
 package com.reedelk.plugin.commons;
 
+import com.reedelk.plugin.service.module.impl.completion.Suggestion;
 import com.reedelk.plugin.service.module.impl.completion.SuggestionType;
-import org.apache.commons.lang3.tuple.Triple;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -16,15 +16,53 @@ class SuggestionDefinitionMatcherTest {
         String suggestionTokenDefinition = "message[FUNCTION:Message]";
 
         // When
-        Optional<Triple<String, SuggestionType, String>> parsed = SuggestionDefinitionMatcher.of(suggestionTokenDefinition);
+        Optional<Suggestion> parsed = SuggestionDefinitionMatcher.of(suggestionTokenDefinition);
 
         // Then
         assertThat(parsed).isPresent();
 
-        Triple<String, SuggestionType, String> parsedSuggestion = parsed.get();
-        assertThat(parsedSuggestion.getLeft()).isEqualTo("message");
-        assertThat(parsedSuggestion.getMiddle()).isEqualTo(SuggestionType.FUNCTION);
-        assertThat(parsedSuggestion.getRight()).isEqualTo("Message");
+        Suggestion parsedSuggestion = parsed.get();
+        assertThat(parsedSuggestion.getToken()).isEqualTo("message");
+        assertThat(parsedSuggestion.getType()).isEqualTo(SuggestionType.FUNCTION);
+        assertThat(parsedSuggestion.getTypeName()).isEqualTo("Message");
+        assertThat(parsedSuggestion.getOffset()).isNotPresent();
+    }
+
+    @Test
+    void shouldCorrectlyParseSuggestionWithOffset() {
+        // Given
+        String suggestionTokenDefinition = "message[FUNCTION:Message:2]";
+
+        // When
+        Optional<Suggestion> parsed = SuggestionDefinitionMatcher.of(suggestionTokenDefinition);
+
+        // Then
+        assertThat(parsed).isPresent();
+
+        Suggestion parsedSuggestion = parsed.get();
+        assertThat(parsedSuggestion.getToken()).isEqualTo("message");
+        assertThat(parsedSuggestion.getType()).isEqualTo(SuggestionType.FUNCTION);
+        assertThat(parsedSuggestion.getTypeName()).isEqualTo("Message");
+        assertThat(parsedSuggestion.getOffset()).isPresent();
+        assertThat(parsedSuggestion.getOffset()).hasValue(2);
+    }
+
+    @Test
+    void shouldCorrectlyParseSuggestionWithNotANumericOffset() {
+        // Given
+        String suggestionTokenDefinition = "message[FUNCTION:Message:2Hello]";
+
+        // When
+        Optional<Suggestion> parsed = SuggestionDefinitionMatcher.of(suggestionTokenDefinition);
+
+        // Then
+        assertThat(parsed).isPresent();
+
+        Suggestion parsedSuggestion = parsed.get();
+        assertThat(parsedSuggestion.getToken()).isEqualTo("message");
+        assertThat(parsedSuggestion.getType()).isEqualTo(SuggestionType.FUNCTION);
+        assertThat(parsedSuggestion.getTypeName()).isEqualTo("Message");
+        assertThat(parsedSuggestion.getOffset()).isNotPresent();
     }
 
     @Test
@@ -33,15 +71,16 @@ class SuggestionDefinitionMatcherTest {
         String suggestionTokenDefinition = "message[VARIABLE:Message[]]";
 
         // When
-        Optional<Triple<String, SuggestionType, String>> parsed = SuggestionDefinitionMatcher.of(suggestionTokenDefinition);
+        Optional<Suggestion> parsed = SuggestionDefinitionMatcher.of(suggestionTokenDefinition);
 
         // Then
         assertThat(parsed).isPresent();
 
-        Triple<String, SuggestionType, String> parsedSuggestion = parsed.get();
-        assertThat(parsedSuggestion.getLeft()).isEqualTo("message");
-        assertThat(parsedSuggestion.getMiddle()).isEqualTo(SuggestionType.VARIABLE);
-        assertThat(parsedSuggestion.getRight()).isEqualTo("Message[]");
+        Suggestion parsedSuggestion = parsed.get();
+        assertThat(parsedSuggestion.getToken()).isEqualTo("message");
+        assertThat(parsedSuggestion.getType()).isEqualTo(SuggestionType.VARIABLE);
+        assertThat(parsedSuggestion.getTypeName()).isEqualTo("Message[]");
+        assertThat(parsedSuggestion.getOffset()).isNotPresent();
     }
 
     @Test
@@ -50,9 +89,27 @@ class SuggestionDefinitionMatcherTest {
         String suggestionTokenDefinition = "message[]";
 
         // When
-        Optional<Triple<String, SuggestionType, String>> parsed = SuggestionDefinitionMatcher.of(suggestionTokenDefinition);
+        Optional<Suggestion> parsed = SuggestionDefinitionMatcher.of(suggestionTokenDefinition);
 
         // Then
         assertThat(parsed).isNotPresent();
+    }
+
+    @Test
+    void shouldCorrectlyParseSuggestionWithPutItem() {
+        // Given
+        String suggestionTokenDefinition = "context.put('',item)[FUNCTION:void:7]";
+
+        // When
+        Optional<Suggestion> parsed = SuggestionDefinitionMatcher.of(suggestionTokenDefinition);
+
+        // Then
+        assertThat(parsed).isPresent();
+
+        Suggestion parsedSuggestion = parsed.get();
+        assertThat(parsedSuggestion.getToken()).isEqualTo("context.put('',item)");
+        assertThat(parsedSuggestion.getType()).isEqualTo(SuggestionType.FUNCTION);
+        assertThat(parsedSuggestion.getTypeName()).isEqualTo("void");
+        assertThat(parsedSuggestion.getOffset()).hasValue(7);
     }
 }

@@ -22,12 +22,22 @@ public class SuggestionAssertion {
     }
 
     public SuggestionAssertion contains(String token, SuggestionType suggestionType, String typeName) {
-        assertThat(suggestions).contains(Suggestion.from(token, suggestionType, typeName));
+        assertThat(suggestions).contains(Suggestion.from(token, suggestionType, typeName, null));
         return this;
     }
 
     public SuggestionAssertion containsOnly(String token, SuggestionType suggestionType, String typeName) {
-        assertThat(suggestions).containsExactly(Suggestion.from(token, suggestionType, typeName));
+        assertThat(suggestions).containsExactly(Suggestion.from(token, suggestionType, typeName, null));
+        return this;
+    }
+
+    public SuggestionAssertion contains(String token, SuggestionType suggestionType, String typeName, int offset) {
+        assertThat(suggestions).contains(Suggestion.from(token, suggestionType, typeName, offset));
+        return this;
+    }
+
+    public SuggestionAssertion containsOnly(String token, SuggestionType suggestionType, String typeName, int offset) {
+        assertThat(suggestions).containsExactly(Suggestion.from(token, suggestionType, typeName, offset));
         return this;
     }
 

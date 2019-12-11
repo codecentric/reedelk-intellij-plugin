@@ -14,6 +14,7 @@ class TrieTest {
     private final String suggestionToken3 = "message.mimeType1()[FUNCTION:MimeType]";
     private final String suggestionToken4 = "message.mimeType2()[FUNCTION:MimeType]";
     private final String suggestionToken5 = "message.mimeType3()[FUNCTION:MimeType]";
+    private final String suggestionToken6 = "message.put('',item)[FUNCTION:MimeType:7]";
 
     @Test
     void shouldCorrectlyInsertSuggestionToken() {
@@ -120,5 +121,18 @@ class TrieTest {
         // Then
         List<Suggestion> results = trie.findByPrefix("message.mimeType1(");
         PluginAssertion.assertThat(results).isEmpty();
+    }
+
+    @Test
+    void shouldCorrectlyReturnPut() {
+        // Given
+        Trie trie = new Trie();
+
+        // When
+        trie.insert(suggestionToken6);
+
+        // Then
+        List<Suggestion> results = trie.findByPrefix("message.pu");
+        PluginAssertion.assertThat(results).hasSize(1);
     }
 }

@@ -21,12 +21,12 @@ public class Trie {
      */
     void insert(Collection<String> suggestionDefinitions) {
         suggestionDefinitions.forEach(suggestionDefinition ->
-                SuggestionDefinitionMatcher.of(suggestionDefinition).ifPresent(parsed -> insert(parsed.getMiddle(), parsed.getRight(), parsed.getLeft())));
+                SuggestionDefinitionMatcher.of(suggestionDefinition).ifPresent(this::insert));
     }
 
     void insert(String ...suggestionDefinitions) {
         Stream.of(suggestionDefinitions).forEach(suggestionDefinition ->
-                SuggestionDefinitionMatcher.of(suggestionDefinition).ifPresent(parsed -> insert(parsed.getMiddle(), parsed.getRight(), parsed.getLeft())));
+                SuggestionDefinitionMatcher.of(suggestionDefinition).ifPresent(this::insert));
     }
 
     @NotNull
@@ -47,13 +47,13 @@ public class Trie {
         delete(root, word, 0);
     }
 
-    private void insert(SuggestionType type, String typeName, String word) {
+    private void insert(Suggestion suggestion) {
+        String word = suggestion.getToken();
         TrieNode current = root;
         for (int i = 0; i < word.length(); i++) {
             current = current.getChildren().computeIfAbsent(word.charAt(i), c -> new TrieNode());
         }
-        current.setType(type);
-        current.setTypeName(typeName);
+        current.setSuggestion(suggestion);
         current.setEndOfWord(true);
     }
 
@@ -101,7 +101,7 @@ public class Trie {
     private void recurse(String parent, TrieNode trieNode, List<Suggestion> results) {
         if (trieNode.getChildren().isEmpty()) {
             // End of token
-            results.add(Suggestion.from(parent, trieNode.getType(), trieNode.getTypeName()));
+            results.add(Suggestion.from(parent, trieNode.getSuggestion()));
             return;
         }
         trieNode.getChildren().forEach((character, childTrieNode) -> {
@@ -109,7 +109,7 @@ public class Trie {
                 String newValue = parent + character;
                 recurse(newValue, childTrieNode, results);
             } else {
-                results.add(Suggestion.from(parent, trieNode.getType(), trieNode.getTypeName()));
+                results.add(Suggestion.from(parent, trieNode.getSuggestion()));
             }
         });
     }

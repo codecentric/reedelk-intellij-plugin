@@ -129,6 +129,7 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
     }
 
     private void insertSuggestions(Trie trie, DefaultSuggestions defaultSuggestions) {
-        trie.insert(defaultSuggestions.tokens());
+        String[] allDefaultSuggestionTokens = defaultSuggestions.tokens();
+        trie.insert(allDefaultSuggestionTokens);
     }
 }

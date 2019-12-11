@@ -6,17 +6,10 @@ import java.util.Map;
 public class TrieNode {
 
     private Map<Character, TrieNode> children = new HashMap<>();
-    private SuggestionType type;
-    private String typeName;
     private boolean isWord;
+    private Suggestion suggestion;
 
     public TrieNode() {
-    }
-
-    public TrieNode(SuggestionType type, String typeName) {
-        this.type = type;
-        this.typeName = typeName;
-        this.isWord = true;
     }
 
     public Map<Character, TrieNode> getChildren() {
@@ -27,23 +20,15 @@ public class TrieNode {
         return isWord;
     }
 
-    public void setType(SuggestionType type) {
-        this.type = type;
-    }
-
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
-    }
-
     public void setEndOfWord(boolean endOfWord) {
         this.isWord = endOfWord;
     }
 
-    public SuggestionType getType() {
-        return type;
+    public Suggestion getSuggestion() {
+        return suggestion;
     }
 
-    public String getTypeName() {
-        return typeName;
+    public void setSuggestion(Suggestion suggestion) {
+        this.suggestion = suggestion;
     }
 }

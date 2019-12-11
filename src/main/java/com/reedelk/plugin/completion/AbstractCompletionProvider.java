@@ -32,13 +32,27 @@ abstract class AbstractCompletionProvider extends CompletionProvider<CompletionP
         if (moduleName != null && project != null) {
             getToken(parameters).ifPresent(token -> {
                 Module module = ModuleManager.getInstance(project).findModuleByName(moduleName);
-                if (module != null) {
-                    CompletionService instance = CompletionService.getInstance(module);
-                    List<Suggestion> suggestions = instance.completionTokensOf(componentFullyQualifiedName, token);
-                    suggestions.forEach(suggestion -> result.addElement(LookupElementBuilder.create(suggestion.getToken())
+                if (module == null) return;
+
+                CompletionService instance = CompletionService.getInstance(module);
+                List<Suggestion> suggestions = instance.completionTokensOf(componentFullyQualifiedName, token);
+                suggestions.forEach(suggestion -> {
+
+                    final LookupElementBuilder lookupBuilder = LookupElementBuilder.create(suggestion.getToken())
                             .withTypeText(suggestion.getTypeName())
-                            .withIcon(suggestion.getType().icon())));
-                }
+                            .withIcon(suggestion.getType().icon());
+
+                    // For some suggestions like for .put('') we must adjust the caret back by X positions.
+                    // If the suggestion definition has defined an offset, then we add an insert handler
+                    // to move the caret back by X positions accordingly.
+                    LookupElementBuilder finalLookupBuilder = suggestion.getOffset().map(offset ->
+                            lookupBuilder.withInsertHandler((insertionContext, item) -> {
+                                int currentOffset = insertionContext.getEditor().getCaretModel().getOffset();
+                                insertionContext.getEditor().getCaretModel().moveToOffset(currentOffset - offset);
+                            })).orElse(lookupBuilder);
+
+                    result.addElement(finalLookupBuilder);
+                });
             });
         }
     }

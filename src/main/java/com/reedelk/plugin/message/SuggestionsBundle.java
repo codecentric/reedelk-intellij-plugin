@@ -43,7 +43,7 @@ public class SuggestionsBundle {
         }
 
         public String[] tokens() {
-            return SuggestionsBundle.message(name).split(",");
+            return SuggestionsBundle.message(name).split("\\|");
         }
     }
 }
