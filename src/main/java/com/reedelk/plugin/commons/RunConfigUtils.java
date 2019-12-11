@@ -19,7 +19,7 @@ public class RunConfigUtils {
             return getConfigurationType(RuntimeRunConfigurationType.class);
         }
 
-        public static boolean equals(ConfigurationType toTest) {
+        public static boolean same(ConfigurationType toTest) {
             Optional<RuntimeRunConfigurationType> optionalType = type();
             return optionalType.map(runtimeRunConfigurationType -> runtimeRunConfigurationType.equals(toTest))
                     .orElse(false);

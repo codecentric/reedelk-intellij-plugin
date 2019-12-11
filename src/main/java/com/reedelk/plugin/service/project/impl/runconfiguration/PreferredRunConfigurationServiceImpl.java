@@ -26,12 +26,12 @@ public class PreferredRunConfigurationServiceImpl implements PreferredRunConfigu
 
     @Override
     public void setLastModuleRunConfiguration(String name) {
-        this.state.lastModuleRunConfiguration = name;
+        this.state.setLastModuleRunConfiguration(name);
     }
 
     @Override
     public void setLastRuntimeRunConfiguration(String name) {
-        this.state.lastRuntimeRunConfiguration = name;
+        this.state.setLastRuntimeRunConfiguration(name);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class PreferredRunConfigurationServiceImpl implements PreferredRunConfigu
             if (runtimeRunConfigurationType.equals(runnerAndConfigurationSettings.getType())) {
                 List<RunnerAndConfigurationSettings> configurationSettingsList =
                         RunManager.getInstance(env.getProject()).getConfigurationSettingsList(runtimeRunConfigurationType);
-                setSelectedConfigurationMatching(env.getProject(), configurationSettingsList, state.lastRuntimeRunConfiguration);
+                setSelectedConfigurationMatching(env.getProject(), configurationSettingsList, state.getLastRuntimeRunConfiguration());
             }
         });
     }
@@ -61,7 +61,7 @@ public class PreferredRunConfigurationServiceImpl implements PreferredRunConfigu
                 RunConfigUtils.ModuleRunConfiguration.type().ifPresent(moduleRunConfigurationType -> {
                     List<RunnerAndConfigurationSettings> configurationSettingsList =
                             RunManager.getInstance(env.getProject()).getConfigurationSettingsList(moduleRunConfigurationType);
-                    setSelectedConfigurationMatching(env.getProject(), configurationSettingsList, state.lastModuleRunConfiguration);
+                    setSelectedConfigurationMatching(env.getProject(), configurationSettingsList, state.getLastModuleRunConfiguration());
                 });
             }
         });
