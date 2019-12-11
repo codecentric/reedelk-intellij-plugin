@@ -5,10 +5,10 @@ import com.intellij.openapi.editor.EditorSettings;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
+import com.reedelk.plugin.commons.Defaults;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditor;
 import com.reedelk.runtime.api.commons.StringUtils;
@@ -27,7 +27,7 @@ public class DynamicValueScriptEditor extends ScriptEditor {
     }
 
     private static Document emptyDocument() {
-        VirtualFile myVirtualFile = new LightVirtualFile(DEFAULT_DYNAMIC_VALUE_SCRIPT_VIRTUAL_FILE_NAME, PlainTextFileType.INSTANCE, StringUtils.EMPTY);
+        VirtualFile myVirtualFile = new LightVirtualFile(DEFAULT_DYNAMIC_VALUE_SCRIPT_VIRTUAL_FILE_NAME, Defaults.JAVASCRIPT_FILE_TYPE, StringUtils.EMPTY);
         return FileDocumentManager.getInstance().getDocument(myVirtualFile);
     }
 

@@ -1,6 +1,5 @@
 package com.reedelk.plugin.editor.properties.renderer.commons;
 
-import com.intellij.codeInsight.AutoPopupController;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -48,7 +47,6 @@ public class ScriptEditor extends DisposablePanel implements DocumentListener {
 
     @Override
     public void documentChanged(@NotNull DocumentEvent event) {
-        AutoPopupController.getInstance(module.getProject()).scheduleAutoPopup(editor);
         if (listener != null) {
             // Notify when script mode changed
             String script = ScriptUtils.asScript(event.getDocument().getText());
