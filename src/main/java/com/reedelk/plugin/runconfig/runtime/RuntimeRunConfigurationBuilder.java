@@ -1,8 +1,8 @@
 package com.reedelk.plugin.runconfig.runtime;
 
 import com.intellij.execution.RunManager;
-import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.openapi.project.Project;
+import com.reedelk.plugin.commons.RunConfigUtils;
 
 public class RuntimeRunConfigurationBuilder {
 
@@ -27,12 +27,13 @@ public class RuntimeRunConfigurationBuilder {
     }
 
     public void add(Project project) {
-        RunnerAndConfigurationSettings runConfigurationSettings = RunManager.getInstance(project).createConfiguration(runtimeConfigName, new RuntimeRunConfigurationFactory(new RuntimeRunConfigurationType()));
-        RuntimeRunConfiguration configuration = (RuntimeRunConfiguration) runConfigurationSettings.getConfiguration();
-        configuration.setRuntimeHomeDirectory(runtimeHomeDirectory);
-        configuration.setName(runtimeConfigName);
+        RunConfigUtils.RuntimeRunConfiguration.create(project, runtimeConfigName).ifPresent(runnerAndConfigurationSettings -> {
+            RuntimeRunConfiguration configuration = (RuntimeRunConfiguration) runnerAndConfigurationSettings.getConfiguration();
+            configuration.setRuntimeHomeDirectory(runtimeHomeDirectory);
+            configuration.setName(runtimeConfigName);
 
-        RunManager.getInstance(project).addConfiguration(runConfigurationSettings);
-        RunManager.getInstance(project).setSelectedConfiguration(runConfigurationSettings);
+            RunManager.getInstance(project).addConfiguration(runnerAndConfigurationSettings);
+            RunManager.getInstance(project).setSelectedConfiguration(runnerAndConfigurationSettings);
+        });
     }
 }

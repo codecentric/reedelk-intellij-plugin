@@ -1,10 +1,8 @@
 package com.reedelk.plugin.commons;
 
 import com.intellij.execution.RunManager;
-import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.openapi.project.Project;
 import com.reedelk.plugin.runconfig.runtime.RuntimeRunConfiguration;
-import com.reedelk.plugin.runconfig.runtime.RuntimeRunConfigurationType;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -42,10 +40,11 @@ public class RuntimeComboManager {
     private void configure(@NotNull JComboBox<String> comboBox, Project project, List<String> additionalItems) {
         this.comboBox = comboBox;
         if (project != null) {
-            List<RunConfiguration> runtimeConfigurations = RunManager.getInstance(project).getConfigurationsList(new RuntimeRunConfigurationType());
-            runtimeConfigurations.stream()
-                    .map(configuration -> (RuntimeRunConfiguration) configuration)
-                    .forEach(configuration -> comboBox.addItem(configuration.getName()));
+            RunConfigUtils.RuntimeRunConfiguration.type().ifPresent(runtimeRunConfigurationType ->
+                    RunManager.getInstance(project).getConfigurationsList(runtimeRunConfigurationType)
+                            .stream()
+                            .map(configuration -> (RuntimeRunConfiguration) configuration)
+                            .forEach(configuration -> comboBox.addItem(configuration.getName())));
         }
         additionalItems.forEach(comboBox::addItem);
         comboBox.addItemListener(event -> {

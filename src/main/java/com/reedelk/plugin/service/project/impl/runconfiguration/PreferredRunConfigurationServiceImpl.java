@@ -18,11 +18,9 @@ import java.util.List;
 @State(name = "reedelk-preferred-run-configuration")
 public class PreferredRunConfigurationServiceImpl implements PreferredRunConfigurationService, ExecutionListener {
 
-    private final Project project;
     private PreferredRunConfigurationState state = new PreferredRunConfigurationState();
 
     public PreferredRunConfigurationServiceImpl(Project project) {
-        this.project = project;
         project.getMessageBus().connect().subscribe(ExecutionManager.EXECUTION_TOPIC, this);
     }
 
@@ -78,12 +76,6 @@ public class PreferredRunConfigurationServiceImpl implements PreferredRunConfigu
     @Override
     public void loadState(@NotNull PreferredRunConfigurationState state) {
         this.state = state;
-
-        RunConfigUtils.RuntimeRunConfiguration.type().ifPresent(runtimeRunConfigurationType -> {
-            List<RunnerAndConfigurationSettings> configurationSettingsList =
-                    RunManager.getInstance(project).getConfigurationSettingsList(runtimeRunConfigurationType);
-            setSelectedConfigurationMatching(project, configurationSettingsList, state.lastRuntimeRunConfiguration);
-        });
     }
 
     private void setSelectedConfigurationMatching(Project project, List<RunnerAndConfigurationSettings> configurationSettingsList, String targetName) {

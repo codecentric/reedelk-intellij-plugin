@@ -1,8 +1,8 @@
 package com.reedelk.plugin.runconfig.module;
 
 import com.intellij.execution.RunManager;
-import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.openapi.project.Project;
+import com.reedelk.plugin.commons.RunConfigUtils;
 
 public class ModuleRunConfigurationBuilder {
 
@@ -27,14 +27,12 @@ public class ModuleRunConfigurationBuilder {
     }
 
     public void add(Project project) {
-        RunnerAndConfigurationSettings moduleConfigurationSettings =
-                RunManager.getInstance(project).createConfiguration(moduleName,
-                        new ModuleRunConfigurationFactory(new ModuleRunConfigurationType()));
-
-        ModuleRunConfiguration moduleRunConfiguration =
-                (ModuleRunConfiguration) moduleConfigurationSettings.getConfiguration();
-        moduleRunConfiguration.setModule(moduleName);
-        moduleRunConfiguration.setRuntimeConfigName(runtimeConfigName);
-        RunManager.getInstance(project).addConfiguration(moduleConfigurationSettings);
+        RunConfigUtils.ModuleRunConfiguration.create(project, moduleName).ifPresent(runnerAndConfigurationSettings -> {
+            ModuleRunConfiguration moduleRunConfiguration =
+                    (ModuleRunConfiguration) runnerAndConfigurationSettings.getConfiguration();
+            moduleRunConfiguration.setModule(moduleName);
+            moduleRunConfiguration.setRuntimeConfigName(runtimeConfigName);
+            RunManager.getInstance(project).addConfiguration(runnerAndConfigurationSettings);
+        });
     }
 }
