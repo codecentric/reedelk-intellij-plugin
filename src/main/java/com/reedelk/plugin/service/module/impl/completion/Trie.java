@@ -101,7 +101,9 @@ public class Trie {
     private void recurse(String parent, TrieNode trieNode, List<Suggestion> results) {
         if (trieNode.getChildren().isEmpty()) {
             // End of token
-            results.add(Suggestion.from(parent, trieNode.getSuggestion()));
+            if (trieNode.getSuggestion() != null) {
+                results.add(Suggestion.from(parent, trieNode.getSuggestion()));
+            }
             return;
         }
         trieNode.getChildren().forEach((character, childTrieNode) -> {
@@ -109,7 +111,9 @@ public class Trie {
                 String newValue = parent + character;
                 recurse(newValue, childTrieNode, results);
             } else {
-                results.add(Suggestion.from(parent, trieNode.getSuggestion()));
+                if (trieNode.getSuggestion() != null) {
+                    results.add(Suggestion.from(parent, trieNode.getSuggestion()));
+                }
             }
         });
     }
