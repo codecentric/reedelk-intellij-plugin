@@ -8,6 +8,8 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.concurrency.Semaphore;
@@ -95,6 +97,17 @@ public class ModuleBuilderBeforeTaskProvider extends BeforeRunTaskProvider<Modul
 
         if (isBlank(moduleRunConfiguration.getRuntimeConfigName())) {
             String errorMessage = message("module.run.error.runtime.not.selected", moduleRunConfiguration.getName());
+            Project project = env.getProject();
+            SwingUtilities.invokeLater(() -> NotificationUtils.notifyError(errorMessage, project));
+            return false;
+        }
+
+        Module moduleByName = ModuleManager.getInstance(env.getProject())
+                .findModuleByName(moduleRunConfiguration.getModuleName());
+        if (moduleByName == null) {
+            // The Configuration has a module name which has been probably changed, hence
+            // it does not exists.
+            String errorMessage = message("module.run.error.module.does.not.exists", moduleRunConfiguration.getModuleName(), moduleRunConfiguration.getName());
             Project project = env.getProject();
             SwingUtilities.invokeLater(() -> NotificationUtils.notifyError(errorMessage, project));
             return false;

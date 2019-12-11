@@ -18,12 +18,12 @@ public class MavenUtils {
     }
 
     public static Optional<MavenProject> getMavenProject(Project project, String moduleName) {
-        Module moduleByName = findModuleByName(moduleName, project);
-        return Optional.ofNullable(MavenProjectsManager.getInstance(project).findProject(moduleByName));
+        Module module = findModuleByName(moduleName, project);
+        return Optional.ofNullable(MavenProjectsManager.getInstance(project).findProject(module));
     }
 
-    private static Module findModuleByName(String name, Project project) {
-        return ModuleManager.getInstance(project).findModuleByName(name);
+    private static Module findModuleByName(String moduleName, Project project) {
+        return ModuleManager.getInstance(project).findModuleByName(moduleName);
     }
 
     public static String getModuleJarFile(MavenProject mavenProject) {
