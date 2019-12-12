@@ -22,6 +22,7 @@ import com.reedelk.runtime.component.Stop;
 import com.reedelk.runtime.component.Unknown;
 import io.github.classgraph.ScanResult;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.idea.maven.model.MavenArtifact;
 import org.jetbrains.idea.maven.project.MavenImportListener;
 import org.jetbrains.idea.maven.project.MavenProject;
 
@@ -100,7 +101,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
     @Override
     public Collection<AutoCompleteContributorDefinition> getAutoCompleteContributorDefinition() {
-        return Collections.unmodifiableList(autoCompleteContributorDefinitions) ;
+        return Collections.unmodifiableList(autoCompleteContributorDefinitions);
     }
 
     @Override
@@ -115,6 +116,14 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         }
     }
 
+    /**
+     * Updates available ESB components from maven dependencies. Components for a given
+     * JAR are scanned if and only if the module name for the current JAR file is present:
+     *
+     * @see com.reedelk.runtime.commons.ModuleUtils#getModuleName(String)
+     * If a JAR contains a module but the module name Manifest attribute does not exists,
+     * then it is ignored.
+     */
     private void asyncUpdateMavenDependenciesComponents() {
         PluginExecutor.getInstance().submit(() -> {
             // Remove all components before updating them
@@ -125,22 +134,23 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
             // Update the components definitions from maven project
             MavenUtils.getMavenProject(module.getProject(), module.getName()).ifPresent(mavenProject -> {
-                mavenProject.getDependencies().stream()
+                List<MavenArtifact> dependencies = mavenProject.getDependencies();
+                dependencies.stream()
                         .filter(artifact -> ModuleUtils.isModule(artifact.getFile()))
                         .map(artifact -> artifact.getFile().getPath()).collect(toList())
-                        .forEach(jarFilePath -> {
+                        .forEach(jarFilePath -> ModuleUtils.getModuleName(jarFilePath).ifPresent(moduleName -> {
+                            // We only scan a module if its jar file is a module with a name.
                             ScanResult scanResult = ComponentScanner.scanResultFrom(jarFilePath);
                             List<ComponentDescriptor> components = componentScanner.from(scanResult);
-                            String moduleName = ModuleUtils.getModuleName(jarFilePath);
+
                             ModuleComponents descriptor = new ModuleComponents(moduleName, components);
                             mavenJarComponentsMap.put(jarFilePath, descriptor);
 
                             List<String> from = componentScanner.autoCompleteFrom(scanResult);
-                            autoCompleteContributorDefinitions.add(
-                                    new AutoCompleteContributorDefinition(from));
+                            autoCompleteContributorDefinitions.add(new AutoCompleteContributorDefinition(from));
 
                             publisher.onComponentListUpdate();
-                        });
+                        }));
             });
         });
     }
