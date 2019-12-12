@@ -16,9 +16,9 @@ import java.util.Optional;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
-public class UndeployRunProfile extends AbstractRunProfile {
+public class UndeployRunProfile1 extends AbstractRunProfile {
 
-    public UndeployRunProfile(Project project, String moduleName, String runtimeConfigName) {
+    public UndeployRunProfile1(Project project, String moduleName, String runtimeConfigName) {
         super(project, moduleName, runtimeConfigName);
     }
 
