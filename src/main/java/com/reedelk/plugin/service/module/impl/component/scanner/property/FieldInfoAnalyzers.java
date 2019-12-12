@@ -19,6 +19,7 @@ public class FieldInfoAnalyzers {
             new HintFieldInfoAnalyzer(),
             new DisplayNameFieldInfoAnalyzer(),
             new DefaultValueFieldInfoAnalyzer(),
+            new ScriptSignatureFieldInfoAnalyzer(),
             new AutoCompleteContributorFieldInfoAnalyzer());
 
     public static ComponentPropertyDescriptor descriptor(FieldInfo propertyInfo, ComponentAnalyzerContext context) {

@@ -24,7 +24,7 @@ public class AutoCompleteContributorFieldInfoAnalyzer implements FieldInfoAnalyz
 
             AutoCompleteContributorDefinition definition =
                     new AutoCompleteContributorDefinition(isMessage, isError, isContext, customContributions);
-            builder.autoComplete(definition);
+            builder.autoCompleteContributor(definition);
         }
     }
 }

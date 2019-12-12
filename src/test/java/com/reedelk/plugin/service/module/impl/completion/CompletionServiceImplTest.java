@@ -89,7 +89,7 @@ class CompletionServiceImplTest {
         ComponentPropertyDescriptor propertyDescriptor = ComponentPropertyDescriptor.builder()
                 .propertyName("myPropertyWithAutoComplete")
                 .type(new TypeDynamicValueDescriptor<>(DynamicString.class))
-                .autoComplete(autoCompleteContribution)
+                .autoCompleteContributor(autoCompleteContribution)
                 .build();
 
         ModuleComponents moduleComponents = createModuleComponentsWith(fullyQualifiedName, propertyDescriptor);

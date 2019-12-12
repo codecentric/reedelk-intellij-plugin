@@ -18,6 +18,7 @@ public class ComponentPropertyDescriptor {
     private String propertyName;
     private String defaultValue;
     private TypeDescriptor propertyType;
+    private ScriptSignatureDefinition scriptSignatureDefinition;
     private AutoCompleteContributorDefinition autoCompleteContributorDefinition;
 
     private final List<WhenDefinition> whenDefinitions = new ArrayList<>();
@@ -60,6 +61,10 @@ public class ComponentPropertyDescriptor {
         return Optional.ofNullable(autoCompleteContributorDefinition);
     }
 
+    public Optional<ScriptSignatureDefinition> getScriptSignatureDefinition() {
+        return Optional.ofNullable(scriptSignatureDefinition);
+    }
+
     @NotNull
     @SuppressWarnings("unchecked")
     public <T extends TypeDescriptor> T getPropertyType() {
@@ -72,11 +77,11 @@ public class ComponentPropertyDescriptor {
         private String displayName;
         private String propertyName;
         private String defaultValue;
-
         private TypeDescriptor propertyType;
+        private ScriptSignatureDefinition scriptSignatureDefinition;
+        private AutoCompleteContributorDefinition autoCompleteContributionsDefinition;
 
         private List<WhenDefinition> whenDefinitions = new ArrayList<>();
-        private AutoCompleteContributorDefinition autoCompleteContributionsDefinition;
 
         public Builder type(TypeDescriptor type) {
             this.propertyType = type;
@@ -108,14 +113,19 @@ public class ComponentPropertyDescriptor {
             return this;
         }
 
-        public Builder autoComplete(AutoCompleteContributorDefinition definition) {
+        public Builder scriptSignature(ScriptSignatureDefinition definition) {
+            this.scriptSignatureDefinition = definition;
+            return this;
+        }
+
+        public Builder autoCompleteContributor(AutoCompleteContributorDefinition definition) {
             this.autoCompleteContributionsDefinition = definition;
             return this;
         }
 
         public ComponentPropertyDescriptor build() {
-            checkState(propertyName != null, "property name");
-            checkState(propertyType != null, "property type");
+            checkState(propertyName != null, "propertyName");
+            checkState(propertyType != null, "propertyType");
 
             ComponentPropertyDescriptor descriptor = new ComponentPropertyDescriptor();
             descriptor.hintValue = hintValue;
@@ -123,8 +133,9 @@ public class ComponentPropertyDescriptor {
             descriptor.propertyName = propertyName;
             descriptor.defaultValue = defaultValue;
             descriptor.propertyType = propertyType;
-            descriptor.whenDefinitions.addAll(whenDefinitions);
+            descriptor.scriptSignatureDefinition = scriptSignatureDefinition;
             descriptor.autoCompleteContributorDefinition = autoCompleteContributionsDefinition;
+            descriptor.whenDefinitions.addAll(whenDefinitions);
             return descriptor;
         }
     }

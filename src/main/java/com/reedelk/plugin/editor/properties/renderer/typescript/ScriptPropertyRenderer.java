@@ -17,6 +17,6 @@ public class ScriptPropertyRenderer extends AbstractPropertyTypeRenderer {
                              @NotNull ComponentPropertyDescriptor propertyDescriptor,
                              @NotNull PropertyAccessor propertyAccessor,
                              @NotNull ContainerContext context) {
-        return new ScriptInputField(module, propertyAccessor, context);
+        return new ScriptInputField(module, propertyDescriptor, propertyAccessor, context);
     }
 }

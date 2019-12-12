@@ -1,6 +1,8 @@
 package com.reedelk.plugin.editor.properties.renderer.typescript.scriptactions;
 
 import com.intellij.openapi.module.Module;
+import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
+import com.reedelk.plugin.component.domain.ScriptSignatureDefinition;
 import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DialogConfirmAction;
@@ -19,11 +21,13 @@ public class ScriptActionsPanel extends DisposablePanel {
     private final transient ContainerContext context;
     private final transient ClickableLabel editAction;
     private final transient ClickableLabel deleteAction;
+    private final ComponentPropertyDescriptor propertyDescriptor;
     private transient ScriptResource selected;
 
-    public ScriptActionsPanel(Module module, ContainerContext context) {
+    public ScriptActionsPanel(Module module, ContainerContext context, ComponentPropertyDescriptor propertyDescriptor) {
         this.module = module;
         this.context = context;
+        this.propertyDescriptor = propertyDescriptor;
         deleteAction = new ClickableLabel(message("script.actions.btn.delete"), Remove, Remove, this::deleteScript);
         editAction = new ClickableLabel(message("script.actions.btn.edit"), EditSource, EditSource, this::editScript);
         ClickableLabel addAction = new ClickableLabel(message("script.actions.btn.add"), Add, Add, this::addScript);
@@ -53,7 +57,9 @@ public class ScriptActionsPanel extends DisposablePanel {
     private void addScript() {
         DialogAddScript dialogAddScript = new DialogAddScript(module.getProject());
         if (dialogAddScript.showAndGet()) {
-            ScriptService.getInstance(module).addScript(dialogAddScript.getScriptFileNameWithPathToAdd());
+            ScriptSignatureDefinition signatureDefinition = propertyDescriptor.getScriptSignatureDefinition().orElse(ScriptSignatureDefinition.DEFAULT);
+            ScriptService.getInstance(module)
+                    .addScript(dialogAddScript.getScriptFileNameWithPathToAdd(), signatureDefinition.getArguments());
         }
     }
 
