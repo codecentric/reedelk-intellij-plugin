@@ -5,7 +5,7 @@ function helloWorld(context,message) {
 
     var result = 'Hello World';
     if (pathParams.containsKey('name')) {
-        result += pathParams.get('name');
+        result += ' ' + pathParams.get('name');
     }
 
     return result;
