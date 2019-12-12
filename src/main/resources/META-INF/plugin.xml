@@ -56,6 +56,9 @@
         <moduleService serviceInterface="com.reedelk.plugin.service.module.CompletionService"
                        serviceImplementation="com.reedelk.plugin.service.module.impl.completion.CompletionServiceImpl"/>
 
+        <moduleService serviceInterface="com.reedelk.plugin.service.module.RuntimeApi"
+                       serviceImplementation="com.reedelk.plugin.service.module.impl.runtimeapi.RuntimeApiImpl"/>
+
         <!-- Program Runner and Executors -->
         <programRunner implementation="com.reedelk.plugin.runconfig.module.runner.DeploymentRunner" order="first"/>
         <executor implementation="com.reedelk.plugin.runconfig.module.runner.ModuleDeployExecutor"/>
@@ -73,7 +76,6 @@
                     factoryClass="com.reedelk.plugin.editor.properties.PropertiesPanelToolWindowFactory"/>
 
         <completion.contributor language="any" implementationClass="com.reedelk.plugin.completion.ScriptCompletionContributor"/>
-
     </extensions>
 
     <actions>

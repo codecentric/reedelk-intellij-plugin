@@ -16,18 +16,13 @@ public class NotificationUtils {
                 .notifyByBalloon(toolWindowId, MessageType.INFO, text);
     }
 
-    public static void notifyWarn(final String text, final Project project) {
+    public static void notifyError(final String toolWindowId, final String text, final Project project) {
         ToolWindowManager.getInstance(project)
-                .notifyByBalloon(ToolWindowId.RUN, MessageType.WARNING, text);
+                .notifyByBalloon(toolWindowId, MessageType.ERROR, StringUtil.notNullize(text, "internal error"));
     }
 
     public static void notifyError(final String text, final Project project) {
         ToolWindowManager.getInstance(project)
                 .notifyByBalloon(ToolWindowId.RUN, MessageType.ERROR, StringUtil.notNullize(text, "internal error"));
-    }
-
-    public static void notifyError(final Exception ex, final Project project) {
-        ToolWindowManager.getInstance(project)
-                .notifyByBalloon(ToolWindowId.RUN, MessageType.ERROR, StringUtil.notNullize(ex.getMessage(), "internal error"));
     }
 }

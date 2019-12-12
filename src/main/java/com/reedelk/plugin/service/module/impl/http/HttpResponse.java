@@ -21,6 +21,9 @@ public class HttpResponse {
         this.status = status;
     }
 
+    public boolean isSuccessful() {
+        return !isNotSuccessful();
+    }
     /**
      * Returns true if the code is in [200..300), which means the request was successfully received,
      * understood, and accepted.
