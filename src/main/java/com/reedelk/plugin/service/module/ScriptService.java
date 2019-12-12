@@ -4,8 +4,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleServiceManager;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 public interface ScriptService {
     static ScriptService getInstance(@NotNull Module module) {
         return ModuleServiceManager.getService(module, ScriptService.class);
@@ -14,7 +12,7 @@ public interface ScriptService {
 
     void fetchScriptResources();
 
-    void addScript(String scriptFileName, List<String> arguments);
+    void addScript(String scriptFileName, String scriptBody);
 
     void removeScript(String scriptFileName);
 }

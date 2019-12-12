@@ -1,6 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer.typescript.scriptactions;
 
 import com.intellij.openapi.module.Module;
+import com.reedelk.plugin.commons.ScriptFunctionDefinitionBuilder;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.ScriptSignatureDefinition;
 import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
@@ -57,9 +58,10 @@ public class ScriptActionsPanel extends DisposablePanel {
     private void addScript() {
         DialogAddScript dialogAddScript = new DialogAddScript(module.getProject());
         if (dialogAddScript.showAndGet()) {
+            String scriptFileName = dialogAddScript.getScriptFileNameWithPathToAdd();
             ScriptSignatureDefinition signatureDefinition = propertyDescriptor.getScriptSignatureDefinition().orElse(ScriptSignatureDefinition.DEFAULT);
-            ScriptService.getInstance(module)
-                    .addScript(dialogAddScript.getScriptFileNameWithPathToAdd(), signatureDefinition.getArguments());
+            String scriptBody = ScriptFunctionDefinitionBuilder.from(scriptFileName, signatureDefinition);
+            ScriptService.getInstance(module).addScript(scriptFileName, scriptBody);
         }
     }
 

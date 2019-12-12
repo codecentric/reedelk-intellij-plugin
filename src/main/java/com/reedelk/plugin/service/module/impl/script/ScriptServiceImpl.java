@@ -64,7 +64,7 @@ public class ScriptServiceImpl implements ScriptService {
     }
 
     @Override
-    public void addScript(String scriptFileName, List<String> arguments) {
+    public void addScript(String scriptFileName, String scriptBody) {
         if (StringUtils.isBlank(scriptFileName)) {
             publisher.onAddError(new PluginException(message("file.name.not.empty")));
             return;
@@ -105,9 +105,7 @@ public class ScriptServiceImpl implements ScriptService {
                         String scriptFileNameWithExtension = normalizedScriptFilePath.getFileName().toString();
                         VirtualFile addedScriptVf = directoryVirtualFile.createChildData(null, scriptFileNameWithExtension);
 
-                        // Potentially user defined arguments.
-                        String scriptTemplateArguments = String.join(",", arguments);
-                        VfsUtil.saveText(addedScriptVf, message("script.default.template", scriptTemplateArguments,scriptFileNameWithExtension));
+                        VfsUtil.saveText(addedScriptVf, scriptBody);
                         publisher.onAddSuccess(new ScriptResource(normalizedScriptFilePath.toString(), addedScriptVf.getNameWithoutExtension()));
 
                     } catch (IOException exception) {
