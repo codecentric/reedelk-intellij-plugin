@@ -46,7 +46,9 @@
                 <preferred-size width="150" height="-1"/>
               </grid>
             </constraints>
-            <properties/>
+            <properties>
+              <text resource-bundle="messages/ReedelkBundle" key="runtimeBuilder.name.default.value"/>
+            </properties>
           </component>
           <component id="f5317" class="javax.swing.JLabel">
             <constraints>

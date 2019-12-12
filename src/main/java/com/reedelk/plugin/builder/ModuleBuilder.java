@@ -83,7 +83,7 @@ public class ModuleBuilder extends MavenModuleBuilder {
 
     @Override
     public Icon getNodeIcon() {
-        return Icons.Module;
+        return Icons.ModuleBuilderStart;
     }
 
     @Override
