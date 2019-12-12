@@ -23,7 +23,7 @@ public class ScriptActionsPanel extends DisposablePanel {
     private final transient ContainerContext context;
     private final transient ClickableLabel editAction;
     private final transient ClickableLabel deleteAction;
-    private final ComponentPropertyDescriptor propertyDescriptor;
+    private final transient ComponentPropertyDescriptor propertyDescriptor;
     private transient ScriptResource selected;
 
     public ScriptActionsPanel(Module module, ContainerContext context, ComponentPropertyDescriptor propertyDescriptor) {

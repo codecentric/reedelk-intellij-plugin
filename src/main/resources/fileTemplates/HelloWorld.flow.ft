@@ -29,7 +29,7 @@
       "implementor": "com.reedelk.core.component.script.ScriptEvaluator",
       "description": "Script",
       "mimeType": "text/plain",
-      "script": "HelloWorld.js"
+      "script": "helloWorld.js"
     }
   ]
 }

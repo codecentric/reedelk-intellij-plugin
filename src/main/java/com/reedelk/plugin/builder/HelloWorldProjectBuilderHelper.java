@@ -15,12 +15,12 @@ import java.util.UUID;
 import static com.reedelk.plugin.commons.Defaults.PROJECT_RESOURCES_FOLDER;
 import static com.reedelk.runtime.commons.ModuleProperties.*;
 
-class DefaultProjectBuilderHelper extends AbstractProjectBuilderHelper {
+class HelloWorldProjectBuilderHelper extends AbstractProjectBuilderHelper {
 
     private final Project project;
     private final VirtualFile root;
 
-    DefaultProjectBuilderHelper(Project project, VirtualFile root) {
+    HelloWorldProjectBuilderHelper(Project project, VirtualFile root) {
         this.project = project;
         this.root = root;
     }
