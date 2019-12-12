@@ -13,7 +13,7 @@ import com.intellij.openapi.util.JDOMExternalizerUtil;
 import com.reedelk.plugin.runconfig.module.runner.ModuleDeployExecutor;
 import com.reedelk.plugin.runconfig.module.runner.ModuleUnDeployExecutor;
 import com.reedelk.plugin.runconfig.module.runprofile.DeployRunProfile;
-import com.reedelk.plugin.runconfig.module.runprofile.UndeployRunProfile1;
+import com.reedelk.plugin.runconfig.module.runprofile.UnDeployRunProfile;
 import com.reedelk.plugin.service.project.PreferredRunConfigurationService;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
@@ -58,7 +58,7 @@ public class ModuleRunConfiguration extends RunConfigurationBase implements
 
             // UnDeploy Executor
         } else if (ModuleUnDeployExecutor.EXECUTOR_ID.equals(executor.getId())) {
-            return new UndeployRunProfile1(project, moduleName, runtimeConfigName);
+            return new UnDeployRunProfile(project, moduleName, runtimeConfigName);
 
         } else {
             throw new ExecutionException("Executor not valid!");
