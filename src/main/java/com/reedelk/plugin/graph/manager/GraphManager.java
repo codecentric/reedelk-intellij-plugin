@@ -25,7 +25,6 @@ import javax.swing.*;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.service.project.DesignerSelectionService.CurrentSelectionListener;
-import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
 
 /**
  * Centralizes updates of the graph coming from:
@@ -121,19 +120,19 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
     }
 
     private void deserializeDocument() {
-        // We only deserialize if the document is present and the text is not empty.
-        if (document != null && !isBlank(document.getText())) {
-            deserializeGraphAndNotify();
+        // We only deserialize (in the background) if and only if the
+        // document related to the current file has been opened already.
+        // Note that if the document has an empty text, the deserialization
+        // will just thrown a 'JSONException' since it is not a valid JSON and
+        // the designer panel will show an Error screen with the exception message.
+        if (document != null) {
+            PluginExecutor.getInstance().submit(new DeserializeGraphAndNotify());
         }
     }
 
     protected abstract String serialize(FlowGraph graph);
 
     protected abstract FlowGraph deserialize(Module module, Document document, FlowGraphProvider graphProvider) throws DeserializationError;
-
-    private void deserializeGraphAndNotify() {
-        PluginExecutor.getInstance().submit(new DeserializeGraphAndNotify());
-    }
 
     private class DeserializeGraphAndNotify implements Runnable {
 
