@@ -353,7 +353,7 @@ class ComponentPropertyAnalyzerTest {
         assertThatExistProperty(
                 "dynamicDoubleProperty",
                 "Dynamic double",
-                new Double("234.23d"),
+                Double.parseDouble("234.23d"),
                 TypeDescriptorMatchers.ofDynamicType(typeDynamicDouble));
     }
 
