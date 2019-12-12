@@ -21,7 +21,7 @@ class ScriptEditorDefault extends DisposablePanel {
 
     private static final int DIVIDER_WIDTH = 0;
     private static final int DIVIDER_MOUSE_ZONE_WIDTH = 4;
-    private static final int EDITOR_CONTEXT_VARIABLES_SIZE = 190;
+    private static final int EDITOR_CONTEXT_VARIABLES_SIZE = 180;
 
     static final Dimension DEFAULT_SCRIPT_DIMENSION = new Dimension(800, 400);
     private static final boolean HORIZONTAL = false;

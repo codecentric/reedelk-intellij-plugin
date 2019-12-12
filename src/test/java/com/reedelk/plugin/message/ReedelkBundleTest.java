@@ -13,15 +13,15 @@ class ReedelkBundleTest {
     @Test
     void shouldCorrectlyFormatScriptFunctionWithArguments() {
         // Given
-        String expectedFunction = "function run(context,message) {\n" +
-                "\tvar result = 'myScript script result';\n" +
-                "\treturn result;\n" +
+        String expectedFunction = "function myFunction(context,message) {\n" +
+                "\tvar text = 'myFunction function';\n" +
+                "\treturn text + ' result';\n" +
                 "}";
         List<String> scriptFunctionArguments = Arrays.asList("context","message");
         String joinedArguments = String.join(",", scriptFunctionArguments);
 
         // When
-        String message = ReedelkBundle.message("script.default.template",joinedArguments , "myScript");
+        String message = ReedelkBundle.message("script.default.template","myFunction", joinedArguments , "myFunction");
 
         // Then
         assertThat(message).isEqualTo(expectedFunction);
@@ -30,15 +30,15 @@ class ReedelkBundleTest {
     @Test
     void shouldCorrectlyFormatScriptFunctionWithoutArguments() {
         // Given
-        String expectedFunction = "function run() {\n" +
-                "\tvar result = 'myScript script result';\n" +
-                "\treturn result;\n" +
+        String expectedFunction = "function myFunction() {\n" +
+                "\tvar text = 'myFunction function';\n" +
+                "\treturn text + ' result';\n" +
                 "}";
         List<String> scriptFunctionArguments = Collections.emptyList();
         String joinedArguments = String.join(",", scriptFunctionArguments);
 
         // When
-        String message = ReedelkBundle.message("script.default.template",joinedArguments , "myScript");
+        String message = ReedelkBundle.message("script.default.template", "myFunction", joinedArguments , "myFunction");
 
         // Then
         assertThat(message).isEqualTo(expectedFunction);

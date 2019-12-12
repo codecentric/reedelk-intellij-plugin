@@ -29,7 +29,7 @@ public class Template {
         }
 
         public static final String FLOW = "HelloWorld.flow";
-        public static final String SCRIPT = "HelloWorld.js";
+        public static final String SCRIPT = "helloWorld.js";
         public static final String CONFIG = "DefaultListener.fconfig";
 
     }
