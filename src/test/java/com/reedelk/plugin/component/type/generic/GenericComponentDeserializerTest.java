@@ -70,18 +70,18 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
             PluginAssertion.assertThat(graph)
                     .node(lastNode).is(node)
                     .hasDataWithValue("integerProperty", 234923)
-                    .hasDataWithValue("integerObjectProperty", new Integer("998829743"))
+                    .hasDataWithValue("integerObjectProperty", Integer.valueOf("998829743"))
                     .hasDataWithValue("longProperty", 913281L)
-                    .hasDataWithValue("longObjectProperty", new Long("55663"))
+                    .hasDataWithValue("longObjectProperty", Long.valueOf("55663"))
                     .hasDataWithValue("floatProperty", 123.234f)
-                    .hasDataWithValue("floatObjectProperty", new Float("7843.12"))
+                    .hasDataWithValue("floatObjectProperty",  Float.parseFloat("7843.12"))
                     .hasDataWithValue("doubleProperty", 234.234d)
-                    .hasDataWithValue("doubleObjectProperty", new Double("11.88877"))
+                    .hasDataWithValue("doubleObjectProperty", Double.parseDouble("11.88877"))
                     .hasDataWithValue("booleanProperty", true)
                     .hasDataWithValue("booleanObjectProperty", Boolean.TRUE)
                     .hasDataWithValue("stringProperty", "my text sample")
                     .hasDataWithValue("bigIntegerProperty", new BigInteger("88923423423"))
-                    .hasDataWithValue("bigDecimalProperty", new BigDecimal("1.001"))
+                    .hasDataWithValue("bigDecimalProperty", new BigDecimal(1.001))
                     .and().nodesCountIs(2);
         }
     }
@@ -113,7 +113,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
                     .hasDataWithValue("stringProperty", "yet another string property")
                     .hasTypeObject("typeObjectProperty")
                     .hasDataWithValue("stringProperty", "sample string property")
-                    .hasDataWithValue("integerObjectProperty", new Integer("255"))
+                    .hasDataWithValue("integerObjectProperty", Integer.valueOf("255"))
                     .and().and().nodesCountIs(2);
         }
 
@@ -309,7 +309,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
             // Then
             PluginAssertion.assertThat(graph)
                     .node(lastNode).is(node)
-                    .hasDataWithValue("doubleObjectProperty", new Double("23491.23432"))
+                    .hasDataWithValue("doubleObjectProperty", Double.parseDouble("23491.23432"))
                     .hasDataWithValue("comboProperty", "two")
                     .and().nodesCountIs(2);
         }
@@ -410,14 +410,14 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
             // Then
             PluginAssertion.assertThat(graph)
                     .node(lastNode).is(node)
-                    .hasDataWithValue("dynamicBigDecimalProperty", new BigDecimal("44.001"))
+                    .hasDataWithValue("dynamicBigDecimalProperty", new BigDecimal(44.001))
                     .hasDataWithValue("dynamicBigIntegerProperty", new BigInteger("8811823843"))
                     .hasDataWithValue("dynamicBooleanProperty", Boolean.TRUE)
                     .hasDataWithValue("dynamicByteArrayProperty", "byte array string")
-                    .hasDataWithValue("dynamicDoubleProperty", new Double("4523.234"))
-                    .hasDataWithValue("dynamicFloatProperty", new Float("7843.12"))
-                    .hasDataWithValue("dynamicIntegerProperty", new Integer("3"))
-                    .hasDataWithValue("dynamicLongProperty", new Long("99933322"))
+                    .hasDataWithValue("dynamicDoubleProperty", Double.parseDouble("4523.234"))
+                    .hasDataWithValue("dynamicFloatProperty", Float.parseFloat("7843.12"))
+                    .hasDataWithValue("dynamicIntegerProperty", Integer.valueOf("3"))
+                    .hasDataWithValue("dynamicLongProperty", Long.valueOf("99933322"))
                     .hasDataWithValue("dynamicObjectProperty", "my object string")
                     .hasDataWithValue("dynamicStringProperty", "my dynamic string")
                     .and().nodesCountIs(2);
