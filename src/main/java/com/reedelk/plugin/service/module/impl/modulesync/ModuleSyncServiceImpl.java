@@ -1,8 +1,9 @@
-package com.reedelk.plugin.service.module.impl;
+package com.reedelk.plugin.service.module.impl.modulesync;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.util.Version;
+import com.reedelk.plugin.commons.ExcludedArtifactsFromModuleSync;
 import com.reedelk.plugin.executor.PluginExecutor;
 import com.reedelk.plugin.maven.MavenUtils;
 import com.reedelk.plugin.service.module.ModuleSyncService;
@@ -17,17 +18,12 @@ import org.jetbrains.idea.maven.model.MavenConstants;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 import static com.reedelk.plugin.service.module.RuntimeApiService.OperationCallback;
 import static com.reedelk.runtime.commons.Preconditions.checkState;
 
+// TODO: Test this service
 public class ModuleSyncServiceImpl implements ModuleSyncService {
-
-    private static final Predicate<MavenArtifact> EXCLUDE_OSGI = artifact -> !artifact.getGroupId().equals("org.osgi");
-    private static final Predicate<MavenArtifact> EXCLUDE_OPS4J = artifact -> !artifact.getGroupId().equals("org.ops4j.pax.logging");
-    private static final Predicate<MavenArtifact> EXCLUDE_PROJECT_REACTOR = artifact -> !artifact.getGroupId().equals("io.projectreactor");
-    private static final Predicate<MavenArtifact> EXCLUSIONS = EXCLUDE_OSGI.and(EXCLUDE_OPS4J).and(EXCLUDE_PROJECT_REACTOR);
 
     private static final Logger LOG = Logger.getInstance(ModuleSyncServiceImpl.class);
 
@@ -54,7 +50,7 @@ public class ModuleSyncServiceImpl implements ModuleSyncService {
                             .stream()
                             .filter(artifact -> Objects.equals(artifact.getOriginalScope(), MavenConstants.SCOPE_PROVIDED))
                             .map(MavenArtifactNode::getArtifact)
-                            .filter(EXCLUSIONS)
+                            .filter(ExcludedArtifactsFromModuleSync.predicate())
                             .forEach(artifact -> syncArtifact(runtimeHostAddress, runtimeHostPort, runtimeModules, artifact));
                 }));
     }
@@ -69,7 +65,7 @@ public class ModuleSyncServiceImpl implements ModuleSyncService {
             Version artifactVersion = Version.parseVersion(artifact.getVersion());
             Version moduleVersion = Version.parseVersion(moduleDTO.getVersion());
 
-            // All good, they have the same version, no need to install it.
+            // All good, they have the same version, no need to install the artifact.
             if (sameVersion(moduleVersion, artifactVersion)) {
                 return;
             }
@@ -94,6 +90,7 @@ public class ModuleSyncServiceImpl implements ModuleSyncService {
                 .filter(moduleDTO -> moduleDTO.getName().equals(moduleName))
                 .findFirst();
     }
+    // TODO: Extract  strings from here
 
     private void installModuleArtifactIntoRuntime(String address, int port, final MavenArtifact artifact) {
         RuntimeApiService.getInstance(module).install(artifact.getFile().getPath(), address, port, new OperationCallback() {

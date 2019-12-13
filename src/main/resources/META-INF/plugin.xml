@@ -60,7 +60,7 @@
                        serviceImplementation="com.reedelk.plugin.service.module.impl.runtimeapi.RuntimeApiServiceImpl"/>
 
         <moduleService serviceInterface="com.reedelk.plugin.service.module.ModuleSyncService"
-                       serviceImplementation="com.reedelk.plugin.service.module.impl.ModuleSyncServiceImpl"/>
+                       serviceImplementation="com.reedelk.plugin.service.module.impl.modulesync.ModuleSyncServiceImpl"/>
 
         <!-- Program Runner and Executors -->
         <programRunner implementation="com.reedelk.plugin.runconfig.module.runner.DeploymentRunner" order="first"/>
