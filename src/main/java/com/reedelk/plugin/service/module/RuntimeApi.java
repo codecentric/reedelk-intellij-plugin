@@ -2,7 +2,10 @@ package com.reedelk.plugin.service.module;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleServiceManager;
+import com.reedelk.runtime.rest.api.module.v1.ModuleGETRes;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Collection;
 
 public interface RuntimeApi {
 
@@ -14,7 +17,11 @@ public interface RuntimeApi {
 
     void deploy(String moduleFile, String address, int port, OperationCallback callback);
 
+    void install(String moduleFile, String address, int port, OperationCallback callback);
+
     void delete(String moduleFile, String address, int port, OperationCallback callback);
+
+    Collection<ModuleGETRes> getInstalledModules(String address, int port);
 
     interface OperationCallback {
         void onSuccess();

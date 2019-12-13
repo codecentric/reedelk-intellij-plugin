@@ -6,13 +6,20 @@ import com.reedelk.plugin.maven.MavenPackageGoal;
 import com.reedelk.plugin.service.module.HttpService;
 import com.reedelk.plugin.service.module.RuntimeApi;
 import com.reedelk.plugin.service.module.impl.http.HttpResponse;
+import com.reedelk.runtime.api.message.content.MimeType;
 import com.reedelk.runtime.rest.api.InternalAPI;
+import com.reedelk.runtime.rest.api.InternalAPI.Module.V1;
 import com.reedelk.runtime.rest.api.hotswap.v1.HotSwapPOSTReq;
 import com.reedelk.runtime.rest.api.module.v1.ModuleDELETEReq;
+import com.reedelk.runtime.rest.api.module.v1.ModuleGETRes;
 import com.reedelk.runtime.rest.api.module.v1.ModulePOSTReq;
+import com.reedelk.runtime.rest.api.module.v1.ModulesGETRes;
 import okhttp3.MediaType;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 
 import static com.reedelk.plugin.commons.Defaults.RestApi;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
@@ -20,7 +27,7 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 public class RuntimeApiImpl implements RuntimeApi {
 
     private static final String BASE_ADMIN_CONSOLE_URL_TEMPLATE = "http://%s:%d/api";
-    private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
+    private static final MediaType JSON = MediaType.get(MimeType.APPLICATION_JSON.toString());
 
     private final Module module;
 
@@ -88,6 +95,22 @@ public class RuntimeApiImpl implements RuntimeApi {
     }
 
     @Override
+    public void install(String moduleFile, String address, int port, OperationCallback callback) {
+        String requestUrl = urlFrom(address, port, RestApi.MODULE_DEPLOY);
+        File file  = new File(moduleFile);
+        try {
+            HttpResponse response = HttpService.getInstance(module).postMultipart(requestUrl, file, "moduleFilePath");
+            if (response.isSuccessful()) {
+                callback.onSuccess();
+            } else {
+                handleNotSuccessfulResponse(response, callback);
+            }
+        } catch (IOException e) {
+            callback.onError(e);
+        }
+    }
+
+    @Override
     public void delete(String moduleFile, String address, int port, OperationCallback callback) {
         ModuleDELETEReq req = new ModuleDELETEReq();
         req.setModuleFilePath(moduleFile);
@@ -103,6 +126,22 @@ public class RuntimeApiImpl implements RuntimeApi {
             }
         } catch (IOException exception) {
             callback.onError(exception);
+        }
+    }
+
+    @Override
+    public Collection<ModuleGETRes> getInstalledModules(String address, int port) {
+        String requestUrl = urlFrom(address, port, RestApi.MODULE);
+        try {
+            HttpResponse response = HttpService.getInstance(module).get(requestUrl);
+            if (response.isSuccessful()) {
+                ModulesGETRes installedModules = V1.GET.Res.deserialize(response.getBody());
+                return installedModules.getModules();
+            } else {
+                return Collections.emptyList();
+            }
+        } catch (IOException exception) {
+            return Collections.emptyList();
         }
     }
 

@@ -17,9 +17,13 @@ public class MavenUtils {
     private MavenUtils() {
     }
 
+    public static Optional<MavenProject> getMavenProject(Module module) {
+        return Optional.ofNullable(MavenProjectsManager.getInstance(module.getProject()).findProject(module));
+    }
+
     public static Optional<MavenProject> getMavenProject(Project project, String moduleName) {
         Module module = findModuleByName(moduleName, project);
-        return Optional.ofNullable(MavenProjectsManager.getInstance(project).findProject(module));
+        return getMavenProject(module);
     }
 
     private static Module findModuleByName(String moduleName, Project project) {

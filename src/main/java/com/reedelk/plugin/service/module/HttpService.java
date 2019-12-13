@@ -6,6 +6,7 @@ import com.reedelk.plugin.service.module.impl.http.HttpResponse;
 import okhttp3.MediaType;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.io.IOException;
 
 
@@ -16,6 +17,8 @@ public interface HttpService {
     }
 
     HttpResponse post(String url, String payload, MediaType mediaType) throws IOException;
+
+    HttpResponse postMultipart(String url, File file, String partName) throws IOException;
 
     HttpResponse get(String url) throws IOException;
 
