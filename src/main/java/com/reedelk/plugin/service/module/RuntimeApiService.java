@@ -7,10 +7,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
-public interface RuntimeApi {
+public interface RuntimeApiService {
 
-    static RuntimeApi getInstance(@NotNull Module module) {
-        return ModuleServiceManager.getService(module, RuntimeApi.class);
+    static RuntimeApiService getInstance(@NotNull Module module) {
+        return ModuleServiceManager.getService(module, RuntimeApiService.class);
     }
 
     void hotSwap(String moduleFile, String resourcesRootDirectory, String address, int port, OperationCallback callback);

@@ -4,7 +4,7 @@ import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.commons.FlowErrorResponse;
 import com.reedelk.plugin.maven.MavenPackageGoal;
 import com.reedelk.plugin.service.module.HttpService;
-import com.reedelk.plugin.service.module.RuntimeApi;
+import com.reedelk.plugin.service.module.RuntimeApiService;
 import com.reedelk.plugin.service.module.impl.http.HttpResponse;
 import com.reedelk.runtime.api.message.content.MimeType;
 import com.reedelk.runtime.rest.api.InternalAPI;
@@ -24,14 +24,14 @@ import java.util.Collections;
 import static com.reedelk.plugin.commons.Defaults.RestApi;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
-public class RuntimeApiImpl implements RuntimeApi {
+public class RuntimeApiServiceImpl implements RuntimeApiService {
 
     private static final String BASE_ADMIN_CONSOLE_URL_TEMPLATE = "http://%s:%d/api";
     private static final MediaType JSON = MediaType.get(MimeType.APPLICATION_JSON.toString());
 
     private final Module module;
 
-    public RuntimeApiImpl(Module module) {
+    public RuntimeApiServiceImpl(Module module) {
         this.module = module;
     }
 

@@ -6,8 +6,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.reedelk.plugin.commons.ToolWindowUtils;
-import com.reedelk.plugin.service.module.RuntimeApi;
-import com.reedelk.plugin.service.module.RuntimeApi.OperationCallback;
+import com.reedelk.plugin.service.module.RuntimeApiService;
+import com.reedelk.plugin.service.module.RuntimeApiService.OperationCallback;
 import com.reedelk.plugin.service.project.SourceChangeService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.project.MavenProject;
@@ -28,7 +28,7 @@ public class UnDeployRunProfile extends AbstractRunProfile {
                 .orElseThrow(() -> new ExecutionException(message("module.run.error.module.not.found", moduleName)));
 
         // Un Deploy Module
-        RuntimeApi.getInstance(module).delete(moduleFile, address, port, new OperationCallback() {
+        RuntimeApiService.getInstance(module).delete(moduleFile, address, port, new OperationCallback() {
             @Override
             public void onSuccess() {
                 SourceChangeService.getInstance(project).changed(runtimeConfigName, moduleName);
