@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.service.module.RuntimeApiService.OperationCallback;
 import static com.reedelk.runtime.commons.Preconditions.checkState;
 
@@ -90,7 +91,6 @@ public class ModuleSyncServiceImpl implements ModuleSyncService {
                 .filter(moduleDTO -> moduleDTO.getName().equals(moduleName))
                 .findFirst();
     }
-    // TODO: Extract  strings from here
 
     private void installModuleArtifactIntoRuntime(String address, int port, final MavenArtifact artifact) {
         RuntimeApiService.getInstance(module).install(artifact.getFile().getPath(), address, port, new OperationCallback() {
@@ -98,14 +98,14 @@ public class ModuleSyncServiceImpl implements ModuleSyncService {
             public void onSuccess() {
                 String artifactId = artifact.getArtifactId();
                 String artifactVersion = artifact.getVersion();
-                LOG.info(artifactId + ", version: " + artifactVersion + " deployed.");
+                LOG.info(message("module.sync.module.deployed",  artifactId, artifactVersion));
             }
 
             @Override
             public void onError(Exception exception) {
                 String artifactId = artifact.getArtifactId();
                 String artifactVersion = artifact.getVersion();
-                LOG.warn(artifactId + ", version: " + artifactVersion + " could not be deployed: " + exception.getMessage());
+                LOG.warn(message("module.sync.module.deploy.error", artifactId, artifactVersion, exception.getMessage()));
             }
         });
     }
