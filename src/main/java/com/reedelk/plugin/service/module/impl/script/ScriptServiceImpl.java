@@ -6,12 +6,12 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.reedelk.plugin.commons.JavascriptFileNameValidator;
 import com.reedelk.plugin.commons.PluginModuleUtils;
 import com.reedelk.plugin.commons.ScriptResourceUtil;
 import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.service.module.ScriptService;
-import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.FileExtension;
 
 import java.io.IOException;
@@ -65,14 +65,9 @@ public class ScriptServiceImpl implements ScriptService {
 
     @Override
     public void addScript(String scriptFileName, String scriptBody) {
-        if (StringUtils.isBlank(scriptFileName)) {
-            publisher.onAddError(new PluginException(message("file.name.not.empty")));
-            return;
-        }
 
-        if (scriptFileName.endsWith("/")) {
-            // The entered script file name was: dir1/dir2/
-            publisher.onAddError(new PluginException(message("file.name.not.empty")));
+        if (!JavascriptFileNameValidator.validate(scriptFileName)) {
+            publisher.onAddError(new PluginException(message("script.file.name.validation.error")));
             return;
         }
 
@@ -123,7 +118,6 @@ public class ScriptServiceImpl implements ScriptService {
                         // The script file to be removed does not exists.
                         return;
                     }
-
                     try {
                         file.delete(null);
                         publisher.onRemoveSuccess();
@@ -141,5 +135,4 @@ public class ScriptServiceImpl implements ScriptService {
         default void onRemoveSuccess() {}
         default void onRemoveError(Exception exception) {}
     }
-
 }

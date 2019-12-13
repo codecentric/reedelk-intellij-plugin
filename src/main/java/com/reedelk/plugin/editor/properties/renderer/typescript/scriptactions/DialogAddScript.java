@@ -56,7 +56,7 @@ public class DialogAddScript extends DialogWrapper {
     @Override
     protected ValidationInfo doValidate() {
         if (!JavascriptFileNameValidator.validate(scriptFileNameWithPathToAdd)) {
-            return new ValidationInfo(message("script.dialog.add.not.valid.script.name"));
+            return new ValidationInfo(message("script.file.name.validation.error"));
         }
         return super.doValidate();
     }
