@@ -6,11 +6,10 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.messages.Topic;
 import com.reedelk.plugin.commons.PluginModuleUtils;
 import com.reedelk.plugin.commons.ScriptResourceUtil;
 import com.reedelk.plugin.exception.PluginException;
-import com.reedelk.plugin.executor.PluginExecutor;
+import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.service.module.ScriptService;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.FileExtension;
@@ -24,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
+import static com.reedelk.plugin.topic.ReedelkTopics.TOPIC_SCRIPT_RESOURCE;
 
 public class ScriptServiceImpl implements ScriptService {
 
@@ -59,7 +59,7 @@ public class ScriptServiceImpl implements ScriptService {
 
                 publisher.onScriptResources(Collections.unmodifiableList(scripts));
 
-            }).submit(PluginExecutor.getInstance());
+            }).submit(PluginExecutors.sequential());
         });
     }
 
@@ -141,8 +141,5 @@ public class ScriptServiceImpl implements ScriptService {
         default void onRemoveSuccess() {}
         default void onRemoveError(Exception exception) {}
     }
-
-    public static final Topic<ScriptResourceChangeListener> TOPIC_SCRIPT_RESOURCE =
-            new Topic<>("Script Resource Change", ScriptResourceChangeListener.class);
 
 }

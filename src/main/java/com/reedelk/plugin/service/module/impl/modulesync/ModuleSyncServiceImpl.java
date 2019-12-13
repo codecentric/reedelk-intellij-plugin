@@ -4,7 +4,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.util.Version;
 import com.reedelk.plugin.commons.ExcludedArtifactsFromModuleSync;
-import com.reedelk.plugin.executor.PluginExecutor;
+import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.maven.MavenUtils;
 import com.reedelk.plugin.service.module.ModuleSyncService;
 import com.reedelk.plugin.service.module.RuntimeApiService;
@@ -35,7 +35,7 @@ public class ModuleSyncServiceImpl implements ModuleSyncService {
 
     @Override
     public void syncInstalledModules(String runtimeHostAddress, int runtimeHostPort) {
-        PluginExecutor.getInstance().submit(() ->
+        PluginExecutors.sequential().submit(() ->
 
                 MavenUtils.getMavenProject(module).ifPresent(mavenProject -> {
 

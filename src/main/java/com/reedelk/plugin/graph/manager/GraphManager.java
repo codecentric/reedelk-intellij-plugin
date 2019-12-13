@@ -14,7 +14,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.editor.DesignerEditor;
-import com.reedelk.plugin.executor.PluginExecutor;
+import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.graph.*;
 import com.reedelk.plugin.graph.deserializer.DeserializationError;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpdateNotifier;
@@ -126,7 +126,7 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
         // will just thrown a 'JSONException' since it is not a valid JSON and
         // the designer panel will show an Error screen with the exception message.
         if (document != null) {
-            PluginExecutor.getInstance().submit(new DeserializeGraphAndNotify());
+            PluginExecutors.sequential().submit(new DeserializeGraphAndNotify());
         }
     }
 

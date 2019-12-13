@@ -8,10 +8,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
+import com.reedelk.plugin.commons.ExcludedArtifactsFromModuleSync;
 import com.reedelk.plugin.component.domain.AutoCompleteContributorDefinition;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
 import com.reedelk.plugin.component.type.unknown.UnknownComponentDescriptorWrapper;
-import com.reedelk.plugin.executor.PluginExecutor;
+import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.maven.MavenUtils;
 import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpdateNotifier;
@@ -22,7 +23,7 @@ import com.reedelk.runtime.component.Stop;
 import com.reedelk.runtime.component.Unknown;
 import io.github.classgraph.ScanResult;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.idea.maven.model.MavenArtifact;
+import org.jetbrains.idea.maven.model.MavenArtifactNode;
 import org.jetbrains.idea.maven.project.MavenImportListener;
 import org.jetbrains.idea.maven.project.MavenProject;
 
@@ -125,38 +126,29 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
      * then it is ignored.
      */
     private void asyncUpdateMavenDependenciesComponents() {
-        PluginExecutor.getInstance().submit(() -> {
-            // Remove all components before updating them
-            mavenJarComponentsMap.clear();
-            autoCompleteContributorDefinitions.clear();
+        // Remove all components before updating them
+        mavenJarComponentsMap.clear();
+        autoCompleteContributorDefinitions.clear();
 
-            publisher.onComponentListUpdate();
+        publisher.onComponentListUpdate();
 
-            // Update the components definitions from maven project
-            MavenUtils.getMavenProject(module.getProject(), module.getName()).ifPresent(mavenProject -> {
-                List<MavenArtifact> dependencies = mavenProject.getDependencies();
-                dependencies.stream()
-                        .filter(artifact -> ModuleUtils.isModule(artifact.getFile()))
-                        .map(artifact -> artifact.getFile().getPath()).collect(toList())
-                        .forEach(jarFilePath -> ModuleUtils.getModuleName(jarFilePath).ifPresent(moduleName -> {
-                            // We only scan a module if its jar file is a module with a name.
-                            ScanResult scanResult = ComponentScanner.scanResultFrom(jarFilePath);
-                            List<ComponentDescriptor> components = componentScanner.from(scanResult);
+        // Update the components definitions from maven project
+        MavenUtils.getMavenProject(module.getProject(), module.getName()).ifPresent(mavenProject -> {
 
-                            ModuleComponents descriptor = new ModuleComponents(moduleName, components);
-                            mavenJarComponentsMap.put(jarFilePath, descriptor);
-
-                            List<String> from = componentScanner.autoCompleteFrom(scanResult);
-                            autoCompleteContributorDefinitions.add(new AutoCompleteContributorDefinition(from));
-
-                            publisher.onComponentListUpdate();
-                        }));
-            });
+            // We only want the root dependencies.
+            mavenProject.getDependencyTree().stream()
+                    .map(MavenArtifactNode::getArtifact)
+                    .filter(ExcludedArtifactsFromModuleSync.predicate())
+                    .filter(artifact -> ModuleUtils.isModule(artifact.getFile()))
+                    .map(artifact -> artifact.getFile().getPath()).collect(toList())
+                    .forEach(jarFilePath -> ModuleUtils.getModuleName(jarFilePath).ifPresent(moduleName -> {
+                        PluginExecutors.parallel().submit(() -> scanForComponentsFromJar(jarFilePath, moduleName));
+                    }));
         });
     }
 
     private void asyncUpdateModuleCustomComponents() {
-        PluginExecutor.getInstance().submit(() -> {
+        PluginExecutors.sequential().submit(() -> {
             String[] modulePaths = ModuleRootManager.getInstance(module)
                     .orderEntries()
                     .withoutSdk()
@@ -178,10 +170,24 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     }
 
     private void asyncUpdateSystemComponents() {
-        PluginExecutor.getInstance().submit(() -> {
+        PluginExecutors.sequential().submit(() -> {
             List<ComponentDescriptor> flowControlComponents = componentScanner.from(Stop.class.getPackage());
             this.systemComponents.addAll(flowControlComponents);
         });
+    }
+
+    private void scanForComponentsFromJar(String jarFilePath, String moduleName) {
+        // We only scan a module if its jar file is a module with a name.
+        ScanResult scanResult = ComponentScanner.scanResultFrom(jarFilePath);
+        List<ComponentDescriptor> components = componentScanner.from(scanResult);
+
+        ModuleComponents descriptor = new ModuleComponents(moduleName, components);
+        mavenJarComponentsMap.put(jarFilePath, descriptor);
+
+        List<String> from = componentScanner.autoCompleteFrom(scanResult);
+        autoCompleteContributorDefinitions.add(new AutoCompleteContributorDefinition(from));
+
+        publisher.onComponentListUpdate();
     }
 
     private Optional<ComponentDescriptor> findComponentMatching(Collection<ModuleComponents> descriptors, String fullyQualifiedName) {

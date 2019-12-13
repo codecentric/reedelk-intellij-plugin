@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
-import static com.reedelk.plugin.service.module.impl.script.ScriptServiceImpl.TOPIC_SCRIPT_RESOURCE;
+import static com.reedelk.plugin.topic.ReedelkTopics.TOPIC_SCRIPT_RESOURCE;
 import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
 import static java.awt.BorderLayout.CENTER;

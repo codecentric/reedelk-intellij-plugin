@@ -8,15 +8,13 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.ThrowableRunnable;
-import com.intellij.util.messages.Topic;
 import com.reedelk.plugin.commons.FileUtils;
 import com.reedelk.plugin.commons.PluginModuleUtils;
 import com.reedelk.plugin.component.deserializer.ConfigurationDeserializer;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.component.serializer.ConfigurationSerializer;
 import com.reedelk.plugin.exception.PluginException;
-import com.reedelk.plugin.executor.PluginExecutor;
+import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.service.module.ConfigService;
 import com.reedelk.runtime.commons.FileExtension;
 import org.jetbrains.annotations.NotNull;
@@ -29,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
+import static com.reedelk.plugin.topic.ReedelkTopics.TOPIC_CONFIG_CHANGE;
 
 public class ConfigServiceImpl implements ConfigService {
 
@@ -51,7 +50,7 @@ public class ConfigServiceImpl implements ConfigService {
                 return true;
             });
             publisher.onConfigs(configs);
-        }).submit(PluginExecutor.getInstance());
+        }).submit(PluginExecutors.sequential());
     }
 
     @Override
@@ -151,10 +150,6 @@ public class ConfigServiceImpl implements ConfigService {
         default void onRemoveError(Exception exception) {}
     }
 
-    public static final Topic<ConfigChangeListener> TOPIC_CONFIG_CHANGE =
-            new Topic<>("Config Change", ConfigChangeListener.class);
-
-
     private Optional<? extends ConfigMetadata> getConfigurationFrom(VirtualFile virtualFile, TypeObjectDescriptor configTypeDescriptor) {
         Optional<Document> maybeDocument = getDocumentFromFile(virtualFile);
         if (maybeDocument.isPresent()) {
@@ -168,11 +163,5 @@ public class ConfigServiceImpl implements ConfigService {
     private Optional<Document> getDocumentFromFile(VirtualFile virtualFile) {
         Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
         return Optional.ofNullable(document);
-    }
-
-    private void executeWriteCommand(ThrowableRunnable<IOException> runnable) throws IOException {
-        WriteCommandAction
-                .writeCommandAction(module.getProject())
-                .run(runnable);
     }
 }

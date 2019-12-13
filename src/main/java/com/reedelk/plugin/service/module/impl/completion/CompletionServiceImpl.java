@@ -8,7 +8,7 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
-import com.reedelk.plugin.executor.PluginExecutor;
+import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpdateNotifier;
@@ -48,7 +48,7 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
     }
 
     void initializeAsync() {
-        PluginExecutor.getInstance().submit(this::initializeSuggestions);
+        PluginExecutors.sequential().submit(this::initializeSuggestions);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
 
     @Override
     public void onComponentListUpdate() {
-        PluginExecutor.getInstance().submit(this::updateComponentsSuggestions);
+        PluginExecutors.sequential().submit(this::updateComponentsSuggestions);
     }
 
     void updateComponentsSuggestions() {

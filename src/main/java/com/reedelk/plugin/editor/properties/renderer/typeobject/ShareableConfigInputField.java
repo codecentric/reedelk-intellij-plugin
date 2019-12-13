@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
-import static com.reedelk.plugin.service.module.impl.configuration.ConfigServiceImpl.TOPIC_CONFIG_CHANGE;
+import static com.reedelk.plugin.topic.ReedelkTopics.TOPIC_CONFIG_CHANGE;
 import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.EAST;
@@ -133,10 +133,9 @@ class ShareableConfigInputField extends DisposablePanel implements ConfigService
             configSelectorCombo.addListener(value -> {
                 propertyAccessor.set(((ConfigMetadata) value).getId());
                 configActionsPanel.onSelect((ConfigMetadata) value);
+
                 // If the selection has changed, we must notify all the
                 // context subscribers that the property has changed.
-
-                // TODO: there should be a way to notify the parent that the child property has changed.
                 context.notifyPropertyChanged(descriptor.getPropertyName(), referenceDataHolder);
             });
         });
