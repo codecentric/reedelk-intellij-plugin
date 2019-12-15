@@ -13,16 +13,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.Optional;
 
 import static com.reedelk.plugin.service.module.RuntimeApiService.OperationCallback;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.jetbrains.idea.maven.model.MavenArtifactState.ADDED;
+import static org.jetbrains.idea.maven.model.MavenConstants.SCOPE_COMPILE;
 import static org.jetbrains.idea.maven.model.MavenConstants.SCOPE_PROVIDED;
 import static org.mockito.Mockito.*;
 
-// TODO: Continue testing
 @ExtendWith(MockitoExtension.class)
 class ModuleSyncServiceImplTest {
 
@@ -49,33 +49,104 @@ class ModuleSyncServiceImplTest {
     @Test
     void shouldUpdateModuleWithGreaterVersionFromMavenProjectThanTheOneInstalled() {
         // Given
-        ModuleGETRes module1 = new ModuleGETRes();
-        module1.setName("module-rest");
-        module1.setVersion("1.0.0");
-        ModuleGETRes module2 = new ModuleGETRes();
-        module2.setName("module-file");
-        module2.setVersion("1.0.0");
-
-        Collection<ModuleGETRes> modules = asList(module1, module2);
+        ModuleGETRes moduleRest = new ModuleGETRes();
+        moduleRest.setName("module-rest");
+        moduleRest.setVersion("1.0.0");
+        ModuleGETRes moduleFile = new ModuleGETRes();
+        moduleFile.setName("module-file");
+        moduleFile.setVersion("1.0.0");
 
         doReturn(true).when(service).isModule(any(File.class));
+        doReturn(asList(moduleRest, moduleFile)).when(runtimeApiService).installedModules(runtimeHostAddress, runtimeHostPort);
 
-        doReturn(modules).when(runtimeApiService)
-                .installedModules(runtimeHostAddress, runtimeHostPort);
-
-        String artifact1FilePath = "/test/module-rest.jar";
-        String artifact2FilePath = "/test/module-file.jar";
+        String moduleRestPath = "/test/module-rest.jar";
+        String moduleFilePath = "/test/module-file.jar";
         doReturn(asList(
-                createArtifactNodeWith(SCOPE_PROVIDED, "module-rest", "1.0.0", new File(artifact1FilePath)),
-                createArtifactNodeWith(SCOPE_PROVIDED, "module-file", "1.0.1", new File(artifact2FilePath))))
+                createArtifactNodeWith(SCOPE_PROVIDED, "module-rest", "1.0.0", new File(moduleRestPath)),
+                createArtifactNodeWith(SCOPE_PROVIDED, "module-file", "1.0.1", new File(moduleFilePath))))
                 .when(mockMavenProject).getDependencyTree();
 
         // When
         service.internalSyncInstalledModules(runtimeHostAddress, runtimeHostPort);
 
         // Then
-        verify(runtimeApiService).install(eq("/test/module-file.jar"), anyString(), anyInt(), any(OperationCallback.class));
+        verify(runtimeApiService)
+                .install(eq(moduleFilePath), eq(runtimeHostAddress), eq(runtimeHostPort), any(OperationCallback.class));
+    }
 
+    @Test
+    void shouldNotInstallAnythingWhenAllTheModulesAreUpToDate() {
+        // Given
+        ModuleGETRes moduleRest = new ModuleGETRes();
+        moduleRest.setName("module-rest");
+        moduleRest.setVersion("1.0.0");
+        ModuleGETRes moduleFile = new ModuleGETRes();
+        moduleFile.setName("module-file");
+        moduleFile.setVersion("1.0.0");
+
+        doReturn(asList(moduleRest, moduleFile)).when(runtimeApiService).installedModules(runtimeHostAddress, runtimeHostPort);
+
+        String moduleRestPath = "/test/module-rest.jar";
+        String moduleFilePath = "/test/module-file.jar";
+        doReturn(asList(
+                createArtifactNodeWith(SCOPE_PROVIDED, "module-rest", "1.0.0", new File(moduleRestPath)),
+                createArtifactNodeWith(SCOPE_PROVIDED, "module-file", "1.0.0", new File(moduleFilePath))))
+                .when(mockMavenProject).getDependencyTree();
+
+        // When
+        service.internalSyncInstalledModules(runtimeHostAddress, runtimeHostPort);
+
+        // Then
+        verify(runtimeApiService, never())
+                .install(anyString(), anyString(), anyInt(), any(OperationCallback.class));
+    }
+
+    @Test
+    void shouldInstallModuleWhenNotInstalledButPresentInMavenDependencies() {
+        // Given
+        ModuleGETRes moduleRest = new ModuleGETRes();
+        moduleRest.setName("module-rest");
+        moduleRest.setVersion("1.0.0");
+
+        doReturn(true).when(service).isModule(any(File.class));
+        doReturn(singletonList(moduleRest)).when(runtimeApiService).installedModules(runtimeHostAddress, runtimeHostPort);
+
+        String moduleRestPath = "/test/module-rest.jar";
+        String moduleFilePath = "/test/module-file.jar";
+        doReturn(asList(
+                createArtifactNodeWith(SCOPE_PROVIDED, "module-rest", "1.0.0", new File(moduleRestPath)),
+                createArtifactNodeWith(SCOPE_PROVIDED, "module-file", "1.0.1", new File(moduleFilePath))))
+                .when(mockMavenProject).getDependencyTree();
+
+        // When
+        service.internalSyncInstalledModules(runtimeHostAddress, runtimeHostPort);
+
+        // Then
+        verify(runtimeApiService)
+                .install(eq(moduleFilePath), eq(runtimeHostAddress), eq(runtimeHostPort), any(OperationCallback.class));
+    }
+
+    @Test
+    void shouldIgnoreDependenciesWithScopeNotProvided() {
+        // Given
+        ModuleGETRes moduleRest = new ModuleGETRes();
+        moduleRest.setName("module-rest");
+        moduleRest.setVersion("1.0.0");
+
+        doReturn(singletonList(moduleRest)).when(runtimeApiService).installedModules(runtimeHostAddress, runtimeHostPort);
+
+        String moduleRestPath = "/test/module-rest.jar";
+        doReturn(
+                singletonList(createArtifactNodeWith(SCOPE_COMPILE, "module-rest", "1.0.1", new File(moduleRestPath))))
+                .when(mockMavenProject)
+                .getDependencyTree();
+
+        // When
+        service.internalSyncInstalledModules(runtimeHostAddress, runtimeHostPort);
+
+        // Then
+        verify(runtimeApiService, never())
+                .install(anyString(), anyString(), anyInt(), any(OperationCallback.class));
     }
 
     private MavenArtifactNode createArtifactNodeWith(String scope, String artifactId, String version, File artifactFile) {
