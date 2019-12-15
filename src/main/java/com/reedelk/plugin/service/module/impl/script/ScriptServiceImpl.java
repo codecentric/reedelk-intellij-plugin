@@ -71,12 +71,13 @@ public class ScriptServiceImpl implements ScriptService {
             return;
         }
 
-        Path normalizedScriptFilePath = Paths.get(ScriptResourceUtil.normalize(scriptFileName));
-
         // If the scripts folder is empty, it means that there is no resources folder created
         // in the current project, therefore no action is required.
         PluginModuleUtils.getScriptsFolder(module).ifPresent(scriptsDirectory ->
                 WriteCommandAction.runWriteCommandAction(module.getProject(), () -> {
+
+                    final String normalizedScriptFile = ScriptResourceUtil.normalize(scriptFileName);
+                    final Path normalizedScriptFilePath = Paths.get(normalizedScriptFile);
 
                     String directoryUpToScriptFile = scriptsDirectory;
 
@@ -98,10 +99,12 @@ public class ScriptServiceImpl implements ScriptService {
 
                         // Create the script file
                         String scriptFileNameWithExtension = normalizedScriptFilePath.getFileName().toString();
-                        VirtualFile addedScriptVf = directoryVirtualFile.createChildData(null, scriptFileNameWithExtension);
+                        VirtualFile addedScriptVirtualFile = directoryVirtualFile.createChildData(null, scriptFileNameWithExtension);
+                        VfsUtil.saveText(addedScriptVirtualFile, scriptBody);
 
-                        VfsUtil.saveText(addedScriptVf, scriptBody);
-                        publisher.onAddSuccess(new ScriptResource(normalizedScriptFilePath.toString(), addedScriptVf.getNameWithoutExtension()));
+                        String scriptResourcePath = addedScriptVirtualFile.getPath().substring(scriptsDirectory.length() + 1);
+                        ScriptResource scriptResource = new ScriptResource(scriptResourcePath, addedScriptVirtualFile.getNameWithoutExtension());
+                        publisher.onAddSuccess(scriptResource);
 
                     } catch (IOException exception) {
                         publisher.onAddError(exception);
