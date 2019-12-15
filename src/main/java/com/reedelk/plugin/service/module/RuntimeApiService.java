@@ -21,7 +21,7 @@ public interface RuntimeApiService {
 
     void delete(String moduleFile, String address, int port, OperationCallback callback);
 
-    Collection<ModuleGETRes> getInstalledModules(String address, int port);
+    Collection<ModuleGETRes> installedModules(String address, int port);
 
     interface OperationCallback {
         void onSuccess();

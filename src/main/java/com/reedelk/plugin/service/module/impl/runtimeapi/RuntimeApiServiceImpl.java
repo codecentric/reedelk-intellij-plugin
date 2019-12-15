@@ -130,7 +130,7 @@ public class RuntimeApiServiceImpl implements RuntimeApiService {
     }
 
     @Override
-    public Collection<ModuleGETRes> getInstalledModules(String address, int port) {
+    public Collection<ModuleGETRes> installedModules(String address, int port) {
         String requestUrl = urlFrom(address, port, RestApi.MODULE);
         try {
             HttpResponse response = HttpService.getInstance(module).get(requestUrl);

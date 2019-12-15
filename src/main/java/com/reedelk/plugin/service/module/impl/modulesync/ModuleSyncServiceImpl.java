@@ -14,7 +14,9 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.model.MavenArtifact;
 import org.jetbrains.idea.maven.model.MavenArtifactNode;
 import org.jetbrains.idea.maven.model.MavenConstants;
+import org.jetbrains.idea.maven.project.MavenProject;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
@@ -23,7 +25,6 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.service.module.RuntimeApiService.OperationCallback;
 import static com.reedelk.runtime.commons.Preconditions.checkState;
 
-// TODO: Test this service
 public class ModuleSyncServiceImpl implements ModuleSyncService {
 
     private static final Logger LOG = Logger.getInstance(ModuleSyncServiceImpl.class);
@@ -37,23 +38,38 @@ public class ModuleSyncServiceImpl implements ModuleSyncService {
     @Override
     public void syncInstalledModules(String runtimeHostAddress, int runtimeHostPort) {
         PluginExecutors.sequential().submit(() ->
+                internalSyncInstalledModules(runtimeHostAddress, runtimeHostPort));
+    }
 
-                MavenUtils.getMavenProject(module).ifPresent(mavenProject -> {
+    void internalSyncInstalledModules(String runtimeHostAddress, int runtimeHostPort) {
+        moduleMavenProject().ifPresent(mavenProject -> {
 
-                    Collection<ModuleGETRes> runtimeModules = RuntimeApiService.getInstance(module)
-                            .getInstalledModules(runtimeHostAddress, runtimeHostPort);
+            Collection<ModuleGETRes> runtimeModules = runtimeApiService()
+                    .installedModules(runtimeHostAddress, runtimeHostPort);
 
-                    // We get dependencies from the dependency tree because we only want the root dependencies,
-                    // i.e the ones defined in the pom file. If we would call mavenProject.getDependencies() we would
-                    // also get back the transitive dependencies. Moreover, we filter out some dependencies which are
-                    // not ESB Modules, e.g: org.osgi.
-                    mavenProject.getDependencyTree()
-                            .stream()
-                            .filter(artifact -> Objects.equals(artifact.getOriginalScope(), MavenConstants.SCOPE_PROVIDED))
-                            .map(MavenArtifactNode::getArtifact)
-                            .filter(ExcludedArtifactsFromModuleSync.predicate())
-                            .forEach(artifact -> syncArtifact(runtimeHostAddress, runtimeHostPort, runtimeModules, artifact));
-                }));
+            // We get dependencies from the dependency tree because we only want the root dependencies,
+            // i.e the ones defined in the pom file. If we would call mavenProject.getDependencies() we would
+            // also get back the transitive dependencies. Moreover, we filter out some dependencies which are
+            // not ESB Modules, e.g: org.osgi.
+            mavenProject.getDependencyTree()
+                    .stream()
+                    .filter(artifact -> Objects.equals(artifact.getOriginalScope(), MavenConstants.SCOPE_PROVIDED))
+                    .map(MavenArtifactNode::getArtifact)
+                    .filter(ExcludedArtifactsFromModuleSync.predicate())
+                    .forEach(artifact -> syncArtifact(runtimeHostAddress, runtimeHostPort, runtimeModules, artifact));
+        });
+    }
+
+    Optional<MavenProject> moduleMavenProject() {
+        return MavenUtils.getMavenProject(module);
+    }
+
+    RuntimeApiService runtimeApiService() {
+        return RuntimeApiService.getInstance(module);
+    }
+
+    boolean isModule(File artifactFile) {
+        return ModuleUtils.isModule(artifactFile);
     }
 
     private void syncArtifact(String runtimeHostAddress, int runtimeHostPort, Collection<ModuleGETRes> installed, MavenArtifact artifact) {
@@ -74,7 +90,7 @@ public class ModuleSyncServiceImpl implements ModuleSyncService {
 
         // The Runtime does not have installed a module matching the expected artifact. Or
         // the version of the module in the artifact is different, therefore we must install it.
-        if (ModuleUtils.isModule(artifact.getFile())) {
+        if (isModule(artifact.getFile())) {
             installModuleArtifactIntoRuntime(runtimeHostAddress, runtimeHostPort, artifact);
         }
     }
@@ -93,7 +109,7 @@ public class ModuleSyncServiceImpl implements ModuleSyncService {
     }
 
     private void installModuleArtifactIntoRuntime(String address, int port, final MavenArtifact artifact) {
-        RuntimeApiService.getInstance(module).install(artifact.getFile().getPath(), address, port, new OperationCallback() {
+        runtimeApiService().install(artifact.getFile().getPath(), address, port, new OperationCallback() {
             @Override
             public void onSuccess() {
                 String artifactId = artifact.getArtifactId();
