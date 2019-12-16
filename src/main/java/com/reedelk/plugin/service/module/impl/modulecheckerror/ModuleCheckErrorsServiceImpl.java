@@ -16,7 +16,6 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class ModuleCheckErrorsServiceImpl implements ModuleCheckErrorsService {
 
-
     private final Module module;
 
     public ModuleCheckErrorsServiceImpl(Module module) {
