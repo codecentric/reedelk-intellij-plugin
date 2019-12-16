@@ -31,9 +31,9 @@ public class Colors {
     public static final JBColor TEXT_FLOW_TITLE = JBColor.GRAY;
     public static final JBColor TEXT_INBOUND_LANE = JBColor.GRAY;
     public static final JBColor TEXT_COMPONENT_DESCRIPTION = JBColor.GRAY;
-    public static final JBColor TEXT_COMPONENT_DESCRIPTION_SELECTED = JBColor.GRAY;
+    public static final JBColor TEXT_COMPONENT_DESCRIPTION_SELECTED = JBColor.DARK_GRAY;
     public static final JBColor TEXT_COMPONENT_TITLE = JBColor.LIGHT_GRAY;
-    public static final JBColor TEXT_COMPONENT_TITLE_SELECTED = JBColor.DARK_GRAY;
+    public static final JBColor TEXT_COMPONENT_TITLE_SELECTED = JBColor.GRAY;
     public static final JBColor TEXT_DEFAULT_ROUTE = JBColor.GRAY;
 
     public static final JBColor PALETTE_TEXT_SELECTED = JBColor.WHITE;
