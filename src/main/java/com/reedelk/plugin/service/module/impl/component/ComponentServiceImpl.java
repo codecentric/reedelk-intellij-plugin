@@ -141,7 +141,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         mavenJarComponentsMap.clear();
         autoCompleteContributorDefinitions.clear();
 
-        publisher.onComponentListUpdate();
+        notifyComponentListUpdate();
 
         // Update the components definitions from maven project
         MavenUtils.getMavenProject(module.getProject(), module.getName()).ifPresent(mavenProject -> {
@@ -178,7 +178,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                             moduleComponents = new ModuleComponents(moduleName, components);
                         });
                     });
-                    publisher.onComponentListUpdate();
+                    notifyComponentListUpdate();
                 });
     }
 
@@ -189,7 +189,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                     List<ComponentDescriptor> flowControlComponents = componentScanner.from(Stop.class.getPackage());
                     systemComponents.addAll(flowControlComponents);
                     isInitialized = true;
-                    publisher.onComponentListUpdate();
+                    notifyComponentListUpdate();
                 });
     }
 
@@ -204,7 +204,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         List<String> from = componentScanner.autoCompleteFrom(scanResult);
         autoCompleteContributorDefinitions.add(new AutoCompleteContributorDefinition(from));
 
-        publisher.onComponentListUpdate();
+        notifyComponentListUpdate();
     }
 
     private Optional<ComponentDescriptor> findComponentMatching(Collection<ModuleComponents> descriptors, String fullyQualifiedName) {
@@ -215,5 +215,9 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
             }
         }
         return Optional.empty();
+    }
+
+    private void notifyComponentListUpdate() {
+        publisher.onComponentListUpdate(getModuleComponents());
     }
 }

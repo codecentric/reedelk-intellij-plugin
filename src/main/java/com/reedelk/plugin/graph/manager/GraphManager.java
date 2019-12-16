@@ -20,9 +20,12 @@ import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.graph.*;
 import com.reedelk.plugin.graph.deserializer.DeserializationError;
 import com.reedelk.plugin.service.module.ComponentService;
+import com.reedelk.plugin.service.module.impl.component.ModuleComponents;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpdateNotifier;
 import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Collection;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.service.project.DesignerSelectionService.CurrentSelectionListener;
@@ -89,7 +92,7 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
     }
 
     @Override
-    public void onComponentListUpdate() {
+    public void onComponentListUpdate(Collection<ModuleComponents> components) {
         // When the component list is updated, we MUST deserialize so that
         // unknown components are correctly resolved and visualized in the Designer.
         deserializeDocument();

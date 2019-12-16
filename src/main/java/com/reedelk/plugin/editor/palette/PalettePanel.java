@@ -4,7 +4,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -67,15 +66,14 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
     }
 
     @Override
-    public void onComponentListUpdate() {
+    public void onComponentListUpdate(Collection<ModuleComponents> components) {
         // We only update the components for this module if and only if
         // the current selected file belongs to the module for which the
         // components have been updated.
         VirtualFile[] selectedFiles = FileEditorManager.getInstance(project).getSelectedFiles();
         if (selectedFiles.length > 0) {
             ApplicationManager.getApplication().runReadAction(() -> {
-                Module selectedFileModule = ModuleUtil.findModuleForFile(selectedFiles[0], project);
-                updateComponents(selectedFileModule);
+                updateComponents(components);
             });
         }
     }
@@ -89,12 +87,14 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
     private void updateComponents(VirtualFile file) {
         if (file != null) {
             Optional.ofNullable(ModuleUtil.findModuleForFile(file, project))
-                    .ifPresent(this::updateComponents);
+                    .ifPresent(module -> {
+                        Collection<ModuleComponents> moduleComponents = ComponentService.getInstance(module).getModuleComponents();
+                        updateComponents(moduleComponents);
+                    });
         }
     }
 
-    private void updateComponents(Module module) {
-        Collection<ModuleComponents> moduleComponents = ComponentService.getInstance(module).getModuleComponents();
+    private void updateComponents(Collection<ModuleComponents> moduleComponents) {
         List<DefaultMutableTreeNode> componentsTreeNodes = getComponentsPackagesTreeNodes(moduleComponents);
 
         SwingUtilities.invokeLater(() -> {
@@ -160,5 +160,4 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
                     .filter(componentDescriptor -> !componentDescriptor.isHidden())
                     .collect(toList())
                     .isEmpty();
-
 }

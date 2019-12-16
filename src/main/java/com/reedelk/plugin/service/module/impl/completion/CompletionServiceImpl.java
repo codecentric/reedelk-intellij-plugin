@@ -11,14 +11,12 @@ import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.ComponentService;
+import com.reedelk.plugin.service.module.impl.component.ModuleComponents;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpdateNotifier;
 import com.reedelk.plugin.topic.ReedelkTopics;
 import com.reedelk.runtime.api.commons.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.message.SuggestionsBundle.DefaultSuggestions;
@@ -71,18 +69,17 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
     }
 
     @Override
-    public void onComponentListUpdate() {
+    public void onComponentListUpdate(Collection<ModuleComponents> components) {
         PluginExecutors.run(module,
                 message("module.completion.update.suggestions.task.title"),
-                indicator -> updateComponentsSuggestions());
+                indicator -> updateComponentsSuggestions(components));
     }
 
-    void updateComponentsSuggestions() {
+    void updateComponentsSuggestions(Collection<ModuleComponents> components) {
         // Since we are updating the suggestion trees for all the components we
         // must empty the current component tree map.
         componentTriesMap.clear();
-        getComponentService().getModuleComponents()
-                .forEach(componentsPackage -> componentsPackage.getModuleComponents()
+        components.forEach(componentsPackage -> componentsPackage.getModuleComponents()
                         .forEach(descriptor -> {
                             String fullyQualifiedName = descriptor.getFullyQualifiedName();
                             addSuggestionFrom(fullyQualifiedName, descriptor.getPropertiesDescriptors());
@@ -104,7 +101,8 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
     void initializeSuggestions() {
         insertSuggestions(defaultComponentTrie, DefaultSuggestions.MESSAGE);
         insertSuggestions(defaultComponentTrie, DefaultSuggestions.CONTEXT);
-        updateComponentsSuggestions();
+        Collection<ModuleComponents> moduleComponents = ComponentService.getInstance(module).getModuleComponents();
+        updateComponentsSuggestions(moduleComponents);
     }
 
     void fireCompletionsUpdatedEvent() {
@@ -121,11 +119,10 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
 
             } else {
                 descriptor.getAutoCompleteContributorDefinition().ifPresent(definition -> {
-                    final Trie componentTrie = new Trie();
+                    Trie componentTrie = new Trie();
                     if (definition.isMessage()) insertSuggestions(componentTrie, DefaultSuggestions.MESSAGE);
                     if (definition.isContext()) insertSuggestions(componentTrie, DefaultSuggestions.CONTEXT);
                     if (definition.isError()) insertSuggestions(componentTrie, DefaultSuggestions.ERROR);
-
                     componentTrie.insert(definition.getContributions());
                     componentTriesMap.put(fullyQualifiedName, componentTrie);
                 });
