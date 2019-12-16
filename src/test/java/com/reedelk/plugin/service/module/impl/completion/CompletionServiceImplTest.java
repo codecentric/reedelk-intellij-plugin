@@ -45,8 +45,10 @@ class CompletionServiceImplTest {
         doReturn(mockMessageBus).when(mockProject).getMessageBus();
         doReturn(mockMessageBusConnection).when(mockMessageBus).connect();
         service = spy(new TestableCompletionService(mockProject, mockModule));
-        doReturn(mockComponentService).when(service).getComponentService();
+
         doNothing().when(service).fireCompletionsUpdatedEvent();
+        doReturn(mockComponentService).when(service).componentService();
+
         service.initializeSuggestions();
     }
 
@@ -94,9 +96,8 @@ class CompletionServiceImplTest {
 
         ModuleComponents moduleComponents = createModuleComponentsWith(fullyQualifiedName, propertyDescriptor);
         List<ModuleComponents> allComponents = Collections.singletonList(moduleComponents);
-        doReturn(allComponents).when(mockComponentService).getModuleComponents();
 
-        service.updateComponentsSuggestions();
+        service.updateComponentsSuggestions(allComponents);
 
         // When
         List<Suggestion> suggestions = service.completionTokensOf(fullyQualifiedName, "mes");
@@ -127,10 +128,9 @@ class CompletionServiceImplTest {
         List<AutoCompleteContributorDefinition> definitions =
                 Arrays.asList(loggerDefinitions, utilsDefinitions);
 
-        doReturn(Collections.emptyList()).when(mockComponentService).getModuleComponents();
         doReturn(definitions).when(mockComponentService).getAutoCompleteContributorDefinition();
 
-        service.updateComponentsSuggestions();
+        service.updateComponentsSuggestions(Collections.emptyList());
 
         // When
         List<Suggestion> suggestions = service.completionTokensOf(COMPONENT_QUALIFIED_NAME, "Log.");
@@ -147,11 +147,8 @@ class CompletionServiceImplTest {
 
     @Test
     void shouldUpdateComponentsSuggestionFireCompletionsUpdatedEvent() {
-        // Given
-        doReturn(Collections.emptyList()).when(mockComponentService).getModuleComponents();
-
         // When
-        service.updateComponentsSuggestions();
+        service.updateComponentsSuggestions(Collections.emptyList());
 
         // Then
         // One time on initialization, the second time due  to the call above.

@@ -41,6 +41,7 @@ public class ModuleCheckErrorsServiceImpl implements ModuleCheckErrorsService {
     }
 
     private void notifyFromStateIfNeeded(ModuleGETRes moduleRuntime, String runtimeHostAddress, int runtimeHostPort) {
+        // TODO: MOVE STATE CONSTANTS INTO REST-API ENUM
         if (moduleRuntime.getState().equals("ERROR")) {
             NotificationUtils.notifyError(
                     message("module.check.errors.module.errors.title"),

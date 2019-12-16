@@ -60,6 +60,6 @@ class ReedelkBundleTest {
         String message = message("module.check.errors.module.errors.content", "http://localhost:1111/console");
 
         // When
-        assertThat(message).isEqualTo("Some flow(s) could not be started due to errors. Go to <a href=\"http://localhost:1111/console\">Reedelk Administration Console</a> to see the errors.");
+        assertThat(message).isEqualTo("Some flow(s) could not be started: go to <a href=\"http://localhost:1111/console\">Reedelk Administration Console</a> to see the errors.");
     }
 }

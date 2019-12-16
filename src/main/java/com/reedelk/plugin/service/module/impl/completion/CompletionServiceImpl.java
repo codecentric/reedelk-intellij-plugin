@@ -88,25 +88,26 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
         // We throw away the old custom functions trie since again we are updating
         // all the custom functions suggestions for all dependencies of this module.
         customFunctionsTrie = new Trie();
-        getComponentService().getAutoCompleteContributorDefinition()
+        componentService()
+                .getAutoCompleteContributorDefinition()
                 .forEach(definition -> customFunctionsTrie.insert(definition.getContributions()));
 
         fireCompletionsUpdatedEvent();
     }
 
-    ComponentService getComponentService() {
-        return ComponentService.getInstance(module);
-    }
-
     void initializeSuggestions() {
         insertSuggestions(defaultComponentTrie, DefaultSuggestions.MESSAGE);
         insertSuggestions(defaultComponentTrie, DefaultSuggestions.CONTEXT);
-        Collection<ModuleComponents> moduleComponents = ComponentService.getInstance(module).getModuleComponents();
+        Collection<ModuleComponents> moduleComponents = componentService().getModuleComponents();
         updateComponentsSuggestions(moduleComponents);
     }
 
     void fireCompletionsUpdatedEvent() {
         messageBus.syncPublisher(COMPLETION_EVENT_TOPIC).onCompletionsUpdated();
+    }
+
+    ComponentService componentService() {
+        return ComponentService.getInstance(module);
     }
 
     private void addSuggestionFrom(String fullyQualifiedName, List<ComponentPropertyDescriptor> propertyDescriptors) {
