@@ -172,6 +172,7 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
         @Override
         public void onFinished() {
             if (cancelled) return;
+
             snapshot.updateSnapshot(GraphManager.this, this.deSerializedGraph);
             // We refresh the current selection only if the graph is not in error.
             if (!this.deSerializedGraph.isError()) {
