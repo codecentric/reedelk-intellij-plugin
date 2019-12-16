@@ -42,7 +42,7 @@ public class ModuleDependenciesSyncServiceImpl implements ModuleDependenciesSync
             // Sync modules from Maven pom and Runtime.
             internalSyncInstalledModules(runtimeHostAddress, runtimeHostPort);
 
-            // Check if there are any Modules in the Runtime in 'UNRESOLVED' or 'ERROR' state.
+            // Check if the current module in the Runtime was not started or resolved.
             checkErrorsService().checkForErrors(runtimeHostAddress, runtimeHostPort);
         });
     }
