@@ -44,13 +44,13 @@ public class ModuleCheckErrorsServiceImpl implements ModuleCheckErrorsService {
         if (moduleRuntime.getState().equals("ERROR")) {
             NotificationUtils.notifyError(
                     message("module.check.errors.module.errors.title"),
-                    message("module.check.errors.module.errors.content", module.getName(),
+                    message("module.check.errors.module.errors.content",
                             RuntimeConsoleURL.from(runtimeHostAddress, runtimeHostPort)));
         }
         if (moduleRuntime.getState().equals("UNRESOLVED")) {
             NotificationUtils.notifyError(
                     message("module.check.errors.module.unresolved.title"),
-                    message("module.check.errors.module.unresolved.content", module.getName(),
+                    message("module.check.errors.module.unresolved.content",
                             RuntimeConsoleURL.from(runtimeHostAddress, runtimeHostPort)));
         }
     }
