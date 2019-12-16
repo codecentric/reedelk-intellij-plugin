@@ -12,6 +12,9 @@ public class SuggestionDefinitionMatcher {
 
     private static final Pattern MATCH_SUGGESTION = Pattern.compile("(.*)\\[([a-zA-Z]*):([^:]*):?(.*)?]$");
 
+    private SuggestionDefinitionMatcher() {
+    }
+
     public static Optional<Suggestion> of(String suggestionTokenDefinition) {
         Matcher matcher = MATCH_SUGGESTION.matcher(suggestionTokenDefinition);
         if (!matcher.matches()) return Optional.empty();

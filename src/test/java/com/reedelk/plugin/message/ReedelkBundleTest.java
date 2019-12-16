@@ -43,4 +43,13 @@ class ReedelkBundleTest {
         // Then
         assertThat(message).isEqualTo(expectedFunction);
     }
+
+    @Test
+    void shouldCorrectlyFormatInteger() {
+        // When
+        String message = ReedelkBundle.message("router.sync.condition.expected.one.successor", 2);
+
+        // Then
+        assertThat(message).isEqualTo("Expected at least one successor for router node but [2] were found");
+    }
 }

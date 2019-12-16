@@ -1,9 +1,9 @@
 package com.reedelk.plugin.graph.deserializer;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowGraphProvider;
+import com.reedelk.runtime.api.commons.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -11,10 +11,8 @@ import static com.reedelk.runtime.commons.JsonParser.Subflow;
 
 public class SubFlowDeserializer extends AbstractDeserializer {
 
-    private static final String EMPTY_DESCRIPTION = "";
-    private static final String EMPTY_TITLE = "";
-
-    private static final Logger LOG = Logger.getInstance(FlowDeserializer.class);
+    private static final String EMPTY_DESCRIPTION = StringUtils.EMPTY;
+    private static final String EMPTY_TITLE = StringUtils.EMPTY;
 
     private SubFlowDeserializer(String json, DeserializerContext context, FlowGraphProvider graphProvider) {
         super(json, context, graphProvider);

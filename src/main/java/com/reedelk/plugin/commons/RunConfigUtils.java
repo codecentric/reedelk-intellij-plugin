@@ -13,7 +13,13 @@ import java.util.Optional;
 
 public class RunConfigUtils {
 
+    private RunConfigUtils() {
+    }
+
     public static class RuntimeRunConfiguration {
+
+        private RuntimeRunConfiguration() {
+        }
 
         public static Optional<RuntimeRunConfigurationType> type() {
             return getConfigurationType(RuntimeRunConfigurationType.class);
@@ -32,6 +38,9 @@ public class RunConfigUtils {
     }
 
     public static class ModuleRunConfiguration {
+
+        private ModuleRunConfiguration() {
+        }
 
         public static Optional<ModuleRunConfigurationType> type() {
             return getConfigurationType(ModuleRunConfigurationType.class);

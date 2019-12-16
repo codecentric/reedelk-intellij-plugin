@@ -10,7 +10,7 @@ import com.reedelk.runtime.component.Router;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkState;
-import static java.lang.String.format;
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class SyncConditionAndRoutePairs {
 
@@ -21,7 +21,7 @@ public class SyncConditionAndRoutePairs {
 
     public static List<RouterConditionRoutePair> from(FlowGraph graph, RouterNode routerNode) {
         List<GraphNode> successors = graph.successors(routerNode);
-        checkState(!successors.isEmpty(), format("Expected at least one successor for router node but %d were found", successors.size()));
+        checkState(!successors.isEmpty(), message("router.sync.condition.expected.one.successor", successors.size()));
 
         int numberOfSuccessors = successors.size();
 

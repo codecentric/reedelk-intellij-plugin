@@ -23,7 +23,6 @@ import java.util.Map;
 public class GraphNodeFactory {
 
     private static final Class<? extends GraphNode> DEFAULT = GenericComponentNode.class;
-
     private static final Map<String, Class<? extends GraphNode>> COMPONENT_DRAWABLE_MAP;
 
     static {
@@ -36,6 +35,9 @@ public class GraphNodeFactory {
         tmp.put(Placeholder.class.getName(), PlaceholderNode.class);
         tmp.put(FlowReference.class.getName(), FlowReferenceNode.class);
         COMPONENT_DRAWABLE_MAP = tmp;
+    }
+
+    private GraphNodeFactory() {
     }
 
     public static <T extends GraphNode> T get(Module module, String componentName) {

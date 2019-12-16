@@ -5,6 +5,9 @@ import org.jetbrains.annotations.Nullable;
 
 public class Versions {
 
+    private Versions() {
+    }
+
     public static boolean compare(@Nullable Version moduleVersion, @Nullable Version artifactVersion) {
         if (moduleVersion == null) {
             return artifactVersion == null;
