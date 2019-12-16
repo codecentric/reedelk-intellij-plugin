@@ -14,13 +14,17 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
  */
 public class PluginExecutors {
 
-    public static void run(@NotNull Module module, @NotNull AsyncProgressTask task) {
-        ProgressManager.getInstance().run(new AsyncProgressTaskExecutor(module, task));
+    public static void run(@NotNull Module module, @NotNull String indicatorText, @NotNull AsyncProgressTask task) {
+        ProgressManager.getInstance().run(new AsyncProgressTaskExecutor(module, indicatorText, task));
     }
 
-    public static void runWithDelay(@NotNull Module module, long delayMillis, @NotNull AsyncProgressTask task) {
+    public static void runWithDelay(@NotNull Module module,
+                                    long delayMillis,
+                                    @NotNull String indicatorText,
+                                    @NotNull AsyncProgressTask task) {
         AppExecutorUtil.getAppScheduledExecutorService().schedule(() ->
-                ProgressManager.getInstance().run(new AsyncProgressTaskExecutor(module, task)), delayMillis, MILLISECONDS);
+                ProgressManager.getInstance().run(new AsyncProgressTaskExecutor(module, indicatorText, task)),
+                delayMillis, MILLISECONDS);
     }
 
     public static void runSmartReadAction(@NotNull Module module, @NotNull Runnable task) {

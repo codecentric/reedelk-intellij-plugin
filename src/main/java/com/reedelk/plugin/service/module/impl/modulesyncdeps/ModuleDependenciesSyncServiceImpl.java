@@ -37,14 +37,15 @@ public class ModuleDependenciesSyncServiceImpl implements ModuleDependenciesSync
 
     @Override
     public void syncInstalledModules(String runtimeHostAddress, int runtimeHostPort) {
+        PluginExecutors.run(module,
+                message("module.sync.task.title", module.getName()),
+                indicator -> {
+                    // Sync modules from Maven pom and Runtime.
+                    internalSyncInstalledModules(runtimeHostAddress, runtimeHostPort);
 
-        PluginExecutors.run(module, indicator -> {
-            // Sync modules from Maven pom and Runtime.
-            internalSyncInstalledModules(runtimeHostAddress, runtimeHostPort);
-
-            // Check if the current module in the Runtime was not started or resolved.
-            checkErrorsService().checkForErrors(runtimeHostAddress, runtimeHostPort);
-        });
+                    // Check if the current module in the Runtime was not started or resolved.
+                    checkErrorsService().checkForErrors(runtimeHostAddress, runtimeHostPort);
+                });
     }
 
     void internalSyncInstalledModules(String runtimeHostAddress, int runtimeHostPort) {

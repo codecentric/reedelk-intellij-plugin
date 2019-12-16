@@ -30,6 +30,7 @@ import org.jetbrains.idea.maven.project.MavenProject;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.util.Arrays.stream;
 import static java.util.Collections.unmodifiableCollection;
 import static java.util.Collections.unmodifiableList;
@@ -152,39 +153,44 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                     .filter(artifact -> ModuleUtils.isModule(artifact.getFile()))
                     .map(artifact -> artifact.getFile().getPath()).collect(toList())
                     .forEach(jarFilePath -> ModuleUtils.getModuleName(jarFilePath).ifPresent(moduleName ->
-                            PluginExecutors.run(module, indicator -> scanForComponentsFromJar(jarFilePath, moduleName))));
+                            PluginExecutors.run(module,
+                                    message("module.component.update.component.for.module", moduleName),
+                                    indicator -> scanForComponentsFromJar(jarFilePath, moduleName))));
         });
     }
 
     private void asyncUpdateModuleCustomComponents() {
-        PluginExecutors.run(module, indicator -> {
-            String[] modulePaths = ModuleRootManager.getInstance(module)
-                    .orderEntries()
-                    .withoutSdk()
-                    .withoutLibraries()
-                    .productionOnly()
-                    .classes()
-                    .getUrls();
-            stream(modulePaths).forEach(modulePath -> {
-                ScanResult scanResult = ComponentScanner.scanResultFrom(modulePath);
-                List<ComponentDescriptor> components = componentScanner.from(scanResult);
-                MavenUtils.getMavenProject(project, module.getName()).ifPresent(mavenProject -> {
-                    String moduleName = mavenProject.getDisplayName();
-                    moduleComponents = new ModuleComponents(moduleName, components);
+        PluginExecutors.run(module,
+                message("module.component.update.component.for.module", module.getName()),
+                indicator -> {
+                    String[] modulePaths = ModuleRootManager.getInstance(module)
+                            .orderEntries()
+                            .withoutSdk()
+                            .withoutLibraries()
+                            .productionOnly()
+                            .classes()
+                            .getUrls();
+                    stream(modulePaths).forEach(modulePath -> {
+                        ScanResult scanResult = ComponentScanner.scanResultFrom(modulePath);
+                        List<ComponentDescriptor> components = componentScanner.from(scanResult);
+                        MavenUtils.getMavenProject(project, module.getName()).ifPresent(mavenProject -> {
+                            String moduleName = mavenProject.getDisplayName();
+                            moduleComponents = new ModuleComponents(moduleName, components);
+                        });
+                    });
+                    publisher.onComponentListUpdate();
                 });
-            });
-            publisher.onComponentListUpdate();
-        });
     }
 
     private void asyncUpdateSystemComponents() {
-        PluginExecutors.run(module, indicator -> {
-            List<ComponentDescriptor> flowControlComponents = componentScanner.from(Stop.class.getPackage());
-            systemComponents.addAll(flowControlComponents);
-            isInitialized = true;
-            publisher.onComponentListUpdate();
-        });
-
+        PluginExecutors.run(module,
+                message("module.component.update.system.components"),
+                indicator -> {
+                    List<ComponentDescriptor> flowControlComponents = componentScanner.from(Stop.class.getPackage());
+                    systemComponents.addAll(flowControlComponents);
+                    isInitialized = true;
+                    publisher.onComponentListUpdate();
+                });
     }
 
     private void scanForComponentsFromJar(String jarFilePath, String moduleName) {

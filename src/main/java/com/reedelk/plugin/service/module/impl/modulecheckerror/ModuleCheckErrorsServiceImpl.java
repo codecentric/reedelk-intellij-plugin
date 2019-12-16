@@ -1,7 +1,6 @@
 package com.reedelk.plugin.service.module.impl.modulecheckerror;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.plugin.commons.Defaults;
 import com.reedelk.plugin.commons.NotificationUtils;
 import com.reedelk.plugin.commons.RuntimeConsoleURL;
 import com.reedelk.plugin.executor.PluginExecutors;
@@ -12,6 +11,7 @@ import com.reedelk.runtime.rest.api.module.v1.ModuleGETRes;
 
 import java.util.Objects;
 
+import static com.reedelk.plugin.commons.Defaults.DEFAULT_CHECK_ERROR_DELAY_MILLIS;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class ModuleCheckErrorsServiceImpl implements ModuleCheckErrorsService {
@@ -25,22 +25,19 @@ public class ModuleCheckErrorsServiceImpl implements ModuleCheckErrorsService {
 
     @Override
     public void checkForErrors(String runtimeHostAddress, int runtimeHostPort) {
-        PluginExecutors.runWithDelay(module, Defaults.DEFAULT_DELAY_MILLIS, indicator -> {
+        PluginExecutors.runWithDelay(module, DEFAULT_CHECK_ERROR_DELAY_MILLIS,
+                message("module.check.errors.task.title"),
+                indicator -> MavenUtils.getMavenProject(module).ifPresent(mavenProject -> {
+                    // We only check for modules matching the current module's artifact i.
+                    String artifactId = mavenProject.getMavenId().getArtifactId();
 
-            indicator.setText(String.format("Checking runtime flows for module [%s]", module.getName()));
-
-            MavenUtils.getMavenProject(module).ifPresent(mavenProject -> {
-                // We only check for modules matching the current module's artifact i.
-                String artifactId = mavenProject.getMavenId().getArtifactId();
-
-                runtimeApiService()
-                        .installedModules(runtimeHostAddress, runtimeHostPort)
-                        .stream()
-                        .filter(moduleGETRes -> Objects.equals(artifactId, moduleGETRes.getName()))
-                        .findFirst()
-                        .ifPresent(runtimeModule -> notifyFromStateIfNeeded(runtimeModule, runtimeHostAddress, runtimeHostPort));
-            });
-        });
+                    runtimeApiService()
+                            .installedModules(runtimeHostAddress, runtimeHostPort)
+                            .stream()
+                            .filter(moduleGETRes -> Objects.equals(artifactId, moduleGETRes.getName()))
+                            .findFirst()
+                            .ifPresent(runtimeModule -> notifyFromStateIfNeeded(runtimeModule, runtimeHostAddress, runtimeHostPort));
+                }));
     }
 
     private void notifyFromStateIfNeeded(ModuleGETRes moduleRuntime, String runtimeHostAddress, int runtimeHostPort) {

@@ -127,7 +127,9 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
         // will just thrown a 'JSONException' since it is not a valid JSON and
         // the designer panel will show an Error screen with the exception message.
         if (document != null) {
-            PluginExecutors.run(module, new DeserializeGraphAndNotify());
+            PluginExecutors.run(module,
+                    message("graph.manager.deserialization.task.title"),
+                    new DeserializeGraphAndNotify());
         }
     }
 
@@ -142,7 +144,6 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
 
         @Override
         public void run(@NotNull ProgressIndicator indicator) {
-            indicator.setText("De-serializing flow");
             if (!ComponentService.getInstance(module).isInitialized()) {
                 indicator.cancel();
                 return;

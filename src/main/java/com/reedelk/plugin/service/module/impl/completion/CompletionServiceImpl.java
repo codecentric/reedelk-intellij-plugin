@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.message.SuggestionsBundle.DefaultSuggestions;
 import static com.reedelk.plugin.topic.ReedelkTopics.COMPLETION_EVENT_TOPIC;
 import static java.util.stream.Collectors.toList;
@@ -48,7 +49,9 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
     }
 
     void initializeAsync() {
-        PluginExecutors.run(module, indicator -> initializeSuggestions());
+        PluginExecutors.run(module,
+                message("module.completion.init.suggestions.task.title"),
+                indicator -> initializeSuggestions());
     }
 
     @Override
@@ -69,7 +72,9 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
 
     @Override
     public void onComponentListUpdate() {
-        PluginExecutors.run(module, indicator -> updateComponentsSuggestions());
+        PluginExecutors.run(module,
+                message("module.completion.update.suggestions.task.title"),
+                indicator -> updateComponentsSuggestions());
     }
 
     void updateComponentsSuggestions() {
