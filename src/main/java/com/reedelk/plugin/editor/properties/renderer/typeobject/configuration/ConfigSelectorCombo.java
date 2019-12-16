@@ -41,6 +41,8 @@ public class ConfigSelectorCombo extends ComboBox<ConfigMetadata> implements Ite
     private class ConfigMetadataRenderer extends ListCellRendererWrapper<ConfigMetadata> {
         @Override
         public void customize(JList list, ConfigMetadata value, int index, boolean selected, boolean hasFocus) {
+            if (value == null) return;
+
             String configTitle = Optional.ofNullable(value.getTitle()).orElse(StringUtils.EMPTY);
             StringBuilder renderedValue = new StringBuilder(configTitle);
             if (renderedValue.length() == 0) {

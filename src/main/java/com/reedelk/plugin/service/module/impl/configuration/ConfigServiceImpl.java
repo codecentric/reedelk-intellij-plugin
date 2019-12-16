@@ -1,6 +1,5 @@
 package com.reedelk.plugin.service.module.impl.configuration;
 
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -41,16 +40,19 @@ public class ConfigServiceImpl implements ConfigService {
 
     @Override
     public void fetchConfigurationsBy(TypeObjectDescriptor typeObjectDescriptor) {
-        ReadAction.nonBlocking(() -> {
+        PluginExecutors.runSmartReadAction(module, () -> {
             List<ConfigMetadata> configs = new ArrayList<>();
             ModuleRootManager.getInstance(module).getFileIndex().iterateContent(fileOrDir -> {
-                if (FileExtension.CONFIG.value().equals(fileOrDir.getExtension())) {
-                    getConfigurationFrom(fileOrDir, typeObjectDescriptor).ifPresent(configs::add);
+                // We must check that the file is still valid before getting the configuration.
+                if (fileOrDir.isValid()) {
+                    if (FileExtension.CONFIG.value().equals(fileOrDir.getExtension())) {
+                        getConfigurationFrom(fileOrDir, typeObjectDescriptor).ifPresent(configs::add);
+                    }
                 }
                 return true;
             });
             publisher.onConfigs(configs);
-        }).submit(PluginExecutors.sequential());
+        });
     }
 
     @Override

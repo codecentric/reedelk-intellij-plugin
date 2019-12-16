@@ -1,6 +1,5 @@
 package com.reedelk.plugin.service.module.impl.script;
 
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModuleRootManager;
@@ -19,11 +18,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.topic.ReedelkTopics.TOPIC_SCRIPT_RESOURCE;
+import static java.util.Collections.unmodifiableList;
 
 public class ScriptServiceImpl implements ScriptService {
 
@@ -37,13 +36,11 @@ public class ScriptServiceImpl implements ScriptService {
 
     @Override
     public void fetchScriptResources() {
-
         // If the scripts folder is empty, it means that there is no resources folder created
         // in the current project, therefore no action is required.
         PluginModuleUtils.getScriptsFolder(module).ifPresent(scriptsFolder -> {
             // We access the index, therefore we must wait to access.
-            ReadAction.nonBlocking(() -> {
-
+            PluginExecutors.runSmartReadAction(module, () -> {
                 List<ScriptResource> scripts = new ArrayList<>();
                 ModuleRootManager.getInstance(module).getFileIndex().iterateContent(scriptFile -> {
                     if (FileExtension.SCRIPT.value().equals(scriptFile.getExtension())) {
@@ -56,10 +53,8 @@ public class ScriptServiceImpl implements ScriptService {
                     }
                     return true;
                 });
-
-                publisher.onScriptResources(Collections.unmodifiableList(scripts));
-
-            }).submit(PluginExecutors.sequential());
+                publisher.onScriptResources(unmodifiableList(scripts));
+            });
         });
     }
 

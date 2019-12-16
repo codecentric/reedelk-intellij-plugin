@@ -5,11 +5,11 @@
 
     <description>
         <![CDATA[
-    <p>1.0.0</p>
-    <ul>
-        <li>Added default 'Hello World' flow template when a new Reedelk ESB project is created</li>
-    </ul>
-    ]]>
+            <p>1.0.0</p>
+            <ul>
+                <li>Added default 'Hello World' flow template when a new Reedelk ESB project is created</li>
+            </ul>
+        ]]>
     </description>
 
     <depends>com.intellij.modules.lang</depends>
@@ -59,8 +59,11 @@
         <moduleService serviceInterface="com.reedelk.plugin.service.module.RuntimeApiService"
                        serviceImplementation="com.reedelk.plugin.service.module.impl.runtimeapi.RuntimeApiServiceImpl"/>
 
-        <moduleService serviceInterface="com.reedelk.plugin.service.module.ModuleSyncService"
-                       serviceImplementation="com.reedelk.plugin.service.module.impl.modulesync.ModuleSyncServiceImpl"/>
+        <moduleService serviceInterface="com.reedelk.plugin.service.module.ModuleDependenciesSyncService"
+                       serviceImplementation="com.reedelk.plugin.service.module.impl.modulesyncdeps.ModuleDependenciesSyncServiceImpl"/>
+
+        <moduleService serviceInterface="com.reedelk.plugin.service.module.ModuleCheckErrorsService"
+                       serviceImplementation="com.reedelk.plugin.service.module.impl.modulecheckerror.ModuleCheckErrorsServiceImpl"/>
 
         <!-- Program Runner and Executors -->
         <programRunner implementation="com.reedelk.plugin.runconfig.module.runner.DeploymentRunner" order="first"/>

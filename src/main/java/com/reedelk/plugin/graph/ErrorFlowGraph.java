@@ -10,9 +10,9 @@ import java.util.function.Consumer;
 
 public class ErrorFlowGraph implements FlowGraph {
 
-    private final Exception error;
+    private final Throwable error;
 
-    public ErrorFlowGraph(Exception error) {
+    public ErrorFlowGraph(Throwable error) {
         this.error = error;
     }
 
@@ -122,7 +122,7 @@ public class ErrorFlowGraph implements FlowGraph {
     }
 
     @Override
-    public Exception getError() {
+    public Throwable getError() {
         return error;
     }
 }

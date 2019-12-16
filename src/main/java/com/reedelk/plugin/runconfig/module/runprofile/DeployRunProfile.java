@@ -6,7 +6,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.reedelk.plugin.commons.ToolWindowUtils;
-import com.reedelk.plugin.service.module.ModuleSyncService;
+import com.reedelk.plugin.service.module.ModuleCheckErrorsService;
+import com.reedelk.plugin.service.module.ModuleDependenciesSyncService;
 import com.reedelk.plugin.service.module.RuntimeApiService;
 import com.reedelk.plugin.service.project.SourceChangeService;
 import org.jetbrains.annotations.NotNull;
@@ -52,7 +53,7 @@ public class DeployRunProfile extends AbstractRunProfile {
                 // Check if there are modules not installed (or installed but with a different version)
                 // in the runtime. If so, then install them so that the current deployed flow can be
                 // started and executed correctly.
-                ModuleSyncService.getInstance(module).syncInstalledModules(address, port);
+                ModuleDependenciesSyncService.getInstance(module).syncInstalledModules(address, port);
             }
 
             @Override
@@ -72,6 +73,9 @@ public class DeployRunProfile extends AbstractRunProfile {
             public void onSuccess() {
                 String message = message("module.run.update", module.getName());
                 ToolWindowUtils.notifyInfo(module.getProject(), message, runtimeConfigName);
+
+                // Check if there are any Modules in the Runtime in 'UNRESOLVED' or 'ERROR' state.
+                checkErrorsService(module).checkForErrors(address, port);
             }
 
             @Override
@@ -80,5 +84,9 @@ public class DeployRunProfile extends AbstractRunProfile {
                 ToolWindowUtils.notifyError(module.getProject(), message, runtimeConfigName);
             }
         });
+    }
+
+    ModuleCheckErrorsService checkErrorsService(Module module) {
+        return ModuleCheckErrorsService.getInstance(module);
     }
 }

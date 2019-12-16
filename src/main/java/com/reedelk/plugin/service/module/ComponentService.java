@@ -15,10 +15,11 @@ public interface ComponentService {
         return ModuleServiceManager.getService(module, ComponentService.class);
     }
 
+    boolean isInitialized();
+
     ComponentDescriptor componentDescriptorByName(String componentFullyQualifiedName);
 
     Collection<ModuleComponents> getModuleComponents();
 
     Collection<AutoCompleteContributorDefinition> getAutoCompleteContributorDefinition();
-
 }

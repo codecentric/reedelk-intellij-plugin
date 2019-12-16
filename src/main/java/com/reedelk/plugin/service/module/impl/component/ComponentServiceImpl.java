@@ -28,21 +28,25 @@ import org.jetbrains.idea.maven.project.MavenImportListener;
 import org.jetbrains.idea.maven.project.MavenProject;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Arrays.stream;
+import static java.util.Collections.unmodifiableCollection;
+import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
 
 public class ComponentServiceImpl implements ComponentService, MavenImportListener, CompilationStatusListener {
 
     private static final String SYSTEM_COMPONENTS_MODULE_NAME = "flow-control";
 
+    private boolean isInitialized = false;
     private final Module module;
     private final Project project;
     private final ComponentListUpdateNotifier publisher;
     private final ComponentScanner componentScanner = new ComponentScanner();
 
     private final ModuleComponents systemComponents;
-    private final Map<String, ModuleComponents> mavenJarComponentsMap = new HashMap<>();
+    private final Map<String, ModuleComponents> mavenJarComponentsMap = new ConcurrentHashMap<>();
     private final List<AutoCompleteContributorDefinition> autoCompleteContributorDefinitions = new ArrayList<>();
 
     private ModuleComponents moduleComponents;
@@ -89,7 +93,8 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
         }
         // The component is not known
-        return new UnknownComponentDescriptorWrapper(componentDescriptorByName(Unknown.class.getName()));
+        ComponentDescriptor unknownComponentDescriptor = componentDescriptorByName(Unknown.class.getName());
+        return new UnknownComponentDescriptorWrapper(unknownComponentDescriptor);
     }
 
     @Override
@@ -97,12 +102,17 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         List<ModuleComponents> descriptors = new ArrayList<>(mavenJarComponentsMap.values());
         descriptors.add(systemComponents);
         if (moduleComponents != null) descriptors.add(moduleComponents);
-        return Collections.unmodifiableCollection(descriptors);
+        return unmodifiableCollection(descriptors);
     }
 
     @Override
     public Collection<AutoCompleteContributorDefinition> getAutoCompleteContributorDefinition() {
-        return Collections.unmodifiableList(autoCompleteContributorDefinitions);
+        return unmodifiableList(autoCompleteContributorDefinitions);
+    }
+
+    @Override
+    public boolean isInitialized() {
+        return isInitialized;
     }
 
     @Override
@@ -135,20 +145,19 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         // Update the components definitions from maven project
         MavenUtils.getMavenProject(module.getProject(), module.getName()).ifPresent(mavenProject -> {
 
-            // We only want the root dependencies.
+            // We only want the root dependencies, since user defined modules are in the root.
             mavenProject.getDependencyTree().stream()
                     .map(MavenArtifactNode::getArtifact)
                     .filter(ExcludedArtifactsFromModuleSync.predicate())
                     .filter(artifact -> ModuleUtils.isModule(artifact.getFile()))
                     .map(artifact -> artifact.getFile().getPath()).collect(toList())
-                    .forEach(jarFilePath -> ModuleUtils.getModuleName(jarFilePath).ifPresent(moduleName -> {
-                        PluginExecutors.parallel().submit(() -> scanForComponentsFromJar(jarFilePath, moduleName));
-                    }));
+                    .forEach(jarFilePath -> ModuleUtils.getModuleName(jarFilePath).ifPresent(moduleName ->
+                            PluginExecutors.run(module, indicator -> scanForComponentsFromJar(jarFilePath, moduleName))));
         });
     }
 
     private void asyncUpdateModuleCustomComponents() {
-        PluginExecutors.sequential().submit(() -> {
+        PluginExecutors.run(module, indicator -> {
             String[] modulePaths = ModuleRootManager.getInstance(module)
                     .orderEntries()
                     .withoutSdk()
@@ -164,16 +173,18 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                     moduleComponents = new ModuleComponents(moduleName, components);
                 });
             });
-
             publisher.onComponentListUpdate();
         });
     }
 
     private void asyncUpdateSystemComponents() {
-        PluginExecutors.sequential().submit(() -> {
+        PluginExecutors.run(module, indicator -> {
             List<ComponentDescriptor> flowControlComponents = componentScanner.from(Stop.class.getPackage());
-            this.systemComponents.addAll(flowControlComponents);
+            systemComponents.addAll(flowControlComponents);
+            isInitialized = true;
+            publisher.onComponentListUpdate();
         });
+
     }
 
     private void scanForComponentsFromJar(String jarFilePath, String moduleName) {

@@ -54,7 +54,7 @@ public interface FlowGraph {
         return false;
     }
 
-    default Exception getError() {
+    default Throwable getError() {
         // An error is set if and only if isError returns true;
         throw new UnsupportedOperationException();
     }

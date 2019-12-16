@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.module.impl.modulesync;
+package com.reedelk.plugin.service.module.impl.modulesyncdeps;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.service.module.RuntimeApiService;
@@ -24,13 +24,13 @@ import static org.jetbrains.idea.maven.model.MavenConstants.SCOPE_PROVIDED;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ModuleSyncServiceImplTest {
+class ModuleDependenciesSyncServiceImplTest {
 
     private final String groupId = "com.test";
     private final String runtimeHostAddress = "localhost";
     private final int runtimeHostPort = 7788;
 
-    private ModuleSyncServiceImpl service;
+    private ModuleDependenciesSyncServiceImpl service;
 
     @Mock
     private RuntimeApiService runtimeApiService;
@@ -41,7 +41,7 @@ class ModuleSyncServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        service = spy(new ModuleSyncServiceImpl(module));
+        service = spy(new ModuleDependenciesSyncServiceImpl(module));
         doReturn(Optional.of(mockMavenProject)).when(service).moduleMavenProject();
         doReturn(runtimeApiService).when(service).runtimeApiService();
     }

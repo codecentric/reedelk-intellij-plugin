@@ -11,17 +11,18 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.editor.DesignerEditor;
+import com.reedelk.plugin.executor.AsyncProgressTask;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.graph.*;
 import com.reedelk.plugin.graph.deserializer.DeserializationError;
+import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpdateNotifier;
 import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
-
-import javax.swing.*;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.service.project.DesignerSelectionService.CurrentSelectionListener;
@@ -126,7 +127,7 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
         // will just thrown a 'JSONException' since it is not a valid JSON and
         // the designer panel will show an Error screen with the exception message.
         if (document != null) {
-            PluginExecutors.sequential().submit(new DeserializeGraphAndNotify());
+            PluginExecutors.run(module, new DeserializeGraphAndNotify());
         }
     }
 
@@ -134,33 +135,50 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
 
     protected abstract FlowGraph deserialize(Module module, Document document, FlowGraphProvider graphProvider) throws DeserializationError;
 
-    private class DeserializeGraphAndNotify implements Runnable {
+    private class DeserializeGraphAndNotify implements AsyncProgressTask {
+
+        private FlowGraph deSerializedGraph;
+        private boolean cancelled = false;
 
         @Override
-        public void run() {
+        public void run(@NotNull ProgressIndicator indicator) {
+            indicator.setText("De-serializing flow");
+            if (!ComponentService.getInstance(module).isInitialized()) {
+                indicator.cancel();
+                return;
+            }
             try {
                 // We are assuming that deserialization of the graph from JSON is a lengthy operation.
                 // Therefore we execute it in a background thread.
-                FlowGraph deSerializedFlow = deserialize(module, document, graphProvider);
-                update(deSerializedFlow);
+                this.deSerializedGraph = deserialize(module, document, graphProvider);
             } catch (Exception exception) {
                 LOG.warn(message("graph.manager.error.deserialization", document.getText(), exception.getMessage()), exception);
-                update(new ErrorFlowGraph(exception));
+                this.deSerializedGraph = new ErrorFlowGraph(exception);
             }
         }
 
-        private void update(FlowGraph deSerializedGraph) {
-            // Must dispatch on the UI-Thread.
-            SwingUtilities.invokeLater(() -> {
-                snapshot.updateSnapshot(GraphManager.this, deSerializedGraph);
-                // We refresh the current selection only if the graph is not in error.
-                if (!deSerializedGraph.isError()) {
-                    // When we deserialize the document we must refresh the current selection,
-                    // so that the Properties panel always references the correct and latest
-                    // graph data.
-                    currentSelectionPublisher.refresh();
-                }
-            });
+        @Override
+        public void onThrowable(@NotNull Throwable error) {
+            LOG.warn(message("graph.manager.error.deserialization", document.getText(), error.getMessage()), error);
+            this.deSerializedGraph = new ErrorFlowGraph(error);
+        }
+
+        @Override
+        public void onCancel() {
+            this.cancelled = true;
+        }
+
+        @Override
+        public void onFinished() {
+            if (cancelled) return;
+            snapshot.updateSnapshot(GraphManager.this, this.deSerializedGraph);
+            // We refresh the current selection only if the graph is not in error.
+            if (!this.deSerializedGraph.isError()) {
+                // When we deserialize the document we must refresh the current selection,
+                // so that the Properties panel always references the correct and latest
+                // graph data.
+                currentSelectionPublisher.refresh();
+            }
         }
     }
 }

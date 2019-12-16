@@ -28,7 +28,7 @@ public class ModuleComponents {
         return Collections.unmodifiableList(moduleComponents);
     }
 
-    public synchronized  void addAll(List<ComponentDescriptor> flowControlComponents) {
+    public synchronized void addAll(List<ComponentDescriptor> flowControlComponents) {
         this.moduleComponents.addAll(flowControlComponents);
     }
 

@@ -48,7 +48,7 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
     }
 
     void initializeAsync() {
-        PluginExecutors.sequential().submit(this::initializeSuggestions);
+        PluginExecutors.run(module, indicator -> initializeSuggestions());
     }
 
     @Override
@@ -69,7 +69,7 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
 
     @Override
     public void onComponentListUpdate() {
-        PluginExecutors.sequential().submit(this::updateComponentsSuggestions);
+        PluginExecutors.run(module, indicator -> updateComponentsSuggestions());
     }
 
     void updateComponentsSuggestions() {

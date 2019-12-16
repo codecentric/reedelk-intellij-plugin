@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.module.impl.modulesync;
+package com.reedelk.plugin.service.module.impl.modulesyncdeps;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
@@ -7,7 +7,8 @@ import com.reedelk.plugin.commons.ExcludedArtifactsFromModuleSync;
 import com.reedelk.plugin.commons.Versions;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.maven.MavenUtils;
-import com.reedelk.plugin.service.module.ModuleSyncService;
+import com.reedelk.plugin.service.module.ModuleCheckErrorsService;
+import com.reedelk.plugin.service.module.ModuleDependenciesSyncService;
 import com.reedelk.plugin.service.module.RuntimeApiService;
 import com.reedelk.runtime.commons.ModuleUtils;
 import com.reedelk.runtime.rest.api.module.v1.ModuleGETRes;
@@ -24,28 +25,32 @@ import java.util.Optional;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.service.module.RuntimeApiService.OperationCallback;
 
-public class ModuleSyncServiceImpl implements ModuleSyncService {
+public class ModuleDependenciesSyncServiceImpl implements ModuleDependenciesSyncService {
 
-    private static final Logger LOG = Logger.getInstance(ModuleSyncServiceImpl.class);
+    private static final Logger LOG = Logger.getInstance(ModuleDependenciesSyncServiceImpl.class);
 
     private final Module module;
 
-    public ModuleSyncServiceImpl(Module module) {
+    public ModuleDependenciesSyncServiceImpl(Module module) {
         this.module = module;
     }
 
     @Override
     public void syncInstalledModules(String runtimeHostAddress, int runtimeHostPort) {
-        PluginExecutors.sequential().submit(() ->
-                internalSyncInstalledModules(runtimeHostAddress, runtimeHostPort));
+
+        PluginExecutors.run(module, indicator -> {
+            // Sync modules from Maven pom and Runtime.
+            internalSyncInstalledModules(runtimeHostAddress, runtimeHostPort);
+
+            // Check if there are any Modules in the Runtime in 'UNRESOLVED' or 'ERROR' state.
+            checkErrorsService().checkForErrors(runtimeHostAddress, runtimeHostPort);
+        });
     }
 
     void internalSyncInstalledModules(String runtimeHostAddress, int runtimeHostPort) {
         moduleMavenProject().ifPresent(mavenProject -> {
-
-            Collection<ModuleGETRes> runtimeModules = runtimeApiService()
-                    .installedModules(runtimeHostAddress, runtimeHostPort);
-
+            Collection<ModuleGETRes> runtimeModules =
+                    runtimeApiService().installedModules(runtimeHostAddress, runtimeHostPort);
             // We get dependencies from the dependency tree because we only want the root dependencies,
             // i.e the ones defined in the pom file. If we would call mavenProject.getDependencies() we would
             // also get back the transitive dependencies. Moreover, we filter out some dependencies which are
@@ -61,6 +66,10 @@ public class ModuleSyncServiceImpl implements ModuleSyncService {
 
     Optional<MavenProject> moduleMavenProject() {
         return MavenUtils.getMavenProject(module);
+    }
+
+    ModuleCheckErrorsService checkErrorsService() {
+        return ModuleCheckErrorsService.getInstance(module);
     }
 
     RuntimeApiService runtimeApiService() {
@@ -107,7 +116,7 @@ public class ModuleSyncServiceImpl implements ModuleSyncService {
             public void onSuccess() {
                 String artifactId = artifact.getArtifactId();
                 String artifactVersion = artifact.getVersion();
-                LOG.info(message("module.sync.module.deployed",  artifactId, artifactVersion));
+                LOG.info(message("module.sync.module.deployed", artifactId, artifactVersion));
             }
 
             @Override

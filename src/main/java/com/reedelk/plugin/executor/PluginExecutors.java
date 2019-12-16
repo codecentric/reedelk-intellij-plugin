@@ -1,9 +1,12 @@
 package com.reedelk.plugin.executor;
 
+import com.intellij.openapi.application.ReadAction;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.util.concurrency.AppExecutorUtil;
-import com.intellij.util.concurrency.SequentialTaskExecutor;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.concurrent.ExecutorService;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
  * A global plugin executor used to run all the background tasks
@@ -11,18 +14,19 @@ import java.util.concurrent.ExecutorService;
  */
 public class PluginExecutors {
 
-    private static final ExecutorService executor =
-            SequentialTaskExecutor.createSequentialApplicationPoolExecutor("Reedelk Plugin Sequential Executor");
-
-    private static final ExecutorService parallelExecutor =
-            AppExecutorUtil.createBoundedApplicationPoolExecutor("Reedelk Plugin Parallel Executor", 3);
-
-
-    public static ExecutorService sequential() {
-        return executor;
+    public static void run(@NotNull Module module, @NotNull AsyncProgressTask task) {
+        ProgressManager.getInstance().run(new AsyncProgressTaskExecutor(module, task));
     }
 
-    public static ExecutorService parallel() {
-        return parallelExecutor;
+    public static void runWithDelay(@NotNull Module module, long delayMillis, @NotNull AsyncProgressTask task) {
+        AppExecutorUtil.getAppScheduledExecutorService().schedule(() ->
+                ProgressManager.getInstance().run(new AsyncProgressTaskExecutor(module, task)), delayMillis, MILLISECONDS);
+    }
+
+    public static void runSmartReadAction(@NotNull Module module, @NotNull Runnable task) {
+        ReadAction.nonBlocking(task)
+                .inSmartMode(module.getProject())
+                .submit(AppExecutorUtil.getAppExecutorService());
+
     }
 }
