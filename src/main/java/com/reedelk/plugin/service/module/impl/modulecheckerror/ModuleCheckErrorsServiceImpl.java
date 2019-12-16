@@ -3,14 +3,16 @@ package com.reedelk.plugin.service.module.impl.modulecheckerror;
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.commons.Defaults;
 import com.reedelk.plugin.commons.NotificationUtils;
+import com.reedelk.plugin.commons.RuntimeConsoleURL;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.maven.MavenUtils;
 import com.reedelk.plugin.service.module.ModuleCheckErrorsService;
 import com.reedelk.plugin.service.module.RuntimeApiService;
 import com.reedelk.runtime.rest.api.module.v1.ModuleGETRes;
 
-import java.util.Collection;
 import java.util.Objects;
+
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class ModuleCheckErrorsServiceImpl implements ModuleCheckErrorsService {
 
@@ -24,26 +26,37 @@ public class ModuleCheckErrorsServiceImpl implements ModuleCheckErrorsService {
     @Override
     public void checkForErrors(String runtimeHostAddress, int runtimeHostPort) {
         PluginExecutors.runWithDelay(module, Defaults.DEFAULT_DELAY_MILLIS, indicator -> {
+
             indicator.setText(String.format("Checking runtime flows for module [%s]", module.getName()));
 
-            Collection<ModuleGETRes> runtimeModules =
-                    runtimeApiService().installedModules(runtimeHostAddress, runtimeHostPort);
+            MavenUtils.getMavenProject(module).ifPresent(mavenProject -> {
+                // We only check for modules matching the current module's artifact i.
+                String artifactId = mavenProject.getMavenId().getArtifactId();
 
-            indicator.setIndeterminate(true);
-            boolean anyUnresolvedOrError = runtimeModules.stream().anyMatch(moduleGETRes ->
-                    MavenUtils.getMavenProject(module).map(mavenProject -> {
-                        // We only check for modules matching the current module's artifact i.
-                        String artifactId = mavenProject.getMavenId().getArtifactId();
-                        return Objects.equals(artifactId, moduleGETRes.getName()) &&
-                                moduleGETRes.getState().equals("UNRESOLVED") ||
-                                moduleGETRes.getState().equals("ERROR");
-                    }).orElse(false));
+                runtimeApiService()
+                        .installedModules(runtimeHostAddress, runtimeHostPort)
+                        .stream()
+                        .filter(moduleGETRes -> Objects.equals(artifactId, moduleGETRes.getName()))
+                        .findFirst()
+                        .ifPresent(runtimeModule -> notifyFromStateIfNeeded(runtimeModule, runtimeHostAddress, runtimeHostPort));
 
-            if (anyUnresolvedOrError) {
-                String htmlContent = "Go to <a href=\"http://" + runtimeHostAddress + ":" + runtimeHostPort + "/console\">Reedelk ESB Administration Console</a>";
-                NotificationUtils.notifyError("Errors in the flow", htmlContent);
-            }
+            });
         });
+    }
+
+    private void notifyFromStateIfNeeded(ModuleGETRes moduleRuntime, String runtimeHostAddress, int runtimeHostPort) {
+        if (moduleRuntime.getState().equals("ERROR")) {
+            NotificationUtils.notifyError(
+                    message("module.check.errors.module.errors.title"),
+                    message("module.check.errors.module.errors.content", module.getName(),
+                            RuntimeConsoleURL.from(runtimeHostAddress, runtimeHostPort)));
+        }
+        if (moduleRuntime.getState().equals("UNRESOLVED")) {
+            NotificationUtils.notifyError(
+                    message("module.check.errors.module.unresolved.title"),
+                    message("module.check.errors.module.unresolved.content", module.getName(),
+                            RuntimeConsoleURL.from(runtimeHostAddress, runtimeHostPort)));
+        }
     }
 
     RuntimeApiService runtimeApiService() {
