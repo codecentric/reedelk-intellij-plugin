@@ -65,13 +65,13 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
             // Given
             ComponentData componentData = new ComponentData(descriptor);
             componentData.set("integerProperty", 234923);
-            componentData.set("integerObjectProperty", new Integer("998829743"));
+            componentData.set("integerObjectProperty", Integer.parseInt("998829743"));
             componentData.set("longProperty", 913281L);
-            componentData.set("longObjectProperty", new Long("55663"));
+            componentData.set("longObjectProperty", Long.parseLong("55663"));
             componentData.set("floatProperty", 123.234f);
-            componentData.set("floatObjectProperty", new Float("7843.12"));
+            componentData.set("floatObjectProperty", Float.parseFloat("7843.12"));
             componentData.set("doubleProperty", 234.234d);
-            componentData.set("doubleObjectProperty", new Double("11.88877"));
+            componentData.set("doubleObjectProperty", Double.parseDouble("11.88877"));
             componentData.set("booleanProperty", true);
             componentData.set("booleanObjectProperty", Boolean.TRUE);
             componentData.set("stringProperty", "my text sample");
@@ -117,7 +117,7 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
 
             TypeObjectDescriptor.TypeObject typeObjectInstance = TypeObjects.typeObjectDescriptor.newInstance();
             typeObjectInstance.set("stringProperty", "sample string property");
-            typeObjectInstance.set("integerObjectProperty", new Integer("255"));
+            typeObjectInstance.set("integerObjectProperty", Integer.parseInt("255"));
 
             GraphNode componentNode = new GenericComponentNode(componentData);
             componentData.set("stringProperty", "yet another string property");
@@ -269,7 +269,7 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
                     .build());
 
             GraphNode componentNode = new GenericComponentNode(componentData);
-            componentData.set("doubleObjectProperty", new Double("23491.23432"));
+            componentData.set("doubleObjectProperty", Double.parseDouble("23491.23432"));
             componentData.set("comboProperty", "two");
 
             // When
@@ -358,10 +358,10 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
             componentData.set("dynamicBigIntegerProperty", new BigInteger("8811823843"));
             componentData.set("dynamicBooleanProperty", Boolean.TRUE);
             componentData.set("dynamicByteArrayProperty", "byte array string");
-            componentData.set("dynamicDoubleProperty", new Double("4523.234"));
-            componentData.set("dynamicFloatProperty", new Float("7843.12"));
-            componentData.set("dynamicIntegerProperty", new Integer("3"));
-            componentData.set("dynamicLongProperty", new Long("99933322"));
+            componentData.set("dynamicDoubleProperty", Double.parseDouble("4523.234"));
+            componentData.set("dynamicFloatProperty", Float.parseFloat("7843.12"));
+            componentData.set("dynamicIntegerProperty", Integer.parseInt("3"));
+            componentData.set("dynamicLongProperty", Long.parseLong("99933322"));
             componentData.set("dynamicObjectProperty", "my object string");
             componentData.set("dynamicStringProperty", "my dynamic string");
 
