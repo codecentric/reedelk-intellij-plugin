@@ -9,6 +9,6 @@ public class RuntimeConsoleURL {
     }
 
     public static String from(String runtimeHostAddress, int runtimeHostPort) {
-        return message("module.check.errors.runtime.console.url", runtimeHostAddress, runtimeHostPort);
+        return message("module.check.errors.runtime.console.url", runtimeHostAddress, String.valueOf(runtimeHostPort));
     }
 }

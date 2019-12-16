@@ -39,7 +39,6 @@ public class ModuleCheckErrorsServiceImpl implements ModuleCheckErrorsService {
                         .filter(moduleGETRes -> Objects.equals(artifactId, moduleGETRes.getName()))
                         .findFirst()
                         .ifPresent(runtimeModule -> notifyFromStateIfNeeded(runtimeModule, runtimeHostAddress, runtimeHostPort));
-
             });
         });
     }

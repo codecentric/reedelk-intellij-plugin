@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ReedelkBundleTest {
@@ -21,7 +22,7 @@ class ReedelkBundleTest {
         String joinedArguments = String.join(",", scriptFunctionArguments);
 
         // When
-        String message = ReedelkBundle.message("script.default.template","myFunction", joinedArguments , "myFunction");
+        String message = message("script.default.template","myFunction", joinedArguments , "myFunction");
 
         // Then
         assertThat(message).isEqualTo(expectedFunction);
@@ -38,7 +39,7 @@ class ReedelkBundleTest {
         String joinedArguments = String.join(",", scriptFunctionArguments);
 
         // When
-        String message = ReedelkBundle.message("script.default.template", "myFunction", joinedArguments , "myFunction");
+        String message = message("script.default.template", "myFunction", joinedArguments , "myFunction");
 
         // Then
         assertThat(message).isEqualTo(expectedFunction);
@@ -47,9 +48,18 @@ class ReedelkBundleTest {
     @Test
     void shouldCorrectlyFormatInteger() {
         // When
-        String message = ReedelkBundle.message("router.sync.condition.expected.one.successor", 2);
+        String message = message("router.sync.condition.expected.one.successor", 2);
 
         // Then
         assertThat(message).isEqualTo("Expected at least one successor for router node but [2] were found");
+    }
+
+    @Test
+    void shouldCorrectlyFormatModuleCheckErrorsContent() {
+        // When
+        String message = message("module.check.errors.module.errors.content", "my-module", "http://localhost:1111/console");
+
+        // When
+        assertThat(message).isEqualTo("The flow(s) in module=[my-module] could not be started due to errors. Go to <a href=\"http://localhost:1111/console\">Reedelk Administration Console</a> to see the errors.");
     }
 }
