@@ -10,6 +10,8 @@ import java.awt.event.MouseListener;
 
 public class ClickableLabel extends JBLabel implements MouseListener {
 
+    private static final Cursor ON_HOVER_CURSOR = new Cursor(Cursor.HAND_CURSOR);
+
     private final transient OnClickAction action;
 
     public ClickableLabel(Icon icon, OnClickAction action) {
@@ -35,6 +37,7 @@ public class ClickableLabel extends JBLabel implements MouseListener {
         setText(text);
         setIcon(icon);
         addMouseListener(this);
+        setCursor(ON_HOVER_CURSOR);
         this.action = action;
         if (disabledIcon != null) {
             setDisabledIcon(disabledIcon);
