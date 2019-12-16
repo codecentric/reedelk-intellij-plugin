@@ -11,6 +11,7 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.Function;
+import com.reedelk.plugin.commons.Defaults;
 import com.reedelk.plugin.commons.HotSwapUtils;
 import com.reedelk.plugin.service.project.SourceChangeService;
 import org.jetbrains.annotations.NotNull;
@@ -24,8 +25,6 @@ import java.util.function.Consumer;
 import static java.util.Arrays.stream;
 
 public class SourceChangeServiceImpl implements SourceChangeService, BulkFileListener, ModuleListener, Disposable {
-
-    private static final String SRC_DIRECTORY = "src";
 
     private static final boolean CHANGED = true;
     private static final boolean UNCHANGED = false;
@@ -75,12 +74,13 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
 
     @Override
     public void after(@NotNull List<? extends VFileEvent> events) {
-        events.stream().map(VFileEvent::getFile).forEach(file -> {
-            if (!isHotSwappableSource(file)) {
-                isModuleSRCChange(file).ifPresent(this::setToChangedMatching);
-                isModulePOMChange(file).ifPresent(this::setToChangedMatching);
-            }
-        });
+        events.stream().map(VFileEvent::getFile).filter(Objects::nonNull)
+                .forEach(file -> {
+                    if (!isHotSwappableSource(file)) {
+                        isModuleSRCChange(file).ifPresent(this::setToChangedMatching);
+                        isModulePOMChange(file).ifPresent(this::setToChangedMatching);
+                    }
+                });
     }
 
     @Override
@@ -121,7 +121,7 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
      * It checks whether the changed file belongs to the module_full_path/src folder or not.
      */
     private Optional<String> isModuleSRCChange(VirtualFile virtualFile) {
-        return startsWith(virtualFile, SRC_DIRECTORY + File.separator);
+        return startsWith(virtualFile, Defaults.PROJECT_SOURCES_FOLDER + File.separator);
     }
 
 
@@ -154,9 +154,9 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
     }
 
     @NotNull
-    private Optional<String> startsWith(VirtualFile virtualFile, String pomXml) {
+    private Optional<String> startsWith(VirtualFile virtualFile, String subDirectory) {
         for (Map.Entry<String, String> entry : moduleNameRootPathMap.entrySet()) {
-            if (virtualFile.getPath().startsWith(entry.getValue() + File.separator + pomXml)) {
+            if (virtualFile.getPath().startsWith(entry.getValue() + File.separator + subDirectory)) {
                 return Optional.of(entry.getKey());
             }
         }

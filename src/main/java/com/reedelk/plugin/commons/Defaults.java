@@ -15,6 +15,7 @@ public class Defaults {
     public static final String DEFAULT_ADMIN_PORT_PARAM_NAME = "admin.console.port";
     public static final String DEFAULT_ADMIN_HOST_PARAM_NAME = "admin.console.address";
 
+    public static final String PROJECT_SOURCES_FOLDER = Paths.get("src").toString();
     public static final String PROJECT_RESOURCES_FOLDER = Paths.get("src", "main", "resources").toString();
 
     public static final String DEFAULT_DYNAMIC_VALUE_SCRIPT_VIRTUAL_FILE_NAME = "tmp.js";
