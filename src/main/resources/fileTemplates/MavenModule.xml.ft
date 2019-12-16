@@ -26,25 +26,13 @@
     <dependencies>
         <dependency>
             <groupId>com.reedelk</groupId>
-            <artifactId>core-module</artifactId>
+            <artifactId>module-core</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.reedelk</groupId>
-            <artifactId>rest-module</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.reedelk</groupId>
-            <artifactId>scheduler-module</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.reedelk</groupId>
-            <artifactId>file-module</artifactId>
+            <artifactId>module-rest</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
