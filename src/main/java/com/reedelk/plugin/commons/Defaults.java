@@ -25,6 +25,8 @@ public class Defaults {
 
     public static final Language JAVASCRIPT_LANGUAGE = Language.findLanguageByID("JavaScript");
 
+    public static final int DEFAULT_DELAY_MILLIS = 500;
+
 
     public static class RestApi {
 

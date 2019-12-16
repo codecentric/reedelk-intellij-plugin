@@ -1,28 +1,23 @@
 package com.reedelk.plugin.commons;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.wm.ToolWindowId;
-import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationListener;
+import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
 
 public class NotificationUtils {
+
+    private static final String REEDELK_NOTIFICATION_GROUP_ID = "Reedelk Integration";
 
     private NotificationUtils() {
     }
 
-    public static void notifyInfo(final String toolWindowId, final String text, final Project project) {
-        ToolWindowManager.getInstance(project)
-                .notifyByBalloon(toolWindowId, MessageType.INFO, text);
-    }
-
-    public static void notifyError(final String toolWindowId, final String text, final Project project) {
-        ToolWindowManager.getInstance(project)
-                .notifyByBalloon(toolWindowId, MessageType.ERROR, StringUtil.notNullize(text, "internal error"));
-    }
-
-    public static void notifyError(final String text, final Project project) {
-        ToolWindowManager.getInstance(project)
-                .notifyByBalloon(ToolWindowId.RUN, MessageType.ERROR, StringUtil.notNullize(text, "internal error"));
+    public static void notifyError(String title, String htmlContent) {
+        Notification notification =
+                new Notification(REEDELK_NOTIFICATION_GROUP_ID, null, NotificationType.ERROR)
+                        .setTitle(title)
+                        .setListener(NotificationListener.URL_OPENING_LISTENER)
+                        .setContent(htmlContent);
+        Notifications.Bus.notify(notification);
     }
 }

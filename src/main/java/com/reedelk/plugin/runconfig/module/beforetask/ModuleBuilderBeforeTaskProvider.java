@@ -15,7 +15,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.messages.MessageBus;
 import com.reedelk.plugin.commons.Icons;
-import com.reedelk.plugin.commons.NotificationUtils;
+import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
 import com.reedelk.plugin.maven.MavenPackageGoal;
 import com.reedelk.plugin.runconfig.module.ModuleRunConfiguration;
@@ -91,14 +91,14 @@ public class ModuleBuilderBeforeTaskProvider extends BeforeRunTaskProvider<Modul
         if (isBlank(moduleRunConfiguration.getModuleName())) {
             String errorMessage = message("module.run.error.module.not.selected", moduleRunConfiguration.getName());
             Project project = env.getProject();
-            SwingUtilities.invokeLater(() -> NotificationUtils.notifyError(errorMessage, project));
+            SwingUtilities.invokeLater(() -> ToolWindowUtils.notifyError(project, errorMessage, moduleRunConfiguration.getName()));
             return false;
         }
 
         if (isBlank(moduleRunConfiguration.getRuntimeConfigName())) {
             String errorMessage = message("module.run.error.runtime.not.selected", moduleRunConfiguration.getName());
             Project project = env.getProject();
-            SwingUtilities.invokeLater(() -> NotificationUtils.notifyError(errorMessage, project));
+            SwingUtilities.invokeLater(() -> ToolWindowUtils.notifyError(project, errorMessage, moduleRunConfiguration.getName()));
             return false;
         }
 
@@ -109,7 +109,7 @@ public class ModuleBuilderBeforeTaskProvider extends BeforeRunTaskProvider<Modul
             // it does not exists.
             String errorMessage = message("module.run.error.module.does.not.exists", moduleRunConfiguration.getModuleName(), moduleRunConfiguration.getName());
             Project project = env.getProject();
-            SwingUtilities.invokeLater(() -> NotificationUtils.notifyError(errorMessage, project));
+            SwingUtilities.invokeLater(() -> ToolWindowUtils.notifyError(project, errorMessage, moduleRunConfiguration.getName()));
             return false;
         }
 

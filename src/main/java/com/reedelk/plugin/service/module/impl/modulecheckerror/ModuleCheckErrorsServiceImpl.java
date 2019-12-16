@@ -1,10 +1,8 @@
 package com.reedelk.plugin.service.module.impl.modulecheckerror;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationListener;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
 import com.intellij.openapi.module.Module;
+import com.reedelk.plugin.commons.Defaults;
+import com.reedelk.plugin.commons.NotificationUtils;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.maven.MavenUtils;
 import com.reedelk.plugin.service.module.ModuleCheckErrorsService;
@@ -16,8 +14,6 @@ import java.util.Objects;
 
 public class ModuleCheckErrorsServiceImpl implements ModuleCheckErrorsService {
 
-    // TODO: Create Utils class for Reedelk Notifications only
-    private static final String REEDELK_NOTIFICATION_GROUP_ID = "Reedelk Integration";
 
     private final Module module;
 
@@ -27,7 +23,7 @@ public class ModuleCheckErrorsServiceImpl implements ModuleCheckErrorsService {
 
     @Override
     public void checkForErrors(String runtimeHostAddress, int runtimeHostPort) {
-        PluginExecutors.runWithDelay(module, 500, indicator -> {
+        PluginExecutors.runWithDelay(module, Defaults.DEFAULT_DELAY_MILLIS, indicator -> {
             indicator.setText(String.format("Checking runtime flows for module [%s]", module.getName()));
 
             Collection<ModuleGETRes> runtimeModules =
@@ -44,12 +40,8 @@ public class ModuleCheckErrorsServiceImpl implements ModuleCheckErrorsService {
                     }).orElse(false));
 
             if (anyUnresolvedOrError) {
-                Notification notification =
-                        new Notification(REEDELK_NOTIFICATION_GROUP_ID, null, NotificationType.ERROR)
-                                .setTitle("Errors in the flow")
-                                .setListener(NotificationListener.URL_OPENING_LISTENER)
-                                .setContent("Go to <a href=\"http://" + runtimeHostAddress + ":" + runtimeHostPort + "/console\">Reedelk ESB Administration Console</a>");
-                Notifications.Bus.notify(notification);
+                String htmlContent = "Go to <a href=\"http://" + runtimeHostAddress + ":" + runtimeHostPort + "/console\">Reedelk ESB Administration Console</a>";
+                NotificationUtils.notifyError("Errors in the flow", htmlContent);
             }
         });
     }

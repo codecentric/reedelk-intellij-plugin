@@ -1,6 +1,8 @@
 package com.reedelk.plugin.commons;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.MessageType;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
@@ -16,6 +18,9 @@ import static java.util.Arrays.stream;
 
 public class ToolWindowUtils {
 
+    private static final Runnable EMPTY_POST_SHOW_ACTION = () -> {
+    };
+
     private ToolWindowUtils() {
     }
 
@@ -24,8 +29,7 @@ public class ToolWindowUtils {
                 findToolWindowByRunConfig(project, runConfigName).ifPresent(toolWindow -> {
                     getContentBy(toolWindow.toolWindow, runConfigName).ifPresent(content ->
                             toolWindow.toolWindow.getContentManager().setSelectedContent(content));
-                    toolWindow.toolWindow.show(() ->
-                            NotificationUtils.notifyInfo(toolWindow.toolWindowId, message, project));
+                    toolWindow.toolWindow.show(() -> notifyInfoBalloon(toolWindow.toolWindowId, message, project));
                 }));
     }
 
@@ -34,8 +38,7 @@ public class ToolWindowUtils {
                 findToolWindowByRunConfig(project, runConfigName).ifPresent(toolWindow -> {
                     getContentBy(toolWindow.toolWindow, runConfigName).ifPresent(content ->
                             toolWindow.toolWindow.getContentManager().setSelectedContent(content));
-                    toolWindow.toolWindow.show(() ->
-                            NotificationUtils.notifyError(toolWindow.toolWindowId, message, project));
+                    toolWindow.toolWindow.show(() -> notifyErrorBalloon(toolWindow.toolWindowId, message, project));
                 }));
     }
 
@@ -57,8 +60,7 @@ public class ToolWindowUtils {
 
     private static void show(ToolWindow toolWindow) {
         if (!toolWindow.isVisible()) {
-            toolWindow.show(() -> {
-            });
+            toolWindow.show(EMPTY_POST_SHOW_ACTION);
         }
     }
 
@@ -81,6 +83,17 @@ public class ToolWindowUtils {
     private static Optional<Content> getContentBy(ToolWindow toolWindow, @NotNull String contentDisplayName) {
         return stream(toolWindow.getContentManager().getContents())
                 .filter(content -> contentDisplayName.equals(content.getDisplayName())).findFirst();
+    }
+
+    public static void notifyErrorBalloon(final String toolWindowId, final String text, final Project project) {
+        ToolWindowManager.getInstance(project)
+                .notifyByBalloon(toolWindowId, MessageType.ERROR, StringUtil.notNullize(text, "internal error"));
+    }
+
+
+    private static void notifyInfoBalloon(final String toolWindowId, final String text, final Project project) {
+        ToolWindowManager.getInstance(project)
+                .notifyByBalloon(toolWindowId, MessageType.INFO, text);
     }
 
     static class ToolWindowAndId {
