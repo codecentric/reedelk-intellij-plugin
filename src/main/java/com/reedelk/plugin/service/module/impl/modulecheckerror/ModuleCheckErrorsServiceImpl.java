@@ -27,6 +27,7 @@ public class ModuleCheckErrorsServiceImpl implements ModuleCheckErrorsService {
         PluginExecutors.runWithDelay(module, DEFAULT_CHECK_ERROR_DELAY_MILLIS,
                 message("module.check.errors.task.title"),
                 indicator -> MavenUtils.getMavenProject(module).ifPresent(mavenProject -> {
+
                     // We only check for modules matching the current module's artifact i.
                     String artifactId = mavenProject.getMavenId().getArtifactId();
 
