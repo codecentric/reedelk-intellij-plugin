@@ -8,7 +8,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.reedelk.plugin.commons.Icons;
@@ -20,6 +20,8 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.model.MavenId;
 import org.jetbrains.idea.maven.utils.MavenUtil;
 import org.jetbrains.idea.maven.wizards.MavenModuleBuilder;
+import org.jetbrains.idea.maven.wizards.MavenModuleWizardStep;
+import org.jetbrains.idea.maven.wizards.SelectPropertiesStep;
 
 import javax.swing.*;
 
@@ -30,6 +32,7 @@ public class ModuleBuilder extends MavenModuleBuilder {
     private boolean createRuntimeConfig;
     private String runtimeConfigName;
     private String runtimeHomeDirectory;
+    private boolean downloadDistribution;
 
     public ModuleBuilder() {
         setProjectId(defaultMavenId());
@@ -101,12 +104,19 @@ public class ModuleBuilder extends MavenModuleBuilder {
         return message("moduleBuilder.description");
     }
 
+    @Override
+    public ModuleWizardStep[] createWizardSteps(@NotNull WizardContext wizardContext, @NotNull ModulesProvider modulesProvider) {
+        return new ModuleWizardStep[]{
+                new ConfigureRuntimeStep(wizardContext, this),
+                new MavenModuleWizardStep(this, wizardContext, !wizardContext.isNewWizard()),
+                new SelectPropertiesStep(wizardContext.getProject(), this)
+        };
+    }
+
     @Nullable
     @Override
     public ModuleWizardStep getCustomOptionsStep(WizardContext context, Disposable parentDisposable) {
-        ConfigureRuntimeStep step = new ConfigureRuntimeStep(context, this, context.getProject());
-        Disposer.register(parentDisposable, step);
-        return step;
+        return new SelectRuntimeSourceStep(this);
     }
 
     @Override
@@ -115,9 +125,7 @@ public class ModuleBuilder extends MavenModuleBuilder {
     }
 
     private MavenId getParentMavenId() {
-        return getParentProject() != null ?
-                getParentProject().getMavenId() :
-                null;
+        return getParentProject() != null ? getParentProject().getMavenId() : null;
     }
 
     private MavenId defaultMavenId() {
@@ -125,6 +133,14 @@ public class ModuleBuilder extends MavenModuleBuilder {
                 message("moduleBuilder.maven.defaultGroupId"),
                 message("moduleBuilder.maven.defaultArtifactId"),
                 message("moduleBuilder.maven.defaultVersion"));
+    }
+
+    public void setDownloadDistribution(boolean downloadDistribution) {
+        this.downloadDistribution = downloadDistribution;
+    }
+
+    public boolean isDownloadDistribution() {
+        return downloadDistribution;
     }
 
     public void setRuntimeConfigName(String runtimeConfigName) {

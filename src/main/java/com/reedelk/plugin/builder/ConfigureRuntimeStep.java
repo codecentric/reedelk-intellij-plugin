@@ -6,10 +6,10 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.components.JBLoadingPanel;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.util.ui.UI;
 import com.reedelk.plugin.commons.RuntimeComboManager;
@@ -24,13 +24,14 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.intellij.openapi.application.ApplicationManager.getApplication;
 import static com.intellij.openapi.util.text.StringUtil.commonPrefixLength;
 import static com.intellij.openapi.util.text.StringUtil.isEmptyOrSpaces;
 import static com.intellij.uiDesigner.core.GridConstraints.*;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.util.Collections.singletonList;
 
-public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable, ItemListener {
+public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListener, Disposable {
 
     private ModuleBuilder moduleBuilder;
 
@@ -41,12 +42,43 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
     private JComboBox<String> runtimeCombo;
     private JTextField runtimeConfigNameTextField;
     private TextFieldWithBrowseButton runtimeHomeDirectoryBrowse;
+    private JBLoadingPanel loadingPanel = new JBLoadingPanel(new BorderLayout(), this, 100);
 
     private RuntimeComboManager runtimeComboManager;
 
     private boolean isNewProject;
 
-    public ConfigureRuntimeStep(WizardContext wizardContext, ModuleBuilder builder, Project project) {
+    @Override
+    public void _init() {
+        super._init();
+        if (moduleBuilder.isDownloadDistribution()) {
+            loadingPanel.getContentPanel().removeAll();
+            loadingPanel.startLoading();
+            loadingPanel.setLoadingText("Downloading Reedelk ESB runtime ...");
+            getApplication().executeOnPooledThread(() -> {
+                // Download the runtime
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    SwingUtilities.invokeLater(() -> {
+                        loadingPanel.getContentPanel().add(jPanel);
+                        loadingPanel.stopLoading();
+                        loadingPanel.revalidate();
+                        loadingPanel.repaint();
+                    });
+                }
+            });
+        } else {
+            SwingUtilities.invokeLater(() -> {
+                loadingPanel.getContentPanel().add(jPanel);
+                jPanel.revalidate();
+            });
+        }
+    }
+
+    public ConfigureRuntimeStep(WizardContext wizardContext, ModuleBuilder builder) {
         isNewProject = wizardContext.isCreatingNewProject();
         if (isNewProject) {
             chooseRuntimePanel.setVisible(false);
@@ -54,16 +86,18 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
             addRuntimePanel.setVisible(false);
         }
         moduleBuilder = builder;
-        runtimeComboManager =
-                new RuntimeComboManager(runtimeCombo, project,
-                singletonList(message("runtimeBuilder.add.new.config")), this);
+        runtimeComboManager = new RuntimeComboManager(
+                runtimeCombo,
+                wizardContext.getProject(),
+                singletonList(message("runtimeBuilder.add.new.config")),
+                this);
         runtimeConfigNameChanged(runtimeComboManager.getRuntimeConfigName());
         createInputWithBrowse(wizardContext, moduleBuilder);
     }
 
     @Override
     public JComponent getComponent() {
-        return jPanel;
+        return loadingPanel;
     }
 
     @Override
@@ -81,11 +115,6 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
                 moduleBuilder.setRuntimeConfigName(runtimeComboManager.getRuntimeConfigName());
             }
         }
-    }
-
-    @Override
-    public void dispose() {
-        // No op
     }
 
     @Override
@@ -157,4 +186,9 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements Disposable
                     new Dimension(-1, -1),
                     new Dimension(-1, -1),
                     new Dimension(-1, -1));
+
+    @Override
+    public void dispose() {
+
+    }
 }
