@@ -46,22 +46,18 @@ public class ToolWindowUtils {
         get(project, PropertiesPanelToolWindowFactory.ID).ifPresent(toolWindow -> toolWindow.setTitle(newToolWindowTitle));
     }
 
-    public static void showPropertiesPanelToolWindow(Project project) {
-        get(project, PropertiesPanelToolWindowFactory.ID).ifPresent(ToolWindowUtils::show);
+    public static void showPropertiesPanelToolWindow(Project project, Runnable postAction) {
+        get(project, PropertiesPanelToolWindowFactory.ID).ifPresent(toolWindow ->
+                toolWindow.show(postAction));
     }
 
     public static void showComponentsPaletteToolWindow(Project project) {
-        get(project, PaletteToolWindowFactory.ID).ifPresent(ToolWindowUtils::show);
+        get(project, PaletteToolWindowFactory.ID).ifPresent(toolWindow ->
+                toolWindow.show(EMPTY_POST_SHOW_ACTION));
     }
 
     public static Optional<ToolWindow> get(Project project, String id) {
         return Optional.ofNullable(ToolWindowManager.getInstance(project).getToolWindow(id));
-    }
-
-    private static void show(ToolWindow toolWindow) {
-        if (!toolWindow.isVisible()) {
-            toolWindow.show(EMPTY_POST_SHOW_ACTION);
-        }
     }
 
     private static Optional<ToolWindowAndId> findToolWindowByRunConfig(@NotNull Project project, @NotNull String runConfigName) {
@@ -104,6 +100,5 @@ public class ToolWindowUtils {
             this.toolWindow = toolWindow;
             this.toolWindowId = toolWindowId;
         }
-
     }
 }

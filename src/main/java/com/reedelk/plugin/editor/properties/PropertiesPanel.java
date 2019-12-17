@@ -45,8 +45,11 @@ public class PropertiesPanel extends DisposablePanel implements SelectionChangeL
 
     @Override
     public void onSelection(SelectableItem selectedItem) {
-        // Nothing to do
-        if (currentSelection == selectedItem) return;
+
+        if (currentSelection == selectedItem) {
+            // Nothing to do
+            return;
+        }
 
         // We must Dispose the current content before
         // creating and assigning a new content.
