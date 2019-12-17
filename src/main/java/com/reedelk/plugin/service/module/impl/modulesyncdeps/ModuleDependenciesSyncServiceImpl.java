@@ -7,7 +7,7 @@ import com.reedelk.plugin.commons.ExcludedArtifactsFromModuleSync;
 import com.reedelk.plugin.commons.Versions;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.maven.MavenUtils;
-import com.reedelk.plugin.service.module.ModuleCheckErrorsService;
+import com.reedelk.plugin.service.module.ModuleCheckStateService;
 import com.reedelk.plugin.service.module.ModuleDependenciesSyncService;
 import com.reedelk.plugin.service.module.RuntimeApiService;
 import com.reedelk.runtime.commons.ModuleUtils;
@@ -44,7 +44,7 @@ public class ModuleDependenciesSyncServiceImpl implements ModuleDependenciesSync
                     internalSyncInstalledModules(runtimeHostAddress, runtimeHostPort);
 
                     // Check if the current module in the Runtime was not started or resolved.
-                    checkErrorsService().checkForErrors(runtimeHostAddress, runtimeHostPort);
+                    checkModuleStateService().checkModuleState(runtimeHostAddress, runtimeHostPort);
                 });
     }
 
@@ -67,10 +67,6 @@ public class ModuleDependenciesSyncServiceImpl implements ModuleDependenciesSync
 
     Optional<MavenProject> moduleMavenProject() {
         return MavenUtils.getMavenProject(module);
-    }
-
-    ModuleCheckErrorsService checkErrorsService() {
-        return ModuleCheckErrorsService.getInstance(module);
     }
 
     RuntimeApiService runtimeApiService() {
@@ -109,6 +105,10 @@ public class ModuleDependenciesSyncServiceImpl implements ModuleDependenciesSync
                 .stream()
                 .filter(moduleDTO -> moduleDTO.getName().equals(moduleName))
                 .findFirst();
+    }
+
+    private ModuleCheckStateService checkModuleStateService() {
+        return ModuleCheckStateService.getInstance(module);
     }
 
     private void installModuleArtifactIntoRuntime(String address, int port, final MavenArtifact artifact) {

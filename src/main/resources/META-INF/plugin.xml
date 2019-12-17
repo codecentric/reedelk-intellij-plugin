@@ -62,8 +62,8 @@
         <moduleService serviceInterface="com.reedelk.plugin.service.module.ModuleDependenciesSyncService"
                        serviceImplementation="com.reedelk.plugin.service.module.impl.modulesyncdeps.ModuleDependenciesSyncServiceImpl"/>
 
-        <moduleService serviceInterface="com.reedelk.plugin.service.module.ModuleCheckErrorsService"
-                       serviceImplementation="com.reedelk.plugin.service.module.impl.modulecheckerror.ModuleCheckErrorsServiceImpl"/>
+        <moduleService serviceInterface="com.reedelk.plugin.service.module.ModuleCheckStateService"
+                       serviceImplementation="com.reedelk.plugin.service.module.impl.modulecheckerror.ModuleCheckStateServiceImpl"/>
 
         <!-- Program Runner and Executors -->
         <programRunner implementation="com.reedelk.plugin.runconfig.module.runner.DeploymentRunner" order="first"/>

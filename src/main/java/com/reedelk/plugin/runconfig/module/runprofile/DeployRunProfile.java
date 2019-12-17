@@ -6,7 +6,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.reedelk.plugin.commons.ToolWindowUtils;
-import com.reedelk.plugin.service.module.ModuleCheckErrorsService;
+import com.reedelk.plugin.service.module.ModuleCheckStateService;
 import com.reedelk.plugin.service.module.ModuleDependenciesSyncService;
 import com.reedelk.plugin.service.module.RuntimeApiService;
 import com.reedelk.plugin.service.project.SourceChangeService;
@@ -75,7 +75,7 @@ public class DeployRunProfile extends AbstractRunProfile {
                 ToolWindowUtils.notifyInfo(module.getProject(), message, runtimeConfigName);
 
                 // Check if there are any Modules in the Runtime in 'UNRESOLVED' or 'ERROR' state.
-                checkErrorsService(module).checkForErrors(address, port);
+                checkModuleStateService(module).checkModuleState(address, port);
             }
 
             @Override
@@ -86,7 +86,7 @@ public class DeployRunProfile extends AbstractRunProfile {
         });
     }
 
-    ModuleCheckErrorsService checkErrorsService(Module module) {
-        return ModuleCheckErrorsService.getInstance(module);
+    ModuleCheckStateService checkModuleStateService(Module module) {
+        return ModuleCheckStateService.getInstance(module);
     }
 }
