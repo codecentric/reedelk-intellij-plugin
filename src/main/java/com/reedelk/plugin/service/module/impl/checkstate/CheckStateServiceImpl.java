@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.module.impl.modulecheckerror;
+package com.reedelk.plugin.service.module.impl.checkstate;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.commons.ModuleState;
@@ -6,7 +6,7 @@ import com.reedelk.plugin.commons.NotificationUtils;
 import com.reedelk.plugin.commons.RuntimeConsoleURL;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.maven.MavenUtils;
-import com.reedelk.plugin.service.module.ModuleCheckStateService;
+import com.reedelk.plugin.service.module.CheckStateService;
 import com.reedelk.plugin.service.module.RuntimeApiService;
 import com.reedelk.runtime.rest.api.module.v1.ModuleGETRes;
 import org.jetbrains.idea.maven.project.MavenProject;
@@ -17,11 +17,11 @@ import java.util.Optional;
 import static com.reedelk.plugin.commons.Defaults.DEFAULT_CHECK_ERROR_DELAY_MILLIS;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
-public class ModuleCheckStateServiceImpl implements ModuleCheckStateService {
+public class CheckStateServiceImpl implements CheckStateService {
 
     private final Module module;
 
-    public ModuleCheckStateServiceImpl(Module module) {
+    public CheckStateServiceImpl(Module module) {
         this.module = module;
     }
 
@@ -32,22 +32,18 @@ public class ModuleCheckStateServiceImpl implements ModuleCheckStateService {
                 indicator -> internalCheckModuleState(runtimeHostAddress, runtimeHostPort));
     }
 
-    void internalCheckModuleState(String runtimeHostAddress,  int runtimeHostPort) {
+    void internalCheckModuleState(String runtimeHostAddress, int runtimeHostPort) {
         moduleMavenProject().ifPresent(mavenProject -> {
+
             // We only check for modules matching the current module's artifact i.
-            String artifactId = mavenProject.getMavenId().getArtifactId();
-
-            runtimeApiService()
-                    .installedModules(runtimeHostAddress, runtimeHostPort)
-                    .stream()
-                    .filter(runtimeModule -> Objects.equals(artifactId, runtimeModule.getName()))
-                    .findFirst()
-                    .ifPresent(runtimeModule -> notifyFromStateIfNeeded(runtimeModule, runtimeHostAddress, runtimeHostPort));
+            Optional.ofNullable(mavenProject.getMavenId().getArtifactId())
+                    .ifPresent(artifactId -> runtimeApiService()
+                            .installedModules(runtimeHostAddress, runtimeHostPort)
+                            .stream()
+                            .filter(runtimeModule -> Objects.equals(artifactId, runtimeModule.getName()))
+                            .findFirst()
+                            .ifPresent(runtimeModule -> notifyFromStateIfNeeded(runtimeModule, runtimeHostAddress, runtimeHostPort)));
         });
-    }
-
-    Optional<MavenProject> moduleMavenProject() {
-        return MavenUtils.getMavenProject(module);
     }
 
     // Notify with a Popup if the module state is 'ERROR' or 'UNRESOLVED'.
@@ -64,6 +60,10 @@ public class ModuleCheckStateServiceImpl implements ModuleCheckStateService {
                     message("module.check.errors.module.unresolved.content",
                             RuntimeConsoleURL.from(runtimeHostAddress, runtimeHostPort)));
         }
+    }
+
+    Optional<MavenProject> moduleMavenProject() {
+        return MavenUtils.getMavenProject(module);
     }
 
     RuntimeApiService runtimeApiService() {

@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.module.impl.modulesyncdeps;
+package com.reedelk.plugin.service.module.impl.syncdeps;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.service.module.RuntimeApiService;
@@ -24,24 +24,25 @@ import static org.jetbrains.idea.maven.model.MavenConstants.SCOPE_PROVIDED;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ModuleDependenciesSyncServiceImplTest {
+class DependenciesSyncServiceImplTest {
 
+    private final String version100 = "1.0.0";
     private final String groupId = "com.test";
-    private final String runtimeHostAddress = "localhost";
     private final int runtimeHostPort = 7788;
+    private final String runtimeHostAddress = "localhost";
 
-    private ModuleDependenciesSyncServiceImpl service;
-
-    @Mock
-    private RuntimeApiService runtimeApiService;
     @Mock
     private Module module;
     @Mock
     private MavenProject mockMavenProject;
+    @Mock
+    private RuntimeApiService runtimeApiService;
+
+    private DependenciesSyncServiceImpl service;
 
     @BeforeEach
     void setUp() {
-        service = spy(new ModuleDependenciesSyncServiceImpl(module));
+        service = spy(new DependenciesSyncServiceImpl(module));
         doReturn(Optional.of(mockMavenProject)).when(service).moduleMavenProject();
         doReturn(runtimeApiService).when(service).runtimeApiService();
     }
@@ -49,15 +50,15 @@ class ModuleDependenciesSyncServiceImplTest {
     @Test
     void shouldUpdateModuleWithGreaterVersionFromMavenProjectThanTheOneInstalled() {
         // Given
-        ModuleGETRes moduleRest = new ModuleGETRes();
-        moduleRest.setName("module-rest");
-        moduleRest.setVersion("1.0.0");
-        ModuleGETRes moduleFile = new ModuleGETRes();
-        moduleFile.setName("module-file");
-        moduleFile.setVersion("1.0.0");
+        ModuleGETRes moduleRest = createModuleWith("module-rest", version100);
+        ModuleGETRes moduleFile = createModuleWith("module-file", version100);
 
-        doReturn(true).when(service).isModule(any(File.class));
-        doReturn(asList(moduleRest, moduleFile)).when(runtimeApiService).installedModules(runtimeHostAddress, runtimeHostPort);
+        doReturn(true)
+                .when(service)
+                .isModule(any(File.class));
+        doReturn(asList(moduleRest, moduleFile))
+                .when(runtimeApiService)
+                .installedModules(runtimeHostAddress, runtimeHostPort);
 
         String moduleRestPath = "/test/module-rest.jar";
         String moduleFilePath = "/test/module-file.jar";
@@ -77,14 +78,12 @@ class ModuleDependenciesSyncServiceImplTest {
     @Test
     void shouldNotInstallAnythingWhenAllTheModulesAreUpToDate() {
         // Given
-        ModuleGETRes moduleRest = new ModuleGETRes();
-        moduleRest.setName("module-rest");
-        moduleRest.setVersion("1.0.0");
-        ModuleGETRes moduleFile = new ModuleGETRes();
-        moduleFile.setName("module-file");
-        moduleFile.setVersion("1.0.0");
+        ModuleGETRes moduleRest = createModuleWith("module-rest", version100);
+        ModuleGETRes moduleFile = createModuleWith("module-file", version100);
 
-        doReturn(asList(moduleRest, moduleFile)).when(runtimeApiService).installedModules(runtimeHostAddress, runtimeHostPort);
+        doReturn(asList(moduleRest, moduleFile))
+                .when(runtimeApiService)
+                .installedModules(runtimeHostAddress, runtimeHostPort);
 
         String moduleRestPath = "/test/module-rest.jar";
         String moduleFilePath = "/test/module-file.jar";
@@ -104,12 +103,14 @@ class ModuleDependenciesSyncServiceImplTest {
     @Test
     void shouldInstallModuleWhenNotInstalledButPresentInMavenDependencies() {
         // Given
-        ModuleGETRes moduleRest = new ModuleGETRes();
-        moduleRest.setName("module-rest");
-        moduleRest.setVersion("1.0.0");
+        ModuleGETRes moduleRest = createModuleWith("module-rest", version100);
 
-        doReturn(true).when(service).isModule(any(File.class));
-        doReturn(singletonList(moduleRest)).when(runtimeApiService).installedModules(runtimeHostAddress, runtimeHostPort);
+        doReturn(true)
+                .when(service)
+                .isModule(any(File.class));
+        doReturn(singletonList(moduleRest))
+                .when(runtimeApiService)
+                .installedModules(runtimeHostAddress, runtimeHostPort);
 
         String moduleRestPath = "/test/module-rest.jar";
         String moduleFilePath = "/test/module-file.jar";
@@ -129,15 +130,15 @@ class ModuleDependenciesSyncServiceImplTest {
     @Test
     void shouldIgnoreDependenciesWithScopeNotProvided() {
         // Given
-        ModuleGETRes moduleRest = new ModuleGETRes();
-        moduleRest.setName("module-rest");
-        moduleRest.setVersion("1.0.0");
+        ModuleGETRes moduleRest = createModuleWith("module-rest", version100);
 
-        doReturn(singletonList(moduleRest)).when(runtimeApiService).installedModules(runtimeHostAddress, runtimeHostPort);
+        doReturn(singletonList(moduleRest))
+                .when(runtimeApiService)
+                .installedModules(runtimeHostAddress, runtimeHostPort);
 
         String moduleRestPath = "/test/module-rest.jar";
-        doReturn(
-                singletonList(createArtifactNodeWith(SCOPE_COMPILE, "module-rest", "1.0.1", new File(moduleRestPath))))
+        doReturn(singletonList(
+                createArtifactNodeWith(SCOPE_COMPILE, "module-rest", "1.0.1", new File(moduleRestPath))))
                 .when(mockMavenProject)
                 .getDependencyTree();
 
@@ -158,4 +159,10 @@ class ModuleDependenciesSyncServiceImplTest {
                 null, scope, null, null);
     }
 
+    private ModuleGETRes createModuleWith(String name, String version) {
+        ModuleGETRes newModule = new ModuleGETRes();
+        newModule.setName(name);
+        newModule.setVersion(version);
+        return newModule;
+    }
 }

@@ -6,8 +6,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.reedelk.plugin.commons.ToolWindowUtils;
-import com.reedelk.plugin.service.module.ModuleCheckStateService;
-import com.reedelk.plugin.service.module.ModuleDependenciesSyncService;
+import com.reedelk.plugin.service.module.CheckStateService;
+import com.reedelk.plugin.service.module.DependenciesSyncService;
 import com.reedelk.plugin.service.module.RuntimeApiService;
 import com.reedelk.plugin.service.project.SourceChangeService;
 import org.jetbrains.annotations.NotNull;
@@ -53,7 +53,7 @@ public class DeployRunProfile extends AbstractRunProfile {
                 // Check if there are modules not installed (or installed but with a different version)
                 // in the runtime. If so, then install them so that the current deployed flow can be
                 // started and executed correctly.
-                ModuleDependenciesSyncService.getInstance(module).syncInstalledModules(address, port);
+                DependenciesSyncService.getInstance(module).syncInstalledModules(address, port);
             }
 
             @Override
@@ -86,7 +86,7 @@ public class DeployRunProfile extends AbstractRunProfile {
         });
     }
 
-    ModuleCheckStateService checkModuleStateService(Module module) {
-        return ModuleCheckStateService.getInstance(module);
+    CheckStateService checkModuleStateService(Module module) {
+        return CheckStateService.getInstance(module);
     }
 }

@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.module.impl.modulesyncdeps;
+package com.reedelk.plugin.service.module.impl.syncdeps;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
@@ -7,8 +7,8 @@ import com.reedelk.plugin.commons.ExcludedArtifactsFromModuleSync;
 import com.reedelk.plugin.commons.Versions;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.maven.MavenUtils;
-import com.reedelk.plugin.service.module.ModuleCheckStateService;
-import com.reedelk.plugin.service.module.ModuleDependenciesSyncService;
+import com.reedelk.plugin.service.module.CheckStateService;
+import com.reedelk.plugin.service.module.DependenciesSyncService;
 import com.reedelk.plugin.service.module.RuntimeApiService;
 import com.reedelk.runtime.commons.ModuleUtils;
 import com.reedelk.runtime.rest.api.module.v1.ModuleGETRes;
@@ -25,13 +25,13 @@ import java.util.Optional;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.service.module.RuntimeApiService.OperationCallback;
 
-public class ModuleDependenciesSyncServiceImpl implements ModuleDependenciesSyncService {
+public class DependenciesSyncServiceImpl implements DependenciesSyncService {
 
-    private static final Logger LOG = Logger.getInstance(ModuleDependenciesSyncServiceImpl.class);
+    private static final Logger LOG = Logger.getInstance(DependenciesSyncServiceImpl.class);
 
     private final Module module;
 
-    public ModuleDependenciesSyncServiceImpl(Module module) {
+    public DependenciesSyncServiceImpl(Module module) {
         this.module = module;
     }
 
@@ -107,8 +107,8 @@ public class ModuleDependenciesSyncServiceImpl implements ModuleDependenciesSync
                 .findFirst();
     }
 
-    private ModuleCheckStateService checkModuleStateService() {
-        return ModuleCheckStateService.getInstance(module);
+    private CheckStateService checkModuleStateService() {
+        return CheckStateService.getInstance(module);
     }
 
     private void installModuleArtifactIntoRuntime(String address, int port, final MavenArtifact artifact) {

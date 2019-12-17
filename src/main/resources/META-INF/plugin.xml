@@ -59,11 +59,11 @@
         <moduleService serviceInterface="com.reedelk.plugin.service.module.RuntimeApiService"
                        serviceImplementation="com.reedelk.plugin.service.module.impl.runtimeapi.RuntimeApiServiceImpl"/>
 
-        <moduleService serviceInterface="com.reedelk.plugin.service.module.ModuleDependenciesSyncService"
-                       serviceImplementation="com.reedelk.plugin.service.module.impl.modulesyncdeps.ModuleDependenciesSyncServiceImpl"/>
+        <moduleService serviceInterface="com.reedelk.plugin.service.module.DependenciesSyncService"
+                       serviceImplementation="com.reedelk.plugin.service.module.impl.syncdeps.DependenciesSyncServiceImpl"/>
 
-        <moduleService serviceInterface="com.reedelk.plugin.service.module.ModuleCheckStateService"
-                       serviceImplementation="com.reedelk.plugin.service.module.impl.modulecheckerror.ModuleCheckStateServiceImpl"/>
+        <moduleService serviceInterface="com.reedelk.plugin.service.module.CheckStateService"
+                       serviceImplementation="com.reedelk.plugin.service.module.impl.checkstate.CheckStateServiceImpl"/>
 
         <!-- Program Runner and Executors -->
         <programRunner implementation="com.reedelk.plugin.runconfig.module.runner.DeploymentRunner" order="first"/>

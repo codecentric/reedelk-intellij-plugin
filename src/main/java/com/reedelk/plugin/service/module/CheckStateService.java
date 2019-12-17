@@ -4,10 +4,10 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleServiceManager;
 import org.jetbrains.annotations.NotNull;
 
-public interface ModuleCheckStateService {
+public interface CheckStateService {
 
-    static ModuleCheckStateService getInstance(@NotNull Module module) {
-        return ModuleServiceManager.getService(module, ModuleCheckStateService.class);
+    static CheckStateService getInstance(@NotNull Module module) {
+        return ModuleServiceManager.getService(module, CheckStateService.class);
     }
 
     void checkModuleState(String runtimeHostAddress, int runtimeHostPort);

@@ -4,10 +4,10 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleServiceManager;
 import org.jetbrains.annotations.NotNull;
 
-public interface ModuleDependenciesSyncService {
+public interface DependenciesSyncService {
 
-    static ModuleDependenciesSyncService getInstance(@NotNull Module module) {
-        return ModuleServiceManager.getService(module, ModuleDependenciesSyncService.class);
+    static DependenciesSyncService getInstance(@NotNull Module module) {
+        return ModuleServiceManager.getService(module, DependenciesSyncService.class);
     }
 
     void syncInstalledModules(String runtimeHostAddress, int runtimeHostPort);
