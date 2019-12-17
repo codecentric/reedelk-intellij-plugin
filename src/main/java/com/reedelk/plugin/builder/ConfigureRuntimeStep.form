@@ -15,11 +15,6 @@
         <properties/>
         <border type="none"/>
         <children>
-          <vspacer id="266b6">
-            <constraints>
-              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-            </constraints>
-          </vspacer>
           <grid id="df37c" binding="chooseRuntimePanel" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
@@ -70,7 +65,7 @@
                   <text resource-bundle="messages/ReedelkBundle" key="runtimeBuilder.name.default.value"/>
                 </properties>
               </component>
-              <component id="f5317" class="javax.swing.JLabel">
+              <component id="f5317" class="javax.swing.JLabel" binding="runtimeHome">
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -80,6 +75,11 @@
               </component>
             </children>
           </grid>
+          <vspacer id="add05">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+            </constraints>
+          </vspacer>
         </children>
       </grid>
       <grid id="5c52e" layout-manager="BorderLayout" hgap="0" vgap="0">

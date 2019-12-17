@@ -6,6 +6,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -21,6 +22,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +33,7 @@ import static com.intellij.openapi.util.text.StringUtil.isEmptyOrSpaces;
 import static com.intellij.uiDesigner.core.GridConstraints.*;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.util.Collections.singletonList;
+import static javax.swing.SwingUtilities.invokeLater;
 
 public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListener, Disposable {
 
@@ -37,6 +41,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
 
     private JPanel jPanel;
     private JLabel runtimeName;
+    private JLabel runtimeHome;
     private JPanel addRuntimePanel;
     private JPanel chooseRuntimePanel;
     private JComboBox<String> runtimeCombo;
@@ -47,22 +52,30 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
     private RuntimeComboManager runtimeComboManager;
 
     private boolean isNewProject;
+    private JPanel runtimeChooserPanel;
 
     @Override
     public void _init() {
         super._init();
-        if (moduleBuilder.isDownloadDistribution()) {
+        if (moduleBuilder.isDownloadDistribution() &&
+                !moduleBuilder.getDownloadDistributionPath().isPresent()) {
+            invokeLater(() -> {
+                runtimeChooserPanel.setVisible(false);
+                runtimeHome.setVisible(false);
+            });
             loadingPanel.getContentPanel().removeAll();
             loadingPanel.startLoading();
             loadingPanel.setLoadingText("Downloading Reedelk ESB runtime ...");
             getApplication().executeOnPooledThread(() -> {
                 // Download the runtime
                 try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Path download = ReedelkRuntimeDistributionDownload.download();
+                    moduleBuilder.setDownloadDistributionPath(download);
+                } catch (IOException e) {
+                    invokeLater(() ->
+                            Messages.showErrorDialog("Error while parsing metadata from server", "Error"));
                 } finally {
-                    SwingUtilities.invokeLater(() -> {
+                    invokeLater(() -> {
                         loadingPanel.getContentPanel().add(jPanel);
                         loadingPanel.stopLoading();
                         loadingPanel.revalidate();
@@ -71,7 +84,8 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
                 }
             });
         } else {
-            SwingUtilities.invokeLater(() -> {
+            invokeLater(() -> {
+                invokeLater(() -> runtimeHomeDirectoryBrowse.setVisible(true));
                 loadingPanel.getContentPanel().add(jPanel);
                 jPanel.revalidate();
             });
@@ -126,12 +140,15 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
             if (isEmptyOrSpaces(runtimeConfigNameTextField.getText())) {
                 errors.add("Runtime Name can not be empty");
             }
-            if (isEmptyOrSpaces(runtimeHomeDirectoryBrowse.getText())) {
-                errors.add("Runtime Path can not be empty");
-            }
 
-            Validator validator = new RuntimeHomeValidator(runtimeHomeDirectoryBrowse.getText());
-            validator.validate(errors);
+            if (!moduleBuilder.isDownloadDistribution()) {
+                if (isEmptyOrSpaces(runtimeHomeDirectoryBrowse.getText())) {
+                    errors.add("Runtime Path can not be empty");
+                }
+
+                Validator validator = new RuntimeHomeValidator(runtimeHomeDirectoryBrowse.getText());
+                validator.validate(errors);
+            }
 
             // Validating adding new module
         } else {
@@ -171,7 +188,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
                 return contentEntryPath == null ? path : path.substring(commonPrefixLength(contentEntryPath, path));
             }
         });
-        JPanel runtimeChooserPanel = UI.PanelFactory.panel(runtimeHomeDirectoryBrowse).
+        this.runtimeChooserPanel = UI.PanelFactory.panel(runtimeHomeDirectoryBrowse).
                 withComment(message("runtimeBuilder.runtime.home.directory"))
                 .createPanel();
         addRuntimePanel.add(runtimeChooserPanel, CHOOSE_RUNTIME_INPUT_GRID_CONSTRAINTS);

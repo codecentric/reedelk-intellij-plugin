@@ -11,6 +11,7 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.io.ZipUtil;
 import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.commons.ReedelkPluginUtil;
 import com.reedelk.plugin.runconfig.module.ModuleRunConfigurationBuilder;
@@ -24,14 +25,20 @@ import org.jetbrains.idea.maven.wizards.MavenModuleWizardStep;
 import org.jetbrains.idea.maven.wizards.SelectPropertiesStep;
 
 import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Optional;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class ModuleBuilder extends MavenModuleBuilder {
 
-    private boolean createRuntimeConfig;
+    private Path downloadDistributionPath;
     private String runtimeConfigName;
     private String runtimeHomeDirectory;
+    private boolean createRuntimeConfig;
     private boolean downloadDistribution;
 
     public ModuleBuilder() {
@@ -47,27 +54,50 @@ public class ModuleBuilder extends MavenModuleBuilder {
         VirtualFile root = LocalFileSystem.getInstance().findFileByPath(contentEntryPath);
 
         if (createRuntimeConfig) {
-            // Create Runtime Run Configuration
-            RuntimeRunConfigurationBuilder.build()
-                    .withRuntimeConfigName(runtimeConfigName)
-                    .withRuntimeHomeDirectory(runtimeHomeDirectory)
-                    .add(project);
+            MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> {
+                if (downloadDistribution && downloadDistributionPath != null) {
+                    // Copy runtime distribution from tmp folder, unzip it inside
+                    // the module root directory, set the runtime home directory
+                    // to the module root/runtime-folder-name.
+
+                    File destination = new File(root.getPath());
+                    try {
+                        ZipUtil.extract(downloadDistributionPath.toFile(), destination, (dir, name) -> true);
+                        String[] reedelkRuntime = destination.list((dir, name) -> dir.isDirectory() &&
+                                name.startsWith("reedelk-esb-runtime-"));
+                        // Create Runtime Run Configuration
+                        RuntimeRunConfigurationBuilder.build()
+                                .withRuntimeConfigName(runtimeConfigName)
+                                .withRuntimeHomeDirectory(Paths.get(root.getPath(), reedelkRuntime[0]).toString())
+                                .add(project);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    // Create Runtime Run Configuration
+                    RuntimeRunConfigurationBuilder.build()
+                            .withRuntimeConfigName(runtimeConfigName)
+                            .withRuntimeHomeDirectory(runtimeHomeDirectory)
+                            .add(project);
+                }
+            });
         }
 
-        // Add Module Run Configuration
-        Module module = rootModel.getModule();
-
-        ModuleRunConfigurationBuilder.build()
-                .withModuleName(module.getName())
-                .withRuntimeConfigName(runtimeConfigName)
-                .add(project);
-
-        final MavenId projectId = getProjectId();
-        final MavenId parentId = getParentMavenId();
-        final String sdkVersion = rootModel.getSdkName();
+        MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> {
+            // Add Module Run Configuration
+            Module module = rootModel.getModule();
+            ModuleRunConfigurationBuilder.build()
+                    .withModuleName(module.getName())
+                    .withRuntimeConfigName(runtimeConfigName)
+                    .add(project);
+        });
 
         MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> {
             // Create Maven project files
+            MavenId projectId = getProjectId();
+            MavenId parentId = getParentMavenId();
+            String sdkVersion = rootModel.getSdkName();
+
             MavenProjectBuilderHelper projectBuilder = new MavenProjectBuilderHelper();
             projectBuilder.configure(project, projectId, parentId, root, sdkVersion);
         });
@@ -153,5 +183,13 @@ public class ModuleBuilder extends MavenModuleBuilder {
 
     public void createRuntimeConfig(boolean createRuntimeConfig) {
         this.createRuntimeConfig = createRuntimeConfig;
+    }
+
+    public void setDownloadDistributionPath(Path downloadDistributionPath) {
+        this.downloadDistributionPath = downloadDistributionPath;
+    }
+
+    public Optional<Path> getDownloadDistributionPath() {
+        return Optional.ofNullable(downloadDistributionPath);
     }
 }
