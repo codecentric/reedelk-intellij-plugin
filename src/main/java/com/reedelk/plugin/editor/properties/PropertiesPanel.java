@@ -1,10 +1,13 @@
 package com.reedelk.plugin.editor.properties;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.fileEditor.FileEditor;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.DisposableUtils;
@@ -67,8 +70,22 @@ public class PropertiesPanel extends DisposablePanel implements SelectionChangeL
     }
 
     @Override
+    public void unselect() {
+        setEmptySelection();
+    }
+
+    @Override
     public void selectionChanged(@NotNull FileEditorManagerEvent event) {
         if (!(event.getNewEditor() instanceof DesignerEditor)) {
+            DisposableUtils.dispose(currentPane);
+            setEmptySelection();
+        }
+    }
+
+    @Override
+    public void fileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+        FileEditor[] allEditors = FileEditorManager.getInstance(project).getAllEditors();
+        if (allEditors.length == 0) {
             DisposableUtils.dispose(currentPane);
             setEmptySelection();
         }

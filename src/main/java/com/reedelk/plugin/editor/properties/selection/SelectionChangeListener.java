@@ -4,4 +4,6 @@ public interface SelectionChangeListener {
 
     void onSelection(SelectableItem selectableItem);
 
+    void unselect();
+
 }

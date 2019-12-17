@@ -38,7 +38,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.reedelk.plugin.editor.designer.dnd.DesignerDropTargetListener.DropActionListener;
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
@@ -49,13 +48,12 @@ public abstract class DesignerPanel extends DisposablePanel implements
         DropActionListener, HintResultListener, DrawableListener,
         ComponentListUpdateNotifier {
 
-    private AtomicBoolean propertiesToolWindowShownAtLeastOnce = new AtomicBoolean(false);
-
     static final int TOP_PADDING = 80;
 
     protected final transient FlowSnapshot snapshot;
 
     private final transient Module module;
+    private final transient SelectableItem defaultSelectedItem;
     private final transient DesignerPanelActionHandler actionHandler;
     private final SelectionChangeListener currentComponentPublisher;
 
@@ -79,11 +77,13 @@ public abstract class DesignerPanel extends DisposablePanel implements
 
     DesignerPanel(@NotNull Module module,
                   @NotNull FlowSnapshot snapshot,
-                  @NotNull DesignerPanelActionHandler actionHandler) {
+                  @NotNull DesignerPanelActionHandler actionHandler,
+                  @NotNull SelectableItem defaultSelectedItem) {
         this.module = module;
         this.snapshot = snapshot;
         this.actionHandler = actionHandler;
         this.hintDrawable = new HintDrawable();
+        this.defaultSelectedItem = defaultSelectedItem;
 
         this.snapshot.addListener(this);
         this.centerOfNodeDrawable = new CenterOfNodeDrawable(snapshot);
@@ -97,8 +97,6 @@ public abstract class DesignerPanel extends DisposablePanel implements
 
         addDropTargetListener(module, snapshot, actionHandler);
         addAncestorListener();
-
-        select(defaultSelectedItem());
     }
 
     @Override
@@ -202,7 +200,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
             } else {
                 // Nothing is selected, we display flow properties
                 unselect();
-                select(defaultSelectedItem());
+                select(defaultSelectedItem);
             }
 
             // Repaint all nodes
@@ -246,12 +244,6 @@ public abstract class DesignerPanel extends DisposablePanel implements
 
     @Override
     public void onDataChange() {
-
-        if(!propertiesToolWindowShownAtLeastOnce.getAndSet(true)) {
-            ToolWindowUtils.showPropertiesPanelToolWindow(module.getProject(),
-                    () -> select(defaultSelectedItem()));
-        }
-
         snapshotUpdated = true;
         if (isVisible) {
             // If it is visible and nothing is selected, we need to set default
@@ -261,7 +253,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
             // If nothing is already selected, we set as current selection
             // the default selected item.
             snapshot.applyOnGraph(graph ->
-                            select(currentSelection),
+                            select(currentSelection == null ? defaultSelectedItem : currentSelection),
                             absentFlow -> unselect(),
                             flowWithError -> unselect());
 
@@ -282,7 +274,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
             // the selection would be bound to the old object before refreshing
             // the flow (or subflow) graph.
             snapshot.applyOnValidGraph(graph ->
-                    SwingUtilities.invokeLater(() -> select(defaultSelectedItem())));
+                    SwingUtilities.invokeLater(() -> select(defaultSelectedItem)));
         }
     }
 
@@ -306,8 +298,6 @@ public abstract class DesignerPanel extends DisposablePanel implements
 
     protected abstract void beforePaint(Graphics2D graphics);
 
-    protected abstract SelectableItem defaultSelectedItem();
-
     private Graphics2D getGraphics2D() {
         return (Graphics2D) getGraphics();
     }
@@ -323,14 +313,16 @@ public abstract class DesignerPanel extends DisposablePanel implements
         if (node.isSelectable()) {
             selected = node;
             selected.selected();
-            currentSelection = new SelectableItemComponent(module, snapshot, selected);
-            select(currentSelection);
+            select(new SelectableItemComponent(module, snapshot, selected));
         }
     }
 
     private void select(SelectableItem selectableItem) {
-        currentSelection = selectableItem;
-        currentComponentPublisher.onSelection(selectableItem);
+        if (currentSelection != selectableItem) {
+            currentSelection = selectableItem;
+        }
+        currentComponentPublisher.onSelection(currentSelection);
+        ToolWindowUtils.showPropertiesPanelToolWindow(module.getProject(), () -> {});
     }
 
     /**
@@ -359,15 +351,17 @@ public abstract class DesignerPanel extends DisposablePanel implements
         addAncestorListener(new AncestorListenerAdapter() {
             @Override
             public void ancestorAdded(AncestorEvent event) {
-                // As soon as the Flow Designer is Visible, we
-                // reset the default selected item selection.
                 isVisible = true;
-                currentSelection = defaultSelectedItem();
+                onDataChange();
             }
 
             @Override
             public void ancestorRemoved(AncestorEvent event) {
                 isVisible = false;
+                unselect();
+                currentSelection = null;
+                currentComponentPublisher.unselect();
+                ToolWindowUtils.showPropertiesPanelToolWindow(module.getProject(), () -> {});
             }
         });
     }
