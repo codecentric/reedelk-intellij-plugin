@@ -2,7 +2,6 @@ package com.reedelk.plugin.editor.properties.renderer.commons;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
@@ -57,11 +56,8 @@ public class ScriptEditor extends DisposablePanel implements DocumentListener {
     @Override
     public void dispose() {
         super.dispose();
-        Editor[] allEditors = EditorFactory.getInstance().getAllEditors();
-        for (Editor currentEditor : allEditors) {
-            if (currentEditor == editor) {
-                EditorFactory.getInstance().releaseEditor(currentEditor);
-            }
+        if (editor != null && !editor.isDisposed()) {
+            EditorFactory.getInstance().releaseEditor(editor);
         }
     }
 

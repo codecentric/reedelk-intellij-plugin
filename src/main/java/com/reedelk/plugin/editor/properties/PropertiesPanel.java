@@ -22,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
-import static javax.swing.SwingUtilities.invokeLater;
 
 public class PropertiesPanel extends DisposablePanel implements SelectionChangeListener, FileEditorManagerListener {
 
@@ -51,27 +50,23 @@ public class PropertiesPanel extends DisposablePanel implements SelectionChangeL
 
         // We must Dispose the current content before
         // creating and assigning a new content.
-        final Disposable toDispose = currentPane;
+        DisposableUtils.dispose(currentPane);
 
         this.currentSelection = selectedItem;
 
-
         if (selectedItem instanceof SelectableItemComponent) {
             createFlowComponentContent(selectedItem);
-        } else if (selectedItem instanceof SelectableItemFlow || selectedItem instanceof SelectableItemSubflow) {
+        } else if (selectedItem instanceof SelectableItemFlow ||
+                selectedItem instanceof SelectableItemSubflow) {
             createFlowOrSubflowContent(selectedItem);
         }
-
-        // We dispose it later
-        invokeLater(() -> DisposableUtils.dispose(toDispose));
     }
 
     @Override
     public void selectionChanged(@NotNull FileEditorManagerEvent event) {
         if (!(event.getNewEditor() instanceof DesignerEditor)) {
-            final Disposable toDispose = currentPane;
+            DisposableUtils.dispose(currentPane);
             setEmptySelection();
-            invokeLater(() -> DisposableUtils.dispose(toDispose));
         }
     }
 
@@ -79,6 +74,7 @@ public class PropertiesPanel extends DisposablePanel implements SelectionChangeL
     public void dispose() {
         super.dispose();
         busConnection.disconnect();
+        DisposableUtils.dispose(currentPane);
     }
 
     private void createFlowOrSubflowContent(SelectableItem selectedItem) {
@@ -99,15 +95,14 @@ public class PropertiesPanel extends DisposablePanel implements SelectionChangeL
         ComponentData componentData = selectedItem.getSelectedNode().componentData();
 
         DisposableScrollPane propertiesPanel = createPropertiesPanel(selectedItem.getModule(),
-                        componentData,
-                        selectedItem.getSnapshot(),
-                        selectedItem.getSelectedNode());
-
+                componentData,
+                selectedItem.getSnapshot(),
+                selectedItem.getSelectedNode());
         String displayName = componentData.getDisplayName();
         setToolWindowTitle(displayName);
 
         updateContent(propertiesPanel);
-        this.currentPane = propertiesPanel;
+        currentPane = propertiesPanel;
     }
 
     private DisposableScrollPane createPropertiesPanel(Module module, ComponentData componentData, FlowSnapshot snapshot, GraphNode node) {
@@ -129,11 +124,9 @@ public class PropertiesPanel extends DisposablePanel implements SelectionChangeL
     }
 
     private void updateContent(JComponent content) {
-        invokeLater(() -> {
-            removeAll();
-            add(content);
-            revalidate();
-        });
+        removeAll();
+        add(content);
+        revalidate();
     }
 
     private void setToolWindowTitle(String newToolWindowTitle) {
