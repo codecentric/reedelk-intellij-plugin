@@ -4,9 +4,9 @@ import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.commons.Half;
 import com.reedelk.plugin.editor.designer.dnd.DesignerPanelActionHandler;
 import com.reedelk.plugin.editor.designer.text.FlowMetadata;
+import com.reedelk.plugin.editor.properties.selection.SelectableItem;
+import com.reedelk.plugin.editor.properties.selection.SelectableItemSubflow;
 import com.reedelk.plugin.graph.FlowSnapshot;
-import com.reedelk.plugin.service.project.impl.designerselection.SelectableItem;
-import com.reedelk.plugin.service.project.impl.designerselection.SelectableItemSubflow;
 
 import java.awt.*;
 

@@ -5,10 +5,10 @@ import com.reedelk.plugin.commons.Half;
 import com.reedelk.plugin.editor.designer.dnd.DesignerPanelActionHandler;
 import com.reedelk.plugin.editor.designer.misc.InboundLane;
 import com.reedelk.plugin.editor.designer.text.FlowMetadata;
+import com.reedelk.plugin.editor.properties.selection.SelectableItem;
+import com.reedelk.plugin.editor.properties.selection.SelectableItemFlow;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowSnapshot;
-import com.reedelk.plugin.service.project.impl.designerselection.SelectableItem;
-import com.reedelk.plugin.service.project.impl.designerselection.SelectableItemFlow;
 
 import java.awt.*;
 

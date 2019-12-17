@@ -5,7 +5,6 @@ import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.DesignerWindowSizeCalculator;
-import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.editor.designer.debug.CenterOfNodeDrawable;
 import com.reedelk.plugin.editor.designer.debug.PrintFlowInfo;
 import com.reedelk.plugin.editor.designer.dnd.DesignerDropTargetListener;
@@ -18,15 +17,15 @@ import com.reedelk.plugin.editor.designer.hint.HintRunnable;
 import com.reedelk.plugin.editor.designer.misc.BuildingFlowInfoPanel;
 import com.reedelk.plugin.editor.designer.misc.FlowWithErrorInfoPanel;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
+import com.reedelk.plugin.editor.properties.selection.SelectableItem;
+import com.reedelk.plugin.editor.properties.selection.SelectableItemComponent;
+import com.reedelk.plugin.editor.properties.selection.SelectionChangeListener;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.SnapshotListener;
 import com.reedelk.plugin.graph.layout.FlowGraphLayout;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.impl.component.ModuleComponents;
 import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpdateNotifier;
-import com.reedelk.plugin.service.project.DesignerSelectionService;
-import com.reedelk.plugin.service.project.impl.designerselection.SelectableItem;
-import com.reedelk.plugin.service.project.impl.designerselection.SelectableItemComponent;
 import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,7 +39,6 @@ import java.util.Collection;
 import java.util.Optional;
 
 import static com.reedelk.plugin.editor.designer.dnd.DesignerDropTargetListener.DropActionListener;
-import static com.reedelk.plugin.service.project.DesignerSelectionService.CurrentSelectionListener;
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
@@ -55,6 +53,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
 
     private final transient Module module;
     private final transient DesignerPanelActionHandler actionHandler;
+    private final SelectionChangeListener currentComponentPublisher;
 
     private transient HintResult hintResult = HintResult.EMPTY;
     private transient HintRunnable hintCalculator; // TODO: This one should be removed and created a class to manage move operation
@@ -64,8 +63,6 @@ public abstract class DesignerPanel extends DisposablePanel implements
     private transient SelectableItem currentSelection;
     private transient MessageBusConnection busConnection;
     private transient CenterOfNodeDrawable centerOfNodeDrawable;
-    private transient DesignerSelectionService designerSelectionService;
-    private transient CurrentSelectionListener componentSelectedPublisher;
     private transient FlowWithErrorInfoPanel errorFlowInfoPanel = new FlowWithErrorInfoPanel();
     private transient BuildingFlowInfoPanel buildingFlowInfoPanel = new BuildingFlowInfoPanel();
 
@@ -92,8 +89,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
 
         this.busConnection = module.getMessageBus().connect();
         this.busConnection.subscribe(ReedelkTopics.COMPONENTS_UPDATE_EVENTS, this);
-        this.componentSelectedPublisher = module.getProject().getMessageBus().syncPublisher(ReedelkTopics.CURRENT_COMPONENT_SELECTION_EVENTS);
-        this.designerSelectionService = DesignerSelectionService.getInstance(module.getProject());
+        this.currentComponentPublisher = module.getProject().getMessageBus().syncPublisher(ReedelkTopics.CURRENT_COMPONENT_SELECTION_EVENTS);
 
         addDropTargetListener(module, snapshot, actionHandler);
         addAncestorListener();
@@ -254,16 +250,10 @@ public abstract class DesignerPanel extends DisposablePanel implements
             // graph is de-serialized, we get notified with this method call.
             // If nothing is already selected, we set as current selection
             // the default selected item.
-            snapshot.applyOnGraph(graph -> {
-                        boolean isAnySelectionPresent = designerSelectionService.getCurrentSelection().isPresent();
-                        if (!isAnySelectionPresent) {
-                            select(defaultSelectedItem());
-                        }
-                    },
-
-                    absentFlow -> unselect(),
-
-                    flowWithError -> unselect());
+            snapshot.applyOnGraph(graph ->
+                            select(currentSelection),
+                            absentFlow -> unselect(),
+                            flowWithError -> unselect());
 
             // When some graph data is changed we need to repaint the canvas.
             // This is needed for instance to refresh flow (or subflow) and
@@ -289,11 +279,6 @@ public abstract class DesignerPanel extends DisposablePanel implements
     @Override
     public void dispose() {
         super.dispose();
-        // Before disposing the Panel, we must un-select the current selection, otherwise
-        // the properties panel would still show the properties of the latest selected component.
-        if (currentSelection != null) {
-            componentSelectedPublisher.onUnSelected(currentSelection);
-        }
         busConnection.disconnect();
     }
 
@@ -322,15 +307,10 @@ public abstract class DesignerPanel extends DisposablePanel implements
             selected.unselected();
             selected = null;
         }
-        if (currentSelection != null) {
-            componentSelectedPublisher.onUnSelected(currentSelection);
-        }
     }
 
     private void select(GraphNode node) {
         if (node.isSelectable()) {
-            // Display the Component Properties Tool Window if it is not visible already
-            ToolWindowUtils.showPropertiesPanelToolWindow(module.getProject());
             selected = node;
             selected.selected();
             currentSelection = new SelectableItemComponent(module, snapshot, selected);
@@ -340,7 +320,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
 
     private void select(SelectableItem selectableItem) {
         currentSelection = selectableItem;
-        componentSelectedPublisher.onSelection(selectableItem);
+        currentComponentPublisher.onSelection(selectableItem);
     }
 
     /**
@@ -369,14 +349,15 @@ public abstract class DesignerPanel extends DisposablePanel implements
         addAncestorListener(new AncestorListenerAdapter() {
             @Override
             public void ancestorAdded(AncestorEvent event) {
-                snapshot.applyOnValidGraph(graph -> select(defaultSelectedItem()));
+                // As soon as the Flow Designer is Visible, we
+                // reset the default selected item selection.
                 isVisible = true;
+                currentSelection = defaultSelectedItem();
             }
 
             @Override
             public void ancestorRemoved(AncestorEvent event) {
                 isVisible = false;
-                unselect();
             }
         });
     }

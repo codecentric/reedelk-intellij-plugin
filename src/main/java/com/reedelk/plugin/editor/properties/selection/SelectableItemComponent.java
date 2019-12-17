@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.project.impl.designerselection;
+package com.reedelk.plugin.editor.properties.selection;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.graph.FlowSnapshot;

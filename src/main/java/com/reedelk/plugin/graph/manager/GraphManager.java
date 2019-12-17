@@ -28,7 +28,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
-import static com.reedelk.plugin.service.project.DesignerSelectionService.CurrentSelectionListener;
 
 /**
  * Centralizes updates of the graph coming from:
@@ -47,7 +46,6 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
     private final MessageBusConnection projectBusConnection;
     private final MessageBusConnection moduleBusConnection;
 
-    private final CurrentSelectionListener currentSelectionPublisher;
     private Document document;
 
     GraphManager(@NotNull Module module,
@@ -65,9 +63,6 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
 
         moduleBusConnection = module.getMessageBus().connect();
         moduleBusConnection.subscribe(ReedelkTopics.COMPONENTS_UPDATE_EVENTS, this);
-
-        currentSelectionPublisher = module.getProject().getMessageBus()
-                .syncPublisher(ReedelkTopics.CURRENT_COMPONENT_SELECTION_EVENTS);
     }
 
     @Override
@@ -174,15 +169,8 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
 
         @Override
         public void onFinished() {
-            if (cancelled) return;
-
-            snapshot.updateSnapshot(GraphManager.this, this.deSerializedGraph);
-            // We refresh the current selection only if the graph is not in error.
-            if (!this.deSerializedGraph.isError()) {
-                // When we deserialize the document we must refresh the current selection,
-                // so that the Properties panel always references the correct and latest
-                // graph data.
-                currentSelectionPublisher.refresh();
+            if (!cancelled) {
+                snapshot.updateSnapshot(GraphManager.this, this.deSerializedGraph);
             }
         }
     }

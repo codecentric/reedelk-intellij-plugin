@@ -1,13 +1,13 @@
-package com.reedelk.plugin.service.project.impl.designerselection;
+package com.reedelk.plugin.editor.properties.selection;
 
 import com.reedelk.plugin.graph.FlowSnapshot;
 import org.jetbrains.annotations.NotNull;
 
-public class SelectableItemFlow implements SelectableItem {
+public class SelectableItemSubflow implements SelectableItem {
 
     private final FlowSnapshot snapshot;
 
-    public SelectableItemFlow(@NotNull FlowSnapshot snapshot) {
+    public SelectableItemSubflow(@NotNull FlowSnapshot snapshot) {
         this.snapshot = snapshot;
     }
 

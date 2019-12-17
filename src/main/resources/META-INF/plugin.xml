@@ -97,11 +97,6 @@
             <implementation-class>com.reedelk.plugin.service.project.impl.sourcechange.SourceChangeServiceImpl</implementation-class>
         </component>
         <component>
-            <interface-class>com.reedelk.plugin.service.project.DesignerSelectionService</interface-class>
-            <implementation-class>com.reedelk.plugin.service.project.impl.designerselection.DesignerSelectionServiceImpl
-            </implementation-class>
-        </component>
-        <component>
             <interface-class>com.reedelk.plugin.service.project.PreferredRunConfigurationService</interface-class>
             <implementation-class>com.reedelk.plugin.service.project.impl.runconfiguration.PreferredRunConfigurationServiceImpl</implementation-class>
         </component>

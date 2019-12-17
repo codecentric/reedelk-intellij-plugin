@@ -1,88 +1,77 @@
 package com.reedelk.plugin.editor.properties;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
+import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.component.domain.ComponentData;
+import com.reedelk.plugin.editor.DesignerEditor;
 import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.plugin.editor.properties.renderer.ComponentPropertiesRendererFactory;
+import com.reedelk.plugin.editor.properties.selection.*;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
-import com.reedelk.plugin.service.project.DesignerSelectionService;
-import com.reedelk.plugin.service.project.impl.designerselection.SelectableItem;
-import com.reedelk.plugin.service.project.impl.designerselection.SelectableItemComponent;
-import com.reedelk.plugin.service.project.impl.designerselection.SelectableItemFlow;
-import com.reedelk.plugin.service.project.impl.designerselection.SelectableItemSubflow;
 import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.event.AncestorEvent;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
-import static com.reedelk.plugin.service.project.DesignerSelectionService.CurrentSelectionListener;
+import static javax.swing.SwingUtilities.invokeLater;
 
-public class PropertiesPanel extends DisposablePanel implements CurrentSelectionListener {
+public class PropertiesPanel extends DisposablePanel implements SelectionChangeListener, FileEditorManagerListener {
 
     private final transient Project project;
-
     private transient Disposable currentPane;
-    private transient SelectableItem currentSelection;
     private transient MessageBusConnection busConnection;
-    private transient DesignerSelectionService designerSelectionService;
+    private SelectableItem currentSelection;
 
     PropertiesPanel(@NotNull Project project) {
         setBorder(JBUI.Borders.empty());
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        setupAncestorListener();
 
         this.project = project;
-        this.designerSelectionService = DesignerSelectionService.getInstance(project);
 
         setEmptySelection();
 
         busConnection = project.getMessageBus().connect();
         busConnection.subscribe(ReedelkTopics.CURRENT_COMPONENT_SELECTION_EVENTS, this);
+        busConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
     }
 
     @Override
     public void onSelection(SelectableItem selectedItem) {
+        // Nothing to do
+        if (currentSelection == selectedItem) return;
+
         // We must Dispose the current content before
         // creating and assigning a new content.
-        DisposableUtils.dispose(currentPane);
+        final Disposable toDispose = currentPane;
 
         this.currentSelection = selectedItem;
 
-        // We display the tool window if an item is selected
-        // and it is still not visible yet.
-        ToolWindowUtils.showPropertiesPanelToolWindow(project);
 
         if (selectedItem instanceof SelectableItemComponent) {
             createFlowComponentContent(selectedItem);
         } else if (selectedItem instanceof SelectableItemFlow || selectedItem instanceof SelectableItemSubflow) {
             createFlowOrSubflowContent(selectedItem);
         }
+
+        // We dispose it later
+        invokeLater(() -> DisposableUtils.dispose(toDispose));
     }
 
     @Override
-    public void onUnSelected(SelectableItem unselected) {
-        if (currentSelection == unselected) {
-            makeCurrentPaneInvisible();
-            DisposableUtils.dispose(currentPane);
+    public void selectionChanged(@NotNull FileEditorManagerEvent event) {
+        if (!(event.getNewEditor() instanceof DesignerEditor)) {
+            final Disposable toDispose = currentPane;
             setEmptySelection();
-            currentSelection = null;
-        }
-    }
-
-    @Override
-    public void refresh() {
-        if (currentSelection != null) {
-            onSelection(currentSelection);
+            invokeLater(() -> DisposableUtils.dispose(toDispose));
         }
     }
 
@@ -140,41 +129,14 @@ public class PropertiesPanel extends DisposablePanel implements CurrentSelection
     }
 
     private void updateContent(JComponent content) {
-        SwingUtilities.invokeLater(() -> {
+        invokeLater(() -> {
             removeAll();
             add(content);
             revalidate();
         });
     }
 
-    private void setupAncestorListener() {
-        addAncestorListener(new AncestorListenerAdapter() {
-            @Override
-            public void ancestorAdded(AncestorEvent event) {
-                designerSelectionService.getCurrentSelection()
-                        .ifPresent(PropertiesPanel.this::onSelection);
-            }
-
-            @Override
-            public void ancestorRemoved(AncestorEvent event) {
-                // Properties panel is collapsed, we need to clear
-                // the current content if present.
-                DisposableUtils.dispose(currentPane);
-                SwingUtilities.invokeLater(PropertiesPanel.this::removeAll);
-            }
-        });
-    }
-
     private void setToolWindowTitle(String newToolWindowTitle) {
         ToolWindowUtils.setPropertiesPanelToolWindowTitle(project, newToolWindowTitle);
-    }
-
-    // Before disposing it we hide the panel so that all the properties
-    // with an editor in it do not 'flicker' when the editor is being
-    // disposed.
-    private void makeCurrentPaneInvisible() {
-        if (currentPane instanceof JComponent) {
-            ((JComponent) currentPane).setVisible(false);
-        }
     }
 }
