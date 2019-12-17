@@ -56,8 +56,9 @@ public class PropertiesPanel extends DisposablePanel implements SelectionChangeL
 
         if (selectedItem instanceof SelectableItemComponent) {
             createFlowComponentContent(selectedItem);
-        } else if (selectedItem instanceof SelectableItemFlow ||
-                selectedItem instanceof SelectableItemSubflow) {
+        } else if (selectedItem instanceof SelectableItemFlow) {
+            createFlowOrSubflowContent(selectedItem);
+        } else if (selectedItem instanceof SelectableItemSubflow) {
             createFlowOrSubflowContent(selectedItem);
         }
     }
