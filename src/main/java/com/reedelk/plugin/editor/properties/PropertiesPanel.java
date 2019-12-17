@@ -122,9 +122,10 @@ public class PropertiesPanel extends DisposablePanel implements SelectionChangeL
     }
 
     private void setEmptySelection() {
+        currentSelection = null;
         DisposablePanel empty = new EmptySelectionPanel(project);
         updateContent(empty);
-        this.currentPane = empty;
+        currentPane = empty;
     }
 
     private void updateContent(JComponent content) {
