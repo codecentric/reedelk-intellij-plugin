@@ -11,7 +11,7 @@ public class FindMaxTopHalfHeight extends AbstractFindMaxHeight {
     private static final FindMaxTopHalfHeight INSTANCE = new FindMaxTopHalfHeight();
 
     public static int of(FlowGraph graph, Graphics2D graphics, GraphNode start, GraphNode firstNodeOutsideScope) {
-        return INSTANCE._of(graph, graphics, start, firstNodeOutsideScope);
+        return INSTANCE.internalOf(graph, graphics, start, firstNodeOutsideScope);
     }
 
     private FindMaxTopHalfHeight() {

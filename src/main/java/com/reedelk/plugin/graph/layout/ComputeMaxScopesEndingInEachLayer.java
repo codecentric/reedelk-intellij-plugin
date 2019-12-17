@@ -13,7 +13,7 @@ import java.util.*;
 
 class ComputeMaxScopesEndingInEachLayer {
 
-    private Map<ScopedGraphNode, Integer> SCOPE_END_NODE_MAX_LAYER_INDEX = new HashMap<>();
+    private final Map<ScopedGraphNode, Integer> scopeEndNodeMaxLayerIndexMap = new HashMap<>();
 
     private final FlowGraph graph;
     private final List<List<GraphNode>> layers;
@@ -43,7 +43,7 @@ class ComputeMaxScopesEndingInEachLayer {
     @NotNull
     private Set<ScopedGraphNode> getScopesInLayer(int index) {
         Set<ScopedGraphNode> scopesInLayer = new HashSet<>();
-        for (Map.Entry<ScopedGraphNode, Integer> entry : SCOPE_END_NODE_MAX_LAYER_INDEX.entrySet()) {
+        for (Map.Entry<ScopedGraphNode, Integer> entry : scopeEndNodeMaxLayerIndexMap.entrySet()) {
             if (entry.getValue() == index) {
                 scopesInLayer.add(entry.getKey());
             }
@@ -63,12 +63,12 @@ class ComputeMaxScopesEndingInEachLayer {
                 ScopedGraphNode scopeNode = (ScopedGraphNode) layerNode;
                 ListLastNodesOfScope.from(graph, scopeNode).forEach(lastNodeOfScope -> {
                     int layerIndex = FindContainingLayer.of(layers, lastNodeOfScope);
-                    if (!SCOPE_END_NODE_MAX_LAYER_INDEX.containsKey(scopeNode)) {
-                        SCOPE_END_NODE_MAX_LAYER_INDEX.put(scopeNode, layerIndex);
+                    if (!scopeEndNodeMaxLayerIndexMap.containsKey(scopeNode)) {
+                        scopeEndNodeMaxLayerIndexMap.put(scopeNode, layerIndex);
                     }
-                    if (SCOPE_END_NODE_MAX_LAYER_INDEX.containsKey(scopeNode) &&
-                            SCOPE_END_NODE_MAX_LAYER_INDEX.get(scopeNode) < layerIndex) {
-                        SCOPE_END_NODE_MAX_LAYER_INDEX.put(scopeNode, layerIndex);
+                    if (scopeEndNodeMaxLayerIndexMap.containsKey(scopeNode) &&
+                            scopeEndNodeMaxLayerIndexMap.get(scopeNode) < layerIndex) {
+                        scopeEndNodeMaxLayerIndexMap.put(scopeNode, layerIndex);
                     }
                 });
             }

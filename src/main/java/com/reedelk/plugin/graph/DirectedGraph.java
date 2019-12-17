@@ -6,20 +6,20 @@ import java.util.function.Consumer;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 
-public class DirectedGraph<NodeType> {
+public class DirectedGraph<T> {
 
-    private NodeType root;
-    private Map<NodeType, List<NodeType>> adjacentNodesMap = new HashMap<>();
+    private T root;
+    private Map<T, List<T>> adjacentNodesMap = new HashMap<>();
 
     public DirectedGraph() {
     }
 
-    public DirectedGraph(NodeType root) {
+    public DirectedGraph(T root) {
         this.root = root;
         addNode(this.root);
     }
 
-    public NodeType root() {
+    public T root() {
         return root;
     }
 
@@ -27,29 +27,29 @@ public class DirectedGraph<NodeType> {
         return this.adjacentNodesMap.isEmpty();
     }
 
-    public void root(NodeType root) {
+    public void root(T root) {
         this.root = root;
         addNode(root);
     }
 
-    public Collection<NodeType> nodes() {
+    public Collection<T> nodes() {
         return adjacentNodesMap.keySet();
     }
 
-    public Map<NodeType, List<NodeType>> edges() {
+    public Map<T, List<T>> edges() {
         return Collections.unmodifiableMap(adjacentNodesMap);
     }
 
-    public void addNode(NodeType n) {
+    public void addNode(T n) {
         adjacentNodesMap.putIfAbsent(n, new ArrayList<>());
     }
 
-    public void removeNode(NodeType n) {
+    public void removeNode(T n) {
         // Remove node and all outgoing edges from n
         adjacentNodesMap.remove(n);
         // Remove all incoming edges to n
-        Collection<List<NodeType>> allAdjacentNodes = adjacentNodesMap.values();
-        for (List<NodeType> adjacentNodes : allAdjacentNodes) {
+        Collection<List<T>> allAdjacentNodes = adjacentNodesMap.values();
+        for (List<T> adjacentNodes : allAdjacentNodes) {
             adjacentNodes.remove(n);
         }
         // Remove root if and only if the node was root
@@ -58,7 +58,7 @@ public class DirectedGraph<NodeType> {
         }
     }
 
-    public void putEdge(NodeType n1, NodeType n2, int index) {
+    public void putEdge(T n1, T n2, int index) {
         checkState(adjacentNodesMap.containsKey(n1), "n1 must be already in graph in order to add an edge");
         if (!adjacentNodesMap.containsKey(n2)) {
             adjacentNodesMap.put(n2, new ArrayList<>());
@@ -66,7 +66,7 @@ public class DirectedGraph<NodeType> {
         adjacentNodesMap.get(n1).add(index, n2);
     }
 
-    public void putEdge(NodeType n1, NodeType n2) {
+    public void putEdge(T n1, T n2) {
         checkState(adjacentNodesMap.containsKey(n1), "n1 must be already in graph in order to add an edge");
         if (!adjacentNodesMap.containsKey(n2)) {
             adjacentNodesMap.put(n2, new ArrayList<>());
@@ -74,27 +74,27 @@ public class DirectedGraph<NodeType> {
         adjacentNodesMap.get(n1).add(n2);
     }
 
-    public void removeEdgesStartingFrom(NodeType n) {
+    public void removeEdgesStartingFrom(T n) {
         checkArgument(n != null, "Node (n) must not be null");
         adjacentNodesMap.put(n, new ArrayList<>());
     }
 
-    public void removeEdge(NodeType n1, NodeType n2) {
+    public void removeEdge(T n1, T n2) {
         if (adjacentNodesMap.containsKey(n1)) {
-            List<NodeType> adjacentNodes = adjacentNodesMap.get(n1);
+            List<T> adjacentNodes = adjacentNodesMap.get(n1);
             adjacentNodes.remove(n2);
         }
     }
 
-    public List<NodeType> successors(NodeType n) {
+    public List<T> successors(T n) {
         return Collections.unmodifiableList(adjacentNodesMap.getOrDefault(n, new ArrayList<>()));
     }
 
-    public List<NodeType> predecessors(NodeType n) {
-        Set<Map.Entry<NodeType, List<NodeType>>> entries = adjacentNodesMap.entrySet();
-        List<NodeType> predecessors = new ArrayList<>();
-        for (Map.Entry<NodeType, List<NodeType>> entry : entries) {
-            List<NodeType> adjacentNodes = entry.getValue();
+    public List<T> predecessors(T n) {
+        Set<Map.Entry<T, List<T>>> entries = adjacentNodesMap.entrySet();
+        List<T> predecessors = new ArrayList<>();
+        for (Map.Entry<T, List<T>> entry : entries) {
+            List<T> adjacentNodes = entry.getValue();
             if (adjacentNodes.contains(n)) {
                 predecessors.add(entry.getKey());
             }
@@ -102,14 +102,14 @@ public class DirectedGraph<NodeType> {
         return Collections.unmodifiableList(predecessors);
     }
 
-    public void breadthFirstTraversal(NodeType root, Consumer<NodeType> visitor) {
-        Set<NodeType> visited = new LinkedHashSet<>();
-        Queue<NodeType> queue = new LinkedList<>();
+    public void breadthFirstTraversal(T root, Consumer<T> visitor) {
+        Set<T> visited = new LinkedHashSet<>();
+        Queue<T> queue = new LinkedList<>();
         queue.add(root);
         visited.add(root);
         while (!queue.isEmpty()) {
-            NodeType n = queue.poll();
-            for (NodeType en : adjacentNodesMap.get(n)) {
+            T n = queue.poll();
+            for (T en : adjacentNodesMap.get(n)) {
                 if (!visited.contains(en)) {
                     visited.add(en);
                     queue.add(en);
@@ -119,17 +119,17 @@ public class DirectedGraph<NodeType> {
         }
     }
 
-    public DirectedGraph<NodeType> copy() {
-        DirectedGraph<NodeType> copy;
+    public DirectedGraph<T> copy() {
+        DirectedGraph<T> copy;
         copy = isEmpty() ?
                 new DirectedGraph<>() :
                 new DirectedGraph<>(root);
 
-        Map<NodeType, List<NodeType>> edges = edges();
-        for (Map.Entry<NodeType, List<NodeType>> entry : edges.entrySet()) {
-            NodeType n1 = entry.getKey();
+        Map<T, List<T>> edges = edges();
+        for (Map.Entry<T, List<T>> entry : edges.entrySet()) {
+            T n1 = entry.getKey();
             copy.addNode(n1);
-            for (NodeType adjacentNode : edges.get(n1)) {
+            for (T adjacentNode : edges.get(n1)) {
                 copy.putEdge(n1, adjacentNode);
             }
         }

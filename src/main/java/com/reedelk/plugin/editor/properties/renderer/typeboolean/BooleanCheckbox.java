@@ -18,11 +18,7 @@ public class BooleanCheckbox extends JBCheckBox implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         JCheckBox checkBox = (JCheckBox) e.getSource();
-        if (checkBox.isSelected()) {
-            listener.onChange(true);
-        } else {
-            listener.onChange(false);
-        }
+        listener.onChange(checkBox.isSelected());
     }
 
     public void setValue(Boolean value) {

@@ -25,15 +25,15 @@ abstract class AbstractFindMaxHeight {
         int measure(GraphNode node, Graphics2D graphics);
     }
 
-    int _of(FlowGraph graph, Graphics2D graphics, GraphNode start, GraphNode firstNodeOutsideScope) {
+    int internalOf(FlowGraph graph, Graphics2D graphics, GraphNode start, GraphNode firstNodeOutsideScope) {
         int currentMax = measurer.measure(start, graphics);
 
         List<GraphNode> nextNodes = singletonList(start);
 
-        return _of(graph, graphics, nextNodes, firstNodeOutsideScope, currentMax);
+        return internalOf(graph, graphics, nextNodes, firstNodeOutsideScope, currentMax);
     }
 
-    private int _of(FlowGraph graph, Graphics2D graphics, java.util.List<GraphNode> nodes, GraphNode firstNodeOutsideScope, int currentMax) {
+    private int internalOf(FlowGraph graph, Graphics2D graphics, java.util.List<GraphNode> nodes, GraphNode firstNodeOutsideScope, int currentMax) {
         int newMax = currentMax;
 
         for (GraphNode node : nodes) {
@@ -76,10 +76,9 @@ abstract class AbstractFindMaxHeight {
                 nextNodes.addAll(graph.successors(node));
             }
 
-            newMax = _of(graph, graphics, nextNodes, firstNodeOutsideScope, newMax);
+            newMax = internalOf(graph, graphics, nextNodes, firstNodeOutsideScope, newMax);
         }
 
         return newMax;
     }
-
 }

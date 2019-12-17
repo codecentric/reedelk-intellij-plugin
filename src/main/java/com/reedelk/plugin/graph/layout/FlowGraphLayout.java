@@ -74,7 +74,7 @@ public class FlowGraphLayout {
 
                 // Find layer containing this node
                 int containingLayerIndex = FindContainingLayer.of(layersList, node);
-                int XCoordinate = Half.of(node.width(graphics)) +
+                int xCoordinate = Half.of(node.width(graphics)) +
                         ComputeLayerWidthSumPreceding.of(graphics, layersList, containingLayerIndex, scopesCountByLayer);
 
                 // Predecessors must not be empty
@@ -91,9 +91,9 @@ public class FlowGraphLayout {
                     max = scope.y() + Half.of(scopeBoundaries.getHeight());
                 }
 
-                int YCoordinate = Half.of(max + min);
+                int yCoordinate = Half.of(max + min);
 
-                node.setPosition(XCoordinate, YCoordinate);
+                node.setPosition(xCoordinate, yCoordinate);
 
                 if (IsScopedGraphNode.of(node)) {
                     top += VERTICAL_PADDING; // top padding

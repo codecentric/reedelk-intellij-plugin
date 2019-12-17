@@ -2,6 +2,7 @@ package com.reedelk.plugin.service.module.impl.configuration;
 
 import com.reedelk.plugin.component.domain.ComponentDataHolder;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
+import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -12,8 +13,7 @@ import static com.reedelk.runtime.commons.JsonParser.Implementor;
 
 public class ConfigMetadata implements ComponentDataHolder {
 
-    private final String ABSENT_FILE = "";
-
+    private final String absentFile = StringUtils.EMPTY;
     private final ComponentDataHolder data;
     private final TypeObjectDescriptor configObjectDescriptor;
 
@@ -81,7 +81,7 @@ public class ConfigMetadata implements ComponentDataHolder {
      * Returns a user friendly version of the file name.
      */
     public String getFileName() {
-        return ABSENT_FILE;
+        return absentFile;
     }
 
     /**

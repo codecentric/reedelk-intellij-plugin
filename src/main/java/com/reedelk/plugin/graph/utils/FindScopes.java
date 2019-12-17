@@ -24,7 +24,7 @@ public class FindScopes {
      * @return Stack containing all the scopes the target node belongs to.
      */
     public static Stack<ScopedGraphNode> of(@NotNull FlowGraph graph, @NotNull GraphNode target) {
-        Stack<ScopedGraphNode> scopedGraphNodes = _of(graph, target);
+        Stack<ScopedGraphNode> scopedGraphNodes = internalOf(graph, target);
         Stack<ScopedGraphNode> toReturn = new Stack<>();
         while (!scopedGraphNodes.isEmpty()) {
             toReturn.push(scopedGraphNodes.pop());
@@ -37,13 +37,13 @@ public class FindScopes {
         return toReturn;
     }
 
-    private static Stack<ScopedGraphNode> _of(@NotNull FlowGraph graph, @NotNull GraphNode target) {
+    private static Stack<ScopedGraphNode> internalOf(@NotNull FlowGraph graph, @NotNull GraphNode target) {
         Stack<ScopedGraphNode> toReturn = new Stack<>();
 
         FindScope.of(graph, target).ifPresent(scopedDrawable -> {
             toReturn.push(scopedDrawable);
 
-            Stack<ScopedGraphNode> scopedGraphNodes = _of(graph, scopedDrawable);
+            Stack<ScopedGraphNode> scopedGraphNodes = internalOf(graph, scopedDrawable);
             StackUtils.reverse(scopedGraphNodes);
             while (!scopedGraphNodes.isEmpty()) {
                 toReturn.push(scopedGraphNodes.pop());
@@ -51,5 +51,4 @@ public class FindScopes {
         });
         return toReturn;
     }
-
 }
