@@ -4,7 +4,6 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class RuntimeConsoleURL {
 
-
     private RuntimeConsoleURL() {
     }
 

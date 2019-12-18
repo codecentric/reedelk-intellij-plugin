@@ -6,7 +6,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -22,12 +21,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.intellij.openapi.application.ApplicationManager.getApplication;
+import static com.intellij.openapi.ui.Messages.showErrorDialog;
 import static com.intellij.openapi.util.text.StringUtil.commonPrefixLength;
 import static com.intellij.openapi.util.text.StringUtil.isEmptyOrSpaces;
 import static com.intellij.uiDesigner.core.GridConstraints.*;
@@ -58,23 +57,23 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
     @Override
     public void _init() {
         super._init();
-        if (moduleBuilder.isDownloadDistribution() &&
-                !moduleBuilder.getTmpDownloadDistributionPath().isPresent()) {
+        if (shouldDownloadDistribution()) {
             invokeLater(() -> {
                 runtimeChooserPanel.setVisible(false);
                 runtimeHome.setVisible(false);
             });
             loadingPanel.getContentPanel().removeAll();
             loadingPanel.startLoading();
-            loadingPanel.setLoadingText("Downloading Reedelk ESB runtime ...");
+            loadingPanel.setLoadingText(message("runtimeBuilder.downloading.distribution"));
             getApplication().executeOnPooledThread(() -> {
                 try {
-                    // Download the runtime
-                    Path download = ReedelkRuntimeDistributionDownload.downloadAndUnzip();
-                    moduleBuilder.setTmpDownloadDistributionPath(download);
-                } catch (IOException e) {
-                    invokeLater(() ->
-                            Messages.showErrorDialog("Error while parsing metadata from server", "Error"));
+                    // Download and Unzip the runtime
+                    Path downloadDistributionPath = ReedelkRuntimeDistributionDownload.downloadAndUnzip();
+                    moduleBuilder.setTmpDownloadDistributionPath(downloadDistributionPath);
+                } catch (Exception exception) {
+                    invokeLater(() -> showErrorDialog(
+                                    message("runtimeBuilder.downloading.distribution.error.message", exception.getMessage()),
+                                    message("runtimeBuilder.downloading.distribution.error.title")));
                 } finally {
                     invokeLater(() -> {
                         loadingPanel.getContentPanel().add(jPanel);
@@ -135,35 +134,29 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
     @Override
     public boolean validate() throws ConfigurationException {
         List<String> errors = new ArrayList<>();
-
         if (isNewProject) {
             // Validating new project
             if (isEmptyOrSpaces(runtimeConfigNameTextField.getText())) {
                 errors.add(message("runtimeBuilder.runtime.config.name.validator.empty"));
             }
-
             if (!moduleBuilder.isDownloadDistribution()) {
                 Validator validator = new RuntimeHomeValidator(runtimeHomeDirectoryBrowse.getText());
                 validator.validate(errors);
             }
-
             if (moduleBuilder.isDownloadDistribution()) {
                 if (!moduleBuilder.getTmpDownloadDistributionPath().isPresent()) {
                     errors.add("Could not download, please try again.");
                 }
             }
-
         } else {
             // Validating adding new module
             if (isEmptyOrSpaces(runtimeComboManager.getRuntimeConfigName())) {
                 errors.add(message("runtimeBuilder.runtime.config.combo.validator.not.selected"));
             }
         }
-
         if (!errors.isEmpty()) {
             throw new ConfigurationException(join(",", errors));
         }
-
         return true;
     }
 
@@ -173,6 +166,11 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
             String newConfigName = (String) event.getItem();
             runtimeConfigNameChanged(newConfigName);
         }
+    }
+
+    @Override
+    public void dispose() {
+        // Nothing to do
     }
 
     private void runtimeConfigNameChanged(String newRuntimeConfigName) {
@@ -211,8 +209,8 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
                     new Dimension(-1, -1),
                     new Dimension(-1, -1));
 
-    @Override
-    public void dispose() {
-
+    private boolean shouldDownloadDistribution() {
+        return moduleBuilder.isDownloadDistribution() &&
+                !moduleBuilder.getTmpDownloadDistributionPath().isPresent();
     }
 }
