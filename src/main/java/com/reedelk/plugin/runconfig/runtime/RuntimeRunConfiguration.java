@@ -79,8 +79,7 @@ public class RuntimeRunConfiguration extends RunConfigurationBase<RuntimeRunConf
         // Reset the state of the modules for this runtime
         SourceChangeService.getInstance(getProject()).reset(getName());
 
-        PreferredRunConfigurationService.getInstance(getProject())
-                .setLastRuntimeRunConfiguration(getName());
+        PreferredRunConfigurationService.getInstance(getProject()).setLastRuntimeRunConfiguration(getName());
 
         return new RuntimeRunCommandLine(this, environment);
     }
