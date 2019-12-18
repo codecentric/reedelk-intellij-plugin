@@ -65,14 +65,15 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
                 try {
                     // Download and Unzip the runtime
                     Path downloadDistributionPath = RuntimeDistributionHelper.downloadAndUnzip();
+
+                    // The configuration name equals the name of the downloaded runtime distribution
+                    runtimeConfigNameTextField.setText(downloadDistributionPath.getFileName().toString());
                     moduleBuilder.setTmpDownloadDistributionPath(downloadDistributionPath);
 
                     invokeLater(() -> {
-                        setRuntimeHomeVisible(false);
-                        loadingPanel.getContentPanel().add(jPanel);
+                        // We stop the loading spinning wheel and move on to the next step.
                         loadingPanel.stopLoading();
-                        loadingPanel.revalidate();
-                        loadingPanel.repaint();
+                        wizardContext.getWizard().clickDefaultButton();
                     });
 
                 } catch (Exception exception) {

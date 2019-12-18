@@ -37,11 +37,6 @@ abstract class AbstractProjectBuilderHelper {
         return createFromTemplate(project, templateName, templateProperties, destinationDir, templateName);
     }
 
-    Optional<VirtualFile> createFromTemplate(Project project, String templateName, VirtualFile destinationDir) {
-        Properties emptyProperties = new Properties();
-        return createFromTemplate(project, templateName, emptyProperties, destinationDir);
-    }
-
     Optional<VirtualFile> createDirectory(VirtualFile root, String suffix) {
         try {
             String finalDirectoryPath = Paths.get(root.getPath(), suffix).toString();
@@ -51,5 +46,10 @@ abstract class AbstractProjectBuilderHelper {
             LOG.warn(message, exception);
             return Optional.empty();
         }
+    }
+
+    void createFromTemplate(Project project, String templateName, VirtualFile destinationDir) {
+        Properties emptyProperties = new Properties();
+        createFromTemplate(project, templateName, emptyProperties, destinationDir);
     }
 }
