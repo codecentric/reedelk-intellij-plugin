@@ -30,7 +30,6 @@ import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpd
 import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import java.awt.*;
 import java.awt.dnd.DropTarget;
@@ -42,6 +41,7 @@ import java.util.Optional;
 import static com.reedelk.plugin.editor.designer.dnd.DesignerDropTargetListener.DropActionListener;
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
+import static javax.swing.SwingUtilities.invokeLater;
 
 public abstract class DesignerPanel extends DisposablePanel implements
         MouseMotionListener, MouseListenerAdapter, SnapshotListener,
@@ -140,6 +140,8 @@ public abstract class DesignerPanel extends DisposablePanel implements
                     flowGraph.breadthFirstTraversal(node -> node.drawDrag(flowGraph, g2, DesignerPanel.this));
 
                     centerOfNodeDrawable.draw(g2);
+
+                    if (currentSelection == null) invokeLater(() -> select(defaultSelectedItem));
 
                 },
 
@@ -253,7 +255,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
             // If nothing is already selected, we set as current selection
             // the default selected item.
             snapshot.applyOnGraph(graph ->
-                            select(currentSelection == null ? defaultSelectedItem : currentSelection),
+                            select(currentSelection),
                             absentFlow -> unselect(),
                             flowWithError -> unselect());
 
@@ -274,7 +276,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
             // the selection would be bound to the old object before refreshing
             // the flow (or subflow) graph.
             snapshot.applyOnValidGraph(graph ->
-                    SwingUtilities.invokeLater(() -> select(defaultSelectedItem)));
+                    invokeLater(() -> select(defaultSelectedItem)));
         }
     }
 
@@ -318,9 +320,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
     }
 
     private void select(SelectableItem selectableItem) {
-        if (currentSelection != selectableItem) {
-            currentSelection = selectableItem;
-        }
+        currentSelection = selectableItem;
         currentComponentPublisher.onSelection(currentSelection);
         ToolWindowUtils.showPropertiesPanelToolWindow(module.getProject(), () -> {});
     }
@@ -344,7 +344,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
     }
 
     private void refresh() {
-        SwingUtilities.invokeLater(this::repaint);
+        invokeLater(this::repaint);
     }
 
     private void addAncestorListener() {
@@ -352,15 +352,13 @@ public abstract class DesignerPanel extends DisposablePanel implements
             @Override
             public void ancestorAdded(AncestorEvent event) {
                 isVisible = true;
-                onDataChange();
             }
 
             @Override
             public void ancestorRemoved(AncestorEvent event) {
                 isVisible = false;
-                currentSelection = null;
-                currentComponentPublisher.unselect();
                 unselect();
+                currentSelection = null;
             }
         });
     }
