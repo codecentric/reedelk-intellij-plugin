@@ -57,12 +57,8 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
     @Override
     public void _init() {
         super._init();
+        loadingPanel.getContentPanel().removeAll();
         if (shouldDownloadDistribution()) {
-            invokeLater(() -> {
-                runtimeChooserPanel.setVisible(false);
-                runtimeHome.setVisible(false);
-            });
-            loadingPanel.getContentPanel().removeAll();
             loadingPanel.startLoading();
             loadingPanel.setLoadingText(message("runtimeBuilder.downloading.distribution"));
             getApplication().executeOnPooledThread(() -> {
@@ -72,6 +68,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
                     moduleBuilder.setTmpDownloadDistributionPath(downloadDistributionPath);
 
                     invokeLater(() -> {
+                        setRuntimeHomeVisible(false);
                         loadingPanel.getContentPanel().add(jPanel);
                         loadingPanel.stopLoading();
                         loadingPanel.revalidate();
@@ -96,7 +93,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
             });
         } else {
             invokeLater(() -> {
-                runtimeHomeDirectoryBrowse.setVisible(true);
+                setRuntimeHomeVisible(true);
                 loadingPanel.getContentPanel().add(jPanel);
                 loadingPanel.revalidate();
                 loadingPanel.repaint();
@@ -212,6 +209,16 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
         addRuntimePanel.add(runtimeChooserPanel, CHOOSE_RUNTIME_INPUT_GRID_CONSTRAINTS);
     }
 
+    private void setRuntimeHomeVisible(boolean visible) {
+        runtimeChooserPanel.setVisible(visible);
+        runtimeHome.setVisible(visible);
+    }
+
+    private boolean shouldDownloadDistribution() {
+        return moduleBuilder.isDownloadDistribution() &&
+                !moduleBuilder.getTmpDownloadDistributionPath().isPresent();
+    }
+
     private static final GridConstraints CHOOSE_RUNTIME_INPUT_GRID_CONSTRAINTS =
             new GridConstraints(1, 1, 1, 1,
                     ANCHOR_WEST,
@@ -221,9 +228,4 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
                     new Dimension(-1, -1),
                     new Dimension(-1, -1),
                     new Dimension(-1, -1));
-
-    private boolean shouldDownloadDistribution() {
-        return moduleBuilder.isDownloadDistribution() &&
-                !moduleBuilder.getTmpDownloadDistributionPath().isPresent();
-    }
 }
