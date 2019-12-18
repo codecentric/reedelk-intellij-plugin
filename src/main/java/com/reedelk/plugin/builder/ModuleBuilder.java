@@ -61,19 +61,23 @@ public class ModuleBuilder extends MavenModuleBuilder {
             MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> {
 
                 if (shouldUseDownloadedDistribution()) {
-                    File destination =
-                            Paths.get(contentEntryPath, tmpDownloadDistributionPath.getFileName().toString()).toFile();
+                    Path destination = Paths.get(contentEntryPath, tmpDownloadDistributionPath.getFileName().toString());
+                    File destinationFile = destination.toFile();
                     try {
-                        FileUtils.copyDirectory(tmpDownloadDistributionPath.toFile(), destination);
+                        FileUtils.copyDirectory(tmpDownloadDistributionPath.toFile(), destinationFile);
                     } catch (IOException e) {
                         // We cannot recover here. We should just display an error message.
-                        invokeLater(() -> showErrorDialog("Could not copy distribution file path", "Error"));
+                        invokeLater(() -> showErrorDialog(
+                                message("moduleBuilder.copy.distribution.error.message",
+                                        tmpDownloadDistributionPath.toString(),
+                                        destination.toString()),
+                                message("moduleBuilder.copy.distribution.error.title")));
                     }
 
                     // Create Runtime Run Configuration
                     RuntimeRunConfigurationBuilder.build()
                             .withRuntimeConfigName(runtimeConfigName)
-                            .withRuntimeHomeDirectory(destination.getPath())
+                            .withRuntimeHomeDirectory(destination.toString())
                             .add(project);
 
                 } else {

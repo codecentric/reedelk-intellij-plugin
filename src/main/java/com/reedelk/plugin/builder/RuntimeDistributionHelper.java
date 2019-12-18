@@ -17,13 +17,13 @@ import java.util.Optional;
 import static com.reedelk.plugin.commons.Defaults.NameConvention;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
-class ReedelkRuntimeDistributionDownload {
+class RuntimeDistributionHelper {
 
     private static final String DOWNLOAD_LATEST_DISTRIBUTION_URL =
             NameConvention.RUNTIME_ONLINE_DISTRIBUTION_URL +
                     NameConvention.RUNTIME_ONLINE_DISTRIBUTION_ZIP_FILE_NAME;
 
-    private ReedelkRuntimeDistributionDownload() {
+    private RuntimeDistributionHelper() {
     }
 
     static Path downloadAndUnzip() throws IOException {

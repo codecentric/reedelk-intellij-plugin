@@ -64,7 +64,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
             getApplication().executeOnPooledThread(() -> {
                 try {
                     // Download and Unzip the runtime
-                    Path downloadDistributionPath = ReedelkRuntimeDistributionDownload.downloadAndUnzip();
+                    Path downloadDistributionPath = RuntimeDistributionHelper.downloadAndUnzip();
                     moduleBuilder.setTmpDownloadDistributionPath(downloadDistributionPath);
 
                     invokeLater(() -> {
