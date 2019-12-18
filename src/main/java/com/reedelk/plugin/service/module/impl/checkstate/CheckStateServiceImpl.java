@@ -50,13 +50,13 @@ public class CheckStateServiceImpl implements CheckStateService {
     void notifyFromStateIfNeeded(ModuleGETRes moduleRuntime, String runtimeHostAddress, int runtimeHostPort) {
         if (ModuleState.ERROR.name().equals(moduleRuntime.getState())) {
             NotificationUtils.notifyError(
-                    message("module.check.errors.module.errors.title"),
+                    message("module.check.errors.module.errors.title", moduleRuntime.getName()),
                     message("module.check.errors.module.errors.content",
                             RuntimeConsoleURL.from(runtimeHostAddress, runtimeHostPort)));
         }
         if (ModuleState.UNRESOLVED.name().equals(moduleRuntime.getState())) {
             NotificationUtils.notifyError(
-                    message("module.check.errors.module.unresolved.title"),
+                    message("module.check.errors.module.unresolved.title", moduleRuntime.getName()),
                     message("module.check.errors.module.unresolved.content",
                             RuntimeConsoleURL.from(runtimeHostAddress, runtimeHostPort)));
         }
