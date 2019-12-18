@@ -7,6 +7,7 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.util.Optional;
 
+import static com.reedelk.plugin.commons.Defaults.NameConvention;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
 
@@ -18,7 +19,9 @@ public class FileUtils {
     public static Optional<String> findRuntimeJarName(String runtimeHomeDirectory) {
         String binDirectoryPath = Paths.get(runtimeHomeDirectory, "bin").toString();
         File binDirectory = new File(binDirectoryPath);
-        String[] runtimeFile = binDirectory.list((dir, name) -> name.startsWith("runtime-") && name.endsWith(".jar"));
+        String[] runtimeFile = binDirectory.list((dir, name) ->
+                name.startsWith(NameConvention.RUNTIME_JAR_FILE_PREFIX) &&
+                name.endsWith(".jar"));
         if (runtimeFile != null && runtimeFile.length == 1) {
             return Optional.of(runtimeFile[0]);
         }

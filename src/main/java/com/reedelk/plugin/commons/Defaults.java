@@ -12,9 +12,6 @@ public class Defaults {
     private Defaults() {
     }
 
-    public static final String DEFAULT_ADMIN_PORT_PARAM_NAME = "admin.console.port";
-    public static final String DEFAULT_ADMIN_HOST_PARAM_NAME = "admin.console.address";
-
     public static final String PROJECT_SOURCES_FOLDER = Paths.get("src").toString();
     public static final String PROJECT_RESOURCES_FOLDER = Paths.get("src", "main", "resources").toString();
 
@@ -36,5 +33,22 @@ public class Defaults {
         public static final String MODULE = "/module";
         public static final String MODULE_DEPLOY = "/module/deploy";
         public static final String HOT_SWAP = "/hotswap";
+    }
+
+    public static class NameConvention {
+        private NameConvention() {
+        }
+        // NAME_CONVENTION: Depends on build file name used
+        public static final String RUNTIME_DISTRIBUTION_ROOT_FOLDER_PREFIX = "reedelk-esb-runtime-";
+        // NAME_CONVENTION: Depends on the artifactId of the runtime artifact .jar (runtime) project.
+        public static final String RUNTIME_JAR_FILE_PREFIX = "runtime-";
+        // NAME_CONVENTION: Depends on url location of distribution
+        public static final String RUNTIME_ONLINE_DISTRIBUTION_URL = "http://reedelk.com/distributions/";
+        // NAME_CONVENTION: Depends on latest build file name used
+        public static final String RUNTIME_ONLINE_DISTRIBUTION_ZIP_FILE_NAME = "reedelk-esb-runtime-latest.zip";
+        // NAME_CONVENTION: Depends on admin console runtime properties
+        public static final String DEFAULT_ADMIN_PORT_PARAM_NAME = "admin.console.port";
+        // NAME_CONVENTION: Depends on admin console runtime properties
+        public static final String DEFAULT_ADMIN_HOST_PARAM_NAME = "admin.console.address";
     }
 }

@@ -12,8 +12,10 @@ import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.io.ZipUtil;
+import com.reedelk.plugin.commons.Defaults;
 import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.commons.ReedelkPluginUtil;
+import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.runconfig.module.ModuleRunConfigurationBuilder;
 import com.reedelk.plugin.runconfig.runtime.RuntimeRunConfigurationBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -55,16 +57,21 @@ public class ModuleBuilder extends MavenModuleBuilder {
 
         if (createRuntimeConfig) {
             MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> {
-                if (downloadDistribution && downloadDistributionPath != null) {
+
+                if (shouldDownloadDistribution()) {
                     // Copy runtime distribution from tmp folder, unzip it inside
                     // the module root directory, set the runtime home directory
                     // to the module root/runtime-folder-name.
-
+                    // TODO: This extract should be done on the download.
+                    // TODO: Here we just copy the distribution folder into th eproject module directory.
                     File destination = new File(root.getPath());
                     try {
                         ZipUtil.extract(downloadDistributionPath.toFile(), destination, (dir, name) -> true);
                         String[] reedelkRuntime = destination.list((dir, name) -> dir.isDirectory() &&
-                                name.startsWith("reedelk-esb-runtime-"));
+                                name.startsWith(Defaults.NameConvention.RUNTIME_DISTRIBUTION_ROOT_FOLDER_PREFIX));
+                        if (reedelkRuntime == null || reedelkRuntime.length == 0) {
+                            throw new PluginException("Error could not find reedelk runtime");
+                        }
                         // Create Runtime Run Configuration
                         RuntimeRunConfigurationBuilder.build()
                                 .withRuntimeConfigName(runtimeConfigName)
@@ -191,5 +198,9 @@ public class ModuleBuilder extends MavenModuleBuilder {
 
     public Optional<Path> getDownloadDistributionPath() {
         return Optional.ofNullable(downloadDistributionPath);
+    }
+
+    private boolean shouldDownloadDistribution() {
+        return downloadDistribution && downloadDistributionPath != null;
     }
 }

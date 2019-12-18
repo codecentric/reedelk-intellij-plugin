@@ -11,15 +11,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
+import static com.reedelk.plugin.commons.Defaults.NameConvention;
+
 public class ReedelkRuntimeDistributionDownload {
 
-    private static final String LATEST_ESB_RUNTIME_DISTRIBUTION_ZIP_FILE_NAME = "reedelk-esb-runtime-latest.zip";
     private static final String DOWNLOAD_LATEST_DISTRIBUTION =
-            "http://reedelk.com/distributions/" + LATEST_ESB_RUNTIME_DISTRIBUTION_ZIP_FILE_NAME;
+            NameConvention.RUNTIME_ONLINE_DISTRIBUTION_URL +
+            NameConvention.RUNTIME_ONLINE_DISTRIBUTION_ZIP_FILE_NAME;
 
     private ReedelkRuntimeDistributionDownload() {
     }
 
+    // TODO: OKHTTP CLIENT SHOULD BE A SINGLE INSTANCE ACROSS THE PLUGIN (DO lazy initialization of it)
     public static Path download() throws IOException {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(DOWNLOAD_LATEST_DISTRIBUTION).get().build();
@@ -38,6 +41,6 @@ public class ReedelkRuntimeDistributionDownload {
     private static Path getTmpFile() {
         String tmpDirectory = System.getProperty("java.io.tmpdir");
         String tmpFolder = UUID.randomUUID().toString();
-        return Paths.get(tmpDirectory, tmpFolder, LATEST_ESB_RUNTIME_DISTRIBUTION_ZIP_FILE_NAME);
+        return Paths.get(tmpDirectory, tmpFolder, NameConvention.RUNTIME_ONLINE_DISTRIBUTION_ZIP_FILE_NAME);
     }
 }
