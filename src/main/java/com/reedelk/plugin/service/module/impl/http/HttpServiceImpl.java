@@ -14,7 +14,7 @@ public class HttpServiceImpl implements HttpService {
     private OkHttpClient client;
 
     public HttpServiceImpl() {
-        this.client = new OkHttpClient();
+        this.client = RestClientProvider.getInstance();
     }
 
     @Override

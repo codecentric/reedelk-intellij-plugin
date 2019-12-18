@@ -11,13 +11,12 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.io.ZipUtil;
-import com.reedelk.plugin.commons.Defaults;
 import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.commons.ReedelkPluginUtil;
 import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.runconfig.module.ModuleRunConfigurationBuilder;
 import com.reedelk.plugin.runconfig.runtime.RuntimeRunConfigurationBuilder;
+import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.model.MavenId;
@@ -37,7 +36,7 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class ModuleBuilder extends MavenModuleBuilder {
 
-    private Path downloadDistributionPath;
+    private Path tmpDownloadDistributionPath;
     private String runtimeConfigName;
     private String runtimeHomeDirectory;
     private boolean createRuntimeConfig;
@@ -59,27 +58,22 @@ public class ModuleBuilder extends MavenModuleBuilder {
             MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> {
 
                 if (shouldDownloadDistribution()) {
-                    // Copy runtime distribution from tmp folder, unzip it inside
-                    // the module root directory, set the runtime home directory
-                    // to the module root/runtime-folder-name.
-                    // TODO: This extract should be done on the download.
-                    // TODO: Here we just copy the distribution folder into th eproject module directory.
-                    File destination = new File(root.getPath());
+                    File destination = Paths.get(
+                            root.getPath(),
+                            tmpDownloadDistributionPath.getFileName().toString()).toFile();
+
                     try {
-                        ZipUtil.extract(downloadDistributionPath.toFile(), destination, (dir, name) -> true);
-                        String[] reedelkRuntime = destination.list((dir, name) -> dir.isDirectory() &&
-                                name.startsWith(Defaults.NameConvention.RUNTIME_DISTRIBUTION_ROOT_FOLDER_PREFIX));
-                        if (reedelkRuntime == null || reedelkRuntime.length == 0) {
-                            throw new PluginException("Error could not find reedelk runtime");
-                        }
-                        // Create Runtime Run Configuration
+                        FileUtils.copyDirectory(tmpDownloadDistributionPath.toFile(), destination);
+                    } catch (IOException e) {
+                        throw new PluginException("Could not copy distribution file path");
+                    }
+
+                    // Create Runtime Run Configuration
                         RuntimeRunConfigurationBuilder.build()
                                 .withRuntimeConfigName(runtimeConfigName)
-                                .withRuntimeHomeDirectory(Paths.get(root.getPath(), reedelkRuntime[0]).toString())
+                                .withRuntimeHomeDirectory(destination.getPath())
                                 .add(project);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+
                 } else {
                     // Create Runtime Run Configuration
                     RuntimeRunConfigurationBuilder.build()
@@ -192,15 +186,15 @@ public class ModuleBuilder extends MavenModuleBuilder {
         this.createRuntimeConfig = createRuntimeConfig;
     }
 
-    public void setDownloadDistributionPath(Path downloadDistributionPath) {
-        this.downloadDistributionPath = downloadDistributionPath;
+    public void setTmpDownloadDistributionPath(Path tmpDownloadDistributionPath) {
+        this.tmpDownloadDistributionPath = tmpDownloadDistributionPath;
     }
 
-    public Optional<Path> getDownloadDistributionPath() {
-        return Optional.ofNullable(downloadDistributionPath);
+    public Optional<Path> getTmpDownloadDistributionPath() {
+        return Optional.ofNullable(tmpDownloadDistributionPath);
     }
 
     private boolean shouldDownloadDistribution() {
-        return downloadDistribution && downloadDistributionPath != null;
+        return downloadDistribution && tmpDownloadDistributionPath != null;
     }
 }

@@ -59,7 +59,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
     public void _init() {
         super._init();
         if (moduleBuilder.isDownloadDistribution() &&
-                !moduleBuilder.getDownloadDistributionPath().isPresent()) {
+                !moduleBuilder.getTmpDownloadDistributionPath().isPresent()) {
             invokeLater(() -> {
                 runtimeChooserPanel.setVisible(false);
                 runtimeHome.setVisible(false);
@@ -68,10 +68,10 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
             loadingPanel.startLoading();
             loadingPanel.setLoadingText("Downloading Reedelk ESB runtime ...");
             getApplication().executeOnPooledThread(() -> {
-                // Download the runtime
                 try {
-                    Path download = ReedelkRuntimeDistributionDownload.download();
-                    moduleBuilder.setDownloadDistributionPath(download);
+                    // Download the runtime
+                    Path download = ReedelkRuntimeDistributionDownload.downloadAndUnzip();
+                    moduleBuilder.setTmpDownloadDistributionPath(download);
                 } catch (IOException e) {
                     invokeLater(() ->
                             Messages.showErrorDialog("Error while parsing metadata from server", "Error"));
@@ -145,6 +145,12 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
             if (!moduleBuilder.isDownloadDistribution()) {
                 Validator validator = new RuntimeHomeValidator(runtimeHomeDirectoryBrowse.getText());
                 validator.validate(errors);
+            }
+
+            if (moduleBuilder.isDownloadDistribution()) {
+                if (!moduleBuilder.getTmpDownloadDistributionPath().isPresent()) {
+                    errors.add("Could not download, please try again.");
+                }
             }
 
         } else {
