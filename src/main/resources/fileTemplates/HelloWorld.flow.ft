@@ -5,7 +5,7 @@
   "flow": [
     {
       "implementor": "com.reedelk.rest.component.RestListener",
-      "description": "GET Hello world",
+      "description": "GET Hello World REST Listener",
       "configuration": {"ref": "${configId}"},
       "path": "/message/{name:.*}",
       "method": "GET",
@@ -21,7 +21,7 @@
     },
     {
       "implementor": "com.reedelk.core.component.logger.LoggerComponent",
-      "description": "Log input message attributes",
+      "description": "Log message attributes",
       "level": "INFO",
       "message": "#[message.attributes()]"
     },
