@@ -219,16 +219,16 @@ class ComponentPropertyAnalyzerTest {
     }
 
     @Test
-    void shouldCorrectlyAnalyzeFileTypeProperty() {
+    void shouldCorrectlyAnalyzeResourceTypeProperty() {
         // Given
-        TypeFileDescriptor typeFile = new TypeFileDescriptor();
+        TypeResourceDescriptor typeResource = new TypeResourceDescriptor();
 
         // Expect
         assertThatExistProperty(
-                "fileProperty",
-                "File property",
+                "resourceProperty",
+                "Resource property",
                 null,
-                TypeDescriptorMatchers.ofTypeFile(typeFile));
+                TypeDescriptorMatchers.ofTypeResource(typeResource));
     }
 
     @Test

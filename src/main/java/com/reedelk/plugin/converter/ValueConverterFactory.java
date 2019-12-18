@@ -2,6 +2,7 @@ package com.reedelk.plugin.converter;
 
 import com.reedelk.plugin.component.domain.TypeDescriptor;
 import com.reedelk.plugin.component.type.unknown.UnknownPropertyType;
+import com.reedelk.runtime.api.resource.Resource;
 import com.reedelk.runtime.api.script.Script;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicStringMap;
 import com.reedelk.runtime.api.script.dynamicvalue.*;
@@ -13,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.reedelk.plugin.component.domain.TypeComboDescriptor.TypeCombo;
-import static com.reedelk.plugin.component.domain.TypeFileDescriptor.TypeFile;
 import static com.reedelk.plugin.component.domain.TypePasswordDescriptor.TypePassword;
 import static java.lang.String.format;
 
@@ -40,27 +40,27 @@ public class ValueConverterFactory {
         tmp.put(BigInteger.class, new ConfigPropertyAwareConverter(new BigIntegerConverter()));
         tmp.put(BigDecimal.class, new ConfigPropertyAwareConverter(new BigDecimalConverter()));
 
-        tmp.put(boolean.class, new BooleanConverter());
-        tmp.put(Boolean.class, new BooleanConverter());
         tmp.put(Enum.class, new EnumConverter());
-        tmp.put(String.class, new StringConverter());
-        tmp.put(TypeFile.class, new FileConverter());
-        tmp.put(TypeCombo.class, new ComboConverter());
-        tmp.put(TypePassword.class, new PasswordConverter());
         tmp.put(Map.class, new MapConverter());
+        tmp.put(String.class, new StringConverter());
         tmp.put(Script.class, new ScriptConverter());
+        tmp.put(Boolean.class, new BooleanConverter());
+        tmp.put(boolean.class, new BooleanConverter());
+        tmp.put(TypeCombo.class, new ComboConverter());
+        tmp.put(Resource.class, new ResourceConverter());
+        tmp.put(TypePassword.class, new PasswordConverter());
 
         // Dynamic value types
-        tmp.put(DynamicBigDecimal.class, new DynamicBigDecimalConverter());
-        tmp.put(DynamicBigInteger.class, new DynamicBigIntegerConverter());
-        tmp.put(DynamicBoolean.class, new DynamicBooleanConverter());
-        tmp.put(DynamicByteArray.class, new DynamicByteArrayConverter());
-        tmp.put(DynamicDouble.class, new DynamicDoubleConverter());
-        tmp.put(DynamicFloat.class, new DynamicFloatConverter());
-        tmp.put(DynamicInteger.class, new DynamicIntegerConverter());
         tmp.put(DynamicLong.class, new DynamicLongConverter());
+        tmp.put(DynamicFloat.class, new DynamicFloatConverter());
+        tmp.put(DynamicDouble.class, new DynamicDoubleConverter());
         tmp.put(DynamicObject.class, new DynamicObjectConverter());
         tmp.put(DynamicString.class, new DynamicStringConverter());
+        tmp.put(DynamicBoolean.class, new DynamicBooleanConverter());
+        tmp.put(DynamicInteger.class, new DynamicIntegerConverter());
+        tmp.put(DynamicByteArray.class, new DynamicByteArrayConverter());
+        tmp.put(DynamicBigInteger.class, new DynamicBigIntegerConverter());
+        tmp.put(DynamicBigDecimal.class, new DynamicBigDecimalConverter());
 
         // Dynamic map types
         tmp.put(DynamicStringMap.class, new DynamicStringMapConverter());

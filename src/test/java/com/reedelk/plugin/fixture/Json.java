@@ -133,10 +133,10 @@ public class Json {
             }
         },
 
-        WithFileProperty {
+        WithResourceProperty {
             @Override
             public String path() {
-                return "flow/generic_component_with_file.json";
+                return "flow/generic_component_with_resource.json";
             }
         },
 

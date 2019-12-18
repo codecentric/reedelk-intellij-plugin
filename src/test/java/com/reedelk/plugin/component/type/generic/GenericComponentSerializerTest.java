@@ -282,26 +282,26 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
     }
 
     @Nested
-    @DisplayName("Component file properties are serialized correctly")
-    class TypeFilePropertiesSerialization {
+    @DisplayName("Component resource properties are serialized correctly")
+    class TypeResourcePropertiesSerialization {
 
         @Test
-        void shouldCorrectlySerializeGenericComponentWithFileProperty() {
+        void shouldCorrectlySerializeGenericComponentWithResourceProperty() {
             // Given
             ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
-                    .propertyDescriptors(asList(Primitives.booleanProperty, SpecialTypes.fileProperty))
+                    .propertyDescriptors(asList(Primitives.booleanProperty, SpecialTypes.resourceProperty))
                     .fullyQualifiedName(ComponentNode1.class.getName())
                     .build());
 
             GraphNode componentNode = new GenericComponentNode(componentData);
             componentData.set("booleanProperty", true);
-            componentData.set("fileProperty", "metadata/schema/person.schema.json");
+            componentData.set("resourceProperty", "metadata/schema/person.schema.json");
 
             // When
             String actualJson = serialize(componentNode);
 
             // Then
-            String expectedJson = Json.GenericComponent.WithFileProperty.json();
+            String expectedJson = Json.GenericComponent.WithResourceProperty.json();
             JSONAssert.assertEquals(expectedJson, actualJson, true);
         }
     }

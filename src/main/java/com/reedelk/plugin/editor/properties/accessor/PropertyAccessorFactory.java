@@ -25,11 +25,11 @@ public class PropertyAccessorFactory {
         Map<Class<? extends TypeDescriptor>, Class<? extends PropertyAccessor>> tmp = new HashMap<>();
         tmp.put(TypeMapDescriptor.class, DefaultPropertyAccessor.class);
         tmp.put(TypeEnumDescriptor.class, DefaultPropertyAccessor.class);
-        tmp.put(TypeFileDescriptor.class, DefaultPropertyAccessor.class);
         tmp.put(UnknownPropertyType.class, DefaultPropertyAccessor.class);
         tmp.put(TypeComboDescriptor.class, DefaultPropertyAccessor.class);
         tmp.put(TypeObjectDescriptor.class, DefaultPropertyAccessor.class);
         tmp.put(TypeScriptDescriptor.class, DefaultPropertyAccessor.class);
+        tmp.put(TypeResourceDescriptor.class, DefaultPropertyAccessor.class);
         tmp.put(TypePasswordDescriptor.class, DefaultPropertyAccessor.class);
         tmp.put(TypePrimitiveDescriptor.class, DefaultPropertyAccessor.class);
         tmp.put(TypeDynamicMapDescriptor.class, DefaultPropertyAccessor.class);

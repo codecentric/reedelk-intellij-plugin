@@ -37,10 +37,10 @@ public class TypeDescriptorMatchers {
         };
     }
 
-    public static TypeDescriptorMatcher ofTypeFile(TypeFileDescriptor expected) {
+    public static TypeDescriptorMatcher ofTypeResource(TypeResourceDescriptor expected) {
         return given -> {
-            if (given instanceof TypeFileDescriptor) {
-                TypeFileDescriptor actual = (TypeFileDescriptor) given;
+            if (given instanceof TypeResourceDescriptor) {
+                TypeResourceDescriptor actual = (TypeResourceDescriptor) given;
                 return same(expected, actual);
             }
             return false;

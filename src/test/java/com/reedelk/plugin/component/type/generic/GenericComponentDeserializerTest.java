@@ -316,14 +316,14 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
     }
 
     @Nested
-    @DisplayName("Component file properties are de-serialized correctly")
-    class TypeFilePropertiesDeserialization {
+    @DisplayName("Component resource properties are de-serialized correctly")
+    class TypeResourcePropertiesDeserialization {
 
         @Test
-        void shouldCorrectlyDeserializeGenericComponentWithFileProperty() {
+        void shouldCorrectlyDeserializeGenericComponentWithResourceProperty() {
             // Given
             ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
-                    .propertyDescriptors(asList(Primitives.booleanProperty, SpecialTypes.fileProperty))
+                    .propertyDescriptors(asList(Primitives.booleanProperty, SpecialTypes.resourceProperty))
                     .fullyQualifiedName(ComponentNode1.class.getName())
                     .build();
 
@@ -331,7 +331,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
 
             mockContextInstantiateGraphNode(node);
 
-            JSONObject genericComponentDefinition = new JSONObject(GenericComponent.WithFileProperty.json());
+            JSONObject genericComponentDefinition = new JSONObject(GenericComponent.WithResourceProperty.json());
 
             // When
             GraphNode lastNode = deserializer.deserialize(root, genericComponentDefinition);
@@ -340,7 +340,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
             PluginAssertion.assertThat(graph)
                     .node(lastNode).is(node)
                     .hasDataWithValue("booleanProperty", true)
-                    .hasDataWithValue("fileProperty", "metadata/schema/person.schema.json")
+                    .hasDataWithValue("resourceProperty", "metadata/schema/person.schema.json")
                     .and().nodesCountIs(2);
         }
     }

@@ -12,7 +12,7 @@ import com.reedelk.plugin.editor.properties.renderer.typecombo.ComboPropertyRend
 import com.reedelk.plugin.editor.properties.renderer.typedouble.DoublePropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typedouble.DynamicDoublePropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typeenum.EnumPropertyRenderer;
-import com.reedelk.plugin.editor.properties.renderer.typefile.FilePropertyRenderer;
+import com.reedelk.plugin.editor.properties.renderer.typefile.ResourcePropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typefloat.DynamicFloatPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typefloat.FloatPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typeinteger.DynamicIntegerPropertyRenderer;
@@ -28,6 +28,7 @@ import com.reedelk.plugin.editor.properties.renderer.typescript.ScriptPropertyRe
 import com.reedelk.plugin.editor.properties.renderer.typestring.DynamicStringPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typestring.StringPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typeunknown.UnknownPropertyTypeRenderer;
+import com.reedelk.runtime.api.resource.Resource;
 import com.reedelk.runtime.api.script.Script;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicStringMap;
 import com.reedelk.runtime.api.script.dynamicvalue.*;
@@ -39,7 +40,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.reedelk.plugin.component.domain.TypeComboDescriptor.TypeCombo;
-import static com.reedelk.plugin.component.domain.TypeFileDescriptor.TypeFile;
 import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
 import static com.reedelk.plugin.component.domain.TypePasswordDescriptor.TypePassword;
 import static com.reedelk.plugin.component.type.unknown.UnknownPropertyType.UnknownType;
@@ -63,28 +63,28 @@ public class PropertyTypeRendererFactory {
         tmp.put(BigInteger.class, new BigIntegerPropertyRenderer());
         tmp.put(BigDecimal.class, new BigDecimalPropertyRenderer());
 
-        tmp.put(Enum.class, new EnumPropertyRenderer());
-        tmp.put(String.class, new StringPropertyRenderer());
+        // Other known types
         tmp.put(Map.class, new MapPropertyRenderer());
+        tmp.put(Enum.class, new EnumPropertyRenderer());
         tmp.put(Script.class, new ScriptPropertyRenderer());
-        tmp.put(TypeFile.class, new FilePropertyRenderer());
+        tmp.put(String.class, new StringPropertyRenderer());
         tmp.put(TypeCombo.class, new ComboPropertyRenderer());
-        tmp.put(TypePassword.class, new PasswordPropertyRenderer());
-
+        tmp.put(Resource.class, new ResourcePropertyRenderer());
         tmp.put(TypeObject.class, new ObjectPropertyRenderer());
+        tmp.put(TypePassword.class, new PasswordPropertyRenderer());
         tmp.put(UnknownType.class, new UnknownPropertyTypeRenderer());
 
         // Dynamic value types
-        tmp.put(DynamicBigDecimal.class, new DynamicBigDecimalPropertyRenderer());
-        tmp.put(DynamicBigInteger.class, new DynamicBigIntegerPropertyRenderer());
-        tmp.put(DynamicBoolean.class, new DynamicBooleanPropertyRenderer());
-        tmp.put(DynamicByteArray.class, new DynamicByteArrayPropertyRenderer());
-        tmp.put(DynamicDouble.class, new DynamicDoublePropertyRenderer());
-        tmp.put(DynamicFloat.class, new DynamicFloatPropertyRenderer());
-        tmp.put(DynamicInteger.class, new DynamicIntegerPropertyRenderer());
         tmp.put(DynamicLong.class, new DynamicLongPropertyRenderer());
+        tmp.put(DynamicFloat.class, new DynamicFloatPropertyRenderer());
+        tmp.put(DynamicDouble.class, new DynamicDoublePropertyRenderer());
         tmp.put(DynamicObject.class, new DynamicObjectPropertyRenderer());
         tmp.put(DynamicString.class, new DynamicStringPropertyRenderer());
+        tmp.put(DynamicInteger.class, new DynamicIntegerPropertyRenderer());
+        tmp.put(DynamicBoolean.class, new DynamicBooleanPropertyRenderer());
+        tmp.put(DynamicByteArray.class, new DynamicByteArrayPropertyRenderer());
+        tmp.put(DynamicBigInteger.class, new DynamicBigIntegerPropertyRenderer());
+        tmp.put(DynamicBigDecimal.class, new DynamicBigDecimalPropertyRenderer());
 
         // Dynamic map types
         tmp.put(DynamicStringMap.class, new DynamicStringMapPropertyRenderer());

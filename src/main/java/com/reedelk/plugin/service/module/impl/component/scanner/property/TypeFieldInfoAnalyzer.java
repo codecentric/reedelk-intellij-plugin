@@ -110,8 +110,8 @@ public class TypeFieldInfoAnalyzer implements FieldInfoAnalyzer {
         } else if (isPassword(fieldInfo, clazz)) {
             return new TypePasswordDescriptor();
 
-        } else if (isFile(fieldInfo, clazz)) {
-            return new TypeFileDescriptor();
+        } else if (isResource(clazz)) {
+            return new TypeResourceDescriptor();
 
         } else if (isCombo(fieldInfo, clazz)) {
             boolean editable = annotationParameterValueOrDefaultFrom(fieldInfo, Combo.class, "editable", false);

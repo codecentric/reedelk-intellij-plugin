@@ -3,6 +3,7 @@ package com.reedelk.plugin.service.module.impl.component.scanner;
 import com.reedelk.plugin.component.domain.Collapsible;
 import com.reedelk.plugin.component.domain.Shared;
 import com.reedelk.runtime.api.annotation.*;
+import com.reedelk.runtime.api.resource.Resource;
 import com.reedelk.runtime.api.script.Script;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicMap;
 import com.reedelk.runtime.api.script.dynamicvalue.DynamicValue;
@@ -129,30 +130,20 @@ public class ScannerUtil {
         }
     }
 
-    public static Class<?> clazzByFullyQualifiedName(String fullyQualifiedClassName) {
-        try {
-            return Class.forName(fullyQualifiedClassName);
-        } catch (ClassNotFoundException e) {
-            // if it is a known type, then the class must be resolvable.
-            // Otherwise the @PropertyValueConverterFactory class would not even compile.
-            throw new UnsupportedType(fullyQualifiedClassName);
-        }
-    }
-
-    public static boolean isFile(FieldInfo fieldInfo, Class<?> clazz) {
-        return hasAnnotation(fieldInfo, File.class) && String.class.equals(clazz);
+    public static boolean isCombo(FieldInfo fieldInfo, Class<?> clazz) {
+        return hasAnnotation(fieldInfo, Combo.class) && String.class.equals(clazz);
     }
 
     public static boolean isMimeTypeCombo(FieldInfo fieldInfo, Class<?> clazz) {
         return hasAnnotation(fieldInfo, MimeTypeCombo.class) && String.class.equals(clazz);
     }
 
-    public static boolean isCombo(FieldInfo fieldInfo, Class<?> clazz) {
-        return fieldInfo.hasAnnotation(Combo.class.getName()) && String.class.equals(clazz);
-    }
-
     public static boolean isPassword(FieldInfo fieldInfo, Class<?> clazz) {
         return hasAnnotation(fieldInfo, Password.class) && String.class.equals(clazz);
+    }
+
+    public static boolean isResource(Class<?> clazz) {
+        return Resource.class.equals(clazz);
     }
 
     public static boolean isMap(Class<?> clazz) {
@@ -175,6 +166,16 @@ public class ScannerUtil {
 
     public static boolean isHidden(ClassInfo classInfo) {
         return classInfo.hasAnnotation(Hidden.class.getName());
+    }
+
+    public static Class<?> clazzByFullyQualifiedName(String fullyQualifiedClassName) {
+        try {
+            return Class.forName(fullyQualifiedClassName);
+        } catch (ClassNotFoundException e) {
+            // if it is a known type, then the class must be resolvable.
+            // Otherwise the @PropertyValueConverterFactory class would not even compile.
+            throw new UnsupportedType(fullyQualifiedClassName);
+        }
     }
 
     private static Object getParameterValue(AnnotationInfo info, String parameterName) {

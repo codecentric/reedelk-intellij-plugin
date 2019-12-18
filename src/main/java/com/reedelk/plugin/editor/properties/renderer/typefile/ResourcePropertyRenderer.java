@@ -20,8 +20,9 @@ import java.awt.event.ActionListener;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
-public class FilePropertyRenderer extends AbstractPropertyTypeRenderer {
+public class ResourcePropertyRenderer extends AbstractPropertyTypeRenderer {
 
+    // TODO: Extract string constants
     @NotNull
     @Override
     public JComponent render(@NotNull Module module,

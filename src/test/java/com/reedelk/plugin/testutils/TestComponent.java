@@ -5,6 +5,7 @@ import com.reedelk.runtime.api.component.ProcessorSync;
 import com.reedelk.runtime.api.message.FlowContext;
 import com.reedelk.runtime.api.message.Message;
 import com.reedelk.runtime.api.message.content.MimeType;
+import com.reedelk.runtime.api.resource.Resource;
 import com.reedelk.runtime.api.script.Script;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicStringMap;
 import com.reedelk.runtime.api.script.dynamicvalue.*;
@@ -71,9 +72,8 @@ public class TestComponent implements ProcessorSync {
     @Default("342.14823")
     private BigDecimal bigDecimalProperty;
 
-    @File
-    @Property("File property")
-    private String fileProperty;
+    @Property("Resource property")
+    private Resource resourceProperty;
 
     @Property("Combo property")
     @Default("two")
@@ -227,8 +227,8 @@ public class TestComponent implements ProcessorSync {
         this.bigDecimalProperty = bigDecimalProperty;
     }
 
-    public void setFileProperty(String fileProperty) {
-        this.fileProperty = fileProperty;
+    public void setResourceProperty(Resource resourceProperty) {
+        this.resourceProperty = resourceProperty;
     }
 
     public void setComboProperty(String comboProperty) {

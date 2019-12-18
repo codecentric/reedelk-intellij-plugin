@@ -207,10 +207,6 @@ public class SamplePropertyDescriptors {
                         .build();
     }
 
-    static class DynamicMapTypes {
-
-    }
-
     static class SpecialTypes {
 
         private static final Map<String, String> valueAndDisplayMap = ImmutableMap.of("NONE", "No config", "CERT", "Certificate");
@@ -218,7 +214,7 @@ public class SamplePropertyDescriptors {
         public static final TypeDescriptor mapTypeDescriptor = new TypeMapDescriptor("Headers");
         public static final TypeDescriptor scriptTypeDescriptor = new TypeScriptDescriptor();
         public static final TypeDescriptor comboTypeDescriptor = new TypeComboDescriptor(true, new String[]{"one", "two", "three"});
-        public static final TypeDescriptor fileTypeDescriptor = new TypeFileDescriptor();
+        public static final TypeDescriptor resourceTypeDescriptor = new TypeResourceDescriptor();
 
         public static final ComponentPropertyDescriptor enumProperty =
                 ComponentPropertyDescriptor.builder()
@@ -248,11 +244,11 @@ public class SamplePropertyDescriptors {
                         .displayName("Combo property")
                         .build();
 
-        public static final ComponentPropertyDescriptor fileProperty =
+        public static final ComponentPropertyDescriptor resourceProperty =
                 ComponentPropertyDescriptor.builder()
-                        .type(fileTypeDescriptor)
-                        .propertyName("fileProperty")
-                        .displayName("File property")
+                        .type(resourceTypeDescriptor)
+                        .propertyName("resourceProperty")
+                        .displayName("Resource property")
                         .build();
     }
 
