@@ -72,7 +72,7 @@ public class DeployRunProfile extends AbstractRunProfile {
             @Override
             public void onSuccess() {
                 String message = message("module.run.update", module.getName());
-                ToolWindowUtils.notifyInfo(module.getProject(), message, runtimeConfigName);
+                ToolWindowUtils.notifyInfoWithoutShowing(module.getProject(), message, runtimeConfigName);
 
                 // Check if there are any Modules in the Runtime in 'UNRESOLVED' or 'ERROR' state.
                 checkModuleStateService(module).checkModuleState(address, port);

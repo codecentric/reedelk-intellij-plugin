@@ -24,6 +24,12 @@ public class ToolWindowUtils {
     private ToolWindowUtils() {
     }
 
+    public static void notifyInfoWithoutShowing(Project project, String message, String runConfigName) {
+        SwingUtilities.invokeLater(() ->
+                findToolWindowByRunConfig(project, runConfigName).ifPresent(toolWindow ->
+                        notifyInfoBalloon(toolWindow.toolWindowId, message, project)));
+    }
+
     public static void notifyInfo(Project project, String message, String runConfigName) {
         SwingUtilities.invokeLater(() ->
                 findToolWindowByRunConfig(project, runConfigName).ifPresent(toolWindow -> {
