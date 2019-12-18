@@ -27,7 +27,7 @@
     },
     {
       "implementor": "com.reedelk.core.component.script.ScriptEvaluator",
-      "description": "Script",
+      "description": "Concatenate 'Hello World' with 'name' path parameter",
       "mimeType": "text/plain",
       "script": "helloWorld.js"
     }
