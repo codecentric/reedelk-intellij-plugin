@@ -42,6 +42,12 @@ public class Defaults {
         public static final String RUNTIME_DISTRIBUTION_ROOT_FOLDER_PREFIX = "reedelk-esb-runtime-";
         // NAME_CONVENTION: Depends on the artifactId of the runtime artifact .jar (runtime) project.
         public static final String RUNTIME_JAR_FILE_PREFIX = "runtime-";
+        // NAME_CONVENTION: Depends on runtime package structure
+        public static final String RUNTIME_PACKAGE_BIN_DIRECTORY = "bin";
+        // NAME_CONVENTION: Depends on runtime package structure
+        public static final String RUNTIME_PACKAGE_CONFIG_DIRECTORY = "config";
+        // NAME_CONVENTION: Depends on runtime package structure
+        public static final String RUNTIME_PACKAGE_MODULES_DIRECTORY = "modules";
         // NAME_CONVENTION: Depends on url location of distribution
         public static final String RUNTIME_ONLINE_DISTRIBUTION_URL = "http://reedelk.com/distributions/";
         // NAME_CONVENTION: Depends on latest build file name used

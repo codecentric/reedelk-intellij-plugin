@@ -13,8 +13,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Paths;
 
+import static com.reedelk.plugin.commons.Defaults.NameConvention;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
-import static java.lang.String.format;
 
 public class RuntimeRunCommandLine extends JavaCommandLineState {
 
@@ -56,7 +56,7 @@ public class RuntimeRunCommandLine extends JavaCommandLineState {
     private String getJarPath(String runtimeHomeDirectory) throws ExecutionException {
         String runtimeJarName = FileUtils
                 .findRuntimeJarName(runtimeHomeDirectory)
-                .orElseThrow(() -> new ExecutionException(format("Could not find suitable runtime (home directory: %s)", runtimeHomeDirectory)));
-        return Paths.get(runtimeHomeDirectory, "bin", runtimeJarName).toString();
+                .orElseThrow(() -> new ExecutionException(message("runtime.run.error.runtime.jar.not.found", runtimeHomeDirectory)));
+        return Paths.get(runtimeHomeDirectory, NameConvention.RUNTIME_PACKAGE_BIN_DIRECTORY, runtimeJarName).toString();
     }
 }

@@ -1,6 +1,7 @@
 package com.reedelk.plugin.validator;
 
 import com.reedelk.plugin.commons.FileUtils;
+import com.reedelk.runtime.api.commons.StringUtils;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -8,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 
+import static com.reedelk.plugin.commons.Defaults.NameConvention;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class RuntimeHomeValidator implements Validator {
@@ -20,6 +22,12 @@ public class RuntimeHomeValidator implements Validator {
 
     @Override
     public void validate(Collection<String> errors) {
+
+        if (StringUtils.isBlank(runtimeHomeDirectory)) {
+            errors.add(message("runtimeBuilder.runtime.home.validator.directory.empty"));
+            return;
+        }
+
         File homeDirectoryFile = new File(runtimeHomeDirectory);
         if (!homeDirectoryFile.exists()) {
             errors.add(message("runtimeBuilder.runtime.home.validator.dir.does.not.exists"));
@@ -38,19 +46,19 @@ public class RuntimeHomeValidator implements Validator {
         }
 
         // Home directory must contain: modules/config
-        boolean existsConfigDir = existsDirectoryNamed(content, "config");
+        boolean existsConfigDir = existsDirectoryNamed(content, NameConvention.RUNTIME_PACKAGE_CONFIG_DIRECTORY);
         if (!existsConfigDir) {
             errors.add(message("runtimeBuilder.runtime.home.validator.config.missing"));
             return;
         }
 
-        boolean existsModulesDir = existsDirectoryNamed(content, "modules");
+        boolean existsModulesDir = existsDirectoryNamed(content, NameConvention.RUNTIME_PACKAGE_MODULES_DIRECTORY);
         if (!existsModulesDir) {
             errors.add(message("runtimeBuilder.runtime.home.validator.modules.missing"));
             return;
         }
 
-        boolean existsBinDir = existsDirectoryNamed(content, "bin");
+        boolean existsBinDir = existsDirectoryNamed(content, NameConvention.RUNTIME_PACKAGE_BIN_DIRECTORY);
         if (!existsBinDir) {
             errors.add(message("runtimeBuilder.runtime.home.validator.bin.missing"));
             return;

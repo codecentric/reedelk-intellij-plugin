@@ -32,6 +32,7 @@ import static com.intellij.openapi.util.text.StringUtil.commonPrefixLength;
 import static com.intellij.openapi.util.text.StringUtil.isEmptyOrSpaces;
 import static com.intellij.uiDesigner.core.GridConstraints.*;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
+import static java.lang.String.join;
 import static java.util.Collections.singletonList;
 import static javax.swing.SwingUtilities.invokeLater;
 
@@ -135,29 +136,29 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
     public boolean validate() throws ConfigurationException {
         List<String> errors = new ArrayList<>();
 
-        // Validating new project
         if (isNewProject) {
+            // Validating new project
             if (isEmptyOrSpaces(runtimeConfigNameTextField.getText())) {
-                errors.add("Runtime Name can not be empty");
+                errors.add(message("runtimeBuilder.runtime.config.name.validator.empty"));
             }
 
             if (!moduleBuilder.isDownloadDistribution()) {
-                if (isEmptyOrSpaces(runtimeHomeDirectoryBrowse.getText())) {
-                    errors.add("Runtime Path can not be empty");
-                }
-
                 Validator validator = new RuntimeHomeValidator(runtimeHomeDirectoryBrowse.getText());
                 validator.validate(errors);
             }
 
-            // Validating adding new module
         } else {
+            // Validating adding new module
             if (isEmptyOrSpaces(runtimeComboManager.getRuntimeConfigName())) {
-                errors.add("A runtime must be selected");
+                errors.add(message("runtimeBuilder.runtime.config.combo.validator.not.selected"));
             }
         }
 
-        return errors.isEmpty();
+        if (!errors.isEmpty()) {
+            throw new ConfigurationException(join(",", errors));
+        }
+
+        return true;
     }
 
     @Override

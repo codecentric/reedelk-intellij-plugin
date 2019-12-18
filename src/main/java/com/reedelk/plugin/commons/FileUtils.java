@@ -17,11 +17,10 @@ public class FileUtils {
     }
 
     public static Optional<String> findRuntimeJarName(String runtimeHomeDirectory) {
-        String binDirectoryPath = Paths.get(runtimeHomeDirectory, "bin").toString();
+        String binDirectoryPath = Paths.get(runtimeHomeDirectory, NameConvention.RUNTIME_PACKAGE_BIN_DIRECTORY).toString();
         File binDirectory = new File(binDirectoryPath);
         String[] runtimeFile = binDirectory.list((dir, name) ->
-                name.startsWith(NameConvention.RUNTIME_JAR_FILE_PREFIX) &&
-                name.endsWith(".jar"));
+                name.startsWith(NameConvention.RUNTIME_JAR_FILE_PREFIX) && FileExtension.JAR.is(name));
         if (runtimeFile != null && runtimeFile.length == 1) {
             return Optional.of(runtimeFile[0]);
         }
