@@ -46,9 +46,9 @@ public class ToolWindowUtils {
         get(project, PropertiesPanelToolWindowFactory.ID).ifPresent(toolWindow -> toolWindow.setTitle(newToolWindowTitle));
     }
 
-    public static void showPropertiesPanelToolWindow(Project project) {
+    public static void showPropertiesPanelToolWindow(Project project, Runnable postAction) {
         get(project, PropertiesPanelToolWindowFactory.ID).ifPresent(toolWindow ->
-                toolWindow.show(EMPTY_POST_SHOW_ACTION));
+                toolWindow.show(postAction));
     }
 
     public static void showComponentsPaletteToolWindow(Project project) {

@@ -28,7 +28,6 @@ import org.jetbrains.idea.maven.project.MavenImportListener;
 import org.jetbrains.idea.maven.project.MavenProject;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.util.Arrays.stream;
@@ -41,13 +40,13 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     private static final String SYSTEM_COMPONENTS_MODULE_NAME = "flow-control";
 
     private boolean isInitialized = false;
+
     private final Module module;
     private final Project project;
+    private final ModuleComponents systemComponents;
     private final ComponentListUpdateNotifier publisher;
     private final ComponentScanner componentScanner = new ComponentScanner();
-
-    private final ModuleComponents systemComponents;
-    private final Map<String, ModuleComponents> mavenJarComponentsMap = new ConcurrentHashMap<>();
+    private final Map<String, ModuleComponents> mavenJarComponentsMap = new HashMap<>();
     private final List<AutoCompleteContributorDefinition> autoCompleteContributorDefinitions = new ArrayList<>();
 
     private ModuleComponents moduleComponents;
@@ -71,7 +70,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     }
 
     @Override
-    public ComponentDescriptor componentDescriptorByName(String componentFullyQualifiedName) {
+    public synchronized ComponentDescriptor componentDescriptorByName(String componentFullyQualifiedName) {
 
         // Is it part of an imported Jar from Maven ?
         Optional<ComponentDescriptor> componentMatching = findComponentMatching(mavenJarComponentsMap.values(), componentFullyQualifiedName);
@@ -99,7 +98,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     }
 
     @Override
-    public Collection<ModuleComponents> getModuleComponents() {
+    public synchronized Collection<ModuleComponents> getModuleComponents() {
         List<ModuleComponents> descriptors = new ArrayList<>(mavenJarComponentsMap.values());
         descriptors.add(systemComponents);
         if (moduleComponents != null) descriptors.add(moduleComponents);
@@ -107,12 +106,12 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     }
 
     @Override
-    public Collection<AutoCompleteContributorDefinition> getAutoCompleteContributorDefinition() {
+    public synchronized Collection<AutoCompleteContributorDefinition> getAutoCompleteContributorDefinition() {
         return unmodifiableList(autoCompleteContributorDefinitions);
     }
 
     @Override
-    public boolean isInitialized() {
+    public synchronized boolean isInitialized() {
         return isInitialized;
     }
 
@@ -136,7 +135,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
      * If a JAR contains a module but the module name Manifest attribute does not exists,
      * then it is ignored.
      */
-    private void asyncUpdateMavenDependenciesComponents() {
+    private synchronized void asyncUpdateMavenDependenciesComponents() {
         // Remove all components before updating them
         mavenJarComponentsMap.clear();
         autoCompleteContributorDefinitions.clear();
@@ -159,7 +158,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         });
     }
 
-    private void asyncUpdateModuleCustomComponents() {
+    private synchronized void asyncUpdateModuleCustomComponents() {
         PluginExecutors.run(module,
                 message("module.component.update.component.for.module", module.getName()),
                 indicator -> {
@@ -182,7 +181,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                 });
     }
 
-    private void asyncUpdateSystemComponents() {
+    private synchronized void asyncUpdateSystemComponents() {
         PluginExecutors.run(module,
                 message("module.component.update.system.components"),
                 indicator -> {
@@ -193,7 +192,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                 });
     }
 
-    private void scanForComponentsFromJar(String jarFilePath, String moduleName) {
+    private synchronized void scanForComponentsFromJar(String jarFilePath, String moduleName) {
         // We only scan a module if its jar file is a module with a name.
         ScanResult scanResult = ComponentScanner.scanResultFrom(jarFilePath);
         List<ComponentDescriptor> components = componentScanner.from(scanResult);
@@ -207,7 +206,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         notifyComponentListUpdate();
     }
 
-    private Optional<ComponentDescriptor> findComponentMatching(Collection<ModuleComponents> descriptors, String fullyQualifiedName) {
+    private static Optional<ComponentDescriptor> findComponentMatching(Collection<ModuleComponents> descriptors, String fullyQualifiedName) {
         for (ModuleComponents descriptor : descriptors) {
             Optional<ComponentDescriptor> moduleComponent = descriptor.getModuleComponent(fullyQualifiedName);
             if (moduleComponent.isPresent()) {

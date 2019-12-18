@@ -328,7 +328,8 @@ public abstract class DesignerPanel extends DisposablePanel implements
         currentSelection = selectableItem;
         currentComponentPublisher.onSelection(currentSelection);
         if (show) {
-            ToolWindowUtils.showPropertiesPanelToolWindow(module.getProject());
+            ToolWindowUtils.showPropertiesPanelToolWindow(module.getProject(),
+                    () -> currentComponentPublisher.onSelection(currentSelection));
         }
     }
 
