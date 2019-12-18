@@ -141,7 +141,12 @@ public abstract class DesignerPanel extends DisposablePanel implements
 
                     centerOfNodeDrawable.draw(g2);
 
-                    if (currentSelection == null) invokeLater(() -> select(defaultSelectedItem));
+                    if (currentSelection == null) {
+                        // First time we open the flow, the current selection might be null.
+                        // This also applies when the Editor has been made visible.
+                        // (When the editor is not visible the current selection is set to null)
+                        invokeLater(() -> select(defaultSelectedItem, false));
+                    }
 
                 },
 
@@ -202,7 +207,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
             } else {
                 // Nothing is selected, we display flow properties
                 unselect();
-                select(defaultSelectedItem);
+                select(defaultSelectedItem, true);
             }
 
             // Repaint all nodes
@@ -255,7 +260,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
             // If nothing is already selected, we set as current selection
             // the default selected item.
             snapshot.applyOnGraph(graph ->
-                            select(currentSelection),
+                            select(currentSelection, false),
                             absentFlow -> unselect(),
                             flowWithError -> unselect());
 
@@ -276,7 +281,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
             // the selection would be bound to the old object before refreshing
             // the flow (or subflow) graph.
             snapshot.applyOnValidGraph(graph ->
-                    invokeLater(() -> select(defaultSelectedItem)));
+                    invokeLater(() -> select(defaultSelectedItem, false)));
         }
     }
 
@@ -315,14 +320,16 @@ public abstract class DesignerPanel extends DisposablePanel implements
         if (node.isSelectable()) {
             selected = node;
             selected.selected();
-            select(new SelectableItemComponent(module, snapshot, selected));
+            select(new SelectableItemComponent(module, snapshot, selected), true);
         }
     }
 
-    private void select(SelectableItem selectableItem) {
+    private void select(SelectableItem selectableItem, boolean show) {
         currentSelection = selectableItem;
         currentComponentPublisher.onSelection(currentSelection);
-        ToolWindowUtils.showPropertiesPanelToolWindow(module.getProject(), () -> {});
+        if (show) {
+            ToolWindowUtils.showPropertiesPanelToolWindow(module.getProject());
+        }
     }
 
     /**
