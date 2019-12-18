@@ -13,7 +13,6 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.commons.ReedelkPluginUtil;
-import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.runconfig.module.ModuleRunConfigurationBuilder;
 import com.reedelk.plugin.runconfig.runtime.RuntimeRunConfigurationBuilder;
 import org.apache.commons.io.FileUtils;
@@ -32,7 +31,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 
+import static com.intellij.openapi.ui.Messages.showErrorDialog;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
+import static javax.swing.SwingUtilities.invokeLater;
 
 public class ModuleBuilder extends MavenModuleBuilder {
 
@@ -49,30 +50,31 @@ public class ModuleBuilder extends MavenModuleBuilder {
     @Override
     public void setupRootModel(@NotNull ModifiableRootModel rootModel) {
         super.setupRootModel(rootModel);
+
+        @NotNull
+        final String contentEntryPath = getContentEntryPath(); // Not null because it is initialized by the setup of the root model.
         final Project project = rootModel.getProject();
 
-        String contentEntryPath = getContentEntryPath();
         VirtualFile root = LocalFileSystem.getInstance().findFileByPath(contentEntryPath);
 
         if (createRuntimeConfig) {
             MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> {
 
-                if (shouldDownloadDistribution()) {
-                    File destination = Paths.get(
-                            root.getPath(),
-                            tmpDownloadDistributionPath.getFileName().toString()).toFile();
-
+                if (shouldUseDownloadedDistribution()) {
+                    File destination =
+                            Paths.get(contentEntryPath, tmpDownloadDistributionPath.getFileName().toString()).toFile();
                     try {
                         FileUtils.copyDirectory(tmpDownloadDistributionPath.toFile(), destination);
                     } catch (IOException e) {
-                        throw new PluginException("Could not copy distribution file path");
+                        // We cannot recover here. We should just display an error message.
+                        invokeLater(() -> showErrorDialog("Could not copy distribution file path", "Error"));
                     }
 
                     // Create Runtime Run Configuration
-                        RuntimeRunConfigurationBuilder.build()
-                                .withRuntimeConfigName(runtimeConfigName)
-                                .withRuntimeHomeDirectory(destination.getPath())
-                                .add(project);
+                    RuntimeRunConfigurationBuilder.build()
+                            .withRuntimeConfigName(runtimeConfigName)
+                            .withRuntimeHomeDirectory(destination.getPath())
+                            .add(project);
 
                 } else {
                     // Create Runtime Run Configuration
@@ -194,7 +196,7 @@ public class ModuleBuilder extends MavenModuleBuilder {
         return Optional.ofNullable(tmpDownloadDistributionPath);
     }
 
-    private boolean shouldDownloadDistribution() {
+    private boolean shouldUseDownloadedDistribution() {
         return downloadDistribution && tmpDownloadDistributionPath != null;
     }
 }

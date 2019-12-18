@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.intellij.openapi.application.ApplicationManager.getApplication;
-import static com.intellij.openapi.ui.Messages.showErrorDialog;
 import static com.intellij.openapi.util.text.StringUtil.commonPrefixLength;
 import static com.intellij.openapi.util.text.StringUtil.isEmptyOrSpaces;
 import static com.intellij.uiDesigner.core.GridConstraints.*;
@@ -37,6 +36,7 @@ import static javax.swing.SwingUtilities.invokeLater;
 
 public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListener, Disposable {
 
+    private final WizardContext wizardContext;
     private ModuleBuilder moduleBuilder;
 
     private JPanel jPanel;
@@ -70,29 +70,42 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
                     // Download and Unzip the runtime
                     Path downloadDistributionPath = ReedelkRuntimeDistributionDownload.downloadAndUnzip();
                     moduleBuilder.setTmpDownloadDistributionPath(downloadDistributionPath);
-                } catch (Exception exception) {
-                    invokeLater(() -> showErrorDialog(
-                                    message("runtimeBuilder.downloading.distribution.error.message", exception.getMessage()),
-                                    message("runtimeBuilder.downloading.distribution.error.title")));
-                } finally {
+
                     invokeLater(() -> {
                         loadingPanel.getContentPanel().add(jPanel);
                         loadingPanel.stopLoading();
                         loadingPanel.revalidate();
                         loadingPanel.repaint();
                     });
+
+                } catch (Exception exception) {
+                    invokeLater(() -> {
+                        String errorMessage = message("runtimeBuilder.downloading.distribution.error.message", exception.getMessage());
+                        String errorTitle = message("runtimeBuilder.downloading.distribution.error.title");
+                        DownloadErrorPanel errorPanel = new DownloadErrorPanel();
+                        errorPanel.setTitle(errorTitle);
+                        errorPanel.setMessage(errorMessage);
+
+                        loadingPanel.getContentPanel().add(errorPanel.content());
+                        loadingPanel.stopLoading();
+                        loadingPanel.revalidate();
+                        loadingPanel.repaint();
+                        wizardContext.getWizard().updateButtons(false, false, false);
+                    });
                 }
             });
         } else {
             invokeLater(() -> {
-                invokeLater(() -> runtimeHomeDirectoryBrowse.setVisible(true));
+                runtimeHomeDirectoryBrowse.setVisible(true);
                 loadingPanel.getContentPanel().add(jPanel);
-                jPanel.revalidate();
+                loadingPanel.revalidate();
+                loadingPanel.repaint();
             });
         }
     }
 
     public ConfigureRuntimeStep(WizardContext wizardContext, ModuleBuilder builder) {
+        this.wizardContext = wizardContext;
         isNewProject = wizardContext.isCreatingNewProject();
         if (isNewProject) {
             chooseRuntimePanel.setVisible(false);
