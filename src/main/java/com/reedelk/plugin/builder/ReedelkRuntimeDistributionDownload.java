@@ -19,7 +19,7 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 class ReedelkRuntimeDistributionDownload {
 
-    private static final String DOWNLOAD_LATEST_DISTRIBUTION =
+    private static final String DOWNLOAD_LATEST_DISTRIBUTION_URL =
             NameConvention.RUNTIME_ONLINE_DISTRIBUTION_URL +
                     NameConvention.RUNTIME_ONLINE_DISTRIBUTION_ZIP_FILE_NAME;
 
@@ -27,7 +27,7 @@ class ReedelkRuntimeDistributionDownload {
     }
 
     static Path downloadAndUnzip() throws IOException {
-        Request request = new Request.Builder().url(DOWNLOAD_LATEST_DISTRIBUTION).get().build();
+        Request request = new Request.Builder().url(DOWNLOAD_LATEST_DISTRIBUTION_URL).get().build();
         try (Response response = RestClientProvider.getInstance().newCall(request).execute()) {
 
             if (response.body() == null) {
@@ -39,7 +39,8 @@ class ReedelkRuntimeDistributionDownload {
 
                 // Prepare directories
                 Path tmpRandomDirectory = TmpRandomDirectory.get();
-                Path distributionZipFilePath = Paths.get(tmpRandomDirectory.toString(), NameConvention.RUNTIME_ONLINE_DISTRIBUTION_ZIP_FILE_NAME);
+                Path distributionZipFilePath =
+                        Paths.get(tmpRandomDirectory.toString(), NameConvention.RUNTIME_ONLINE_DISTRIBUTION_ZIP_FILE_NAME);
                 File distributionZipFile = distributionZipFilePath.toFile();
                 FileUtils.copyInputStreamToFile(initialStream, distributionZipFile);
 
@@ -53,7 +54,7 @@ class ReedelkRuntimeDistributionDownload {
                         .orElseThrow(() -> new IOException(
                                 message("runtimeBuilder.downloading.distribution.error.root.folder",
                                         NameConvention.RUNTIME_DISTRIBUTION_ROOT_FOLDER_PREFIX,
-                                        DOWNLOAD_LATEST_DISTRIBUTION)));
+                                        DOWNLOAD_LATEST_DISTRIBUTION_URL)));
 
                 // The final path is the tmp random directory + the distribution folder name
                 return Paths.get(tmpRandomDirectory.toString(), runtimeRootFolderName);
