@@ -2,7 +2,9 @@ package com.reedelk.plugin.converter;
 
 import com.reedelk.plugin.component.domain.TypeDescriptor;
 import com.reedelk.plugin.component.type.unknown.UnknownPropertyType;
-import com.reedelk.runtime.api.resource.Resource;
+import com.reedelk.runtime.api.resource.ResourceBinary;
+import com.reedelk.runtime.api.resource.ResourceDynamic;
+import com.reedelk.runtime.api.resource.ResourceText;
 import com.reedelk.runtime.api.script.Script;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicStringMap;
 import com.reedelk.runtime.api.script.dynamicvalue.*;
@@ -47,7 +49,9 @@ public class ValueConverterFactory {
         tmp.put(Boolean.class, new BooleanConverter());
         tmp.put(boolean.class, new BooleanConverter());
         tmp.put(TypeCombo.class, new ComboConverter());
-        tmp.put(Resource.class, new ResourceConverter());
+        tmp.put(ResourceText.class, new ResourceConverter());
+        tmp.put(ResourceBinary.class, new ResourceConverter());
+        tmp.put(ResourceDynamic.class,new ResourceDynamicConverter());
         tmp.put(TypePassword.class, new PasswordConverter());
 
         // Dynamic value types

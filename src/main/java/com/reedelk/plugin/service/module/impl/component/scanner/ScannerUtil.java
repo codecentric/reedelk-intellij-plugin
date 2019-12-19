@@ -3,7 +3,9 @@ package com.reedelk.plugin.service.module.impl.component.scanner;
 import com.reedelk.plugin.component.domain.Collapsible;
 import com.reedelk.plugin.component.domain.Shared;
 import com.reedelk.runtime.api.annotation.*;
-import com.reedelk.runtime.api.resource.Resource;
+import com.reedelk.runtime.api.resource.ResourceBinary;
+import com.reedelk.runtime.api.resource.ResourceDynamic;
+import com.reedelk.runtime.api.resource.ResourceText;
 import com.reedelk.runtime.api.script.Script;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicMap;
 import com.reedelk.runtime.api.script.dynamicvalue.DynamicValue;
@@ -142,8 +144,16 @@ public class ScannerUtil {
         return hasAnnotation(fieldInfo, Password.class) && String.class.equals(clazz);
     }
 
-    public static boolean isResource(Class<?> clazz) {
-        return Resource.class.equals(clazz);
+    public static boolean isResourceText(Class<?> clazz) {
+        return ResourceText.class.equals(clazz);
+    }
+
+    public static boolean isResourceBinary(Class<?> clazz) {
+        return ResourceBinary.class.equals(clazz);
+    }
+
+    public static boolean isResourceDynamic(Class<?> clazz) {
+        return ResourceDynamic.class.equals(clazz);
     }
 
     public static boolean isMap(Class<?> clazz) {

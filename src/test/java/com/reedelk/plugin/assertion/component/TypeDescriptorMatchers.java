@@ -37,10 +37,30 @@ public class TypeDescriptorMatchers {
         };
     }
 
-    public static TypeDescriptorMatcher ofTypeResource(TypeResourceDescriptor expected) {
+    public static TypeDescriptorMatcher ofTypeResourceText(TypeResourceTextDescriptor expected) {
         return given -> {
-            if (given instanceof TypeResourceDescriptor) {
-                TypeResourceDescriptor actual = (TypeResourceDescriptor) given;
+            if (given instanceof TypeResourceTextDescriptor) {
+                TypeResourceTextDescriptor actual = (TypeResourceTextDescriptor) given;
+                return same(expected, actual);
+            }
+            return false;
+        };
+    }
+
+    public static TypeDescriptorMatcher ofTypeResourceBinary(TypeResourceBinaryDescriptor expected) {
+        return given -> {
+            if (given instanceof TypeResourceBinaryDescriptor) {
+                TypeResourceBinaryDescriptor actual = (TypeResourceBinaryDescriptor) given;
+                return same(expected, actual);
+            }
+            return false;
+        };
+    }
+
+    public static TypeDescriptorMatcher ofTypeResourceDynamic(TypeResourceDynamicDescriptor expected) {
+        return given -> {
+            if (given instanceof TypeResourceDynamicDescriptor) {
+                TypeResourceDynamicDescriptor actual = (TypeResourceDynamicDescriptor) given;
                 return same(expected, actual);
             }
             return false;

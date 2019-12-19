@@ -12,6 +12,7 @@ import com.reedelk.plugin.editor.properties.renderer.typecombo.ComboPropertyRend
 import com.reedelk.plugin.editor.properties.renderer.typedouble.DoublePropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typedouble.DynamicDoublePropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typeenum.EnumPropertyRenderer;
+import com.reedelk.plugin.editor.properties.renderer.typefile.ResourceDynamicPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typefile.ResourcePropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typefloat.DynamicFloatPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typefloat.FloatPropertyRenderer;
@@ -28,7 +29,9 @@ import com.reedelk.plugin.editor.properties.renderer.typescript.ScriptPropertyRe
 import com.reedelk.plugin.editor.properties.renderer.typestring.DynamicStringPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typestring.StringPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typeunknown.UnknownPropertyTypeRenderer;
-import com.reedelk.runtime.api.resource.Resource;
+import com.reedelk.runtime.api.resource.ResourceBinary;
+import com.reedelk.runtime.api.resource.ResourceDynamic;
+import com.reedelk.runtime.api.resource.ResourceText;
 import com.reedelk.runtime.api.script.Script;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicStringMap;
 import com.reedelk.runtime.api.script.dynamicvalue.*;
@@ -69,7 +72,9 @@ public class PropertyTypeRendererFactory {
         tmp.put(Script.class, new ScriptPropertyRenderer());
         tmp.put(String.class, new StringPropertyRenderer());
         tmp.put(TypeCombo.class, new ComboPropertyRenderer());
-        tmp.put(Resource.class, new ResourcePropertyRenderer());
+        tmp.put(ResourceText.class, new ResourcePropertyRenderer());
+        tmp.put(ResourceBinary.class, new ResourcePropertyRenderer());
+        tmp.put(ResourceDynamic.class, new ResourceDynamicPropertyRenderer());
         tmp.put(TypeObject.class, new ObjectPropertyRenderer());
         tmp.put(TypePassword.class, new PasswordPropertyRenderer());
         tmp.put(UnknownType.class, new UnknownPropertyTypeRenderer());

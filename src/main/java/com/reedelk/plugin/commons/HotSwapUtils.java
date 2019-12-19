@@ -4,41 +4,20 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.reedelk.runtime.commons.FileExtension;
+
+import java.util.Optional;
 
 public class HotSwapUtils {
 
     private HotSwapUtils() {
     }
 
-    public static boolean hasHotSwappableExtension(VirtualFile file) {
-        String extension = file.getExtension();
-        return extension != null &&
-                (extension.equals(FileExtension.SCRIPT.value()) ||
-                        extension.equals(FileExtension.FLOW.value()) ||
-                        extension.equals(FileExtension.SUBFLOW.value()) ||
-                        extension.equals(FileExtension.CONFIG.value()));
-    }
-
-    public static boolean isInsideHotSwappableFolder(Project project, VirtualFile file) {
-        String extension = file.getExtension();
+    public static boolean isInsideResourcesFolder(Project project, VirtualFile file) {
         Module moduleForFile = ModuleUtil.findModuleForFile(file, project);
-        if (moduleForFile == null) {
-            return false;
-        } else if (FileExtension.CONFIG.value().equals(extension)) {
-            return PluginModuleUtils.getConfigsFolder(moduleForFile).map(configsFolder ->
-                    file.getPath().startsWith(configsFolder)).orElse(false);
-        } else if (FileExtension.FLOW.value().equals(extension)) {
-            return PluginModuleUtils.getFlowsFolder(moduleForFile).map(flowsFolder ->
-                    file.getPath().startsWith(flowsFolder)).orElse(false);
-        } else if (FileExtension.SUBFLOW.value().equals(extension)) {
-            return PluginModuleUtils.getSubFlowsFolder(moduleForFile).map(subFlowsFolder ->
-                    file.getPath().startsWith(subFlowsFolder)).orElse(false);
-        } else if (FileExtension.SCRIPT.value().equals(extension)) {
-            return PluginModuleUtils.getScriptsFolder(moduleForFile).map(scriptsFolder ->
-                    file.getPath().startsWith(scriptsFolder)).orElse(false);
-        } else {
-            return false;
-        }
+        if (moduleForFile == null) return false;
+
+        return PluginModuleUtils.getResourcesFolder(moduleForFile)
+                .flatMap(resourcesFolderPath -> Optional.of(file.getPath().startsWith(resourcesFolderPath)))
+                .orElse(false);
     }
 }

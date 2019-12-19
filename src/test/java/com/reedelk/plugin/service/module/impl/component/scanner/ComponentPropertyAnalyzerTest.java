@@ -219,16 +219,42 @@ class ComponentPropertyAnalyzerTest {
     }
 
     @Test
-    void shouldCorrectlyAnalyzeResourceTypeProperty() {
+    void shouldCorrectlyAnalyzeResourceTextTypeProperty() {
         // Given
-        TypeResourceDescriptor typeResource = new TypeResourceDescriptor();
+        TypeResourceTextDescriptor typeResource = new TypeResourceTextDescriptor();
 
         // Expect
         assertThatExistProperty(
-                "resourceProperty",
-                "Resource property",
+                "resourceTextProperty",
+                "Resource text property",
                 null,
-                TypeDescriptorMatchers.ofTypeResource(typeResource));
+                TypeDescriptorMatchers.ofTypeResourceText(typeResource));
+    }
+
+    @Test
+    void shouldCorrectlyAnalyzeResourceBinaryTypeProperty() {
+        // Given
+        TypeResourceBinaryDescriptor typeResource = new TypeResourceBinaryDescriptor();
+
+        // Expect
+        assertThatExistProperty(
+                "resourceBinaryProperty",
+                "Resource binary property",
+                null,
+                TypeDescriptorMatchers.ofTypeResourceBinary(typeResource));
+    }
+
+    @Test
+    void shouldCorrectlyAnalyzeResourceDynamicTypeProperty() {
+        // Given
+        TypeResourceDynamicDescriptor typeResource = new TypeResourceDynamicDescriptor();
+
+        // Expect
+        assertThatExistProperty(
+                "resourceDynamicProperty",
+                "Resource dynamic property",
+                "#[]", // Empty script is the default value
+                TypeDescriptorMatchers.ofTypeResourceDynamic(typeResource));
     }
 
     @Test
