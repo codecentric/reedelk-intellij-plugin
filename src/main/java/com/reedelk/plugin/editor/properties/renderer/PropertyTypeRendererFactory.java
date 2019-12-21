@@ -29,8 +29,8 @@ import com.reedelk.plugin.editor.properties.renderer.typescript.ScriptPropertyRe
 import com.reedelk.plugin.editor.properties.renderer.typestring.DynamicStringPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typestring.StringPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typeunknown.UnknownPropertyTypeRenderer;
+import com.reedelk.runtime.api.resource.DynamicResource;
 import com.reedelk.runtime.api.resource.ResourceBinary;
-import com.reedelk.runtime.api.resource.ResourceDynamic;
 import com.reedelk.runtime.api.resource.ResourceText;
 import com.reedelk.runtime.api.script.Script;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicStringMap;
@@ -86,10 +86,10 @@ public class PropertyTypeRendererFactory {
         tmp.put(DynamicString.class, new DynamicStringPropertyRenderer());
         tmp.put(DynamicInteger.class, new DynamicIntegerPropertyRenderer());
         tmp.put(DynamicBoolean.class, new DynamicBooleanPropertyRenderer());
+        tmp.put(DynamicResource.class, new ResourceDynamicPropertyRenderer());
         tmp.put(DynamicByteArray.class, new DynamicByteArrayPropertyRenderer());
         tmp.put(DynamicBigInteger.class, new DynamicBigIntegerPropertyRenderer());
         tmp.put(DynamicBigDecimal.class, new DynamicBigDecimalPropertyRenderer());
-        tmp.put(ResourceDynamic.class, new ResourceDynamicPropertyRenderer());
 
         // Dynamic map types
         tmp.put(DynamicStringMap.class, new DynamicStringMapPropertyRenderer());

@@ -2,8 +2,8 @@ package com.reedelk.plugin.converter;
 
 import com.reedelk.plugin.component.domain.TypeDescriptor;
 import com.reedelk.plugin.component.type.unknown.UnknownPropertyType;
+import com.reedelk.runtime.api.resource.DynamicResource;
 import com.reedelk.runtime.api.resource.ResourceBinary;
-import com.reedelk.runtime.api.resource.ResourceDynamic;
 import com.reedelk.runtime.api.resource.ResourceText;
 import com.reedelk.runtime.api.script.Script;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicStringMap;
@@ -61,10 +61,10 @@ public class ValueConverterFactory {
         tmp.put(DynamicString.class, new DynamicStringConverter());
         tmp.put(DynamicBoolean.class, new DynamicBooleanConverter());
         tmp.put(DynamicInteger.class, new DynamicIntegerConverter());
+        tmp.put(DynamicResource.class, new DynamicResourceConverter());
         tmp.put(DynamicByteArray.class, new DynamicByteArrayConverter());
         tmp.put(DynamicBigInteger.class, new DynamicBigIntegerConverter());
         tmp.put(DynamicBigDecimal.class, new DynamicBigDecimalConverter());
-        tmp.put(ResourceDynamic.class, new ResourceDynamicConverter());
 
         // Dynamic map types
         tmp.put(DynamicStringMap.class, new DynamicStringMapConverter());

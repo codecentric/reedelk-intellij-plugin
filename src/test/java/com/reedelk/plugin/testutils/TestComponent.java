@@ -5,8 +5,8 @@ import com.reedelk.runtime.api.component.ProcessorSync;
 import com.reedelk.runtime.api.message.FlowContext;
 import com.reedelk.runtime.api.message.Message;
 import com.reedelk.runtime.api.message.content.MimeType;
+import com.reedelk.runtime.api.resource.DynamicResource;
 import com.reedelk.runtime.api.resource.ResourceBinary;
-import com.reedelk.runtime.api.resource.ResourceDynamic;
 import com.reedelk.runtime.api.resource.ResourceText;
 import com.reedelk.runtime.api.script.Script;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicStringMap;
@@ -81,7 +81,7 @@ public class TestComponent implements ProcessorSync {
     private ResourceBinary resourceBinaryProperty;
 
     @Property("Resource dynamic property")
-    private ResourceDynamic resourceDynamicProperty;
+    private DynamicResource resourceDynamicProperty;
 
     @Property("Combo property")
     @Default("two")
@@ -243,7 +243,7 @@ public class TestComponent implements ProcessorSync {
         this.resourceBinaryProperty = resourceBinaryProperty;
     }
 
-    public void setResourceDynamicProperty(ResourceDynamic resourceDynamicProperty) {
+    public void setResourceDynamicProperty(DynamicResource resourceDynamicProperty) {
         this.resourceDynamicProperty = resourceDynamicProperty;
     }
 
