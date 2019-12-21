@@ -51,7 +51,6 @@ public class ValueConverterFactory {
         tmp.put(TypeCombo.class, new ComboConverter());
         tmp.put(ResourceText.class, new ResourceConverter());
         tmp.put(ResourceBinary.class, new ResourceConverter());
-        tmp.put(ResourceDynamic.class,new ResourceDynamicConverter());
         tmp.put(TypePassword.class, new PasswordConverter());
 
         // Dynamic value types
@@ -65,6 +64,7 @@ public class ValueConverterFactory {
         tmp.put(DynamicByteArray.class, new DynamicByteArrayConverter());
         tmp.put(DynamicBigInteger.class, new DynamicBigIntegerConverter());
         tmp.put(DynamicBigDecimal.class, new DynamicBigDecimalConverter());
+        tmp.put(ResourceDynamic.class, new ResourceDynamicConverter());
 
         // Dynamic map types
         tmp.put(DynamicStringMap.class, new DynamicStringMapConverter());

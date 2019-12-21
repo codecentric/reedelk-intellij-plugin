@@ -57,16 +57,6 @@ public class TypeDescriptorMatchers {
         };
     }
 
-    public static TypeDescriptorMatcher ofTypeResourceDynamic(TypeResourceDynamicDescriptor expected) {
-        return given -> {
-            if (given instanceof TypeResourceDynamicDescriptor) {
-                TypeResourceDynamicDescriptor actual = (TypeResourceDynamicDescriptor) given;
-                return same(expected, actual);
-            }
-            return false;
-        };
-    }
-
     public static TypeDescriptorMatcher ofTypeCombo(TypeComboDescriptor expected) {
         return given -> {
             if (given instanceof TypeComboDescriptor) {

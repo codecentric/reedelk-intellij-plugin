@@ -74,7 +74,6 @@ public class PropertyTypeRendererFactory {
         tmp.put(TypeCombo.class, new ComboPropertyRenderer());
         tmp.put(ResourceText.class, new ResourcePropertyRenderer());
         tmp.put(ResourceBinary.class, new ResourcePropertyRenderer());
-        tmp.put(ResourceDynamic.class, new ResourceDynamicPropertyRenderer());
         tmp.put(TypeObject.class, new ObjectPropertyRenderer());
         tmp.put(TypePassword.class, new PasswordPropertyRenderer());
         tmp.put(UnknownType.class, new UnknownPropertyTypeRenderer());
@@ -90,6 +89,7 @@ public class PropertyTypeRendererFactory {
         tmp.put(DynamicByteArray.class, new DynamicByteArrayPropertyRenderer());
         tmp.put(DynamicBigInteger.class, new DynamicBigIntegerPropertyRenderer());
         tmp.put(DynamicBigDecimal.class, new DynamicBigDecimalPropertyRenderer());
+        tmp.put(ResourceDynamic.class, new ResourceDynamicPropertyRenderer());
 
         // Dynamic map types
         tmp.put(DynamicStringMap.class, new DynamicStringMapPropertyRenderer());

@@ -4,7 +4,6 @@ import com.reedelk.plugin.component.domain.Collapsible;
 import com.reedelk.plugin.component.domain.Shared;
 import com.reedelk.runtime.api.annotation.*;
 import com.reedelk.runtime.api.resource.ResourceBinary;
-import com.reedelk.runtime.api.resource.ResourceDynamic;
 import com.reedelk.runtime.api.resource.ResourceText;
 import com.reedelk.runtime.api.script.Script;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicMap;
@@ -150,10 +149,6 @@ public class ScannerUtil {
 
     public static boolean isResourceBinary(Class<?> clazz) {
         return ResourceBinary.class.equals(clazz);
-    }
-
-    public static boolean isResourceDynamic(Class<?> clazz) {
-        return ResourceDynamic.class.equals(clazz);
     }
 
     public static boolean isMap(Class<?> clazz) {

@@ -8,6 +8,7 @@ import com.reedelk.plugin.service.module.impl.component.scanner.property.Compone
 import com.reedelk.plugin.testutils.ScannerTestUtils;
 import com.reedelk.plugin.testutils.TestComponent;
 import com.reedelk.runtime.api.message.content.MimeType;
+import com.reedelk.runtime.api.resource.ResourceDynamic;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicStringMap;
 import com.reedelk.runtime.api.script.dynamicvalue.*;
 import io.github.classgraph.ClassInfo;
@@ -247,14 +248,15 @@ class ComponentPropertyAnalyzerTest {
     @Test
     void shouldCorrectlyAnalyzeResourceDynamicTypeProperty() {
         // Given
-        TypeResourceDynamicDescriptor typeResource = new TypeResourceDynamicDescriptor();
+        TypeDynamicValueDescriptor<ResourceDynamic> typeDynamicResource =
+                new TypeDynamicValueDescriptor<>(ResourceDynamic.class);
 
         // Expect
         assertThatExistProperty(
                 "resourceDynamicProperty",
                 "Resource dynamic property",
-                "#[]", // Empty script is the default value
-                TypeDescriptorMatchers.ofTypeResourceDynamic(typeResource));
+                null,
+                TypeDescriptorMatchers.ofDynamicType(typeDynamicResource));
     }
 
     @Test

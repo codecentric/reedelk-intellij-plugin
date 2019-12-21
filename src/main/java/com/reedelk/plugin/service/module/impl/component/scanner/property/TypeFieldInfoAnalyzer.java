@@ -116,9 +116,6 @@ public class TypeFieldInfoAnalyzer implements FieldInfoAnalyzer {
         } else if (isResourceBinary(clazz)) {
             return new TypeResourceBinaryDescriptor();
 
-        } else if (isResourceDynamic(clazz)) {
-                return new TypeResourceDynamicDescriptor();
-
         } else if (isCombo(fieldInfo, clazz)) {
             boolean editable = annotationParameterValueOrDefaultFrom(fieldInfo, Combo.class, "editable", false);
             Object[] comboValues = annotationParameterValueOrDefaultFrom(fieldInfo, Combo.class, "comboValues", new String[]{});

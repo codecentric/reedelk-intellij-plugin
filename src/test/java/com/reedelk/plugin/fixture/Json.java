@@ -1,6 +1,6 @@
 package com.reedelk.plugin.fixture;
 
-import com.reedelk.runtime.commons.FileUtils;
+import com.reedelk.runtime.api.commons.FileUtils;
 
 import java.net.URL;
 
