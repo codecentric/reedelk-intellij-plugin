@@ -5,6 +5,8 @@ import org.json.JSONObject;
 
 import java.util.Optional;
 
+import static com.reedelk.runtime.api.commons.FlowError.Properties;
+
 public class FlowErrorResponse {
 
     private FlowErrorResponse() {
@@ -13,13 +15,14 @@ public class FlowErrorResponse {
     public static Optional<FlowError> from(String httpResponseBody) {
         try {
             JSONObject object = new JSONObject(httpResponseBody);
-            long moduleId = object.has(FlowError.Properties.moduleId) ? object.getLong(FlowError.Properties.moduleId) : -1;
-            String moduleName = object.has(FlowError.Properties.moduleName) ? object.getString(FlowError.Properties.moduleName) : null;
-            String flowId = object.has(FlowError.Properties.flowId) ? object.getString(FlowError.Properties.flowId) : null;
-            String flowTitle = object.has(FlowError.Properties.flowTitle) ? object.getString(FlowError.Properties.flowTitle) : null;
-            String errorType = object.has(FlowError.Properties.errorType) ? object.getString(FlowError.Properties.errorType) : null;
-            String errorMessage = object.has(FlowError.Properties.errorMessage) ? object.getString(FlowError.Properties.errorMessage) : null;
-            return Optional.of(new FlowError(moduleId, moduleName, flowId, flowTitle, errorType, errorMessage));
+            long moduleId = object.has(Properties.moduleId) ? object.getLong(Properties.moduleId) : -1;
+            String moduleName = object.has(Properties.moduleName) ? object.getString(Properties.moduleName) : null;
+            String flowId = object.has(Properties.flowId) ? object.getString(Properties.flowId) : null;
+            String flowTitle = object.has(Properties.flowTitle) ? object.getString(Properties.flowTitle) : null;
+            String correlationId = object.has(Properties.correlationId) ? object.getString(Properties.correlationId) : null;
+            String errorType = object.has(Properties.errorType) ? object.getString(Properties.errorType) : null;
+            String errorMessage = object.has(Properties.errorMessage) ? object.getString(Properties.errorMessage) : null;
+            return Optional.of(new FlowError(moduleId, moduleName, flowId, flowTitle, correlationId, errorType, errorMessage));
         } catch (Exception exception) {
             return Optional.empty();
         }
