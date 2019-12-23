@@ -3,6 +3,7 @@ package com.reedelk.plugin.filetype;
 import com.intellij.json.JsonLanguage;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.reedelk.plugin.commons.Icons;
+import com.reedelk.runtime.commons.FileExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,7 +12,6 @@ import javax.swing.*;
 public class FlowConfigFileType extends LanguageFileType {
 
     public static final FlowConfigFileType INSTANCE = new FlowConfigFileType();
-    public static final String DEFAULT_EXTENSION = "fconfig";
 
 
     public FlowConfigFileType() {
@@ -33,7 +33,7 @@ public class FlowConfigFileType extends LanguageFileType {
     @NotNull
     @Override
     public String getDefaultExtension() {
-        return DEFAULT_EXTENSION;
+        return FileExtension.CONFIG.value();
     }
 
     @Nullable

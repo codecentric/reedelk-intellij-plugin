@@ -3,6 +3,7 @@ package com.reedelk.plugin.filetype;
 import com.intellij.json.JsonLanguage;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.reedelk.plugin.commons.Icons;
+import com.reedelk.runtime.commons.FileExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,7 +12,6 @@ import javax.swing.*;
 public class SubFlowFileType extends LanguageFileType {
 
     public static final SubFlowFileType INSTANCE = new SubFlowFileType();
-    public static final String DEFAULT_EXTENSION = "subflow";
 
     public SubFlowFileType() {
         super(JsonLanguage.INSTANCE);
@@ -32,7 +32,7 @@ public class SubFlowFileType extends LanguageFileType {
     @NotNull
     @Override
     public String getDefaultExtension() {
-        return DEFAULT_EXTENSION;
+        return FileExtension.SUBFLOW.value();
     }
 
     @Nullable
