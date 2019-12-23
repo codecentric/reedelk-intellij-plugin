@@ -12,8 +12,6 @@ import com.reedelk.plugin.editor.properties.renderer.typecombo.ComboPropertyRend
 import com.reedelk.plugin.editor.properties.renderer.typedouble.DoublePropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typedouble.DynamicDoublePropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typeenum.EnumPropertyRenderer;
-import com.reedelk.plugin.editor.properties.renderer.typefile.ResourceDynamicPropertyRenderer;
-import com.reedelk.plugin.editor.properties.renderer.typefile.ResourcePropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typefloat.DynamicFloatPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typefloat.FloatPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typeinteger.DynamicIntegerPropertyRenderer;
@@ -25,6 +23,8 @@ import com.reedelk.plugin.editor.properties.renderer.typemap.MapPropertyRenderer
 import com.reedelk.plugin.editor.properties.renderer.typeobject.DynamicObjectPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typeobject.ObjectPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typepassword.PasswordPropertyRenderer;
+import com.reedelk.plugin.editor.properties.renderer.typeresource.ResourceDynamicPropertyRenderer;
+import com.reedelk.plugin.editor.properties.renderer.typeresource.ResourcePropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typescript.ScriptPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typestring.DynamicStringPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typestring.StringPropertyRenderer;

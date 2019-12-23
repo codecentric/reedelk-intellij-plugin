@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.renderer.typefile;
+package com.reedelk.plugin.editor.properties.renderer.typeresource;
 
 import com.reedelk.plugin.editor.properties.renderer.typestring.DynamicStringPropertyRenderer;
 

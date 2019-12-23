@@ -9,6 +9,10 @@ public class StringInputField extends InputField<String> {
         super(hint);
     }
 
+    public StringInputField(String hint, int columns) {
+        super(hint, columns);
+    }
+
     @Override
     protected ValueConverter<String> getConverter() {
         return ValueConverterFactory.forType(String.class);
