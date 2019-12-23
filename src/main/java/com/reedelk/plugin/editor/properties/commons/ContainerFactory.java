@@ -10,7 +10,7 @@ import javax.swing.border.CompoundBorder;
 import java.awt.*;
 
 import static java.awt.BorderLayout.*;
-import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS;
+import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 
 public class ContainerFactory {
 
@@ -79,7 +79,7 @@ public class ContainerFactory {
         scrollPane.setBorder(JBUI.Borders.empty());
         scrollPane.setViewportView(panel);
         scrollPane.createVerticalScrollBar();
-        scrollPane.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_AS_NEEDED);
         return scrollPane;
     }
 }

@@ -1,20 +1,28 @@
 package com.reedelk.plugin.editor.properties.renderer.typeobject.configuration;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
+import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
+import com.reedelk.plugin.editor.properties.commons.DisposableScrollPane;
 import com.reedelk.plugin.service.module.impl.configuration.ConfigMetadata;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 
-public class ConfigurationDialog extends DialogWrapper {
+public class ConfigurationDialog extends DialogWrapper implements Disposable {
+
+    private static final int MINIMUM_PANEL_WIDTH = 500;
 
     private Module module;
+    private DisposableScrollPane panel;
     private ConfigMetadata configMetadata;
     private TypeObjectDescriptor objectDescriptor;
+
     private boolean isNewConfig;
     private String okActionLabel;
 
@@ -35,8 +43,20 @@ public class ConfigurationDialog extends DialogWrapper {
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
-        ConfigPropertiesPanel panel = new ConfigPropertiesPanel(module, configMetadata, objectDescriptor, isNewConfig);
-        return ContainerFactory.makeItScrollable(panel);
+        DisposablePanel propertiesPanel = new ConfigPropertiesPanel(module, configMetadata, objectDescriptor, isNewConfig);
+        this.panel = ContainerFactory.makeItScrollable(propertiesPanel);
+        this.panel.setMinimumSize(new Dimension(MINIMUM_PANEL_WIDTH, 100));
+        setCrossClosesWindow(true);
+        return this.panel;
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        if (panel != null) {
+            panel.dispose();
+            panel = null;
+        }
     }
 
     static Builder builder() {
