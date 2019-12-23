@@ -8,10 +8,6 @@ public class TypeComboDescriptor implements TypeDescriptor {
     private final String prototype;
     private final String[] comboValues;
 
-    public TypeComboDescriptor(boolean editable, String[] comboValues) {
-        this(editable, comboValues, null);
-    }
-
     public TypeComboDescriptor(boolean editable, String[] comboValues, String prototype) {
         this.comboValues = requireNonNull(comboValues, "combo values");
         this.prototype = prototype;

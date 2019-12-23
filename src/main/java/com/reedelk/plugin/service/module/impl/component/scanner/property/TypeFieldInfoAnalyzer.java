@@ -119,8 +119,9 @@ public class TypeFieldInfoAnalyzer implements FieldInfoAnalyzer {
         } else if (isCombo(fieldInfo, clazz)) {
             boolean editable = annotationParameterValueOrDefaultFrom(fieldInfo, Combo.class, "editable", false);
             Object[] comboValues = annotationParameterValueOrDefaultFrom(fieldInfo, Combo.class, "comboValues", new String[]{});
+            String prototype = annotationParameterValueOrDefaultFrom(fieldInfo, Combo.class, "prototype", null);
             String[] items = stream(comboValues).map(value -> (String) value).toArray(String[]::new);
-            return new TypeComboDescriptor(editable, items);
+            return new TypeComboDescriptor(editable, items, prototype);
 
         } else if (isMimeTypeCombo(fieldInfo, clazz)) {
             List<String> predefinedMimeTypes = Arrays.asList(MimeType.ALL_MIME_TYPES);

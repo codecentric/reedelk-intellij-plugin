@@ -215,7 +215,7 @@ public class SamplePropertyDescriptors {
         static final TypeDescriptor enumTypeDescriptor = new TypeEnumDescriptor(valueAndDisplayMap, "NONE");
         static final TypeDescriptor mapTypeDescriptor = new TypeMapDescriptor("Headers");
         static final TypeDescriptor scriptTypeDescriptor = new TypeScriptDescriptor();
-        static final TypeDescriptor comboTypeDescriptor = new TypeComboDescriptor(true, new String[]{"one", "two", "three"});
+        static final TypeDescriptor comboTypeDescriptor = new TypeComboDescriptor(true, new String[]{"one", "two", "three"}, null);
         static final TypeDescriptor resourceTypeDescriptor = new TypeResourceTextDescriptor();
 
         static final ComponentPropertyDescriptor enumProperty =

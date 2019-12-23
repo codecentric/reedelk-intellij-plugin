@@ -262,7 +262,7 @@ class ComponentPropertyAnalyzerTest {
     @Test
     void shouldCorrectlyAnalyzeComboTypeProperty() {
         // Given
-        TypeComboDescriptor typeCombo = new TypeComboDescriptor(true, new String[]{"one", "two", "three"});
+        TypeComboDescriptor typeCombo = new TypeComboDescriptor(true, new String[]{"one", "two", "three"}, "XXXXXXXXXXXX");
 
         // Expect
         assertThatExistProperty(

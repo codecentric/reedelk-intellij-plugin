@@ -85,7 +85,7 @@ public class TestComponent implements ProcessorSync {
 
     @Property("Combo property")
     @Default("two")
-    @Combo(editable = true, comboValues = {"one", "two", "three"})
+    @Combo(editable = true, comboValues = {"one", "two", "three"}, prototype = "XXXXXXXXXXXX")
     private String comboProperty;
 
     @Property("Map property")
