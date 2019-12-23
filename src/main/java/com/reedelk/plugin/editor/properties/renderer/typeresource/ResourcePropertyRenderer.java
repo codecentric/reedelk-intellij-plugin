@@ -13,17 +13,15 @@ import com.reedelk.plugin.commons.PluginModuleUtils;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
-import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
+import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
 import com.reedelk.plugin.editor.properties.renderer.AbstractPropertyTypeRenderer;
 import com.reedelk.plugin.editor.properties.renderer.commons.StringInputField;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
-import static java.awt.BorderLayout.WEST;
 
 public class ResourcePropertyRenderer extends AbstractPropertyTypeRenderer {
 
@@ -52,7 +50,6 @@ public class ResourcePropertyRenderer extends AbstractPropertyTypeRenderer {
 
         descriptor.setTitle(message("properties.type.resource.choose.file.dialog"));
 
-        DisposablePanel wrapper = new DisposablePanel(new BorderLayout());
 
         JBTextField textField = Experiments.isFeatureEnabled("inline.browse.button") ?
                 new ChooseFileInputField(message("properties.type.resource.choose.file.hint"), inputFileFieldColumns) :
@@ -60,15 +57,15 @@ public class ResourcePropertyRenderer extends AbstractPropertyTypeRenderer {
 
         textField.setEditable(false);
 
-        TextFieldWithBrowse choseFile = new TextFieldWithBrowse(wrapper, textField);
+        TextFieldWithBrowse choseFile = new TextFieldWithBrowse(textField);
         choseFile.setText(propertyAccessor.get());
         choseFile.setEditable(false);
 
         TextBrowseFolderListener actionListener =
                 new TextBrowseFolderListener(descriptor, module.getProject(), choseFile, resourcesFolder, propertyAccessor);
         choseFile.addCustomBrowseFolderListener(actionListener);
-        wrapper.add(choseFile, WEST);
-        return wrapper;
+
+        return ContainerFactory.pushLeft(choseFile);
     }
 
 
@@ -88,9 +85,9 @@ public class ResourcePropertyRenderer extends AbstractPropertyTypeRenderer {
 
     class TextFieldWithBrowse extends TextFieldWithBrowseButton {
 
-        TextFieldWithBrowse(DisposablePanel parent, JBTextField textField) {
+        TextFieldWithBrowse(JBTextField textField) {
             // to prevent field to be infinitely re-sized in grid-box layouts
-            super(textField, null, parent);
+            super(textField, null);
         }
 
         void addCustomBrowseFolderListener(@NotNull TextBrowseFolderListener listener) {
