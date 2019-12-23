@@ -5,15 +5,12 @@ import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeComboDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
-import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
+import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
 import com.reedelk.plugin.editor.properties.renderer.AbstractPropertyTypeRenderer;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.Arrays;
-
-import static java.awt.BorderLayout.WEST;
 
 public class ComboPropertyRenderer extends AbstractPropertyTypeRenderer {
 
@@ -36,12 +33,10 @@ public class ComboPropertyRenderer extends AbstractPropertyTypeRenderer {
         String[] comboValues = typeComboDescriptor.getComboValues();
 
         Arrays.sort(comboValues); // sort ascending order
-        StringDropDown dropDown = new StringDropDown(comboValues, editable, prototype);
+        StringDropDown dropDown = new StringDropDown(module, comboValues, editable, prototype);
         dropDown.setValue(propertyAccessor.get());
         dropDown.addListener(propertyAccessor::set);
 
-        JPanel dropDownContainer = new DisposablePanel(new BorderLayout());
-        dropDownContainer.add(dropDown, WEST);
-        return dropDownContainer;
+        return ContainerFactory.pushLeft(dropDown);
     }
 }
