@@ -62,7 +62,10 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
 
     @Override
     public <T> T propertyValueFrom(String propertyName) {
-        return propertyAccessors.get(propertyName).get();
+        // When an Enum does not have a default value, the property accessor
+        // might be null. In this case its value would be null.
+        PropertyAccessor propertyAccessor = propertyAccessors.get(propertyName);
+        return propertyAccessor != null ? propertyAccessor.get() : null;
     }
 
     @Override
