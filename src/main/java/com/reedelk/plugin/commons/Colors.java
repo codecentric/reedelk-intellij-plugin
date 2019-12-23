@@ -43,5 +43,6 @@ public class Colors {
     public static final JBColor HINT_COLOR = new JBColor(new Color(224, 69, 67), new Color(224, 69, 67));
 
     public static final JBColor INPUT_FIELD_HINT = JBColor.LIGHT_GRAY;
+    public static final JBColor FILE_INPUT_FIELD_HINT = JBColor.DARK_GRAY;
 
 }

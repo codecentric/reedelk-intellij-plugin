@@ -1,6 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer.typeresource;
 
 import com.intellij.ui.components.fields.ExtendableTextField;
+import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.HintPainter;
 
 import java.awt.*;
@@ -17,6 +18,6 @@ public class ChooseFileInputField extends ExtendableTextField {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        HintPainter.from(g, this, hintText);
+        HintPainter.from(g, this, hintText, Colors.FILE_INPUT_FIELD_HINT);
     }
 }
