@@ -3,7 +3,7 @@ package com.reedelk.plugin.editor.properties.commons;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
-import com.reedelk.plugin.editor.properties.ClickableLabelWithToolTip1;
+import com.reedelk.plugin.editor.properties.ClickableLabelWithTooltip;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +23,7 @@ public class PropertyTitleLabel extends JPanel {
     public PropertyTitleLabel(ComponentPropertyDescriptor propertyDescriptor) {
         this(propertyDescriptor.getDisplayName());
         propertyDescriptor.getPropertyInfo().ifPresent(propertyInfoText -> {
-            JLabel infoTooltipIcon = new ClickableLabelWithToolTip1(propertyInfoText, Info);
+            JLabel infoTooltipIcon = new ClickableLabelWithTooltip(propertyInfoText, Info);
             add(ContainerFactory.pushLeft(infoTooltipIcon), BorderLayout.CENTER);
         });
     }

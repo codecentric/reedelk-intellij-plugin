@@ -6,11 +6,11 @@ import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 
-public class ClickableLabelWithToolTip1 extends ClickableLabel {
+public class ClickableLabelWithTooltip extends ClickableLabel {
 
     private final String tooltipText;
 
-    public ClickableLabelWithToolTip1(String tooltipText, Icon icon) {
+    public ClickableLabelWithTooltip(String tooltipText, Icon icon) {
         super(icon);
         this.tooltipText = tooltipText;
     }
