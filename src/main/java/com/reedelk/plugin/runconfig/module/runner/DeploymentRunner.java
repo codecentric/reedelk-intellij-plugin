@@ -20,5 +20,4 @@ public class DeploymentRunner extends DefaultProgramRunner {
                 ModuleUnDeployExecutor.EXECUTOR_ID.equals(executorId)) &&
                 profile instanceof ModuleRunConfiguration;
     }
-
 }
