@@ -22,8 +22,8 @@ import static com.reedelk.plugin.service.module.RuntimeApiService.OperationCallb
 
 public class DeployRunProfile extends AbstractRunProfile {
 
-    public DeployRunProfile(Project project, String moduleName, String runtimeConfigName) {
-        super(project, moduleName, runtimeConfigName);
+    public DeployRunProfile(Project project, String moduleName, String runtimeConfigName, String moduleConfigName) {
+        super(project, moduleName, runtimeConfigName, moduleConfigName);
     }
 
     @Override

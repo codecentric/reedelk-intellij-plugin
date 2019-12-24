@@ -19,14 +19,16 @@ abstract class AbstractRunProfile implements RunProfileState {
 
     protected final Project project;
     protected final String moduleName;
+    private final String moduleConfigName;
     protected final String runtimeConfigName;
 
     String address;
     int port;
 
-    AbstractRunProfile(final Project project, final String moduleName, String runtimeConfigName) {
+    AbstractRunProfile(final Project project, final String moduleName, String runtimeConfigName, String moduleConfigName) {
         this.project = project;
         this.moduleName = moduleName;
+        this.moduleConfigName = moduleConfigName;
         this.runtimeConfigName = runtimeConfigName;
     }
 
@@ -50,7 +52,7 @@ abstract class AbstractRunProfile implements RunProfileState {
 
         RunnerAndConfigurationSettings configSettings = RunManager.getInstance(project).findConfigurationByName(runtimeConfigName);
         if (configSettings == null) {
-            throw new ExecutionException(message("module.run.error.runtime.config.not.found", runtimeConfigName));
+            throw new ExecutionException(message("module.run.error.runtime.config.not.found", runtimeConfigName, moduleConfigName));
         }
 
         RuntimeRunConfiguration runtimeRunConfiguration = (RuntimeRunConfiguration) configSettings.getConfiguration();

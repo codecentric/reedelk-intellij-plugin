@@ -18,8 +18,8 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class UnDeployRunProfile extends AbstractRunProfile {
 
-    public UnDeployRunProfile(Project project, String moduleName, String runtimeConfigName) {
-        super(project, moduleName, runtimeConfigName);
+    public UnDeployRunProfile(Project project, String moduleName, String runtimeConfigName, String moduleConfigName) {
+        super(project, moduleName, runtimeConfigName, moduleConfigName);
     }
 
     @Override

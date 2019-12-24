@@ -54,11 +54,11 @@ public class ModuleRunConfiguration extends RunConfigurationBase implements
         if (ModuleDeployExecutor.EXECUTOR_ID.equals(executor.getId())) {
             PreferredRunConfigurationService.getInstance(project)
                     .setLastModuleRunConfiguration(getName());
-            return new DeployRunProfile(project, moduleName, runtimeConfigName);
+            return new DeployRunProfile(project, moduleName, runtimeConfigName, getName());
 
             // UnDeploy Executor
         } else if (ModuleUnDeployExecutor.EXECUTOR_ID.equals(executor.getId())) {
-            return new UnDeployRunProfile(project, moduleName, runtimeConfigName);
+            return new UnDeployRunProfile(project, moduleName, runtimeConfigName, getName());
 
         } else {
             throw new ExecutionException("Executor not valid!");
