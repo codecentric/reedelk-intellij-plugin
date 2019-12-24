@@ -31,8 +31,8 @@ public class Icons {
         }
 
         public static final Icon Default = IconLoader.getIcon("/icons/ComponentDefault.png");
-        public static final Icon Inbound = IconLoader.getIcon("/icons/ComponentInbound.png");
-        public static final Icon Processor = IconLoader.getIcon("/icons/ComponentProcessor.png");
+        public static final Icon Inbound = AllIcons.General.ArrowRight;
+        public static final Icon Processor = AllIcons.General.GearPlain;
 
         private static final Map<String, Icon> KEY_ICON_MAP = new HashMap<>();
 
