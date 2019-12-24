@@ -66,4 +66,11 @@ public class ComponentPropertyDescriptorAssertion {
         assertThat(definition).isNotPresent();
         return this;
     }
+
+    public ComponentPropertyDescriptorAssertion hasPropertyInfo(String propertyInfoText) {
+        Optional<String> optionalPropertyInfo = propertyDescriptor.getPropertyInfo();
+        assertThat(optionalPropertyInfo).isPresent();
+        assertThat(optionalPropertyInfo).hasValue(propertyInfoText);
+        return this;
+    }
 }

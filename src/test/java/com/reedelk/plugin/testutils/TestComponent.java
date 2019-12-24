@@ -171,6 +171,10 @@ public class TestComponent implements ProcessorSync {
     @Property("Property with autocomplete contributor")
     private DynamicString propertyWithAutoCompleteContributor;
 
+    @Property("String property with info text")
+    @PropertyInfo("This is the info text")
+    private String stringPropertyWithTooltipInfo;
+
 
     private int notExposedProperty;
 
@@ -321,5 +325,9 @@ public class TestComponent implements ProcessorSync {
 
     public void setMimeTypeCustom(String mimeTypeCustom) {
         this.mimeTypeCustom = mimeTypeCustom;
+    }
+
+    public void setStringPropertyWithTooltipInfo(String stringPropertyWithTooltipInfo) {
+        this.stringPropertyWithTooltipInfo = stringPropertyWithTooltipInfo;
     }
 }

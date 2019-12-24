@@ -548,6 +548,22 @@ class ComponentPropertyAnalyzerTest {
                 TypeDescriptorMatchers.ofPrimitiveType(typeInteger));
     }
 
+    @Test
+    void shouldReturnCorrectTooltipInfo() {
+        // Given
+        FieldInfo property = componentClassInfo.getFieldInfo("stringPropertyWithTooltipInfo");
+
+        // When
+        Optional<ComponentPropertyDescriptor> descriptor = analyzer.analyze(property);
+
+        // Then
+        assertThat(descriptor).isPresent();
+        PluginAssertion.assertThat(descriptor.get())
+                .hasName("stringPropertyWithTooltipInfo")
+                .hasDisplayName("String property with info text")
+                .hasPropertyInfo("This is the info text");
+    }
+
     private void assertThatExistProperty(String propertyName, String displayName, Object defaultValue, TypeDescriptorMatcher matcher) {
         // Given
         FieldInfo property = componentClassInfo.getFieldInfo(propertyName);
