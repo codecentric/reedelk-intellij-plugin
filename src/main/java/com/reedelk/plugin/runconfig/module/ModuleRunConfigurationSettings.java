@@ -15,6 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import static com.intellij.uiDesigner.core.GridConstraints.*;
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class ModuleRunConfigurationSettings extends SettingsEditor<ModuleRunConfiguration> {
 
@@ -28,13 +29,11 @@ public class ModuleRunConfigurationSettings extends SettingsEditor<ModuleRunConf
         moduleComboBox = new ModuleDescriptionsComboBox();
         moduleComboBox.setAllModulesFromProject(project);
 
-
         JPanel moduleChooserPanel = UI.PanelFactory.panel(moduleComboBox).
-                withComment("Choose the ESB Module this run configuration will be applied to")
+                withComment(message("moduleBuilder.module.run.config.message"))
                 .createPanel();
 
         jPanel.add(moduleChooserPanel, MODULE_SELECTOR);
-
 
         runtimeComboManager = new RuntimeComboManager(runtimeCombo, project);
     }

@@ -15,6 +15,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.messages.MessageBus;
 import com.reedelk.plugin.commons.Icons;
+import com.reedelk.plugin.commons.RuntimeComboManager;
 import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
 import com.reedelk.plugin.maven.MavenPackageGoal;
@@ -88,26 +89,34 @@ public class ModuleBuilderBeforeTaskProvider extends BeforeRunTaskProvider<Modul
         ModuleRunConfiguration moduleRunConfiguration = (ModuleRunConfiguration) configuration;
 
         // Notify error if the module is not selected (or not valid) in the current Runtime Configuration.
-        if (isBlank(moduleRunConfiguration.getModuleName())) {
+        final String moduleName = moduleRunConfiguration.getModuleName();
+        final String runtimeConfigName = moduleRunConfiguration.getRuntimeConfigName();
+
+        if (isBlank(moduleName)) {
             String errorMessage = message("module.run.error.module.not.selected", moduleRunConfiguration.getName());
             Project project = env.getProject();
             SwingUtilities.invokeLater(() -> ToolWindowUtils.notifyError(project, errorMessage, moduleRunConfiguration.getName()));
             return false;
         }
 
-        if (isBlank(moduleRunConfiguration.getRuntimeConfigName())) {
+        if (RuntimeComboManager.NO_RUNTIME_CONFIG_AVAILABLE.equals(runtimeConfigName)) {
+            String errorMessage = message("module.run.error.runtime.to.be.defined", moduleRunConfiguration.getName());
+            Project project = env.getProject();
+            SwingUtilities.invokeLater(() -> ToolWindowUtils.notifyError(project, errorMessage, moduleRunConfiguration.getName()));
+            return false;
+        }
+
+        if (isBlank(runtimeConfigName)) {
             String errorMessage = message("module.run.error.runtime.not.selected", moduleRunConfiguration.getName());
             Project project = env.getProject();
             SwingUtilities.invokeLater(() -> ToolWindowUtils.notifyError(project, errorMessage, moduleRunConfiguration.getName()));
             return false;
         }
 
-        Module moduleByName = ModuleManager.getInstance(env.getProject())
-                .findModuleByName(moduleRunConfiguration.getModuleName());
+        Module moduleByName = ModuleManager.getInstance(env.getProject()).findModuleByName(moduleName);
         if (moduleByName == null) {
-            // The Configuration has a module name which has been probably changed, hence
-            // it does not exists.
-            String errorMessage = message("module.run.error.module.does.not.exists", moduleRunConfiguration.getModuleName(), moduleRunConfiguration.getName());
+            // The Configuration has a module name which has been probably changed, hence it does not exists.
+            String errorMessage = message("module.run.error.module.does.not.exists", moduleName, moduleRunConfiguration.getName());
             Project project = env.getProject();
             SwingUtilities.invokeLater(() -> ToolWindowUtils.notifyError(project, errorMessage, moduleRunConfiguration.getName()));
             return false;
@@ -128,9 +137,6 @@ public class ModuleBuilderBeforeTaskProvider extends BeforeRunTaskProvider<Modul
                 // By saving all documents we force the File listener
                 // to commit all files. This way we know if we can hot swap or not.
                 FileDocumentManager.getInstance().saveAllDocuments();
-
-                String moduleName = moduleRunConfiguration.getModuleName();
-                String runtimeConfigName = moduleRunConfiguration.getRuntimeConfigName();
 
                 // No Need to re-compile and build the project.
                 if (SourceChangeService.getInstance(env.getProject()).isHotSwap(runtimeConfigName, moduleName)) {

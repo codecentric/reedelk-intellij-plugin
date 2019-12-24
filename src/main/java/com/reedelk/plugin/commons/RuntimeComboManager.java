@@ -11,7 +11,11 @@ import java.awt.event.ItemListener;
 import java.util.Collections;
 import java.util.List;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
+
 public class RuntimeComboManager {
+
+    public static final String NO_RUNTIME_CONFIG_AVAILABLE = message("moduleBuilder.runtime.run.config.not.available.combo.default");
 
     private String runtimeConfigName;
     private JComboBox<String> comboBox;
@@ -47,6 +51,13 @@ public class RuntimeComboManager {
                             .forEach(configuration -> comboBox.addItem(configuration.getName())));
         }
         additionalItems.forEach(comboBox::addItem);
+
+        // By default we add a placeholder, to make clear to the user that there are no runtime configurations
+        // defined in the project and that one should be defined.
+        if (comboBox.getModel().getSize() == 0) {
+            comboBox.addItem(NO_RUNTIME_CONFIG_AVAILABLE);
+        }
+
         comboBox.addItemListener(event -> {
             if (event.getStateChange() == ItemEvent.SELECTED) {
                 this.runtimeConfigName = (String) event.getItem();
