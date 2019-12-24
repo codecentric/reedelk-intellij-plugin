@@ -56,10 +56,12 @@ public class ModuleRunConfigurationSettings extends SettingsEditor<ModuleRunConf
     @Override
     protected void applyEditorTo(@NotNull ModuleRunConfiguration configuration) throws ConfigurationException {
         Module selectedModule = moduleComboBox.getSelectedModule();
-        if (selectedModule != null) configuration.setModule(selectedModule.getName());
-
-        if (runtimeComboManager.getRuntimeConfigName() != null) {
-            configuration.setRuntimeConfigName(runtimeComboManager.getRuntimeConfigName());
+        if (selectedModule != null) {
+            configuration.setModule(selectedModule.getName());
+        }
+        String runtimeConfigName = runtimeComboManager.getRuntimeConfigName();
+        if (runtimeConfigName != null) {
+            configuration.setRuntimeConfigName(runtimeConfigName);
         }
     }
 

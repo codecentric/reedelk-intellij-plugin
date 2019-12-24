@@ -6,7 +6,6 @@ import com.reedelk.plugin.runconfig.runtime.RuntimeRunConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Collections;
 import java.util.List;
@@ -17,24 +16,21 @@ public class RuntimeComboManager {
 
     public static final String NO_RUNTIME_CONFIG_AVAILABLE = message("moduleBuilder.runtime.run.config.not.available.combo.default");
 
-    private String runtimeConfigName;
     private JComboBox<String> comboBox;
 
     public RuntimeComboManager(@NotNull JComboBox<String> comboBox, Project project) {
         configure(comboBox, project, Collections.emptyList());
         this.comboBox.setSelectedIndex(0);
-        this.runtimeConfigName = (String) this.comboBox.getSelectedItem();
     }
 
     public RuntimeComboManager(@NotNull JComboBox<String> comboBox, Project project, List<String> additionalItems, ItemListener itemListener) {
         configure(comboBox, project, additionalItems);
         this.comboBox.addItemListener(itemListener);
         this.comboBox.setSelectedIndex(0);
-        this.runtimeConfigName = (String) this.comboBox.getSelectedItem();
     }
 
     public String getRuntimeConfigName() {
-        return runtimeConfigName;
+        return (String) this.comboBox.getSelectedItem();
     }
 
     public void setRuntimeConfigName(String runtimeConfigName) {
@@ -57,11 +53,5 @@ public class RuntimeComboManager {
         if (comboBox.getModel().getSize() == 0) {
             comboBox.addItem(NO_RUNTIME_CONFIG_AVAILABLE);
         }
-
-        comboBox.addItemListener(event -> {
-            if (event.getStateChange() == ItemEvent.SELECTED) {
-                this.runtimeConfigName = (String) event.getItem();
-            }
-        });
     }
 }
