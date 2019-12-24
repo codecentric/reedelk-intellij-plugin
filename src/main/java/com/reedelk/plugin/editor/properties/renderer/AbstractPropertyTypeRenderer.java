@@ -23,13 +23,12 @@ public abstract class AbstractPropertyTypeRenderer implements PropertyTypeRender
                             @NotNull ComponentPropertyDescriptor descriptor,
                             @NotNull ContainerContext context) {
 
-        PropertyTitleLabel propertyTitleLabel = new PropertyTitleLabel(descriptor.getDisplayName());
+        PropertyTitleLabel propertyTitleLabel = new PropertyTitleLabel(descriptor);
 
         // Apply visibility conditions to the label and the rendered component
         applyWhenVisibility(descriptor.getWhenDefinitions(), context, rendered, propertyTitleLabel);
 
-        // Add the component and its property title label to the
-        // parent container.
+        // Add the component and its property title label to the parent container.
         FormBuilder.get()
                 .addLabel(propertyTitleLabel, parent)
                 .addLastField(rendered, parent);

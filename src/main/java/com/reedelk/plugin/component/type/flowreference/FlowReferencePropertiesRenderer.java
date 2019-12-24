@@ -9,6 +9,7 @@ import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.FormBuilder;
+import com.reedelk.plugin.editor.properties.commons.PropertyTitleLabel;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.SubflowService;
@@ -56,8 +57,9 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
 
         SubflowSelector selector = buildSubflowSelectorCombo(referencePropertyAccessor);
 
+        PropertyTitleLabel propertyTitleLabel = new PropertyTitleLabel(referencePropertyDescriptor);
         FormBuilder.get()
-                .addLabel(referencePropertyDescriptor.getDisplayName(), genericPropertiesPanel)
+                .addLabel(propertyTitleLabel, genericPropertiesPanel)
                 .addLastField(selector, genericPropertiesPanel);
 
         return genericPropertiesPanel;

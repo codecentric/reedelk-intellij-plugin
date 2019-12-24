@@ -13,7 +13,8 @@ public class FieldInfoAnalyzers {
     }
 
     private static final List<FieldInfoAnalyzer> FIELD_INFO_ANALYZERS = Arrays.asList(
-            new NameFieldInfoAnalyzer(),
+            new PropertyNameFieldInfoAnalyzer(),
+            new PropertyInfoFieldInfoAnalyzer(),
             new TypeFieldInfoAnalyzer(),
             new WhenFieldInfoAnalyzer(),
             new HintFieldInfoAnalyzer(),

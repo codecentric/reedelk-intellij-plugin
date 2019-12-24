@@ -69,6 +69,7 @@ public class Icons {
         private Misc() {
         }
 
+        public static final Icon Info = IconLoader.getIcon("/icons/Info.png");
         public static final Icon ShowPassword = IconLoader.getIcon("/icons/PasswordShow.png");
         public static final Icon HidePassword = IconLoader.getIcon("/icons/PasswordHide.png");
     }

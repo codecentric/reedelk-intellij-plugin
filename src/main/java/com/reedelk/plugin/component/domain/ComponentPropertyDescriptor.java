@@ -17,6 +17,7 @@ public class ComponentPropertyDescriptor {
     private String displayName;
     private String propertyName;
     private String defaultValue;
+    private String propertyInfo;
     private TypeDescriptor propertyType;
     private ScriptSignatureDefinition scriptSignatureDefinition;
     private AutoCompleteContributorDefinition autoCompleteContributorDefinition;
@@ -53,6 +54,11 @@ public class ComponentPropertyDescriptor {
     }
 
     @NotNull
+    public Optional<String> getPropertyInfo() {
+        return Optional.ofNullable(propertyInfo);
+    }
+
+    @NotNull
     public List<WhenDefinition> getWhenDefinitions() {
         return whenDefinitions;
     }
@@ -77,6 +83,7 @@ public class ComponentPropertyDescriptor {
         private String displayName;
         private String propertyName;
         private String defaultValue;
+        private String propertyInfo;
         private TypeDescriptor propertyType;
         private ScriptSignatureDefinition scriptSignatureDefinition;
         private AutoCompleteContributorDefinition autoCompleteContributionsDefinition;
@@ -108,6 +115,11 @@ public class ComponentPropertyDescriptor {
             return this;
         }
 
+        public Builder propertyInfo(String propertyInfo) {
+            this.propertyInfo = propertyInfo;
+            return this;
+        }
+
         public Builder when(WhenDefinition whenDefinition) {
             this.whenDefinitions.add(whenDefinition);
             return this;
@@ -133,6 +145,7 @@ public class ComponentPropertyDescriptor {
             descriptor.propertyName = propertyName;
             descriptor.defaultValue = defaultValue;
             descriptor.propertyType = propertyType;
+            descriptor.propertyInfo = propertyInfo;
             descriptor.scriptSignatureDefinition = scriptSignatureDefinition;
             descriptor.autoCompleteContributorDefinition = autoCompleteContributionsDefinition;
             descriptor.whenDefinitions.addAll(whenDefinitions);
