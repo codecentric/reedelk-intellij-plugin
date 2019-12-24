@@ -23,6 +23,7 @@ import java.util.Optional;
 public abstract class AbstractGraphNode implements GraphNode {
 
     public static final int NODE_WIDTH = 130;
+    public static final int HALF_NODE_WIDTH = Half.of(NODE_WIDTH);
 
     protected final Icon icon;
 

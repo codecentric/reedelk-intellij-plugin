@@ -24,12 +24,14 @@ public class Images {
         public static final Image DefaultComponent;
         public static final Image RemoveComponent;
         public static final Image InboundPlaceholderIcon;
+        public static final Image OutboundPlaceholderIcon;
         public static final Image PlaceholderHintIcon;
 
         static {
             DefaultComponent = loadImage("/images/ComponentDefault.png");
             RemoveComponent = loadImage("/images/ComponentRemove.png");
             InboundPlaceholderIcon = loadImage("/images/ComponentInboundPlaceholder.png");
+            OutboundPlaceholderIcon = loadImage("/images/ComponentOutboundPlaceholder.png");
             PlaceholderHintIcon = loadImage("/images/ComponentPlaceholderHint.png");
         }
 

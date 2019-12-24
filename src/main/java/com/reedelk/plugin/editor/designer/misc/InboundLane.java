@@ -44,7 +44,7 @@ public class InboundLane {
     private void drawInboundComponentIcon(Graphics2D graphics, ImageObserver observer) {
         Image inboundPlaceholderImage = Images.Component.InboundPlaceholderIcon;
         graphics.drawImage(inboundPlaceholderImage,
-                Half.of(AbstractGraphNode.NODE_WIDTH) - Icon.Dimension.HALF_ICON_WIDTH,
+                AbstractGraphNode.HALF_NODE_WIDTH - Icon.Dimension.HALF_ICON_WIDTH,
                 topPadding + Icon.Dimension.ICON_HEIGHT + Icon.Dimension.TOP_PADDING - Icon.Dimension.ICON_WIDTH, observer);
     }
 

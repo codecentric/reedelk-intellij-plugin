@@ -144,6 +144,7 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
         public void run(@NotNull ProgressIndicator indicator) {
             if (!ComponentService.getInstance(module).isInitialized()) {
                 indicator.cancel();
+                cancelled = true;
                 return;
             }
             try {

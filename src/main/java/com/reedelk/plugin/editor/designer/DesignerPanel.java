@@ -21,6 +21,7 @@ import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.selection.SelectableItem;
 import com.reedelk.plugin.editor.properties.selection.SelectableItemComponent;
 import com.reedelk.plugin.editor.properties.selection.SelectionChangeListener;
+import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.SnapshotListener;
 import com.reedelk.plugin.graph.layout.FlowGraphLayout;
@@ -35,6 +36,7 @@ import java.awt.*;
 import java.awt.dnd.DropTarget;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.ImageObserver;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -50,9 +52,8 @@ public abstract class DesignerPanel extends DisposablePanel implements
 
     static final int TOP_PADDING = 80;
 
-    protected final transient FlowSnapshot snapshot;
-
     private final transient Module module;
+    private final transient FlowSnapshot snapshot;
     private final transient SelectableItem defaultSelectedItem;
     private final transient DesignerPanelActionHandler actionHandler;
     private final SelectionChangeListener currentComponentPublisher;
@@ -126,13 +127,16 @@ public abstract class DesignerPanel extends DisposablePanel implements
 
                     }
 
-                    beforePaint(g2);
+                    beforePaint(flowGraph, g2, this);
 
-                    // Draw the graph nodes
-                    flowGraph.breadthFirstTraversal(node -> node.draw(flowGraph, g2, DesignerPanel.this));
+                    flowGraph.breadthFirstTraversal(node -> {
 
-                    // Draw the arrows connecting the nodes
-                    flowGraph.breadthFirstTraversal(node -> node.drawArrows(flowGraph, g2, DesignerPanel.this));
+                        // Draw the graph nodes
+                        node.draw(flowGraph, g2, DesignerPanel.this);
+
+                        // Draw the arrows connecting the nodes
+                        node.drawArrows(flowGraph, g2, DesignerPanel.this);
+                    });
 
                     hintDrawable.draw(flowGraph, g2, hintResult, this);
 
@@ -253,12 +257,9 @@ public abstract class DesignerPanel extends DisposablePanel implements
     public void onDataChange() {
         snapshotUpdated = true;
         if (isVisible) {
-            // If it is visible and nothing is selected, we need to set default
-            // selection. The first time we open the designer, we  need to wait
+            // The first time we open the designer, we  need to wait
             // for the background Thread to deserialize the graph. When the
             // graph is de-serialized, we get notified with this method call.
-            // If nothing is already selected, we set as current selection
-            // the default selected item.
             snapshot.applyOnGraph(graph ->
                             select(currentSelection, false),
                             absentFlow -> unselect(),
@@ -303,7 +304,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
         refresh();
     }
 
-    protected abstract void beforePaint(Graphics2D graphics);
+    protected abstract void beforePaint(FlowGraph graph, Graphics2D graphics, ImageObserver imageObserver);
 
     private Graphics2D getGraphics2D() {
         return (Graphics2D) getGraphics();

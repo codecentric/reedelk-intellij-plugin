@@ -9,7 +9,8 @@ import java.util.Optional;
 
 public class DesignerWindowSizeCalculator {
 
-    private static final int WINDOW_GROW_STEP = 50;
+    private static final int WINDOW_X_GROW_STEP = 50;
+    private static final int WINDOW_Y_GROW_STEP = 100;
 
     private DesignerWindowSizeCalculator() {
     }
@@ -33,8 +34,8 @@ public class DesignerWindowSizeCalculator {
             if (currentMaxY > maxY) maxY = currentMaxY;
         }
 
-        int newSizeX = maxX + WINDOW_GROW_STEP;
-        int newSizeY = maxY + WINDOW_GROW_STEP;
+        int newSizeX = maxX + WINDOW_X_GROW_STEP;
+        int newSizeY = maxY + WINDOW_Y_GROW_STEP;
 
         return Optional.of(new Dimension(newSizeX, newSizeY));
     }
