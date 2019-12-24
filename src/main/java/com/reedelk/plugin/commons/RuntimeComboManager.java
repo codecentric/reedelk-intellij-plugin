@@ -34,7 +34,21 @@ public class RuntimeComboManager {
     }
 
     public void setRuntimeConfigName(String runtimeConfigName) {
-        comboBox.setSelectedItem(runtimeConfigName);
+        for (int i = 0; i < comboBox.getModel().getSize(); i++) {
+            if (comboBox.getItemAt(i).equals(runtimeConfigName)) {
+                comboBox.setSelectedItem(runtimeConfigName);
+                return;
+            }
+        }
+        // The Runtime config name is not valid (probably it has been cancelled)
+        if (NO_RUNTIME_CONFIG_AVAILABLE.equals(runtimeConfigName)) {
+            comboBox.addItem(runtimeConfigName);
+            comboBox.setSelectedItem(runtimeConfigName);
+        } else {
+            String notFoundItem = runtimeConfigName + " (not found)";
+            comboBox.addItem(notFoundItem);
+            comboBox.setSelectedItem(notFoundItem);
+        }
     }
 
     private void configure(@NotNull JComboBox<String> comboBox, Project project, List<String> additionalItems) {
