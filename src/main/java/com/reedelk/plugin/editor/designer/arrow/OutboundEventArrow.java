@@ -19,7 +19,7 @@ import java.util.Stack;
 
 import static com.reedelk.plugin.commons.Images.Component.OutboundPlaceholderIcon;
 
-public class OutboundEvent {
+public class OutboundEventArrow {
 
     private final int BOTTOM_PADDING = 100;
     private final int SCOPE_END_PADDING = 30;
@@ -27,7 +27,7 @@ public class OutboundEvent {
     private final Arrow arrow;
     private final BasicStroke stroke;
 
-    public OutboundEvent() {
+    public OutboundEventArrow() {
         this.arrow = new Arrow();
         this.stroke = new BasicStroke(1f);
     }
