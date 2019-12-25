@@ -6,6 +6,8 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.concurrent.ExecutorService;
+
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
@@ -13,6 +15,10 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
  * in this plugin. This executor is single threaded.
  */
 public class PluginExecutors {
+
+    // There is only one executor across application to deserialize flows
+    private static ExecutorService deserializerExecutor =
+            AppExecutorUtil.createBoundedApplicationPoolExecutor("Reedelk Deserializer", 1);
 
     public static void run(@NotNull Module module, @NotNull String indicatorText, @NotNull AsyncProgressTask task) {
         ProgressManager.getInstance().run(new AsyncProgressTaskExecutor(module, indicatorText, task));
@@ -32,5 +38,9 @@ public class PluginExecutors {
                 .inSmartMode(module.getProject())
                 .submit(AppExecutorUtil.getAppExecutorService());
 
+    }
+
+    public static void onDeserializeExecutor(Runnable runnable) {
+        deserializerExecutor.submit(runnable);
     }
 }

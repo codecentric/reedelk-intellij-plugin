@@ -12,9 +12,9 @@ import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.editor.DesignerEditor;
+import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.graph.*;
 import com.reedelk.plugin.graph.deserializer.DeserializationError;
 import com.reedelk.plugin.service.module.ComponentService;
@@ -24,7 +24,6 @@ import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
-import java.util.concurrent.ExecutorService;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static javax.swing.SwingUtilities.invokeLater;
@@ -38,10 +37,6 @@ import static javax.swing.SwingUtilities.invokeLater;
 public abstract class GraphManager implements FileEditorManagerListener, FileEditorManagerListener.Before, SnapshotListener, Disposable, ComponentListUpdateNotifier {
 
     private static final Logger LOG = Logger.getInstance(GraphManager.class);
-
-    // Only one executor across the application to deserialize
-    private static ExecutorService executor =
-            AppExecutorUtil.createBoundedApplicationPoolExecutor("Reedelk Deserializer", 1);
 
     private final Module module;
     private final FlowSnapshot snapshot;
@@ -136,7 +131,7 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
         // Note that if the document has an empty text, the deserialization
         // will just thrown a 'JSONException' since it is not a valid JSON and
         // the designer panel will show an Error screen with the exception message.
-        executor.submit(() -> {
+        PluginExecutors.onDeserializeExecutor(() -> {
             try {
                 FlowGraph deSerializedGraph = deserialize(module, json, graphProvider);
                 invokeLater(() ->
