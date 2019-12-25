@@ -65,8 +65,6 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         this.systemComponents = new ModuleComponents(SYSTEM_COMPONENTS_MODULE_NAME, new ArrayList<>());
 
         asyncUpdateSystemComponents();
-        asyncUpdateMavenDependenciesComponents();
-        asyncUpdateModuleCustomComponents();
     }
 
     @Override
@@ -101,7 +99,9 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     public synchronized Collection<ModuleComponents> getModuleComponents() {
         List<ModuleComponents> descriptors = new ArrayList<>(mavenJarComponentsMap.values());
         descriptors.add(systemComponents);
-        if (moduleComponents != null) descriptors.add(moduleComponents);
+        if (moduleComponents != null) {
+            descriptors.add(moduleComponents);
+        }
         return unmodifiableCollection(descriptors);
     }
 
@@ -117,7 +117,17 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
     @Override
     public void importFinished(@NotNull Collection<MavenProject> importedProjects, @NotNull List<Module> newModules) {
-        asyncUpdateMavenDependenciesComponents();
+        // Remove all components before updating them
+        mavenJarComponentsMap.clear();
+        autoCompleteContributorDefinitions.clear();
+
+        // Notify that all components have been removed
+        notifyComponentListUpdate();
+
+        // Update Maven dependencies components and do nothing when its done.
+        asyncUpdateMavenDependenciesComponents(() -> {
+            // Nothing
+        });
     }
 
     @Override
@@ -135,27 +145,26 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
      * If a JAR contains a module but the module name Manifest attribute does not exists,
      * then it is ignored.
      */
-    private synchronized void asyncUpdateMavenDependenciesComponents() {
-        // Remove all components before updating them
-        mavenJarComponentsMap.clear();
-        autoCompleteContributorDefinitions.clear();
-
-        notifyComponentListUpdate();
-
-        // Update the components definitions from maven project
-        MavenUtils.getMavenProject(module.getProject(), module.getName()).ifPresent(mavenProject -> {
-
-            // We only want the root dependencies, since user defined modules are in the root.
-            mavenProject.getDependencyTree().stream()
-                    .map(MavenArtifactNode::getArtifact)
-                    .filter(ExcludedArtifactsFromModuleSync.predicate())
-                    .filter(artifact -> ModuleUtils.isModule(artifact.getFile()))
-                    .map(artifact -> artifact.getFile().getPath()).collect(toList())
-                    .forEach(jarFilePath -> ModuleUtils.getModuleName(jarFilePath).ifPresent(moduleName ->
-                            PluginExecutors.run(module,
-                                    message("module.component.update.component.for.module", moduleName),
-                                    indicator -> scanForComponentsFromJar(jarFilePath, moduleName))));
-        });
+    private synchronized void asyncUpdateMavenDependenciesComponents(OnDone callback) {
+        PluginExecutors.run(module,
+                message("module.component.update.component.for.module", module.getName()),
+                indicator -> {
+                    // Update the components definitions from maven project
+                    MavenUtils.getMavenProject(module.getProject(), module.getName()).ifPresent(mavenProject -> {
+                        // We only want the root dependencies, since user defined modules are in the root.
+                        mavenProject.getDependencyTree().stream()
+                                .map(MavenArtifactNode::getArtifact)
+                                .filter(ExcludedArtifactsFromModuleSync.predicate())
+                                .filter(artifact -> ModuleUtils.isModule(artifact.getFile()))
+                                .map(artifact -> artifact.getFile().getPath()).collect(toList())
+                                .forEach(jarFilePath -> ModuleUtils.getModuleName(jarFilePath)
+                                        .ifPresent(esbModuleName -> {
+                                            scanForComponentsOfJar(jarFilePath, esbModuleName);
+                                            notifyComponentListUpdate();
+                                        }));
+                    });
+                    callback.execute();
+                });
     }
 
     private synchronized void asyncUpdateModuleCustomComponents() {
@@ -189,10 +198,14 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                     systemComponents.addAll(flowControlComponents);
                     isInitialized = true;
                     notifyComponentListUpdate();
+
+                    // Update maven dependencies and then current
+                    // module dependencies when the task is complete.
+                    asyncUpdateMavenDependenciesComponents(this::asyncUpdateModuleCustomComponents);
                 });
     }
 
-    private synchronized void scanForComponentsFromJar(String jarFilePath, String moduleName) {
+    private synchronized void scanForComponentsOfJar(String jarFilePath, String moduleName) {
         // We only scan a module if its jar file is a module with a name.
         ScanResult scanResult = ComponentScanner.scanResultFrom(jarFilePath);
         List<ComponentDescriptor> components = componentScanner.from(scanResult);
@@ -202,8 +215,6 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
         List<String> from = componentScanner.autoCompleteFrom(scanResult);
         autoCompleteContributorDefinitions.add(new AutoCompleteContributorDefinition(from));
-
-        notifyComponentListUpdate();
     }
 
     private static Optional<ComponentDescriptor> findComponentMatching(Collection<ModuleComponents> descriptors, String fullyQualifiedName) {
@@ -217,6 +228,12 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     }
 
     private void notifyComponentListUpdate() {
-        publisher.onComponentListUpdate(getModuleComponents());
+        Collection<ModuleComponents> moduleComponents = getModuleComponents();
+        publisher.onComponentListUpdate(moduleComponents);
     }
+
+    interface OnDone {
+        void execute();
+    }
+
 }

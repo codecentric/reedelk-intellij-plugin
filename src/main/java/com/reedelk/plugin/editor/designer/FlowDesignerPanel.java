@@ -2,7 +2,6 @@ package com.reedelk.plugin.editor.designer;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.commons.Half;
-import com.reedelk.plugin.editor.designer.arrow.OutboundEventArrow;
 import com.reedelk.plugin.editor.designer.dnd.DesignerPanelActionHandler;
 import com.reedelk.plugin.editor.designer.misc.InboundLane;
 import com.reedelk.plugin.editor.designer.text.FlowMetadata;
@@ -17,19 +16,16 @@ public class FlowDesignerPanel extends DesignerPanel {
 
     private final transient InboundLane inboundLane;
     private final transient FlowMetadata flowMetadata;
-    private final transient OutboundEventArrow outboundEventArrow;
 
     public FlowDesignerPanel(Module module, FlowSnapshot snapshot, DesignerPanelActionHandler actionHandler) {
         super(module, snapshot, actionHandler, new SelectableItemFlow(snapshot));
         this.inboundLane = new InboundLane(TOP_PADDING, this);
         this.flowMetadata = new FlowMetadata(snapshot, Half.of(TOP_PADDING), AbstractGraphNode.NODE_WIDTH);
-        this.outboundEventArrow = new OutboundEventArrow();
     }
 
     @Override
     protected void beforePaint(FlowGraph graph, Graphics2D graphics, ImageObserver imageObserver) {
         inboundLane.draw(graph, graphics, FlowDesignerPanel.this);
         flowMetadata.draw(graphics);
-        outboundEventArrow.draw(graph, graphics, imageObserver);
     }
 }

@@ -146,17 +146,26 @@ public abstract class DesignerPanel extends DisposablePanel implements
                     centerOfNodeDrawable.draw(g2);
 
                     if (currentSelection == null) {
-                        // First time we open the flow, the current selection might be null.
-                        // This also applies when the Editor has been made visible.
-                        // (When the editor is not visible the current selection is set to null)
-                        invokeLater(() -> select(defaultSelectedItem, false));
+                        currentComponentPublisher.unselect();
                     }
 
                 },
 
-                absentFlow -> buildingFlowInfoPanel.draw(g2, this, this),
+                absentFlow -> {
+                    // If the flow is not present we must unselect any property panel
+                    // and resize the window to match the parent (scroll pane).
+                    setSize(getParent().getSize());
+                    buildingFlowInfoPanel.draw(g2, this, this);
+                    currentComponentPublisher.unselect();
+                },
 
-                flowWithError -> errorFlowInfoPanel.draw(flowWithError, g2, this, this));
+                flowWithError -> {
+                    // If the flow is not present we must unselect any property panel
+                    // and resize the window to match the parent (scroll pane).
+                    setSize(getParent().getSize());
+                    errorFlowInfoPanel.draw(flowWithError, g2, this, this);
+                    currentComponentPublisher.unselect();
+                });
 
         g2.dispose();
     }

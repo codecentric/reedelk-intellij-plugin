@@ -11,12 +11,10 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.editor.DesignerEditor;
-import com.reedelk.plugin.executor.AsyncProgressTask;
-import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.graph.*;
 import com.reedelk.plugin.graph.deserializer.DeserializationError;
 import com.reedelk.plugin.service.module.ComponentService;
@@ -26,8 +24,10 @@ import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.concurrent.ExecutorService;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
+import static javax.swing.SwingUtilities.invokeLater;
 
 /**
  * Centralizes updates of the graph coming from:
@@ -39,10 +39,15 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
 
     private static final Logger LOG = Logger.getInstance(GraphManager.class);
 
+    // Only one executor across the application to deserialize
+    private static ExecutorService executor =
+            AppExecutorUtil.createBoundedApplicationPoolExecutor("Reedelk Deserializer", 1);
+
     private final Module module;
     private final FlowSnapshot snapshot;
     private final VirtualFile graphFile;
     private final FlowGraphProvider graphProvider;
+    private final ComponentService componentService;
     private final MessageBusConnection projectBusConnection;
     private final MessageBusConnection moduleBusConnection;
 
@@ -51,12 +56,14 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
     GraphManager(@NotNull Module module,
                  @NotNull VirtualFile managedFile,
                  @NotNull FlowSnapshot snapshot,
-                 @NotNull FlowGraphProvider graphProvider) {
+                 @NotNull FlowGraphProvider graphProvider,
+                 @NotNull ComponentService componentService) {
         this.module = module;
         this.snapshot = snapshot;
         this.graphFile = managedFile;
         this.snapshot.addListener(this);
         this.graphProvider = graphProvider;
+        this.componentService = componentService;
 
         projectBusConnection = module.getProject().getMessageBus().connect();
         projectBusConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
@@ -90,7 +97,9 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
     public void onComponentListUpdate(Collection<ModuleComponents> components) {
         // When the component list is updated, we MUST deserialize so that
         // unknown components are correctly resolved and visualized in the Designer.
-        deserializeDocument();
+        if (componentService.isInitialized()) {
+            deserializeDocument();
+        }
     }
 
     @Override
@@ -119,60 +128,32 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
     }
 
     private void deserializeDocument() {
+        if (document == null) return;
+
+        final String json = document.getText();
         // We only deserialize (in the background) if and only if the
         // document related to the current file has been opened already.
         // Note that if the document has an empty text, the deserialization
         // will just thrown a 'JSONException' since it is not a valid JSON and
         // the designer panel will show an Error screen with the exception message.
-        if (document != null) {
-            PluginExecutors.run(module,
-                    message("graph.manager.deserialization.task.title"),
-                    new DeserializeGraphAndNotify());
-        }
+        executor.submit(() -> {
+            try {
+                FlowGraph deSerializedGraph = deserialize(module, json, graphProvider);
+                invokeLater(() ->
+                        snapshot.updateSnapshot(GraphManager.this, deSerializedGraph));
+
+            } catch (Exception exception) {
+                LOG.warn(message("graph.manager.error.deserialization", json, exception.getMessage()), exception);
+                FlowGraph deSerializedGraph = new ErrorFlowGraph(exception);
+                invokeLater(() ->
+                        snapshot.updateSnapshot(GraphManager.this, deSerializedGraph));
+            }
+        });
     }
+
 
     protected abstract String serialize(FlowGraph graph);
 
-    protected abstract FlowGraph deserialize(Module module, Document document, FlowGraphProvider graphProvider) throws DeserializationError;
+    protected abstract FlowGraph deserialize(Module module, String documentText, FlowGraphProvider graphProvider) throws DeserializationError;
 
-    private class DeserializeGraphAndNotify implements AsyncProgressTask {
-
-        private FlowGraph deSerializedGraph;
-        private boolean cancelled = false;
-
-        @Override
-        public void run(@NotNull ProgressIndicator indicator) {
-            if (!ComponentService.getInstance(module).isInitialized()) {
-                indicator.cancel();
-                cancelled = true;
-                return;
-            }
-            try {
-                // We are assuming that deserialization of the graph from JSON is a lengthy operation.
-                // Therefore we execute it in a background thread.
-                this.deSerializedGraph = deserialize(module, document, graphProvider);
-            } catch (Exception exception) {
-                LOG.warn(message("graph.manager.error.deserialization", document.getText(), exception.getMessage()), exception);
-                this.deSerializedGraph = new ErrorFlowGraph(exception);
-            }
-        }
-
-        @Override
-        public void onThrowable(@NotNull Throwable error) {
-            LOG.warn(message("graph.manager.error.deserialization", document.getText(), error.getMessage()), error);
-            this.deSerializedGraph = new ErrorFlowGraph(error);
-        }
-
-        @Override
-        public void onCancel() {
-            this.cancelled = true;
-        }
-
-        @Override
-        public void onFinished() {
-            if (!cancelled) {
-                snapshot.updateSnapshot(GraphManager.this, this.deSerializedGraph);
-            }
-        }
-    }
 }
