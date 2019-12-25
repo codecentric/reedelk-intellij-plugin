@@ -154,7 +154,9 @@ public abstract class DesignerPanel extends DisposablePanel implements
                 absentFlow -> {
                     // If the flow is not present we must unselect any property panel
                     // and resize the window to match the parent (scroll pane).
-                    setSize(getParent().getSize());
+                    Dimension parentSize = getParent().getSize();
+                    setSize(parentSize);
+                    setPreferredSize(parentSize);
                     buildingFlowInfoPanel.draw(g2, this, this);
                     currentComponentPublisher.unselect();
                 },
@@ -162,7 +164,9 @@ public abstract class DesignerPanel extends DisposablePanel implements
                 flowWithError -> {
                     // If the flow is not present we must unselect any property panel
                     // and resize the window to match the parent (scroll pane).
-                    setSize(getParent().getSize());
+                    Dimension parentSize = getParent().getSize();
+                    setSize(parentSize);
+                    setPreferredSize(parentSize);
                     errorFlowInfoPanel.draw(flowWithError, g2, this, this);
                     currentComponentPublisher.unselect();
                 });
