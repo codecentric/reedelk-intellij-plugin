@@ -27,12 +27,7 @@
         <fileEditorProvider implementation="com.reedelk.plugin.editor.FlowDesignerEditorProvider" order="first"/>
         <fileEditorProvider implementation="com.reedelk.plugin.editor.SubFlowDesignerEditorProvider" order="first"/>
 
-        <!-- File Templates -->
-        <internalFileTemplate name="Maven Module"/>
-        <internalFileTemplate name="Maven Project"/>
-
-        <stepsBeforeRunProvider
-                implementation="com.reedelk.plugin.runconfig.module.beforetask.ModuleBuilderBeforeTaskProvider"/>
+        <stepsBeforeRunProvider implementation="com.reedelk.plugin.runconfig.module.beforetask.ModuleBuilderBeforeTaskProvider"/>
 
         <!-- Module Builder -->
         <moduleBuilder builderClass="com.reedelk.plugin.builder.ModuleBuilder" id="ESB_MODULE_BUILDER" order="first"/>
