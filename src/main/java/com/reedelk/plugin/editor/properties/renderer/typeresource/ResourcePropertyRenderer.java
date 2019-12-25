@@ -51,7 +51,7 @@ public class ResourcePropertyRenderer extends AbstractPropertyTypeRenderer {
         descriptor.setTitle(message("properties.type.resource.choose.file.dialog"));
 
 
-        JBTextField textField = Experiments.isFeatureEnabled("inline.browse.button") ?
+        JBTextField textField = Experiments.getInstance().isFeatureEnabled("inline.browse.button") ?
                 new ChooseFileInputField(message("properties.type.resource.choose.file.hint"), inputFileFieldColumns) :
                 new StringInputField(message("properties.type.resource.choose.file.hint"), inputFileFieldColumns);
 
