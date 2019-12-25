@@ -2,6 +2,7 @@ package com.reedelk.plugin.commons;
 
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
+import com.reedelk.plugin.graph.utils.FindMaxBottomHalfHeight;
 
 import java.awt.*;
 import java.util.Collection;
@@ -10,7 +11,7 @@ import java.util.Optional;
 public class DesignerWindowSizeCalculator {
 
     private static final int WINDOW_X_GROW_STEP = 50;
-    private static final int WINDOW_Y_GROW_STEP = 100;
+    private static final int WINDOW_Y_GROW_STEP = 110;
 
     private DesignerWindowSizeCalculator() {
     }
@@ -22,16 +23,16 @@ public class DesignerWindowSizeCalculator {
             return Optional.empty();
         }
 
-        Collection<GraphNode> nodes = graph.nodes();
+        int maxBottomHalf = FindMaxBottomHalfHeight.of(graph, graphics, graph.root(), null);
+        int maxY = graph.root().y() + maxBottomHalf;
 
         int maxX = graph.root().x() + graph.root().width(graphics);
-        int maxY = graph.root().y() + graph.root().height(graphics);
-
-        for (GraphNode node : nodes) {
-            int currentMaxX = node.x() + node.width(graphics);
-            int currentMaxY = node.y() + node.bottomHalfHeight(graphics);
-            if (currentMaxX > maxX) maxX = currentMaxX;
-            if (currentMaxY > maxY) maxY = currentMaxY;
+        Collection<GraphNode> endNodes = graph.endNodes();
+        for (GraphNode endNode : endNodes) {
+            int currentX = endNode.x() + endNode.width(graphics);
+            if (currentX > maxX) {
+                maxX = currentX;
+            }
         }
 
         int newSizeX = maxX + WINDOW_X_GROW_STEP;

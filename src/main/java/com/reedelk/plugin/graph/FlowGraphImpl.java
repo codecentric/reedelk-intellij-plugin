@@ -4,6 +4,7 @@ import com.reedelk.plugin.graph.node.GraphNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -100,6 +101,18 @@ public class FlowGraphImpl implements FlowGraph {
     @Override
     public List<GraphNode> predecessors(@NotNull GraphNode n1) {
         return graph.predecessors(n1);
+    }
+
+    @Override
+    public List<GraphNode> endNodes() {
+        List<GraphNode> endNodes = new ArrayList<>();
+        graph.edges().forEach((graphNode, graphNodes) -> {
+            // An end node is a node without successors.
+            if (graphNodes.isEmpty()) {
+                endNodes.add(graphNode);
+            }
+        });
+        return endNodes;
     }
 
     @Override

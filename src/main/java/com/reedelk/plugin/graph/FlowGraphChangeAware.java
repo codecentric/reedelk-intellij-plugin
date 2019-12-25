@@ -97,6 +97,11 @@ public class FlowGraphChangeAware implements FlowGraph {
     }
 
     @Override
+    public List<GraphNode> endNodes() {
+        return wrapped.endNodes();
+    }
+
+    @Override
     public int nodesCount() {
         return wrapped.nodesCount();
     }
@@ -129,5 +134,4 @@ public class FlowGraphChangeAware implements FlowGraph {
     public boolean isChanged() {
         return changed;
     }
-
 }

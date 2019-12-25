@@ -147,4 +147,32 @@ class FlowGraphImplTest extends AbstractGraphTest {
         assertThat(graph.successors(root)).isEmpty();
         assertThat(graph.nodesCount()).isEqualTo(2);
     }
+
+    @Test
+    void shouldCorrectlyReturnSingleEndNode() {
+        // Given
+        graph.root(root);
+        graph.add(root, componentNode1);
+
+        // When
+        List<GraphNode> graphNodes = graph.endNodes();
+
+        // Then
+        assertThat(graphNodes).containsOnly(componentNode1);
+    }
+
+    @Test
+    void shouldCorrectlyReturnMultipleEndNodes() {
+        // Given
+        graph.root(root);
+        graph.add(root, forkNode1);
+        graph.add(forkNode1, componentNode1);
+        graph.add(forkNode1, componentNode2);
+
+        // When
+        List<GraphNode> graphNodes = graph.endNodes();
+
+        // Then
+        assertThat(graphNodes).containsExactlyInAnyOrder(componentNode1, componentNode2);
+    }
 }

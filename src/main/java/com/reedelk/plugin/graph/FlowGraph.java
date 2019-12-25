@@ -46,6 +46,8 @@ public interface FlowGraph {
 
     List<GraphNode> predecessors(@NotNull GraphNode n1);
 
+    List<GraphNode> endNodes();
+
     void removeEdgesStartingFrom(GraphNode node);
 
     void breadthFirstTraversal(@NotNull Consumer<GraphNode> consumer);

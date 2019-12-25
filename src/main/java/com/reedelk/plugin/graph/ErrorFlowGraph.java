@@ -107,6 +107,11 @@ public class ErrorFlowGraph implements FlowGraph {
     }
 
     @Override
+    public List<GraphNode> endNodes() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public void removeEdgesStartingFrom(GraphNode node) {
         throw new UnsupportedOperationException();
     }

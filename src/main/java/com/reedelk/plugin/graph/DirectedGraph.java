@@ -8,6 +8,8 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class DirectedGraph<T> {
 
+    private final List<T> EMPTY_SUCCESSORS = new ArrayList<T>();
+
     private T root;
     private Map<T, List<T>> adjacentNodesMap = new HashMap<>();
 
@@ -87,7 +89,7 @@ public class DirectedGraph<T> {
     }
 
     public List<T> successors(T n) {
-        return Collections.unmodifiableList(adjacentNodesMap.getOrDefault(n, new ArrayList<>()));
+        return Collections.unmodifiableList(adjacentNodesMap.getOrDefault(n, EMPTY_SUCCESSORS));
     }
 
     public List<T> predecessors(T n) {

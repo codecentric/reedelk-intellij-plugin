@@ -38,12 +38,13 @@ public class OutboundEvent {
             // We won't draw any return event arrow.
             return;
         }
-        for (GraphNode node : graph.nodes()) {
-            if (graph.successors(node).isEmpty()) {
-                draw(graph, graphics, observer, node);
-                break;
-            }
-        }
+
+        // If there is more than one end node it must belong to an outer scope
+        // which has the rightmost bound to the rightmost edge of the graph.
+        graph.endNodes()
+                .stream()
+                .findFirst()
+                .ifPresent(node -> draw(graph, graphics, observer, node));
     }
 
     private void draw(FlowGraph graph, Graphics2D graphics, ImageObserver observer, @NotNull GraphNode lastNode) {
