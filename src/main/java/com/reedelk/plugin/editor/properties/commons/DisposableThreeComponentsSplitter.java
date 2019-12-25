@@ -2,6 +2,7 @@ package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
+import com.intellij.openapi.util.Disposer;
 
 import java.awt.*;
 
@@ -22,7 +23,7 @@ public class DisposableThreeComponentsSplitter extends ThreeComponentsSplitter {
                 ((Disposable) component).dispose();
             }
         }
+        Disposer.dispose(this);
         super.dispose();
     }
-
 }
