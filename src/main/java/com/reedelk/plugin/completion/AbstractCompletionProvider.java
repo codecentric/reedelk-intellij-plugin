@@ -4,10 +4,12 @@ import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionProvider;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ProcessingContext;
+import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.impl.completion.Suggestion;
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +22,12 @@ import static com.reedelk.plugin.userdata.ScriptEditorKey.MODULE_NAME;
 
 abstract class AbstractCompletionProvider extends CompletionProvider<CompletionParameters> {
 
+    /**
+     * We only compute completions if the editor contains module name property and
+     * the project associated with it is not null. The module name is set when the ScriptEditor
+     * is created by a DynamicValueField or ScriptEditorDefault and so on ...
+     * @see com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditor#ScriptEditor(Module module, Document document, ContainerContext context)
+     */
     @Override
     protected void addCompletions(@NotNull CompletionParameters parameters,
                                   @NotNull ProcessingContext context,
@@ -30,31 +38,35 @@ abstract class AbstractCompletionProvider extends CompletionProvider<CompletionP
         Project project = parameters.getEditor().getProject();
 
         if (moduleName != null && project != null) {
-            getToken(parameters).ifPresent(token -> {
-                Module module = ModuleManager.getInstance(project).findModuleByName(moduleName);
-                if (module == null) return;
-
-                CompletionService instance = CompletionService.getInstance(module);
-                List<Suggestion> suggestions = instance.completionTokensOf(componentFullyQualifiedName, token);
-                suggestions.forEach(suggestion -> {
-
-                    final LookupElementBuilder lookupBuilder = LookupElementBuilder.create(suggestion.getToken())
-                            .withTypeText(suggestion.getTypeName())
-                            .withIcon(suggestion.getType().icon());
-
-                    // For some suggestions like for .put('') we must adjust the caret back by X positions.
-                    // If the suggestion definition has defined an offset, then we add an insert handler
-                    // to move the caret back by X positions accordingly.
-                    LookupElementBuilder finalLookupBuilder = suggestion.getOffset().map(offset ->
-                            lookupBuilder.withInsertHandler((insertionContext, item) -> {
-                                int currentOffset = insertionContext.getEditor().getCaretModel().getOffset();
-                                insertionContext.getEditor().getCaretModel().moveToOffset(currentOffset - offset);
-                            })).orElse(lookupBuilder);
-
-                    result.addElement(finalLookupBuilder);
-                });
-            });
+            computeResultSet(parameters, result, moduleName, componentFullyQualifiedName, project);
         }
+    }
+
+    private void computeResultSet(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result, String moduleName, String componentFullyQualifiedName, Project project) {
+        getToken(parameters).ifPresent(token -> {
+            Module module = ModuleManager.getInstance(project).findModuleByName(moduleName);
+            if (module == null) return;
+
+            CompletionService instance = CompletionService.getInstance(module);
+            List<Suggestion> suggestions = instance.completionTokensOf(componentFullyQualifiedName, token);
+            suggestions.forEach(suggestion -> {
+
+                final LookupElementBuilder lookupBuilder = LookupElementBuilder.create(suggestion.getToken())
+                        .withTypeText(suggestion.getTypeName())
+                        .withIcon(suggestion.getType().icon());
+
+                // For some suggestions like for .put('') we must adjust the caret back by X positions.
+                // If the suggestion definition has defined an offset, then we add an insert handler
+                // to move the caret back by X positions accordingly.
+                LookupElementBuilder finalLookupBuilder = suggestion.getOffset().map(offset ->
+                        lookupBuilder.withInsertHandler((insertionContext, item) -> {
+                            int currentOffset = insertionContext.getEditor().getCaretModel().getOffset();
+                            insertionContext.getEditor().getCaretModel().moveToOffset(currentOffset - offset);
+                        })).orElse(lookupBuilder);
+
+                result.addElement(finalLookupBuilder);
+            });
+        });
     }
 
     abstract Optional<String> getToken(@NotNull CompletionParameters parameters);

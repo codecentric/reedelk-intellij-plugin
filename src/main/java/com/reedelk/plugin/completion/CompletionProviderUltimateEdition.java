@@ -6,6 +6,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
+/**
+ * @see ScriptCompletionContributor
+ */
 class CompletionProviderUltimateEdition extends AbstractCompletionProvider {
 
     Optional<String> getToken(@NotNull CompletionParameters parameters) {

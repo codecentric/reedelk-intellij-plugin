@@ -37,9 +37,13 @@ test {
 }
 
 intellij {
-    plugins = ["maven"]
-    version '2018.3'
-    type 'IU'
+    plugins = ["maven", "java"]
+    version '2019.3'
+    type 'CE'
+
+    //plugins = ["maven"]
+    //version '2018.3'
+    //type 'IU'
 }
 
 jacoco {
@@ -47,10 +51,6 @@ jacoco {
 }
 
 patchPluginXml {
-    changeNotes """
-      Reedelk ESB IntelliJ designer<br>
-      <em>First Release</em>"""
-
-    sinceBuild '183'
+    sinceBuild '191'
     untilBuild '194'
 }

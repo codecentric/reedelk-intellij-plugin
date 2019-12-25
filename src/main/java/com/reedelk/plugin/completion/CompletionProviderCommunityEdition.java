@@ -6,6 +6,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
+/**
+ * @see ScriptCompletionContributor
+ */
 class CompletionProviderCommunityEdition extends AbstractCompletionProvider {
 
     @Override
@@ -15,7 +18,7 @@ class CompletionProviderCommunityEdition extends AbstractCompletionProvider {
         return findLastToken(text, offset);
     }
 
-    private Optional<String> findLastToken(String text, int offset) {
+    Optional<String> findLastToken(String text, int offset) {
         // Need to find space, or new line or it is position 0
         int count = offset;
         if (count == 0 || count == 1) return Optional.empty();
@@ -28,7 +31,7 @@ class CompletionProviderCommunityEdition extends AbstractCompletionProvider {
             }
             count--;
             char c = text.charAt(count);
-            if (c == '\n' || c == ' ') {
+            if (c == '\n' || c == ' ' || c == '\t') {
                 index = count + 1;
                 break;
             }
