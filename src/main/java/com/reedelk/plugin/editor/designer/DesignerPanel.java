@@ -302,6 +302,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
     @Override
     public void dispose() {
         super.dispose();
+        currentComponentPublisher.unselect();
         busConnection.disconnect();
     }
 
