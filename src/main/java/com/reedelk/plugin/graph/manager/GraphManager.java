@@ -122,26 +122,25 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
                         () -> document.setText(json)), ModalityState.NON_MODAL);
     }
 
+    /**
+     * We only deserialize (in the background) if and only if the
+     * document related to the current file has been opened already.
+     * Note that if the document has an empty text, the deserialization
+     * will just thrown a 'JSONException' since it is not a valid JSON and
+     * the designer panel will show an Error screen with the exception message.
+     */
     private void deserializeDocument() {
         if (document == null) return;
 
         final String json = document.getText();
-        // We only deserialize (in the background) if and only if the
-        // document related to the current file has been opened already.
-        // Note that if the document has an empty text, the deserialization
-        // will just thrown a 'JSONException' since it is not a valid JSON and
-        // the designer panel will show an Error screen with the exception message.
         PluginExecutors.onDeserializeExecutor(() -> {
             try {
                 FlowGraph deSerializedGraph = deserialize(module, json, graphProvider);
-                invokeLater(() ->
-                        snapshot.updateSnapshot(GraphManager.this, deSerializedGraph));
-
+                invokeLater(() -> snapshot.updateSnapshot(GraphManager.this, deSerializedGraph));
             } catch (Exception exception) {
                 LOG.warn(message("graph.manager.error.deserialization", json, exception.getMessage()), exception);
                 FlowGraph deSerializedGraph = new ErrorFlowGraph(exception);
-                invokeLater(() ->
-                        snapshot.updateSnapshot(GraphManager.this, deSerializedGraph));
+                invokeLater(() -> snapshot.updateSnapshot(GraphManager.this, deSerializedGraph));
             }
         });
     }
