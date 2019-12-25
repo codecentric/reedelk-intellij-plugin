@@ -31,7 +31,7 @@ public class PropertiesPanel extends DisposablePanel implements SelectionChangeL
     private final transient Project project;
     private transient Disposable currentPane;
     private transient MessageBusConnection busConnection;
-    private SelectableItem currentSelection;
+    private transient SelectableItem currentSelection;
 
     PropertiesPanel(@NotNull Project project) {
         setBorder(JBUI.Borders.empty());
@@ -140,6 +140,7 @@ public class PropertiesPanel extends DisposablePanel implements SelectionChangeL
 
     private void setEmptySelection() {
         currentSelection = null;
+        DisposableUtils.dispose(currentPane);
         DisposablePanel empty = new EmptySelectionPanel(project);
         updateContent(empty);
         currentPane = empty;
