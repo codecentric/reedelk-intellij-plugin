@@ -15,18 +15,17 @@ import static java.awt.BorderLayout.WEST;
 public class TypeObjectContainerHeader extends DisposablePanel {
 
     public TypeObjectContainerHeader(String displayName, Icon icon, ClickableLabel.OnClickAction labelClickListener) {
-        JLabel switchLabel = new ClickableLabel(displayName, icon, RIGHT,labelClickListener);
-        HorizontalSeparator separator = new HorizontalSeparator();
-        setLayout(new BorderLayout());
-        add(switchLabel, WEST);
-        add(separator, CENTER);
+        this(new ClickableLabel(displayName, icon, RIGHT,labelClickListener));
     }
 
     public TypeObjectContainerHeader(String displayName) {
-        JLabel titleLabel = new JBLabel(displayName);
+        this(new JBLabel(displayName));
+    }
+
+    private TypeObjectContainerHeader(JLabel label) {
         HorizontalSeparator separator = new HorizontalSeparator();
         setLayout(new BorderLayout());
-        add(titleLabel, WEST);
+        add(label, WEST);
         add(separator, CENTER);
     }
 
