@@ -4,6 +4,7 @@ import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.commons.VectorUtils;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.LinkedHashMap;
@@ -14,7 +15,7 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
 
     @SuppressWarnings("unchecked")
     @Override
-    protected JComponent getContent(Module module, PropertyAccessor propertyAccessor, ContainerContext context) {
+    protected JComponent getContent(Module module, PropertyAccessor propertyAccessor, @NotNull ContainerContext context) {
         MapTableModel tableModel = new MapTableModel(vectors -> {
             // Data Model Update
             Map<String, String> updated = new LinkedHashMap<>();

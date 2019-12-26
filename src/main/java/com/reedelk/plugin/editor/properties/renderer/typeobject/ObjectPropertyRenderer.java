@@ -29,7 +29,7 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
         TypeObjectDescriptor objectDescriptor = descriptor.getPropertyType();
         return YES.equals(objectDescriptor.getShared()) ?
                 renderShareable(module, descriptor, accessor, context) :
-                renderInline(module, accessor, objectDescriptor);
+                renderInline(module, accessor, descriptor);
     }
 
     @Override
@@ -48,7 +48,48 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
     }
 
     @NotNull
-    private JComponent renderInline(Module module, PropertyAccessor propertyAccessor, TypeObjectDescriptor objectDescriptor) {
+    private JComponent renderInline(Module module, PropertyAccessor propertyAccessor, ComponentPropertyDescriptor descriptor) {
+        TypeObjectDescriptor objectDescriptor = descriptor.getPropertyType();
+        if (Collapsible.YES.equals(objectDescriptor.getCollapsible())) {
+            // Deferred rendering (only when it is un-collapsed)
+            return new CollapsibleObjectTypeContainer(descriptor.getDisplayName(),
+                    () -> renderObjectProperties(propertyAccessor, objectDescriptor, module));
+        } else {
+            JComponent propertiesPanel = renderObjectProperties(propertyAccessor, objectDescriptor, module);
+            // If the property type is a complex object (not shared), we wrap it in a bordered box with title
+            // the name of the object property.
+            return ContainerFactory.createObjectTypeContainer(propertiesPanel, descriptor.getDisplayName());
+        }
+    }
+
+    @NotNull
+    private JComponent renderShareable(Module module, ComponentPropertyDescriptor descriptor, PropertyAccessor propertyAccessor, ContainerContext context) {
+        ComponentDataHolder dataHolder = propertyAccessor.get();
+        FlowSnapshot snapshot = propertyAccessor.getSnapshot();
+
+        // We create the accessor for the config reference:
+        // a shareable config object is referenced with a unique UUID
+        PropertyAccessor refAccessor = PropertyAccessorFactory.get()
+                .typeDescriptor(descriptor.getPropertyType())
+                .propertyName(JsonParser.Component.ref())
+                .snapshot(snapshot)
+                .dataHolder(dataHolder)
+                .build();
+
+        return new ShareableConfigInputField(module, dataHolder, descriptor, refAccessor, context);
+    }
+
+    private void addToParentInline(@NotNull JComponent parent, @NotNull JComponent rendered, @NotNull ComponentPropertyDescriptor descriptor, @NotNull ContainerContext context) {
+        // If the property has any 'when' condition, we apply listener/s to make it
+        // visible (or not) when the condition is met (or not).
+        applyWhenVisibility(descriptor.getWhenDefinitions(), context, rendered);
+
+        // Add the component to the parent container.
+        FormBuilder.get().addLastField(rendered, parent);
+    }
+
+    @NotNull
+    private JComponent renderObjectProperties(PropertyAccessor propertyAccessor, TypeObjectDescriptor objectDescriptor, Module module) {
         // The accessor of type object returns a TypeObject map.
         ComponentDataHolder dataHolder = propertyAccessor.get();
 
@@ -75,48 +116,5 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
         });
 
         return propertiesPanel;
-    }
-
-    @NotNull
-    private JComponent renderShareable(Module module, ComponentPropertyDescriptor descriptor, PropertyAccessor propertyAccessor, ContainerContext context) {
-        ComponentDataHolder dataHolder = propertyAccessor.get();
-        FlowSnapshot snapshot = propertyAccessor.getSnapshot();
-
-        // We create the accessor for the config reference:
-        // a shareable config object is referenced with a unique UUID
-        PropertyAccessor refAccessor = PropertyAccessorFactory.get()
-                .typeDescriptor(descriptor.getPropertyType())
-                .propertyName(JsonParser.Component.ref())
-                .snapshot(snapshot)
-                .dataHolder(dataHolder)
-                .build();
-
-        return new ShareableConfigInputField(module, dataHolder, descriptor, refAccessor, context);
-    }
-
-    private void addToParentInline(@NotNull JComponent parent, @NotNull JComponent rendered, @NotNull ComponentPropertyDescriptor descriptor, @NotNull ContainerContext context) {
-        // If the property type is a complex object (not shared), we wrap it in a
-        // bordered box with title the name of the object property.
-        TypeObjectDescriptor objectDescriptor = descriptor.getPropertyType();
-
-        DisposablePanel wrappedRenderedComponent =
-                createObjectTypeContainer(rendered, objectDescriptor, descriptor.getDisplayName());
-
-        // If the property has any 'when' condition, we apply listener/s to make it
-        // visible (or not) when the condition is met (or not).
-        applyWhenVisibility(descriptor.getWhenDefinitions(), context, wrappedRenderedComponent);
-
-        // Add the component to the parent container.
-        FormBuilder.get()
-                .addLastField(wrappedRenderedComponent, parent);
-    }
-
-    private DisposablePanel createObjectTypeContainer(
-            @NotNull JComponent renderedComponent,
-            @NotNull TypeObjectDescriptor descriptor,
-            @NotNull String title) {
-        return Collapsible.YES.equals(descriptor.getCollapsible()) ?
-                new CollapsibleObjectTypeContainer(renderedComponent, title) :
-                ContainerFactory.createObjectTypeContainer(renderedComponent, title);
     }
 }

@@ -5,6 +5,7 @@ import com.reedelk.plugin.commons.VectorUtils;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.runtime.api.commons.ScriptUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.LinkedHashMap;
@@ -15,7 +16,7 @@ public class DynamicStringMapPropertyRenderer extends BaseMapPropertyRenderer {
 
     @SuppressWarnings("unchecked")
     @Override
-    protected JComponent getContent(Module module, PropertyAccessor propertyAccessor, ContainerContext context) {
+    protected JComponent getContent(Module module, PropertyAccessor propertyAccessor, @NotNull ContainerContext context) {
         MapTableModel tableModel = new MapTableModel(vectors -> {
             // Model Update
             Map<String, String> updated = new LinkedHashMap<>();

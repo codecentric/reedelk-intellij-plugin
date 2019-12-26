@@ -14,6 +14,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 import static com.intellij.icons.AllIcons.General.Add;
 import static com.intellij.icons.AllIcons.General.Remove;
@@ -32,9 +34,30 @@ class DynamicMapPropertyTabContainer extends DisposablePanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         add(actionPanel);
         add(propertyTable);
+        addComponentListener(new ComponentListener() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+
+            }
+
+            @Override
+            public void componentMoved(ComponentEvent e) {
+
+            }
+
+            @Override
+            public void componentShown(ComponentEvent e) {
+                System.out.println("Component is visible and is showing: " + isShowing());
+            }
+
+            @Override
+            public void componentHidden(ComponentEvent e) {
+
+            }
+        });
     }
 
-    class TableActionPanel extends DisposablePanel {
+    static class TableActionPanel extends DisposablePanel {
         TableActionPanel(PropertyTable table) {
             setLayout(new FlowLayout(FlowLayout.LEFT));
             add(new ClickableLabel(message("properties.type.map.table.add"), Add, table::addEmptyRow));
@@ -42,7 +65,7 @@ class DynamicMapPropertyTabContainer extends DisposablePanel {
         }
     }
 
-    class MapTableColumnModel extends DefaultTableColumnModel implements Disposable, CommitPropertiesListener {
+    static class MapTableColumnModel extends DefaultTableColumnModel implements Disposable, CommitPropertiesListener {
 
         private transient  MessageBusConnection busConnection;
         private transient TableDynamicCellEditor cellEditor;

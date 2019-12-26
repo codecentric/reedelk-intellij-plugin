@@ -45,7 +45,7 @@ class MapPropertyTabContainer extends DisposablePanel {
         busConnection.disconnect();
     }
 
-    class TableActionPanel extends DisposablePanel {
+    static class TableActionPanel extends DisposablePanel {
         TableActionPanel(PropertyTable table) {
             setLayout(new FlowLayout(FlowLayout.LEFT));
             add(new ClickableLabel(message("properties.type.map.table.add"), Add, table::addEmptyRow));
@@ -53,7 +53,7 @@ class MapPropertyTabContainer extends DisposablePanel {
         }
     }
 
-    class MapTableColumnModel extends DefaultTableColumnModel implements CommitPropertiesListener {
+    static class MapTableColumnModel extends DefaultTableColumnModel implements CommitPropertiesListener {
         MapTableColumnModel() {
             // Column 1 (the map key)
             TableColumn keyColumn = new TableColumn(0);
