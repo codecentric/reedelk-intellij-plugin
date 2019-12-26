@@ -39,10 +39,11 @@ public class Colors {
     public static final JBColor PALETTE_TEXT_SELECTED = JBColor.WHITE;
     public static final JBColor PALETTE_TEXT_UNSELECTED = JBColor.DARK_GRAY;
 
-    public static final JBColor CONTAINER_OBJECT_TYPE_COLLAPSIBLE_BORDER = JBColor.LIGHT_GRAY;
     public static final JBColor HINT_COLOR = new JBColor(new Color(224, 69, 67), new Color(224, 69, 67));
 
     public static final JBColor INPUT_FIELD_HINT = JBColor.LIGHT_GRAY;
     public static final JBColor FILE_INPUT_FIELD_HINT = JBColor.DARK_GRAY;
+
+    public static final Color TYPE_OBJECT_HORIZONTAL_SEPARATOR = JBColor.LIGHT_GRAY;
 
 }

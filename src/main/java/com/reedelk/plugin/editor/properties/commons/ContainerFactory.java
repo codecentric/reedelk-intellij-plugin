@@ -52,9 +52,7 @@ public class ContainerFactory {
         return wrapper;
     }
 
-    public static DisposablePanel createObjectTypeContainer(
-            @NotNull JComponent renderedComponent,
-            @NotNull String title) {
+    public static DisposablePanel createObjectTypeContainer(@NotNull JComponent renderedComponent, @NotNull String title) {
         return new DefaultObjectTypeContainer(renderedComponent, title);
     }
 
@@ -71,6 +69,14 @@ public class ContainerFactory {
         panel.setLayout(new BorderLayout());
         panel.add(component, WEST);
         panel.add(Box.createGlue(), CENTER);
+        return panel;
+    }
+
+    public static DisposablePanel pushCenter(JComponent component, Border border) {
+        DisposablePanel panel = new DisposablePanel();
+        panel.setLayout(new BorderLayout());
+        panel.add(component, CENTER);
+        panel.setBorder(border);
         return panel;
     }
 
