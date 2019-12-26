@@ -2,6 +2,8 @@ package com.reedelk.plugin.converter;
 
 import com.reedelk.plugin.component.domain.TypeDescriptor;
 import com.reedelk.plugin.component.type.unknown.UnknownPropertyType;
+import com.reedelk.runtime.api.annotation.Combo;
+import com.reedelk.runtime.api.annotation.Password;
 import com.reedelk.runtime.api.resource.DynamicResource;
 import com.reedelk.runtime.api.resource.ResourceBinary;
 import com.reedelk.runtime.api.resource.ResourceText;
@@ -15,10 +17,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.reedelk.plugin.component.domain.TypeComboDescriptor.TypeCombo;
-import static com.reedelk.plugin.component.domain.TypePasswordDescriptor.TypePassword;
 import static java.lang.String.format;
 
+// TODO: These converters should use the converter from com.reedelk.runtime.converter.Converters
 public class ValueConverterFactory {
 
     private ValueConverterFactory() {
@@ -48,10 +49,10 @@ public class ValueConverterFactory {
         tmp.put(Script.class, new ScriptConverter());
         tmp.put(Boolean.class, new BooleanConverter());
         tmp.put(boolean.class, new BooleanConverter());
-        tmp.put(TypeCombo.class, new ComboConverter());
         tmp.put(ResourceText.class, new ResourceConverter());
         tmp.put(ResourceBinary.class, new ResourceConverter());
-        tmp.put(TypePassword.class, new PasswordConverter());
+        tmp.put(Combo.class, new ComboConverter());
+        tmp.put(Password.class, new PasswordConverter());
 
         // Dynamic value types
         tmp.put(DynamicLong.class, new DynamicLongConverter());

@@ -1,4 +1,10 @@
-package com.reedelk.plugin.component.domain;
+package com.reedelk.plugin.component;
+
+import com.reedelk.plugin.component.domain.ComponentDescriptor;
+import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
+import com.reedelk.plugin.component.domain.ComponentType;
+import com.reedelk.plugin.component.domain.TypePrimitiveDescriptor;
+import com.reedelk.runtime.commons.JsonParser;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
-import static com.reedelk.runtime.commons.JsonParser.Implementor;
 
 /**
  * Decorator which adds the default "Description" property to all registered components.
@@ -26,7 +31,7 @@ public class ComponentDescriptionDecorator implements ComponentDescriptor {
         TypePrimitiveDescriptor typeDescriptor = new TypePrimitiveDescriptor(String.class);
 
         descriptionDescriptor = ComponentPropertyDescriptor.builder()
-                .propertyName(Implementor.description())
+                .propertyName(JsonParser.Implementor.description())
                 .type(typeDescriptor)
                 .hintValue(message("component.description.hint"))
                 .displayName(DESCRIPTION_PROPERTY_DISPLAY_NAME)
@@ -88,7 +93,7 @@ public class ComponentDescriptionDecorator implements ComponentDescriptor {
 
     @Override
     public Optional<ComponentPropertyDescriptor> getPropertyDescriptor(String propertyName) {
-        if (propertyName.equals(Implementor.description())) {
+        if (propertyName.equals(JsonParser.Implementor.description())) {
             return Optional.of(descriptionDescriptor);
         } else {
             return wrapped.getPropertyDescriptor(propertyName);

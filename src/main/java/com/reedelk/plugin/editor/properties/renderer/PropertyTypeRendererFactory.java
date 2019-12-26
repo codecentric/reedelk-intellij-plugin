@@ -29,6 +29,8 @@ import com.reedelk.plugin.editor.properties.renderer.typescript.ScriptPropertyRe
 import com.reedelk.plugin.editor.properties.renderer.typestring.DynamicStringPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typestring.StringPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typeunknown.UnknownPropertyTypeRenderer;
+import com.reedelk.runtime.api.annotation.Combo;
+import com.reedelk.runtime.api.annotation.Password;
 import com.reedelk.runtime.api.resource.DynamicResource;
 import com.reedelk.runtime.api.resource.ResourceBinary;
 import com.reedelk.runtime.api.resource.ResourceText;
@@ -42,9 +44,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.reedelk.plugin.component.domain.TypeComboDescriptor.TypeCombo;
 import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
-import static com.reedelk.plugin.component.domain.TypePasswordDescriptor.TypePassword;
 import static com.reedelk.plugin.component.type.unknown.UnknownPropertyType.UnknownType;
 
 public class PropertyTypeRendererFactory {
@@ -71,12 +71,12 @@ public class PropertyTypeRendererFactory {
         tmp.put(Enum.class, new EnumPropertyRenderer());
         tmp.put(Script.class, new ScriptPropertyRenderer());
         tmp.put(String.class, new StringPropertyRenderer());
-        tmp.put(TypeCombo.class, new ComboPropertyRenderer());
         tmp.put(ResourceText.class, new ResourcePropertyRenderer());
         tmp.put(ResourceBinary.class, new ResourcePropertyRenderer());
         tmp.put(TypeObject.class, new ObjectPropertyRenderer());
-        tmp.put(TypePassword.class, new PasswordPropertyRenderer());
         tmp.put(UnknownType.class, new UnknownPropertyTypeRenderer());
+        tmp.put(Combo.class, new ComboPropertyRenderer());
+        tmp.put(Password.class, new PasswordPropertyRenderer());
 
         // Dynamic value types
         tmp.put(DynamicLong.class, new DynamicLongPropertyRenderer());

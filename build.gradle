@@ -23,7 +23,7 @@ dependencies {
     compile group: 'com.reedelk', name: 'runtime-api', version: '1.0.0-SNAPSHOT'
     compile group: 'com.reedelk', name: 'runtime-commons', version: '1.0.0-SNAPSHOT'
     compile group: 'com.reedelk', name: 'runtime-rest-api', version: '1.0.0-SNAPSHOT'
-    compile group: 'com.reedelk', name: 'runtime-components', version: '1.0.0-SNAPSHOT'
+    compile group: 'com.reedelk', name: 'runtime-components-analyzer', version: '1.0.0-SNAPSHOT'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
@@ -39,16 +39,8 @@ test {
 intellij {
     plugins = ["maven", "java"]
 
-
-    //version '2019.3'
-    //type 'IU'
-
     version '2019.3'
-    type 'CE'
-
-    //plugins = ["maven"]
-    //version '2018.3'
-    //type 'IU'
+    type 'CE' // or IU (for Ultimate edition)
 }
 
 jacoco {
