@@ -46,4 +46,6 @@ public class Colors {
 
     public static final Color TYPE_OBJECT_HORIZONTAL_SEPARATOR = JBColor.LIGHT_GRAY;
 
+    public static final Color TOOL_WINDOW_PROPERTIES_TEXT = JBColor.DARK_GRAY;
+
 }

@@ -22,7 +22,7 @@ public class HintPainter {
             Insets ins = textField.getInsets();
             FontMetrics fm = g.getFontMetrics();
             g.setColor(color);
-            g.drawString(hint, ins.left + 8, h / 2 + fm.getAscent() / 2 - 2);
+            g.drawString(hint, ins.left + 7, h / 2 + fm.getAscent() / 2 - 2);
         }
     }
 }

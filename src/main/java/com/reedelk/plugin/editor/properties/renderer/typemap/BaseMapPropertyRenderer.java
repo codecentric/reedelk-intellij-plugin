@@ -17,7 +17,10 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
+import javax.swing.border.TitledBorder;
 import java.util.Optional;
+
+import static com.reedelk.plugin.commons.Colors.TOOL_WINDOW_PROPERTIES_TEXT;
 
 abstract class BaseMapPropertyRenderer implements PropertyTypeRenderer {
 
@@ -40,7 +43,9 @@ abstract class BaseMapPropertyRenderer implements PropertyTypeRenderer {
 
             Border border = BorderFactory.createLineBorder(JBColor.LIGHT_GRAY);
             if (tabGroup.isPresent()) {
-                border = BorderFactory.createTitledBorder(border, tabGroup.get());
+                TitledBorder titledBorder = BorderFactory.createTitledBorder(border, tabGroup.get());
+                titledBorder.setTitleColor(TOOL_WINDOW_PROPERTIES_TEXT);
+                border = titledBorder;
             }
 
             Border top = BorderFactory.createEmptyBorder(5, 0, 0, 0);

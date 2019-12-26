@@ -23,6 +23,7 @@ public class TypeObjectContainerHeader extends DisposablePanel {
     }
 
     private TypeObjectContainerHeader(JLabel label) {
+        label.setForeground(Colors.TOOL_WINDOW_PROPERTIES_TEXT);
         HorizontalSeparator separator = new HorizontalSeparator();
         setLayout(new BorderLayout());
         add(label, WEST);
