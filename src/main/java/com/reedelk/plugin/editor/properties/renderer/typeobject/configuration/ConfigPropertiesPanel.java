@@ -1,7 +1,6 @@
 package com.reedelk.plugin.editor.properties.renderer.typeobject.configuration;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.ui.components.JBPanel;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.DefaultDescriptorDataValuesFiller;
 import com.reedelk.plugin.component.domain.ComponentDataHolder;
@@ -64,7 +63,7 @@ class ConfigPropertiesPanel extends DisposablePanel {
         add(ContainerFactory.pushTop(propertiesPanel), CENTER);
     }
 
-    class ConfigMetadataHeaderPanel extends JBPanel {
+    static class ConfigMetadataHeaderPanel extends DisposablePanel {
 
         ConfigMetadataHeaderPanel(ConfigMetadata configMetadata, boolean isNewConfig) {
             super(new GridBagLayout());
@@ -96,7 +95,7 @@ class ConfigPropertiesPanel extends DisposablePanel {
         }
     }
 
-    class ConfigPropertiesPanelHolder extends PropertiesPanelHolder {
+    static class ConfigPropertiesPanelHolder extends PropertiesPanelHolder {
 
         ConfigPropertiesPanelHolder(String componentFullyQualifiedName, ConfigMetadata configMetadata, List<ComponentPropertyDescriptor> descriptors) {
             super(componentFullyQualifiedName, configMetadata, descriptors);

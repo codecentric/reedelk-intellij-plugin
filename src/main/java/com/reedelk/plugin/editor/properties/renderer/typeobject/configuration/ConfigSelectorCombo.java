@@ -38,7 +38,7 @@ public class ConfigSelectorCombo extends ComboBox<ConfigMetadata> implements Ite
         this.listener = changeListener;
     }
 
-    private class ConfigMetadataRenderer extends ListCellRendererWrapper<ConfigMetadata> {
+    private static class ConfigMetadataRenderer extends ListCellRendererWrapper<ConfigMetadata> {
         @Override
         public void customize(JList list, ConfigMetadata value, int index, boolean selected, boolean hasFocus) {
             if (value == null) return;
