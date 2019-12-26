@@ -1,13 +1,12 @@
 package com.reedelk.plugin.editor.properties.renderer.typeobject;
 
 import com.intellij.ui.JBColor;
-import com.intellij.ui.components.JBLabel;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
+import com.reedelk.plugin.editor.properties.commons.ContainerRenderingFunction;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
+import com.reedelk.plugin.editor.properties.commons.LoadingContentPanel;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -19,7 +18,6 @@ import static com.intellij.icons.AllIcons.General.ArrowRight;
 import static com.intellij.util.ui.JBUI.Borders.empty;
 import static com.intellij.util.ui.JBUI.Borders.emptyTop;
 import static com.reedelk.plugin.editor.properties.commons.ClickableLabel.IconAlignment.RIGHT;
-import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.awt.BorderLayout.*;
 import static javax.swing.BorderFactory.createMatteBorder;
 
@@ -27,13 +25,13 @@ class CollapsibleObjectTypeContainer extends DisposablePanel {
 
     private final String displayName;
     private final DisposablePanel collapsedContent;
-    private final RenderingFunction renderingFunction;
+    private final ContainerRenderingFunction renderingFunction;
     private DisposablePanel unCollapsedContent;
 
     private boolean collapsed = true;
     private boolean loaded = false;
 
-    CollapsibleObjectTypeContainer(String displayName, RenderingFunction unCollapsedContentRenderer) {
+    CollapsibleObjectTypeContainer(String displayName, ContainerRenderingFunction unCollapsedContentRenderer) {
         this.renderingFunction = unCollapsedContentRenderer;
         this.displayName = displayName;
         this.collapsedContent = new CollapsedContent(displayName);
@@ -44,9 +42,6 @@ class CollapsibleObjectTypeContainer extends DisposablePanel {
         setBorder(BORDER_COLLAPSIBLE_OBJECT_CONTAINER);
     }
 
-    interface RenderingFunction {
-        JComponent doRender();
-    }
     @Override
     public void dispose() {
         super.dispose();
@@ -81,22 +76,12 @@ class CollapsibleObjectTypeContainer extends DisposablePanel {
     private void lazyLoadUnCollapsedContent() {
         SwingUtilities.invokeLater(() -> {
             remove(unCollapsedContent);
-            JComponent renderedContent = renderingFunction.doRender();
+            JComponent renderedContent = renderingFunction.render();
             loaded = true;
             unCollapsedContent = new UnCollapsedContent(displayName, renderedContent);
             add(unCollapsedContent);
             revalidate();
         });
-    }
-
-    static class LoadingContentPanel extends DisposablePanel {
-        LoadingContentPanel() {
-            super(new BorderLayout());
-            JBLabel loadingContentLabel = new JBLabel(message("message.loading.content"));
-            loadingContentLabel.setFontColor(UIUtil.FontColor.BRIGHTER);
-            loadingContentLabel.setBorder(BORDER_LOADING_CONTENT);
-            add(loadingContentLabel, CENTER);
-        }
     }
 
     class UnCollapsedContent extends DisposablePanel {
@@ -158,7 +143,6 @@ class CollapsibleObjectTypeContainer extends DisposablePanel {
         }
     }
 
-    static final Border BORDER_LOADING_CONTENT = JBUI.Borders.empty(5);
     static final Border BORDER_COLLAPSIBLE_OBJECT_CONTAINER = emptyTop(5);
     static final Border BORDER_HORIZONTAL_SEPARATOR = empty(2, 5, 0, 0);
     static final Border BORDER_UN_COLLAPSED_CONTENT_OUTSIDE = createMatteBorder(0, 1, 1, 1, Colors.CONTAINER_OBJECT_TYPE_COLLAPSIBLE_BORDER);

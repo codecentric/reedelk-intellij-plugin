@@ -15,44 +15,44 @@ import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 
 import static com.intellij.icons.AllIcons.General.Add;
 import static com.intellij.icons.AllIcons.General.Remove;
+import static com.reedelk.plugin.editor.properties.commons.PropertyTable.PropertyTableModel;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 class DynamicMapPropertyTabContainer extends DisposablePanel {
 
     private static final String[] COLUMN_NAMES = {"Key", "Value"};
 
-    DynamicMapPropertyTabContainer(Module module, PropertyTable.PropertyTableModel tableModel, ContainerContext context) {
-        MapTableColumnModel columnModel = new MapTableColumnModel(module, context);
-        PropertyTable propertyTable = new PropertyTable(tableModel, columnModel);
+    private boolean loaded = false;
 
-        JPanel actionPanel = new TableActionPanel(propertyTable);
+    DynamicMapPropertyTabContainer(Module module, PropertyTableModel tableModel, ContainerContext context) {
+        setLayout(new BorderLayout());
+        add(new LoadingContentPanel());
 
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        add(actionPanel);
-        add(propertyTable);
-        addComponentListener(new ComponentListener() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-
-            }
-
-            @Override
-            public void componentMoved(ComponentEvent e) {
-
-            }
-
+        addComponentListener(new ComponentListenerAdapter() {
             @Override
             public void componentShown(ComponentEvent e) {
-                System.out.println("Component is visible and is showing: " + isShowing());
-            }
+                // If the content was already loaded, there is no need to loading it again.
+                if (loaded) return;
 
-            @Override
-            public void componentHidden(ComponentEvent e) {
+                // Lazy loading of Table content. We do it so that we can optimize the rendering
+                // of the component's properties.
+                SwingUtilities.invokeLater(() -> {
+                    DisposablePanel mapContainer = new DisposablePanel();
+                    mapContainer.setLayout(new BoxLayout(mapContainer, BoxLayout.Y_AXIS));
+                    MapTableColumnModel columnModel = new MapTableColumnModel(module, context);
+                    PropertyTable propertyTable = new PropertyTable(tableModel, columnModel);
+                    JPanel actionPanel = new TableActionPanel(propertyTable);
+                    mapContainer.add(actionPanel);
+                    mapContainer.add(propertyTable);
 
+                    loaded = true;
+
+                    removeAll();
+                    add(mapContainer, BorderLayout.CENTER);
+                });
             }
         });
     }
