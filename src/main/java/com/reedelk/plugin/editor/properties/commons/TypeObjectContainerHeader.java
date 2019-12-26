@@ -1,8 +1,6 @@
 package com.reedelk.plugin.editor.properties.commons;
 
-import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;
-import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Colors;
 
 import javax.swing.*;
@@ -42,12 +40,11 @@ public class TypeObjectContainerHeader extends DisposablePanel {
 
             JSeparator jSeparator = new JSeparator();
             jSeparator.setForeground(Colors.TYPE_OBJECT_HORIZONTAL_SEPARATOR);
-            jSeparator.setBorder(JBUI.Borders.customLine(JBColor.LIGHT_GRAY, 2));
             add(jSeparator, gbc);
 
-            setBorder(BORDER_HORIZONTAL_SEPARATOR);
+            setBorder(BORDER_HORIZONTAL_SEPARATOR_CONTAINER);
         }
     }
 
-    static final Border BORDER_HORIZONTAL_SEPARATOR = empty(2, 5, 0, 0);
+    static final Border BORDER_HORIZONTAL_SEPARATOR_CONTAINER = empty(2, 5, 0, 0);
 }
