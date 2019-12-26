@@ -19,9 +19,9 @@
     <extensions defaultExtensionNs="com.intellij">
 
         <!-- File Type -->
-        <fileTypeFactory implementation="com.reedelk.plugin.filetype.FlowFileTypeFactory"/>
-        <fileTypeFactory implementation="com.reedelk.plugin.filetype.SubFlowFileTypeFactory"/>
-        <fileTypeFactory implementation="com.reedelk.plugin.filetype.FlowConfigFileTypeFactory"/>
+        <fileType name="REEDELK_FILE_TYPE_FLOW" extensions="flow" language="JSON" implementationClass="com.reedelk.plugin.filetype.FlowFileType" />
+        <fileType name="REEDELK_FILE_TYPE_SUBFLOW" extensions="subflow" language="JSON" implementationClass="com.reedelk.plugin.filetype.SubFlowFileType" />
+        <fileType name="REEDELK_FILE_TYPE_CONFIG" extensions="fconfig" language="JSON" implementationClass="com.reedelk.plugin.filetype.FlowConfigFileType" />
 
         <!-- File Editor -->
         <fileEditorProvider implementation="com.reedelk.plugin.editor.FlowDesignerEditorProvider" order="first"/>

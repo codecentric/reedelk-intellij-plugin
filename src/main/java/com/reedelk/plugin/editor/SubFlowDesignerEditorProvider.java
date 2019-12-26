@@ -21,16 +21,21 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class SubFlowDesignerEditorProvider implements FileEditorProvider, DumbAware {
 
+    /**
+     * We create an editor if and only if the given file belongs to a module
+     * (it might not necessarily belong to a module) AND the file type is 'Flow' type.
+     */
     @Override
     public boolean accept(@NotNull Project project, @NotNull VirtualFile file) {
-        return file.getFileType() == SubFlowFileType.INSTANCE;
+        Module module = ModuleUtil.findModuleForFile(file, project);
+        return SubFlowFileType .class.equals(file.getFileType().getClass()) && module != null;
     }
 
     @NotNull
     @Override
     public FileEditor createEditor(@NotNull Project project, @NotNull VirtualFile file) {
         Module module = ModuleUtil.findModuleForFile(file, project);
-        checkState(module != null, "Module must not be null");
+        checkState(module != null, "module");
 
         FlowSnapshot snapshot = new FlowSnapshot();
         FlowGraphProvider graphProvider = new FlowGraphProvider();

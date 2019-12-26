@@ -38,6 +38,11 @@ test {
 
 intellij {
     plugins = ["maven", "java"]
+
+
+    //version '2019.3'
+    //type 'IU'
+
     version '2019.3'
     type 'CE'
 

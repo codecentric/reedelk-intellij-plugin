@@ -21,21 +21,21 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class FlowDesignerEditorProvider implements FileEditorProvider, DumbAware {
 
+    /**
+     * We create an editor if and only if the given file belongs to a module
+     * (it might not necessarily belong to a module) AND the file type is 'Flow' type.
+     */
     @Override
     public boolean accept(@NotNull Project project, @NotNull VirtualFile file) {
         Module module = ModuleUtil.findModuleForFile(file, project);
-        // We cannot accept to create the editor if the module is not present yet.
-        // This check (module != null) fixes a but where a null pointer is thrown
-        // when a newly imported project is imported and modules have not been added
-        // yet to the Idea Project.
-        return file.getFileType() == FlowFileType.INSTANCE && module != null;
+        return FlowFileType.class.equals(file.getFileType().getClass()) && module != null;
     }
 
     @NotNull
     @Override
     public FileEditor createEditor(@NotNull Project project, @NotNull VirtualFile file) {
         Module module = ModuleUtil.findModuleForFile(file, project);
-        checkState(module != null, "Module must not be null");
+        checkState(module != null, "module");
 
         FlowSnapshot snapshot = new FlowSnapshot();
         FlowGraphProvider graphProvider = new FlowGraphProvider();
