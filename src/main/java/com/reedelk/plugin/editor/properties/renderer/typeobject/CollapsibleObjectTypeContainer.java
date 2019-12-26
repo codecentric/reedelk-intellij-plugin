@@ -1,16 +1,11 @@
 package com.reedelk.plugin.editor.properties.renderer.typeobject;
 
 import com.intellij.ui.JBColor;
-import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.DisposableUtils;
-import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
-import com.reedelk.plugin.editor.properties.commons.ContainerRenderingFunction;
-import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
-import com.reedelk.plugin.editor.properties.commons.LoadingContentPanel;
+import com.reedelk.plugin.editor.properties.commons.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
 import java.awt.*;
 
 import static com.intellij.icons.AllIcons.General.ArrowDown;
@@ -19,7 +14,6 @@ import static com.intellij.util.ui.JBUI.Borders.empty;
 import static com.intellij.util.ui.JBUI.Borders.emptyTop;
 import static com.reedelk.plugin.editor.properties.commons.ClickableLabel.IconAlignment.RIGHT;
 import static java.awt.BorderLayout.*;
-import static javax.swing.BorderFactory.createMatteBorder;
 
 class CollapsibleObjectTypeContainer extends DisposablePanel {
 
@@ -91,7 +85,7 @@ class CollapsibleObjectTypeContainer extends DisposablePanel {
             JPanel nestedContainerWrapper = new DisposablePanel();
             nestedContainerWrapper.setLayout(new BorderLayout());
             nestedContainerWrapper.add(content, CENTER);
-            nestedContainerWrapper.setBorder(BORDER_UN_COLLAPSED_CONTENT);
+            nestedContainerWrapper.setBorder(DefaultObjectTypeContainer.BORDER_OBJECT_TYPE_CONTENT);
 
             setLayout(new BorderLayout());
             add(topBar, NORTH);
@@ -145,7 +139,4 @@ class CollapsibleObjectTypeContainer extends DisposablePanel {
 
     static final Border BORDER_COLLAPSIBLE_OBJECT_CONTAINER = emptyTop(5);
     static final Border BORDER_HORIZONTAL_SEPARATOR = empty(2, 5, 0, 0);
-    static final Border BORDER_UN_COLLAPSED_CONTENT_OUTSIDE = createMatteBorder(0, 1, 1, 1, Colors.CONTAINER_OBJECT_TYPE_COLLAPSIBLE_BORDER);
-    static final Border BORDER_UN_COLLAPSED_CONTENT_INSIDE = new CompoundBorder(BORDER_UN_COLLAPSED_CONTENT_OUTSIDE, empty(2, 4, 4, 0));
-    static final Border BORDER_UN_COLLAPSED_CONTENT = new CompoundBorder(empty(0, 8, 8, 0), BORDER_UN_COLLAPSED_CONTENT_INSIDE);
 }
