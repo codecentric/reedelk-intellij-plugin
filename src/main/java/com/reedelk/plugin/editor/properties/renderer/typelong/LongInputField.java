@@ -1,9 +1,9 @@
 package com.reedelk.plugin.editor.properties.renderer.typelong;
 
-import com.reedelk.plugin.converter.ValueConverter;
-import com.reedelk.plugin.converter.ValueConverterFactory;
+import com.reedelk.plugin.commons.PluginValueConverterProvider;
 import com.reedelk.plugin.editor.properties.renderer.commons.NumericDocumentFilter;
 import com.reedelk.plugin.editor.properties.renderer.commons.NumericInputField;
+import com.reedelk.runtime.converter.PluginValueConverter;
 
 import javax.swing.text.DocumentFilter;
 
@@ -26,8 +26,8 @@ public class LongInputField extends NumericInputField<Long> {
     }
 
     @Override
-    protected ValueConverter<Long> getConverter() {
-        return ValueConverterFactory.forType(Long.class);
+    protected PluginValueConverter<Long> getConverter() {
+        return PluginValueConverterProvider.forType(Long.class);
     }
 
 }

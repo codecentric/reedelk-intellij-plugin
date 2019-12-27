@@ -1,9 +1,9 @@
 package com.reedelk.plugin.editor.properties.renderer.typefloat;
 
-import com.reedelk.plugin.converter.ValueConverter;
-import com.reedelk.plugin.converter.ValueConverterFactory;
+import com.reedelk.plugin.commons.PluginValueConverterProvider;
 import com.reedelk.plugin.editor.properties.renderer.commons.NumericDocumentFilter;
 import com.reedelk.plugin.editor.properties.renderer.commons.NumericInputField;
+import com.reedelk.runtime.converter.PluginValueConverter;
 
 import javax.swing.text.DocumentFilter;
 
@@ -26,7 +26,7 @@ public class FloatInputField extends NumericInputField<Float> {
     }
 
     @Override
-    protected ValueConverter<Float> getConverter() {
-        return ValueConverterFactory.forType(Float.class);
+    protected PluginValueConverter<Float> getConverter() {
+        return PluginValueConverterProvider.forType(Float.class);
     }
 }
