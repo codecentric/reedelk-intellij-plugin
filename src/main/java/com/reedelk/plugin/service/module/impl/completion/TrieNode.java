@@ -5,12 +5,9 @@ import java.util.Map;
 
 public class TrieNode {
 
-    private Map<Character, TrieNode> children = new HashMap<>();
     private boolean isWord;
     private Suggestion suggestion;
-
-    public TrieNode() {
-    }
+    private Map<Character, TrieNode> children = new HashMap<>();
 
     public Map<Character, TrieNode> getChildren() {
         return children;

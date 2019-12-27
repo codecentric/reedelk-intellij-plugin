@@ -13,7 +13,7 @@ import java.awt.event.ItemListener;
 
 public class StringDropDown extends JComboBox<String> implements ItemListener, CommitPropertiesListener, Disposable {
 
-    private final MessageBusConnection connect;
+    private final transient MessageBusConnection connect;
     private transient InputChangeListener listener;
 
     public StringDropDown(Module module, String[] items, boolean editable, String prototype) {

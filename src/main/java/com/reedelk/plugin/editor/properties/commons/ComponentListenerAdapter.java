@@ -11,17 +11,21 @@ public class ComponentListenerAdapter implements ComponentListener {
 
     @Override
     public void componentResized(ComponentEvent e) {
+        // If needed can be overridden by inheritors.
     }
 
     @Override
     public void componentMoved(ComponentEvent e) {
+        // If needed can be overridden by inheritors.
     }
 
     @Override
     public void componentShown(ComponentEvent e) {
+        // If needed can be overridden by inheritors.
     }
 
     @Override
     public void componentHidden(ComponentEvent e) {
+        // If needed can be overridden by inheritors.
     }
 }

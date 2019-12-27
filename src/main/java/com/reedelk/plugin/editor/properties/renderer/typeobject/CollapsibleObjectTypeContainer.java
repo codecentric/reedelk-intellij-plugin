@@ -15,7 +15,7 @@ public class CollapsibleObjectTypeContainer extends DisposablePanel {
 
     private final String displayName;
     private final DisposablePanel collapsedContent;
-    private final ContainerRenderingFunction renderingFunction;
+    private final transient ContainerRenderingFunction renderingFunction;
     private DisposablePanel unCollapsedContent;
 
     private boolean collapsed = true;
@@ -93,7 +93,7 @@ public class CollapsibleObjectTypeContainer extends DisposablePanel {
         }
     }
 
-    private final ClickableLabel.OnClickAction clickAction = () -> {
+    private final transient ClickableLabel.OnClickAction clickAction = () -> {
         if (collapsed) {
             unCollapse();
             collapsed = false;
