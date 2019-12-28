@@ -5,9 +5,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.assertion.PluginAssertion;
-import com.reedelk.plugin.component.domain.*;
+import com.reedelk.plugin.component.domain.AutoCompleteContributorDefinition;
+import com.reedelk.plugin.component.domain.ComponentDescriptor;
+import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.ModuleComponents;
+import com.reedelk.plugin.testutils.ObjectFactories;
 import com.reedelk.runtime.api.script.dynamicvalue.DynamicString;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -82,15 +85,15 @@ class CompletionServiceImplTest {
     void shouldReturnSpecificComponentSuggestions() {
         // Given
         String fullyQualifiedName = "com.reedelk.components.MyCustomComponent";
-        AutoCompleteContributorDefinition autoCompleteContribution =
-                new AutoCompleteContributorDefinition(false, false, false, asList(
-                        "messageCustom1[VARIABLE:MyType1]",
+        AutoCompleteContributorDefinition autoCompleteContribution = new AutoCompleteContributorDefinition();
+        autoCompleteContribution.setContributions(
+                asList("messageCustom1[VARIABLE:MyType1]",
                         "messageCustom2[VARIABLE:MyType2]",
                         "messageCustom3[VARIABLE:MyType3]"));
 
         ComponentPropertyDescriptor propertyDescriptor = ComponentPropertyDescriptor.builder()
                 .propertyName("myPropertyWithAutoComplete")
-                .type(new TypeDynamicValueDescriptor<>(DynamicString.class))
+                .type(ObjectFactories.createTypeDynamicValueDescriptor(DynamicString.class))
                 .autoCompleteContributor(autoCompleteContribution)
                 .build();
 
@@ -157,7 +160,7 @@ class CompletionServiceImplTest {
 
     private ModuleComponents createModuleComponentsWith(String componentFullyQualifiedName, ComponentPropertyDescriptor propertyDescriptor) {
         List<ComponentPropertyDescriptor> propertyDescriptors = Collections.singletonList(propertyDescriptor);
-        ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+        ComponentDescriptor descriptor = ComponentDescriptor.create()
                 .fullyQualifiedName(componentFullyQualifiedName)
                 .propertyDescriptors(propertyDescriptors)
                 .build();
@@ -165,7 +168,7 @@ class CompletionServiceImplTest {
         return new ModuleComponents("my-module", componentDescriptors);
     }
 
-    class TestableCompletionService extends CompletionServiceImpl {
+    static class TestableCompletionService extends CompletionServiceImpl {
 
         TestableCompletionService(Project project, Module module) {
             super(project, module);

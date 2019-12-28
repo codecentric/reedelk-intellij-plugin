@@ -2,7 +2,9 @@ package com.reedelk.plugin.configuration;
 
 import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.component.deserializer.ConfigurationDeserializer;
-import com.reedelk.plugin.component.domain.*;
+import com.reedelk.plugin.component.domain.ComponentDataHolder;
+import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
+import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.fixture.ComponentNode1;
 import com.reedelk.plugin.fixture.ComponentNode2;
 import com.reedelk.plugin.fixture.ComponentNode3;
@@ -13,6 +15,7 @@ import java.util.Optional;
 
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.Primitives;
 import static com.reedelk.plugin.fixture.Json.Configuration.*;
+import static com.reedelk.plugin.testutils.ObjectFactories.createTypeObjectDescriptor;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,11 +25,8 @@ class DeserializerTest {
     @Test
     void shouldCorrectlyDeserializeSimpleConfig() {
         // Given
-        TypeObjectDescriptor httpConfigType = new TypeObjectDescriptor(
-                ComponentNode1.class.getName(),
-                asList(host, port, keepAlive),
-                Shared.NO,
-                Collapsible.NO);
+        TypeObjectDescriptor httpConfigType = createTypeObjectDescriptor(
+                ComponentNode1.class.getName(), asList(host, port, keepAlive));
 
         String json = Sample.json();
 
@@ -52,10 +52,8 @@ class DeserializerTest {
     void shouldCorrectlyDeserializeConfigWithNestedObjectProperties() {
         // Given
         TypeObjectDescriptor httpConfigType =
-                new TypeObjectDescriptor(ComponentNode1.class.getName(),
-                        asList(host, port, keepAlive, securityConfigPropertyDescriptor),
-                        Shared.NO,
-                        Collapsible.NO);
+                createTypeObjectDescriptor(ComponentNode1.class.getName(),
+                        asList(host, port, keepAlive, securityConfigPropertyDescriptor));
 
         String json = NestedConfig.json();
 
@@ -91,10 +89,8 @@ class DeserializerTest {
     void shouldCorrectlyDeserializeConfigWithNestedObjectPropertiesWhenNestedPropertyIsMissingInTheJson() {
         // Given
         TypeObjectDescriptor httpConfigType =
-                new TypeObjectDescriptor(ComponentNode1.class.getName(),
-                        asList(host, port, keepAlive, securityConfigPropertyDescriptor),
-                        Shared.NO,
-                        Collapsible.NO);
+                createTypeObjectDescriptor(ComponentNode1.class.getName(),
+                        asList(host, port, keepAlive, securityConfigPropertyDescriptor));
 
 
         String json = NestedConfigMissingObjectProperty.json();
@@ -120,10 +116,8 @@ class DeserializerTest {
     void shouldCorrectlyDeserializeConfigWithNestedObjectPropertiesWhenNestedPropertyIsNullInTheJson() {
         // Given
         TypeObjectDescriptor httpConfigType =
-                new TypeObjectDescriptor(ComponentNode1.class.getName(),
-                        asList(host, port, keepAlive, securityConfigPropertyDescriptor),
-                        Shared.NO,
-                        Collapsible.NO);
+                createTypeObjectDescriptor(ComponentNode1.class.getName(),
+                        asList(host, port, keepAlive, securityConfigPropertyDescriptor));
 
 
         String json = NestedConfigNullObjectProperty.json();
@@ -149,10 +143,8 @@ class DeserializerTest {
     void shouldReturnEmptyWhenJsonContainsErrors() {
         // Given
         TypeObjectDescriptor httpConfigType =
-                new TypeObjectDescriptor(ComponentNode1.class.getName(),
-                        asList(host, port, keepAlive, securityConfigPropertyDescriptor),
-                        Shared.NO,
-                        Collapsible.NO);
+                createTypeObjectDescriptor(ComponentNode1.class.getName(),
+                        asList(host, port, keepAlive, securityConfigPropertyDescriptor));
 
 
         String notValidJson = "myInvalidJson";
@@ -167,11 +159,9 @@ class DeserializerTest {
     @Test
     void shouldReturnEmptyWhenJsonImplementorIsDifferentFromConfigPropertyFullyQualifiedName() {
         // Given
-        TypeObjectDescriptor activeMqConfigType = new TypeObjectDescriptor(
-                ComponentNode4.class.getName(), // we provide an object descriptor with a different qualified name
-                asList(host, port, keepAlive),
-                Shared.NO,
-                Collapsible.NO);
+        TypeObjectDescriptor activeMqConfigType =
+                // we provide an object descriptor with a different qualified name
+                createTypeObjectDescriptor(ComponentNode4.class.getName(), asList(host, port, keepAlive));
 
         String json = Sample.json();
 
@@ -185,11 +175,8 @@ class DeserializerTest {
     @Test
     void shouldCorrectlyDeserializeConfigWithoutTitle() {
         // Given
-        TypeObjectDescriptor httpConfigType = new TypeObjectDescriptor(
-                ComponentNode1.class.getName(),
-                asList(host, port, keepAlive),
-                Shared.NO,
-                Collapsible.NO);
+        TypeObjectDescriptor httpConfigType =
+                createTypeObjectDescriptor(ComponentNode1.class.getName(), asList(host, port, keepAlive));
 
         String json = SampleWithoutTitle.json();
 
@@ -255,11 +242,8 @@ class DeserializerTest {
                     .displayName("Algorithm")
                     .build();
 
-    private final TypeObjectDescriptor keyStoreConfigObjectType = new TypeObjectDescriptor(
-            ComponentNode3.class.getName(),
-            singletonList(algorithm),
-            Shared.NO,
-            Collapsible.NO);
+    private final TypeObjectDescriptor keyStoreConfigObjectType = createTypeObjectDescriptor(
+            ComponentNode3.class.getName(), singletonList(algorithm));
 
     private final ComponentPropertyDescriptor keyStoreConfig =
             ComponentPropertyDescriptor.builder()
@@ -268,11 +252,8 @@ class DeserializerTest {
                     .displayName("Key Store config")
                     .build();
 
-    private final TypeObjectDescriptor securityConfigObjectType = new TypeObjectDescriptor(
-            ComponentNode2.class.getName(),
-            asList(userName, password, keyStoreConfig),
-            Shared.NO,
-            Collapsible.NO);
+    private final TypeObjectDescriptor securityConfigObjectType = createTypeObjectDescriptor(
+            ComponentNode2.class.getName(), asList(userName, password, keyStoreConfig));
 
     private final ComponentPropertyDescriptor securityConfigPropertyDescriptor =
             ComponentPropertyDescriptor.builder()

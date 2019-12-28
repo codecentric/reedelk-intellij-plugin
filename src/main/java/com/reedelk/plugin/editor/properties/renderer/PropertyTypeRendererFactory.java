@@ -102,9 +102,9 @@ public class PropertyTypeRendererFactory {
     }
 
     public PropertyTypeRenderer from(TypeDescriptor propertyType) {
-        if (RENDERER.containsKey(propertyType.type())) {
-            return RENDERER.get(propertyType.type());
+        if (RENDERER.containsKey(propertyType.getType())) {
+            return RENDERER.get(propertyType.getType());
         }
-        throw new IllegalArgumentException("Could not find renderer for type: " + propertyType.type());
+        throw new IllegalArgumentException("Could not find renderer for type: " + propertyType.getType());
     }
 }

@@ -8,9 +8,6 @@ plugins {
 group 'com.reedelk'
 version '1.0.0'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
 repositories {
     mavenCentral()
     mavenLocal()
@@ -19,7 +16,6 @@ repositories {
 dependencies {
     compile group: 'org.json', name: 'json', version: '20190722'
     compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.14.0'
-    compile group: 'io.github.classgraph', name: 'classgraph', version: '4.8.25'
     compile group: 'com.reedelk', name: 'runtime-api', version: '1.0.0-SNAPSHOT'
     compile group: 'com.reedelk', name: 'runtime-commons', version: '1.0.0-SNAPSHOT'
     compile group: 'com.reedelk', name: 'runtime-rest-api', version: '1.0.0-SNAPSHOT'

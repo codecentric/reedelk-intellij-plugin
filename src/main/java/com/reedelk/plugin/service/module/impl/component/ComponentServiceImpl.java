@@ -11,17 +11,15 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.ExcludedArtifactsFromModuleSync;
 import com.reedelk.plugin.component.domain.AutoCompleteContributorDefinition;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
+import com.reedelk.plugin.component.scanner.ComponentScanner;
 import com.reedelk.plugin.component.type.unknown.UnknownComponentDescriptorWrapper;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.maven.MavenUtils;
 import com.reedelk.plugin.service.module.ComponentService;
-import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpdateNotifier;
-import com.reedelk.plugin.service.module.impl.component.scanner.ComponentScanner;
 import com.reedelk.plugin.topic.ReedelkTopics;
 import com.reedelk.runtime.commons.ModuleUtils;
 import com.reedelk.runtime.component.Stop;
 import com.reedelk.runtime.component.Unknown;
-import io.github.classgraph.ScanResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.model.MavenArtifactNode;
 import org.jetbrains.idea.maven.project.MavenImportListener;
@@ -48,6 +46,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     private final ComponentScanner componentScanner = new ComponentScanner();
     private final Map<String, ModuleComponents> mavenJarComponentsMap = new HashMap<>();
     private final List<AutoCompleteContributorDefinition> autoCompleteContributorDefinitions = new ArrayList<>();
+    private final ComponentScanner scanner = new ComponentScanner();
 
     private ModuleComponents moduleComponents;
 
@@ -179,8 +178,8 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                             .classes()
                             .getUrls();
                     stream(modulePaths).forEach(modulePath -> {
-                        ScanResult scanResult = ComponentScanner.scanResultFrom(modulePath);
-                        List<ComponentDescriptor> components = componentScanner.from(scanResult);
+
+                        List<ComponentDescriptor> components = scanner.from(modulePath);
                         MavenUtils.getMavenProject(project, module.getName()).ifPresent(mavenProject -> {
                             String moduleName = mavenProject.getDisplayName();
                             moduleComponents = new ModuleComponents(moduleName, components);
@@ -207,14 +206,14 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
     private synchronized void scanForComponentsOfJar(String jarFilePath, String moduleName) {
         // We only scan a module if its jar file is a module with a name.
-        ScanResult scanResult = ComponentScanner.scanResultFrom(jarFilePath);
-        List<ComponentDescriptor> components = componentScanner.from(scanResult);
+        List<ComponentDescriptor> components = scanner.from(jarFilePath);
 
         ModuleComponents descriptor = new ModuleComponents(moduleName, components);
         mavenJarComponentsMap.put(jarFilePath, descriptor);
 
-        List<String> from = componentScanner.autoCompleteFrom(scanResult);
-        autoCompleteContributorDefinitions.add(new AutoCompleteContributorDefinition(from));
+        // TODO: The component descirptor should contain autocomplete contributor definitions
+        //  List<String> from = componentScanner.autoCompleteFrom(scanResult);
+        // TODO: Fixme autoCompleteContributorDefinitions.add(new AutoCompleteContributorDefinition(from));
     }
 
     private static Optional<ComponentDescriptor> findComponentMatching(Collection<ModuleComponents> descriptors, String fullyQualifiedName) {

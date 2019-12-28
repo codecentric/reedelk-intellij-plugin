@@ -39,7 +39,7 @@ abstract class BaseMapPropertyRenderer implements PropertyTypeRenderer {
             tabbed.setPreferredSize(Sizes.TabbedPane.HEIGHT);
 
             TypeMapDescriptor propertyType = propertyDescriptor.getPropertyType();
-            Optional<String> tabGroup = propertyType.getTabGroup();
+            Optional<String> tabGroup = Optional.ofNullable(propertyType.getTabGroup());
 
             Border border = BorderFactory.createLineBorder(JBColor.LIGHT_GRAY);
             if (tabGroup.isPresent()) {
@@ -79,7 +79,7 @@ abstract class BaseMapPropertyRenderer implements PropertyTypeRenderer {
 
         // Add the component to the container context.
         TypeMapDescriptor propertyType = descriptor.getPropertyType();
-        propertyType.getTabGroup()
+        Optional.ofNullable(propertyType.getTabGroup())
                 .ifPresent(group -> holder.addMetadata(TabGroup.class.getName(), group));
 
         context.addComponent(holder);
@@ -89,7 +89,7 @@ abstract class BaseMapPropertyRenderer implements PropertyTypeRenderer {
 
     private Optional<DisposableTabbedPane> getGroupTabbedPane(ComponentPropertyDescriptor propertyDescriptor, ContainerContext context) {
         TypeMapDescriptor propertyType = propertyDescriptor.getPropertyType();
-        Optional<String> tabGroup = propertyType.getTabGroup();
+        Optional<String> tabGroup = Optional.ofNullable(propertyType.getTabGroup());
         if (tabGroup.isPresent()) {
             // Tab group annotation was present in the property definition. We need to lookup
             // for other components in the panel context having TabGroup metadata with the

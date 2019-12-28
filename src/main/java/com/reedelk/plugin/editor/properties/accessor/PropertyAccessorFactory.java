@@ -70,7 +70,7 @@ public class PropertyAccessorFactory {
         checkState(typeDescriptor != null, "type descriptor must not be null");
         checkState(dataHolder != null, "data holder must not be null");
         checkState(ACCESSOR_MAP.containsKey(typeDescriptor.getClass()),
-                String.format("accessor for type %s not defined", typeDescriptor.type()));
+                String.format("accessor for type %s not defined", typeDescriptor.getType()));
 
         Class<? extends PropertyAccessor> accessorClazz = ACCESSOR_MAP.get(typeDescriptor.getClass());
         return instantiate(accessorClazz);

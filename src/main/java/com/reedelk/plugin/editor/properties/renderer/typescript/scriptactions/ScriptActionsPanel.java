@@ -12,6 +12,8 @@ import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.service.module.ScriptService;
 import com.reedelk.plugin.service.module.impl.script.ScriptResource;
 
+import java.util.Optional;
+
 import static com.intellij.icons.AllIcons.Actions.EditSource;
 import static com.intellij.icons.AllIcons.General.Add;
 import static com.intellij.icons.AllIcons.General.Remove;
@@ -59,7 +61,8 @@ public class ScriptActionsPanel extends DisposablePanel {
     private void addScript() {
         DialogAddScript dialogAddScript = new DialogAddScript(module.getProject());
         if (dialogAddScript.showAndGet()) {
-            ScriptSignatureDefinition signatureDefinition = propertyDescriptor.getScriptSignatureDefinition().orElse(ScriptSignatureDefinition.DEFAULT);
+            ScriptSignatureDefinition signatureDefinition =
+                    Optional.ofNullable(propertyDescriptor.getScriptSignatureDefinition()).orElse(ScriptSignatureDefinition.DEFAULT);
             String scriptFileNameIncludingPathToAdd = dialogAddScript.getScriptFileNameIncludingPathToAdd();
             String scriptFunctionName = JavascriptFileNameValidator.getFileNameWithoutExtensionFrom(scriptFileNameIncludingPathToAdd);
             String scriptBody = ScriptFunctionDefinitionBuilder.from(scriptFunctionName, signatureDefinition);

@@ -9,8 +9,6 @@ import java.util.Map;
 
 public class Icons {
 
-    public static final String PNG_EXTENSION = "png";
-
     public static final Icon ModuleBuilderStart = IconLoader.getIcon("/icons/ModuleBuilderStart.png");
     public static final Icon Module = IconLoader.getIcon("/icons/ModulePackage.png");
     public static final Icon Runtime = IconLoader.getIcon("/icons/Runtime.png");

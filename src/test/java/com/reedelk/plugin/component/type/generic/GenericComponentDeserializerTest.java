@@ -2,7 +2,6 @@ package com.reedelk.plugin.component.type.generic;
 
 import com.google.common.collect.ImmutableMap;
 import com.reedelk.plugin.assertion.PluginAssertion;
-import com.reedelk.plugin.component.domain.ComponentDefaultDescriptor;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
 import com.reedelk.plugin.fixture.ComponentNode1;
 import com.reedelk.plugin.graph.deserializer.AbstractNodeDeserializerTest;
@@ -36,7 +35,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
     @DisplayName("Component primitives types are de-serialized correctly")
     class PrimitiveTypeDeserialization {
 
-        private ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+        private ComponentDescriptor descriptor = ComponentDescriptor.create()
                 .propertyDescriptors(asList(
                         Primitives.integerProperty,
                         Primitives.integerObjectProperty,
@@ -93,7 +92,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
         @Test
         void shouldCorrectlyDeserializeTypeObject() {
             // Given
-            ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+            ComponentDescriptor descriptor = ComponentDescriptor.create()
                     .propertyDescriptors(asList(stringProperty, TypeObjects.typeObjectProperty))
                     .fullyQualifiedName(ComponentNode1.class.getName())
                     .build();
@@ -120,7 +119,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
         @Test
         void shouldCorrectlyDeserializeSharedTypeObjectWithReference() {
             // Given
-            ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+            ComponentDescriptor descriptor = ComponentDescriptor.create()
                     .propertyDescriptors(asList(booleanProperty, TypeObjects.typeObjectSharedProperty))
                     .fullyQualifiedName(ComponentNode1.class.getName())
                     .build();
@@ -147,7 +146,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
         @Test
         void shouldCorrectlyDeserializeSharedEmptyTypeObject() {
             // Given
-            ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+            ComponentDescriptor descriptor = ComponentDescriptor.create()
                     .propertyDescriptors(asList(booleanProperty, TypeObjects.typeObjectSharedProperty))
                     .fullyQualifiedName(ComponentNode1.class.getName())
                     .build();
@@ -174,7 +173,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
         @Test
         void shouldCorrectlyDeserializeSharedTypeObjectWhenReferencePropertyNotPresent() {
             // Given
-            ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+            ComponentDescriptor descriptor = ComponentDescriptor.create()
                     .propertyDescriptors(asList(booleanProperty, TypeObjects.typeObjectSharedProperty))
                     .fullyQualifiedName(ComponentNode1.class.getName())
                     .build();
@@ -201,7 +200,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
         @Test
         void shouldCorrectlyDeserializeMissingSharedTypeObject() {
             // Given
-            ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+            ComponentDescriptor descriptor = ComponentDescriptor.create()
                     .propertyDescriptors(asList(booleanProperty, TypeObjects.typeObjectSharedProperty))
                     .fullyQualifiedName(ComponentNode1.class.getName())
                     .build();
@@ -232,7 +231,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
         @Test
         void shouldCorrectlyDeserializeGenericComponentWithMapProperty() {
             // Given
-            ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+            ComponentDescriptor descriptor = ComponentDescriptor.create()
                     .propertyDescriptors(asList(stringProperty, SpecialTypes.mapProperty))
                     .fullyQualifiedName(ComponentNode1.class.getName())
                     .build();
@@ -262,7 +261,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
         @Test
         void shouldCorrectlyDeserializeGenericComponentWithScriptProperty() {
             // Given
-            ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+            ComponentDescriptor descriptor = ComponentDescriptor.create()
                     .propertyDescriptors(asList(stringProperty, SpecialTypes.scriptProperty))
                     .fullyQualifiedName(ComponentNode1.class.getName())
                     .build();
@@ -292,7 +291,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
         @Test
         void shouldCorrectlyDeserializeGenericComponentWithComboProperty() {
             // Given
-            ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+            ComponentDescriptor descriptor = ComponentDescriptor.create()
                     .propertyDescriptors(asList(Primitives.doubleObjectProperty, SpecialTypes.comboProperty))
                     .fullyQualifiedName(ComponentNode1.class.getName())
                     .build();
@@ -322,7 +321,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
         @Test
         void shouldCorrectlyDeserializeGenericComponentWithResourceProperty() {
             // Given
-            ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+            ComponentDescriptor descriptor = ComponentDescriptor.create()
                     .propertyDescriptors(asList(Primitives.booleanProperty, SpecialTypes.resourceProperty))
                     .fullyQualifiedName(ComponentNode1.class.getName())
                     .build();
@@ -352,7 +351,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
         @Test
         void shouldCorrectlyDeserializeGenericComponentWithEnumProperty() {
             // Given
-            ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+            ComponentDescriptor descriptor = ComponentDescriptor.create()
                     .propertyDescriptors(asList(Primitives.floatProperty, SpecialTypes.enumProperty))
                     .fullyQualifiedName(ComponentNode1.class.getName())
                     .build();
@@ -380,7 +379,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
     @DisplayName("Component Dynamic properties are de-serialized correctly")
     class TypeDynamicPropertiesDeserialization {
 
-        ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+        ComponentDescriptor descriptor = ComponentDescriptor.create()
                 .propertyDescriptors(asList(
                         DynamicTypes.dynamicBigDecimalProperty,
                         DynamicTypes.dynamicBigIntegerProperty,

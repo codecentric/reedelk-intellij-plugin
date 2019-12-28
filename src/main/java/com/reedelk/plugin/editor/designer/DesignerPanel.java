@@ -26,8 +26,8 @@ import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.SnapshotListener;
 import com.reedelk.plugin.graph.layout.FlowGraphLayout;
 import com.reedelk.plugin.graph.node.GraphNode;
+import com.reedelk.plugin.service.module.impl.component.ComponentListUpdateNotifier;
 import com.reedelk.plugin.service.module.impl.component.ModuleComponents;
-import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpdateNotifier;
 import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
 

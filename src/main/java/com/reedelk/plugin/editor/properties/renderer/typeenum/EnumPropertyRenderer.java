@@ -25,7 +25,7 @@ public class EnumPropertyRenderer extends AbstractPropertyTypeRenderer {
 
         TypeEnumDescriptor propertyType = propertyDescriptor.getPropertyType();
 
-        EnumDropDown dropDown = new EnumDropDown(propertyType.valueAndDisplayMap());
+        EnumDropDown dropDown = new EnumDropDown(propertyType.getNameAndDisplayNameMap());
 
         // We set the default value if not present
         if (propertyAccessor.get() == null) {

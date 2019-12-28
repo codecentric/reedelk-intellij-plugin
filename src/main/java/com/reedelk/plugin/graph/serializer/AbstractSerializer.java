@@ -1,7 +1,7 @@
 package com.reedelk.plugin.graph.serializer;
 
 import com.reedelk.plugin.component.domain.ComponentData;
-import com.reedelk.plugin.component.domain.ComponentDefaultDescriptor;
+import com.reedelk.plugin.component.domain.ComponentDescriptor;
 import com.reedelk.plugin.component.type.stop.StopNode;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -24,7 +24,7 @@ public abstract class AbstractSerializer {
 
     public static class UntilNoSuccessors extends StopNode {
         public UntilNoSuccessors() {
-            super(new ComponentData(ComponentDefaultDescriptor.create().build()));
+            super(new ComponentData(new ComponentDescriptor()));
         }
     }
 

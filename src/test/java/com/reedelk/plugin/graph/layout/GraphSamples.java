@@ -4,7 +4,7 @@ import com.reedelk.plugin.AbstractGraphTest;
 import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.commons.Images;
 import com.reedelk.plugin.component.domain.ComponentData;
-import com.reedelk.plugin.component.domain.ComponentDefaultDescriptor;
+import com.reedelk.plugin.component.domain.ComponentDescriptor;
 import com.reedelk.plugin.component.type.generic.GenericComponentNode;
 import com.reedelk.plugin.component.type.router.RouterNode;
 import com.reedelk.plugin.graph.FlowGraph;
@@ -366,7 +366,7 @@ public class GraphSamples {
     }
 
     private ComponentData createComponent(String name) {
-        ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
+        ComponentData componentData = new ComponentData(ComponentDescriptor.create()
                 .fullyQualifiedName(name)
                 .displayName(name)
                 .propertyDescriptors(Collections.emptyList())

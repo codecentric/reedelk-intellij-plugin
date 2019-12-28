@@ -10,15 +10,16 @@ import java.math.BigInteger;
 import java.util.Map;
 
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.Primitives.*;
+import static com.reedelk.plugin.testutils.ObjectFactories.*;
 import static java.util.Arrays.asList;
 
 public class SamplePropertyDescriptors {
 
     public static class Primitives {
 
-        public static final TypeDescriptor integerTypeDescriptor = new TypePrimitiveDescriptor(int.class);
-        public static final TypeDescriptor booleanTypeDescriptor = new TypePrimitiveDescriptor(boolean.class);
-        public static final TypeDescriptor stringTypeDescriptor = new TypePrimitiveDescriptor(String.class);
+        public static final TypeDescriptor integerTypeDescriptor = createTypePrimitiveDescriptor(int.class);
+        public static final TypeDescriptor booleanTypeDescriptor = createTypePrimitiveDescriptor(boolean.class);
+        public static final TypeDescriptor stringTypeDescriptor = createTypePrimitiveDescriptor(String.class);
 
         static final ComponentPropertyDescriptor integerProperty =
                 ComponentPropertyDescriptor.builder()
@@ -42,16 +43,16 @@ public class SamplePropertyDescriptors {
                         .defaultValue("")
                         .build();
 
-        static final TypeDescriptor integerObjectTypeDescriptor = new TypePrimitiveDescriptor(Integer.class);
-        static final TypeDescriptor longTypeDescriptor = new TypePrimitiveDescriptor(long.class);
-        static final TypeDescriptor longObjectTypeDescriptor = new TypePrimitiveDescriptor(Long.class);
-        static final TypeDescriptor floatTypeDescriptor = new TypePrimitiveDescriptor(float.class);
-        static final TypeDescriptor floatObjectTypeDescriptor = new TypePrimitiveDescriptor(Float.class);
-        static final TypeDescriptor doubleTypeDescriptor = new TypePrimitiveDescriptor(double.class);
-        static final TypeDescriptor doubleObjectTypeDescriptor = new TypePrimitiveDescriptor(Double.class);
-        static final TypeDescriptor booleanObjectTypeDescriptor = new TypePrimitiveDescriptor(Boolean.class);
-        static final TypeDescriptor bigIntegerTypeDescriptor = new TypePrimitiveDescriptor(BigInteger.class);
-        static final TypeDescriptor bigDecimalTypeDescriptor = new TypePrimitiveDescriptor(BigDecimal.class);
+        static final TypeDescriptor integerObjectTypeDescriptor = createTypePrimitiveDescriptor(Integer.class);
+        static final TypeDescriptor longTypeDescriptor = createTypePrimitiveDescriptor(long.class);
+        static final TypeDescriptor longObjectTypeDescriptor = createTypePrimitiveDescriptor(Long.class);
+        static final TypeDescriptor floatTypeDescriptor = createTypePrimitiveDescriptor(float.class);
+        static final TypeDescriptor floatObjectTypeDescriptor = createTypePrimitiveDescriptor(Float.class);
+        static final TypeDescriptor doubleTypeDescriptor = createTypePrimitiveDescriptor(double.class);
+        static final TypeDescriptor doubleObjectTypeDescriptor = createTypePrimitiveDescriptor(Double.class);
+        static final TypeDescriptor booleanObjectTypeDescriptor = createTypePrimitiveDescriptor(Boolean.class);
+        static final TypeDescriptor bigIntegerTypeDescriptor = createTypePrimitiveDescriptor(BigInteger.class);
+        static final TypeDescriptor bigDecimalTypeDescriptor = createTypePrimitiveDescriptor(BigDecimal.class);
 
         static final ComponentPropertyDescriptor integerObjectProperty =
                 ComponentPropertyDescriptor.builder()
@@ -126,16 +127,16 @@ public class SamplePropertyDescriptors {
 
     static class DynamicTypes {
 
-        static final TypeDescriptor dynamicBigDecimalTypeDescriptor = new TypeDynamicValueDescriptor<>(DynamicBigDecimal.class);
-        static final TypeDescriptor dynamicBigIntegerTypeDescriptor = new TypeDynamicValueDescriptor<>(DynamicBigInteger.class);
-        static final TypeDescriptor dynamicBooleanTypeDescriptor = new TypeDynamicValueDescriptor<>(DynamicBoolean.class);
-        static final TypeDescriptor dynamicByteArrayTypeDescriptor = new TypeDynamicValueDescriptor<>(DynamicByteArray.class);
-        static final TypeDescriptor dynamicDoubleTypeDescriptor = new TypeDynamicValueDescriptor<>(DynamicDouble.class);
-        static final TypeDescriptor dynamicFloatTypeDescriptor = new TypeDynamicValueDescriptor<>(DynamicFloat.class);
-        static final TypeDescriptor dynamicIntegerTypeDescriptor = new TypeDynamicValueDescriptor<>(DynamicInteger.class);
-        static final TypeDescriptor dynamicLongTypeDescriptor = new TypeDynamicValueDescriptor<>(DynamicLong.class);
-        static final TypeDescriptor dynamicObjectTypeDescriptor = new TypeDynamicValueDescriptor<>(DynamicObject.class);
-        static final TypeDescriptor dynamicStringTypeDescriptor = new TypeDynamicValueDescriptor<>(DynamicString.class);
+        static final TypeDescriptor dynamicBigDecimalTypeDescriptor = createTypeDynamicValueDescriptor(DynamicBigDecimal.class);
+        static final TypeDescriptor dynamicBigIntegerTypeDescriptor = createTypeDynamicValueDescriptor(DynamicBigInteger.class);
+        static final TypeDescriptor dynamicBooleanTypeDescriptor = createTypeDynamicValueDescriptor(DynamicBoolean.class);
+        static final TypeDescriptor dynamicByteArrayTypeDescriptor = createTypeDynamicValueDescriptor(DynamicByteArray.class);
+        static final TypeDescriptor dynamicDoubleTypeDescriptor = createTypeDynamicValueDescriptor(DynamicDouble.class);
+        static final TypeDescriptor dynamicFloatTypeDescriptor = createTypeDynamicValueDescriptor(DynamicFloat.class);
+        static final TypeDescriptor dynamicIntegerTypeDescriptor = createTypeDynamicValueDescriptor(DynamicInteger.class);
+        static final TypeDescriptor dynamicLongTypeDescriptor = createTypeDynamicValueDescriptor(DynamicLong.class);
+        static final TypeDescriptor dynamicObjectTypeDescriptor = createTypeDynamicValueDescriptor(DynamicObject.class);
+        static final TypeDescriptor dynamicStringTypeDescriptor = createTypeDynamicValueDescriptor(DynamicString.class);
 
         static final ComponentPropertyDescriptor dynamicBigDecimalProperty =
                 ComponentPropertyDescriptor.builder()
@@ -212,10 +213,10 @@ public class SamplePropertyDescriptors {
 
         private static final Map<String, String> valueAndDisplayMap = ImmutableMap.of("NONE", "No config", "CERT", "Certificate");
 
-        static final TypeDescriptor enumTypeDescriptor = new TypeEnumDescriptor(valueAndDisplayMap, "NONE");
-        static final TypeDescriptor mapTypeDescriptor = new TypeMapDescriptor("Headers");
+        static final TypeDescriptor enumTypeDescriptor = createTypeEnumDescriptor(valueAndDisplayMap);
+        static final TypeDescriptor mapTypeDescriptor = createTypeMapDescriptor("Headers");
         static final TypeDescriptor scriptTypeDescriptor = new TypeScriptDescriptor();
-        static final TypeDescriptor comboTypeDescriptor = new TypeComboDescriptor(true, new String[]{"one", "two", "three"}, null);
+        static final TypeDescriptor comboTypeDescriptor = createTypeComboDescriptor(true, new String[]{"one", "two", "three"}, null);
         static final TypeDescriptor resourceTypeDescriptor = new TypeResourceTextDescriptor();
 
         static final ComponentPropertyDescriptor enumProperty =
@@ -257,10 +258,10 @@ public class SamplePropertyDescriptors {
     static class TypeObjects {
 
         static final TypeObjectDescriptor typeObjectDescriptor =
-                new TypeObjectDescriptor(ComponentNode2.class.getName(), asList(stringProperty, integerObjectProperty), Shared.NO, Collapsible.NO);
+                createTypeObjectDescriptor(ComponentNode2.class.getName(), asList(stringProperty, integerObjectProperty));
 
         static final TypeObjectDescriptor typeObjectSharedDescriptor =
-                new TypeObjectDescriptor(ComponentNode2.class.getName(), asList(doubleObjectProperty, bigIntegerProperty), Shared.YES, Collapsible.NO);
+                createTypeObjectDescriptor(ComponentNode2.class.getName(), asList(doubleObjectProperty, bigIntegerProperty), Shared.YES);
 
         static final ComponentPropertyDescriptor typeObjectProperty =
                 ComponentPropertyDescriptor.builder()

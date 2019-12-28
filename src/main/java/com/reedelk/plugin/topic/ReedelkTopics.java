@@ -3,7 +3,7 @@ package com.reedelk.plugin.topic;
 import com.intellij.util.messages.Topic;
 import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
 import com.reedelk.plugin.editor.properties.selection.SelectionChangeListener;
-import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpdateNotifier;
+import com.reedelk.plugin.service.module.impl.component.ComponentListUpdateNotifier;
 
 import static com.reedelk.plugin.service.module.CompletionService.OnCompletionEvent;
 import static com.reedelk.plugin.service.module.impl.configuration.ConfigServiceImpl.ConfigChangeListener;

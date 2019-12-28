@@ -18,7 +18,7 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 /**
  * Decorator which adds the default "Description" property to all registered components.
  */
-public class ComponentDescriptionDecorator implements ComponentDescriptor {
+public class ComponentDescriptionDecorator extends ComponentDescriptor {
 
     private static final String DESCRIPTION_PROPERTY_DISPLAY_NAME = "Description";
 
@@ -28,7 +28,8 @@ public class ComponentDescriptionDecorator implements ComponentDescriptor {
     public ComponentDescriptionDecorator(ComponentDescriptor descriptor) {
         this.wrapped = descriptor;
 
-        TypePrimitiveDescriptor typeDescriptor = new TypePrimitiveDescriptor(String.class);
+        TypePrimitiveDescriptor typeDescriptor = new TypePrimitiveDescriptor();
+        typeDescriptor.setType(String.class);
 
         descriptionDescriptor = ComponentPropertyDescriptor.builder()
                 .propertyName(JsonParser.Implementor.description())
@@ -81,11 +82,11 @@ public class ComponentDescriptionDecorator implements ComponentDescriptor {
     }
 
     @Override
-    public List<ComponentPropertyDescriptor> getPropertiesDescriptors() {
+    public List<ComponentPropertyDescriptor> getComponentPropertyDescriptors() {
         List<ComponentPropertyDescriptor> descriptionDescriptorList = new ArrayList<>();
         descriptionDescriptorList.add(descriptionDescriptor);
 
-        List<ComponentPropertyDescriptor> propertiesDescriptors = wrapped.getPropertiesDescriptors();
+        List<ComponentPropertyDescriptor> propertiesDescriptors = wrapped.getComponentPropertyDescriptors();
         descriptionDescriptorList.addAll(propertiesDescriptors);
 
         return Collections.unmodifiableList(descriptionDescriptorList);

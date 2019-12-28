@@ -9,7 +9,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
-public class UnknownComponentDescriptorWrapper implements ComponentDescriptor {
+public class UnknownComponentDescriptorWrapper extends ComponentDescriptor {
 
     private final ComponentDescriptor wrapped;
 
@@ -48,8 +48,8 @@ public class UnknownComponentDescriptorWrapper implements ComponentDescriptor {
     }
 
     @Override
-    public List<ComponentPropertyDescriptor> getPropertiesDescriptors() {
-        return wrapped.getPropertiesDescriptors();
+    public List<ComponentPropertyDescriptor> getComponentPropertyDescriptors() {
+        return wrapped.getComponentPropertyDescriptors();
     }
 
     @Override

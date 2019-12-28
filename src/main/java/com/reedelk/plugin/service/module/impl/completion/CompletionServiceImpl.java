@@ -11,8 +11,8 @@ import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.ComponentService;
+import com.reedelk.plugin.service.module.impl.component.ComponentListUpdateNotifier;
 import com.reedelk.plugin.service.module.impl.component.ModuleComponents;
-import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpdateNotifier;
 import com.reedelk.plugin.topic.ReedelkTopics;
 import com.reedelk.runtime.api.commons.StringUtils;
 
@@ -82,7 +82,7 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
         components.forEach(componentsPackage -> componentsPackage.getModuleComponents()
                         .forEach(descriptor -> {
                             String fullyQualifiedName = descriptor.getFullyQualifiedName();
-                            addSuggestionFrom(fullyQualifiedName, descriptor.getPropertiesDescriptors());
+                            addSuggestionFrom(fullyQualifiedName, descriptor.getComponentPropertyDescriptors());
                         }));
 
         // We throw away the old custom functions trie since again we are updating
@@ -119,7 +119,7 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
                 addSuggestionFrom(typeObjectDescriptor.getTypeFullyQualifiedName(), typeObjectDescriptor.getObjectProperties());
 
             } else {
-                descriptor.getAutoCompleteContributorDefinition().ifPresent(definition -> {
+                Optional.ofNullable(descriptor.getAutoCompleteContributorDefinition()).ifPresent(definition -> {
                     Trie componentTrie = new Trie();
                     if (definition.isMessage()) insertSuggestions(componentTrie, DefaultSuggestions.MESSAGE);
                     if (definition.isContext()) insertSuggestions(componentTrie, DefaultSuggestions.CONTEXT);

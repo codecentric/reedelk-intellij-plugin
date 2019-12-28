@@ -10,12 +10,7 @@ public class PluginValueConverterProvider {
     }
 
     public static PluginValueConverter<?> forType(TypeDescriptor typeDescriptor) {
-        return forType(typeDescriptor.type());
-    }
-
-    public static boolean isKnownType(String clazzFullyQualifiedName) {
-        return PluginConverters.forConfigPropertyAware()
-                .isKnownType(clazzFullyQualifiedName);
+        return forType(typeDescriptor.getType());
     }
 
     public static <T> PluginValueConverter<T> forType(Class<T> typeClazz) {

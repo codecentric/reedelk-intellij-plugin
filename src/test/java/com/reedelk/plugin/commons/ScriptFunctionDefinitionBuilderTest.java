@@ -3,9 +3,10 @@ package com.reedelk.plugin.commons;
 import com.reedelk.plugin.component.domain.ScriptSignatureDefinition;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.Collections;
 
+import static com.reedelk.plugin.testutils.ObjectFactories.createScriptSignatureDefinition;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ScriptFunctionDefinitionBuilderTest {
@@ -19,7 +20,7 @@ class ScriptFunctionDefinitionBuilderTest {
                 "}";
         String  scriptFunctionName = "myTestFunction";
         ScriptSignatureDefinition definition =
-                new ScriptSignatureDefinition(Arrays.asList("context", "arg1", "arg2", "arg3"));
+                createScriptSignatureDefinition(asList("context", "arg1", "arg2", "arg3"));
 
         // When
         String scriptFunctionDefinition = ScriptFunctionDefinitionBuilder.from(scriptFunctionName, definition);
@@ -37,7 +38,7 @@ class ScriptFunctionDefinitionBuilderTest {
                 "}";
         String  scriptFunctionName = "myTestFunction";
         ScriptSignatureDefinition definition =
-                new ScriptSignatureDefinition(Collections.emptyList());
+                createScriptSignatureDefinition(Collections.emptyList());
 
         // When
         String scriptFunctionDefinition = ScriptFunctionDefinitionBuilder.from(scriptFunctionName, definition);

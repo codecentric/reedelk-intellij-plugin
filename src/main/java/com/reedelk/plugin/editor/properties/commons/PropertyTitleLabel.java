@@ -8,6 +8,7 @@ import com.reedelk.plugin.editor.properties.ClickableLabelWithTooltip;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.util.Optional;
 
 import static com.reedelk.plugin.commons.Colors.TOOL_WINDOW_PROPERTIES_TEXT;
 import static com.reedelk.plugin.commons.Icons.Misc.Info;
@@ -29,7 +30,7 @@ public class PropertyTitleLabel extends JPanel {
 
     public PropertyTitleLabel(ComponentPropertyDescriptor propertyDescriptor) {
         this(propertyDescriptor.getDisplayName());
-        propertyDescriptor.getPropertyInfo().ifPresent(propertyInfoText -> {
+        Optional.ofNullable(propertyDescriptor.getPropertyInfo()).ifPresent(propertyInfoText -> {
             JLabel infoTooltipIcon = new ClickableLabelWithTooltip(propertyInfoText, Info);
             add(ContainerFactory.pushLeft(infoTooltipIcon), CENTER);
         });

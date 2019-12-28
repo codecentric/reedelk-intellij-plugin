@@ -14,8 +14,8 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
 import com.reedelk.plugin.service.module.ComponentService;
+import com.reedelk.plugin.service.module.impl.component.ComponentListUpdateNotifier;
 import com.reedelk.plugin.service.module.impl.component.ModuleComponents;
-import com.reedelk.plugin.service.module.impl.component.scanner.ComponentListUpdateNotifier;
 import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
 
@@ -155,9 +155,7 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
     // A module might not have any component if for instance all its components are hidden.
     // This is why in this method we filter all the component descriptors which are not hidden.
     private static final Predicate<ModuleComponents> ExcludeModuleWithoutComponents =
-            moduleComponents -> !moduleComponents.getModuleComponents()
+            moduleComponents -> moduleComponents.getModuleComponents()
                     .stream()
-                    .filter(componentDescriptor -> !componentDescriptor.isHidden())
-                    .collect(toList())
-                    .isEmpty();
+                    .anyMatch(componentDescriptor -> !componentDescriptor.isHidden());
 }

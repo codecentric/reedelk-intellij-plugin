@@ -2,7 +2,6 @@ package com.reedelk.plugin;
 
 import com.reedelk.plugin.commons.FontInfoProvider;
 import com.reedelk.plugin.component.domain.ComponentData;
-import com.reedelk.plugin.component.domain.ComponentDefaultDescriptor;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
 import com.reedelk.plugin.component.domain.ComponentType;
 import com.reedelk.plugin.component.type.flowreference.FlowReferenceNode;
@@ -146,7 +145,7 @@ public abstract class AbstractGraphTest {
     }
 
     protected static <T extends GraphNode> T createGraphNodeInstance(Class componentClazz, Class<T> graphNodeClazz, ComponentType componentType) {
-        ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+        ComponentDescriptor descriptor = ComponentDescriptor.create()
                 .fullyQualifiedName(componentClazz.getName())
                 .componentType(componentType)
                 .build();

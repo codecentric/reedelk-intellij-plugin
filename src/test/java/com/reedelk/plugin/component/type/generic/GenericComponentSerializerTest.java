@@ -2,7 +2,6 @@ package com.reedelk.plugin.component.type.generic;
 
 import com.reedelk.plugin.AbstractGraphTest;
 import com.reedelk.plugin.component.domain.ComponentData;
-import com.reedelk.plugin.component.domain.ComponentDefaultDescriptor;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.fixture.ComponentNode1;
@@ -42,7 +41,7 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
     @DisplayName("Component primitives types are serialized correctly")
     class PrimitiveTypesSerialization {
 
-        ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+        ComponentDescriptor descriptor = ComponentDescriptor.create()
                 .propertyDescriptors(asList(
                         Primitives.integerProperty,
                         Primitives.integerObjectProperty,
@@ -110,7 +109,7 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
         @Test
         void shouldCorrectlySerializeTypeObject() {
             // Given
-            ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
+            ComponentData componentData = new ComponentData(ComponentDescriptor.create()
                     .propertyDescriptors(asList(stringProperty, TypeObjects.typeObjectProperty))
                     .fullyQualifiedName(ComponentNode1.class.getName())
                     .build());
@@ -134,7 +133,7 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
         @Test
         void shouldCorrectlySerializeGenericComponentWithTypeObjectReference() {
             // Given
-            ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
+            ComponentData componentData = new ComponentData(ComponentDescriptor.create()
                     .propertyDescriptors(asList(Primitives.booleanProperty, TypeObjects.typeObjectSharedProperty))
                     .fullyQualifiedName(ComponentNode1.class.getName())
                     .build());
@@ -158,7 +157,7 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
         @Test
         void shouldCorrectlySerializeGenericComponentWithEmptyTypeObjectReference() {
             // Given
-            ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
+            ComponentData componentData = new ComponentData(ComponentDescriptor.create()
                     .propertyDescriptors(asList(Primitives.booleanProperty, TypeObjects.typeObjectSharedProperty))
                     .fullyQualifiedName(ComponentNode1.class.getName())
                     .build());
@@ -190,7 +189,7 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
             myMap.put("key1", "value1");
             myMap.put("key2", 3);
 
-            ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
+            ComponentData componentData = new ComponentData(ComponentDescriptor.create()
                     .propertyDescriptors(asList(Primitives.stringProperty, SpecialTypes.mapProperty))
                     .fullyQualifiedName(ComponentNode1.class.getName())
                     .build());
@@ -213,7 +212,7 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
             // Given
             Map<String, Object> myMap = new HashMap<>();
 
-            ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
+            ComponentData componentData = new ComponentData(ComponentDescriptor.create()
                     .propertyDescriptors(asList(Primitives.stringProperty, SpecialTypes.mapProperty))
                     .fullyQualifiedName(ComponentNode1.class.getName())
                     .build());
@@ -238,7 +237,7 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
         @Test
         void shouldCorrectlySerializeGenericComponentWithScriptProperty() {
             // Given
-            ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
+            ComponentData componentData = new ComponentData(ComponentDescriptor.create()
                     .propertyDescriptors(asList(Primitives.stringProperty, SpecialTypes.scriptProperty))
                     .fullyQualifiedName(ComponentNode1.class.getName())
                     .build());
@@ -263,7 +262,7 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
         @Test
         void shouldCorrectlySerializeGenericComponentWithComboProperty() {
             // Given
-            ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
+            ComponentData componentData = new ComponentData(ComponentDescriptor.create()
                     .propertyDescriptors(asList(Primitives.doubleObjectProperty, SpecialTypes.comboProperty))
                     .fullyQualifiedName(ComponentNode1.class.getName())
                     .build());
@@ -288,7 +287,7 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
         @Test
         void shouldCorrectlySerializeGenericComponentWithResourceProperty() {
             // Given
-            ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
+            ComponentData componentData = new ComponentData(ComponentDescriptor.create()
                     .propertyDescriptors(asList(Primitives.booleanProperty, SpecialTypes.resourceProperty))
                     .fullyQualifiedName(ComponentNode1.class.getName())
                     .build());
@@ -313,7 +312,7 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
         @Test
         void shouldCorrectlySerializeGenericComponentWithEnumProperty() {
             // Given
-            ComponentData componentData = new ComponentData(ComponentDefaultDescriptor.create()
+            ComponentData componentData = new ComponentData(ComponentDescriptor.create()
                     .propertyDescriptors(asList(Primitives.floatProperty, SpecialTypes.enumProperty))
                     .fullyQualifiedName(ComponentNode1.class.getName())
                     .build());
@@ -335,7 +334,7 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
     @DisplayName("Component Dynamic properties are serialized correctly")
     class TypeDynamicPropertiesSerialization {
 
-        ComponentDescriptor descriptor = ComponentDefaultDescriptor.create()
+        ComponentDescriptor descriptor = ComponentDescriptor.create()
                 .propertyDescriptors(asList(
                         DynamicTypes.dynamicBigDecimalProperty,
                         DynamicTypes.dynamicBigIntegerProperty,
