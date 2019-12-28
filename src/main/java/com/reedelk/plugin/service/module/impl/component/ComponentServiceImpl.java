@@ -209,7 +209,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         PluginExecutors.run(module,
                 message("module.component.update.system.components"),
                 indicator -> {
-                    List<ComponentDescriptor> flowControlComponents = componentsAnalyzer.from(Stop.class.getPackage());
+                    List<ComponentDescriptor> flowControlComponents = componentsAnalyzer.from(Stop.class);
                     systemComponents.addAll(flowControlComponents);
                     isInitialized = true;
                     notifyComponentListUpdate();
