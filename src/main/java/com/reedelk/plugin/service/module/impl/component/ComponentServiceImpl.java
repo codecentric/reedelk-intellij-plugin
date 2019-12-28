@@ -9,9 +9,12 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.ExcludedArtifactsFromModuleSync;
+import com.reedelk.plugin.commons.Icons;
+import com.reedelk.plugin.commons.Images;
+import com.reedelk.plugin.component.analyzer.PackageComponentsAnalyzer;
 import com.reedelk.plugin.component.domain.AutoCompleteContributorDefinition;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
-import com.reedelk.plugin.component.scanner.ComponentScanner;
+import com.reedelk.plugin.component.domain.PackageComponents;
 import com.reedelk.plugin.component.type.unknown.UnknownComponentDescriptorWrapper;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.maven.MavenUtils;
@@ -43,10 +46,10 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     private final Project project;
     private final ModuleComponents systemComponents;
     private final ComponentListUpdateNotifier publisher;
-    private final ComponentScanner componentScanner = new ComponentScanner();
+    private final PackageComponentsAnalyzer componentsAnalyzer = new PackageComponentsAnalyzer();
     private final Map<String, ModuleComponents> mavenJarComponentsMap = new HashMap<>();
     private final List<AutoCompleteContributorDefinition> autoCompleteContributorDefinitions = new ArrayList<>();
-    private final ComponentScanner scanner = new ComponentScanner();
+
 
     private ModuleComponents moduleComponents;
 
@@ -179,10 +182,23 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                             .getUrls();
                     stream(modulePaths).forEach(modulePath -> {
 
-                        List<ComponentDescriptor> components = scanner.from(modulePath);
+                        PackageComponents packageComponents = componentsAnalyzer.from(modulePath);
                         MavenUtils.getMavenProject(project, module.getName()).ifPresent(mavenProject -> {
+
+                            List<ComponentDescriptor> componentDescriptors = packageComponents.getComponentDescriptors();
+
+                            // Add Icons and Images to local cache.
+                            registerIconsAndImagesLocalCache(componentDescriptors);
+
                             String moduleName = mavenProject.getDisplayName();
-                            moduleComponents = new ModuleComponents(moduleName, components);
+                            moduleComponents = new ModuleComponents(moduleName, componentDescriptors);
+
+                            // TODO: Module autocomplete contributor definitions should be cleared here!
+                            //  because here we are just keep adding without removing them!
+                            List<AutoCompleteContributorDefinition> autocompleteContributorDefinitions =
+                                    packageComponents.getAutocompleteContributorDefinitions();
+                            autoCompleteContributorDefinitions.addAll(autocompleteContributorDefinitions);
+
                         });
                     });
                     notifyComponentListUpdate();
@@ -193,7 +209,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         PluginExecutors.run(module,
                 message("module.component.update.system.components"),
                 indicator -> {
-                    List<ComponentDescriptor> flowControlComponents = componentScanner.from(Stop.class.getPackage());
+                    List<ComponentDescriptor> flowControlComponents = componentsAnalyzer.from(Stop.class.getPackage());
                     systemComponents.addAll(flowControlComponents);
                     isInitialized = true;
                     notifyComponentListUpdate();
@@ -206,14 +222,17 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
     private synchronized void scanForComponentsOfJar(String jarFilePath, String moduleName) {
         // We only scan a module if its jar file is a module with a name.
-        List<ComponentDescriptor> components = scanner.from(jarFilePath);
+        PackageComponents packageComponents = componentsAnalyzer.from(jarFilePath);
+        List<ComponentDescriptor> componentDescriptors = packageComponents.getComponentDescriptors();
+        registerIconsAndImagesLocalCache(componentDescriptors);
 
-        ModuleComponents descriptor = new ModuleComponents(moduleName, components);
+        // Add them to the map of components
+        ModuleComponents descriptor = new ModuleComponents(moduleName, componentDescriptors);
         mavenJarComponentsMap.put(jarFilePath, descriptor);
 
-        // TODO: The component descirptor should contain autocomplete contributor definitions
-        //  List<String> from = componentScanner.autoCompleteFrom(scanResult);
-        // TODO: Fixme autoCompleteContributorDefinitions.add(new AutoCompleteContributorDefinition(from));
+        List<AutoCompleteContributorDefinition> autocompleteContributorDefinitions =
+                packageComponents.getAutocompleteContributorDefinitions();
+        autoCompleteContributorDefinitions.addAll(autocompleteContributorDefinitions);
     }
 
     private static Optional<ComponentDescriptor> findComponentMatching(Collection<ModuleComponents> descriptors, String fullyQualifiedName) {
@@ -231,8 +250,15 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         publisher.onComponentListUpdate(moduleComponents);
     }
 
+    // Add Icons and Images to local cache.
+    private void registerIconsAndImagesLocalCache(List<ComponentDescriptor> componentDescriptors) {
+        componentDescriptors.forEach(componentDescriptor -> {
+            Images.Component.put(componentDescriptor.getFullyQualifiedName(), componentDescriptor.getImage());
+            Icons.Component.put(componentDescriptor.getFullyQualifiedName(), componentDescriptor.getIcon());
+        });
+    }
+
     interface OnDone {
         void execute();
     }
-
 }
