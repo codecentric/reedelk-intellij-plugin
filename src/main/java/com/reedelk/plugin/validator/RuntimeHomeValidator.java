@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 
-import static com.reedelk.plugin.commons.Defaults.NameConvention;
+import static com.reedelk.plugin.commons.DefaultConstants.NameConvention;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class RuntimeHomeValidator implements Validator {

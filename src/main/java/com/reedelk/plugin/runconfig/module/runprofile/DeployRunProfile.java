@@ -16,7 +16,7 @@ import org.jetbrains.idea.maven.project.MavenProject;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-import static com.reedelk.plugin.commons.Defaults.PROJECT_RESOURCES_FOLDER;
+import static com.reedelk.plugin.commons.DefaultConstants.PROJECT_RESOURCES_FOLDER;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.service.module.RuntimeApiService.OperationCallback;
 

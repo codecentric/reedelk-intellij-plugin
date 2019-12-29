@@ -14,7 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-import static com.reedelk.plugin.commons.Defaults.NameConvention;
+import static com.reedelk.plugin.commons.DefaultConstants.NameConvention;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 class RuntimeDistributionHelper {

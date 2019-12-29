@@ -12,7 +12,7 @@ import com.reedelk.plugin.template.Template.HelloWorld;
 
 import java.util.UUID;
 
-import static com.reedelk.plugin.commons.Defaults.PROJECT_RESOURCES_FOLDER;
+import static com.reedelk.plugin.commons.DefaultConstants.PROJECT_RESOURCES_FOLDER;
 import static com.reedelk.runtime.commons.ModuleProperties.*;
 
 class HelloWorldProjectBuilderHelper extends AbstractProjectBuilderHelper {

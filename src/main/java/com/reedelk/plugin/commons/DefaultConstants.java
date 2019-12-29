@@ -14,16 +14,11 @@ public class DefaultConstants {
 
     public static final String PROJECT_SOURCES_FOLDER = Paths.get("src").toString();
     public static final String PROJECT_RESOURCES_FOLDER = Paths.get("src", "main", "resources").toString();
-
     public static final String DEFAULT_DYNAMIC_VALUE_SCRIPT_VIRTUAL_FILE_NAME = "tmp.js";
-
     public static final FileType JAVASCRIPT_FILE_TYPE =
             FileTypeManager.getInstance().getFileTypeByExtension(FileExtension.SCRIPT.value());
-
     public static final Language JAVASCRIPT_LANGUAGE = Language.findLanguageByID("JavaScript");
-
     public static final int DEFAULT_CHECK_ERROR_DELAY_MILLIS = 500;
-
 
     public static class RestApi {
 

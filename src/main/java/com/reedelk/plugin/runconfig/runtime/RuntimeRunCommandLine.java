@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Paths;
 
-import static com.reedelk.plugin.commons.Defaults.NameConvention;
+import static com.reedelk.plugin.commons.DefaultConstants.NameConvention;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class RuntimeRunCommandLine extends JavaCommandLineState {

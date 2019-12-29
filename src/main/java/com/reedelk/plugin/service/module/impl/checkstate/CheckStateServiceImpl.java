@@ -14,7 +14,7 @@ import org.jetbrains.idea.maven.project.MavenProject;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.reedelk.plugin.commons.Defaults.DEFAULT_CHECK_ERROR_DELAY_MILLIS;
+import static com.reedelk.plugin.commons.DefaultConstants.DEFAULT_CHECK_ERROR_DELAY_MILLIS;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class CheckStateServiceImpl implements CheckStateService {
@@ -33,17 +33,13 @@ public class CheckStateServiceImpl implements CheckStateService {
     }
 
     void internalCheckModuleState(String runtimeHostAddress, int runtimeHostPort) {
-        moduleMavenProject().ifPresent(mavenProject -> {
-
-            // We only check for modules matching the current module's artifact i.
-            Optional.ofNullable(mavenProject.getMavenId().getArtifactId())
-                    .ifPresent(artifactId -> runtimeApiService()
-                            .installedModules(runtimeHostAddress, runtimeHostPort)
-                            .stream()
-                            .filter(runtimeModule -> Objects.equals(artifactId, runtimeModule.getName()))
-                            .findFirst()
-                            .ifPresent(runtimeModule -> notifyFromStateIfNeeded(runtimeModule, runtimeHostAddress, runtimeHostPort)));
-        });
+        // We only check for modules matching the current module's artifact i.
+        moduleMavenProject().flatMap(mavenProject ->
+                Optional.ofNullable(mavenProject.getMavenId().getArtifactId()).flatMap(artifactId ->
+                        runtimeApiService().installedModules(runtimeHostAddress, runtimeHostPort)
+                                .stream()
+                                .filter(runtimeModule -> Objects.equals(artifactId, runtimeModule.getName()))
+                                .findFirst())).ifPresent(runtimeModule -> notifyFromStateIfNeeded(runtimeModule, runtimeHostAddress, runtimeHostPort));
     }
 
     // Notify with a Popup if the module state is 'ERROR' or 'UNRESOLVED'.

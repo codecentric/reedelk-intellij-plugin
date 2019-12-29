@@ -11,7 +11,7 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.Function;
-import com.reedelk.plugin.commons.Defaults;
+import com.reedelk.plugin.commons.DefaultConstants;
 import com.reedelk.plugin.service.project.SourceChangeService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.SystemIndependent;
@@ -126,7 +126,7 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
      * It checks whether the changed file belongs to the module_full_path/src folder or not.
      */
     private Optional<String> isModuleSRCChange(VirtualFile virtualFile) {
-        return startsWith(virtualFile, Defaults.PROJECT_SOURCES_FOLDER + File.separator);
+        return startsWith(virtualFile, DefaultConstants.PROJECT_SOURCES_FOLDER + File.separator);
     }
 
 
@@ -142,7 +142,7 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
     private boolean isHotSwappableSource(VirtualFile file) {
         return file != null &&
                 // if it is inside resources folder, then it is hot-swappable, otherwise not.
-                file.getPath().contains(Defaults.PROJECT_RESOURCES_FOLDER);
+                file.getPath().contains(DefaultConstants.PROJECT_RESOURCES_FOLDER);
     }
 
     private void setToChangedMatching(String moduleName) {

@@ -4,7 +4,7 @@ import com.intellij.execution.configurations.ParametersList;
 import com.reedelk.plugin.runconfig.runtime.RuntimeRunConfiguration;
 import com.reedelk.runtime.api.commons.StringUtils;
 
-import static com.reedelk.plugin.commons.Defaults.NameConvention;
+import static com.reedelk.plugin.commons.DefaultConstants.NameConvention;
 
 abstract class BaseParameterStrategy implements ParameterStrategy {
 

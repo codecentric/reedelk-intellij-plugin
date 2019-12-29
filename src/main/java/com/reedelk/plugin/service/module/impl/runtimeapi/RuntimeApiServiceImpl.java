@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 
-import static com.reedelk.plugin.commons.Defaults.RestApi;
+import static com.reedelk.plugin.commons.DefaultConstants.RestApi;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class RuntimeApiServiceImpl implements RuntimeApiService {
