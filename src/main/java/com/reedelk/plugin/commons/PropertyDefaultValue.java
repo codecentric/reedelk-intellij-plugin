@@ -2,9 +2,9 @@ package com.reedelk.plugin.commons;
 
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeDescriptor;
+import com.reedelk.plugin.converter.ValueConverterProvider;
 import com.reedelk.runtime.api.annotation.Default;
 import com.reedelk.runtime.converter.DefaultValues;
-import com.reedelk.runtime.converter.PluginConverters;
 
 public class PropertyDefaultValue {
 
@@ -26,6 +26,6 @@ public class PropertyDefaultValue {
         TypeDescriptor propertyType = descriptor.getPropertyType();
         return Default.USE_DEFAULT_VALUE.equals(defaultValue) ?
                 DefaultValues.defaultValue(propertyType.getType()) :
-                PluginConverters.forDefaults().forType(propertyType.getType()).from(defaultValue);
+                ValueConverterProvider.forDefaults().forType(propertyType.getType()).from(defaultValue);
     }
 }

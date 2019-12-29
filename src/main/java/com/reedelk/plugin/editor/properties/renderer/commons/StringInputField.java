@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer.commons;
 
-import com.reedelk.plugin.commons.PluginValueConverterProvider;
-import com.reedelk.runtime.converter.PluginValueConverter;
+import com.reedelk.plugin.converter.ValueConverter;
+import com.reedelk.plugin.converter.ValueConverterProvider;
 
 public class StringInputField extends InputField<String> {
 
@@ -14,7 +14,7 @@ public class StringInputField extends InputField<String> {
     }
 
     @Override
-    protected PluginValueConverter<String> getConverter() {
-        return PluginValueConverterProvider.forType(String.class);
+    protected ValueConverter<String> getConverter() {
+        return ValueConverterProvider.forType(String.class);
     }
 }

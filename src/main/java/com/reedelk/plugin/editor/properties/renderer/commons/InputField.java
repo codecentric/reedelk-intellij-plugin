@@ -3,7 +3,7 @@ package com.reedelk.plugin.editor.properties.renderer.commons;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBTextField;
 import com.reedelk.plugin.commons.HintPainter;
-import com.reedelk.runtime.converter.PluginValueConverter;
+import com.reedelk.plugin.converter.ValueConverter;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -13,7 +13,7 @@ import java.awt.*;
 public abstract class InputField<T> extends JBTextField implements DocumentListener {
 
     private final String hint;
-    private final transient PluginValueConverter<?> converter;
+    private final transient ValueConverter<?> converter;
     private transient InputChangeListener listener;
     final PlainDocument document;
 
@@ -68,7 +68,7 @@ public abstract class InputField<T> extends JBTextField implements DocumentListe
         this.listener = changeListener;
     }
 
-    protected abstract PluginValueConverter<?> getConverter();
+    protected abstract ValueConverter<?> getConverter();
 
     private void notifyListener() {
         if (listener != null) {

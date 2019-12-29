@@ -1,9 +1,9 @@
 package com.reedelk.plugin.editor.properties.renderer.typedouble;
 
-import com.reedelk.plugin.commons.PluginValueConverterProvider;
+import com.reedelk.plugin.converter.ValueConverter;
+import com.reedelk.plugin.converter.ValueConverterProvider;
 import com.reedelk.plugin.editor.properties.renderer.commons.NumericDocumentFilter;
 import com.reedelk.plugin.editor.properties.renderer.commons.NumericInputField;
-import com.reedelk.runtime.converter.PluginValueConverter;
 
 import javax.swing.text.DocumentFilter;
 
@@ -26,7 +26,7 @@ public class DoubleInputField extends NumericInputField<Double> {
     }
 
     @Override
-    protected PluginValueConverter<Double> getConverter() {
-        return PluginValueConverterProvider.forType(Double.class);
+    protected ValueConverter<Double> getConverter() {
+        return ValueConverterProvider.forType(Double.class);
     }
 }

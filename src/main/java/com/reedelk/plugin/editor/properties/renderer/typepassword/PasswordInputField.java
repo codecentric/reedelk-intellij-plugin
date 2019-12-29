@@ -1,12 +1,12 @@
 package com.reedelk.plugin.editor.properties.renderer.typepassword;
 
 import com.intellij.ui.components.JBPasswordField;
-import com.reedelk.plugin.commons.PluginValueConverterProvider;
+import com.reedelk.plugin.converter.ValueConverter;
+import com.reedelk.plugin.converter.ValueConverterProvider;
 import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.renderer.commons.InputChangeListener;
 import com.reedelk.runtime.api.annotation.Password;
-import com.reedelk.runtime.converter.PluginValueConverter;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -18,7 +18,7 @@ import static com.reedelk.plugin.commons.Icons.Misc.ShowPassword;
 
 public class PasswordInputField extends DisposablePanel implements DocumentListener {
 
-    private transient PluginValueConverter<?> converter = PluginValueConverterProvider.forType(Password.class);
+    private transient ValueConverter<?> converter = ValueConverterProvider.forType(Password.class);
     private transient InputChangeListener listener;
     private ClickableLabel showPassword;
     private JBPasswordField passwordField;
