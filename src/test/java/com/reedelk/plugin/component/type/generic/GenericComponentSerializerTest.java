@@ -1,9 +1,9 @@
 package com.reedelk.plugin.component.type.generic;
 
-import com.reedelk.component.descriptor.ComponentData;
 import com.reedelk.component.descriptor.ComponentDescriptor;
 import com.reedelk.plugin.AbstractGraphTest;
 import com.reedelk.plugin.commons.TypeObjectFactory;
+import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.fixture.ComponentNode1;
 import com.reedelk.plugin.fixture.Json;
 import com.reedelk.plugin.graph.FlowGraph;

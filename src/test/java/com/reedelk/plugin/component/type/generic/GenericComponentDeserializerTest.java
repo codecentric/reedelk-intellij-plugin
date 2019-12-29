@@ -80,7 +80,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
                     .hasDataWithValue("booleanObjectProperty", Boolean.TRUE)
                     .hasDataWithValue("stringProperty", "my text sample")
                     .hasDataWithValue("bigIntegerProperty", new BigInteger("88923423423"))
-                    .hasDataWithValue("bigDecimalProperty", new BigDecimal("1.001"))
+                    .hasDataWithValue("bigDecimalProperty", new BigDecimal(1.001))
                     .and().nodesCountIs(2);
         }
     }
@@ -409,7 +409,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
             // Then
             PluginAssertion.assertThat(graph)
                     .node(lastNode).is(node)
-                    .hasDataWithValue("dynamicBigDecimalProperty", new BigDecimal("44.001"))
+                    .hasDataWithValue("dynamicBigDecimalProperty", new BigDecimal(44.001))
                     .hasDataWithValue("dynamicBigIntegerProperty", new BigInteger("8811823843"))
                     .hasDataWithValue("dynamicBooleanProperty", Boolean.TRUE)
                     .hasDataWithValue("dynamicByteArrayProperty", "byte array string")

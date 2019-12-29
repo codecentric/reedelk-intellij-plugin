@@ -1,9 +1,9 @@
 package com.reedelk.plugin;
 
-import com.reedelk.component.descriptor.ComponentData;
 import com.reedelk.component.descriptor.ComponentDescriptor;
 import com.reedelk.component.descriptor.ComponentType;
 import com.reedelk.plugin.commons.FontInfoProvider;
+import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.component.type.flowreference.FlowReferenceNode;
 import com.reedelk.plugin.component.type.fork.ForkNode;
 import com.reedelk.plugin.component.type.generic.GenericComponentNode;

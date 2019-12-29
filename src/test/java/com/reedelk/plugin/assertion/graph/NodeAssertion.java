@@ -1,7 +1,7 @@
 package com.reedelk.plugin.assertion.graph;
 
-import com.reedelk.component.descriptor.ComponentData;
 import com.reedelk.component.descriptor.TypeObjectDescriptor;
+import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.graph.node.GraphNode;
 
 import java.math.BigDecimal;

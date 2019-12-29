@@ -1,6 +1,6 @@
 package com.reedelk.plugin.component.type.router.functions;
 
-import com.reedelk.component.descriptor.ComponentData;
+import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.component.type.router.RouterConditionRoutePair;
 import com.reedelk.plugin.component.type.router.RouterNode;
 

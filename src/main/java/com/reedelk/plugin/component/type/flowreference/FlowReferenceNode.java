@@ -1,6 +1,6 @@
 package com.reedelk.plugin.component.type.flowreference;
 
-import com.reedelk.component.descriptor.ComponentData;
+import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.editor.designer.AbstractGraphNode;
 
 public class FlowReferenceNode extends AbstractGraphNode {

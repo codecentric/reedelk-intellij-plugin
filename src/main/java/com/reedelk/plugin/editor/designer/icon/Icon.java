@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.designer.icon;
 
-import com.reedelk.component.descriptor.ComponentData;
 import com.reedelk.plugin.commons.Half;
+import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.editor.designer.text.TextComponentDescription;
 import com.reedelk.plugin.editor.designer.text.TextComponentTitle;
 

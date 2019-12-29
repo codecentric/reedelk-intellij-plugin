@@ -1,6 +1,6 @@
 package com.reedelk.plugin.editor.designer.icon;
 
-import com.reedelk.component.descriptor.ComponentData;
+import com.reedelk.plugin.component.ComponentData;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;

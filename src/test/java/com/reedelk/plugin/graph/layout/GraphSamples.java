@@ -1,10 +1,10 @@
 package com.reedelk.plugin.graph.layout;
 
-import com.reedelk.component.descriptor.ComponentData;
 import com.reedelk.component.descriptor.ComponentDescriptor;
 import com.reedelk.plugin.AbstractGraphTest;
 import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.commons.Images;
+import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.component.type.generic.GenericComponentNode;
 import com.reedelk.plugin.component.type.router.RouterNode;
 import com.reedelk.plugin.graph.FlowGraph;

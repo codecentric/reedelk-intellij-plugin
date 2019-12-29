@@ -1,7 +1,7 @@
 package com.reedelk.plugin.component.type.flowreference;
 
-import com.reedelk.component.descriptor.ComponentData;
 import com.reedelk.plugin.commons.JsonObjectFactory;
+import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.serializer.AbstractNodeSerializer;

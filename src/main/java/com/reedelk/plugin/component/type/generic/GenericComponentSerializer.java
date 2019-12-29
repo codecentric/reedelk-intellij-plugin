@@ -1,7 +1,7 @@
 package com.reedelk.plugin.component.type.generic;
 
-import com.reedelk.component.descriptor.ComponentData;
 import com.reedelk.plugin.commons.JsonObjectFactory;
+import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.component.serializer.ComponentDataHolderSerializer;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;

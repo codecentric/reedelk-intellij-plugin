@@ -3,6 +3,7 @@ package com.reedelk.plugin.component.serializer;
 import com.reedelk.component.descriptor.*;
 import com.reedelk.plugin.commons.AtLeastOneWhenConditionIsTrue;
 import com.reedelk.plugin.commons.JsonObjectFactory;
+import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.JsonParser;
 import org.jetbrains.annotations.NotNull;

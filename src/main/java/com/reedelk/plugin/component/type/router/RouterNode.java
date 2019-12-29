@@ -1,10 +1,10 @@
 package com.reedelk.plugin.component.type.router;
 
-import com.reedelk.component.descriptor.ComponentData;
 import com.reedelk.plugin.commons.AddPlaceholder;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.Fonts;
 import com.reedelk.plugin.commons.Half;
+import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.component.type.router.functions.IsDefaultRoute;
 import com.reedelk.plugin.component.type.router.functions.SyncConditionAndRoutePairs;
 import com.reedelk.plugin.editor.designer.AbstractScopedGraphNode;

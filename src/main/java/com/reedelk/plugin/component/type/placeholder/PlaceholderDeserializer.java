@@ -1,6 +1,6 @@
 package com.reedelk.plugin.component.type.placeholder;
 
-import com.reedelk.component.descriptor.ComponentData;
+import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.deserializer.AbstractNodeDeserializer;
 import com.reedelk.plugin.graph.deserializer.DeserializerContext;
