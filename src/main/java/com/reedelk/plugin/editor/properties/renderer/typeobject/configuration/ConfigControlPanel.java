@@ -1,6 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer.typeobject.configuration;
 
 import com.intellij.openapi.module.Module;
+import com.reedelk.plugin.commons.TypeObjectFactory;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 import com.reedelk.plugin.editor.properties.commons.DialogConfirmAction;
@@ -8,7 +9,6 @@ import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.service.module.ConfigService;
 import com.reedelk.plugin.service.module.impl.configuration.ConfigMetadata;
 import com.reedelk.plugin.service.module.impl.configuration.NewConfigMetadata;
-import com.reedelk.runtime.commons.JsonParser;
 
 import java.util.UUID;
 
@@ -17,6 +17,8 @@ import static com.intellij.icons.AllIcons.General.Add;
 import static com.intellij.icons.AllIcons.General.Remove;
 import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
+import static com.reedelk.runtime.commons.JsonParser.Config;
+import static com.reedelk.runtime.commons.JsonParser.Implementor;
 
 public class ConfigControlPanel extends DisposablePanel {
 
@@ -46,9 +48,10 @@ public class ConfigControlPanel extends DisposablePanel {
 
     private void addConfiguration() {
         // We ignore the selected. Create new config object.
-        TypeObject configTypeObject = new TypeObject(typeDescriptor.getTypeFullyQualifiedName());
-        configTypeObject.set(JsonParser.Config.id(), UUID.randomUUID().toString());
-        configTypeObject.set(JsonParser.Config.title(), message("config.field.title.default"));
+        TypeObject configTypeObject = TypeObjectFactory.newInstance();
+        configTypeObject.set(Implementor.name(), typeDescriptor.getTypeFullyQualifiedName());
+        configTypeObject.set(Config.id(), UUID.randomUUID().toString());
+        configTypeObject.set(Config.title(), message("config.field.title.default"));
 
         ConfigMetadata newConfigMetadata = new NewConfigMetadata(message("config.field.file.default"), configTypeObject, typeDescriptor);
 

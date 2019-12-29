@@ -45,7 +45,7 @@ class IsConditionSatisfiedTest {
         void shouldReturnFalseWhenWantedIsNullAndActualIsTypeObject() {
             // Given
             String wantedPropertyValue = When.NULL;
-            Object actualPropertyValue = new TypeObject();
+            Object actualPropertyValue = TypeObjectFactory.newInstance();
 
             // When
             boolean actual = IsConditionSatisfied.of(wantedPropertyValue, actualPropertyValue);
@@ -58,7 +58,7 @@ class IsConditionSatisfiedTest {
         void shouldReturnTrueWhenWantedIsNullAndActualTypeObjectPropertyIsNotPresent() {
             // Given
             String wantedPropertyValue = "{'myProperty': '" + When.NULL + "'}";
-            Object actualPropertyValue = new TypeObject();
+            Object actualPropertyValue = TypeObjectFactory.newInstance();
 
             // When
             boolean actual = IsConditionSatisfied.of(wantedPropertyValue, actualPropertyValue);
@@ -71,7 +71,7 @@ class IsConditionSatisfiedTest {
         void shouldReturnTrueWhenWantedIsNullAndActualTypeObjectPropertyIsNull() {
             // Given
             String wantedPropertyValue = "{'myProperty': '" + When.NULL + "'}";
-            TypeObject actualPropertyValue = new TypeObject();
+            TypeObject actualPropertyValue = TypeObjectFactory.newInstance();
             actualPropertyValue.set("myProperty", null);
 
             // When
@@ -85,7 +85,7 @@ class IsConditionSatisfiedTest {
         void shouldReturnFalseWhenWantedIsNullAndActualTypeObjectPropertyIsNotNull() {
             // Given
             String wantedPropertyValue = "{'myProperty': '" + When.NULL + "'}";
-            TypeObject actualPropertyValue = new TypeObject();
+            TypeObject actualPropertyValue = TypeObjectFactory.newInstance();
             actualPropertyValue.set("myProperty", "my value");
 
             // When
@@ -117,7 +117,7 @@ class IsConditionSatisfiedTest {
         void shouldReturnTrueWhenWantedIsPropertyWithBlankValueAndActualIsTypeObjectWithEmptyString() {
             // Given
             String wantedPropertyValue = "{'ref': '" + When.BLANK + "'}";
-            TypeObject actualPropertyValue = new TypeObject();
+            TypeObject actualPropertyValue = TypeObjectFactory.newInstance();
             actualPropertyValue.set(JsonParser.Component.ref(), "");
 
             // When
@@ -131,7 +131,7 @@ class IsConditionSatisfiedTest {
         void shouldReturnTrueWhenWantedIsPropertyWithBlankValueAndActualIsTypeObjectWithNullString() {
             // Given
             String wantedPropertyValue = "{'ref': '" + When.BLANK + "'}";
-            TypeObject actualPropertyValue = new TypeObject();
+            TypeObject actualPropertyValue = TypeObjectFactory.newInstance();
             actualPropertyValue.set(JsonParser.Component.ref(), null);
 
             // When
@@ -145,7 +145,7 @@ class IsConditionSatisfiedTest {
         void shouldReturnTrueWhenWantedIsPropertyWithBlankValueAndActualIsTypeObjectWithoutProperty() {
             // Given
             String wantedPropertyValue = "{'ref': '" + When.BLANK + "'}";
-            TypeObject actualPropertyValue = new TypeObject();
+            TypeObject actualPropertyValue = TypeObjectFactory.newInstance();
 
             // When
             boolean actual = IsConditionSatisfied.of(wantedPropertyValue, actualPropertyValue);
@@ -158,7 +158,7 @@ class IsConditionSatisfiedTest {
         void shouldReturnFalseWhenWantedIsPropertyWithBlankValueAndActualIsTypeObjectWithNotEmptyStringProperty() {
             // Given
             String wantedPropertyValue = "{'ref': '" + When.BLANK + "'}";
-            TypeObject actualPropertyValue = new TypeObject();
+            TypeObject actualPropertyValue = TypeObjectFactory.newInstance();
             actualPropertyValue.set(JsonParser.Component.ref(), "aabbccdd");
 
             // When
@@ -216,7 +216,7 @@ class IsConditionSatisfiedTest {
         void shouldReturnFalseWhenWantedIsPropertyWithNotBlankValueAndActualIsTypeObjectWithEmptyString() {
             // Given
             String wantedPropertyValue = "{'ref': '" + When.NOT_BLANK + "'}";
-            TypeObject actualPropertyValue = new TypeObject();
+            TypeObject actualPropertyValue = TypeObjectFactory.newInstance();
             actualPropertyValue.set(JsonParser.Component.ref(), "");
 
             // When
@@ -230,7 +230,7 @@ class IsConditionSatisfiedTest {
         void shouldReturnFalseWhenWantedIsPropertyWithNotBlankValueAndActualIsTypeObjectWithNullString() {
             // Given
             String wantedPropertyValue = "{'ref': '" + When.NOT_BLANK + "'}";
-            TypeObject actualPropertyValue = new TypeObject();
+            TypeObject actualPropertyValue = TypeObjectFactory.newInstance();
             actualPropertyValue.set(JsonParser.Component.ref(), null);
 
             // When
@@ -244,7 +244,7 @@ class IsConditionSatisfiedTest {
         void shouldReturnFalseWhenWantedIsPropertyWithNotBlankValueAndActualIsTypeObjectWithoutProperty() {
             // Given
             String wantedPropertyValue = "{'ref': '" + When.NOT_BLANK + "'}";
-            TypeObject actualPropertyValue = new TypeObject();
+            TypeObject actualPropertyValue = TypeObjectFactory.newInstance();
 
             // When
             boolean actual = IsConditionSatisfied.of(wantedPropertyValue, actualPropertyValue);
@@ -257,7 +257,7 @@ class IsConditionSatisfiedTest {
         void shouldReturnTrueWhenWantedIsPropertyWithNotBlankValueAndActualIsTypeObjectWithNotEmptyStringProperty() {
             // Given
             String wantedPropertyValue = "{'ref': '" + When.NOT_BLANK + "'}";
-            TypeObject actualPropertyValue = new TypeObject();
+            TypeObject actualPropertyValue = TypeObjectFactory.newInstance();
             actualPropertyValue.set(JsonParser.Component.ref(), "aabbccdd");
 
             // When

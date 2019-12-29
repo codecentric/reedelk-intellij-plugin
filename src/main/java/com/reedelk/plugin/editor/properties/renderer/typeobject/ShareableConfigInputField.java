@@ -3,6 +3,7 @@ package com.reedelk.plugin.editor.properties.renderer.typeobject;
 import com.intellij.openapi.module.Module;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.PopupUtils;
+import com.reedelk.plugin.commons.TypeObjectFactory;
 import com.reedelk.plugin.component.domain.ComponentDataHolder;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
@@ -147,7 +148,7 @@ class ShareableConfigInputField extends DisposablePanel implements ConfigService
                 .filter(configMetadata -> configMetadata.getId().equals(reference))
                 .findFirst()
                 .orElseGet(() -> {
-                    TypeObjectDescriptor.TypeObject unselectedConfigDefinition = new TypeObjectDescriptor.TypeObject();
+                    TypeObjectDescriptor.TypeObject unselectedConfigDefinition = TypeObjectFactory.newInstance();
                     unselectedConfigDefinition.set(JsonParser.Config.id(), reference);
                     unselectedConfigDefinition.set(JsonParser.Config.title(), String.format("Unresolved (%s)", reference));
                     return new ConfigMetadata(unselectedConfigDefinition);
@@ -156,7 +157,7 @@ class ShareableConfigInputField extends DisposablePanel implements ConfigService
 
     private static final ConfigMetadata UNSELECTED_CONFIG;
     static {
-        TypeObjectDescriptor.TypeObject unselectedConfigDefinition = new TypeObjectDescriptor.TypeObject();
+        TypeObjectDescriptor.TypeObject unselectedConfigDefinition = TypeObjectFactory.newInstance();
         unselectedConfigDefinition.set(JsonParser.Config.id(), TypeObjectDescriptor.TypeObject.DEFAULT_CONFIG_REF);
         unselectedConfigDefinition.set(JsonParser.Config.title(), message("config.not.selected"));
         UNSELECTED_CONFIG = new ConfigMetadata(unselectedConfigDefinition);

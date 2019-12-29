@@ -21,7 +21,7 @@ class DefaultDescriptorDataValuesFillerTest {
 
     @BeforeEach
     void setUp() {
-        testDataHolder = new ConfigMetadata(new TypeObjectDescriptor.TypeObject());
+        testDataHolder = new ConfigMetadata(TypeObjectFactory.newInstance());
     }
 
     @Test

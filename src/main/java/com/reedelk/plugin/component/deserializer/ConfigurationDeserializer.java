@@ -1,6 +1,7 @@
 package com.reedelk.plugin.component.deserializer;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.reedelk.plugin.commons.TypeObjectFactory;
 import com.reedelk.plugin.component.domain.ComponentDataHolder;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import org.jetbrains.annotations.NotNull;
@@ -9,6 +10,7 @@ import org.json.JSONObject;
 
 import java.util.Optional;
 
+import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
 import static com.reedelk.runtime.commons.JsonParser.Config;
 import static com.reedelk.runtime.commons.JsonParser.Implementor;
 
@@ -42,15 +44,14 @@ public class ConfigurationDeserializer {
 
     @NotNull
     private static Optional<ComponentDataHolder> deserialize(TypeObjectDescriptor propertyType, JSONObject jsonDefinition) {
-        TypeObjectDescriptor.TypeObject dataHolder = propertyType.newInstance();
+        TypeObject dataHolder = TypeObjectFactory.newInstance(propertyType);
         dataHolder.set(Config.id(), Config.id(jsonDefinition));
         dataHolder.set(Implementor.name(), Implementor.name(jsonDefinition));
         if (jsonDefinition.has(Config.title())) {
             dataHolder.set(Config.title(), Config.title(jsonDefinition));
         }
-        propertyType
-                .getObjectProperties()
-                .forEach(descriptor -> ComponentDataHolderDeserializer.deserialize(jsonDefinition, dataHolder, descriptor));
+        propertyType.getObjectProperties().forEach(descriptor ->
+                ComponentDataHolderDeserializer.deserialize(jsonDefinition, dataHolder, descriptor));
         return Optional.of(dataHolder);
 
     }

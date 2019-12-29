@@ -1,16 +1,18 @@
 package com.reedelk.plugin.component.deserializer;
 
 import com.reedelk.plugin.commons.PluginValueConverterProvider;
+import com.reedelk.plugin.commons.TypeObjectFactory;
 import com.reedelk.plugin.component.domain.ComponentDataHolder;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeDescriptor;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
-import com.reedelk.runtime.commons.JsonParser;
 import com.reedelk.runtime.converter.PluginValueConverter;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import static com.reedelk.plugin.component.domain.Shared.YES;
+import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
+import static com.reedelk.runtime.commons.JsonParser.Component;
 
 public class ComponentDataHolderDeserializer {
 
@@ -36,7 +38,7 @@ public class ComponentDataHolderDeserializer {
                                               @NotNull ComponentPropertyDescriptor descriptor,
                                               @NotNull TypeObjectDescriptor propertyType) {
 
-        TypeObjectDescriptor.TypeObject nestedObject = propertyType.newInstance();
+        TypeObject nestedObject = TypeObjectFactory.newInstance(propertyType);
 
         if (componentJsonObject.has(descriptor.getPropertyName()) &&
                 !componentJsonObject.isNull(descriptor.getPropertyName())) {
@@ -55,9 +57,9 @@ public class ComponentDataHolderDeserializer {
             } else if (YES.equals(propertyType.getShared())) {
                 // The config is shareable, therefore we just set the
                 // reference value pointing to the shared config.
-                if (nestedJsonObject.has(JsonParser.Component.ref())) {
-                    String reference = JsonParser.Component.ref(nestedJsonObject);
-                    nestedObject.set(JsonParser.Component.ref(), reference);
+                if (nestedJsonObject.has(Component.ref())) {
+                    String reference = Component.ref(nestedJsonObject);
+                    nestedObject.set(Component.ref(), reference);
                     componentData.set(descriptor.getPropertyName(), nestedObject);
                 } else {
                     // The nested JSON object does not have a component "ref" property inside it.
@@ -84,7 +86,8 @@ public class ComponentDataHolderDeserializer {
     private static void addEmptyInstancesForTypeObject(ComponentDataHolder dataHolder, ComponentPropertyDescriptor descriptor) {
         if (descriptor.getPropertyType() instanceof TypeObjectDescriptor) {
             TypeObjectDescriptor propertyObjectType = descriptor.getPropertyType();
-            TypeObjectDescriptor.TypeObject typeObject = propertyObjectType.newInstance();
+            TypeObject typeObject = TypeObjectFactory.newInstance(propertyObjectType);
+
             dataHolder.set(descriptor.getPropertyName(), typeObject);
             // From now on, the subtree contains null objects.
             propertyObjectType.getObjectProperties()

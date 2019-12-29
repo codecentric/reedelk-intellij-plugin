@@ -1,5 +1,6 @@
 package com.reedelk.plugin.configuration;
 
+import com.reedelk.plugin.commons.TypeObjectFactory;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.Shared;
 import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
@@ -18,6 +19,7 @@ import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptor
 import static com.reedelk.plugin.fixture.Json.Configuration.*;
 import static com.reedelk.plugin.testutils.ObjectFactories.createTypeObjectDescriptor;
 import static com.reedelk.runtime.commons.JsonParser.Config;
+import static com.reedelk.runtime.commons.JsonParser.Implementor;
 import static java.util.Arrays.asList;
 
 class SerializerTest {
@@ -25,7 +27,8 @@ class SerializerTest {
     @Test
     void shouldSerializeConfigCorrectly() {
         // Given
-        TypeObject httpConfigType = new TypeObject(ComponentNode1.class.getName());
+        TypeObject httpConfigType = TypeObjectFactory.newInstance();
+        httpConfigType.set(Implementor.name(), ComponentNode1.class.getName());
         httpConfigType.set(Config.id(), "38add40d-6a29-4e9e-9620-2bf165276204");
         httpConfigType.set(Config.title(), "HTTP Configuration");
         httpConfigType.set("host", "192.168.1.32");
@@ -45,15 +48,18 @@ class SerializerTest {
     @Test
     void shouldSerializeConfigWithNestedConfigObjectCorrectly() {
         // Given
-        TypeObject keyStoreConfig = new TypeObject(ComponentNode3.class.getName());
+        TypeObject keyStoreConfig = TypeObjectFactory.newInstance();
+        keyStoreConfig.set(Implementor.name(), ComponentNode3.class.getName());
         keyStoreConfig.set("algorithm", "SHA-1");
 
-        TypeObject securityConfig = new TypeObject(ComponentNode2.class.getName());
+        TypeObject securityConfig = TypeObjectFactory.newInstance();
+        securityConfig.set(Implementor.name(), ComponentNode2.class.getName());
         securityConfig.set("userName", "myUserName");
         securityConfig.set("password", "myPassword");
         securityConfig.set("keyStoreConfig", keyStoreConfig);
 
-        TypeObject httpConfigType = new TypeObject(ComponentNode1.class.getName());
+        TypeObject httpConfigType = TypeObjectFactory.newInstance();
+        httpConfigType.set(Implementor.name(), ComponentNode1.class.getName());
         httpConfigType.set(Config.id(), "38add40d-6a29-4e9e-9620-2bf165276204");
         httpConfigType.set(Config.title(), "HTTP Configuration");
         httpConfigType.set("host", "localhost");
@@ -75,11 +81,14 @@ class SerializerTest {
     @Test
     void shouldNotSerializeEmptyObjects() {
         // Given
-        TypeObject keyStoreConfig = new TypeObject(ComponentNode3.class.getName());
-        TypeObject securityConfig = new TypeObject(ComponentNode2.class.getName());
+        TypeObject keyStoreConfig = TypeObjectFactory.newInstance();
+        keyStoreConfig.set(Implementor.name(), ComponentNode3.class.getName());
+        TypeObject securityConfig = TypeObjectFactory.newInstance();
+        securityConfig.set(Implementor.name(), ComponentNode2.class.getName());
         securityConfig.set("keyStoreConfig", keyStoreConfig);
 
-        TypeObject httpConfigType = new TypeObject(ComponentNode1.class.getName());
+        TypeObject httpConfigType = TypeObjectFactory.newInstance();
+        httpConfigType.set(Implementor.name(), ComponentNode1.class.getName());
         httpConfigType.set(Config.id(), "38add40d-6a29-4e9e-9620-2bf165276204");
         httpConfigType.set(Config.title(), "HTTP Configuration");
         httpConfigType.set("host", "192.168.1.32");
@@ -101,7 +110,8 @@ class SerializerTest {
     @Test
     void shouldNotSerializeBooleanWhenValueIsFalse() {
         // Given
-        TypeObject httpConfigType = new TypeObject(ComponentNode1.class.getName());
+        TypeObject httpConfigType = TypeObjectFactory.newInstance();
+        httpConfigType.set(Implementor.name(), ComponentNode1.class.getName());
         httpConfigType.set(Config.id(), "38add40d-6a29-4e9e-9620-2bf165276204");
         httpConfigType.set(Config.title(), "HTTP Configuration");
         httpConfigType.set("host", "192.168.1.32");

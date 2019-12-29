@@ -1,6 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer.typecombo;
 
 import com.intellij.openapi.module.Module;
+import com.reedelk.plugin.commons.PropertyDefaultValue;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeComboDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
@@ -25,7 +26,8 @@ public class ComboPropertyRenderer extends AbstractPropertyTypeRenderer {
 
         // We set the default value if not present
         if (propertyAccessor.get() == null) {
-            propertyAccessor.set(propertyDescriptor.getDefaultValue());
+            Object defaultValue = PropertyDefaultValue.of(propertyDescriptor);
+            propertyAccessor.set(defaultValue);
         }
 
         String prototype = typeComboDescriptor.getPrototype();

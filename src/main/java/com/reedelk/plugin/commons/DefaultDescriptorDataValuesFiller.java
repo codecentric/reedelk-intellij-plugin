@@ -26,7 +26,7 @@ public class DefaultDescriptorDataValuesFiller {
             if (propertyType instanceof TypeObjectDescriptor) {
                 fillTypeObject(dataHolder, (TypeObjectDescriptor) propertyType, propertyName);
             } else {
-                Object defaultValue = descriptor.getDefaultValue();
+                Object defaultValue = PropertyDefaultValue.of(descriptor);
                 dataHolder.set(propertyName, defaultValue);
             }
         });
@@ -35,7 +35,7 @@ public class DefaultDescriptorDataValuesFiller {
     private static void fillTypeObject(@NotNull ComponentDataHolder dataHolder,
                                        @NotNull TypeObjectDescriptor propertyType,
                                        @NotNull String propertyName) {
-        TypeObject nested = propertyType.newInstance();
+        TypeObject nested = TypeObjectFactory.newInstance(propertyType);
         if (YES.equals(propertyType.getShared())) {
             // If the property is shareable, we initialize it with default config ref
             nested.set(Component.ref(), TypeObject.DEFAULT_CONFIG_REF);

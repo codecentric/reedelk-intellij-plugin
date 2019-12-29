@@ -1,9 +1,9 @@
 package com.reedelk.plugin.component.type.generic;
 
 import com.reedelk.plugin.AbstractGraphTest;
+import com.reedelk.plugin.commons.TypeObjectFactory;
 import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.component.domain.ComponentDescriptor;
-import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.fixture.ComponentNode1;
 import com.reedelk.plugin.fixture.Json;
 import com.reedelk.plugin.graph.FlowGraph;
@@ -21,6 +21,7 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.*;
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.Primitives.stringProperty;
 import static com.reedelk.plugin.graph.serializer.AbstractSerializer.UntilNoSuccessors;
@@ -114,7 +115,7 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
                     .fullyQualifiedName(ComponentNode1.class.getName())
                     .build());
 
-            TypeObjectDescriptor.TypeObject typeObjectInstance = TypeObjects.typeObjectDescriptor.newInstance();
+            TypeObject typeObjectInstance = TypeObjectFactory.newInstance();
             typeObjectInstance.set("stringProperty", "sample string property");
             typeObjectInstance.set("integerObjectProperty", Integer.parseInt("255"));
 
@@ -138,7 +139,7 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
                     .fullyQualifiedName(ComponentNode1.class.getName())
                     .build());
 
-            TypeObjectDescriptor.TypeObject typeObjectSharedInstance = TypeObjects.typeObjectSharedDescriptor.newInstance();
+            TypeObject typeObjectSharedInstance = TypeObjectFactory.newInstance();
             typeObjectSharedInstance.set("ref", "4ba1b6a0-9644-11e9-bc42-526af7764f64");
 
             GraphNode componentNode = new GenericComponentNode(componentData);
@@ -162,7 +163,7 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
                     .fullyQualifiedName(ComponentNode1.class.getName())
                     .build());
 
-            TypeObjectDescriptor.TypeObject typeObjectSharedInstance = TypeObjects.typeObjectSharedDescriptor.newInstance();
+            TypeObject typeObjectSharedInstance = TypeObjectFactory.newInstance();
             typeObjectSharedInstance.set("ref", "");
 
             GraphNode componentNode = new GenericComponentNode(componentData);
