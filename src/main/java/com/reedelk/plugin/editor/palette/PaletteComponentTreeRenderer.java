@@ -13,6 +13,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;
+import java.util.Optional;
 
 public class PaletteComponentTreeRenderer implements TreeCellRenderer {
 
@@ -55,7 +56,9 @@ public class PaletteComponentTreeRenderer implements TreeCellRenderer {
                 ComponentDescriptor descriptor = (ComponentDescriptor) userObject;
 
                 this.value.setText(descriptor.getDisplayName());
-                this.value.setIcon(descriptor.getIcon());
+
+                Icon componentIcon = Optional.ofNullable(descriptor.getIcon()).orElse(Icons.Component.Default);
+                this.value.setIcon(componentIcon);
 
                 if (selected) {
                     this.value.setForeground(Colors.PALETTE_TEXT_SELECTED);

@@ -13,8 +13,6 @@ import com.reedelk.component.descriptor.ComponentDescriptor;
 import com.reedelk.component.descriptor.PackageDescriptor;
 import com.reedelk.component.descriptor.analyzer.PackageDescriptorAnalyzer;
 import com.reedelk.plugin.commons.ExcludedArtifactsFromModuleSync;
-import com.reedelk.plugin.commons.Icons;
-import com.reedelk.plugin.commons.Images;
 import com.reedelk.plugin.component.type.unknown.UnknownComponentDescriptorWrapper;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.maven.MavenUtils;
@@ -187,9 +185,6 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
                             List<ComponentDescriptor> componentDescriptors = packageComponents.getComponentDescriptors();
 
-                            // Add Icons and Images to local cache.
-                            registerIconsAndImagesLocalCache(componentDescriptors);
-
                             String moduleName = mavenProject.getDisplayName();
                             moduleComponents = new ModuleComponents(moduleName, componentDescriptors);
 
@@ -224,7 +219,6 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         // We only scan a module if its jar file is a module with a name.
         PackageDescriptor packageComponents = componentsAnalyzer.from(jarFilePath);
         List<ComponentDescriptor> componentDescriptors = packageComponents.getComponentDescriptors();
-        registerIconsAndImagesLocalCache(componentDescriptors);
 
         // Add them to the map of components
         ModuleComponents descriptor = new ModuleComponents(moduleName, componentDescriptors);
@@ -248,14 +242,6 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     private void notifyComponentListUpdate() {
         Collection<ModuleComponents> moduleComponents = getModuleComponents();
         publisher.onComponentListUpdate(moduleComponents);
-    }
-
-    // Add Icons and Images to local cache.
-    private void registerIconsAndImagesLocalCache(List<ComponentDescriptor> componentDescriptors) {
-        componentDescriptors.forEach(componentDescriptor -> {
-            Images.Component.put(componentDescriptor.getFullyQualifiedName(), componentDescriptor.getImage());
-            Icons.Component.put(componentDescriptor.getFullyQualifiedName(), componentDescriptor.getIcon());
-        });
     }
 
     interface OnDone {

@@ -4,8 +4,8 @@ import com.reedelk.component.descriptor.ComponentDataHolder;
 import com.reedelk.component.descriptor.ComponentDescriptor;
 import com.reedelk.component.descriptor.ComponentPropertyDescriptor;
 import com.reedelk.component.descriptor.ComponentType;
+import com.reedelk.plugin.commons.Images;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -59,11 +59,8 @@ public class ComponentData implements ComponentDataHolder {
     }
 
     public Image getComponentImage() {
-        return descriptor.getImage();
-    }
-
-    public Icon getComponentIcon() {
-        return descriptor.getIcon();
+        return Optional.ofNullable(descriptor.getImage())
+                .orElse(Images.Component.DefaultComponent);
     }
 
     public ComponentType getComponentClass() {

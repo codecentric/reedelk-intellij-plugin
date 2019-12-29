@@ -6,8 +6,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
@@ -34,17 +32,6 @@ public class Images {
             OutboundPlaceholderIcon = loadImage("/images/ComponentOutboundPlaceholder.png");
             PlaceholderHintIcon = loadImage("/images/ComponentPlaceholderHint.png");
         }
-
-        private static final Map<String, Image> KEY_IMAGE_MAP = new HashMap<>();
-
-        public static void put(String key, Image image) {
-            KEY_IMAGE_MAP.put(key, image);
-        }
-
-        public static Image get(String key) {
-            return KEY_IMAGE_MAP.getOrDefault(key, DefaultComponent);
-        }
-
     }
 
     public static class Flow {
