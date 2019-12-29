@@ -12,7 +12,7 @@ import java.awt.*;
 import java.util.List;
 
 import static com.reedelk.plugin.commons.Colors.SCOPE_VERTICAL_DIVIDER;
-import static com.reedelk.runtime.commons.Preconditions.checkState;
+import static com.reedelk.runtime.api.commons.Preconditions.checkState;
 import static java.awt.BasicStroke.CAP_ROUND;
 import static java.awt.BasicStroke.JOIN_ROUND;
 

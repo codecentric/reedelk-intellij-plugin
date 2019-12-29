@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import static com.reedelk.runtime.commons.Preconditions.checkState;
+import static com.reedelk.runtime.api.commons.Preconditions.checkState;
 
 public abstract class AbstractNodeSerializer implements Serializer {
 

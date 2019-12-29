@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
-import static com.reedelk.runtime.commons.Preconditions.checkState;
+import static com.reedelk.runtime.api.commons.Preconditions.checkState;
 
 public class RemoveGraphNodeActionStrategy implements ActionStrategy {
 

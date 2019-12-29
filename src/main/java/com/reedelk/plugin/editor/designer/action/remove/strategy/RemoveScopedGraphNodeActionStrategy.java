@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Consumer;
 
-import static com.reedelk.runtime.commons.Preconditions.checkState;
+import static com.reedelk.runtime.api.commons.Preconditions.checkState;
 
 public class RemoveScopedGraphNodeActionStrategy implements ActionStrategy {
 

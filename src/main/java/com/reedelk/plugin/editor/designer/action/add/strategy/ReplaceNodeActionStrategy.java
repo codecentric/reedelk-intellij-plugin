@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.reedelk.runtime.commons.Preconditions.checkState;
+import static com.reedelk.runtime.api.commons.Preconditions.checkState;
 
 /**
  * Strategy which replaces a node with the given replacement node.

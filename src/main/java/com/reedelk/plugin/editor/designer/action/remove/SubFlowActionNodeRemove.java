@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.reedelk.runtime.commons.Preconditions.checkState;
+import static com.reedelk.runtime.api.commons.Preconditions.checkState;
 
 /**
  * Removes a single node from a Subflow. In a subflow when the root

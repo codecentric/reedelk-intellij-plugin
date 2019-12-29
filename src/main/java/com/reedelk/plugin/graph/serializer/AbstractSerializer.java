@@ -7,7 +7,7 @@ import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import org.json.JSONArray;
 
-import static com.reedelk.runtime.commons.Preconditions.checkArgument;
+import static com.reedelk.runtime.api.commons.Preconditions.checkArgument;
 
 public abstract class AbstractSerializer {
 
