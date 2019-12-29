@@ -1,6 +1,6 @@
 package com.reedelk.plugin.editor.palette;
 
-import com.reedelk.plugin.component.domain.ComponentDescriptor;
+import com.reedelk.component.descriptor.ComponentDescriptor;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.datatransfer.DataFlavor;
@@ -37,5 +37,4 @@ public class ComponentDescriptorTransferable implements Transferable {
         }
         throw new UnsupportedFlavorException(flavor);
     }
-
 }

@@ -1,6 +1,6 @@
 package com.reedelk.plugin.commons;
 
-import com.reedelk.plugin.component.domain.ScriptSignatureDefinition;
+import com.reedelk.component.descriptor.ScriptSignatureDescriptor;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -19,7 +19,7 @@ class ScriptFunctionDefinitionBuilderTest {
                 "\treturn text + ' result';\n" +
                 "}";
         String  scriptFunctionName = "myTestFunction";
-        ScriptSignatureDefinition definition =
+        ScriptSignatureDescriptor definition =
                 createScriptSignatureDefinition(asList("context", "arg1", "arg2", "arg3"));
 
         // When
@@ -37,7 +37,7 @@ class ScriptFunctionDefinitionBuilderTest {
                 "\treturn text + ' result';\n" +
                 "}";
         String  scriptFunctionName = "myTestFunction";
-        ScriptSignatureDefinition definition =
+        ScriptSignatureDescriptor definition =
                 createScriptSignatureDefinition(Collections.emptyList());
 
         // When

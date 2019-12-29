@@ -1,6 +1,6 @@
 package com.reedelk.plugin.component.type.placeholder;
 
-import com.reedelk.plugin.component.domain.ComponentData;
+import com.reedelk.component.descriptor.ComponentData;
 import com.reedelk.plugin.editor.designer.AbstractGraphNode;
 import com.reedelk.plugin.editor.designer.DrawableListener;
 

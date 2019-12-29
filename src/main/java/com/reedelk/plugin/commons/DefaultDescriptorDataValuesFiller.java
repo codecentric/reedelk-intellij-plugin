@@ -1,15 +1,11 @@
 package com.reedelk.plugin.commons;
 
-import com.reedelk.plugin.component.domain.ComponentDataHolder;
-import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
-import com.reedelk.plugin.component.domain.TypeDescriptor;
-import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
+import com.reedelk.component.descriptor.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.reedelk.plugin.component.domain.Shared.YES;
-import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
+import static com.reedelk.component.descriptor.TypeObjectDescriptor.TypeObject;
 import static com.reedelk.runtime.commons.JsonParser.Component;
 
 public class DefaultDescriptorDataValuesFiller {
@@ -36,7 +32,7 @@ public class DefaultDescriptorDataValuesFiller {
                                        @NotNull TypeObjectDescriptor propertyType,
                                        @NotNull String propertyName) {
         TypeObject nested = TypeObjectFactory.newInstance(propertyType);
-        if (YES.equals(propertyType.getShared())) {
+        if (Shared.YES.equals(propertyType.getShared())) {
             // If the property is shareable, we initialize it with default config ref
             nested.set(Component.ref(), TypeObject.DEFAULT_CONFIG_REF);
             dataHolder.set(propertyName, nested);

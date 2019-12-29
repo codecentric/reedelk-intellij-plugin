@@ -4,10 +4,10 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
+import com.reedelk.component.descriptor.AutoCompleteContributorDescriptor;
+import com.reedelk.component.descriptor.ComponentDescriptor;
+import com.reedelk.component.descriptor.ComponentPropertyDescriptor;
 import com.reedelk.plugin.assertion.PluginAssertion;
-import com.reedelk.plugin.component.domain.AutoCompleteContributorDefinition;
-import com.reedelk.plugin.component.domain.ComponentDescriptor;
-import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.ModuleComponents;
 import com.reedelk.plugin.testutils.ObjectFactories;
@@ -85,7 +85,7 @@ class CompletionServiceImplTest {
     void shouldReturnSpecificComponentSuggestions() {
         // Given
         String fullyQualifiedName = "com.reedelk.components.MyCustomComponent";
-        AutoCompleteContributorDefinition autoCompleteContribution = new AutoCompleteContributorDefinition();
+        AutoCompleteContributorDescriptor autoCompleteContribution = new AutoCompleteContributorDescriptor();
         autoCompleteContribution.setContributions(
                 asList("messageCustom1[VARIABLE:MyType1]",
                         "messageCustom2[VARIABLE:MyType2]",
@@ -116,22 +116,22 @@ class CompletionServiceImplTest {
     @Test
     void shouldReturnCustomFunctionsSuggestions() {
         // Given
-        AutoCompleteContributorDefinition utilsDefinitions = new AutoCompleteContributorDefinition(Arrays.asList(
+        AutoCompleteContributorDescriptor utilsDefinitions = new AutoCompleteContributorDescriptor(Arrays.asList(
                 "Util[VARIABLE:Util]",
                 "Util.tmpdir()[FUNCTION:String]",
                 "Util.uuid()[FUNCTION:String]"));
 
-        AutoCompleteContributorDefinition loggerDefinitions = new AutoCompleteContributorDefinition(Arrays.asList(
+        AutoCompleteContributorDescriptor loggerDefinitions = new AutoCompleteContributorDescriptor(Arrays.asList(
                 "Log[VARIABLE:Log]",
                 "Log.info('')[FUNCTION:void]",
                 "Log.debug('')[FUNCTION:void]",
                 "Log.warn('')[FUNCTION:void]",
                 "Log.error('')[FUNCTION:void]",
                 "Log.trace('')[FUNCTION:void]"));
-        List<AutoCompleteContributorDefinition> definitions =
+        List<AutoCompleteContributorDescriptor> definitions =
                 Arrays.asList(loggerDefinitions, utilsDefinitions);
 
-        doReturn(definitions).when(mockComponentService).getAutoCompleteContributorDefinition();
+        doReturn(definitions).when(mockComponentService).getAutoCompleteContributorDescriptors();
 
         service.updateComponentsSuggestions(Collections.emptyList());
 

@@ -1,11 +1,11 @@
 package com.reedelk.plugin.assertion;
 
+import com.reedelk.component.descriptor.ComponentDataHolder;
 import com.reedelk.plugin.assertion.commons.MapAssertion;
 import com.reedelk.plugin.assertion.component.ComponentDataHolderAssertion;
 import com.reedelk.plugin.assertion.graph.FlowGraphAssertion;
 import com.reedelk.plugin.assertion.graph.FlowGraphChangeAwareAssertion;
 import com.reedelk.plugin.assertion.suggestion.SuggestionAssertion;
-import com.reedelk.plugin.component.domain.ComponentDataHolder;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowGraphChangeAware;
 import com.reedelk.plugin.service.module.impl.completion.Suggestion;

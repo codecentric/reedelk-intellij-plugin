@@ -8,13 +8,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
+import com.reedelk.component.descriptor.AutoCompleteContributorDescriptor;
+import com.reedelk.component.descriptor.ComponentDescriptor;
+import com.reedelk.component.descriptor.PackageDescriptor;
+import com.reedelk.component.descriptor.analyzer.PackageDescriptorAnalyzer;
 import com.reedelk.plugin.commons.ExcludedArtifactsFromModuleSync;
 import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.commons.Images;
-import com.reedelk.plugin.component.analyzer.PackageComponentsAnalyzer;
-import com.reedelk.plugin.component.domain.AutoCompleteContributorDefinition;
-import com.reedelk.plugin.component.domain.ComponentDescriptor;
-import com.reedelk.plugin.component.domain.PackageComponents;
 import com.reedelk.plugin.component.type.unknown.UnknownComponentDescriptorWrapper;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.maven.MavenUtils;
@@ -46,9 +46,9 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     private final Project project;
     private final ModuleComponents systemComponents;
     private final ComponentListUpdateNotifier publisher;
-    private final PackageComponentsAnalyzer componentsAnalyzer = new PackageComponentsAnalyzer();
+    private final PackageDescriptorAnalyzer componentsAnalyzer = new PackageDescriptorAnalyzer();
     private final Map<String, ModuleComponents> mavenJarComponentsMap = new HashMap<>();
-    private final List<AutoCompleteContributorDefinition> autoCompleteContributorDefinitions = new ArrayList<>();
+    private final List<AutoCompleteContributorDescriptor> autoCompleteContributorDefinitions = new ArrayList<>();
 
 
     private ModuleComponents moduleComponents;
@@ -108,7 +108,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     }
 
     @Override
-    public synchronized Collection<AutoCompleteContributorDefinition> getAutoCompleteContributorDefinition() {
+    public synchronized Collection<AutoCompleteContributorDescriptor> getAutoCompleteContributorDescriptors() {
         return unmodifiableList(autoCompleteContributorDefinitions);
     }
 
@@ -182,7 +182,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                             .getUrls();
                     stream(modulePaths).forEach(modulePath -> {
 
-                        PackageComponents packageComponents = componentsAnalyzer.from(modulePath);
+                        PackageDescriptor packageComponents = componentsAnalyzer.from(modulePath);
                         MavenUtils.getMavenProject(project, module.getName()).ifPresent(mavenProject -> {
 
                             List<ComponentDescriptor> componentDescriptors = packageComponents.getComponentDescriptors();
@@ -195,8 +195,8 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
                             // TODO: Module autocomplete contributor definitions should be cleared here!
                             //  because here we are just keep adding without removing them!
-                            List<AutoCompleteContributorDefinition> autocompleteContributorDefinitions =
-                                    packageComponents.getAutocompleteContributorDefinitions();
+                            List<AutoCompleteContributorDescriptor> autocompleteContributorDefinitions =
+                                    packageComponents.getAutocompleteContributorDescriptors();
                             autoCompleteContributorDefinitions.addAll(autocompleteContributorDefinitions);
 
                         });
@@ -222,7 +222,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
     private synchronized void scanForComponentsOfJar(String jarFilePath, String moduleName) {
         // We only scan a module if its jar file is a module with a name.
-        PackageComponents packageComponents = componentsAnalyzer.from(jarFilePath);
+        PackageDescriptor packageComponents = componentsAnalyzer.from(jarFilePath);
         List<ComponentDescriptor> componentDescriptors = packageComponents.getComponentDescriptors();
         registerIconsAndImagesLocalCache(componentDescriptors);
 
@@ -230,8 +230,8 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         ModuleComponents descriptor = new ModuleComponents(moduleName, componentDescriptors);
         mavenJarComponentsMap.put(jarFilePath, descriptor);
 
-        List<AutoCompleteContributorDefinition> autocompleteContributorDefinitions =
-                packageComponents.getAutocompleteContributorDefinitions();
+        List<AutoCompleteContributorDescriptor> autocompleteContributorDefinitions =
+                packageComponents.getAutocompleteContributorDescriptors();
         autoCompleteContributorDefinitions.addAll(autocompleteContributorDefinitions);
     }
 

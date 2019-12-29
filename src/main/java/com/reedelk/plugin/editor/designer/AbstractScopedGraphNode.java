@@ -1,9 +1,9 @@
 package com.reedelk.plugin.editor.designer;
 
+import com.reedelk.component.descriptor.ComponentData;
+import com.reedelk.component.descriptor.ComponentType;
 import com.reedelk.plugin.commons.Half;
 import com.reedelk.plugin.commons.IsPlaceholderNode;
-import com.reedelk.plugin.component.domain.ComponentData;
-import com.reedelk.plugin.component.domain.ComponentType;
 import com.reedelk.plugin.editor.designer.arrow.Arrow;
 import com.reedelk.plugin.editor.designer.icon.Icon;
 import com.reedelk.plugin.editor.designer.icon.IconRemoveComponent;
@@ -208,7 +208,6 @@ public abstract class AbstractScopedGraphNode implements ScopedGraphNode {
     public int topHalfHeight(Graphics2D graphics) {
         return icon.topHalfHeight();
     }
-
 
     @Override
     public Point getTargetArrowEnd() {

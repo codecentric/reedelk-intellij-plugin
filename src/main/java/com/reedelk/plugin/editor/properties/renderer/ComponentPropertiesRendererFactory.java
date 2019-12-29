@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.plugin.component.domain.ComponentData;
+import com.reedelk.component.descriptor.ComponentData;
 import com.reedelk.plugin.component.type.flowreference.FlowReferencePropertiesRenderer;
 import com.reedelk.plugin.component.type.fork.ForkPropertiesRenderer;
 import com.reedelk.plugin.component.type.generic.GenericComponentPropertiesRenderer;

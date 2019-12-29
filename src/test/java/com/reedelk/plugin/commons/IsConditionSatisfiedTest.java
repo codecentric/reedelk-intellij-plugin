@@ -6,7 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
+import static com.reedelk.component.descriptor.TypeObjectDescriptor.TypeObject;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class IsConditionSatisfiedTest {

@@ -1,10 +1,10 @@
 package com.reedelk.plugin.editor.properties.renderer.typescript.scriptactions;
 
 import com.intellij.openapi.module.Module;
+import com.reedelk.component.descriptor.ComponentPropertyDescriptor;
+import com.reedelk.component.descriptor.ScriptSignatureDescriptor;
 import com.reedelk.plugin.commons.JavascriptFileNameValidator;
 import com.reedelk.plugin.commons.ScriptFunctionDefinitionBuilder;
-import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
-import com.reedelk.plugin.component.domain.ScriptSignatureDefinition;
 import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DialogConfirmAction;
@@ -61,8 +61,8 @@ public class ScriptActionsPanel extends DisposablePanel {
     private void addScript() {
         DialogAddScript dialogAddScript = new DialogAddScript(module.getProject());
         if (dialogAddScript.showAndGet()) {
-            ScriptSignatureDefinition signatureDefinition =
-                    Optional.ofNullable(propertyDescriptor.getScriptSignatureDefinition()).orElse(ScriptSignatureDefinition.DEFAULT);
+            ScriptSignatureDescriptor signatureDefinition =
+                    Optional.ofNullable(propertyDescriptor.getScriptSignatureDescriptor()).orElse(ScriptSignatureDescriptor.DEFAULT);
             String scriptFileNameIncludingPathToAdd = dialogAddScript.getScriptFileNameIncludingPathToAdd();
             String scriptFunctionName = JavascriptFileNameValidator.getFileNameWithoutExtensionFrom(scriptFileNameIncludingPathToAdd);
             String scriptBody = ScriptFunctionDefinitionBuilder.from(scriptFunctionName, signatureDefinition);

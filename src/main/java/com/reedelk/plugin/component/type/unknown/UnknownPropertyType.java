@@ -1,6 +1,6 @@
 package com.reedelk.plugin.component.type.unknown;
 
-import com.reedelk.plugin.component.domain.TypeDescriptor;
+import com.reedelk.component.descriptor.TypeDescriptor;
 
 public class UnknownPropertyType implements TypeDescriptor {
 

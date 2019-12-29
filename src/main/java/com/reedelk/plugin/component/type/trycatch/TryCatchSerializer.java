@@ -1,7 +1,7 @@
 package com.reedelk.plugin.component.type.trycatch;
 
+import com.reedelk.component.descriptor.ComponentData;
 import com.reedelk.plugin.commons.JsonObjectFactory;
-import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
@@ -41,7 +41,6 @@ public class TryCatchSerializer extends AbstractScopedNodeSerializer {
 
         JSONArray nextArrayObject = new JSONArray();
 
-        successorsOfTryCatch.size();
         GraphNode trySubflow = successorsOfTryCatch.get(0);
 
 

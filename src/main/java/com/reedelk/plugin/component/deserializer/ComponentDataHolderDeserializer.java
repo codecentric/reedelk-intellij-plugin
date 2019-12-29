@@ -1,17 +1,13 @@
 package com.reedelk.plugin.component.deserializer;
 
+import com.reedelk.component.descriptor.*;
 import com.reedelk.plugin.commons.TypeObjectFactory;
-import com.reedelk.plugin.component.domain.ComponentDataHolder;
-import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
-import com.reedelk.plugin.component.domain.TypeDescriptor;
-import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.converter.ValueConverter;
 import com.reedelk.plugin.converter.ValueConverterProvider;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
-import static com.reedelk.plugin.component.domain.Shared.YES;
-import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
+import static com.reedelk.component.descriptor.TypeObjectDescriptor.TypeObject;
 import static com.reedelk.runtime.commons.JsonParser.Component;
 
 public class ComponentDataHolderDeserializer {
@@ -54,7 +50,7 @@ public class ComponentDataHolderDeserializer {
             if (nestedJsonObject.isEmpty()) {
                 addEmptyInstancesForTypeObject(componentData, descriptor);
 
-            } else if (YES.equals(propertyType.getShared())) {
+            } else if (Shared.YES.equals(propertyType.getShared())) {
                 // The config is shareable, therefore we just set the
                 // reference value pointing to the shared config.
                 if (nestedJsonObject.has(Component.ref())) {

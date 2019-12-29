@@ -9,7 +9,7 @@ import java.awt.*;
  * A Panel which calls dispose() an all children implementing
  * Disposable interface, {@see com.intellij.openapi.Disposable}.
  */
-public class DisposablePanel extends JBPanel implements Disposable {
+public class DisposablePanel extends JBPanel<DisposablePanel> implements Disposable {
 
     public DisposablePanel() {
         super();

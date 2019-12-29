@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer.typeobject;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.plugin.component.domain.*;
+import com.reedelk.component.descriptor.*;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.reedelk.plugin.editor.properties.commons.*;
@@ -15,8 +15,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.util.List;
 
-import static com.reedelk.plugin.component.domain.Shared.NO;
-import static com.reedelk.plugin.component.domain.Shared.YES;
 
 public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
 
@@ -27,7 +25,7 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
                              @NotNull PropertyAccessor accessor,
                              @NotNull ContainerContext context) {
         TypeObjectDescriptor objectDescriptor = descriptor.getPropertyType();
-        return YES.equals(objectDescriptor.getShared()) ?
+        return Shared.YES.equals(objectDescriptor.getShared()) ?
                 renderShareable(module, descriptor, accessor, context) :
                 renderInline(module, accessor, descriptor);
     }
@@ -38,7 +36,7 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
                             @NotNull ComponentPropertyDescriptor descriptor,
                             @NotNull ContainerContext context) {
         TypeObjectDescriptor objectDescriptor = descriptor.getPropertyType();
-        if (NO.equals(objectDescriptor.getShared())) {
+        if (Shared.NO.equals(objectDescriptor.getShared())) {
             addToParentInline(parent, rendered, descriptor, context);
         } else {
             super.addToParent(parent, rendered, descriptor, context);
@@ -82,7 +80,7 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
     private void addToParentInline(@NotNull JComponent parent, @NotNull JComponent rendered, @NotNull ComponentPropertyDescriptor descriptor, @NotNull ContainerContext context) {
         // If the property has any 'when' condition, we apply listener/s to make it
         // visible (or not) when the condition is met (or not).
-        applyWhenVisibility(descriptor.getWhenDefinitions(), context, rendered);
+        applyWhenVisibility(descriptor.getWhenDescriptors(), context, rendered);
 
         // Add the component to the parent container.
         FormBuilder.get().addLastField(rendered, parent);

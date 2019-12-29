@@ -1,9 +1,9 @@
 package com.reedelk.plugin.editor.designer.text;
 
+import com.reedelk.component.descriptor.ComponentData;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.Fonts;
 import com.reedelk.plugin.commons.SplitTextInLines;
-import com.reedelk.plugin.component.domain.ComponentData;
 
 import java.awt.*;
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.reedelk.plugin.service.module.impl.configuration;
 
-import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
+import com.reedelk.component.descriptor.TypeObjectDescriptor;
 import org.jetbrains.annotations.NotNull;
 
 public class NewConfigMetadata extends ConfigMetadata {

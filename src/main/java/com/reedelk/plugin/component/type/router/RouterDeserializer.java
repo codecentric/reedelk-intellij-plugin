@@ -1,6 +1,6 @@
 package com.reedelk.plugin.component.type.router;
 
-import com.reedelk.plugin.component.domain.ComponentData;
+import com.reedelk.component.descriptor.ComponentData;
 import com.reedelk.plugin.component.type.stop.StopNode;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.deserializer.AbstractNodeDeserializer;

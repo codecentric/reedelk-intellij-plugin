@@ -1,7 +1,7 @@
 package com.reedelk.plugin.component.type.router;
 
+import com.reedelk.component.descriptor.ComponentData;
 import com.reedelk.plugin.assertion.PluginAssertion;
-import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.graph.deserializer.AbstractNodeDeserializerTest;
 import com.reedelk.plugin.graph.node.GraphNode;
 import org.json.JSONObject;

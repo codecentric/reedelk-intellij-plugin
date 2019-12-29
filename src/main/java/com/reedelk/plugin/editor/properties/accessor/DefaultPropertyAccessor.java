@@ -1,6 +1,6 @@
 package com.reedelk.plugin.editor.properties.accessor;
 
-import com.reedelk.plugin.component.domain.ComponentDataHolder;
+import com.reedelk.component.descriptor.ComponentDataHolder;
 import com.reedelk.plugin.graph.FlowSnapshot;
 
 public class DefaultPropertyAccessor implements PropertyAccessor {

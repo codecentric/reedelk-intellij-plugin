@@ -1,7 +1,7 @@
 package com.reedelk.plugin.component.type.trycatch;
 
+import com.reedelk.component.descriptor.ComponentData;
 import com.reedelk.plugin.commons.AddPlaceholder;
-import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.component.type.trycatch.widget.TryCatchVerticalDivider;
 import com.reedelk.plugin.component.type.trycatch.widget.TryCatchVerticalDividerArrows;
 import com.reedelk.plugin.editor.designer.AbstractScopedGraphNode;

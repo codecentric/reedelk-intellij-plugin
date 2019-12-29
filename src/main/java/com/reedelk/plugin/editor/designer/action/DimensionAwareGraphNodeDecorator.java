@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.designer.action;
 
-import com.reedelk.plugin.component.domain.ComponentData;
-import com.reedelk.plugin.component.domain.ComponentType;
+import com.reedelk.component.descriptor.ComponentData;
+import com.reedelk.component.descriptor.ComponentType;
 import com.reedelk.plugin.editor.designer.DrawableListener;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;

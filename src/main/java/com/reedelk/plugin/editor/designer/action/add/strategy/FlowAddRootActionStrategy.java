@@ -1,10 +1,9 @@
 package com.reedelk.plugin.editor.designer.action.add.strategy;
 
+import com.reedelk.component.descriptor.ComponentType;
 import com.reedelk.plugin.editor.designer.action.ActionStrategy;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
-
-import static com.reedelk.plugin.component.domain.ComponentType.INBOUND;
 
 public class FlowAddRootActionStrategy implements ActionStrategy {
 
@@ -22,6 +21,6 @@ public class FlowAddRootActionStrategy implements ActionStrategy {
     @Override
     public boolean applicableOn(GraphNode node) {
         // Only inbound components can be added as root inside flows.
-        return INBOUND.equals(node.getComponentClass());
+        return ComponentType.INBOUND.equals(node.getComponentClass());
     }
 }

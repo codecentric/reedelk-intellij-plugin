@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
+import com.reedelk.component.descriptor.ComponentPropertyDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
@@ -35,4 +35,5 @@ public abstract class AbstractNumericPropertyRenderer<T> extends AbstractPropert
     }
 
     protected abstract InputField<T> getInputField(String hint);
+
 }

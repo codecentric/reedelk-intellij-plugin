@@ -2,7 +2,7 @@ package com.reedelk.plugin.assertion.graph;
 
 import java.math.BigDecimal;
 
-import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
+import static com.reedelk.component.descriptor.TypeObjectDescriptor.TypeObject;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TypeObjectAssertion {

@@ -1,10 +1,10 @@
 package com.reedelk.plugin.component.type.router;
 
+import com.reedelk.component.descriptor.ComponentData;
 import com.reedelk.plugin.commons.AddPlaceholder;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.Fonts;
 import com.reedelk.plugin.commons.Half;
-import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.component.type.router.functions.IsDefaultRoute;
 import com.reedelk.plugin.component.type.router.functions.SyncConditionAndRoutePairs;
 import com.reedelk.plugin.editor.designer.AbstractScopedGraphNode;
@@ -18,7 +18,6 @@ import com.reedelk.plugin.graph.node.ScopedGraphNode;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 import java.util.List;
-import java.util.function.Consumer;
 
 import static com.reedelk.plugin.editor.designer.arrow.VerticalDividerArrows.OnProcessSuccessor;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
@@ -87,7 +86,7 @@ public class RouterNode extends AbstractScopedGraphNode {
             // this scoped node itself. In this case the placeholder provider does not add
             // any placeholder since we are removing the containing scope.
             AddPlaceholder.to(placeholderProvider, message("placeholder.description.router.otherwise"), graph, this, index)
-                    .ifPresent((Consumer<GraphNode>) node -> updateConditionRoutePairs(graph));
+                    .ifPresent(node -> updateConditionRoutePairs(graph));
         } else {
             // If the scope is not empty, we need to update the condition -> route pairs since
             // they might have been changed after removing a successor.

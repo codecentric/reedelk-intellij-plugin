@@ -1,6 +1,6 @@
 package com.reedelk.plugin.testutils;
 
-import com.reedelk.plugin.component.domain.*;
+import com.reedelk.component.descriptor.*;
 import com.reedelk.runtime.api.script.dynamicvalue.DynamicValue;
 
 import java.util.List;
@@ -54,8 +54,8 @@ public class ObjectFactories {
         return descriptor;
     }
 
-    public static ScriptSignatureDefinition createScriptSignatureDefinition(List<String> arguments) {
-        ScriptSignatureDefinition definition = new ScriptSignatureDefinition();
+    public static ScriptSignatureDescriptor createScriptSignatureDefinition(List<String> arguments) {
+        ScriptSignatureDescriptor definition = new ScriptSignatureDescriptor();
         definition.setArguments(arguments);
         return definition;
     }

@@ -2,11 +2,11 @@ package com.reedelk.plugin.editor.properties.renderer.typeobject;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.util.messages.MessageBusConnection;
+import com.reedelk.component.descriptor.ComponentDataHolder;
+import com.reedelk.component.descriptor.ComponentPropertyDescriptor;
+import com.reedelk.component.descriptor.TypeObjectDescriptor;
 import com.reedelk.plugin.commons.PopupUtils;
 import com.reedelk.plugin.commons.TypeObjectFactory;
-import com.reedelk.plugin.component.domain.ComponentDataHolder;
-import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
-import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;

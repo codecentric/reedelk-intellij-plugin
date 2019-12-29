@@ -1,7 +1,7 @@
 package com.reedelk.plugin.component.type.generic;
 
 import com.google.common.collect.ImmutableMap;
-import com.reedelk.plugin.component.domain.*;
+import com.reedelk.component.descriptor.*;
 import com.reedelk.plugin.fixture.ComponentNode2;
 import com.reedelk.runtime.api.script.dynamicvalue.*;
 

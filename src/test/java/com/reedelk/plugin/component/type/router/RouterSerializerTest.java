@@ -1,7 +1,7 @@
 package com.reedelk.plugin.component.type.router;
 
+import com.reedelk.component.descriptor.ComponentData;
 import com.reedelk.plugin.AbstractGraphTest;
-import com.reedelk.plugin.component.domain.ComponentData;
 import com.reedelk.plugin.fixture.Json;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.runtime.commons.JsonParser;

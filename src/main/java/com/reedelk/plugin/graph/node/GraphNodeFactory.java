@@ -1,10 +1,10 @@
 package com.reedelk.plugin.graph.node;
 
 import com.intellij.openapi.module.Module;
+import com.reedelk.component.descriptor.ComponentData;
+import com.reedelk.component.descriptor.ComponentDescriptor;
 import com.reedelk.plugin.commons.ImplementsInterface;
 import com.reedelk.plugin.component.ComponentDescriptionDecorator;
-import com.reedelk.plugin.component.domain.ComponentData;
-import com.reedelk.plugin.component.domain.ComponentDescriptor;
 import com.reedelk.plugin.component.type.flowreference.FlowReferenceNode;
 import com.reedelk.plugin.component.type.fork.ForkNode;
 import com.reedelk.plugin.component.type.generic.GenericComponentNode;

@@ -1,6 +1,6 @@
 package com.reedelk.plugin.editor.properties.renderer;
 
-import com.reedelk.plugin.component.domain.TypeDescriptor;
+import com.reedelk.component.descriptor.TypeDescriptor;
 import com.reedelk.plugin.editor.properties.renderer.typebigdecimal.BigDecimalPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typebigdecimal.DynamicBigDecimalPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typebiginteger.BigIntegerPropertyRenderer;
@@ -44,7 +44,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
+import static com.reedelk.component.descriptor.TypeObjectDescriptor.TypeObject;
 import static com.reedelk.plugin.component.type.unknown.UnknownPropertyType.UnknownType;
 
 public class PropertyTypeRendererFactory {

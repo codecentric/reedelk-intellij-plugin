@@ -1,7 +1,7 @@
 package com.reedelk.plugin.service.module.impl.configuration;
 
-import com.reedelk.plugin.component.domain.ComponentDataHolder;
-import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
+import com.reedelk.component.descriptor.ComponentDataHolder;
+import com.reedelk.component.descriptor.TypeObjectDescriptor;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 

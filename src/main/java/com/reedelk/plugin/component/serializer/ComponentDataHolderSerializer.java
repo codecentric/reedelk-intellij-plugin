@@ -1,8 +1,8 @@
 package com.reedelk.plugin.component.serializer;
 
+import com.reedelk.component.descriptor.*;
 import com.reedelk.plugin.commons.AtLeastOneWhenConditionIsTrue;
 import com.reedelk.plugin.commons.JsonObjectFactory;
-import com.reedelk.plugin.component.domain.*;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.JsonParser;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
+import static com.reedelk.component.descriptor.TypeObjectDescriptor.TypeObject;
 
 public class ComponentDataHolderSerializer {
 
@@ -38,7 +38,7 @@ public class ComponentDataHolderSerializer {
                                   @NotNull JSONObject parent,
                                   @NotNull List<ComponentPropertyDescriptor> propertiesDescriptors) {
         propertiesDescriptors.forEach(propertyDescriptor -> {
-            List<WhenDefinition> whens = propertyDescriptor.getWhenDefinitions();
+            List<WhenDescriptor> whens = propertyDescriptor.getWhenDescriptors();
             if (whens.isEmpty()) {
                 // If there are no when conditions, we serialize the value.
                 serialize(componentData, parent, propertyDescriptor);
@@ -104,7 +104,7 @@ public class ComponentDataHolderSerializer {
      */
     private static final Predicate<Object> ExcludeEmptyMaps = data -> {
         if (data instanceof Map) {
-            Map dataMap = (Map) data;
+            Map<?,?> dataMap = (Map<?,?>) data;
             return !dataMap.isEmpty();
         }
         return true;

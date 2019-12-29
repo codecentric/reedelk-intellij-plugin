@@ -1,6 +1,6 @@
 package com.reedelk.plugin.component.type.fork;
 
-import com.reedelk.plugin.component.domain.ComponentData;
+import com.reedelk.component.descriptor.ComponentData;
 import com.reedelk.plugin.editor.designer.AbstractScopedGraphNode;
 import com.reedelk.plugin.editor.designer.arrow.VerticalDividerArrows;
 import com.reedelk.plugin.editor.designer.misc.VerticalDivider;

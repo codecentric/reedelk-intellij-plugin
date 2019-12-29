@@ -1,10 +1,10 @@
 package com.reedelk.plugin.configuration;
 
+import com.reedelk.component.descriptor.ComponentDataHolder;
+import com.reedelk.component.descriptor.ComponentPropertyDescriptor;
+import com.reedelk.component.descriptor.TypeObjectDescriptor;
 import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.component.deserializer.ConfigurationDeserializer;
-import com.reedelk.plugin.component.domain.ComponentDataHolder;
-import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
-import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.fixture.ComponentNode1;
 import com.reedelk.plugin.fixture.ComponentNode2;
 import com.reedelk.plugin.fixture.ComponentNode3;

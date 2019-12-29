@@ -1,9 +1,9 @@
 package com.reedelk.plugin.configuration;
 
+import com.reedelk.component.descriptor.ComponentPropertyDescriptor;
+import com.reedelk.component.descriptor.Shared;
+import com.reedelk.component.descriptor.TypeObjectDescriptor;
 import com.reedelk.plugin.commons.TypeObjectFactory;
-import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
-import com.reedelk.plugin.component.domain.Shared;
-import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import com.reedelk.plugin.component.serializer.ConfigurationSerializer;
 import com.reedelk.plugin.fixture.ComponentNode1;
 import com.reedelk.plugin.fixture.ComponentNode2;
@@ -14,7 +14,7 @@ import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.util.Collections;
 
-import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
+import static com.reedelk.component.descriptor.TypeObjectDescriptor.TypeObject;
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.Primitives;
 import static com.reedelk.plugin.fixture.Json.Configuration.*;
 import static com.reedelk.plugin.testutils.ObjectFactories.createTypeObjectDescriptor;

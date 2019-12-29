@@ -1,9 +1,9 @@
 package com.reedelk.plugin.component;
 
-import com.reedelk.plugin.component.domain.ComponentDescriptor;
-import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
-import com.reedelk.plugin.component.domain.ComponentType;
-import com.reedelk.plugin.component.domain.TypePrimitiveDescriptor;
+import com.reedelk.component.descriptor.ComponentDescriptor;
+import com.reedelk.component.descriptor.ComponentPropertyDescriptor;
+import com.reedelk.component.descriptor.ComponentType;
+import com.reedelk.component.descriptor.TypePrimitiveDescriptor;
 import com.reedelk.runtime.commons.JsonParser;
 
 import javax.swing.*;
@@ -71,6 +71,7 @@ public class ComponentDescriptionDecorator extends ComponentDescriptor {
         return wrapped.getFullyQualifiedName();
     }
 
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     @Override
     public boolean equals(Object o) {
         return wrapped.equals(o);

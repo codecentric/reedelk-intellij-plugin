@@ -1,8 +1,8 @@
 package com.reedelk.plugin.component.type.flowreference;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.plugin.component.domain.ComponentData;
-import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
+import com.reedelk.component.descriptor.ComponentData;
+import com.reedelk.component.descriptor.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.type.flowreference.widget.SubflowSelector;
 import com.reedelk.plugin.component.type.generic.GenericComponentPropertiesRenderer;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;

@@ -2,8 +2,8 @@ package com.reedelk.plugin.service.module;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleServiceManager;
-import com.reedelk.plugin.component.domain.AutoCompleteContributorDefinition;
-import com.reedelk.plugin.component.domain.ComponentDescriptor;
+import com.reedelk.component.descriptor.AutoCompleteContributorDescriptor;
+import com.reedelk.component.descriptor.ComponentDescriptor;
 import com.reedelk.plugin.service.module.impl.component.ModuleComponents;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,5 +21,5 @@ public interface ComponentService {
 
     Collection<ModuleComponents> getModuleComponents();
 
-    Collection<AutoCompleteContributorDefinition> getAutoCompleteContributorDefinition();
+    Collection<AutoCompleteContributorDescriptor> getAutoCompleteContributorDescriptors();
 }

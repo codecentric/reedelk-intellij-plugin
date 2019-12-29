@@ -12,7 +12,7 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.treeStructure.SimpleTree;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.messages.MessageBusConnection;
-import com.reedelk.plugin.component.domain.ComponentDescriptor;
+import com.reedelk.component.descriptor.ComponentDescriptor;
 import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.ComponentListUpdateNotifier;
 import com.reedelk.plugin.service.module.impl.component.ModuleComponents;
@@ -32,7 +32,7 @@ import java.util.function.Predicate;
 import static java.awt.BorderLayout.CENTER;
 import static java.util.stream.Collectors.toList;
 
-public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier, FileEditorManagerListener {
+public class PalettePanel extends JBPanel<PalettePanel> implements ComponentListUpdateNotifier, FileEditorManagerListener {
 
     private final transient Tree tree;
     private final transient Project project;
@@ -72,9 +72,7 @@ public class PalettePanel extends JBPanel implements ComponentListUpdateNotifier
         // components have been updated.
         VirtualFile[] selectedFiles = FileEditorManager.getInstance(project).getSelectedFiles();
         if (selectedFiles.length > 0) {
-            ApplicationManager.getApplication().runReadAction(() -> {
-                updateComponents(components);
-            });
+            ApplicationManager.getApplication().runReadAction(() -> updateComponents(components));
         }
     }
 

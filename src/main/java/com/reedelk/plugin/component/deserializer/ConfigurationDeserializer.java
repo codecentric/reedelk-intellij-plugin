@@ -1,16 +1,16 @@
 package com.reedelk.plugin.component.deserializer;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.reedelk.component.descriptor.ComponentDataHolder;
+import com.reedelk.component.descriptor.TypeObjectDescriptor;
 import com.reedelk.plugin.commons.TypeObjectFactory;
-import com.reedelk.plugin.component.domain.ComponentDataHolder;
-import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Optional;
 
-import static com.reedelk.plugin.component.domain.TypeObjectDescriptor.TypeObject;
+import static com.reedelk.component.descriptor.TypeObjectDescriptor.TypeObject;
 import static com.reedelk.runtime.commons.JsonParser.Config;
 import static com.reedelk.runtime.commons.JsonParser.Implementor;
 

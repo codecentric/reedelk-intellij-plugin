@@ -1,8 +1,8 @@
 package com.reedelk.plugin.editor.properties.renderer;
 
+import com.reedelk.component.descriptor.ComponentPropertyDescriptor;
+import com.reedelk.component.descriptor.WhenDescriptor;
 import com.reedelk.plugin.commons.AtLeastOneWhenConditionIsTrue;
-import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
-import com.reedelk.plugin.component.domain.WhenDefinition;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.FormBuilder;
 import com.reedelk.plugin.editor.properties.commons.JComponentHolder;
@@ -26,7 +26,7 @@ public abstract class AbstractPropertyTypeRenderer implements PropertyTypeRender
         PropertyTitleLabel propertyTitleLabel = new PropertyTitleLabel(descriptor);
 
         // Apply visibility conditions to the label and the rendered component
-        applyWhenVisibility(descriptor.getWhenDefinitions(), context, rendered, propertyTitleLabel);
+        applyWhenVisibility(descriptor.getWhenDescriptors(), context, rendered, propertyTitleLabel);
 
         // Add the component and its property title label to the parent container.
         FormBuilder.get()
@@ -42,7 +42,7 @@ public abstract class AbstractPropertyTypeRenderer implements PropertyTypeRender
      * any when definition defined for the property then at least one ot them
      * must be satisfied.
      */
-    protected void applyWhenVisibility(List<WhenDefinition> whens, ContainerContext context, JComponent... components) {
+    protected void applyWhenVisibility(List<WhenDescriptor> whens, ContainerContext context, JComponent... components) {
         // If there are no when definitions, then the component is visible (default visibility).
         if (whens.isEmpty()) return;
 
@@ -53,7 +53,7 @@ public abstract class AbstractPropertyTypeRenderer implements PropertyTypeRender
         // We need to group all the when definitions by property.
         // Apply on change listener
         whens.stream()
-                .collect(groupingBy(WhenDefinition::getPropertyName))
+                .collect(groupingBy(WhenDescriptor::getPropertyName))
                 .forEach((propertyName, whensForPropertyName) ->
                         context.subscribePropertyChange(propertyName, newValue -> {
                             boolean shouldBeVisible =

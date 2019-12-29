@@ -6,8 +6,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
-import com.reedelk.plugin.component.domain.TypeObjectDescriptor;
+import com.reedelk.component.descriptor.ComponentPropertyDescriptor;
+import com.reedelk.component.descriptor.TypeObjectDescriptor;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.ComponentService;
@@ -89,7 +89,7 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
         // all the custom functions suggestions for all dependencies of this module.
         customFunctionsTrie = new Trie();
         componentService()
-                .getAutoCompleteContributorDefinition()
+                .getAutoCompleteContributorDescriptors()
                 .forEach(definition -> customFunctionsTrie.insert(definition.getContributions()));
 
         fireCompletionsUpdatedEvent();
@@ -119,7 +119,7 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
                 addSuggestionFrom(typeObjectDescriptor.getTypeFullyQualifiedName(), typeObjectDescriptor.getObjectProperties());
 
             } else {
-                Optional.ofNullable(descriptor.getAutoCompleteContributorDefinition()).ifPresent(definition -> {
+                Optional.ofNullable(descriptor.getAutoCompleteContributorDescriptor()).ifPresent(definition -> {
                     Trie componentTrie = new Trie();
                     if (definition.isMessage()) insertSuggestions(componentTrie, DefaultSuggestions.MESSAGE);
                     if (definition.isContext()) insertSuggestions(componentTrie, DefaultSuggestions.CONTEXT);

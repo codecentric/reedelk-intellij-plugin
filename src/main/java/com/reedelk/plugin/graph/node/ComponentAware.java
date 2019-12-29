@@ -1,6 +1,6 @@
 package com.reedelk.plugin.graph.node;
 
-import com.reedelk.plugin.component.domain.ComponentData;
+import com.reedelk.component.descriptor.ComponentData;
 
 public interface ComponentAware {
 

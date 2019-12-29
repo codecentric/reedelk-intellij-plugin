@@ -11,7 +11,8 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 
-import static com.reedelk.plugin.component.domain.ComponentType.INBOUND;
+import static com.reedelk.component.descriptor.ComponentType.INBOUND;
+
 
 class FlowActionNodeAddRootTest extends BaseFlowActionNodeAddTest {
 
