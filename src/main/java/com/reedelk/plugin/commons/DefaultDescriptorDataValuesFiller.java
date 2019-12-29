@@ -26,7 +26,7 @@ public class DefaultDescriptorDataValuesFiller {
             if (propertyType instanceof TypeObjectDescriptor) {
                 fillTypeObject(dataHolder, (TypeObjectDescriptor) propertyType, propertyName);
             } else {
-                Object defaultValue = PropertyDefaultValue.of(descriptor);
+                Object defaultValue = DefaultPropertyValue.of(descriptor);
                 dataHolder.set(propertyName, defaultValue);
             }
         });

@@ -7,7 +7,7 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-import static com.reedelk.plugin.commons.Defaults.NameConvention;
+import static com.reedelk.plugin.commons.DefaultConstants.NameConvention;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
 

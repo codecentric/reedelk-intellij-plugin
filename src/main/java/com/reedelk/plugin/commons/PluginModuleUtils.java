@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-import static com.reedelk.plugin.commons.Defaults.PROJECT_RESOURCES_FOLDER;
+import static com.reedelk.plugin.commons.DefaultConstants.PROJECT_RESOURCES_FOLDER;
 import static com.reedelk.runtime.commons.ModuleProperties.Config;
 import static com.reedelk.runtime.commons.ModuleProperties.Script;
 

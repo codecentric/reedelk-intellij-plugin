@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer.typeenum;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.plugin.commons.PropertyDefaultValue;
+import com.reedelk.plugin.commons.DefaultPropertyValue;
 import com.reedelk.plugin.component.domain.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.domain.TypeEnumDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
@@ -30,7 +30,7 @@ public class EnumPropertyRenderer extends AbstractPropertyTypeRenderer {
 
         // We set the default value if not present
         if (propertyAccessor.get() == null) {
-            Object defaultValue = PropertyDefaultValue.of(propertyDescriptor);
+            Object defaultValue = DefaultPropertyValue.of(propertyDescriptor);
             propertyAccessor.set(defaultValue);
         }
 

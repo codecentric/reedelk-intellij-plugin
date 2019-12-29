@@ -7,9 +7,9 @@ import com.reedelk.runtime.commons.FileExtension;
 
 import java.nio.file.Paths;
 
-public class Defaults {
+public class DefaultConstants {
 
-    private Defaults() {
+    private DefaultConstants() {
     }
 
     public static final String PROJECT_SOURCES_FOLDER = Paths.get("src").toString();

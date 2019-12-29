@@ -7,7 +7,7 @@ import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.module.Module;
-import com.reedelk.plugin.commons.Defaults;
+import com.reedelk.plugin.commons.DefaultConstants;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.runtime.api.commons.ScriptUtils;
@@ -34,7 +34,7 @@ public class ScriptEditor extends DisposablePanel implements DocumentListener {
         this.module = module;
         this.document = document;
         this.editor = (EditorEx) EditorFactory.getInstance()
-                .createEditor(document, module.getProject(), Defaults.JAVASCRIPT_FILE_TYPE, false);
+                .createEditor(document, module.getProject(), DefaultConstants.JAVASCRIPT_FILE_TYPE, false);
         this.editor.putUserData(MODULE_NAME, module.getName());
         this.editor.putUserData(COMPONENT_FULLY_QUALIFIED_NAME, context.componentFullyQualifiedName());
         configure(this.editor);

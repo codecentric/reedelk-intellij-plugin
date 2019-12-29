@@ -1,6 +1,6 @@
 package com.reedelk.plugin.converter.types;
 
-import com.reedelk.runtime.converter.DefaultValues;
+import com.reedelk.runtime.api.commons.DefaultValues;
 import com.reedelk.runtime.converter.RuntimeConverters;
 import com.reedelk.runtime.converter.json.JsonObjectConverter;
 import org.json.JSONObject;

@@ -8,7 +8,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
-import com.reedelk.plugin.commons.Defaults;
+import com.reedelk.plugin.commons.DefaultConstants;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditor;
 import com.reedelk.runtime.api.commons.StringUtils;
@@ -16,7 +16,7 @@ import com.reedelk.runtime.api.commons.StringUtils;
 import javax.swing.*;
 
 import static com.intellij.util.ui.JBUI.Borders;
-import static com.reedelk.plugin.commons.Defaults.DEFAULT_DYNAMIC_VALUE_SCRIPT_VIRTUAL_FILE_NAME;
+import static com.reedelk.plugin.commons.DefaultConstants.DEFAULT_DYNAMIC_VALUE_SCRIPT_VIRTUAL_FILE_NAME;
 import static com.reedelk.plugin.commons.Fonts.ScriptEditor.SCRIPT_EDITOR_FONT_SIZE;
 import static java.util.Collections.singletonList;
 
@@ -27,7 +27,7 @@ public class DynamicValueScriptEditor extends ScriptEditor {
     }
 
     private static Document emptyDocument() {
-        VirtualFile myVirtualFile = new LightVirtualFile(DEFAULT_DYNAMIC_VALUE_SCRIPT_VIRTUAL_FILE_NAME, Defaults.JAVASCRIPT_FILE_TYPE, StringUtils.EMPTY);
+        VirtualFile myVirtualFile = new LightVirtualFile(DEFAULT_DYNAMIC_VALUE_SCRIPT_VIRTUAL_FILE_NAME, DefaultConstants.JAVASCRIPT_FILE_TYPE, StringUtils.EMPTY);
         return FileDocumentManager.getInstance().getDocument(myVirtualFile);
     }
 
