@@ -43,6 +43,8 @@ import java.math.BigInteger;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.reedelk.module.descriptor.model.TypeObjectDescriptor.TypeObject;
 import static com.reedelk.plugin.component.type.unknown.UnknownPropertyType.UnknownType;
@@ -73,8 +75,6 @@ public class PropertyTypeRendererFactory {
         tmp.put(String.class, new StringPropertyRenderer());
         tmp.put(ResourceText.class, new ResourcePropertyRenderer());
         tmp.put(ResourceBinary.class, new ResourcePropertyRenderer());
-        tmp.put(TypeObject.class, new ObjectPropertyRenderer());
-        tmp.put(UnknownType.class, new UnknownPropertyTypeRenderer());
         tmp.put(Combo.class, new ComboPropertyRenderer());
         tmp.put(Password.class, new PasswordPropertyRenderer());
 
@@ -94,11 +94,27 @@ public class PropertyTypeRendererFactory {
         // Dynamic map types
         tmp.put(DynamicStringMap.class, new DynamicStringMapPropertyRenderer());
 
+        // NOT platform types (internal use only)
+        tmp.put(TypeObject.class, new ObjectPropertyRenderer());
+        tmp.put(UnknownType.class, new UnknownPropertyTypeRenderer());
+
         RENDERER = Collections.unmodifiableMap(tmp);
     }
 
     public static PropertyTypeRendererFactory get() {
         return new PropertyTypeRendererFactory();
+    }
+
+    public static int size() {
+        return RENDERER.size() - 2; // We remove the TypeObject and UnknownType since they are not exposed in the API.
+    }
+
+    public static Set<Class<?>> supportedConverters() {
+        return RENDERER.keySet().stream()
+                // We remove the TypeObject and UnknownType since they are not exposed in the API.
+                .filter(aClass -> !aClass.equals(TypeObject.class))
+                .filter(aClass -> !aClass.equals(UnknownType.class))
+                .collect(Collectors.toSet());
     }
 
     public PropertyTypeRenderer from(TypeDescriptor propertyType) {
