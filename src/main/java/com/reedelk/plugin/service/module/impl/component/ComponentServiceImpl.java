@@ -38,18 +38,22 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
     private static final String SYSTEM_COMPONENTS_MODULE_NAME = "flow-control";
 
-    private boolean isInitialized = false;
+    private boolean isInitialized;
 
     private final Module module;
     private final Project project;
-    private final ModuleComponents systemComponents;
+
     private final ComponentListUpdateNotifier publisher;
     private final ModuleAnalyzer componentsAnalyzer = new ModuleAnalyzer();
-    private final Map<String, ModuleComponents> mavenJarComponentsMap = new HashMap<>();
+
+    // Autocomplete
     private final List<AutoCompleteContributorDescriptor> autoCompleteContributorDefinitions = new ArrayList<>();
+    private final List<AutoCompleteContributorDescriptor> moduleCompleteContributorDefinitions = new ArrayList<>();
 
-
-    private ModuleComponents moduleComponents;
+    // Components
+    private ModuleComponents moduleComponents; // Current module this service is referring to.
+    private final ModuleComponents systemComponents; // Default system components
+    private final Map<String, ModuleComponents> mavenJarComponentsMap = new HashMap<>(); // Components coming from imported maven jars.
 
     public ComponentServiceImpl(Project project, Module module) {
         this.module = module;
@@ -107,7 +111,9 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
     @Override
     public synchronized Collection<AutoCompleteContributorDescriptor> getAutoCompleteContributorDescriptors() {
-        return unmodifiableList(autoCompleteContributorDefinitions);
+        List<AutoCompleteContributorDescriptor> allAutoCompletions = new ArrayList<>(autoCompleteContributorDefinitions);
+        allAutoCompletions.addAll(moduleCompleteContributorDefinitions);
+        return unmodifiableList(allAutoCompletions);
     }
 
     @Override
@@ -145,7 +151,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
      * If a JAR contains a module but the module name Manifest attribute does not exists,
      * then it is ignored.
      */
-    private synchronized void asyncUpdateMavenDependenciesComponents(OnDone callback) {
+    private void asyncUpdateMavenDependenciesComponents(OnDone callback) {
         PluginExecutors.run(module,
                 message("module.component.update.component.for.module", module.getName()),
                 indicator -> {
@@ -167,7 +173,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                 });
     }
 
-    private synchronized void asyncUpdateModuleCustomComponents() {
+    private void asyncUpdateModuleCustomComponents() {
         PluginExecutors.run(module,
                 message("module.component.update.component.for.module", module.getName()),
                 indicator -> {
@@ -178,35 +184,38 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                             .productionOnly()
                             .classes()
                             .getUrls();
-                    stream(modulePaths).forEach(modulePath -> {
+                    stream(modulePaths).forEach(moduleTargetClassesDirectory -> {
 
-                        ModuleDescriptor packageComponents = componentsAnalyzer.from(modulePath);
+                        ModuleDescriptor packageComponents = componentsAnalyzer.fromClassesFolder(moduleTargetClassesDirectory);
                         MavenUtils.getMavenProject(project, module.getName()).ifPresent(mavenProject -> {
 
                             List<ComponentDescriptor> componentDescriptors = packageComponents.getComponentDescriptors();
-
                             String moduleName = mavenProject.getDisplayName();
-                            moduleComponents = new ModuleComponents(moduleName, componentDescriptors);
-
-                            // TODO: Module autocomplete contributor definitions should be cleared here!
-                            //  because here we are just keep adding without removing them!
-                            List<AutoCompleteContributorDescriptor> autocompleteContributorDefinitions =
+                            List<AutoCompleteContributorDescriptor> moduleContributions =
                                     packageComponents.getAutocompleteContributorDescriptors();
-                            autoCompleteContributorDefinitions.addAll(autocompleteContributorDefinitions);
 
+                            synchronized (ComponentServiceImpl.this) {
+                                moduleComponents = new ModuleComponents(moduleName, componentDescriptors);
+                                moduleCompleteContributorDefinitions.clear();
+                                moduleCompleteContributorDefinitions.addAll(moduleContributions);
+                            }
                         });
                     });
                     notifyComponentListUpdate();
                 });
     }
 
-    private synchronized void asyncUpdateSystemComponents() {
+    private void asyncUpdateSystemComponents() {
         PluginExecutors.run(module,
                 message("module.component.update.system.components"),
                 indicator -> {
                     List<ComponentDescriptor> flowControlComponents = componentsAnalyzer.from(Stop.class);
-                    systemComponents.addAll(flowControlComponents);
-                    isInitialized = true;
+
+                    synchronized (ComponentServiceImpl.class) {
+                        systemComponents.addAll(flowControlComponents);
+                        isInitialized = true;
+                    }
+
                     notifyComponentListUpdate();
 
                     // Update maven dependencies and then current
@@ -215,18 +224,20 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                 });
     }
 
-    private synchronized void scanForComponentsOfJar(String jarFilePath, String moduleName) {
+    private void scanForComponentsOfJar(String jarFilePath, String moduleName) {
         // We only scan a module if its jar file is a module with a name.
         ModuleDescriptor packageComponents = componentsAnalyzer.from(jarFilePath);
         List<ComponentDescriptor> componentDescriptors = packageComponents.getComponentDescriptors();
 
-        // Add them to the map of components
-        ModuleComponents descriptor = new ModuleComponents(moduleName, componentDescriptors);
-        mavenJarComponentsMap.put(jarFilePath, descriptor);
+        synchronized (ComponentServiceImpl.class) {
+            // Add them to the map of components
+            ModuleComponents descriptor = new ModuleComponents(moduleName, componentDescriptors);
+            mavenJarComponentsMap.put(jarFilePath, descriptor);
 
-        List<AutoCompleteContributorDescriptor> autocompleteContributorDefinitions =
-                packageComponents.getAutocompleteContributorDescriptors();
-        autoCompleteContributorDefinitions.addAll(autocompleteContributorDefinitions);
+            List<AutoCompleteContributorDescriptor> autocompleteContributorDefinitions =
+                    packageComponents.getAutocompleteContributorDescriptors();
+            autoCompleteContributorDefinitions.addAll(autocompleteContributorDefinitions);
+        }
     }
 
     private static Optional<ComponentDescriptor> findComponentMatching(Collection<ModuleComponents> descriptors, String fullyQualifiedName) {
