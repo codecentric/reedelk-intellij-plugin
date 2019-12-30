@@ -18,6 +18,7 @@ import java.math.BigInteger;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static java.lang.String.format;
 
@@ -77,8 +78,12 @@ public class ConfigPropertyAwareConverters implements Converter {
         return INSTANCE;
     }
 
-    static int getConvertersCount() {
+    static int size() {
         return CONFIG_PROPERTY_AWARE_CONVERTERS.size();
+    }
+
+    static Set<Class<?>> supportedConverters() {
+        return CONFIG_PROPERTY_AWARE_CONVERTERS.keySet();
     }
 
     @SuppressWarnings("unchecked")

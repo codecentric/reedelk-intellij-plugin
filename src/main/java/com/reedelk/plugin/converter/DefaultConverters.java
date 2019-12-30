@@ -15,6 +15,7 @@ import java.math.BigInteger;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static java.lang.String.format;
 
@@ -73,8 +74,12 @@ public class DefaultConverters implements Converter {
         return INSTANCE;
     }
 
-    static int getConvertersCount() {
+    static int size() {
         return DEFAULTS_CONVERTERS.size();
+    }
+
+    static Set<Class<?>> supportedConverters() {
+        return DEFAULTS_CONVERTERS.keySet();
     }
 
     @SuppressWarnings("unchecked")
