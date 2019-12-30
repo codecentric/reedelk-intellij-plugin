@@ -7,7 +7,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.reedelk.component.descriptor.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
 import com.reedelk.plugin.commons.FileUtils;
 import com.reedelk.plugin.commons.PluginModuleUtils;
 import com.reedelk.plugin.component.deserializer.ConfigurationDeserializer;

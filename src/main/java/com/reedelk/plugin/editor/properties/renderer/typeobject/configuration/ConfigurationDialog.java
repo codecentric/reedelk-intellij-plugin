@@ -3,7 +3,7 @@ package com.reedelk.plugin.editor.properties.renderer.typeobject.configuration;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.reedelk.component.descriptor.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
 import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.DisposableScrollPane;

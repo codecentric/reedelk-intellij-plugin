@@ -1,11 +1,11 @@
 package com.reedelk.plugin.commons;
 
-import com.reedelk.component.descriptor.*;
+import com.reedelk.module.descriptor.model.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.reedelk.component.descriptor.TypeObjectDescriptor.TypeObject;
+import static com.reedelk.module.descriptor.model.TypeObjectDescriptor.TypeObject;
 import static com.reedelk.runtime.commons.JsonParser.Component;
 
 public class DefaultDescriptorDataValuesFiller {

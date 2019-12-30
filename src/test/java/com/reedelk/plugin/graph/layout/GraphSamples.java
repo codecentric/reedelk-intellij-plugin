@@ -1,6 +1,6 @@
 package com.reedelk.plugin.graph.layout;
 
-import com.reedelk.component.descriptor.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.ComponentDescriptor;
 import com.reedelk.plugin.AbstractGraphTest;
 import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.commons.Images;

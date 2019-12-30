@@ -1,6 +1,6 @@
 package com.reedelk.plugin.graph.serializer;
 
-import com.reedelk.component.descriptor.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.ComponentDescriptor;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.component.type.stop.StopNode;
 import com.reedelk.plugin.graph.FlowGraph;

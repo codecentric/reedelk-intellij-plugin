@@ -1,7 +1,7 @@
 package com.reedelk.plugin.commons;
 
-import com.reedelk.component.descriptor.Shared;
-import com.reedelk.component.descriptor.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.Shared;
+import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
 import com.reedelk.runtime.commons.JsonParser;
 
 public class TypeObjectFactory {

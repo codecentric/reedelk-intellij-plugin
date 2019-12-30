@@ -1,6 +1,6 @@
 package com.reedelk.plugin.assertion.component;
 
-import com.reedelk.component.descriptor.ComponentDataHolder;
+import com.reedelk.module.descriptor.model.ComponentDataHolder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

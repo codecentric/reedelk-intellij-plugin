@@ -1,7 +1,7 @@
 package com.reedelk.plugin.commons;
 
-import com.reedelk.component.descriptor.ComponentPropertyDescriptor;
-import com.reedelk.component.descriptor.TypeDescriptor;
+import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.TypeDescriptor;
 import com.reedelk.plugin.converter.ValueConverterProvider;
 import com.reedelk.runtime.api.annotation.Default;
 import com.reedelk.runtime.api.commons.DefaultValues;

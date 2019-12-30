@@ -9,7 +9,7 @@ import com.intellij.openapi.ui.TextComponentAccessor;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBTextField;
-import com.reedelk.component.descriptor.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
 import com.reedelk.plugin.commons.PluginModuleUtils;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;

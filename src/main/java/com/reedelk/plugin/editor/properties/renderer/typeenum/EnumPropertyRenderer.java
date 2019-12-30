@@ -1,8 +1,8 @@
 package com.reedelk.plugin.editor.properties.renderer.typeenum;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.component.descriptor.ComponentPropertyDescriptor;
-import com.reedelk.component.descriptor.TypeEnumDescriptor;
+import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.TypeEnumDescriptor;
 import com.reedelk.plugin.commons.DefaultPropertyValue;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;

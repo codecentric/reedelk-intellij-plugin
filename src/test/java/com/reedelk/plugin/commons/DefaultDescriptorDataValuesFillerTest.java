@@ -1,9 +1,9 @@
 package com.reedelk.plugin.commons;
 
-import com.reedelk.component.descriptor.ComponentDataHolder;
-import com.reedelk.component.descriptor.ComponentPropertyDescriptor;
-import com.reedelk.component.descriptor.Shared;
-import com.reedelk.component.descriptor.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.ComponentDataHolder;
+import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.Shared;
+import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
 import com.reedelk.plugin.service.module.impl.configuration.ConfigMetadata;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

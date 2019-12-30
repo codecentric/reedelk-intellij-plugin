@@ -1,8 +1,8 @@
 package com.reedelk.plugin.editor.properties.commons;
 
-import com.reedelk.component.descriptor.ComponentDataHolder;
-import com.reedelk.component.descriptor.ComponentPropertyDescriptor;
-import com.reedelk.component.descriptor.TypeDescriptor;
+import com.reedelk.module.descriptor.model.ComponentDataHolder;
+import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.TypeDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.reedelk.plugin.editor.properties.renderer.commons.InputChangeListener;

@@ -1,6 +1,6 @@
 package com.reedelk.plugin.component.serializer;
 
-import com.reedelk.component.descriptor.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
 import com.reedelk.plugin.commons.JsonObjectFactory;
 import com.reedelk.plugin.service.module.impl.configuration.ConfigMetadata;
 import com.reedelk.runtime.commons.JsonParser;

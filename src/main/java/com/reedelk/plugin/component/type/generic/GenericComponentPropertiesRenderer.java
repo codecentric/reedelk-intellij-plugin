@@ -1,8 +1,8 @@
 package com.reedelk.plugin.component.type.generic;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.component.descriptor.ComponentPropertyDescriptor;
-import com.reedelk.component.descriptor.TypeDescriptor;
+import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.TypeDescriptor;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;

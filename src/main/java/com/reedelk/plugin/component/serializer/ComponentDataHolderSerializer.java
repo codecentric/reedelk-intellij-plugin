@@ -1,6 +1,6 @@
 package com.reedelk.plugin.component.serializer;
 
-import com.reedelk.component.descriptor.*;
+import com.reedelk.module.descriptor.model.*;
 import com.reedelk.plugin.commons.AtLeastOneWhenConditionIsTrue;
 import com.reedelk.plugin.commons.JsonObjectFactory;
 import com.reedelk.plugin.component.ComponentData;
@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static com.reedelk.component.descriptor.TypeObjectDescriptor.TypeObject;
+import static com.reedelk.module.descriptor.model.TypeObjectDescriptor.TypeObject;
 
 public class ComponentDataHolderSerializer {
 

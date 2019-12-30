@@ -1,7 +1,7 @@
 package com.reedelk.plugin.component.type.generic;
 
 import com.google.common.collect.ImmutableMap;
-import com.reedelk.component.descriptor.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.ComponentDescriptor;
 import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.fixture.ComponentNode1;
 import com.reedelk.plugin.graph.deserializer.AbstractNodeDeserializerTest;

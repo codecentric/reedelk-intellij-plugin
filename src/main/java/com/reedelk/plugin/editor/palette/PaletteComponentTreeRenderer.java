@@ -1,8 +1,8 @@
 package com.reedelk.plugin.editor.palette;
 
 import com.intellij.util.ui.JBUI;
-import com.reedelk.component.descriptor.ComponentDescriptor;
-import com.reedelk.component.descriptor.ComponentType;
+import com.reedelk.module.descriptor.model.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.ComponentType;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.editor.properties.commons.ContainerFactory;

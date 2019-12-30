@@ -8,10 +8,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import com.reedelk.component.descriptor.AutoCompleteContributorDescriptor;
-import com.reedelk.component.descriptor.ComponentDescriptor;
-import com.reedelk.component.descriptor.PackageDescriptor;
-import com.reedelk.component.descriptor.analyzer.PackageDescriptorAnalyzer;
+import com.reedelk.module.descriptor.ModuleDescriptor;
+import com.reedelk.module.descriptor.analyzer.ModuleAnalyzer;
+import com.reedelk.module.descriptor.model.AutoCompleteContributorDescriptor;
+import com.reedelk.module.descriptor.model.ComponentDescriptor;
 import com.reedelk.plugin.commons.ExcludedArtifactsFromModuleSync;
 import com.reedelk.plugin.component.type.unknown.UnknownComponentDescriptorWrapper;
 import com.reedelk.plugin.executor.PluginExecutors;
@@ -44,7 +44,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     private final Project project;
     private final ModuleComponents systemComponents;
     private final ComponentListUpdateNotifier publisher;
-    private final PackageDescriptorAnalyzer componentsAnalyzer = new PackageDescriptorAnalyzer();
+    private final ModuleAnalyzer componentsAnalyzer = new ModuleAnalyzer();
     private final Map<String, ModuleComponents> mavenJarComponentsMap = new HashMap<>();
     private final List<AutoCompleteContributorDescriptor> autoCompleteContributorDefinitions = new ArrayList<>();
 
@@ -180,7 +180,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                             .getUrls();
                     stream(modulePaths).forEach(modulePath -> {
 
-                        PackageDescriptor packageComponents = componentsAnalyzer.from(modulePath);
+                        ModuleDescriptor packageComponents = componentsAnalyzer.from(modulePath);
                         MavenUtils.getMavenProject(project, module.getName()).ifPresent(mavenProject -> {
 
                             List<ComponentDescriptor> componentDescriptors = packageComponents.getComponentDescriptors();
@@ -217,7 +217,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
     private synchronized void scanForComponentsOfJar(String jarFilePath, String moduleName) {
         // We only scan a module if its jar file is a module with a name.
-        PackageDescriptor packageComponents = componentsAnalyzer.from(jarFilePath);
+        ModuleDescriptor packageComponents = componentsAnalyzer.from(jarFilePath);
         List<ComponentDescriptor> componentDescriptors = packageComponents.getComponentDescriptors();
 
         // Add them to the map of components

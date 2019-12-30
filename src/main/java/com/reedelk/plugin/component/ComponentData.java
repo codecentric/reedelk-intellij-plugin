@@ -1,9 +1,9 @@
 package com.reedelk.plugin.component;
 
-import com.reedelk.component.descriptor.ComponentDataHolder;
-import com.reedelk.component.descriptor.ComponentDescriptor;
-import com.reedelk.component.descriptor.ComponentPropertyDescriptor;
-import com.reedelk.component.descriptor.ComponentType;
+import com.reedelk.module.descriptor.model.ComponentDataHolder;
+import com.reedelk.module.descriptor.model.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.ComponentType;
 import com.reedelk.plugin.commons.Images;
 
 import java.awt.*;

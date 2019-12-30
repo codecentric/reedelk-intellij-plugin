@@ -2,8 +2,8 @@ package com.reedelk.plugin.editor.designer.action;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
-import com.reedelk.component.descriptor.ComponentDescriptor;
-import com.reedelk.component.descriptor.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
 import com.reedelk.plugin.commons.DefaultDescriptorDataValuesFiller;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.editor.designer.action.add.AddActionHandler;

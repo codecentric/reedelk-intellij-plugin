@@ -1,6 +1,6 @@
 package com.reedelk.plugin.editor.properties.accessor;
 
-import com.reedelk.component.descriptor.*;
+import com.reedelk.module.descriptor.model.*;
 import com.reedelk.plugin.component.type.unknown.UnknownPropertyType;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.runtime.api.commons.StringUtils;

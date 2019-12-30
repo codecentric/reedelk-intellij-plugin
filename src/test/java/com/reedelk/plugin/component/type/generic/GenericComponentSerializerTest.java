@@ -1,6 +1,6 @@
 package com.reedelk.plugin.component.type.generic;
 
-import com.reedelk.component.descriptor.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.ComponentDescriptor;
 import com.reedelk.plugin.AbstractGraphTest;
 import com.reedelk.plugin.commons.TypeObjectFactory;
 import com.reedelk.plugin.component.ComponentData;
@@ -21,7 +21,7 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.reedelk.component.descriptor.TypeObjectDescriptor.TypeObject;
+import static com.reedelk.module.descriptor.model.TypeObjectDescriptor.TypeObject;
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.*;
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.Primitives.stringProperty;
 import static com.reedelk.plugin.graph.serializer.AbstractSerializer.UntilNoSuccessors;

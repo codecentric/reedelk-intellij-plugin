@@ -1,6 +1,6 @@
 package com.reedelk.plugin.converter;
 
-import com.reedelk.component.descriptor.TypeDescriptor;
+import com.reedelk.module.descriptor.model.TypeDescriptor;
 
 public class ValueConverterProvider {
 

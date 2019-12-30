@@ -1,7 +1,7 @@
 package com.reedelk.plugin.component.type.router;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.component.descriptor.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.component.type.generic.GenericComponentPropertiesRenderer;
 import com.reedelk.plugin.component.type.router.widget.ConditionRouteTableModel;

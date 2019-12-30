@@ -1,6 +1,6 @@
 package com.reedelk.plugin.service.module.impl.component;
 
-import com.reedelk.component.descriptor.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.ComponentDescriptor;
 
 import java.util.Collections;
 import java.util.List;

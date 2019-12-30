@@ -1,6 +1,6 @@
 package com.reedelk.plugin.testutils;
 
-import com.reedelk.component.descriptor.*;
+import com.reedelk.module.descriptor.model.*;
 import com.reedelk.runtime.api.script.dynamicvalue.DynamicValue;
 
 import java.util.List;

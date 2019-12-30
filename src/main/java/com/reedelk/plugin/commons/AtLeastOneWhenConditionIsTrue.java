@@ -1,6 +1,6 @@
 package com.reedelk.plugin.commons;
 
-import com.reedelk.component.descriptor.WhenDescriptor;
+import com.reedelk.module.descriptor.model.WhenDescriptor;
 
 import java.util.List;
 

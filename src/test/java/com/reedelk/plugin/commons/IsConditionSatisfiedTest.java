@@ -1,12 +1,12 @@
 package com.reedelk.plugin.commons;
 
+import com.reedelk.module.descriptor.model.TypeObjectDescriptor.TypeObject;
 import com.reedelk.runtime.api.annotation.When;
 import com.reedelk.runtime.commons.JsonParser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import static com.reedelk.component.descriptor.TypeObjectDescriptor.TypeObject;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class IsConditionSatisfiedTest {

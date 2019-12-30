@@ -1,7 +1,7 @@
 package com.reedelk.plugin;
 
-import com.reedelk.component.descriptor.ComponentDescriptor;
-import com.reedelk.component.descriptor.ComponentType;
+import com.reedelk.module.descriptor.model.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.ComponentType;
 import com.reedelk.plugin.commons.FontInfoProvider;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.component.type.flowreference.FlowReferenceNode;
@@ -31,8 +31,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.reedelk.component.descriptor.ComponentType.INBOUND;
-import static com.reedelk.component.descriptor.ComponentType.PROCESSOR;
+import static com.reedelk.module.descriptor.model.ComponentType.INBOUND;
+import static com.reedelk.module.descriptor.model.ComponentType.PROCESSOR;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;

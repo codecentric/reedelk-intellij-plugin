@@ -1,13 +1,13 @@
 package com.reedelk.plugin.component.deserializer;
 
-import com.reedelk.component.descriptor.*;
+import com.reedelk.module.descriptor.model.*;
 import com.reedelk.plugin.commons.TypeObjectFactory;
 import com.reedelk.plugin.converter.ValueConverter;
 import com.reedelk.plugin.converter.ValueConverterProvider;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
-import static com.reedelk.component.descriptor.TypeObjectDescriptor.TypeObject;
+import static com.reedelk.module.descriptor.model.TypeObjectDescriptor.TypeObject;
 import static com.reedelk.runtime.commons.JsonParser.Component;
 
 public class ComponentDataHolderDeserializer {

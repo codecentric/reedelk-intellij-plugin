@@ -2,7 +2,7 @@ package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBUI;
-import com.reedelk.component.descriptor.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
 import com.reedelk.plugin.editor.properties.ClickableLabelWithTooltip;
 
 import javax.swing.*;

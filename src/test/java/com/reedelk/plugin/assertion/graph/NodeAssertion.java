@@ -1,6 +1,6 @@
 package com.reedelk.plugin.assertion.graph;
 
-import com.reedelk.component.descriptor.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.graph.node.GraphNode;
 

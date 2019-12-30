@@ -1,6 +1,6 @@
 package com.reedelk.plugin.commons;
 
-import com.reedelk.component.descriptor.ScriptSignatureDescriptor;
+import com.reedelk.module.descriptor.model.ScriptSignatureDescriptor;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 

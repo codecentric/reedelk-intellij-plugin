@@ -1,6 +1,6 @@
 package com.reedelk.plugin.editor.designer;
 
-import com.reedelk.component.descriptor.ComponentType;
+import com.reedelk.module.descriptor.model.ComponentType;
 import com.reedelk.plugin.commons.Half;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.editor.designer.arrow.Arrow;
