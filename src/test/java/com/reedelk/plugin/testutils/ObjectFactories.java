@@ -28,8 +28,8 @@ public class ObjectFactories {
         return descriptor;
     }
 
-    public static <T extends DynamicValue<?>> TypeDynamicValueDescriptor<T> createTypeDynamicValueDescriptor(Class<T> dynamicClazzType) {
-        TypeDynamicValueDescriptor<T> descriptor = new TypeDynamicValueDescriptor<>();
+    public static <T extends DynamicValue<?>> TypeDynamicValueDescriptor createTypeDynamicValueDescriptor(Class<T> dynamicClazzType) {
+        TypeDynamicValueDescriptor descriptor = new TypeDynamicValueDescriptor();
         descriptor.setType(dynamicClazzType);
         return descriptor;
     }
