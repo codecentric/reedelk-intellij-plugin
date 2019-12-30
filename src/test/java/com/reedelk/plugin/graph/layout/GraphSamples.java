@@ -10,9 +10,10 @@ import com.reedelk.plugin.component.type.router.RouterNode;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
-import com.reedelk.runtime.commons.JsonParser;
 
 import java.util.Collections;
+
+import static com.reedelk.runtime.commons.JsonParser.Implementor;
 
 public class GraphSamples {
 
@@ -366,14 +367,15 @@ public class GraphSamples {
     }
 
     private ComponentData createComponent(String name) {
-        ComponentData componentData = new ComponentData(ComponentDescriptor.create()
-                .fullyQualifiedName(name)
+        ComponentDescriptor descriptor = ComponentDescriptor.create()
                 .displayName(name)
+                .fullyQualifiedName(name)
                 .propertyDescriptors(Collections.emptyList())
-                .icon(Images.Component.DefaultComponent)
-                .paletteIcon(Icons.Component.Default)
-                .build());
-        componentData.set(JsonParser.Implementor.description(), "Test");
+                .build();
+        descriptor.setIcon(Icons.Component.Default);
+        descriptor.setImage(Images.Component.DefaultComponent);
+        ComponentData componentData = new ComponentData(descriptor);
+        componentData.set(Implementor.description(), "Test");
         return componentData;
     }
 }
