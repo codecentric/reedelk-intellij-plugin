@@ -3,12 +3,14 @@ package com.reedelk.plugin.service.module.impl.component;
 import com.intellij.openapi.compiler.CompilationStatusListener;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompilerTopics;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.module.descriptor.ModuleDescriptor;
+import com.reedelk.module.descriptor.ModuleDescriptorException;
 import com.reedelk.module.descriptor.analyzer.ModuleAnalyzer;
 import com.reedelk.module.descriptor.model.AutoCompleteContributorDescriptor;
 import com.reedelk.module.descriptor.model.ComponentDescriptor;
@@ -35,6 +37,8 @@ import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
 
 public class ComponentServiceImpl implements ComponentService, MavenImportListener, CompilationStatusListener {
+
+    private static final Logger LOG = Logger.getInstance(ComponentServiceImpl.class);
 
     private static final String SYSTEM_COMPONENTS_MODULE_NAME = "flow-control";
 
@@ -186,7 +190,15 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                             .getUrls();
                     stream(modulePaths).forEach(moduleTargetClassesDirectory -> {
 
-                        ModuleDescriptor packageComponents = componentsAnalyzer.fromClassesFolder(moduleTargetClassesDirectory);
+                        ModuleDescriptor packageComponents;
+                        try {
+                            packageComponents = componentsAnalyzer.fromClassesFolder(moduleTargetClassesDirectory);
+                        } catch (ModuleDescriptorException e) {
+                            String message = message("module.analyze.error", module.getName(), e.getMessage());
+                            LOG.error(message, e);
+                            return;
+                        }
+
                         MavenUtils.getMavenProject(project, module.getName()).ifPresent(mavenProject -> {
 
                             List<ComponentDescriptor> componentDescriptors = packageComponents.getComponentDescriptors();
@@ -226,7 +238,15 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
     private void scanForComponentsOfJar(String jarFilePath, String moduleName) {
         // We only scan a module if its jar file is a module with a name.
-        ModuleDescriptor packageComponents = componentsAnalyzer.from(jarFilePath);
+        ModuleDescriptor packageComponents;
+        try {
+            packageComponents = componentsAnalyzer.from(jarFilePath);
+        } catch (ModuleDescriptorException e) {
+            String message = message("module.analyze.jar.error", jarFilePath, moduleName, e.getMessage());
+            LOG.error(message, e);
+            return;
+        }
+
         List<ComponentDescriptor> componentDescriptors = packageComponents.getComponentDescriptors();
 
         synchronized (ComponentServiceImpl.class) {
