@@ -44,7 +44,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.reedelk.module.descriptor.model.TypeObjectDescriptor.TypeObject;
 import static com.reedelk.plugin.component.type.unknown.UnknownPropertyType.UnknownType;
@@ -106,15 +105,11 @@ public class PropertyTypeRendererFactory {
     }
 
     public static int size() {
-        return RENDERER.size() - 2; // We remove the TypeObject and UnknownType since they are not exposed in the API.
+        return RENDERER.size();
     }
 
     public static Set<Class<?>> supportedConverters() {
-        return RENDERER.keySet().stream()
-                // We remove the TypeObject and UnknownType since they are not exposed in the API.
-                .filter(aClass -> !aClass.equals(TypeObject.class))
-                .filter(aClass -> !aClass.equals(UnknownType.class))
-                .collect(Collectors.toSet());
+        return RENDERER.keySet();
     }
 
     public PropertyTypeRenderer from(TypeDescriptor propertyType) {

@@ -1,5 +1,7 @@
 package com.reedelk.plugin.converter;
 
+import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.plugin.component.type.unknown.UnknownPropertyType;
 import com.reedelk.plugin.editor.properties.renderer.PropertyTypeRendererFactory;
 import com.reedelk.runtime.api.commons.PlatformTypes;
 import org.junit.jupiter.api.Test;
@@ -70,13 +72,19 @@ class IntegrityCheckTest {
     void shouldHaveAPropertyRendererForEachPlatformType() {
         // Given
         int platformTypesSize = PlatformTypes.size();
-        int propertyRenderersSize = PropertyTypeRendererFactory.size();
+        // We remove the TypeObject and UnknownType since they are not exposed in the API.
+        int propertyRenderersSize = PropertyTypeRendererFactory.size() - 2;
         assertThat(platformTypesSize)
                 .withFailMessage("The number of property renderers do not match the supported platform types!")
                 .isEqualTo(propertyRenderersSize);
 
         // Expect
-        PropertyTypeRendererFactory.supportedConverters().forEach(supportedConverterClazz -> {
+        PropertyTypeRendererFactory.supportedConverters()
+                .stream()
+                // We remove the TypeObject and UnknownType since they are not exposed in the API.
+                .filter(aClass -> !aClass.equals(TypeObjectDescriptor.TypeObject.class))
+                .filter(aClass -> !aClass.equals(UnknownPropertyType.UnknownType.class))
+                .forEach(supportedConverterClazz -> {
             String typeFullyQualifiedName = supportedConverterClazz.getName();
             boolean supported = PlatformTypes.isSupported(typeFullyQualifiedName);
             assertThat(supported)
