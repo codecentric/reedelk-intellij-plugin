@@ -192,7 +192,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
                         ModuleDescriptor packageComponents;
                         try {
-                            packageComponents = componentsAnalyzer.fromClassesFolder(moduleTargetClassesDirectory);
+                            packageComponents = componentsAnalyzer.fromClassesFolder(moduleTargetClassesDirectory, true);
                         } catch (ModuleDescriptorException e) {
                             String message = message("module.analyze.error", module.getName(), e.getMessage());
                             LOG.error(message, e);
