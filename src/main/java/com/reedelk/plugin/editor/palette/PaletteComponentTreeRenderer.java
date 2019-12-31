@@ -75,7 +75,6 @@ public class PaletteComponentTreeRenderer implements TreeCellRenderer {
             }
         }
 
-        return defaultRenderer.getTreeCellRendererComponent(tree, value, selected, expanded,
-                leaf, row, hasFocus);
+        return defaultRenderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
     }
 }

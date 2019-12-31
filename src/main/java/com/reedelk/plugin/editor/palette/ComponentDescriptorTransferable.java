@@ -8,14 +8,15 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 
 public class ComponentDescriptorTransferable implements Transferable {
 
-    public static final DataFlavor FLAVOR = new DataFlavor(String.class, "Fully qualified component name");
+    public static final DataFlavor FLAVOR = new DataFlavor(PaletteComponent.class,
+            "Palette Component");
 
     private static final DataFlavor[] flavors = new DataFlavor[]{FLAVOR};
 
-    private final String componentFullyQualifiedName;
+    private final PaletteComponent paletteComponent;
 
-    public ComponentDescriptorTransferable(String componentFullyQualifiedName) {
-        this.componentFullyQualifiedName = componentFullyQualifiedName;
+    public ComponentDescriptorTransferable(PaletteComponent paletteComponent) {
+        this.paletteComponent = paletteComponent;
     }
 
     @Override
@@ -30,9 +31,9 @@ public class ComponentDescriptorTransferable implements Transferable {
 
     @Override
     @NotNull
-    public String getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
+    public PaletteComponent getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
         if (FLAVOR.equals(flavor)) {
-            return componentFullyQualifiedName;
+            return paletteComponent;
         }
         throw new UnsupportedFlavorException(flavor);
     }

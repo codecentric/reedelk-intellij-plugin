@@ -13,6 +13,7 @@ import com.reedelk.plugin.editor.designer.action.remove.strategy.DefaultPlacehol
 import com.reedelk.plugin.editor.designer.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.editor.designer.debug.PrintFlowInfo;
 import com.reedelk.plugin.editor.designer.dnd.DesignerPanelActionHandler;
+import com.reedelk.plugin.editor.palette.PaletteComponent;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.GraphNodeFactory;
@@ -114,8 +115,10 @@ public abstract class DesignerPanelAbstractActionHandler implements DesignerPane
         DataFlavor[] transferDataFlavor = transferable.getTransferDataFlavors();
         if (!asList(transferDataFlavor).contains(FLAVOR)) return Optional.empty();
         try {
-            String componentFullyQualifiedName = (String) transferable.getTransferData(FLAVOR);
-            ComponentDescriptor componentDescriptor = ComponentService.getInstance(module).componentDescriptorByName(componentFullyQualifiedName);
+            PaletteComponent paletteComponent = (PaletteComponent) transferable.getTransferData(FLAVOR);
+            ComponentDescriptor componentDescriptor =
+                    ComponentService.getInstance(module)
+                            .componentDescriptorByName(paletteComponent.getComponentFullyQualifiedName());
             return Optional.of(componentDescriptor);
         } catch (UnsupportedFlavorException | IOException e) {
             LOG.error("Could not extract dropped component name", e);

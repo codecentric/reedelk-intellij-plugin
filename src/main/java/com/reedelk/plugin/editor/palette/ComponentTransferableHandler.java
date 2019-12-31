@@ -30,7 +30,9 @@ public class ComponentTransferableHandler extends TransferHandler {
             setDragComponentImage(descriptor.getImage());
 
             String fullyQualifiedName = descriptor.getFullyQualifiedName();
-            return new ComponentDescriptorTransferable(fullyQualifiedName);
+            PaletteComponent paletteComponent = new PaletteComponent();
+            paletteComponent.setComponentFullyQualifiedName(fullyQualifiedName);
+            return new ComponentDescriptorTransferable(paletteComponent);
 
         } else {
             return new EmptyTransferable();
