@@ -22,28 +22,23 @@ public class ComponentTransferableHandler extends TransferHandler {
     protected Transferable createTransferable(JComponent source) {
 
         JTree tree = (JTree) source;
-
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 
         Object userObject = node.getUserObject();
-
         if (userObject instanceof ComponentDescriptor) {
-
             ComponentDescriptor descriptor = (ComponentDescriptor) userObject;
+            setDragComponentImage(descriptor.getImage());
 
-            setDragImage(descriptor);
-
-            return new ComponentDescriptorTransferable(descriptor);
+            String fullyQualifiedName = descriptor.getFullyQualifiedName();
+            return new ComponentDescriptorTransferable(fullyQualifiedName);
 
         } else {
-
             return new EmptyTransferable();
-
         }
     }
 
-    private void setDragImage(ComponentDescriptor descriptor) {
-        setDragImage(descriptor.getImage());
+    private void setDragComponentImage(Image dragImage) {
+        setDragImage(dragImage);
         if (SystemInfo.isMac) {
             // On Mac the offset must be negative.
             setDragImageOffset(new Point(-HALF_ICON_WIDTH, -HALF_ICON_HEIGHT));

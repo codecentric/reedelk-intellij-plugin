@@ -1,10 +1,11 @@
 package com.reedelk.plugin.editor.properties.renderer.typeenum;
 
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.ui.ListCellRendererWrapper;
+import com.intellij.ui.SimpleListCellRenderer;
 import com.reedelk.plugin.editor.properties.renderer.commons.InputChangeListener;
 import org.apache.commons.collections.KeyValue;
 import org.apache.commons.collections.keyvalue.DefaultMapEntry;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
@@ -13,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 
 public class EnumDropDown extends ComboBox<KeyValue> implements ItemListener {
@@ -50,16 +50,23 @@ public class EnumDropDown extends ComboBox<KeyValue> implements ItemListener {
     }
 
     public void setValue(Object value) {
+        if (value == null) return;
+
         Optional<KeyValue> matching = keyValues.stream()
-                .filter(keyValue -> keyValue.getKey().equals(value)).findFirst();
-        KeyValue keyValue = matching.orElseThrow(() ->
-                new IllegalStateException(format("Could not find matching enum value for [%s]", value)));
-        setSelectedItem(keyValue);
+                .filter(keyValue -> keyValue.getKey().equals(value))
+                .findFirst();
+
+        if (matching.isPresent()) {
+            setSelectedItem(matching.get());
+        } else if (!keyValues.isEmpty()) {
+            // otherwise we take the first one
+            setSelectedItem(keyValues.get(0));
+        }
     }
 
-    class ItemRenderer extends ListCellRendererWrapper<KeyValue> {
+    static class ItemRenderer extends SimpleListCellRenderer<KeyValue> {
         @Override
-        public void customize(JList list, KeyValue value, int index, boolean selected, boolean hasFocus) {
+        public void customize(@NotNull JList list, KeyValue value, int index, boolean selected, boolean hasFocus) {
             if (value != null) {
                 setText((String) value.getValue());
             }

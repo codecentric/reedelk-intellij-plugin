@@ -4,16 +4,16 @@ import com.reedelk.module.descriptor.model.ComponentDescriptor;
 import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
 import com.reedelk.module.descriptor.model.ComponentType;
 import com.reedelk.module.descriptor.model.TypePrimitiveDescriptor;
-import com.reedelk.runtime.commons.JsonParser;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
+import static com.reedelk.runtime.commons.JsonParser.Implementor;
+import static java.util.Collections.unmodifiableList;
 
 /**
  * Decorator which adds the default "Description" property to all registered components.
@@ -24,6 +24,7 @@ public class ComponentDescriptionDecorator extends ComponentDescriptor {
 
     private ComponentDescriptor wrapped;
     private final ComponentPropertyDescriptor descriptionDescriptor;
+    private final List<ComponentPropertyDescriptor> componentPropertyDescriptorsWithDescription;
 
     public ComponentDescriptionDecorator(ComponentDescriptor descriptor) {
         this.wrapped = descriptor;
@@ -32,12 +33,19 @@ public class ComponentDescriptionDecorator extends ComponentDescriptor {
         typeDescriptor.setType(String.class);
 
         descriptionDescriptor = ComponentPropertyDescriptor.builder()
-                .propertyName(JsonParser.Implementor.description())
+                .propertyName(Implementor.description())
                 .type(typeDescriptor)
                 .hintValue(message("component.description.hint"))
                 .displayName(DESCRIPTION_PROPERTY_DISPLAY_NAME)
                 .defaultValue(wrapped.getDisplayName())
                 .build();
+
+        // The component properties are the union of the existing one + the description property.
+        List<ComponentPropertyDescriptor> descriptionDescriptorList = new ArrayList<>();
+        descriptionDescriptorList.add(descriptionDescriptor);
+        List<ComponentPropertyDescriptor> propertiesDescriptors = wrapped.getComponentPropertyDescriptors();
+        descriptionDescriptorList.addAll(propertiesDescriptors);
+        this.componentPropertyDescriptorsWithDescription = unmodifiableList(descriptionDescriptorList);
     }
 
     @Override
@@ -84,18 +92,12 @@ public class ComponentDescriptionDecorator extends ComponentDescriptor {
 
     @Override
     public List<ComponentPropertyDescriptor> getComponentPropertyDescriptors() {
-        List<ComponentPropertyDescriptor> descriptionDescriptorList = new ArrayList<>();
-        descriptionDescriptorList.add(descriptionDescriptor);
-
-        List<ComponentPropertyDescriptor> propertiesDescriptors = wrapped.getComponentPropertyDescriptors();
-        descriptionDescriptorList.addAll(propertiesDescriptors);
-
-        return Collections.unmodifiableList(descriptionDescriptorList);
+        return componentPropertyDescriptorsWithDescription;
     }
 
     @Override
     public Optional<ComponentPropertyDescriptor> getPropertyDescriptor(String propertyName) {
-        if (propertyName.equals(JsonParser.Implementor.description())) {
+        if (propertyName.equals(Implementor.description())) {
             return Optional.of(descriptionDescriptor);
         } else {
             return wrapped.getPropertyDescriptor(propertyName);

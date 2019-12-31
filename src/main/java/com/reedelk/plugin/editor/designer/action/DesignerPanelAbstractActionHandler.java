@@ -16,6 +16,7 @@ import com.reedelk.plugin.editor.designer.dnd.DesignerPanelActionHandler;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.GraphNodeFactory;
+import com.reedelk.plugin.service.module.ComponentService;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -81,7 +82,7 @@ public abstract class DesignerPanelAbstractActionHandler implements DesignerPane
     @Override
     public Optional<GraphNode> onAdd(Graphics2D graphics, Point dropPoint, Transferable transferable, ImageObserver observer) {
 
-        return componentDescriptorOf(transferable).map(descriptor -> {
+        return componentDescriptorFrom(transferable).map(descriptor -> {
 
             GraphNode nodeToAdd = GraphNodeFactory.get(descriptor);
 
@@ -109,15 +110,16 @@ public abstract class DesignerPanelAbstractActionHandler implements DesignerPane
 
     protected abstract Action getActionAdd(GraphNode nodeToAdd, Point dropPoint, Graphics2D graphics, ImageObserver observer);
 
-    private Optional<ComponentDescriptor> componentDescriptorOf(Transferable transferable) {
+    private Optional<ComponentDescriptor> componentDescriptorFrom(Transferable transferable) {
         DataFlavor[] transferDataFlavor = transferable.getTransferDataFlavors();
-        if (asList(transferDataFlavor).contains(FLAVOR)) {
-            try {
-                return Optional.of((ComponentDescriptor) transferable.getTransferData(FLAVOR));
-            } catch (UnsupportedFlavorException | IOException e) {
-                LOG.error("Could not extract dropped component name", e);
-            }
+        if (!asList(transferDataFlavor).contains(FLAVOR)) return Optional.empty();
+        try {
+            String componentFullyQualifiedName = (String) transferable.getTransferData(FLAVOR);
+            ComponentDescriptor componentDescriptor = ComponentService.getInstance(module).componentDescriptorByName(componentFullyQualifiedName);
+            return Optional.of(componentDescriptor);
+        } catch (UnsupportedFlavorException | IOException e) {
+            LOG.error("Could not extract dropped component name", e);
+            return Optional.empty();
         }
-        return Optional.empty();
     }
 }

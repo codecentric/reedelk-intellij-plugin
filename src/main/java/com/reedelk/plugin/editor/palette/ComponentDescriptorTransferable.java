@@ -1,6 +1,5 @@
 package com.reedelk.plugin.editor.palette;
 
-import com.reedelk.module.descriptor.model.ComponentDescriptor;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.datatransfer.DataFlavor;
@@ -9,14 +8,14 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 
 public class ComponentDescriptorTransferable implements Transferable {
 
-    public static final DataFlavor FLAVOR = new DataFlavor(ComponentDescriptor.class, "Descriptor of a component");
+    public static final DataFlavor FLAVOR = new DataFlavor(String.class, "Fully qualified component name");
 
     private static final DataFlavor[] flavors = new DataFlavor[]{FLAVOR};
 
-    private final ComponentDescriptor descriptor;
+    private final String componentFullyQualifiedName;
 
-    public ComponentDescriptorTransferable(ComponentDescriptor descriptor) {
-        this.descriptor = descriptor;
+    public ComponentDescriptorTransferable(String componentFullyQualifiedName) {
+        this.componentFullyQualifiedName = componentFullyQualifiedName;
     }
 
     @Override
@@ -31,9 +30,9 @@ public class ComponentDescriptorTransferable implements Transferable {
 
     @Override
     @NotNull
-    public ComponentDescriptor getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
+    public String getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
         if (FLAVOR.equals(flavor)) {
-            return descriptor;
+            return componentFullyQualifiedName;
         }
         throw new UnsupportedFlavorException(flavor);
     }
