@@ -1,6 +1,5 @@
 package com.reedelk.plugin.editor.properties.renderer.typeresource;
 
-import com.intellij.openapi.application.Experiments;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -15,7 +14,6 @@ import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
 import com.reedelk.plugin.editor.properties.renderer.AbstractPropertyTypeRenderer;
-import com.reedelk.plugin.editor.properties.renderer.commons.StringInputField;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,10 +48,8 @@ public class ResourcePropertyRenderer extends AbstractPropertyTypeRenderer {
 
         descriptor.setTitle(message("properties.type.resource.choose.file.dialog"));
 
-
-        JBTextField textField = Experiments.getInstance().isFeatureEnabled("inline.browse.button") ?
-                new ChooseFileInputField(message("properties.type.resource.choose.file.hint"), inputFileFieldColumns) :
-                new StringInputField(message("properties.type.resource.choose.file.hint"), inputFileFieldColumns);
+        JBTextField textField =
+                new ChooseFileInputField(message("properties.type.resource.choose.file.hint"), inputFileFieldColumns);
 
         textField.setEditable(false);
 
@@ -69,7 +65,7 @@ public class ResourcePropertyRenderer extends AbstractPropertyTypeRenderer {
     }
 
 
-    class TextBrowseFolderListener extends ComponentWithBrowseButton.BrowseFolderActionListener<JTextField> {
+    static class TextBrowseFolderListener extends ComponentWithBrowseButton.BrowseFolderActionListener<JTextField> {
         TextBrowseFolderListener(@NotNull FileChooserDescriptor fileChooserDescriptor,
                                  @Nullable Project project,
                                  @NotNull ComponentWithBrowseButton textField,
@@ -83,7 +79,7 @@ public class ResourcePropertyRenderer extends AbstractPropertyTypeRenderer {
         }
     }
 
-    class TextFieldWithBrowse extends TextFieldWithBrowseButton {
+    static class TextFieldWithBrowse extends TextFieldWithBrowseButton {
 
         TextFieldWithBrowse(JBTextField textField) {
             // to prevent field to be infinitely re-sized in grid-box layouts
@@ -96,7 +92,7 @@ public class ResourcePropertyRenderer extends AbstractPropertyTypeRenderer {
         }
     }
 
-    class FileComponentPropertyAccessor implements TextComponentAccessor<JTextField> {
+    static class FileComponentPropertyAccessor implements TextComponentAccessor<JTextField> {
 
         private final String root;
         private final PropertyAccessor propertyAccessor;
