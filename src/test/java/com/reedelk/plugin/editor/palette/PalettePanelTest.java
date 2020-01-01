@@ -36,7 +36,7 @@ class PalettePanelTest {
             ModuleComponents module1 = new ModuleComponents("Module1", asList(mockDescriptor1, mockDescriptor2));
 
             // When
-            DefaultMutableTreeNode treeNode = PalettePanel.buildPackageTreeNode(module1);
+            DefaultMutableTreeNode treeNode = PalettePanel.asTreeNode(module1);
 
             // Then
             assertThat(treeNode.getUserObject()).isEqualTo("Module1");
@@ -57,7 +57,7 @@ class PalettePanelTest {
             ModuleComponents module1 = new ModuleComponents("Module1", asList(mockDescriptor1, mockDescriptor2));
 
             // When
-            DefaultMutableTreeNode treeNode = PalettePanel.buildPackageTreeNode(module1);
+            DefaultMutableTreeNode treeNode = PalettePanel.asTreeNode(module1);
 
             // Then
             List<DefaultMutableTreeNode> children = toList(treeNode.children());
@@ -79,7 +79,7 @@ class PalettePanelTest {
 
             // When
             List<DefaultMutableTreeNode> treeNodes =
-                    PalettePanel.getComponentsPackagesTreeNodes(asList(module1, module2));
+                    PalettePanel.asTreeNodes(asList(module1, module2));
 
             // Then
             assertThat(treeNodes).hasSize(2);
@@ -96,7 +96,7 @@ class PalettePanelTest {
 
             // When
             List<DefaultMutableTreeNode> treeNodes =
-                    PalettePanel.getComponentsPackagesTreeNodes(asList(module1, module2));
+                    PalettePanel.asTreeNodes(asList(module1, module2));
 
             // Then
             assertThat(treeNodes).hasSize(1);

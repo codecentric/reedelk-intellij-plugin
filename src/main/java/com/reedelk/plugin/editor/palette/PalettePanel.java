@@ -25,6 +25,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import java.awt.*;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -93,7 +94,7 @@ public class PalettePanel extends JBPanel<PalettePanel> implements ComponentList
     }
 
     private void updateComponents(Collection<ModuleComponents> moduleComponents) {
-        List<DefaultMutableTreeNode> componentsTreeNodes = getComponentsPackagesTreeNodes(moduleComponents);
+        List<DefaultMutableTreeNode> componentsTreeNodes = asTreeNodes(moduleComponents);
 
         SwingUtilities.invokeLater(() -> {
 
@@ -127,23 +128,22 @@ public class PalettePanel extends JBPanel<PalettePanel> implements ComponentList
     }
 
     @NotNull
-    static List<DefaultMutableTreeNode> getComponentsPackagesTreeNodes(Collection<ModuleComponents> moduleComponents) {
-        return moduleComponents
-                .stream()
+    static List<DefaultMutableTreeNode> asTreeNodes(Collection<ModuleComponents> moduleComponents) {
+        return moduleComponents.stream()
                 .filter(ExcludeModuleWithoutComponents)
-                .map(PalettePanel::buildPackageTreeNode)
+                .sorted(Comparator.comparing(ModuleComponents::getName))
+                .map(PalettePanel::asTreeNode)
                 .collect(toList());
     }
 
     @NotNull
-    static DefaultMutableTreeNode buildPackageTreeNode(ModuleComponents moduleComponents) {
+    static DefaultMutableTreeNode asTreeNode(ModuleComponents moduleComponents) {
         DefaultMutableTreeNode componentTreeNode = new DefaultMutableTreeNode(moduleComponents.getName());
-        moduleComponents
-                .getModuleComponents()
+        moduleComponents.getModuleComponents()
                 .stream()
                 .filter(ExcludeHiddenComponent)
-                .forEach(componentDescriptor ->
-                        componentTreeNode.add(new DefaultMutableTreeNode(componentDescriptor)));
+                .sorted(Comparator.comparing(ComponentDescriptor::getDisplayName))
+                .forEach(componentDescriptor -> componentTreeNode.add(new DefaultMutableTreeNode(componentDescriptor)));
         return componentTreeNode;
     }
 

@@ -1,8 +1,6 @@
 package com.reedelk.plugin.editor.palette;
 
-import com.intellij.util.ui.JBUI;
 import com.reedelk.module.descriptor.model.ComponentDescriptor;
-import com.reedelk.module.descriptor.model.ComponentType;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
@@ -19,7 +17,6 @@ public class PaletteComponentTreeRenderer implements TreeCellRenderer {
 
     private JPanel renderer;
     private JLabel value;
-    private JLabel typeIcon;
 
     private DefaultTreeCellRenderer defaultRenderer = new DefaultTreeCellRenderer();
 
@@ -27,20 +24,14 @@ public class PaletteComponentTreeRenderer implements TreeCellRenderer {
         this.value = new JLabel();
         this.value.setAlignmentY(JLabel.CENTER_ALIGNMENT);
 
-        this.typeIcon = new JLabel();
-        this.typeIcon.setAlignmentY(JLabel.CENTER_ALIGNMENT);
-        this.typeIcon.setIcon(Icons.Module);
-        this.typeIcon.setBorder(JBUI.Borders.empty(1, 0, 0, 3));
-
         this.renderer = new JPanel();
         this.renderer.setLayout(new BorderLayout());
-        this.renderer.add(typeIcon, BorderLayout.WEST);
 
         DisposablePanel valueContainerLeftAligned = ContainerFactory.pushLeft(value);
         valueContainerLeftAligned.setBackground(renderer.getBackground());
         valueContainerLeftAligned.setOpaque(false);
 
-        this.renderer.add(valueContainerLeftAligned, BorderLayout.CENTER);
+        this.renderer.add(valueContainerLeftAligned, BorderLayout.WEST);
 
         this.defaultRenderer.setOpenIcon(Icons.Module);
         this.defaultRenderer.setClosedIcon(Icons.Module);
@@ -59,18 +50,9 @@ public class PaletteComponentTreeRenderer implements TreeCellRenderer {
 
                 Icon componentIcon = Optional.ofNullable(descriptor.getIcon()).orElse(Icons.Component.Default);
                 this.value.setIcon(componentIcon);
-
-                if (selected) {
-                    this.value.setForeground(Colors.PALETTE_TEXT_SELECTED);
-                } else {
-                    this.value.setForeground(Colors.PALETTE_TEXT_UNSELECTED);
-                }
-
-                if (ComponentType.INBOUND.equals(descriptor.getComponentType())) {
-                    typeIcon.setIcon(Icons.Component.Inbound);
-                } else {
-                    typeIcon.setIcon(Icons.Component.Processor);
-                }
+                this.value.setForeground(selected ?
+                        Colors.PALETTE_TEXT_SELECTED :
+                        Colors.PALETTE_TEXT_UNSELECTED);
                 return renderer;
             }
         }
