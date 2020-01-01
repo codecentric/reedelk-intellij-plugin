@@ -33,7 +33,7 @@ public class CheckStateServiceImpl implements CheckStateService {
     }
 
     void internalCheckModuleState(String runtimeHostAddress, int runtimeHostPort) {
-        // We only check for modules matching the current module's artifact i.
+        // We only check for modules matching the current module's artifact id.
         moduleMavenProject().flatMap(mavenProject ->
                 Optional.ofNullable(mavenProject.getMavenId().getArtifactId()).flatMap(artifactId ->
                         runtimeApiService().installedModules(runtimeHostAddress, runtimeHostPort)

@@ -6,6 +6,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.reedelk.plugin.commons.ToolWindowUtils;
+import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.service.module.CheckStateService;
 import com.reedelk.plugin.service.module.DependenciesSyncService;
 import com.reedelk.plugin.service.module.RuntimeApiService;
@@ -31,13 +32,15 @@ public class DeployRunProfile extends AbstractRunProfile {
         Module module = Optional.ofNullable(ModuleManager.getInstance(project).findModuleByName(moduleName))
                 .orElseThrow(() -> new ExecutionException(message("module.run.error.module.not.found", moduleName)));
 
-        if (SourceChangeService.getInstance(project).isHotSwap(runtimeConfigName, moduleName)) {
-            // If the module has changes only in Flows/Configs/Scripts and so on, then we can hot swap the module.
-            hotSwap(mavenProject, moduleFile, module);
-        } else {
-            // Otherwise we re-deploy the module
-            deploy(moduleFile, module);
-        }
+        PluginExecutors.run(module, message("module.run.deploy.description", moduleName), indicator -> {
+            if (SourceChangeService.getInstance(project).isHotSwap(runtimeConfigName, moduleName)) {
+                // If the module has changes only in Flows/Configs/Scripts and so on, then we can hot swap the module.
+                hotSwap(mavenProject, moduleFile, module);
+            } else {
+                // Otherwise we re-deploy the module
+                deploy(moduleFile, module);
+            }
+        });
 
         return null;
     }
