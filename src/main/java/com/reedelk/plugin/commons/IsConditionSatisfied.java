@@ -1,6 +1,7 @@
 package com.reedelk.plugin.commons;
 
 import com.reedelk.runtime.api.annotation.When;
+import com.reedelk.runtime.api.commons.ScriptUtils;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -28,6 +29,10 @@ public class IsConditionSatisfied {
             (wanted, actual) -> !EVALUATOR_BLANK.apply(wanted, actual);
     private static final ConditionEvaluator EVALUATOR_DEFAULT =
             (wanted, actual) -> actual != null && actual.toString().equals(wanted);
+    private static final ConditionEvaluator EVALUATOR_SCRIPT =
+            (wanted, actual) -> ScriptUtils.isScript(actual);
+    private static final ConditionEvaluator EVALUATOR_NOT_SCRIPT =
+            (wanted, actual) -> !ScriptUtils.isScript(actual);
 
     private static final ConditionEvaluator EVALUATOR_TYPE_OBJECT = (wantedJson, typeObject) -> {
         TypeObject actualTypeObject = (TypeObject) typeObject;
@@ -45,6 +50,8 @@ public class IsConditionSatisfied {
         tmp.put(When.NULL, EVALUATOR_NULL);
         tmp.put(When.BLANK, EVALUATOR_BLANK);
         tmp.put(When.NOT_BLANK, EVALUATOR_NOT_BLANK);
+        tmp.put(When.SCRIPT, EVALUATOR_SCRIPT);
+        tmp.put(When.NOT_SCRIPT, EVALUATOR_NOT_SCRIPT);
         EVALUATOR_MAP = tmp;
     }
 
