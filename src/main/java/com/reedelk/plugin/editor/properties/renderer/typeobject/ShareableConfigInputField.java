@@ -79,14 +79,14 @@ class ShareableConfigInputField extends DisposablePanel implements Configuration
 
     @Override
     public void onAddSuccess(ConfigMetadata configMetadata) {
-        propertyAccessor.set(configMetadata.getId());
+        setPropertyAccessorValue(configMetadata.getId());
         ConfigurationService.getInstance(module).loadConfigurationsBy(descriptor.getPropertyType());
     }
 
     @Override
     public void onRemoveSuccess() {
         // Nothing is selected.
-        propertyAccessor.set(EMPTY);
+        setPropertyAccessorValue(EMPTY);
         ConfigurationService.getInstance(module).loadConfigurationsBy(descriptor.getPropertyType());
     }
 
@@ -132,12 +132,9 @@ class ShareableConfigInputField extends DisposablePanel implements Configuration
 
             // Add back the listener
             configSelectorCombo.addListener(value -> {
-                propertyAccessor.set(((ConfigMetadata) value).getId());
-                configActionsPanel.onSelect((ConfigMetadata) value);
-
-                // If the selection has changed, we must notify all the
-                // context subscribers that the property has changed.
-                context.notifyPropertyChanged(descriptor.getPropertyName(), referenceDataHolder);
+                ConfigMetadata selectedConfig = (ConfigMetadata) value;
+                configActionsPanel.onSelect(selectedConfig);
+                setPropertyAccessorValue(selectedConfig.getId());
             });
         });
     }
@@ -153,6 +150,13 @@ class ShareableConfigInputField extends DisposablePanel implements Configuration
                     unselectedConfigDefinition.set(JsonParser.Config.title(), String.format("Unresolved (%s)", reference));
                     return new ConfigMetadata(unselectedConfigDefinition);
                 });
+    }
+
+    private void setPropertyAccessorValue(String configReference) {
+        propertyAccessor.set(configReference);
+        // If the selection has changed, we must notify all the
+        // context subscribers that the property has changed.
+        context.notifyPropertyChanged(descriptor.getPropertyName(), referenceDataHolder);
     }
 
     private static final ConfigMetadata UNSELECTED_CONFIG;
