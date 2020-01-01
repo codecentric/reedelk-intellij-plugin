@@ -12,9 +12,9 @@ import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.renderer.typeobject.configuration.ConfigControlPanel;
 import com.reedelk.plugin.editor.properties.renderer.typeobject.configuration.ConfigSelectorCombo;
-import com.reedelk.plugin.service.module.ConfigService;
+import com.reedelk.plugin.service.module.ConfigurationService;
 import com.reedelk.plugin.service.module.impl.configuration.ConfigMetadata;
-import com.reedelk.plugin.service.module.impl.configuration.ConfigServiceImpl;
+import com.reedelk.plugin.service.module.impl.configuration.ConfigurationServiceImpl;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.commons.JsonParser;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +31,7 @@ import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.EAST;
 
-class ShareableConfigInputField extends DisposablePanel implements ConfigServiceImpl.ConfigChangeListener {
+class ShareableConfigInputField extends DisposablePanel implements ConfigurationServiceImpl.ConfigChangeListener {
 
     private final transient Module module;
     private final transient ContainerContext context;
@@ -67,7 +67,7 @@ class ShareableConfigInputField extends DisposablePanel implements ConfigService
         add(configSelectorCombo, CENTER);
         add(configActionsPanel, EAST);
 
-        ConfigService.getInstance(module).fetchConfigurationsBy(descriptor.getPropertyType());
+        ConfigurationService.getInstance(module).loadConfigurationsBy(descriptor.getPropertyType());
     }
 
     @Override
@@ -80,14 +80,14 @@ class ShareableConfigInputField extends DisposablePanel implements ConfigService
     @Override
     public void onAddSuccess(ConfigMetadata configMetadata) {
         propertyAccessor.set(configMetadata.getId());
-        ConfigService.getInstance(module).fetchConfigurationsBy(descriptor.getPropertyType());
+        ConfigurationService.getInstance(module).loadConfigurationsBy(descriptor.getPropertyType());
     }
 
     @Override
     public void onRemoveSuccess() {
         // Nothing is selected.
         propertyAccessor.set(EMPTY);
-        ConfigService.getInstance(module).fetchConfigurationsBy(descriptor.getPropertyType());
+        ConfigurationService.getInstance(module).loadConfigurationsBy(descriptor.getPropertyType());
     }
 
     @Override

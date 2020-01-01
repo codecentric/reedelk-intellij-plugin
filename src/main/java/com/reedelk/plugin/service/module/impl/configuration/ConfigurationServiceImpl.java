@@ -14,7 +14,7 @@ import com.reedelk.plugin.component.deserializer.ConfigurationDeserializer;
 import com.reedelk.plugin.component.serializer.ConfigurationSerializer;
 import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.executor.PluginExecutors;
-import com.reedelk.plugin.service.module.ConfigService;
+import com.reedelk.plugin.service.module.ConfigurationService;
 import com.reedelk.runtime.commons.FileExtension;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,18 +28,18 @@ import java.util.Optional;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.topic.ReedelkTopics.TOPIC_CONFIG_CHANGE;
 
-public class ConfigServiceImpl implements ConfigService {
+public class ConfigurationServiceImpl implements ConfigurationService {
 
     private final Module module;
     private final ConfigChangeListener publisher;
 
-    public ConfigServiceImpl(Module module) {
+    public ConfigurationServiceImpl(Module module) {
         this.module = module;
         this.publisher = module.getMessageBus().syncPublisher(TOPIC_CONFIG_CHANGE);
     }
 
     @Override
-    public void fetchConfigurationsBy(TypeObjectDescriptor typeObjectDescriptor) {
+    public void loadConfigurationsBy(TypeObjectDescriptor typeObjectDescriptor) {
         PluginExecutors.runSmartReadAction(module, () -> {
             List<ConfigMetadata> configs = new ArrayList<>();
             ModuleRootManager.getInstance(module).getFileIndex().iterateContent(fileOrDir -> {
@@ -56,7 +56,7 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
-    public void saveConfig(@NotNull ConfigMetadata updatedConfig) {
+    public void saveConfiguration(@NotNull ConfigMetadata updatedConfig) {
         WriteCommandAction.runWriteCommandAction(module.getProject(), () -> {
             VirtualFile file = VfsUtil.findFile(Paths.get(updatedConfig.getConfigFile()), true);
             if (file == null) {
@@ -88,7 +88,7 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
-    public void addConfig(@NotNull ConfigMetadata newConfig) {
+    public void addConfiguration(@NotNull ConfigMetadata newConfig) {
         PluginModuleUtils.getConfigsFolder(module).ifPresent(configsFolder ->
                 WriteCommandAction.runWriteCommandAction(module.getProject(), () -> {
 
@@ -126,7 +126,7 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
-    public void removeConfig(@NotNull ConfigMetadata toRemove) {
+    public void removeConfiguration(@NotNull ConfigMetadata toRemove) {
         WriteCommandAction.runWriteCommandAction(module.getProject(), () -> {
             final VirtualFile file = VfsUtil.findFile(Paths.get(toRemove.getConfigFile()), true);
             if (file == null) {
@@ -143,15 +143,6 @@ public class ConfigServiceImpl implements ConfigService {
         });
     }
 
-    public interface ConfigChangeListener {
-        default void onConfigs(Collection<ConfigMetadata> configurations) {}
-        default void onAddSuccess(ConfigMetadata configuration) {}
-        default void onAddError(Exception exception) {}
-        default void onSaveError(Exception exception) {}
-        default void onRemoveSuccess() {}
-        default void onRemoveError(Exception exception) {}
-    }
-
     private Optional<? extends ConfigMetadata> getConfigurationFrom(VirtualFile virtualFile, TypeObjectDescriptor configTypeDescriptor) {
         Optional<Document> maybeDocument = getDocumentFromFile(virtualFile);
         if (maybeDocument.isPresent()) {
@@ -165,5 +156,14 @@ public class ConfigServiceImpl implements ConfigService {
     private Optional<Document> getDocumentFromFile(VirtualFile virtualFile) {
         Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
         return Optional.ofNullable(document);
+    }
+
+    public interface ConfigChangeListener {
+        default void onConfigs(Collection<ConfigMetadata> configurations) {}
+        default void onAddSuccess(ConfigMetadata configuration) {}
+        default void onAddError(Exception exception) {}
+        default void onSaveError(Exception exception) {}
+        default void onRemoveSuccess() {}
+        default void onRemoveError(Exception exception) {}
     }
 }

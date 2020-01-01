@@ -6,7 +6,7 @@ import com.reedelk.plugin.commons.TypeObjectFactory;
 import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 import com.reedelk.plugin.editor.properties.commons.DialogConfirmAction;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
-import com.reedelk.plugin.service.module.ConfigService;
+import com.reedelk.plugin.service.module.ConfigurationService;
 import com.reedelk.plugin.service.module.impl.configuration.ConfigMetadata;
 import com.reedelk.plugin.service.module.impl.configuration.NewConfigMetadata;
 
@@ -65,7 +65,7 @@ public class ConfigControlPanel extends DisposablePanel {
                 .build();
 
         if (dialogAddConfiguration.showAndGet()) {
-            ConfigService.getInstance(module).addConfig(newConfigMetadata);
+            ConfigurationService.getInstance(module).addConfiguration(newConfigMetadata);
         }
     }
 
@@ -79,7 +79,7 @@ public class ConfigControlPanel extends DisposablePanel {
                     .okActionLabel(message("config.dialog.edit.btn.edit"))
                     .build();
             if (dialogEditConfiguration.showAndGet()) {
-                ConfigService.getInstance(module).saveConfig(selected);
+                ConfigurationService.getInstance(module).saveConfiguration(selected);
             }
         }
     }
@@ -91,7 +91,7 @@ public class ConfigControlPanel extends DisposablePanel {
                             message("config.dialog.delete.title"),
                             message("config.dialog.delete.confirm.message"));
             if (dialogConfirmDelete.showAndGet()) {
-                ConfigService.getInstance(module).removeConfig(selected);
+                ConfigurationService.getInstance(module).removeConfiguration(selected);
             }
         }
     }

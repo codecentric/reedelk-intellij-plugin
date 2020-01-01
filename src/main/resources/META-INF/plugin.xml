@@ -42,8 +42,8 @@
         <moduleService serviceInterface="com.reedelk.plugin.service.module.SubflowService"
                        serviceImplementation="com.reedelk.plugin.service.module.impl.subflow.SubflowServiceImpl"/>
 
-        <moduleService serviceInterface="com.reedelk.plugin.service.module.ConfigService"
-                       serviceImplementation="com.reedelk.plugin.service.module.impl.configuration.ConfigServiceImpl"/>
+        <moduleService serviceInterface="com.reedelk.plugin.service.module.ConfigurationService"
+                       serviceImplementation="com.reedelk.plugin.service.module.impl.configuration.ConfigurationServiceImpl"/>
 
         <moduleService serviceInterface="com.reedelk.plugin.service.module.ScriptService"
                        serviceImplementation="com.reedelk.plugin.service.module.impl.script.ScriptServiceImpl"/>
