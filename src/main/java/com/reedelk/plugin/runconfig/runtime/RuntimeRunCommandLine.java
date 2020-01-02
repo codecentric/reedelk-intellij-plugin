@@ -6,8 +6,9 @@ import com.intellij.execution.configurations.JavaParameters;
 import com.intellij.execution.configurations.ParametersList;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.reedelk.plugin.commons.FileUtils;
+import com.reedelk.plugin.commons.ProjectSdk;
 import com.reedelk.plugin.runconfig.runtime.parameter.ParameterStrategyBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,17 +33,14 @@ public class RuntimeRunCommandLine extends JavaCommandLineState {
 
         Project project = configuration.getProject();
 
-        ProjectRootManager manager = ProjectRootManager.getInstance(project);
+        Sdk sdk = ProjectSdk.of(project).orElseThrow(() ->
+                new ExecutionException(message("error.sdk.not.selected")));
 
-        if (manager.getProjectSdk() == null) {
-            throw new ExecutionException(message("runtime.run.error.sdk.not.selected"));
-        }
-
-        javaParams.setJdk(manager.getProjectSdk());
+        javaParams.setJdk(sdk);
 
         ParametersList parameters = javaParams.getVMParametersList();
 
-        ParameterStrategyBuilder.from(manager.getProjectSdk()).apply(parameters, configuration);
+        ParameterStrategyBuilder.from(sdk).apply(parameters, configuration);
 
         String runtimeHomeDirectory = configuration.getRuntimeHomeDirectory();
 

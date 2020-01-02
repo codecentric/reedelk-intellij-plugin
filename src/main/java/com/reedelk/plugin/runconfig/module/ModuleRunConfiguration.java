@@ -8,8 +8,11 @@ import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.RunConfigurationWithSuppressedDefaultRunAction;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizerUtil;
+import com.reedelk.plugin.commons.ProjectSdk;
+import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.runconfig.module.runner.ModuleDeployExecutor;
 import com.reedelk.plugin.runconfig.module.runner.ModuleUnDeployExecutor;
 import com.reedelk.plugin.runconfig.module.runprofile.DeployRunProfile;
@@ -19,7 +22,11 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ModuleRunConfiguration extends RunConfigurationBase implements
+import java.util.Optional;
+
+import static com.reedelk.plugin.message.ReedelkBundle.message;
+
+public class ModuleRunConfiguration extends RunConfigurationBase<ModuleRunConfiguration> implements
         RunConfigurationWithSuppressedDefaultRunAction,
         RunConfigurationWithSuppressedDefaultDebugAction {
 
@@ -49,6 +56,12 @@ public class ModuleRunConfiguration extends RunConfigurationBase implements
     @Override
     public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment) throws ExecutionException {
         Project project = getProject();
+
+        Optional<Sdk> optionalSdk = ProjectSdk.of(project);
+        if (!optionalSdk.isPresent()) {
+            ToolWindowUtils.notifyError(project, message("error.sdk.not.selected"), getName());
+            return null;
+        }
 
         // Deploy Executor
         if (ModuleDeployExecutor.EXECUTOR_ID.equals(executor.getId())) {
