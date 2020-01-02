@@ -7,7 +7,6 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.executor.PluginExecutors;
-import com.reedelk.plugin.service.module.CheckStateService;
 import com.reedelk.plugin.service.module.DependenciesSyncService;
 import com.reedelk.plugin.service.module.RuntimeApiService;
 import com.reedelk.plugin.service.project.SourceChangeService;
@@ -77,8 +76,10 @@ public class DeployRunProfile extends AbstractRunProfile {
                 String message = message("module.run.update", module.getName());
                 ToolWindowUtils.notifyInfoWithoutShowing(module.getProject(), message, runtimeConfigName);
 
-                // Check if there are any Modules in the Runtime in 'UNRESOLVED' or 'ERROR' state.
-                checkModuleStateService(module).checkModuleState(address, port);
+                // Check if there are modules not installed (or installed but with a different version)
+                // in the runtime. If so, then install them so that the current deployed flow can be
+                // started and executed correctly.
+                DependenciesSyncService.getInstance(module).syncInstalledModules(address, port);
             }
 
             @Override
@@ -87,9 +88,5 @@ public class DeployRunProfile extends AbstractRunProfile {
                 ToolWindowUtils.notifyError(module.getProject(), message, runtimeConfigName);
             }
         });
-    }
-
-    CheckStateService checkModuleStateService(Module module) {
-        return CheckStateService.getInstance(module);
     }
 }

@@ -40,9 +40,9 @@ public class RuntimeApiServiceImpl implements RuntimeApiService {
     }
 
     @Override
-    public void hotSwap(String moduleFile, String resourcesRootDirectory, String address, int port, OperationCallback callback) {
+    public void hotSwap(String moduleJarFile, String resourcesRootDirectory, String address, int port, OperationCallback callback) {
         HotSwapPOSTReq req = new HotSwapPOSTReq();
-        req.setModuleFilePath(moduleFile);
+        req.setModuleFilePath(moduleJarFile);
         req.setResourcesRootDirectory(resourcesRootDirectory);
 
         String jsonBody = InternalAPI.HotSwap.V1.POST.Req.serialize(req);
@@ -50,21 +50,7 @@ public class RuntimeApiServiceImpl implements RuntimeApiService {
         try {
             HttpResponse response = HttpService.getInstance(module).post(requestUrl, jsonBody, JSON);
             if (response.isNotFound()) {
-                // The module we tried to Hot Swap was not installed in the Runtime, therefore we must re-package the module
-                // by executing 'maven package' goal and then install it in the runtime. It is important to re-package the
-                // module since the files supposed to be hot swapped are not in the jar yet.
-                MavenPackageGoal packageGoal = new MavenPackageGoal(module.getProject(), module.getName(), result -> {
-                    if (!result) {
-                        // Maven package goal was not successful
-                        IOException exception = new IOException(message("module.run.error.maven.goal.package.failed", module.getName()));
-                        callback.onError(exception);
-                    } else {
-                        // The  Maven package goal was successful. The .jar artifact is in the /target folder and we can
-                        // deploy the package onto the ESB runtime.
-                        deploy(moduleFile, address, port, callback);
-                    }
-                });
-                packageGoal.execute();
+                handleModulePackageNotInstalled(moduleJarFile, address, port, callback);
             } else if (response.isSuccessful()) {
                 callback.onSuccess();
             } else {
@@ -143,6 +129,26 @@ public class RuntimeApiServiceImpl implements RuntimeApiService {
         } catch (IOException exception) {
             return Collections.emptyList();
         }
+    }
+
+    private void handleModulePackageNotInstalled(String moduleJarFile, String address, int port, OperationCallback callback) {
+        // The module we tried to Hot Swap was not installed in the Runtime.
+        // The .jar artifact does not exists in the /target folder, therefore we must re-package the module
+        // by executing 'maven package' goal and then install it in the runtime.
+        // IMPORTANT: It is important to re-package the module since the files supposed to be hot
+        //  swapped are not in the jar yet.
+        MavenPackageGoal packageGoal = new MavenPackageGoal(module.getProject(), module.getName(), result -> {
+            if (!result) {
+                // Maven package goal was not successful
+                IOException exception = new IOException(message("module.run.error.maven.goal.package.failed", module.getName()));
+                callback.onError(exception);
+            } else {
+                // The  Maven package goal was successful. The .jar artifact is in the /target folder and we can
+                // deploy the package onto the ESB runtime.
+                deploy(moduleJarFile, address, port, callback);
+            }
+        });
+        packageGoal.execute();
     }
 
     private void handleNotSuccessfulResponse(HttpResponse response, OperationCallback callback) {
