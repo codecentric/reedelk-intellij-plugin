@@ -2,6 +2,7 @@ package com.reedelk.plugin.editor.palette;
 
 import com.reedelk.module.descriptor.model.ComponentDescriptor;
 import com.reedelk.plugin.service.module.impl.component.ModuleComponents;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import java.util.*;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
 class PalettePanelTest {
@@ -25,6 +27,21 @@ class PalettePanelTest {
     private ComponentDescriptor mockDescriptor2;
     @Mock
     private ComponentDescriptor mockDescriptor3;
+
+    @BeforeEach
+    void setUp() {
+        lenient().doReturn("Mock Descriptor 1")
+                .when(mockDescriptor1)
+                .getDisplayName();
+
+        lenient().doReturn("Mock Descriptor 2")
+                .when(mockDescriptor2)
+                .getDisplayName();
+
+        lenient().doReturn("Mock Descriptor 3")
+                .when(mockDescriptor3)
+                .getDisplayName();
+    }
 
     @Nested
     @DisplayName("Build package tree node tests")
