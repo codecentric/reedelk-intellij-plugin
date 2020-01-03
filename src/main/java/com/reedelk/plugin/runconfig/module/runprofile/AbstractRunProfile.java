@@ -19,8 +19,9 @@ abstract class AbstractRunProfile implements RunProfileState {
 
     protected final Project project;
     protected final String moduleName;
-    private final String moduleConfigName;
     protected final String runtimeConfigName;
+
+    private final String moduleConfigName;
 
     String address;
     int port;
