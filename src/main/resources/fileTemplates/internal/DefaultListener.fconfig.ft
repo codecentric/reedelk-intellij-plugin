@@ -3,7 +3,7 @@
   "title": "${title}",
   "implementor": "com.reedelk.rest.configuration.listener.ListenerConfiguration",
   "host": "localhost",
-  "port": 8080,
+  "port": 8282,
   "protocol": "HTTP",
   "basePath": "/api",
   "keepAlive": true
