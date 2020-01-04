@@ -8,7 +8,7 @@
     <parent>
         <groupId>com.reedelk</groupId>
         <artifactId>module-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>0.9.0</version>
     </parent>
 
     <groupId>${groupId}</groupId>
@@ -35,13 +35,13 @@
         <dependency>
             <groupId>com.reedelk</groupId>
             <artifactId>module-core</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>0.9.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.reedelk</groupId>
             <artifactId>module-rest</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>0.9.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

@@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
 class CheckStateServiceImplTest {
 
     private final String groupId = "com.test";
-    private final String version = "1.0.0-SNAPSHOT";
+    private final String version = "0.8.1-SNAPSHOT";
     private final int runtimeHostPort = 7788;
     private final String runtimeHostAddress = "localhost";
 
