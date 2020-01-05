@@ -11,7 +11,7 @@ import javax.swing.*;
 public class ModuleUnDeployExecutor extends Executor {
 
     @NonNls
-    public static final String EXECUTOR_ID = "unDeployESBModule";
+    public static final String EXECUTOR_ID = "unDeployReedelkModule";
 
     @Override
     public String getToolWindowId() {
@@ -36,7 +36,7 @@ public class ModuleUnDeployExecutor extends Executor {
 
     @Override
     public String getDescription() {
-        return "UnDeploy ESB Module to Runtime";
+        return "UnDeploy Module to Runtime";
     }
 
     @NotNull
@@ -54,7 +54,7 @@ public class ModuleUnDeployExecutor extends Executor {
     @NotNull
     @Override
     public String getStartActionText() {
-        return "UnDeploy ESB Module";
+        return "UnDeploy Module";
     }
 
     @Override
@@ -64,6 +64,6 @@ public class ModuleUnDeployExecutor extends Executor {
 
     @Override
     public String getHelpId() {
-        return "unDeploy.esb.id";
+        return "unDeploy.reedelk.id";
     }
 }

@@ -11,7 +11,7 @@ import javax.swing.*;
 public class ModuleDeployExecutor extends Executor {
 
     @NonNls
-    public static final String EXECUTOR_ID = "deployESBModule";
+    public static final String EXECUTOR_ID = "deployReedelkModule";
 
     @Override
     public String getToolWindowId() {
@@ -36,7 +36,7 @@ public class ModuleDeployExecutor extends Executor {
 
     @Override
     public String getDescription() {
-        return "Deploy ESB Module to Runtime";
+        return "Deploy Module to Runtime";
     }
 
     @NotNull
@@ -54,7 +54,7 @@ public class ModuleDeployExecutor extends Executor {
     @NotNull
     @Override
     public String getStartActionText() {
-        return "Deploy ESB Module";
+        return "Deploy Module";
     }
 
     @Override
@@ -64,7 +64,7 @@ public class ModuleDeployExecutor extends Executor {
 
     @Override
     public String getHelpId() {
-        return "deploy.esb.id";
+        return "deploy.reedelk.id";
     }
 
 }

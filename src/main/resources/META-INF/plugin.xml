@@ -1,13 +1,13 @@
 <idea-plugin>
     <id>com.reedelk.plugin</id>
-    <name>Reedelk ESB Flow Designer</name>
+    <name>Reedelk Integration Platform Flow Designer</name>
     <vendor email="info@reedelk.com" url="http://www.reedelk.com">Reedelk</vendor>
 
     <description>
         <![CDATA[
-            <p>1.0.0</p>
+            <p>0.9.0</p>
             <ul>
-                <li>Added default 'Hello World' flow template when a new Reedelk ESB project is created</li>
+                <li>First Reedelk Integration Platform Flow Designer Release</li>
             </ul>
         ]]>
     </description>

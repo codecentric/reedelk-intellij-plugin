@@ -54,7 +54,7 @@
             <constraints border-constraint="Center"/>
             <properties>
               <font/>
-              <text value="Choose  Reedelk ESB runtime distribution"/>
+              <text value="Choose  Reedelk Runtime Distribution"/>
             </properties>
           </component>
         </children>

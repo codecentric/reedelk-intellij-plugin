@@ -43,7 +43,7 @@ public class ModuleBuilderBeforeTaskProvider extends BeforeRunTaskProvider<Modul
 
     @Override
     public String getName() {
-        return "ESB Module Builder";
+        return "Module Builder";
     }
 
     @Nullable
@@ -54,7 +54,7 @@ public class ModuleBuilderBeforeTaskProvider extends BeforeRunTaskProvider<Modul
 
     @Override
     public String getDescription(ModuleBuilderBeforeTask beforeRunTask) {
-        return "Build ESB Module package";
+        return "Build Module package";
     }
 
     @Override

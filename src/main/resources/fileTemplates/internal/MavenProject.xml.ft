@@ -26,7 +26,7 @@
     <repositories>
         <repository>
             <id>reedelk-repository</id>
-            <name>Reedelk ESB Repository</name>
+            <name>Reedelk Repository</name>
             <url>https://www.reedelk.com/maven/</url>
         </repository>
     </repositories>

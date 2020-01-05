@@ -12,13 +12,13 @@ public class RuntimeRunConfigurationType implements ConfigurationType {
     @NotNull
     @Override
     public String getDisplayName() {
-        return "ESB Runtime Run Config";
+        return "Runtime Run Config";
     }
 
     @Nls
     @Override
     public String getConfigurationTypeDescription() {
-        return "Launches an ESB Runtime";
+        return "Launches Reedelk Runtime";
     }
 
     @Override
