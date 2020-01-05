@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 import static com.reedelk.plugin.service.module.RuntimeApiService.OperationCallback;
@@ -60,8 +61,8 @@ class DependenciesSyncServiceImplTest {
                 .when(runtimeApiService)
                 .installedModules(runtimeHostAddress, runtimeHostPort);
 
-        String moduleRestPath = "/test/module-rest.jar";
-        String moduleFilePath = "/test/module-file.jar";
+        String moduleRestPath = Paths.get("test", "module-rest.jar").toString();
+        String moduleFilePath = Paths.get("test", "module-file.jar").toString();
         doReturn(asList(
                 createArtifactNodeWith(SCOPE_PROVIDED, "module-rest", "1.0.0", new File(moduleRestPath)),
                 createArtifactNodeWith(SCOPE_PROVIDED, "module-file", "1.0.1", new File(moduleFilePath))))
@@ -85,8 +86,8 @@ class DependenciesSyncServiceImplTest {
                 .when(runtimeApiService)
                 .installedModules(runtimeHostAddress, runtimeHostPort);
 
-        String moduleRestPath = "/test/module-rest.jar";
-        String moduleFilePath = "/test/module-file.jar";
+        String moduleRestPath = Paths.get("test", "module-rest.jar").toString();
+        String moduleFilePath = Paths.get("test", "module-file.jar").toString();
         doReturn(asList(
                 createArtifactNodeWith(SCOPE_PROVIDED, "module-rest", "1.0.0", new File(moduleRestPath)),
                 createArtifactNodeWith(SCOPE_PROVIDED, "module-file", "1.0.0", new File(moduleFilePath))))
@@ -112,8 +113,8 @@ class DependenciesSyncServiceImplTest {
                 .when(runtimeApiService)
                 .installedModules(runtimeHostAddress, runtimeHostPort);
 
-        String moduleRestPath = "/test/module-rest.jar";
-        String moduleFilePath = "/test/module-file.jar";
+        String moduleRestPath = Paths.get("test", "module-rest.jar").toString();
+        String moduleFilePath = Paths.get("test","module-file.jar").toString();
         doReturn(asList(
                 createArtifactNodeWith(SCOPE_PROVIDED, "module-rest", "1.0.0", new File(moduleRestPath)),
                 createArtifactNodeWith(SCOPE_PROVIDED, "module-file", "1.0.1", new File(moduleFilePath))))
@@ -136,7 +137,7 @@ class DependenciesSyncServiceImplTest {
                 .when(runtimeApiService)
                 .installedModules(runtimeHostAddress, runtimeHostPort);
 
-        String moduleRestPath = "/test/module-rest.jar";
+        String moduleRestPath = Paths.get("test","module-rest.jar").toString();
         doReturn(singletonList(
                 createArtifactNodeWith(SCOPE_COMPILE, "module-rest", "1.0.1", new File(moduleRestPath))))
                 .when(mockMavenProject)
