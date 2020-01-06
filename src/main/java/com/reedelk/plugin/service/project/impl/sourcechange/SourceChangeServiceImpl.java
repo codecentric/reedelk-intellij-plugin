@@ -142,7 +142,7 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
     private boolean isHotSwappableSource(VirtualFile file) {
         return file != null &&
                 // if it is inside resources folder, then it is hot-swappable, otherwise not.
-                file.getPath().contains(DefaultConstants.PROJECT_RESOURCES_FOLDER);
+                new File(file.getPath()).getPath().contains(DefaultConstants.PROJECT_RESOURCES_FOLDER);
     }
 
     private void setToChangedMatching(String moduleName) {
@@ -156,13 +156,18 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
     private String getModuleDirectory(Module module) {
         @SystemIndependent String moduleFilePath = module.getModuleFilePath();
         File moduleFilePathFile = new File(moduleFilePath);
-        return moduleFilePathFile.getParent();
+        String parent = moduleFilePathFile.getParent();
+        // On windows it is inside .idea directory.
+        if (parent.endsWith(".idea")) {
+            return new File(parent).getParent();
+        }
+        return parent;
     }
 
     @NotNull
     private Optional<String> startsWith(VirtualFile virtualFile, String subDirectory) {
         for (Map.Entry<String, String> entry : moduleNameRootPathMap.entrySet()) {
-            if (virtualFile.getPath().startsWith(entry.getValue() + File.separator + subDirectory)) {
+            if (new File(virtualFile.getPath()).getPath().startsWith(entry.getValue() + File.separator + subDirectory)) {
                 return Optional.of(entry.getKey());
             }
         }
