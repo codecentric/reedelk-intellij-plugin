@@ -47,5 +47,5 @@ jacoco {
 
 patchPluginXml {
     sinceBuild '191'
-    untilBuild '193'
+    untilBuild '194'
 }
