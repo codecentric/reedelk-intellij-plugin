@@ -19,7 +19,6 @@ import org.jetbrains.idea.maven.model.MavenConstants;
 
 import java.io.File;
 import java.util.*;
-import java.util.function.Consumer;
 
 import static java.util.Arrays.stream;
 
@@ -36,7 +35,11 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
     private Map<BiKey, Boolean> runtimeModuleNameChangedMap = new HashMap<>();
 
     public SourceChangeServiceImpl(Project project) {
-        stream(ModuleManager.getInstance(project).getModules()).forEach(new RegisterModuleConsumer());
+        stream(ModuleManager.getInstance(project).getModules()).forEach(module -> {
+            String moduleFilePath = module.getModuleFilePath();
+            File moduleFilePathFile = new File(moduleFilePath);
+            moduleNameRootPathMap.putIfAbsent(module.getName(), moduleFilePathFile.getParent());
+        });
         project.getMessageBus().connect(this).subscribe(ProjectTopics.MODULES, this);
         project.getMessageBus().connect(this).subscribe(VirtualFileManager.VFS_CHANGES, this);
     }
@@ -172,15 +175,6 @@ public class SourceChangeServiceImpl implements SourceChangeService, BulkFileLis
             }
         }
         return Optional.empty();
-    }
-
-    class RegisterModuleConsumer implements Consumer<Module> {
-        @Override
-        public void accept(Module module) {
-            @SystemIndependent String moduleFilePath = module.getModuleFilePath();
-            File moduleFilePathFile = new File(moduleFilePath);
-            moduleNameRootPathMap.putIfAbsent(module.getName(), moduleFilePathFile.getParent());
-        }
     }
 
     private static class BiKey {
