@@ -15,29 +15,6 @@
     <artifactId>${artifactId}</artifactId>
     <packaging>bundle</packaging>
 
-    <repositories>
-        <repository>
-            <id>reedelk-repository</id>
-            <name>Reedelk Repository</name>
-            <url>https://www.reedelk.com/maven/</url>
-        </repository>
-        <repository>
-            <id>maven-central</id>
-            <url>http://repo1.maven.org/maven2</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>reedelk-plugin-repository</id>
-            <name>Reedelk Plugin Repository</name>
-            <url>https://www.reedelk.com/maven/</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>maven-central</id>
-            <url>http://repo1.maven.org/maven2</url>
-        </pluginRepository>
-    </pluginRepositories>
-
     <dependencies>
         <dependency>
             <groupId>com.reedelk</groupId>
@@ -52,4 +29,5 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
 </project>
