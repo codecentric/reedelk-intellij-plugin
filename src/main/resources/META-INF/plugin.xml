@@ -9,6 +9,15 @@
         ]]>
     </description>
 
+
+    <change-notes><![CDATA[
+	    <ul>
+	        <li>feature: project module automatically deployed when runtime started</li>
+	        <li>bug: fixed incompatibility with IntelliJ 2019.1.4</li>
+        </ul>
+      ]]>
+    </change-notes>
+
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.java</depends>
     <depends>org.jetbrains.idea.maven</depends>
