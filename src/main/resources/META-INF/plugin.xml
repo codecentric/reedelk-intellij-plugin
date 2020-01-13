@@ -13,7 +13,8 @@
     <change-notes><![CDATA[
 	    <ul>
 	        <li>Feature: project module automatically deployed when runtime started</li>
-	        <li>Bugfix: removed deprecated usages of: com.intellij.ui.ListCellRendererWrapper
+	        <li>Bugfix: removed deprecated usages of: org.jetbrains.idea.maven.wizards.MavenModuleBuilder</li>
+	        <li>Bugfix: removed deprecated usages of: com.intellij.ui.ListCellRendererWrapper</li>
 	        <li>Bugfix: fixed incompatibility with IntelliJ 2019.1.4: removed usages of com.intellij.ui.SimpleListCellRenderer</li>
         </ul>
       ]]>

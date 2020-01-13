@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.model.MavenId;
 import org.jetbrains.idea.maven.utils.MavenUtil;
-import org.jetbrains.idea.maven.wizards.MavenModuleBuilder;
+import org.jetbrains.idea.maven.wizards.AbstractMavenModuleBuilder;
 import org.jetbrains.idea.maven.wizards.MavenModuleWizardStep;
 import org.jetbrains.idea.maven.wizards.SelectPropertiesStep;
 
@@ -35,7 +35,7 @@ import static com.intellij.openapi.ui.Messages.showErrorDialog;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static javax.swing.SwingUtilities.invokeLater;
 
-public class ModuleBuilder extends MavenModuleBuilder {
+public class ModuleBuilder extends AbstractMavenModuleBuilder {
 
     private Path tmpDownloadDistributionPath;
     private String runtimeConfigName;
