@@ -1,6 +1,6 @@
 <idea-plugin>
     <id>com.reedelk.plugin</id>
-    <name>Reedelk Integration Platform Flow Designer</name>
+    <name>Reedelk Flow Designer</name>
     <vendor email="info@reedelk.com" url="http://www.reedelk.com">Reedelk</vendor>
 
     <description>
