@@ -1,10 +1,11 @@
 package com.reedelk.plugin.editor.properties.renderer.typeobject.configuration;
 
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.ui.ListCellRendererWrapper;
+import com.reedelk.plugin.editor.properties.commons.SimpleListItemRenderer;
 import com.reedelk.plugin.editor.properties.renderer.commons.InputChangeListener;
 import com.reedelk.plugin.service.module.impl.configuration.ConfigMetadata;
 import com.reedelk.runtime.api.commons.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
@@ -38,9 +39,9 @@ public class ConfigSelectorCombo extends ComboBox<ConfigMetadata> implements Ite
         this.listener = changeListener;
     }
 
-    private static class ConfigMetadataRenderer extends ListCellRendererWrapper<ConfigMetadata> {
+    private static class ConfigMetadataRenderer extends SimpleListItemRenderer<ConfigMetadata> {
         @Override
-        public void customize(JList list, ConfigMetadata value, int index, boolean selected, boolean hasFocus) {
+        public void customize(@NotNull JList<? extends ConfigMetadata> list, ConfigMetadata value, int index, boolean selected, boolean hasFocus) {
             if (value == null) return;
 
             String configTitle = Optional.ofNullable(value.getTitle()).orElse(StringUtils.EMPTY);

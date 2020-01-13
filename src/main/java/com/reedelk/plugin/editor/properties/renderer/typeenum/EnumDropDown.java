@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer.typeenum;
 
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.ui.SimpleListCellRenderer;
+import com.reedelk.plugin.editor.properties.commons.SimpleListItemRenderer;
 import com.reedelk.plugin.editor.properties.renderer.commons.InputChangeListener;
 import org.apache.commons.collections.KeyValue;
 import org.apache.commons.collections.keyvalue.DefaultMapEntry;
@@ -64,9 +64,9 @@ public class EnumDropDown extends ComboBox<KeyValue> implements ItemListener {
         }
     }
 
-    static class ItemRenderer extends SimpleListCellRenderer<KeyValue> {
+    static class ItemRenderer extends SimpleListItemRenderer<KeyValue> {
         @Override
-        public void customize(@NotNull JList list, KeyValue value, int index, boolean selected, boolean hasFocus) {
+        public void customize(@NotNull JList<? extends KeyValue> list, KeyValue value, int index, boolean selected, boolean hasFocus) {
             if (value != null) {
                 setText((String) value.getValue());
             }

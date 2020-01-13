@@ -1,8 +1,9 @@
 package com.reedelk.plugin.component.type.flowreference.widget;
 
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.ui.ListCellRendererWrapper;
+import com.reedelk.plugin.editor.properties.commons.SimpleListItemRenderer;
 import com.reedelk.plugin.service.module.impl.subflow.SubflowMetadata;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
@@ -35,11 +36,13 @@ public class SubflowSelector extends ComboBox<SubflowMetadata> implements ItemLi
         void onSelect(SubflowMetadata subflowMetadata);
     }
 
-    private class SubflowMetadataRenderer extends ListCellRendererWrapper<SubflowMetadata> {
+    private static class SubflowMetadataRenderer extends SimpleListItemRenderer<SubflowMetadata> {
         @Override
-        public void customize(JList list, SubflowMetadata value, int index, boolean selected, boolean hasFocus) {
-            String title = value.getTitle();
-            this.setText(title);
+        public void customize(@NotNull JList<? extends SubflowMetadata> list, SubflowMetadata value, int index, boolean selected, boolean hasFocus) {
+            if (value != null) {
+                String title = value.getTitle();
+                setText(title);
+            }
         }
     }
 }

@@ -1,10 +1,11 @@
 package com.reedelk.plugin.editor.properties.renderer.typescript;
 
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.ui.ListCellRendererWrapper;
+import com.reedelk.plugin.editor.properties.commons.SimpleListItemRenderer;
 import com.reedelk.plugin.editor.properties.renderer.commons.InputChangeListener;
 import com.reedelk.plugin.service.module.impl.script.ScriptResource;
 import com.reedelk.runtime.api.commons.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
@@ -37,9 +38,9 @@ public class ScriptSelectorCombo extends ComboBox<ScriptResource> implements Ite
         this.listener = changeListener;
     }
 
-    private class ScriptSelectorRenderer extends ListCellRendererWrapper<ScriptResource> {
+    private static class ScriptSelectorRenderer extends SimpleListItemRenderer<ScriptResource> {
         @Override
-        public void customize(JList list, ScriptResource value, int index, boolean selected, boolean hasFocus) {
+        public void customize(@NotNull JList<? extends ScriptResource> list, ScriptResource value, int index, boolean selected, boolean hasFocus) {
             if (value != null) {
                 if (StringUtils.isBlank(value.getPath())) {
                     setText(value.getDisplayName());
