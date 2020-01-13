@@ -3,16 +3,18 @@ package com.reedelk.plugin.runconfig.runtime;
 import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.execution.configurations.ConfigurationType;
 import com.reedelk.plugin.commons.Icons;
+import com.reedelk.plugin.message.ReedelkBundle;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
 public class RuntimeRunConfigurationType implements ConfigurationType {
+
     @NotNull
     @Override
     public String getDisplayName() {
-        return "Runtime Run Config";
+        return ReedelkBundle.message("runtime.run.config.name");
     }
 
     @Nls
@@ -29,7 +31,7 @@ public class RuntimeRunConfigurationType implements ConfigurationType {
     @NotNull
     @Override
     public String getId() {
-        return "ESB_RUNTIME_CONFIGURATION";
+        return ReedelkBundle.message("runtime.run.config.id");
     }
 
     @Override
