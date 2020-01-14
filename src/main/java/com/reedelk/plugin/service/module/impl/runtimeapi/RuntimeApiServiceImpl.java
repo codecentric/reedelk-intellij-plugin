@@ -35,10 +35,6 @@ public class RuntimeApiServiceImpl implements RuntimeApiService {
         this.module = module;
     }
 
-    private String urlFrom(String address, int port, String path) {
-        return String.format(BASE_ADMIN_CONSOLE_URL_TEMPLATE, address, port) + path;
-    }
-
     @Override
     public void hotSwap(String moduleJarFile, String resourcesRootDirectory, String address, int port, OperationCallback callback) {
         HotSwapPOSTReq req = new HotSwapPOSTReq();
@@ -156,5 +152,9 @@ public class RuntimeApiServiceImpl implements RuntimeApiService {
                 .map(flowError -> new IOException(flowError.getErrorMessage()))
                 .orElse(new IOException(response.getBody()));
         callback.onError(exception);
+    }
+
+    private String urlFrom(String address, int port, String path) {
+        return String.format(BASE_ADMIN_CONSOLE_URL_TEMPLATE, address, port) + path;
     }
 }
