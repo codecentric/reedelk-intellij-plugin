@@ -6,7 +6,6 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.concurrency.CancellablePromise;
 
 import java.util.concurrent.ExecutorService;
 
@@ -39,8 +38,8 @@ public class PluginExecutors {
         runSmartReadAction(module.getProject(), task);
     }
 
-    public static CancellablePromise<Void> runSmartReadAction(@NotNull Project project, @NotNull Runnable task) {
-        return ReadAction.nonBlocking(task)
+    public static void runSmartReadAction(@NotNull Project project, @NotNull Runnable task) {
+        ReadAction.nonBlocking(task)
                 .inSmartMode(project)
                 .submit(AppExecutorUtil.getAppExecutorService());
     }

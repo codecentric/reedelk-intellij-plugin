@@ -14,7 +14,6 @@ import com.reedelk.plugin.service.module.impl.runtimeapi.RuntimeApiServiceWaitRu
 import com.reedelk.plugin.service.project.PreferredRunConfigurationService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.concurrency.CancellablePromise;
 
 import java.util.List;
 import java.util.Optional;
@@ -118,10 +117,8 @@ public class PreferredRunConfigurationServiceImpl implements PreferredRunConfigu
             RuntimeRunConfiguration runtimeRunConfiguration = (RuntimeRunConfiguration) runtimeRunSettings.getConfiguration();
             int port = Integer.parseInt(runtimeRunConfiguration.getRuntimePort());
             String address = runtimeRunConfiguration.getRuntimeBindAddress();
-            CancellablePromise<Void> cancellablePromise =
-                    PluginExecutors.runSmartReadAction(project, new RuntimeApiServiceWaitRuntime(port, address));
-            cancellablePromise.onSuccess(aVoid ->
-                    ExecutionManager.getInstance(project).restartRunProfile(builder.build()));
+            PluginExecutors.runSmartReadAction(project, new RuntimeApiServiceWaitRuntime(port, address,
+                    onRuntimeStartedVoid -> ExecutionManager.getInstance(project).restartRunProfile(builder.build())));
         }
     }
 }

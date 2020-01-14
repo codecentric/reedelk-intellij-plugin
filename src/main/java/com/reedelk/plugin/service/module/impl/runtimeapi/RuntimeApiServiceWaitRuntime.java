@@ -5,16 +5,20 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import java.util.function.Consumer;
+
 import static com.reedelk.plugin.commons.DefaultConstants.RestApi;
 
 public class RuntimeApiServiceWaitRuntime implements Runnable {
 
     private final int port;
     private final String address;
+    private final Consumer<Void> onRuntimeStartedCallback;
 
-    public RuntimeApiServiceWaitRuntime(int port, String address) {
+    public RuntimeApiServiceWaitRuntime(int port, String address, Consumer<Void> onRuntimeStartedCallback) {
         this.port = port;
         this.address = address;
+        this.onRuntimeStartedCallback = onRuntimeStartedCallback;
     }
 
     @Override
@@ -31,7 +35,12 @@ public class RuntimeApiServiceWaitRuntime implements Runnable {
                 break;
             }
             try (Response response = instance.newCall(request).execute()) {
-                if (response.code() == 200) break;
+                if (response.code() == 200) {
+                    if (onRuntimeStartedCallback != null) {
+                        onRuntimeStartedCallback.accept(null);
+                    }
+                    break;
+                }
             } catch (Exception e) {
                 // Nothing to do, the runtime is not started yet.
             } finally {
