@@ -26,7 +26,6 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class RuntimeApiServiceImpl implements RuntimeApiService {
 
-    private static final String BASE_ADMIN_CONSOLE_URL_TEMPLATE = "http://%s:%d/api";
     private static final MediaType JSON = MediaType.get(MimeType.APPLICATION_JSON.toString());
 
     private final Module module;
@@ -42,7 +41,7 @@ public class RuntimeApiServiceImpl implements RuntimeApiService {
         req.setResourcesRootDirectory(resourcesRootDirectory);
 
         String jsonBody = InternalAPI.HotSwap.V1.POST.Req.serialize(req);
-        String requestUrl = urlFrom(address, port, RestApi.HOT_SWAP);
+        String requestUrl = RestApi.apiURLOf(address, port, RestApi.HOT_SWAP);
         try {
             HttpResponse response = HttpService.getInstance(module).post(requestUrl, jsonBody, JSON);
             if (response.isNotFound()) {
@@ -63,7 +62,7 @@ public class RuntimeApiServiceImpl implements RuntimeApiService {
         req.setModuleFilePath(moduleFile);
 
         String jsonBody = InternalAPI.Module.V1.POST.Req.serialize(req);
-        String requestUrl = urlFrom(address, port, RestApi.MODULE);
+        String requestUrl = RestApi.apiURLOf(address, port, RestApi.MODULE);
         try {
             HttpResponse response = HttpService.getInstance(module).post(requestUrl, jsonBody, JSON);
             if (response.isSuccessful()) {
@@ -78,7 +77,7 @@ public class RuntimeApiServiceImpl implements RuntimeApiService {
 
     @Override
     public void install(String moduleFile, String address, int port, OperationCallback callback) {
-        String requestUrl = urlFrom(address, port, RestApi.MODULE_DEPLOY);
+        String requestUrl = RestApi.apiURLOf(address, port, RestApi.MODULE_DEPLOY);
         File file  = new File(moduleFile);
         try {
             HttpResponse response = HttpService.getInstance(module).postMultipart(requestUrl, file, "moduleFilePath");
@@ -98,7 +97,7 @@ public class RuntimeApiServiceImpl implements RuntimeApiService {
         req.setModuleFilePath(moduleFile);
 
         String jsonBody = InternalAPI.Module.V1.DELETE.Req.serialize(req);
-        String requestUrl = urlFrom(address, port, RestApi.MODULE);
+        String requestUrl = RestApi.apiURLOf(address, port, RestApi.MODULE);
         try {
             HttpResponse response = HttpService.getInstance(module).delete(requestUrl, jsonBody, JSON);
             if (response.isSuccessful()) {
@@ -113,7 +112,7 @@ public class RuntimeApiServiceImpl implements RuntimeApiService {
 
     @Override
     public Collection<ModuleGETRes> installedModules(String address, int port) {
-        String requestUrl = urlFrom(address, port, RestApi.MODULE);
+        String requestUrl = RestApi.apiURLOf(address, port, RestApi.MODULE);
         try {
             HttpResponse response = HttpService.getInstance(module).get(requestUrl);
             if (response.isSuccessful()) {
@@ -152,9 +151,5 @@ public class RuntimeApiServiceImpl implements RuntimeApiService {
                 .map(flowError -> new IOException(flowError.getErrorMessage()))
                 .orElse(new IOException(response.getBody()));
         callback.onError(exception);
-    }
-
-    private String urlFrom(String address, int port, String path) {
-        return String.format(BASE_ADMIN_CONSOLE_URL_TEMPLATE, address, port) + path;
     }
 }

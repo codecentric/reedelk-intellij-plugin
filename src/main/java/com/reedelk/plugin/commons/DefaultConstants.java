@@ -25,9 +25,15 @@ public class DefaultConstants {
         private RestApi() {
         }
 
+        private static final String ADMIN_CONSOLE_TEMPLATE_URL = "http://%s:%d/api";
         public static final String MODULE = "/module";
         public static final String MODULE_DEPLOY = "/module/deploy";
         public static final String HOT_SWAP = "/hotswap";
+        public static final String HEALTH = "/health";
+
+        public static String apiURLOf(String address, int port, String path) {
+            return String.format(ADMIN_CONSOLE_TEMPLATE_URL, address, port) + path;
+        }
     }
 
     public static class NameConvention {

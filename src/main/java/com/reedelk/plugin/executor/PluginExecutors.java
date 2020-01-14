@@ -3,8 +3,10 @@ package com.reedelk.plugin.executor;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.concurrency.CancellablePromise;
 
 import java.util.concurrent.ExecutorService;
 
@@ -34,10 +36,13 @@ public class PluginExecutors {
     }
 
     public static void runSmartReadAction(@NotNull Module module, @NotNull Runnable task) {
-        ReadAction.nonBlocking(task)
-                .inSmartMode(module.getProject())
-                .submit(AppExecutorUtil.getAppExecutorService());
+        runSmartReadAction(module.getProject(), task);
+    }
 
+    public static CancellablePromise<Void> runSmartReadAction(@NotNull Project project, @NotNull Runnable task) {
+        return ReadAction.nonBlocking(task)
+                .inSmartMode(project)
+                .submit(AppExecutorUtil.getAppExecutorService());
     }
 
     public static void onDeserializeExecutor(Runnable runnable) {
