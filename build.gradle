@@ -14,6 +14,9 @@ targetCompatibility = 1.8
 repositories {
     mavenCentral()
     mavenLocal()
+    maven {
+        url "http://localhost:8081/repository/reedelk"
+    }
 }
 
 dependencies {
