@@ -14,11 +14,13 @@ public class ModuleUnDeployExecutor extends Executor {
     public static final String EXECUTOR_ID = "unDeployReedelkModule";
 
     @Override
+    @NotNull
     public String getToolWindowId() {
         return ToolWindowId.RUN;
     }
 
     @Override
+    @NotNull
     public Icon getToolWindowIcon() {
         return Icons.Module;
     }

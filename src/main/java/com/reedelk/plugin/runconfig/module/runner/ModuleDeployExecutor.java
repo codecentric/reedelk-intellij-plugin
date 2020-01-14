@@ -14,11 +14,13 @@ public class ModuleDeployExecutor extends Executor {
     public static final String EXECUTOR_ID = "deployReedelkModule";
 
     @Override
+    @NotNull
     public String getToolWindowId() {
         return ToolWindowId.RUN;
     }
 
     @Override
+    @NotNull
     public Icon getToolWindowIcon() {
         return Icons.Module;
     }
@@ -66,5 +68,4 @@ public class ModuleDeployExecutor extends Executor {
     public String getHelpId() {
         return "deploy.reedelk.id";
     }
-
 }
