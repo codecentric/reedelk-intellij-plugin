@@ -3,6 +3,7 @@ package com.reedelk.plugin.editor.properties.renderer.typemap;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.JBColor;
 import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.TabPlacement;
 import com.reedelk.module.descriptor.model.TypeMapDescriptor;
 import com.reedelk.plugin.commons.Sizes;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
@@ -35,10 +36,9 @@ abstract class BaseMapPropertyRenderer implements PropertyTypeRenderer {
         Optional<DisposableTabbedPane> groupTabbedPane = getGroupTabbedPane(propertyDescriptor, context);
 
         DisposableTabbedPane tabbedPane = groupTabbedPane.orElseGet(() -> {
-            DisposableTabbedPane tabbed = new DisposableTabbedPane(JTabbedPane.LEFT);
-            tabbed.setPreferredSize(Sizes.TabbedPane.HEIGHT);
 
             TypeMapDescriptor propertyType = propertyDescriptor.getPropertyType();
+
             Optional<String> tabGroup = Optional.ofNullable(propertyType.getTabGroup());
 
             Border border = BorderFactory.createLineBorder(JBColor.LIGHT_GRAY);
@@ -46,6 +46,17 @@ abstract class BaseMapPropertyRenderer implements PropertyTypeRenderer {
                 TitledBorder titledBorder = BorderFactory.createTitledBorder(border, tabGroup.get());
                 titledBorder.setTitleColor(TOOL_WINDOW_PROPERTIES_TEXT);
                 border = titledBorder;
+            }
+
+            DisposableTabbedPane tabbed;
+            TabPlacement tabPlacement = propertyType.getTabPlacement();
+            if (TabPlacement.TOP.equals(tabPlacement)) {
+                tabbed = new DisposableTabbedPane(JTabbedPane.TOP);
+                tabbed.setPreferredSize(Sizes.TabbedPane.HEIGHT_TOP_PLACEMENT);
+            } else {
+                // Default placement is on the left
+                tabbed = new DisposableTabbedPane(JTabbedPane.LEFT);
+                tabbed.setPreferredSize(Sizes.TabbedPane.HEIGHT_LEFT_PLACEMENT);
             }
 
             Border top = BorderFactory.createEmptyBorder(5, 0, 0, 0);

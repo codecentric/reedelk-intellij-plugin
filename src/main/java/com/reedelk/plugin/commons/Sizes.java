@@ -20,6 +20,7 @@ public class Sizes {
         private TabbedPane() {
         }
 
-        public static final Dimension HEIGHT = new Dimension(0, 150);
+        public static final Dimension HEIGHT_LEFT_PLACEMENT = new Dimension(0, 150);
+        public static final Dimension HEIGHT_TOP_PLACEMENT = new Dimension(0, 200);
     }
 }
