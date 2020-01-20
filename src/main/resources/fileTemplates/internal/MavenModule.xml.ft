@@ -19,13 +19,13 @@
         <dependency>
             <groupId>com.reedelk</groupId>
             <artifactId>module-core</artifactId>
-            <version>0.7.0-SNAPSHOT</version>
+            <version>0.7.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.reedelk</groupId>
             <artifactId>module-rest</artifactId>
-            <version>0.7.0-SNAPSHOT</version>
+            <version>0.7.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
