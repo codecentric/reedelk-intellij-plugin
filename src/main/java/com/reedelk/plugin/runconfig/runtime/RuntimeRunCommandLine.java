@@ -10,8 +10,10 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.reedelk.plugin.commons.FileUtils;
 import com.reedelk.plugin.commons.ProjectSdk;
 import com.reedelk.plugin.runconfig.runtime.parameter.ParameterStrategyBuilder;
+import com.reedelk.runtime.commons.FileExtension;
 import org.jetbrains.annotations.NotNull;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static com.reedelk.plugin.commons.DefaultConstants.NameConvention;
@@ -29,14 +31,13 @@ public class RuntimeRunCommandLine extends JavaCommandLineState {
     @Override
     protected JavaParameters createJavaParameters() throws ExecutionException {
 
-        JavaParameters javaParams = new JavaParameters();
 
         Project project = configuration.getProject();
 
         Sdk sdk = ProjectSdk.of(project).orElseThrow(() ->
                 new ExecutionException(message("error.sdk.not.selected")));
 
-        javaParams.setJdk(sdk);
+        JavaParameters javaParams = new JavaParameters();
 
         ParametersList parameters = javaParams.getVMParametersList();
 
@@ -44,10 +45,16 @@ public class RuntimeRunCommandLine extends JavaCommandLineState {
 
         String runtimeHomeDirectory = configuration.getRuntimeHomeDirectory();
 
-        String jarPath = getJarPath(runtimeHomeDirectory);
+        Path libsPath = Paths.get(runtimeHomeDirectory,
+                NameConvention.RUNTIME_PACKAGE_LIB_DIRECTORY, "*");
+        Path runtimePath = Paths.get(runtimeHomeDirectory,
+                NameConvention.RUNTIME_PACKAGE_BIN_DIRECTORY,
+                NameConvention.RUNTIME_JAR_FILE_PREFIX + "." + FileExtension.JAR.value());
 
-        javaParams.setJarPath(jarPath);
-
+        javaParams.setJdk(sdk);
+        javaParams.getClassPath().add(libsPath.toString());
+        javaParams.getClassPath().add(runtimePath.toString());
+        javaParams.setMainClass(NameConvention.RUNTIME_LAUNCHER_CLASS);
         return javaParams;
     }
 

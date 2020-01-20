@@ -39,12 +39,16 @@ public class DefaultConstants {
     public static class NameConvention {
         private NameConvention() {
         }
+        // NAME_CONVENTION: Depends on launcher main class fully qualified name
+        public static final String RUNTIME_LAUNCHER_CLASS = "com.reedelk.runtime.Launcher";
         // NAME_CONVENTION: Depends on build file name used
         public static final String RUNTIME_DISTRIBUTION_ROOT_FOLDER_PREFIX = "reedelk-runtime-";
         // NAME_CONVENTION: Depends on the artifactId of the runtime artifact .jar (runtime) project.
         public static final String RUNTIME_JAR_FILE_PREFIX = "runtime";
         // NAME_CONVENTION: Depends on runtime package structure
         public static final String RUNTIME_PACKAGE_BIN_DIRECTORY = "bin";
+        // NAME_CONVENTION: Depends on runtime package structure
+        public static final String RUNTIME_PACKAGE_LIB_DIRECTORY = "lib";
         // NAME_CONVENTION: Depends on runtime package structure
         public static final String RUNTIME_PACKAGE_CONFIG_DIRECTORY = "config";
         // NAME_CONVENTION: Depends on runtime package structure
