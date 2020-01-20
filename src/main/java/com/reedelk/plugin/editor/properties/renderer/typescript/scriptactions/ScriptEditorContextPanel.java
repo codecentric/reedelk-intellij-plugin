@@ -55,8 +55,10 @@ class ScriptEditorContextPanel extends DisposablePanel implements CompletionServ
         this.panelVariablesWrapper.setLayout(boxLayout);
         this.panelVariablesWrapper.setBorder(empty(5));
 
-        CompletionService.getInstance(module).contextVariablesOf(componentFullyQualifiedName).forEach(suggestion ->
-                panelVariablesWrapper.add(new ContextVariableLabel(suggestion.getToken(), suggestion.getTypeName())));
+        CompletionService.getInstance(module)
+                .contextVariablesOf(componentFullyQualifiedName)
+                .forEach(suggestion ->
+                        panelVariablesWrapper.add(new ContextVariableLabel(suggestion.getToken(), suggestion.getTypeName())));
 
         JBScrollPane panelVariablesScrollPane = new JBScrollPane(panelVariablesWrapper);
         panelVariablesScrollPane.setBorder(empty());
@@ -73,13 +75,15 @@ class ScriptEditorContextPanel extends DisposablePanel implements CompletionServ
 
     @Override
     public void onCompletionsUpdated() {
-        CompletionService.getInstance(module).contextVariablesOf(componentFullyQualifiedName).forEach(suggestion ->
-                panelVariablesWrapper.add(new ContextVariableLabel(suggestion.getToken(), suggestion.getTypeName())));
+        panelVariablesWrapper.removeAll();
+        CompletionService.getInstance(module)
+                .contextVariablesOf(componentFullyQualifiedName)
+                .forEach(suggestion ->
+                        panelVariablesWrapper.add(new ContextVariableLabel(suggestion.getToken(), suggestion.getTypeName())));
         SwingUtilities.invokeLater(panelVariablesWrapper::repaint);
     }
 
     static class ContextVariableLabel extends JLabel {
-
         ContextVariableLabel(String name, String type) {
             super(message("script.editor.context.vars.html.template", name, type));
             setIcon(SuggestionType.VARIABLE.icon());
