@@ -12,10 +12,9 @@
 
     <change-notes><![CDATA[
 	    <ul>
-	        <li>Feature: project module automatically deployed when runtime started.</li>
-	        <li>Feature: added plugin icon.</li>
-	        <li>Bugfix: removed deprecated usages of: com.intellij.ui.ListCellRendererWrapper.</li>
-	        <li>Bugfix: fixed incompatibility with IntelliJ 2019.1.4: removed usages of com.intellij.ui.SimpleListCellRenderer.</li>
+	        <li>Feature: added support for Map properties tab placement on top in addition to left tabs.</li>
+	        <li>Feature: Reedelk's runtime is not started using lib folder in the classpath as well: this allows to load external libraries such as SQL drivers and make them available to components.</li>
+	        <li>Bugfix: icon and component image not found exception thrown has been fixed. Now an info message is logged and default component icon is used.</li>
         </ul>
       ]]>
     </change-notes>
