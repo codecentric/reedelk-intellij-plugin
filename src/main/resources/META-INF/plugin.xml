@@ -12,9 +12,7 @@
 
     <change-notes><![CDATA[
 	    <ul>
-	        <li>Feature: added support for Map properties tab placement on top in addition to left tabs.</li>
-	        <li>Feature: Reedelk's runtime is not started using lib folder in the classpath as well: this allows to load external libraries such as SQL drivers and make them available to components.</li>
-	        <li>Bugfix: icon and component image not found exception thrown has been fixed. Now an info message is logged and default component icon is used.</li>
+	        <li>Feature: improved project deployment time when there are no Java classes with custom components to be packaged.</li>
         </ul>
       ]]>
     </change-notes>
