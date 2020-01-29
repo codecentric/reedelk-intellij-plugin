@@ -2,7 +2,7 @@ package com.reedelk.plugin.service.module.impl.runtimeapi;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.commons.FlowErrorResponse;
-import com.reedelk.plugin.maven.MavenPackageGoal;
+import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.service.module.HttpService;
 import com.reedelk.plugin.service.module.RuntimeApiService;
 import com.reedelk.plugin.service.module.impl.http.HttpResponse;
@@ -78,7 +78,7 @@ public class RuntimeApiServiceImpl implements RuntimeApiService {
     @Override
     public void install(String moduleFile, String address, int port, OperationCallback callback) {
         String requestUrl = RestApi.apiURLOf(address, port, RestApi.MODULE_DEPLOY);
-        File file  = new File(moduleFile);
+        File file = new File(moduleFile);
         try {
             HttpResponse response = HttpService.getInstance(module).postMultipart(requestUrl, file, "moduleFilePath");
             if (response.isSuccessful()) {
@@ -129,21 +129,24 @@ public class RuntimeApiServiceImpl implements RuntimeApiService {
     private void handleModulePackageNotInstalled(String moduleJarFile, String address, int port, OperationCallback callback) {
         // The module we tried to Hot Swap was not installed in the Runtime.
         // The .jar artifact does not exists in the /target folder, therefore we must re-package the module
-        // by executing 'maven package' goal and then install it in the runtime.
-        // IMPORTANT: It is important to re-package the module since the files supposed to be hot
-        //  swapped are not in the jar yet.
-        MavenPackageGoal packageGoal = new MavenPackageGoal(module.getProject(), module.getName(), result -> {
-            if (!result) {
-                // Maven package goal was not successful
-                IOException exception = new IOException(message("module.run.error.maven.goal.package.failed", module.getName()));
-                callback.onError(exception);
-            } else {
+        // by executing 'maven package' goal or manually creating the jar and then install it in the runtime.
+        // IMPORTANT: It is important to re-package the module since the files supposed to be hot swapped are not in the jar yet!
+        ModulePackager packager = new ModulePackager(module.getProject(), module.getName(), new ModulePackager.OnModulePackaged() {
+            @Override
+            public void onDone() {
                 // The  Maven package goal was successful. The .jar artifact is in the /target folder and we can
                 // deploy the package onto the ESB runtime.
                 deploy(moduleJarFile, address, port, callback);
             }
+
+            @Override
+            public void onError(Exception exception) {
+                // Maven package goal was not successful
+                PluginException wrapped = new PluginException(message("module.run.error.maven.goal.package.failed", module.getName()), exception);
+                callback.onError(wrapped);
+            }
         });
-        packageGoal.execute();
+        packager.doPackage();
     }
 
     private void handleNotSuccessfulResponse(HttpResponse response, OperationCallback callback) {

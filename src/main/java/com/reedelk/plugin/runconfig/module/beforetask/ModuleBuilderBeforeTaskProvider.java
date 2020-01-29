@@ -3,7 +3,6 @@ package com.reedelk.plugin.runconfig.module.beforetask;
 import com.intellij.execution.BeforeRunTaskProvider;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -18,13 +17,14 @@ import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.commons.RuntimeComboManager;
 import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
-import com.reedelk.plugin.maven.MavenPackageGoal;
+import com.reedelk.plugin.exception.PluginException;
+import com.reedelk.plugin.maven.MavenUtils;
 import com.reedelk.plugin.runconfig.module.ModuleRunConfiguration;
 import com.reedelk.plugin.runconfig.module.runner.ModuleUnDeployExecutor;
+import com.reedelk.plugin.service.module.impl.runtimeapi.ModulePackager;
 import com.reedelk.plugin.service.project.SourceChangeService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.idea.maven.utils.MavenLog;
 
 import javax.swing.*;
 
@@ -76,7 +76,7 @@ public class ModuleBuilderBeforeTaskProvider extends BeforeRunTaskProvider<Modul
     }
 
     @Override
-    public boolean executeTask(DataContext context, @NotNull RunConfiguration configuration, @NotNull ExecutionEnvironment env, @NotNull ModuleBuilderBeforeTask task) {
+    public boolean executeTask(@NotNull DataContext context, @NotNull RunConfiguration configuration, @NotNull ExecutionEnvironment env, @NotNull ModuleBuilderBeforeTask task) {
 
         if (!(configuration instanceof ModuleRunConfiguration)) return false;
 
@@ -125,42 +125,48 @@ public class ModuleBuilderBeforeTaskProvider extends BeforeRunTaskProvider<Modul
         final Semaphore targetDone = new Semaphore();
         final boolean[] result = new boolean[]{true};
 
-        try {
-            ApplicationManager.getApplication().invokeAndWait(() -> {
+        ApplicationManager.getApplication().invokeAndWait(() -> {
+            // We must commit so that listeners e.g Tables can fire "stopCellEditing" to write
+            // the values into the DataHolders so that they can be written into the document.
+            MessageBus messageBus = env.getProject().getMessageBus();
+            CommitPropertiesListener publisher = messageBus.syncPublisher(COMMIT_COMPONENT_PROPERTIES_EVENTS);
+            publisher.onCommit();
 
-                // We must commit so that listeners e.g Tables can fire "stopCellEditing" to write
-                // the values into the DataHolders so that they can be written into the document.
-                MessageBus messageBus = env.getProject().getMessageBus();
-                CommitPropertiesListener publisher = messageBus.syncPublisher(COMMIT_COMPONENT_PROPERTIES_EVENTS);
-                publisher.onCommit();
+            // By saving all documents we force the File listener
+            // to commit all files. This way we know if we can hot swap or not.
+            FileDocumentManager.getInstance().saveAllDocuments();
 
-                // By saving all documents we force the File listener
-                // to commit all files. This way we know if we can hot swap or not.
-                FileDocumentManager.getInstance().saveAllDocuments();
-
-                // No Need to re-compile and build the project.
-                if (SourceChangeService.getInstance(env.getProject()).isHotSwap(runtimeConfigName, moduleName)) {
-                    return;
-                }
-
-                final Project project = CommonDataKeys.PROJECT.getData(context);
-                if (project == null || project.isDisposed()) return;
-
+            // If the maven artifact does not exists -> then we need to build it.
+            // If it is not hot swap -> then we need to re-build it (something has changed in the java source code).
+            if (!MavenUtils.existsMavenArtifact(env.getProject(), moduleName) ||
+                    !SourceChangeService.getInstance(env.getProject()).isHotSwap(runtimeConfigName, moduleName)) {
                 targetDone.down();
-                MavenPackageGoal packageGoal = new MavenPackageGoal(project, moduleName, goalResult -> {
-                    result[0] = goalResult;
-                    targetDone.up();
+                buildPackage(env.getProject(), moduleName, new ModulePackager.OnModulePackaged() {
+                    @Override
+                    public void onDone() {
+                        result[0] = true;
+                        targetDone.up();
+                    }
+
+                    @Override
+                    public void onError(Exception exception) {
+                        result[0] = false;
+                        targetDone.up();
+                    }
                 });
-                packageGoal.execute();
-
-            }, ModalityState.NON_MODAL);
-
-        } catch (Exception e) {
-            MavenLog.LOG.error(e);
-            return false;
-        }
+            }
+        }, ModalityState.NON_MODAL);
 
         targetDone.waitFor();
         return result[0];
+    }
+
+    private void buildPackage(Project project, String moduleName, ModulePackager.OnModulePackaged callback) {
+        if (project == null || project.isDisposed()) {
+            callback.onError(new PluginException("Project is disposed."));
+        } else {
+            ModulePackager packager = new ModulePackager(project, moduleName, callback);
+            packager.doPackage();
+        }
     }
 }
