@@ -64,8 +64,9 @@ public class MavenUtils {
                             .collect(Collectors.toList());
                     return !collect.isEmpty();
                 } catch (IOException exception) {
-                    LOG.error(message("error.reading.sources.directory"), exception);
-                    return true;
+                    // The java directory does not exists. Therefore we are ok.
+                    LOG.warn(message("error.reading.sources.directory", exception.getMessage()));
+                    return false;
                 }
             });
         }).orElse(false);
