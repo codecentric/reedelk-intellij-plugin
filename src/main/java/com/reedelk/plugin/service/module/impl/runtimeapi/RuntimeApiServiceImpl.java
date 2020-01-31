@@ -3,6 +3,7 @@ package com.reedelk.plugin.service.module.impl.runtimeapi;
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.commons.FlowErrorResponse;
 import com.reedelk.plugin.exception.PluginException;
+import com.reedelk.plugin.maven.MavenUtils;
 import com.reedelk.plugin.service.module.HttpService;
 import com.reedelk.plugin.service.module.RuntimeApiService;
 import com.reedelk.plugin.service.module.impl.http.HttpResponse;
@@ -160,12 +161,14 @@ public class RuntimeApiServiceImpl implements RuntimeApiService {
 
     private void waitUntilInstalled(String address, int port) throws InterruptedException {
         int attempts = 0;
+        //The installed module has name equal to the artifact id.
+        String artifactId = MavenUtils.getMavenProject(module).get().getMavenId().getArtifactId();
         do {
             Thread.sleep(100);
             Collection<ModuleGETRes> moduleGETRes = installedModules(address, port);
             boolean found = moduleGETRes.stream()
                     .anyMatch(installedModule ->
-                            installedModule.getName().equals(module.getName()));
+                            installedModule.getName().equals(artifactId));
             if (found) return;
             attempts++;
         } while (attempts < 30);
