@@ -12,7 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Vector;
 
-public class DynamicStringMapPropertyRenderer extends BaseMapPropertyRenderer {
+public class DynamicMapPropertyRenderer extends BaseMapPropertyRenderer {
 
     @SuppressWarnings("unchecked")
     @Override

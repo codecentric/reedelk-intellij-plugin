@@ -8,6 +8,7 @@ import com.reedelk.runtime.api.resource.DynamicResource;
 import com.reedelk.runtime.api.resource.ResourceBinary;
 import com.reedelk.runtime.api.resource.ResourceText;
 import com.reedelk.runtime.api.script.Script;
+import com.reedelk.runtime.api.script.dynamicmap.DynamicObjectMap;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicStringMap;
 import com.reedelk.runtime.api.script.dynamicvalue.*;
 import com.reedelk.runtime.converter.json.JsonObjectConverter;
@@ -67,6 +68,7 @@ public class ConfigPropertyAwareConverters implements Converter {
         tmp.put(ResourceBinary.class, new AsResourceBinary());
 
         tmp.put(DynamicStringMap.class, new AsDynamicStringMap());
+        tmp.put(DynamicObjectMap.class, new AsDynamicObjectMap());
 
         CONFIG_PROPERTY_AWARE_CONVERTERS = Collections.unmodifiableMap(tmp);
     }
