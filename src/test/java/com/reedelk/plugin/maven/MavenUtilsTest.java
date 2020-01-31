@@ -21,7 +21,7 @@ class MavenUtilsTest {
     private MavenProject mavenProject;
 
     @Test
-    void shouldReturnCorrectJarFileWithPath() {
+    void shouldReturnCorrectModuleJarFileWithPath() {
         // Given
         MavenId mavenId = new MavenId("com.test", "module-xyz", "1.4.0");
         doReturn(mavenId)
@@ -34,7 +34,28 @@ class MavenUtilsTest {
                 .getBuildDirectory();
 
         // When
-        String moduleJarFile = MavenUtils.getModuleJarFile(mavenProject);
+        String moduleJarFile = MavenUtils.getModuleJarFile(mavenProject).toString();
+
+        // Then
+        String expected = Paths.get(File.separator + "projects", "myproject", "target", "module-xyz-1.4.0.jar").toString();
+        assertThat(moduleJarFile).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldReturnCorrectModuleJarFileURIWithPath() {
+        // Given
+        MavenId mavenId = new MavenId("com.test", "module-xyz", "1.4.0");
+        doReturn(mavenId)
+                .when(mavenProject)
+                .getMavenId();
+
+        String buildDirectory = File.separator + "projects" + File.separator + "myproject" + File.separator + "target";
+        doReturn(buildDirectory)
+                .when(mavenProject)
+                .getBuildDirectory();
+
+        // When
+        String moduleJarFile = MavenUtils.getModuleJarFileURI(mavenProject);
 
         // Then
         URI uri = Paths.get(File.separator + "projects", "myproject", "target", "module-xyz-1.4.0.jar").toUri();

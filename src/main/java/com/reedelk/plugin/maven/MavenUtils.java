@@ -8,7 +8,6 @@ import org.jetbrains.idea.maven.model.MavenId;
 import org.jetbrains.idea.maven.project.MavenProject;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,10 +26,9 @@ public class MavenUtils {
     }
 
     public static boolean existsMavenArtifact(Project project, String moduleName) {
-        return getMavenProject(project, moduleName).map(mavenProject -> {
-            String moduleJarFilePath = getModuleJarFile(mavenProject);
-            return new File(moduleJarFilePath).exists();
-        }).orElse(false);
+        return getMavenProject(project, moduleName).map(mavenProject ->
+                getModuleJarFile(mavenProject).toFile().exists())
+                .orElse(false);
     }
 
     public static Optional<MavenProject> getMavenProject(Module module) {
@@ -46,12 +44,14 @@ public class MavenUtils {
         return ModuleManager.getInstance(project).findModuleByName(moduleName);
     }
 
-    public static String getModuleJarFile(MavenProject mavenProject) {
+    public static Path getModuleJarFile(MavenProject mavenProject) {
         String targetDir = mavenProject.getBuildDirectory();
         MavenId mavenId = mavenProject.getMavenId();
-        return Paths.get(targetDir, mavenId.getArtifactId() + "-" + mavenId.getVersion() + ".jar")
-                .toUri()
-                .toString();
+        return Paths.get(targetDir, mavenId.getArtifactId() + "-" + mavenId.getVersion() + ".jar");
+    }
+
+    public static String getModuleJarFileURI(MavenProject mavenProject) {
+        return getModuleJarFile(mavenProject).toUri().toString();
     }
 
     public static boolean containsAnySourceFile(Project project, String moduleName) {

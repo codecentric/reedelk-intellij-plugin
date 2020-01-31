@@ -49,7 +49,7 @@ abstract class AbstractRunProfile implements RunProfileState {
         }
 
         MavenProject mavenProject = optionalMavenProject.get();
-        String moduleJarFilePath = MavenUtils.getModuleJarFile(mavenProject);
+        String moduleJarFilePath = MavenUtils.getModuleJarFileURI(mavenProject);
 
         RunnerAndConfigurationSettings configSettings = RunManager.getInstance(project).findConfigurationByName(runtimeConfigName);
         if (configSettings == null) {

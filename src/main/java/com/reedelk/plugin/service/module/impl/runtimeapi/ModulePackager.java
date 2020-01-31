@@ -7,9 +7,6 @@ import com.reedelk.plugin.maven.MavenUtils;
 import org.jetbrains.idea.maven.model.MavenResource;
 import org.jetbrains.idea.maven.project.MavenProject;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,23 +52,14 @@ public class ModulePackager {
                 callback.onError(new PluginException("Resources directory does not exists"));
             }
             String resourcesDirectory = first.get().getDirectory();
-            String moduleJarFilePath = MavenUtils.getModuleJarFile(mavenProject);
-            String realPath = realPathFrom(moduleJarFilePath);
-            ModuleJarBuilder moduleJarBuilder = new ModuleJarBuilder(realPath, resourcesDirectory, version, artifactId);
+            String moduleJarFilePath = MavenUtils.getModuleJarFile(mavenProject).toString();
+            ModuleJarBuilder moduleJarBuilder = new ModuleJarBuilder(moduleJarFilePath, resourcesDirectory, version, artifactId);
             try {
                 moduleJarBuilder.run();
                 callback.onDone();
             } catch (Exception exception) {
                 callback.onError(exception);
             }
-        }
-    }
-
-    private String realPathFrom(String moduleJarFilePath) {
-        try {
-            return Paths.get(new URI(moduleJarFilePath)).toString();
-        } catch (URISyntaxException e) {
-            throw new PluginException(String.format("Could not create real path from %s", moduleJarFilePath), e);
         }
     }
 
