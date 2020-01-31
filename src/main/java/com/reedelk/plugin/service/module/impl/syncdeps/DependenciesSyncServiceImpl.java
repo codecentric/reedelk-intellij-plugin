@@ -6,6 +6,7 @@ import com.intellij.openapi.util.Version;
 import com.reedelk.plugin.commons.ExcludedArtifactsFromModuleSync;
 import com.reedelk.plugin.commons.Versions;
 import com.reedelk.plugin.executor.PluginExecutors;
+import com.reedelk.plugin.maven.MavenResolveGoal;
 import com.reedelk.plugin.maven.MavenUtils;
 import com.reedelk.plugin.service.module.CheckStateService;
 import com.reedelk.plugin.service.module.DependenciesSyncService;
@@ -21,6 +22,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.service.module.RuntimeApiService.OperationCallback;
@@ -36,22 +38,42 @@ public class DependenciesSyncServiceImpl implements DependenciesSyncService {
     }
 
     @Override
-    public void syncInstalledModules(String runtimeHostAddress, int runtimeHostPort) {
+    public void syncInstalledModules(String runtimeHostAddress, int runtimeHostPort, Consumer<Void> onDone) {
         PluginExecutors.run(module,
                 message("module.sync.task.title", module.getName()),
                 indicator -> {
-                    // Sync modules from Maven pom and Runtime.
-                    internalSyncInstalledModules(runtimeHostAddress, runtimeHostPort);
 
-                    // Check if the current module in the Runtime was not started or resolved.
-                    checkModuleStateService().checkModuleState(runtimeHostAddress, runtimeHostPort);
+                    boolean moduleUnresolved = checkModuleStateService().isModuleUnresolved(runtimeHostAddress, runtimeHostPort);
+                    if (moduleUnresolved) {
+                        // We must make sure all artifacts from the pom file have been downloaded: otherwise we cannot
+                        // install them into the runtime.
+                        MavenResolveGoal resolveGoal = new MavenResolveGoal(module.getProject(), module.getName(), result -> {
+                            // Sync modules from Maven pom and Runtime.
+                            internalSyncInstalledModules(runtimeHostAddress, runtimeHostPort);
+
+                            onDone.accept(null);
+
+                            // Check if the current module in the Runtime was not started or resolved.
+                            checkModuleStateService().checkModuleState(runtimeHostAddress, runtimeHostPort);
+
+                        });
+                        resolveGoal.execute();
+
+                    } else {
+                        onDone.accept(null);
+
+                        // Check if the current module in the Runtime was not started or resolved.
+                        checkModuleStateService().checkModuleState(runtimeHostAddress, runtimeHostPort);
+                    }
+
                 });
     }
 
     void internalSyncInstalledModules(String runtimeHostAddress, int runtimeHostPort) {
         moduleMavenProject().ifPresent(mavenProject -> {
             Collection<ModuleGETRes> runtimeModules =
-                    runtimeApiService().installedModules(runtimeHostAddress, runtimeHostPort);
+                    runtimeApiService()
+                            .installedModules(runtimeHostAddress, runtimeHostPort);
             // We get dependencies from the dependency tree because we only want the root dependencies,
             // i.e the ones defined in the pom file. If we would call mavenProject.getDependencies() we would
             // also get back the transitive dependencies. Moreover, we filter out some dependencies which are

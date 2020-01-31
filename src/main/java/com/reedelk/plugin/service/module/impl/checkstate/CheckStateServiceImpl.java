@@ -32,11 +32,25 @@ public class CheckStateServiceImpl implements CheckStateService {
                 indicator -> internalCheckModuleState(runtimeHostAddress, runtimeHostPort));
     }
 
+    @Override
+    public boolean isModuleUnresolved(String runtimeHostAddress, int runtimeHostPort) {
+        return moduleMavenProject().flatMap(mavenProject ->
+                Optional.ofNullable(mavenProject.getMavenId().getArtifactId())
+                        .flatMap(artifactId -> runtimeApiService()
+                                .installedModules(runtimeHostAddress, runtimeHostPort)
+                                .stream()
+                                .filter(runtimeModule -> Objects.equals(artifactId, runtimeModule.getName()))
+                                .findFirst()))
+                .map(moduleGETRes -> ModuleState.UNRESOLVED.name().equals(moduleGETRes.getState()))
+                .orElse(false);
+    }
+
     void internalCheckModuleState(String runtimeHostAddress, int runtimeHostPort) {
         // We only check for modules matching the current module's artifact id.
         moduleMavenProject().flatMap(mavenProject ->
                 Optional.ofNullable(mavenProject.getMavenId().getArtifactId()).flatMap(artifactId ->
-                        runtimeApiService().installedModules(runtimeHostAddress, runtimeHostPort)
+                        runtimeApiService()
+                                .installedModules(runtimeHostAddress, runtimeHostPort)
                                 .stream()
                                 .filter(runtimeModule -> Objects.equals(artifactId, runtimeModule.getName()))
                                 .findFirst())).ifPresent(runtimeModule -> notifyFromStateIfNeeded(runtimeModule, runtimeHostAddress, runtimeHostPort));

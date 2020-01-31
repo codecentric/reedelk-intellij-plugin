@@ -66,11 +66,13 @@ public class RuntimeApiServiceImpl implements RuntimeApiService {
         try {
             HttpResponse response = HttpService.getInstance(module).post(requestUrl, jsonBody, JSON);
             if (response.isSuccessful()) {
+                // We must wait because this the deployment and start of the module is async.
+                waitUntilInstalled(address, port);
                 callback.onSuccess();
             } else {
                 handleNotSuccessfulResponse(response, callback);
             }
-        } catch (IOException exception) {
+        } catch (Exception exception) {
             callback.onError(exception);
         }
     }
@@ -154,5 +156,20 @@ public class RuntimeApiServiceImpl implements RuntimeApiService {
                 .map(flowError -> new IOException(flowError.getErrorMessage()))
                 .orElse(new IOException(response.getBody()));
         callback.onError(exception);
+    }
+
+    private void waitUntilInstalled(String address, int port) throws InterruptedException {
+        int attempts = 0;
+        do {
+            Thread.sleep(100);
+            Collection<ModuleGETRes> moduleGETRes = installedModules(address, port);
+            boolean found = moduleGETRes.stream()
+                    .anyMatch(installedModule ->
+                            installedModule.getName().equals(module.getName()));
+            if (found) return;
+            attempts++;
+        } while (attempts < 30);
+
+        throw new PluginException("Could not find installed module: " + module.getName());
     }
 }

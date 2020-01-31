@@ -11,4 +11,6 @@ public interface CheckStateService {
     }
 
     void checkModuleState(String runtimeHostAddress, int runtimeHostPort);
+
+    boolean isModuleUnresolved(String runtimeHostAddress, int runtimeHostPort);
 }

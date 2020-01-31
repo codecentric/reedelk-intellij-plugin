@@ -48,14 +48,14 @@ public class DeployRunProfile extends AbstractRunProfile {
         RuntimeApiService.getInstance(module).deploy(moduleFile, address, port, new OperationCallback() {
             @Override
             public void onSuccess() {
-                String message = message("module.run.deploy", module.getName());
-                ToolWindowUtils.notifyInfo(module.getProject(), message, runtimeConfigName);
-                SourceChangeService.getInstance(project).unchanged(runtimeConfigName, moduleName);
-
                 // Check if there are modules not installed (or installed but with a different version)
                 // in the runtime. If so, then install them so that the current deployed flow can be
                 // started and executed correctly.
-                DependenciesSyncService.getInstance(module).syncInstalledModules(address, port);
+                DependenciesSyncService.getInstance(module).syncInstalledModules(address, port, aVoid -> {
+                    String message = message("module.run.deploy", module.getName());
+                    ToolWindowUtils.notifyInfo(module.getProject(), message, runtimeConfigName);
+                    SourceChangeService.getInstance(project).unchanged(runtimeConfigName, moduleName);
+                });
             }
 
             @Override
@@ -73,13 +73,13 @@ public class DeployRunProfile extends AbstractRunProfile {
         RuntimeApiService.getInstance(module).hotSwap(moduleFile, resourcesRootDirectory, address, port, new OperationCallback() {
             @Override
             public void onSuccess() {
-                String message = message("module.run.update", module.getName());
-                ToolWindowUtils.notifyInfoWithoutShowing(module.getProject(), message, runtimeConfigName);
-
                 // Check if there are modules not installed (or installed but with a different version)
                 // in the runtime. If so, then install them so that the current deployed flow can be
                 // started and executed correctly.
-                DependenciesSyncService.getInstance(module).syncInstalledModules(address, port);
+                DependenciesSyncService.getInstance(module).syncInstalledModules(address, port, aVoid -> {
+                    String message = message("module.run.update", module.getName());
+                    ToolWindowUtils.notifyInfoWithoutShowing(module.getProject(), message, runtimeConfigName);
+                });
             }
 
             @Override
