@@ -12,7 +12,7 @@
 
     <change-notes><![CDATA[
 	    <ul>
-	        <li>Feature: improved project deployment time when there are no Java classes with custom components to be packaged.</li>
+	        <li>Feature: Aligned runtime and modules to v0.8.0</li>
         </ul>
       ]]>
     </change-notes>
