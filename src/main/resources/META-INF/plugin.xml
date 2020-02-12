@@ -1,11 +1,11 @@
 <idea-plugin>
     <id>com.reedelk.plugin</id>
     <name>Reedelk Flow Designer</name>
-    <vendor email="info@reedelk.com" url="http://www.reedelk.com">Reedelk</vendor>
+    <vendor email="info@reedelk.com" url="https://www.reedelk.com">Reedelk</vendor>
 
     <description>
         <![CDATA[
-            <p>Reedelk Integration Platform IntelliJ Flow Designer www.reedelk.com</p>
+            <p>Reedelk Integration Platform IntelliJ Flow Designer</p>
         ]]>
     </description>
 
