@@ -2,6 +2,7 @@ package com.reedelk.plugin.builder;
 
 import com.intellij.util.io.ZipUtil;
 import com.reedelk.plugin.commons.TmpRandomDirectory;
+import com.reedelk.plugin.message.ReedelkBundle;
 import com.reedelk.plugin.service.module.impl.http.RestClientProvider;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -20,8 +21,8 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 class RuntimeDistributionHelper {
 
     private static final String DOWNLOAD_LATEST_DISTRIBUTION_URL =
-            NameConvention.RUNTIME_ONLINE_DISTRIBUTION_URL +
-                    NameConvention.RUNTIME_ONLINE_DISTRIBUTION_ZIP_FILE_NAME;
+            ReedelkBundle.message("version.latest.runtime.zip.url");
+    private static final String DISTRIBUTION_ZIP_FILE_NAME = "distribution.zip";
 
     private RuntimeDistributionHelper() {
     }
@@ -40,7 +41,7 @@ class RuntimeDistributionHelper {
                 // Prepare directories
                 Path tmpRandomDirectory = TmpRandomDirectory.get();
                 Path distributionZipFilePath =
-                        Paths.get(tmpRandomDirectory.toString(), NameConvention.RUNTIME_ONLINE_DISTRIBUTION_ZIP_FILE_NAME);
+                        Paths.get(tmpRandomDirectory.toString(), DISTRIBUTION_ZIP_FILE_NAME);
                 File distributionZipFile = distributionZipFilePath.toFile();
                 FileUtils.copyInputStreamToFile(initialStream, distributionZipFile);
 

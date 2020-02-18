@@ -53,10 +53,6 @@ public class DefaultConstants {
         public static final String RUNTIME_PACKAGE_CONFIG_DIRECTORY = "config";
         // NAME_CONVENTION: Depends on runtime package structure
         public static final String RUNTIME_PACKAGE_MODULES_DIRECTORY = "modules";
-        // NAME_CONVENTION: Depends on url location of distribution
-        public static final String RUNTIME_ONLINE_DISTRIBUTION_URL = "http://reedelk.com/distributions/";
-        // NAME_CONVENTION: Depends on latest build file name used
-        public static final String RUNTIME_ONLINE_DISTRIBUTION_ZIP_FILE_NAME = "reedelk-runtime-latest.zip";
         // NAME_CONVENTION: Depends on admin console runtime properties
         public static final String DEFAULT_ADMIN_PORT_PARAM_NAME = "admin.console.port";
         // NAME_CONVENTION: Depends on admin console runtime properties
