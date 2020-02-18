@@ -51,6 +51,9 @@ class HelloWorldProjectBuilderHelper extends AbstractProjectBuilderHelper {
                         .ifPresent(virtualFile -> FileEditorManager.getInstance(project).openFile(virtualFile, true));
             });
 
+            // Assets
+            createDirectory(root, PROJECT_RESOURCES_FOLDER + Assets.RESOURCE_DIRECTORY);
+
             ToolWindowUtils.showComponentsPaletteToolWindow(project);
         });
     }
