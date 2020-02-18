@@ -12,7 +12,8 @@
 
     <change-notes><![CDATA[
 	    <ul>
-	        <li>Feature: Aligned runtime and modules to v0.8.0</li>
+	        <li>Feature: Aligned runtime and modules to v0.8.1.</li>
+	        <li>Bugfix: Fixed bug which prevented setting VM options from 'Reedelk Runtime Run' configuration definition.</li>
         </ul>
       ]]>
     </change-notes>

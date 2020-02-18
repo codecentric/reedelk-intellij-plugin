@@ -16,5 +16,8 @@ abstract class BaseParameterStrategy implements ParameterStrategy {
         if (StringUtils.isNotBlank(configuration.getRuntimeBindAddress())) {
             parameters.add("-D" + NameConvention.DEFAULT_ADMIN_HOST_PARAM_NAME + "=" + configuration.getRuntimeBindAddress());
         }
+        if (StringUtils.isNotBlank(configuration.getVmOptions())) {
+            parameters.add(configuration.getVmOptions());
+        }
     }
 }
