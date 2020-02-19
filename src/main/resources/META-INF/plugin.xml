@@ -12,9 +12,7 @@
 
     <change-notes><![CDATA[
 	    <ul>
-	        <li>Feature: Aligned runtime and modules to v0.8.1.</li>
-	        <li>Feature: Automatically create /assets folder inside the project's resources whenever a new project is created.</li>
-	        <li>Bugfix: Fixed bug which prevented setting VM options from 'Reedelk Runtime Run' configuration definition.</li>
+	        <li>Add release notes for 0.8.2-SNAPSHOT</li>
         </ul>
       ]]>
     </change-notes>
