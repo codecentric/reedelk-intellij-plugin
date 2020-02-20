@@ -24,22 +24,22 @@ public class ComponentDataHolderSerializer {
 
     public static void serialize(@NotNull ComponentData componentData,
                                  @NotNull JSONObject parent) {
-        List<ComponentPropertyDescriptor> propertiesDescriptors = componentData.getPropertiesDescriptors();
+        List<PropertyDescriptor> propertiesDescriptors = componentData.getPropertiesDescriptors();
         serialize(componentData, parent, propertiesDescriptors);
     }
 
     public static void serialize(@NotNull TypeObjectDescriptor typeObjectDescriptor,
                                  @NotNull ComponentDataHolder dataHolder,
                                  @NotNull JSONObject jsonObject) {
-        List<ComponentPropertyDescriptor> propertiesDescriptor = typeObjectDescriptor.getObjectProperties();
+        List<PropertyDescriptor> propertiesDescriptor = typeObjectDescriptor.getObjectProperties();
         serialize(dataHolder, jsonObject, propertiesDescriptor);
     }
 
     private static void serialize(@NotNull ComponentDataHolder componentData,
                                   @NotNull JSONObject parent,
-                                  @NotNull List<ComponentPropertyDescriptor> propertiesDescriptors) {
+                                  @NotNull List<PropertyDescriptor> propertiesDescriptors) {
         propertiesDescriptors.forEach(propertyDescriptor -> {
-            List<WhenDescriptor> whens = propertyDescriptor.getWhenDescriptors();
+            List<WhenDescriptor> whens = propertyDescriptor.getWhens();
             if (whens.isEmpty()) {
                 // If there are no when conditions, we serialize the value.
                 serialize(componentData, parent, propertyDescriptor);
@@ -55,8 +55,8 @@ public class ComponentDataHolderSerializer {
 
     private static void serialize(@NotNull ComponentDataHolder dataHolder,
                                   @NotNull JSONObject jsonObject,
-                                  @NotNull ComponentPropertyDescriptor propertyDescriptor) {
-        String propertyName = propertyDescriptor.getPropertyName();
+                                  @NotNull PropertyDescriptor propertyDescriptor) {
+        String propertyName = propertyDescriptor.getName();
         if (dataHolder.has(propertyName)) {
             Object data = dataHolder.get(propertyName);
             if (isTypeObject(data)) {
@@ -67,10 +67,10 @@ public class ComponentDataHolderSerializer {
         }
     }
 
-    private static void processTypeObject(@NotNull ComponentPropertyDescriptor propertyDescriptor,
+    private static void processTypeObject(@NotNull PropertyDescriptor propertyDescriptor,
                                           @NotNull JSONObject jsonObject,
                                           @NotNull TypeObject data) {
-        TypeObjectDescriptor propertyType = propertyDescriptor.getPropertyType();
+        TypeObjectDescriptor propertyType = propertyDescriptor.getType();
         if (Shared.YES.equals(propertyType.getShared())) {
             String ref = data.get(JsonParser.Component.ref());
             // An object reference is ONLY serialized when it is present and it is NOT blank.
@@ -89,10 +89,10 @@ public class ComponentDataHolderSerializer {
         }
     }
 
-    private static void putData(@NotNull ComponentPropertyDescriptor propertyDescriptor,
+    private static void putData(@NotNull PropertyDescriptor propertyDescriptor,
                                 @NotNull JSONObject jsonObject,
                                 @Nullable Object data) {
-        String propertyName = propertyDescriptor.getPropertyName();
+        String propertyName = propertyDescriptor.getName();
         Stream.of(data)
                 .filter(ExcludeEmptyMaps)
                 .filter(ExcludeEmptyObjects)

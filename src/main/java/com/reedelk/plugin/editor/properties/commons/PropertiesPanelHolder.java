@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.properties.commons;
 
 import com.reedelk.module.descriptor.model.ComponentDataHolder;
-import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.TypeDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessorFactory;
@@ -25,14 +25,14 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
     private final transient ComponentDataHolder dataHolder;
 
     private final transient List<JComponentHolder> componentHolders = new ArrayList<>();
-    private final transient List<ComponentPropertyDescriptor> descriptors = new ArrayList<>();
+    private final transient List<PropertyDescriptor> descriptors = new ArrayList<>();
 
     private final transient Map<String, PropertyAccessor> propertyAccessors = new HashMap<>();
     private final transient Map<String, List<InputChangeListener>> propertyChangeListeners = new HashMap<>();
 
     public PropertiesPanelHolder(@NotNull String componentFullyQualifiedName,
                                  @NotNull ComponentDataHolder dataHolder,
-                                 @NotNull List<ComponentPropertyDescriptor> descriptors,
+                                 @NotNull List<PropertyDescriptor> descriptors,
                                  @Nullable FlowSnapshot snapshot) {
         this.snapshot = snapshot;
         this.dataHolder = dataHolder;
@@ -48,7 +48,7 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
      * Constructor used by a configuration panel Dialog. The configuration panel Dialog does not
      * immediately change the values on the Graph snapshot since it writes the values in a a config file.
      */
-    public PropertiesPanelHolder(@NotNull String componentFullyQualifiedName, ComponentDataHolder dataHolder, List<ComponentPropertyDescriptor> descriptors) {
+    public PropertiesPanelHolder(@NotNull String componentFullyQualifiedName, ComponentDataHolder dataHolder, List<PropertyDescriptor> descriptors) {
         this(componentFullyQualifiedName, dataHolder, descriptors, null);
     }
 
@@ -106,8 +106,8 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
         // to be notified. This is needed for instance to re-compute suggestions when
         // a new JSON schema file is selected from a file chooser input field.
         descriptors.forEach(propertyDescriptor -> {
-            String propertyName = propertyDescriptor.getPropertyName();
-            TypeDescriptor propertyType = propertyDescriptor.getPropertyType();
+            String propertyName = propertyDescriptor.getName();
+            TypeDescriptor propertyType = propertyDescriptor.getType();
             PropertyAccessor propertyAccessor = getAccessor(propertyName, propertyType, dataHolder);
             PropertyAccessor propertyAccessorWrapper = new PropertyChangeNotifierDecorator(this, propertyAccessor);
             propertyAccessors.put(propertyName, propertyAccessorWrapper);

@@ -2,7 +2,7 @@ package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBUI;
-import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.plugin.editor.properties.ClickableLabelWithTooltip;
 
 import javax.swing.*;
@@ -28,9 +28,9 @@ public class PropertyTitleLabel extends JPanel {
         add(textLabel, WEST);
     }
 
-    public PropertyTitleLabel(ComponentPropertyDescriptor propertyDescriptor) {
+    public PropertyTitleLabel(PropertyDescriptor propertyDescriptor) {
         this(propertyDescriptor.getDisplayName());
-        Optional.ofNullable(propertyDescriptor.getPropertyInfo()).ifPresent(propertyInfoText -> {
+        Optional.ofNullable(propertyDescriptor.getDescription()).ifPresent(propertyInfoText -> {
             JLabel infoTooltipIcon = new ClickableLabelWithTooltip(propertyInfoText, Info);
             add(ContainerFactory.pushLeft(infoTooltipIcon), CENTER);
         });

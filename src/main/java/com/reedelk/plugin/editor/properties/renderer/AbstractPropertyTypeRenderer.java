@@ -1,6 +1,6 @@
 package com.reedelk.plugin.editor.properties.renderer;
 
-import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.WhenDescriptor;
 import com.reedelk.plugin.commons.AtLeastOneWhenConditionIsTrue;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
@@ -20,13 +20,13 @@ public abstract class AbstractPropertyTypeRenderer implements PropertyTypeRender
     @Override
     public void addToParent(@NotNull JComponent parent,
                             @NotNull JComponent rendered,
-                            @NotNull ComponentPropertyDescriptor descriptor,
+                            @NotNull PropertyDescriptor descriptor,
                             @NotNull ContainerContext context) {
 
         PropertyTitleLabel propertyTitleLabel = new PropertyTitleLabel(descriptor);
 
         // Apply visibility conditions to the label and the rendered component
-        applyWhenVisibility(descriptor.getWhenDescriptors(), context, rendered, propertyTitleLabel);
+        applyWhenVisibility(descriptor.getWhens(), context, rendered, propertyTitleLabel);
 
         // Add the component and its property title label to the parent container.
         FormBuilder.get()

@@ -3,10 +3,10 @@ package com.reedelk.plugin.editor.properties.renderer.typeobject.configuration;
 import com.intellij.openapi.module.Module;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.module.descriptor.model.ComponentDataHolder;
-import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.TypeDescriptor;
 import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
-import com.reedelk.plugin.commons.DefaultDescriptorDataValuesFiller;
+import com.reedelk.plugin.commons.InitValuesFiller;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
@@ -30,11 +30,11 @@ class ConfigPropertiesPanel extends DisposablePanel {
 
     ConfigPropertiesPanel(Module module, ConfigMetadata configMetadata, TypeObjectDescriptor objectDescriptor, boolean isNewConfig) {
 
-        List<ComponentPropertyDescriptor> descriptors = objectDescriptor.getObjectProperties();
+        List<PropertyDescriptor> descriptors = objectDescriptor.getObjectProperties();
 
         if (isNewConfig) {
             // Fill Default Properties Values
-            DefaultDescriptorDataValuesFiller.fill(configMetadata, descriptors);
+            InitValuesFiller.fill(configMetadata, descriptors);
         }
 
         ConfigMetadataHeaderPanel headerPanel = new ConfigMetadataHeaderPanel(configMetadata, isNewConfig);
@@ -44,11 +44,11 @@ class ConfigPropertiesPanel extends DisposablePanel {
 
         descriptors.forEach(propertyDescriptor -> {
 
-            String propertyName = propertyDescriptor.getPropertyName();
+            String propertyName = propertyDescriptor.getName();
 
             PropertyAccessor propertyAccessor = propertiesPanel.getAccessor(propertyName);
 
-            TypeDescriptor propertyType = propertyDescriptor.getPropertyType();
+            TypeDescriptor propertyType = propertyDescriptor.getType();
 
             PropertyTypeRenderer renderer = PropertyTypeRendererFactory.get().from(propertyType);
 
@@ -97,7 +97,7 @@ class ConfigPropertiesPanel extends DisposablePanel {
 
     static class ConfigPropertiesPanelHolder extends PropertiesPanelHolder {
 
-        ConfigPropertiesPanelHolder(String componentFullyQualifiedName, ConfigMetadata configMetadata, List<ComponentPropertyDescriptor> descriptors) {
+        ConfigPropertiesPanelHolder(String componentFullyQualifiedName, ConfigMetadata configMetadata, List<PropertyDescriptor> descriptors) {
             super(componentFullyQualifiedName, configMetadata, descriptors);
         }
 

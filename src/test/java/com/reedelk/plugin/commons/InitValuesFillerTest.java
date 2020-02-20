@@ -1,7 +1,7 @@
 package com.reedelk.plugin.commons;
 
 import com.reedelk.module.descriptor.model.ComponentDataHolder;
-import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.Shared;
 import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
 import com.reedelk.plugin.service.module.impl.configuration.ConfigMetadata;
@@ -15,7 +15,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class DefaultDescriptorDataValuesFillerTest {
+class InitValuesFillerTest {
 
     private ComponentDataHolder testDataHolder;
 
@@ -25,9 +25,9 @@ class DefaultDescriptorDataValuesFillerTest {
     }
 
     @Test
-    void shouldCorrectlyFillDefaultValuesForPrimitiveTypes() {
+    void shouldCorrectlyFillInitValuesForPrimitiveTypes() {
         // When
-        DefaultDescriptorDataValuesFiller
+        InitValuesFiller
                 .fill(testDataHolder, asList(namePropertyDescriptor, surnamePropertyDescriptor));
 
         // Then
@@ -41,19 +41,19 @@ class DefaultDescriptorDataValuesFillerTest {
     }
 
     @Test
-    void shouldCorrectlyFillNullDefaultValueForUndefinedDefaultValue() {
+    void shouldCorrectlyFillNullDefaultValueForUndefinedInitValue() {
         // Given
 
-        ComponentPropertyDescriptor addressPropertyDescriptorWithoutDefaultValue =
-                ComponentPropertyDescriptor.builder()
+        PropertyDescriptor addressPropertyDescriptorWithoutInitValue =
+                PropertyDescriptor.builder()
+                        .name("address")
                         .displayName("Address")
-                        .propertyName("address")
                         .type(Primitives.stringTypeDescriptor)
                         .build();
 
         // When
-        DefaultDescriptorDataValuesFiller
-                .fill(testDataHolder, singletonList(addressPropertyDescriptorWithoutDefaultValue));
+        InitValuesFiller
+                .fill(testDataHolder, singletonList(addressPropertyDescriptorWithoutInitValue));
 
         // Then
         String defaultAddress = testDataHolder.get("address");
@@ -61,22 +61,22 @@ class DefaultDescriptorDataValuesFillerTest {
     }
 
     @Test
-    void shouldCorrectlyFillDefaultValuesForComplexTypes() {
+    void shouldCorrectlyFillInitValuesForComplexTypes() {
         // Given
         String objectFullyQualifiedName = "com.esb.test.Component";
 
         TypeObjectDescriptor typeObjectDescriptor =
                 createTypeObjectDescriptor(objectFullyQualifiedName, asList(namePropertyDescriptor, zipCodePropertyDescriptor));
 
-        ComponentPropertyDescriptor objectPropertyDescriptor =
-                ComponentPropertyDescriptor.builder()
-                        .propertyName("configuration")
+        PropertyDescriptor objectPropertyDescriptor =
+                PropertyDescriptor.builder()
+                        .name("configuration")
                         .type(typeObjectDescriptor)
                         .displayName("Configuration")
                         .build();
 
         // When
-        DefaultDescriptorDataValuesFiller
+        InitValuesFiller
                 .fill(testDataHolder, singletonList(objectPropertyDescriptor));
 
         // Then
@@ -90,30 +90,30 @@ class DefaultDescriptorDataValuesFillerTest {
     }
 
     @Test
-    void shouldCorrectlyFillDefaultValuesForNestedComplexObjects() {
+    void shouldCorrectlyFillInitValuesForNestedComplexObjects() {
         // Given
         String object1FullyQualifiedName = "com.esb.test.Component1";
         String object2FullyQualifiedName = "com.esb.test.Component2";
 
         TypeObjectDescriptor typeObject2 = createTypeObjectDescriptor(object2FullyQualifiedName, asList(surnamePropertyDescriptor, zipCodePropertyDescriptor));
-        ComponentPropertyDescriptor object2PropertyDescriptor =
-                ComponentPropertyDescriptor.builder()
-                        .propertyName("configuration2")
+        PropertyDescriptor object2PropertyDescriptor =
+                PropertyDescriptor.builder()
+                        .name("configuration2")
                         .type(typeObject2)
                         .displayName("Configuration 2")
                         .build();
 
         TypeObjectDescriptor typeObject1 =
                 createTypeObjectDescriptor(object1FullyQualifiedName, asList(namePropertyDescriptor, object2PropertyDescriptor));
-        ComponentPropertyDescriptor object1PropertyDescriptor =
-                ComponentPropertyDescriptor.builder()
-                        .propertyName("configuration1")
+        PropertyDescriptor object1PropertyDescriptor =
+                PropertyDescriptor.builder()
+                        .name("configuration1")
                         .type(typeObject1)
                         .displayName("Configuration 1")
                         .build();
 
         // When
-        DefaultDescriptorDataValuesFiller
+        InitValuesFiller
                 .fill(testDataHolder, singletonList(object1PropertyDescriptor));
 
         // Then
@@ -134,15 +134,15 @@ class DefaultDescriptorDataValuesFillerTest {
         TypeObjectDescriptor typeObjectDescriptor =
                 createTypeObjectDescriptor(objectFullyQualifiedName, asList(namePropertyDescriptor, zipCodePropertyDescriptor), Shared.YES);
 
-        ComponentPropertyDescriptor objectPropertyDescriptor =
-                ComponentPropertyDescriptor.builder()
-                        .propertyName("configuration")
+        PropertyDescriptor objectPropertyDescriptor =
+                PropertyDescriptor.builder()
+                        .name("configuration")
                         .displayName("Configuration")
                         .type(typeObjectDescriptor)
                         .build();
 
         // When
-        DefaultDescriptorDataValuesFiller
+        InitValuesFiller
                 .fill(testDataHolder, singletonList(objectPropertyDescriptor));
 
         // Then
@@ -155,27 +155,27 @@ class DefaultDescriptorDataValuesFillerTest {
     }
 
 
-    private final ComponentPropertyDescriptor namePropertyDescriptor =
-            ComponentPropertyDescriptor.builder()
-                    .propertyName("name")
+    private final PropertyDescriptor namePropertyDescriptor =
+            PropertyDescriptor.builder()
+                    .name("name")
                     .type(Primitives.stringTypeDescriptor)
                     .displayName("Your name")
-                    .defaultValue("Test name")
+                    .initValue("Test name")
                     .build();
 
-    private final ComponentPropertyDescriptor surnamePropertyDescriptor =
-            ComponentPropertyDescriptor.builder()
-                    .propertyName("surname")
+    private final PropertyDescriptor surnamePropertyDescriptor =
+            PropertyDescriptor.builder()
+                    .name("surname")
                     .type(Primitives.stringTypeDescriptor)
                     .displayName("Your surname")
-                    .defaultValue("Test surname")
+                    .initValue("Test surname")
                     .build();
 
-    private final ComponentPropertyDescriptor zipCodePropertyDescriptor =
-            ComponentPropertyDescriptor.builder()
-                    .propertyName("zipCode")
+    private final PropertyDescriptor zipCodePropertyDescriptor =
+            PropertyDescriptor.builder()
+                    .name("zipCode")
                     .type(Primitives.integerTypeDescriptor)
                     .displayName("ZIP Code")
-                    .defaultValue("23411")
+                    .initValue("23411")
                     .build();
 }

@@ -1,7 +1,7 @@
 package com.reedelk.plugin.component.type.router;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.component.type.generic.GenericComponentPropertiesRenderer;
 import com.reedelk.plugin.component.type.router.widget.ConditionRouteTableModel;
@@ -31,7 +31,7 @@ public class RouterPropertiesRenderer extends GenericComponentPropertiesRenderer
 
         ComponentData componentData = routerNode.componentData();
 
-        List<ComponentPropertyDescriptor> descriptors = componentData.getPropertiesDescriptors();
+        List<PropertyDescriptor> descriptors = componentData.getPropertiesDescriptors();
 
         PropertiesPanelHolder genericProperties =
                 super.getDefaultPropertiesPanel(componentData.getFullyQualifiedName(), componentData, descriptors);

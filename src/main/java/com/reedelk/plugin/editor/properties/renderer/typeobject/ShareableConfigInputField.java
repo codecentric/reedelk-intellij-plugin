@@ -3,7 +3,7 @@ package com.reedelk.plugin.editor.properties.renderer.typeobject;
 import com.intellij.openapi.module.Module;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.module.descriptor.model.ComponentDataHolder;
-import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
 import com.reedelk.plugin.commons.PopupUtils;
 import com.reedelk.plugin.commons.TypeObjectFactory;
@@ -37,7 +37,7 @@ class ShareableConfigInputField extends DisposablePanel implements Configuration
     private final transient ContainerContext context;
     private final transient MessageBusConnection connect;
     private final transient PropertyAccessor propertyAccessor;
-    private final transient ComponentPropertyDescriptor descriptor;
+    private final transient PropertyDescriptor descriptor;
     private final transient ComponentDataHolder referenceDataHolder;
 
     private final ConfigControlPanel configActionsPanel;
@@ -46,7 +46,7 @@ class ShareableConfigInputField extends DisposablePanel implements Configuration
 
     ShareableConfigInputField(@NotNull Module module,
                               @NotNull ComponentDataHolder referenceDataHolder,
-                              @NotNull ComponentPropertyDescriptor descriptor,
+                              @NotNull PropertyDescriptor descriptor,
                               @NotNull PropertyAccessor propertyAccessor,
                               @NotNull ContainerContext context) {
 
@@ -61,13 +61,13 @@ class ShareableConfigInputField extends DisposablePanel implements Configuration
 
         // The Config Selector Combo
         this.configSelectorCombo = new ConfigSelectorCombo();
-        this.configActionsPanel = new ConfigControlPanel(module, descriptor.getPropertyType());
+        this.configActionsPanel = new ConfigControlPanel(module, descriptor.getType());
 
         setLayout(new BorderLayout());
         add(configSelectorCombo, CENTER);
         add(configActionsPanel, EAST);
 
-        ConfigurationService.getInstance(module).loadConfigurationsBy(descriptor.getPropertyType());
+        ConfigurationService.getInstance(module).loadConfigurationsBy(descriptor.getType());
     }
 
     @Override
@@ -80,14 +80,14 @@ class ShareableConfigInputField extends DisposablePanel implements Configuration
     @Override
     public void onAddSuccess(ConfigMetadata configMetadata) {
         setPropertyAccessorValue(configMetadata.getId());
-        ConfigurationService.getInstance(module).loadConfigurationsBy(descriptor.getPropertyType());
+        ConfigurationService.getInstance(module).loadConfigurationsBy(descriptor.getType());
     }
 
     @Override
     public void onRemoveSuccess() {
         // Nothing is selected.
         setPropertyAccessorValue(EMPTY);
-        ConfigurationService.getInstance(module).loadConfigurationsBy(descriptor.getPropertyType());
+        ConfigurationService.getInstance(module).loadConfigurationsBy(descriptor.getType());
     }
 
     @Override
@@ -156,7 +156,7 @@ class ShareableConfigInputField extends DisposablePanel implements Configuration
         propertyAccessor.set(configReference);
         // If the selection has changed, we must notify all the
         // context subscribers that the property has changed.
-        context.notifyPropertyChanged(descriptor.getPropertyName(), referenceDataHolder);
+        context.notifyPropertyChanged(descriptor.getName(), referenceDataHolder);
     }
 
     private static final ConfigMetadata UNSELECTED_CONFIG;

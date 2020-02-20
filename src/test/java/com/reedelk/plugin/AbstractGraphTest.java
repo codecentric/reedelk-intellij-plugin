@@ -144,10 +144,10 @@ public abstract class AbstractGraphTest {
         lenient().doReturn(sampleTextBounds).when(fontMetrics).getStringBounds(anyString(), any(Graphics2D.class));
     }
 
-    protected static <T extends GraphNode> T createGraphNodeInstance(Class componentClazz, Class<T> graphNodeClazz, ComponentType componentType) {
+    protected static <T extends GraphNode> T createGraphNodeInstance(Class<?> componentClazz, Class<T> graphNodeClazz, ComponentType componentType) {
         ComponentDescriptor descriptor = ComponentDescriptor.create()
                 .fullyQualifiedName(componentClazz.getName())
-                .componentType(componentType)
+                .type(componentType)
                 .build();
         return createGraphNodeInstance(graphNodeClazz, descriptor);
     }
@@ -171,7 +171,7 @@ public abstract class AbstractGraphTest {
         lenient().doReturn(bottomHeight).when(node).bottomHalfHeight(graphics);
     }
 
-    private static <T extends GraphNode> T createGraphNodeInstance(Class componentClazz, Class<T> graphNodeClazz) {
+    private static <T extends GraphNode> T createGraphNodeInstance(Class<?> componentClazz, Class<T> graphNodeClazz) {
         return spy(createGraphNodeInstance(componentClazz, graphNodeClazz, PROCESSOR));
     }
 

@@ -1,7 +1,7 @@
 package com.reedelk.plugin.component.type.flowreference;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.component.type.flowreference.widget.SubflowSelector;
 import com.reedelk.plugin.component.type.generic.GenericComponentPropertiesRenderer;
@@ -33,27 +33,28 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
     public DisposablePanel render(GraphNode node) {
         ComponentData componentData = node.componentData();
 
-        Optional<ComponentPropertyDescriptor> propertyDescriptor = componentData.getPropertyDescriptor(FlowReference.ref());
+        Optional<PropertyDescriptor> propertyDescriptor = componentData.getPropertyDescriptor(FlowReference.ref());
         if (!propertyDescriptor.isPresent()) {
             throw new IllegalStateException("Reference property descriptor must not be null");
         }
 
         PropertyAccessor referencePropertyAccessor = PropertyAccessorFactory.get()
-                .typeDescriptor(propertyDescriptor.get().getPropertyType())
+                .typeDescriptor(propertyDescriptor.get().getType())
                 .propertyName(FlowReference.ref())
                 .dataHolder(componentData)
                 .snapshot(snapshot)
                 .build();
 
-        List<ComponentPropertyDescriptor> descriptors = componentData.getPropertiesDescriptors();
-        List<ComponentPropertyDescriptor> filteredDescriptors = descriptors
+        List<PropertyDescriptor> descriptors = componentData.getPropertiesDescriptors();
+        List<PropertyDescriptor> filteredDescriptors = descriptors
                 .stream()
-                .filter(descriptor -> !FlowReference.ref().equals(descriptor.getPropertyName()))
+                .filter(descriptor -> !FlowReference.ref().equals(descriptor.getName()))
                 .collect(Collectors.toList());
 
-        DisposablePanel genericPropertiesPanel = getDefaultPropertiesPanel(componentData.getFullyQualifiedName(), componentData, filteredDescriptors);
+        DisposablePanel genericPropertiesPanel =
+                getDefaultPropertiesPanel(componentData.getFullyQualifiedName(), componentData, filteredDescriptors);
 
-        ComponentPropertyDescriptor referencePropertyDescriptor = propertyDescriptor.get();
+        PropertyDescriptor referencePropertyDescriptor = propertyDescriptor.get();
 
         SubflowSelector selector = buildSubflowSelectorCombo(referencePropertyAccessor);
 

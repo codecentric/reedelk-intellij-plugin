@@ -21,26 +21,26 @@ public class SamplePropertyDescriptors {
         public static final TypeDescriptor booleanTypeDescriptor = createTypePrimitiveDescriptor(boolean.class);
         public static final TypeDescriptor stringTypeDescriptor = createTypePrimitiveDescriptor(String.class);
 
-        static final ComponentPropertyDescriptor integerProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor integerProperty =
+                PropertyDescriptor.builder()
                         .type(integerTypeDescriptor)
-                        .propertyName("integerProperty")
+                        .name("integerProperty")
                         .displayName("Integer property")
                         .build();
 
-        public static final ComponentPropertyDescriptor booleanProperty =
-                ComponentPropertyDescriptor.builder()
+        public static final PropertyDescriptor booleanProperty =
+                PropertyDescriptor.builder()
                         .type(booleanTypeDescriptor)
-                        .propertyName("booleanProperty")
+                        .name("booleanProperty")
                         .displayName("Boolean property")
                         .build();
 
-        public static final ComponentPropertyDescriptor stringProperty =
-                ComponentPropertyDescriptor.builder()
+        public static final PropertyDescriptor stringProperty =
+                PropertyDescriptor.builder()
                         .type(stringTypeDescriptor)
-                        .propertyName("stringProperty")
+                        .name("stringProperty")
                         .displayName("String property")
-                        .defaultValue("")
+                        .initValue("")
                         .build();
 
         static final TypeDescriptor integerObjectTypeDescriptor = createTypePrimitiveDescriptor(Integer.class);
@@ -54,73 +54,73 @@ public class SamplePropertyDescriptors {
         static final TypeDescriptor bigIntegerTypeDescriptor = createTypePrimitiveDescriptor(BigInteger.class);
         static final TypeDescriptor bigDecimalTypeDescriptor = createTypePrimitiveDescriptor(BigDecimal.class);
 
-        static final ComponentPropertyDescriptor integerObjectProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor integerObjectProperty =
+                PropertyDescriptor.builder()
                         .type(integerObjectTypeDescriptor)
-                        .propertyName("integerObjectProperty")
+                        .name("integerObjectProperty")
                         .displayName("Integer object property")
                         .build();
 
-        static final ComponentPropertyDescriptor longProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor longProperty =
+                PropertyDescriptor.builder()
                         .type(longTypeDescriptor)
-                        .propertyName("longProperty")
+                        .name("longProperty")
                         .displayName("Long property")
                         .build();
 
-        static final ComponentPropertyDescriptor longObjectProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor longObjectProperty =
+                PropertyDescriptor.builder()
                         .type(longObjectTypeDescriptor)
-                        .propertyName("longObjectProperty")
+                        .name("longObjectProperty")
                         .displayName("Long object property")
                         .build();
 
-        static final ComponentPropertyDescriptor floatProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor floatProperty =
+                PropertyDescriptor.builder()
                         .type(floatTypeDescriptor)
-                        .propertyName("floatProperty")
+                        .name("floatProperty")
                         .displayName("Float property")
                         .build();
 
-        static final ComponentPropertyDescriptor floatObjectProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor floatObjectProperty =
+                PropertyDescriptor.builder()
                         .type(floatObjectTypeDescriptor)
-                        .propertyName("floatObjectProperty")
+                        .name("floatObjectProperty")
                         .displayName("Float object property")
                         .build();
 
-        static final ComponentPropertyDescriptor doubleProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor doubleProperty =
+                PropertyDescriptor.builder()
                         .type(doubleTypeDescriptor)
-                        .propertyName("doubleProperty")
+                        .name("doubleProperty")
                         .displayName("Double property")
                         .build();
 
-        static final ComponentPropertyDescriptor doubleObjectProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor doubleObjectProperty =
+                PropertyDescriptor.builder()
                         .type(doubleObjectTypeDescriptor)
-                        .propertyName("doubleObjectProperty")
+                        .name("doubleObjectProperty")
                         .displayName("Double object property")
                         .build();
 
-        static final ComponentPropertyDescriptor booleanObjectProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor booleanObjectProperty =
+                PropertyDescriptor.builder()
                         .type(booleanObjectTypeDescriptor)
-                        .propertyName("booleanObjectProperty")
+                        .name("booleanObjectProperty")
                         .displayName("Boolean object property")
                         .build();
 
-        static final ComponentPropertyDescriptor bigIntegerProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor bigIntegerProperty =
+                PropertyDescriptor.builder()
                         .type(bigIntegerTypeDescriptor)
-                        .propertyName("bigIntegerProperty")
+                        .name("bigIntegerProperty")
                         .displayName("Big Integer property")
                         .build();
 
-        static final ComponentPropertyDescriptor bigDecimalProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor bigDecimalProperty =
+                PropertyDescriptor.builder()
                         .type(bigDecimalTypeDescriptor)
-                        .propertyName("bigDecimalProperty")
+                        .name("bigDecimalProperty")
                         .displayName("Big Decimal property")
                         .build();
     }
@@ -138,73 +138,73 @@ public class SamplePropertyDescriptors {
         static final TypeDescriptor dynamicObjectTypeDescriptor = createTypeDynamicValueDescriptor(DynamicObject.class);
         static final TypeDescriptor dynamicStringTypeDescriptor = createTypeDynamicValueDescriptor(DynamicString.class);
 
-        static final ComponentPropertyDescriptor dynamicBigDecimalProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor dynamicBigDecimalProperty =
+                PropertyDescriptor.builder()
                         .type(dynamicBigDecimalTypeDescriptor)
-                        .propertyName("dynamicBigDecimalProperty")
+                        .name("dynamicBigDecimalProperty")
                         .displayName("Dynamic Big Decimal property")
                         .build();
 
-        static final ComponentPropertyDescriptor dynamicBigIntegerProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor dynamicBigIntegerProperty =
+                PropertyDescriptor.builder()
                         .type(dynamicBigIntegerTypeDescriptor)
-                        .propertyName("dynamicBigIntegerProperty")
+                        .name("dynamicBigIntegerProperty")
                         .displayName("Dynamic Big Integer property")
                         .build();
 
-        static final ComponentPropertyDescriptor dynamicBooleanProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor dynamicBooleanProperty =
+                PropertyDescriptor.builder()
                         .type(dynamicBooleanTypeDescriptor)
-                        .propertyName("dynamicBooleanProperty")
+                        .name("dynamicBooleanProperty")
                         .displayName("Dynamic Boolean property")
                         .build();
 
-        static final ComponentPropertyDescriptor dynamicByteArrayProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor dynamicByteArrayProperty =
+                PropertyDescriptor.builder()
                         .type(dynamicByteArrayTypeDescriptor)
-                        .propertyName("dynamicByteArrayProperty")
+                        .name("dynamicByteArrayProperty")
                         .displayName("Dynamic Byte Array property")
                         .build();
 
-        static final ComponentPropertyDescriptor dynamicDoubleProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor dynamicDoubleProperty =
+                PropertyDescriptor.builder()
                         .type(dynamicDoubleTypeDescriptor)
-                        .propertyName("dynamicDoubleProperty")
+                        .name("dynamicDoubleProperty")
                         .displayName("Dynamic Double property")
                         .build();
 
-        static final ComponentPropertyDescriptor dynamicFloatProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor dynamicFloatProperty =
+                PropertyDescriptor.builder()
                         .type(dynamicFloatTypeDescriptor)
-                        .propertyName("dynamicFloatProperty")
+                        .name("dynamicFloatProperty")
                         .displayName("Dynamic Float property")
                         .build();
 
-        static final ComponentPropertyDescriptor dynamicIntegerProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor dynamicIntegerProperty =
+                PropertyDescriptor.builder()
                         .type(dynamicIntegerTypeDescriptor)
-                        .propertyName("dynamicIntegerProperty")
+                        .name("dynamicIntegerProperty")
                         .displayName("Dynamic Integer property")
                         .build();
 
-        static final ComponentPropertyDescriptor dynamicLongProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor dynamicLongProperty =
+                PropertyDescriptor.builder()
                         .type(dynamicLongTypeDescriptor)
-                        .propertyName("dynamicLongProperty")
+                        .name("dynamicLongProperty")
                         .displayName("Dynamic Long property")
                         .build();
 
-        static final ComponentPropertyDescriptor dynamicObjectProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor dynamicObjectProperty =
+                PropertyDescriptor.builder()
                         .type(dynamicObjectTypeDescriptor)
-                        .propertyName("dynamicObjectProperty")
+                        .name("dynamicObjectProperty")
                         .displayName("Dynamic Object property")
                         .build();
 
-        static final ComponentPropertyDescriptor dynamicStringProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor dynamicStringProperty =
+                PropertyDescriptor.builder()
                         .type(dynamicStringTypeDescriptor)
-                        .propertyName("dynamicStringProperty")
+                        .name("dynamicStringProperty")
                         .displayName("Dynamic String property")
                         .build();
     }
@@ -219,38 +219,38 @@ public class SamplePropertyDescriptors {
         static final TypeDescriptor comboTypeDescriptor = createTypeComboDescriptor(true, new String[]{"one", "two", "three"}, null);
         static final TypeDescriptor resourceTypeDescriptor = new TypeResourceTextDescriptor();
 
-        static final ComponentPropertyDescriptor enumProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor enumProperty =
+                PropertyDescriptor.builder()
                         .type(enumTypeDescriptor)
-                        .propertyName("enumProperty")
+                        .name("enumProperty")
                         .displayName("Enum property")
                         .build();
 
-        static final ComponentPropertyDescriptor mapProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor mapProperty =
+                PropertyDescriptor.builder()
                         .type(mapTypeDescriptor)
-                        .propertyName("mapProperty")
+                        .name("mapProperty")
                         .displayName("Map property")
                         .build();
 
-        static final ComponentPropertyDescriptor scriptProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor scriptProperty =
+                PropertyDescriptor.builder()
                         .type(scriptTypeDescriptor)
-                        .propertyName("scriptProperty")
+                        .name("scriptProperty")
                         .displayName("Script property")
                         .build();
 
-        static final ComponentPropertyDescriptor comboProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor comboProperty =
+                PropertyDescriptor.builder()
                         .type(comboTypeDescriptor)
-                        .propertyName("comboProperty")
+                        .name("comboProperty")
                         .displayName("Combo property")
                         .build();
 
-        static final ComponentPropertyDescriptor resourceProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor resourceProperty =
+                PropertyDescriptor.builder()
                         .type(resourceTypeDescriptor)
-                        .propertyName("resourceProperty")
+                        .name("resourceProperty")
                         .displayName("Resource property")
                         .build();
     }
@@ -263,20 +263,20 @@ public class SamplePropertyDescriptors {
         static final TypeObjectDescriptor typeObjectSharedDescriptor =
                 createTypeObjectDescriptor(ComponentNode2.class.getName(), asList(doubleObjectProperty, bigIntegerProperty), Shared.YES);
 
-        static final ComponentPropertyDescriptor typeObjectProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor typeObjectProperty =
+                PropertyDescriptor.builder()
                         .type(typeObjectDescriptor)
-                        .propertyName("typeObjectProperty")
+                        .name("typeObjectProperty")
                         .displayName("Type Object property")
-                        .defaultValue(null)
+                        .initValue(null)
                         .build();
 
-        static final ComponentPropertyDescriptor typeObjectSharedProperty =
-                ComponentPropertyDescriptor.builder()
+        static final PropertyDescriptor typeObjectSharedProperty =
+                PropertyDescriptor.builder()
                         .type(typeObjectSharedDescriptor)
-                        .propertyName("typeObjectSharedProperty")
+                        .name("typeObjectSharedProperty")
                         .displayName("Type Object shared property")
-                        .defaultValue(null)
+                        .initValue(null)
                         .build();
 
     }

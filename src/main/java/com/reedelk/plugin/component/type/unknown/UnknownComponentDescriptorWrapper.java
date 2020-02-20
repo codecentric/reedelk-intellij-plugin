@@ -1,8 +1,8 @@
 package com.reedelk.plugin.component.type.unknown;
 
 import com.reedelk.module.descriptor.model.ComponentDescriptor;
-import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
 import com.reedelk.module.descriptor.model.ComponentType;
+import com.reedelk.module.descriptor.model.PropertyDescriptor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,8 +38,8 @@ public class UnknownComponentDescriptorWrapper extends ComponentDescriptor {
     }
 
     @Override
-    public ComponentType getComponentType() {
-        return wrapped.getComponentType();
+    public ComponentType getType() {
+        return wrapped.getType();
     }
 
     @Override
@@ -48,15 +48,15 @@ public class UnknownComponentDescriptorWrapper extends ComponentDescriptor {
     }
 
     @Override
-    public List<ComponentPropertyDescriptor> getComponentPropertyDescriptors() {
-        return wrapped.getComponentPropertyDescriptors();
+    public List<PropertyDescriptor> getProperties() {
+        return wrapped.getProperties();
     }
 
     @Override
-    public Optional<ComponentPropertyDescriptor> getPropertyDescriptor(String propertyName) {
-        return Optional.of(ComponentPropertyDescriptor
+    public Optional<PropertyDescriptor> getPropertyDescriptor(String propertyName) {
+        return Optional.of(PropertyDescriptor
                 .builder()
-                .propertyName(propertyName)
+                .name(propertyName)
                 .type(new UnknownPropertyType())
                 .displayName("Unknown")
                 .build());

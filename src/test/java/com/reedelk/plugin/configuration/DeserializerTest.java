@@ -1,7 +1,7 @@
 package com.reedelk.plugin.configuration;
 
 import com.reedelk.module.descriptor.model.ComponentDataHolder;
-import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
 import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.component.deserializer.ConfigurationDeserializer;
@@ -197,68 +197,68 @@ class DeserializerTest {
                 .hasKeyWithValue("keepAlive", true);
     }
 
-    private final ComponentPropertyDescriptor host =
-            ComponentPropertyDescriptor.builder()
+    private final PropertyDescriptor host =
+            PropertyDescriptor.builder()
                     .type(Primitives.stringTypeDescriptor)
-                    .propertyName("host")
+                    .name("host")
                     .displayName("Host")
-                    .defaultValue("localhost")
+                    .initValue("localhost")
                     .build();
 
-    private final ComponentPropertyDescriptor port =
-            ComponentPropertyDescriptor.builder()
+    private final PropertyDescriptor port =
+            PropertyDescriptor.builder()
                     .type(Primitives.integerTypeDescriptor)
-                    .propertyName("port")
+                    .name("port")
                     .displayName("Port")
-                    .defaultValue("8080")
+                    .initValue("8080")
                     .build();
 
-    private final ComponentPropertyDescriptor keepAlive =
-            ComponentPropertyDescriptor.builder()
+    private final PropertyDescriptor keepAlive =
+            PropertyDescriptor.builder()
                     .type(Primitives.booleanTypeDescriptor)
-                    .propertyName("keepAlive")
+                    .name("keepAlive")
                     .displayName("Keep Alive")
-                    .defaultValue("true")
+                    .initValue("true")
                     .build();
 
-    private final ComponentPropertyDescriptor userName =
-            ComponentPropertyDescriptor.builder()
+    private final PropertyDescriptor userName =
+            PropertyDescriptor.builder()
                     .type(Primitives.stringTypeDescriptor)
-                    .propertyName("userName")
+                    .name("userName")
                     .displayName("User Name")
                     .build();
 
-    private final ComponentPropertyDescriptor password =
-            ComponentPropertyDescriptor.builder()
+    private final PropertyDescriptor password =
+            PropertyDescriptor.builder()
                     .type(Primitives.stringTypeDescriptor)
-                    .propertyName("password")
+                    .name("password")
                     .displayName("Password")
                     .build();
 
-    private final ComponentPropertyDescriptor algorithm =
-            ComponentPropertyDescriptor.builder()
+    private final PropertyDescriptor algorithm =
+            PropertyDescriptor.builder()
                     .type(Primitives.stringTypeDescriptor)
-                    .propertyName("algorithm")
+                    .name("algorithm")
                     .displayName("Algorithm")
                     .build();
 
     private final TypeObjectDescriptor keyStoreConfigObjectType = createTypeObjectDescriptor(
             ComponentNode3.class.getName(), singletonList(algorithm));
 
-    private final ComponentPropertyDescriptor keyStoreConfig =
-            ComponentPropertyDescriptor.builder()
+    private final PropertyDescriptor keyStoreConfig =
+            PropertyDescriptor.builder()
                     .type(keyStoreConfigObjectType)
-                    .propertyName("keyStoreConfig")
+                    .name("keyStoreConfig")
                     .displayName("Key Store config")
                     .build();
 
     private final TypeObjectDescriptor securityConfigObjectType = createTypeObjectDescriptor(
             ComponentNode2.class.getName(), asList(userName, password, keyStoreConfig));
 
-    private final ComponentPropertyDescriptor securityConfigPropertyDescriptor =
-            ComponentPropertyDescriptor.builder()
+    private final PropertyDescriptor securityConfigPropertyDescriptor =
+            PropertyDescriptor.builder()
                     .type(securityConfigObjectType)
-                    .propertyName("securityConfig")
+                    .name("securityConfig")
                     .displayName("Security Config")
                     .build();
 }

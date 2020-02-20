@@ -8,7 +8,7 @@ import com.intellij.openapi.ui.TextComponentAccessor;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBTextField;
-import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.plugin.commons.PluginModuleUtils;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
@@ -28,7 +28,7 @@ public class ResourcePropertyRenderer extends AbstractPropertyTypeRenderer {
     @NotNull
     @Override
     public JComponent render(@NotNull Module module,
-                             @NotNull ComponentPropertyDescriptor propertyDescriptor,
+                             @NotNull PropertyDescriptor propertyDescriptor,
                              @NotNull PropertyAccessor propertyAccessor,
                              @NotNull ContainerContext context) {
 

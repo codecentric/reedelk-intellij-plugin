@@ -201,10 +201,10 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
                         MavenUtils.getMavenProject(project, module.getName()).ifPresent(mavenProject -> {
 
-                            List<ComponentDescriptor> componentDescriptors = packageComponents.getComponentDescriptors();
+                            List<ComponentDescriptor> componentDescriptors = packageComponents.getComponents();
                             String moduleName = mavenProject.getDisplayName();
                             List<AutoCompleteContributorDescriptor> moduleContributions =
-                                    packageComponents.getAutocompleteContributorDescriptors();
+                                    packageComponents.getAutocompleteContributors();
 
                             synchronized (ComponentServiceImpl.this) {
                                 moduleComponents = new ModuleComponents(moduleName, componentDescriptors);
@@ -247,7 +247,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
             return;
         }
 
-        List<ComponentDescriptor> componentDescriptors = packageComponents.getComponentDescriptors();
+        List<ComponentDescriptor> componentDescriptors = packageComponents.getComponents();
 
         synchronized (ComponentServiceImpl.class) {
             // Add them to the map of components
@@ -255,7 +255,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
             mavenJarComponentsMap.put(jarFilePath, descriptor);
 
             List<AutoCompleteContributorDescriptor> autocompleteContributorDefinitions =
-                    packageComponents.getAutocompleteContributorDescriptors();
+                    packageComponents.getAutocompleteContributors();
             autoCompleteContributorDefinitions.addAll(autocompleteContributorDefinitions);
         }
     }

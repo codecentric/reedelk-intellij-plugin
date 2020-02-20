@@ -2,7 +2,7 @@ package com.reedelk.plugin.editor.properties.renderer.typescript;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.util.messages.MessageBusConnection;
-import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.plugin.commons.PopupUtils;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
@@ -35,7 +35,7 @@ public class ScriptInputField extends DisposablePanel implements ScriptServiceIm
     private final transient ScriptActionsPanel scriptActionsPanel;
     private final transient ScriptSelectorCombo scriptSelectorCombo;
 
-    ScriptInputField(Module module, ComponentPropertyDescriptor propertyDescriptor, PropertyAccessor propertyAccessor, ContainerContext context) {
+    ScriptInputField(Module module, PropertyDescriptor propertyDescriptor, PropertyAccessor propertyAccessor, ContainerContext context) {
         this.module = module;
         this.propertyAccessor = propertyAccessor;
         this.scriptActionsPanel = new ScriptActionsPanel(module, context, propertyDescriptor);

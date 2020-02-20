@@ -17,29 +17,29 @@ public class ComponentDataHolderDeserializer {
 
     public static void deserialize(@NotNull JSONObject componentJsonObject,
                                    @NotNull ComponentDataHolder componentData,
-                                   @NotNull ComponentPropertyDescriptor propertyDescriptor) {
-        TypeDescriptor propertyType = propertyDescriptor.getPropertyType();
+                                   @NotNull PropertyDescriptor propertyDescriptor) {
+        TypeDescriptor propertyType = propertyDescriptor.getType();
 
         if (propertyType instanceof TypeObjectDescriptor) {
             deserializeTypeObject(componentJsonObject, componentData, propertyDescriptor, (TypeObjectDescriptor) propertyType);
         } else {
             ValueConverter<?> converter = ValueConverterProvider.forType(propertyType);
-            Object propertyValue = converter.from(propertyDescriptor.getPropertyName(), componentJsonObject);
-            componentData.set(propertyDescriptor.getPropertyName(), propertyValue);
+            Object propertyValue = converter.from(propertyDescriptor.getName(), componentJsonObject);
+            componentData.set(propertyDescriptor.getName(), propertyValue);
         }
     }
 
     private static void deserializeTypeObject(@NotNull JSONObject componentJsonObject,
                                               @NotNull ComponentDataHolder componentData,
-                                              @NotNull ComponentPropertyDescriptor descriptor,
+                                              @NotNull PropertyDescriptor descriptor,
                                               @NotNull TypeObjectDescriptor propertyType) {
 
         TypeObject nestedObject = TypeObjectFactory.newInstance(propertyType);
 
-        if (componentJsonObject.has(descriptor.getPropertyName()) &&
-                !componentJsonObject.isNull(descriptor.getPropertyName())) {
+        if (componentJsonObject.has(descriptor.getName()) &&
+                !componentJsonObject.isNull(descriptor.getName())) {
 
-            JSONObject nestedJsonObject = componentJsonObject.getJSONObject(descriptor.getPropertyName());
+            JSONObject nestedJsonObject = componentJsonObject.getJSONObject(descriptor.getName());
 
             // If the property is present in the JSON but it is an empty object we
             // still fill up instances of type object for object properties recursively.
@@ -56,7 +56,7 @@ public class ComponentDataHolderDeserializer {
                 if (nestedJsonObject.has(Component.ref())) {
                     String reference = Component.ref(nestedJsonObject);
                     nestedObject.set(Component.ref(), reference);
-                    componentData.set(descriptor.getPropertyName(), nestedObject);
+                    componentData.set(descriptor.getName(), nestedObject);
                 } else {
                     // The nested JSON object does not have a component "ref" property inside it.
                     // We still must add empty instances for the type object.
@@ -67,7 +67,7 @@ public class ComponentDataHolderDeserializer {
                 propertyType.getObjectProperties()
                         .forEach(typeDescriptor ->
                                 deserialize(nestedJsonObject, nestedObject, typeDescriptor));
-                componentData.set(descriptor.getPropertyName(), nestedObject);
+                componentData.set(descriptor.getName(), nestedObject);
             }
 
         } else {
@@ -79,12 +79,12 @@ public class ComponentDataHolderDeserializer {
         }
     }
 
-    private static void addEmptyInstancesForTypeObject(ComponentDataHolder dataHolder, ComponentPropertyDescriptor descriptor) {
-        if (descriptor.getPropertyType() instanceof TypeObjectDescriptor) {
-            TypeObjectDescriptor propertyObjectType = descriptor.getPropertyType();
+    private static void addEmptyInstancesForTypeObject(ComponentDataHolder dataHolder, PropertyDescriptor descriptor) {
+        if (descriptor.getType() instanceof TypeObjectDescriptor) {
+            TypeObjectDescriptor propertyObjectType = descriptor.getType();
             TypeObject typeObject = TypeObjectFactory.newInstance(propertyObjectType);
 
-            dataHolder.set(descriptor.getPropertyName(), typeObject);
+            dataHolder.set(descriptor.getName(), typeObject);
             // From now on, the subtree contains null objects.
             propertyObjectType.getObjectProperties()
                     .forEach(propertyDescriptor ->

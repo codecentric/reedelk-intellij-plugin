@@ -2,7 +2,7 @@ package com.reedelk.plugin.editor.properties.renderer.typemap;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.JBColor;
-import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.TabPlacement;
 import com.reedelk.module.descriptor.model.TypeMapDescriptor;
 import com.reedelk.plugin.commons.Sizes;
@@ -28,7 +28,7 @@ abstract class BaseMapPropertyRenderer implements PropertyTypeRenderer {
     @NotNull
     @Override
     public JComponent render(@NotNull Module module,
-                             @NotNull ComponentPropertyDescriptor propertyDescriptor,
+                             @NotNull PropertyDescriptor propertyDescriptor,
                              @NotNull PropertyAccessor propertyAccessor,
                              @NotNull ContainerContext context) {
 
@@ -37,7 +37,7 @@ abstract class BaseMapPropertyRenderer implements PropertyTypeRenderer {
 
         DisposableTabbedPane tabbedPane = groupTabbedPane.orElseGet(() -> {
 
-            TypeMapDescriptor propertyType = propertyDescriptor.getPropertyType();
+            TypeMapDescriptor propertyType = propertyDescriptor.getType();
 
             Optional<String> tabGroup = Optional.ofNullable(propertyType.getTabGroup());
 
@@ -73,7 +73,7 @@ abstract class BaseMapPropertyRenderer implements PropertyTypeRenderer {
     @Override
     public void addToParent(@NotNull JComponent parent,
                             @NotNull JComponent rendered,
-                            @NotNull ComponentPropertyDescriptor descriptor,
+                            @NotNull PropertyDescriptor descriptor,
                             @NotNull ContainerContext context) {
         // If exists a group tabbed pane, then we don't add it to the parent
         // because it has been already added to the tabbed pane above in the
@@ -89,7 +89,7 @@ abstract class BaseMapPropertyRenderer implements PropertyTypeRenderer {
         JComponentHolder holder = new JComponentHolder(rendered);
 
         // Add the component to the container context.
-        TypeMapDescriptor propertyType = descriptor.getPropertyType();
+        TypeMapDescriptor propertyType = descriptor.getType();
         Optional.ofNullable(propertyType.getTabGroup())
                 .ifPresent(group -> holder.addMetadata(TabGroup.class.getName(), group));
 
@@ -98,8 +98,8 @@ abstract class BaseMapPropertyRenderer implements PropertyTypeRenderer {
 
     protected abstract JComponent getContent(Module module, PropertyAccessor propertyAccessor, @NotNull ContainerContext context);
 
-    private Optional<DisposableTabbedPane> getGroupTabbedPane(ComponentPropertyDescriptor propertyDescriptor, ContainerContext context) {
-        TypeMapDescriptor propertyType = propertyDescriptor.getPropertyType();
+    private Optional<DisposableTabbedPane> getGroupTabbedPane(PropertyDescriptor propertyDescriptor, ContainerContext context) {
+        TypeMapDescriptor propertyType = propertyDescriptor.getType();
         Optional<String> tabGroup = Optional.ofNullable(propertyType.getTabGroup());
         if (tabGroup.isPresent()) {
             // Tab group annotation was present in the property definition. We need to lookup

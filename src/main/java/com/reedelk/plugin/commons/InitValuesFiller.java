@@ -8,22 +8,22 @@ import java.util.List;
 import static com.reedelk.module.descriptor.model.TypeObjectDescriptor.TypeObject;
 import static com.reedelk.runtime.commons.JsonParser.Component;
 
-public class DefaultDescriptorDataValuesFiller {
+public class InitValuesFiller {
 
-    private DefaultDescriptorDataValuesFiller() {
+    private InitValuesFiller() {
     }
 
     public static void fill(@NotNull ComponentDataHolder dataHolder,
-                            @NotNull List<ComponentPropertyDescriptor> propertyDescriptors) {
+                            @NotNull List<PropertyDescriptor> propertyDescriptors) {
         propertyDescriptors.forEach(descriptor -> {
-            String propertyName = descriptor.getPropertyName();
-            TypeDescriptor propertyType = descriptor.getPropertyType();
+            String propertyName = descriptor.getName();
+            TypeDescriptor propertyType = descriptor.getType();
 
             if (propertyType instanceof TypeObjectDescriptor) {
                 fillTypeObject(dataHolder, (TypeObjectDescriptor) propertyType, propertyName);
             } else {
-                Object defaultValue = DefaultPropertyValue.of(descriptor);
-                dataHolder.set(propertyName, defaultValue);
+                Object initValue = InitPropertyValue.of(descriptor);
+                dataHolder.set(propertyName, initValue);
             }
         });
     }

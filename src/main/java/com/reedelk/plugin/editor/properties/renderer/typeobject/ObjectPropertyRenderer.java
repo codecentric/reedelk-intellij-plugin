@@ -21,10 +21,10 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
     @NotNull
     @Override
     public JComponent render(@NotNull Module module,
-                             @NotNull ComponentPropertyDescriptor descriptor,
+                             @NotNull PropertyDescriptor descriptor,
                              @NotNull PropertyAccessor accessor,
                              @NotNull ContainerContext context) {
-        TypeObjectDescriptor objectDescriptor = descriptor.getPropertyType();
+        TypeObjectDescriptor objectDescriptor = descriptor.getType();
         return Shared.YES.equals(objectDescriptor.getShared()) ?
                 renderShareable(module, descriptor, accessor, context) :
                 renderInline(module, accessor, descriptor);
@@ -33,9 +33,9 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
     @Override
     public void addToParent(@NotNull JComponent parent,
                             @NotNull JComponent rendered,
-                            @NotNull ComponentPropertyDescriptor descriptor,
+                            @NotNull PropertyDescriptor descriptor,
                             @NotNull ContainerContext context) {
-        TypeObjectDescriptor objectDescriptor = descriptor.getPropertyType();
+        TypeObjectDescriptor objectDescriptor = descriptor.getType();
         if (Shared.NO.equals(objectDescriptor.getShared())) {
             addToParentInline(parent, rendered, descriptor, context);
         } else {
@@ -46,8 +46,8 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
     }
 
     @NotNull
-    private JComponent renderInline(Module module, PropertyAccessor propertyAccessor, ComponentPropertyDescriptor descriptor) {
-        TypeObjectDescriptor objectDescriptor = descriptor.getPropertyType();
+    private JComponent renderInline(Module module, PropertyAccessor propertyAccessor, PropertyDescriptor descriptor) {
+        TypeObjectDescriptor objectDescriptor = descriptor.getType();
         if (Collapsible.YES.equals(objectDescriptor.getCollapsible())) {
             // Deferred rendering (only when it is un-collapsed)
             return new CollapsibleObjectTypeContainer(descriptor.getDisplayName(),
@@ -61,14 +61,14 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
     }
 
     @NotNull
-    private JComponent renderShareable(Module module, ComponentPropertyDescriptor descriptor, PropertyAccessor propertyAccessor, ContainerContext context) {
+    private JComponent renderShareable(Module module, PropertyDescriptor descriptor, PropertyAccessor propertyAccessor, ContainerContext context) {
         ComponentDataHolder dataHolder = propertyAccessor.get();
         FlowSnapshot snapshot = propertyAccessor.getSnapshot();
 
         // We create the accessor for the config reference:
         // a shareable config object is referenced with a unique UUID
         PropertyAccessor refAccessor = PropertyAccessorFactory.get()
-                .typeDescriptor(descriptor.getPropertyType())
+                .typeDescriptor(descriptor.getType())
                 .propertyName(JsonParser.Component.ref())
                 .snapshot(snapshot)
                 .dataHolder(dataHolder)
@@ -77,10 +77,10 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
         return new ShareableConfigInputField(module, dataHolder, descriptor, refAccessor, context);
     }
 
-    private void addToParentInline(@NotNull JComponent parent, @NotNull JComponent rendered, @NotNull ComponentPropertyDescriptor descriptor, @NotNull ContainerContext context) {
+    private void addToParentInline(@NotNull JComponent parent, @NotNull JComponent rendered, @NotNull PropertyDescriptor descriptor, @NotNull ContainerContext context) {
         // If the property has any 'when' condition, we apply listener/s to make it
         // visible (or not) when the condition is met (or not).
-        applyWhenVisibility(descriptor.getWhenDescriptors(), context, rendered);
+        applyWhenVisibility(descriptor.getWhens(), context, rendered);
 
         // Add the component to the parent container.
         FormBuilder.get().addLastField(rendered, parent);
@@ -93,18 +93,18 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
 
         FlowSnapshot snapshot = propertyAccessor.getSnapshot();
 
-        List<ComponentPropertyDescriptor> objectProperties = objectDescriptor.getObjectProperties();
+        List<PropertyDescriptor> objectProperties = objectDescriptor.getObjectProperties();
 
         PropertiesPanelHolder propertiesPanel = new PropertiesPanelHolder(
                 objectDescriptor.getTypeFullyQualifiedName(), dataHolder, objectProperties, snapshot);
 
         objectProperties.forEach(objectProperty -> {
 
-            String propertyName = objectProperty.getPropertyName();
+            String propertyName = objectProperty.getName();
 
             PropertyAccessor nestedPropertyAccessor = propertiesPanel.getAccessor(propertyName);
 
-            TypeDescriptor propertyType = objectProperty.getPropertyType();
+            TypeDescriptor propertyType = objectProperty.getType();
 
             PropertyTypeRenderer renderer = PropertyTypeRendererFactory.get().from(propertyType);
 

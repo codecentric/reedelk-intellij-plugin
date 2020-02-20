@@ -6,7 +6,7 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.module.descriptor.model.AutoCompleteContributorDescriptor;
 import com.reedelk.module.descriptor.model.ComponentDescriptor;
-import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.ModuleComponents;
@@ -91,8 +91,8 @@ class CompletionServiceImplTest {
                         "messageCustom2[VARIABLE:MyType2]",
                         "messageCustom3[VARIABLE:MyType3]"));
 
-        ComponentPropertyDescriptor propertyDescriptor = ComponentPropertyDescriptor.builder()
-                .propertyName("myPropertyWithAutoComplete")
+        PropertyDescriptor propertyDescriptor = PropertyDescriptor.builder()
+                .name("myPropertyWithAutoComplete")
                 .type(ObjectFactories.createTypeDynamicValueDescriptor(DynamicString.class))
                 .autoCompleteContributor(autoCompleteContribution)
                 .build();
@@ -158,8 +158,8 @@ class CompletionServiceImplTest {
         verify(service, times(2)).fireCompletionsUpdatedEvent();
     }
 
-    private ModuleComponents createModuleComponentsWith(String componentFullyQualifiedName, ComponentPropertyDescriptor propertyDescriptor) {
-        List<ComponentPropertyDescriptor> propertyDescriptors = Collections.singletonList(propertyDescriptor);
+    private ModuleComponents createModuleComponentsWith(String componentFullyQualifiedName, PropertyDescriptor propertyDescriptor) {
+        List<PropertyDescriptor> propertyDescriptors = Collections.singletonList(propertyDescriptor);
         ComponentDescriptor descriptor = ComponentDescriptor.create()
                 .fullyQualifiedName(componentFullyQualifiedName)
                 .propertyDescriptors(propertyDescriptors)

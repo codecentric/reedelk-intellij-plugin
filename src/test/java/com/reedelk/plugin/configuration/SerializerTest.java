@@ -1,6 +1,6 @@
 package com.reedelk.plugin.configuration;
 
-import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.Shared;
 import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
 import com.reedelk.plugin.commons.TypeObjectFactory;
@@ -128,56 +128,56 @@ class SerializerTest {
         JSONAssert.assertEquals(expectedJson, actualJson, true);
     }
 
-    private ComponentPropertyDescriptor hostProperty =
-            ComponentPropertyDescriptor.builder()
+    private PropertyDescriptor hostProperty =
+            PropertyDescriptor.builder()
                     .type(Primitives.stringTypeDescriptor)
-                    .propertyName("host")
+                    .name("host")
                     .displayName("Host")
                     .build();
 
-    private ComponentPropertyDescriptor portProperty =
-            ComponentPropertyDescriptor.builder()
+    private PropertyDescriptor portProperty =
+            PropertyDescriptor.builder()
                     .type(Primitives.integerTypeDescriptor)
-                    .propertyName("port")
+                    .name("port")
                     .displayName("Port")
                     .build();
 
-    private ComponentPropertyDescriptor keepAlive =
-            ComponentPropertyDescriptor.builder()
+    private PropertyDescriptor keepAlive =
+            PropertyDescriptor.builder()
                     .type(Primitives.booleanTypeDescriptor)
-                    .propertyName("keepAlive")
+                    .name("keepAlive")
                     .displayName("Keep Alive")
                     .build();
 
 
-    private ComponentPropertyDescriptor algorithm =
-            ComponentPropertyDescriptor.builder()
+    private PropertyDescriptor algorithm =
+            PropertyDescriptor.builder()
                     .type(Primitives.stringTypeDescriptor)
-                    .propertyName("algorithm")
+                    .name("algorithm")
                     .displayName("Algorithm")
                     .build();
 
     private TypeObjectDescriptor keyStoreConfigObjectType = createTypeObjectDescriptor(
             ComponentNode3.class.getName(), Collections.singletonList(algorithm));
 
-    private ComponentPropertyDescriptor keyStoreConfigDescriptor =
-            ComponentPropertyDescriptor.builder()
+    private PropertyDescriptor keyStoreConfigDescriptor =
+            PropertyDescriptor.builder()
                     .type(keyStoreConfigObjectType)
-                    .propertyName("keyStoreConfig")
+                    .name("keyStoreConfig")
                     .displayName("Key store config")
                     .build();
 
-    private ComponentPropertyDescriptor userName =
-            ComponentPropertyDescriptor.builder()
+    private PropertyDescriptor userName =
+            PropertyDescriptor.builder()
                     .type(Primitives.stringTypeDescriptor)
-                    .propertyName("userName")
+                    .name("userName")
                     .displayName("User Name")
                     .build();
 
-    private ComponentPropertyDescriptor password =
-            ComponentPropertyDescriptor.builder()
+    private PropertyDescriptor password =
+            PropertyDescriptor.builder()
                     .type(Primitives.stringTypeDescriptor)
-                    .propertyName("password")
+                    .name("password")
                     .displayName("Password")
                     .build();
 
@@ -185,10 +185,10 @@ class SerializerTest {
     private TypeObjectDescriptor securityConfigObjectType = createTypeObjectDescriptor(ComponentNode2.class.getName(),
             asList(userName, password, keyStoreConfigDescriptor));
 
-    private ComponentPropertyDescriptor securityConfigDescriptor =
-            ComponentPropertyDescriptor.builder()
+    private PropertyDescriptor securityConfigDescriptor =
+            PropertyDescriptor.builder()
                     .type(securityConfigObjectType)
-                    .propertyName("securityConfig")
+                    .name("securityConfig")
                     .displayName("Security config")
                     .build();
 

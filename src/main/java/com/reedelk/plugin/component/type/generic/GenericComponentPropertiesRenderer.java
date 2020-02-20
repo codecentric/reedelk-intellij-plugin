@@ -1,7 +1,7 @@
 package com.reedelk.plugin.component.type.generic;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.TypeDescriptor;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
@@ -28,23 +28,23 @@ public class GenericComponentPropertiesRenderer extends AbstractComponentPropert
 
         ComponentData componentData = node.componentData();
 
-        List<ComponentPropertyDescriptor> descriptors = componentData.getPropertiesDescriptors();
+        List<PropertyDescriptor> descriptors = componentData.getPropertiesDescriptors();
 
         return getDefaultPropertiesPanel(componentData.getFullyQualifiedName(), componentData, descriptors);
     }
 
     @NotNull
-    protected PropertiesPanelHolder getDefaultPropertiesPanel(String componentFullyQualifiedName, ComponentData componentData, List<ComponentPropertyDescriptor> descriptors) {
+    protected PropertiesPanelHolder getDefaultPropertiesPanel(String componentFullyQualifiedName, ComponentData componentData, List<PropertyDescriptor> descriptors) {
 
         PropertiesPanelHolder propertiesPanel = new PropertiesPanelHolder(componentFullyQualifiedName, componentData, descriptors, snapshot);
 
         descriptors.forEach(descriptor -> {
 
-            String propertyName = descriptor.getPropertyName();
+            String propertyName = descriptor.getName();
 
             PropertyAccessor propertyAccessor = propertiesPanel.getAccessor(propertyName);
 
-            TypeDescriptor propertyType = descriptor.getPropertyType();
+            TypeDescriptor propertyType = descriptor.getType();
 
             PropertyTypeRenderer renderer = PropertyTypeRendererFactory.get().from(propertyType);
 

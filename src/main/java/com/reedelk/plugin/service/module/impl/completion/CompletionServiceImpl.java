@@ -6,7 +6,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.service.module.CompletionService;
@@ -82,7 +82,7 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
         components.forEach(componentsPackage -> componentsPackage.getModuleComponents()
                         .forEach(descriptor -> {
                             String fullyQualifiedName = descriptor.getFullyQualifiedName();
-                            addSuggestionFrom(fullyQualifiedName, descriptor.getComponentPropertyDescriptors());
+                            addSuggestionFrom(fullyQualifiedName, descriptor.getProperties());
                         }));
 
         // We throw away the old custom functions trie since again we are updating
@@ -110,16 +110,16 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
         return ComponentService.getInstance(module);
     }
 
-    private void addSuggestionFrom(String fullyQualifiedName, List<ComponentPropertyDescriptor> propertyDescriptors) {
+    private void addSuggestionFrom(String fullyQualifiedName, List<PropertyDescriptor> propertyDescriptors) {
         propertyDescriptors.forEach(descriptor -> {
-            if (descriptor.getPropertyType() instanceof TypeObjectDescriptor) {
+            if (descriptor.getType() instanceof TypeObjectDescriptor) {
                 // If the property type is TypeObject, we must recursively add the
                 // suggestions for all the properties of this object.
-                TypeObjectDescriptor typeObjectDescriptor = descriptor.getPropertyType();
+                TypeObjectDescriptor typeObjectDescriptor = descriptor.getType();
                 addSuggestionFrom(typeObjectDescriptor.getTypeFullyQualifiedName(), typeObjectDescriptor.getObjectProperties());
 
             } else {
-                Optional.ofNullable(descriptor.getAutoCompleteContributorDescriptor()).ifPresent(definition -> {
+                Optional.ofNullable(descriptor.getAutocompleteContributor()).ifPresent(definition -> {
                     Trie componentTrie = new Trie();
                     if (definition.isMessage()) insertSuggestions(componentTrie, DefaultSuggestions.MESSAGE);
                     if (definition.isContext()) insertSuggestions(componentTrie, DefaultSuggestions.CONTEXT);

@@ -3,8 +3,8 @@ package com.reedelk.plugin.editor.designer.action;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.ComponentDescriptor;
-import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
-import com.reedelk.plugin.commons.DefaultDescriptorDataValuesFiller;
+import com.reedelk.module.descriptor.model.PropertyDescriptor;
+import com.reedelk.plugin.commons.InitValuesFiller;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.editor.designer.action.add.AddActionHandler;
 import com.reedelk.plugin.editor.designer.action.move.MoveActionHandler;
@@ -89,10 +89,10 @@ public abstract class DesignerPanelAbstractActionHandler implements DesignerPane
 
             ComponentData componentData = nodeToAdd.componentData();
 
-            List<ComponentPropertyDescriptor> propertiesDescriptors = componentData.getPropertiesDescriptors();
+            List<PropertyDescriptor> propertiesDescriptors = componentData.getPropertiesDescriptors();
 
             // Fill default property values for the just added component
-            DefaultDescriptorDataValuesFiller.fill(componentData, propertiesDescriptors);
+            InitValuesFiller.fill(componentData, propertiesDescriptors);
 
             LOG.info(format("Node Dropped [%s], drop point [x: %d, y: %d]", PrintFlowInfo.name(nodeToAdd), dropPoint.x, dropPoint.y));
 

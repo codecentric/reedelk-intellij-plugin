@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer.typescript.scriptactions;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
+import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.ScriptSignatureDescriptor;
 import com.reedelk.plugin.commons.JavascriptFileNameValidator;
 import com.reedelk.plugin.commons.ScriptFunctionDefinitionBuilder;
@@ -25,10 +25,10 @@ public class ScriptActionsPanel extends DisposablePanel {
     private final transient ContainerContext context;
     private final transient ClickableLabel editAction;
     private final transient ClickableLabel deleteAction;
-    private final transient ComponentPropertyDescriptor propertyDescriptor;
+    private final transient PropertyDescriptor propertyDescriptor;
     private transient ScriptResource selected;
 
-    public ScriptActionsPanel(Module module, ContainerContext context, ComponentPropertyDescriptor propertyDescriptor) {
+    public ScriptActionsPanel(Module module, ContainerContext context, PropertyDescriptor propertyDescriptor) {
         this.module = module;
         this.context = context;
         this.propertyDescriptor = propertyDescriptor;
@@ -62,7 +62,7 @@ public class ScriptActionsPanel extends DisposablePanel {
         DialogAddScript dialogAddScript = new DialogAddScript(module.getProject());
         if (dialogAddScript.showAndGet()) {
             ScriptSignatureDescriptor signatureDefinition =
-                    Optional.ofNullable(propertyDescriptor.getScriptSignatureDescriptor()).orElse(ScriptSignatureDescriptor.DEFAULT);
+                    Optional.ofNullable(propertyDescriptor.getScriptSignature()).orElse(ScriptSignatureDescriptor.DEFAULT);
             String scriptFileNameIncludingPathToAdd = dialogAddScript.getScriptFileNameIncludingPathToAdd();
             String scriptFunctionName = JavascriptFileNameValidator.getFileNameWithoutExtensionFrom(scriptFileNameIncludingPathToAdd);
             String scriptBody = ScriptFunctionDefinitionBuilder.from(scriptFunctionName, signatureDefinition);

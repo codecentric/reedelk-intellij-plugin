@@ -2,8 +2,8 @@ package com.reedelk.plugin.component;
 
 import com.reedelk.module.descriptor.model.ComponentDataHolder;
 import com.reedelk.module.descriptor.model.ComponentDescriptor;
-import com.reedelk.module.descriptor.model.ComponentPropertyDescriptor;
 import com.reedelk.module.descriptor.model.ComponentType;
+import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.plugin.commons.Images;
 
 import java.awt.*;
@@ -64,14 +64,14 @@ public class ComponentData implements ComponentDataHolder {
     }
 
     public ComponentType getComponentClass() {
-        return descriptor.getComponentType();
+        return descriptor.getType();
     }
 
-    public List<ComponentPropertyDescriptor> getPropertiesDescriptors() {
-        return descriptor.getComponentPropertyDescriptors();
+    public List<PropertyDescriptor> getPropertiesDescriptors() {
+        return descriptor.getProperties();
     }
 
-    public Optional<ComponentPropertyDescriptor> getPropertyDescriptor(String propertyName) {
+    public Optional<PropertyDescriptor> getPropertyDescriptor(String propertyName) {
         return descriptor.getPropertyDescriptor(propertyName);
     }
 }
