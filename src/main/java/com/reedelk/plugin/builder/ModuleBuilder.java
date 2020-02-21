@@ -25,7 +25,6 @@ import org.jetbrains.idea.maven.wizards.MavenModuleWizardStep;
 import org.jetbrains.idea.maven.wizards.SelectPropertiesStep;
 
 import javax.swing.*;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -61,10 +60,11 @@ public class ModuleBuilder extends MavenModuleBuilder {
             MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> {
 
                 if (shouldUseDownloadedDistribution()) {
-                    Path destination = Paths.get(contentEntryPath, tmpDownloadDistributionPath.getFileName().toString());
-                    File destinationFile = destination.toFile();
+                    this.runtimeConfigName = message("runtimeBuilder.name.default.value");
+                    String unzippedRuntimeDirectoryName = message("unzipped.runtime.directory.name");
+                    Path destination = Paths.get(contentEntryPath, unzippedRuntimeDirectoryName);
                     try {
-                        FileUtils.copyDirectory(tmpDownloadDistributionPath.toFile(), destinationFile);
+                        FileUtils.copyDirectory(tmpDownloadDistributionPath.toFile(), destination.toFile());
                     } catch (IOException e) {
                         // We cannot recover here. We should just display an error message.
                         invokeLater(() -> showErrorDialog(
