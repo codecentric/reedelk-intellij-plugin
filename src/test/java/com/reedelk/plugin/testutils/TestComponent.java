@@ -17,7 +17,7 @@ import java.math.BigInteger;
 import java.util.Map;
 
 
-@ModuleComponent(name = "Test Component")
+@ModuleComponent("Test Component")
 public class TestComponent implements ProcessorSync {
 
     @Property("Integer property")
@@ -172,7 +172,7 @@ public class TestComponent implements ProcessorSync {
     private DynamicString propertyWithAutoCompleteContributor;
 
     @Property("String property with info text")
-    @PropertyDescription("This is the info text")
+    @Description("This is the info text")
     private String stringPropertyWithTooltipInfo;
 
 

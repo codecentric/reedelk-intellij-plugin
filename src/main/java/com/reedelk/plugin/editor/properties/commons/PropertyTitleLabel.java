@@ -3,15 +3,14 @@ package com.reedelk.plugin.editor.properties.commons;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.plugin.editor.properties.ClickableLabelWithTooltip;
+import com.reedelk.plugin.commons.TooltipContent;
+import com.reedelk.plugin.editor.properties.ClickableTooltip;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.util.Optional;
 
 import static com.reedelk.plugin.commons.Colors.TOOL_WINDOW_PROPERTIES_TEXT;
-import static com.reedelk.plugin.commons.Icons.Misc.Info;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.WEST;
 
@@ -30,9 +29,9 @@ public class PropertyTitleLabel extends JPanel {
 
     public PropertyTitleLabel(PropertyDescriptor propertyDescriptor) {
         this(propertyDescriptor.getDisplayName());
-        Optional.ofNullable(propertyDescriptor.getDescription()).ifPresent(propertyInfoText -> {
-            JLabel infoTooltipIcon = new ClickableLabelWithTooltip(propertyInfoText, Info);
-            add(ContainerFactory.pushLeft(infoTooltipIcon), CENTER);
+        TooltipContent.from(propertyDescriptor).build().ifPresent(toolTipText -> {
+            ClickableTooltip tooltip = new ClickableTooltip(toolTipText);
+            add(ContainerFactory.pushLeft(tooltip), CENTER);
         });
     }
 }

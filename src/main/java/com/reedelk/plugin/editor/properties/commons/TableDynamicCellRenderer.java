@@ -21,7 +21,7 @@ public class TableDynamicCellRenderer implements TableCellRenderer, Disposable {
     public TableDynamicCellRenderer(Module module, ContainerContext context) {
         JLabel codeIcon = new JBLabel(Code);
         this.editor = new DynamicValueScriptEditor(module, context);
-        this.content = ContainerFactory.createLabelNextToComponent(codeIcon, editor, false);
+        this.content = ContainerFactory.createLabelNextToComponentWithoutOuterBorder(codeIcon, editor);
     }
 
     @Override

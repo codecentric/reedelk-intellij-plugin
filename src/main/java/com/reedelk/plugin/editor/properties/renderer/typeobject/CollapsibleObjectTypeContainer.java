@@ -1,6 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer.typeobject;
 
 import com.reedelk.plugin.commons.DisposableUtils;
+import com.reedelk.plugin.commons.TooltipContent;
 import com.reedelk.plugin.editor.properties.commons.*;
 
 import javax.swing.*;
@@ -14,18 +15,21 @@ import static java.awt.BorderLayout.NORTH;
 public class CollapsibleObjectTypeContainer extends DisposablePanel {
 
     private final String displayName;
+    private final TooltipContent tooltipContent;
     private final DisposablePanel collapsedContent;
     private final transient ContainerRenderingFunction renderingFunction;
+
     private DisposablePanel unCollapsedContent;
 
     private boolean collapsed = true;
     private boolean loaded = false;
 
-    CollapsibleObjectTypeContainer(String displayName, ContainerRenderingFunction unCollapsedContentRenderer) {
+    CollapsibleObjectTypeContainer(String displayName, TooltipContent tooltipContent, ContainerRenderingFunction unCollapsedContentRenderer) {
         this.renderingFunction = unCollapsedContentRenderer;
         this.displayName = displayName;
-        this.collapsedContent = new CollapsedContent(displayName);
-        this.unCollapsedContent = new UnCollapsedContent(displayName, new LoadingContentPanel());
+        this.tooltipContent = tooltipContent;
+        this.collapsedContent = new CollapsedContent(displayName, tooltipContent);
+        this.unCollapsedContent = new UnCollapsedContent(displayName, tooltipContent, new LoadingContentPanel());
 
         setLayout(new BorderLayout());
         add(collapsedContent, CENTER);
@@ -68,15 +72,15 @@ public class CollapsibleObjectTypeContainer extends DisposablePanel {
             remove(unCollapsedContent);
             JComponent renderedContent = renderingFunction.render();
             loaded = true;
-            unCollapsedContent = new UnCollapsedContent(displayName, renderedContent);
+            unCollapsedContent = new UnCollapsedContent(displayName, tooltipContent, renderedContent);
             add(unCollapsedContent);
             revalidate();
         });
     }
 
     class UnCollapsedContent extends DisposablePanel {
-        UnCollapsedContent(String displayName, JComponent content) {
-            TypeObjectContainerHeader topHeader = new TypeObjectContainerHeader(displayName, ArrowDown, clickAction);
+        UnCollapsedContent(String displayName, TooltipContent tooltipContent, JComponent content) {
+            TypeObjectContainerHeader topHeader = new TypeObjectContainerHeader(displayName, tooltipContent, ArrowDown, clickAction);
 
             JPanel nestedContainerWrapper =
                     ContainerFactory.pushCenter(content, DefaultObjectTypeContainer.BORDER_OBJECT_TYPE_CONTENT);
@@ -88,8 +92,8 @@ public class CollapsibleObjectTypeContainer extends DisposablePanel {
     }
 
     class CollapsedContent extends TypeObjectContainerHeader {
-        CollapsedContent(String displayName) {
-            super(displayName, ArrowRight, clickAction);
+        CollapsedContent(String displayName, TooltipContent tooltipContent) {
+            super(displayName, tooltipContent, ArrowRight, clickAction);
         }
     }
 

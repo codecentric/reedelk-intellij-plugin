@@ -2,6 +2,7 @@ package com.reedelk.plugin.component.type.router;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
+import com.reedelk.plugin.commons.TooltipContent;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.component.type.generic.GenericComponentPropertiesRenderer;
 import com.reedelk.plugin.component.type.router.widget.ConditionRouteTableModel;
@@ -16,7 +17,7 @@ import java.util.List;
 
 import static com.reedelk.plugin.component.type.router.RouterNode.DATA_CONDITION_ROUTE_PAIRS;
 import static com.reedelk.plugin.editor.properties.commons.ContainerFactory.createObjectTypeContainer;
-import static com.reedelk.plugin.message.ReedelkBundle.message;
+import static com.reedelk.runtime.api.commons.Preconditions.checkState;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 
@@ -31,21 +32,32 @@ public class RouterPropertiesRenderer extends GenericComponentPropertiesRenderer
 
         ComponentData componentData = routerNode.componentData();
 
+        String componentFullyQualifiedName = componentData.getFullyQualifiedName();
+
         List<PropertyDescriptor> descriptors = componentData.getPropertiesDescriptors();
 
-        PropertiesPanelHolder genericProperties =
-                super.getDefaultPropertiesPanel(componentData.getFullyQualifiedName(), componentData, descriptors);
+        checkState(descriptors.size() == 1, "Expected only one descriptor for router component.");
+
+        PropertyDescriptor propertyDescriptor = descriptors.get(0);
+        String propertyTitle = propertyDescriptor.getDisplayName();
+
+        String propertyName = propertyDescriptor.getName();
+        checkState("conditionAndRouteDefinitions".equals(propertyName), "Expected only one property named 'conditionAndRouteDefinitions' for Router.");
+
+        TooltipContent tooltipContent = TooltipContent.from(propertyDescriptor);
+
+        PropertiesPanelHolder propertiesPanel =
+                new PropertiesPanelHolder(componentFullyQualifiedName, componentData, descriptors, snapshot);
 
         List<RouterConditionRoutePair> conditionRoutePairList = componentData.get(DATA_CONDITION_ROUTE_PAIRS);
 
         ConditionRouteTableModel model = new ConditionRouteTableModel(conditionRoutePairList, snapshot);
-        RouterRouteTable routerRouteTable = new RouterRouteTable(module, model, genericProperties);
-        DisposablePanel routerTableContainer =
-                createObjectTypeContainer(routerRouteTable, message("router.table.container.title"));
+        RouterRouteTable routerRouteTable = new RouterRouteTable(module, model, propertiesPanel);
+        DisposablePanel routerTableContainer = createObjectTypeContainer(routerRouteTable, propertyTitle, tooltipContent);
 
         DisposablePanel container = new DisposablePanel();
         container.setLayout(new BorderLayout());
-        container.add(genericProperties, NORTH);
+        container.add(propertiesPanel, NORTH);
         container.add(routerTableContainer, CENTER);
         return container;
     }

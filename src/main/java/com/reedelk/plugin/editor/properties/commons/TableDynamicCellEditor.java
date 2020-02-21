@@ -25,7 +25,7 @@ public class TableDynamicCellEditor implements TableCellEditor, Disposable {
     public TableDynamicCellEditor(Module module, ContainerContext context) {
         JLabel codeIcon = new JLabel(Code);
         this.editor = new DynamicValueScriptEditor(module, context);
-        this.content = ContainerFactory.createLabelNextToComponent(codeIcon, editor, false);
+        this.content = ContainerFactory.createLabelNextToComponentWithoutOuterBorder(codeIcon, editor);
     }
 
     @Override

@@ -60,7 +60,7 @@ public class DynamicValueField extends DisposablePanel {
                     switchComponent(inputFieldContainer, scriptContainer);
                     listener.onChange(inputFieldAdapter.getValue());
                 });
-        return ContainerFactory.createLabelNextToComponent(codeIcon, editorComponent);
+        return ContainerFactory.createLabelNextToComponentWithOuterBorder(codeIcon, editorComponent);
     }
 
     private DisposablePanel createInputFieldContainer() {
@@ -72,7 +72,7 @@ public class DynamicValueField extends DisposablePanel {
         inputFieldAdapter.setMargin(JBUI.emptyInsets());
         inputFieldAdapter.setBorder(JBUI.Borders.empty());
         inputFieldAdapter.setFont(Fonts.ScriptEditor.DYNAMIC_FIELD_FONT_SIZE);
-        return ContainerFactory.createLabelNextToComponent(textIcon, inputFieldAdapter.getComponent());
+        return ContainerFactory.createLabelNextToComponentWithOuterBorder(textIcon, inputFieldAdapter.getComponent());
     }
 
     private void switchComponent(DisposablePanel visible, DisposablePanel invisible) {
