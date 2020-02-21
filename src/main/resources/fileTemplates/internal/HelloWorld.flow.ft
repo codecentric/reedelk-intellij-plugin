@@ -20,13 +20,13 @@
       }
     },
     {
-      "implementor": "com.reedelk.core.component.logger.LoggerComponent",
+      "implementor": "com.reedelk.core.component.LoggerComponent",
       "description": "Log message attributes",
       "level": "INFO",
       "message": "#[message.attributes()]"
     },
     {
-      "implementor": "com.reedelk.core.component.script.ScriptEvaluator",
+      "implementor": "com.reedelk.core.component.ScriptEvaluator",
       "description": "Concatenate 'Hello World' with 'name' path parameter",
       "mimeType": "text/plain",
       "script": "helloWorld.js"
