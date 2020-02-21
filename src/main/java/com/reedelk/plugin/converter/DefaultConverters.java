@@ -7,6 +7,7 @@ import com.reedelk.runtime.api.resource.DynamicResource;
 import com.reedelk.runtime.api.resource.ResourceBinary;
 import com.reedelk.runtime.api.resource.ResourceText;
 import com.reedelk.runtime.api.script.Script;
+import com.reedelk.runtime.api.script.dynamicmap.DynamicBooleanMap;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicObjectMap;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicStringMap;
 import com.reedelk.runtime.api.script.dynamicvalue.*;
@@ -63,6 +64,7 @@ public class DefaultConverters implements Converter {
         tmp.put(DynamicBigDecimal.class, new AsDynamicBigDecimal());
 
         // Dynamic map types
+        tmp.put(DynamicBooleanMap.class, new AsDynamicBooleanMap());
         tmp.put(DynamicStringMap.class, new AsDynamicStringMap());
         tmp.put(DynamicObjectMap.class, new AsDynamicObjectMap());
 

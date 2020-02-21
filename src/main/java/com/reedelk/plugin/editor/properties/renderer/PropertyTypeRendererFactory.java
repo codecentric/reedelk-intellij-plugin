@@ -35,6 +35,7 @@ import com.reedelk.runtime.api.resource.DynamicResource;
 import com.reedelk.runtime.api.resource.ResourceBinary;
 import com.reedelk.runtime.api.resource.ResourceText;
 import com.reedelk.runtime.api.script.Script;
+import com.reedelk.runtime.api.script.dynamicmap.DynamicBooleanMap;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicObjectMap;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicStringMap;
 import com.reedelk.runtime.api.script.dynamicvalue.*;
@@ -92,6 +93,7 @@ public class PropertyTypeRendererFactory {
         tmp.put(DynamicBigDecimal.class, new DynamicBigDecimalPropertyRenderer());
 
         // Dynamic map types
+        tmp.put(DynamicBooleanMap.class, new DynamicMapPropertyRenderer());
         tmp.put(DynamicStringMap.class, new DynamicMapPropertyRenderer());
         tmp.put(DynamicObjectMap.class, new DynamicMapPropertyRenderer());
 

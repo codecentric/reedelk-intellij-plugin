@@ -8,6 +8,7 @@ import com.reedelk.runtime.api.resource.DynamicResource;
 import com.reedelk.runtime.api.resource.ResourceBinary;
 import com.reedelk.runtime.api.resource.ResourceText;
 import com.reedelk.runtime.api.script.Script;
+import com.reedelk.runtime.api.script.dynamicmap.DynamicBooleanMap;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicObjectMap;
 import com.reedelk.runtime.api.script.dynamicmap.DynamicStringMap;
 import com.reedelk.runtime.api.script.dynamicvalue.*;
@@ -67,6 +68,7 @@ public class ConfigPropertyAwareConverters implements Converter {
         tmp.put(ResourceText.class, new AsResourceText());
         tmp.put(ResourceBinary.class, new AsResourceBinary());
 
+        tmp.put(DynamicBooleanMap.class, new AsDynamicBooleanMap());
         tmp.put(DynamicStringMap.class, new AsDynamicStringMap());
         tmp.put(DynamicObjectMap.class, new AsDynamicObjectMap());
 
