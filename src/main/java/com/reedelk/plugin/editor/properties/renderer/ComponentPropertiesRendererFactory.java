@@ -9,6 +9,7 @@ import com.reedelk.plugin.component.type.placeholder.PlaceholderPropertiesRender
 import com.reedelk.plugin.component.type.router.RouterPropertiesRenderer;
 import com.reedelk.plugin.component.type.stop.StopPropertiesRenderer;
 import com.reedelk.plugin.component.type.trycatch.TryCatchPropertiesRenderer;
+import com.reedelk.plugin.component.type.unknown.Unknown;
 import com.reedelk.plugin.component.type.unknown.UnknownComponentPropertiesRenderer;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.runtime.api.exception.ESBException;

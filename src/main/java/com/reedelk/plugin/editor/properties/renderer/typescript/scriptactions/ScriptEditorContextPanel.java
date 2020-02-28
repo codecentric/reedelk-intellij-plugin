@@ -5,22 +5,26 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
-import com.reedelk.plugin.service.module.CompletionService;
-import com.reedelk.plugin.service.module.impl.completion.SuggestionType;
+import com.reedelk.plugin.service.module.AutocompleteService;
+import com.reedelk.plugin.service.module.impl.completion.Suggestion;
 import com.reedelk.plugin.topic.ReedelkTopics;
+import com.reedelk.runtime.api.autocomplete.AutocompleteItemType;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
+import java.util.List;
 
+import static com.intellij.icons.AllIcons.Nodes.Function;
+import static com.intellij.icons.AllIcons.Nodes.Variable;
 import static com.intellij.util.ui.JBUI.Borders.*;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 import static javax.swing.BorderFactory.createMatteBorder;
 
-class ScriptEditorContextPanel extends DisposablePanel implements CompletionService.OnCompletionEvent {
+class ScriptEditorContextPanel extends DisposablePanel implements AutocompleteService.OnCompletionEvent {
 
     private static final Border MATTE_BORDER = createMatteBorder(1, 1, 1, 0,
             Colors.SCRIPT_EDITOR_CONTEXT_PANEL_BORDER);
@@ -31,7 +35,7 @@ class ScriptEditorContextPanel extends DisposablePanel implements CompletionServ
     private final transient Module module;
     private final transient MessageBusConnection connect;
     private final String componentFullyQualifiedName;
-    private final DisposablePanel panelVariablesWrapper;
+    private final DisposablePanel panelVariables;
 
     ScriptEditorContextPanel(Module module, String componentFullyQualifiedName) {
         this.module = module;
@@ -50,17 +54,16 @@ class ScriptEditorContextPanel extends DisposablePanel implements CompletionServ
         panelTitleWrapper.add(panelTitle, NORTH);
         add(panelTitleWrapper, NORTH);
 
-        this.panelVariablesWrapper = new DisposablePanel();
-        BoxLayout boxLayout = new BoxLayout(panelVariablesWrapper, BoxLayout.PAGE_AXIS);
-        this.panelVariablesWrapper.setLayout(boxLayout);
-        this.panelVariablesWrapper.setBorder(empty(5));
+        this.panelVariables = new DisposablePanel();
+        BoxLayout boxLayout = new BoxLayout(panelVariables, BoxLayout.PAGE_AXIS);
+        this.panelVariables.setLayout(boxLayout);
+        this.panelVariables.setBorder(empty(5));
 
-        CompletionService.getInstance(module)
+        AutocompleteService.getInstance(module)
                 .contextVariablesOf(componentFullyQualifiedName)
-                .forEach(suggestion ->
-                        panelVariablesWrapper.add(new ContextVariableLabel(suggestion.getToken(), suggestion.getTypeName())));
+                .forEach(suggestion -> panelVariables.add(new ContextVariableLabel(suggestion)));
 
-        JBScrollPane panelVariablesScrollPane = new JBScrollPane(panelVariablesWrapper);
+        JBScrollPane panelVariablesScrollPane = new JBScrollPane(panelVariables);
         panelVariablesScrollPane.setBorder(empty());
         add(panelVariablesScrollPane, CENTER);
     }
@@ -75,18 +78,22 @@ class ScriptEditorContextPanel extends DisposablePanel implements CompletionServ
 
     @Override
     public void onCompletionsUpdated() {
-        panelVariablesWrapper.removeAll();
-        CompletionService.getInstance(module)
-                .contextVariablesOf(componentFullyQualifiedName)
-                .forEach(suggestion ->
-                        panelVariablesWrapper.add(new ContextVariableLabel(suggestion.getToken(), suggestion.getTypeName())));
-        SwingUtilities.invokeLater(panelVariablesWrapper::repaint);
+        List<Suggestion> suggestions =
+                AutocompleteService.getInstance(module)
+                .contextVariablesOf(componentFullyQualifiedName);
+
+        SwingUtilities.invokeLater(() -> {
+            panelVariables.removeAll();
+            suggestions.forEach(suggestion ->
+                    panelVariables.add(new ContextVariableLabel(suggestion)));
+            panelVariables.repaint();
+        });
     }
 
     static class ContextVariableLabel extends JLabel {
-        ContextVariableLabel(String name, String type) {
-            super(message("script.editor.context.vars.html.template", name, type));
-            setIcon(SuggestionType.VARIABLE.icon());
+        ContextVariableLabel(Suggestion suggestion) {
+            super(message("script.editor.context.vars.html.template", suggestion.getReplaceValue(), suggestion.getReturnType()));
+            setIcon(suggestion.getItemType() == AutocompleteItemType.FUNCTION ? Function : Variable);
             setBorder(emptyTop(4));
         }
     }

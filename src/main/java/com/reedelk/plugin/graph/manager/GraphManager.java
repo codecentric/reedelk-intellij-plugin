@@ -13,13 +13,13 @@ import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBusConnection;
+import com.reedelk.module.descriptor.ModuleDescriptor;
 import com.reedelk.plugin.editor.DesignerEditor;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.graph.*;
 import com.reedelk.plugin.graph.deserializer.DeserializationError;
 import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.ComponentListUpdateNotifier;
-import com.reedelk.plugin.service.module.impl.component.ModuleComponents;
 import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
 
@@ -89,12 +89,10 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
     }
 
     @Override
-    public void onComponentListUpdate(Collection<ModuleComponents> components) {
+    public void onComponentListUpdate(Collection<ModuleDescriptor> components) {
         // When the component list is updated, we MUST deserialize so that
         // unknown components are correctly resolved and visualized in the Designer.
-        if (componentService.isInitialized()) {
-            deserializeDocument();
-        }
+        deserializeDocument();
     }
 
     @Override

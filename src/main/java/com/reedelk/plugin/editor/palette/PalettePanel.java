@@ -12,10 +12,10 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.treeStructure.SimpleTree;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.messages.MessageBusConnection;
+import com.reedelk.module.descriptor.ModuleDescriptor;
 import com.reedelk.module.descriptor.model.ComponentDescriptor;
 import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.ComponentListUpdateNotifier;
-import com.reedelk.plugin.service.module.impl.component.ModuleComponents;
 import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
 
@@ -67,7 +67,7 @@ public class PalettePanel extends JBPanel<PalettePanel> implements ComponentList
     }
 
     @Override
-    public void onComponentListUpdate(Collection<ModuleComponents> components) {
+    public void onComponentListUpdate(Collection<ModuleDescriptor> components) {
         // We only update the components for this module if and only if
         // the current selected file belongs to the module for which the
         // components have been updated.
@@ -87,13 +87,13 @@ public class PalettePanel extends JBPanel<PalettePanel> implements ComponentList
         if (file != null) {
             Optional.ofNullable(ModuleUtil.findModuleForFile(file, project))
                     .ifPresent(module -> {
-                        Collection<ModuleComponents> moduleComponents = ComponentService.getInstance(module).getModuleComponents();
+                        Collection<ModuleDescriptor> moduleComponents = ComponentService.getInstance(module).getAllModuleComponents();
                         updateComponents(moduleComponents);
                     });
         }
     }
 
-    private void updateComponents(Collection<ModuleComponents> moduleComponents) {
+    private void updateComponents(Collection<ModuleDescriptor> moduleComponents) {
         List<DefaultMutableTreeNode> componentsTreeNodes = asTreeNodes(moduleComponents);
 
         SwingUtilities.invokeLater(() -> {
@@ -128,18 +128,18 @@ public class PalettePanel extends JBPanel<PalettePanel> implements ComponentList
     }
 
     @NotNull
-    static List<DefaultMutableTreeNode> asTreeNodes(Collection<ModuleComponents> moduleComponents) {
+    static List<DefaultMutableTreeNode> asTreeNodes(Collection<ModuleDescriptor> moduleComponents) {
         return moduleComponents.stream()
                 .filter(ExcludeModuleWithoutComponents)
-                .sorted(Comparator.comparing(ModuleComponents::getName))
+                .sorted(Comparator.comparing(ModuleDescriptor::getName))
                 .map(PalettePanel::asTreeNode)
                 .collect(toList());
     }
 
     @NotNull
-    static DefaultMutableTreeNode asTreeNode(ModuleComponents moduleComponents) {
+    static DefaultMutableTreeNode asTreeNode(ModuleDescriptor moduleComponents) {
         DefaultMutableTreeNode componentTreeNode = new DefaultMutableTreeNode(moduleComponents.getName());
-        moduleComponents.getModuleComponents()
+        moduleComponents.getComponents()
                 .stream()
                 .filter(ExcludeHiddenComponent)
                 .sorted(Comparator.comparing(ComponentDescriptor::getDisplayName))
@@ -152,8 +152,8 @@ public class PalettePanel extends JBPanel<PalettePanel> implements ComponentList
 
     // A module might not have any component if for instance all its components are hidden.
     // This is why in this method we filter all the component descriptors which are not hidden.
-    private static final Predicate<ModuleComponents> ExcludeModuleWithoutComponents =
-            moduleComponents -> moduleComponents.getModuleComponents()
+    private static final Predicate<ModuleDescriptor> ExcludeModuleWithoutComponents =
+            moduleComponents -> moduleComponents.getComponents()
                     .stream()
                     .anyMatch(componentDescriptor -> !componentDescriptor.isHidden());
 }

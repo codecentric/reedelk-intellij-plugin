@@ -7,6 +7,7 @@ import com.reedelk.plugin.component.type.placeholder.PlaceholderDeserializer;
 import com.reedelk.plugin.component.type.router.RouterDeserializer;
 import com.reedelk.plugin.component.type.stop.StopDeserializer;
 import com.reedelk.plugin.component.type.trycatch.TryCatchDeserializer;
+import com.reedelk.plugin.component.type.unknown.Unknown;
 import com.reedelk.plugin.component.type.unknown.UnknownDeserializer;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.runtime.api.exception.ESBException;

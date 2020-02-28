@@ -7,18 +7,17 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public interface CompletionService {
+public interface AutocompleteService {
 
-    static CompletionService getInstance(@NotNull Module module) {
-        return ModuleServiceManager.getService(module, CompletionService.class);
+    static AutocompleteService getInstance(@NotNull Module module) {
+        return ModuleServiceManager.getService(module, AutocompleteService.class);
     }
 
     List<Suggestion> contextVariablesOf(String componentFullyQualifiedName);
 
-    List<Suggestion> completionTokensOf(String componentFullyQualifiedName, String token);
+    List<Suggestion> autocompleteSuggestionOf(String componentFullyQualifiedName, String token);
 
     interface OnCompletionEvent {
         void onCompletionsUpdated();
     }
-
 }

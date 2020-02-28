@@ -12,6 +12,7 @@ import com.reedelk.plugin.component.type.placeholder.PlaceholderNode;
 import com.reedelk.plugin.component.type.router.RouterNode;
 import com.reedelk.plugin.component.type.stop.StopNode;
 import com.reedelk.plugin.component.type.trycatch.TryCatchNode;
+import com.reedelk.plugin.component.type.unknown.Unknown;
 import com.reedelk.plugin.component.type.unknown.UnknownNode;
 import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.runtime.component.*;
@@ -42,7 +43,7 @@ public class GraphNodeFactory {
 
     public static <T extends GraphNode> T get(Module module, String componentName) {
         ComponentDescriptor componentDescriptor =
-                ComponentService.getInstance(module).componentDescriptorByName(componentName);
+                ComponentService.getInstance(module).findComponentDescriptorBy(componentName);
         return GraphNodeFactory.get(componentDescriptor);
     }
 

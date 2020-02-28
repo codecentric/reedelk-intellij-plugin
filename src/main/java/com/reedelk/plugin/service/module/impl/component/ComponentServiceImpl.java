@@ -11,10 +11,11 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.module.descriptor.ModuleDescriptor;
 import com.reedelk.module.descriptor.ModuleDescriptorException;
-import com.reedelk.module.descriptor.analyzer.ModuleAnalyzer;
-import com.reedelk.module.descriptor.model.AutoCompleteContributorDescriptor;
+import com.reedelk.module.descriptor.analyzer.ModuleDescriptorAnalyzer;
+import com.reedelk.module.descriptor.model.AutocompleteItemDescriptor;
 import com.reedelk.module.descriptor.model.ComponentDescriptor;
 import com.reedelk.plugin.commons.ExcludedArtifactsFromModuleSync;
+import com.reedelk.plugin.component.type.unknown.Unknown;
 import com.reedelk.plugin.component.type.unknown.UnknownComponentDescriptorWrapper;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.maven.MavenUtils;
@@ -22,7 +23,6 @@ import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.topic.ReedelkTopics;
 import com.reedelk.runtime.commons.ModuleUtils;
 import com.reedelk.runtime.component.Stop;
-import com.reedelk.runtime.component.Unknown;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.model.MavenArtifactNode;
 import org.jetbrains.idea.maven.project.MavenImportListener;
@@ -40,28 +40,26 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
     private static final Logger LOG = Logger.getInstance(ComponentServiceImpl.class);
 
-    private static final String SYSTEM_COMPONENTS_MODULE_NAME = "flow-control";
-
-    private boolean isInitialized;
-
     private final Module module;
-    private final Project project;
 
     private final ComponentListUpdateNotifier publisher;
-    private final ModuleAnalyzer componentsAnalyzer = new ModuleAnalyzer();
+    private final ModuleDescriptorAnalyzer moduleAnalyzer = new ModuleDescriptorAnalyzer();
 
     // Autocomplete
-    private final List<AutoCompleteContributorDescriptor> autoCompleteContributorDefinitions = new ArrayList<>();
-    private final List<AutoCompleteContributorDescriptor> moduleCompleteContributorDefinitions = new ArrayList<>();
+    private final List<AutocompleteItemDescriptor> autoCompleteContributorDefinitions = new ArrayList<>();
+    private final List<AutocompleteItemDescriptor> moduleCompleteContributorDefinitions = new ArrayList<>();
 
-    // Components
-    private ModuleComponents moduleComponents; // Current module this service is referring to.
-    private final ModuleComponents systemComponents; // Default system components
-    private final Map<String, ModuleComponents> mavenJarComponentsMap = new HashMap<>(); // Components coming from imported maven jars.
+    // Flow Control Components (e.g system components)
+    // - Once loaded once, they are fixed and they cannot be updated because they are fixed in the api version -
+    private ModuleDescriptor flowControlModule;
+    // Current Module Descriptor - Can be refreshed
+    private ModuleDescriptor currentModule;
+    // Components coming from maven dependencies.
+    private final Map<String, ModuleDescriptor> mavenModules = new HashMap<>();
+
 
     public ComponentServiceImpl(Project project, Module module) {
         this.module = module;
-        this.project = project;
 
         MessageBus messageBus = project.getMessageBus();
 
@@ -70,72 +68,70 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         connection.subscribe(CompilerTopics.COMPILATION_STATUS, this);
 
         this.publisher = messageBus.syncPublisher(ReedelkTopics.COMPONENTS_UPDATE_EVENTS);
-        this.systemComponents = new ModuleComponents(SYSTEM_COMPONENTS_MODULE_NAME, new ArrayList<>());
 
-        asyncUpdateSystemComponents();
+        // When the service is initialized, then:
+        // 1. Load Runtime Commons Module (i.e system components)
+        // 2. Load Maven Dependencies Components
+        // 3. Custom components (e.g from the current project).
+        asyncLoadRuntimeCommonsModule(() ->
+                asyncLoadMavenDependenciesComponents(() ->
+                        asyncLoadModuleCustomComponents()));
     }
 
     @Override
-    public synchronized ComponentDescriptor componentDescriptorByName(String componentFullyQualifiedName) {
+    public synchronized ComponentDescriptor findComponentDescriptorBy(String componentFullyQualifiedName) {
+        // Is it a system component?
+        if (flowControlModule != null) {
+            Optional<ComponentDescriptor> systemComponent = findComponentBy(flowControlModule.getComponents(), componentFullyQualifiedName);
+            if (systemComponent.isPresent()) {
+                return systemComponent.get();
+            }
+        }
 
-        // Is it part of an imported Jar from Maven ?
-        Optional<ComponentDescriptor> componentMatching = findComponentMatching(mavenJarComponentsMap.values(), componentFullyQualifiedName);
+        // Is it a component from a maven dependency?
+        Optional<ComponentDescriptor> componentMatching = findComponentMatching(mavenModules.values(), componentFullyQualifiedName);
         if (componentMatching.isPresent()) {
             return componentMatching.get();
         }
 
-        // Is it a system component ?
-        Optional<ComponentDescriptor> systemComponent = systemComponents.getModuleComponent(componentFullyQualifiedName);
-        if (systemComponent.isPresent()) {
-            return systemComponent.get();
-        }
-
-        // Is it a component in this module being developed ?
-        if (moduleComponents != null) {
-            Optional<ComponentDescriptor> moduleComponent = moduleComponents.getModuleComponent(componentFullyQualifiedName);
+        // Is it a component in the current module being developed?
+        if (currentModule != null) {
+            Optional<ComponentDescriptor> moduleComponent = findComponentBy(currentModule.getComponents(), componentFullyQualifiedName);
             if (moduleComponent.isPresent()) {
                 return moduleComponent.get();
             }
-
         }
-        // The component is not known
-        ComponentDescriptor unknownComponentDescriptor = componentDescriptorByName(Unknown.class.getName());
-        return new UnknownComponentDescriptorWrapper(unknownComponentDescriptor);
+
+        // Then the component is not known.
+        return new UnknownComponentDescriptorWrapper(Unknown.DESCRIPTOR);
     }
 
     @Override
-    public synchronized Collection<ModuleComponents> getModuleComponents() {
-        List<ModuleComponents> descriptors = new ArrayList<>(mavenJarComponentsMap.values());
-        descriptors.add(systemComponents);
-        if (moduleComponents != null) {
-            descriptors.add(moduleComponents);
-        }
+    public synchronized Collection<ModuleDescriptor> getAllModuleComponents() {
+        List<ModuleDescriptor> descriptors = new ArrayList<>(mavenModules.values());
+        if (flowControlModule != null) descriptors.add(flowControlModule);
+        if (currentModule != null) descriptors.add(currentModule);
         return unmodifiableCollection(descriptors);
     }
 
     @Override
-    public synchronized Collection<AutoCompleteContributorDescriptor> getAutoCompleteContributorDescriptors() {
-        List<AutoCompleteContributorDescriptor> allAutoCompletions = new ArrayList<>(autoCompleteContributorDefinitions);
+    public synchronized Collection<AutocompleteItemDescriptor> getAutoCompleteItemDescriptors() {
+        List<AutocompleteItemDescriptor> allAutoCompletions = new ArrayList<>(autoCompleteContributorDefinitions);
         allAutoCompletions.addAll(moduleCompleteContributorDefinitions);
         return unmodifiableList(allAutoCompletions);
     }
 
     @Override
-    public synchronized boolean isInitialized() {
-        return isInitialized;
-    }
-
-    @Override
     public void importFinished(@NotNull Collection<MavenProject> importedProjects, @NotNull List<Module> newModules) {
         // Remove all components before updating them
-        mavenJarComponentsMap.clear();
+        mavenModules.clear();
         autoCompleteContributorDefinitions.clear();
 
         // Notify that all components have been removed
         notifyComponentListUpdate();
 
         // Update Maven dependencies components and do nothing when its done.
-        asyncUpdateMavenDependenciesComponents(() -> {
+        asyncLoadMavenDependenciesComponents(() -> {
             // Nothing
         });
     }
@@ -143,19 +139,28 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     @Override
     public void compilationFinished(boolean aborted, int errors, int warnings, @NotNull CompileContext compileContext) {
         if (!aborted && errors == 0) {
-            asyncUpdateModuleCustomComponents();
+            asyncLoadModuleCustomComponents();
         }
     }
 
+    private void asyncLoadRuntimeCommonsModule(OnDone callback) {
+        PluginExecutors.run(module, message("module.component.update.system.components"), indicator -> {
+            ModuleDescriptor descriptor = moduleAnalyzer.from(Stop.class);
+            synchronized (ComponentServiceImpl.class) {
+                flowControlModule = descriptor;
+            }
+            notifyComponentListUpdate();
+            callback.execute();
+        });
+    }
+
     /**
-     * Updates available ESB components from maven dependencies. Components for a given
-     * JAR are scanned if and only if the module name for the current JAR file is present:
-     *
-     * @see com.reedelk.runtime.commons.ModuleUtils#getModuleName(String)
-     * If a JAR contains a module but the module name Manifest attribute does not exists,
-     * then it is ignored.
+     * Updates available components from maven dependencies. Components for a given
+     * JAR are scanned if and only if the module name property for the current JAR file is
+     * present in the JAR manifest.
      */
-    private void asyncUpdateMavenDependenciesComponents(OnDone callback) {
+    private void asyncLoadMavenDependenciesComponents(OnDone callback) {
+        // TODO: Extract the following async progress task into its own class.
         PluginExecutors.run(module,
                 message("module.component.update.component.for.module", module.getName()),
                 indicator -> {
@@ -167,9 +172,8 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                                 .filter(ExcludedArtifactsFromModuleSync.predicate())
                                 .filter(artifact -> ModuleUtils.isModule(artifact.getFile()))
                                 .map(artifact -> artifact.getFile().getPath()).collect(toList())
-                                .forEach(jarFilePath -> ModuleUtils.getModuleName(jarFilePath)
-                                        .ifPresent(esbModuleName -> {
-                                            scanForComponentsOfJar(jarFilePath, esbModuleName);
+                                .forEach(jarFilePath -> ModuleUtils.getModuleName(jarFilePath).ifPresent(moduleName -> {
+                                            loadComponentsFromJar(jarFilePath, moduleName);
                                             notifyComponentListUpdate();
                                         }));
                     });
@@ -177,7 +181,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                 });
     }
 
-    private void asyncUpdateModuleCustomComponents() {
+    private void asyncLoadModuleCustomComponents() {
         PluginExecutors.run(module,
                 message("module.component.update.component.for.module", module.getName()),
                 indicator -> {
@@ -190,79 +194,58 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                             .getUrls();
                     stream(modulePaths).forEach(moduleTargetClassesDirectory -> {
 
-                        ModuleDescriptor packageComponents;
-                        try {
-                            packageComponents = componentsAnalyzer.fromClassesFolder(moduleTargetClassesDirectory, true);
-                        } catch (ModuleDescriptorException e) {
-                            String message = message("module.analyze.error", module.getName(), e.getMessage());
-                            LOG.error(message, e);
-                            return;
-                        }
-
+                        // TODO: Fixme.
+                        /**
                         MavenUtils.getMavenProject(project, module.getName()).ifPresent(mavenProject -> {
+
+                            // TODO: Is it really maven project.getdisplayname?
+                            ModuleDescriptor packageComponents;
+                            try {
+                                packageComponents = componentsAnalyzer.fromClassesFolder(moduleTargetClassesDirectory, mavenProject.getDisplayName(), true);
+                            } catch (ModuleDescriptorException e) {
+                                String message = message("module.analyze.error", module.getName(), e.getMessage());
+                                LOG.error(message, e);
+                                return;
+                            }
 
                             List<ComponentDescriptor> componentDescriptors = packageComponents.getComponents();
                             String moduleName = mavenProject.getDisplayName();
-                            List<AutoCompleteContributorDescriptor> moduleContributions =
-                                    packageComponents.getAutocompleteContributors();
-
+                            List<AutocompleteItemDescriptor> moduleContributions = packageComponents.getAutocompleteItems();
                             synchronized (ComponentServiceImpl.this) {
-                                moduleComponents = new ModuleComponents(moduleName, componentDescriptors);
+                                moduleComponents = new ModuleDescriptor();
+                                moduleComponents
                                 moduleCompleteContributorDefinitions.clear();
                                 moduleCompleteContributorDefinitions.addAll(moduleContributions);
                             }
-                        });
+                        });*/
                     });
                     notifyComponentListUpdate();
                 });
     }
 
-    private void asyncUpdateSystemComponents() {
-        PluginExecutors.run(module,
-                message("module.component.update.system.components"),
-                indicator -> {
-                    List<ComponentDescriptor> flowControlComponents = componentsAnalyzer.from(Stop.class);
-
-                    synchronized (ComponentServiceImpl.class) {
-                        systemComponents.addAll(flowControlComponents);
-                        isInitialized = true;
-                    }
-
-                    notifyComponentListUpdate();
-
-                    // Update maven dependencies and then current
-                    // module dependencies when the task is complete.
-                    asyncUpdateMavenDependenciesComponents(this::asyncUpdateModuleCustomComponents);
-                });
-    }
-
-    private void scanForComponentsOfJar(String jarFilePath, String moduleName) {
+    private void loadComponentsFromJar(String jarFilePath, String moduleName) {
         // We only scan a module if its jar file is a module with a name.
-        ModuleDescriptor packageComponents;
+        ModuleDescriptor moduleDescriptor;
         try {
-            packageComponents = componentsAnalyzer.from(jarFilePath);
+            moduleDescriptor = moduleAnalyzer.from(jarFilePath, moduleName);
         } catch (ModuleDescriptorException e) {
             String message = message("module.analyze.jar.error", jarFilePath, moduleName, e.getMessage());
             LOG.error(message, e);
             return;
         }
 
-        List<ComponentDescriptor> componentDescriptors = packageComponents.getComponents();
-
         synchronized (ComponentServiceImpl.class) {
             // Add them to the map of components
-            ModuleComponents descriptor = new ModuleComponents(moduleName, componentDescriptors);
-            mavenJarComponentsMap.put(jarFilePath, descriptor);
+            mavenModules.put(jarFilePath, moduleDescriptor);
 
-            List<AutoCompleteContributorDescriptor> autocompleteContributorDefinitions =
-                    packageComponents.getAutocompleteContributors();
-            autoCompleteContributorDefinitions.addAll(autocompleteContributorDefinitions);
+            List<AutocompleteItemDescriptor> autocompleteItems = moduleDescriptor.getAutocompleteItems();
+            autoCompleteContributorDefinitions.addAll(autocompleteItems);
         }
     }
 
-    private static Optional<ComponentDescriptor> findComponentMatching(Collection<ModuleComponents> descriptors, String fullyQualifiedName) {
-        for (ModuleComponents descriptor : descriptors) {
-            Optional<ComponentDescriptor> moduleComponent = descriptor.getModuleComponent(fullyQualifiedName);
+    private static Optional<ComponentDescriptor> findComponentMatching(Collection<ModuleDescriptor> descriptors, String fullyQualifiedName) {
+        for (ModuleDescriptor descriptor : descriptors) {
+            Optional<ComponentDescriptor> moduleComponent = findComponentBy(descriptor.getComponents(), fullyQualifiedName);
             if (moduleComponent.isPresent()) {
                 return moduleComponent;
             }
@@ -271,11 +254,17 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     }
 
     private void notifyComponentListUpdate() {
-        Collection<ModuleComponents> moduleComponents = getModuleComponents();
+        Collection<ModuleDescriptor> moduleComponents = getAllModuleComponents();
         publisher.onComponentListUpdate(moduleComponents);
     }
 
     interface OnDone {
         void execute();
+    }
+
+    private static Optional<ComponentDescriptor> findComponentBy(List<ComponentDescriptor> components, String fullyQualifiedName) {
+        return components.stream()
+                .filter(componentDescriptor -> componentDescriptor.getFullyQualifiedName().equals(fullyQualifiedName))
+                .findFirst();
     }
 }

@@ -3,7 +3,7 @@ package com.reedelk.plugin.component;
 import com.reedelk.module.descriptor.model.ComponentDescriptor;
 import com.reedelk.module.descriptor.model.ComponentType;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.TypePrimitiveDescriptor;
+import com.reedelk.plugin.commons.TypePrimitiveDescriptors;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,11 +29,8 @@ public class ComponentDescriptionDecorator extends ComponentDescriptor {
     public ComponentDescriptionDecorator(ComponentDescriptor descriptor) {
         this.wrapped = descriptor;
 
-        TypePrimitiveDescriptor typeDescriptor = new TypePrimitiveDescriptor();
-        typeDescriptor.setType(String.class);
-
         descriptionDescriptor = PropertyDescriptor.builder()
-                .type(typeDescriptor)
+                .type(TypePrimitiveDescriptors.STRING)
                 .name(Implementor.description())
                 .hintValue(message("component.description.hint"))
                 .displayName(DESCRIPTION_PROPERTY_DISPLAY_NAME)

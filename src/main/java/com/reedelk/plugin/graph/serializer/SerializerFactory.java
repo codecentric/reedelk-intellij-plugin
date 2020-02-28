@@ -7,6 +7,7 @@ import com.reedelk.plugin.component.type.placeholder.PlaceholderSerializer;
 import com.reedelk.plugin.component.type.router.RouterSerializer;
 import com.reedelk.plugin.component.type.stop.StopSerializer;
 import com.reedelk.plugin.component.type.trycatch.TryCatchSerializer;
+import com.reedelk.plugin.component.type.unknown.Unknown;
 import com.reedelk.plugin.component.type.unknown.UnknownSerializer;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.runtime.api.exception.ESBException;

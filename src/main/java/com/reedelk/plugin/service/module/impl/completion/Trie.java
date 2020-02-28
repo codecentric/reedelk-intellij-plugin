@@ -1,120 +1,64 @@
 package com.reedelk.plugin.service.module.impl.completion;
 
-import com.reedelk.plugin.commons.SuggestionDefinitionMatcher;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
+import java.util.Map;
 
-public class Trie {
+import static java.util.Collections.singletonList;
 
-    private static final List<Suggestion> EMPTY = new ArrayList<>();
+public class Trie<T extends TypeAware> {
 
-    private TrieNode root = new TrieNode();
+    private TrieNode<T> root;
 
-    /**
-     * Inserts a suggestion definition into the suggestion tree.
-     * @param suggestionDefinitions A suggestion definition is a triple: suggestionToken[suggestionType:suggestionName], e.g: messages[VARIABLE:Message[]]
-     */
-    void insert(Collection<String> suggestionDefinitions) {
-        suggestionDefinitions.forEach(suggestionDefinition ->
-                SuggestionDefinitionMatcher.of(suggestionDefinition).ifPresent(this::insert));
+    public Trie() {
+        this.root = new TrieNode<>();
     }
 
-    void insert(String ...suggestionDefinitions) {
-        Stream.of(suggestionDefinitions).forEach(suggestionDefinition ->
-                SuggestionDefinitionMatcher.of(suggestionDefinition).ifPresent(this::insert));
-    }
-
-    @NotNull
-    List<Suggestion> findByPrefix(String prefix) {
-        if (prefix.endsWith("(")) return EMPTY;
-        return find(prefix).flatMap(trieNode -> {
-            if (trieNode.isEndOfWord()) {
-                return Optional.empty();
-            }
-
-            int i = prefix.lastIndexOf('.');
-            String toAppend = i == -1 ? prefix : prefix.substring(i + 1);
-            return Optional.of(allTokensFrom(toAppend, trieNode));
-        }).orElse(new ArrayList<>());
-    }
-
-    public void delete(String word) {
-        delete(root, word, 0);
-    }
-
-    private void insert(Suggestion suggestion) {
-        String word = suggestion.getToken();
-        TrieNode current = root;
+    public void insert(T typeAware) {
+        TrieNode<T> current = root;
+        String word = typeAware.getToken();
         for (int i = 0; i < word.length(); i++) {
-            current = current.getChildren().computeIfAbsent(word.charAt(i), c -> new TrieNode());
+            current = current.getChildren().computeIfAbsent(word.charAt(i), c -> new TrieNode<>());
         }
-        current.setSuggestion(suggestion);
-        current.setEndOfWord(true);
+        current.setTypeAware(typeAware);
     }
 
-    private Optional<TrieNode> find(String word) {
-        TrieNode current = root;
-        for (int i = 0; i < word.length(); i++) {
-            char ch = word.charAt(i);
-            TrieNode node = current.getChildren().get(ch);
-            if (node == null) {
-                return Optional.empty();
-            }
-            current = node;
+    public List<TrieResult<T>> traversal(TrieNode<T> start, List<TrieResult<T>> suggestion, String current) {
+        if (start.isWord()) {
+            TrieResult<T> result = new TrieResult<>(current, start.getTypeAware());
+            suggestion.add(result);
         }
-        return Optional.of(current);
-    }
-
-    private boolean delete(TrieNode current, String word, int index) {
-        if (index == word.length()) {
-            if (!current.isEndOfWord()) {
-                return false;
-            }
-            current.setEndOfWord(false);
-            return current.getChildren().isEmpty();
-        }
-        char ch = word.charAt(index);
-        TrieNode node = current.getChildren().get(ch);
-        if (node == null) {
-            return false;
-        }
-        boolean shouldDeleteCurrentNode = delete(node, word, index + 1) && !node.isEndOfWord();
-
-        if (shouldDeleteCurrentNode) {
-            current.getChildren().remove(ch);
-            return current.getChildren().isEmpty();
-        }
-        return false;
-    }
-
-    private List<Suggestion> allTokensFrom(String parent, TrieNode trieNode) {
-        List<Suggestion> results = new ArrayList<>();
-        recurse(parent, trieNode, results);
-        return results;
-    }
-
-    private void recurse(String parent, TrieNode trieNode, List<Suggestion> results) {
-        if (trieNode.getChildren().isEmpty()) {
-            // End of token
-            if (trieNode.getSuggestion() != null) {
-                results.add(Suggestion.from(parent, trieNode.getSuggestion()));
-            }
-            return;
-        }
-        trieNode.getChildren().forEach((character, childTrieNode) -> {
-            if (character != '.') {
-                String newValue = parent + character;
-                recurse(newValue, childTrieNode, results);
-            } else {
-                if (trieNode.getSuggestion() != null) {
-                    results.add(Suggestion.from(parent, trieNode.getSuggestion()));
-                }
-            }
+        start.getChildren().forEach((character, trieNode) -> {
+            String newCurrent = current + character;
+            traversal(trieNode, suggestion, newCurrent);
         });
+        return suggestion;
+    }
+
+    public List<TrieResult<T>> autocomplete(String word) {
+        List<TrieResult<T>> suggestions = new ArrayList<>();
+        TrieNode<T> current = root;
+        int i = 0;
+        int lastWordIndex = -1;
+        while (i < word.length()) {
+            char c = word.charAt(i);
+            Map<Character, TrieNode<T>> children = current.getChildren();
+            if (children.containsKey(c)) {
+                if (c == '.') {
+                    lastWordIndex = i;
+                }
+                current = children.get(c);
+            } else {
+                return suggestions;
+            }
+            i++;
+        }
+
+        if (current.isWord()) {
+            return singletonList(new TrieResult<>(word, current.getTypeAware()));
+        } else {
+            String prefix = lastWordIndex != -1 ? word.substring(lastWordIndex + 1) : word;
+            return traversal(current, suggestions, prefix);
+        }
     }
 }

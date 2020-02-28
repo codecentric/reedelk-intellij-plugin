@@ -19,6 +19,7 @@ public class Images {
         private Component() {
         }
 
+        public static final Image UknownComponent;
         public static final Image DefaultComponent;
         public static final Image RemoveComponent;
         public static final Image InboundPlaceholderIcon;
@@ -26,6 +27,7 @@ public class Images {
         public static final Image PlaceholderHintIcon;
 
         static {
+            UknownComponent = loadImage("/images/ComponentUnknown.png");
             DefaultComponent = loadImage("/images/ComponentDefault.png");
             RemoveComponent = loadImage("/images/ComponentRemove.png");
             InboundPlaceholderIcon = loadImage("/images/ComponentInboundPlaceholder.png");

@@ -1,67 +1,82 @@
 package com.reedelk.plugin.service.module.impl.completion;
 
-import java.util.Objects;
-import java.util.Optional;
+import com.reedelk.module.descriptor.model.AutocompleteItemDescriptor;
+import com.reedelk.module.descriptor.model.AutocompleteVariableDescriptor;
+import com.reedelk.runtime.api.autocomplete.AutocompleteItemType;
 
-public class Suggestion {
+
+public class Suggestion implements TypeAware {
 
     private final String token;
-    private final String typeName;
-    private final Integer offset;
-    private SuggestionType type;
+    private final String type;
+    private final String returnType;
+    private final String replaceValue;
 
-    public static Suggestion from(String token, SuggestionType type, String typeName, Integer offset) {
-        return new Suggestion(token, type, typeName, offset);
+    private final boolean isGlobal;
+    private final int cursorOffset;
+    private AutocompleteItemType itemType;
+
+    public static Suggestion create(AutocompleteItemDescriptor descriptor) {
+        return new Suggestion(
+                descriptor.isGlobal(),
+                descriptor.getToken(),
+                descriptor.getType(),
+                descriptor.getReturnType(),
+                descriptor.getReplaceValue(),
+                descriptor.getCursorOffset(),
+                descriptor.getItemType());
     }
 
-    public static Suggestion from(String token, Suggestion suggestion) {
-        return new Suggestion(token, suggestion.type, suggestion.typeName, suggestion.offset);
+    public static Suggestion create(AutocompleteVariableDescriptor descriptor) {
+        return new Suggestion(
+                true,
+                descriptor.getName(),
+                descriptor.getType(),
+                descriptor.getType(),
+                descriptor.getName(),
+                0,
+                AutocompleteItemType.VARIABLE);
     }
 
-    private Suggestion(String token, SuggestionType type, String typeName, Integer offset) {
+    private Suggestion(boolean isGlobal, String token, String type, String returnType, String replaceValue, int cursorOffset, AutocompleteItemType itemType) {
+        this.type = type;
         this.token = token;
-        this.type = type == null ? SuggestionType.UNKNOWN : type;
-        this.typeName = typeName;
-        this.offset = offset;
+        this.isGlobal = isGlobal;
+        this.itemType = itemType;
+        this.returnType = returnType;
+        this.replaceValue = replaceValue;
+        this.cursorOffset = cursorOffset;
     }
 
+    @Override
+    public boolean isGlobal() {
+        return isGlobal;
+    }
+
+    @Override
     public String getToken() {
         return token;
     }
 
-    public SuggestionType getType() {
+    @Override
+    public String getType() {
         return type;
     }
 
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public Optional<Integer> getOffset() {
-        return Optional.ofNullable(offset);
-    }
-
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Suggestion that = (Suggestion) o;
-        return token.equals(that.token) &&
-                typeName.equals(that.typeName) &&
-                type == that.type;
+    public String getReturnType() {
+        return returnType;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(token, typeName, type);
+    public String getReplaceValue() {
+        return replaceValue;
     }
 
-    @Override
-    public String toString() {
-        return "Suggestion{" +
-                "token='" + token + '\'' +
-                ", typeName='" + typeName + '\'' +
-                ", type=" + type +
-                '}';
+    public int getCursorOffset() {
+        return cursorOffset;
+    }
+
+    public AutocompleteItemType getItemType() {
+        return itemType;
     }
 }

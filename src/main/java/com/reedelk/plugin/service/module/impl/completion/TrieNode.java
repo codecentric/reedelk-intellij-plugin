@@ -3,29 +3,25 @@ package com.reedelk.plugin.service.module.impl.completion;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TrieNode {
+public class TrieNode<T extends TypeAware> {
 
-    private boolean isWord;
-    private Suggestion suggestion;
-    private Map<Character, TrieNode> children = new HashMap<>();
+    private T typeAware;
+    private Map<Character, TrieNode<T>> children = new HashMap<>();
 
-    public Map<Character, TrieNode> getChildren() {
+    public boolean isWord() {
+        return typeAware != null &&
+                (children.isEmpty() || children.containsKey('.'));
+    }
+
+    public Map<Character, TrieNode<T>> getChildren() {
         return children;
     }
 
-    public boolean isEndOfWord() {
-        return isWord;
+    public T getTypeAware() {
+        return typeAware;
     }
 
-    public void setEndOfWord(boolean endOfWord) {
-        this.isWord = endOfWord;
-    }
-
-    public Suggestion getSuggestion() {
-        return suggestion;
-    }
-
-    public void setSuggestion(Suggestion suggestion) {
-        this.suggestion = suggestion;
+    public void setTypeAware(T typeAware) {
+        this.typeAware = typeAware;
     }
 }
