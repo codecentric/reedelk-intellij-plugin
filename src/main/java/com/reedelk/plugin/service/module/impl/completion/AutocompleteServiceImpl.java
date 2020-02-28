@@ -133,11 +133,9 @@ public class AutocompleteServiceImpl implements AutocompleteService, Compilation
     }
 
     private void initialize(Module module) {
-        PluginExecutors.run(module,
-                message("module.completion.init.suggestions.task.title"),
-                indicator -> {
-                    Collection<ModuleDescriptor> allModules = componentService().getAllModuleComponents();
-                    updateAutocomplete(allModules);
-                });
+        PluginExecutors.run(module, message("module.completion.init.suggestions.task.title"), indicator -> {
+            Collection<ModuleDescriptor> allModules = componentService().getAllModuleComponents();
+            updateAutocomplete(allModules);
+        });
     }
 }

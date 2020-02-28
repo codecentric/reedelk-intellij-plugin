@@ -41,6 +41,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     private static final Logger LOG = Logger.getInstance(ComponentServiceImpl.class);
 
     private final Module module;
+    private final Project project;
 
     private final ComponentListUpdateNotifier publisher;
     private final ModuleDescriptorAnalyzer moduleAnalyzer = new ModuleDescriptorAnalyzer();
@@ -60,6 +61,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
     public ComponentServiceImpl(Project project, Module module) {
         this.module = module;
+        this.project = project;
 
         MessageBus messageBus = project.getMessageBus();
 
@@ -161,9 +163,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
      */
     private void asyncLoadMavenDependenciesComponents(OnDone callback) {
         // TODO: Extract the following async progress task into its own class.
-        PluginExecutors.run(module,
-                message("module.component.update.component.for.module", module.getName()),
-                indicator -> {
+        PluginExecutors.run(module, message("module.component.update.component.for.module", module.getName()), indicator -> {
                     // Update the components definitions from maven project
                     MavenUtils.getMavenProject(module.getProject(), module.getName()).ifPresent(mavenProject -> {
                         // We only want the root dependencies, since user defined modules are in the root.
@@ -173,54 +173,46 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                                 .filter(artifact -> ModuleUtils.isModule(artifact.getFile()))
                                 .map(artifact -> artifact.getFile().getPath()).collect(toList())
                                 .forEach(jarFilePath -> ModuleUtils.getModuleName(jarFilePath).ifPresent(moduleName -> {
-                                            loadComponentsFromJar(jarFilePath, moduleName);
-                                            notifyComponentListUpdate();
-                                        }));
+                                    loadComponentsFromJar(jarFilePath, moduleName);
+                                    notifyComponentListUpdate();
+                                }));
                     });
                     callback.execute();
                 });
     }
 
     private void asyncLoadModuleCustomComponents() {
-        PluginExecutors.run(module,
-                message("module.component.update.component.for.module", module.getName()),
-                indicator -> {
-                    String[] modulePaths = ModuleRootManager.getInstance(module)
-                            .orderEntries()
-                            .withoutSdk()
-                            .withoutLibraries()
-                            .productionOnly()
-                            .classes()
-                            .getUrls();
-                    stream(modulePaths).forEach(moduleTargetClassesDirectory -> {
+        PluginExecutors.run(module, message("module.component.update.component.for.module", module.getName()), indicator -> {
+            String[] modulePaths = ModuleRootManager.getInstance(module)
+                    .orderEntries()
+                    .withoutSdk()
+                    .withoutLibraries()
+                    .productionOnly()
+                    .classes()
+                    .getUrls();
+            stream(modulePaths).forEach(moduleTargetClassesDirectory -> {
 
-                        // TODO: Fixme.
-                        /**
-                        MavenUtils.getMavenProject(project, module.getName()).ifPresent(mavenProject -> {
+                MavenUtils.getMavenProject(project, module.getName()).ifPresent(mavenProject -> {
 
-                            // TODO: Is it really maven project.getdisplayname?
-                            ModuleDescriptor packageComponents;
-                            try {
-                                packageComponents = componentsAnalyzer.fromClassesFolder(moduleTargetClassesDirectory, mavenProject.getDisplayName(), true);
-                            } catch (ModuleDescriptorException e) {
-                                String message = message("module.analyze.error", module.getName(), e.getMessage());
-                                LOG.error(message, e);
-                                return;
-                            }
+                    ModuleDescriptor packageComponents;
+                    try {
+                        packageComponents = moduleAnalyzer.fromDirectory(moduleTargetClassesDirectory, mavenProject.getDisplayName(), true);
+                    } catch (ModuleDescriptorException exception) {
+                        String message = message("module.analyze.error", module.getName(), exception.getMessage());
+                        LOG.error(message, exception);
+                        return;
+                    }
 
-                            List<ComponentDescriptor> componentDescriptors = packageComponents.getComponents();
-                            String moduleName = mavenProject.getDisplayName();
-                            List<AutocompleteItemDescriptor> moduleContributions = packageComponents.getAutocompleteItems();
-                            synchronized (ComponentServiceImpl.this) {
-                                moduleComponents = new ModuleDescriptor();
-                                moduleComponents
-                                moduleCompleteContributorDefinitions.clear();
-                                moduleCompleteContributorDefinitions.addAll(moduleContributions);
-                            }
-                        });*/
-                    });
-                    notifyComponentListUpdate();
+                    List<AutocompleteItemDescriptor> moduleContributions = packageComponents.getAutocompleteItems();
+                    synchronized (ComponentServiceImpl.this) {
+                        currentModule = packageComponents;
+                        moduleCompleteContributorDefinitions.clear();
+                        moduleCompleteContributorDefinitions.addAll(moduleContributions);
+                    }
                 });
+            });
+            notifyComponentListUpdate();
+        });
     }
 
     private void loadComponentsFromJar(String jarFilePath, String moduleName) {
