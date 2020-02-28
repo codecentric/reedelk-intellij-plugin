@@ -9,8 +9,9 @@ public class TrieNode<T extends TypeAware> {
     private Map<Character, TrieNode<T>> children = new HashMap<>();
 
     public boolean isWord() {
-        return typeAware != null &&
-                (children.isEmpty() || children.containsKey('.'));
+        return (children.isEmpty() && typeAware != null) ||
+                (children.containsKey('.') && typeAware != null) ||
+                typeAware != null;
     }
 
     public Map<Character, TrieNode<T>> getChildren() {

@@ -37,8 +37,8 @@ public class AutocompleteServiceImpl implements AutocompleteService, Compilation
 
     // This tree contains the Functions and Types registered by each module.
     private final SuggestionTree<Suggestion> moduleSuggestions = new SuggestionTree<>(typeTriesMap);
-    private final Map<String, SuggestionTree<Suggestion>> componentQualifiedNameSuggestionsMap = new HashMap<>();
     private final SuggestionTree<Suggestion> defaultComponentSuggestions = new SuggestionTree<>(typeTriesMap);
+    private final Map<String, SuggestionTree<Suggestion>> componentQualifiedNameSuggestionsMap = new HashMap<>();
 
 
     // Custom Functions are global so they are always present.
