@@ -16,8 +16,6 @@ import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.ComponentListUpdateNotifier;
 import com.reedelk.plugin.topic.ReedelkTopics;
 import com.reedelk.runtime.api.commons.StringUtils;
-import com.reedelk.runtime.api.flow.FlowContext;
-import com.reedelk.runtime.api.message.Message;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -52,18 +50,7 @@ public class AutocompleteServiceImpl implements AutocompleteService, Compilation
         connection.subscribe(CompilerTopics.COMPILATION_STATUS, this);
         connection.subscribe(ReedelkTopics.COMPONENTS_UPDATE_EVENTS, this);
 
-        AutocompleteVariableDescriptor message = new AutocompleteVariableDescriptor();
-        message.setName("message");
-        message.setType(Message.class.getSimpleName());
-        Suggestion messageSuggestion = Suggestion.create(message);
-        defaultComponentSuggestions.add(messageSuggestion);
-
-
-        AutocompleteVariableDescriptor context = new AutocompleteVariableDescriptor();
-        context.setName("context");
-        context.setType(FlowContext.class.getSimpleName());
-        Suggestion contextSuggestion = Suggestion.create(context);
-        defaultComponentSuggestions.add(contextSuggestion);
+        DefaultComponentScriptSuggestions.get().forEach(defaultComponentSuggestions::add);
 
         initialize(module);
     }
@@ -128,16 +115,16 @@ public class AutocompleteServiceImpl implements AutocompleteService, Compilation
                 String typeFullyQualifiedName = typeObjectDescriptor.getTypeFullyQualifiedName();
                 List<PropertyDescriptor> properties = typeObjectDescriptor.getObjectProperties();
                 updateAutocomplete(typeFullyQualifiedName, properties);
+
             } else {
                 // Use fully qualified name and autocomplete to process and create trees.
                 List<AutocompleteVariableDescriptor> autocomplete = descriptor.getAutocompleteVariables();
                 if (!autocomplete.isEmpty()) {
                     SuggestionTree<Suggestion> componentSuggestionTree = new SuggestionTree<>(moduleSuggestions.getTypeTriesMap());
-                    List<Suggestion> componentSuggestions =
-                            autocomplete
-                                    .stream()
-                                    .map(Suggestion::create)
-                                    .collect(toList());
+                    List<Suggestion> componentSuggestions = autocomplete
+                            .stream()
+                            .map(Suggestion::create)
+                            .collect(toList());
                     componentSuggestions.forEach(componentSuggestionTree::add);
                     componentQualifiedNameSuggestionsMap.put(fullyQualifiedName, componentSuggestionTree);
                 }
