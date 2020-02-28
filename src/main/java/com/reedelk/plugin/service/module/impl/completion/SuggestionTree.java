@@ -1,6 +1,7 @@
 package com.reedelk.plugin.service.module.impl.completion;
 
 import com.reedelk.plugin.commons.ArrayUtils;
+import com.reedelk.runtime.api.commons.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,7 @@ import static java.util.stream.Collectors.groupingBy;
 
 public class SuggestionTree<T extends TypeAware> {
 
-    private static final String[] EMPTY = new String[]{""};
+    private static final String[] EMPTY = new String[]{StringUtils.EMPTY};
 
     private final Trie<T> root = new Trie<>();
     private final Map<String, Trie<T>> typeTriesMap;
