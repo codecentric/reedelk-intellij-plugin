@@ -6,15 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static java.util.stream.Collectors.groupingBy;
 
 public class SuggestionTree<T extends TypeAware> {
-
-    private static final String GROUP_METHOD_NAME = "method";
-    private static final Pattern methodNameMatchPattern = Pattern.compile("(?<" + GROUP_METHOD_NAME + ">[a-zA-Z][a-zA-Z0-9]+)\\(.*");
 
     private static final String[] EMPTY = new String[]{""};
 
@@ -30,13 +25,7 @@ public class SuggestionTree<T extends TypeAware> {
     }
 
     public List<TrieResult<T>> autocomplete(String input) {
-        String[] tokens = input.split("\\.");
-        for (int i = 0; i < tokens.length; i++) {
-            Matcher matcher = methodNameMatchPattern.matcher(tokens[i]);
-            if (matcher.matches()) {
-                tokens[i] = matcher.group(GROUP_METHOD_NAME);
-            }
-        }
+        String[] tokens = InputTokenizer.tokenize(input);
 
         if (input.endsWith(".")) {
             tokens = ArrayUtils.concatenate(tokens, EMPTY);
