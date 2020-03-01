@@ -10,39 +10,39 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.groupingBy;
 
-public class SuggestionTree<T extends TypeAware> {
+public class SuggestionTree {
 
     private static final String[] EMPTY = new String[]{StringUtils.EMPTY};
 
-    private final Trie<T> root = new Trie<>();
-    private final Map<String, Trie<T>> typeTriesMap;
+    private final Trie root = new Trie();
+    private final Map<String, Trie> typeTriesMap;
 
-    public SuggestionTree(Map<String, Trie<T>> typeTriesMap) {
+    public SuggestionTree(Map<String, Trie> typeTriesMap) {
         this.typeTriesMap = typeTriesMap;
     }
 
-    public Map<String, Trie<T>> getTypeTriesMap() {
+    public Map<String, Trie> getTypeTriesMap() {
         return typeTriesMap;
     }
 
-    public List<TrieResult<T>> autocomplete(String input) {
+    public List<TrieResult> autocomplete(String input) {
         String[] tokens = InputTokenizer.tokenize(input);
 
         if (input.endsWith(".")) {
             tokens = ArrayUtils.concatenate(tokens, EMPTY);
         }
 
-        Trie<T> current = root;
-        List<TrieResult<T>> autocompleteResults = new ArrayList<>();
+        Trie current = root;
+        List<TrieResult> autocompleteResults = new ArrayList<>();
         for (int i = 0; i < tokens.length; i++) {
             String token = tokens[i];
             if (i == tokens.length - 1) {
                 autocompleteResults = current.autocomplete(token);
             } else {
-                Optional<TrieResult<T>> first = current.autocomplete(token).stream().findFirst();
+                Optional<TrieResult> first = current.autocomplete(token).stream().findFirst();
                 if (first.isPresent()) {
-                    TrieResult<T> trieResult = first.get();
-                    String returnType = trieResult.getTypeAware().getReturnType();
+                    TrieResult trieResult = first.get();
+                    String returnType = trieResult.getSuggestion().getReturnType();
                     current = typeTriesMap.get(returnType);
                 } else {
                     // Could not found a match to follow for the current token.
@@ -54,21 +54,21 @@ public class SuggestionTree<T extends TypeAware> {
         return autocompleteResults;
     }
 
-    public void add(T typeAware) {
-        root.insert(typeAware);
+    public void add(Suggestion suggestion) {
+        root.insert(suggestion);
     }
 
-    public void add(List<T> typeAware) {
+    public void add(List<Suggestion> suggestions) {
 
-        Map<String, List<T>> typeAwareGroupedByType =
-                typeAware.stream().collect(groupingBy(TypeAware::getType));
+        Map<String, List<Suggestion>> typeAwareGroupedByType =
+                suggestions.stream().collect(groupingBy(Suggestion::getType));
 
         typeAwareGroupedByType
-                .keySet().forEach(type -> typeTriesMap.put(type, new Trie<T>()));
+                .keySet().forEach(type -> typeTriesMap.put(type, new Trie()));
 
         typeAwareGroupedByType.forEach((type, descriptorsGroupedByType) -> {
             // Build trie with autocomplete definitions.
-            Trie<T> current = typeTriesMap.get(type);
+            Trie current = typeTriesMap.get(type);
 
             // For each node
             descriptorsGroupedByType.forEach(typeAwareItem -> {

@@ -5,7 +5,7 @@ import com.reedelk.module.descriptor.model.AutocompleteVariableDescriptor;
 import com.reedelk.runtime.api.autocomplete.AutocompleteItemType;
 
 
-public class Suggestion implements TypeAware {
+public class Suggestion {
 
     private final String token;
     private final String type;
@@ -48,22 +48,18 @@ public class Suggestion implements TypeAware {
         this.cursorOffset = cursorOffset;
     }
 
-    @Override
     public boolean isGlobal() {
         return isGlobal;
     }
 
-    @Override
     public String getToken() {
         return token;
     }
 
-    @Override
     public String getType() {
         return type;
     }
 
-    @Override
     public String getReturnType() {
         return returnType;
     }

@@ -32,12 +32,12 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
     private final Module module;
     private final MessageBus messageBus;
 
-    private final Map<String, Trie<Suggestion>> typeTriesMap = new HashMap<>();
+    private final Map<String, Trie> typeTriesMap = new HashMap<>();
 
     // This tree contains the Functions and Types registered by each module.
-    private SuggestionTree<Suggestion> moduleSuggestions = new SuggestionTree<>(typeTriesMap);
-    private final SuggestionTree<Suggestion> defaultComponentSuggestions = new SuggestionTree<>(typeTriesMap);
-    private final Map<String, SuggestionTree<Suggestion>> componentQualifiedNameSuggestionsMap = new HashMap<>();
+    private SuggestionTree moduleSuggestions = new SuggestionTree(typeTriesMap);
+    private final SuggestionTree defaultComponentSuggestions = new SuggestionTree(typeTriesMap);
+    private final Map<String, SuggestionTree> componentQualifiedNameSuggestionsMap = new HashMap<>();
 
 
     // Custom Functions are global so they are always present.
@@ -63,12 +63,13 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
 
     @Override
     public synchronized List<Suggestion> autocompleteSuggestionOf(String componentFullyQualifiedName, String token) {
-        SuggestionTree<Suggestion> defaultSuggestion = componentQualifiedNameSuggestionsMap.getOrDefault(componentFullyQualifiedName, defaultComponentSuggestions);
-        List<TrieResult<Suggestion>> specific = defaultSuggestion.autocomplete(token);
-        List<TrieResult<Suggestion>> autocomplete = moduleSuggestions.autocomplete(token);
-        specific.addAll(autocomplete);
-        return specific.stream()
-                .map(TrieResult::getTypeAware)
+        SuggestionTree componentSuggestionTree =
+                componentQualifiedNameSuggestionsMap.getOrDefault(componentFullyQualifiedName, defaultComponentSuggestions);
+        List<TrieResult> componentSuggestions = componentSuggestionTree.autocomplete(token);
+        List<TrieResult> autocomplete = moduleSuggestions.autocomplete(token);
+        componentSuggestions.addAll(autocomplete);
+        return componentSuggestions.stream()
+                .map(TrieResult::getSuggestion)
                 .collect(toList());
     }
 
@@ -95,7 +96,7 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
 
     synchronized void updateAutocomplete(Collection<ModuleDescriptor> descriptors) {
         typeTriesMap.clear();
-        moduleSuggestions = new SuggestionTree<>(typeTriesMap);
+        moduleSuggestions = new SuggestionTree(typeTriesMap);
         componentQualifiedNameSuggestionsMap.clear();
 
 
@@ -136,7 +137,7 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
     private void updateAutocomplete(String fullyQualifiedName, PropertyDescriptor descriptor) {
         List<AutocompleteVariableDescriptor> autocomplete = descriptor.getAutocompleteVariables();
         if (!autocomplete.isEmpty()) {
-            SuggestionTree<Suggestion> componentSuggestionTree = new SuggestionTree<>(moduleSuggestions.getTypeTriesMap());
+            SuggestionTree componentSuggestionTree = new SuggestionTree(moduleSuggestions.getTypeTriesMap());
             List<Suggestion> componentSuggestions = autocomplete
                     .stream()
                     .map(Suggestion::create)

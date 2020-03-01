@@ -1,9 +1,23 @@
 package com.reedelk.plugin.editor.palette;
 
+import com.reedelk.module.descriptor.ModuleDescriptor;
 import com.reedelk.module.descriptor.model.ComponentDescriptor;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import javax.swing.tree.DefaultMutableTreeNode;
+import java.util.*;
+
+import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
 class PalettePanelTest {
@@ -15,8 +29,6 @@ class PalettePanelTest {
     @Mock
     private ComponentDescriptor mockDescriptor3;
 
-    // TODO: Fixme
-    /**
     @BeforeEach
     void setUp() {
         lenient().doReturn("Mock Descriptor 1")
@@ -39,7 +51,9 @@ class PalettePanelTest {
         @Test
         void shouldCorrectlyBuildPackageTreeNode() {
             // Given
-            ModuleComponents module1 = new ModuleComponents("Module1", asList(mockDescriptor1, mockDescriptor2));
+            ModuleDescriptor module1 = new ModuleDescriptor();
+            module1.setName("Module1");
+            module1.setComponents(asList(mockDescriptor1, mockDescriptor2));
 
             // When
             DefaultMutableTreeNode treeNode = PalettePanel.asTreeNode(module1);
@@ -60,7 +74,9 @@ class PalettePanelTest {
             doReturn(true)
                     .when(mockDescriptor2)
                     .isHidden();
-            ModuleComponents module1 = new ModuleComponents("Module1", asList(mockDescriptor1, mockDescriptor2));
+            ModuleDescriptor module1 = new ModuleDescriptor();
+            module1.setName("Module1");
+            module1.setComponents(asList(mockDescriptor1, mockDescriptor2));
 
             // When
             DefaultMutableTreeNode treeNode = PalettePanel.asTreeNode(module1);
@@ -80,8 +96,13 @@ class PalettePanelTest {
         @Test
         void shouldCorrectlyReturnCorrectComponentsPackagesTreeNodes() {
             // Given
-            ModuleComponents module1 = new ModuleComponents("Module1", asList(mockDescriptor1, mockDescriptor2));
-            ModuleComponents module2 = new ModuleComponents("Module2", Collections.singletonList(mockDescriptor3));
+            ModuleDescriptor module1 = new ModuleDescriptor();
+            module1.setName("Module1");
+            module1.setComponents(asList(mockDescriptor1, mockDescriptor2));
+
+            ModuleDescriptor module2 = new ModuleDescriptor();
+            module2.setName("Module2");
+            module2.setComponents(Collections.singletonList(mockDescriptor3));
 
             // When
             List<DefaultMutableTreeNode> treeNodes =
@@ -97,8 +118,12 @@ class PalettePanelTest {
         @Test
         void shouldExcludeComponentsPackagesWithNoComponents() {
             // Given
-            ModuleComponents module1 = new ModuleComponents("Module1", asList(mockDescriptor1, mockDescriptor2));
-            ModuleComponents module2 = new ModuleComponents("Module2", Collections.emptyList());
+            ModuleDescriptor module1 = new ModuleDescriptor();
+            module1.setName("Module1");
+            module1.setComponents(asList(mockDescriptor1, mockDescriptor2));
+
+            ModuleDescriptor module2 = new ModuleDescriptor();
+            module2.setName("Module2");
 
             // When
             List<DefaultMutableTreeNode> treeNodes =
@@ -132,7 +157,7 @@ class PalettePanelTest {
         List<DefaultMutableTreeNode> treeNodeChildren = toList(treeNode.children());
         assertThat(treeNodeChildren).hasSize(descriptors.length);
 
-        Arrays.stream(descriptors)
+        stream(descriptors)
                 .forEach(descriptor -> assertThatExistsChildrenWithUserObject(treeNodeChildren, descriptor));
     }
 
@@ -142,5 +167,5 @@ class PalettePanelTest {
             treeNodes.add((DefaultMutableTreeNode) enumeration.nextElement());
         }
         return treeNodes;
-    }*/
+    }
 }

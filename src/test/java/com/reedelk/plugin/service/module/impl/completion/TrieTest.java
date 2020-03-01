@@ -1,6 +1,5 @@
 package com.reedelk.plugin.service.module.impl.completion;
 
-// TODO: Fixme
 class TrieTest {
 
     private final String suggestionToken1 = "message[VARIABLE:Message]";
@@ -9,7 +8,8 @@ class TrieTest {
     private final String suggestionToken4 = "message.mimeType2()[FUNCTION:MimeType]";
     private final String suggestionToken5 = "message.mimeType3()[FUNCTION:MimeType]";
     private final String suggestionToken6 = "message.put('',item)[FUNCTION:MimeType:7]";
-/**
+
+    /**
     @Test
     void shouldCorrectlyInsertSuggestionToken() {
         // Given

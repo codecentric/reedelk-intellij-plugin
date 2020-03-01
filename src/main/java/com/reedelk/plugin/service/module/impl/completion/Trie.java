@@ -6,26 +6,25 @@ import java.util.Map;
 
 import static java.util.Collections.singletonList;
 
-public class Trie<T extends TypeAware> {
-
-    private TrieNode<T> root;
+public class Trie {
+    private TrieNode root;
 
     public Trie() {
-        this.root = new TrieNode<>();
+        this.root = new TrieNode();
     }
 
-    public void insert(T typeAware) {
-        TrieNode<T> current = root;
-        String word = typeAware.getToken();
+    public void insert(Suggestion suggestion) {
+        TrieNode current = root;
+        String word = suggestion.getToken();
         for (int i = 0; i < word.length(); i++) {
-            current = current.getChildren().computeIfAbsent(word.charAt(i), c -> new TrieNode<>());
+            current = current.getChildren().computeIfAbsent(word.charAt(i), c -> new TrieNode());
         }
-        current.setTypeAware(typeAware);
+        current.setSuggestion(suggestion);
     }
 
-    public List<TrieResult<T>> traversal(TrieNode<T> start, List<TrieResult<T>> suggestion, String current) {
+    public List<TrieResult> traversal(TrieNode start, List<TrieResult> suggestion, String current) {
         if (start.isWord()) {
-            TrieResult<T> result = new TrieResult<>(current, start.getTypeAware());
+            TrieResult result = new TrieResult(current, start.getSuggestion());
             suggestion.add(result);
         }
         start.getChildren().forEach((character, trieNode) -> {
@@ -35,14 +34,14 @@ public class Trie<T extends TypeAware> {
         return suggestion;
     }
 
-    public List<TrieResult<T>> autocomplete(String word) {
-        List<TrieResult<T>> suggestions = new ArrayList<>();
-        TrieNode<T> current = root;
+    public List<TrieResult> autocomplete(String word) {
+        List<TrieResult> suggestions = new ArrayList<>();
+        TrieNode current = root;
         int i = 0;
         int lastWordIndex = -1;
         while (i < word.length()) {
             char c = word.charAt(i);
-            Map<Character, TrieNode<T>> children = current.getChildren();
+            Map<Character, TrieNode> children = current.getChildren();
             if (children.containsKey(c)) {
                 if (c == '.') {
                     lastWordIndex = i;
@@ -55,7 +54,7 @@ public class Trie<T extends TypeAware> {
         }
 
         if (current.isWord()) {
-            return singletonList(new TrieResult<>(word, current.getTypeAware()));
+            return singletonList(new TrieResult(word, current.getSuggestion()));
         } else {
             String prefix = lastWordIndex != -1 ? word.substring(lastWordIndex + 1) : word;
             return traversal(current, suggestions, prefix);

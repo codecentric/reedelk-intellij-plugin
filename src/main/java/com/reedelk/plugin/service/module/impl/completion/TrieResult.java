@@ -1,20 +1,20 @@
 package com.reedelk.plugin.service.module.impl.completion;
 
-public class TrieResult<T extends TypeAware> {
+public class TrieResult {
 
     private String word;
-    private T typeAware;
+    private Suggestion suggestion;
 
-    TrieResult(String word, T typeAware) {
+    TrieResult(String word, Suggestion suggestion) {
         this.word = word;
-        this.typeAware = typeAware;
+        this.suggestion = suggestion;
     }
 
     public String getWord() {
         return word;
     }
 
-    public T getTypeAware() {
-        return typeAware;
+    public Suggestion getSuggestion() {
+        return suggestion;
     }
 }

@@ -35,12 +35,12 @@ class SuggestionTreeTest {
     @Test
     void shouldReturnEmptyWhenNoMatchesAreFound() {
         // Given
-        SuggestionTree<Suggestion> suggestionTree = new SuggestionTree<>(new HashMap<>());
+        SuggestionTree suggestionTree = new SuggestionTree(new HashMap<>());
         List<Suggestion> suggestions = asList(utilSuggestion, configSuggestion);
         suggestionTree.add(suggestions);
 
         // When
-        List<TrieResult<Suggestion>> results = suggestionTree.autocomplete("message.");
+        List<TrieResult> results = suggestionTree.autocomplete("message.");
 
         // Then
         assertThat(results).isEmpty();
@@ -49,30 +49,30 @@ class SuggestionTreeTest {
     @Test
     void shouldReturnCorrectTokenWhenRootMatches() {
         // Given
-        SuggestionTree<Suggestion> suggestionTree = new SuggestionTree<>(new HashMap<>());
+        SuggestionTree suggestionTree = new SuggestionTree(new HashMap<>());
         List<Suggestion> autocompleteItems = asList(utilSuggestion, configSuggestion);
         suggestionTree.add(autocompleteItems);
 
         // When
-        List<TrieResult<Suggestion>> results = suggestionTree.autocomplete("Ut");
+        List<TrieResult> results = suggestionTree.autocomplete("Ut");
 
         // Then
         assertThat(results).hasSize(1);
 
-        TrieResult<Suggestion> result = results.get(0);
+        TrieResult result = results.get(0);
         assertThat(result.getWord()).isEqualTo("Util");
-        assertThat(result.getTypeAware()).isEqualTo(utilSuggestion);
+        assertThat(result.getSuggestion()).isEqualTo(utilSuggestion);
     }
 
     @Test
     void shouldReturnAllRootVariablesWhenSuggestionTokenIsEmpty() {
         // Given
-        SuggestionTree<Suggestion> suggestionTree = new SuggestionTree<>(new HashMap<>());
+        SuggestionTree suggestionTree = new SuggestionTree(new HashMap<>());
         List<Suggestion> autocompleteItems = asList(utilSuggestion, configSuggestion);
         suggestionTree.add(autocompleteItems);
 
         // When
-        List<TrieResult<Suggestion>> results = suggestionTree.autocomplete("");
+        List<TrieResult> results = suggestionTree.autocomplete("");
 
         // Then
         assertThat(results).hasSize(2);
@@ -83,18 +83,18 @@ class SuggestionTreeTest {
     @Test
     void shouldReturnEmptyResultsWhenNoSuggestionsAndTokenIsEmpty() {
         // Given
-        SuggestionTree<Suggestion> suggestionTree = new SuggestionTree<>(new HashMap<>());
+        SuggestionTree suggestionTree = new SuggestionTree(new HashMap<>());
 
         // When
-        List<TrieResult<Suggestion>> results = suggestionTree.autocomplete("");
+        List<TrieResult> results = suggestionTree.autocomplete("");
 
         // Then
         assertThat(results).isEmpty();
     }
 
-    private void assertThatContains(List<TrieResult<Suggestion>> results, String word, Suggestion suggestion) {
+    private void assertThatContains(List<TrieResult> results, String word, Suggestion suggestion) {
         boolean found = results.stream()
-                .anyMatch(result -> word.equals(result.getWord()) && result.getTypeAware() == suggestion);
+                .anyMatch(result -> word.equals(result.getWord()) && result.getSuggestion() == suggestion);
         assertThat(found).isTrue();
     }
 }
