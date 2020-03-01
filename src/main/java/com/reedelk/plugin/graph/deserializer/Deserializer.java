@@ -9,5 +9,4 @@ public interface Deserializer {
     default GraphNode deserialize(GraphNode parent, JSONObject componentDefinition) {
         throw new UnsupportedOperationException();
     }
-
 }

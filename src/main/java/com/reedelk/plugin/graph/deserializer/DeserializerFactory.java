@@ -50,6 +50,11 @@ public class DeserializerFactory {
         return new DeserializerFactory();
     }
 
+    public DeserializerFactory graph(FlowGraph graph) {
+        this.graph = graph;
+        return this;
+    }
+
     public DeserializerFactory context(DeserializerContext context) {
         this.context = context;
         return this;
@@ -57,11 +62,6 @@ public class DeserializerFactory {
 
     public DeserializerFactory componentDefinition(JSONObject componentDefinition) {
         this.componentDefinition = componentDefinition;
-        return this;
-    }
-
-    public DeserializerFactory graph(FlowGraph graph) {
-        this.graph = graph;
         return this;
     }
 
