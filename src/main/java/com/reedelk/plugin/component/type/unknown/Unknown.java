@@ -9,24 +9,23 @@ import com.reedelk.runtime.api.component.Component;
 
 import java.util.Collections;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
+import static com.reedelk.runtime.commons.JsonParser.Implementor;
+
 public class Unknown implements Component {
 
-    // TODO: Fix display name and so on.
     public static final ComponentDescriptor DESCRIPTOR;
     static {
-        // Must add the icon
         DESCRIPTOR = ComponentDescriptor.create()
-                .displayName("Unknown component")
+                .displayName(message("component.unknown"))
                 .fullyQualifiedName(Unknown.class.getName())
-                .description("Unknown component")
                 .propertyDescriptors(Collections.singletonList(PropertyDescriptor.builder()
-                        .displayName("Unknown component")
-                        .name("implementor")
+                        .displayName(message("component.unknown.implementor"))
+                        .name(Implementor.name())
                         .type(TypePrimitiveDescriptors.STRING)
                         .build()))
                 .type(ComponentType.UNKNOWN)
                 .build();
-
         DESCRIPTOR.setImage(Images.Component.UknownComponent);
     }
 }
