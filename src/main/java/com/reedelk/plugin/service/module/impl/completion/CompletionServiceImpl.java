@@ -26,7 +26,6 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.topic.ReedelkTopics.COMPLETION_EVENT_TOPIC;
 import static java.util.stream.Collectors.toList;
 
-// TODO: Test this service.
 public class CompletionServiceImpl implements CompletionService, CompilationStatusListener, ComponentListUpdateNotifier {
 
     private final Module module;
@@ -52,8 +51,7 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
         connection.subscribe(ReedelkTopics.COMPONENTS_UPDATE_EVENTS, this);
 
         DefaultComponentScriptSuggestions.get().forEach(defaultComponentSuggestions::add);
-
-        initialize(module);
+        initialize();
     }
 
     @Override
@@ -85,7 +83,7 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
         return ComponentService.getInstance(module);
     }
 
-    private void initialize(Module module) {
+    void initialize() {
         PluginExecutors.run(module, message("module.completion.init.suggestions.task.title"), indicator -> {
             Collection<ModuleDescriptor> allModules = componentService().getAllModuleComponents();
             updateAutocomplete(allModules);

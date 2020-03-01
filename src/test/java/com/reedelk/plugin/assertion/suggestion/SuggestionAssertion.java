@@ -1,6 +1,7 @@
 package com.reedelk.plugin.assertion.suggestion;
 
 import com.reedelk.plugin.service.module.impl.completion.Suggestion;
+import com.reedelk.runtime.api.autocomplete.AutocompleteItemType;
 
 import java.util.Collection;
 
@@ -14,9 +15,11 @@ public class SuggestionAssertion {
         this.suggestions = suggestions;
     }
 
-    public SuggestionAssertion contains(String suggestionToken) {
+    public SuggestionAssertion contains(String suggestionToken, AutocompleteItemType type) {
         boolean found = suggestions.stream()
-                .anyMatch(suggestion -> suggestionToken.equals(suggestion.getToken()));
+                .anyMatch(suggestion ->
+                        suggestionToken.equals(suggestion.getToken()) &&
+                        type.equals(suggestion.getItemType()));
         assertThat(found).isTrue();
         return this;
     }
