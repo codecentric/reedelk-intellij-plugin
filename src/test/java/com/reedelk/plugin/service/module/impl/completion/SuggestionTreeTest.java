@@ -74,7 +74,7 @@ class SuggestionTreeTest {
     }
 
     @Test
-    void shouldCorrectlySuggest() {
+    void shouldReturnEmptySuggestions() {
         // Given
         AutocompleteItemDescriptor tmpDirItem = AutocompleteItemDescriptor.create()
                 .type("Util")
