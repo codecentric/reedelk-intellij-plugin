@@ -74,7 +74,8 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
 
     @Override
     public void onComponentListUpdate(Collection<ModuleDescriptor> components) {
-        PluginExecutors.run(module, message("module.completion.update.suggestions.task.title"), indicator -> updateAutocomplete(components));
+        PluginExecutors.run(module, message("module.completion.update.suggestions.task.title"),
+                indicator -> updateAutocomplete(components));
     }
 
     void fireCompletionsUpdatedEvent() {

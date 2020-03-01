@@ -3,7 +3,6 @@ package com.reedelk.plugin.service.module;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleServiceManager;
 import com.reedelk.module.descriptor.ModuleDescriptor;
-import com.reedelk.module.descriptor.model.AutocompleteItemDescriptor;
 import com.reedelk.module.descriptor.model.ComponentDescriptor;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,5 +18,4 @@ public interface ComponentService {
 
     Collection<ModuleDescriptor> getAllModuleComponents();
 
-    Collection<AutocompleteItemDescriptor> getAutoCompleteItemDescriptors();
 }

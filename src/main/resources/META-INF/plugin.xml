@@ -53,8 +53,8 @@
         <moduleService serviceInterface="com.reedelk.plugin.service.module.ScriptService"
                        serviceImplementation="com.reedelk.plugin.service.module.impl.script.ScriptServiceImpl"/>
 
-        <moduleService serviceInterface="com.reedelk.plugin.service.module.AutocompleteService"
-                       serviceImplementation="com.reedelk.plugin.service.module.impl.completion.AutocompleteServiceImpl"/>
+        <moduleService serviceInterface="com.reedelk.plugin.service.module.CompletionService"
+                       serviceImplementation="com.reedelk.plugin.service.module.impl.completion.CompletionServiceImpl"/>
 
         <moduleService serviceInterface="com.reedelk.plugin.service.module.RuntimeApiService"
                        serviceImplementation="com.reedelk.plugin.service.module.impl.runtimeapi.RuntimeApiServiceImpl"/>

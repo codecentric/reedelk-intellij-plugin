@@ -5,7 +5,7 @@ import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
 import com.reedelk.plugin.editor.properties.selection.SelectionChangeListener;
 import com.reedelk.plugin.service.module.impl.component.ComponentListUpdateNotifier;
 
-import static com.reedelk.plugin.service.module.AutocompleteService.OnCompletionEvent;
+import static com.reedelk.plugin.service.module.CompletionService.OnCompletionEvent;
 import static com.reedelk.plugin.service.module.impl.configuration.ConfigurationServiceImpl.ConfigChangeListener;
 import static com.reedelk.plugin.service.module.impl.script.ScriptServiceImpl.ScriptResourceChangeListener;
 

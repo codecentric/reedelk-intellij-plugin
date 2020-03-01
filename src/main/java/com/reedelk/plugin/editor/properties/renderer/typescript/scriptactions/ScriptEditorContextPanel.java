@@ -5,7 +5,7 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
-import com.reedelk.plugin.service.module.AutocompleteService;
+import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.impl.completion.Suggestion;
 import com.reedelk.plugin.topic.ReedelkTopics;
 import com.reedelk.runtime.api.autocomplete.AutocompleteItemType;
@@ -24,7 +24,7 @@ import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 import static javax.swing.BorderFactory.createMatteBorder;
 
-class ScriptEditorContextPanel extends DisposablePanel implements AutocompleteService.OnCompletionEvent {
+class ScriptEditorContextPanel extends DisposablePanel implements CompletionService.OnCompletionEvent {
 
     private static final Border MATTE_BORDER = createMatteBorder(1, 1, 1, 0,
             Colors.SCRIPT_EDITOR_CONTEXT_PANEL_BORDER);
@@ -59,7 +59,7 @@ class ScriptEditorContextPanel extends DisposablePanel implements AutocompleteSe
         this.panelVariables.setLayout(boxLayout);
         this.panelVariables.setBorder(empty(5));
 
-        AutocompleteService.getInstance(module)
+        CompletionService.getInstance(module)
                 .contextVariablesOf(componentFullyQualifiedName)
                 .forEach(suggestion -> panelVariables.add(new ContextVariableLabel(suggestion)));
 
@@ -79,7 +79,7 @@ class ScriptEditorContextPanel extends DisposablePanel implements AutocompleteSe
     @Override
     public void onCompletionsUpdated() {
         List<Suggestion> suggestions =
-                AutocompleteService.getInstance(module)
+                CompletionService.getInstance(module)
                 .contextVariablesOf(componentFullyQualifiedName);
 
         SwingUtilities.invokeLater(() -> {
