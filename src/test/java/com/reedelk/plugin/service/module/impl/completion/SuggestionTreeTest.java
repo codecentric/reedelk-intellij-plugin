@@ -1,6 +1,8 @@
 package com.reedelk.plugin.service.module.impl.completion;
 
+import com.reedelk.module.descriptor.model.AutocompleteItemDescriptor;
 import com.reedelk.plugin.assertion.PluginAssertion;
+import com.reedelk.runtime.api.autocomplete.AutocompleteItemType;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -69,5 +71,28 @@ class SuggestionTreeTest {
         // Then
         PluginAssertion.assertThat(suggestions)
                 .isEmpty();
+    }
+
+    @Test
+    void shouldCorrectlySuggest() {
+        // Given
+        AutocompleteItemDescriptor tmpDirItem = AutocompleteItemDescriptor.create()
+                .type("Util")
+                .token("tmpdir")
+                .returnType("String")
+                .replaceValue("tmpdir()")
+                .itemType(AutocompleteItemType.FUNCTION)
+                .build();
+        Suggestion tmpDir = Suggestion.create(tmpDirItem);
+
+        SuggestionTree suggestionTree = new SuggestionTree(new HashMap<>());
+        List<Suggestion> autocompleteItems = asList(SampleSuggestions.UTIL, tmpDir);
+        suggestionTree.add(autocompleteItems);
+
+        // When
+        List<Suggestion> autocomplete = suggestionTree.autocomplete("U.tm");
+
+        // Then
+        PluginAssertion.assertThat(autocomplete).isEmpty();
     }
 }

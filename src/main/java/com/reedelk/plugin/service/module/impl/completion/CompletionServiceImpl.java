@@ -30,13 +30,12 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
 
     private final Module module;
     private final MessageBus messageBus;
-
     private final Map<String, Trie> typeTriesMap = new HashMap<>();
+    private final SuggestionTree defaultComponentSuggestions = new SuggestionTree(typeTriesMap);
+    private final Map<String, SuggestionTree> componentQualifiedNameSuggestionsMap = new HashMap<>();
 
     // This tree contains the Functions and Types registered by each module.
     private SuggestionTree moduleSuggestions = new SuggestionTree(typeTriesMap);
-    private final SuggestionTree defaultComponentSuggestions = new SuggestionTree(typeTriesMap);
-    private final Map<String, SuggestionTree> componentQualifiedNameSuggestionsMap = new HashMap<>();
 
 
     // Custom Functions are global so they are always present.

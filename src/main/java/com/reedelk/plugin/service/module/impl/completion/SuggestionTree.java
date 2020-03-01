@@ -40,11 +40,18 @@ public class SuggestionTree {
             if (i == tokens.length - 1) {
                 autocompleteResults = current.autocomplete(token);
             } else {
-                Optional<Suggestion> first = current.autocomplete(token).stream().findFirst();
-                if (first.isPresent()) {
-                    Suggestion suggestion = first.get();
-                    String returnType = suggestion.getReturnType();
-                    current = typeTriesMap.getOrDefault(returnType, UNKNOWN_TYPE_TRIE);
+                Optional<Suggestion> maybeSuggestion = current.autocomplete(token).stream().findFirst();
+                if (maybeSuggestion.isPresent()) {
+                    Suggestion suggestion = maybeSuggestion.get();
+
+                    // If there is more than one token, it must be an exact match.
+                    if (suggestion.getToken().equals(token)) {
+                        String returnType = suggestion.getReturnType();
+                        current = typeTriesMap.getOrDefault(returnType, UNKNOWN_TYPE_TRIE);
+                    } else {
+                        break;
+                    }
+
                 } else {
                     // Could not found a match to follow for the current token.
                     // Therefore no match is found.
