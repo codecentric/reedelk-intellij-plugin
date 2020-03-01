@@ -34,7 +34,7 @@ public class AutocompleteServiceImpl implements AutocompleteService, Compilation
     private final Map<String, Trie<Suggestion>> typeTriesMap = new HashMap<>();
 
     // This tree contains the Functions and Types registered by each module.
-    private final SuggestionTree<Suggestion> moduleSuggestions = new SuggestionTree<>(typeTriesMap);
+    private SuggestionTree<Suggestion> moduleSuggestions = new SuggestionTree<>(typeTriesMap);
     private final SuggestionTree<Suggestion> defaultComponentSuggestions = new SuggestionTree<>(typeTriesMap);
     private final Map<String, SuggestionTree<Suggestion>> componentQualifiedNameSuggestionsMap = new HashMap<>();
 
@@ -56,12 +56,12 @@ public class AutocompleteServiceImpl implements AutocompleteService, Compilation
     }
 
     @Override
-    public List<Suggestion> contextVariablesOf(String componentFullyQualifiedName) {
+    public synchronized List<Suggestion> contextVariablesOf(String componentFullyQualifiedName) {
         return autocompleteSuggestionOf(componentFullyQualifiedName, StringUtils.EMPTY);
     }
 
     @Override
-    public List<Suggestion> autocompleteSuggestionOf(String componentFullyQualifiedName, String token) {
+    public synchronized List<Suggestion> autocompleteSuggestionOf(String componentFullyQualifiedName, String token) {
         SuggestionTree<Suggestion> defaultSuggestion = componentQualifiedNameSuggestionsMap.getOrDefault(componentFullyQualifiedName, defaultComponentSuggestions);
         List<TrieResult<Suggestion>> specific = defaultSuggestion.autocomplete(token);
         List<TrieResult<Suggestion>> autocomplete = moduleSuggestions.autocomplete(token);
@@ -73,19 +73,36 @@ public class AutocompleteServiceImpl implements AutocompleteService, Compilation
 
     @Override
     public void onComponentListUpdate(Collection<ModuleDescriptor> components) {
-        PluginExecutors.run(module,
-                message("module.completion.update.suggestions.task.title"),
-                indicator -> updateAutocomplete(components));
+        PluginExecutors.run(module, message("module.completion.update.suggestions.task.title"), indicator -> updateAutocomplete(components));
     }
 
-    void updateAutocomplete(Collection<ModuleDescriptor> descriptors) {
+    void fireCompletionsUpdatedEvent() {
+        messageBus.syncPublisher(COMPLETION_EVENT_TOPIC).onCompletionsUpdated();
+    }
+
+    ComponentService componentService() {
+        return ComponentService.getInstance(module);
+    }
+
+    private void initialize(Module module) {
+        PluginExecutors.run(module, message("module.completion.init.suggestions.task.title"), indicator -> {
+            Collection<ModuleDescriptor> allModules = componentService().getAllModuleComponents();
+            updateAutocomplete(allModules);
+        });
+    }
+
+    synchronized void updateAutocomplete(Collection<ModuleDescriptor> descriptors) {
+        typeTriesMap.clear();
+        moduleSuggestions = new SuggestionTree<>(typeTriesMap);
+        componentQualifiedNameSuggestionsMap.clear();
+
+
         // Add all autocomplete items registered by the module.
         descriptors.stream()
                 .map(ModuleDescriptor::getAutocompleteItems)
-                .map(autocompleteItemDescriptors ->
-                        autocompleteItemDescriptors.stream()
-                                .map(Suggestion::create)
-                                .collect(toList()))
+                .map(itemDescriptors -> itemDescriptors.stream()
+                        .map(Suggestion::create)
+                        .collect(toList()))
                 .forEach(moduleSuggestions::add);
 
         // Add autocomplete for each component.
@@ -97,14 +114,6 @@ public class AutocompleteServiceImpl implements AutocompleteService, Compilation
 
         // Fire update event done.
         fireCompletionsUpdatedEvent();
-    }
-
-    void fireCompletionsUpdatedEvent() {
-        messageBus.syncPublisher(COMPLETION_EVENT_TOPIC).onCompletionsUpdated();
-    }
-
-    ComponentService componentService() {
-        return ComponentService.getInstance(module);
     }
 
     private void updateAutocomplete(String fullyQualifiedName, List<PropertyDescriptor> propertyDescriptors) {
@@ -133,12 +142,5 @@ public class AutocompleteServiceImpl implements AutocompleteService, Compilation
             componentSuggestions.forEach(componentSuggestionTree::add);
             componentQualifiedNameSuggestionsMap.put(fullyQualifiedName, componentSuggestionTree);
         }
-    }
-
-    private void initialize(Module module) {
-        PluginExecutors.run(module, message("module.completion.init.suggestions.task.title"), indicator -> {
-            Collection<ModuleDescriptor> allModules = componentService().getAllModuleComponents();
-            updateAutocomplete(allModules);
-        });
     }
 }
