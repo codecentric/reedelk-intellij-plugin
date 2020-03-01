@@ -1,83 +1,61 @@
 package com.reedelk.plugin.service.module.impl.completion;
 
-import com.reedelk.module.descriptor.model.AutocompleteItemDescriptor;
-import com.reedelk.runtime.api.autocomplete.AutocompleteItemType;
+import com.reedelk.plugin.assertion.PluginAssertion;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
 
 class SuggestionTreeTest {
-
-    private AutocompleteItemDescriptor utilAutocompleteType = AutocompleteItemDescriptor.create()
-            .global(true)
-            .type("Util")
-            .token("Util")
-            .returnType("Util")
-            .replaceValue("Util")
-            .itemType(AutocompleteItemType.VARIABLE)
-            .build();
-    private Suggestion utilSuggestion = Suggestion.create(utilAutocompleteType);
-
-    private AutocompleteItemDescriptor configAutocompleteType = AutocompleteItemDescriptor.create()
-            .global(true)
-            .type("Config")
-            .token("Config")
-            .returnType("Config")
-            .replaceValue("Config")
-            .itemType(AutocompleteItemType.VARIABLE)
-            .build();
-    private Suggestion configSuggestion = Suggestion.create(configAutocompleteType);
 
     @Test
     void shouldReturnEmptyWhenNoMatchesAreFound() {
         // Given
         SuggestionTree suggestionTree = new SuggestionTree(new HashMap<>());
-        List<Suggestion> suggestions = asList(utilSuggestion, configSuggestion);
+        List<Suggestion> suggestions = asList(SampleSuggestions.UTIL, SampleSuggestions.CONFIG);
         suggestionTree.add(suggestions);
 
         // When
         List<Suggestion> actualSuggestions = suggestionTree.autocomplete("message.");
 
         // Then
-        assertThat(actualSuggestions).isEmpty();
+        PluginAssertion.assertThat(actualSuggestions)
+                .isEmpty();
     }
 
     @Test
     void shouldReturnCorrectTokenWhenRootMatches() {
         // Given
         SuggestionTree suggestionTree = new SuggestionTree(new HashMap<>());
-        List<Suggestion> autocompleteItems = asList(utilSuggestion, configSuggestion);
+        List<Suggestion> autocompleteItems = asList(SampleSuggestions.UTIL, SampleSuggestions.CONFIG);
         suggestionTree.add(autocompleteItems);
 
         // When
         List<Suggestion> suggestions = suggestionTree.autocomplete("Ut");
 
         // Then
-        assertThat(suggestions).hasSize(1);
-
-        Suggestion suggestion = suggestions.get(0);
-        assertThat(suggestion.getToken()).isEqualTo("Util");
-        assertThat(suggestion).isEqualTo(utilSuggestion);
+        PluginAssertion.assertThat(suggestions)
+                .hasSize(1)
+                .contains(SampleSuggestions.UTIL);
     }
 
     @Test
     void shouldReturnAllRootVariablesWhenSuggestionTokenIsEmpty() {
         // Given
         SuggestionTree suggestionTree = new SuggestionTree(new HashMap<>());
-        List<Suggestion> autocompleteItems = asList(utilSuggestion, configSuggestion);
+        List<Suggestion> autocompleteItems = asList(SampleSuggestions.UTIL, SampleSuggestions.CONFIG);
         suggestionTree.add(autocompleteItems);
 
         // When
         List<Suggestion> suggestions = suggestionTree.autocomplete("");
 
         // Then
-        assertThat(suggestions).hasSize(2);
-        assertThatContains(suggestions, "Util", utilSuggestion);
-        assertThatContains(suggestions, "Config", configSuggestion);
+        PluginAssertion.assertThat(suggestions)
+                .hasSize(2)
+                .contains(SampleSuggestions.UTIL)
+                .contains(SampleSuggestions.CONFIG);
     }
 
     @Test
@@ -89,12 +67,7 @@ class SuggestionTreeTest {
         List<Suggestion> suggestions = suggestionTree.autocomplete("");
 
         // Then
-        assertThat(suggestions).isEmpty();
-    }
-
-    private void assertThatContains(List<Suggestion> suggestions, String word, Suggestion expected) {
-        boolean found = suggestions.stream()
-                .anyMatch(suggestion -> word.equals(suggestion.getToken()) && suggestion == expected);
-        assertThat(found).isTrue();
+        PluginAssertion.assertThat(suggestions)
+                .isEmpty();
     }
 }

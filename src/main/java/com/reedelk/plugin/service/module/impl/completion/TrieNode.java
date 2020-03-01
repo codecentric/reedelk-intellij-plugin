@@ -8,7 +8,7 @@ public class TrieNode {
     private Suggestion suggestion;
     private Map<Character, TrieNode> children = new HashMap<>();
 
-    public boolean isWord() {
+    public boolean isSuggestion() {
         return (children.isEmpty() && suggestion != null) ||
                 (children.containsKey('.') && suggestion != null) ||
                 suggestion != null;

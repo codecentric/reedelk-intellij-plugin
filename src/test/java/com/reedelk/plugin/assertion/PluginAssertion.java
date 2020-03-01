@@ -5,9 +5,12 @@ import com.reedelk.plugin.assertion.commons.MapAssertion;
 import com.reedelk.plugin.assertion.component.ComponentDataHolderAssertion;
 import com.reedelk.plugin.assertion.graph.FlowGraphAssertion;
 import com.reedelk.plugin.assertion.graph.FlowGraphChangeAwareAssertion;
+import com.reedelk.plugin.assertion.suggestion.SuggestionAssertion;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowGraphChangeAware;
+import com.reedelk.plugin.service.module.impl.completion.Suggestion;
 
+import java.util.Collection;
 import java.util.Map;
 
 public class PluginAssertion {
@@ -26,5 +29,9 @@ public class PluginAssertion {
 
     public static ComponentDataHolderAssertion assertThat(ComponentDataHolder dataHolder) {
         return new ComponentDataHolderAssertion(dataHolder);
+    }
+
+    public static SuggestionAssertion assertThat(Collection<Suggestion> suggestions) {
+        return new SuggestionAssertion(suggestions);
     }
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 import static java.util.Collections.singletonList;
 
 public class Trie {
+
     private TrieNode root;
 
     public Trie() {
@@ -23,7 +24,7 @@ public class Trie {
     }
 
     public List<Suggestion> traversal(TrieNode start, List<Suggestion> suggestion, String current) {
-        if (start.isWord()) {
+        if (start.isSuggestion()) {
             suggestion.add(start.getSuggestion());
         }
         start.getChildren().forEach((character, trieNode) -> {
@@ -52,7 +53,7 @@ public class Trie {
             i++;
         }
 
-        if (current.isWord()) {
+        if (current.isSuggestion()) {
             return singletonList(current.getSuggestion());
         } else {
             String prefix = lastWordIndex != -1 ? word.substring(lastWordIndex + 1) : word;
