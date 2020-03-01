@@ -84,10 +84,13 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     }
 
     @Override
-    public synchronized Collection<ModuleDescriptor> getAllModuleComponents() {
-        List<ModuleDescriptor> descriptors = new ArrayList<>(mavenModules);
-        if (flowControlModule != null) descriptors.add(flowControlModule);
-        if (currentModule != null) descriptors.add(currentModule);
+    public Collection<ModuleDescriptor> getAllModuleComponents() {
+        List<ModuleDescriptor> descriptors;
+        synchronized (ComponentServiceImpl.class) {
+            descriptors = new ArrayList<>(mavenModules);
+            if (flowControlModule != null) descriptors.add(flowControlModule);
+            if (currentModule != null) descriptors.add(currentModule);
+        }
         return unmodifiableCollection(descriptors);
     }
 
@@ -120,8 +123,8 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                 new LoadRuntimeModuleDescriptor(callback, runtimeModuleDescriptor -> {
                     synchronized (ComponentServiceImpl.class) {
                         flowControlModule = runtimeModuleDescriptor;
+                        notifyComponentListUpdate();
                     }
-                    notifyComponentListUpdate();
                 }));
     }
 
@@ -135,8 +138,8 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                 new LoadMavenDependenciesModuleDescriptorsTask(module, callback, loadedModuleDescriptor -> {
                     synchronized (ComponentServiceImpl.class) {
                         mavenModules.add(loadedModuleDescriptor);
+                        notifyComponentListUpdate();
                     }
-                    notifyComponentListUpdate();
                 }));
     }
 
