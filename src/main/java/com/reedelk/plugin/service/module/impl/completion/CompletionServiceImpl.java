@@ -65,12 +65,10 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
     public synchronized List<Suggestion> autocompleteSuggestionOf(String componentFullyQualifiedName, String token) {
         SuggestionTree componentSuggestionTree =
                 componentQualifiedNameSuggestionsMap.getOrDefault(componentFullyQualifiedName, defaultComponentSuggestions);
-        List<TrieResult> componentSuggestions = componentSuggestionTree.autocomplete(token);
-        List<TrieResult> autocomplete = moduleSuggestions.autocomplete(token);
+        List<Suggestion> componentSuggestions = componentSuggestionTree.autocomplete(token);
+        List<Suggestion> autocomplete = moduleSuggestions.autocomplete(token);
         componentSuggestions.addAll(autocomplete);
-        return componentSuggestions.stream()
-                .map(TrieResult::getSuggestion)
-                .collect(toList());
+        return componentSuggestions;
     }
 
     @Override

@@ -40,10 +40,10 @@ class SuggestionTreeTest {
         suggestionTree.add(suggestions);
 
         // When
-        List<TrieResult> results = suggestionTree.autocomplete("message.");
+        List<Suggestion> actualSuggestions = suggestionTree.autocomplete("message.");
 
         // Then
-        assertThat(results).isEmpty();
+        assertThat(actualSuggestions).isEmpty();
     }
 
     @Test
@@ -54,14 +54,14 @@ class SuggestionTreeTest {
         suggestionTree.add(autocompleteItems);
 
         // When
-        List<TrieResult> results = suggestionTree.autocomplete("Ut");
+        List<Suggestion> suggestions = suggestionTree.autocomplete("Ut");
 
         // Then
-        assertThat(results).hasSize(1);
+        assertThat(suggestions).hasSize(1);
 
-        TrieResult result = results.get(0);
-        assertThat(result.getWord()).isEqualTo("Util");
-        assertThat(result.getSuggestion()).isEqualTo(utilSuggestion);
+        Suggestion suggestion = suggestions.get(0);
+        assertThat(suggestion.getToken()).isEqualTo("Util");
+        assertThat(suggestion).isEqualTo(utilSuggestion);
     }
 
     @Test
@@ -72,12 +72,12 @@ class SuggestionTreeTest {
         suggestionTree.add(autocompleteItems);
 
         // When
-        List<TrieResult> results = suggestionTree.autocomplete("");
+        List<Suggestion> suggestions = suggestionTree.autocomplete("");
 
         // Then
-        assertThat(results).hasSize(2);
-        assertThatContains(results, "Util", utilSuggestion);
-        assertThatContains(results, "Config", configSuggestion);
+        assertThat(suggestions).hasSize(2);
+        assertThatContains(suggestions, "Util", utilSuggestion);
+        assertThatContains(suggestions, "Config", configSuggestion);
     }
 
     @Test
@@ -86,15 +86,15 @@ class SuggestionTreeTest {
         SuggestionTree suggestionTree = new SuggestionTree(new HashMap<>());
 
         // When
-        List<TrieResult> results = suggestionTree.autocomplete("");
+        List<Suggestion> suggestions = suggestionTree.autocomplete("");
 
         // Then
-        assertThat(results).isEmpty();
+        assertThat(suggestions).isEmpty();
     }
 
-    private void assertThatContains(List<TrieResult> results, String word, Suggestion suggestion) {
-        boolean found = results.stream()
-                .anyMatch(result -> word.equals(result.getWord()) && result.getSuggestion() == suggestion);
+    private void assertThatContains(List<Suggestion> suggestions, String word, Suggestion expected) {
+        boolean found = suggestions.stream()
+                .anyMatch(suggestion -> word.equals(suggestion.getToken()) && suggestion == expected);
         assertThat(found).isTrue();
     }
 }

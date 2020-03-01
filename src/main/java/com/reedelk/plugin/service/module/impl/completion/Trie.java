@@ -22,10 +22,9 @@ public class Trie {
         current.setSuggestion(suggestion);
     }
 
-    public List<TrieResult> traversal(TrieNode start, List<TrieResult> suggestion, String current) {
+    public List<Suggestion> traversal(TrieNode start, List<Suggestion> suggestion, String current) {
         if (start.isWord()) {
-            TrieResult result = new TrieResult(current, start.getSuggestion());
-            suggestion.add(result);
+            suggestion.add(start.getSuggestion());
         }
         start.getChildren().forEach((character, trieNode) -> {
             String newCurrent = current + character;
@@ -34,8 +33,8 @@ public class Trie {
         return suggestion;
     }
 
-    public List<TrieResult> autocomplete(String word) {
-        List<TrieResult> suggestions = new ArrayList<>();
+    public List<Suggestion> autocomplete(String word) {
+        List<Suggestion> suggestions = new ArrayList<>();
         TrieNode current = root;
         int i = 0;
         int lastWordIndex = -1;
@@ -54,7 +53,7 @@ public class Trie {
         }
 
         if (current.isWord()) {
-            return singletonList(new TrieResult(word, current.getSuggestion()));
+            return singletonList(current.getSuggestion());
         } else {
             String prefix = lastWordIndex != -1 ? word.substring(lastWordIndex + 1) : word;
             return traversal(current, suggestions, prefix);

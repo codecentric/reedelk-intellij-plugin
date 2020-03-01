@@ -1,28 +1,42 @@
 package com.reedelk.plugin.service.module.impl.completion;
 
+import com.reedelk.module.descriptor.model.AutocompleteItemDescriptor;
+import com.reedelk.runtime.api.autocomplete.AutocompleteItemType;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 class TrieTest {
 
-    private final String suggestionToken1 = "message[VARIABLE:Message]";
-    private final String suggestionToken2 = "multiply()[FUNCTION:int]";
-    private final String suggestionToken3 = "message.mimeType1()[FUNCTION:MimeType]";
-    private final String suggestionToken4 = "message.mimeType2()[FUNCTION:MimeType]";
-    private final String suggestionToken5 = "message.mimeType3()[FUNCTION:MimeType]";
-    private final String suggestionToken6 = "message.put('',item)[FUNCTION:MimeType:7]";
-
-    /**
     @Test
     void shouldCorrectlyInsertSuggestionToken() {
         // Given
+        AutocompleteItemDescriptor itemDescriptor = AutocompleteItemDescriptor.create()
+                .global(true)
+                .token("Util")
+                .type("Util")
+                .cursorOffset(2)
+                .returnType("Util")
+                .replaceValue("Util")
+                .description("Script utilities")
+                .itemType(AutocompleteItemType.VARIABLE)
+                .build();
+
+        Suggestion suggestion = Suggestion.create(itemDescriptor);
         Trie trie = new Trie();
 
         // When
-        trie.insert(suggestionToken1);
+        trie.insert(suggestion);
 
         // Then
-        List<Suggestion> results = trie.findByPrefix("m");
-        PluginAssertion.assertThat(results)
-                .containsOnly("message", SuggestionType.VARIABLE, "Message");
+        List<Suggestion> result = trie.autocomplete("Ut");
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0)).isEqualTo(suggestion);
     }
+
+    /**
 
     @Test
     void shouldCorrectlyFindMultipleSuggestionsByPrefix() {
