@@ -109,27 +109,30 @@ public class AutocompleteServiceImpl implements AutocompleteService, Compilation
 
     private void updateAutocomplete(String fullyQualifiedName, List<PropertyDescriptor> propertyDescriptors) {
         propertyDescriptors.forEach(descriptor -> {
-            // If the property type is TypeObject, we must recursively add the autocomplete tokens.
             if (descriptor.getType() instanceof TypeObjectDescriptor) {
+                // If the property type is TypeObject, we must recursively add the
+                // autocomplete tokens for each nested object type.
                 TypeObjectDescriptor typeObjectDescriptor = descriptor.getType();
                 String typeFullyQualifiedName = typeObjectDescriptor.getTypeFullyQualifiedName();
                 List<PropertyDescriptor> properties = typeObjectDescriptor.getObjectProperties();
                 updateAutocomplete(typeFullyQualifiedName, properties);
-
             } else {
-                // Use fully qualified name and autocomplete to process and create trees.
-                List<AutocompleteVariableDescriptor> autocomplete = descriptor.getAutocompleteVariables();
-                if (!autocomplete.isEmpty()) {
-                    SuggestionTree<Suggestion> componentSuggestionTree = new SuggestionTree<>(moduleSuggestions.getTypeTriesMap());
-                    List<Suggestion> componentSuggestions = autocomplete
-                            .stream()
-                            .map(Suggestion::create)
-                            .collect(toList());
-                    componentSuggestions.forEach(componentSuggestionTree::add);
-                    componentQualifiedNameSuggestionsMap.put(fullyQualifiedName, componentSuggestionTree);
-                }
+                updateAutocomplete(fullyQualifiedName, descriptor);
             }
         });
+    }
+
+    private void updateAutocomplete(String fullyQualifiedName, PropertyDescriptor descriptor) {
+        List<AutocompleteVariableDescriptor> autocomplete = descriptor.getAutocompleteVariables();
+        if (!autocomplete.isEmpty()) {
+            SuggestionTree<Suggestion> componentSuggestionTree = new SuggestionTree<>(moduleSuggestions.getTypeTriesMap());
+            List<Suggestion> componentSuggestions = autocomplete
+                    .stream()
+                    .map(Suggestion::create)
+                    .collect(toList());
+            componentSuggestions.forEach(componentSuggestionTree::add);
+            componentQualifiedNameSuggestionsMap.put(fullyQualifiedName, componentSuggestionTree);
+        }
     }
 
     private void initialize(Module module) {

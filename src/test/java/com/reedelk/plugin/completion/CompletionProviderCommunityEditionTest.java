@@ -63,4 +63,16 @@ class CompletionProviderCommunityEditionTest {
         //  Then
         assertThat(actual).hasValue("messa");
     }
+
+    @Test
+    void shouldCorrectlyFindToken() {
+        // Given
+        String text = "MultipartBuilder.part('super').binaryWithMimeType(message.payload(),'application/octet-stream').";
+
+        // When
+        Optional<String> actual = provider.findLastToken(text, 97);
+
+        // Then
+        assertThat(actual).hasValue("MultipartBuilder.part('super').binaryWithMimeType(message.payload(),'application/octet-stream').");
+    }
 }
