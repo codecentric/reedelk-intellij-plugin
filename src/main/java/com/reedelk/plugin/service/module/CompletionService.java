@@ -7,10 +7,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public interface AutocompleteService {
+public interface CompletionService {
 
-    static AutocompleteService getInstance(@NotNull Module module) {
-        return ModuleServiceManager.getService(module, AutocompleteService.class);
+    static CompletionService getInstance(@NotNull Module module) {
+        return ModuleServiceManager.getService(module, CompletionService.class);
     }
 
     List<Suggestion> contextVariablesOf(String componentFullyQualifiedName);

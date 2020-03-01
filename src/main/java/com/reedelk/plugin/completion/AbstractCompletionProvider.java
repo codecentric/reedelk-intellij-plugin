@@ -10,7 +10,7 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ProcessingContext;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
-import com.reedelk.plugin.service.module.AutocompleteService;
+import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.impl.completion.Suggestion;
 import com.reedelk.runtime.api.autocomplete.AutocompleteItemType;
 import org.jetbrains.annotations.NotNull;
@@ -51,7 +51,7 @@ abstract class AbstractCompletionProvider extends CompletionProvider<CompletionP
             Module module = ModuleManager.getInstance(project).findModuleByName(moduleName);
             if (module == null) return;
 
-            AutocompleteService instance = AutocompleteService.getInstance(module);
+            CompletionService instance = CompletionService.getInstance(module);
             List<Suggestion> suggestions = instance.autocompleteSuggestionOf(componentFullyQualifiedName, token);
             suggestions.forEach(suggestion -> {
 

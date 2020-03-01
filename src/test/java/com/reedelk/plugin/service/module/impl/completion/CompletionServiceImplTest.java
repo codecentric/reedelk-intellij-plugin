@@ -14,7 +14,7 @@ import static org.mockito.Mockito.*;
 
 // TODO: Fixme
 @ExtendWith(MockitoExtension.class)
-class AutocompleteServiceImplTest {
+class CompletionServiceImplTest {
 
     private final String COMPONENT_QUALIFIED_NAME = "com.reedelk.components.TestComponent";
 
@@ -29,13 +29,13 @@ class AutocompleteServiceImplTest {
     @Mock
     private MessageBusConnection mockMessageBusConnection;
 
-    private TestableAutocompleteService service;
+    private TestableCompletionService service;
 
     @BeforeEach
     void setUp() {
         doReturn(mockMessageBus).when(mockProject).getMessageBus();
         doReturn(mockMessageBusConnection).when(mockMessageBus).connect();
-        service = spy(new TestableAutocompleteService(mockProject, mockModule));
+        service = spy(new TestableCompletionService(mockProject, mockModule));
 
         doNothing().when(service).fireCompletionsUpdatedEvent();
         doReturn(mockComponentService).when(service).componentService();
@@ -156,9 +156,9 @@ class AutocompleteServiceImplTest {
         return new ModuleComponents("my-module", componentDescriptors);
     }
 */
-    static class TestableAutocompleteService extends AutocompleteServiceImpl {
+    static class TestableCompletionService extends CompletionServiceImpl {
 
-        TestableAutocompleteService(Project project, Module module) {
+        TestableCompletionService(Project project, Module module) {
             super(project, module);
         }
 

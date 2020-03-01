@@ -11,7 +11,7 @@ import com.reedelk.module.descriptor.model.AutocompleteVariableDescriptor;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
 import com.reedelk.plugin.executor.PluginExecutors;
-import com.reedelk.plugin.service.module.AutocompleteService;
+import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.ComponentListUpdateNotifier;
 import com.reedelk.plugin.topic.ReedelkTopics;
@@ -26,7 +26,8 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.topic.ReedelkTopics.COMPLETION_EVENT_TOPIC;
 import static java.util.stream.Collectors.toList;
 
-public class AutocompleteServiceImpl implements AutocompleteService, CompilationStatusListener, ComponentListUpdateNotifier {
+// TODO: Test this service.
+public class CompletionServiceImpl implements CompletionService, CompilationStatusListener, ComponentListUpdateNotifier {
 
     private final Module module;
     private final MessageBus messageBus;
@@ -42,7 +43,7 @@ public class AutocompleteServiceImpl implements AutocompleteService, Compilation
     // Custom Functions are global so they are always present.
     // Need to define default script suggestions and specific suggestions for
     // Component by module, and component fully qualified name and property.
-    public AutocompleteServiceImpl(Project project, Module module) {
+    public CompletionServiceImpl(Project project, Module module) {
         this.module = module;
         this.messageBus = project.getMessageBus();
 
