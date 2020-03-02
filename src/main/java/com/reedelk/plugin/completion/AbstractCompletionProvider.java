@@ -12,7 +12,7 @@ import com.intellij.util.ProcessingContext;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.impl.completion.Suggestion;
-import com.reedelk.runtime.api.autocomplete.AutocompleteType;
+import com.reedelk.runtime.api.autocomplete.AutocompleteItemType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -57,7 +57,7 @@ abstract class AbstractCompletionProvider extends CompletionProvider<CompletionP
 
                 final LookupElementBuilder lookupBuilder = LookupElementBuilder.create(suggestion.getReplaceValue())
                         .withTypeText(suggestion.getReturnType())
-                        .withIcon(suggestion.getItemType() == AutocompleteType.FUNCTION ? Method : Variable);
+                        .withIcon(suggestion.getItemType() == AutocompleteItemType.FUNCTION ? Method : Variable);
 
                 // For some suggestions like for .put('') we must adjust the caret back by X positions.
                 // If the suggestion definition has defined an offset, then we add an insert handler

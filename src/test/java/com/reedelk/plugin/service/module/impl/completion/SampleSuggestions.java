@@ -2,7 +2,7 @@ package com.reedelk.plugin.service.module.impl.completion;
 
 import com.reedelk.module.descriptor.model.AutocompleteItemDescriptor;
 import com.reedelk.module.descriptor.model.AutocompleteTypeDescriptor;
-import com.reedelk.runtime.api.autocomplete.AutocompleteType;
+import com.reedelk.runtime.api.autocomplete.AutocompleteItemType;
 
 public class SampleSuggestions {
 
@@ -25,7 +25,7 @@ public class SampleSuggestions {
             .token("tmpdir")
             .returnType("String")
             .replaceValue("tmpdir()")
-            .itemType(AutocompleteType.FUNCTION)
+            .itemType(AutocompleteItemType.FUNCTION)
             .build();
     public static final Suggestion TMP_DIR = Suggestion.create(TMP_DIR_ITEM);
 
@@ -34,7 +34,7 @@ public class SampleSuggestions {
             .token("uuid")
             .returnType("String")
             .replaceValue("uuid()")
-            .itemType(AutocompleteType.FUNCTION)
+            .itemType(AutocompleteItemType.FUNCTION)
             .build();
     public static final Suggestion UUID = Suggestion.create(UUID_ITEM);
 

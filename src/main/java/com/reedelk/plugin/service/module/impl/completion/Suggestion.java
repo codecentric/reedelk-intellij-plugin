@@ -3,7 +3,7 @@ package com.reedelk.plugin.service.module.impl.completion;
 import com.reedelk.module.descriptor.model.AutocompleteItemDescriptor;
 import com.reedelk.module.descriptor.model.AutocompleteTypeDescriptor;
 import com.reedelk.module.descriptor.model.AutocompleteVariableDescriptor;
-import com.reedelk.runtime.api.autocomplete.AutocompleteType;
+import com.reedelk.runtime.api.autocomplete.AutocompleteItemType;
 
 
 public class Suggestion {
@@ -15,7 +15,7 @@ public class Suggestion {
 
     private final boolean isGlobal;
     private final int cursorOffset;
-    private AutocompleteType itemType;
+    private AutocompleteItemType itemType;
 
     public static Suggestion create(AutocompleteTypeDescriptor descriptor) {
         return new Suggestion(
@@ -25,7 +25,7 @@ public class Suggestion {
                 descriptor.getType(),
                 descriptor.getType(),
                 0,
-                AutocompleteType.VARIABLE);
+                AutocompleteItemType.VARIABLE);
     }
 
     public static Suggestion create(AutocompleteItemDescriptor descriptor) {
@@ -47,10 +47,10 @@ public class Suggestion {
                 descriptor.getType(),
                 descriptor.getName(),
                 0,
-                AutocompleteType.VARIABLE);
+                AutocompleteItemType.VARIABLE);
     }
 
-    private Suggestion(boolean isGlobal, String token, String type, String returnType, String replaceValue, int cursorOffset, AutocompleteType itemType) {
+    private Suggestion(boolean isGlobal, String token, String type, String returnType, String replaceValue, int cursorOffset, AutocompleteItemType itemType) {
         this.type = type;
         this.token = token;
         this.isGlobal = isGlobal;
@@ -84,7 +84,7 @@ public class Suggestion {
         return cursorOffset;
     }
 
-    public AutocompleteType getItemType() {
+    public AutocompleteItemType getItemType() {
         return itemType;
     }
 }

@@ -2,7 +2,7 @@ package com.reedelk.plugin.service.module.impl.completion;
 
 import com.reedelk.module.descriptor.model.AutocompleteItemDescriptor;
 import com.reedelk.plugin.assertion.PluginAssertion;
-import com.reedelk.runtime.api.autocomplete.AutocompleteType;
+import com.reedelk.runtime.api.autocomplete.AutocompleteItemType;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -31,7 +31,7 @@ class TrieTest {
                 .token("text")
                 .returnType("MyType")
                 .replaceValue("text()")
-                .itemType(AutocompleteType.VARIABLE)
+                .itemType(AutocompleteItemType.VARIABLE)
                 .build();
         Suggestion suggestion1 = Suggestion.create(item1);
 
@@ -40,7 +40,7 @@ class TrieTest {
                 .token("textWithMimeType")
                 .returnType("MyType")
                 .replaceValue("textWithMimeType()")
-                .itemType(AutocompleteType.VARIABLE)
+                .itemType(AutocompleteItemType.VARIABLE)
                 .build();
         Suggestion suggestion2 = Suggestion.create(item2);
 

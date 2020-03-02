@@ -11,7 +11,7 @@ import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.testutils.ObjectFactories;
-import com.reedelk.runtime.api.autocomplete.AutocompleteType;
+import com.reedelk.runtime.api.autocomplete.AutocompleteItemType;
 import com.reedelk.runtime.api.script.dynamicvalue.DynamicString;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -76,7 +76,7 @@ class CompletionServiceImplTest {
 
         // Then
         PluginAssertion.assertThat(suggestions)
-                .contains("message", AutocompleteType.VARIABLE)
+                .contains("message", AutocompleteItemType.VARIABLE)
                 .hasSize(1);
     }
 
@@ -107,8 +107,8 @@ class CompletionServiceImplTest {
         // Then
         PluginAssertion.assertThat(suggestions)
                 .hasSize(2)
-                .contains("var1", AutocompleteType.VARIABLE)
-                .contains("var2", AutocompleteType.VARIABLE);
+                .contains("var1", AutocompleteItemType.VARIABLE)
+                .contains("var2", AutocompleteItemType.VARIABLE);
     }
 
     @Test
