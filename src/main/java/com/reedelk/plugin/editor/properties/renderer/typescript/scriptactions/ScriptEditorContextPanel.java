@@ -92,7 +92,7 @@ class ScriptEditorContextPanel extends DisposablePanel implements CompletionServ
 
     static class ContextVariableLabel extends JLabel {
         ContextVariableLabel(Suggestion suggestion) {
-            super(message("script.editor.context.vars.html.template", suggestion.getReplaceValue(), suggestion.getReturnType()));
+            super(message("script.editor.context.vars.html.template", suggestion.getSignature(), suggestion.getReturnType()));
             setIcon(suggestion.getItemType() == AutocompleteItemType.FUNCTION ? Function : Variable);
             setBorder(emptyTop(4));
         }

@@ -30,7 +30,7 @@ class TrieTest {
                 .type("MyType")
                 .token("text")
                 .returnType("MyType")
-                .replaceValue("text()")
+                .signature("text()")
                 .itemType(AutocompleteItemType.VARIABLE)
                 .build();
         Suggestion suggestion1 = Suggestion.create(item1);
@@ -39,7 +39,7 @@ class TrieTest {
                 .type("MyType")
                 .token("textWithMimeType")
                 .returnType("MyType")
-                .replaceValue("textWithMimeType()")
+                .signature("textWithMimeType()")
                 .itemType(AutocompleteItemType.VARIABLE)
                 .build();
         Suggestion suggestion2 = Suggestion.create(item2);

@@ -4,14 +4,15 @@ import com.reedelk.module.descriptor.model.AutocompleteItemDescriptor;
 import com.reedelk.module.descriptor.model.AutocompleteTypeDescriptor;
 import com.reedelk.module.descriptor.model.AutocompleteVariableDescriptor;
 import com.reedelk.runtime.api.autocomplete.AutocompleteItemType;
+import com.reedelk.runtime.api.commons.StringUtils;
 
 
 public class Suggestion {
 
-    private final String token;
     private final String type;
+    private final String token;
+    private final String signature;
     private final String returnType;
-    private final String replaceValue;
 
     private final boolean isGlobal;
     private final int cursorOffset;
@@ -31,10 +32,10 @@ public class Suggestion {
     public static Suggestion create(AutocompleteItemDescriptor descriptor) {
         return new Suggestion(
                 false,
-                descriptor.getToken(),
+                descriptor.getToken() + (descriptor.getItemType() == AutocompleteItemType.FUNCTION ? "()" : StringUtils.EMPTY),
                 descriptor.getType(),
                 descriptor.getReturnType(),
-                descriptor.getReplaceValue(),
+                descriptor.getSignature(),
                 descriptor.getCursorOffset(),
                 descriptor.getItemType());
     }
@@ -50,34 +51,34 @@ public class Suggestion {
                 AutocompleteItemType.VARIABLE);
     }
 
-    private Suggestion(boolean isGlobal, String token, String type, String returnType, String replaceValue, int cursorOffset, AutocompleteItemType itemType) {
+    private Suggestion(boolean isGlobal, String token, String type, String returnType, String signature, int cursorOffset, AutocompleteItemType itemType) {
         this.type = type;
         this.token = token;
         this.isGlobal = isGlobal;
         this.itemType = itemType;
+        this.signature = signature;
         this.returnType = returnType;
-        this.replaceValue = replaceValue;
         this.cursorOffset = cursorOffset;
-    }
-
-    public boolean isGlobal() {
-        return isGlobal;
-    }
-
-    public String getToken() {
-        return token;
     }
 
     public String getType() {
         return type;
     }
 
-    public String getReturnType() {
-        return returnType;
+    public String getToken() {
+        return token;
     }
 
-    public String getReplaceValue() {
-        return replaceValue;
+    public boolean isGlobal() {
+        return isGlobal;
+    }
+
+    public String getSignature() {
+        return signature;
+    }
+
+    public String getReturnType() {
+        return returnType;
     }
 
     public int getCursorOffset() {

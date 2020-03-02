@@ -24,7 +24,7 @@ public class SampleSuggestions {
             .type("Util")
             .token("tmpdir")
             .returnType("String")
-            .replaceValue("tmpdir()")
+            .signature("tmpdir()")
             .itemType(AutocompleteItemType.FUNCTION)
             .build();
     public static final Suggestion TMP_DIR = Suggestion.create(TMP_DIR_ITEM);
@@ -33,7 +33,7 @@ public class SampleSuggestions {
             .type("Util")
             .token("uuid")
             .returnType("String")
-            .replaceValue("uuid()")
+            .signature("uuid()")
             .itemType(AutocompleteItemType.FUNCTION)
             .build();
     public static final Suggestion UUID = Suggestion.create(UUID_ITEM);

@@ -55,7 +55,8 @@ abstract class AbstractCompletionProvider extends CompletionProvider<CompletionP
             List<Suggestion> suggestions = instance.autocompleteSuggestionOf(componentFullyQualifiedName, token);
             suggestions.forEach(suggestion -> {
 
-                final LookupElementBuilder lookupBuilder = LookupElementBuilder.create(suggestion.getReplaceValue())
+                final LookupElementBuilder lookupBuilder = LookupElementBuilder.create(suggestion.getToken())
+                        .withPresentableText(suggestion.getSignature())
                         .withTypeText(suggestion.getReturnType())
                         .withIcon(suggestion.getItemType() == AutocompleteItemType.FUNCTION ? Method : Variable);
 
