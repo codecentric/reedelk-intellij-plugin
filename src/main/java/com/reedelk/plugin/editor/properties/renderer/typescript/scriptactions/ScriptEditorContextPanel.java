@@ -8,7 +8,7 @@ import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.impl.completion.Suggestion;
 import com.reedelk.plugin.topic.ReedelkTopics;
-import com.reedelk.runtime.api.autocomplete.AutocompleteItemType;
+import com.reedelk.runtime.api.autocomplete.AutocompleteType;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -93,7 +93,7 @@ class ScriptEditorContextPanel extends DisposablePanel implements CompletionServ
     static class ContextVariableLabel extends JLabel {
         ContextVariableLabel(Suggestion suggestion) {
             super(message("script.editor.context.vars.html.template", suggestion.getReplaceValue(), suggestion.getReturnType()));
-            setIcon(suggestion.getItemType() == AutocompleteItemType.FUNCTION ? Function : Variable);
+            setIcon(suggestion.getItemType() == AutocompleteType.FUNCTION ? Function : Variable);
             setBorder(emptyTop(4));
         }
     }

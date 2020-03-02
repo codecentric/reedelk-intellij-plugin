@@ -94,6 +94,13 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
         moduleSuggestions = new SuggestionTree(typeTriesMap);
         componentQualifiedNameSuggestionsMap.clear();
 
+        // Add all autocomplete types registered by the module
+        descriptors.stream()
+                .map(ModuleDescriptor::getAutocompleteTypes)
+                .map(typeDescriptors -> typeDescriptors.stream()
+                        .map(Suggestion::create)
+                        .collect(toList()))
+                .forEach(moduleSuggestions::add);
 
         // Add all autocomplete items registered by the module.
         descriptors.stream()

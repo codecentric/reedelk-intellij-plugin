@@ -1,8 +1,9 @@
 package com.reedelk.plugin.service.module.impl.completion;
 
 import com.reedelk.module.descriptor.model.AutocompleteItemDescriptor;
+import com.reedelk.module.descriptor.model.AutocompleteTypeDescriptor;
 import com.reedelk.module.descriptor.model.AutocompleteVariableDescriptor;
-import com.reedelk.runtime.api.autocomplete.AutocompleteItemType;
+import com.reedelk.runtime.api.autocomplete.AutocompleteType;
 
 
 public class Suggestion {
@@ -14,11 +15,22 @@ public class Suggestion {
 
     private final boolean isGlobal;
     private final int cursorOffset;
-    private AutocompleteItemType itemType;
+    private AutocompleteType itemType;
+
+    public static Suggestion create(AutocompleteTypeDescriptor descriptor) {
+        return new Suggestion(
+                descriptor.isGlobal(),
+                descriptor.getType(),
+                descriptor.getType(),
+                descriptor.getType(),
+                descriptor.getType(),
+                0,
+                AutocompleteType.VARIABLE);
+    }
 
     public static Suggestion create(AutocompleteItemDescriptor descriptor) {
         return new Suggestion(
-                descriptor.isGlobal(),
+                false,
                 descriptor.getToken(),
                 descriptor.getType(),
                 descriptor.getReturnType(),
@@ -35,10 +47,10 @@ public class Suggestion {
                 descriptor.getType(),
                 descriptor.getName(),
                 0,
-                AutocompleteItemType.VARIABLE);
+                AutocompleteType.VARIABLE);
     }
 
-    private Suggestion(boolean isGlobal, String token, String type, String returnType, String replaceValue, int cursorOffset, AutocompleteItemType itemType) {
+    private Suggestion(boolean isGlobal, String token, String type, String returnType, String replaceValue, int cursorOffset, AutocompleteType itemType) {
         this.type = type;
         this.token = token;
         this.isGlobal = isGlobal;
@@ -72,7 +84,7 @@ public class Suggestion {
         return cursorOffset;
     }
 
-    public AutocompleteItemType getItemType() {
+    public AutocompleteType getItemType() {
         return itemType;
     }
 }

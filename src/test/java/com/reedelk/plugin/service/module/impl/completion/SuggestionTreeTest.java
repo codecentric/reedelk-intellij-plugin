@@ -1,8 +1,6 @@
 package com.reedelk.plugin.service.module.impl.completion;
 
-import com.reedelk.module.descriptor.model.AutocompleteItemDescriptor;
 import com.reedelk.plugin.assertion.PluginAssertion;
-import com.reedelk.runtime.api.autocomplete.AutocompleteItemType;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -74,19 +72,43 @@ class SuggestionTreeTest {
     }
 
     @Test
+    void shouldReturnMultipleSuggestion() {
+        // Given
+        SuggestionTree suggestionTree = new SuggestionTree(new HashMap<>());
+        List<Suggestion> autocompleteItems = asList(SampleSuggestions.UTIL, SampleSuggestions.TMP_DIR, SampleSuggestions.UUID);
+        suggestionTree.add(autocompleteItems);
+
+        // When
+        List<Suggestion> autocomplete = suggestionTree.autocomplete("Util.");
+
+        // Then
+        PluginAssertion.assertThat(autocomplete)
+                .hasSize(2)
+                .contains(SampleSuggestions.TMP_DIR)
+                .contains(SampleSuggestions.UUID);
+    }
+
+    @Test
+    void shouldReturnCorrectSuggestion() {
+        // Given
+        SuggestionTree suggestionTree = new SuggestionTree(new HashMap<>());
+        List<Suggestion> autocompleteItems = asList(SampleSuggestions.UTIL, SampleSuggestions.TMP_DIR, SampleSuggestions.UUID);
+        suggestionTree.add(autocompleteItems);
+
+        // When
+        List<Suggestion> autocomplete = suggestionTree.autocomplete("Util.u");
+
+        // Then
+        PluginAssertion.assertThat(autocomplete)
+                .hasSize(1)
+                .contains(SampleSuggestions.UUID);
+    }
+
+    @Test
     void shouldReturnEmptySuggestions() {
         // Given
-        AutocompleteItemDescriptor tmpDirItem = AutocompleteItemDescriptor.create()
-                .type("Util")
-                .token("tmpdir")
-                .returnType("String")
-                .replaceValue("tmpdir()")
-                .itemType(AutocompleteItemType.FUNCTION)
-                .build();
-        Suggestion tmpDir = Suggestion.create(tmpDirItem);
-
         SuggestionTree suggestionTree = new SuggestionTree(new HashMap<>());
-        List<Suggestion> autocompleteItems = asList(SampleSuggestions.UTIL, tmpDir);
+        List<Suggestion> autocompleteItems = asList(SampleSuggestions.UTIL, SampleSuggestions.TMP_DIR);
         suggestionTree.add(autocompleteItems);
 
         // When
