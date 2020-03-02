@@ -11,25 +11,21 @@ import static com.reedelk.runtime.commons.JsonParser.Implementor;
 
 public class PlaceholderDeserializer extends AbstractNodeDeserializer {
 
-    public PlaceholderDeserializer(FlowGraph graph, DeserializerContext context) {
-        super(graph, context);
+    public PlaceholderDeserializer(FlowGraph graph, GraphNode current, DeserializerContext context) {
+        super(graph, current, context);
     }
 
     @Override
     public GraphNode deserialize(GraphNode parent, JSONObject jsonDefinition) {
 
-        String name = Implementor.name(jsonDefinition);
-
-        GraphNode placeholderNode = context.instantiateGraphNode(name);
-
-        ComponentData componentData = placeholderNode.componentData();
+        ComponentData componentData = current.componentData();
 
         if (jsonDefinition.has(Implementor.description())) {
             componentData.set(Implementor.description(), Implementor.description(jsonDefinition));
         }
 
-        graph.add(parent, placeholderNode);
+        graph.add(parent, current);
 
-        return placeholderNode;
+        return current;
     }
 }

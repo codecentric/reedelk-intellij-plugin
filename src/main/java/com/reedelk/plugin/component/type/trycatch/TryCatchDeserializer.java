@@ -16,8 +16,8 @@ import static com.reedelk.runtime.commons.JsonParser.TryCatch;
 
 public class TryCatchDeserializer extends AbstractNodeDeserializer {
 
-    public TryCatchDeserializer(FlowGraph graph, DeserializerContext context) {
-        super(graph, context);
+    public TryCatchDeserializer(FlowGraph graph, GraphNode current, DeserializerContext context) {
+        super(graph, current, context);
     }
 
     @Override

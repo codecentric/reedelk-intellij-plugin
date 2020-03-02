@@ -196,6 +196,15 @@ public class Json {
         }
     }
 
+    public enum Unknown implements DataProvider {
+        Sample() {
+            @Override
+            public String path() {
+                return "flow/unknown_sample.json";
+            }
+        }
+    }
+
     public enum FlowReference implements DataProvider {
         Sample() {
             @Override

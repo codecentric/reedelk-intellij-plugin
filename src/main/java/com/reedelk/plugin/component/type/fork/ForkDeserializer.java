@@ -12,12 +12,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import static com.reedelk.runtime.commons.JsonParser.Fork;
-import static com.reedelk.runtime.commons.JsonParser.Implementor;
 
 public class ForkDeserializer extends AbstractNodeDeserializer {
 
-    public ForkDeserializer(FlowGraph graph, DeserializerContext context) {
-        super(graph, context);
+    public ForkDeserializer(FlowGraph graph, GraphNode current, DeserializerContext context) {
+        super(graph, current, context);
     }
 
     @Override
@@ -25,9 +24,7 @@ public class ForkDeserializer extends AbstractNodeDeserializer {
 
         StopNode stopNode = context.instantiateGraphNode(Stop.class.getName());
 
-        String name = Implementor.name(componentDefinition);
-
-        ForkNode forkNode = context.instantiateGraphNode(name);
+        ForkNode forkNode = (ForkNode) current;
 
         graph.add(parent, forkNode);
 

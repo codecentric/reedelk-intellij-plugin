@@ -8,28 +8,22 @@ import com.reedelk.plugin.graph.deserializer.DeserializerContext;
 import com.reedelk.plugin.graph.node.GraphNode;
 import org.json.JSONObject;
 
-import static com.reedelk.runtime.commons.JsonParser.Implementor;
-
 public class GenericComponentDeserializer extends AbstractNodeDeserializer {
 
-    public GenericComponentDeserializer(FlowGraph graph, DeserializerContext context) {
-        super(graph, context);
+    public GenericComponentDeserializer(FlowGraph graph, GraphNode current, DeserializerContext context) {
+        super(graph, current, context);
     }
 
     @Override
     public GraphNode deserialize(GraphNode parent, JSONObject jsonDefinition) {
-        String name = Implementor.name(jsonDefinition);
 
-        // The following graph node instance, might be generic component or unknown node.
-        GraphNode node = context.instantiateGraphNode(name);
-
-        ComponentData componentData = node.componentData();
+        ComponentData componentData = current.componentData();
 
         componentData.getPropertiesDescriptors().forEach(descriptor ->
                 ComponentDataHolderDeserializer.deserialize(jsonDefinition, componentData, descriptor));
 
-        graph.add(parent, node);
+        graph.add(parent, current);
 
-        return node;
+        return current;
     }
 }

@@ -16,7 +16,7 @@ class ForkDeserializerTest extends AbstractNodeDeserializerTest {
     @BeforeEach
     protected void setUp() {
         super.setUp();
-        deserializer = new ForkDeserializer(graph, context);
+        deserializer = new ForkDeserializer(graph, forkNode1, context);
     }
 
     @Test

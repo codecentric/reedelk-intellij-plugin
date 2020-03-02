@@ -7,7 +7,6 @@ import com.reedelk.plugin.fixture.ComponentNode1;
 import com.reedelk.plugin.graph.deserializer.AbstractNodeDeserializerTest;
 import com.reedelk.plugin.graph.node.GraphNode;
 import org.json.JSONObject;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -22,14 +21,6 @@ import static com.reedelk.plugin.fixture.Json.GenericComponent;
 import static java.util.Arrays.asList;
 
 class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
-
-    private GenericComponentDeserializer deserializer;
-
-    @BeforeEach
-    protected void setUp() {
-        super.setUp();
-        deserializer = new GenericComponentDeserializer(graph, context);
-    }
 
     @Nested
     @DisplayName("Component primitives types are de-serialized correctly")
@@ -63,6 +54,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
             JSONObject genericComponentDefinition = new JSONObject(GenericComponent.Primitives.json());
 
             // When
+            GenericComponentDeserializer deserializer = new GenericComponentDeserializer(graph, node, context);
             GraphNode lastNode = deserializer.deserialize(root, genericComponentDefinition);
 
             // Then
@@ -104,6 +96,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
             JSONObject genericComponentDefinition = new JSONObject(GenericComponent.WithTypeObject.json());
 
             // When
+            GenericComponentDeserializer deserializer = new GenericComponentDeserializer(graph, node, context);
             GraphNode lastNode = deserializer.deserialize(root, genericComponentDefinition);
 
             // Then
@@ -131,6 +124,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
             JSONObject genericComponentDefinition = new JSONObject(GenericComponent.WithTypeObjectReference.json());
 
             // When
+            GenericComponentDeserializer deserializer = new GenericComponentDeserializer(graph, node, context);
             GraphNode lastNode = deserializer.deserialize(root, genericComponentDefinition);
 
             // Then
@@ -158,6 +152,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
             JSONObject genericComponentDefinition = new JSONObject(GenericComponent.WithTypeObjectEmpty.json());
 
             // When
+            GenericComponentDeserializer deserializer = new GenericComponentDeserializer(graph, node, context);
             GraphNode lastNode = deserializer.deserialize(root, genericComponentDefinition);
 
             // Then
@@ -185,6 +180,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
             JSONObject genericComponentDefinition = new JSONObject(GenericComponent.WithTypeObjectReferenceNotPresent.json());
 
             // When
+            GenericComponentDeserializer deserializer = new GenericComponentDeserializer(graph, node, context);
             GraphNode lastNode = deserializer.deserialize(root, genericComponentDefinition);
 
             // Then
@@ -212,6 +208,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
             JSONObject genericComponentDefinition = new JSONObject(GenericComponent.WithTypeObjectMissing.json());
 
             // When
+            GenericComponentDeserializer deserializer = new GenericComponentDeserializer(graph, node, context);
             GraphNode lastNode = deserializer.deserialize(root, genericComponentDefinition);
 
             // Then
@@ -243,6 +240,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
             JSONObject genericComponentDefinition = new JSONObject(GenericComponent.WithNotEmptyMapProperty.json());
 
             // When
+            GenericComponentDeserializer deserializer = new GenericComponentDeserializer(graph, node, context);
             GraphNode lastNode = deserializer.deserialize(root, genericComponentDefinition);
 
             // Then
@@ -273,6 +271,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
             JSONObject genericComponentDefinition = new JSONObject(GenericComponent.WithScriptProperty.json());
 
             // When
+            GenericComponentDeserializer deserializer = new GenericComponentDeserializer(graph, node, context);
             GraphNode lastNode = deserializer.deserialize(root, genericComponentDefinition);
 
             // Then
@@ -303,6 +302,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
             JSONObject genericComponentDefinition = new JSONObject(GenericComponent.WithComboProperty.json());
 
             // When
+            GenericComponentDeserializer deserializer = new GenericComponentDeserializer(graph, node, context);
             GraphNode lastNode = deserializer.deserialize(root, genericComponentDefinition);
 
             // Then
@@ -333,6 +333,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
             JSONObject genericComponentDefinition = new JSONObject(GenericComponent.WithResourceProperty.json());
 
             // When
+            GenericComponentDeserializer deserializer = new GenericComponentDeserializer(graph, node, context);
             GraphNode lastNode = deserializer.deserialize(root, genericComponentDefinition);
 
             // Then
@@ -363,6 +364,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
             JSONObject genericComponentDefinition = new JSONObject(GenericComponent.WithEnumProperty.json());
 
             // When
+            GenericComponentDeserializer deserializer = new GenericComponentDeserializer(graph, node, context);
             GraphNode lastNode = deserializer.deserialize(root, genericComponentDefinition);
 
             // Then
@@ -404,6 +406,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
             JSONObject genericComponentDefinition = new JSONObject(GenericComponent.DynamicTypes.json());
 
             // When
+            GenericComponentDeserializer deserializer = new GenericComponentDeserializer(graph, node, context);
             GraphNode lastNode = deserializer.deserialize(root, genericComponentDefinition);
 
             // Then
@@ -432,6 +435,7 @@ class GenericComponentDeserializerTest extends AbstractNodeDeserializerTest {
             JSONObject genericComponentDefinition = new JSONObject(GenericComponent.DynamicTypesWithScript.json());
 
             // When
+            GenericComponentDeserializer deserializer = new GenericComponentDeserializer(graph, node, context);
             GraphNode lastNode = deserializer.deserialize(root, genericComponentDefinition);
 
             // Then

@@ -24,8 +24,8 @@ import static com.reedelk.runtime.commons.JsonParser.Router;
 
 public class RouterDeserializer extends AbstractNodeDeserializer {
 
-    public RouterDeserializer(FlowGraph graph, DeserializerContext context) {
-        super(graph, context);
+    public RouterDeserializer(FlowGraph graph, GraphNode current, DeserializerContext context) {
+        super(graph, current, context);
     }
 
     @Override
@@ -33,9 +33,7 @@ public class RouterDeserializer extends AbstractNodeDeserializer {
 
         StopNode stopNode = context.instantiateGraphNode(Stop.class.getName());
 
-        String name = Implementor.name(componentDefinition);
-
-        RouterNode routerNode = context.instantiateGraphNode(name);
+        RouterNode routerNode = (RouterNode) current;
 
         Map<GraphNode, String> nodeAndConditionMap = new LinkedHashMap<>();
 

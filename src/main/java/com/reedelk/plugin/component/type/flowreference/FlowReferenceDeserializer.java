@@ -12,16 +12,14 @@ import static com.reedelk.runtime.commons.JsonParser.Implementor;
 
 public class FlowReferenceDeserializer extends AbstractNodeDeserializer {
 
-    public FlowReferenceDeserializer(FlowGraph graph, DeserializerContext context) {
-        super(graph, context);
+    public FlowReferenceDeserializer(FlowGraph graph, GraphNode current, DeserializerContext context) {
+        super(graph, current, context);
     }
 
     @Override
     public GraphNode deserialize(GraphNode parent, JSONObject componentDefinition) {
 
-        String name = Implementor.name(componentDefinition);
-
-        FlowReferenceNode node = context.instantiateGraphNode(name);
+        FlowReferenceNode node = (FlowReferenceNode) current;
 
         ComponentData componentData = node.componentData();
 

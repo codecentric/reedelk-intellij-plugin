@@ -1,18 +1,25 @@
 package com.reedelk.plugin.graph.deserializer;
 
 import com.reedelk.plugin.component.type.flowreference.FlowReferenceDeserializer;
+import com.reedelk.plugin.component.type.flowreference.FlowReferenceNode;
 import com.reedelk.plugin.component.type.fork.ForkDeserializer;
+import com.reedelk.plugin.component.type.fork.ForkNode;
 import com.reedelk.plugin.component.type.generic.GenericComponentDeserializer;
+import com.reedelk.plugin.component.type.generic.GenericComponentNode;
 import com.reedelk.plugin.component.type.placeholder.PlaceholderDeserializer;
+import com.reedelk.plugin.component.type.placeholder.PlaceholderNode;
 import com.reedelk.plugin.component.type.router.RouterDeserializer;
+import com.reedelk.plugin.component.type.router.RouterNode;
 import com.reedelk.plugin.component.type.stop.StopDeserializer;
+import com.reedelk.plugin.component.type.stop.StopNode;
 import com.reedelk.plugin.component.type.trycatch.TryCatchDeserializer;
-import com.reedelk.plugin.component.type.unknown.Unknown;
+import com.reedelk.plugin.component.type.trycatch.TryCatchNode;
 import com.reedelk.plugin.component.type.unknown.UnknownDeserializer;
+import com.reedelk.plugin.component.type.unknown.UnknownNode;
+import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.graph.FlowGraph;
+import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.runtime.api.exception.ESBException;
-import com.reedelk.runtime.commons.JsonParser;
-import com.reedelk.runtime.component.*;
 import org.json.JSONObject;
 
 import java.lang.reflect.InvocationTargetException;
@@ -21,6 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.reedelk.runtime.api.commons.Preconditions.checkState;
+import static com.reedelk.runtime.commons.JsonParser.Implementor;
 
 public class DeserializerFactory {
 
@@ -28,20 +36,20 @@ public class DeserializerFactory {
     private DeserializerContext context;
     private JSONObject componentDefinition;
 
-    private static final Class<? extends Deserializer> GENERIC_DESERIALIZER = GenericComponentDeserializer.class;
-    private static final Map<String, Class<? extends Deserializer>> COMPONENT_DESERIALIZER_MAP;
-
+    private static final Map<Class<?>, Class<? extends Deserializer>> COMPONENT_DESERIALIZER_MAP;
     static {
-        Map<String, Class<? extends Deserializer>> tmp = new HashMap<>();
-        tmp.put(Stop.class.getName(), StopDeserializer.class);
-        tmp.put(Fork.class.getName(), ForkDeserializer.class);
-        tmp.put(Router.class.getName(), RouterDeserializer.class);
-        tmp.put(Unknown.class.getName(), UnknownDeserializer.class);
-        tmp.put(TryCatch.class.getName(), TryCatchDeserializer.class);
-        tmp.put(Placeholder.class.getName(), PlaceholderDeserializer.class);
-        tmp.put(FlowReference.class.getName(), FlowReferenceDeserializer.class);
+        Map<Class<?>, Class<? extends Deserializer>> tmp = new HashMap<>();
+        tmp.put(StopNode.class, StopDeserializer.class);
+        tmp.put(ForkNode.class, ForkDeserializer.class);
+        tmp.put(RouterNode.class, RouterDeserializer.class);
+        tmp.put(UnknownNode.class, UnknownDeserializer.class);
+        tmp.put(TryCatchNode.class, TryCatchDeserializer.class);
+        tmp.put(PlaceholderNode.class, PlaceholderDeserializer.class);
+        tmp.put(FlowReferenceNode.class, FlowReferenceDeserializer.class);
+        tmp.put(GenericComponentNode.class, GenericComponentDeserializer.class);
         COMPONENT_DESERIALIZER_MAP = Collections.unmodifiableMap(tmp);
     }
+
 
     private DeserializerFactory() {
     }
@@ -70,18 +78,31 @@ public class DeserializerFactory {
         checkState(context != null, "context must not be null");
         checkState(componentDefinition != null, "component definition must not be null");
 
-        String componentName = JsonParser.Implementor.name(componentDefinition);
-        Class<? extends Deserializer> deserializerClazz = COMPONENT_DESERIALIZER_MAP.getOrDefault(componentName, GENERIC_DESERIALIZER);
-        return instantiate(deserializerClazz);
+        String componentName = Implementor.name(componentDefinition);
+
+        GraphNode current = context.instantiateGraphNode(componentName);
+
+        Class<? extends Deserializer> deserializerClazz = deserializerOf(current);
+
+        return instantiate(deserializerClazz, current);
     }
 
-    private Deserializer instantiate(Class<? extends Deserializer> deserializerClazz) {
+    private Deserializer instantiate(Class<? extends Deserializer> deserializerClazz, GraphNode current) {
         try {
             return deserializerClazz
-                    .getDeclaredConstructor(FlowGraph.class, DeserializerContext.class)
-                    .newInstance(graph, context);
+                    .getDeclaredConstructor(FlowGraph.class, GraphNode.class, DeserializerContext.class)
+                    .newInstance(graph, current, context);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new ESBException(e);
         }
+    }
+
+    private static Class<? extends Deserializer> deserializerOf(GraphNode current) {
+        Class<?> nodeClass = COMPONENT_DESERIALIZER_MAP.keySet()
+                .stream()
+                .filter(aClass -> aClass.isAssignableFrom(current.getClass()))
+                .findFirst()
+                .orElseThrow(() -> new PluginException("Deserializer for graph node=[" + current.getClass() + "] not found."));
+        return COMPONENT_DESERIALIZER_MAP.get(nodeClass);
     }
 }

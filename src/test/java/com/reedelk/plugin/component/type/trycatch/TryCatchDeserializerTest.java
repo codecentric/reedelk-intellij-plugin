@@ -16,7 +16,7 @@ class TryCatchDeserializerTest extends AbstractNodeDeserializerTest {
     @BeforeEach
     protected void setUp() {
         super.setUp();
-        deserializer = new TryCatchDeserializer(graph, context);
+        deserializer = new TryCatchDeserializer(graph, tryCatchNode1, context);
     }
 
     @Test

@@ -16,7 +16,7 @@ class FlowReferenceDeserializerTest extends AbstractNodeDeserializerTest {
     @BeforeEach
     protected void setUp() {
         super.setUp();
-        deserializer = new FlowReferenceDeserializer(graph, context);
+        deserializer = new FlowReferenceDeserializer(graph, flowReferenceNode1, context);
     }
 
     @Test

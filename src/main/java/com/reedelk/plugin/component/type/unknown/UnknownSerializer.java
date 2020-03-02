@@ -7,6 +7,8 @@ import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.serializer.AbstractNodeSerializer;
 import org.json.JSONObject;
 
+import static com.reedelk.runtime.commons.JsonParser.Implementor;
+
 public class UnknownSerializer extends AbstractNodeSerializer {
 
     /**
@@ -18,13 +20,20 @@ public class UnknownSerializer extends AbstractNodeSerializer {
 
         JSONObject componentAsJson = JsonObjectFactory.newJSONObject();
 
-        componentData.getDataProperties().forEach(propertyName -> {
 
-            Object data = componentData.get(propertyName);
+        Implementor.name(componentData.get(Implementor.name()), componentAsJson);
 
-            componentAsJson.put(propertyName, data);
+        componentData
+                .getDataProperties()
+                .stream()
+                .filter(propertyName -> !propertyName.equals(Implementor.name()))
+                .forEach(propertyName -> {
 
-        });
+                    Object data = componentData.get(propertyName);
+
+                    componentAsJson.put(propertyName, data);
+
+                });
 
         return componentAsJson;
     }

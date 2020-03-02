@@ -14,7 +14,7 @@ public class StopDeserializerTest extends AbstractNodeDeserializerTest {
     @BeforeEach
     protected void setUp() {
         super.setUp();
-        deserializer = new StopDeserializer(graph, context);
+        deserializer = new StopDeserializer(graph, stopNode1, context);
     }
 
     @Test

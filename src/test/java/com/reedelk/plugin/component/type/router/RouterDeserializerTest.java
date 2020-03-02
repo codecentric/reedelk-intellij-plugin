@@ -21,7 +21,7 @@ class RouterDeserializerTest extends AbstractNodeDeserializerTest {
     @BeforeEach
     protected void setUp() {
         super.setUp();
-        deserializer = new RouterDeserializer(graph, context);
+        deserializer = new RouterDeserializer(graph, routerNode1, context);
     }
 
     @Test
