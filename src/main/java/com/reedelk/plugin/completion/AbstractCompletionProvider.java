@@ -53,12 +53,13 @@ abstract class AbstractCompletionProvider extends CompletionProvider<CompletionP
 
             CompletionService instance = CompletionService.getInstance(module);
             List<Suggestion> suggestions = instance.autocompleteSuggestionOf(componentFullyQualifiedName, token);
-            suggestions.forEach(suggestion -> {
 
-                final LookupElementBuilder lookupBuilder = LookupElementBuilder.create(suggestion.getToken())
-                        .withPresentableText(suggestion.getSignature())
-                        .withTypeText(suggestion.getReturnType())
-                        .withIcon(suggestion.getItemType() == AutocompleteItemType.FUNCTION ? Method : Variable);
+            suggestions.forEach(suggestion -> {
+                final LookupElementBuilder lookupBuilder =
+                        LookupElementBuilder.create(suggestion.getSuggestion())
+                                .withPresentableText(suggestion.getSignature())
+                                .withTypeText(suggestion.getReturnType())
+                                .withIcon(suggestion.getItemType() == AutocompleteItemType.FUNCTION ? Method : Variable);
 
                 // For some suggestions like for .put('') we must adjust the caret back by X positions.
                 // If the suggestion definition has defined an offset, then we add an insert handler

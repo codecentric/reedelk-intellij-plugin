@@ -4,7 +4,6 @@ import com.reedelk.module.descriptor.model.AutocompleteItemDescriptor;
 import com.reedelk.module.descriptor.model.AutocompleteTypeDescriptor;
 import com.reedelk.module.descriptor.model.AutocompleteVariableDescriptor;
 import com.reedelk.runtime.api.autocomplete.AutocompleteItemType;
-import com.reedelk.runtime.api.commons.StringUtils;
 
 
 public class Suggestion {
@@ -13,6 +12,7 @@ public class Suggestion {
     private final String token;
     private final String signature;
     private final String returnType;
+    private final String suggestion;
 
     private final boolean isGlobal;
     private final int cursorOffset;
@@ -32,7 +32,7 @@ public class Suggestion {
     public static Suggestion create(AutocompleteItemDescriptor descriptor) {
         return new Suggestion(
                 false,
-                descriptor.getToken() + (descriptor.getItemType() == AutocompleteItemType.FUNCTION ? "()" : StringUtils.EMPTY),
+                descriptor.getToken(),
                 descriptor.getType(),
                 descriptor.getReturnType(),
                 descriptor.getSignature(),
@@ -59,6 +59,7 @@ public class Suggestion {
         this.signature = signature;
         this.returnType = returnType;
         this.cursorOffset = cursorOffset;
+        this.suggestion = (itemType == AutocompleteItemType.FUNCTION ? token + "()" : token);
     }
 
     public String getType() {
@@ -79,6 +80,10 @@ public class Suggestion {
 
     public String getReturnType() {
         return returnType;
+    }
+
+    public String getSuggestion() {
+        return suggestion;
     }
 
     public int getCursorOffset() {
