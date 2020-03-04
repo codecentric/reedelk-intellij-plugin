@@ -3,6 +3,7 @@ package com.reedelk.plugin.editor.properties.renderer;
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.component.type.flowreference.FlowReferencePropertiesRenderer;
+import com.reedelk.plugin.component.type.foreach.ForEachPropertiesRenderer;
 import com.reedelk.plugin.component.type.fork.ForkPropertiesRenderer;
 import com.reedelk.plugin.component.type.generic.GenericComponentPropertiesRenderer;
 import com.reedelk.plugin.component.type.placeholder.PlaceholderPropertiesRenderer;
@@ -32,9 +33,10 @@ public class ComponentPropertiesRendererFactory {
         tmp.put(Stop.class.getName(), StopPropertiesRenderer.class);
         tmp.put(Fork.class.getName(), ForkPropertiesRenderer.class);
         tmp.put(Router.class.getName(), RouterPropertiesRenderer.class);
-        tmp.put(Unknown.class.getName(), UnknownComponentPropertiesRenderer.class);
+        tmp.put(ForEach.class.getName(), ForEachPropertiesRenderer.class);
         tmp.put(TryCatch.class.getName(), TryCatchPropertiesRenderer.class);
         tmp.put(Placeholder.class.getName(), PlaceholderPropertiesRenderer.class);
+        tmp.put(Unknown.class.getName(), UnknownComponentPropertiesRenderer.class);
         tmp.put(FlowReference.class.getName(), FlowReferencePropertiesRenderer.class);
         RENDERER = Collections.unmodifiableMap(tmp);
     }

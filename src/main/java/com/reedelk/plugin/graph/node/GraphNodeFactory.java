@@ -6,6 +6,7 @@ import com.reedelk.plugin.commons.ImplementsInterface;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.component.ComponentDescriptionDecorator;
 import com.reedelk.plugin.component.type.flowreference.FlowReferenceNode;
+import com.reedelk.plugin.component.type.foreach.ForEachNode;
 import com.reedelk.plugin.component.type.fork.ForkNode;
 import com.reedelk.plugin.component.type.generic.GenericComponentNode;
 import com.reedelk.plugin.component.type.placeholder.PlaceholderNode;
@@ -32,6 +33,7 @@ public class GraphNodeFactory {
         tmp.put(Fork.class.getName(), ForkNode.class);
         tmp.put(Router.class.getName(), RouterNode.class);
         tmp.put(Unknown.class.getName(), UnknownNode.class);
+        tmp.put(ForEach.class.getName(), ForEachNode.class);
         tmp.put(TryCatch.class.getName(), TryCatchNode.class);
         tmp.put(Placeholder.class.getName(), PlaceholderNode.class);
         tmp.put(FlowReference.class.getName(), FlowReferenceNode.class);

@@ -1,6 +1,7 @@
 package com.reedelk.plugin.graph.serializer;
 
 import com.reedelk.plugin.component.type.flowreference.FlowReferenceSerializer;
+import com.reedelk.plugin.component.type.foreach.ForEachSerializer;
 import com.reedelk.plugin.component.type.fork.ForkSerializer;
 import com.reedelk.plugin.component.type.generic.GenericComponentSerializer;
 import com.reedelk.plugin.component.type.placeholder.PlaceholderSerializer;
@@ -31,6 +32,7 @@ public class SerializerFactory {
         tmp.put(Fork.class.getName(), ForkSerializer.class);
         tmp.put(Router.class.getName(), RouterSerializer.class);
         tmp.put(Unknown.class.getName(), UnknownSerializer.class);
+        tmp.put(ForEach.class.getName(), ForEachSerializer.class);
         tmp.put(TryCatch.class.getName(), TryCatchSerializer.class);
         tmp.put(Placeholder.class.getName(), PlaceholderSerializer.class);
         tmp.put(FlowReference.class.getName(), FlowReferenceSerializer.class);

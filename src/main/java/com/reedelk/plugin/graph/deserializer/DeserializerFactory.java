@@ -2,6 +2,8 @@ package com.reedelk.plugin.graph.deserializer;
 
 import com.reedelk.plugin.component.type.flowreference.FlowReferenceDeserializer;
 import com.reedelk.plugin.component.type.flowreference.FlowReferenceNode;
+import com.reedelk.plugin.component.type.foreach.ForEachDeserializer;
+import com.reedelk.plugin.component.type.foreach.ForEachNode;
 import com.reedelk.plugin.component.type.fork.ForkDeserializer;
 import com.reedelk.plugin.component.type.fork.ForkNode;
 import com.reedelk.plugin.component.type.generic.GenericComponentDeserializer;
@@ -42,6 +44,7 @@ public class DeserializerFactory {
         tmp.put(StopNode.class, StopDeserializer.class);
         tmp.put(ForkNode.class, ForkDeserializer.class);
         tmp.put(RouterNode.class, RouterDeserializer.class);
+        tmp.put(ForEachNode.class, ForEachDeserializer.class);
         tmp.put(UnknownNode.class, UnknownDeserializer.class);
         tmp.put(TryCatchNode.class, TryCatchDeserializer.class);
         tmp.put(PlaceholderNode.class, PlaceholderDeserializer.class);
