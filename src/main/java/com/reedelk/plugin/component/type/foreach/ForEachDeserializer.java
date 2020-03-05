@@ -1,5 +1,7 @@
 package com.reedelk.plugin.component.type.foreach;
 
+import com.reedelk.plugin.component.ComponentData;
+import com.reedelk.plugin.component.deserializer.ComponentDataHolderDeserializer;
 import com.reedelk.plugin.component.type.stop.StopNode;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.deserializer.AbstractNodeDeserializer;
@@ -22,11 +24,16 @@ public class ForEachDeserializer extends AbstractNodeDeserializer {
     public GraphNode deserialize(GraphNode parent, JSONObject componentDefinition) {
         StopNode stopNode = context.instantiateGraphNode(Stop.class.getName());
 
+        ComponentData componentData = current.componentData();
+
+        componentData.getPropertiesDescriptors().forEach(descriptor ->
+                ComponentDataHolderDeserializer.deserialize(componentDefinition, componentData, descriptor));
+
         ForEachNode forEachNode = (ForEachNode) current;
 
         graph.add(parent, forEachNode);
 
-        JSONArray forEach = JsonParser.ForEach.doEach(componentDefinition);
+        JSONArray forEach = JsonParser.ForEach.next(componentDefinition);
 
         // If the for each does not contain any branch, we immediately stop.
         if (forEach.isEmpty()) {

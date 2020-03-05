@@ -2,6 +2,7 @@ package com.reedelk.plugin.component.type.foreach;
 
 import com.reedelk.plugin.commons.JsonObjectFactory;
 import com.reedelk.plugin.component.ComponentData;
+import com.reedelk.plugin.component.serializer.ComponentDataHolderSerializer;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
@@ -17,7 +18,6 @@ import static com.reedelk.runtime.commons.JsonParser.Implementor;
 
 public class ForEachSerializer extends AbstractScopedNodeSerializer {
 
-    // TODO: Verify this.
     @Override
     protected JSONObject serializeScopedNode(FlowGraph graph, ScopedGraphNode forEachNode, GraphNode stop) {
         ComponentData componentData = forEachNode.componentData();
@@ -25,6 +25,8 @@ public class ForEachSerializer extends AbstractScopedNodeSerializer {
         JSONObject forEachObject = JsonObjectFactory.newJSONObject();
 
         Implementor.name(componentData.getFullyQualifiedName(), forEachObject);
+
+        ComponentDataHolderSerializer.serialize(componentData, forEachObject);
 
         List<GraphNode> successorsOfForEach = graph.successors(forEachNode);
 
@@ -40,10 +42,10 @@ public class ForEachSerializer extends AbstractScopedNodeSerializer {
                     .build()
                     .serialize(graph, forEachArray, successor, stop);
 
-            ForEach.doEach(forEachArray, forEachObject);
+            ForEach.next(forEachArray, forEachObject);
         }
 
-        ForEach.doEach(forEachArray, forEachObject);
+        ForEach.next(forEachArray, forEachObject);
 
         return forEachObject;
     }

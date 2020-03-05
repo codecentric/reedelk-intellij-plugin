@@ -38,5 +38,4 @@ class ForkDeserializerTest extends AbstractNodeDeserializerTest {
                 .and().successorsOf(componentNode4).isOnly(stopNode1)
                 .and().nodesCountIs(7);
     }
-
 }
