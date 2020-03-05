@@ -5,6 +5,7 @@ import com.reedelk.module.descriptor.model.ComponentType;
 import com.reedelk.plugin.commons.FontInfoProvider;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.component.type.flowreference.FlowReferenceNode;
+import com.reedelk.plugin.component.type.foreach.ForEachNode;
 import com.reedelk.plugin.component.type.fork.ForkNode;
 import com.reedelk.plugin.component.type.generic.GenericComponentNode;
 import com.reedelk.plugin.component.type.placeholder.PlaceholderNode;
@@ -71,6 +72,9 @@ public abstract class AbstractGraphTest {
     protected ForkNode forkNode2;
     protected ForkNode forkNode3;
 
+    // For Each
+    protected ForEachNode forEachNode1;
+
     // Router
     protected RouterNode routerNode1;
     protected RouterNode routerNode2;
@@ -122,6 +126,8 @@ public abstract class AbstractGraphTest {
         forkNode2 = createGraphNodeInstance(Fork.class, ForkNode.class);
         forkNode3 = createGraphNodeInstance(Fork.class, ForkNode.class);
 
+        forEachNode1 = createGraphNodeInstance(ForEach.class, ForEachNode.class);
+
         routerNode1 = createGraphNodeInstance(Router.class, RouterNode.class);
         routerNode2 = createGraphNodeInstance(Router.class, RouterNode.class);
         routerNode3 = createGraphNodeInstance(Router.class, RouterNode.class);
@@ -153,7 +159,7 @@ public abstract class AbstractGraphTest {
     }
 
     protected static <T extends GraphNode> T createGraphNodeInstance(Class<T> graphNodeClazz, ComponentDescriptor descriptor) {
-        ComponentData componentData = new ComponentData(descriptor);
+        ComponentData componentData = spy(new ComponentData(descriptor));
         return spy(createGraphNodeInstance(graphNodeClazz, componentData));
     }
 

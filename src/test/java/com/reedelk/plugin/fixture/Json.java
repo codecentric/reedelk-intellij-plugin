@@ -178,6 +178,15 @@ public class Json {
         }
     }
 
+    public enum ForEach implements DataProvider {
+        Sample() {
+            @Override
+            public String path() {
+                return "flow/foreach_sample.json";
+            }
+        }
+    }
+
     public enum Router implements DataProvider {
         Sample() {
             @Override

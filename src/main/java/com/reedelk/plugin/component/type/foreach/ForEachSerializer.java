@@ -20,6 +20,7 @@ public class ForEachSerializer extends AbstractScopedNodeSerializer {
 
     @Override
     protected JSONObject serializeScopedNode(FlowGraph graph, ScopedGraphNode forEachNode, GraphNode stop) {
+
         ComponentData componentData = forEachNode.componentData();
 
         JSONObject forEachObject = JsonObjectFactory.newJSONObject();
