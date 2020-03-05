@@ -51,7 +51,7 @@ class ForEachDeserializerTest extends AbstractNodeDeserializerTest {
                 .and().successorsOf(forEachNode1).isOnly(componentNode3)
                 .and().successorsOf(componentNode3).isOnly(componentNode2)
                 .and().successorsOf(componentNode2).isOnly(stopNode1)
-                .and().node(forEachNode1).hasDataWithValue("collection", "#[['one', 'two', 'three']]")
+                .and().node(forEachNode1).hasDataWithValue("collection", "#[['one','two','three']]")
                 .and().successorsOf(stopNode1).isEmpty();
     }
 }
