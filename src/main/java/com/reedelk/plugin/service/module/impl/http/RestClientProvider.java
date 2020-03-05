@@ -4,7 +4,14 @@ import okhttp3.OkHttpClient;
 
 public class RestClientProvider {
 
+    private RestClientProvider() {
+    }
+
     private static class LazyProvider {
+
+        private LazyProvider() {
+        }
+
         private static final OkHttpClient INSTANCE = new OkHttpClient();
     }
 

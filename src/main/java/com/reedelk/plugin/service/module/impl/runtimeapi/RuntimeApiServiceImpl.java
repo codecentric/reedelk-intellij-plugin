@@ -89,8 +89,8 @@ public class RuntimeApiServiceImpl implements RuntimeApiService {
             } else {
                 handleNotSuccessfulResponse(response, callback);
             }
-        } catch (IOException e) {
-            callback.onError(e);
+        } catch (IOException exception) {
+            callback.onError(exception);
         }
     }
 
@@ -159,20 +159,30 @@ public class RuntimeApiServiceImpl implements RuntimeApiService {
         callback.onError(exception);
     }
 
-    private void waitUntilInstalled(String address, int port) throws InterruptedException {
-        int attempts = 0;
-        //The installed module has name equal to the artifact id.
-        String artifactId = MavenUtils.getMavenProject(module).get().getMavenId().getArtifactId();
-        do {
-            Thread.sleep(100);
-            Collection<ModuleGETRes> moduleGETRes = installedModules(address, port);
-            boolean found = moduleGETRes.stream()
-                    .anyMatch(installedModule ->
-                            installedModule.getName().equals(artifactId));
-            if (found) return;
-            attempts++;
-        } while (attempts < 30);
+    private void waitUntilInstalled(String address, int port) {
 
-        throw new PluginException("Could not find installed module: " + module.getName());
+        MavenUtils.getMavenProject(module).ifPresent(mavenProject -> {
+
+            //The installed module has name equal to the artifact id.
+            String artifactId = mavenProject.getMavenId().getArtifactId();
+            int attempts = 0;
+            do {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    // Nothing to do. The process has been interrupted.
+                    return;
+                }
+                Collection<ModuleGETRes> moduleGETRes = installedModules(address, port);
+                boolean found = moduleGETRes.stream()
+                        .anyMatch(installedModule ->
+                                installedModule.getName().equals(artifactId));
+                if (found) return;
+                attempts++;
+            } while (attempts < 30);
+
+            throw new PluginException("Could not find installed module: " + module.getName());
+        });
     }
 }

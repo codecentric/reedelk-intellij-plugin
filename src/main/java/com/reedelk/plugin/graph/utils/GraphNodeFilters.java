@@ -15,6 +15,10 @@ class GraphNodeFilters {
     }
 
     static class StopNodes {
+
+        private StopNodes() {
+        }
+
         static Collection<StopNode> from(Collection<GraphNode> nodes) {
             return nodes.stream()
                     .filter(n -> n instanceof StopNode)
@@ -24,6 +28,10 @@ class GraphNodeFilters {
     }
 
     static class ScopedGraphNodes {
+
+        private ScopedGraphNodes() {
+        }
+
         static Collection<ScopedGraphNode> from(Collection<GraphNode> nodes) {
             return nodes.stream()
                     .filter(IsScopedGraphNode::of)

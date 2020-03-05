@@ -28,18 +28,11 @@ public class ModuleJarBuilder {
         this.moduleJarFilePath = moduleJarFilePath;
     }
 
-    private File createModuleJarFile() throws IOException {
-        File moduleJarFile = new File(moduleJarFilePath);
-        moduleJarFile.getParentFile().mkdirs();
-        moduleJarFile.createNewFile(); // if file already exists will do nothing
-        return moduleJarFile;
-    }
-
     public void run() throws IOException {
         Manifest manifest = new ModuleManifest(moduleVersion, moduleName);
         File moduleJarFile = createModuleJarFile();
-        try (JarOutputStream target = new JarOutputStream(new FileOutputStream(moduleJarFile), manifest)) {
-            Stream<Path> walk = Files.walk(Paths.get(resourcesPath));
+        try (JarOutputStream target = new JarOutputStream(new FileOutputStream(moduleJarFile), manifest);
+             Stream<Path> walk = Files.walk(Paths.get(resourcesPath))) {
             walk.forEach(path -> {
                 try {
                     if (!path.toString().equals(resourcesPath)) {
@@ -87,5 +80,11 @@ public class ModuleJarBuilder {
                 target.closeEntry();
             }
         }
+    }
+
+    private File createModuleJarFile() {
+        File moduleJarFile = new File(moduleJarFilePath);
+        moduleJarFile.getParentFile().mkdirs();
+        return moduleJarFile;
     }
 }

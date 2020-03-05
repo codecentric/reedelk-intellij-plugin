@@ -15,8 +15,8 @@ import static java.awt.BorderLayout.NORTH;
 public class CollapsibleObjectTypeContainer extends DisposablePanel {
 
     private final String displayName;
-    private final TooltipContent tooltipContent;
     private final DisposablePanel collapsedContent;
+    private final transient TooltipContent tooltipContent;
     private final transient ContainerRenderingFunction renderingFunction;
 
     private DisposablePanel unCollapsedContent;

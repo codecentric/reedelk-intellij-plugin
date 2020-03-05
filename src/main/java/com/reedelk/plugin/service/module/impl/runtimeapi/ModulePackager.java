@@ -10,6 +10,8 @@ import org.jetbrains.idea.maven.project.MavenProject;
 import java.util.List;
 import java.util.Optional;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
+
 public class ModulePackager {
 
     private final Project project;
@@ -29,7 +31,8 @@ public class ModulePackager {
             MavenPackageGoal packageGoal = new MavenPackageGoal(project, moduleName, result -> {
                 if (!result) {
                     // Maven package goal was not successful
-                    callback.onError(new PluginException("Maven package goal was not successful"));
+                    String error = message("error.maven.goal.package", moduleName);
+                    callback.onError(new PluginException(error));
                 } else {
                     // The  Maven package goal was successful. The .jar artifact is in the /target folder and we can
                     // deploy the package onto the ESB runtime.
@@ -40,18 +43,24 @@ public class ModulePackager {
 
         } else {
             Optional<MavenProject> optionalMavenProject = MavenUtils.getMavenProject(project, moduleName);
-            MavenProject mavenProject = optionalMavenProject.get();
-
-            // Only flows and resources. we create the package.
-            String version = mavenProject.getMavenId().getVersion();
-            String artifactId = mavenProject.getMavenId().getArtifactId();
-            List<MavenResource> resources = mavenProject.getResources();
-
-            Optional<MavenResource> first = resources.stream().findFirst();
-            if (!first.isPresent()) {
-                callback.onError(new PluginException("Resources directory does not exists"));
+            if (optionalMavenProject.isPresent()) {
+                buildModuleJar(optionalMavenProject.get());
+            } else {
+                String error = message("module.run.error.maven.project.not.found", moduleName);
+                callback.onError(new PluginException(error));
             }
-            String resourcesDirectory = first.get().getDirectory();
+        }
+    }
+
+    private void buildModuleJar(MavenProject mavenProject) {
+        // Only flows and resources. we create the package.
+        String version = mavenProject.getMavenId().getVersion();
+        String artifactId = mavenProject.getMavenId().getArtifactId();
+        List<MavenResource> resources = mavenProject.getResources();
+
+        Optional<MavenResource> mavenResource = resources.stream().findFirst();
+        if (mavenResource.isPresent()) {
+            String resourcesDirectory = mavenResource.get().getDirectory();
             String moduleJarFilePath = MavenUtils.getModuleJarFile(mavenProject).toString();
             ModuleJarBuilder moduleJarBuilder = new ModuleJarBuilder(moduleJarFilePath, resourcesDirectory, version, artifactId);
             try {
@@ -60,6 +69,8 @@ public class ModulePackager {
             } catch (Exception exception) {
                 callback.onError(exception);
             }
+        } else {
+            callback.onError(new PluginException(message("error.resource.dir.not.found")));
         }
     }
 

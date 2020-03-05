@@ -10,6 +10,9 @@ import static java.awt.RenderingHints.VALUE_TEXT_ANTIALIAS_ON;
 
 public class HintPainter {
 
+    private HintPainter() {
+    }
+
     public static void from(Graphics g, JBTextField textField, String hint) {
         from(g, textField, hint, Colors.INPUT_FIELD_HINT);
     }

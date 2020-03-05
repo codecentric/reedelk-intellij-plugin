@@ -14,6 +14,9 @@ import static com.reedelk.runtime.commons.JsonParser.Implementor;
 
 public class Unknown implements Component {
 
+    private Unknown() {
+    }
+
     public static final ComponentDescriptor DESCRIPTOR;
     static {
         DESCRIPTOR = ComponentDescriptor.create()

@@ -8,6 +8,9 @@ import java.util.Optional;
 
 public class ProjectSdk {
 
+    private ProjectSdk() {
+    }
+
     public static Optional<Sdk> of(Project project) {
         ProjectRootManager projectRootManager = ProjectRootManager.getInstance(project);
         return Optional.ofNullable(projectRootManager.getProjectSdk());

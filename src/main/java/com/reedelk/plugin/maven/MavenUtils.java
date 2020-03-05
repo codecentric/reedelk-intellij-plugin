@@ -60,7 +60,7 @@ public class MavenUtils {
             return sources.stream().anyMatch(sourcesDirectory -> {
                 try {
                     List<Path> collect = Files.walk(Paths.get(sourcesDirectory))
-                            .filter(Files::isRegularFile)
+                            .filter(path -> path.toFile().isFile())
                             .collect(Collectors.toList());
                     return !collect.isEmpty();
                 } catch (IOException exception) {

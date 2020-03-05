@@ -32,7 +32,8 @@ public class RuntimeApiServiceWaitRuntime implements Runnable {
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
-                break;
+                Thread.currentThread().interrupt();
+                return;
             }
             try (Response response = instance.newCall(request).execute()) {
                 if (response.code() == 200) {

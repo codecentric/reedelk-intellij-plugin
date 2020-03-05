@@ -6,6 +6,9 @@ import java.util.UUID;
 
 public class TmpRandomDirectory {
 
+    private TmpRandomDirectory() {
+    }
+
     /**
      * @return the Path of a random directory created inside the tmp folder.
      */

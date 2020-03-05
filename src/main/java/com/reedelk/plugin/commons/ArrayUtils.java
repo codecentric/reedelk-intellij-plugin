@@ -4,6 +4,9 @@ import java.lang.reflect.Array;
 
 public class ArrayUtils {
 
+    private ArrayUtils() {
+    }
+
     public static <T> T[] concatenate(T[] a, T[] b) {
         int aLen = a.length;
         int bLen = b.length;

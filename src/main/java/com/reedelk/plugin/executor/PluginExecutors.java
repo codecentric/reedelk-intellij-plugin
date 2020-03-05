@@ -17,6 +17,9 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
  */
 public class PluginExecutors {
 
+    private PluginExecutors() {
+    }
+
     // There is only one executor across application to deserialize flows
     private static ExecutorService deserializerExecutor =
             AppExecutorUtil.createBoundedApplicationPoolExecutor("Reedelk Deserializer", 1);
