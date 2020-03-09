@@ -52,3 +52,9 @@ patchPluginXml {
     sinceBuild '191'
     untilBuild '194'
 }
+
+jar {
+    manifest {
+        attributes 'Implementation-Version': version
+    }
+}

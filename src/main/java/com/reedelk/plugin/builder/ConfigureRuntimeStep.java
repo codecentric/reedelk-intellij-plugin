@@ -62,6 +62,8 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
             loadingPanel.startLoading();
             loadingPanel.setLoadingText(message("runtimeBuilder.downloading.distribution"));
             getApplication().executeOnPooledThread(() -> {
+
+                invokeLater(() -> wizardContext.getWizard().updateButtons(false, false, false));
                 try {
                     // Download and Unzip the runtime
                     Path downloadDistributionPath = RuntimeDistributionHelper.downloadAndUnzip();
@@ -71,6 +73,8 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
                     moduleBuilder.setTmpDownloadDistributionPath(downloadDistributionPath);
 
                     invokeLater(() -> {
+                        wizardContext.getWizard().updateButtons(false, true, false);
+
                         // We stop the loading spinning wheel and move on to the next step.
                         loadingPanel.stopLoading();
                         wizardContext.getWizard().clickDefaultButton();
