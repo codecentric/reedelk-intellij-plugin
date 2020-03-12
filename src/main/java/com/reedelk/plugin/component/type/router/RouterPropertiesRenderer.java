@@ -5,7 +5,6 @@ import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.plugin.commons.TooltipContent;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.component.type.generic.GenericComponentPropertiesRenderer;
-import com.reedelk.plugin.component.type.router.widget.ConditionRouteTableModel;
 import com.reedelk.plugin.component.type.router.widget.RouterRouteTable;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.PropertiesPanelHolder;
@@ -51,8 +50,7 @@ public class RouterPropertiesRenderer extends GenericComponentPropertiesRenderer
 
         List<RouterConditionRoutePair> conditionRoutePairList = componentData.get(DATA_CONDITION_ROUTE_PAIRS);
 
-        ConditionRouteTableModel model = new ConditionRouteTableModel(conditionRoutePairList, snapshot);
-        RouterRouteTable routerRouteTable = new RouterRouteTable(module, model, propertiesPanel);
+        RouterRouteTable routerRouteTable = new RouterRouteTable(module, snapshot, conditionRoutePairList, propertiesPanel);
         DisposablePanel routerTableContainer = createObjectTypeContainer(routerRouteTable, propertyTitle, tooltipContent);
 
         DisposablePanel container = new DisposablePanel();

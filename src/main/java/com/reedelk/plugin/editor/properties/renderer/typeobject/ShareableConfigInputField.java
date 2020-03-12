@@ -51,9 +51,9 @@ class ShareableConfigInputField extends DisposablePanel implements Configuration
                               @NotNull ContainerContext context) {
 
         this.module = module;
-        this.referenceDataHolder = referenceDataHolder;
         this.context = context;
         this.descriptor = descriptor;
+        this.referenceDataHolder = referenceDataHolder;
         this.connect = module.getMessageBus().connect();
         this.connect.subscribe(TOPIC_CONFIG_CHANGE, this);
 

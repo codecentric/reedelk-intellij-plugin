@@ -1,9 +1,12 @@
 package com.reedelk.plugin.editor.properties.renderer.typemap;
 
 import com.intellij.openapi.module.Module;
+import com.reedelk.module.descriptor.model.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.TypeMapDescriptor;
 import com.reedelk.plugin.commons.VectorUtils;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
+import com.reedelk.plugin.editor.properties.commons.DisposableTabbedPane;
 import com.reedelk.runtime.api.commons.ScriptUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,9 +17,30 @@ import java.util.Vector;
 
 public class DynamicMapPropertyRenderer extends BaseMapPropertyRenderer {
 
-    @SuppressWarnings("unchecked")
+    @NotNull
     @Override
-    protected JComponent getContent(Module module, PropertyAccessor propertyAccessor, @NotNull ContainerContext context) {
+    public JComponent render(@NotNull Module module,
+                             @NotNull PropertyDescriptor propertyDescriptor,
+                             @NotNull PropertyAccessor propertyAccessor,
+                             @NotNull ContainerContext context) {
+
+        final TypeMapDescriptor propertyType = propertyDescriptor.getType();
+        DisposableTabbedPane tabbedPane = tabbedPaneFrom(propertyDescriptor, context, propertyType);
+        JComponent content = createContent(module, propertyAccessor, context);
+        tabbedPane.addTab(propertyDescriptor.getDisplayName(), content);
+        return tabbedPane;
+    }
+
+    @Override
+    public void addToParent(@NotNull JComponent parent,
+                            @NotNull JComponent rendered,
+                            @NotNull PropertyDescriptor descriptor,
+                            @NotNull ContainerContext context) {
+        addTabbedPaneToParent(parent, rendered, descriptor, context);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected JComponent createContent(Module module, PropertyAccessor propertyAccessor, @NotNull ContainerContext context) {
         MapTableModel tableModel = new MapTableModel(vectors -> {
             // Model Update
             Map<String, String> updated = new LinkedHashMap<>();
