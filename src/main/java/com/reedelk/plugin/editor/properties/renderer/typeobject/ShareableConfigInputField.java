@@ -8,6 +8,7 @@ import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
 import com.reedelk.plugin.commons.PopupUtils;
 import com.reedelk.plugin.commons.TypeObjectFactory;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
+import com.reedelk.plugin.editor.properties.commons.ComboActionsPanel;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.renderer.typeobject.configuration.ConfigControlPanel;
@@ -40,7 +41,7 @@ class ShareableConfigInputField extends DisposablePanel implements Configuration
     private final transient PropertyDescriptor descriptor;
     private final transient ComponentDataHolder referenceDataHolder;
 
-    private final ConfigControlPanel configActionsPanel;
+    private final ComboActionsPanel<ConfigMetadata> configActionsPanel;
     private final ConfigSelectorCombo configSelectorCombo;
 
 
@@ -128,12 +129,12 @@ class ShareableConfigInputField extends DisposablePanel implements Configuration
             // Update the model
             configSelectorCombo.setModel(comboModel);
             configSelectorCombo.setSelectedItem(selected);
-            configActionsPanel.onSelect(selected);
+            configActionsPanel.select(selected);
 
             // Add back the listener
             configSelectorCombo.addListener(value -> {
                 ConfigMetadata selectedConfig = (ConfigMetadata) value;
-                configActionsPanel.onSelect(selectedConfig);
+                configActionsPanel.select(selectedConfig);
                 setPropertyAccessorValue(selectedConfig.getId());
             });
         });

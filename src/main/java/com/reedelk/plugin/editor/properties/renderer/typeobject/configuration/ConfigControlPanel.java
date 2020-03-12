@@ -3,50 +3,38 @@ package com.reedelk.plugin.editor.properties.renderer.typeobject.configuration;
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
 import com.reedelk.plugin.commons.TypeObjectFactory;
-import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
+import com.reedelk.plugin.editor.properties.commons.ComboActionsPanel;
 import com.reedelk.plugin.editor.properties.commons.DialogConfirmAction;
-import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.service.module.ConfigurationService;
 import com.reedelk.plugin.service.module.impl.configuration.ConfigMetadata;
 import com.reedelk.plugin.service.module.impl.configuration.NewConfigMetadata;
 
 import java.util.UUID;
 
-import static com.intellij.icons.AllIcons.Actions.EditSource;
-import static com.intellij.icons.AllIcons.General.Add;
-import static com.intellij.icons.AllIcons.General.Remove;
 import static com.reedelk.module.descriptor.model.TypeObjectDescriptor.TypeObject;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.commons.JsonParser.Config;
 import static com.reedelk.runtime.commons.JsonParser.Implementor;
 
-public class ConfigControlPanel extends DisposablePanel {
+public class ConfigControlPanel extends ComboActionsPanel<ConfigMetadata> {
 
     private final transient Module module;
-    private final transient ClickableLabel editAction;
-    private final transient ClickableLabel deleteAction;
     private final transient TypeObjectDescriptor typeDescriptor;
 
-    private transient ConfigMetadata selected;
-
     public ConfigControlPanel(Module module, TypeObjectDescriptor typeDescriptor) {
+        super();
         this.module = module;
         this.typeDescriptor = typeDescriptor;
-        deleteAction = new ClickableLabel(message("config.actions.btn.delete"), Remove, Remove, this::deleteConfiguration);
-        editAction = new ClickableLabel(message("config.actions.btn.edit"), EditSource, EditSource, this::editConfiguration);
-        ClickableLabel addAction = new ClickableLabel(message("config.actions.btn.add"), Add, Add, this::addConfiguration);
-        add(editAction);
-        add(addAction);
-        add(deleteAction);
     }
 
-    public void onSelect(ConfigMetadata newSelected) {
-        this.selected = newSelected;
-        this.editAction.setEnabled(newSelected.isEditable());
-        this.deleteAction.setEnabled(newSelected.isRemovable());
+    @Override
+    protected void onSelect(ConfigMetadata newSelected) {
+        enableEdit(newSelected.isEditable());
+        enableDelete(newSelected.isEditable());
     }
 
-    private void addConfiguration() {
+    @Override
+    protected void onAdd(ConfigMetadata item) {
         // We ignore the selected. Create new config object.
         TypeObject configTypeObject = TypeObjectFactory.newInstance();
         configTypeObject.set(Implementor.name(), typeDescriptor.getTypeFullyQualifiedName());
@@ -69,29 +57,31 @@ public class ConfigControlPanel extends DisposablePanel {
         }
     }
 
-    private void editConfiguration() {
-        if (selected.isEditable()) {
+    @Override
+    protected void onEdit(ConfigMetadata item) {
+        if (item.isEditable()) {
             ConfigurationDialog dialogEditConfiguration = ConfigurationDialog.builder()
                     .module(module)
-                    .configMetadata(selected)
+                    .configMetadata(item)
                     .objectDescriptor(typeDescriptor)
                     .title(message("config.dialog.edit.title"))
                     .okActionLabel(message("config.dialog.edit.btn.edit"))
                     .build();
             if (dialogEditConfiguration.showAndGet()) {
-                ConfigurationService.getInstance(module).saveConfiguration(selected);
+                ConfigurationService.getInstance(module).saveConfiguration(item);
             }
         }
     }
 
-    private void deleteConfiguration() {
-        if (selected.isRemovable()) {
+    @Override
+    protected void onDelete(ConfigMetadata item) {
+        if (item.isRemovable()) {
             DialogConfirmAction dialogConfirmDelete =
                     new DialogConfirmAction(module,
                             message("config.dialog.delete.title"),
                             message("config.dialog.delete.confirm.message"));
             if (dialogConfirmDelete.showAndGet()) {
-                ConfigurationService.getInstance(module).removeConfiguration(selected);
+                ConfigurationService.getInstance(module).removeConfiguration(item);
             }
         }
     }
