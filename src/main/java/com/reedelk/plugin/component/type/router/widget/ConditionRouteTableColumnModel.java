@@ -58,7 +58,7 @@ class ConditionRouteTableColumnModel extends DefaultTableColumnModel implements 
         TableColumnModelUtils.onCommit(this);
     }
 
-    class RoutesCellRenderer extends DefaultTableCellRenderer {
+    static class RoutesCellRenderer extends DefaultTableCellRenderer {
         @Override
         protected void setValue(Object value) {
             GraphNode node = (GraphNode) value;

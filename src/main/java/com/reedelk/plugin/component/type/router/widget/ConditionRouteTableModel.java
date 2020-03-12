@@ -36,7 +36,7 @@ public class ConditionRouteTableModel extends AbstractTableModel implements Prop
     }
 
     @Override
-    public Class getColumnClass(int columnIndex) {
+    public Class<?> getColumnClass(int columnIndex) {
         return getValueAt(0, columnIndex).getClass();
     }
 
