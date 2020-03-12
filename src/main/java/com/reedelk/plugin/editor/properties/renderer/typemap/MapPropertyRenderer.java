@@ -32,7 +32,7 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
             tabbedPane.addTab(descriptor.getDisplayName(), content);
             return tabbedPane;
         } else {
-            return new MapPropertyWithCustomObjectContainer();
+            return new MapPropertyWithCustomObjectContainer(propertyAccessor);
         }
     }
 

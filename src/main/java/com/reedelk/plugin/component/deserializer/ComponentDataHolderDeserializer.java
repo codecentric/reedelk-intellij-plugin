@@ -12,10 +12,16 @@ import static com.reedelk.runtime.commons.JsonParser.Component;
 
 public class ComponentDataHolderDeserializer {
 
+    private static final ComponentDataHolderDeserializer INSTANCE = new ComponentDataHolderDeserializer();
+
+    public static ComponentDataHolderDeserializer get() {
+        return INSTANCE;
+    }
+
     private ComponentDataHolderDeserializer() {
     }
 
-    public static void deserialize(@NotNull JSONObject componentJsonObject,
+    public void deserialize(@NotNull JSONObject componentJsonObject,
                                    @NotNull ComponentDataHolder componentData,
                                    @NotNull PropertyDescriptor propertyDescriptor) {
         TypeDescriptor propertyType = propertyDescriptor.getType();
@@ -29,7 +35,7 @@ public class ComponentDataHolderDeserializer {
         }
     }
 
-    private static void deserializeTypeObject(@NotNull JSONObject componentJsonObject,
+    private void deserializeTypeObject(@NotNull JSONObject componentJsonObject,
                                               @NotNull ComponentDataHolder componentData,
                                               @NotNull PropertyDescriptor descriptor,
                                               @NotNull TypeObjectDescriptor propertyType) {
@@ -64,9 +70,8 @@ public class ComponentDataHolderDeserializer {
                 }
             } else {
                 // The config is not shareable, hence we deserialize the object right away.
-                propertyType.getObjectProperties()
-                        .forEach(typeDescriptor ->
-                                deserialize(nestedJsonObject, nestedObject, typeDescriptor));
+                propertyType.getObjectProperties().forEach(typeDescriptor ->
+                        deserialize(nestedJsonObject, nestedObject, typeDescriptor));
                 componentData.set(descriptor.getName(), nestedObject);
             }
 
@@ -79,7 +84,7 @@ public class ComponentDataHolderDeserializer {
         }
     }
 
-    private static void addEmptyInstancesForTypeObject(ComponentDataHolder dataHolder, PropertyDescriptor descriptor) {
+    private void addEmptyInstancesForTypeObject(ComponentDataHolder dataHolder, PropertyDescriptor descriptor) {
         if (descriptor.getType() instanceof TypeObjectDescriptor) {
             TypeObjectDescriptor propertyObjectType = descriptor.getType();
             TypeObject typeObject = TypeObjectFactory.newInstance(propertyObjectType);

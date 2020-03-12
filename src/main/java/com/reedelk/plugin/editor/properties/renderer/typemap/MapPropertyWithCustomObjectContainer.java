@@ -1,39 +1,33 @@
 package com.reedelk.plugin.editor.properties.renderer.typemap;
 
-import com.intellij.openapi.ui.ComboBox;
+import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
+import com.reedelk.plugin.editor.properties.commons.ComboActionsPanel;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
+import com.reedelk.plugin.editor.properties.renderer.typemap.custom.CustomObjectControlPanel;
+import com.reedelk.plugin.editor.properties.renderer.typemap.custom.CustomObjectMetadata;
+import com.reedelk.plugin.editor.properties.renderer.typemap.custom.CustomObjectSelectorCombo;
 
-import javax.swing.*;
 import java.awt.*;
+
+import static java.awt.BorderLayout.*;
 
 public class MapPropertyWithCustomObjectContainer extends DisposablePanel {
 
-    static final String[] COLUMN_NAMES = {"Key", "Edit"};
+    private final CustomObjectSelectorCombo comboSelector;
+    private final ComboActionsPanel<CustomObjectMetadata> controlPanel;
 
-    static class ListItem {
-        String displayName;
+    public MapPropertyWithCustomObjectContainer(PropertyAccessor propertyAccessor) {
 
-    }
-    public MapPropertyWithCustomObjectContainer() {
+        // The Config Selector Combo
+        this.comboSelector = new CustomObjectSelectorCombo();
+        this.controlPanel = new CustomObjectControlPanel();
+
+        DisposablePanel disposablePanel = new DisposablePanel();
+        disposablePanel.setLayout(new BorderLayout());
+        disposablePanel.add(comboSelector, CENTER);
+        disposablePanel.add(controlPanel, EAST);
+
         setLayout(new BorderLayout());
-
-        ListItem one = new ListItem();
-        one.displayName = "200";
-        ListItem two = new ListItem();
-        two.displayName = "401";
-
-
-
-        DefaultComboBoxModel<ListItem> comboBoxModel = new DefaultComboBoxModel<>();
-        comboBoxModel.addElement(one);
-        comboBoxModel.addElement(two);
-
-        ComboBox<ListItem> combo = new ComboBox<>(comboBoxModel);
-
-        combo.setRenderer((list, value, index, isSelected, cellHasFocus) -> new JLabel(value.displayName));
-
-        // The key is the name of the item in the list
-
-        add(combo, BorderLayout.WEST);
+        add(disposablePanel, WEST);
     }
 }

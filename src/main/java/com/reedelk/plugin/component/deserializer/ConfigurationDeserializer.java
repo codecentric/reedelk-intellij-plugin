@@ -51,7 +51,7 @@ public class ConfigurationDeserializer {
             dataHolder.set(Config.title(), Config.title(jsonDefinition));
         }
         propertyType.getObjectProperties().forEach(descriptor ->
-                ComponentDataHolderDeserializer.deserialize(jsonDefinition, dataHolder, descriptor));
+                ComponentDataHolderDeserializer.get().deserialize(jsonDefinition, dataHolder, descriptor));
         return Optional.of(dataHolder);
 
     }
