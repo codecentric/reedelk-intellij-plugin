@@ -10,14 +10,14 @@ public class Colors {
     private Colors() {
     }
 
-    public static final JBColor PROPERTIES_EMPTY_SELECTION_BACKGROUND = new JBColor(new Color(237, 237, 237), new Color(237, 237, 237));
-    public static final JBColor FOREGROUND_TEXT = new JBColor(new Color(153, 153, 153), new Color(153, 153, 153));
+    public static final JBColor PROPERTIES_EMPTY_SELECTION_BACKGROUND = new JBColor(Gray._237, Gray._237);
+    public static final JBColor FOREGROUND_TEXT = new JBColor(Gray._153, Gray._153);
 
     public static final Color SCRIPT_EDITOR_CONTEXT_PANEL_BORDER = JBColor.LIGHT_GRAY;
     public static final Color SCRIPT_EDITOR_CONTEXT_PANEL_TITLE_BG = new Color(226, 230, 236);
-    public static final Color SCRIPT_EDITOR_CONTEXT_PANEL_BORDER_BOTTOM = new Color(201, 201, 201);
+    public static final Color SCRIPT_EDITOR_CONTEXT_PANEL_BORDER_BOTTOM = Gray._201;
 
-    public static final Color SCRIPT_EDITOR_INLINE_ICON_BORDER = Color.LIGHT_GRAY;
+    public static final Color SCRIPT_EDITOR_INLINE_ICON_BORDER = JBColor.LIGHT_GRAY;
 
     public static final JBColor DESIGNER_BG = JBColor.WHITE;
     public static final JBColor SCOPE_VERTICAL_DIVIDER = new JBColor(Gray._200, Gray._30);
