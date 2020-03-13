@@ -21,9 +21,10 @@ public class ComponentDataHolderDeserializer {
     private ComponentDataHolderDeserializer() {
     }
 
-    public void deserialize(@NotNull JSONObject componentJsonObject,
-                                   @NotNull ComponentDataHolder componentData,
-                                   @NotNull PropertyDescriptor propertyDescriptor) {
+    public void deserialize(
+            @NotNull JSONObject componentJsonObject,
+            @NotNull ComponentDataHolder componentData,
+            @NotNull PropertyDescriptor propertyDescriptor) {
         TypeDescriptor propertyType = propertyDescriptor.getType();
 
         if (propertyType instanceof TypeObjectDescriptor) {
@@ -36,9 +37,9 @@ public class ComponentDataHolderDeserializer {
     }
 
     private void deserializeTypeObject(@NotNull JSONObject componentJsonObject,
-                                              @NotNull ComponentDataHolder componentData,
-                                              @NotNull PropertyDescriptor descriptor,
-                                              @NotNull TypeObjectDescriptor propertyType) {
+                                       @NotNull ComponentDataHolder componentData,
+                                       @NotNull PropertyDescriptor descriptor,
+                                       @NotNull TypeObjectDescriptor propertyType) {
 
         TypeObject nestedObject = TypeObjectFactory.newInstance(propertyType);
 
