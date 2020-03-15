@@ -21,7 +21,6 @@ import com.reedelk.plugin.component.type.unknown.UnknownNode;
 import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
-import com.reedelk.runtime.api.exception.ESBException;
 import org.json.JSONObject;
 
 import java.lang.reflect.InvocationTargetException;
@@ -95,8 +94,8 @@ public class DeserializerFactory {
             return deserializerClazz
                     .getDeclaredConstructor(FlowGraph.class, GraphNode.class, DeserializerContext.class)
                     .newInstance(graph, current, context);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            throw new ESBException(e);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException exception) {
+            throw new PluginException("Could not instantiate deserializer class=" + deserializerClazz.getName(), exception);
         }
     }
 

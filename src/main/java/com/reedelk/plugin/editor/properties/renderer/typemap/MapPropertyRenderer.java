@@ -2,6 +2,7 @@ package com.reedelk.plugin.editor.properties.renderer.typemap;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.TypeDescriptor;
 import com.reedelk.module.descriptor.model.TypeMapDescriptor;
 import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
 import com.reedelk.plugin.commons.VectorUtils;
@@ -27,7 +28,7 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
         final TypeMapDescriptor propertyType = descriptor.getType();
         final JComponent content = isPrimitiveValueType(propertyType) ?
                 createContent(module, propertyAccessor, context) :
-                createCustomObjectContent(module, propertyAccessor, context);
+                createCustomObjectContent(module, propertyType, propertyAccessor, context);
 
         DisposableTabbedPane tabbedPane = tabbedPaneFrom(descriptor, context, propertyType);
         tabbedPane.addTab(descriptor.getDisplayName(), content);
@@ -67,7 +68,13 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
     }
 
     @SuppressWarnings("unchecked")
-    protected JComponent createCustomObjectContent(Module module, PropertyAccessor propertyAccessor, @NotNull ContainerContext context) {
+    protected JComponent createCustomObjectContent(@NotNull Module module,
+                                                   @NotNull TypeMapDescriptor descriptor,
+                                                   @NotNull PropertyAccessor propertyAccessor,
+                                                   @NotNull ContainerContext context) {
+
+        TypeDescriptor valueType = descriptor.getValueType();
+        TypeObjectDescriptor typeObjectDescriptor = (TypeObjectDescriptor) descriptor.getValueType();
         Map<String,String> data = propertyAccessor.get();
         MapTableModel tableModel = new MapTableModel(vectors -> {
             // Data Model Update
@@ -86,8 +93,10 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
         MapTableCustomColumnModel.ActionHandler action = new MapTableCustomColumnModel.ActionHandler() {
             @Override
             public void onClick(Object value) {
-                System.out.println("hello");
-
+                EditCustomObjectDialog dialog = new EditCustomObjectDialog(module, "Test");
+                if (dialog.showAndGet()) {
+                    System.out.println("hello");
+                }
             }
         };
         MapTableCustomColumnModel columnModel = new MapTableCustomColumnModel(action);

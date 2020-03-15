@@ -10,8 +10,8 @@ import com.reedelk.plugin.component.type.stop.StopSerializer;
 import com.reedelk.plugin.component.type.trycatch.TryCatchSerializer;
 import com.reedelk.plugin.component.type.unknown.Unknown;
 import com.reedelk.plugin.component.type.unknown.UnknownSerializer;
+import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.graph.node.GraphNode;
-import com.reedelk.runtime.api.exception.ESBException;
 import com.reedelk.runtime.component.*;
 
 import java.lang.reflect.InvocationTargetException;
@@ -67,8 +67,8 @@ public class SerializerFactory {
             return builderClazz
                     .getDeclaredConstructor()
                     .newInstance();
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            throw new ESBException(e);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException exception) {
+            throw new PluginException("Could not instantiate builder class=" + builderClazz.getName(), exception);
         }
     }
 }

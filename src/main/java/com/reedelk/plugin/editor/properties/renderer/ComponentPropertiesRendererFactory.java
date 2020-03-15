@@ -12,8 +12,8 @@ import com.reedelk.plugin.component.type.stop.StopPropertiesRenderer;
 import com.reedelk.plugin.component.type.trycatch.TryCatchPropertiesRenderer;
 import com.reedelk.plugin.component.type.unknown.Unknown;
 import com.reedelk.plugin.component.type.unknown.UnknownComponentPropertiesRenderer;
+import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.graph.FlowSnapshot;
-import com.reedelk.runtime.api.exception.ESBException;
 import com.reedelk.runtime.component.*;
 
 import java.lang.reflect.InvocationTargetException;
@@ -82,8 +82,8 @@ public class ComponentPropertiesRendererFactory {
             return rendererClazz
                     .getConstructor(FlowSnapshot.class, Module.class)
                     .newInstance(snapshot, module);
-        } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
-            throw new ESBException(e);
+        } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException exception) {
+            throw new PluginException("Could not instantiate renderer class=" + rendererClazz.getName(), exception);
         }
     }
 }

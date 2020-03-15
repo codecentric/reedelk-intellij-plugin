@@ -2,9 +2,9 @@ package com.reedelk.plugin.editor.properties.accessor;
 
 import com.reedelk.module.descriptor.model.*;
 import com.reedelk.plugin.component.type.unknown.UnknownPropertyType;
+import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.runtime.api.commons.StringUtils;
-import com.reedelk.runtime.api.exception.ESBException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -87,8 +87,8 @@ public class PropertyAccessorFactory {
                         .getDeclaredConstructor(String.class, ComponentDataHolder.class)
                         .newInstance(propertyName, dataHolder);
             }
-        } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
-            throw new ESBException(e);
+        } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException exception) {
+            throw new PluginException("Could not instantiate accessor class=" + accessorClazz.getName(), exception);
         }
     }
 }
