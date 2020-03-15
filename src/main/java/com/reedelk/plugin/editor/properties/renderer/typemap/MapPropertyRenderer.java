@@ -87,6 +87,7 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
             @Override
             public void onClick(Object value) {
                 System.out.println("hello");
+
             }
         };
         MapTableCustomColumnModel columnModel = new MapTableCustomColumnModel(action);

@@ -48,13 +48,9 @@ public class DisposableTable extends DisposableScrollPane implements CommitPrope
         Enumeration<TableColumn> columns = table.getColumnModel().getColumns();
         Collections.list(columns).forEach(tableColumn -> {
             TableCellEditor cellEditor = tableColumn.getCellEditor();
-            if (cellEditor instanceof Disposable) {
-                DisposableUtils.dispose((Disposable) cellEditor);
-            }
             TableCellRenderer cellRenderer = tableColumn.getCellRenderer();
-            if (cellRenderer instanceof Disposable) {
-                DisposableUtils.dispose((Disposable) cellRenderer);
-            }
+            DisposableUtils.dispose(cellEditor);
+            DisposableUtils.dispose(cellRenderer);
         });
     }
 

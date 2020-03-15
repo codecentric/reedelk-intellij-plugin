@@ -13,4 +13,10 @@ public class DisposableUtils {
             Disposer.dispose(disposable);
         }
     }
+
+    public static void dispose(Object object) {
+        if (object instanceof Disposable) {
+            dispose((Disposable) object);
+        }
+    }
 }
