@@ -1,16 +1,17 @@
 package com.reedelk.plugin.editor.properties.renderer.typemap;
 
-import com.reedelk.plugin.editor.properties.commons.PropertyTable;
+import com.reedelk.plugin.editor.properties.commons.DisposableTableModel;
 
 import javax.swing.table.DefaultTableModel;
 import java.util.Vector;
 import java.util.function.Consumer;
 
-public class MapTableModel extends DefaultTableModel implements PropertyTable.PropertyTableModel {
+@SuppressWarnings("unchecked")
+public class MapTableModel extends DefaultTableModel implements DisposableTableModel {
 
-    private final transient Consumer<Vector<Vector>> dataUpdater;
+    private final transient Consumer<Vector<Vector<?>>> dataUpdater;
 
-    MapTableModel(Consumer<Vector<Vector>> dataUpdater) {
+    MapTableModel(Consumer<Vector<Vector<?>>> dataUpdater) {
         super(0, 2); // a Map table has two columns
         this.dataUpdater = dataUpdater;
     }

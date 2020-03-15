@@ -3,11 +3,11 @@ package com.reedelk.plugin.editor.properties.renderer.typemap;
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.TypeMapDescriptor;
+import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
 import com.reedelk.plugin.commons.VectorUtils;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposableTabbedPane;
-import com.reedelk.runtime.converter.DeserializerConverter;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -25,15 +25,13 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
                              @NotNull ContainerContext context) {
 
         final TypeMapDescriptor propertyType = descriptor.getType();
+        final JComponent content = isPrimitiveValueType(propertyType) ?
+                createContent(module, propertyAccessor, context) :
+                createCustomObjectContent(module, propertyAccessor, context);
 
-        if (isPrimitiveValueType(propertyType)) {
-            DisposableTabbedPane tabbedPane = tabbedPaneFrom(descriptor, context, propertyType);
-            JComponent content = createContent(module, propertyAccessor, context);
-            tabbedPane.addTab(descriptor.getDisplayName(), content);
-            return tabbedPane;
-        } else {
-            return new MapPropertyWithCustomObjectContainer(propertyAccessor);
-        }
+        DisposableTabbedPane tabbedPane = tabbedPaneFrom(descriptor, context, propertyType);
+        tabbedPane.addTab(descriptor.getDisplayName(), content);
+        return tabbedPane;
     }
 
     @Override
@@ -42,15 +40,11 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
                             @NotNull PropertyDescriptor descriptor,
                             @NotNull ContainerContext context) {
 
-        if (isPrimitiveValueType(descriptor.getType())) {
-            addTabbedPaneToParent(parent, rendered, descriptor, context);
-        } else {
-            super.addToParent(parent, rendered, descriptor, context);
-        }
+        addTabbedPaneToParent(parent, rendered, descriptor, context);
     }
 
     @SuppressWarnings("unchecked")
-    protected JComponent createContent(Module module, PropertyAccessor propertyAccessor, @NotNull ContainerContext context) {
+    private JComponent createContent(Module module, PropertyAccessor propertyAccessor, @NotNull ContainerContext context) {
         MapTableModel tableModel = new MapTableModel(vectors -> {
             // Data Model Update
             Map<String, String> updated = new LinkedHashMap<>();
@@ -68,13 +62,38 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
             map.forEach((key, value) -> tableModel.addRow(new Object[]{key, value}));
         }
 
-        // Return the content
-        return new MapPropertyTabContainer(module, tableModel);
+        MapTableColumnModel columnModel = new MapTableColumnModel();
+        return new MapPropertyTabContainer(module.getProject(), tableModel, columnModel);
     }
 
+    @SuppressWarnings("unchecked")
+    protected JComponent createCustomObjectContent(Module module, PropertyAccessor propertyAccessor, @NotNull ContainerContext context) {
+        Map<String,String> data = propertyAccessor.get();
+        MapTableModel tableModel = new MapTableModel(vectors -> {
+            // Data Model Update
+            Map<String, Object> updated = new LinkedHashMap<>();
+            vectors.forEach(vector -> {
+                String key = VectorUtils.getOrEmptyIfNull((Vector<String>) vector, 0); // 0 is the key
+                Object value = VectorUtils.getOrEmptyIfNull((Vector<String>) vector, 1); // 1 is the value
+                updated.put(key, value);
+            });
+            propertyAccessor.set(updated);
+        });
+
+        // Data Model Initialize
+        data.forEach((key, value) -> tableModel.addRow(new Object[] { key, value }));
+
+        MapTableCustomColumnModel.ActionHandler action = new MapTableCustomColumnModel.ActionHandler() {
+            @Override
+            public void onClick(Object value) {
+                System.out.println("hello");
+            }
+        };
+        MapTableCustomColumnModel columnModel = new MapTableCustomColumnModel(action);
+        return new MapPropertyTabContainer(module.getProject(), tableModel, columnModel);
+    }
 
     private boolean isPrimitiveValueType(TypeMapDescriptor propertyType) {
-        final String mapValueType = propertyType.getValueFullyQualifiedName();
-        return DeserializerConverter.getInstance().isPrimitive(mapValueType);
+        return !(propertyType.getValueType() instanceof TypeObjectDescriptor);
     }
 }

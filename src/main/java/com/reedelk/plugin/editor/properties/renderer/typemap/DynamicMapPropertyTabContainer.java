@@ -1,24 +1,17 @@
 package com.reedelk.plugin.editor.properties.renderer.typemap;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBTextField;
-import com.intellij.util.messages.MessageBusConnection;
-import com.reedelk.plugin.commons.DisposableUtils;
-import com.reedelk.plugin.commons.TableColumnModelUtils;
-import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
+import com.intellij.ui.table.JBTable;
 import com.reedelk.plugin.editor.properties.commons.*;
-import com.reedelk.plugin.topic.ReedelkTopics;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 
 import static com.intellij.icons.AllIcons.General.Add;
 import static com.intellij.icons.AllIcons.General.Remove;
-import static com.reedelk.plugin.editor.properties.commons.PropertyTable.PropertyTableModel;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 class DynamicMapPropertyTabContainer extends DisposablePanel {
@@ -27,7 +20,7 @@ class DynamicMapPropertyTabContainer extends DisposablePanel {
 
     private boolean loaded = false;
 
-    DynamicMapPropertyTabContainer(Module module, PropertyTableModel tableModel, ContainerContext context) {
+    DynamicMapPropertyTabContainer(Module module, DisposableTableModel tableModel, ContainerContext context) {
         setLayout(new BorderLayout());
         add(new LoadingContentPanel());
 
@@ -43,10 +36,11 @@ class DynamicMapPropertyTabContainer extends DisposablePanel {
                     DisposablePanel mapContainer = new DisposablePanel();
                     mapContainer.setLayout(new BoxLayout(mapContainer, BoxLayout.Y_AXIS));
                     MapTableColumnModel columnModel = new MapTableColumnModel(module, context);
-                    PropertyTable propertyTable = new PropertyTable(tableModel, columnModel);
-                    JPanel actionPanel = new TableActionPanel(propertyTable);
+                    DisposableTable disposablePropertyTable =
+                            new DisposableTable(module.getProject(), tableModel, columnModel);
+                    JPanel actionPanel = new TableActionPanel(disposablePropertyTable);
                     mapContainer.add(actionPanel);
-                    mapContainer.add(propertyTable);
+                    mapContainer.add(disposablePropertyTable);
 
                     loaded = true;
 
@@ -58,50 +52,38 @@ class DynamicMapPropertyTabContainer extends DisposablePanel {
     }
 
     static class TableActionPanel extends DisposablePanel {
-        TableActionPanel(PropertyTable table) {
+        TableActionPanel(DisposableTable table) {
             setLayout(new FlowLayout(FlowLayout.LEFT));
             add(new ClickableLabel(message("properties.type.map.table.add"), Add, table::addEmptyRow));
             add(new ClickableLabel(message("properties.type.map.table.remove"), Remove, table::removeSelectedRow));
         }
     }
 
-    static class MapTableColumnModel extends DefaultTableColumnModel implements Disposable, CommitPropertiesListener {
+    static class MapTableColumnModel implements DisposableTableColumnModelFactory {
 
-        private transient  MessageBusConnection busConnection;
-        private transient TableDynamicCellEditor cellEditor;
-        private transient TableDynamicCellRenderer cellRenderer;
+        private final Module module;
+        private final ContainerContext context;
 
         MapTableColumnModel(Module  module, ContainerContext context) {
-            this.cellEditor = new TableDynamicCellEditor(module, context);
-            this.cellRenderer = new TableDynamicCellRenderer(module, context);
+            this.module = module;
+            this.context = context;
+        }
+
+        @Override
+        public void create(JBTable table) {
+            TableDynamicCellEditor cellEditor = new TableDynamicCellEditor(module, context);
+            TableDynamicCellRenderer cellRenderer = new TableDynamicCellRenderer(module, context);
 
             // Column 1 (the map key)
-            TableColumn keyColumn = new TableColumn(0);
+            TableColumn keyColumn = table.getColumnModel().getColumn(0);
             keyColumn.setHeaderValue(COLUMN_NAMES[0]);
             keyColumn.setCellEditor(new DefaultCellEditor(new JBTextField()));
-            addColumn(keyColumn);
 
             // Column 2 (the map value)
-            TableColumn valueColumn = new TableColumn(1);
+            TableColumn valueColumn = table.getColumnModel().getColumn(1);
             valueColumn.setHeaderValue(COLUMN_NAMES[1]);
             valueColumn.setCellRenderer(cellRenderer);
             valueColumn.setCellEditor(cellEditor);
-            addColumn(valueColumn);
-
-            busConnection = module.getProject().getMessageBus().connect();
-            busConnection.subscribe(ReedelkTopics.COMMIT_COMPONENT_PROPERTIES_EVENTS, this);
-        }
-
-        @Override
-        public void dispose() {
-            busConnection.disconnect();
-            DisposableUtils.dispose(cellRenderer);
-            DisposableUtils.dispose(cellEditor);
-        }
-
-        @Override
-        public void onCommit() {
-            TableColumnModelUtils.onCommit(this);
         }
     }
 }

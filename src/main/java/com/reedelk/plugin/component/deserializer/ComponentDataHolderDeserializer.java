@@ -28,7 +28,7 @@ public class ComponentDataHolderDeserializer {
         TypeDescriptor propertyType = propertyDescriptor.getType();
 
         if (propertyType instanceof TypeObjectDescriptor) {
-            deserializeTypeObject(componentJsonObject, componentData, propertyDescriptor, (TypeObjectDescriptor) propertyType);
+            deserializeTypeObjectDescriptor(componentJsonObject, componentData, propertyDescriptor, (TypeObjectDescriptor) propertyType);
         } else {
             ValueConverter<?> converter = ValueConverterProvider.forType(propertyType);
             Object propertyValue = converter.from(propertyDescriptor.getName(), componentJsonObject);
@@ -36,17 +36,16 @@ public class ComponentDataHolderDeserializer {
         }
     }
 
-    private void deserializeTypeObject(@NotNull JSONObject componentJsonObject,
-                                       @NotNull ComponentDataHolder componentData,
-                                       @NotNull PropertyDescriptor descriptor,
-                                       @NotNull TypeObjectDescriptor propertyType) {
+    private void deserializeTypeObjectDescriptor(@NotNull JSONObject jsonObject,
+                                                 @NotNull ComponentDataHolder componentData,
+                                                 @NotNull PropertyDescriptor descriptor,
+                                                 @NotNull TypeObjectDescriptor propertyType) {
 
         TypeObject nestedObject = TypeObjectFactory.newInstance(propertyType);
 
-        if (componentJsonObject.has(descriptor.getName()) &&
-                !componentJsonObject.isNull(descriptor.getName())) {
+        if (jsonObject.has(descriptor.getName()) && !jsonObject.isNull(descriptor.getName())) {
 
-            JSONObject nestedJsonObject = componentJsonObject.getJSONObject(descriptor.getName());
+            JSONObject nestedJsonObject = jsonObject.getJSONObject(descriptor.getName());
 
             // If the property is present in the JSON but it is an empty object we
             // still fill up instances of type object for object properties recursively.
