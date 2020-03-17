@@ -45,7 +45,7 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
     }
 
     /**
-     * Constructor used by a configuration panel Dialog. The configuration panel Dialog does not
+     * Constructor used by a configuration panel dialog. The configuration panel dialog does not
      * immediately change the values on the Graph snapshot since it writes the values in a a config file.
      */
     public PropertiesPanelHolder(@NotNull String componentFullyQualifiedName, ComponentDataHolder dataHolder, List<PropertyDescriptor> descriptors) {
@@ -103,8 +103,7 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
     private void initAccessors() {
         // We decorate each accessor with a property change decorator, which
         // notifies all the subscribers wishing to listen for a property change event
-        // to be notified. This is needed for instance to re-compute suggestions when
-        // a new JSON schema file is selected from a file chooser input field.
+        // to be notified. This is needed for instance show/hide other properties using @When annotation.
         descriptors.forEach(propertyDescriptor -> {
             String propertyName = propertyDescriptor.getName();
             TypeDescriptor propertyType = propertyDescriptor.getType();
