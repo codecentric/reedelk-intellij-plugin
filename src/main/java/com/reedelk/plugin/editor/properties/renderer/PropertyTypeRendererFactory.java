@@ -18,8 +18,8 @@ import com.reedelk.plugin.editor.properties.renderer.typeinteger.DynamicIntegerP
 import com.reedelk.plugin.editor.properties.renderer.typeinteger.IntegerPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typelong.DynamicLongPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typelong.LongPropertyRenderer;
-import com.reedelk.plugin.editor.properties.renderer.typemap.DynamicMapPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typemap.MapPropertyRenderer;
+import com.reedelk.plugin.editor.properties.renderer.typemap.dynamic.DynamicMapPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typeobject.DynamicObjectPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typeobject.ObjectPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typepassword.PasswordPropertyRenderer;

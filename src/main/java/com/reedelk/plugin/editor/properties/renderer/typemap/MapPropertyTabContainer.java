@@ -2,6 +2,7 @@ package com.reedelk.plugin.editor.properties.renderer.typemap;
 
 import com.intellij.openapi.project.Project;
 import com.reedelk.plugin.editor.properties.commons.*;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,12 +13,11 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 class MapPropertyTabContainer extends DisposablePanel {
 
-    MapPropertyTabContainer(Project project,
-                            DisposableTableModel tableModel,
-                            DisposableTableColumnModelFactory columnModelFactory) {
+    MapPropertyTabContainer(@NotNull Project project,
+                            @NotNull DisposableTableModel tableModel,
+                            @NotNull DisposableTableColumnModelFactory columnModelFactory) {
         DisposableTable table = new DisposableTable(project, tableModel, columnModelFactory);
         JPanel actionPanel = new TableActionPanel(table);
-
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         add(actionPanel);
         add(table);

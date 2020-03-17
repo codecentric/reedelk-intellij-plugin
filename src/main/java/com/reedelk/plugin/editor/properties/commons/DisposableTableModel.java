@@ -11,4 +11,8 @@ public interface DisposableTableModel extends TableModel {
     default void removeRow(int row) {
         throw new UnsupportedOperationException();
     }
+
+    default Object[] createRow() {
+        return new Object[]{};
+    }
 }

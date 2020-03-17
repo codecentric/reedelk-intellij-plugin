@@ -21,7 +21,7 @@ import java.util.Optional;
 
 import static com.reedelk.plugin.commons.Colors.TOOL_WINDOW_PROPERTIES_TEXT;
 
-abstract class BaseMapPropertyRenderer extends AbstractPropertyTypeRenderer {
+public abstract class BaseMapPropertyRenderer extends AbstractPropertyTypeRenderer {
 
     protected void addTabbedPaneToParent(@NotNull JComponent parent,
                                          @NotNull JComponent rendered,

@@ -1,20 +1,21 @@
 package com.reedelk.plugin.editor.properties.renderer.typemap;
 
 import com.intellij.openapi.module.Module;
+import com.reedelk.module.descriptor.model.ComponentDataHolder;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.TypeDescriptor;
 import com.reedelk.module.descriptor.model.TypeMapDescriptor;
 import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
-import com.reedelk.plugin.commons.VectorUtils;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposableTabbedPane;
+import com.reedelk.plugin.editor.properties.renderer.typemap.custom.MapTableCustomColumnModel;
+import com.reedelk.plugin.editor.properties.renderer.typemap.custom.MapTableCustomColumnModelFactory;
+import com.reedelk.plugin.editor.properties.renderer.typemap.custom.MapTableCustomObjectDialog;
+import com.reedelk.plugin.editor.properties.renderer.typemap.primitive.MapTableColumnModelFactory;
+import com.reedelk.plugin.editor.properties.renderer.typemap.primitive.MapTableModel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Vector;
 
 public class MapPropertyRenderer extends BaseMapPropertyRenderer {
 
@@ -44,62 +45,29 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
         addTabbedPaneToParent(parent, rendered, descriptor, context);
     }
 
-    @SuppressWarnings("unchecked")
-    private JComponent createContent(Module module, PropertyAccessor propertyAccessor, @NotNull ContainerContext context) {
-        MapTableModel tableModel = new MapTableModel(vectors -> {
-            // Data Model Update
-            Map<String, String> updated = new LinkedHashMap<>();
-            vectors.forEach(vector -> {
-                String key = VectorUtils.getOrEmptyIfNull((Vector<String>) vector, 0); // 0 is the key
-                String value = VectorUtils.getOrEmptyIfNull((Vector<String>) vector, 1); // 1 is the value
-                updated.put(key, value);
-            });
-            propertyAccessor.set(updated);
-        });
-
-        // Data Model Initialize
-        Map<String, String> map = propertyAccessor.get();
-        if (map != null) {
-            map.forEach((key, value) -> tableModel.addRow(new Object[]{key, value}));
-        }
-
-        MapTableColumnModel columnModel = new MapTableColumnModel();
+    private JComponent createContent(@NotNull Module module,
+                                     @NotNull PropertyAccessor propertyAccessor,
+                                     @NotNull ContainerContext context) {
+        MapTableModel tableModel = new MapTableModel(propertyAccessor);
+        MapTableColumnModelFactory columnModel = new MapTableColumnModelFactory();
         return new MapPropertyTabContainer(module.getProject(), tableModel, columnModel);
     }
 
-    @SuppressWarnings("unchecked")
     protected JComponent createCustomObjectContent(@NotNull Module module,
                                                    @NotNull TypeMapDescriptor descriptor,
                                                    @NotNull PropertyAccessor propertyAccessor,
                                                    @NotNull ContainerContext context) {
 
-        TypeDescriptor valueType = descriptor.getValueType();
         TypeObjectDescriptor typeObjectDescriptor = (TypeObjectDescriptor) descriptor.getValueType();
-        Map<String,String> data = propertyAccessor.get();
-        MapTableModel tableModel = new MapTableModel(vectors -> {
-            // Data Model Update
-            Map<String, Object> updated = new LinkedHashMap<>();
-            vectors.forEach(vector -> {
-                String key = VectorUtils.getOrEmptyIfNull((Vector<String>) vector, 0); // 0 is the key
-                Object value = VectorUtils.getOrEmptyIfNull((Vector<String>) vector, 1); // 1 is the value
-                updated.put(key, value);
-            });
-            propertyAccessor.set(updated);
-        });
 
-        // Data Model Initialize
-        data.forEach((key, value) -> tableModel.addRow(new Object[] { key, value }));
+        MapTableCustomColumnModel tableModel = new MapTableCustomColumnModel(propertyAccessor);
 
-        MapTableCustomColumnModel.ActionHandler action = new MapTableCustomColumnModel.ActionHandler() {
-            @Override
-            public void onClick(Object value) {
-                EditCustomObjectDialog dialog = new EditCustomObjectDialog(module, "Test");
-                if (dialog.showAndGet()) {
-                    System.out.println("hello");
-                }
-            }
+        MapTableCustomColumnModelFactory.ActionHandler action = value -> {
+            MapTableCustomObjectDialog dialog = new MapTableCustomObjectDialog(module, "Test", typeObjectDescriptor, (ComponentDataHolder) value);
+            dialog.showAndGet();
         };
-        MapTableCustomColumnModel columnModel = new MapTableCustomColumnModel(action);
+
+        MapTableCustomColumnModelFactory columnModel = new MapTableCustomColumnModelFactory(action);
         return new MapPropertyTabContainer(module.getProject(), tableModel, columnModel);
     }
 

@@ -1,19 +1,16 @@
-package com.reedelk.plugin.editor.properties.renderer.typemap;
+package com.reedelk.plugin.editor.properties.renderer.typemap.dynamic;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.TypeMapDescriptor;
-import com.reedelk.plugin.commons.VectorUtils;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposableTabbedPane;
-import com.reedelk.runtime.api.commons.ScriptUtils;
+import com.reedelk.plugin.editor.properties.commons.DisposableTableModel;
+import com.reedelk.plugin.editor.properties.renderer.typemap.BaseMapPropertyRenderer;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Vector;
 
 public class DynamicMapPropertyRenderer extends BaseMapPropertyRenderer {
 
@@ -25,9 +22,10 @@ public class DynamicMapPropertyRenderer extends BaseMapPropertyRenderer {
                              @NotNull ContainerContext context) {
 
         final TypeMapDescriptor propertyType = propertyDescriptor.getType();
-        DisposableTabbedPane tabbedPane = tabbedPaneFrom(propertyDescriptor, context, propertyType);
-        JComponent content = createContent(module, propertyAccessor, context);
+        final DisposableTabbedPane tabbedPane = tabbedPaneFrom(propertyDescriptor, context, propertyType);
+        final JComponent content = createContent(module, propertyAccessor, context);
         tabbedPane.addTab(propertyDescriptor.getDisplayName(), content);
+
         return tabbedPane;
     }
 
@@ -39,26 +37,10 @@ public class DynamicMapPropertyRenderer extends BaseMapPropertyRenderer {
         addTabbedPaneToParent(parent, rendered, descriptor, context);
     }
 
-    @SuppressWarnings("unchecked")
-    protected JComponent createContent(Module module, PropertyAccessor propertyAccessor, @NotNull ContainerContext context) {
-        MapTableModel tableModel = new MapTableModel(vectors -> {
-            // Model Update
-            Map<String, String> updated = new LinkedHashMap<>();
-            vectors.forEach(vector -> {
-                String key = VectorUtils.getOrEmptyIfNull((Vector<String>) vector, 0); // 0 is the key
-                String value = ScriptUtils.asScript(VectorUtils.getOrEmptyIfNull((Vector<String>) vector, 1)); // 1 is the value
-                updated.put(key, value);
-            });
-            propertyAccessor.set(updated);
-        });
-
-        // Data Model Initialize
-        Map<String, String> map = propertyAccessor.get();
-        if (map != null) {
-            map.forEach((key, value) -> tableModel.addRow(new Object[]{key, ScriptUtils.unwrap(value)}));
-        }
-
-        // Return the content
+    protected JComponent createContent(@NotNull Module module,
+                                       @NotNull PropertyAccessor propertyAccessor,
+                                       @NotNull ContainerContext context) {
+        DisposableTableModel tableModel = new DynamicMapTableModel(propertyAccessor);
         return new DynamicMapPropertyTabContainer(module, tableModel, context);
     }
 }

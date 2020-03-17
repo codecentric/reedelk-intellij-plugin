@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.renderer.typemap;
+package com.reedelk.plugin.editor.properties.renderer.typemap.custom;
 
 import com.intellij.ui.components.JBTextField;
 import com.intellij.ui.table.JBTable;
@@ -10,17 +10,20 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
-public class MapTableCustomColumnModel implements DisposableTableColumnModelFactory {
+public class MapTableCustomColumnModelFactory implements DisposableTableColumnModelFactory {
+
+    private static final Cursor CURSOR_HAND = new Cursor(Cursor.HAND_CURSOR);
+    private static final Cursor CURSOR_DEFAULT = new Cursor(Cursor.DEFAULT_CURSOR);
 
     private static final String[] COLUMN_NAMES = {"Status Code", "Edit Response"};
     private static final int EDIT_COLUMN_WIDTH = 100;
     private final ActionHandler action;
 
-    interface ActionHandler {
+    public interface ActionHandler {
         void onClick(Object editorValue);
     }
 
-    public MapTableCustomColumnModel(ActionHandler action) {
+    public MapTableCustomColumnModelFactory(ActionHandler action) {
         this.action = action;
     }
 
@@ -32,7 +35,7 @@ public class MapTableCustomColumnModel implements DisposableTableColumnModelFact
         keyColumn.setCellEditor(new DefaultCellEditor(new JBTextField()));
 
         // Column 2 (Edit button)
-        EditButtonColumn editButtonColumn = new EditButtonColumn(table, action);
+        MapTableCustomEditButtonCell editButtonColumn = new MapTableCustomEditButtonCell(table, action);
 
         TableColumn valueColumn = table.getColumnModel().getColumn(1);
         valueColumn.setHeaderValue(COLUMN_NAMES[1]);
@@ -49,11 +52,11 @@ public class MapTableCustomColumnModel implements DisposableTableColumnModelFact
             }
 
             @Override
-            public void mouseMoved(MouseEvent e) {
-                if (table.columnAtPoint(e.getPoint()) == 1) {
-                    table.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            public void mouseMoved(MouseEvent event) {
+                if (table.columnAtPoint(event.getPoint()) == 1) {
+                    table.setCursor(CURSOR_HAND);
                 } else {
-                    table.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                    table.setCursor(CURSOR_DEFAULT);
                 }
             }
         });

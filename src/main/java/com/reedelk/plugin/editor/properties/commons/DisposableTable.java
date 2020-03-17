@@ -60,7 +60,7 @@ public class DisposableTable extends DisposableScrollPane implements CommitPrope
     }
 
     public void addEmptyRow() {
-        tableModel.addRow(new Object[]{});
+        tableModel.addRow(tableModel.createRow());
     }
 
     public void removeSelectedRow() {

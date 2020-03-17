@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.renderer.typemap;
+package com.reedelk.plugin.editor.properties.renderer.typemap.custom;
 
 import com.intellij.ui.components.JBLabel;
 import com.reedelk.plugin.commons.Icons;
@@ -14,29 +14,18 @@ import java.awt.event.MouseListener;
 
 import static com.intellij.icons.AllIcons.Actions.EditSource;
 
-/**
- * The ButtonColumn class provides a renderer and an editor that looks like a
- * JButton. The renderer and editor will then be used for a specified column
- * in the table. The TableModel will contain the String to be displayed on
- * the button.
- * <p>
- * The button can be invoked by a mouse click or by pressing the space bar
- * when the cell has focus. Optionally a mnemonic can be set to invoke the
- * button. When the button is invoked the provided Action is invoked. The
- * source of the Action will be the table. The action command will contain
- * the model row number of the button that was clicked.
- */
-public class EditButtonColumn extends AbstractCellEditor implements TableCellRenderer, TableCellEditor, ActionListener, MouseListener {
+
+public class MapTableCustomEditButtonCell extends AbstractCellEditor implements TableCellRenderer, TableCellEditor, ActionListener, MouseListener {
     private JTable table;
 
-    private MapTableCustomColumnModel.ActionHandler action;
+    private MapTableCustomColumnModelFactory.ActionHandler action;
     private JPanel edit;
     private JPanel render;
 
     private boolean isButtonColumnEditor;
     private Object editorValue;
 
-    public EditButtonColumn(JTable table, MapTableCustomColumnModel.ActionHandler action) {
+    public MapTableCustomEditButtonCell(JTable table, MapTableCustomColumnModelFactory.ActionHandler action) {
         this.table = table;
         this.action = action;
 
@@ -89,8 +78,8 @@ public class EditButtonColumn extends AbstractCellEditor implements TableCellRen
     @Override
     public void mouseReleased(MouseEvent event) {
         if (isButtonColumnEditor && table.isEditing()) {
-            table.getCellEditor().stopCellEditing();
             action.onClick(editorValue);
+            table.getCellEditor().stopCellEditing();
             fireEditingStopped();
         }
         isButtonColumnEditor = false;

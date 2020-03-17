@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.renderer.typemap;
+package com.reedelk.plugin.editor.properties.renderer.typemap.primitive;
 
 import com.intellij.ui.components.JBTextField;
 import com.intellij.ui.table.JBTable;
@@ -7,7 +7,7 @@ import com.reedelk.plugin.editor.properties.commons.DisposableTableColumnModelFa
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 
-public class MapTableColumnModel implements DisposableTableColumnModelFactory {
+public class MapTableColumnModelFactory implements DisposableTableColumnModelFactory {
 
     private static final String[] COLUMN_NAMES = {"Key", "Value"};
 
