@@ -18,7 +18,7 @@ class DynamicMapPropertyTabContainer extends DisposablePanel {
 
     DynamicMapPropertyTabContainer(@NotNull Module module,
                                    @NotNull DisposableTableModel tableModel,
-                                   @NotNull ContainerContext context) {
+                                   @NotNull DisposableTableColumnModelFactory columnModelFactory) {
         setLayout(new BorderLayout());
         add(new LoadingContentPanel());
 
@@ -33,8 +33,7 @@ class DynamicMapPropertyTabContainer extends DisposablePanel {
                 SwingUtilities.invokeLater(() -> {
                     DisposablePanel mapContainer = new DisposablePanel();
                     mapContainer.setLayout(new BoxLayout(mapContainer, BoxLayout.Y_AXIS));
-                    DynamicMapTableColumnModelFactory columnModel = new DynamicMapTableColumnModelFactory(module, context);
-                    DisposableTable disposablePropertyTable = new DisposableTable(module.getProject(), tableModel, columnModel);
+                    DisposableTable disposablePropertyTable = new DisposableTable(module.getProject(), tableModel, columnModelFactory);
                     JPanel actionPanel = new TableActionPanel(disposablePropertyTable);
                     mapContainer.add(actionPanel);
                     mapContainer.add(disposablePropertyTable);

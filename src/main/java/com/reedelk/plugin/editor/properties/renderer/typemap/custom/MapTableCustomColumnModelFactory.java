@@ -2,6 +2,7 @@ package com.reedelk.plugin.editor.properties.renderer.typemap.custom;
 
 import com.intellij.ui.components.JBTextField;
 import com.intellij.ui.table.JBTable;
+import com.reedelk.module.descriptor.model.TypeMapDescriptor;
 import com.reedelk.plugin.editor.properties.commons.DisposableTableColumnModelFactory;
 
 import javax.swing.*;
@@ -9,32 +10,41 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.util.Optional;
+
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class MapTableCustomColumnModelFactory implements DisposableTableColumnModelFactory {
 
     private static final Cursor CURSOR_HAND = new Cursor(Cursor.HAND_CURSOR);
     private static final Cursor CURSOR_DEFAULT = new Cursor(Cursor.DEFAULT_CURSOR);
 
-    private static final String[] COLUMN_NAMES = {"Status Code", "Edit Response"};
     private static final int EDIT_COLUMN_WIDTH = 100;
     private final MapTableCustomEditButtonAction action;
+    private final String keyName;
+    private final String valueName;
 
-    public MapTableCustomColumnModelFactory(MapTableCustomEditButtonAction action) {
+    public MapTableCustomColumnModelFactory(TypeMapDescriptor propertyType, MapTableCustomEditButtonAction action) {
+        String keyName = propertyType.getKeyName();
+        String valueName = propertyType.getValueName();
+
         this.action = action;
+        this.keyName = Optional.ofNullable(keyName).orElse(message("table.header.key.name"));
+        this.valueName = Optional.ofNullable(valueName).orElse(message("table.header.value.name"));
     }
 
     @Override
     public void create(JBTable table) {
         // Column 1 (the map key)
         TableColumn keyColumn = table.getColumnModel().getColumn(0);
-        keyColumn.setHeaderValue(COLUMN_NAMES[0]);
+        keyColumn.setHeaderValue(keyName);
         keyColumn.setCellEditor(new DefaultCellEditor(new JBTextField()));
 
         // Column 2 (Edit button)
         MapTableCustomEditButtonCell editButtonColumn = new MapTableCustomEditButtonCell(table, action);
 
         TableColumn valueColumn = table.getColumnModel().getColumn(1);
-        valueColumn.setHeaderValue(COLUMN_NAMES[1]);
+        valueColumn.setHeaderValue(valueName);
         valueColumn.setCellRenderer(editButtonColumn);
         valueColumn.setCellEditor(editButtonColumn);
         valueColumn.setPreferredWidth(EDIT_COLUMN_WIDTH);

@@ -23,7 +23,7 @@ public class DynamicMapPropertyRenderer extends BaseMapPropertyRenderer {
 
         final TypeMapDescriptor propertyType = propertyDescriptor.getType();
         final DisposableTabbedPane tabbedPane = tabbedPaneFrom(propertyDescriptor, context, propertyType);
-        final JComponent content = createContent(module, propertyAccessor, context);
+        final JComponent content = createContent(module, propertyType, propertyAccessor, context);
         tabbedPane.addTab(propertyDescriptor.getDisplayName(), content);
 
         return tabbedPane;
@@ -38,9 +38,11 @@ public class DynamicMapPropertyRenderer extends BaseMapPropertyRenderer {
     }
 
     protected JComponent createContent(@NotNull Module module,
+                                       @NotNull TypeMapDescriptor propertyType,
                                        @NotNull PropertyAccessor propertyAccessor,
                                        @NotNull ContainerContext context) {
         DisposableTableModel tableModel = new DynamicMapTableModel(propertyAccessor);
-        return new DynamicMapPropertyTabContainer(module, tableModel, context);
+        DynamicMapTableColumnModelFactory columnModelFactory = new DynamicMapTableColumnModelFactory(module, propertyType, context);
+        return new DynamicMapPropertyTabContainer(module, tableModel, columnModelFactory);
     }
 }

@@ -31,7 +31,7 @@ class ConditionRouteTableColumnModelFactory implements DisposableTableColumnMode
 
         // Column 0 (Condition)
         TableColumn conditionColumn = table.getColumnModel().getColumn(0);
-        conditionColumn.setHeaderValue(ConditionRouteColumns.COLUMN_NAMES[1]);
+        conditionColumn.setHeaderValue(ConditionRouteColumns.COLUMN_NAMES[0]);
         conditionColumn.setCellRenderer(cellRenderer);
         conditionColumn.setCellEditor(conditionCellEditor);
 
