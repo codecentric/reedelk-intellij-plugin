@@ -30,7 +30,6 @@ public class DynamicMapTableColumnModelFactory implements DisposableTableColumnM
         this.context = context;
         this.keyName = Optional.ofNullable(keyName).orElse(message("table.header.key.name"));
         this.valueName = Optional.ofNullable(valueName).orElse(message("table.header.value.name"));
-
     }
 
     @Override
