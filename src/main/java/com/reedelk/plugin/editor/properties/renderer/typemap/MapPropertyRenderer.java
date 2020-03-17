@@ -18,6 +18,8 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
+
 public class MapPropertyRenderer extends BaseMapPropertyRenderer {
 
     @NotNull
@@ -27,13 +29,14 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
                              @NotNull PropertyAccessor propertyAccessor,
                              @NotNull ContainerContext context) {
 
+        final String propertyDisplayName = descriptor.getDisplayName();
         final TypeMapDescriptor propertyType = descriptor.getType();
         final JComponent content = isPrimitiveValueType(propertyType) ?
-                createContent(module, propertyAccessor, context) :
-                createCustomObjectContent(module, propertyType, propertyAccessor, context);
+                createContent(module, propertyAccessor) :
+                createCustomObjectContent(module, propertyType, propertyAccessor);
 
         DisposableTabbedPane tabbedPane = tabbedPaneFrom(descriptor, context, propertyType);
-        tabbedPane.addTab(descriptor.getDisplayName(), content);
+        tabbedPane.addTab(propertyDisplayName, content);
         return tabbedPane;
     }
 
@@ -47,8 +50,7 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
     }
 
     private JComponent createContent(@NotNull Module module,
-                                     @NotNull PropertyAccessor propertyAccessor,
-                                     @NotNull ContainerContext context) {
+                                     @NotNull PropertyAccessor propertyAccessor) {
         MapTableModel tableModel = new MapTableModel(propertyAccessor);
         MapTableColumnModelFactory columnModel = new MapTableColumnModelFactory();
         return new MapPropertyTabContainer(module.getProject(), tableModel, columnModel);
@@ -56,15 +58,15 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
 
     protected JComponent createCustomObjectContent(@NotNull Module module,
                                                    @NotNull TypeMapDescriptor descriptor,
-                                                   @NotNull PropertyAccessor propertyAccessor,
-                                                   @NotNull ContainerContext context) {
+                                                   @NotNull PropertyAccessor propertyAccessor) {
 
         TypeObjectDescriptor typeObjectDescriptor = (TypeObjectDescriptor) descriptor.getValueType();
 
         MapTableCustomColumnModel tableModel = new MapTableCustomColumnModel(propertyAccessor);
 
         MapTableCustomEditButtonAction action = value -> {
-            MapTableCustomObjectDialog dialog = new MapTableCustomObjectDialog(module, "Test", typeObjectDescriptor, (ComponentDataHolder) value);
+            MapTableCustomObjectDialog dialog =
+                    new MapTableCustomObjectDialog(module, message("properties.type.map.value.edit"), typeObjectDescriptor, (ComponentDataHolder) value);
             dialog.showAndGet();
         };
 
