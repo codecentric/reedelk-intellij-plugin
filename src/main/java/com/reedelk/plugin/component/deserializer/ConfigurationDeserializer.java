@@ -25,8 +25,8 @@ public class ConfigurationDeserializer {
         JSONObject jsonDefinition;
         try {
             jsonDefinition = new JSONObject(json);
-        } catch (JSONException e) {
-            LOG.warn(e);
+        } catch (JSONException exception) {
+            LOG.warn(exception);
             return Optional.empty();
         }
 
@@ -50,9 +50,10 @@ public class ConfigurationDeserializer {
         if (jsonDefinition.has(Config.title())) {
             dataHolder.set(Config.title(), Config.title(jsonDefinition));
         }
-        propertyType.getObjectProperties().forEach(descriptor ->
-                ComponentDataHolderDeserializer.get().deserialize(jsonDefinition, dataHolder, descriptor));
-        return Optional.of(dataHolder);
 
+        propertyType.getObjectProperties().forEach(descriptor ->
+                ComponentDataHolderDeserializer.get().deserialize(dataHolder, descriptor, jsonDefinition));
+
+        return Optional.of(dataHolder);
     }
 }

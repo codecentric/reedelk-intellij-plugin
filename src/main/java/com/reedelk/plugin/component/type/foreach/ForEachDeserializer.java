@@ -27,7 +27,7 @@ public class ForEachDeserializer extends AbstractNodeDeserializer {
         ComponentData componentData = current.componentData();
 
         componentData.getPropertiesDescriptors().forEach(descriptor ->
-                ComponentDataHolderDeserializer.get().deserialize(componentDefinition, componentData, descriptor));
+                ComponentDataHolderDeserializer.get().deserialize(componentData, descriptor, componentDefinition));
 
         ForEachNode forEachNode = (ForEachNode) current;
 

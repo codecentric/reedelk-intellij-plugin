@@ -50,7 +50,6 @@ public class ComponentDescriptionDecorator extends ComponentDescriptor {
         return wrapped.getIcon();
     }
 
-
     @Override
     public Image getImage() {
         return wrapped.getImage();

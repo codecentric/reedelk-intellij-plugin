@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -55,6 +55,7 @@ public class ComponentDataHolderSerializer {
         });
     }
 
+    @SuppressWarnings("unchecked")
     private static void serialize(@NotNull ComponentDataHolder dataHolder,
                                   @NotNull JSONObject jsonObject,
                                   @NotNull PropertyDescriptor propertyDescriptor) {
@@ -63,8 +64,9 @@ public class ComponentDataHolderSerializer {
             Object data = dataHolder.get(propertyName);
             if (isTypeObject(data)) {
                 processTypeObject(propertyDescriptor, jsonObject, (TypeObject) data);
+            } else if (isTypeMap(data)) {
+                putData(propertyDescriptor, jsonObject, (Map<String, Object>) data);
             } else {
-                // TODO: If type map and the value is type object, then problem
                 putData(propertyDescriptor, jsonObject, data);
             }
         }
@@ -94,36 +96,37 @@ public class ComponentDataHolderSerializer {
 
     private static void putData(@NotNull PropertyDescriptor propertyDescriptor,
                                 @NotNull JSONObject jsonObject,
+                                @Nullable Map<String, Object> map) {
+        String propertyName = propertyDescriptor.getName();
+        Stream.of(map)
+                .filter(ExcludeEmptyMaps)
+                .forEach(theMap -> {
+                    Map<String, Object> serialized = new HashMap<>();
+                    Objects.requireNonNull(theMap).forEach((key, value) -> {
+                        // The target value type of the map is user defined,
+                        // therefore we need to serialize it it as well.
+                        if (isTypeObject(value)) {
+                            TypeMapDescriptor type = propertyDescriptor.getType();
+                            TypeObjectDescriptor objectDescriptor = (TypeObjectDescriptor) type.getValueType();
+                            JSONObject serializedMapValue = JsonObjectFactory.newJSONObject();
+                            serialize(objectDescriptor, (TypeObject) value, serializedMapValue);
+                            serialized.put(key, serializedMapValue);
+                        } else {
+                            serialized.put(key, value);
+                        }
+                    });
+                    jsonObject.put(propertyName, serialized);
+                });
+    }
+
+    private static void putData(@NotNull PropertyDescriptor propertyDescriptor,
+                                @NotNull JSONObject jsonObject,
                                 @Nullable Object data) {
         String propertyName = propertyDescriptor.getName();
         Stream.of(data)
-                .filter(ExcludeEmptyMaps)
                 .filter(ExcludeEmptyObjects)
                 .filter(ExcludeBooleanFalse)
-                .forEach(filteredData -> {
-                    if (filteredData instanceof Map) {
-                        Map<String,Object> test = new HashMap<>();
-                        ((Map<String,Object>)filteredData).forEach(new BiConsumer<String, Object>() {
-                            @Override
-                            public void accept(String key, Object value) {
-                                if (isTypeObject(value)) {
-                                    TypeMapDescriptor type = propertyDescriptor.getType();
-                                    TypeObjectDescriptor objectDescriptor = (TypeObjectDescriptor) type.getValueType();
-                                    JSONObject refObject = JsonObjectFactory.newJSONObject();
-                                    serialize(objectDescriptor, (TypeObject) value, refObject);
-                                    test.put(key, refObject);
-                                } else {
-                                    test.put(key, value);
-                                }
-                            }
-                        });
-
-                        jsonObject.put(propertyName, test);
-
-                    } else {
-                        jsonObject.put(propertyName, filteredData);
-                    }
-                });
+                .forEach(filteredData -> jsonObject.put(propertyName, filteredData));
     }
 
     /**
@@ -131,7 +134,7 @@ public class ComponentDataHolderSerializer {
      */
     private static final Predicate<Object> ExcludeEmptyMaps = data -> {
         if (data instanceof Map) {
-            Map<?,?> dataMap = (Map<?,?>) data;
+            Map<?, ?> dataMap = (Map<?, ?>) data;
             return !dataMap.isEmpty();
         }
         return true;
@@ -159,5 +162,9 @@ public class ComponentDataHolderSerializer {
 
     private static boolean isTypeObject(Object data) {
         return data instanceof TypeObject;
+    }
+
+    private static boolean isTypeMap(Object data) {
+        return data instanceof Map;
     }
 }

@@ -18,16 +18,14 @@ public class GenericComponentDeserializer extends AbstractNodeDeserializer {
     }
 
     @Override
-    public GraphNode deserialize(GraphNode parent, JSONObject jsonDefinition) {
+    public GraphNode deserialize(GraphNode parent, JSONObject jsonObject) {
 
         ComponentData componentData = current.componentData();
 
         List<PropertyDescriptor> descriptors = componentData.getPropertiesDescriptors();
 
-        descriptors.forEach(descriptor ->
-                ComponentDataHolderDeserializer
-                        .get()
-                        .deserialize(jsonDefinition, componentData, descriptor));
+        descriptors.forEach(propertyDescriptor ->
+                ComponentDataHolderDeserializer.get().deserialize(componentData, propertyDescriptor, jsonObject));
 
         graph.add(parent, current);
 
