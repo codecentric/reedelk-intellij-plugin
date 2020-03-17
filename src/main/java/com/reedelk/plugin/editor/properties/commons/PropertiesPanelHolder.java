@@ -100,6 +100,15 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
         return this.propertyAccessors.get(propertyName);
     }
 
+    protected PropertyAccessor getAccessor(String propertyName, TypeDescriptor propertyType, ComponentDataHolder dataHolder) {
+        return PropertyAccessorFactory.get()
+                .typeDescriptor(propertyType)
+                .propertyName(propertyName)
+                .dataHolder(dataHolder)
+                .snapshot(snapshot)
+                .build();
+    }
+
     private void initAccessors() {
         // We decorate each accessor with a property change decorator, which
         // notifies all the subscribers wishing to listen for a property change event
@@ -111,14 +120,5 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
             PropertyAccessor propertyAccessorWrapper = new PropertyChangeNotifierDecorator(this, propertyAccessor);
             propertyAccessors.put(propertyName, propertyAccessorWrapper);
         });
-    }
-
-    protected PropertyAccessor getAccessor(String propertyName, TypeDescriptor propertyType, ComponentDataHolder dataHolder) {
-        return PropertyAccessorFactory.get()
-                .typeDescriptor(propertyType)
-                .propertyName(propertyName)
-                .dataHolder(dataHolder)
-                .snapshot(snapshot)
-                .build();
     }
 }

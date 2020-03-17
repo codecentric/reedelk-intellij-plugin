@@ -16,16 +16,16 @@ import static com.intellij.icons.AllIcons.Actions.EditSource;
 
 
 public class MapTableCustomEditButtonCell extends AbstractCellEditor implements TableCellRenderer, TableCellEditor, ActionListener, MouseListener {
-    private JTable table;
 
-    private MapTableCustomColumnModelFactory.ActionHandler action;
+    private JTable table;
     private JPanel edit;
     private JPanel render;
+    private MapTableCustomEditButtonAction action;
 
-    private boolean isButtonColumnEditor;
     private Object editorValue;
+    private boolean isButtonColumnEditor;
 
-    public MapTableCustomEditButtonCell(JTable table, MapTableCustomColumnModelFactory.ActionHandler action) {
+    public MapTableCustomEditButtonCell(JTable table, MapTableCustomEditButtonAction action) {
         this.table = table;
         this.action = action;
 

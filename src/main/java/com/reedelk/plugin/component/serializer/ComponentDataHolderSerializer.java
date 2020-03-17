@@ -10,8 +10,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -62,6 +64,7 @@ public class ComponentDataHolderSerializer {
             if (isTypeObject(data)) {
                 processTypeObject(propertyDescriptor, jsonObject, (TypeObject) data);
             } else {
+                // TODO: If type map and the value is type object, then problem
                 putData(propertyDescriptor, jsonObject, data);
             }
         }
@@ -97,7 +100,30 @@ public class ComponentDataHolderSerializer {
                 .filter(ExcludeEmptyMaps)
                 .filter(ExcludeEmptyObjects)
                 .filter(ExcludeBooleanFalse)
-                .forEach(filteredData -> jsonObject.put(propertyName, filteredData));
+                .forEach(filteredData -> {
+                    if (filteredData instanceof Map) {
+                        Map<String,Object> test = new HashMap<>();
+                        ((Map<String,Object>)filteredData).forEach(new BiConsumer<String, Object>() {
+                            @Override
+                            public void accept(String key, Object value) {
+                                if (isTypeObject(value)) {
+                                    TypeMapDescriptor type = propertyDescriptor.getType();
+                                    TypeObjectDescriptor objectDescriptor = (TypeObjectDescriptor) type.getValueType();
+                                    JSONObject refObject = JsonObjectFactory.newJSONObject();
+                                    serialize(objectDescriptor, (TypeObject) value, refObject);
+                                    test.put(key, refObject);
+                                } else {
+                                    test.put(key, value);
+                                }
+                            }
+                        });
+
+                        jsonObject.put(propertyName, test);
+
+                    } else {
+                        jsonObject.put(propertyName, filteredData);
+                    }
+                });
     }
 
     /**

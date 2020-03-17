@@ -10,6 +10,7 @@ import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposableTabbedPane;
 import com.reedelk.plugin.editor.properties.renderer.typemap.custom.MapTableCustomColumnModel;
 import com.reedelk.plugin.editor.properties.renderer.typemap.custom.MapTableCustomColumnModelFactory;
+import com.reedelk.plugin.editor.properties.renderer.typemap.custom.MapTableCustomEditButtonAction;
 import com.reedelk.plugin.editor.properties.renderer.typemap.custom.MapTableCustomObjectDialog;
 import com.reedelk.plugin.editor.properties.renderer.typemap.primitive.MapTableColumnModelFactory;
 import com.reedelk.plugin.editor.properties.renderer.typemap.primitive.MapTableModel;
@@ -62,7 +63,7 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
 
         MapTableCustomColumnModel tableModel = new MapTableCustomColumnModel(propertyAccessor);
 
-        MapTableCustomColumnModelFactory.ActionHandler action = value -> {
+        MapTableCustomEditButtonAction action = value -> {
             MapTableCustomObjectDialog dialog = new MapTableCustomObjectDialog(module, "Test", typeObjectDescriptor, (ComponentDataHolder) value);
             dialog.showAndGet();
         };

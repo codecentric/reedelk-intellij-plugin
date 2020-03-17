@@ -28,9 +28,9 @@ public class MapTableCustomObjectDialog extends DialogWrapper implements Disposa
     public MapTableCustomObjectDialog(Module module, String title, TypeObjectDescriptor typeObjectDescriptor, ComponentDataHolder value) {
         super(module.getProject(), true);
         setTitle(title);
-        this.module = module;
         this.typeObjectDescriptor = typeObjectDescriptor;
         this.componentDataHolder = value;
+        this.module = module;
         init();
     }
 

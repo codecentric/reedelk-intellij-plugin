@@ -2,13 +2,11 @@ package com.reedelk.plugin.editor.properties.renderer.typeobject.configuration;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.util.ui.JBUI;
-import com.reedelk.module.descriptor.model.ComponentDataHolder;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.TypeDescriptor;
 import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
 import com.reedelk.plugin.commons.InitValuesFiller;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
-import com.reedelk.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.FormBuilder;
@@ -39,8 +37,8 @@ class ConfigPropertiesPanel extends DisposablePanel {
 
         ConfigMetadataHeaderPanel headerPanel = new ConfigMetadataHeaderPanel(configMetadata, isNewConfig);
 
-        ConfigPropertiesPanelHolder propertiesPanel =
-                new ConfigPropertiesPanelHolder(objectDescriptor.getTypeFullyQualifiedName(), configMetadata, descriptors);
+        PropertiesPanelHolder propertiesPanel =
+                new PropertiesPanelHolder(objectDescriptor.getTypeFullyQualifiedName(), configMetadata, descriptors);
 
         descriptors.forEach(propertyDescriptor -> {
 
@@ -92,27 +90,6 @@ class ConfigPropertiesPanel extends DisposablePanel {
 
             // Add Separator at the bottom
             FormBuilder.get().addLastField(new JSeparator(), this);
-        }
-    }
-
-    static class ConfigPropertiesPanelHolder extends PropertiesPanelHolder {
-
-        ConfigPropertiesPanelHolder(String componentFullyQualifiedName, ConfigMetadata configMetadata, List<PropertyDescriptor> descriptors) {
-            super(componentFullyQualifiedName, configMetadata, descriptors);
-        }
-
-        /**
-         * We override the default Properties panel holder because the accessors of data
-         * displayed in this panel goes to the configuration file and not in the graph
-         * component's data (snapshot).
-         */
-        @Override
-        protected PropertyAccessor getAccessor(String propertyName, TypeDescriptor propertyType, ComponentDataHolder dataHolder) {
-            return PropertyAccessorFactory.get()
-                    .typeDescriptor(propertyType)
-                    .propertyName(propertyName)
-                    .dataHolder(dataHolder)
-                    .build();
         }
     }
 }

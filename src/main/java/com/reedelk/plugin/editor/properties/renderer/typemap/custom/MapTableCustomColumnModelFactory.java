@@ -17,13 +17,9 @@ public class MapTableCustomColumnModelFactory implements DisposableTableColumnMo
 
     private static final String[] COLUMN_NAMES = {"Status Code", "Edit Response"};
     private static final int EDIT_COLUMN_WIDTH = 100;
-    private final ActionHandler action;
+    private final MapTableCustomEditButtonAction action;
 
-    public interface ActionHandler {
-        void onClick(Object editorValue);
-    }
-
-    public MapTableCustomColumnModelFactory(ActionHandler action) {
+    public MapTableCustomColumnModelFactory(MapTableCustomEditButtonAction action) {
         this.action = action;
     }
 
@@ -48,7 +44,6 @@ public class MapTableCustomColumnModelFactory implements DisposableTableColumnMo
         table.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
-
             }
 
             @Override
