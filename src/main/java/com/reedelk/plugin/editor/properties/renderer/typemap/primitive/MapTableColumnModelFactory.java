@@ -17,12 +17,10 @@ public class MapTableColumnModelFactory implements DisposableTableColumnModelFac
         TableColumn keyColumn = table.getColumnModel().getColumn(0);
         keyColumn.setHeaderValue(COLUMN_NAMES[0]);
         keyColumn.setCellEditor(new DefaultCellEditor(new JBTextField()));
-        table.addColumn(keyColumn);
 
         // Column 2 (the map value)
         TableColumn valueColumn = table.getColumnModel().getColumn(1);
         valueColumn.setHeaderValue(COLUMN_NAMES[1]);
         valueColumn.setCellEditor(new DefaultCellEditor(new JBTextField()));
-        table.addColumn(valueColumn);
     }
 }
