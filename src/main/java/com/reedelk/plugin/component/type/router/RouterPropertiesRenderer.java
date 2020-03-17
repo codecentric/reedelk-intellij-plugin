@@ -46,7 +46,7 @@ public class RouterPropertiesRenderer extends GenericComponentPropertiesRenderer
         TooltipContent tooltipContent = TooltipContent.from(propertyDescriptor);
 
         PropertiesPanelHolder propertiesPanel =
-                new PropertiesPanelHolder(componentFullyQualifiedName, componentData, descriptors, snapshot);
+                new PropertiesPanelHolder(module, componentFullyQualifiedName, componentData, snapshot);
 
         List<RouterConditionRoutePair> conditionRoutePairList = componentData.get(DATA_CONDITION_ROUTE_PAIRS);
 

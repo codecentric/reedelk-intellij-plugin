@@ -3,16 +3,12 @@ package com.reedelk.plugin.editor.properties.renderer.typeobject.configuration;
 import com.intellij.openapi.module.Module;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.TypeDescriptor;
 import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
 import com.reedelk.plugin.commons.InitValuesFiller;
-import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.FormBuilder;
 import com.reedelk.plugin.editor.properties.commons.PropertiesPanelHolder;
-import com.reedelk.plugin.editor.properties.renderer.PropertyTypeRenderer;
-import com.reedelk.plugin.editor.properties.renderer.PropertyTypeRendererFactory;
 import com.reedelk.plugin.editor.properties.renderer.commons.StringInputField;
 import com.reedelk.plugin.service.module.impl.configuration.ConfigMetadata;
 
@@ -37,24 +33,10 @@ class ConfigPropertiesPanel extends DisposablePanel {
 
         ConfigMetadataHeaderPanel headerPanel = new ConfigMetadataHeaderPanel(configMetadata, isNewConfig);
 
+        String componentFullyQualifiedName = objectDescriptor.getTypeFullyQualifiedName();
+
         PropertiesPanelHolder propertiesPanel =
-                new PropertiesPanelHolder(objectDescriptor.getTypeFullyQualifiedName(), configMetadata, descriptors);
-
-        descriptors.forEach(propertyDescriptor -> {
-
-            String propertyName = propertyDescriptor.getName();
-
-            PropertyAccessor propertyAccessor = propertiesPanel.getAccessor(propertyName);
-
-            TypeDescriptor propertyType = propertyDescriptor.getType();
-
-            PropertyTypeRenderer renderer = PropertyTypeRendererFactory.get().from(propertyType);
-
-            JComponent renderedComponent = renderer.render(module, propertyDescriptor, propertyAccessor, propertiesPanel);
-
-            renderer.addToParent(propertiesPanel, renderedComponent, propertyDescriptor, propertiesPanel);
-
-        });
+                new PropertiesPanelHolder(module, componentFullyQualifiedName, configMetadata, descriptors);
 
         setLayout(new BorderLayout());
         add(headerPanel, NORTH);

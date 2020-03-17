@@ -7,8 +7,6 @@ import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.plugin.editor.properties.renderer.AbstractPropertyTypeRenderer;
-import com.reedelk.plugin.editor.properties.renderer.PropertyTypeRenderer;
-import com.reedelk.plugin.editor.properties.renderer.PropertyTypeRendererFactory;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.runtime.commons.JsonParser;
 import org.jetbrains.annotations.NotNull;
@@ -99,24 +97,8 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
 
         List<PropertyDescriptor> objectProperties = objectDescriptor.getObjectProperties();
 
-        PropertiesPanelHolder propertiesPanel = new PropertiesPanelHolder(
-                objectDescriptor.getTypeFullyQualifiedName(), dataHolder, objectProperties, snapshot);
+        String typeFullyQualifiedName = objectDescriptor.getTypeFullyQualifiedName();
 
-        objectProperties.forEach(objectProperty -> {
-
-            String propertyName = objectProperty.getName();
-
-            PropertyAccessor nestedPropertyAccessor = propertiesPanel.getAccessor(propertyName);
-
-            TypeDescriptor propertyType = objectProperty.getType();
-
-            PropertyTypeRenderer renderer = PropertyTypeRendererFactory.get().from(propertyType);
-
-            JComponent renderedComponent = renderer.render(module, objectProperty, nestedPropertyAccessor, propertiesPanel);
-
-            renderer.addToParent(propertiesPanel, renderedComponent, objectProperty, propertiesPanel);
-        });
-
-        return propertiesPanel;
+        return new PropertiesPanelHolder(module, typeFullyQualifiedName, dataHolder, objectProperties, snapshot);
     }
 }
