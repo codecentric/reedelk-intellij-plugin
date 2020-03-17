@@ -105,9 +105,9 @@ public class ConfigurationDialog extends DialogWrapper implements Disposable {
         ConfigurationDialog build() {
             ConfigurationDialog dialog = new ConfigurationDialog(module, title);
             dialog.isNewConfig = isNewConfig;
+            dialog.okActionLabel = okActionLabel;
             dialog.configMetadata = configMetadata;
             dialog.objectDescriptor = objectDescriptor;
-            dialog.okActionLabel = okActionLabel;
             dialog.init();
             return dialog;
         }
