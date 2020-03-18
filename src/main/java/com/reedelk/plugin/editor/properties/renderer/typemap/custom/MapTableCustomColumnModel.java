@@ -14,7 +14,7 @@ import static com.reedelk.module.descriptor.model.TypeObjectDescriptor.newInstan
 
 public class MapTableCustomColumnModel extends AbstractMapTableModel {
 
-    private final PropertyAccessor propertyAccessor;
+    private final transient PropertyAccessor propertyAccessor;
 
     public MapTableCustomColumnModel(PropertyAccessor propertyAccessor) {
         this.propertyAccessor = propertyAccessor;

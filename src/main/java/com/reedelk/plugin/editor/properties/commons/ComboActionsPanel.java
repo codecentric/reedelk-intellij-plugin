@@ -11,7 +11,7 @@ public abstract class ComboActionsPanel<T> extends DisposablePanel {
     private final transient ClickableLabel editAction;
     private final transient ClickableLabel deleteAction;
 
-    private T item;
+    private transient T item;
 
     public ComboActionsPanel() {
         editAction = new ClickableLabel(message("config.actions.btn.edit"), EditSource, EditSource, this::edit);

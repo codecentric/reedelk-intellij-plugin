@@ -61,6 +61,14 @@ public class ScriptEditor extends DisposablePanel implements DocumentListener {
         }
     }
 
+    @Override
+    public void setBackground(Color color) {
+        super.setBackground(color);
+        if (this.editor != null) {
+            this.editor.setBackgroundColor(color);
+        }
+    }
+
     public String getValue() {
         return document.getText();
     }
@@ -80,11 +88,5 @@ public class ScriptEditor extends DisposablePanel implements DocumentListener {
 
     protected void configure(EditorEx editor) {
         // optionally add extra configuration to the editor.
-    }
-
-    public void setBackground(Color color) {
-        if (this.editor != null) {
-            this.editor.setBackgroundColor(color);
-        }
     }
 }

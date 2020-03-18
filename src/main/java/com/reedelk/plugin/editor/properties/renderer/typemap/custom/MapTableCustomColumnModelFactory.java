@@ -24,12 +24,9 @@ public class MapTableCustomColumnModelFactory implements DisposableTableColumnMo
     private final String valueName;
 
     public MapTableCustomColumnModelFactory(TypeMapDescriptor propertyType, MapTableCustomEditButtonAction action) {
-        String keyName = propertyType.getKeyName();
-        String valueName = propertyType.getValueName();
-
         this.action = action;
-        this.keyName = Optional.ofNullable(keyName).orElse(message("table.header.key.name"));
-        this.valueName = Optional.ofNullable(valueName).orElse(message("table.header.value.name"));
+        this.keyName = Optional.ofNullable(propertyType.getKeyName()).orElse(message("table.header.key.name"));
+        this.valueName = Optional.ofNullable(propertyType.getValueName()).orElse(message("table.header.value.name"));
     }
 
     @Override
@@ -53,6 +50,7 @@ public class MapTableCustomColumnModelFactory implements DisposableTableColumnMo
         table.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
+                // We are not interested in detecting mouse dragged event.
             }
 
             @Override

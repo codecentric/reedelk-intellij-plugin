@@ -23,15 +23,13 @@ import static com.intellij.util.ui.JBUI.Borders;
 
 public class PropertiesPanelHolder extends DisposablePanel implements ContainerContext {
 
-    private final Module module;
     private final String componentFullyQualifiedName;
 
+    private final transient Module module;
     private final transient FlowSnapshot snapshot;
     private final transient ComponentDataHolder dataHolder;
-
     private final transient List<PropertyDescriptor> descriptors = new ArrayList<>();
     private final transient List<JComponentHolder> componentHolders = new ArrayList<>();
-
     private final transient Map<String, PropertyAccessor> propertyAccessors = new HashMap<>();
     private final transient Map<String, List<InputChangeListener>> propertyChangeListeners = new HashMap<>();
 

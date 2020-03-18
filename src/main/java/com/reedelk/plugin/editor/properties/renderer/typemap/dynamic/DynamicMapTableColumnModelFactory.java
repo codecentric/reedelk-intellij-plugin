@@ -18,13 +18,10 @@ public class DynamicMapTableColumnModelFactory implements DisposableTableColumnM
     private final ContainerContext context;
 
     DynamicMapTableColumnModelFactory(Module module, TypeMapDescriptor propertyType, ContainerContext context) {
-        String keyName = propertyType.getKeyName();
-        String valueName = propertyType.getValueName();
-
         this.module = module;
         this.context = context;
-        this.keyName = Optional.ofNullable(keyName).orElse(message("table.header.key.name"));
-        this.valueName = Optional.ofNullable(valueName).orElse(message("table.header.value.name"));
+        this.keyName = Optional.ofNullable(propertyType.getKeyName()).orElse(message("table.header.key.name"));
+        this.valueName = Optional.ofNullable(propertyType.getValueName()).orElse(message("table.header.value.name"));
     }
 
     @Override

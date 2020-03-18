@@ -11,7 +11,7 @@ import java.util.Vector;
 
 public class MapTableModel extends AbstractMapTableModel {
 
-    private final PropertyAccessor propertyAccessor;
+    private final transient PropertyAccessor propertyAccessor;
 
     public MapTableModel(PropertyAccessor propertyAccessor) {
         super();

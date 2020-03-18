@@ -18,13 +18,13 @@ import static com.intellij.icons.AllIcons.Actions.EditSource;
 
 public class MapTableCustomEditButtonCell extends AbstractCellEditor implements TableCellRenderer, TableCellEditor, ActionListener, MouseListener {
 
-    private JTable table;
     private JPanel edit;
+    private JTable table;
     private JPanel render;
-    private MapTableCustomEditButtonAction action;
-
-    private Object editorValue;
     private boolean isButtonColumnEditor;
+
+    private transient Object editorValue;
+    private transient MapTableCustomEditButtonAction action;
 
     public MapTableCustomEditButtonCell(JTable table, MapTableCustomEditButtonAction action) {
         this.table = table;
@@ -92,13 +92,16 @@ public class MapTableCustomEditButtonCell extends AbstractCellEditor implements 
 
     @Override
     public void mouseClicked(MouseEvent event) {
+        // Not used
     }
 
     @Override
     public void mouseEntered(MouseEvent event) {
+        // Not used
     }
 
     @Override
     public void mouseExited(MouseEvent event) {
+        // Not used
     }
 }

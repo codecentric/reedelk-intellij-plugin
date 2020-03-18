@@ -16,10 +16,8 @@ public class MapTableColumnModelFactory implements DisposableTableColumnModelFac
     private final String valueName;
 
     public MapTableColumnModelFactory(TypeMapDescriptor propertyType) {
-        String keyName = propertyType.getKeyName();
-        String valueName = propertyType.getValueName();
-        this.keyName = Optional.ofNullable(keyName).orElse(message("table.header.key.name"));
-        this.valueName = Optional.ofNullable(valueName).orElse(message("table.header.value.name"));
+        this.keyName = Optional.ofNullable(propertyType.getKeyName()).orElse(message("table.header.key.name"));
+        this.valueName = Optional.ofNullable(propertyType.getValueName()).orElse(message("table.header.value.name"));
     }
 
     @Override

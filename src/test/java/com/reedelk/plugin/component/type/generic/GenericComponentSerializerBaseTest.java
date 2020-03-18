@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 
 import static com.reedelk.plugin.graph.serializer.AbstractSerializer.UntilNoSuccessors;
 
-class GenericComponentSerializerBaseTest extends AbstractGraphTest {
+abstract class GenericComponentSerializerBaseTest extends AbstractGraphTest {
 
     private static final UntilNoSuccessors UNTIL_NO_SUCCESSORS = new UntilNoSuccessors();
 
