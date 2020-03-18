@@ -1,0 +1,14 @@
+{
+  "implementor": "com.reedelk.plugin.fixture.ComponentNode1",
+  "stringProperty": "first property",
+  "mapPropertyWithCustomValueType": {
+    "200": {
+      "stringProperty": "200 string property",
+      "integerObjectProperty": 200
+    },
+    "400": {
+      "stringProperty": "400 string property",
+      "integerObjectProperty": 400
+    }
+  }
+}

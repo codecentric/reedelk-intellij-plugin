@@ -214,7 +214,8 @@ public class SamplePropertyDescriptors {
         private static final Map<String, String> valueAndDisplayMap = ImmutableMap.of("NONE", "No config", "CERT", "Certificate");
 
         static final TypeDescriptor enumTypeDescriptor = createTypeEnumDescriptor(valueAndDisplayMap);
-        static final TypeDescriptor mapTypeDescriptor = createTypeMapDescriptor("Headers");
+        static final TypeDescriptor mapTypeDescriptor = createTypeMapDescriptor("Headers", stringTypeDescriptor);
+        static final TypeDescriptor mapTypeDescriptorWithCustomValueType = createTypeMapDescriptor("Responses", TypeObjects.typeObjectDescriptor);
         static final TypeDescriptor scriptTypeDescriptor = new TypeScriptDescriptor();
         static final TypeDescriptor comboTypeDescriptor = createTypeComboDescriptor(true, new String[]{"one", "two", "three"}, null);
         static final TypeDescriptor resourceTypeDescriptor = new TypeResourceTextDescriptor();
@@ -231,6 +232,13 @@ public class SamplePropertyDescriptors {
                         .type(mapTypeDescriptor)
                         .name("mapProperty")
                         .displayName("Map property")
+                        .build();
+
+        static final PropertyDescriptor mapPropertyWithCustomValueType =
+                PropertyDescriptor.builder()
+                        .type(mapTypeDescriptorWithCustomValueType)
+                        .name("mapPropertyWithCustomValueType")
+                        .displayName("Map property with custom value type")
                         .build();
 
         static final PropertyDescriptor scriptProperty =

@@ -48,8 +48,9 @@ public class ObjectFactories {
         return descriptor;
     }
 
-    public static TypeMapDescriptor createTypeMapDescriptor(String tabGroup) {
+    public static TypeMapDescriptor createTypeMapDescriptor(String tabGroup, TypeDescriptor valueType) {
         TypeMapDescriptor descriptor = new TypeMapDescriptor();
+        descriptor.setValueType(valueType);
         descriptor.setTabGroup(tabGroup);
         return descriptor;
     }
