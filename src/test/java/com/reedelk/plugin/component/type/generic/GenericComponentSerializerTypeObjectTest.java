@@ -10,7 +10,9 @@ import com.reedelk.plugin.graph.node.GraphNode;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
+import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.Primitives;
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.Primitives.stringProperty;
+import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.TypeObjects;
 import static java.util.Arrays.asList;
 
 public class GenericComponentSerializerTypeObjectTest extends GenericComponentSerializerBaseTest {
@@ -19,7 +21,7 @@ public class GenericComponentSerializerTypeObjectTest extends GenericComponentSe
     void shouldCorrectlySerializeTypeObject() {
         // Given
         ComponentData componentData = new ComponentData(ComponentDescriptor.create()
-                .propertyDescriptors(asList(stringProperty, SamplePropertyDescriptors.TypeObjects.typeObjectProperty))
+                .propertyDescriptors(asList(stringProperty, TypeObjects.typeObjectProperty))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build());
 
@@ -43,7 +45,7 @@ public class GenericComponentSerializerTypeObjectTest extends GenericComponentSe
     void shouldCorrectlySerializeGenericComponentWithTypeObjectReference() {
         // Given
         ComponentData componentData = new ComponentData(ComponentDescriptor.create()
-                .propertyDescriptors(asList(SamplePropertyDescriptors.Primitives.booleanProperty, SamplePropertyDescriptors.TypeObjects.typeObjectSharedProperty))
+                .propertyDescriptors(asList(Primitives.booleanProperty, TypeObjects.typeObjectSharedProperty))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build());
 
@@ -67,7 +69,7 @@ public class GenericComponentSerializerTypeObjectTest extends GenericComponentSe
     void shouldCorrectlySerializeGenericComponentWithEmptyTypeObjectReference() {
         // Given
         ComponentData componentData = new ComponentData(ComponentDescriptor.create()
-                .propertyDescriptors(asList(SamplePropertyDescriptors.Primitives.booleanProperty, SamplePropertyDescriptors.TypeObjects.typeObjectSharedProperty))
+                .propertyDescriptors(asList(Primitives.booleanProperty, TypeObjects.typeObjectSharedProperty))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build());
 
