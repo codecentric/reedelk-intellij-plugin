@@ -14,7 +14,7 @@ import java.math.BigInteger;
 
 import static java.util.Arrays.asList;
 
-public class GenericComponentDeserializerPrimitiveTypeTest extends AbstractNodeDeserializerTest {
+public class GenericComponentDeserializerTypePrimitiveTest extends AbstractNodeDeserializerTest {
 
     @Test
     void shouldCorrectlyDeserializePrimitiveTypesValues() {
