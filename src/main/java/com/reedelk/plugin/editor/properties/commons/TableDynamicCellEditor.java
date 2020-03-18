@@ -2,6 +2,7 @@ package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
+import com.intellij.util.ui.UIUtil;
 import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditor;
 import com.reedelk.plugin.editor.properties.renderer.typedynamicvalue.DynamicValueScriptEditor;
@@ -30,6 +31,8 @@ public class TableDynamicCellEditor implements TableCellEditor, Disposable {
 
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+        this.editor.setBackground(row % 2 == 0 ? UIUtil.getDecoratedRowColor() : UIUtil.getTableBackground());
+        this.editor.setForeground(UIUtil.getTextFieldForeground());
         this.editor.setValue(value == null ? StringUtils.EMPTY : (String) value);
         return this.content;
     }

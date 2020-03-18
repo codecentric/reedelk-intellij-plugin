@@ -3,6 +3,7 @@ package com.reedelk.plugin.editor.properties.commons;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBLabel;
+import com.intellij.util.ui.UIUtil;
 import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.editor.properties.renderer.typedynamicvalue.DynamicValueScriptEditor;
 import com.reedelk.runtime.api.commons.StringUtils;
@@ -26,6 +27,8 @@ public class TableDynamicCellRenderer implements TableCellRenderer, Disposable {
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        this.editor.setBackground(row % 2 == 0 ? UIUtil.getDecoratedRowColor() : UIUtil.getTableBackground());
+        this.editor.setForeground(UIUtil.getTextFieldForeground());
         this.editor.setValue(value == null ? StringUtils.EMPTY : (String) value);
         return this.content;
     }
