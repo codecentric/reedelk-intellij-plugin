@@ -1,15 +1,10 @@
 package com.reedelk.plugin.editor.properties.renderer.typemap.dynamic;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.ui.components.JBTextField;
 import com.intellij.ui.table.JBTable;
 import com.reedelk.module.descriptor.model.TypeMapDescriptor;
-import com.reedelk.plugin.editor.properties.commons.ContainerContext;
-import com.reedelk.plugin.editor.properties.commons.DisposableTableColumnModelFactory;
-import com.reedelk.plugin.editor.properties.commons.TableDynamicCellEditor;
-import com.reedelk.plugin.editor.properties.commons.TableDynamicCellRenderer;
+import com.reedelk.plugin.editor.properties.commons.*;
 
-import javax.swing.*;
 import javax.swing.table.TableColumn;
 import java.util.Optional;
 
@@ -40,7 +35,7 @@ public class DynamicMapTableColumnModelFactory implements DisposableTableColumnM
         // Column 1 (the map key)
         TableColumn keyColumn = table.getColumnModel().getColumn(0);
         keyColumn.setHeaderValue(keyName);
-        keyColumn.setCellEditor(new DefaultCellEditor(new JBTextField()));
+        keyColumn.setCellRenderer(new StripedRowCellRenderer());
 
         // Column 2 (the map value)
         TableColumn valueColumn = table.getColumnModel().getColumn(1);

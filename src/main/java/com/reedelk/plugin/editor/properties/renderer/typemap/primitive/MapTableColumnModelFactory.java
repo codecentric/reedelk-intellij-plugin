@@ -1,11 +1,10 @@
 package com.reedelk.plugin.editor.properties.renderer.typemap.primitive;
 
-import com.intellij.ui.components.JBTextField;
 import com.intellij.ui.table.JBTable;
 import com.reedelk.module.descriptor.model.TypeMapDescriptor;
 import com.reedelk.plugin.editor.properties.commons.DisposableTableColumnModelFactory;
+import com.reedelk.plugin.editor.properties.commons.StripedRowCellRenderer;
 
-import javax.swing.*;
 import javax.swing.table.TableColumn;
 import java.util.Optional;
 
@@ -28,11 +27,11 @@ public class MapTableColumnModelFactory implements DisposableTableColumnModelFac
         // Column 1 (the map key)
         TableColumn keyColumn = table.getColumnModel().getColumn(0);
         keyColumn.setHeaderValue(keyName);
-        keyColumn.setCellEditor(new DefaultCellEditor(new JBTextField()));
+        keyColumn.setCellRenderer(new StripedRowCellRenderer());
 
         // Column 2 (the map value)
         TableColumn valueColumn = table.getColumnModel().getColumn(1);
         valueColumn.setHeaderValue(valueName);
-        valueColumn.setCellEditor(new DefaultCellEditor(new JBTextField()));
+        valueColumn.setCellRenderer(new StripedRowCellRenderer());
     }
 }

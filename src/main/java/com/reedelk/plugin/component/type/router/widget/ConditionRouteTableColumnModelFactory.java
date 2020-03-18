@@ -2,15 +2,14 @@ package com.reedelk.plugin.component.type.router.widget;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.table.JBTable;
-import com.reedelk.plugin.editor.properties.commons.ContainerContext;
-import com.reedelk.plugin.editor.properties.commons.DisposableTableColumnModelFactory;
-import com.reedelk.plugin.editor.properties.commons.TableDynamicCellEditor;
-import com.reedelk.plugin.editor.properties.commons.TableDynamicCellRenderer;
+import com.intellij.util.ui.UIUtil;
+import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.runtime.api.commons.StringUtils;
 
-import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.*;
 import javax.swing.table.TableColumn;
+import java.awt.*;
 
 import static com.reedelk.runtime.commons.JsonParser.Implementor;
 
@@ -41,8 +40,7 @@ class ConditionRouteTableColumnModelFactory implements DisposableTableColumnMode
         routeColumn.setCellRenderer(new RoutesCellRenderer());
     }
 
-    static class RoutesCellRenderer extends DefaultTableCellRenderer {
-
+    static class RoutesCellRenderer extends StripedRowCellRenderer {
         @Override
         protected void setValue(Object value) {
             GraphNode node = (GraphNode) value;
@@ -52,6 +50,18 @@ class ConditionRouteTableColumnModelFactory implements DisposableTableColumnMode
                 routeDisplayName.append(" (").append(description).append(")");
             }
             setText(routeDisplayName.toString());
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            JLabel component = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            if (isSelected) {
+                // The Route field is not selectable, therefore we don't change
+                // its color when it is selected.
+                component.setBackground(row % 2 == 0 ? UIUtil.getDecoratedRowColor() : UIUtil.getTableBackground());
+                component.setForeground(UIUtil.getTextFieldForeground());
+            }
+            return component;
         }
     }
 }
