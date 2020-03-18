@@ -26,7 +26,7 @@ public class MapTableModel extends AbstractMapTableModel {
 
     @SuppressWarnings("unchecked")
     @Override
-    protected void onUpdate(Vector<Object> data) {
+    protected void onUpdate(Vector<?> data) {
         Map<String, String> updated = new LinkedHashMap<>();
         data.forEach(vector -> {
             String key = VectorUtils.getOrEmptyIfNull((Vector<String>) vector, 0); // 0 is the key

@@ -27,14 +27,12 @@ public class DynamicMapTableModel extends AbstractMapTableModel {
 
     @Override
     public Object[] createRow() {
-        return new Object[]{
-                StringUtils.EMPTY,
-                StringUtils.EMPTY};
+        return new Object[]{ StringUtils.EMPTY, StringUtils.EMPTY };
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    protected void onUpdate(Vector<Object> data) {
+    protected void onUpdate(Vector<?> data) {
         // Model Update
         Map<String, String> updated = new LinkedHashMap<>();
         data.forEach(vector -> {

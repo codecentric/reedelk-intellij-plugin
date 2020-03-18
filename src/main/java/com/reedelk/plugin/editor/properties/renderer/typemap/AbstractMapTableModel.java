@@ -5,7 +5,6 @@ import com.reedelk.plugin.editor.properties.commons.DisposableTableModel;
 import javax.swing.table.DefaultTableModel;
 import java.util.Vector;
 
-@SuppressWarnings("unchecked")
 public abstract class AbstractMapTableModel extends DefaultTableModel implements DisposableTableModel {
 
     private static final int ROWS = 0;
@@ -38,5 +37,5 @@ public abstract class AbstractMapTableModel extends DefaultTableModel implements
         return true;
     }
 
-    protected abstract void onUpdate(Vector<Object> data);
+    protected abstract void onUpdate(Vector<?> data);
 }
