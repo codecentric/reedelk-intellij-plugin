@@ -126,6 +126,13 @@ public class Json {
             }
         },
 
+        WithEmptyMapPropertyCustomValueType {
+            @Override
+            public String path() {
+                return "flow/generic_component_with_empty_map_custom_value_type.json";
+            }
+        },
+
         WithScriptProperty {
             @Override
             public String path() {

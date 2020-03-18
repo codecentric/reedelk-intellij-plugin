@@ -30,11 +30,14 @@ class TypeMapDeserializer {
             // Process each response.
             TypeObjectDescriptor typeObjectDescriptor = (TypeObjectDescriptor) valueType;
 
-            JSONObject jsonObject = componentJsonObject.getJSONObject(propertyName);
-            jsonObject.keySet().forEach(key -> {
-                MapComponentDataHolder dataHolder = new MapComponentDataHolder(keyAndValues);
-                TypeObjectDeserializer.get().deserialize(jsonObject, dataHolder, key, typeObjectDescriptor);
-            });
+            if (componentJsonObject.has(propertyName) && !componentJsonObject.isNull(propertyName)) {
+                JSONObject jsonObject = componentJsonObject.getJSONObject(propertyName);
+                jsonObject.keySet().forEach(key -> {
+                    MapComponentDataHolder dataHolder = new MapComponentDataHolder(keyAndValues);
+                    TypeObjectDeserializer.get().deserialize(jsonObject, dataHolder, key, typeObjectDescriptor);
+                });
+            }
+
         } else {
             ValueConverter<?> converter = ValueConverterProvider.forType(propertyType);
             Object propertyValue = converter.from(propertyName, componentJsonObject);

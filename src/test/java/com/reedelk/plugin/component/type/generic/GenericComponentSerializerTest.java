@@ -188,7 +188,7 @@ class GenericComponentSerializerTest extends AbstractGraphTest {
             // Given
             Map<String, Object> myMap = new HashMap<>();
             myMap.put("key1", "value1");
-            myMap.put("key2", 3);
+            myMap.put("key2", "value2");
 
             ComponentData componentData = new ComponentData(ComponentDescriptor.create()
                     .propertyDescriptors(asList(Primitives.stringProperty, SpecialTypes.mapProperty))
