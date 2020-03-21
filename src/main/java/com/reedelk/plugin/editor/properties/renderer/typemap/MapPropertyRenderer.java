@@ -66,19 +66,6 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
                 });
     }
 
-    @Override
-    public void addToParent(@NotNull JComponent parent,
-                            @NotNull JComponent rendered,
-                            @NotNull PropertyDescriptor descriptor,
-                            @NotNull ContainerContext context) {
-        final TypeMapDescriptor propertyType = descriptor.getType();
-        if (propertyType.getTabGroup() == null) {
-            super.addToParent(parent, rendered, descriptor, context);
-        } else {
-            addTabbedPaneToParent(parent, rendered, descriptor, context);
-        }
-    }
-
     private JComponent createContent(@NotNull Module module,
                                      @NotNull TypeMapDescriptor propertyType,
                                      @NotNull PropertyAccessor propertyAccessor) {

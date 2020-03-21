@@ -44,17 +44,4 @@ public class DynamicMapPropertyRenderer extends BaseMapPropertyRenderer {
             return new MapTableContainer(propertyDescriptor, module, tableModel, columnModelFactory);
         });
     }
-
-    @Override
-    public void addToParent(@NotNull JComponent parent,
-                            @NotNull JComponent rendered,
-                            @NotNull PropertyDescriptor descriptor,
-                            @NotNull ContainerContext context) {
-        final TypeMapDescriptor propertyType = descriptor.getType();
-        if (propertyType.getTabGroup() == null) {
-            super.addToParent(parent, rendered, descriptor, context);
-        } else {
-            addTabbedPaneToParent(parent, rendered, descriptor, context);
-        }
-    }
 }
