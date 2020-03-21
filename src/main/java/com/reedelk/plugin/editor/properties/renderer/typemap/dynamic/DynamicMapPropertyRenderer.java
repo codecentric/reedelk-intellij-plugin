@@ -50,6 +50,11 @@ public class DynamicMapPropertyRenderer extends BaseMapPropertyRenderer {
                             @NotNull JComponent rendered,
                             @NotNull PropertyDescriptor descriptor,
                             @NotNull ContainerContext context) {
-        addTabbedPaneToParent(parent, rendered, descriptor, context);
+        final TypeMapDescriptor propertyType = descriptor.getType();
+        if (propertyType.getTabGroup() == null) {
+            super.addToParent(parent, rendered, descriptor, context);
+        } else {
+            addTabbedPaneToParent(parent, rendered, descriptor, context);
+        }
     }
 }
