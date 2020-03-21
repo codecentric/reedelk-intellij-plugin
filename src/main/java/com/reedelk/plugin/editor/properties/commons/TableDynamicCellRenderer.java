@@ -28,7 +28,6 @@ public class TableDynamicCellRenderer implements TableCellRenderer, Disposable {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         this.editor.setBackground(row % 2 == 0 ? UIUtil.getDecoratedRowColor() : UIUtil.getTableBackground());
-        this.editor.setForeground(UIUtil.getTextFieldForeground());
         this.editor.setValue(value == null ? StringUtils.EMPTY : (String) value);
         return this.content;
     }
