@@ -28,12 +28,25 @@ public abstract class BaseMapPropertyRenderer extends AbstractPropertyTypeRender
                             @NotNull JComponent rendered,
                             @NotNull PropertyDescriptor descriptor,
                             @NotNull ContainerContext context) {
-        final TypeMapDescriptor propertyType = descriptor.getType();
-        if (propertyType.getTabGroup() == null) {
-            super.addToParent(parent, rendered, descriptor, context);
-        } else {
-            addTabbedPaneToParent(parent, rendered, descriptor, context);
+
+        // If exists a group tabbed pane, then we don't add it to the parent because
+        // it has been already added to the tabbed pane above in the render method.
+        Optional<DisposableTabbedPane> groupTabbedPane = getGroupTabbedPane(descriptor, context);
+        if (groupTabbedPane.isPresent()) {
+            return;
         }
+
+        // Add the component to the parent container.
+        FormBuilder.get().addLastField(rendered, parent);
+
+        JComponentHolder holder = new JComponentHolder(rendered);
+
+        // Add the component to the container context.
+        TypeMapDescriptor propertyType = descriptor.getType();
+        Optional.ofNullable(propertyType.getTabGroup())
+                .ifPresent(group -> holder.addMetadata(TabGroup.class.getName(), group));
+
+        context.addComponent(holder);
     }
 
     @NotNull
@@ -85,30 +98,5 @@ public abstract class BaseMapPropertyRenderer extends AbstractPropertyTypeRender
             }
         }
         return Optional.empty();
-    }
-
-    private void addTabbedPaneToParent(@NotNull JComponent parent,
-                                       @NotNull JComponent rendered,
-                                       @NotNull PropertyDescriptor descriptor,
-                                       @NotNull ContainerContext context) {
-
-        // If exists a group tabbed pane, then we don't add it to the parent because
-        // it has been already added to the tabbed pane above in the render method.
-        Optional<DisposableTabbedPane> groupTabbedPane = getGroupTabbedPane(descriptor, context);
-        if (groupTabbedPane.isPresent()) {
-            return;
-        }
-
-        // Add the component to the parent container.
-        FormBuilder.get().addLastField(rendered, parent);
-
-        JComponentHolder holder = new JComponentHolder(rendered);
-
-        // Add the component to the container context.
-        TypeMapDescriptor propertyType = descriptor.getType();
-        Optional.ofNullable(propertyType.getTabGroup())
-                .ifPresent(group -> holder.addMetadata(TabGroup.class.getName(), group));
-
-        context.addComponent(holder);
     }
 }
