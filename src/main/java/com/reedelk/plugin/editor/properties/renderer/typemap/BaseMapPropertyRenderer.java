@@ -77,6 +77,7 @@ public abstract class BaseMapPropertyRenderer extends AbstractPropertyTypeRender
             Border top = BorderFactory.createEmptyBorder(5, 0, 0, 0);
             CompoundBorder compoundBorder = new CompoundBorder(top, border);
             tabbed.setBorder(compoundBorder);
+            tabbed.setPreferredSize(Sizes.Table.TABBED);
             return tabbed;
         });
     }

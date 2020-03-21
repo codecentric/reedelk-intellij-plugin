@@ -1,6 +1,7 @@
 package com.reedelk.plugin.component.type.router.widget;
 
 import com.intellij.openapi.module.Module;
+import com.reedelk.plugin.commons.Sizes;
 import com.reedelk.plugin.component.type.router.RouterConditionRoutePair;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
@@ -22,7 +23,7 @@ public class RouterRouteTable extends DisposablePanel {
         DisposableTableModel model = new ConditionRouteTableModel(conditionRoutePairList, snapshot);
         ConditionRouteTableColumnModelFactory factory = new ConditionRouteTableColumnModelFactory(module, context);
 
-        DisposableTable table = new DisposableTable(module.getProject(), model, factory);
+        DisposableTable table = new DisposableTable(module.getProject(), Sizes.Table.ROUTER, model, factory);
 
         setLayout(new BorderLayout());
         add(table, NORTH);

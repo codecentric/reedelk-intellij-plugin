@@ -9,9 +9,11 @@ import com.reedelk.plugin.commons.Sizes;
 import com.reedelk.plugin.commons.TableColumnModelUtils;
 import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
 import com.reedelk.plugin.topic.ReedelkTopics;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.table.*;
+import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.Collections;
@@ -23,7 +25,10 @@ public class DisposableTable extends DisposableScrollPane implements CommitPrope
     private final transient DisposableTableModel tableModel;
     private final transient MessageBusConnection busConnection;
 
-    public DisposableTable(Project project, DisposableTableModel tableModel, DisposableTableColumnModelFactory columnModelFactory) {
+    public DisposableTable(@NotNull Project project,
+                           @NotNull Dimension preferredSize,
+                           @NotNull DisposableTableModel tableModel,
+                           @NotNull DisposableTableColumnModelFactory columnModelFactory) {
         this.tableModel = tableModel;
 
         this.table = new DisposableAwareTable(tableModel);
@@ -32,13 +37,12 @@ public class DisposableTable extends DisposableScrollPane implements CommitPrope
         this.table.setFillsViewportHeight(true);
 
         columnModelFactory.create(table);
-        setPreferredSize(Sizes.Table.HEIGHT);
+        setPreferredSize(preferredSize);
         setViewportView(table);
 
         this.busConnection = project.getMessageBus().connect();
         this.busConnection.subscribe(ReedelkTopics.COMMIT_COMPONENT_PROPERTIES_EVENTS, this);
     }
-
 
     @Override
     public void dispose() {

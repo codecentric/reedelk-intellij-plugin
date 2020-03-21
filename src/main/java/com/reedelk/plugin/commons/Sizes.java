@@ -13,7 +13,9 @@ public class Sizes {
 
         public static final int ROW_HEIGHT = 23;
 
-        public static final Dimension HEIGHT = new Dimension(0, 100);
+        public static final Dimension ROUTER = new Dimension(0, 120);
+        public static final Dimension TABBED = new Dimension(0, 160);
+        public static final Dimension DEFAULT = new Dimension(0, 100);
     }
 
     public static class TabbedPane {

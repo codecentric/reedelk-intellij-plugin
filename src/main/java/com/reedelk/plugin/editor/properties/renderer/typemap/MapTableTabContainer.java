@@ -1,6 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer.typemap;
 
 import com.intellij.openapi.module.Module;
+import com.reedelk.plugin.commons.Sizes;
 import com.reedelk.plugin.editor.properties.commons.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,8 +14,8 @@ public class MapTableTabContainer extends DisposablePanel {
     private boolean loaded = false;
 
     public MapTableTabContainer(@NotNull Module module,
-                         @NotNull DisposableTableModel tableModel,
-                         @NotNull DisposableTableColumnModelFactory columnModelFactory) {
+                                @NotNull DisposableTableModel tableModel,
+                                @NotNull DisposableTableColumnModelFactory columnModelFactory) {
         setLayout(new BorderLayout());
         add(new LoadingContentPanel());
 
@@ -29,7 +30,8 @@ public class MapTableTabContainer extends DisposablePanel {
                 SwingUtilities.invokeLater(() -> {
                     DisposablePanel mapContainer = new DisposablePanel();
                     mapContainer.setLayout(new BoxLayout(mapContainer, BoxLayout.Y_AXIS));
-                    DisposableTable disposablePropertyTable = new DisposableTable(module.getProject(), tableModel, columnModelFactory);
+                    DisposableTable disposablePropertyTable =
+                            new DisposableTable(module.getProject(), Sizes.Table.TABBED, tableModel, columnModelFactory);
                     JPanel actionPanel = new MapTableActionPanel(disposablePropertyTable);
                     mapContainer.add(actionPanel);
                     mapContainer.add(disposablePropertyTable);
