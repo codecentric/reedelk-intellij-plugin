@@ -149,6 +149,7 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
     }
 
     private void renderProperties() {
+
         descriptors.forEach(descriptor -> {
 
             String propertyName = descriptor.getName();
