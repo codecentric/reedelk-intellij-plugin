@@ -8,6 +8,8 @@ import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposableTabbedPane;
+import com.reedelk.plugin.editor.properties.commons.DisposableTableColumnModelFactory;
+import com.reedelk.plugin.editor.properties.commons.DisposableTableModel;
 import com.reedelk.plugin.editor.properties.renderer.typemap.custom.MapTableCustomColumnModel;
 import com.reedelk.plugin.editor.properties.renderer.typemap.custom.MapTableCustomColumnModelFactory;
 import com.reedelk.plugin.editor.properties.renderer.typemap.custom.MapTableCustomEditButtonAction;
@@ -17,6 +19,8 @@ import com.reedelk.plugin.editor.properties.renderer.typemap.primitive.MapTableM
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.util.Optional;
+import java.util.function.Function;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
@@ -31,13 +35,35 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
 
         final String propertyDisplayName = descriptor.getDisplayName();
         final TypeMapDescriptor propertyType = descriptor.getType();
-        final JComponent content = isPrimitiveValueType(propertyType) ?
-                createContent(module, propertyType, propertyAccessor) :
-                createCustomObjectContent(module, propertyType, propertyAccessor);
 
-        DisposableTabbedPane tabbedPane = tabbedPaneFrom(descriptor, context, propertyType);
-        tabbedPane.addTab(propertyDisplayName, content);
-        return tabbedPane;
+        return Optional.ofNullable(propertyType.getTabGroup())
+                .map((Function<String, JComponent>) tabGroupName -> {
+                    final JComponent content = isPrimitiveValueType(propertyType) ?
+                            createContent(module, propertyType, propertyAccessor) :
+                            createCustomObjectContent(module, propertyType, propertyAccessor);
+                    final DisposableTabbedPane tabbedPane = tabbedPaneFrom(descriptor, context, propertyType);
+                    tabbedPane.addTab(propertyDisplayName, content);
+                    return tabbedPane;
+
+                }).orElseGet(() -> {
+
+                    DisposableTableModel tableModel;
+                    DisposableTableColumnModelFactory columnModelFactory;
+                    if (isPrimitiveValueType(propertyType)) {
+                        tableModel = new MapTableModel(propertyAccessor);
+                        columnModelFactory = new MapTableColumnModelFactory(propertyType);
+                    } else {
+                        TypeObjectDescriptor typeObjectDescriptor = (TypeObjectDescriptor) propertyType.getValueType();
+                        MapTableCustomEditButtonAction action = value -> {
+                            MapTableCustomObjectDialog dialog =
+                                    new MapTableCustomObjectDialog(module, message("properties.type.map.value.edit"), typeObjectDescriptor, (ComponentDataHolder) value);
+                            dialog.showAndGet();
+                        };
+                        tableModel = new MapTableCustomColumnModel(propertyAccessor);
+                        columnModelFactory = new MapTableCustomColumnModelFactory(propertyType, action);
+                    }
+                    return new MapTableContainer(descriptor, module, tableModel, columnModelFactory);
+                });
     }
 
     @Override
@@ -45,8 +71,12 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
                             @NotNull JComponent rendered,
                             @NotNull PropertyDescriptor descriptor,
                             @NotNull ContainerContext context) {
-
-        addTabbedPaneToParent(parent, rendered, descriptor, context);
+        final TypeMapDescriptor propertyType = descriptor.getType();
+        if (propertyType.getTabGroup() == null) {
+            super.addToParent(parent, rendered, descriptor, context);
+        } else {
+            addTabbedPaneToParent(parent, rendered, descriptor, context);
+        }
     }
 
     private JComponent createContent(@NotNull Module module,
@@ -54,7 +84,7 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
                                      @NotNull PropertyAccessor propertyAccessor) {
         MapTableModel tableModel = new MapTableModel(propertyAccessor);
         MapTableColumnModelFactory columnModel = new MapTableColumnModelFactory(propertyType);
-        return new MapPropertyTabContainer(module.getProject(), tableModel, columnModel);
+        return new MapTableTabContainer(module, tableModel, columnModel);
     }
 
     protected JComponent createCustomObjectContent(@NotNull Module module,
@@ -62,17 +92,14 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
                                                    @NotNull PropertyAccessor propertyAccessor) {
 
         TypeObjectDescriptor typeObjectDescriptor = (TypeObjectDescriptor) propertyType.getValueType();
-
         MapTableCustomColumnModel tableModel = new MapTableCustomColumnModel(propertyAccessor);
-
         MapTableCustomEditButtonAction action = value -> {
             MapTableCustomObjectDialog dialog =
                     new MapTableCustomObjectDialog(module, message("properties.type.map.value.edit"), typeObjectDescriptor, (ComponentDataHolder) value);
             dialog.showAndGet();
         };
-
         MapTableCustomColumnModelFactory columnModel = new MapTableCustomColumnModelFactory(propertyType, action);
-        return new MapPropertyTabContainer(module.getProject(), tableModel, columnModel);
+        return new MapTableTabContainer(module, tableModel, columnModel);
     }
 
     private boolean isPrimitiveValueType(TypeMapDescriptor propertyType) {

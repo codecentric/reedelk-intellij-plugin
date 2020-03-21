@@ -13,7 +13,7 @@ public class Sizes {
 
         public static final int ROW_HEIGHT = 23;
 
-        public static final Dimension HEIGHT = new Dimension(0, 130);
+        public static final Dimension HEIGHT = new Dimension(0, 100);
     }
 
     public static class TabbedPane {

@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.renderer.typemap.dynamic;
+package com.reedelk.plugin.editor.properties.renderer.typemap;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.editor.properties.commons.*;
@@ -8,17 +8,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 
-import static com.intellij.icons.AllIcons.General.Add;
-import static com.intellij.icons.AllIcons.General.Remove;
-import static com.reedelk.plugin.message.ReedelkBundle.message;
-
-class DynamicMapPropertyTabContainer extends DisposablePanel {
+public class MapTableTabContainer extends DisposablePanel {
 
     private boolean loaded = false;
 
-    DynamicMapPropertyTabContainer(@NotNull Module module,
-                                   @NotNull DisposableTableModel tableModel,
-                                   @NotNull DisposableTableColumnModelFactory columnModelFactory) {
+    public MapTableTabContainer(@NotNull Module module,
+                         @NotNull DisposableTableModel tableModel,
+                         @NotNull DisposableTableColumnModelFactory columnModelFactory) {
         setLayout(new BorderLayout());
         add(new LoadingContentPanel());
 
@@ -34,7 +30,7 @@ class DynamicMapPropertyTabContainer extends DisposablePanel {
                     DisposablePanel mapContainer = new DisposablePanel();
                     mapContainer.setLayout(new BoxLayout(mapContainer, BoxLayout.Y_AXIS));
                     DisposableTable disposablePropertyTable = new DisposableTable(module.getProject(), tableModel, columnModelFactory);
-                    JPanel actionPanel = new TableActionPanel(disposablePropertyTable);
+                    JPanel actionPanel = new MapTableActionPanel(disposablePropertyTable);
                     mapContainer.add(actionPanel);
                     mapContainer.add(disposablePropertyTable);
 
@@ -45,13 +41,5 @@ class DynamicMapPropertyTabContainer extends DisposablePanel {
                 });
             }
         });
-    }
-
-    static class TableActionPanel extends DisposablePanel {
-        TableActionPanel(DisposableTable table) {
-            setLayout(new FlowLayout(FlowLayout.LEFT));
-            add(new ClickableLabel(message("properties.type.map.table.add"), Add, table::addEmptyRow));
-            add(new ClickableLabel(message("properties.type.map.table.remove"), Remove, table::removeSelectedRow));
-        }
     }
 }

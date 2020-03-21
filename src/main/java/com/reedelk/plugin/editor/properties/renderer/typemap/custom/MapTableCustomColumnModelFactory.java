@@ -18,7 +18,7 @@ public class MapTableCustomColumnModelFactory implements DisposableTableColumnMo
     private static final Cursor CURSOR_HAND = new Cursor(Cursor.HAND_CURSOR);
     private static final Cursor CURSOR_DEFAULT = new Cursor(Cursor.DEFAULT_CURSOR);
 
-    private static final int EDIT_COLUMN_WIDTH = 100;
+    private static final int EDIT_COLUMN_WIDTH = 150;
     private final MapTableCustomEditButtonAction action;
     private final String keyName;
     private final String valueName;
