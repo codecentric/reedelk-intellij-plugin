@@ -52,7 +52,7 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
                 .collect(Collectors.toList());
 
         DisposablePanel genericPropertiesPanel =
-                getDefaultPropertiesPanel(componentData.getFullyQualifiedName(), componentData, filteredDescriptors);
+                createDefaultPropertiesPanel(componentData.getFullyQualifiedName(), componentData, filteredDescriptors);
 
         PropertyDescriptor referencePropertyDescriptor = propertyDescriptor.get();
 
