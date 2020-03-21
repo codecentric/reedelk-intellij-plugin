@@ -9,6 +9,7 @@ import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.FormBuilder;
+import com.reedelk.plugin.editor.properties.commons.PropertiesPanelHolder;
 import com.reedelk.plugin.editor.properties.commons.PropertyTitleLabel;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -19,9 +20,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.reedelk.runtime.commons.JsonParser.FlowReference;
+import static java.util.stream.Collectors.toList;
 
 public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesRenderer {
 
@@ -49,10 +50,12 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
         List<PropertyDescriptor> filteredDescriptors = descriptors
                 .stream()
                 .filter(descriptor -> !FlowReference.ref().equals(descriptor.getName()))
-                .collect(Collectors.toList());
+                .collect(toList());
+
+        String fullyQualifiedName = componentData.getFullyQualifiedName();
 
         DisposablePanel genericPropertiesPanel =
-                createDefaultPropertiesPanel(componentData.getFullyQualifiedName(), componentData, filteredDescriptors);
+                new PropertiesPanelHolder(module, fullyQualifiedName, componentData, filteredDescriptors, snapshot);
 
         PropertyDescriptor referencePropertyDescriptor = propertyDescriptor.get();
 

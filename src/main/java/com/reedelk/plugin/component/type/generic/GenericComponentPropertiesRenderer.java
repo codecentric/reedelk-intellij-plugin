@@ -8,7 +8,6 @@ import com.reedelk.plugin.editor.properties.commons.PropertiesPanelHolder;
 import com.reedelk.plugin.editor.properties.renderer.AbstractComponentPropertiesRenderer;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -25,11 +24,8 @@ public class GenericComponentPropertiesRenderer extends AbstractComponentPropert
 
         List<PropertyDescriptor> descriptors = componentData.getPropertiesDescriptors();
 
-        return createDefaultPropertiesPanel(componentData.getFullyQualifiedName(), componentData, descriptors);
-    }
+        String fullyQualifiedName = componentData.getFullyQualifiedName();
 
-    @NotNull
-    protected PropertiesPanelHolder createDefaultPropertiesPanel(String componentFullyQualifiedName, ComponentData componentData, List<PropertyDescriptor> descriptors) {
-        return new PropertiesPanelHolder(module, componentFullyQualifiedName, componentData, descriptors, snapshot);
+        return new PropertiesPanelHolder(module, fullyQualifiedName, componentData, descriptors, snapshot);
     }
 }
