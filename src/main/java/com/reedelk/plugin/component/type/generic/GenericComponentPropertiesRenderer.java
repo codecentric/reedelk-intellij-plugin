@@ -9,9 +9,14 @@ import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
 
 import javax.swing.*;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 
 public class GenericComponentPropertiesRenderer extends AbstractComponentPropertiesRenderer {
 
@@ -24,22 +29,16 @@ public class GenericComponentPropertiesRenderer extends AbstractComponentPropert
 
         ComponentData componentData = node.componentData();
 
-        Map<String, List<PropertyDescriptor>> propertiesByGroup = group(componentData.getPropertiesDescriptors());
+        List<PropertyDescriptor> propertiesDescriptors = componentData.getPropertiesDescriptors();
+
+        String defaultTabKey = message("properties.panel.tab.title.general");
+
+        Map<String, List<PropertyDescriptor>> propertiesByGroup = propertiesDescriptors.stream()
+                .collect(groupingBy(propertyDescriptor ->
+                                ofNullable(propertyDescriptor.getGroup()).orElse(defaultTabKey),
+                        LinkedHashMap::new,
+                        toList()));
 
         return new PropertiesPanelTabbedPanel(module, snapshot, componentData, propertiesByGroup);
-    }
-
-    private Map<String, List<PropertyDescriptor>> group(List<PropertyDescriptor> descriptors) {
-        Map<String, List<PropertyDescriptor>> map = new LinkedHashMap<>();
-        String defaultTabKey = message("properties.panel.tab.title.general");
-        descriptors.forEach(propertyDescriptor -> {
-            String group = Optional.ofNullable(propertyDescriptor.getGroup()).orElse(defaultTabKey);
-            if (!map.containsKey(group)) {
-                map.put(group, new ArrayList<>());
-            }
-            List<PropertyDescriptor> propertiesForGroup = map.get(group);
-            propertiesForGroup.add(propertyDescriptor);
-        });
-        return map;
     }
 }
