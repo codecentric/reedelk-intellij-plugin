@@ -34,10 +34,8 @@ public class GenericComponentPropertiesRenderer extends AbstractComponentPropert
         String defaultTabKey = message("properties.panel.tab.title.general");
 
         Map<String, List<PropertyDescriptor>> propertiesByGroup = propertiesDescriptors.stream()
-                .collect(groupingBy(propertyDescriptor ->
-                                ofNullable(propertyDescriptor.getGroup()).orElse(defaultTabKey),
-                        LinkedHashMap::new,
-                        toList()));
+                .collect(groupingBy(propertyDescriptor -> ofNullable(propertyDescriptor.getGroup()).orElse(defaultTabKey),
+                        LinkedHashMap::new, toList()));
 
         return new PropertiesPanelTabbedPanel(module, snapshot, componentData, propertiesByGroup);
     }
