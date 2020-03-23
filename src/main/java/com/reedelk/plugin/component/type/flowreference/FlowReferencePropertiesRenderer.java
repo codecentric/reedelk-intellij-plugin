@@ -7,20 +7,21 @@ import com.reedelk.plugin.component.type.flowreference.widget.SubflowSelector;
 import com.reedelk.plugin.component.type.generic.GenericComponentPropertiesRenderer;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessorFactory;
-import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
-import com.reedelk.plugin.editor.properties.commons.FormBuilder;
-import com.reedelk.plugin.editor.properties.commons.PropertiesPanelHolder;
-import com.reedelk.plugin.editor.properties.commons.PropertyTitleLabel;
+import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.SubflowService;
 import com.reedelk.plugin.service.module.impl.subflow.SubflowMetadata;
+import com.reedelk.runtime.api.commons.ImmutableMap;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.commons.JsonParser.FlowReference;
 import static java.util.stream.Collectors.toList;
 
@@ -31,7 +32,7 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
     }
 
     @Override
-    public DisposablePanel render(GraphNode node) {
+    public JComponent render(GraphNode node) {
         ComponentData componentData = node.componentData();
 
         Optional<PropertyDescriptor> propertyDescriptor = componentData.getPropertyDescriptor(FlowReference.ref());
@@ -39,34 +40,38 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
             throw new IllegalStateException("Reference property descriptor must not be null");
         }
 
-        PropertyAccessor referencePropertyAccessor = PropertyAccessorFactory.get()
-                .typeDescriptor(propertyDescriptor.get().getType())
-                .propertyName(FlowReference.ref())
-                .dataHolder(componentData)
-                .snapshot(snapshot)
-                .build();
+        Supplier<JComponent> componentSupplier = () -> {
+            PropertyAccessor referencePropertyAccessor = PropertyAccessorFactory.get()
+                    .typeDescriptor(propertyDescriptor.get().getType())
+                    .propertyName(FlowReference.ref())
+                    .dataHolder(componentData)
+                    .snapshot(snapshot)
+                    .build();
 
-        List<PropertyDescriptor> descriptors = componentData.getPropertiesDescriptors();
-        List<PropertyDescriptor> filteredDescriptors = descriptors
-                .stream()
-                .filter(descriptor -> !FlowReference.ref().equals(descriptor.getName()))
-                .collect(toList());
+            List<PropertyDescriptor> descriptors = componentData.getPropertiesDescriptors();
+            List<PropertyDescriptor> filteredDescriptors = descriptors
+                    .stream()
+                    .filter(descriptor -> !FlowReference.ref().equals(descriptor.getName()))
+                    .collect(toList());
 
-        String fullyQualifiedName = componentData.getFullyQualifiedName();
+            String fullyQualifiedName = componentData.getFullyQualifiedName();
 
-        DisposablePanel genericPropertiesPanel =
-                new PropertiesPanelHolder(module, fullyQualifiedName, componentData, filteredDescriptors, snapshot);
+            DisposablePanel genericPropertiesPanel =
+                    new PropertiesPanelHolder(module, fullyQualifiedName, componentData, filteredDescriptors, snapshot);
 
-        PropertyDescriptor referencePropertyDescriptor = propertyDescriptor.get();
+            PropertyDescriptor referencePropertyDescriptor = propertyDescriptor.get();
 
-        SubflowSelector selector = buildSubflowSelectorCombo(referencePropertyAccessor);
+            SubflowSelector selector = buildSubflowSelectorCombo(referencePropertyAccessor);
 
-        PropertyTitleLabel propertyTitleLabel = new PropertyTitleLabel(referencePropertyDescriptor);
-        FormBuilder.get()
-                .addLabel(propertyTitleLabel, genericPropertiesPanel)
-                .addLastField(selector, genericPropertiesPanel);
+            PropertyTitleLabel propertyTitleLabel = new PropertyTitleLabel(referencePropertyDescriptor);
+            FormBuilder.get()
+                    .addLabel(propertyTitleLabel, genericPropertiesPanel)
+                    .addLastField(selector, genericPropertiesPanel);
+            return genericPropertiesPanel;
+        };
 
-        return genericPropertiesPanel;
+        String defaultTabKey = message("properties.panel.tab.title.general");
+        return new PropertiesPanelTabbedPanel(componentData, ImmutableMap.of(defaultTabKey, componentSupplier));
     }
 
 

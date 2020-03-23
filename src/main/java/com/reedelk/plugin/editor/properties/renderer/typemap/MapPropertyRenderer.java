@@ -35,48 +35,40 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
 
         final String propertyDisplayName = descriptor.getDisplayName();
         final TypeMapDescriptor propertyType = descriptor.getType();
+        final MapColumnAndModel columnAndModel = getColumnAndModel(module, propertyAccessor, propertyType);
 
         return Optional.ofNullable(propertyType.getTabGroup())
+                // Tab group exists
                 .map((Function<String, JComponent>) tabGroupName -> {
-                    final JComponent content = isPrimitiveValueType(propertyType) ?
-                            createContent(module, propertyType, propertyAccessor) :
-                            createCustomObjectContent(module, propertyType, propertyAccessor);
+                    final JComponent content = new MapTableTabContainer(module, columnAndModel.model, columnAndModel.columnModelFactory);
                     final DisposableTabbedPane tabbedPane = tabbedPaneFrom(descriptor, context, propertyType);
                     tabbedPane.addTab(propertyDisplayName, content);
                     return tabbedPane;
 
                 }).orElseGet(() -> {
-
-                    DisposableTableModel tableModel;
-                    DisposableTableColumnModelFactory columnModelFactory;
-                    if (isPrimitiveValueType(propertyType)) {
-                        tableModel = new MapTableModel(propertyAccessor);
-                        columnModelFactory = new MapTableColumnModelFactory(propertyType);
-                    } else {
-                        TypeObjectDescriptor typeObjectDescriptor = (TypeObjectDescriptor) propertyType.getValueType();
-                        MapTableCustomEditButtonAction action = value -> {
-                            MapTableCustomObjectDialog dialog =
-                                    new MapTableCustomObjectDialog(module, message("properties.type.map.value.edit"), typeObjectDescriptor, (ComponentDataHolder) value);
-                            dialog.showAndGet();
-                        };
-                        tableModel = new MapTableCustomColumnModel(propertyAccessor);
-                        columnModelFactory = new MapTableCustomColumnModelFactory(propertyType, action);
-                    }
-                    return new MapTableContainer(descriptor, module, tableModel, columnModelFactory);
+                    // No tab group
+                    return new MapTableContainer(descriptor, module, columnAndModel.model, columnAndModel.columnModelFactory);
                 });
     }
 
-    private JComponent createContent(@NotNull Module module,
-                                     @NotNull TypeMapDescriptor propertyType,
-                                     @NotNull PropertyAccessor propertyAccessor) {
-        MapTableModel tableModel = new MapTableModel(propertyAccessor);
-        MapTableColumnModelFactory columnModel = new MapTableColumnModelFactory(propertyType);
-        return new MapTableTabContainer(module, tableModel, columnModel);
+    private MapColumnAndModel getColumnAndModel(@NotNull Module module,
+                                                @NotNull PropertyAccessor propertyAccessor,
+                                                @NotNull TypeMapDescriptor propertyType) {
+        return isTypeObjectDescriptor(propertyType) ?
+                createCustomObjectContent(module, propertyType, propertyAccessor) :
+                createContent(propertyType, propertyAccessor);
     }
 
-    protected JComponent createCustomObjectContent(@NotNull Module module,
-                                                   @NotNull TypeMapDescriptor propertyType,
-                                                   @NotNull PropertyAccessor propertyAccessor) {
+    private MapColumnAndModel createContent(@NotNull TypeMapDescriptor propertyType,
+                                            @NotNull PropertyAccessor propertyAccessor) {
+        MapTableModel tableModel = new MapTableModel(propertyAccessor);
+        MapTableColumnModelFactory columnModel = new MapTableColumnModelFactory(propertyType);
+        return new MapColumnAndModel(tableModel, columnModel);
+    }
+
+    protected MapColumnAndModel createCustomObjectContent(@NotNull Module module,
+                                                          @NotNull TypeMapDescriptor propertyType,
+                                                          @NotNull PropertyAccessor propertyAccessor) {
 
         TypeObjectDescriptor typeObjectDescriptor = (TypeObjectDescriptor) propertyType.getValueType();
         MapTableCustomColumnModel tableModel = new MapTableCustomColumnModel(propertyAccessor);
@@ -86,10 +78,21 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
             dialog.showAndGet();
         };
         MapTableCustomColumnModelFactory columnModel = new MapTableCustomColumnModelFactory(propertyType, action);
-        return new MapTableTabContainer(module, tableModel, columnModel);
+        return new MapColumnAndModel(tableModel, columnModel);
     }
 
-    private boolean isPrimitiveValueType(TypeMapDescriptor propertyType) {
-        return !(propertyType.getValueType() instanceof TypeObjectDescriptor);
+    private boolean isTypeObjectDescriptor(TypeMapDescriptor propertyType) {
+        return propertyType.getValueType() instanceof TypeObjectDescriptor;
+    }
+
+    static class MapColumnAndModel {
+
+        DisposableTableModel model;
+        DisposableTableColumnModelFactory columnModelFactory;
+
+        MapColumnAndModel(DisposableTableModel model, DisposableTableColumnModelFactory columnModelFactory) {
+            this.model = model;
+            this.columnModelFactory = columnModelFactory;
+        }
     }
 }

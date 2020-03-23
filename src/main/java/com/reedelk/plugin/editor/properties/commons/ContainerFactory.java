@@ -1,6 +1,5 @@
 package com.reedelk.plugin.editor.properties.commons;
 
-import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.TooltipContent;
 import org.jetbrains.annotations.NotNull;
@@ -10,6 +9,7 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
 
+import static com.intellij.util.ui.JBUI.Borders;
 import static java.awt.BorderLayout.*;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 
@@ -20,7 +20,7 @@ public class ContainerFactory {
 
     public static DisposablePanel createLabelNextToComponent(JLabel label, JComponent body) {
         DisposablePanel wrapper = new DisposablePanel(new BorderLayout());
-        label.setBorder(JBUI.Borders.emptyRight(5));
+        label.setBorder(Borders.emptyRight(5));
         wrapper.add(label, WEST);
         wrapper.add(body, CENTER);
         return wrapper;
@@ -64,11 +64,11 @@ public class ContainerFactory {
         return panel;
     }
 
-    public static DisposableScrollPane makeItScrollable(DisposablePanel panel) {
+    public static DisposableScrollPane makeItScrollable(JComponent panel) {
         DisposableScrollPane scrollPane = new DisposableScrollPane();
-        scrollPane.setBorder(JBUI.Borders.empty());
         scrollPane.setViewportView(panel);
         scrollPane.createVerticalScrollBar();
+        scrollPane.setBorder(Borders.empty());
         scrollPane.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_AS_NEEDED);
         return scrollPane;
     }
@@ -76,12 +76,12 @@ public class ContainerFactory {
     private static DisposablePanel createLabelNextToComponent(JLabel label, JComponent body, boolean outerBorder) {
         Border iconBorder;
         if (outerBorder) {
-            Border iconOutside = JBUI.Borders.customLine(Colors.SCRIPT_EDITOR_INLINE_ICON_BORDER, 1, 1, 1, 0);
-            Border iconInside = JBUI.Borders.empty(0, 4);
+            Border iconOutside = Borders.customLine(Colors.SCRIPT_EDITOR_INLINE_ICON_BORDER, 1, 1, 1, 0);
+            Border iconInside = Borders.empty(0, 4);
             iconBorder = new CompoundBorder(iconOutside, iconInside);
         } else {
-            Border iconOutside = JBUI.Borders.customLine(Colors.SCRIPT_EDITOR_INLINE_ICON_BORDER, 0, 0, 0, 1);
-            Border iconInside = JBUI.Borders.empty(0, 4);
+            Border iconOutside = Borders.customLine(Colors.SCRIPT_EDITOR_INLINE_ICON_BORDER, 0, 0, 0, 1);
+            Border iconInside = Borders.empty(0, 4);
             iconBorder = new CompoundBorder(iconOutside, iconInside);
         }
 
@@ -89,11 +89,11 @@ public class ContainerFactory {
 
         Border bodyBorder;
         if (outerBorder) {
-            Border bodyOutside = JBUI.Borders.customLine(Colors.SCRIPT_EDITOR_INLINE_ICON_BORDER, 1, 1, 1, 1);
-            Border bodyInside = JBUI.Borders.empty(0, 2);
+            Border bodyOutside = Borders.customLine(Colors.SCRIPT_EDITOR_INLINE_ICON_BORDER, 1, 1, 1, 1);
+            Border bodyInside = Borders.empty(0, 2);
             bodyBorder = new CompoundBorder(bodyOutside, bodyInside);
         } else {
-            bodyBorder = JBUI.Borders.empty(0, 2);
+            bodyBorder = Borders.empty(0, 2);
         }
         body.setBorder(bodyBorder);
 

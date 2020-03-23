@@ -18,13 +18,9 @@ public class DefaultObjectTypeContainer extends DisposablePanel {
 
     DefaultObjectTypeContainer(JComponent renderedComponent, String displayName, TooltipContent tooltipContent) {
         setLayout(new BorderLayout());
-
         TypeObjectContainerHeader topHeader = new TypeObjectContainerHeader(displayName, tooltipContent);
-
-        add(topHeader, NORTH);
-
         JPanel nestedContainerWrapper = ContainerFactory.pushCenter(renderedComponent, BORDER_OBJECT_TYPE_CONTENT);
-
+        add(topHeader, NORTH);
         add(nestedContainerWrapper, CENTER);
     }
 }

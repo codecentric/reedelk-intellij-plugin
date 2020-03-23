@@ -9,6 +9,7 @@ import java.awt.*;
 
 import static com.intellij.icons.AllIcons.General.ArrowDown;
 import static com.intellij.icons.AllIcons.General.ArrowRight;
+import static com.reedelk.plugin.editor.properties.commons.PanelWithText.LoadingContentPanel;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 

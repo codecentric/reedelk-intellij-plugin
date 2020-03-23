@@ -34,7 +34,7 @@ public class DynamicValueField extends DisposablePanel {
         this.scriptContainer = createScriptModePanel(editor);
         this.inputFieldContainer = createInputFieldContainer();
 
-        setBorder(JBUI.Borders.empty(0, 3));
+        setBorder(JBUI.Borders.empty(2, 3));
         setLayout(new BorderLayout());
         add(this.inputFieldContainer, CENTER);
     }

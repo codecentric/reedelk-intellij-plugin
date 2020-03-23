@@ -9,6 +9,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 
+import static com.reedelk.plugin.editor.properties.commons.PanelWithText.LoadingContentPanel;
+
 public class MapTableTabContainer extends DisposablePanel {
 
     private boolean loaded = false;

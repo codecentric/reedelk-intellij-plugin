@@ -41,12 +41,21 @@ public class ComponentData implements ComponentDataHolder {
         return propertyNameDataMap.containsKey(key);
     }
 
-    public String getFullyQualifiedName() {
-        return descriptor.getFullyQualifiedName();
+    public String getDescription() {
+        return descriptor.getDescription();
     }
 
     public String getDisplayName() {
         return descriptor.getDisplayName();
+    }
+
+    public Image getComponentImage() {
+        return Optional.ofNullable(descriptor.getImage())
+                .orElse(Images.Component.DefaultComponent);
+    }
+
+    public String getFullyQualifiedName() {
+        return descriptor.getFullyQualifiedName();
     }
 
     public List<String> getDataProperties() {
@@ -56,11 +65,6 @@ public class ComponentData implements ComponentDataHolder {
         }
         Collections.reverse(dataProperties);
         return dataProperties;
-    }
-
-    public Image getComponentImage() {
-        return Optional.ofNullable(descriptor.getImage())
-                .orElse(Images.Component.DefaultComponent);
     }
 
     public ComponentType getComponentClass() {

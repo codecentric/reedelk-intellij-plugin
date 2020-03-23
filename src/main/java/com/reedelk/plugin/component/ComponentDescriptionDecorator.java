@@ -87,6 +87,11 @@ public class ComponentDescriptionDecorator extends ComponentDescriptor {
     }
 
     @Override
+    public String getDescription() {
+        return wrapped.getDescription();
+    }
+
+    @Override
     public List<PropertyDescriptor> getProperties() {
         return componentPropertyDescriptorsWithDescription;
     }

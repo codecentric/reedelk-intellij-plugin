@@ -3,13 +3,15 @@ package com.reedelk.plugin.component.type.generic;
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.plugin.component.ComponentData;
-import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
-import com.reedelk.plugin.editor.properties.commons.PropertiesPanelHolder;
+import com.reedelk.plugin.editor.properties.commons.PropertiesPanelTabbedPanel;
 import com.reedelk.plugin.editor.properties.renderer.AbstractComponentPropertiesRenderer;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
 
-import java.util.List;
+import javax.swing.*;
+import java.util.*;
+
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class GenericComponentPropertiesRenderer extends AbstractComponentPropertiesRenderer {
 
@@ -18,14 +20,26 @@ public class GenericComponentPropertiesRenderer extends AbstractComponentPropert
     }
 
     @Override
-    public DisposablePanel render(GraphNode node) {
+    public JComponent render(GraphNode node) {
 
         ComponentData componentData = node.componentData();
 
-        List<PropertyDescriptor> descriptors = componentData.getPropertiesDescriptors();
+        Map<String, List<PropertyDescriptor>> propertiesByGroup = group(componentData.getPropertiesDescriptors());
 
-        String fullyQualifiedName = componentData.getFullyQualifiedName();
+        return new PropertiesPanelTabbedPanel(module, snapshot, componentData, propertiesByGroup);
+    }
 
-        return new PropertiesPanelHolder(module, fullyQualifiedName, componentData, descriptors, snapshot);
+    private Map<String, List<PropertyDescriptor>> group(List<PropertyDescriptor> descriptors) {
+        Map<String, List<PropertyDescriptor>> map = new LinkedHashMap<>();
+        String defaultTabKey = message("properties.panel.tab.title.general");
+        descriptors.forEach(propertyDescriptor -> {
+            String group = Optional.ofNullable(propertyDescriptor.getGroup()).orElse(defaultTabKey);
+            if (!map.containsKey(group)) {
+                map.put(group, new ArrayList<>());
+            }
+            List<PropertyDescriptor> propertiesForGroup = map.get(group);
+            propertiesForGroup.add(propertyDescriptor);
+        });
+        return map;
     }
 }

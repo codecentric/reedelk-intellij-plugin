@@ -1,6 +1,5 @@
 package com.reedelk.plugin.editor.properties;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
@@ -14,7 +13,9 @@ import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.editor.DesignerEditor;
-import com.reedelk.plugin.editor.properties.commons.*;
+import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
+import com.reedelk.plugin.editor.properties.commons.EmptySelectionPanel;
+import com.reedelk.plugin.editor.properties.commons.FlowAndSubflowMetadataPanel;
 import com.reedelk.plugin.editor.properties.renderer.ComponentPropertiesRendererFactory;
 import com.reedelk.plugin.editor.properties.selection.*;
 import com.reedelk.plugin.graph.FlowSnapshot;
@@ -29,7 +30,7 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 public class PropertiesPanel extends DisposablePanel implements SelectionChangeListener, FileEditorManagerListener {
 
     private final transient Project project;
-    private transient Disposable currentPane;
+    private transient JComponent currentPane;
     private transient MessageBusConnection busConnection;
     private transient SelectableItem currentSelection;
 
@@ -115,7 +116,7 @@ public class PropertiesPanel extends DisposablePanel implements SelectionChangeL
         // of the component currently selected.
         ComponentData componentData = selectedItem.getSelectedNode().componentData();
 
-        DisposableScrollPane propertiesPanel = createPropertiesPanel(selectedItem.getModule(),
+        JComponent propertiesPanel = createPropertiesPanel(selectedItem.getModule(),
                 componentData,
                 selectedItem.getSnapshot(),
                 selectedItem.getSelectedNode());
@@ -126,16 +127,13 @@ public class PropertiesPanel extends DisposablePanel implements SelectionChangeL
         currentPane = propertiesPanel;
     }
 
-    private DisposableScrollPane createPropertiesPanel(Module module, ComponentData componentData, FlowSnapshot snapshot, GraphNode node) {
-        DisposablePanel propertiesPanel = ComponentPropertiesRendererFactory.get()
+    private JComponent createPropertiesPanel(Module module, ComponentData componentData, FlowSnapshot snapshot, GraphNode node) {
+        return ComponentPropertiesRendererFactory.get()
                 .component(componentData)
                 .snapshot(snapshot)
                 .module(module)
                 .build()
                 .render(node);
-        DisposablePanel propertiesBoxContainer = ContainerFactory.pushTop(propertiesPanel);
-        propertiesBoxContainer.setBorder(JBUI.Borders.empty(10));
-        return ContainerFactory.makeItScrollable(propertiesBoxContainer);
     }
 
     private void setEmptySelection() {

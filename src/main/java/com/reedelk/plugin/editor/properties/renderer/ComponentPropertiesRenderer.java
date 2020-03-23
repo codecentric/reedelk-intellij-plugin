@@ -1,9 +1,10 @@
 package com.reedelk.plugin.editor.properties.renderer;
 
-import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.graph.node.GraphNode;
+
+import javax.swing.*;
 
 public interface ComponentPropertiesRenderer {
 
-    DisposablePanel render(GraphNode node);
+    JComponent render(GraphNode node);
 }

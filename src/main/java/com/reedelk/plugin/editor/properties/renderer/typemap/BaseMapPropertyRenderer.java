@@ -2,7 +2,6 @@ package com.reedelk.plugin.editor.properties.renderer.typemap;
 
 import com.intellij.ui.JBColor;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.TabPlacement;
 import com.reedelk.module.descriptor.model.TypeMapDescriptor;
 import com.reedelk.plugin.commons.Sizes;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
@@ -16,10 +15,9 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
-import javax.swing.border.TitledBorder;
 import java.util.Optional;
 
-import static com.reedelk.plugin.commons.Colors.TOOL_WINDOW_PROPERTIES_TEXT;
+import static com.intellij.util.ui.JBUI.Borders;
 
 public abstract class BaseMapPropertyRenderer extends AbstractPropertyTypeRenderer {
 
@@ -53,31 +51,14 @@ public abstract class BaseMapPropertyRenderer extends AbstractPropertyTypeRender
     protected DisposableTabbedPane tabbedPaneFrom(@NotNull PropertyDescriptor propertyDescriptor, @NotNull ContainerContext context, TypeMapDescriptor propertyType) {
         // Map properties are grouped together into a  Tabbed Pane.
         return getGroupTabbedPane(propertyDescriptor, context).orElseGet(() -> {
+            Border outerBorder = Borders.emptyTop(5);
+            Border innerBorder = Borders.customLine(JBColor.LIGHT_GRAY);
+            CompoundBorder compoundBorder = new CompoundBorder(outerBorder, innerBorder);
 
-            Optional<String> tabGroup = Optional.ofNullable(propertyType.getTabGroup());
-
-            Border border = BorderFactory.createLineBorder(JBColor.LIGHT_GRAY);
-            if (tabGroup.isPresent()) {
-                TitledBorder titledBorder = BorderFactory.createTitledBorder(border, tabGroup.get());
-                titledBorder.setTitleColor(TOOL_WINDOW_PROPERTIES_TEXT);
-                border = titledBorder;
-            }
-
-            DisposableTabbedPane tabbed;
-            TabPlacement tabPlacement = propertyType.getTabPlacement();
-            if (TabPlacement.TOP.equals(tabPlacement)) {
-                tabbed = new DisposableTabbedPane(JTabbedPane.TOP);
-                tabbed.setPreferredSize(Sizes.TabbedPane.HEIGHT_TOP_PLACEMENT);
-            } else {
-                // Default placement is on the left
-                tabbed = new DisposableTabbedPane(JTabbedPane.LEFT);
-                tabbed.setPreferredSize(Sizes.TabbedPane.HEIGHT_LEFT_PLACEMENT);
-            }
-
-            Border top = BorderFactory.createEmptyBorder(5, 0, 0, 0);
-            CompoundBorder compoundBorder = new CompoundBorder(top, border);
-            tabbed.setBorder(compoundBorder);
+            DisposableTabbedPane tabbed = new DisposableTabbedPane(JTabbedPane.TOP);
+            tabbed.setPreferredSize(Sizes.TabbedPane.HEIGHT_TOP_PLACEMENT);
             tabbed.setPreferredSize(Sizes.Table.TABBED);
+            tabbed.setBorder(compoundBorder);
             return tabbed;
         });
     }
