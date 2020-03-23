@@ -26,11 +26,10 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
     private final FlowSnapshot snapshot;
     private final ComponentData componentData;
 
-    public PropertiesPanelTabbedPanel(
-            @NotNull Module module,
-            @NotNull FlowSnapshot flowSnapshot,
-            @NotNull ComponentData componentData,
-            @NotNull Map<String, List<PropertyDescriptor>> propertiesByGroup) {
+    public PropertiesPanelTabbedPanel(@NotNull Module module,
+                                      @NotNull FlowSnapshot flowSnapshot,
+                                      @NotNull ComponentData componentData,
+                                      @NotNull Map<String, List<PropertyDescriptor>> propertiesByGroup) {
         super(JTabbedPane.LEFT);
         this.module = module;
         this.snapshot = flowSnapshot;
@@ -56,9 +55,8 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
         setTabComponentAt(count, new TabLabelVertical(message("properties.panel.tab.title.help")));
     }
 
-    public PropertiesPanelTabbedPanel(
-            @NotNull ComponentData componentData,
-            @NotNull Map<String, Supplier<JComponent>> componentsByGroup) {
+    public PropertiesPanelTabbedPanel(@NotNull ComponentData componentData,
+                                      @NotNull Map<String, Supplier<JComponent>> componentsByGroup) {
         super(JTabbedPane.LEFT);
         this.module = null;
         this.snapshot = null;
