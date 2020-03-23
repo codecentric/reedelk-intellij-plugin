@@ -21,7 +21,7 @@ public class Sizes {
     public static class TabbedPane {
         private TabbedPane() {
         }
-        public static final Dimension TAB_LABEL = new Dimension(110, 15);
+        public static final Dimension TAB_LABEL = new Dimension(130, 15);
         public static final Dimension HEIGHT_TOP_PLACEMENT = new Dimension(0, 200);
     }
 
