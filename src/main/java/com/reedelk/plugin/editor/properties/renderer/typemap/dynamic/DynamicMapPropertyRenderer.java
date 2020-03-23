@@ -7,6 +7,7 @@ import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposableTabbedPane;
 import com.reedelk.plugin.editor.properties.commons.DisposableTableModel;
+import com.reedelk.plugin.editor.properties.commons.TabLabelHorizontal;
 import com.reedelk.plugin.editor.properties.renderer.typemap.BaseMapPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typemap.MapTableContainer;
 import com.reedelk.plugin.editor.properties.renderer.typemap.MapTableTabContainer;
@@ -35,6 +36,7 @@ public class DynamicMapPropertyRenderer extends BaseMapPropertyRenderer {
             final JComponent content = new MapTableTabContainer(module, tableModel, columnModelFactory);
             final DisposableTabbedPane tabbedPane = tabbedPaneFrom(propertyDescriptor, context, propertyType);
             tabbedPane.addTab(propertyDisplayName, content);
+            tabbedPane.setTabComponentAt(tabbedPane.getTabCount() - 1, new TabLabelHorizontal(propertyDisplayName));
             return tabbedPane;
 
         }).orElseGet(() -> {

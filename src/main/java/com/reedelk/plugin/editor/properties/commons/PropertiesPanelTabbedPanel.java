@@ -42,18 +42,18 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
             // The component does not have any property defined (e.g Try-Catch, Fork ...)
             String tabName = message("properties.panel.tab.title.general");
             addTabFromSupplier(tabName, PanelWithText.NoPropertiesPanel::new);
-            setTabComponentAt(count, new TabLabel(tabName));
+            setTabComponentAt(count, new TabLabelVertical(tabName));
             count++;
         } else {
             for (Map.Entry<String, List<PropertyDescriptor>> entry : propertiesByGroup.entrySet()) {
                 addTabFromProperties(entry.getKey(), entry.getValue());
-                setTabComponentAt(count, new TabLabel(entry.getKey()));
+                setTabComponentAt(count, new TabLabelVertical(entry.getKey()));
                 count++;
             }
         }
 
         add(new HelpTab(componentData));
-        setTabComponentAt(count, new TabLabel(message("properties.panel.tab.title.help")));
+        setTabComponentAt(count, new TabLabelVertical(message("properties.panel.tab.title.help")));
     }
 
     public PropertiesPanelTabbedPanel(
@@ -66,11 +66,11 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
         int count = 0;
         for (Map.Entry<String, Supplier<JComponent>> entry : componentsByGroup.entrySet()) {
             addTabFromSupplier(entry.getKey(), entry.getValue());
-            setTabComponentAt(count, new TabLabel(entry.getKey()));
+            setTabComponentAt(count, new TabLabelVertical(entry.getKey()));
             count++;
         }
         add(new HelpTab(componentData));
-        setTabComponentAt(count, new TabLabel(message("properties.panel.tab.title.help")));
+        setTabComponentAt(count, new TabLabelVertical(message("properties.panel.tab.title.help")));
     }
 
     private void addTabFromSupplier(String key, Supplier<JComponent> componentSupplier) {

@@ -5,9 +5,9 @@ import com.reedelk.plugin.commons.Sizes;
 
 import javax.swing.*;
 
-public class TabLabel extends JLabel {
+public class TabLabelVertical extends JLabel {
 
-    public TabLabel(String name) {
+    public TabLabelVertical(String name) {
         super(name, SwingConstants.RIGHT);
         setPreferredSize(Sizes.TabbedPane.TAB_LABEL);
         setForeground(Colors.PROPERTIES_TABS_TITLE);

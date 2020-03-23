@@ -6,10 +6,7 @@ import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.TypeMapDescriptor;
 import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
-import com.reedelk.plugin.editor.properties.commons.ContainerContext;
-import com.reedelk.plugin.editor.properties.commons.DisposableTabbedPane;
-import com.reedelk.plugin.editor.properties.commons.DisposableTableColumnModelFactory;
-import com.reedelk.plugin.editor.properties.commons.DisposableTableModel;
+import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.plugin.editor.properties.renderer.typemap.custom.MapTableCustomColumnModel;
 import com.reedelk.plugin.editor.properties.renderer.typemap.custom.MapTableCustomColumnModelFactory;
 import com.reedelk.plugin.editor.properties.renderer.typemap.custom.MapTableCustomEditButtonAction;
@@ -43,6 +40,7 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
                     final JComponent content = new MapTableTabContainer(module, columnAndModel.model, columnAndModel.columnModelFactory);
                     final DisposableTabbedPane tabbedPane = tabbedPaneFrom(descriptor, context, propertyType);
                     tabbedPane.addTab(propertyDisplayName, content);
+                    tabbedPane.setTabComponentAt(tabbedPane.getTabCount() - 1, new TabLabelHorizontal(propertyDisplayName));
                     return tabbedPane;
 
                 }).orElseGet(() -> {
