@@ -1,6 +1,5 @@
 package com.reedelk.plugin.editor.properties.commons;
 
-import com.intellij.openapi.Disposable;
 import com.reedelk.plugin.editor.properties.renderer.commons.InputChangeListener;
 import com.reedelk.plugin.editor.properties.renderer.commons.InputField;
 import com.reedelk.plugin.editor.properties.renderer.commons.StringInputField;
@@ -10,19 +9,16 @@ import com.reedelk.plugin.graph.FlowSnapshot;
 import javax.swing.*;
 import java.awt.*;
 
-import static com.intellij.util.ui.JBUI.Borders;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
-import static java.awt.BorderLayout.CENTER;
-import static java.awt.BorderLayout.NORTH;
 
-public class FlowAndSubflowMetadataPanel extends DisposablePanel implements Disposable {
+public class FlowAndSubflowMetadataPanel extends DisposableTabbedPane {
 
     private final transient FlowSnapshot snapshot;
 
     public FlowAndSubflowMetadataPanel(FlowSnapshot snapshot) {
+        super(JTabbedPane.LEFT);
         this.snapshot = snapshot;
         initialize();
-        setBorder(Borders.empty(10));
     }
 
     @Override
@@ -31,21 +27,22 @@ public class FlowAndSubflowMetadataPanel extends DisposablePanel implements Disp
     }
 
     private void initialize() {
-        DisposablePanel propertiesPanel = new DisposablePanel(new GridBagLayout());
+        GenericTab genericTab = new GenericTab(() -> {
+            DisposablePanel propertiesPanel = new DisposablePanel(new GridBagLayout());
+            InputField<String> titleField = createTitleInputField();
+            FormBuilder.get()
+                    .addLabel(message("flow.metadata.title"), propertiesPanel)
+                    .addLastField(titleField, propertiesPanel);
 
-        InputField<String> titleField = createTitleInputField();
-        FormBuilder.get()
-                .addLabel(message("flow.metadata.title"), propertiesPanel)
-                .addLastField(titleField, propertiesPanel);
-
-        InputField<String> descriptionField = createDescriptionInputField();
-        FormBuilder.get()
-                .addLabel(message("flow.metadata.description"), propertiesPanel)
-                .addLastField(descriptionField, propertiesPanel);
-
-        setLayout(new BorderLayout());
-        add(propertiesPanel, NORTH);
-        add(Box.createGlue(), CENTER);
+            InputField<String> descriptionField = createDescriptionInputField();
+            FormBuilder.get()
+                    .addLabel(message("flow.metadata.description"), propertiesPanel)
+                    .addLastField(descriptionField, propertiesPanel);
+            return propertiesPanel;
+        });
+        String tabName = message("properties.panel.tab.title.flow");
+        addTab(tabName, genericTab);
+        setTabComponentAt(0, new TabLabelVertical(tabName));
     }
 
     private InputField<String> createTitleInputField() {
