@@ -67,10 +67,8 @@ public class RouterSerializer extends AbstractScopedNodeSerializer {
 
     private RouterConditionRoutePair findPairFor(GraphNode routerNode, List<RouterConditionRoutePair> conditionRoutePairs) {
         return conditionRoutePairs.stream()
-                .filter(routerConditionRoutePair ->
-                        routerConditionRoutePair.getNext() == routerNode)
+                .filter(routerConditionRoutePair -> routerConditionRoutePair.getNext() == routerNode)
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Router condition route pair must be present."));
     }
-
 }
