@@ -61,18 +61,18 @@ class TypeMapDeserializer {
 
         @SuppressWarnings("unchecked")
         @Override
-        public <T> T get(String s) {
-            return (T) delegate.get(s);
+        public <T> T get(String key) {
+            return (T) delegate.get(key);
         }
 
         @Override
-        public void set(String s, Object o) {
-            delegate.put(s, (TypeObjectDescriptor.TypeObject) o);
+        public void set(String key, Object value) {
+            delegate.put(key, (TypeObjectDescriptor.TypeObject) value);
         }
 
         @Override
-        public boolean has(String s) {
-            return delegate.containsKey(s);
+        public boolean has(String key) {
+            return delegate.containsKey(key);
         }
     }
 }
