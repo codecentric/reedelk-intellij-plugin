@@ -17,16 +17,10 @@ public class GenericTab extends DisposableScrollPane {
     private boolean loaded = false;
 
     public GenericTab(Supplier<JComponent> componentSupplier) {
-        createVerticalScrollBar();
-        setBorder(JBUI.Borders.empty());
-        setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_AS_NEEDED);
-        setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
-
         DisposablePanel panel = new DisposablePanel();
         panel.setLayout(new BorderLayout());
         panel.add(new LoadingContentPanel(), NORTH);
         panel.add(createGlue(), CENTER);
-        setViewportView(panel);
 
         addComponentListener(new ComponentListenerAdapter() {
             @Override
@@ -48,5 +42,11 @@ public class GenericTab extends DisposableScrollPane {
                 });
             }
         });
+
+        createVerticalScrollBar();
+        setBorder(JBUI.Borders.empty());
+        setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_AS_NEEDED);
+        setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
+        setViewportView(panel);
     }
 }
