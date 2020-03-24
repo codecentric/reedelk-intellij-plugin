@@ -8,6 +8,7 @@ import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.DisposableThreeComponentsSplitter;
 import com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditor;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
@@ -26,7 +27,9 @@ class ScriptEditorDefault extends DisposablePanel {
     static final Dimension DEFAULT_SCRIPT_DIMENSION = new Dimension(800, 400);
     private static final boolean HORIZONTAL = false;
 
-    ScriptEditorDefault(Module module, Document document, ContainerContext context) {
+    ScriptEditorDefault(@NotNull Module module,
+                        @NotNull Document document,
+                        @NotNull ContainerContext context) {
         ScriptEditor editor = new ScriptEditor(module, document, context);
 
         ThreeComponentsSplitter splitter = new DisposableThreeComponentsSplitter(HORIZONTAL);

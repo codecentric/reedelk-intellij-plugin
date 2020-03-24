@@ -30,7 +30,9 @@ public class ScriptEditor extends DisposablePanel implements DocumentListener {
     private final transient Document document;
     private transient ScriptEditorChangeListener listener;
 
-    public ScriptEditor(Module module, @NotNull Document document, ContainerContext context) {
+    public ScriptEditor(@NotNull Module module,
+                        @NotNull Document document,
+                        @NotNull ContainerContext context) {
         this.module = module;
         this.document = document;
         this.editor = (EditorEx) EditorFactory.getInstance()
