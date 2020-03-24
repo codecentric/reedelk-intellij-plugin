@@ -136,6 +136,9 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
         });
     }
 
+    // TODO: THIS IS WRONG BECAUSE THE SUGGESTION SHOULD BE COMPONENT
+    //  QUALIFIED NAME BUT ALSO BY GIVEN PROPERTY! For the same qualified name there MIGHT
+    //  BE TWO DIFFERENT PROPERTIES WITH DIFFERENT AUTOCOMPLETE!!!!
     private void updateAutocomplete(String fullyQualifiedName, PropertyDescriptor descriptor) {
         List<AutocompleteVariableDescriptor> autocomplete = descriptor.getAutocompleteVariables();
         if (!autocomplete.isEmpty()) {
