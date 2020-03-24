@@ -49,19 +49,23 @@ public class RouterPropertiesRenderer extends GenericComponentPropertiesRenderer
         TooltipContent tooltipContent = TooltipContent.from(propertyDescriptor);
 
         Supplier<JComponent> routerTableSupplier = () -> {
+
             PropertiesPanelHolder propertiesPanel =
                     new PropertiesPanelHolder(module, componentFullyQualifiedName, componentData, snapshot);
 
             List<RouterConditionRoutePair> conditionRoutePairList = componentData.get(DATA_CONDITION_ROUTE_PAIRS);
 
             RouterRouteTable routerRouteTable = new RouterRouteTable(module, snapshot, conditionRoutePairList, propertiesPanel);
+
             DisposablePanel objectTypeContainer = createObjectTypeContainer(routerRouteTable, propertyTitle, tooltipContent);
+
             objectTypeContainer.setBorder(JBUI.Borders.empty(10, 5, 0, 0));
+
             return objectTypeContainer;
         };
 
-
         String defaultTabKey = message("properties.panel.tab.title.general");
+
         return new PropertiesPanelTabbedPanel(componentData, ImmutableMap.of(defaultTabKey, routerTableSupplier));
     }
 }
