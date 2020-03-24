@@ -28,4 +28,7 @@ public class ReedelkTopics {
 
     public static final Topic<CommitPropertiesListener> COMMIT_COMPONENT_PROPERTIES_EVENTS =
             Topic.create("commit component properties events", CommitPropertiesListener.class);
+
+    private ReedelkTopics() {
+    }
 }

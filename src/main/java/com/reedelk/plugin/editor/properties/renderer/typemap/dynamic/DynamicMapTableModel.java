@@ -12,7 +12,7 @@ import java.util.Vector;
 
 public class DynamicMapTableModel extends AbstractMapTableModel {
 
-    private final PropertyAccessor propertyAccessor;
+    private final transient PropertyAccessor propertyAccessor;
 
     public DynamicMapTableModel(PropertyAccessor propertyAccessor) {
         super();

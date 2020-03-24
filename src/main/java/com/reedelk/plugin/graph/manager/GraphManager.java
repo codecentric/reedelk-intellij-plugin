@@ -18,7 +18,6 @@ import com.reedelk.plugin.editor.DesignerEditor;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.graph.*;
 import com.reedelk.plugin.graph.deserializer.DeserializationError;
-import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.ComponentListUpdateNotifier;
 import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +41,6 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
     private final FlowSnapshot snapshot;
     private final VirtualFile graphFile;
     private final FlowGraphProvider graphProvider;
-    private final ComponentService componentService;
     private final MessageBusConnection projectBusConnection;
     private final MessageBusConnection moduleBusConnection;
 
@@ -51,14 +49,12 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
     GraphManager(@NotNull Module module,
                  @NotNull VirtualFile managedFile,
                  @NotNull FlowSnapshot snapshot,
-                 @NotNull FlowGraphProvider graphProvider,
-                 @NotNull ComponentService componentService) {
+                 @NotNull FlowGraphProvider graphProvider) {
         this.module = module;
         this.snapshot = snapshot;
         this.graphFile = managedFile;
         this.snapshot.addListener(this);
         this.graphProvider = graphProvider;
-        this.componentService = componentService;
 
         projectBusConnection = module.getProject().getMessageBus().connect();
         projectBusConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);

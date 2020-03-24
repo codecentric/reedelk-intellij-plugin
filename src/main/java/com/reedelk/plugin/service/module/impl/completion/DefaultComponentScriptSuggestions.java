@@ -29,4 +29,7 @@ public class DefaultComponentScriptSuggestions {
     public static List<Suggestion> get() {
         return DEFAULT;
     }
+
+    private DefaultComponentScriptSuggestions() {
+    }
 }

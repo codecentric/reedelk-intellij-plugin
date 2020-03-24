@@ -14,7 +14,6 @@ import com.reedelk.plugin.graph.FlowGraphProvider;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.manager.GraphManager;
 import com.reedelk.plugin.graph.manager.SubFlowGraphManager;
-import com.reedelk.plugin.service.module.ComponentService;
 import org.jetbrains.annotations.NotNull;
 
 import static com.google.common.base.Preconditions.checkState;
@@ -39,8 +38,7 @@ public class SubFlowDesignerEditorProvider implements FileEditorProvider, DumbAw
 
         FlowSnapshot snapshot = new FlowSnapshot();
         FlowGraphProvider graphProvider = new FlowGraphProvider();
-        ComponentService componentService = ComponentService.getInstance(module);
-        GraphManager graphManager = new SubFlowGraphManager(module, file, snapshot, graphProvider, componentService);
+        GraphManager graphManager = new SubFlowGraphManager(module, file, snapshot, graphProvider);
 
         DesignerPanelSubFlowActionHandler handler = new DesignerPanelSubFlowActionHandler(module, snapshot);
         return new SubFlowDesignerEditor(module, snapshot, graphManager, handler);

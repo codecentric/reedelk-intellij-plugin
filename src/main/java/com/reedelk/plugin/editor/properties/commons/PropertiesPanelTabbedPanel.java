@@ -22,9 +22,9 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
 
     private static final JBEmptyBorder BORDER = Borders.empty(3, 5, 0, 0);
 
-    private final Module module;
-    private final FlowSnapshot snapshot;
-    private final ComponentData componentData;
+    private final transient Module module;
+    private final transient FlowSnapshot snapshot;
+    private final transient ComponentData componentData;
 
     public PropertiesPanelTabbedPanel(@NotNull Module module,
                                       @NotNull FlowSnapshot flowSnapshot,

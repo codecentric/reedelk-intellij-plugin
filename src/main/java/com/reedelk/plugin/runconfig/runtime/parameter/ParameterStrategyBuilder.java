@@ -20,6 +20,9 @@ public class ParameterStrategyBuilder {
                     .put(JavaSdkVersion.JDK_12, new Java12Parameters())
                     .build();
 
+    private ParameterStrategyBuilder() {
+    }
+
     public static ParameterStrategy from(Sdk sdk) {
         JavaSdkVersion sdkVersion = JavaSdk.getInstance().getVersion(sdk);
         return VERSION_STRATEGY_MAP.getOrDefault(sdkVersion, DEFAULT_PARAMETER_STRATEGY);
