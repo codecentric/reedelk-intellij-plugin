@@ -4,8 +4,10 @@ import com.reedelk.plugin.component.ComponentData;
 
 import javax.swing.*;
 import java.awt.event.ComponentEvent;
+import java.util.Optional;
 
 import static com.intellij.util.ui.JBUI.Borders;
+import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 import static java.lang.String.format;
 
 public class HelpTab extends DisposableScrollPane {
@@ -38,7 +40,11 @@ public class HelpTab extends DisposableScrollPane {
                 // of the component's properties.
                 SwingUtilities.invokeLater(() -> {
 
-                    editorPane.setText(format(HTML_TEMPLATE, componentData.getDisplayName(), componentData.getDescription()));
+                    String componentDescription = Optional.ofNullable(componentData.getDescription()).orElse(EMPTY);
+
+                    editorPane.setEditable(false);
+
+                    editorPane.setText(format(HTML_TEMPLATE, componentData.getDisplayName(), componentDescription));
 
                     loaded = true;
                 });
