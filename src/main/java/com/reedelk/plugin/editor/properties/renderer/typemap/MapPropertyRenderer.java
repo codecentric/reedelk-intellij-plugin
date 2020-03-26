@@ -16,10 +16,11 @@ import com.reedelk.plugin.editor.properties.renderer.typemap.primitive.MapTableM
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.util.Optional;
 import java.util.function.Function;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
+import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
+import static java.util.Optional.ofNullable;
 
 public class MapPropertyRenderer extends BaseMapPropertyRenderer {
 
@@ -34,7 +35,7 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
         final TypeMapDescriptor propertyType = descriptor.getType();
         final MapColumnAndModel columnAndModel = getColumnAndModel(module, propertyAccessor, propertyType);
 
-        return Optional.ofNullable(propertyType.getTabGroup())
+        return ofNullable(propertyType.getTabGroup())
                 // Tab group exists
                 .map((Function<String, JComponent>) tabGroupName -> {
                     final JComponent content = new MapTableTabContainer(module, columnAndModel.model, columnAndModel.columnModelFactory);
@@ -69,13 +70,18 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
                                                           @NotNull PropertyAccessor propertyAccessor) {
 
         TypeObjectDescriptor typeObjectDescriptor = (TypeObjectDescriptor) propertyType.getValueType();
-        MapTableCustomColumnModel tableModel = new MapTableCustomColumnModel(propertyAccessor);
         MapTableCustomEditButtonAction action = value -> {
+            String dialogTitle = message("properties.type.map.value.edit", ofNullable(propertyType.getValueName()).orElse(EMPTY));
             MapTableCustomObjectDialog dialog =
-                    new MapTableCustomObjectDialog(module, message("properties.type.map.value.edit"), typeObjectDescriptor, (ComponentDataHolder) value);
+                    new MapTableCustomObjectDialog(
+                            module,
+                            dialogTitle,
+                            typeObjectDescriptor,
+                            (ComponentDataHolder) value);
             dialog.showAndGet();
         };
         MapTableCustomColumnModelFactory columnModel = new MapTableCustomColumnModelFactory(propertyType, action);
+        MapTableCustomColumnModel tableModel = new MapTableCustomColumnModel(propertyAccessor);
         return new MapColumnAndModel(tableModel, columnModel);
     }
 
