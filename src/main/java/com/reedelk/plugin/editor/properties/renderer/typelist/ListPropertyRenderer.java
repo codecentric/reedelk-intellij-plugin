@@ -26,7 +26,9 @@ public class ListPropertyRenderer extends AbstractPropertyTypeRenderer {
         // Copy data into the model
         List<Object> arrayItems = propertyAccessor.get();
         DefaultListModel<Object> model = new DefaultListModel<>();
-        arrayItems.forEach(model::addElement);
+        if (arrayItems != null) {
+            arrayItems.forEach(model::addElement);
+        }
         model.addListDataListener(new ListModelChangeListener(propertyAccessor));
 
         // Create list
