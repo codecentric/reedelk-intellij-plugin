@@ -16,6 +16,7 @@ import com.reedelk.plugin.editor.properties.renderer.typefloat.DynamicFloatPrope
 import com.reedelk.plugin.editor.properties.renderer.typefloat.FloatPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typeinteger.DynamicIntegerPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typeinteger.IntegerPropertyRenderer;
+import com.reedelk.plugin.editor.properties.renderer.typelist.ListPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typelong.DynamicLongPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typelong.LongPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typemap.MapPropertyRenderer;
@@ -42,10 +43,7 @@ import com.reedelk.runtime.api.script.dynamicvalue.*;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.reedelk.module.descriptor.model.TypeObjectDescriptor.TypeObject;
 import static com.reedelk.plugin.component.type.unknown.UnknownPropertyType.UnknownType;
@@ -71,6 +69,7 @@ public class PropertyTypeRendererFactory {
 
         // Other known types
         tmp.put(Map.class, new MapPropertyRenderer());
+        tmp.put(List.class, new ListPropertyRenderer());
         tmp.put(Enum.class, new EnumPropertyRenderer());
         tmp.put(Script.class, new ScriptPropertyRenderer());
         tmp.put(String.class, new StringPropertyRenderer());

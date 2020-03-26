@@ -23,7 +23,7 @@ public class AsMap implements ValueConverter<Map<String,Object>> {
         try {
             JSONObject jsonObject = new JSONObject(value);
             return asMap(jsonObject);
-        } catch (Exception e) {
+        } catch (Exception exception) {
             return new HashMap<>();
         }
     }

@@ -14,10 +14,7 @@ import com.reedelk.runtime.api.script.dynamicvalue.*;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static java.lang.String.format;
 
@@ -43,6 +40,7 @@ public class DefaultConverters implements Converter {
         tmp.put(BigDecimal.class, new AsBigDecimal());
 
         tmp.put(Map.class, new AsMap());
+        tmp.put(List.class, new AsList());
         tmp.put(Enum.class, new AsEnum());
         tmp.put(Script.class, new AsScript());
         tmp.put(Combo.class, new AsCombo());

@@ -12,11 +12,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class AsMapTest {
 
     private ValueConverter<Map<String,Object>> converter = new AsMap();
-    private final String mapAsJson = "{" +
-            "\"key1\":\"value1\"," +
-            "\"key2\": 3," +
-            "\"key3\": true" +
-            "}";
 
     @Test
     void toTextShouldThrowExceptionWhenInvoked() {
@@ -69,6 +64,11 @@ class AsMapTest {
     @Test
     void shouldReturnMapFromJsonObject() {
         // Given
+        String mapAsJson = "{" +
+                "\"key1\":\"value1\"," +
+                "\"key2\": 3," +
+                "\"key3\": true" +
+                "}";
         JSONObject map = new JSONObject(mapAsJson);
         JSONObject object = new JSONObject();
         object.put("headers", map);

@@ -17,10 +17,7 @@ import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static java.lang.String.format;
 
@@ -63,6 +60,7 @@ public class ConfigPropertyAwareConverters implements Converter {
 
         // The following types Cannot be specified with a config property.
         tmp.put(Map.class, new AsMap());
+        tmp.put(List.class, new AsList());
         tmp.put(Enum.class, new AsEnum());
         tmp.put(Combo.class, new AsCombo());
         tmp.put(ResourceText.class, new AsResourceText());
@@ -136,7 +134,6 @@ public class ConfigPropertyAwareConverters implements Converter {
             if (ConfigurationPropertyUtils.isConfigProperty(value)) {
                 return value;
             }
-
             return delegate.from(propertyName, object);
         }
     }

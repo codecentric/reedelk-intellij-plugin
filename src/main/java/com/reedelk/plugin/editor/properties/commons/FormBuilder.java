@@ -8,7 +8,7 @@ public class FormBuilder {
 
     private GridBagConstraints lastConstraints;
     private GridBagConstraints labelConstraints;
-    private GridBagConstraints middleConstraints;
+    private GridBagConstraints labelTopConstraints;
 
     private FormBuilder() {
         // Set up the constraints for the "last" field in each
@@ -34,14 +34,6 @@ public class FormBuilder {
         // Add a little padding
         lastConstraints.insets = JBUI.insets(1, 1, 1, 1);
 
-        // Now for the "middle" field components
-        middleConstraints =
-                (GridBagConstraints) lastConstraints.clone();
-
-        // These still get as much space as possible, but do
-        // not close out a row
-        middleConstraints.gridwidth = GridBagConstraints.RELATIVE;
-
         // And finally the "label" constrains, typically to be
         // used for the first component on each row
         labelConstraints = (GridBagConstraints) lastConstraints.clone();
@@ -49,6 +41,9 @@ public class FormBuilder {
         // Give these as little space as necessary
         labelConstraints.weightx = 0.0;
         labelConstraints.gridwidth = 1;
+
+        labelTopConstraints = (GridBagConstraints) labelConstraints.clone();
+        labelTopConstraints.anchor = GridBagConstraints.NORTH;
     }
 
     public static FormBuilder get() {
@@ -60,10 +55,10 @@ public class FormBuilder {
      * component will be stretched to take the remainder of
      * the current row.
      */
-    public FormBuilder addLastField(Component c, Container parent) {
+    public FormBuilder addLastField(Component component, Container parent) {
         GridBagLayout gbl = (GridBagLayout) parent.getLayout();
-        gbl.setConstraints(c, lastConstraints);
-        parent.add(c);
+        gbl.setConstraints(component, lastConstraints);
+        parent.add(component);
         return this;
     }
 
@@ -73,33 +68,32 @@ public class FormBuilder {
      * to the minimum width of the widest component on the
      * form.
      */
-    public FormBuilder addLabel(Component c, Container parent) {
+    public FormBuilder addLabelTop(PropertyTitleLabel label, Container parent) {
         GridBagLayout gbl = (GridBagLayout) parent.getLayout();
-        gbl.setConstraints(c, labelConstraints);
-        parent.add(c);
+        gbl.setConstraints(label, labelTopConstraints);
+        parent.add(label);
+        return this;
+    }
+
+    /**
+     * Adds an arbitrary label component, starting a new row
+     * if appropriate. The width of the component will be set
+     * to the minimum width of the widest component on the
+     * form.
+     */
+    public FormBuilder addLabel(PropertyTitleLabel label, Container parent) {
+        GridBagLayout gbl = (GridBagLayout) parent.getLayout();
+        gbl.setConstraints(label, labelConstraints);
+        parent.add(label);
         return this;
     }
 
     /**
      * Adds a JLabel with the given string to the label column
      */
-    public FormBuilder addLabel(String s, Container parent) {
-        PropertyTitleLabel c = new PropertyTitleLabel(s);
-        addLabel(c, parent);
+    public FormBuilder addLabel(String propertyTitle, Container parent) {
+        PropertyTitleLabel label = new PropertyTitleLabel(propertyTitle);
+        addLabel(label, parent);
         return this;
     }
-
-    /**
-     * Adds a "middle" field component. Any component may be
-     * used. The component will be stretched to take all of
-     * the space between the label and the "last" field. All
-     * "middle" fields in the layout will be the same width.
-     */
-    public FormBuilder addMiddleField(Component c, Container parent) {
-        GridBagLayout gbl = (GridBagLayout) parent.getLayout();
-        gbl.setConstraints(c, middleConstraints);
-        parent.add(c);
-        return this;
-    }
-
 }
