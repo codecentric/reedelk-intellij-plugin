@@ -45,7 +45,7 @@ public class ConfigurationDialog extends DialogWrapper implements Disposable {
     protected JComponent createCenterPanel() {
         DisposablePanel propertiesPanel = new ConfigPropertiesPanel(module, configMetadata, objectDescriptor, isNewConfig);
         this.panel = ContainerFactory.makeItScrollable(propertiesPanel);
-        this.panel.setMinimumSize(new Dimension(MINIMUM_PANEL_WIDTH, 100));
+        this.panel.setMinimumSize(new Dimension(MINIMUM_PANEL_WIDTH, 0));
         setCrossClosesWindow(true);
         return this.panel;
     }
