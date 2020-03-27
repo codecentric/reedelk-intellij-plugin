@@ -1,26 +1,25 @@
 package com.reedelk.plugin.editor.properties.renderer.typemap;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.util.ui.JBUI;
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.plugin.commons.Sizes;
-import com.reedelk.plugin.editor.properties.commons.*;
+import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
+import com.reedelk.plugin.editor.properties.commons.DisposableTable;
+import com.reedelk.plugin.editor.properties.commons.DisposableTableColumnModelFactory;
+import com.reedelk.plugin.editor.properties.commons.DisposableTableModel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 
+import static com.intellij.util.ui.JBUI.Borders;
+
 public class MapTableContainer extends DisposablePanel {
 
-    public MapTableContainer(
-            @NotNull PropertyDescriptor propertyDescriptor,
-            @NotNull Module module,
-            @NotNull DisposableTableModel tableModel,
-            @NotNull DisposableTableColumnModelFactory columnModelFactory) {
-
+    public MapTableContainer(@NotNull Module module,
+                             @NotNull DisposableTableModel tableModel,
+                             @NotNull DisposableTableColumnModelFactory columnModelFactory) {
         setLayout(new BorderLayout());
-        setBorder(JBUI.Borders.emptyTop(5));
-        add(new LabelContainer(propertyDescriptor), BorderLayout.NORTH);
+        setBorder(Borders.emptyTop(5));
         add(new TableContainer(module, tableModel, columnModelFactory), BorderLayout.CENTER);
     }
 
@@ -35,15 +34,6 @@ public class MapTableContainer extends DisposablePanel {
             JPanel actionPanel = new MapTableActionPanel(disposablePropertyTable);
             add(actionPanel);
             add(disposablePropertyTable);
-        }
-    }
-
-    static class LabelContainer extends DisposablePanel {
-
-        LabelContainer(PropertyDescriptor propertyDescriptor) {
-            setLayout(new BorderLayout());
-            PropertyTitleLabel propertyTitleLabel = new PropertyTitleLabel(propertyDescriptor);
-            add(propertyTitleLabel, BorderLayout.NORTH);
         }
     }
 }

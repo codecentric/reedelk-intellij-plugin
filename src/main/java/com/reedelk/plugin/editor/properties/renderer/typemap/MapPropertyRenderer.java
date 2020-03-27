@@ -1,6 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer.typemap;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.util.ui.JBUI;
 import com.reedelk.module.descriptor.model.ComponentDataHolder;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.TypeMapDescriptor;
@@ -24,6 +25,30 @@ import static java.util.Optional.ofNullable;
 
 public class MapPropertyRenderer extends BaseMapPropertyRenderer {
 
+    @Override
+    public void addToParent(@NotNull JComponent parent,
+                            @NotNull JComponent rendered,
+                            @NotNull PropertyDescriptor descriptor,
+                            @NotNull ContainerContext context) {
+
+        final TypeMapDescriptor propertyType = descriptor.getType();
+        boolean isTabGroupPresent = ofNullable(propertyType.getTabGroup()).isPresent();
+
+
+        if (isTabGroupPresent) {
+            super.addToParent(parent, rendered, descriptor, context);
+        } else {
+            PropertyTitleLabel propertyTitleLabel = new PropertyTitleLabel(descriptor);
+            propertyTitleLabel.setBorder(JBUI.Borders.emptyTop(10));
+            FormBuilder.get()
+                    .addLabelTop(propertyTitleLabel, parent)
+                    .addLastField(rendered, parent);
+
+            JComponentHolder holder = new JComponentHolder(rendered);
+            context.addComponent(holder);
+        }
+    }
+
     @NotNull
     @Override
     public JComponent render(@NotNull Module module,
@@ -46,7 +71,7 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
 
                 }).orElseGet(() -> {
                     // No tab group
-                    return new MapTableContainer(descriptor, module, columnAndModel.model, columnAndModel.columnModelFactory);
+                    return new MapTableContainer(module, columnAndModel.model, columnAndModel.columnModelFactory);
                 });
     }
 

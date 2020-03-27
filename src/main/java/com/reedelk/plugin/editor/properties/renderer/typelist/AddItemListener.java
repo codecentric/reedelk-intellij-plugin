@@ -1,6 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer.typelist;
 
 import com.intellij.ui.components.JBList;
+import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -8,12 +9,10 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class AddItemListener implements ActionListener, DocumentListener {
+public class AddItemListener implements ClickableLabel.OnClickAction, DocumentListener {
 
-    private JButton addButton;
+    private ClickableLabel addButton;
     private final JBList<Object> list;
     private final JTextField itemTextField;
     private final DefaultListModel<Object> listModel;
@@ -22,15 +21,18 @@ public class AddItemListener implements ActionListener, DocumentListener {
 
     public AddItemListener(@NotNull JBList<Object> list,
                            @NotNull DefaultListModel<Object> listModel,
-                           @NotNull JButton addButton,
+                           @NotNull ClickableLabel addButton,
                            @NotNull JTextField itemTextField) {
         this.list = list;
         this.addButton = addButton;
         this.listModel = listModel;
         this.itemTextField = itemTextField;
+        this.itemTextField.getDocument().addDocumentListener(this);
     }
 
-    public void actionPerformed(ActionEvent e) {
+    @Override
+    public void onClick() {
+
         String itemValue = itemTextField.getText();
 
         // User didn't type in a unique name...

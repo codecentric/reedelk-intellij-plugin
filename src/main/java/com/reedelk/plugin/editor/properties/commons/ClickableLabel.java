@@ -12,7 +12,7 @@ public class ClickableLabel extends JBLabel implements MouseListener {
 
     private static final Cursor ON_HOVER_CURSOR = new Cursor(Cursor.HAND_CURSOR);
 
-    private final transient OnClickAction action;
+    private transient OnClickAction action;
 
     public ClickableLabel(Icon icon) {
         this(StringUtils.EMPTY, icon, null, IconAlignment.LEFT, null);
@@ -20,6 +20,10 @@ public class ClickableLabel extends JBLabel implements MouseListener {
 
     public ClickableLabel(Icon icon, OnClickAction action) {
         this(StringUtils.EMPTY, icon, null, IconAlignment.LEFT, action);
+    }
+
+    public ClickableLabel(String text, Icon enabledIcon, Icon disabledIcon) {
+        this(text, enabledIcon, disabledIcon, IconAlignment.LEFT, null);
     }
 
     public ClickableLabel(Icon icon, Icon disabledIcon, OnClickAction action) {
@@ -33,6 +37,7 @@ public class ClickableLabel extends JBLabel implements MouseListener {
     public ClickableLabel(String text, Icon icon, Icon disabledIcon, OnClickAction action) {
         this(text, icon, disabledIcon, IconAlignment.LEFT, action);
     }
+
     public ClickableLabel(String text, Icon icon, IconAlignment iconAlignment, OnClickAction action) {
         this(text, icon, null, iconAlignment, action);
     }
@@ -78,6 +83,10 @@ public class ClickableLabel extends JBLabel implements MouseListener {
     @Override
     public void mouseReleased(MouseEvent event) {
         // not used
+    }
+
+    public void setAction(OnClickAction action) {
+        this.action = action;
     }
 
     public interface OnClickAction {

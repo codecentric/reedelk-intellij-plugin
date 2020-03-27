@@ -1,23 +1,22 @@
 package com.reedelk.plugin.editor.properties.renderer.typelist;
 
 import com.intellij.ui.components.JBList;
+import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class RemoveItemListener implements ActionListener, ListDataListener {
+public class RemoveItemListener implements ClickableLabel.OnClickAction, ListDataListener {
 
     private final JBList<Object> list;
-    private final JButton removeButton;
+    private final ClickableLabel removeButton;
     private final DefaultListModel<Object> listModel;
 
     RemoveItemListener(@NotNull JBList<Object> list,
                        @NotNull DefaultListModel<Object> listModel,
-                       @NotNull JButton removeButton) {
+                       @NotNull ClickableLabel removeButton) {
         this.list = list;
         this.listModel = listModel;
         this.removeButton = removeButton;
@@ -25,7 +24,8 @@ public class RemoveItemListener implements ActionListener, ListDataListener {
         checkButtonEnabled();
     }
 
-    public void actionPerformed(ActionEvent e) {
+    @Override
+    public void onClick() {
         //This method can be called only if
         //there's a valid selection
         //so go ahead and remove whatever's selected.

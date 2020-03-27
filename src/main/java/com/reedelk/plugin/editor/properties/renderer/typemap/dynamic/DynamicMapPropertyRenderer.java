@@ -42,8 +42,9 @@ public class DynamicMapPropertyRenderer extends BaseMapPropertyRenderer {
         }).orElseGet(() -> {
             // Single table
             final DisposableTableModel tableModel = new DynamicMapTableModel(propertyAccessor);
-            final DynamicMapTableColumnModelFactory columnModelFactory = new DynamicMapTableColumnModelFactory(module, propertyType, context);
-            return new MapTableContainer(propertyDescriptor, module, tableModel, columnModelFactory);
+            final DynamicMapTableColumnModelFactory columnModelFactory =
+                    new DynamicMapTableColumnModelFactory(module, propertyType, context);
+            return new MapTableContainer(module, tableModel, columnModelFactory);
         });
     }
 }

@@ -11,7 +11,7 @@ import static com.intellij.util.ui.JBUI.Borders.empty;
 
 public class ListScrollPane extends DisposablePanel {
 
-    private static final Dimension DIMENSION = new Dimension(0, 85);
+    private static final Dimension DIMENSION = new Dimension(0, 65);
     private static final EmptyBorder BORDER = empty(0, 3);
 
     public ListScrollPane(JBList<Object> list) {
