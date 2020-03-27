@@ -55,7 +55,7 @@ public class ListPropertyRenderer extends AbstractPropertyTypeRenderer {
                             @NotNull ContainerContext context) {
 
         PropertyTitleLabel propertyTitleLabel = new PropertyTitleLabel(descriptor);
-        propertyTitleLabel.setBorder(Borders.emptyTop(10));
+        propertyTitleLabel.setBorder(Borders.emptyTop(6));
 
         // Apply visibility conditions to the label and the rendered component
         applyWhenVisibility(descriptor.getWhens(), context, rendered, propertyTitleLabel);

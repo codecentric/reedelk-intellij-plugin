@@ -1,7 +1,6 @@
 package com.reedelk.plugin.editor.properties.renderer.typemap;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.util.ui.JBUI;
 import com.reedelk.module.descriptor.model.ComponentDataHolder;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.TypeMapDescriptor;
@@ -19,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.util.function.Function;
 
+import static com.intellij.util.ui.JBUI.Borders;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 import static java.util.Optional.ofNullable;
@@ -39,7 +39,7 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
             super.addToParent(parent, rendered, descriptor, context);
         } else {
             PropertyTitleLabel propertyTitleLabel = new PropertyTitleLabel(descriptor);
-            propertyTitleLabel.setBorder(JBUI.Borders.emptyTop(10));
+            propertyTitleLabel.setBorder(Borders.emptyTop(12));
             FormBuilder.get()
                     .addLabelTop(propertyTitleLabel, parent)
                     .addLastField(rendered, parent);
