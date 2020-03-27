@@ -58,6 +58,7 @@ public abstract class InputField<T> extends JBTextField implements DocumentListe
     public void setValue(T value) {
         String valueAsString = converter.toText(value);
         setText(valueAsString);
+        setCaretPosition(0);
     }
 
     public Object getValue() {
