@@ -4,8 +4,8 @@ import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
-import com.reedelk.plugin.editor.properties.renderer.commons.DynamicValueField;
-import com.reedelk.plugin.editor.properties.renderer.commons.DynamicValueInputFieldAdapter;
+import com.reedelk.plugin.editor.properties.commons.DynamicValueField;
+import com.reedelk.plugin.editor.properties.commons.DynamicValueInputFieldAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

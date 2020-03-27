@@ -4,7 +4,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
-import com.reedelk.plugin.editor.properties.renderer.commons.InputChangeListener;
+import com.reedelk.plugin.editor.properties.commons.InputChangeListener;
 import com.reedelk.plugin.topic.ReedelkTopics;
 
 import javax.swing.*;

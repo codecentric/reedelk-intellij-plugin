@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer.typeboolean;
 
 import com.intellij.ui.components.JBCheckBox;
-import com.reedelk.plugin.editor.properties.renderer.commons.InputChangeListener;
+import com.reedelk.plugin.editor.properties.commons.InputChangeListener;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

@@ -2,8 +2,8 @@ package com.reedelk.plugin.editor.properties.renderer.typebigdecimal;
 
 import com.reedelk.plugin.converter.ValueConverter;
 import com.reedelk.plugin.converter.ValueConverterProvider;
-import com.reedelk.plugin.editor.properties.renderer.commons.NumericDocumentFilter;
-import com.reedelk.plugin.editor.properties.renderer.commons.NumericInputField;
+import com.reedelk.plugin.editor.properties.commons.NumericDocumentFilter;
+import com.reedelk.plugin.editor.properties.commons.NumericInputField;
 
 import javax.swing.text.DocumentFilter;
 import java.math.BigDecimal;

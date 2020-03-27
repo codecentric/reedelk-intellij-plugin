@@ -1,8 +1,5 @@
 package com.reedelk.plugin.editor.properties.commons;
 
-import com.reedelk.plugin.editor.properties.renderer.commons.InputChangeListener;
-import com.reedelk.plugin.editor.properties.renderer.commons.InputField;
-import com.reedelk.plugin.editor.properties.renderer.commons.StringInputField;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowSnapshot;
 

@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer.typebiginteger;
 
+import com.reedelk.plugin.editor.properties.commons.InputField;
 import com.reedelk.plugin.editor.properties.renderer.AbstractNumericPropertyRenderer;
-import com.reedelk.plugin.editor.properties.renderer.commons.InputField;
 
 import java.math.BigInteger;
 

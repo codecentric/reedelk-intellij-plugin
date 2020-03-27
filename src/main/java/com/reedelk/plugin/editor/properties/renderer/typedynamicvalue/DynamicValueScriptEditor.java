@@ -10,7 +10,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
 import com.reedelk.plugin.commons.DefaultConstants;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
-import com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditor;
+import com.reedelk.plugin.editor.properties.commons.ScriptEditor;
 import com.reedelk.runtime.api.commons.StringUtils;
 
 import javax.swing.*;

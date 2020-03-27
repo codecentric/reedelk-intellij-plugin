@@ -5,7 +5,7 @@ import com.reedelk.plugin.converter.ValueConverter;
 import com.reedelk.plugin.converter.ValueConverterProvider;
 import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
-import com.reedelk.plugin.editor.properties.renderer.commons.InputChangeListener;
+import com.reedelk.plugin.editor.properties.commons.InputChangeListener;
 import com.reedelk.runtime.api.annotation.Password;
 
 import javax.swing.*;

@@ -4,7 +4,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.util.ui.UIUtil;
 import com.reedelk.plugin.commons.DisposableUtils;
-import com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditor;
 import com.reedelk.plugin.editor.properties.renderer.typedynamicvalue.DynamicValueScriptEditor;
 import com.reedelk.runtime.api.commons.StringUtils;
 

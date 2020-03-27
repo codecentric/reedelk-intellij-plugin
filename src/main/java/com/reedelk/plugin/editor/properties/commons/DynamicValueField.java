@@ -1,12 +1,8 @@
-package com.reedelk.plugin.editor.properties.renderer.commons;
+package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Fonts;
-import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
-import com.reedelk.plugin.editor.properties.commons.ContainerContext;
-import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
-import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.renderer.typedynamicvalue.DynamicValueScriptEditor;
 import com.reedelk.runtime.api.commons.ScriptUtils;
 

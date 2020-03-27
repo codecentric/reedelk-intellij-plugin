@@ -4,9 +4,9 @@ import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
+import com.reedelk.plugin.editor.properties.commons.InputField;
+import com.reedelk.plugin.editor.properties.commons.StringInputField;
 import com.reedelk.plugin.editor.properties.renderer.AbstractPropertyTypeRenderer;
-import com.reedelk.plugin.editor.properties.renderer.commons.InputField;
-import com.reedelk.plugin.editor.properties.renderer.commons.StringInputField;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

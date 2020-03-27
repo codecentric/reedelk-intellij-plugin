@@ -10,6 +10,7 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ProcessingContext;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
+import com.reedelk.plugin.editor.properties.commons.ScriptEditor;
 import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.impl.completion.Suggestion;
 import com.reedelk.runtime.api.autocomplete.AutocompleteItemType;
@@ -30,7 +31,7 @@ abstract class AbstractCompletionProvider extends CompletionProvider<CompletionP
      * the project associated with it is not null. The module name is set when the ScriptEditor
      * is created by a DynamicValueField or ScriptEditorDefault and so on ...
      *
-     * @see com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditor#ScriptEditor(Module module, Document document, ContainerContext context)
+     * @see ScriptEditor#ScriptEditor(Module module, Document document, ContainerContext context)
      */
     @Override
     protected void addCompletions(@NotNull CompletionParameters parameters,

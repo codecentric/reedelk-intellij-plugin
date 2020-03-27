@@ -3,7 +3,7 @@ package com.reedelk.plugin.editor.properties.renderer.typelist;
 import com.intellij.ui.components.JBList;
 import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
-import com.reedelk.plugin.editor.properties.renderer.commons.StringInputField;
+import com.reedelk.plugin.editor.properties.commons.StringInputField;
 
 import javax.swing.*;
 import java.awt.*;

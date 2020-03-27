@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.renderer.commons;
+package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBTextField;

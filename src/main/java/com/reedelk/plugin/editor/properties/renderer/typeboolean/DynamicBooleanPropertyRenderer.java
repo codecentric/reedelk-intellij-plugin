@@ -1,8 +1,8 @@
 package com.reedelk.plugin.editor.properties.renderer.typeboolean;
 
+import com.reedelk.plugin.editor.properties.commons.DynamicValueInputFieldAdapter;
+import com.reedelk.plugin.editor.properties.commons.ScriptEditorChangeListener;
 import com.reedelk.plugin.editor.properties.renderer.AbstractDynamicPropertyTypeRenderer;
-import com.reedelk.plugin.editor.properties.renderer.commons.DynamicValueInputFieldAdapter;
-import com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditorChangeListener;
 
 import javax.swing.*;
 import javax.swing.border.Border;

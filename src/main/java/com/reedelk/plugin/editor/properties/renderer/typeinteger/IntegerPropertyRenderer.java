@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer.typeinteger;
 
+import com.reedelk.plugin.editor.properties.commons.NumericInputField;
 import com.reedelk.plugin.editor.properties.renderer.AbstractNumericPropertyRenderer;
-import com.reedelk.plugin.editor.properties.renderer.commons.NumericInputField;
 
 public class IntegerPropertyRenderer extends AbstractNumericPropertyRenderer<Integer> {
     @Override

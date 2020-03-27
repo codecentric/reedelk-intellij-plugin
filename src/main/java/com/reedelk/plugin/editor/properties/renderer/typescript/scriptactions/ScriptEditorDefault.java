@@ -7,7 +7,7 @@ import com.intellij.ui.components.JBLabel;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.DisposableThreeComponentsSplitter;
-import com.reedelk.plugin.editor.properties.renderer.commons.ScriptEditor;
+import com.reedelk.plugin.editor.properties.commons.ScriptEditor;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;

@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.renderer.commons;
+package com.reedelk.plugin.editor.properties.commons;
 
 import com.reedelk.plugin.converter.ValueConverter;
 import com.reedelk.plugin.converter.ValueConverterProvider;

@@ -1,8 +1,8 @@
 package com.reedelk.plugin.editor.properties.renderer.typescript;
 
 import com.intellij.openapi.ui.ComboBox;
+import com.reedelk.plugin.editor.properties.commons.InputChangeListener;
 import com.reedelk.plugin.editor.properties.commons.SimpleListItemRenderer;
-import com.reedelk.plugin.editor.properties.renderer.commons.InputChangeListener;
 import com.reedelk.plugin.service.module.impl.script.ScriptResource;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;

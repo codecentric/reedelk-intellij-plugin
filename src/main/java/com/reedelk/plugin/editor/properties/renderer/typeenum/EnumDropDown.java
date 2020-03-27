@@ -1,8 +1,8 @@
 package com.reedelk.plugin.editor.properties.renderer.typeenum;
 
 import com.intellij.openapi.ui.ComboBox;
+import com.reedelk.plugin.editor.properties.commons.InputChangeListener;
 import com.reedelk.plugin.editor.properties.commons.SimpleListItemRenderer;
-import com.reedelk.plugin.editor.properties.renderer.commons.InputChangeListener;
 import org.apache.commons.collections.KeyValue;
 import org.apache.commons.collections.keyvalue.DefaultMapEntry;
 import org.jetbrains.annotations.NotNull;

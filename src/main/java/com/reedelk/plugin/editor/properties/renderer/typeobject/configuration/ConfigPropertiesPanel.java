@@ -8,7 +8,7 @@ import com.reedelk.plugin.commons.InitValuesFiller;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.FormBuilder;
 import com.reedelk.plugin.editor.properties.commons.PropertiesPanelHolder;
-import com.reedelk.plugin.editor.properties.renderer.commons.StringInputField;
+import com.reedelk.plugin.editor.properties.commons.StringInputField;
 import com.reedelk.plugin.service.module.impl.configuration.ConfigMetadata;
 
 import javax.swing.*;

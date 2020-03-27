@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.renderer.commons;
+package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
@@ -8,8 +8,6 @@ import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.commons.DefaultConstants;
-import com.reedelk.plugin.editor.properties.commons.ContainerContext;
-import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.runtime.api.commons.ScriptUtils;
 import org.jetbrains.annotations.NotNull;
 

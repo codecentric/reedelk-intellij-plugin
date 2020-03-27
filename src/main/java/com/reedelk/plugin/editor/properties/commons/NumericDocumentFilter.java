@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.renderer.commons;
+package com.reedelk.plugin.editor.properties.commons;
 
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;

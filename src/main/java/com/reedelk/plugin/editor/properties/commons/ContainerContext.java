@@ -1,7 +1,5 @@
 package com.reedelk.plugin.editor.properties.commons;
 
-import com.reedelk.plugin.editor.properties.renderer.commons.InputChangeListener;
-
 import javax.swing.*;
 import java.util.Optional;
 import java.util.function.BiPredicate;
