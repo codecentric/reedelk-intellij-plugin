@@ -3,7 +3,7 @@ package com.reedelk.plugin.editor.properties.renderer.typemap.custom;
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.ComponentDataHolder;
 import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
-import com.reedelk.plugin.editor.properties.renderer.typeobject.configuration.AbstractPropertiesDialog;
+import com.reedelk.plugin.editor.properties.commons.AbstractPropertiesDialog;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

@@ -1,12 +1,9 @@
-package com.reedelk.plugin.editor.properties.renderer.typeobject.configuration;
+package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.reedelk.plugin.commons.DisposableUtils;
-import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
-import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
-import com.reedelk.plugin.editor.properties.commons.DisposableScrollPane;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
