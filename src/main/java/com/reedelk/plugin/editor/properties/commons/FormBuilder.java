@@ -2,6 +2,7 @@ package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.util.ui.JBUI;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class FormBuilder {
@@ -9,39 +10,28 @@ public class FormBuilder {
     private GridBagConstraints lastConstraints;
     private GridBagConstraints labelConstraints;
     private GridBagConstraints labelTopConstraints;
+    private GridBagConstraints fullWidthAndHeightConstraints;
 
     private FormBuilder() {
-        // Set up the constraints for the "last" field in each
-        // row first, then copy and modify those constraints.
 
-        // weightx is 1.0 for fields, 0.0 for labels
-        // gridwidth is REMAINDER for fields, 1 for labels
+        // Last components
         lastConstraints = new GridBagConstraints();
-
-        // Stretch components horizontally (but not vertically)
-        lastConstraints.fill = GridBagConstraints.HORIZONTAL;
-
-        // Components that are too short or narrow for their space
-        // Should be pinned to the northwest (upper left) corner
+        lastConstraints.fill = GridBagConstraints.HORIZONTAL; // Stretch components horizontally (but not vertically)
         lastConstraints.anchor = GridBagConstraints.CENTER;
+        lastConstraints.weightx = 1.0; // Give the "last" component as much space as possible
+        lastConstraints.gridwidth = GridBagConstraints.REMAINDER; // Give the "last" component the remainder of the row
+        lastConstraints.insets = JBUI.insets(1, 1, 1, 1); // Add a little padding
 
-        // Give the "last" component as much space as possible
-        lastConstraints.weightx = 1.0;
-
-        // Give the "last" component the remainder of the row
-        lastConstraints.gridwidth = GridBagConstraints.REMAINDER;
-
-        // Add a little padding
-        lastConstraints.insets = JBUI.insets(1, 1, 1, 1);
+        // Full Width and Heights used for example for tables which require to stretch Horizontally but also vertically.
+        fullWidthAndHeightConstraints = (GridBagConstraints) lastConstraints.clone();
+        fullWidthAndHeightConstraints.fill = GridBagConstraints.BOTH;
+        fullWidthAndHeightConstraints.weighty = 1.0;
 
         // And finally the "label" constrains, typically to be
         // used for the first component on each row
         labelConstraints = (GridBagConstraints) lastConstraints.clone();
-
-        // Give these as little space as necessary
-        labelConstraints.weightx = 0.0;
+        labelConstraints.weightx = 0.0; // Give these as little space as necessary
         labelConstraints.gridwidth = 1;
-
         labelTopConstraints = (GridBagConstraints) labelConstraints.clone();
         labelTopConstraints.anchor = GridBagConstraints.NORTH;
     }
@@ -94,6 +84,13 @@ public class FormBuilder {
     public FormBuilder addLabel(String propertyTitle, Container parent) {
         PropertyTitleLabel label = new PropertyTitleLabel(propertyTitle);
         addLabel(label, parent);
+        return this;
+    }
+
+    public FormBuilder addFullWidthAndHeight(JComponent p, JComponent parent) {
+        GridBagLayout gbl = (GridBagLayout) parent.getLayout();
+        gbl.setConstraints(p, fullWidthAndHeightConstraints);
+        parent.add(p);
         return this;
     }
 }

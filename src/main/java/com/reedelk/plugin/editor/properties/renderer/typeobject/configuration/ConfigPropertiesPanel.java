@@ -5,7 +5,6 @@ import com.intellij.util.ui.JBUI;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
 import com.reedelk.plugin.commons.InitValuesFiller;
-import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.FormBuilder;
 import com.reedelk.plugin.editor.properties.commons.PropertiesPanelHolder;
@@ -17,8 +16,6 @@ import java.awt.*;
 import java.util.List;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
-import static java.awt.BorderLayout.CENTER;
-import static java.awt.BorderLayout.NORTH;
 
 class ConfigPropertiesPanel extends DisposablePanel {
 
@@ -38,9 +35,9 @@ class ConfigPropertiesPanel extends DisposablePanel {
         PropertiesPanelHolder propertiesPanel =
                 new PropertiesPanelHolder(module, componentFullyQualifiedName, configMetadata, descriptors);
 
-        setLayout(new BorderLayout());
-        add(headerPanel, NORTH);
-        add(ContainerFactory.pushTop(propertiesPanel), CENTER);
+        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        add(headerPanel);
+        add(propertiesPanel);
     }
 
     static class ConfigMetadataHeaderPanel extends DisposablePanel {

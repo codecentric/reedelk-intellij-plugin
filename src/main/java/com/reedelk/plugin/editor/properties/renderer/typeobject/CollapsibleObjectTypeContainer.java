@@ -9,9 +9,10 @@ import java.awt.*;
 
 import static com.intellij.icons.AllIcons.General.ArrowDown;
 import static com.intellij.icons.AllIcons.General.ArrowRight;
+import static com.intellij.util.ui.JBUI.Borders.empty;
+import static com.intellij.util.ui.JBUI.Borders.emptyLeft;
 import static com.reedelk.plugin.editor.properties.commons.PanelWithText.LoadingContentPanel;
-import static java.awt.BorderLayout.CENTER;
-import static java.awt.BorderLayout.NORTH;
+import static java.awt.BorderLayout.*;
 
 public class CollapsibleObjectTypeContainer extends DisposablePanel {
 
@@ -81,14 +82,24 @@ public class CollapsibleObjectTypeContainer extends DisposablePanel {
 
     class UnCollapsedContent extends DisposablePanel {
         UnCollapsedContent(String displayName, TooltipContent tooltipContent, JComponent content) {
-            TypeObjectContainerHeader topHeader = new TypeObjectContainerHeader(displayName, tooltipContent, ArrowDown, clickAction);
-
-            JPanel nestedContainerWrapper =
-                    ContainerFactory.pushCenter(content, DefaultObjectTypeContainer.BORDER_OBJECT_TYPE_CONTENT);
-
+            TypeObjectContainerHeader topHeader =
+                    new TypeObjectContainerHeader(displayName, tooltipContent, ArrowDown, clickAction);
             setLayout(new BorderLayout());
+
+
+            // we add a little bit of inset padding to make it clear are properties of un-collapsed object.
+
+            JSeparator jSeparator = new JSeparator(JSeparator.VERTICAL);
+
+            DisposablePanel container = new DisposablePanel(new BorderLayout());
+            container.setBorder(empty(5, 10, 0, 0));
+            container.add(jSeparator, WEST);
+
+            content.setBorder(emptyLeft(10));
+            container.add(content, CENTER);
+
             add(topHeader, NORTH);
-            add(nestedContainerWrapper, CENTER);
+            add(container, CENTER);
         }
     }
 

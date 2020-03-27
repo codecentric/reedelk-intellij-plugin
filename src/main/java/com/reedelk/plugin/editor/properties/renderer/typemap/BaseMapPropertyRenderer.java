@@ -35,7 +35,7 @@ public abstract class BaseMapPropertyRenderer extends AbstractPropertyTypeRender
         }
 
         // Add the component to the parent container.
-        FormBuilder.get().addLastField(rendered, parent);
+        FormBuilder.get().addFullWidthAndHeight(rendered, parent);
 
         JComponentHolder holder = new JComponentHolder(rendered);
 
@@ -51,7 +51,7 @@ public abstract class BaseMapPropertyRenderer extends AbstractPropertyTypeRender
     protected DisposableTabbedPane tabbedPaneFrom(@NotNull PropertyDescriptor propertyDescriptor, @NotNull ContainerContext context, TypeMapDescriptor propertyType) {
         // Map properties are grouped together into a  Tabbed Pane.
         return getGroupTabbedPane(propertyDescriptor, context).orElseGet(() -> {
-            Border outerBorder = Borders.emptyTop(5);
+            Border outerBorder = Borders.empty(5, 0, 0, 3);
             Border innerBorder = Borders.customLine(JBColor.LIGHT_GRAY);
             CompoundBorder compoundBorder = new CompoundBorder(outerBorder, innerBorder);
 

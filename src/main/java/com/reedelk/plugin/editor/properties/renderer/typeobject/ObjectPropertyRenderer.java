@@ -85,7 +85,7 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
         applyWhenVisibility(descriptor.getWhens(), context, rendered);
 
         // Add the component to the parent container.
-        FormBuilder.get().addLastField(rendered, parent);
+        FormBuilder.get().addFullWidthAndHeight(rendered, parent);
     }
 
     @NotNull
