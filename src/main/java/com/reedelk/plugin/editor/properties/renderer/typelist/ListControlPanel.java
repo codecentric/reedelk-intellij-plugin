@@ -21,7 +21,7 @@ public class ListControlPanel extends DisposablePanel {
         ControlsContainer controlsContainer = new ControlsContainer(list, model, itemValueTextField);
 
         setLayout(new BorderLayout());
-        setBorder(Borders.empty(2, 0));
+        setBorder(Borders.empty(1, 0));
         add(controlsContainer, BorderLayout.WEST);
         add(itemValueTextField, BorderLayout.CENTER);
     }
@@ -30,7 +30,7 @@ public class ListControlPanel extends DisposablePanel {
 
         ControlsContainer(JBList<Object> list, DefaultListModel<Object> model, JTextField itemValueTextField) {
             ClickableLabel delete = new ClickableLabel(message("properties.type.list.delete"), Remove, Remove);
-            delete.setBorder(Borders.empty(0, 4));
+            delete.setBorder(Borders.emptyRight(4));
             delete.setAction(new RemoveItemListener(list, model, delete));
 
             ClickableLabel add = new ClickableLabel(message("properties.type.list.add"), Add, Add);

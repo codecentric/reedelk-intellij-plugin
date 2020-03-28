@@ -7,6 +7,7 @@ import com.reedelk.module.descriptor.model.TypeMapDescriptor;
 import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.*;
+import com.reedelk.plugin.editor.properties.renderer.AbstractTabGroupAwarePropertyTypeRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typemap.custom.MapTableCustomColumnModel;
 import com.reedelk.plugin.editor.properties.renderer.typemap.custom.MapTableCustomColumnModelFactory;
 import com.reedelk.plugin.editor.properties.renderer.typemap.custom.MapTableCustomEditButtonAction;
@@ -18,36 +19,11 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.util.function.Function;
 
-import static com.intellij.util.ui.JBUI.Borders;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 import static java.util.Optional.ofNullable;
 
-public class MapPropertyRenderer extends BaseMapPropertyRenderer {
-
-    @Override
-    public void addToParent(@NotNull JComponent parent,
-                            @NotNull JComponent rendered,
-                            @NotNull PropertyDescriptor descriptor,
-                            @NotNull ContainerContext context) {
-
-        final TypeMapDescriptor propertyType = descriptor.getType();
-        boolean isTabGroupPresent = ofNullable(propertyType.getTabGroup()).isPresent();
-
-
-        if (isTabGroupPresent) {
-            super.addToParent(parent, rendered, descriptor, context);
-        } else {
-            PropertyTitleLabel propertyTitleLabel = new PropertyTitleLabel(descriptor);
-            propertyTitleLabel.setBorder(Borders.emptyTop(12));
-            FormBuilder.get()
-                    .addLabelTop(propertyTitleLabel, parent)
-                    .addLastField(rendered, parent);
-
-            JComponentHolder holder = new JComponentHolder(rendered);
-            context.addComponent(holder);
-        }
-    }
+public class MapPropertyRenderer extends AbstractTabGroupAwarePropertyTypeRenderer {
 
     @NotNull
     @Override
@@ -64,7 +40,7 @@ public class MapPropertyRenderer extends BaseMapPropertyRenderer {
                 // Tab group exists
                 .map((Function<String, JComponent>) tabGroupName -> {
                     final JComponent content = new MapTableTabContainer(module, columnAndModel.model, columnAndModel.columnModelFactory);
-                    final DisposableTabbedPane tabbedPane = tabbedPaneFrom(descriptor, context, propertyType);
+                    final DisposableTabbedPane tabbedPane = tabbedPaneFrom(descriptor, context);
                     tabbedPane.addTab(propertyDisplayName, content);
                     tabbedPane.setTabComponentAt(tabbedPane.getTabCount() - 1, new TabLabelHorizontal(propertyDisplayName));
                     return tabbedPane;

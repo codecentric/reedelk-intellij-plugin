@@ -19,7 +19,7 @@ public class MapTableActionPanel extends DisposablePanel {
         ControlsContainer controlsContainer = new ControlsContainer(table);
 
         setLayout(new BorderLayout());
-        setBorder(Borders.empty(4, 0));
+        setBorder(Borders.empty(3, 0));
         add(controlsContainer, BorderLayout.WEST);
     }
 
@@ -27,10 +27,10 @@ public class MapTableActionPanel extends DisposablePanel {
         ControlsContainer(DisposableTable table) {
 
             ClickableLabel add = new ClickableLabel(message("properties.type.map.table.add"), Add, table::addEmptyRow);
-            add.setBorder(Borders.empty(4,0,4,4));
+            add.setBorder(Borders.empty(3,0,3,4));
 
             ClickableLabel remove = new ClickableLabel(message("properties.type.map.table.remove"), Remove, table::removeSelectedRow);
-            remove.setBorder(Borders.empty(4,4,4,4));
+            remove.setBorder(Borders.empty(3, 4));
 
             setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
             add(add);

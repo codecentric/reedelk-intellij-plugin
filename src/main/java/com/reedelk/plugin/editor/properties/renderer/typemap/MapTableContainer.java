@@ -19,7 +19,7 @@ public class MapTableContainer extends DisposablePanel {
                              @NotNull DisposableTableModel tableModel,
                              @NotNull DisposableTableColumnModelFactory columnModelFactory) {
         setLayout(new BorderLayout());
-        setBorder(Borders.emptyTop(5));
+        setBorder(Borders.empty());
         add(new TableContainer(module, tableModel, columnModelFactory), BorderLayout.CENTER);
     }
 
