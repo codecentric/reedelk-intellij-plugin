@@ -1,7 +1,6 @@
 package com.reedelk.plugin.editor.properties.renderer;
 
 import com.intellij.ui.JBColor;
-import com.intellij.util.ui.JBUI;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.TabGroupAwareDescriptor;
 import com.reedelk.plugin.commons.Sizes;
@@ -14,6 +13,7 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import java.util.Optional;
 
+import static com.intellij.util.ui.JBUI.Borders;
 import static com.intellij.util.ui.JBUI.Borders.emptyTop;
 import static java.util.Optional.ofNullable;
 
@@ -33,10 +33,14 @@ public abstract class AbstractTabGroupAwarePropertyTypeRenderer extends Abstract
 
             // If exists a group tabbed pane, then we don't add it to the parent because
             // it has been already added to the tabbed pane above in the render method.
-            Optional<DisposableTabbedPane> groupTabbedPane = getGroupTabbedPane(descriptor, context);
+            Optional<DisposableTabbedPane> groupTabbedPane = findGroupTabbedPane(descriptor, context);
             if (groupTabbedPane.isPresent()) {
                 return;
             }
+
+            // Note that the rendered component is the tabbed pane to be added to the parent container.
+            // For now we assume that its visibility is the same for all the tabs present in the tabbed pane.
+            applyWhenVisibility(descriptor.getWhens(), context, rendered);
 
             // Add the component to the parent container.
             FormBuilder.get().addFullWidthAndHeight(rendered, parent);
@@ -70,9 +74,9 @@ public abstract class AbstractTabGroupAwarePropertyTypeRenderer extends Abstract
     protected DisposableTabbedPane tabbedPaneFrom(@NotNull PropertyDescriptor propertyDescriptor,
                                                   @NotNull ContainerContext context) {
         // Map properties are grouped together into a  Tabbed Pane.
-        return getGroupTabbedPane(propertyDescriptor, context).orElseGet(() -> {
-            Border outerBorder = JBUI.Borders.empty(5, 0, 0, 3);
-            Border innerBorder = JBUI.Borders.customLine(JBColor.LIGHT_GRAY);
+        return findGroupTabbedPane(propertyDescriptor, context).orElseGet(() -> {
+            Border outerBorder = Borders.empty(5, 0, 0, 3);
+            Border innerBorder = Borders.customLine(JBColor.LIGHT_GRAY);
             CompoundBorder compoundBorder = new CompoundBorder(outerBorder, innerBorder);
 
             DisposableTabbedPane tabbed = new DisposableTabbedPane(JTabbedPane.TOP);
@@ -83,7 +87,7 @@ public abstract class AbstractTabGroupAwarePropertyTypeRenderer extends Abstract
         });
     }
 
-    protected Optional<DisposableTabbedPane> getGroupTabbedPane(PropertyDescriptor propertyDescriptor, ContainerContext context) {
+    protected Optional<DisposableTabbedPane> findGroupTabbedPane(PropertyDescriptor propertyDescriptor, ContainerContext context) {
         TabGroupAwareDescriptor propertyType = propertyDescriptor.getType();
         Optional<String> tabGroup = Optional.ofNullable(propertyType.getTabGroup());
         if (tabGroup.isPresent()) {
