@@ -14,6 +14,7 @@ import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
 import com.reedelk.plugin.editor.properties.renderer.AbstractPropertyTypeRenderer;
+import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -111,10 +112,14 @@ public class ResourcePropertyRenderer extends AbstractPropertyTypeRenderer {
         }
 
         @Override
-        public void setText(JTextField component, @NotNull String text) {
-            String fileRelativePath = text.substring(root.length() + 1);
-            component.setText(fileRelativePath);
-            propertyAccessor.set(fileRelativePath);
+        public void setText(@NotNull JTextField component, @NotNull String text) {
+            if (StringUtils.isNotBlank(text)) {
+                String fileRelativePath = text.substring(root.length() + 1);
+                component.setText(fileRelativePath);
+                propertyAccessor.set(fileRelativePath);
+            } else {
+                propertyAccessor.set(StringUtils.EMPTY);
+            }
         }
     }
 }
