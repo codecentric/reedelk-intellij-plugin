@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import static com.intellij.util.ui.JBUI.Borders.empty;
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.util.Optional.ofNullable;
 
 public class ListPropertyRenderer extends AbstractTabGroupAwarePropertyTypeRenderer {
@@ -36,16 +37,17 @@ public class ListPropertyRenderer extends AbstractTabGroupAwarePropertyTypeRende
                 // Tab group exists
                 .map((Function<String, JComponent>) tabGroupName -> {
                     final DisposableTabbedPane tabbedPane = tabbedPaneFrom(descriptor, context);
-                    tabbedPane.addTab(propertyDisplayName, createContent(propertyAccessor));
+                    tabbedPane.addTab(propertyDisplayName, createContent(descriptor, propertyAccessor));
                     tabbedPane.setTabComponentAt(tabbedPane.getTabCount() - 1, new TabLabelHorizontal(propertyDisplayName));
                     return tabbedPane;
                 }).orElseGet(() ->
                         // No tab group
-                        createContent(propertyAccessor));
+                        createContent(descriptor, propertyAccessor));
     }
 
     @NotNull
-    private JComponent createContent(@NotNull PropertyAccessor propertyAccessor) {
+    private JComponent createContent(@NotNull PropertyDescriptor descriptor,
+                                     @NotNull PropertyAccessor propertyAccessor) {
         // Copy data into the model
         List<Object> arrayItems = propertyAccessor.get();
         DefaultListModel<Object> model = new DefaultListModel<>();
@@ -61,7 +63,9 @@ public class ListPropertyRenderer extends AbstractTabGroupAwarePropertyTypeRende
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         // Layout
-        ListControlPanel listControls = new ListControlPanel(list, model);
+        String hint = ofNullable(descriptor.getHintValue())
+                .orElse(message("properties.type.list.item.hint"));
+        ListControlPanel listControls = new ListControlPanel(list, model, hint);
         ListScrollPane listScrollPane = new ListScrollPane(list);
         listScrollPane.setBorder(empty());
 

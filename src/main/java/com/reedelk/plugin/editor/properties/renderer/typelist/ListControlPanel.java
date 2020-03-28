@@ -16,8 +16,8 @@ import static javax.swing.SwingConstants.VERTICAL;
 
 public class ListControlPanel extends DisposablePanel {
 
-    public ListControlPanel(JBList<Object> list, DefaultListModel<Object> model) {
-        JTextField itemValueTextField = new StringInputField(message("properties.type.list.item.hint"));
+    public ListControlPanel(JBList<Object> list, DefaultListModel<Object> model, String inputHint) {
+        JTextField itemValueTextField = new StringInputField(inputHint);
         ControlsContainer controlsContainer = new ControlsContainer(list, model, itemValueTextField);
 
         setLayout(new BorderLayout());
