@@ -46,7 +46,7 @@ public class TooltipContent {
                     .append(this.example);
         }
         if (StringUtils.isNotBlank(this.defaultValue)) {
-            if (builder.length() != 0) {
+            if (StringUtils.isNotBlank(this.example) && builder.length() != 0) {
                 builder.append("<br>");
             }
             builder.append("<b>Default: </b>")
