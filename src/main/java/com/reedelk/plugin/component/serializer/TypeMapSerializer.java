@@ -15,7 +15,6 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-// TODO: Testme
 class TypeMapSerializer {
 
     private static final TypeMapSerializer INSTANCE = new TypeMapSerializer();
