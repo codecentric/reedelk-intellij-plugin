@@ -15,6 +15,7 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+// TODO: Testme
 class TypeMapSerializer {
 
     private static final TypeMapSerializer INSTANCE = new TypeMapSerializer();
@@ -40,7 +41,7 @@ class TypeMapSerializer {
                             JSONObject serializedMapValue = JsonObjectFactory.newJSONObject();
 
                             List<PropertyDescriptor> propertiesDescriptor = objectDescriptor.getObjectProperties();
-                            TypeObjectSerializer.get().serialize((TypeObjectDescriptor.TypeObject) value, jsonObject, propertiesDescriptor);
+                            TypeObjectSerializer.get().serialize((TypeObjectDescriptor.TypeObject) value, serializedMapValue, propertiesDescriptor);
 
                             serialized.put(key, serializedMapValue);
                         } else {

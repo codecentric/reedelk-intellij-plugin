@@ -14,6 +14,7 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+// TODO: Testme
 class TypeListSerializer {
 
     private static final TypeListSerializer INSTANCE = new TypeListSerializer();
