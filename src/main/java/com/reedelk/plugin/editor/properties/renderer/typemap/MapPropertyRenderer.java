@@ -69,15 +69,12 @@ public class MapPropertyRenderer extends AbstractCollectionAwarePropertyTypeRend
                                                           @NotNull TypeMapDescriptor propertyType,
                                                           @NotNull PropertyAccessor propertyAccessor) {
 
-        TypeObjectDescriptor typeObjectDescriptor = (TypeObjectDescriptor) propertyType.getValueType();
+        final TypeObjectDescriptor typeObjectDescriptor = (TypeObjectDescriptor) propertyType.getValueType();
+        final String dialogTitle = ofNullable(propertyType.getDialogTitle()).orElse(EMPTY);
         TableCustomEditButtonAction action = value -> {
-            String dialogTitle = message("properties.type.map.value.edit", ofNullable(propertyType.getValueName()).orElse(EMPTY));
+            String editDialogTitle = message("properties.type.map.value.edit", dialogTitle);
             TableCustomObjectDialog dialog =
-                    new TableCustomObjectDialog(
-                            module,
-                            dialogTitle,
-                            typeObjectDescriptor,
-                            (ComponentDataHolder) value);
+                    new TableCustomObjectDialog(module, editDialogTitle, typeObjectDescriptor, (ComponentDataHolder) value);
             dialog.showAndGet();
         };
         MapTableCustomColumnModelFactory columnModel = new MapTableCustomColumnModelFactory(propertyType, action);

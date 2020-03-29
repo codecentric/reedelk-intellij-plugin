@@ -20,6 +20,7 @@ import java.util.function.Function;
 
 import static com.reedelk.plugin.editor.properties.commons.TableEditButtonCellEditor.TableCustomEditButtonAction;
 import static com.reedelk.plugin.editor.properties.renderer.typelist.custom.ListCustomObjectTableContainer.ListCustomObjectAddItemAction;
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.util.Optional.ofNullable;
 
 public class ListPropertyRenderer extends AbstractCollectionAwarePropertyTypeRenderer {
@@ -62,12 +63,12 @@ public class ListPropertyRenderer extends AbstractCollectionAwarePropertyTypeRen
                                                  @NotNull TypeListDescriptor propertyType,
                                                  @NotNull PropertyAccessor propertyAccessor) {
         final TypeObjectDescriptor objectDescriptor = (TypeObjectDescriptor) propertyType.getValueType();
-        String dialogTitle = propertyType.getDialogTitle();
-        String listDisplayPropertyName = propertyType.getListDisplayProperty();
+        final String dialogTitle = propertyType.getDialogTitle();
+        final String listDisplayPropertyName = propertyType.getListDisplayProperty();
 
         // Edit button action
         TableCustomEditButtonAction action = value -> {
-            String editDialogTitle = "Edit " + dialogTitle;
+            String editDialogTitle = message("properties.type.map.value.edit", dialogTitle);
             TableCustomObjectDialog dialog =
                     new TableCustomObjectDialog(module, editDialogTitle, objectDescriptor, (ComponentDataHolder) value);
             dialog.showAndGet();
@@ -75,7 +76,7 @@ public class ListPropertyRenderer extends AbstractCollectionAwarePropertyTypeRen
 
         // Create new item action
         ListCustomObjectAddItemAction addItemAction = newObject -> {
-            String newDialogTitle = "New " + dialogTitle;
+            String newDialogTitle = message("properties.type.map.value.new", dialogTitle);
             TableCustomObjectDialog dialog =
                     new TableCustomObjectDialog(module, newDialogTitle, objectDescriptor, newObject);
             return dialog.showAndGet();
