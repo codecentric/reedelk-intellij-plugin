@@ -21,7 +21,7 @@ public class GenericComponentSerializer extends AbstractNodeSerializer {
 
         Implementor.name(componentData.getFullyQualifiedName(), componentAsJson);
 
-        ComponentDataHolderSerializer.serialize(componentData, componentAsJson);
+        ComponentDataHolderSerializer.get().serialize(componentData, componentAsJson);
 
         return componentAsJson;
     }

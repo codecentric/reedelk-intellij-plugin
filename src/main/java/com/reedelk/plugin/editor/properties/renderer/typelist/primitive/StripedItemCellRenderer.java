@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.renderer.typelist;
+package com.reedelk.plugin.editor.properties.renderer.typelist.primitive;
 
 import com.intellij.util.ui.UIUtil;
 

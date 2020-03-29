@@ -22,9 +22,9 @@ class TypeObjectDeserializer {
                      @NotNull String propertyName,
                      @NotNull TypeObjectDescriptor propertyType) {
 
-        TypeObjectDescriptor.TypeObject nestedObject = TypeObjectFactory.newInstance(propertyType);
-
         if (jsonObject.has(propertyName) && !jsonObject.isNull(propertyName)) {
+
+            TypeObjectDescriptor.TypeObject nestedObject = TypeObjectFactory.newInstance(propertyType);
 
             JSONObject nestedJsonObject = jsonObject.getJSONObject(propertyName);
 

@@ -7,11 +7,9 @@ import com.reedelk.module.descriptor.model.TypeMapDescriptor;
 import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.*;
-import com.reedelk.plugin.editor.properties.renderer.AbstractTabGroupAwarePropertyTypeRenderer;
-import com.reedelk.plugin.editor.properties.renderer.typemap.custom.MapTableCustomColumnModel;
+import com.reedelk.plugin.editor.properties.renderer.AbstractCollectionAwarePropertyTypeRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typemap.custom.MapTableCustomColumnModelFactory;
-import com.reedelk.plugin.editor.properties.renderer.typemap.custom.MapTableCustomEditButtonAction;
-import com.reedelk.plugin.editor.properties.renderer.typemap.custom.MapTableCustomObjectDialog;
+import com.reedelk.plugin.editor.properties.renderer.typemap.custom.MapTableCustomModel;
 import com.reedelk.plugin.editor.properties.renderer.typemap.primitive.MapTableColumnModelFactory;
 import com.reedelk.plugin.editor.properties.renderer.typemap.primitive.MapTableModel;
 import org.jetbrains.annotations.NotNull;
@@ -19,11 +17,12 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.util.function.Function;
 
+import static com.reedelk.plugin.editor.properties.commons.TableEditButtonCellEditor.TableCustomEditButtonAction;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 import static java.util.Optional.ofNullable;
 
-public class MapPropertyRenderer extends AbstractTabGroupAwarePropertyTypeRenderer {
+public class MapPropertyRenderer extends AbstractCollectionAwarePropertyTypeRenderer {
 
     @NotNull
     @Override
@@ -71,10 +70,10 @@ public class MapPropertyRenderer extends AbstractTabGroupAwarePropertyTypeRender
                                                           @NotNull PropertyAccessor propertyAccessor) {
 
         TypeObjectDescriptor typeObjectDescriptor = (TypeObjectDescriptor) propertyType.getValueType();
-        MapTableCustomEditButtonAction action = value -> {
+        TableCustomEditButtonAction action = value -> {
             String dialogTitle = message("properties.type.map.value.edit", ofNullable(propertyType.getValueName()).orElse(EMPTY));
-            MapTableCustomObjectDialog dialog =
-                    new MapTableCustomObjectDialog(
+            TableCustomObjectDialog dialog =
+                    new TableCustomObjectDialog(
                             module,
                             dialogTitle,
                             typeObjectDescriptor,
@@ -82,7 +81,7 @@ public class MapPropertyRenderer extends AbstractTabGroupAwarePropertyTypeRender
             dialog.showAndGet();
         };
         MapTableCustomColumnModelFactory columnModel = new MapTableCustomColumnModelFactory(propertyType, action);
-        MapTableCustomColumnModel tableModel = new MapTableCustomColumnModel(propertyAccessor);
+        MapTableCustomModel tableModel = new MapTableCustomModel(propertyAccessor);
         return new MapColumnAndModel(tableModel, columnModel);
     }
 

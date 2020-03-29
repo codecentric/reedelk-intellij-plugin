@@ -2,7 +2,7 @@ package com.reedelk.plugin.editor.properties.renderer.typemap.custom;
 
 import com.reedelk.plugin.commons.VectorUtils;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
-import com.reedelk.plugin.editor.properties.renderer.typemap.AbstractMapTableModel;
+import com.reedelk.plugin.editor.properties.commons.TableModelDefaultAbstract;
 import com.reedelk.runtime.api.commons.StringUtils;
 
 import java.util.LinkedHashMap;
@@ -12,11 +12,11 @@ import java.util.Vector;
 import static com.reedelk.module.descriptor.model.TypeObjectDescriptor.TypeObject;
 import static com.reedelk.module.descriptor.model.TypeObjectDescriptor.newInstance;
 
-public class MapTableCustomColumnModel extends AbstractMapTableModel {
+public class MapTableCustomModel extends TableModelDefaultAbstract {
 
     private final transient PropertyAccessor propertyAccessor;
 
-    public MapTableCustomColumnModel(PropertyAccessor propertyAccessor) {
+    public MapTableCustomModel(PropertyAccessor propertyAccessor) {
         this.propertyAccessor = propertyAccessor;
         Map<String, TypeObject> data = propertyAccessor.get();
         if (data != null) {

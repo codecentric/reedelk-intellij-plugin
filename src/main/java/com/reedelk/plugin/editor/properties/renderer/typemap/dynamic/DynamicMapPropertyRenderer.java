@@ -8,7 +8,7 @@ import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposableTabbedPane;
 import com.reedelk.plugin.editor.properties.commons.DisposableTableModel;
 import com.reedelk.plugin.editor.properties.commons.TabLabelHorizontal;
-import com.reedelk.plugin.editor.properties.renderer.AbstractTabGroupAwarePropertyTypeRenderer;
+import com.reedelk.plugin.editor.properties.renderer.AbstractCollectionAwarePropertyTypeRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typemap.MapTableContainer;
 import com.reedelk.plugin.editor.properties.renderer.typemap.MapTableTabContainer;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +18,7 @@ import java.util.function.Function;
 
 import static java.util.Optional.ofNullable;
 
-public class DynamicMapPropertyRenderer extends AbstractTabGroupAwarePropertyTypeRenderer {
+public class DynamicMapPropertyRenderer extends AbstractCollectionAwarePropertyTypeRenderer {
 
     @NotNull
     @Override

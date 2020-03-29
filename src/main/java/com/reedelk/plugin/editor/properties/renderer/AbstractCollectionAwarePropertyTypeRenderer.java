@@ -1,8 +1,8 @@
 package com.reedelk.plugin.editor.properties.renderer;
 
 import com.intellij.ui.JBColor;
+import com.reedelk.module.descriptor.model.CollectionAwareDescriptor;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.TabGroupAwareDescriptor;
 import com.reedelk.plugin.commons.Sizes;
 import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.runtime.api.annotation.TabGroup;
@@ -17,7 +17,7 @@ import static com.intellij.util.ui.JBUI.Borders;
 import static com.intellij.util.ui.JBUI.Borders.emptyTop;
 import static java.util.Optional.ofNullable;
 
-public abstract class AbstractTabGroupAwarePropertyTypeRenderer extends AbstractPropertyTypeRenderer {
+public abstract class AbstractCollectionAwarePropertyTypeRenderer extends AbstractPropertyTypeRenderer {
 
     @Override
     public void addToParent(@NotNull JComponent parent,
@@ -26,7 +26,7 @@ public abstract class AbstractTabGroupAwarePropertyTypeRenderer extends Abstract
                             @NotNull ContainerContext context) {
 
 
-        final TabGroupAwareDescriptor propertyType = descriptor.getType();
+        final CollectionAwareDescriptor propertyType = descriptor.getType();
         boolean isTabGroupPresent = ofNullable(propertyType.getTabGroup()).isPresent();
 
         if (isTabGroupPresent) {
@@ -88,7 +88,7 @@ public abstract class AbstractTabGroupAwarePropertyTypeRenderer extends Abstract
     }
 
     protected Optional<DisposableTabbedPane> findGroupTabbedPane(PropertyDescriptor propertyDescriptor, ContainerContext context) {
-        TabGroupAwareDescriptor propertyType = propertyDescriptor.getType();
+        CollectionAwareDescriptor propertyType = propertyDescriptor.getType();
         Optional<String> tabGroup = Optional.ofNullable(propertyType.getTabGroup());
         if (tabGroup.isPresent()) {
             // Tab group annotation was present in the property definition. We need to lookup

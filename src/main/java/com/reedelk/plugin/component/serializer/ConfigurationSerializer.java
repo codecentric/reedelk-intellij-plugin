@@ -24,7 +24,7 @@ public class ConfigurationSerializer {
         JsonParser.Config.title(dataHolder.getTitle(), object);
         JsonParser.Implementor.name(dataHolder.getFullyQualifiedName(), object);
 
-        ComponentDataHolderSerializer.serialize(typeObjectDescriptor, dataHolder, object);
+        ComponentDataHolderSerializer.get().serialize(typeObjectDescriptor, object, dataHolder);
 
         return object.toString(JSON_INDENT_FACTOR);
     }

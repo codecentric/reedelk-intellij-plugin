@@ -1,16 +1,14 @@
-package com.reedelk.plugin.editor.properties.renderer.typemap;
-
-import com.reedelk.plugin.editor.properties.commons.DisposableTableModel;
+package com.reedelk.plugin.editor.properties.commons;
 
 import javax.swing.table.DefaultTableModel;
 import java.util.Vector;
 
-public abstract class AbstractMapTableModel extends DefaultTableModel implements DisposableTableModel {
+public abstract class TableModelDefaultAbstract extends DefaultTableModel implements DisposableTableModel {
 
     private static final int ROWS = 0;
     private static final int COLUMNS = 2; // a Map table has two columns
 
-    public AbstractMapTableModel() {
+    public TableModelDefaultAbstract() {
         super(ROWS, COLUMNS);
     }
 

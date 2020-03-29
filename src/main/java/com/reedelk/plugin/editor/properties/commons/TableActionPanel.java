@@ -1,8 +1,4 @@
-package com.reedelk.plugin.editor.properties.renderer.typemap;
-
-import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
-import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
-import com.reedelk.plugin.editor.properties.commons.DisposableTable;
+package com.reedelk.plugin.editor.properties.commons;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,13 +6,14 @@ import java.awt.*;
 import static com.intellij.icons.AllIcons.General.Add;
 import static com.intellij.icons.AllIcons.General.Remove;
 import static com.intellij.util.ui.JBUI.Borders;
+import static com.reedelk.plugin.editor.properties.commons.ClickableLabel.OnClickAction;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static javax.swing.SwingConstants.VERTICAL;
 
-public class MapTableActionPanel extends DisposablePanel {
+public class TableActionPanel extends DisposablePanel {
 
-    public MapTableActionPanel(DisposableTable table) {
-        ControlsContainer controlsContainer = new ControlsContainer(table);
+    public TableActionPanel(OnClickAction addAction, OnClickAction removeAction) {
+        ControlsContainer controlsContainer = new ControlsContainer(addAction, removeAction);
 
         setLayout(new BorderLayout());
         setBorder(Borders.empty(3, 0));
@@ -24,12 +21,12 @@ public class MapTableActionPanel extends DisposablePanel {
     }
 
     static class ControlsContainer extends DisposablePanel {
-        ControlsContainer(DisposableTable table) {
+        ControlsContainer(OnClickAction addAction, OnClickAction removeAction) {
 
-            ClickableLabel add = new ClickableLabel(message("properties.type.map.table.add"), Add, table::addEmptyRow);
+            ClickableLabel add = new ClickableLabel(message("properties.type.map.table.add"), Add, addAction);
             add.setBorder(Borders.empty(3,0,3,4));
 
-            ClickableLabel remove = new ClickableLabel(message("properties.type.map.table.remove"), Remove, table::removeSelectedRow);
+            ClickableLabel remove = new ClickableLabel(message("properties.type.map.table.remove"), Remove, removeAction);
             remove.setBorder(Borders.empty(3, 4));
 
             setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));

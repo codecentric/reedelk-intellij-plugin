@@ -2,14 +2,14 @@ package com.reedelk.plugin.editor.properties.renderer.typemap.primitive;
 
 import com.reedelk.plugin.commons.VectorUtils;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
-import com.reedelk.plugin.editor.properties.renderer.typemap.AbstractMapTableModel;
+import com.reedelk.plugin.editor.properties.commons.TableModelDefaultAbstract;
 import com.reedelk.runtime.api.commons.StringUtils;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Vector;
 
-public class MapTableModel extends AbstractMapTableModel {
+public class MapTableModel extends TableModelDefaultAbstract {
 
     private final transient PropertyAccessor propertyAccessor;
 

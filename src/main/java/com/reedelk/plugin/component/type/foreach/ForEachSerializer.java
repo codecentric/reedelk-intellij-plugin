@@ -27,7 +27,7 @@ public class ForEachSerializer extends AbstractScopedNodeSerializer {
 
         Implementor.name(componentData.getFullyQualifiedName(), forEachObject);
 
-        ComponentDataHolderSerializer.serialize(componentData, forEachObject);
+        ComponentDataHolderSerializer.get().serialize(componentData, forEachObject);
 
         List<GraphNode> successorsOfForEach = graph.successors(forEachNode);
 

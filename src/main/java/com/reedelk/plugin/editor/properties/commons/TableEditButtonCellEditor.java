@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.renderer.typemap.custom;
+package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.UIUtil;
@@ -8,15 +8,15 @@ import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 
 import static com.intellij.icons.AllIcons.Actions.EditSource;
 
 
-public class MapTableCustomEditButtonCell extends AbstractCellEditor implements TableCellRenderer, TableCellEditor, ActionListener, MouseListener {
+public class TableEditButtonCellEditor extends AbstractCellEditor implements TableCellRenderer, TableCellEditor, ActionListener, MouseListener, MouseMotionListener {
+
+    private static final Cursor CURSOR_HAND = new Cursor(Cursor.HAND_CURSOR);
+    private static final Cursor CURSOR_DEFAULT = new Cursor(Cursor.DEFAULT_CURSOR);
 
     private JPanel edit;
     private JTable table;
@@ -24,9 +24,13 @@ public class MapTableCustomEditButtonCell extends AbstractCellEditor implements 
     private boolean isButtonColumnEditor;
 
     private transient Object editorValue;
-    private transient MapTableCustomEditButtonAction action;
+    private transient TableCustomEditButtonAction action;
 
-    public MapTableCustomEditButtonCell(JTable table, MapTableCustomEditButtonAction action) {
+    public interface TableCustomEditButtonAction {
+        void onClick(Object editorValue);
+    }
+
+    public TableEditButtonCellEditor(JTable table, TableCustomEditButtonAction action) {
         this.table = table;
         this.action = action;
 
@@ -46,6 +50,9 @@ public class MapTableCustomEditButtonCell extends AbstractCellEditor implements 
         render = new JPanel();
         render.setLayout(new FlowLayout());
         render.add(renderLabel);
+
+        table.addMouseListener(this);
+        table.addMouseMotionListener(this);
     }
 
     @Override
@@ -88,6 +95,20 @@ public class MapTableCustomEditButtonCell extends AbstractCellEditor implements 
             fireEditingStopped();
         }
         isButtonColumnEditor = false;
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        // We are not interested in detecting mouse dragged event.
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent event) {
+        if (table.columnAtPoint(event.getPoint()) == 1) {
+            table.setCursor(CURSOR_HAND);
+        } else {
+            table.setCursor(CURSOR_DEFAULT);
+        }
     }
 
     @Override

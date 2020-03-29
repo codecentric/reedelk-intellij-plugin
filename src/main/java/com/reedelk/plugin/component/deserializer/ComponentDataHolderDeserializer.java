@@ -29,8 +29,10 @@ public class ComponentDataHolderDeserializer {
             TypeObjectDeserializer.get().deserialize(jsonObject, componentData, propertyName, typeObjectDescriptor);
 
         } else if (propertyType instanceof TypeMapDescriptor) {
-            TypeDescriptor valueType = ((TypeMapDescriptor) propertyType).getValueType();
-            TypeMapDeserializer.get().deserialize(jsonObject, componentData, propertyName, propertyType, valueType);
+            TypeMapDeserializer.get().deserialize(jsonObject, componentData, propertyName, (TypeMapDescriptor) propertyType);
+
+        } else if (propertyType instanceof TypeListDescriptor) {
+            TypeListDeserializer.get().deserialize(jsonObject, componentData, propertyName, (TypeListDescriptor) propertyType);
 
         } else {
             ValueConverter<?> converter = ValueConverterProvider.forType(propertyType);
