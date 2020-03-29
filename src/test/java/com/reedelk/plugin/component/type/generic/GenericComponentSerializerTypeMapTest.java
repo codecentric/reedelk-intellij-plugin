@@ -1,7 +1,6 @@
 package com.reedelk.plugin.component.type.generic;
 
 import com.reedelk.module.descriptor.model.ComponentDescriptor;
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
 import com.reedelk.plugin.commons.TypeObjectFactory;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.fixture.ComponentNode1;
@@ -13,6 +12,8 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.reedelk.module.descriptor.model.TypeObjectDescriptor.TypeObject;
+import static com.reedelk.module.descriptor.model.TypeObjectDescriptor.newInstance;
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.Primitives;
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.SpecialTypes;
 import static java.util.Arrays.asList;
@@ -68,21 +69,21 @@ public class GenericComponentSerializerTypeMapTest extends GenericComponentSeria
     @Test
     void shouldCorrectlySerializeGenericComponentWithNotEmptyMapPropertyCustomValueType() {
         // Given
-        TypeObjectDescriptor.TypeObject typeObjectInstance = TypeObjectFactory.newInstance();
+        TypeObject typeObjectInstance = TypeObjectFactory.newInstance();
         typeObjectInstance.set("stringProperty", "sample string property");
         typeObjectInstance.set("integerObjectProperty", Integer.parseInt("255"));
 
-        CustomItemType mapValueType1 = new CustomItemType();
-        mapValueType1.setStringProperty("200 string property");
-        mapValueType1.setIntegerObjectProperty(200);
+        TypeObject item1 = newInstance();
+        item1.set("stringProperty", "200 string property");
+        item1.set("integerObjectProperty", 200);
 
-        CustomItemType mapValueType2 = new CustomItemType();
-        mapValueType2.setStringProperty("400 string property");
-        mapValueType2.setIntegerObjectProperty(400);
+        TypeObject item2 = newInstance();
+        item2.set("stringProperty", "400 string property");
+        item2.set("integerObjectProperty", 400);
 
-        Map<String, CustomItemType> myMap = new HashMap<>();
-        myMap.put("200", mapValueType1);
-        myMap.put("400", mapValueType2);
+        Map<String, TypeObject> myMap = new HashMap<>();
+        myMap.put("200", item1);
+        myMap.put("400", item2);
 
         ComponentData componentData = new ComponentData(ComponentDescriptor.create()
                 .propertyDescriptors(asList(Primitives.stringProperty, SpecialTypes.mapPropertyWithCustomValueType))
@@ -104,7 +105,7 @@ public class GenericComponentSerializerTypeMapTest extends GenericComponentSeria
     @Test
     void shouldNotSerializeGenericComponentPropertyWithEmptyMapPropertyCustomValueType() {
         // Given
-        Map<String, CustomItemType> myMap = new HashMap<>();
+        Map<String, TypeObject> myMap = new HashMap<>();
 
         ComponentData componentData = new ComponentData(ComponentDescriptor.create()
                 .propertyDescriptors(asList(Primitives.stringProperty, SpecialTypes.mapPropertyWithCustomValueType))

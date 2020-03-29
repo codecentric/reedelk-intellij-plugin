@@ -14,7 +14,6 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-// TODO: Testme
 class TypeListSerializer {
 
     private static final TypeListSerializer INSTANCE = new TypeListSerializer();
@@ -25,9 +24,9 @@ class TypeListSerializer {
 
     public void serialize(@NotNull PropertyDescriptor propertyDescriptor,
                           @NotNull JSONObject jsonObject,
-                          @Nullable List<Object> map) {
+                          @Nullable List<Object> list) {
         String propertyName = propertyDescriptor.getName();
-        Stream.of(map)
+        Stream.of(list)
                 .filter(ExcludeEmptyLists)
                 .forEach(theList -> {
                     List<Object> serialized = new ArrayList<>();

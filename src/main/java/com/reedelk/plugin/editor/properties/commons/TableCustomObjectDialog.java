@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.awt.BorderLayout.CENTER;
 
 public class TableCustomObjectDialog extends AbstractPropertiesDialog {
@@ -22,7 +23,7 @@ public class TableCustomObjectDialog extends AbstractPropertiesDialog {
                                    @NotNull String title,
                                    @NotNull TypeObjectDescriptor typeObjectDescriptor,
                                    @NotNull ComponentDataHolder value) {
-        super(module, title,"Save"); // TODO: hardcoded save btn
+        super(module, title, message("dialog.custom.properties.btn.save"));
         setTitle(title);
         this.typeObjectDescriptor = typeObjectDescriptor;
         this.componentDataHolder = value;

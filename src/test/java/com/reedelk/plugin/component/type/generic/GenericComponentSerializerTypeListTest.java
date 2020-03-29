@@ -1,7 +1,6 @@
 package com.reedelk.plugin.component.type.generic;
 
 import com.reedelk.module.descriptor.model.ComponentDescriptor;
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
 import com.reedelk.plugin.commons.TypeObjectFactory;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.fixture.ComponentNode1;
@@ -13,6 +12,8 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.reedelk.module.descriptor.model.TypeObjectDescriptor.TypeObject;
+import static com.reedelk.module.descriptor.model.TypeObjectDescriptor.newInstance;
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.Primitives.stringProperty;
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.SpecialTypes.listProperty;
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.SpecialTypes.listPropertyWithCustomValueType;
@@ -70,19 +71,19 @@ public class GenericComponentSerializerTypeListTest extends GenericComponentSeri
     @Test
     void shouldCorrectlySerializeGenericComponentWithNotEmptyListPropertyCustomValueType() {
         // Given
-        TypeObjectDescriptor.TypeObject typeObjectInstance = TypeObjectFactory.newInstance();
+        TypeObject typeObjectInstance = TypeObjectFactory.newInstance();
         typeObjectInstance.set("stringProperty", "sample string property");
         typeObjectInstance.set("integerObjectProperty", Integer.parseInt("255"));
 
-        CustomItemType item1 = new CustomItemType();
-        item1.setStringProperty("200 string property");
-        item1.setIntegerObjectProperty(200);
+        TypeObject item1 = newInstance();
+        item1.set("stringProperty", "200 string property");
+        item1.set("integerObjectProperty", 200);
 
-        CustomItemType item2 = new CustomItemType();
-        item2.setStringProperty("400 string property");
-        item2.setIntegerObjectProperty(400);
+        TypeObject item2 = newInstance();
+        item2.set("stringProperty", "400 string property");
+        item2.set("integerObjectProperty", 400);
 
-        List<CustomItemType> myList = new ArrayList<>();
+        List<TypeObject> myList = new ArrayList<>();
         myList.add(item1);
         myList.add(item2);
 
@@ -106,7 +107,7 @@ public class GenericComponentSerializerTypeListTest extends GenericComponentSeri
     @Test
     void shouldNotSerializeGenericComponentPropertyWithEmptyListPropertyCustomValueType() {
         // Given
-        List<CustomItemType> myList = new ArrayList<>();
+        List<TypeObject> myList = new ArrayList<>();
 
         ComponentData componentData = new ComponentData(ComponentDescriptor.create()
                 .propertyDescriptors(asList(stringProperty, listPropertyWithCustomValueType))
