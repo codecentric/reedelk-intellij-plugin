@@ -112,13 +112,6 @@ public class Json {
             }
         },
 
-        WithNotEmptyMapPropertyCustomValueType {
-            @Override
-            public String path() {
-                return "flow/generic_component_with_not_empty_map_custom_value_type.json";
-            }
-        },
-
         WithEmptyMapProperty {
             @Override
             public String path() {
@@ -126,10 +119,45 @@ public class Json {
             }
         },
 
+        WithNotEmptyMapPropertyCustomValueType {
+            @Override
+            public String path() {
+                return "flow/generic_component_with_not_empty_map_custom_value_type.json";
+            }
+        },
+
         WithEmptyMapPropertyCustomValueType {
             @Override
             public String path() {
                 return "flow/generic_component_with_empty_map_custom_value_type.json";
+            }
+        },
+
+        WithNotEmptyListProperty {
+            @Override
+            public String path() {
+                return "flow/generic_component_with_not_empty_list.json";
+            }
+        },
+
+        WithEmptyListProperty {
+            @Override
+            public String path() {
+                return "flow/generic_component_with_empty_list.json";
+            }
+        },
+
+        WithNotEmptyListPropertyCustomValueType {
+            @Override
+            public String path() {
+                return "flow/generic_component_with_not_empty_list_custom_value_type.json";
+            }
+        },
+
+        WithEmptyListPropertyCustomValueType {
+            @Override
+            public String path() {
+                return "flow/generic_component_with_empty_list_custom_value_type.json";
             }
         },
 

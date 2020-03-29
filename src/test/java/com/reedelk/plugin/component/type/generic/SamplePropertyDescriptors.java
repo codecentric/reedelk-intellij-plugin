@@ -215,7 +215,9 @@ public class SamplePropertyDescriptors {
 
         static final TypeDescriptor enumTypeDescriptor = createTypeEnumDescriptor(valueAndDisplayMap);
         static final TypeDescriptor mapTypeDescriptor = createTypeMapDescriptor("Headers", stringTypeDescriptor);
+        static final TypeDescriptor listTypeDescriptor = createTypeListDescriptor("Tags", stringTypeDescriptor);
         static final TypeDescriptor mapTypeDescriptorWithCustomValueType = createTypeMapDescriptor("Responses", TypeObjects.typeObjectDescriptor);
+        static final TypeDescriptor listTypeDescriptorWithCustomValueType = createTypeListDescriptor("Responses", TypeObjects.typeObjectDescriptor);
         static final TypeDescriptor scriptTypeDescriptor = new TypeScriptDescriptor();
         static final TypeDescriptor comboTypeDescriptor = createTypeComboDescriptor(true, new String[]{"one", "two", "three"}, null);
         static final TypeDescriptor resourceTypeDescriptor = new TypeResourceTextDescriptor();
@@ -234,11 +236,25 @@ public class SamplePropertyDescriptors {
                         .displayName("Map property")
                         .build();
 
+        static final PropertyDescriptor listProperty =
+                PropertyDescriptor.builder()
+                        .type(listTypeDescriptor)
+                        .name("listProperty")
+                        .displayName("List property")
+                        .build();
+
         static final PropertyDescriptor mapPropertyWithCustomValueType =
                 PropertyDescriptor.builder()
                         .type(mapTypeDescriptorWithCustomValueType)
                         .name("mapPropertyWithCustomValueType")
                         .displayName("Map property with custom value type")
+                        .build();
+
+        static final PropertyDescriptor listPropertyWithCustomValueType =
+                PropertyDescriptor.builder()
+                        .type(listTypeDescriptorWithCustomValueType)
+                        .name("listPropertyWithCustomValueType")
+                        .displayName("List property with custom value type")
                         .build();
 
         static final PropertyDescriptor scriptProperty =

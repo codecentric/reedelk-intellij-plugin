@@ -55,6 +55,13 @@ public class ObjectFactories {
         return descriptor;
     }
 
+    public static TypeListDescriptor createTypeListDescriptor(String tabGroup, TypeDescriptor valueType) {
+        TypeListDescriptor descriptor = new TypeListDescriptor();
+        descriptor.setValueType(valueType);
+        descriptor.setTabGroup(tabGroup);
+        return descriptor;
+    }
+
     public static ScriptSignatureDescriptor createScriptSignatureDefinition(List<String> arguments) {
         ScriptSignatureDescriptor definition = new ScriptSignatureDescriptor();
         definition.setArguments(arguments);
