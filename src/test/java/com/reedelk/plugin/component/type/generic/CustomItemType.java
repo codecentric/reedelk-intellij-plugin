@@ -2,7 +2,7 @@ package com.reedelk.plugin.component.type.generic;
 
 import com.reedelk.runtime.api.component.Implementor;
 
-public class CustomMapValueType implements Implementor {
+public class CustomItemType implements Implementor {
 
     private String stringProperty;
     private Integer integerObjectProperty;
