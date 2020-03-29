@@ -7,7 +7,7 @@ import java.awt.geom.RoundRectangle2D;
 
 public class SelectedBox {
 
-    private static final int TOP_PADDING = 4;
+    private static final int TOP_PADDING = 3;
     private static final int RIGHT_PADDING = 2;
     private static final int BOTTOM_PADDING = 8;
 
