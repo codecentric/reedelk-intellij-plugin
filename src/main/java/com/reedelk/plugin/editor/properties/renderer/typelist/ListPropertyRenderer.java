@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.util.function.Function;
 
+import static com.reedelk.plugin.editor.properties.commons.TableCustomObjectDialog.DialogType;
 import static com.reedelk.plugin.editor.properties.commons.TableEditButtonCellEditor.TableCustomEditButtonAction;
 import static com.reedelk.plugin.editor.properties.renderer.typelist.custom.ListCustomObjectTableContainer.ListCustomObjectAddItemAction;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
@@ -70,7 +71,7 @@ public class ListPropertyRenderer extends AbstractCollectionAwarePropertyTypeRen
         TableCustomEditButtonAction action = value -> {
             String editDialogTitle = message("properties.type.map.value.edit", dialogTitle);
             TableCustomObjectDialog dialog =
-                    new TableCustomObjectDialog(module, editDialogTitle, objectDescriptor, (ComponentDataHolder) value);
+                    new TableCustomObjectDialog(module, editDialogTitle, objectDescriptor, (ComponentDataHolder) value, DialogType.EDIT);
             dialog.showAndGet();
         };
 
@@ -78,7 +79,7 @@ public class ListPropertyRenderer extends AbstractCollectionAwarePropertyTypeRen
         ListCustomObjectAddItemAction addItemAction = newObject -> {
             String newDialogTitle = message("properties.type.map.value.new", dialogTitle);
             TableCustomObjectDialog dialog =
-                    new TableCustomObjectDialog(module, newDialogTitle, objectDescriptor, newObject);
+                    new TableCustomObjectDialog(module, newDialogTitle, objectDescriptor, newObject, DialogType.NEW);
             return dialog.showAndGet();
         };
 

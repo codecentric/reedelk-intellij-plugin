@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.util.function.Function;
 
+import static com.reedelk.plugin.editor.properties.commons.TableCustomObjectDialog.DialogType;
 import static com.reedelk.plugin.editor.properties.commons.TableEditButtonCellEditor.TableCustomEditButtonAction;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
@@ -74,11 +75,11 @@ public class MapPropertyRenderer extends AbstractCollectionAwarePropertyTypeRend
         TableCustomEditButtonAction action = value -> {
             String editDialogTitle = message("properties.type.map.value.edit", dialogTitle);
             TableCustomObjectDialog dialog =
-                    new TableCustomObjectDialog(module, editDialogTitle, typeObjectDescriptor, (ComponentDataHolder) value);
+                    new TableCustomObjectDialog(module, editDialogTitle, typeObjectDescriptor, (ComponentDataHolder) value, DialogType.EDIT);
             dialog.showAndGet();
         };
         MapTableCustomColumnModelFactory columnModel = new MapTableCustomColumnModelFactory(propertyType, action);
-        MapTableCustomModel tableModel = new MapTableCustomModel(propertyAccessor);
+        MapTableCustomModel tableModel = new MapTableCustomModel(propertyAccessor, typeObjectDescriptor);
         return new MapColumnAndModel(tableModel, columnModel);
     }
 
