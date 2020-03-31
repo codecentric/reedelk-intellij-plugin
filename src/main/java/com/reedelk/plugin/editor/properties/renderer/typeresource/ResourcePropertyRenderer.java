@@ -9,6 +9,7 @@ import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBTextField;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.ResourceAwareDescriptor;
 import com.reedelk.plugin.commons.PluginModuleUtils;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
@@ -21,10 +22,11 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
+import static java.util.Optional.ofNullable;
 
 public class ResourcePropertyRenderer extends AbstractPropertyTypeRenderer {
 
-    private final int inputFileFieldColumns = 40;
+    private static final int INPUT_FILE_FIELD_COLUMNS = 38;
 
     @NotNull
     @Override
@@ -47,11 +49,15 @@ public class ResourcePropertyRenderer extends AbstractPropertyTypeRenderer {
             }
         };
 
-        descriptor.setTitle(message("properties.type.resource.choose.file.dialog"));
+        ResourceAwareDescriptor resourceAwareDescriptor = propertyDescriptor.getType();
+        String chooseFileDialogTitle = ofNullable(resourceAwareDescriptor.getHintBrowseFile())
+                .orElse(message("properties.type.resource.choose.file.dialog"));
+        descriptor.setTitle(chooseFileDialogTitle);
 
-        JBTextField textField =
-                new ChooseFileInputField(message("properties.type.resource.choose.file.hint"), inputFileFieldColumns);
+        String chooseFileHint = ofNullable(resourceAwareDescriptor.getHintBrowseFile())
+                .orElse(message("properties.type.resource.choose.file.hint"));
 
+        JBTextField textField = new ChooseFileInputField(chooseFileHint, INPUT_FILE_FIELD_COLUMNS);
         textField.setEditable(false);
 
         TextFieldWithBrowse choseFile = new TextFieldWithBrowse(textField);
