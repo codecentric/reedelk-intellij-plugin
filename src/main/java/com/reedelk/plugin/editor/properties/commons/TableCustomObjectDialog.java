@@ -48,7 +48,7 @@ public class TableCustomObjectDialog extends AbstractPropertiesDialog {
             List<PropertyDescriptor> descriptors = objectDescriptor.getObjectProperties();
 
             if (DialogType.NEW == dialogType) {
-                // Fill Default Properties Values
+                // Fill Default Properties Values because we are creating a brand new object.
                 InitValuesFiller.fill(dataHolder, descriptors);
             }
 

@@ -91,7 +91,8 @@ public abstract class DesignerPanelAbstractActionHandler implements DesignerPane
 
             List<PropertyDescriptor> propertiesDescriptors = componentData.getPropertiesDescriptors();
 
-            // Fill default property values for the just added component
+            // When a component is added to the canvas (drag and drop)
+            // we fill the default component's property values.
             InitValuesFiller.fill(componentData, propertiesDescriptors);
 
             LOG.info(format("Node Dropped [%s], drop point [x: %d, y: %d]", PrintFlowInfo.name(nodeToAdd), dropPoint.x, dropPoint.y));

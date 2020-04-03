@@ -3,7 +3,6 @@ package com.reedelk.plugin.editor.properties.renderer.typeenum;
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.TypeEnumDescriptor;
-import com.reedelk.plugin.commons.InitPropertyValue;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
@@ -14,6 +13,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import static java.awt.BorderLayout.WEST;
+import static java.util.Optional.ofNullable;
 
 public class EnumPropertyRenderer extends AbstractPropertyTypeRenderer {
 
@@ -28,13 +28,13 @@ public class EnumPropertyRenderer extends AbstractPropertyTypeRenderer {
 
         EnumDropDown dropDown = new EnumDropDown(propertyType.getNameAndDisplayNameMap());
 
-        // We set the default value if not present
-        if (propertyAccessor.get() == null) {
-            Object initValue = InitPropertyValue.of(propertyDescriptor);
-            propertyAccessor.set(initValue);
-        }
+        // We set the default value in the dropdown if present.
+        ofNullable(propertyDescriptor.getDefaultValue()).ifPresent(dropDown::setValue);
 
-        dropDown.setValue(propertyAccessor.get());
+        // We only add it if it is not null.
+        ofNullable(propertyAccessor.get())
+                .ifPresent(value -> dropDown.setValue(propertyAccessor.get()));
+
         dropDown.addListener(propertyAccessor::set);
 
         JPanel dropDownContainer = new DisposablePanel(new BorderLayout());
