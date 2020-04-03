@@ -46,7 +46,8 @@ public class MapTableCustomModel extends TableModelDefaultAbstract {
     @Override
     public Object[] createRow() {
         // When we create a new custom object we must fill it with the initial values
-        // configured using @InitValue annotation on each property.
+        // configured using @InitValue annotation on each property. This is used
+        // when we have a Map with custom value type.
         TypeObject newTypeObjectInstance = TypeObjectDescriptor.newInstance();
         List<PropertyDescriptor> descriptors = typeObjectDescriptor.getObjectProperties();
         InitValuesFiller.fill(newTypeObjectInstance, descriptors);

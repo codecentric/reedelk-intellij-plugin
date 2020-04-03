@@ -49,6 +49,8 @@ public class TableCustomObjectDialog extends AbstractPropertiesDialog {
 
             if (DialogType.NEW == dialogType) {
                 // Fill Default Properties Values because we are creating a brand new object.
+                // This is needed in the case of List with custom object. Because the new
+                // Object gets created whenever we open the dialog with dialog type 'NEW'.
                 InitValuesFiller.fill(dataHolder, descriptors);
             }
 
