@@ -112,8 +112,10 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
      */
     private void write(final @NotNull String json) {
         ApplicationManager.getApplication().invokeLater(() ->
-                WriteCommandAction.runWriteCommandAction(module.getProject(),
-                        () -> document.setText(json)), ModalityState.NON_MODAL);
+                        WriteCommandAction.runWriteCommandAction(module.getProject(),
+                                () -> document.setText(json)),
+                // If the module has been disposed, we cannot write.
+                ModalityState.NON_MODAL, module.getDisposed());
     }
 
     /**
