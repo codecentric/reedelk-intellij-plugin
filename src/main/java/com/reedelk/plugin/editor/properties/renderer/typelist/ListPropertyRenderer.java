@@ -22,6 +22,7 @@ import static com.reedelk.plugin.editor.properties.commons.TableCustomObjectDial
 import static com.reedelk.plugin.editor.properties.commons.TableEditButtonCellEditor.TableCustomEditButtonAction;
 import static com.reedelk.plugin.editor.properties.renderer.typelist.custom.ListCustomObjectTableContainer.ListCustomObjectAddItemAction;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
+import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 import static java.util.Optional.ofNullable;
 
 public class ListPropertyRenderer extends AbstractCollectionAwarePropertyTypeRenderer {
@@ -64,7 +65,7 @@ public class ListPropertyRenderer extends AbstractCollectionAwarePropertyTypeRen
                                                  @NotNull TypeListDescriptor propertyType,
                                                  @NotNull PropertyAccessor propertyAccessor) {
         final TypeObjectDescriptor objectDescriptor = (TypeObjectDescriptor) propertyType.getValueType();
-        final String dialogTitle = propertyType.getDialogTitle();
+        final String dialogTitle = ofNullable(propertyType.getDialogTitle()).orElse(EMPTY);
         final String listDisplayPropertyName = propertyType.getListDisplayProperty();
 
         // Edit button action
