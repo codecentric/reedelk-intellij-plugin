@@ -56,10 +56,15 @@ public class ContainerFactory {
         return panel;
     }
 
-    public static DisposablePanel pushCenter(JComponent component, Border border) {
+    public static DisposablePanel pushCenter(JComponent component) {
         DisposablePanel panel = new DisposablePanel();
         panel.setLayout(new BorderLayout());
         panel.add(component, CENTER);
+        return panel;
+    }
+
+    public static DisposablePanel pushCenter(JComponent component, Border border) {
+        DisposablePanel panel = pushCenter(component);
         panel.setBorder(border);
         return panel;
     }

@@ -68,7 +68,9 @@ public class ResourcePropertyRenderer extends AbstractPropertyTypeRenderer {
                 new TextBrowseFolderListener(descriptor, module.getProject(), choseFile, resourcesFolder, propertyAccessor);
         choseFile.addCustomBrowseFolderListener(actionListener);
 
-        return ContainerFactory.pushLeft(choseFile);
+        return Boolean.TRUE.equals(resourceAwareDescriptor.getWidthAuto()) ?
+                ContainerFactory.pushCenter(choseFile) :
+                ContainerFactory.pushLeft(choseFile);
     }
 
 
