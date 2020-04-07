@@ -25,6 +25,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.topic.ReedelkTopics.TOPIC_CONFIG_CHANGE;
@@ -41,8 +42,9 @@ class ShareableConfigInputField extends DisposablePanel implements Configuration
     private final transient PropertyDescriptor descriptor;
     private final transient ComponentDataHolder referenceDataHolder;
 
-    private final ComboActionsPanel<ConfigMetadata> configActionsPanel;
     private final ConfigSelectorCombo configSelectorCombo;
+    private final String currentInputFieldTypeFullyQualifiedName;
+    private final ComboActionsPanel<ConfigMetadata> configActionsPanel;
 
 
     ShareableConfigInputField(@NotNull Module module,
@@ -68,42 +70,67 @@ class ShareableConfigInputField extends DisposablePanel implements Configuration
         add(configSelectorCombo, CENTER);
         add(configActionsPanel, EAST);
 
-        ConfigurationService.getInstance(module).loadConfigurationsBy(descriptor.getType());
+        TypeObjectDescriptor typeObjectDescriptor = descriptor.getType();
+        this.currentInputFieldTypeFullyQualifiedName = typeObjectDescriptor.getTypeFullyQualifiedName();
+        ConfigurationService.getInstance(module).loadConfigurationsBy(typeObjectDescriptor);
     }
 
     @Override
-    public void onConfigs(Collection<ConfigMetadata> configurations) {
-        String currentSelectedScriptReference = propertyAccessor.get();
-        ConfigMetadata matchingMetadata = findMatchingMetadata(configurations, currentSelectedScriptReference);
-        updateWith(configurations, matchingMetadata);
+    public void onConfigurationsReady(String typeObjectFullyQualifiedName, Collection<ConfigMetadata> configurations) {
+        // The event is might refer to another Config Input Field in the same Panel therefore we need to check if
+        // the fully qualified name of the object type this event is referring to can be applied to this input field.
+        // This happens when you have two @Shared objects in the same Property Panel. When one input field requests
+        // configurations the topic TOPIC_CONFIG_CHANGE is subscribed by both input fields.
+        // Therefore here we only update the configurations if and only if the event refers to configurations for
+        // this object type fully qualified name.
+        if (Objects.equals(currentInputFieldTypeFullyQualifiedName, typeObjectFullyQualifiedName)) {
+            String currentSelectedScriptReference = propertyAccessor.get();
+            ConfigMetadata matchingMetadata = findMatchingMetadata(configurations, currentSelectedScriptReference);
+            updateWith(configurations, matchingMetadata);
+        }
     }
 
     @Override
-    public void onAddSuccess(ConfigMetadata configMetadata) {
-        setPropertyAccessorValue(configMetadata.getId());
-        ConfigurationService.getInstance(module).loadConfigurationsBy(descriptor.getType());
+    public void onAddSuccess(String typeObjectFullyQualifiedName, ConfigMetadata configMetadata) {
+        // Check if event refers to the current type object fully qualified name
+        if (Objects.equals(currentInputFieldTypeFullyQualifiedName, typeObjectFullyQualifiedName)) {
+            setPropertyAccessorValue(configMetadata.getId());
+            ConfigurationService.getInstance(module).loadConfigurationsBy(descriptor.getType());
+        }
     }
 
     @Override
-    public void onRemoveSuccess() {
-        // Nothing is selected.
-        setPropertyAccessorValue(EMPTY);
-        ConfigurationService.getInstance(module).loadConfigurationsBy(descriptor.getType());
+    public void onRemoveSuccess(String typeObjectFullyQualifiedName) {
+        // Check if event refers to the current type object fully qualified name
+        if (Objects.equals(currentInputFieldTypeFullyQualifiedName, typeObjectFullyQualifiedName)) {
+            // Nothing is selected.
+            setPropertyAccessorValue(EMPTY);
+            ConfigurationService.getInstance(module).loadConfigurationsBy(descriptor.getType());
+        }
     }
 
     @Override
-    public void onSaveError(Exception exception) {
-        PopupUtils.error(exception, configActionsPanel);
+    public void onSaveError(String typeObjectFullyQualifiedName, Exception exception) {
+        // Check if event refers to the current type object fully qualified name
+        if (Objects.equals(currentInputFieldTypeFullyQualifiedName, typeObjectFullyQualifiedName)) {
+            PopupUtils.error(exception, configActionsPanel);
+        }
     }
 
     @Override
-    public void onAddError(Exception exception) {
-        PopupUtils.error(exception, configActionsPanel);
+    public void onAddError(String typeObjectFullyQualifiedName, Exception exception) {
+        // Check if event refers to the current type object fully qualified name
+        if (Objects.equals(currentInputFieldTypeFullyQualifiedName, typeObjectFullyQualifiedName)) {
+            PopupUtils.error(exception, configActionsPanel);
+        }
     }
 
     @Override
-    public void onRemoveError(Exception exception) {
-        PopupUtils.error(exception, configActionsPanel);
+    public void onRemoveError(String typeObjectFullyQualifiedName, Exception exception) {
+        // Check if event refers to the current type object fully qualified name
+        if (Objects.equals(currentInputFieldTypeFullyQualifiedName, typeObjectFullyQualifiedName)) {
+            PopupUtils.error(exception, configActionsPanel);
+        }
     }
 
     @Override

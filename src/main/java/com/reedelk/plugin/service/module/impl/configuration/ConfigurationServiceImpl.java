@@ -51,94 +51,99 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                 }
                 return true;
             });
-            publisher.onConfigs(configs);
+            // We must publish event by padding the fully qualified name of the object type these
+            // configurations refer to. This is because there might be multiple input field subscribing
+            // to this publisher event.
+            String typeObjectFullyQualifiedName = typeObjectDescriptor.getTypeFullyQualifiedName();
+            publisher.onConfigurationsReady(typeObjectFullyQualifiedName, configs);
         });
     }
 
     @Override
     public void saveConfiguration(@NotNull ConfigMetadata updatedConfig) {
+        String configTypeFullyQualifiedName = updatedConfig.getFullyQualifiedName();
+
         WriteCommandAction.runWriteCommandAction(module.getProject(), () -> {
             VirtualFile file = VfsUtil.findFile(Paths.get(updatedConfig.getConfigFile()), true);
             if (file == null) {
-                PluginException exception =
-                        new PluginException(message("config.error.save.file.not.found",
+                PluginException exception = new PluginException(message("config.error.save.file.not.found",
                                 updatedConfig.getId(),
                                 updatedConfig.getConfigFile()));
-                publisher.onSaveError(exception);
+                publisher.onSaveError(configTypeFullyQualifiedName, exception);
                 return;
             }
 
             Document document = FileDocumentManager.getInstance().getDocument(file);
             if (document == null) {
-                PluginException exception =
-                        new PluginException(message("config.error.save.document.not.found",
+                PluginException exception = new PluginException(message("config.error.save.document.not.found",
                                 updatedConfig.getId(),
                                 updatedConfig.getConfigFile()));
-                publisher.onSaveError(exception);
-                return;
-            }
-
-            try {
-                String serializedConfig = ConfigurationSerializer.serialize(updatedConfig);
-                document.setText(serializedConfig);
-            } catch (Exception thrown) {
-                publisher.onSaveError(thrown);
+                publisher.onSaveError(configTypeFullyQualifiedName, exception);
+            } else {
+                try {
+                    String serializedConfig = ConfigurationSerializer.serialize(updatedConfig);
+                    document.setText(serializedConfig);
+                } catch (Exception thrown) {
+                    publisher.onSaveError(configTypeFullyQualifiedName, thrown);
+                }
             }
         });
     }
 
     @Override
     public void addConfiguration(@NotNull ConfigMetadata newConfig) {
+        String configTypeFullyQualifiedName = newConfig.getFullyQualifiedName();
+
         PluginModuleUtils.getConfigsFolder(module).ifPresent(configsFolder ->
                 WriteCommandAction.runWriteCommandAction(module.getProject(), () -> {
 
                     String finalFileName = FileUtils.appendExtensionToFileName(newConfig.getFileName(), FileExtension.CONFIG);
                     final VirtualFile configFile = VfsUtil.findFile(Paths.get(configsFolder, finalFileName), true);
                     if (configFile != null) {
-                        PluginException exception =
-                                new PluginException(message("config.error.add.file.exists.already", finalFileName));
-                        publisher.onAddError(exception);
+                        PluginException exception = new PluginException(message("config.error.add.file.exists.already", finalFileName));
+                        publisher.onAddError(configTypeFullyQualifiedName, exception);
                         return;
                     }
 
                     try {
-
                         VirtualFile configDirectoryVf = VfsUtil.createDirectoryIfMissing(configsFolder);
                         if (configDirectoryVf == null) {
-                            PluginException exception =
-                                    new PluginException(message("config.error.add.config.dir.not.created", finalFileName));
-                            publisher.onAddError(exception);
-                            return;
+                            PluginException exception = new PluginException(message("config.error.add.config.dir.not.created", finalFileName));
+                            publisher.onAddError(configTypeFullyQualifiedName, exception);
+
+                        } else {
+                            // Create new config file.
+                            VirtualFile childData = configDirectoryVf.createChildData(null, finalFileName);
+
+                            // Serialize the config
+                            String serializedConfig = ConfigurationSerializer.serialize(newConfig);
+                            VfsUtil.saveText(childData, serializedConfig);
+                            publisher.onAddSuccess(configTypeFullyQualifiedName, newConfig);
                         }
 
-                        // Create new config file.
-                        VirtualFile childData = configDirectoryVf.createChildData(null, finalFileName);
-
-                        // Serialize the config
-                        String serializedConfig = ConfigurationSerializer.serialize(newConfig);
-                        VfsUtil.saveText(childData, serializedConfig);
-                        publisher.onAddSuccess(newConfig);
-
                     } catch (IOException exception) {
-                        publisher.onAddError(exception);
+                        publisher.onAddError(configTypeFullyQualifiedName, exception);
                     }
                 }));
     }
 
     @Override
     public void removeConfiguration(@NotNull ConfigMetadata toRemove) {
+        String configTypeFullyQualifiedName = toRemove.getFullyQualifiedName();
         WriteCommandAction.runWriteCommandAction(module.getProject(), () -> {
             final VirtualFile file = VfsUtil.findFile(Paths.get(toRemove.getConfigFile()), true);
             if (file == null) {
                 // The config file to be removed does not exists.
-                return;
-            }
-            try {
-                file.delete(null);
-                publisher.onRemoveSuccess();
-            } catch (IOException exception) {
-                String errorMessage = message("config.error.remove", toRemove.getId(), exception.getMessage());
-                publisher.onRemoveError(new PluginException(errorMessage, exception));
+                // We consider it successful...
+                publisher.onRemoveSuccess(configTypeFullyQualifiedName);
+            } else {
+                try {
+                    file.delete(null);
+                    publisher.onRemoveSuccess(configTypeFullyQualifiedName);
+                } catch (IOException exception) {
+                    String errorMessage = message("config.error.remove", toRemove.getId(), exception.getMessage());
+                    publisher.onRemoveError(configTypeFullyQualifiedName, new PluginException(errorMessage, exception));
+                }
             }
         });
     }
@@ -159,11 +164,17 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     }
 
     public interface ConfigChangeListener {
-        default void onConfigs(Collection<ConfigMetadata> configurations) {}
-        default void onAddSuccess(ConfigMetadata configuration) {}
-        default void onAddError(Exception exception) {}
-        default void onSaveError(Exception exception) {}
-        default void onRemoveSuccess() {}
-        default void onRemoveError(Exception exception) {}
+
+        void onConfigurationsReady(String typeObjectFullyQualifiedName, Collection<ConfigMetadata> configurations);
+
+        void onAddSuccess(String typeObjectFullyQualifiedName, ConfigMetadata configuration);
+
+        void onAddError(String typeObjectFullyQualifiedName, Exception exception);
+
+        void onSaveError(String typeObjectFullyQualifiedName, Exception exception);
+
+        void onRemoveSuccess(String typeObjectFullyQualifiedName);
+
+        void onRemoveError(String typeObjectFullyQualifiedName, Exception exception);
     }
 }
