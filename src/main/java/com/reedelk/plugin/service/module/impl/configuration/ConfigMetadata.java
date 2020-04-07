@@ -13,7 +13,8 @@ import static com.reedelk.runtime.commons.JsonParser.Implementor;
 
 public class ConfigMetadata implements ComponentDataHolder {
 
-    private final String absentFile = StringUtils.EMPTY;
+    private static final String ABSENT_FILE = StringUtils.EMPTY;
+
     private final ComponentDataHolder data;
     private final TypeObjectDescriptor configObjectDescriptor;
 
@@ -81,7 +82,7 @@ public class ConfigMetadata implements ComponentDataHolder {
      * Returns a user friendly version of the file name.
      */
     public String getFileName() {
-        return absentFile;
+        return ABSENT_FILE;
     }
 
     /**
