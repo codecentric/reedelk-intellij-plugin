@@ -8,6 +8,7 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBLoadingPanel;
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -49,7 +50,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
     private JLabel downloadedZipFile;
     private JLabel downloadedZipFileIcon;
     private TextFieldWithBrowseButton runtimeHomeDirectoryBrowse;
-    private JBLoadingPanel loadingPanel = new JBLoadingPanel(new BorderLayout(), this, 100);
+    private JBLoadingPanel loadingPanel;
 
     private RuntimeComboManager runtimeComboManager;
 
@@ -60,6 +61,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
     @Override
     public void _init() {
         super._init();
+        loadingPanel = new JBLoadingPanel(new BorderLayout(),this, 100);
         downloadedZipFile.setVisible(false);
 
         loadingPanel.getContentPanel().removeAll();
@@ -174,8 +176,14 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
     }
 
     @Override
+    public void disposeUIResources() {
+        super.disposeUIResources();
+        Disposer.dispose(this);
+    }
+
+    @Override
     public void dispose() {
-        // Nothing to do
+        // Nothing to do (already disposed in the method above)
     }
 
     private void runtimeConfigNameChanged(String newRuntimeConfigName) {
