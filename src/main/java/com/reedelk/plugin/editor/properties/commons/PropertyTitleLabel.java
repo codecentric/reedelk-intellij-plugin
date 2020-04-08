@@ -19,7 +19,7 @@ public class PropertyTitleLabel extends JPanel {
     private static final Border BORDER_PROPERTY_TITLE = JBUI.Borders.emptyRight(2);
 
     public PropertyTitleLabel(String propertyDisplayName) {
-        JBLabel textLabel = new JBLabel(propertyDisplayName + ":");
+        JBLabel textLabel = new JBLabel(createLabelText(propertyDisplayName));
         textLabel.setBorder(BORDER_PROPERTY_TITLE);
         textLabel.setForeground(TOOL_WINDOW_PROPERTIES_TEXT);
 
@@ -33,5 +33,9 @@ public class PropertyTitleLabel extends JPanel {
             ClickableTooltip tooltip = new ClickableTooltip(toolTipText);
             add(ContainerFactory.pushLeft(tooltip), CENTER);
         });
+    }
+
+    protected String createLabelText(String propertyDisplayName) {
+        return propertyDisplayName + ":";
     }
 }
