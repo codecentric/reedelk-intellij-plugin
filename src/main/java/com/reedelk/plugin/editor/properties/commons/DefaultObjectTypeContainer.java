@@ -21,5 +21,6 @@ public class DefaultObjectTypeContainer extends DisposablePanel {
         JPanel nestedContainerWrapper = ContainerFactory.pushCenter(renderedComponent, BORDER_OBJECT_TYPE_CONTENT);
         add(topHeader, NORTH);
         add(nestedContainerWrapper, CENTER);
+        setBorder(BORDER_OBJECT_TYPE_CONTAINER_TOP);
     }
 }
