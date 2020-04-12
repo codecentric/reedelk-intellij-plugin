@@ -1,5 +1,7 @@
 package com.reedelk.plugin.editor.properties.commons;
 
+import com.reedelk.module.descriptor.model.PropertyDescriptor;
+import com.reedelk.plugin.commons.TypePrimitiveDescriptors;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowSnapshot;
 
@@ -18,41 +20,44 @@ public class FlowAndSubflowMetadataPanel extends DisposableTabbedPane {
         initialize();
     }
 
-    @Override
-    public void dispose() {
-        // nothing to dispose
-    }
-
     private void initialize() {
         GenericTab genericTab = new GenericTab(() -> {
+
             DisposablePanel propertiesPanel = new DisposablePanel(new GridBagLayout());
-            InputField<String> titleField = createTitleInputField();
+
+            // Title
+            PropertyTitleLabel propertyTitleLabel = new PropertyTitleLabel(propertyTitleDescriptor);
+            InputField<String> titleField = createTitleInputField(propertyTitleDescriptor);
             FormBuilder.get()
-                    .addLabel(message("flow.metadata.title"), propertiesPanel)
+                    .addLabel(propertyTitleLabel, propertiesPanel)
                     .addLastField(titleField, propertiesPanel);
 
-            InputField<String> descriptionField = createDescriptionInputField();
+            // Label
+            PropertyTitleLabel propertyDescriptionLabel = new PropertyTitleLabel(propertyDescriptionDescriptor);
+            InputField<String> descriptionField = createDescriptionInputField(propertyDescriptionDescriptor);
             FormBuilder.get()
-                    .addLabel(message("flow.metadata.description"), propertiesPanel)
+                    .addLabel(propertyDescriptionLabel, propertiesPanel)
                     .addLastField(descriptionField, propertiesPanel);
+
             return propertiesPanel;
         });
+
         String tabName = message("properties.panel.tab.title.flow");
         addTab(tabName, genericTab);
         setTabComponentAt(0, new TabLabelVertical(tabName));
     }
 
-    private InputField<String> createTitleInputField() {
+    private InputField<String> createTitleInputField(PropertyDescriptor propertyDescriptor) {
         FlowGraph graph = snapshot.getGraphOrThrowIfAbsent();
-        return createStringInputField(graph.title(), message("flow.title.hint"), value -> {
+        return createStringInputField(graph.title(), propertyDescriptor.getHintValue(), value -> {
             snapshot.getGraphOrThrowIfAbsent().setTitle((String) value);
             snapshot.onDataChange();
         });
     }
 
-    private InputField<String> createDescriptionInputField() {
+    private InputField<String> createDescriptionInputField(PropertyDescriptor propertyDescriptor) {
         FlowGraph graph = snapshot.getGraphOrThrowIfAbsent();
-        return createStringInputField(graph.description(), message("flow.description.hint"), value -> {
+        return createStringInputField(graph.description(), propertyDescriptor.getHintValue(), value -> {
             snapshot.getGraphOrThrowIfAbsent().setDescription((String) value);
             snapshot.onDataChange();
         });
@@ -64,4 +69,20 @@ public class FlowAndSubflowMetadataPanel extends DisposableTabbedPane {
         inputField.addListener(changeListener);
         return inputField;
     }
+
+    private static final PropertyDescriptor propertyTitleDescriptor = PropertyDescriptor.builder()
+            .description(message("flow.title.description"))
+            .displayName(message("flow.metadata.title"))
+            .hintValue(message("flow.title.hint"))
+            .name("title")
+            .type(TypePrimitiveDescriptors.STRING)
+            .build();
+
+    private static final PropertyDescriptor propertyDescriptionDescriptor = PropertyDescriptor.builder()
+            .description(message("flow.description.description"))
+            .displayName(message("flow.metadata.description"))
+            .hintValue(message("flow.description.hint"))
+            .name("description")
+            .type(TypePrimitiveDescriptors.STRING)
+            .build();
 }
