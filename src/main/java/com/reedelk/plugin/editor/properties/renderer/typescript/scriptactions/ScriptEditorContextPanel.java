@@ -9,12 +9,15 @@ import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.impl.completion.Suggestion;
 import com.reedelk.plugin.topic.ReedelkTopics;
 import com.reedelk.runtime.api.autocomplete.AutocompleteItemType;
+import com.reedelk.runtime.api.commons.StringUtils;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.intellij.icons.AllIcons.Nodes.Function;
 import static com.intellij.icons.AllIcons.Nodes.Variable;
@@ -59,9 +62,7 @@ class ScriptEditorContextPanel extends DisposablePanel implements CompletionServ
         this.panelVariables.setLayout(boxLayout);
         this.panelVariables.setBorder(empty(5));
 
-        CompletionService.getInstance(module)
-                .contextVariablesOf(componentFullyQualifiedName)
-                .forEach(suggestion -> panelVariables.add(new ContextVariableLabel(suggestion)));
+        getSuggestions().forEach(suggestion -> panelVariables.add(new ContextVariableLabel(suggestion)));
 
         JBScrollPane panelVariablesScrollPane = new JBScrollPane(panelVariables);
         panelVariablesScrollPane.setBorder(empty());
@@ -78,9 +79,7 @@ class ScriptEditorContextPanel extends DisposablePanel implements CompletionServ
 
     @Override
     public void onCompletionsUpdated() {
-        List<Suggestion> suggestions =
-                CompletionService.getInstance(module)
-                .contextVariablesOf(componentFullyQualifiedName);
+        List<Suggestion> suggestions = getSuggestions();
 
         SwingUtilities.invokeLater(() -> {
             panelVariables.removeAll();
@@ -96,5 +95,14 @@ class ScriptEditorContextPanel extends DisposablePanel implements CompletionServ
             setIcon(suggestion.getItemType() == AutocompleteItemType.FUNCTION ? Function : Variable);
             setBorder(emptyTop(4));
         }
+    }
+
+    private List<Suggestion> getSuggestions() {
+        return CompletionService.getInstance(module)
+                .contextVariablesOf(componentFullyQualifiedName)
+                .stream()
+                .filter(suggestion -> StringUtils.isNotBlank(suggestion.getSignature()))
+                .sorted(Comparator.comparing(Suggestion::getSignature).reversed())
+                .collect(Collectors.toList());
     }
 }
