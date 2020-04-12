@@ -31,11 +31,10 @@ public class RuntimeRunCommandLine extends JavaCommandLineState {
     @Override
     protected JavaParameters createJavaParameters() throws ExecutionException {
 
-
         Project project = configuration.getProject();
 
-        Sdk sdk = ProjectSdk.of(project).orElseThrow(() ->
-                new ExecutionException(message("error.sdk.not.selected")));
+        Sdk sdk = ProjectSdk.of(project)
+                .orElseThrow(() -> new ExecutionException(message("error.sdk.not.selected")));
 
         JavaParameters javaParams = new JavaParameters();
 

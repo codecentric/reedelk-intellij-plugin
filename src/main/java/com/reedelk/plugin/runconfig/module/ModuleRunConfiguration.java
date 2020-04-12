@@ -1,5 +1,6 @@
 package com.reedelk.plugin.runconfig.module;
 
+import com.intellij.CommonBundle;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionTarget;
 import com.intellij.execution.Executor;
@@ -9,10 +10,10 @@ import com.intellij.execution.runners.RunConfigurationWithSuppressedDefaultRunAc
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizerUtil;
 import com.reedelk.plugin.commons.ProjectSdk;
-import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.runconfig.module.runner.ModuleDeployExecutor;
 import com.reedelk.plugin.runconfig.module.runner.ModuleUnDeployExecutor;
 import com.reedelk.plugin.runconfig.module.runprofile.DeployRunProfile;
@@ -59,7 +60,7 @@ public class ModuleRunConfiguration extends RunConfigurationBase<ModuleRunConfig
 
         Optional<Sdk> optionalSdk = ProjectSdk.of(project);
         if (!optionalSdk.isPresent()) {
-            ToolWindowUtils.notifyError(project, message("error.sdk.not.selected"), getName());
+            Messages.showMessageDialog(project, message("error.sdk.not.selected"), CommonBundle.getErrorTitle(), Messages.getErrorIcon());
             return null;
         }
 
