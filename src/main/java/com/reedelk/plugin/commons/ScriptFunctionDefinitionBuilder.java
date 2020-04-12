@@ -10,7 +10,7 @@ public class ScriptFunctionDefinitionBuilder {
     }
 
     public static String from(String scriptFunctionName, ScriptSignatureDescriptor signatureDefinition) {
-        String scriptTemplateArguments = String.join(",", signatureDefinition.getArguments());
+        String scriptTemplateArguments = String.join(", ", signatureDefinition.getArguments());
         return message("script.default.template", scriptFunctionName, scriptTemplateArguments, scriptFunctionName);
     }
 }

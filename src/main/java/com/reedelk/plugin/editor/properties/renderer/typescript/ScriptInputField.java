@@ -1,5 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer.typescript;
 
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.module.Module;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
@@ -35,6 +37,8 @@ public class ScriptInputField extends DisposablePanel implements ScriptServiceIm
     private final transient ScriptActionsPanel scriptActionsPanel;
     private final transient ScriptSelectorCombo scriptSelectorCombo;
 
+    private boolean shouldOpenEditDialog = false;
+
     ScriptInputField(Module module, PropertyDescriptor propertyDescriptor, PropertyAccessor propertyAccessor, ContainerContext context) {
         this.module = module;
         this.propertyAccessor = propertyAccessor;
@@ -61,6 +65,9 @@ public class ScriptInputField extends DisposablePanel implements ScriptServiceIm
     @Override
     public void onAddSuccess(ScriptResource resource) {
         propertyAccessor.set(resource.getPath());
+        synchronized (this) {
+            shouldOpenEditDialog = true;
+        }
         ScriptService.getInstance(module).fetchScriptResources();
     }
 
@@ -99,7 +106,7 @@ public class ScriptInputField extends DisposablePanel implements ScriptServiceIm
         DefaultComboBoxModel<ScriptResource> comboModel = new DefaultComboBoxModel<>();
         updatedResources.forEach(comboModel::addElement);
 
-        SwingUtilities.invokeLater(() -> {
+        ApplicationManager.getApplication().invokeLater(() -> {
             // We must remove any previous listener.
             scriptSelectorCombo.removeListener();
 
@@ -113,7 +120,15 @@ public class ScriptInputField extends DisposablePanel implements ScriptServiceIm
                 propertyAccessor.set(((ScriptResource) value).getPath());
                 scriptActionsPanel.onSelect((ScriptResource) value);
             });
-        });
+
+            // We open the edit dialog if the script has just been added.
+            synchronized (ScriptInputField.this) {
+                if (shouldOpenEditDialog) {
+                    shouldOpenEditDialog = false;
+                    scriptActionsPanel.editScript();
+                }
+            }
+        }, ModalityState.NON_MODAL);
     }
 
     private ScriptResource findResourceMatching(Collection<ScriptResource> scriptResources, String path) {
@@ -123,7 +138,7 @@ public class ScriptInputField extends DisposablePanel implements ScriptServiceIm
                 .orElseGet(() -> new NotFoundScriptResource(path));
     }
 
-    public class NotFoundScriptResource extends ScriptResource {
+    private static class NotFoundScriptResource extends ScriptResource {
 
         NotFoundScriptResource(String path) {
             super(path, message("script.not.found"));
@@ -140,7 +155,7 @@ public class ScriptInputField extends DisposablePanel implements ScriptServiceIm
         }
     }
 
-    static class UnselectedScriptResource extends ScriptResource {
+    private static class UnselectedScriptResource extends ScriptResource {
 
         UnselectedScriptResource() {
             super(EMPTY, message("script.not.selected"));

@@ -51,7 +51,7 @@ public class ScriptActionsPanel extends DisposablePanel {
         }
     }
 
-    private void editScript() {
+    public void editScript() {
         if (selected.isEditable()) {
             DialogEditScript dialog = new DialogEditScript(module, selected.getPath(), context);
             dialog.show();
