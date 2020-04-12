@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 
-class PrecedingNodeWithOneSuccessorTest extends AbstractGraphTest {
+class PrecedingNodeWithOneSuccessorActionTest extends AbstractGraphTest {
 
     @Test
     void shouldAddSuccessorInsideScope() {
@@ -24,8 +24,8 @@ class PrecedingNodeWithOneSuccessorTest extends AbstractGraphTest {
         forkNode1.setPosition(195, 158);
         componentNode1.setPosition(330, 155);
 
-        PrecedingNodeWithOneSuccessor strategy =
-                new PrecedingNodeWithOneSuccessor(graph, componentNode2DropPoint, forkNode1, graphics, placeholderProvider);
+        PrecedingNodeWithOneSuccessorAction strategy =
+                new PrecedingNodeWithOneSuccessorAction(graph, componentNode2DropPoint, forkNode1, graphics, placeholderProvider);
 
         // When
         strategy.execute(componentNode2);
@@ -55,8 +55,8 @@ class PrecedingNodeWithOneSuccessorTest extends AbstractGraphTest {
         forkNode1.setPosition(195, 158);
         componentNode1.setPosition(330, 155);
 
-        PrecedingNodeWithOneSuccessor strategy =
-                new PrecedingNodeWithOneSuccessor(graph, componentNode2DropPoint, forkNode1, graphics, placeholderProvider);
+        PrecedingNodeWithOneSuccessorAction strategy =
+                new PrecedingNodeWithOneSuccessorAction(graph, componentNode2DropPoint, forkNode1, graphics, placeholderProvider);
 
         // When
         strategy.execute(componentNode2);

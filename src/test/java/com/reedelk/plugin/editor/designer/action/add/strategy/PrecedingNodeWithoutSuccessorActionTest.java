@@ -9,11 +9,11 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 
-class PrecedingNodeWithoutSuccessorTest extends AbstractGraphTest {
+class PrecedingNodeWithoutSuccessorActionTest extends AbstractGraphTest {
 
     @DisplayName("Scoped Node without successors")
     @Nested
-    class WithPrecedingScopedNode {
+    class WithPrecedingScopedNodeAction {
         @Test
         void shouldAddSuccessorInsideScope() {
             // Given
@@ -27,8 +27,8 @@ class PrecedingNodeWithoutSuccessorTest extends AbstractGraphTest {
             root.setPosition(65, 158);
             forkNode1.setPosition(195, 158);
 
-            PrecedingNodeWithoutSuccessor strategy =
-                    new PrecedingNodeWithoutSuccessor(graph, componentNode1DropPoint, forkNode1, graphics, placeholderProvider);
+            PrecedingNodeWithoutSuccessorAction strategy =
+                    new PrecedingNodeWithoutSuccessorAction(graph, componentNode1DropPoint, forkNode1, graphics, placeholderProvider);
 
             // When
             strategy.execute(componentNode1);
@@ -55,8 +55,8 @@ class PrecedingNodeWithoutSuccessorTest extends AbstractGraphTest {
             root.setPosition(65, 158);
             forkNode1.setPosition(195, 158);
 
-            PrecedingNodeWithoutSuccessor strategy =
-                    new PrecedingNodeWithoutSuccessor(graph, componentNode1DropPoint, forkNode1, graphics, placeholderProvider);
+            PrecedingNodeWithoutSuccessorAction strategy =
+                    new PrecedingNodeWithoutSuccessorAction(graph, componentNode1DropPoint, forkNode1, graphics, placeholderProvider);
 
             // When
             strategy.execute(componentNode1);

@@ -17,15 +17,15 @@ import static com.reedelk.runtime.api.commons.Preconditions.checkState;
 /**
  * Strategy which replaces a node with the given replacement node.
  */
-public class ReplaceNodeActionStrategy implements ActionStrategy {
+public class ReplaceNodeAction implements ActionStrategy {
 
     private final PlaceholderProvider placeholderProvider;
     private final GraphNode toBeReplaced;
     private final FlowGraph graph;
 
-    ReplaceNodeActionStrategy(@NotNull FlowGraph graph,
-                              @NotNull GraphNode toBeReplaced,
-                              @NotNull PlaceholderProvider placeholderProvider) {
+    ReplaceNodeAction(@NotNull FlowGraph graph,
+                      @NotNull GraphNode toBeReplaced,
+                      @NotNull PlaceholderProvider placeholderProvider) {
         this.placeholderProvider = placeholderProvider;
         this.toBeReplaced = toBeReplaced;
         this.graph = graph;

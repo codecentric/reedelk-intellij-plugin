@@ -3,7 +3,7 @@ package com.reedelk.plugin.editor.designer.action.add.strategy;
 import com.reedelk.plugin.editor.designer.action.ActionStrategy;
 import com.reedelk.plugin.graph.node.GraphNode;
 
-public class NoOpActionStrategy implements ActionStrategy {
+public class NoOpAction implements ActionStrategy {
 
     @Override
     public void execute(GraphNode node) {

@@ -18,11 +18,11 @@ import static com.google.common.base.Preconditions.checkState;
 
 public abstract class StrategyBuilder {
 
-    protected PlaceholderProvider placeholderProvider;
-    protected ImageObserver observer;
-    protected Graphics2D graphics;
-    protected FlowGraph graph;
     protected Point dropPoint;
+    protected FlowGraph graph;
+    protected Graphics2D graphics;
+    protected ImageObserver observer;
+    protected PlaceholderProvider placeholderProvider;
 
     public StrategyBuilder graph(FlowGraph graph) {
         this.graph = graph;
@@ -55,14 +55,14 @@ public abstract class StrategyBuilder {
     @NotNull
     ActionStrategy strategyFromClosestPrecedingNode(GraphNode precedingNode) {
         if (graph.successors(precedingNode).isEmpty()) {
-            return new PrecedingNodeWithoutSuccessor(graph, dropPoint, precedingNode, graphics, placeholderProvider);
+            return new PrecedingNodeWithoutSuccessorAction(graph, dropPoint, precedingNode, graphics, placeholderProvider);
 
         } else if (IsScopedGraphNode.of(precedingNode)) {
             ScopedGraphNode scopedGraphNode = (ScopedGraphNode) precedingNode;
             if (hasOnlyOneSuccessorOutsideScope(scopedGraphNode, graph)) {
-                return new PrecedingNodeWithOneSuccessor(graph, dropPoint, scopedGraphNode, graphics, placeholderProvider);
+                return new PrecedingNodeWithOneSuccessorAction(graph, dropPoint, scopedGraphNode, graphics, placeholderProvider);
             } else {
-                return new PrecedingScopedNode(graph, dropPoint, scopedGraphNode, graphics, placeholderProvider);
+                return new PrecedingScopedNodeAction(graph, dropPoint, scopedGraphNode, graphics, placeholderProvider);
             }
 
         } else {
@@ -70,7 +70,7 @@ public abstract class StrategyBuilder {
             // a node in the flow must have at most one successor.
             checkState(graph.successors(precedingNode).size() == 1,
                     "Successors size MUST be 1, otherwise it must be a Scoped Node");
-            return new PrecedingNodeWithOneSuccessor(graph, dropPoint, precedingNode, graphics, placeholderProvider);
+            return new PrecedingNodeWithOneSuccessorAction(graph, dropPoint, precedingNode, graphics, placeholderProvider);
         }
     }
 

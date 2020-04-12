@@ -133,7 +133,7 @@ public class RouterNode extends AbstractScopedGraphNode {
         component.set(DATA_CONDITION_ROUTE_PAIRS, updatedConditions);
     }
 
-    class AddOtherwiseRouteLabelOnVerticalDividerArrow implements OnProcessSuccessor {
+    static class AddOtherwiseRouteLabelOnVerticalDividerArrow implements OnProcessSuccessor {
 
         private static final int DEFAULT_ROUTE_TEXT_LEFT_PADDING = 9;
         private static final int DEFAULT_ROUTE_TEXT_TOP_PADDING = -3;

@@ -11,14 +11,14 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public abstract class PanelWithText extends DisposablePanel {
 
-    static final Border BORDER = Borders.empty(5);
+    static final Border BORDER = Borders.empty(10);
 
     protected PanelWithText(String text) {
         super(new GridBagLayout());
-        JBLabel loadingContentLabel = new JBLabel(text);
-        loadingContentLabel.setForeground(Colors.FOREGROUND_TEXT);
-        loadingContentLabel.setBorder(BORDER);
-        add(loadingContentLabel);
+        JBLabel textLabel = new JBLabel(text);
+        textLabel.setForeground(Colors.FOREGROUND_TEXT);
+        textLabel.setBorder(BORDER);
+        add(textLabel);
     }
 
     public static class LoadingContentPanel extends PanelWithText {

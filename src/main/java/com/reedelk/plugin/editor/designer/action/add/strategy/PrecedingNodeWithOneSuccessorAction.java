@@ -20,7 +20,7 @@ import java.util.Stack;
 
 import static com.google.common.base.Preconditions.checkState;
 
-public class PrecedingNodeWithOneSuccessor implements ActionStrategy {
+public class PrecedingNodeWithOneSuccessorAction implements ActionStrategy {
 
     private final PlaceholderProvider placeholderProvider;
     private final GraphNode precedingNode;
@@ -28,11 +28,11 @@ public class PrecedingNodeWithOneSuccessor implements ActionStrategy {
     private final FlowGraph graph;
     private final Point dropPoint;
 
-    PrecedingNodeWithOneSuccessor(@NotNull FlowGraph graph,
-                                  @NotNull Point dropPoint,
-                                  @NotNull GraphNode precedingNode,
-                                  @NotNull Graphics2D graphics,
-                                  @NotNull PlaceholderProvider placeholderProvider) {
+    PrecedingNodeWithOneSuccessorAction(@NotNull FlowGraph graph,
+                                        @NotNull Point dropPoint,
+                                        @NotNull GraphNode precedingNode,
+                                        @NotNull Graphics2D graphics,
+                                        @NotNull PlaceholderProvider placeholderProvider) {
         this.placeholderProvider = placeholderProvider;
         this.precedingNode = precedingNode;
         this.dropPoint = dropPoint;

@@ -25,19 +25,19 @@ public class SubFlowStrategyBuilder extends StrategyBuilder {
     public ActionStrategy build() {
 
         if (graph.isEmpty()) {
-            return new SubFlowAddRootActionStrategy(graph);
+            return new SubFlowAddRootAction(graph, placeholderProvider);
 
         } else if (isBeforeRoot(graph, dropPoint, graphics)) {
-            return new SubFlowAddNewRoot(graph);
+            return new SubFlowAddNewRootAction(graph, placeholderProvider);
 
         } else if (isOverlappingAnyPlaceHolder(graph, dropPoint)) {
             GraphNode overlappingPlaceholder = getOverlappingPlaceholder(graph, dropPoint);
-            return new ReplaceNodeActionStrategy(graph, overlappingPlaceholder, placeholderProvider);
+            return new ReplaceNodeAction(graph, overlappingPlaceholder, placeholderProvider);
 
         } else {
             return FindClosestPrecedingNode.of(graph, dropPoint, graphics)
                     .map(this::strategyFromClosestPrecedingNode)
-                    .orElseGet(NoOpActionStrategy::new);
+                    .orElseGet(NoOpAction::new);
         }
     }
 

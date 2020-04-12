@@ -18,7 +18,7 @@ import static com.reedelk.plugin.commons.ScopeUtils.*;
  * Strategy which can be applied to preceding nodes of type ScopedGraphNode.
  * Note that only a scoped node might have more than one successor.
  */
-public class PrecedingScopedNode implements ActionStrategy {
+public class PrecedingScopedNodeAction implements ActionStrategy {
 
     private final PlaceholderProvider placeholderProvider;
     private final ScopedGraphNode closestPrecedingNode;
@@ -26,11 +26,11 @@ public class PrecedingScopedNode implements ActionStrategy {
     private final FlowGraph graph;
     private final Point dropPoint;
 
-    PrecedingScopedNode(@NotNull FlowGraph graph,
-                        @NotNull Point dropPoint,
-                        @NotNull ScopedGraphNode scopedNode,
-                        @NotNull Graphics2D graphics,
-                        @NotNull PlaceholderProvider placeholderProvider) {
+    PrecedingScopedNodeAction(@NotNull FlowGraph graph,
+                              @NotNull Point dropPoint,
+                              @NotNull ScopedGraphNode scopedNode,
+                              @NotNull Graphics2D graphics,
+                              @NotNull PlaceholderProvider placeholderProvider) {
         this.placeholderProvider = placeholderProvider;
         this.closestPrecedingNode = scopedNode;
         this.dropPoint = dropPoint;

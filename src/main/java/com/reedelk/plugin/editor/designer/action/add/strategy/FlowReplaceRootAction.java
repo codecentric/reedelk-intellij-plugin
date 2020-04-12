@@ -5,9 +5,9 @@ import com.reedelk.plugin.editor.designer.action.remove.strategy.PlaceholderProv
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.node.GraphNode;
 
-public class FlowReplaceRootActionStrategy extends ReplaceNodeActionStrategy {
+public class FlowReplaceRootAction extends ReplaceNodeAction {
 
-    FlowReplaceRootActionStrategy(FlowGraph graph, PlaceholderProvider placeholderProvider) {
+    FlowReplaceRootAction(FlowGraph graph, PlaceholderProvider placeholderProvider) {
         super(graph, graph.root(), placeholderProvider);
     }
 

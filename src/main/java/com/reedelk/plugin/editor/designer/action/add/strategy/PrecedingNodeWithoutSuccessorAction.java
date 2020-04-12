@@ -24,7 +24,7 @@ import java.util.Stack;
  * If the closest preceding node does not belong to a scope, then:
  * - Add the node as successor.
  */
-public class PrecedingNodeWithoutSuccessor implements ActionStrategy {
+public class PrecedingNodeWithoutSuccessorAction implements ActionStrategy {
 
     private final PlaceholderProvider placeholderProvider;
     private final GraphNode closestPrecedingNode;
@@ -32,11 +32,11 @@ public class PrecedingNodeWithoutSuccessor implements ActionStrategy {
     private final FlowGraph graph;
     private final Point dropPoint;
 
-    PrecedingNodeWithoutSuccessor(@NotNull FlowGraph graph,
-                                  @NotNull Point dropPoint,
-                                  @NotNull GraphNode closestPrecedingNode,
-                                  @NotNull Graphics2D graphics,
-                                  @NotNull PlaceholderProvider placeholderProvider) {
+    PrecedingNodeWithoutSuccessorAction(@NotNull FlowGraph graph,
+                                        @NotNull Point dropPoint,
+                                        @NotNull GraphNode closestPrecedingNode,
+                                        @NotNull Graphics2D graphics,
+                                        @NotNull PlaceholderProvider placeholderProvider) {
         this.closestPrecedingNode = closestPrecedingNode;
         this.placeholderProvider = placeholderProvider;
         this.dropPoint = dropPoint;
