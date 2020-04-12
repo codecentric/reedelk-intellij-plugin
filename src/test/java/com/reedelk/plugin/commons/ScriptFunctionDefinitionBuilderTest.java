@@ -14,7 +14,7 @@ class ScriptFunctionDefinitionBuilderTest {
     @Test
     void shouldBuildCorrectlyBuildFunctionDefinitionWhenArgumentsGreaterThanZero() {
         // Given
-        String expectedFunction = "function myTestFunction(context,arg1,arg2,arg3) {\n" +
+        String expectedFunction = "function myTestFunction(context, arg1, arg2, arg3) {\n" +
                 "\tvar text = 'myTestFunction function';\n" +
                 "\treturn text + ' result';\n" +
                 "}";
