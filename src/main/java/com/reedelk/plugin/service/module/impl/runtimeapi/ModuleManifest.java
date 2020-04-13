@@ -1,5 +1,7 @@
 package com.reedelk.plugin.service.module.impl.runtimeapi;
 
+import com.reedelk.runtime.commons.ModuleProperties;
+
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
@@ -17,7 +19,7 @@ public class ModuleManifest extends Manifest {
         addAttribute(BUNDLE_SYMBOLIC_NAME, moduleName);
         addAttribute(BUNDLE_VERSION, normalizeVersion(moduleVersion));
         addAttribute(CREATED_BY, message("plugin.display.name"));
-        addAttribute(ESB_MODULE, Boolean.TRUE.toString());
+        addAttribute(INTEGRATION_MODULE, Boolean.TRUE.toString());
     }
 
     private void addAttribute(Attributes.Name name, String value) {
@@ -28,14 +30,15 @@ public class ModuleManifest extends Manifest {
         return version.replaceAll("-", ".");
     }
 
-    private static final Attributes.Name BUILT_BY = new Attributes.Name("Built-By");
-    private static final Attributes.Name BUILD_JDK = new Attributes.Name("Build-Jdk");
-    private static final Attributes.Name CREATED_BY = new Attributes.Name("Created-By");
-    private static final Attributes.Name ESB_MODULE = new Attributes.Name("ESB-Module");
-    private static final Attributes.Name BUNDLE_NAME = new Attributes.Name("Bundle-Name");
-    private static final Attributes.Name BUNDLE_VERSION = new Attributes.Name("Bundle-Version");
-    private static final Attributes.Name BND_LAST_MODIFIED = new Attributes.Name("Bnd-LastModified");
-    private static final Attributes.Name BUNDLE_SYMBOLIC_NAME = new Attributes.Name("Bundle-SymbolicName");
-    private static final Attributes.Name BUNDLE_MANIFEST_VERSION = new Attributes.Name("Bundle-ManifestVersion");
+    private static final Attributes.Name INTEGRATION_MODULE = new Attributes.Name(ModuleProperties.Bundle.INTEGRATION_MODULE_HEADER);
+
+    private static final Attributes.Name BUILT_BY = new Attributes.Name(ModuleProperties.Bundle.BUILT_BY);
+    private static final Attributes.Name BUILD_JDK = new Attributes.Name(ModuleProperties.Bundle.BUILD_JDK);
+    private static final Attributes.Name CREATED_BY = new Attributes.Name(ModuleProperties.Bundle.CREATED_BY);
+    private static final Attributes.Name BUNDLE_NAME = new Attributes.Name(ModuleProperties.Bundle.BUNDLE_NAME);
+    private static final Attributes.Name BUNDLE_VERSION = new Attributes.Name(ModuleProperties.Bundle.MODULE_VERSION);
+    private static final Attributes.Name BND_LAST_MODIFIED = new Attributes.Name(ModuleProperties.Bundle.BND_LAST_MODIFIED);
+    private static final Attributes.Name BUNDLE_SYMBOLIC_NAME = new Attributes.Name(ModuleProperties.Bundle.MODULE_SYMBOLIC_NAME);
+    private static final Attributes.Name BUNDLE_MANIFEST_VERSION = new Attributes.Name(ModuleProperties.Bundle.BUNDLE_MANIFEST_VERSION);
 }
 
