@@ -4,7 +4,7 @@
   "description": "${description}",
   "flow": [
     {
-      "implementor": "com.reedelk.rest.component.RestListener",
+      "implementor": "com.reedelk.rest.component.RESTListener",
       "description": "GET Hello World REST Listener",
       "configuration": {"ref": "${configId}"},
       "path": "/message/{name:.*}",

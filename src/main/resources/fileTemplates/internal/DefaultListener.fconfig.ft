@@ -1,7 +1,7 @@
 {
   "id": "${id}",
   "title": "${title}",
-  "implementor": "com.reedelk.rest.component.RestListenerConfiguration",
+  "implementor": "com.reedelk.rest.component.RESTListenerConfiguration",
   "host": "localhost",
   "port": 8282,
   "protocol": "HTTP",
