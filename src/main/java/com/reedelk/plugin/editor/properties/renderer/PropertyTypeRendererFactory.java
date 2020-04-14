@@ -8,6 +8,7 @@ import com.reedelk.plugin.editor.properties.renderer.typebiginteger.DynamicBigIn
 import com.reedelk.plugin.editor.properties.renderer.typeboolean.BooleanPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typeboolean.DynamicBooleanPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typebytearray.DynamicByteArrayPropertyRenderer;
+import com.reedelk.plugin.editor.properties.renderer.typechar.CharPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typecombo.ComboPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typedouble.DoublePropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typedouble.DynamicDoublePropertyRenderer;
@@ -64,6 +65,8 @@ public class PropertyTypeRendererFactory {
         tmp.put(Double.class, new DoublePropertyRenderer());
         tmp.put(boolean.class, new BooleanPropertyRenderer());
         tmp.put(Boolean.class, new BooleanPropertyRenderer());
+        tmp.put(char.class, new CharPropertyRenderer());
+        tmp.put(Character.class, new CharPropertyRenderer());
         tmp.put(BigInteger.class, new BigIntegerPropertyRenderer());
         tmp.put(BigDecimal.class, new BigDecimalPropertyRenderer());
 

@@ -63,6 +63,8 @@ public class ConfigPropertyAwareConverters implements Converter {
         tmp.put(List.class, new AsList());
         tmp.put(Enum.class, new AsEnum());
         tmp.put(Combo.class, new AsCombo());
+        tmp.put(char.class, new AsChar());
+        tmp.put(Character.class, new AsCharObject());
         tmp.put(ResourceText.class, new AsResourceText());
         tmp.put(ResourceBinary.class, new AsResourceBinary());
 
