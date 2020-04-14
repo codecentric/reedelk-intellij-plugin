@@ -21,6 +21,10 @@ public class TypeObjectContainerHeader extends DisposablePanel {
         this(new ClickableLabel(displayName, icon, RIGHT, labelClickListener), tooltipContent);
     }
 
+    public TypeObjectContainerHeader(String displayName, TooltipContent tooltipContent, Icon icon, ClickableLabel.IconAlignment iconAlignment, ClickableLabel.OnClickAction labelClickListener) {
+        this(new ClickableLabel(displayName, icon, iconAlignment, labelClickListener), tooltipContent);
+    }
+
     public TypeObjectContainerHeader(String displayName, TooltipContent tooltipContent) {
         this(new JBLabel(displayName), tooltipContent);
     }

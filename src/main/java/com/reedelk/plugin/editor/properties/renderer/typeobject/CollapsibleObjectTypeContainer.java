@@ -83,7 +83,7 @@ public class CollapsibleObjectTypeContainer extends DisposablePanel {
     class UnCollapsedContent extends DisposablePanel {
         UnCollapsedContent(String displayName, TooltipContent tooltipContent, JComponent content) {
             TypeObjectContainerHeader topHeader =
-                    new TypeObjectContainerHeader(displayName, tooltipContent, ArrowDown, clickAction);
+                    new TypeObjectContainerHeader(displayName, tooltipContent, ArrowDown, ClickableLabel.IconAlignment.LEFT, clickAction);
             setLayout(new BorderLayout());
 
 
@@ -92,7 +92,7 @@ public class CollapsibleObjectTypeContainer extends DisposablePanel {
             JSeparator jSeparator = new JSeparator(JSeparator.VERTICAL);
 
             DisposablePanel container = new DisposablePanel(new BorderLayout());
-            container.setBorder(empty(5, 10, 0, 0));
+            container.setBorder(empty(5, 7, 0, 0));
             container.add(jSeparator, WEST);
 
             content.setBorder(emptyLeft(10));
@@ -105,7 +105,7 @@ public class CollapsibleObjectTypeContainer extends DisposablePanel {
 
     class CollapsedContent extends TypeObjectContainerHeader {
         CollapsedContent(String displayName, TooltipContent tooltipContent) {
-            super(displayName, tooltipContent, ArrowRight, clickAction);
+            super(displayName, tooltipContent, ArrowRight, ClickableLabel.IconAlignment.LEFT, clickAction);
         }
     }
 
