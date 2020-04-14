@@ -26,11 +26,12 @@ public class RemoveItemListener implements ClickableLabel.OnClickAction, ListDat
 
     @Override
     public void onClick() {
-        //This method can be called only if
-        //there's a valid selection
-        //so go ahead and remove whatever's selected.
+        // This method can be called only if there's a valid selection
+        // so go ahead and remove whatever's selected.
         int index = list.getSelectedIndex();
-        listModel.remove(index);
+        if (index >= 0) {
+            listModel.remove(index);
+        }
 
         int size = listModel.getSize();
 
