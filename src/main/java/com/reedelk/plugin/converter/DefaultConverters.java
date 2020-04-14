@@ -35,6 +35,8 @@ public class DefaultConverters implements Converter {
         tmp.put(int.class, new AsInteger());
         tmp.put(Long.class, new AsLongObject());
         tmp.put(long.class, new AsLong());
+        tmp.put(Character.class, new AsCharObject());
+        tmp.put(char.class, new AsChar());
         tmp.put(String.class, new AsString());
         tmp.put(BigInteger.class, new AsBigInteger());
         tmp.put(BigDecimal.class, new AsBigDecimal());
