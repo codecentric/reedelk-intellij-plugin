@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.properties.commons;
 
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.plugin.commons.TypePrimitiveDescriptors;
+import com.reedelk.plugin.commons.PredefinedPropertyDescriptor;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowSnapshot;
 
@@ -26,15 +26,15 @@ public class FlowAndSubflowMetadataPanel extends DisposableTabbedPane {
             DisposablePanel propertiesPanel = new DisposablePanel(new GridBagLayout());
 
             // Title
-            PropertyTitleLabel propertyTitleLabel = new PropertyTitleLabel(propertyTitleDescriptor);
-            InputField<String> titleField = createTitleInputField(propertyTitleDescriptor);
+            PropertyTitleLabel propertyTitleLabel = new PropertyTitleLabel(PredefinedPropertyDescriptor.FLOW_TITLE);
+            InputField<String> titleField = createTitleInputField(PredefinedPropertyDescriptor.FLOW_TITLE);
             FormBuilder.get()
                     .addLabel(propertyTitleLabel, propertiesPanel)
                     .addLastField(titleField, propertiesPanel);
 
             // Label
-            PropertyTitleLabel propertyDescriptionLabel = new PropertyTitleLabel(propertyDescriptionDescriptor);
-            InputField<String> descriptionField = createDescriptionInputField(propertyDescriptionDescriptor);
+            PropertyTitleLabel propertyDescriptionLabel = new PropertyTitleLabel(PredefinedPropertyDescriptor.FLOW_DESCRIPTION);
+            InputField<String> descriptionField = createDescriptionInputField(PredefinedPropertyDescriptor.FLOW_DESCRIPTION);
             FormBuilder.get()
                     .addLabel(propertyDescriptionLabel, propertiesPanel)
                     .addLastField(descriptionField, propertiesPanel);
@@ -69,20 +69,4 @@ public class FlowAndSubflowMetadataPanel extends DisposableTabbedPane {
         inputField.addListener(changeListener);
         return inputField;
     }
-
-    private static final PropertyDescriptor propertyTitleDescriptor = PropertyDescriptor.builder()
-            .description(message("flow.title.description"))
-            .displayName(message("flow.metadata.title"))
-            .hintValue(message("flow.title.hint"))
-            .name("title")
-            .type(TypePrimitiveDescriptors.STRING)
-            .build();
-
-    private static final PropertyDescriptor propertyDescriptionDescriptor = PropertyDescriptor.builder()
-            .description(message("flow.description.description"))
-            .displayName(message("flow.metadata.description"))
-            .hintValue(message("flow.description.hint"))
-            .name("description")
-            .type(TypePrimitiveDescriptors.STRING)
-            .build();
 }

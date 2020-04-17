@@ -5,17 +5,13 @@ import com.intellij.util.ui.JBUI;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
 import com.reedelk.plugin.commons.InitValuesFiller;
-import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
-import com.reedelk.plugin.editor.properties.commons.FormBuilder;
-import com.reedelk.plugin.editor.properties.commons.PropertiesPanelHolder;
-import com.reedelk.plugin.editor.properties.commons.StringInputField;
+import com.reedelk.plugin.commons.PredefinedPropertyDescriptor;
+import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.plugin.service.module.impl.configuration.ConfigMetadata;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
-
-import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 class ConfigPropertiesPanel extends DisposablePanel {
 
@@ -50,22 +46,28 @@ class ConfigPropertiesPanel extends DisposablePanel {
 
         private void init(ConfigMetadata configMetadata, boolean isNewConfig) {
 
-            // Config File Name input field
-            StringInputField configFileInputField = new StringInputField(message("config.field.file.hint"));
-            configFileInputField.setEnabled(isNewConfig);
-            configFileInputField.setValue(configMetadata.getFileName());
-            configFileInputField.addListener(value -> configMetadata.setFileName((String) value));
-            FormBuilder.get()
-                    .addLabel(message("config.field.file"), this)
-                    .addLastField(configFileInputField, this);
-
             // Config Title input title
-            StringInputField configTitleInputField = new StringInputField(message("config.field.title.hint"));
+            PropertyDescriptor configFileTitleDescriptor = PredefinedPropertyDescriptor.CONFIG_FILE_TITLE;
+            PropertyTitleLabel configFileTitleLabel = new PropertyTitleLabel(configFileTitleDescriptor);
+
+            StringInputField configTitleInputField = new StringInputField(configFileTitleDescriptor.getHintValue());
             configTitleInputField.setValue(configMetadata.getTitle());
             configTitleInputField.addListener(value -> configMetadata.setTitle((String) value));
             FormBuilder.get()
-                    .addLabel(message("config.field.title"), this)
+                    .addLabel(configFileTitleLabel, this)
                     .addLastField(configTitleInputField, this);
+
+            // Config File Name input field
+            PropertyDescriptor configFileNameDescriptor = PredefinedPropertyDescriptor.CONFIG_FILE_NAME;
+            PropertyTitleLabel configFileNameLabel = new PropertyTitleLabel(configFileNameDescriptor);
+
+            StringInputField configFileNameInputField = new StringInputField(configFileNameDescriptor.getHintValue());
+            configFileNameInputField.setEnabled(isNewConfig);
+            configFileNameInputField.setValue(configMetadata.getFileName());
+            configFileNameInputField.addListener(value -> configMetadata.setFileName((String) value));
+            FormBuilder.get()
+                    .addLabel(configFileNameLabel, this)
+                    .addLastField(configFileNameInputField, this);
 
             // Add Separator at the bottom
             FormBuilder.get().addLastField(new JSeparator(), this);
