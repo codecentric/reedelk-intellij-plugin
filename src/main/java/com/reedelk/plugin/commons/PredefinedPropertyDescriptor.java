@@ -31,14 +31,16 @@ public class PredefinedPropertyDescriptor {
 
     public static final PropertyDescriptor CONFIG_FILE_TITLE = PropertyDescriptor.builder()
             .description(message("config.field.title.description"))
+            .example(message("config.field.title.example"))
             .hintValue(message("config.field.title.hint"))
             .displayName(message("config.field.title"))
             .type(TypePrimitiveDescriptors.STRING)
-            .name("configFile")
+            .name("configTitle")
             .build();
 
     public static final PropertyDescriptor CONFIG_FILE_NAME = PropertyDescriptor.builder()
             .description(message("config.field.file.description"))
+            .example(message("config.field.file.example"))
             .hintValue(message("config.field.file.hint"))
             .displayName(message("config.field.file"))
             .type(TypePrimitiveDescriptors.STRING)
