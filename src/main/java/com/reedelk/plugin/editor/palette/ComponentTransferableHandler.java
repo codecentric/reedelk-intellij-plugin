@@ -13,6 +13,8 @@ import static com.reedelk.plugin.editor.designer.icon.Icon.Dimension.HALF_ICON_W
 
 public class ComponentTransferableHandler extends TransferHandler {
 
+    private static final Transferable EMPTY = new EmptyTransferable();
+
     @Override
     public int getSourceActions(JComponent source) {
         return COPY_OR_MOVE;
@@ -20,23 +22,21 @@ public class ComponentTransferableHandler extends TransferHandler {
 
     @Override
     protected Transferable createTransferable(JComponent source) {
-
         JTree tree = (JTree) source;
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 
-        Object userObject = node.getUserObject();
-        if (userObject instanceof ComponentDescriptor) {
-            ComponentDescriptor descriptor = (ComponentDescriptor) userObject;
-            setDragComponentImage(descriptor.getImage());
-
-            String fullyQualifiedName = descriptor.getFullyQualifiedName();
-            PaletteComponent paletteComponent = new PaletteComponent();
-            paletteComponent.setComponentFullyQualifiedName(fullyQualifiedName);
-            return new ComponentDescriptorTransferable(paletteComponent);
-
-        } else {
-            return new EmptyTransferable();
+        if (node != null) {
+            Object userObject = node.getUserObject();
+            if (userObject instanceof ComponentDescriptor) {
+                ComponentDescriptor descriptor = (ComponentDescriptor) userObject;
+                setDragComponentImage(descriptor.getImage());
+                String fullyQualifiedName = descriptor.getFullyQualifiedName();
+                PaletteComponent paletteComponent = new PaletteComponent();
+                paletteComponent.setComponentFullyQualifiedName(fullyQualifiedName);
+                return new ComponentDescriptorTransferable(paletteComponent);
+            }
         }
+        return EMPTY;
     }
 
     private void setDragComponentImage(Image dragImage) {
