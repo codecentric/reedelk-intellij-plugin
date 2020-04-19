@@ -4,6 +4,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
+import com.reedelk.plugin.commons.Sizes;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import org.jetbrains.annotations.NotNull;
@@ -34,11 +35,11 @@ public class PropertiesPanelContainer extends DisposableThreeComponentsSplitter 
         Border border = new CompoundBorder(outside, inside);
         properties.setBorder(border);
 
-        final JEditorPane componentOutputData = new JEditorPane();
+        JEditorPane componentOutputData = new JEditorPane();
         componentOutputData.setContentType(CONTENT_TYPE);
         componentOutputData.setText(String.format(HTML_TEMPLATE, "Output", "Message Input"));
 
-        setLastSize(400);
+        setLastSize(Sizes.PropertiesPane.COMPONENT_OUTPUT_INFO_WIDTH);
         setInnerComponent(properties);
         setLastComponent(componentOutputData);
         setDividerWidth(0);

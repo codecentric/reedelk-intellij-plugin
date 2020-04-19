@@ -25,4 +25,7 @@ public class Sizes {
         public static final Dimension HEIGHT_TOP_PLACEMENT = new Dimension(0, 200);
     }
 
+    public static class PropertiesPane {
+        public static final int COMPONENT_OUTPUT_INFO_WIDTH = 400;
+    }
 }
