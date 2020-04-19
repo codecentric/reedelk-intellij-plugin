@@ -13,7 +13,6 @@ public class Sizes {
 
         public static final int ROW_HEIGHT = 23;
 
-        public static final Dimension ROUTER = new Dimension(0, 150);
         public static final Dimension TABBED = new Dimension(0, 170);
         public static final Dimension DEFAULT = new Dimension(0, 100);
     }
@@ -21,11 +20,11 @@ public class Sizes {
     public static class TabbedPane {
         private TabbedPane() {
         }
-        public static final Dimension TAB_LABEL = new Dimension(130, 15);
+        public static final Dimension TAB_LABEL = new Dimension(150, 15);
         public static final Dimension HEIGHT_TOP_PLACEMENT = new Dimension(0, 200);
     }
 
     public static class PropertiesPane {
-        public static final int COMPONENT_OUTPUT_INFO_WIDTH = 400;
+        public static final int COMPONENT_OUTPUT_INFO_WIDTH = 350;
     }
 }
