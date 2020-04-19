@@ -1,28 +1,21 @@
 package com.reedelk.plugin.editor.properties.commons;
 
 import javax.swing.*;
-import java.awt.*;
+import javax.swing.border.Border;
 import java.awt.event.ComponentEvent;
 import java.util.function.Supplier;
 
 import static com.intellij.util.ui.JBUI.Borders.empty;
-import static com.intellij.util.ui.JBUI.Borders.emptyLeft;
 import static com.reedelk.plugin.editor.properties.commons.PanelWithText.LoadingContentPanel;
-import static java.awt.BorderLayout.CENTER;
-import static java.awt.BorderLayout.NORTH;
-import static javax.swing.Box.createGlue;
 
 public class GenericTab extends DisposableScrollPane {
+
+    private static final Border CONTENT_BORDER = empty(5, 15, 15, 0);
 
     private boolean loaded = false;
 
     public GenericTab(Supplier<JComponent> componentSupplier) {
         super(VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_NEVER);
-        DisposablePanel panel = new DisposablePanel();
-        panel.setLayout(new BorderLayout());
-        panel.add(new LoadingContentPanel(), NORTH);
-        panel.add(createGlue(), CENTER);
-        panel.setBorder(empty());
 
         addComponentListener(new ComponentListenerAdapter() {
             @Override
@@ -36,17 +29,26 @@ public class GenericTab extends DisposableScrollPane {
 
                     JComponent jComponent = componentSupplier.get();
 
-                    panel.removeAll();
-                    panel.add(jComponent, NORTH);
-                    panel.add(createGlue(), CENTER);
+                    if (jComponent instanceof JTable) {
+                        // Router (the JBTable adds the header to the scroll pane automatically).
+                        jComponent.setOpaque(false);
+                        setViewportView(jComponent);
+
+                    } else {
+                        DisposablePanel toAdd = ContainerFactory.pushTop(jComponent);
+                        toAdd.setBorder(CONTENT_BORDER);
+                        setViewportView(toAdd);
+                    }
 
                     loaded = true;
                 });
             }
         });
 
-        setViewportView(panel);
-        setViewportBorder(emptyLeft(5));
+        setViewportView(ContainerFactory.pushTop(new LoadingContentPanel()));
+        getViewport().setOpaque(true);
+        setOpaque(true);
+        setViewportBorder(empty());
         setBorder(empty());
     }
 }

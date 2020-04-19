@@ -14,7 +14,7 @@ public class HelpTab extends DisposableScrollPane {
 
     private static final String CONTENT_TYPE = "text/html";
     private static final String HTML_TEMPLATE =
-            "<div style=\"color: #333333; padding-left:5px;padding-right:10px;font-family:verdana\">" +
+            "<div style=\"color: #333333; padding-left:15px;padding-right:10px;font-family:verdana\">" +
                     "<h2>%s</h2>" +
                     "<p>%s</p>" +
                     "</div>";
