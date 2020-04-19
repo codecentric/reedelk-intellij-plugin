@@ -25,6 +25,6 @@ public class Sizes {
     }
 
     public static class PropertiesPane {
-        public static final int COMPONENT_OUTPUT_INFO_WIDTH = 350;
+        public static final int COMPONENT_OUTPUT_INFO_WIDTH = 300;
     }
 }

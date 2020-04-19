@@ -17,12 +17,12 @@ public class RouterRouteTable extends DisposableTable {
                             FlowSnapshot snapshot,
                             List<RouterConditionRoutePair> conditionRoutePairList,
                             ContainerContext context) {
-
         super(module.getProject(),
                 new ConditionRouteTableModel(conditionRoutePairList, snapshot),
-                new ConditionRouteTableColumnModelFactory(module, context),
                 false);
 
+        ConditionRouteTableColumnModelFactory factory = new ConditionRouteTableColumnModelFactory(module, context);
+        factory.create(this);
         setOpaque(true);
         setBackground(Colors.PROPERTIES_EMPTY_SELECTION_BACKGROUND);
         setBorder(JBUI.Borders.customLine(JBColor.LIGHT_GRAY, 0, 0, 1, 0));

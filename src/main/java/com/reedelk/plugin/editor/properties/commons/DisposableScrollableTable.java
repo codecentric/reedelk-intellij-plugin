@@ -16,10 +16,12 @@ public class DisposableScrollableTable extends DisposableScrollPane {
                                      @NotNull DisposableTableModel tableModel,
                                      @NotNull DisposableTableColumnModelFactory columnModelFactory) {
         this.tableModel = tableModel;
-        this.table = new DisposableTable(project, tableModel, columnModelFactory, true);
+        this.table = new DisposableTable(project, tableModel, true);
 
         setPreferredSize(preferredSize);
-        setViewportView(table);
+        setViewportView(this.table);
+
+        columnModelFactory.create(this.table);
     }
 
     public void addEmptyRow() {

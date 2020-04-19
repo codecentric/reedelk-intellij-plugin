@@ -27,13 +27,11 @@ public class DisposableTable extends JBTable implements Disposable, CommitProper
 
     public DisposableTable(@NotNull Project project,
                            @NotNull TableModel tableModel,
-                           @NotNull DisposableTableColumnModelFactory columnModelFactory,
                            boolean fillViewPortHeight) {
         super(tableModel);
         addFocusListener(new ClearSelectionFocusListener());
         setRowHeight(Sizes.Table.ROW_HEIGHT);
         setFillsViewportHeight(fillViewPortHeight);
-        columnModelFactory.create(this);
         this.busConnection = project.getMessageBus().connect();
         this.busConnection.subscribe(ReedelkTopics.COMMIT_COMPONENT_PROPERTIES_EVENTS, this);
     }
