@@ -16,7 +16,10 @@ public class TabLabelVertical extends JPanel {
 
         JBLabel tabTitle = new JBLabel(name, JLabel.RIGHT);
         tabTitle.setForeground(Colors.PROPERTIES_TABS_TITLE);
-        add(tabTitle, BorderLayout.WEST);
+
+        DisposablePanel container = ContainerFactory.pushRight(tabTitle);
+        container.setOpaque(false);
+        add(container, BorderLayout.CENTER);
 
         Icon icon = AllIcons.General.ArrowRight;
         add(new JBLabel(icon, JLabel.RIGHT), BorderLayout.EAST);
