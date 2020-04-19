@@ -12,120 +12,71 @@ import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.table.*;
-import java.awt.*;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.Collections;
 import java.util.Enumeration;
 
-public class DisposableTable extends DisposableScrollPane implements CommitPropertiesListener {
+public class DisposableTable extends JBTable implements Disposable, CommitPropertiesListener {
 
-    private final transient JBTable table;
-    private final transient DisposableTableModel tableModel;
     private final transient MessageBusConnection busConnection;
 
     public DisposableTable(@NotNull Project project,
-                           @NotNull Dimension preferredSize,
-                           @NotNull DisposableTableModel tableModel,
-                           @NotNull DisposableTableColumnModelFactory columnModelFactory) {
-        this.tableModel = tableModel;
-
-        this.table = new DisposableAwareTable(tableModel);
-        this.table.addFocusListener(new ClearSelectionFocusListener());
-        this.table.setRowHeight(Sizes.Table.ROW_HEIGHT);
-        this.table.setFillsViewportHeight(true);
-
-        columnModelFactory.create(table);
-        setPreferredSize(preferredSize);
-        setViewportView(table);
-
+                           @NotNull TableModel tableModel,
+                           @NotNull DisposableTableColumnModelFactory columnModelFactory,
+                           boolean fillViewPortHeight) {
+        super(tableModel);
+        addFocusListener(new ClearSelectionFocusListener());
+        setRowHeight(Sizes.Table.ROW_HEIGHT);
+        setFillsViewportHeight(fillViewPortHeight);
+        columnModelFactory.create(this);
         this.busConnection = project.getMessageBus().connect();
         this.busConnection.subscribe(ReedelkTopics.COMMIT_COMPONENT_PROPERTIES_EVENTS, this);
     }
 
     @Override
     public void dispose() {
-        super.dispose();
         this.busConnection.disconnect();
 
-        Enumeration<TableColumn> columns = table.getColumnModel().getColumns();
-        Collections.list(columns).forEach(tableColumn -> {
-            TableCellEditor cellEditor = tableColumn.getCellEditor();
-            TableCellRenderer cellRenderer = tableColumn.getCellRenderer();
-            DisposableUtils.dispose(cellEditor);
-            DisposableUtils.dispose(cellRenderer);
-        });
+        if (getModel() != null) {
+            TableModel tableModel = getModel();
+            if (tableModel instanceof Disposable) {
+                ((Disposable) tableModel).dispose();
+            }
+        }
+
+        if (getColumnModel() != null) {
+            Enumeration<TableColumn> columns = getColumnModel().getColumns();
+            Collections.list(columns).forEach(tableColumn -> {
+                TableCellEditor cellEditor = tableColumn.getCellEditor();
+                TableCellRenderer cellRenderer = tableColumn.getCellRenderer();
+                DisposableUtils.dispose(cellEditor);
+                DisposableUtils.dispose(cellRenderer);
+            });
+        }
     }
 
     @Override
     public void onCommit() {
-        TableColumnModelUtils.onCommit(table.getColumnModel());
+        TableColumnModelUtils.onCommit(getColumnModel());
     }
 
-    public void addEmptyRow() {
-        tableModel.addRow(tableModel.createRow());
-    }
-
-    public void removeSelectedRow() {
-        int selectedRow = table.getSelectedRow();
-
-        // If the selected row is -1, it means that we called remove,
-        // without having selected any item in the table.
-        if (selectedRow > -1) {
-            tableModel.removeRow(selectedRow);
-
-            // Shift the selection to previous/next item.
-            if (table.getModel().getRowCount() > 0) {
-                if (table.getModel().getRowCount() >= selectedRow + 1) {
-                    // Existed one after the one removed.
-                    table.setRowSelectionInterval(selectedRow, selectedRow);
-                } else {
-                    // It did not exist a row after the one we removed.
-                    table.setRowSelectionInterval(selectedRow - 1, selectedRow - 1);
-                }
-            }
-        }
-    }
-
-
-    class ClearSelectionFocusListener implements FocusListener {
+    private class ClearSelectionFocusListener implements FocusListener {
 
         @Override
-        public void focusGained(FocusEvent e) {
+        public void focusGained(FocusEvent event) {
             // nothing to do when focus is gained
         }
 
         @Override
-        public void focusLost(FocusEvent e) {
-            if (table != null) {
-                ListSelectionModel selectionModel = table.getSelectionModel();
-                if (selectionModel != null) {
-                    selectionModel.clearSelection();
-                }
-            }
-        }
-    }
-
-    private static class DisposableAwareTable extends JBTable implements Disposable {
-
-        DisposableAwareTable(TableModel tableModel) {
-            super(tableModel);
-        }
-
-        @Override
-        public void dispose() {
-            if (getModel() != null) {
-                TableModel tableModel = getModel();
-                if (tableModel instanceof Disposable) {
-                    ((Disposable) tableModel).dispose();
-                }
-            }
-            if (getColumnModel() != null) {
-                TableColumnModel columnModel = getColumnModel();
-                if (columnModel instanceof Disposable) {
-                    ((Disposable) columnModel).dispose();
-                }
+        public void focusLost(FocusEvent event) {
+            ListSelectionModel selectionModel = getSelectionModel();
+            if (selectionModel != null) {
+                selectionModel.clearSelection();
             }
         }
     }

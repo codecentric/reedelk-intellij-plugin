@@ -23,8 +23,8 @@ public class ListCustomObjectTableContainer extends DisposablePanel {
         ListTableCustomColumnModelFactory factory = new ListTableCustomColumnModelFactory(action, listDisplayPropertyName);
         DisposableTableModel disposableTableModel = new ListTableCustomModel(propertyAccessor);
 
-        DisposableTable disposablePropertyTable =
-                new DisposableTable(module.getProject(), Sizes.Table.DEFAULT, disposableTableModel, factory);
+        DisposableScrollableTable disposablePropertyTable =
+                new DisposableScrollableTable(module.getProject(), Sizes.Table.DEFAULT, disposableTableModel, factory);
 
         ClickableLabel.OnClickAction removeAction = disposablePropertyTable::removeSelectedRow;
         ClickableLabel.OnClickAction addAction = () -> {

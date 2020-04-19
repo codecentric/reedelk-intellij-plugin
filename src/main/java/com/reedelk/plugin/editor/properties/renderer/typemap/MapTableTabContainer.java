@@ -23,8 +23,8 @@ public class MapTableTabContainer extends DisposablePanel {
 
                 DisposablePanel mapContainer = new DisposablePanel();
                 mapContainer.setLayout(new BoxLayout(mapContainer, BoxLayout.Y_AXIS));
-                DisposableTable disposablePropertyTable =
-                        new DisposableTable(module.getProject(), Sizes.Table.TABBED, tableModel, columnModelFactory);
+                DisposableScrollableTable disposablePropertyTable =
+                        new DisposableScrollableTable(module.getProject(), Sizes.Table.TABBED, tableModel, columnModelFactory);
 
                 ClickableLabel.OnClickAction addAction = disposablePropertyTable::addEmptyRow;
                 ClickableLabel.OnClickAction removeAction = disposablePropertyTable::removeSelectedRow;
