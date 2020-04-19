@@ -1,6 +1,7 @@
 package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.util.ui.JBUI;
 import com.reedelk.module.descriptor.model.ComponentDataHolder;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.TypeDescriptor;
@@ -31,6 +32,7 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
         this.module = module;
         this.snapshot = snapshot;
         this.componentData = componentData;
+        setTabComponentInsets(JBUI.emptyInsets());
         setBackground(Colors.PROPERTIES_TABS_BACKGROUND);
     }
 
