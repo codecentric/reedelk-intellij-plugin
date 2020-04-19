@@ -3,7 +3,7 @@ package com.reedelk.plugin.component.type.generic;
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.plugin.component.ComponentData;
-import com.reedelk.plugin.editor.properties.commons.PropertiesPanelTabbedPanel;
+import com.reedelk.plugin.editor.properties.commons.PropertiesPanelContainer;
 import com.reedelk.plugin.editor.properties.renderer.AbstractComponentPropertiesRenderer;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -37,6 +37,6 @@ public class GenericComponentPropertiesRenderer extends AbstractComponentPropert
                 .collect(groupingBy(propertyDescriptor -> ofNullable(propertyDescriptor.getGroup()).orElse(defaultTabKey),
                         LinkedHashMap::new, toList()));
 
-        return new PropertiesPanelTabbedPanel(module, snapshot, componentData, propertiesByGroup);
+        return new PropertiesPanelContainer(module, snapshot, componentData, propertiesByGroup);
     }
 }

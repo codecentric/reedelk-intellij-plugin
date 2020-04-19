@@ -7,6 +7,13 @@ import java.awt.*;
 
 public class DisposableScrollPane extends JBScrollPane implements Disposable {
 
+    public DisposableScrollPane(int verticalScrollbarAsNeeded, int horizontalScrollbarNever) {
+        super(verticalScrollbarAsNeeded, horizontalScrollbarNever);
+    }
+
+    public DisposableScrollPane() {
+    }
+
     @Override
     public void dispose() {
         // Dispose all the children components implementing

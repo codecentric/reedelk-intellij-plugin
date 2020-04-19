@@ -1,42 +1,46 @@
 package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.util.ui.JBEmptyBorder;
 import com.reedelk.module.descriptor.model.ComponentDataHolder;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.TypeDescriptor;
 import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import static com.intellij.util.ui.JBUI.Borders;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
-
-    private static final JBEmptyBorder BORDER = Borders.empty(3, 5, 0, 0);
 
     private final transient Module module;
     private final transient FlowSnapshot snapshot;
     private final transient ComponentData componentData;
 
+    private PropertiesPanelTabbedPanel(@Nullable Module module,
+                                       @Nullable FlowSnapshot snapshot,
+                                       @NotNull ComponentData componentData) {
+        super(JTabbedPane.LEFT);
+        this.module = module;
+        this.snapshot = snapshot;
+        this.componentData = componentData;
+        setBackground(Colors.PROPERTIES_TABS_BACKGROUND);
+    }
+
     public PropertiesPanelTabbedPanel(@NotNull Module module,
                                       @NotNull FlowSnapshot flowSnapshot,
                                       @NotNull ComponentData componentData,
                                       @NotNull Map<String, List<PropertyDescriptor>> propertiesByGroup) {
-        super(JTabbedPane.LEFT);
-        this.module = module;
-        this.snapshot = flowSnapshot;
-        this.componentData = componentData;
+        this(module, flowSnapshot, componentData);
 
         int count = 0;
-
         if (propertiesByGroup.isEmpty()) {
             // The component does not have any property defined (e.g Try-Catch, Fork ...)
             String tabName = message("properties.panel.tab.title.general");
@@ -55,14 +59,14 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
         setTabComponentAt(count, new TabLabelVertical(message("properties.panel.tab.title.help")));
     }
 
+    // Used by specific and not generic components with their custom properties panel.
+    // e.g Router or Flow Reference.
     public PropertiesPanelTabbedPanel(@NotNull ComponentData componentData,
-                                      @NotNull Map<String, Supplier<JComponent>> componentsByGroup) {
-        super(JTabbedPane.LEFT);
-        this.module = null;
-        this.snapshot = null;
-        this.componentData = componentData;
+                                      @NotNull Map<String, Supplier<JComponent>> componentByGroup) {
+        this(null, null, componentData);
+
         int count = 0;
-        for (Map.Entry<String, Supplier<JComponent>> entry : componentsByGroup.entrySet()) {
+        for (Map.Entry<String, Supplier<JComponent>> entry : componentByGroup.entrySet()) {
             addTabFromSupplier(entry.getKey(), entry.getValue());
             setTabComponentAt(count, new TabLabelVertical(entry.getKey()));
             count++;
@@ -79,30 +83,21 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
     private void addTabFromProperties(String key, List<PropertyDescriptor> propertyDescriptors) {
         if (isSingleTypeObject(propertyDescriptors)) {
             addTabFromSupplier(key, () -> {
+                // *Unroll* all the object properties in the Tab
                 PropertyDescriptor propertyDescriptor = propertyDescriptors.get(0);
                 TypeDescriptor type = propertyDescriptor.getType();
                 TypeObjectDescriptor typeObjectDescriptor = (TypeObjectDescriptor) type;
                 List<PropertyDescriptor> objectProperties = typeObjectDescriptor.getObjectProperties();
                 String fullyQualifiedName = typeObjectDescriptor.getTypeFullyQualifiedName();
                 ComponentDataHolder objectDataHolder = componentData.get(propertyDescriptor.getName());
-                return createPropertiesPanelHolder(objectProperties, fullyQualifiedName, objectDataHolder);
+                return new PropertiesPanelHolder(module, fullyQualifiedName, objectDataHolder, objectProperties, snapshot);
             });
         } else {
             addTabFromSupplier(key, () -> {
                 String fullyQualifiedName = componentData.getFullyQualifiedName();
-                return createPropertiesPanelHolder(propertyDescriptors, fullyQualifiedName, componentData);
+                return new PropertiesPanelHolder(module, fullyQualifiedName, componentData, propertyDescriptors, snapshot);
             });
         }
-    }
-
-    @NotNull
-    private PropertiesPanelHolder createPropertiesPanelHolder(@NotNull List<PropertyDescriptor> objectProperties,
-                                                              @NotNull String fullyQualifiedName,
-                                                              @NotNull ComponentDataHolder objectDataHolder) {
-        PropertiesPanelHolder panel =
-                new PropertiesPanelHolder(module, fullyQualifiedName, objectDataHolder, objectProperties, snapshot);
-        panel.setBorder(BORDER);
-        return panel;
     }
 
     private boolean isSingleTypeObject(List<PropertyDescriptor> propertyDescriptors) {

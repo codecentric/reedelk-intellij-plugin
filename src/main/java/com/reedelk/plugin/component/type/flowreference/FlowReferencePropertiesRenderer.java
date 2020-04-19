@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -71,7 +72,10 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
         };
 
         String defaultTabKey = message("properties.panel.tab.title.general");
-        return new PropertiesPanelTabbedPanel(componentData, ImmutableMap.of(defaultTabKey, componentSupplier));
+
+        Map<String, Supplier<JComponent>> tabAndComponentSupplier =
+                ImmutableMap.of(defaultTabKey, componentSupplier);
+        return new PropertiesPanelContainer(componentData, tabAndComponentSupplier);
     }
 
 

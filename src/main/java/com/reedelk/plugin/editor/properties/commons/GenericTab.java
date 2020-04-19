@@ -1,12 +1,12 @@
 package com.reedelk.plugin.editor.properties.commons;
 
-import com.intellij.util.ui.JBUI;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.util.function.Supplier;
 
+import static com.intellij.util.ui.JBUI.Borders.empty;
+import static com.intellij.util.ui.JBUI.Borders.emptyLeft;
 import static com.reedelk.plugin.editor.properties.commons.PanelWithText.LoadingContentPanel;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
@@ -17,10 +17,12 @@ public class GenericTab extends DisposableScrollPane {
     private boolean loaded = false;
 
     public GenericTab(Supplier<JComponent> componentSupplier) {
+        super(VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_NEVER);
         DisposablePanel panel = new DisposablePanel();
         panel.setLayout(new BorderLayout());
         panel.add(new LoadingContentPanel(), NORTH);
         panel.add(createGlue(), CENTER);
+        panel.setBorder(empty());
 
         addComponentListener(new ComponentListenerAdapter() {
             @Override
@@ -43,10 +45,8 @@ public class GenericTab extends DisposableScrollPane {
             }
         });
 
-        createVerticalScrollBar();
-        setBorder(JBUI.Borders.empty());
-        setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_AS_NEEDED);
-        setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
         setViewportView(panel);
+        setViewportBorder(emptyLeft(5));
+        setBorder(empty());
     }
 }

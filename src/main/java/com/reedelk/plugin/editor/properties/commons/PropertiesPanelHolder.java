@@ -44,7 +44,7 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
         this.descriptors.addAll(descriptors);
 
         setLayout(new GridBagLayout());
-        setBorder(Borders.emptyRight(10));
+        setBorder(Borders.empty(8, 0, 0, 10));
         initAccessors();
         renderProperties();
     }
