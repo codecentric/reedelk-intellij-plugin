@@ -8,7 +8,6 @@ import com.reedelk.plugin.graph.FlowSnapshot;
 import javax.swing.*;
 import java.awt.*;
 
-import static com.reedelk.plugin.commons.Colors.PROPERTIES_TABS_BACKGROUND;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class FlowAndSubflowMetadataPanel extends DisposableTabbedPane {
@@ -18,7 +17,6 @@ public class FlowAndSubflowMetadataPanel extends DisposableTabbedPane {
     public FlowAndSubflowMetadataPanel(FlowSnapshot snapshot) {
         super(JTabbedPane.LEFT);
         this.snapshot = snapshot;
-        setBackground(PROPERTIES_TABS_BACKGROUND);
         initialize();
     }
 

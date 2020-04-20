@@ -10,8 +10,6 @@ public class Colors {
     private Colors() {
     }
 
-    public static final JBColor PROPERTIES_TABS_BACKGROUND = JBColor.WHITE;
-
     public static final JBColor PROPERTIES_TABS_TITLE = JBColor.DARK_GRAY;
 
     public static final JBColor PROPERTIES_EMPTY_SELECTION_BACKGROUND = new JBColor(Gray._237, Gray._237);

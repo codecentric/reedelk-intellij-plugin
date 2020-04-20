@@ -6,7 +6,6 @@ import com.reedelk.module.descriptor.model.ComponentDataHolder;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.TypeDescriptor;
 import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
-import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +32,6 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
         this.snapshot = snapshot;
         this.componentData = componentData;
         setTabComponentInsets(JBUI.emptyInsets());
-        setBackground(Colors.PROPERTIES_TABS_BACKGROUND);
     }
 
     public PropertiesPanelTabbedPanel(@NotNull Module module,

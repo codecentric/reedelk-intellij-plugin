@@ -12,7 +12,6 @@ import com.reedelk.plugin.graph.node.GraphNode;
 import javax.swing.*;
 import java.awt.*;
 
-import static com.reedelk.plugin.commons.Colors.PROPERTIES_TABS_BACKGROUND;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class UnknownComponentPropertiesRenderer extends AbstractComponentPropertiesRenderer {
@@ -38,7 +37,6 @@ public class UnknownComponentPropertiesRenderer extends AbstractComponentPropert
         public UnknownPropertiesContainer(ComponentData componentData) {
             super(JTabbedPane.LEFT);
             this.componentData = componentData;
-            setBackground(PROPERTIES_TABS_BACKGROUND);
             initialize();
         }
 
