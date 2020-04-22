@@ -23,7 +23,8 @@ public class PopupUtils {
     }
 
     public static void info(String text, JComponent component) {
-        JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(text, INFO, null)
+        JBPopupFactory.getInstance()
+                .createHtmlTextBalloonBuilder(text, INFO, HyperlinkListenerUtils.BROWSER_OPEN)
                 .createBalloon()
                 .show(RelativePoint.getCenterOf(component), Position.above);
     }
