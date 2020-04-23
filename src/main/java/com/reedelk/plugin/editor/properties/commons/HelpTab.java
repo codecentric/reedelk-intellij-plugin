@@ -3,22 +3,23 @@ package com.reedelk.plugin.editor.properties.commons;
 import com.reedelk.plugin.commons.HyperlinkListenerUtils;
 import com.reedelk.plugin.component.ComponentData;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.text.html.HTMLEditorKit;
+import java.awt.*;
 import java.awt.event.ComponentEvent;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Hashtable;
 import java.util.Optional;
 
 import static com.intellij.util.ui.JBUI.Borders;
-import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
-import static java.lang.String.format;
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class HelpTab extends DisposableScrollPane {
-
-    private static final String CONTENT_TYPE = "text/html";
-    private static final String HTML_TEMPLATE =
-            "<div style=\"color: #333333; padding-left:15px;padding-right:10px;font-family:verdana\">" +
-                    "<h2>%s</h2>" +
-                    "<p>%s</p>" +
-                    "</div>";
 
     private boolean loaded = false;
 
@@ -27,10 +28,14 @@ public class HelpTab extends DisposableScrollPane {
         setBorder(Borders.empty());
         setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_AS_NEEDED);
 
-        final JEditorPane editorPane = new JEditorPane();
-        editorPane.setContentType(CONTENT_TYPE);
+        JEditorPane editorPane = new JEditorPane();
+        editorPane.setEditorKit(new HTMLEditorKit());
+        editorPane.setEditable(false);
         editorPane.addHyperlinkListener(HyperlinkListenerUtils.BROWSER_OPEN);
+        editorPane.setContentType(CONTENT_TYPE);
+
         setViewportView(editorPane);
+
 
         addComponentListener(new ComponentListenerAdapter() {
             @Override
@@ -42,15 +47,63 @@ public class HelpTab extends DisposableScrollPane {
                 // of the component's properties.
                 SwingUtilities.invokeLater(() -> {
 
-                    String componentDescription = Optional.ofNullable(componentData.getDescription()).orElse(EMPTY);
+                    ImageCache image_cache = new ImageCache((BufferedImage) componentData.getComponentImage());
+                    editorPane.getDocument().putProperty("imageCache", image_cache);
 
-                    editorPane.setEditable(false);
+                    String componentDescription = Optional.ofNullable(componentData.getDescription())
+                            .orElse(message("component.description.not.provided"));
 
-                    editorPane.setText(format(HTML_TEMPLATE, componentData.getDisplayName(), componentDescription));
+                    String componentTitle = componentData.getDisplayName();
+                    editorPane.setText(String.format(HTML_TEMPLATE, COMPONENT_IMAGE_URL, componentTitle, componentDescription));
 
                     loaded = true;
                 });
             }
         });
+    }
+
+    private static URL COMPONENT_IMAGE_URL;
+    static {
+        try {
+            COMPONENT_IMAGE_URL = new URL("file:component-icon.png");
+        } catch (MalformedURLException e) {
+            // This exception will never be thrown.
+        }
+    }
+
+    private static final String CONTENT_TYPE = "text/html";
+    private static final String HTML_TEMPLATE =
+            "<div style=\"color: #333333; padding:15px;font-family:verdana\">" +
+                    "<img src=\"%s\"\">" +
+                    "<h2>%s</h2>" +
+                    "<p style=\"text-align: justify\">%s</p>" +
+                    "</div>";
+
+    static class ImageCache extends Hashtable {
+
+        private final BufferedImage image;
+
+        ImageCache(BufferedImage image) {
+            this.image = image;
+        }
+
+        @Override
+        public Object get(Object key) {
+            if (COMPONENT_IMAGE_URL.equals(key)) {
+                return Toolkit.getDefaultToolkit().createImage(toByteArray(image));
+            } else {
+                return super.get(key);
+            }
+        }
+    }
+
+    public static byte[] toByteArray(BufferedImage originalImage) {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            ImageIO.write(originalImage, "png", outputStream);
+            outputStream.flush();
+            return outputStream.toByteArray();
+        } catch (IOException e) {
+            return new byte[0];
+        }
     }
 }
