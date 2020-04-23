@@ -1,5 +1,6 @@
 package com.reedelk.plugin.editor.properties.commons;
 
+import com.reedelk.plugin.commons.HyperlinkListenerUtils;
 import com.reedelk.plugin.component.ComponentData;
 
 import javax.swing.*;
@@ -28,6 +29,7 @@ public class HelpTab extends DisposableScrollPane {
 
         final JEditorPane editorPane = new JEditorPane();
         editorPane.setContentType(CONTENT_TYPE);
+        editorPane.addHyperlinkListener(HyperlinkListenerUtils.BROWSER_OPEN);
         setViewportView(editorPane);
 
         addComponentListener(new ComponentListenerAdapter() {
