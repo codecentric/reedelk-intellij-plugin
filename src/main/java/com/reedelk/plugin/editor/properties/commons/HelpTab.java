@@ -21,21 +21,15 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class HelpTab extends DisposableScrollPane {
 
+    private static final String IMAGE_CACHE_PROPERTY = "imageCache";
+
     private boolean loaded = false;
 
     public HelpTab(ComponentData componentData) {
         createVerticalScrollBar();
         setBorder(Borders.empty());
         setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_AS_NEEDED);
-
-        JEditorPane editorPane = new JEditorPane();
-        editorPane.setEditorKit(new HTMLEditorKit());
-        editorPane.setEditable(false);
-        editorPane.addHyperlinkListener(HyperlinkListenerUtils.BROWSER_OPEN);
-        editorPane.setContentType(CONTENT_TYPE);
-
-        setViewportView(editorPane);
-
+        setViewportView(ContainerFactory.pushTop(new PanelWithText.LoadingContentPanel()));
 
         addComponentListener(new ComponentListenerAdapter() {
             @Override
@@ -48,13 +42,19 @@ public class HelpTab extends DisposableScrollPane {
                 SwingUtilities.invokeLater(() -> {
 
                     ImageCache image_cache = new ImageCache((BufferedImage) componentData.getComponentImage());
-                    editorPane.getDocument().putProperty("imageCache", image_cache);
-
                     String componentDescription = Optional.ofNullable(componentData.getDescription())
                             .orElse(message("component.description.not.provided"));
-
                     String componentTitle = componentData.getDisplayName();
-                    editorPane.setText(String.format(HTML_TEMPLATE, COMPONENT_IMAGE_URL, componentTitle, componentDescription));
+
+                    JEditorPane editorPane = new JEditorPane();
+                    editorPane.setEditorKit(new HTMLEditorKit());
+                    editorPane.setEditable(false);
+                    editorPane.addHyperlinkListener(HyperlinkListenerUtils.BROWSER_OPEN);
+                    editorPane.setContentType(CONTENT_TYPE);
+                    editorPane.getDocument().putProperty(IMAGE_CACHE_PROPERTY, image_cache);
+                    editorPane.setText(String.format(HTML_TEMPLATE, componentTitle, COMPONENT_IMAGE_URL, componentDescription));
+
+                    setViewportView(editorPane);
 
                     loaded = true;
                 });
@@ -73,9 +73,9 @@ public class HelpTab extends DisposableScrollPane {
 
     private static final String CONTENT_TYPE = "text/html";
     private static final String HTML_TEMPLATE =
-            "<div style=\"color: #333333; padding:15px;font-family:verdana\">" +
-                    "<img src=\"%s\"\">" +
+            "<div style=\"color: #333333; padding-left:15px; padding-bottom:15px; padding-right:15px; font-family:verdana\">" +
                     "<h2>%s</h2>" +
+                    "<img src=\"%s\"\">" +
                     "<p style=\"text-align: justify\">%s</p>" +
                     "</div>";
 
