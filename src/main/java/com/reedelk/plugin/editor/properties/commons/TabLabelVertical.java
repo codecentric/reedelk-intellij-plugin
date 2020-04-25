@@ -2,6 +2,7 @@ package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ui.components.JBLabel;
+import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.Sizes;
 
@@ -14,13 +15,14 @@ public class TabLabelVertical extends JPanel {
         super(new BorderLayout());
         setOpaque(false);
 
-        JBLabel tabTitle = new JBLabel(name, JLabel.RIGHT);
+        JBLabel tabTitle = new JBLabel(name, JLabel.LEFT);
+        tabTitle.setBorder(JBUI.Borders.emptyLeft(5));
         tabTitle.setForeground(Colors.PROPERTIES_TABS_TITLE);
 
-        add(tabTitle, BorderLayout.WEST);
+        add(tabTitle, BorderLayout.CENTER);
 
         Icon icon = AllIcons.General.ArrowRight;
-        add(new JBLabel(icon, JLabel.RIGHT), BorderLayout.EAST);
+        add(new JBLabel(icon, JLabel.LEFT), BorderLayout.WEST);
         
         setPreferredSize(Sizes.TabbedPane.TAB_LABEL);
     }
