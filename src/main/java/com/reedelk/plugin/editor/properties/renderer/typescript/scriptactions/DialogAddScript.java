@@ -3,7 +3,7 @@ package com.reedelk.plugin.editor.properties.renderer.typescript.scriptactions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
-import com.reedelk.plugin.commons.JavascriptFileNameValidator;
+import com.reedelk.plugin.commons.ScriptFileNameValidator;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.FormBuilder;
 import com.reedelk.plugin.editor.properties.commons.InputField;
@@ -55,7 +55,7 @@ public class DialogAddScript extends DialogWrapper {
     @Nullable
     @Override
     protected ValidationInfo doValidate() {
-        if (!JavascriptFileNameValidator.validate(scriptFileNameWithPathToAdd)) {
+        if (!ScriptFileNameValidator.validate(scriptFileNameWithPathToAdd)) {
             return new ValidationInfo(message("script.file.name.validation.error"));
         }
         return super.doValidate();

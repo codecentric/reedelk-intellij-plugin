@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class JavascriptFileNameValidatorTest {
+class ScriptFileNameValidatorTest {
 
     @Test
     void shouldIsValidFunctionNameReturnTrue() {
@@ -12,7 +12,7 @@ class JavascriptFileNameValidatorTest {
         String functionName = "My_Function";
 
         // When
-        boolean isValid = JavascriptFileNameValidator.validate(functionName);
+        boolean isValid = ScriptFileNameValidator.validate(functionName);
 
         // Then
         assertThat(isValid).isTrue();
@@ -24,7 +24,7 @@ class JavascriptFileNameValidatorTest {
         String functionName = "1$_myFunction";
 
         // When
-        boolean isValid = JavascriptFileNameValidator.validate(functionName);
+        boolean isValid = ScriptFileNameValidator.validate(functionName);
 
         // Then
         assertThat(isValid).isFalse();
@@ -36,7 +36,7 @@ class JavascriptFileNameValidatorTest {
         String functionName = "scripts/";
 
         // When
-        boolean isValid = JavascriptFileNameValidator.validate(functionName);
+        boolean isValid = ScriptFileNameValidator.validate(functionName);
 
         // Then
         assertThat(isValid).isFalse();
@@ -48,7 +48,7 @@ class JavascriptFileNameValidatorTest {
         String functionName = "scripts\\";
 
         // When
-        boolean isValid = JavascriptFileNameValidator.validate(functionName);
+        boolean isValid = ScriptFileNameValidator.validate(functionName);
 
         // Then
         assertThat(isValid).isFalse();

@@ -5,27 +5,26 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class JavascriptFileNameValidator {
+import static java.util.Arrays.asList;
+import static java.util.Collections.unmodifiableList;
 
-    private static final Collection<String> JAVASCRIPT_RESERVED_KEYWORDS = Arrays.asList(
-            "abstract", "arguments", "await", "boolean", "break","byte","case","catch",
-            "char","class","const","continue", "debugger","default","delete","do",
-            "double","else","enum","eval", "export","extends","false", "final","finally",
-            "float","for","function", "goto","if","implements","import","in","instanceof",
-            "int","interface", "let","long","native","new","null","package","private",
-            "protected", "public", "return", "short", "static","super","switch","synchronized",
-            "this", "throw","throws","transient","true", "try","typeof","var","void", "volatile",
-            "while","with","yield");
+public class ScriptFileNameValidator {
+
+    private static final Collection<String> SCRIPT_RESERVED_KEYWORDS = unmodifiableList(asList(
+            "as", "assert", "break", "case", "catch", "class", "const", "continue",
+            "def", "default", "do", "else", "enum", "extends", "false", "finally",
+            "for", "goto", "if", "implements", "import", "in", "instanceof",
+            "interface", "new", "null", "package", "return", "super", "switch",
+            "this", "throw", "throws", "trait", "true", "try", "var", "while"));
 
     private static final Pattern FUNCTION_NAME_VALIDATOR = Pattern.compile("^[$a-zA-Z_][0-9a-zA-Z_$]*$");
 
 
-    private JavascriptFileNameValidator() {
+    private ScriptFileNameValidator() {
     }
 
     // Validates only the file name at the end of the path.
@@ -38,7 +37,7 @@ public class JavascriptFileNameValidator {
         } else {
             String fileNameWithoutExtension = getFileNameWithoutExtensionFrom(scriptFileNameWithPathToAdd);
             Matcher matcher = FUNCTION_NAME_VALIDATOR.matcher(fileNameWithoutExtension);
-            return matcher.matches() && !JAVASCRIPT_RESERVED_KEYWORDS.contains(fileNameWithoutExtension);
+            return matcher.matches() && !SCRIPT_RESERVED_KEYWORDS.contains(fileNameWithoutExtension);
         }
     }
 

@@ -34,7 +34,7 @@ public class ScriptEditor extends DisposablePanel implements DocumentListener {
         this.module = module;
         this.document = document;
         this.editor = (EditorEx) EditorFactory.getInstance()
-                .createEditor(document, module.getProject(), DefaultConstants.JAVASCRIPT_FILE_TYPE, false);
+                .createEditor(document, module.getProject(), DefaultConstants.SCRIPT_FILE_TYPE, false);
         this.editor.putUserData(MODULE_NAME, module.getName());
         this.editor.putUserData(COMPONENT_FULLY_QUALIFIED_NAME, context.componentFullyQualifiedName());
         configure(this.editor);

@@ -27,7 +27,8 @@ public class DynamicValueScriptEditor extends ScriptEditor {
     }
 
     private static Document emptyDocument() {
-        VirtualFile myVirtualFile = new LightVirtualFile(DEFAULT_DYNAMIC_VALUE_SCRIPT_VIRTUAL_FILE_NAME, DefaultConstants.JAVASCRIPT_FILE_TYPE, StringUtils.EMPTY);
+        VirtualFile myVirtualFile =
+                new LightVirtualFile(DEFAULT_DYNAMIC_VALUE_SCRIPT_VIRTUAL_FILE_NAME, DefaultConstants.SCRIPT_FILE_TYPE, StringUtils.EMPTY);
         return FileDocumentManager.getInstance().getDocument(myVirtualFile);
     }
 

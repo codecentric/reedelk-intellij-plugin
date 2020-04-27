@@ -5,7 +5,7 @@ public class Template {
     private Template() {
     }
 
-    public class Maven {
+    public static class Maven {
 
         private Maven() {
         }
@@ -14,7 +14,7 @@ public class Template {
         public static final String MODULE = "MavenModule";
     }
 
-    public class ProjectFile {
+    public static class ProjectFile {
 
         private ProjectFile() {
         }
@@ -23,13 +23,13 @@ public class Template {
         public static final String SUBFLOW = "SubflowFile";
     }
 
-    public class HelloWorld {
+    public static class HelloWorld {
 
         private HelloWorld() {
         }
 
         public static final String FLOW = "HelloWorld.flow";
-        public static final String SCRIPT = "helloWorld.js";
+        public static final String SCRIPT = "helloWorld.groovy";
         public static final String CONFIG = "DefaultListener.fconfig";
 
     }

@@ -1,0 +1,12 @@
+def helloWorld(context, message) {
+
+    def attributes = message.attributes()
+    def pathParams = attributes.pathParams
+
+    def result = 'Hello World'
+    if (pathParams.containsKey('name')) {
+        result += ' ' + pathParams.get('name')
+    }
+
+    return result;
+}

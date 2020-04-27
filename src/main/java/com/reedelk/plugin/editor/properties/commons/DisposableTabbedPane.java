@@ -15,7 +15,7 @@ public class DisposableTabbedPane extends JBTabbedPane implements Disposable {
     public void dispose() {
         // Dispose all the children components implementing
         // the disposable interface. This is for instance needed
-        // to correctly release resources of Javascript Editor.
+        // to correctly release resources of script editor.
         Component[] components = getComponents();
         for (Component component : components) {
             if (component instanceof Disposable) {

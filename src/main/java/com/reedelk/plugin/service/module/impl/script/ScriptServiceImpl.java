@@ -5,8 +5,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.reedelk.plugin.commons.JavascriptFileNameValidator;
 import com.reedelk.plugin.commons.PluginModuleUtils;
+import com.reedelk.plugin.commons.ScriptFileNameValidator;
 import com.reedelk.plugin.commons.ScriptResourceUtil;
 import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.executor.PluginExecutors;
@@ -61,7 +61,7 @@ public class ScriptServiceImpl implements ScriptService {
     @Override
     public void addScript(String scriptFileName, String scriptBody) {
 
-        if (!JavascriptFileNameValidator.validate(scriptFileName)) {
+        if (!ScriptFileNameValidator.validate(scriptFileName)) {
             publisher.onAddError(new PluginException(message("script.file.name.validation.error")));
             return;
         }
@@ -127,10 +127,10 @@ public class ScriptServiceImpl implements ScriptService {
     }
 
     public interface ScriptResourceChangeListener {
-        default void onScriptResources(Collection<ScriptResource> scriptResources) {}
-        default void onAddSuccess(ScriptResource resource) {}
-        default void onAddError(Exception exception) {}
-        default void onRemoveSuccess() {}
-        default void onRemoveError(Exception exception) {}
+        void onScriptResources(Collection<ScriptResource> scriptResources);
+        void onAddSuccess(ScriptResource resource);
+        void onAddError(Exception exception);
+        void onRemoveSuccess();
+        void onRemoveError(Exception exception);
     }
 }
