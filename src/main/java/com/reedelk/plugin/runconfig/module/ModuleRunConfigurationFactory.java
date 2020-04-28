@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 public class ModuleRunConfigurationFactory extends ConfigurationFactory {
 
     private static final String FACTORY_NAME = "Module Run Configuration Factory";
+    private static final String FACTORY_ID = "REEDELK_MODULE_RUN_CONFIGURATION_FACTORY";
 
     public ModuleRunConfigurationFactory(@NotNull ConfigurationType type) {
         super(type);
@@ -26,4 +27,9 @@ public class ModuleRunConfigurationFactory extends ConfigurationFactory {
         return FACTORY_NAME;
     }
 
+    @NotNull
+    @Override
+    public String getId() {
+        return FACTORY_ID;
+    }
 }
