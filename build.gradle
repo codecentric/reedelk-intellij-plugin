@@ -50,7 +50,7 @@ jacoco {
 
 patchPluginXml {
     sinceBuild '191'
-    untilBuild '194'
+    untilBuild '202'
 }
 
 jar {
