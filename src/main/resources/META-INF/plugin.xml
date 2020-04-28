@@ -84,7 +84,9 @@
         <toolWindow id="com.reedelk.plugin.toolwindow.palette.component.properties" anchor="bottom"
                     factoryClass="com.reedelk.plugin.editor.properties.PropertiesPanelToolWindowFactory"/>
 
-        <completion.contributor language="any" implementationClass="com.reedelk.plugin.completion.ScriptCompletionContributor"/>
+        <completion.contributor language="any"
+                                implementationClass="com.reedelk.plugin.completion.ScriptCompletionContributor"
+                                order="first"/>
 
     </extensions>
 
