@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 public class RuntimeRunConfigurationFactory extends ConfigurationFactory {
 
     private static final String FACTORY_NAME = "Runtime Run Configuration Factory";
+    private static final String FACTORY_ID = "REEDELK_RUNTIME_RUN_CONFIGURATION_FACTORY";
 
     public RuntimeRunConfigurationFactory(@NotNull ConfigurationType type) {
         super(type);
@@ -24,5 +25,11 @@ public class RuntimeRunConfigurationFactory extends ConfigurationFactory {
     @Override
     public String getName() {
         return FACTORY_NAME;
+    }
+
+    @NotNull
+    @Override
+    public String getId() {
+        return FACTORY_ID;
     }
 }
