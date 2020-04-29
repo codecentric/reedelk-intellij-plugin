@@ -48,8 +48,8 @@ abstract class AbstractProjectBuilderHelper {
         }
     }
 
-    void createFromTemplate(Project project, String templateName, VirtualFile destinationDir) {
+    Optional<VirtualFile> createFromTemplate(Project project, String templateName, VirtualFile destinationDir) {
         Properties emptyProperties = new Properties();
-        createFromTemplate(project, templateName, emptyProperties, destinationDir);
+        return createFromTemplate(project, templateName, emptyProperties, destinationDir);
     }
 }

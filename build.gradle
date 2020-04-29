@@ -38,7 +38,7 @@ test {
 }
 
 intellij {
-    plugins = ["maven", "java"]
+    plugins = ["maven", "java", "groovy"]
 
     version '2020.1'
     type 'CE' // CE for (for Community Edition) or IU (for Ultimate edition)

@@ -10,21 +10,19 @@ import java.util.Stack;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
-/**
- * @see ScriptCompletionContributor
- */
-class CompletionProviderCommunityEdition extends AbstractCompletionProvider {
+public class TokenFinder {
 
-    private static final Logger LOG = Logger.getInstance(CompletionProviderCommunityEdition.class);
+    private static final Logger LOG = Logger.getInstance(TokenFinder.class);
 
-    @Override
-    Optional<String> getToken(@NotNull CompletionParameters parameters) {
+    private TokenFinder() {}
+
+    public static Optional<String> find(@NotNull CompletionParameters parameters) {
         String text = parameters.getPosition().getText();
         int offset = parameters.getOffset();
         return findLastToken(text, offset);
     }
 
-    Optional<String> findLastToken(String text, int offset) {
+    static Optional<String> findLastToken(String text, int offset) {
         try {
             return internalFindLastToken(text, offset);
         } catch (Exception exception) {
@@ -34,7 +32,7 @@ class CompletionProviderCommunityEdition extends AbstractCompletionProvider {
         }
     }
 
-    private Optional<String> internalFindLastToken(String text, int offset) {
+    private static Optional<String> internalFindLastToken(String text, int offset) {
         // Need to find space, or new line or it is position 0
         int count = offset;
         if (count == 0 || count == 1) return Optional.empty();
@@ -65,7 +63,7 @@ class CompletionProviderCommunityEdition extends AbstractCompletionProvider {
         return StringUtils.isBlank(token) ? Optional.empty() : Optional.of(token);
     }
 
-    private int consumeUntilFound(String text, int count) {
+    private static int consumeUntilFound(String text, int count) {
         Stack<Character> stack = new Stack<>();
         stack.push(')');
         while (!stack.isEmpty() && count > 1) {

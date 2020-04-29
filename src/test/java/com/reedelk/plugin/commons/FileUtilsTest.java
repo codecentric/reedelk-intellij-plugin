@@ -18,7 +18,7 @@ class FileUtilsTest {
         String actualFileName = FileUtils.appendExtensionToFileName(fileName, FileExtension.SCRIPT);
 
         // Then
-        assertThat(actualFileName).isEqualTo("MyScript.js");
+        assertThat(actualFileName).isEqualTo("MyScript.groovy");
     }
 
     @Test
@@ -30,19 +30,19 @@ class FileUtilsTest {
         String actualFileName = FileUtils.appendExtensionToFileName(fileName, FileExtension.SCRIPT);
 
         // Then
-        assertThat(actualFileName).isEqualTo("MyScript.java.js");
+        assertThat(actualFileName).isEqualTo("MyScript.java.groovy");
     }
 
     @Test
     void shouldNotAppendExtensionToFileName() {
         // Given
-        String fileName = "MyScript.js";
+        String fileName = "MyScript.groovy";
 
         // When
         String actualFileName = FileUtils.appendExtensionToFileName(fileName, FileExtension.SCRIPT);
 
         // Then
-        assertThat(actualFileName).isEqualTo("MyScript.js");
+        assertThat(actualFileName).isEqualTo("MyScript.groovy");
     }
 
     @Test

@@ -4,6 +4,7 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.reedelk.plugin.commons.DisableInspectionFor;
 import com.reedelk.plugin.commons.ToolWindowUtils;
 import com.reedelk.plugin.message.ReedelkBundle;
 import com.reedelk.plugin.template.ConfigProperties;
@@ -30,8 +31,9 @@ class HelloWorldProjectBuilderHelper extends AbstractProjectBuilderHelper {
             String configId = UUID.randomUUID().toString();
 
             // Script
-            createDirectory(root, PROJECT_RESOURCES_FOLDER + Script.RESOURCE_DIRECTORY).ifPresent(scriptDirectory ->
-                    createFromTemplate(project, HelloWorld.SCRIPT, scriptDirectory));
+            createDirectory(root, PROJECT_RESOURCES_FOLDER + Script.RESOURCE_DIRECTORY)
+                    .flatMap(scriptDirectory -> createFromTemplate(project, HelloWorld.SCRIPT, scriptDirectory))
+                    .ifPresent(virtualFile -> DisableInspectionFor.file(project, virtualFile));
 
             // Config
             createDirectory(root, PROJECT_RESOURCES_FOLDER + Config.RESOURCE_DIRECTORY).ifPresent(configDirectory -> {

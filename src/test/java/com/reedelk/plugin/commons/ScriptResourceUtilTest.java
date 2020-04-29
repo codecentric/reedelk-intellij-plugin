@@ -15,6 +15,6 @@ class ScriptResourceUtilTest {
         String normalized = ScriptResourceUtil.normalize(scriptFilename);
 
         // Then
-        assertThat(normalized).isEqualTo("dir1/dir2/function.js");
+        assertThat(normalized).isEqualTo("dir1/dir2/function.groovy");
     }
 }

@@ -1,35 +1,23 @@
 package com.reedelk.plugin.editor.properties.renderer.typedynamicvalue;
 
-import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorSettings;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.testFramework.LightVirtualFile;
-import com.reedelk.plugin.commons.DefaultConstants;
+import com.reedelk.plugin.commons.ScriptFileUtils;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.ScriptEditor;
-import com.reedelk.runtime.api.commons.StringUtils;
 
 import javax.swing.*;
 
 import static com.intellij.util.ui.JBUI.Borders;
-import static com.reedelk.plugin.commons.DefaultConstants.DEFAULT_DYNAMIC_VALUE_SCRIPT_VIRTUAL_FILE_NAME;
 import static com.reedelk.plugin.commons.Fonts.ScriptEditor.SCRIPT_EDITOR_FONT_SIZE;
 import static java.util.Collections.singletonList;
 
 public class DynamicValueScriptEditor extends ScriptEditor {
 
     public DynamicValueScriptEditor(Module module, ContainerContext context) {
-        super(module, emptyDocument(), context);
-    }
-
-    private static Document emptyDocument() {
-        VirtualFile myVirtualFile =
-                new LightVirtualFile(DEFAULT_DYNAMIC_VALUE_SCRIPT_VIRTUAL_FILE_NAME, DefaultConstants.SCRIPT_FILE_TYPE, StringUtils.EMPTY);
-        return FileDocumentManager.getInstance().getDocument(myVirtualFile);
+        super(module, ScriptFileUtils.createEmptyInMemoryDocument(), context);
     }
 
     @Override

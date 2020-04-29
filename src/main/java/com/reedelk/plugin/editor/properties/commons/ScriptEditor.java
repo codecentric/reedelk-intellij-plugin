@@ -1,7 +1,5 @@
 package com.reedelk.plugin.editor.properties.commons;
 
-import com.intellij.codeInsight.daemon.impl.analysis.FileHighlightingSetting;
-import com.intellij.codeInsight.daemon.impl.analysis.HighlightingSettingsPerFile;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorFactory;
@@ -9,14 +7,11 @@ import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.module.Module;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
 import com.reedelk.plugin.commons.DefaultConstants;
 import com.reedelk.runtime.api.commons.ScriptUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.util.Optional;
 
 import static com.intellij.openapi.command.WriteCommandAction.writeCommandAction;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
@@ -38,11 +33,6 @@ public class ScriptEditor extends DisposablePanel implements DocumentListener {
                         @NotNull ContainerContext context) {
         this.module = module;
         this.document = document;
-
-        PsiFile psiFile = PsiDocumentManager.getInstance(module.getProject()).getPsiFile(document);
-        Optional.ofNullable(psiFile).ifPresent(file ->
-                HighlightingSettingsPerFile.getInstance(module.getProject())
-                        .setHighlightingSettingForRoot(file, FileHighlightingSetting.SKIP_INSPECTION));
 
         this.editor = (EditorEx) EditorFactory.getInstance()
                 .createEditor(document, module.getProject(), DefaultConstants.SCRIPT_FILE_TYPE, false);

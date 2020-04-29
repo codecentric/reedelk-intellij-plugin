@@ -14,9 +14,9 @@ class ScriptFunctionDefinitionBuilderTest {
     @Test
     void shouldBuildCorrectlyBuildFunctionDefinitionWhenArgumentsGreaterThanZero() {
         // Given
-        String expectedFunction = "function myTestFunction(context, arg1, arg2, arg3) {\n" +
-                "\tvar text = 'myTestFunction function';\n" +
-                "\treturn text + ' result';\n" +
+        String expectedFunction = "def myTestFunction(context, arg1, arg2, arg3) {\n" +
+                "\tdef text = 'myTestFunction function'\n" +
+                "\treturn text + ' result'\n" +
                 "}";
         String  scriptFunctionName = "myTestFunction";
         ScriptSignatureDescriptor definition =
@@ -32,9 +32,9 @@ class ScriptFunctionDefinitionBuilderTest {
     @Test
     void shouldCorrectlyBuildFunctionDefinitionWhenArgumentsAreEmpty() {
         // Given
-        String expectedFunction = "function myTestFunction() {\n" +
-                "\tvar text = 'myTestFunction function';\n" +
-                "\treturn text + ' result';\n" +
+        String expectedFunction = "def myTestFunction() {\n" +
+                "\tdef text = 'myTestFunction function'\n" +
+                "\treturn text + ' result'\n" +
                 "}";
         String  scriptFunctionName = "myTestFunction";
         ScriptSignatureDescriptor definition =

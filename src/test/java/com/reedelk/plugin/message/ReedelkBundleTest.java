@@ -14,9 +14,9 @@ class ReedelkBundleTest {
     @Test
     void shouldCorrectlyFormatScriptFunctionWithArguments() {
         // Given
-        String expectedFunction = "function myFunction(context,message) {\n" +
-                "\tvar text = 'myFunction function';\n" +
-                "\treturn text + ' result';\n" +
+        String expectedFunction = "def myFunction(context,message) {\n" +
+                "\tdef text = 'myFunction function'\n" +
+                "\treturn text + ' result'\n" +
                 "}";
         List<String> scriptFunctionArguments = Arrays.asList("context","message");
         String joinedArguments = String.join(",", scriptFunctionArguments);
@@ -31,9 +31,9 @@ class ReedelkBundleTest {
     @Test
     void shouldCorrectlyFormatScriptFunctionWithoutArguments() {
         // Given
-        String expectedFunction = "function myFunction() {\n" +
-                "\tvar text = 'myFunction function';\n" +
-                "\treturn text + ' result';\n" +
+        String expectedFunction = "def myFunction() {\n" +
+                "\tdef text = 'myFunction function'\n" +
+                "\treturn text + ' result'\n" +
                 "}";
         List<String> scriptFunctionArguments = Collections.emptyList();
         String joinedArguments = String.join(",", scriptFunctionArguments);

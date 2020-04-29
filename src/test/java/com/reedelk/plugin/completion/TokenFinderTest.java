@@ -1,28 +1,20 @@
 package com.reedelk.plugin.completion;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class CompletionProviderCommunityEditionTest {
-
-    private CompletionProviderCommunityEdition provider;
-
-    @BeforeEach
-    void setUp() {
-        provider = new CompletionProviderCommunityEdition();
-    }
-
+class TokenFinderTest {
+    
     @Test
     void shouldCorrectlyFindLastTokenStartingWithTab() {
         // Given
         String text = "\tmess";
 
         // When
-        Optional<String> actual = provider.findLastToken(text, 5);
+        Optional<String> actual = TokenFinder.findLastToken(text, 5);
 
         //  Then
         assertThat(actual).hasValue("mess");
@@ -34,7 +26,7 @@ class CompletionProviderCommunityEditionTest {
         String text = "  messa";
 
         // When
-        Optional<String> actual = provider.findLastToken(text, 7);
+        Optional<String> actual = TokenFinder.findLastToken(text, 7);
 
         //  Then
         assertThat(actual).hasValue("messa");
@@ -46,7 +38,7 @@ class CompletionProviderCommunityEditionTest {
         String text = "\nmessa";
 
         // When
-        Optional<String> actual = provider.findLastToken(text, 6);
+        Optional<String> actual = TokenFinder.findLastToken(text, 6);
 
         //  Then
         assertThat(actual).hasValue("messa");
@@ -58,7 +50,7 @@ class CompletionProviderCommunityEditionTest {
         String text = "\n\tmessa";
 
         // When
-        Optional<String> actual = provider.findLastToken(text, 7);
+        Optional<String> actual = TokenFinder.findLastToken(text, 7);
 
         //  Then
         assertThat(actual).hasValue("messa");
@@ -76,7 +68,7 @@ class CompletionProviderCommunityEditionTest {
         int offset = 103;
 
         // When
-        Optional<String> actual = provider.findLastToken(text, offset);
+        Optional<String> actual = TokenFinder.findLastToken(text, offset);
 
         // Then
         assertThat(actual).hasValue("HttpPartBuilder.create().text('Mytext').");
@@ -94,7 +86,7 @@ class CompletionProviderCommunityEditionTest {
         int offset = 104;
 
         // When
-        Optional<String> actual = provider.findLastToken(text, offset);
+        Optional<String> actual = TokenFinder.findLastToken(text, offset);
 
         // Then
         assertThat(actual).hasValue("HttpPartBuilder.create().text('My text').");
@@ -108,7 +100,7 @@ class CompletionProviderCommunityEditionTest {
         int offset = 16;
 
         // When
-        Optional<String> actual = provider.findLastToken(text, offset);
+        Optional<String> actual = TokenFinder.findLastToken(text, offset);
 
         // Then
         assertThat(actual).isNotPresent();
@@ -122,7 +114,7 @@ class CompletionProviderCommunityEditionTest {
         int offset = 21;
 
         // When
-        Optional<String> actual = provider.findLastToken(text, offset);
+        Optional<String> actual = TokenFinder.findLastToken(text, offset);
 
         // Then
         assertThat(actual).contains("Util.text('My text').");
@@ -136,7 +128,7 @@ class CompletionProviderCommunityEditionTest {
         int offset = 36;
 
         // When
-        Optional<String> actual = provider.findLastToken(text, offset);
+        Optional<String> actual = TokenFinder.findLastToken(text, offset);
 
         // Then
         assertThat(actual).contains("Util.text(['one text', 'two text']).");

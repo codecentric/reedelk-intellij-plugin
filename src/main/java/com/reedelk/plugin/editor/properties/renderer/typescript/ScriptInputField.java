@@ -5,6 +5,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.module.Module;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.module.descriptor.model.PropertyDescriptor;
+import com.reedelk.plugin.commons.DisableInspectionFor;
 import com.reedelk.plugin.commons.PopupUtils;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
@@ -69,6 +70,10 @@ public class ScriptInputField extends DisposablePanel implements ScriptServiceIm
             shouldOpenEditDialog = true;
         }
         ScriptService.getInstance(module).fetchScriptResources();
+
+        // We disable the inspection for the file otherwise the user gets
+        // inspection warnings then the script file is opened outside the Edit dialog.
+        DisableInspectionFor.file(module, resource.getPath());
     }
 
     @Override

@@ -1,9 +1,7 @@
 package com.reedelk.plugin.commons;
 
-import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.reedelk.runtime.commons.FileExtension;
 
 import java.nio.file.Paths;
 
@@ -12,11 +10,12 @@ public class DefaultConstants {
     private DefaultConstants() {
     }
 
+    public static final FileType SCRIPT_FILE_TYPE = FileTypeManager.getInstance().getFileTypeByExtension("reedelk");
+    public static final String SCRIPT_TMP_FILE_NAME = "tmp." + SCRIPT_FILE_TYPE.getDefaultExtension();
+
     public static final String PROJECT_SOURCES_FOLDER = Paths.get("src").toString();
     public static final String PROJECT_RESOURCES_FOLDER = Paths.get("src", "main", "resources").toString();
-    public static final String DEFAULT_DYNAMIC_VALUE_SCRIPT_VIRTUAL_FILE_NAME = "tmp." + FileExtension.SCRIPT.value();
-    public static final FileType SCRIPT_FILE_TYPE = FileTypeManager.getInstance().getFileTypeByExtension(FileExtension.SCRIPT.value());
-    public static final Language SCRIPT_LANGUAGE = Language.findLanguageByID("Groovy");
+
     public static final int DEFAULT_CHECK_ERROR_DELAY_MILLIS = 500;
 
     public static class RestApi {

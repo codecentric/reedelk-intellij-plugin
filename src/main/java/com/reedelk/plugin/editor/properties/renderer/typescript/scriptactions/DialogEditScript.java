@@ -1,5 +1,6 @@
 package com.reedelk.plugin.editor.properties.renderer.typescript.scriptactions;
 
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.Module;
@@ -8,6 +9,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.PluginModuleUtils;
+import com.reedelk.plugin.commons.ScriptFileUtils;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import org.jetbrains.annotations.NotNull;
@@ -28,21 +30,39 @@ public class DialogEditScript extends DialogWrapper {
 
     private final String scriptFilePathAndName;
     private final DisposablePanel editorPanel;
-
+    private final Module module;
+    private Document tmpDocument;
+    private Document originalDocument;
 
     DialogEditScript(@NotNull Module module, String scriptFilePathAndName, ContainerContext context) {
         super(module.getProject(), false);
+        this.module = module;
         setTitle(message("script.dialog.edit.title"));
         setResizable(true);
 
         this.scriptFilePathAndName = scriptFilePathAndName;
         this.editorPanel = PluginModuleUtils.getScriptsFolder(module)
                 .flatMap(scriptsFolder -> ofNullable(VfsUtil.findFile(Paths.get(scriptsFolder, scriptFilePathAndName), true))).map((Function<VirtualFile, DisposablePanel>) scriptVirtualFile -> {
-                    Document document = FileDocumentManager.getInstance().getDocument(scriptVirtualFile);
-                    return new ScriptEditorDefault(module, document, context);
+                    originalDocument = FileDocumentManager.getInstance().getDocument(scriptVirtualFile);
+                    // We create a tmp virtual Reedelk file so that we can workaround,
+                    // wrong autocompletion for Groovy files inside expression fields and script editors.
+                    tmpDocument = ScriptFileUtils.createInMemoryDocumentWithContent(originalDocument.getText());
+                    return new ScriptEditorDefault(module, tmpDocument, context);
                 }).orElse(null);
 
         init();
+    }
+
+    @Override
+    protected void doOKAction() {
+        super.doOKAction();
+        WriteCommandAction.runWriteCommandAction(module.getProject(), new Runnable() {
+            @Override
+            public void run() {
+                // Whenever we are done, we must write back the updated script in the file system file.
+                originalDocument.setText(tmpDocument.getText());
+            }
+        });
     }
 
     @NotNull

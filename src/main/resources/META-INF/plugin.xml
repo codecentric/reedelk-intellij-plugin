@@ -84,9 +84,18 @@
         <toolWindow id="com.reedelk.plugin.toolwindow.palette.component.properties" anchor="bottom"
                     factoryClass="com.reedelk.plugin.editor.properties.PropertiesPanelToolWindowFactory"/>
 
-        <completion.contributor language="Groovy"
-                                implementationClass="com.reedelk.plugin.completion.ScriptCompletionContributor"
+        <fileType name="Reedelk" implementationClass="com.reedelk.plugin.language.ReedelkFileType"
+                  fieldName="INSTANCE" language="reedelk" extensions="reedelk"/>
+
+        <lang.syntaxHighlighterFactory language="reedelk"
+                                       implementationClass="com.reedelk.plugin.language.ReedelkSyntaxHighlighterFactory"/>
+
+        <completion.contributor language="any"
+                                implementationClass="com.reedelk.plugin.completion.GroovyCompletionContributor"
                                 order="first"/>
+
+        <lang.parserDefinition language="reedelk"
+                               implementationClass="com.reedelk.plugin.language.ReedelkParserDefinition"/>
 
     </extensions>
 
