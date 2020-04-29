@@ -56,7 +56,9 @@ public class DynamicValueField extends DisposablePanel {
                     switchComponent(inputFieldContainer, scriptContainer);
                     listener.onChange(inputFieldAdapter.getValue());
                 });
-        return ContainerFactory.createLabelNextToComponentWithOuterBorder(codeIcon, editorComponent);
+
+        DisposablePanel container = ContainerFactory.createLabelNextToComponentWithOuterBorder(codeIcon, editorComponent);
+        return new FixedHeightPanel(container);
     }
 
     private DisposablePanel createInputFieldContainer() {
@@ -68,7 +70,9 @@ public class DynamicValueField extends DisposablePanel {
         inputFieldAdapter.setMargin(JBUI.emptyInsets());
         inputFieldAdapter.setBorder(JBUI.Borders.empty());
         inputFieldAdapter.setFont(Fonts.ScriptEditor.DYNAMIC_FIELD_FONT_SIZE);
-        return ContainerFactory.createLabelNextToComponentWithOuterBorder(textIcon, inputFieldAdapter.getComponent());
+        DisposablePanel container =
+                ContainerFactory.createLabelNextToComponentWithOuterBorder(textIcon, inputFieldAdapter.getComponent());
+        return new FixedHeightPanel(container);
     }
 
     private void switchComponent(DisposablePanel visible, DisposablePanel invisible) {
@@ -84,5 +88,36 @@ public class DynamicValueField extends DisposablePanel {
         this.listener = listener;
         this.editor.setListener(listener);
         this.inputFieldAdapter.addListener(listener);
+    }
+
+    private static class FixedHeightPanel extends DisposablePanel {
+
+        private static final int HEIGHT = 24;
+
+        public FixedHeightPanel(JComponent content) {
+            setLayout(new BorderLayout());
+            add(content, CENTER);
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            Dimension size = super.getPreferredSize();
+            size.height = HEIGHT;
+            return size;
+        }
+
+        @Override
+        public Dimension getMaximumSize() {
+            Dimension size = super.getMaximumSize();
+            size.height = HEIGHT;
+            return size;
+        }
+
+        @Override
+        public Dimension getMinimumSize() {
+            Dimension size = super.getMinimumSize();
+            size.height = HEIGHT;
+            return size;
+        }
     }
 }

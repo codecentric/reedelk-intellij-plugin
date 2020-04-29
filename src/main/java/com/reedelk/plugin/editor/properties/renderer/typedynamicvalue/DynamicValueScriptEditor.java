@@ -25,6 +25,7 @@ public class DynamicValueScriptEditor extends ScriptEditor {
         editor.setOneLineMode(true);
         editor.setBorder(Borders.empty());
         editor.getScrollPane().setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        editor.getScrollPane().setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         EditorColorsScheme colorsScheme = editor.getColorsScheme();
         colorsScheme.setEditorFontSize(SCRIPT_EDITOR_FONT_SIZE);
