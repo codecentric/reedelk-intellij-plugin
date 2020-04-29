@@ -7,6 +7,9 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class PredefinedPropertyDescriptor {
 
+    private PredefinedPropertyDescriptor() {
+    }
+
     public static final PropertyDescriptor FLOW_TITLE = PropertyDescriptor.builder()
             .description(message("flow.title.description"))
             .displayName(message("flow.metadata.title"))

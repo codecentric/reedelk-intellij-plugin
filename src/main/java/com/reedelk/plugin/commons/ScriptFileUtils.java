@@ -11,6 +11,9 @@ import static com.reedelk.plugin.commons.DefaultConstants.SCRIPT_TMP_FILE_NAME;
 
 public class ScriptFileUtils {
 
+    private ScriptFileUtils() {
+    }
+
     public static Document createEmptyInMemoryDocument() {
         return createInMemoryDocumentWithContent(StringUtils.EMPTY);
     }

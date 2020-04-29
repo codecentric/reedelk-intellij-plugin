@@ -10,6 +10,9 @@ class TokenNormalizer {
 
     private static final String[] EMPTY_ARRAY = new String[]{EMPTY};
 
+    private TokenNormalizer() {
+    }
+
     static String[] normalize(String input) {
         String result = input.replaceAll("\\n", EMPTY);
         result = result.replaceAll("\\t", EMPTY);

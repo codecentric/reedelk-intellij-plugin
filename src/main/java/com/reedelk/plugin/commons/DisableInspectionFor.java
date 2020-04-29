@@ -16,6 +16,9 @@ import java.util.Optional;
 
 public class DisableInspectionFor {
 
+    private DisableInspectionFor() {
+    }
+
     public static void file(Module module, String filePath) {
         PluginModuleUtils.getScriptsFolder(module).ifPresent(scriptsFolder -> {
             VirtualFile theFile = VfsUtil.findFile(Paths.get(scriptsFolder, filePath), true);
