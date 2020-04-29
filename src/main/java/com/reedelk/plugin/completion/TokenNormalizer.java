@@ -1,12 +1,29 @@
-package com.reedelk.plugin.service.module.impl.completion;
+package com.reedelk.plugin.completion;
+
+import com.reedelk.plugin.commons.ArrayUtils;
 
 import java.util.Stack;
 
-public class InputTokenizer {
+import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 
-    private InputTokenizer() {}
+class TokenNormalizer {
 
-    public static String[] tokenize(String input) {
+    private static final String[] EMPTY_ARRAY = new String[]{EMPTY};
+
+    static String[] normalize(String input) {
+        String result = input.replaceAll("\\n", EMPTY);
+        result = result.replaceAll("\\t", EMPTY);
+        result = result.replaceAll(" ", EMPTY);
+
+        String[] tokens = tokenize(result);
+        if (input.endsWith(".")) {
+            tokens = ArrayUtils.concatenate(tokens, EMPTY_ARRAY);
+        }
+
+        return tokens;
+    }
+
+    private static String[] tokenize(String input) {
         StringBuilder builder = new StringBuilder();
         Stack<Character> stack = new Stack<>();
         char c;

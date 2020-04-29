@@ -55,15 +55,15 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
 
     @Override
     public synchronized List<Suggestion> contextVariablesOf(String componentFullyQualifiedName) {
-        return autocompleteSuggestionOf(componentFullyQualifiedName, StringUtils.EMPTY);
+        return autocompleteSuggestionOf(componentFullyQualifiedName, new String[]{StringUtils.EMPTY});
     }
 
     @Override
-    public synchronized List<Suggestion> autocompleteSuggestionOf(String componentFullyQualifiedName, String token) {
+    public synchronized List<Suggestion> autocompleteSuggestionOf(String componentFullyQualifiedName, String[] tokens) {
         SuggestionTree componentSuggestionTree =
                 componentQualifiedNameSuggestionsMap.getOrDefault(componentFullyQualifiedName, defaultComponentSuggestions);
-        List<Suggestion> componentSuggestions = componentSuggestionTree.autocomplete(token);
-        List<Suggestion> autocomplete = moduleSuggestions.autocomplete(token);
+        List<Suggestion> componentSuggestions = componentSuggestionTree.autocomplete(tokens);
+        List<Suggestion> autocomplete = moduleSuggestions.autocomplete(tokens);
         componentSuggestions.addAll(autocomplete);
         return componentSuggestions;
     }

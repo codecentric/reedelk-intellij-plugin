@@ -18,7 +18,7 @@ class SuggestionTreeTest {
         suggestionTree.add(suggestions);
 
         // When
-        List<Suggestion> actualSuggestions = suggestionTree.autocomplete("message.");
+        List<Suggestion> actualSuggestions = suggestionTree.autocomplete(new String[]{"message", ""});
 
         // Then
         PluginAssertion.assertThat(actualSuggestions)
@@ -33,7 +33,7 @@ class SuggestionTreeTest {
         suggestionTree.add(autocompleteItems);
 
         // When
-        List<Suggestion> suggestions = suggestionTree.autocomplete("Ut");
+        List<Suggestion> suggestions = suggestionTree.autocomplete(new String[] {"Ut"});
 
         // Then
         PluginAssertion.assertThat(suggestions)
@@ -49,7 +49,7 @@ class SuggestionTreeTest {
         suggestionTree.add(autocompleteItems);
 
         // When
-        List<Suggestion> suggestions = suggestionTree.autocomplete("");
+        List<Suggestion> suggestions = suggestionTree.autocomplete(new String[]{""});
 
         // Then
         PluginAssertion.assertThat(suggestions)
@@ -64,7 +64,7 @@ class SuggestionTreeTest {
         SuggestionTree suggestionTree = new SuggestionTree(new HashMap<>());
 
         // When
-        List<Suggestion> suggestions = suggestionTree.autocomplete("");
+        List<Suggestion> suggestions = suggestionTree.autocomplete(new String[]{""});
 
         // Then
         PluginAssertion.assertThat(suggestions)
@@ -79,7 +79,7 @@ class SuggestionTreeTest {
         suggestionTree.add(autocompleteItems);
 
         // When
-        List<Suggestion> autocomplete = suggestionTree.autocomplete("Util.");
+        List<Suggestion> autocomplete = suggestionTree.autocomplete(new String[]{"Util", ""});
 
         // Then
         PluginAssertion.assertThat(autocomplete)
@@ -96,7 +96,7 @@ class SuggestionTreeTest {
         suggestionTree.add(autocompleteItems);
 
         // When
-        List<Suggestion> autocomplete = suggestionTree.autocomplete("Util.u");
+        List<Suggestion> autocomplete = suggestionTree.autocomplete(new String[]{"Util","u"});
 
         // Then
         PluginAssertion.assertThat(autocomplete)
@@ -112,7 +112,7 @@ class SuggestionTreeTest {
         suggestionTree.add(autocompleteItems);
 
         // When
-        List<Suggestion> autocomplete = suggestionTree.autocomplete("U.tm");
+        List<Suggestion> autocomplete = suggestionTree.autocomplete(new String[]{"U", "tm"});
 
         // Then
         PluginAssertion.assertThat(autocomplete).isEmpty();

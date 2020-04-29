@@ -32,37 +32,32 @@ public class GroovyCompletionContributor extends CompletionContributor {
     }
 
     private void computeResultSet(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result, String moduleName, String componentFullyQualifiedName, Project project) {
-        if (!TokenFinder.find(parameters).isPresent()) {
-            return;
-        }
-        String token = TokenFinder.find(parameters).get();
         Module module = ModuleManager.getInstance(project).findModuleByName(moduleName);
         if (module == null) return;
 
-        CompletionService instance = CompletionService.getInstance(module);
-        List<Suggestion> suggestions = instance.autocompleteSuggestionOf(componentFullyQualifiedName, token);
-
-        addSuggestions(result, suggestions);
+        TokenFinder.find(parameters).ifPresent(tokens -> {
+            CompletionService instance = CompletionService.getInstance(module);
+            List<Suggestion> suggestions = instance.autocompleteSuggestionOf(componentFullyQualifiedName, tokens);
+            suggestions.forEach(suggestion -> addSuggestion(result, suggestion));
+        });
     }
 
-    private void addSuggestions(@NotNull CompletionResultSet result, List<Suggestion> suggestions) {
-        suggestions.forEach(suggestion -> {
-            final LookupElementBuilder lookupBuilder =
-                    LookupElementBuilder.create(suggestion.getSuggestion())
-                            .withPresentableText(suggestion.getSignature())
-                            .withTypeText(suggestion.getReturnType())
-                            .withIcon(suggestion.getItemType() == AutocompleteItemType.FUNCTION ? Method : Variable);
+    private void addSuggestion(@NotNull CompletionResultSet result, Suggestion suggestion) {
+        final LookupElementBuilder lookupBuilder =
+                LookupElementBuilder.create(suggestion.getSuggestion())
+                        .withPresentableText(suggestion.getSignature())
+                        .withTypeText(suggestion.getReturnType())
+                        .withIcon(suggestion.getItemType() == AutocompleteItemType.FUNCTION ? Method : Variable);
 
-            // For some suggestions like for .put('') we must adjust the caret back by X positions.
-            // If the suggestion definition has defined an offset, then we add an insert handler
-            // to move the caret back by X positions accordingly.
-            LookupElementBuilder finalLookupBuilder =
-                    lookupBuilder.withInsertHandler((insertionContext, item) -> {
-                        int currentOffset = insertionContext.getEditor().getCaretModel().getOffset();
-                        insertionContext.getEditor().getCaretModel().moveToOffset(currentOffset - suggestion.getCursorOffset());
-                    });
+        // For some suggestions like for .put('') we must adjust the caret back by X positions.
+        // If the suggestion definition has defined an offset, then we add an insert handler
+        // to move the caret back by X positions accordingly.
+        LookupElementBuilder finalLookupBuilder =
+                lookupBuilder.withInsertHandler((insertionContext, item) -> {
+                    int currentOffset = insertionContext.getEditor().getCaretModel().getOffset();
+                    insertionContext.getEditor().getCaretModel().moveToOffset(currentOffset - suggestion.getCursorOffset());
+                });
 
-            result.addElement(finalLookupBuilder);
-        });
+        result.addElement(finalLookupBuilder);
     }
 }

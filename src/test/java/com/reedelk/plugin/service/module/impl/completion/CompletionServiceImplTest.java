@@ -57,7 +57,7 @@ class CompletionServiceImplTest {
     @Test
     void shouldReturnEmptyCompletionTokens() {
         // Given
-        String searchToken = "s";
+        String[] searchToken = new String[]{"s"};
 
         // When
         List<Suggestion> suggestions = service.autocompleteSuggestionOf(COMPONENT_QUALIFIED_NAME, searchToken);
@@ -69,7 +69,7 @@ class CompletionServiceImplTest {
     @Test
     void shouldReturnDefaultMessageCompletionToken() {
         // Given
-        String searchToken = "mes";
+        String[] searchToken = new String[] {"mes"};
 
         // When
         List<Suggestion> suggestions = service.autocompleteSuggestionOf(COMPONENT_QUALIFIED_NAME, searchToken);
@@ -102,7 +102,7 @@ class CompletionServiceImplTest {
         service.updateAutocomplete(Collections.singletonList(moduleDescriptor));
 
         // When
-        List<Suggestion> suggestions = service.autocompleteSuggestionOf(COMPONENT_QUALIFIED_NAME, "va");
+        List<Suggestion> suggestions = service.autocompleteSuggestionOf(COMPONENT_QUALIFIED_NAME, new String[]{"va"});
 
         // Then
         PluginAssertion.assertThat(suggestions)

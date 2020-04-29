@@ -16,15 +16,15 @@ public class TokenFinder {
 
     private TokenFinder() {}
 
-    public static Optional<String> find(@NotNull CompletionParameters parameters) {
+    public static Optional<String[]> find(@NotNull CompletionParameters parameters) {
         String text = parameters.getPosition().getText();
         int offset = parameters.getOffset();
         return findLastToken(text, offset);
     }
 
-    static Optional<String> findLastToken(String text, int offset) {
+    static Optional<String[]> findLastToken(String text, int offset) {
         try {
-            return internalFindLastToken(text, offset);
+            return internalFindLastToken(text, offset).map(TokenNormalizer::normalize);
         } catch (Exception exception) {
             String message = message("module.completion.provider.error.token", exception.getMessage());
             LOG.warn(message, exception);
@@ -50,6 +50,13 @@ public class TokenFinder {
                 count = consumeUntilFound(text, count - 1);
             }
 
+            if (c == '.') {
+                Optional<Integer> isBuilder = existsDotBefore(text, count);
+                if (isBuilder.isPresent()) {
+                    count = isBuilder.get() + 1;
+                }
+            }
+
             // It is the end of the token
             if (c == '\n' || c == ' ' || c == '\t') {
                 index = count + 1;
@@ -61,6 +68,17 @@ public class TokenFinder {
         String token = text.substring(index, offset);
         // IF it is blank, // Might be all \n\n\n up to it, hence we can't provide any suggestion.
         return StringUtils.isBlank(token) ? Optional.empty() : Optional.of(token);
+    }
+
+    private static Optional<Integer> existsDotBefore(String text, int count) {
+        int current = count - 1;
+        char c = text.charAt(current);
+        while ((c == '\n' || c == ' ' || c == '\t') && current > 0) {
+            current--;
+            c = text.charAt(current);
+            if (c == ')') return Optional.of(current);
+        }
+        return Optional.empty();
     }
 
     private static int consumeUntilFound(String text, int count) {

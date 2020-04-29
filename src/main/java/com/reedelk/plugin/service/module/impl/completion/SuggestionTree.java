@@ -1,8 +1,5 @@
 package com.reedelk.plugin.service.module.impl.completion;
 
-import com.reedelk.plugin.commons.ArrayUtils;
-import com.reedelk.runtime.api.commons.StringUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +9,6 @@ import static java.util.stream.Collectors.groupingBy;
 
 public class SuggestionTree {
 
-    private static final String[] EMPTY = new String[]{StringUtils.EMPTY};
     private static final Trie UNKNOWN_TYPE_TRIE = new Trie();
 
     private final Trie root = new Trie();
@@ -26,13 +22,7 @@ public class SuggestionTree {
         return typeTriesMap;
     }
 
-    public List<Suggestion> autocomplete(String input) {
-        String[] tokens = InputTokenizer.tokenize(input);
-
-        if (input.endsWith(".")) {
-            tokens = ArrayUtils.concatenate(tokens, EMPTY);
-        }
-
+    public List<Suggestion> autocomplete(String[] tokens) {
         Trie current = root;
         List<Suggestion> autocompleteResults = new ArrayList<>();
         for (int i = 0; i < tokens.length; i++) {
