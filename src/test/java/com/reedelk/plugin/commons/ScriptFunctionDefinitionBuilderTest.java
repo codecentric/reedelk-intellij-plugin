@@ -1,12 +1,14 @@
 package com.reedelk.plugin.commons;
 
-import com.reedelk.module.descriptor.model.ScriptSignatureDescriptor;
+import com.reedelk.module.descriptor.model.property.ScriptSignatureArgument;
+import com.reedelk.module.descriptor.model.property.ScriptSignatureDescriptor;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static com.reedelk.plugin.testutils.ObjectFactories.createScriptSignatureDefinition;
-import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ScriptFunctionDefinitionBuilderTest {
@@ -19,8 +21,13 @@ class ScriptFunctionDefinitionBuilderTest {
                 "\treturn text + ' result'\n" +
                 "}";
         String  scriptFunctionName = "myTestFunction";
-        ScriptSignatureDescriptor definition =
-                createScriptSignatureDefinition(asList("context", "arg1", "arg2", "arg3"));
+
+        List<ScriptSignatureArgument> descriptor = Arrays.asList(
+                new ScriptSignatureArgument("context", "Type1"),
+                new ScriptSignatureArgument("arg1", "Type2"),
+                new ScriptSignatureArgument("arg2", "Type3"),
+                new ScriptSignatureArgument("arg3", "Type4"));
+        ScriptSignatureDescriptor definition = createScriptSignatureDefinition(descriptor);
 
         // When
         String scriptFunctionDefinition = ScriptFunctionDefinitionBuilder.from(scriptFunctionName, definition);

@@ -1,8 +1,8 @@
 package com.reedelk.plugin.configuration;
 
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.Shared;
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.property.Shared;
 import com.reedelk.plugin.commons.TypeObjectFactory;
 import com.reedelk.plugin.component.serializer.ConfigurationSerializer;
 import com.reedelk.plugin.fixture.ComponentNode1;
@@ -14,7 +14,7 @@ import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.util.Collections;
 
-import static com.reedelk.module.descriptor.model.TypeObjectDescriptor.TypeObject;
+import static com.reedelk.module.descriptor.model.property.ObjectDescriptor.TypeObject;
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.Primitives;
 import static com.reedelk.plugin.fixture.Json.Configuration.*;
 import static com.reedelk.plugin.testutils.ObjectFactories.createTypeObjectDescriptor;
@@ -157,7 +157,7 @@ class SerializerTest {
                     .displayName("Algorithm")
                     .build();
 
-    private TypeObjectDescriptor keyStoreConfigObjectType = createTypeObjectDescriptor(
+    private ObjectDescriptor keyStoreConfigObjectType = createTypeObjectDescriptor(
             ComponentNode3.class.getName(), Collections.singletonList(algorithm));
 
     private PropertyDescriptor keyStoreConfigDescriptor =
@@ -182,7 +182,7 @@ class SerializerTest {
                     .build();
 
 
-    private TypeObjectDescriptor securityConfigObjectType = createTypeObjectDescriptor(ComponentNode2.class.getName(),
+    private ObjectDescriptor securityConfigObjectType = createTypeObjectDescriptor(ComponentNode2.class.getName(),
             asList(userName, password, keyStoreConfigDescriptor));
 
     private PropertyDescriptor securityConfigDescriptor =
@@ -192,6 +192,6 @@ class SerializerTest {
                     .displayName("Security config")
                     .build();
 
-    private TypeObjectDescriptor configObjectDescriptor = createTypeObjectDescriptor(
+    private ObjectDescriptor configObjectDescriptor = createTypeObjectDescriptor(
             ComponentNode1.class.getName(), asList(hostProperty, portProperty, keepAlive, securityConfigDescriptor), Shared.YES);
 }

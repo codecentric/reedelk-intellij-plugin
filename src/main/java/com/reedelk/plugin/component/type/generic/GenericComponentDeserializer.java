@@ -1,6 +1,6 @@
 package com.reedelk.plugin.component.type.generic;
 
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.component.deserializer.ComponentDataHolderDeserializer;
 import com.reedelk.plugin.graph.FlowGraph;

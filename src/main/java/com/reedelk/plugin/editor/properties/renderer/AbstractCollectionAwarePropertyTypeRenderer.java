@@ -1,8 +1,8 @@
 package com.reedelk.plugin.editor.properties.renderer;
 
 import com.intellij.ui.JBColor;
-import com.reedelk.module.descriptor.model.CollectionAwareDescriptor;
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.property.CollectionAwareDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.commons.Sizes;
 import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.runtime.api.annotation.TabGroup;

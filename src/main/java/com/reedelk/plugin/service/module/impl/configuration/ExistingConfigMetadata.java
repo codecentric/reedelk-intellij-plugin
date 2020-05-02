@@ -1,8 +1,8 @@
 package com.reedelk.plugin.service.module.impl.configuration;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import com.reedelk.module.descriptor.model.ComponentDataHolder;
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import org.jetbrains.annotations.NotNull;
 
 public class ExistingConfigMetadata extends ConfigMetadata {
@@ -11,7 +11,7 @@ public class ExistingConfigMetadata extends ConfigMetadata {
 
     public ExistingConfigMetadata(@NotNull VirtualFile file,
                                   @NotNull ComponentDataHolder dataHolder,
-                                  @NotNull TypeObjectDescriptor configObjectDescriptor) {
+                                  @NotNull ObjectDescriptor configObjectDescriptor) {
         super(dataHolder, configObjectDescriptor);
         this.file = file;
     }

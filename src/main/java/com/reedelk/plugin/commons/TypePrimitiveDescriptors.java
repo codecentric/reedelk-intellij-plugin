@@ -1,15 +1,15 @@
 package com.reedelk.plugin.commons;
 
-import com.reedelk.module.descriptor.model.TypePrimitiveDescriptor;
+import com.reedelk.module.descriptor.model.property.PrimitiveDescriptor;
 
 public class TypePrimitiveDescriptors {
 
     private TypePrimitiveDescriptors() {
     }
 
-    public static final TypePrimitiveDescriptor STRING;
+    public static final PrimitiveDescriptor STRING;
     static {
-        STRING = new TypePrimitiveDescriptor();
+        STRING = new PrimitiveDescriptor();
         STRING.setType(String.class);
     }
 }

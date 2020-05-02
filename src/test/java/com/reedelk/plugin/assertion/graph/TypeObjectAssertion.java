@@ -1,16 +1,17 @@
 package com.reedelk.plugin.assertion.graph;
 
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
+
 import java.math.BigDecimal;
 
-import static com.reedelk.module.descriptor.model.TypeObjectDescriptor.TypeObject;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TypeObjectAssertion {
 
-    private final TypeObject typeObject;
+    private final ObjectDescriptor.TypeObject typeObject;
     private final NodeAssertion parent;
 
-    TypeObjectAssertion(TypeObject typeObject, NodeAssertion parent) {
+    TypeObjectAssertion(ObjectDescriptor.TypeObject typeObject, NodeAssertion parent) {
         this.typeObject = typeObject;
         this.parent = parent;
     }

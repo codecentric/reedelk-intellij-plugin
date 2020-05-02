@@ -1,9 +1,9 @@
 package com.reedelk.plugin.component.deserializer;
 
-import com.reedelk.module.descriptor.model.ComponentDataHolder;
-import com.reedelk.module.descriptor.model.TypeDescriptor;
-import com.reedelk.module.descriptor.model.TypeMapDescriptor;
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
+import com.reedelk.module.descriptor.model.property.MapDescriptor;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyTypeDescriptor;
 import com.reedelk.plugin.converter.ValueConverter;
 import com.reedelk.plugin.converter.ValueConverterProvider;
 import org.jetbrains.annotations.NotNull;
@@ -25,19 +25,19 @@ class TypeMapDeserializer {
     void deserialize(@NotNull JSONObject componentJsonObject,
                      @NotNull ComponentDataHolder componentData,
                      @NotNull String propertyName,
-                     @NotNull TypeMapDescriptor propertyType) {
+                     @NotNull MapDescriptor propertyType) {
 
         // The deserialization depends on the value type of the map.
         // The value type could be a complex or a primitive type.
-        TypeDescriptor valueType = propertyType.getValueType();
-        if (valueType instanceof TypeObjectDescriptor) {
+        PropertyTypeDescriptor valueType = propertyType.getValueType();
+        if (valueType instanceof ObjectDescriptor) {
             // The user defined map looks like: Map<String, OpenApiResponse> where OpenApiResponse is a user
             // defined type implementing 'implementor' interface.
-            Map<String, TypeObjectDescriptor.TypeObject> keyAndValues = new HashMap<>();
+            Map<String, ObjectDescriptor.TypeObject> keyAndValues = new HashMap<>();
             componentData.set(propertyName, keyAndValues);
 
             // Process each response type.
-            TypeObjectDescriptor typeObjectDescriptor = (TypeObjectDescriptor) valueType;
+            ObjectDescriptor typeObjectDescriptor = (ObjectDescriptor) valueType;
 
             if (componentJsonObject.has(propertyName) && !componentJsonObject.isNull(propertyName)) {
                 JSONObject jsonObject = componentJsonObject.getJSONObject(propertyName);
@@ -56,12 +56,11 @@ class TypeMapDeserializer {
 
     static class MapComponentDataHolder implements ComponentDataHolder {
 
-        private final Map<String, TypeObjectDescriptor.TypeObject> delegate;
+        private final Map<String, ObjectDescriptor.TypeObject> delegate;
 
-        public MapComponentDataHolder(Map<String, TypeObjectDescriptor.TypeObject> delegate) {
+        public MapComponentDataHolder(Map<String, ObjectDescriptor.TypeObject> delegate) {
             this.delegate = delegate;
         }
-
 
         @Override
         public List<String> keys() {
@@ -76,7 +75,7 @@ class TypeMapDeserializer {
 
         @Override
         public void set(String key, Object value) {
-            delegate.put(key, (TypeObjectDescriptor.TypeObject) value);
+            delegate.put(key, (ObjectDescriptor.TypeObject) value);
         }
 
         @Override

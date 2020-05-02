@@ -1,11 +1,8 @@
 package com.reedelk.plugin.service.module.impl.completion;
 
-import com.reedelk.module.descriptor.model.AutocompleteItemDescriptor;
-import com.reedelk.module.descriptor.model.AutocompleteTypeDescriptor;
-import com.reedelk.runtime.api.autocomplete.AutocompleteItemType;
-
 public class SampleSuggestions {
 
+    /**
     private static final AutocompleteTypeDescriptor UTIL_AUTOCOMPLETE_TYPE = AutocompleteTypeDescriptor.create()
             .type("Util")
             .global(true)
@@ -37,5 +34,6 @@ public class SampleSuggestions {
             .itemType(AutocompleteItemType.FUNCTION)
             .build();
     public static final Suggestion UUID = Suggestion.create(UUID_ITEM);
+     */
 
 }

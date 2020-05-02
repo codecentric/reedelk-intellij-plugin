@@ -3,9 +3,9 @@ package com.reedelk.plugin.service.module.impl.component;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
-import com.reedelk.module.descriptor.ModuleDescriptor;
 import com.reedelk.module.descriptor.ModuleDescriptorException;
 import com.reedelk.module.descriptor.analyzer.ModuleDescriptorAnalyzer;
+import com.reedelk.module.descriptor.model.ModuleDescriptor;
 import com.reedelk.plugin.commons.ExcludedArtifactsFromModuleSync;
 import com.reedelk.plugin.executor.AsyncProgressTask;
 import com.reedelk.plugin.maven.MavenUtils;
@@ -43,10 +43,9 @@ class LoadMavenDependenciesModuleDescriptorsTask implements AsyncProgressTask {
                     .filter(ExcludedArtifactsFromModuleSync.predicate())
                     .filter(artifact -> ModuleUtils.isModule(artifact.getFile()))
                     .map(artifact -> artifact.getFile().getPath()).collect(toList())
-                    .forEach(jarFilePath ->
-                            ModuleUtils.getModuleName(jarFilePath) // We only scan a module if its jar file is a module with a name.
-                                    .flatMap(moduleName -> readModuleDescriptorFromJarFile(jarFilePath, moduleName))
-                                    .ifPresent(moduleDescriptorLoaded::onItem));
+                    .forEach(jarFilePath -> ModuleUtils.getModuleName(jarFilePath) // We only scan a module if its jar file has a module name.
+                            .flatMap(moduleName -> readModuleDescriptorFromJarFile(jarFilePath, moduleName))
+                            .ifPresent(moduleDescriptorLoaded::onItem));
         });
 
         callback.execute();
@@ -54,10 +53,10 @@ class LoadMavenDependenciesModuleDescriptorsTask implements AsyncProgressTask {
 
     private Optional<ModuleDescriptor> readModuleDescriptorFromJarFile(String jarFilePath, String moduleName) {
         try {
-            return Optional.of(moduleAnalyzer.from(jarFilePath, moduleName));
-        } catch (ModuleDescriptorException e) {
-            String message = message("module.analyze.jar.error", jarFilePath, moduleName, e.getMessage());
-            LOG.error(message, e);
+            return moduleAnalyzer.from(jarFilePath);
+        } catch (ModuleDescriptorException exception) {
+            String message = message("module.analyze.jar.error", jarFilePath, moduleName, exception.getMessage());
+            LOG.error(message, exception);
             return Optional.empty();
         }
     }

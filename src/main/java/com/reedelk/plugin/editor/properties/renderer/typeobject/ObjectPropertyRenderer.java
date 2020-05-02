@@ -1,7 +1,11 @@
 package com.reedelk.plugin.editor.properties.renderer.typeobject;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.module.descriptor.model.*;
+import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
+import com.reedelk.module.descriptor.model.property.Collapsible;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.property.Shared;
 import com.reedelk.plugin.commons.TooltipContent;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessorFactory;
@@ -23,7 +27,7 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
                              @NotNull PropertyDescriptor descriptor,
                              @NotNull PropertyAccessor accessor,
                              @NotNull ContainerContext context) {
-        TypeObjectDescriptor objectDescriptor = descriptor.getType();
+        ObjectDescriptor objectDescriptor = descriptor.getType();
         return Shared.YES.equals(objectDescriptor.getShared()) ?
                 renderShareable(module, descriptor, accessor, context) :
                 renderInline(module, accessor, descriptor);
@@ -34,7 +38,7 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
                             @NotNull JComponent rendered,
                             @NotNull PropertyDescriptor descriptor,
                             @NotNull ContainerContext context) {
-        TypeObjectDescriptor objectDescriptor = descriptor.getType();
+        ObjectDescriptor objectDescriptor = descriptor.getType();
         if (Shared.NO.equals(objectDescriptor.getShared())) {
             addToParentInline(parent, rendered, descriptor, context);
         } else {
@@ -46,7 +50,7 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
 
     @NotNull
     private JComponent renderInline(Module module, PropertyAccessor propertyAccessor, PropertyDescriptor descriptor) {
-        TypeObjectDescriptor objectDescriptor = descriptor.getType();
+        ObjectDescriptor objectDescriptor = descriptor.getType();
         TooltipContent tooltipContent = TooltipContent.from(descriptor);
         if (Collapsible.YES.equals(objectDescriptor.getCollapsible())) {
             // Deferred rendering (only when it is un-collapsed)
@@ -89,7 +93,7 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
     }
 
     @NotNull
-    private JComponent renderObjectProperties(PropertyAccessor propertyAccessor, TypeObjectDescriptor objectDescriptor, Module module) {
+    private JComponent renderObjectProperties(PropertyAccessor propertyAccessor, ObjectDescriptor objectDescriptor, Module module) {
         // The accessor of type object returns a TypeObject map.
         ComponentDataHolder dataHolder = propertyAccessor.get();
 

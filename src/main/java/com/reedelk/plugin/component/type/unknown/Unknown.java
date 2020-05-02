@@ -1,7 +1,7 @@
 package com.reedelk.plugin.component.type.unknown;
 
-import com.reedelk.module.descriptor.model.ComponentDescriptor;
-import com.reedelk.module.descriptor.model.ComponentType;
+import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentType;
 import com.reedelk.plugin.commons.Images;
 import com.reedelk.plugin.commons.PredefinedPropertyDescriptor;
 import com.reedelk.runtime.api.component.Component;
@@ -17,7 +17,7 @@ public class Unknown implements Component {
     public static final ComponentDescriptor DESCRIPTOR;
     static {
         DESCRIPTOR = ComponentDescriptor.create()
-                .propertyDescriptors(singletonList(PredefinedPropertyDescriptor.UNKNOWN_IMPLEMENTOR))
+                .properties(singletonList(PredefinedPropertyDescriptor.UNKNOWN_IMPLEMENTOR))
                 .fullyQualifiedName(Unknown.class.getName())
                 .displayName(message("component.unknown"))
                 .type(ComponentType.UNKNOWN)

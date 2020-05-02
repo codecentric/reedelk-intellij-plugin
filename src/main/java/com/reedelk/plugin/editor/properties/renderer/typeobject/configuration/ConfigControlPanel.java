@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer.typeobject.configuration;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.plugin.commons.TypeObjectFactory;
 import com.reedelk.plugin.editor.properties.commons.ComboActionsPanel;
 import com.reedelk.plugin.editor.properties.commons.DialogConfirmAction;
@@ -12,7 +12,6 @@ import com.reedelk.plugin.service.module.impl.configuration.NewConfigMetadata;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.reedelk.module.descriptor.model.TypeObjectDescriptor.TypeObject;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.commons.JsonParser.Config;
 import static com.reedelk.runtime.commons.JsonParser.Implementor;
@@ -21,9 +20,9 @@ public class ConfigControlPanel extends ComboActionsPanel<ConfigMetadata> {
 
     private final String dialogTitle;
     private final transient Module module;
-    private final transient TypeObjectDescriptor typeDescriptor;
+    private final transient ObjectDescriptor typeDescriptor;
 
-    public ConfigControlPanel(Module module, TypeObjectDescriptor typeDescriptor) {
+    public ConfigControlPanel(Module module, ObjectDescriptor typeDescriptor) {
         super();
         this.module = module;
         this.typeDescriptor = typeDescriptor;
@@ -40,7 +39,7 @@ public class ConfigControlPanel extends ComboActionsPanel<ConfigMetadata> {
     @Override
     protected void onAdd(ConfigMetadata item) {
         // We ignore the selected. Create new config object.
-        TypeObject configTypeObject = TypeObjectFactory.newInstance();
+        ObjectDescriptor.TypeObject configTypeObject = TypeObjectFactory.newInstance();
         configTypeObject.set(Implementor.name(), typeDescriptor.getTypeFullyQualifiedName());
         configTypeObject.set(Config.id(), UUID.randomUUID().toString());
         configTypeObject.set(Config.title(), message("config.field.title.default"));

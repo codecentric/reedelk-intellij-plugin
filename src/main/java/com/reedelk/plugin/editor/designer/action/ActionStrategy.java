@@ -1,6 +1,6 @@
 package com.reedelk.plugin.editor.designer.action;
 
-import com.reedelk.module.descriptor.model.ComponentType;
+import com.reedelk.module.descriptor.model.component.ComponentType;
 import com.reedelk.plugin.graph.node.GraphNode;
 
 public interface ActionStrategy {

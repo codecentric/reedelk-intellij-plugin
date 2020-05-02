@@ -1,7 +1,7 @@
 package com.reedelk.plugin.commons;
 
-import com.reedelk.module.descriptor.model.Shared;
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.Shared;
 import com.reedelk.runtime.commons.JsonParser;
 
 public class TypeObjectFactory {
@@ -9,13 +9,13 @@ public class TypeObjectFactory {
     private TypeObjectFactory() {
     }
 
-    public static TypeObjectDescriptor.TypeObject newInstance() {
-        return TypeObjectDescriptor.newInstance();
+    public static ObjectDescriptor.TypeObject newInstance() {
+        return ObjectDescriptor.newInstance();
     }
 
-    public static TypeObjectDescriptor.TypeObject newInstance(TypeObjectDescriptor descriptor) {
+    public static ObjectDescriptor.TypeObject newInstance(ObjectDescriptor descriptor) {
         String typeFullyQualifiedName = descriptor.getTypeFullyQualifiedName();
-        TypeObjectDescriptor.TypeObject typeObject = TypeObjectDescriptor.newInstance();
+        ObjectDescriptor.TypeObject typeObject = ObjectDescriptor.newInstance();
 
         if (Shared.NO.equals(descriptor.getShared())) {
             // If the type object is not shared, then the serialized

@@ -13,7 +13,7 @@ import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBusConnection;
-import com.reedelk.module.descriptor.ModuleDescriptor;
+import com.reedelk.module.descriptor.model.ModuleDescriptor;
 import com.reedelk.plugin.editor.DesignerEditor;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.graph.*;

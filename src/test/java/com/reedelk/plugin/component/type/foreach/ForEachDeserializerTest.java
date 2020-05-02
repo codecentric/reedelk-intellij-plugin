@@ -1,7 +1,7 @@
 package com.reedelk.plugin.component.type.foreach;
 
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.TypeDynamicValueDescriptor;
+import com.reedelk.module.descriptor.model.property.DynamicValueDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.graph.deserializer.AbstractNodeDeserializerTest;
@@ -26,7 +26,7 @@ class ForEachDeserializerTest extends AbstractNodeDeserializerTest {
         deserializer = new ForEachDeserializer(graph, forEachNode1, context);
         ComponentData componentData = forEachNode1.componentData();
 
-        TypeDynamicValueDescriptor descriptor = new TypeDynamicValueDescriptor();
+        DynamicValueDescriptor descriptor = new DynamicValueDescriptor();
         descriptor.setType(DynamicObject.class);
 
         PropertyDescriptor collectionProperty = PropertyDescriptor.builder()

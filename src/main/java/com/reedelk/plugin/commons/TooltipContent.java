@@ -1,6 +1,6 @@
 package com.reedelk.plugin.commons;
 
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.runtime.api.commons.StringUtils;
 
 import java.util.Optional;

@@ -1,6 +1,6 @@
 package com.reedelk.plugin.assertion.graph;
 
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.graph.node.GraphNode;
 
@@ -46,7 +46,7 @@ public class NodeAssertion {
     public TypeObjectAssertion hasTypeObject(String propertyName) {
         ComponentData component = this.node.componentData();
         Object actualValue = component.get(propertyName);
-        return new TypeObjectAssertion((TypeObjectDescriptor.TypeObject) actualValue, this);
+        return new TypeObjectAssertion((ObjectDescriptor.TypeObject) actualValue, this);
     }
 
     public FlowGraphAssertion and() {

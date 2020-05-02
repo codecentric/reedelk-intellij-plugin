@@ -1,13 +1,13 @@
 package com.reedelk.plugin.converter;
 
-import com.reedelk.module.descriptor.model.TypeDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyTypeDescriptor;
 
 public class ValueConverterProvider {
 
     private ValueConverterProvider() {
     }
 
-    public static ValueConverter<?> forType(TypeDescriptor typeDescriptor) {
+    public static ValueConverter<?> forType(PropertyTypeDescriptor typeDescriptor) {
         return forType(typeDescriptor.getType());
     }
 

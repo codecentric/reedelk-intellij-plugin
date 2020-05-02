@@ -3,7 +3,7 @@ package com.reedelk.plugin.editor.properties.commons;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.JBUI;
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.commons.Sizes;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.graph.FlowSnapshot;

@@ -1,6 +1,10 @@
 package com.reedelk.plugin.component.serializer;
 
-import com.reedelk.module.descriptor.model.*;
+import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.property.Shared;
+import com.reedelk.module.descriptor.model.property.WhenDescriptor;
 import com.reedelk.plugin.commons.AtLeastOneWhenConditionIsTrue;
 import com.reedelk.plugin.commons.JsonObjectFactory;
 import com.reedelk.runtime.api.commons.StringUtils;
@@ -42,8 +46,8 @@ class TypeObjectSerializer {
 
     private void serialize(@NotNull PropertyDescriptor propertyDescriptor,
                            @NotNull JSONObject jsonObject,
-                           @NotNull TypeObjectDescriptor.TypeObject data) {
-        TypeObjectDescriptor propertyType = propertyDescriptor.getType();
+                           @NotNull ObjectDescriptor.TypeObject data) {
+        ObjectDescriptor propertyType = propertyDescriptor.getType();
         if (Shared.YES.equals(propertyType.getShared())) {
             String ref = data.get(JsonParser.Component.ref());
             // An object reference is ONLY serialized when it is present and it is NOT blank.
@@ -73,7 +77,7 @@ class TypeObjectSerializer {
         if (dataHolder.has(propertyName)) {
             Object data = dataHolder.get(propertyName);
             if (SerializerUtils.isTypeObject(data)) {
-                serialize(propertyDescriptor, jsonObject, (TypeObjectDescriptor.TypeObject) data);
+                serialize(propertyDescriptor, jsonObject, (ObjectDescriptor.TypeObject) data);
             } else if (isTypeMap(data)) {
                 TypeMapSerializer.get().serialize(propertyDescriptor, jsonObject, (Map<String, Object>) data);
             } else if (isTypeList(data)) {

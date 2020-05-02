@@ -1,6 +1,6 @@
 package com.reedelk.plugin.component.serializer;
 
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 
 public class SerializerUtils {
 
@@ -8,6 +8,6 @@ public class SerializerUtils {
     }
 
     public static boolean isTypeObject(Object data) {
-        return data instanceof TypeObjectDescriptor.TypeObject;
+        return data instanceof ObjectDescriptor.TypeObject;
     }
 }

@@ -1,7 +1,6 @@
 package com.reedelk.plugin.component.type.generic;
 
-import com.reedelk.module.descriptor.model.ComponentDescriptor;
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.plugin.commons.TypeObjectFactory;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.fixture.ComponentNode1;
@@ -10,6 +9,7 @@ import com.reedelk.plugin.graph.node.GraphNode;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
+import static com.reedelk.module.descriptor.model.property.ObjectDescriptor.TypeObject;
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.Primitives;
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.Primitives.stringProperty;
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.TypeObjects;
@@ -21,11 +21,11 @@ public class GenericComponentSerializerTypeObjectTest extends GenericComponentSe
     void shouldCorrectlySerializeTypeObject() {
         // Given
         ComponentData componentData = new ComponentData(ComponentDescriptor.create()
-                .propertyDescriptors(asList(stringProperty, TypeObjects.typeObjectProperty))
+                .properties(asList(stringProperty, TypeObjects.typeObjectProperty))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build());
 
-        TypeObjectDescriptor.TypeObject typeObjectInstance = TypeObjectFactory.newInstance();
+        TypeObject typeObjectInstance = TypeObjectFactory.newInstance();
         typeObjectInstance.set("stringProperty", "sample string property");
         typeObjectInstance.set("integerObjectProperty", Integer.parseInt("255"));
 
@@ -45,11 +45,11 @@ public class GenericComponentSerializerTypeObjectTest extends GenericComponentSe
     void shouldCorrectlySerializeGenericComponentWithTypeObjectReference() {
         // Given
         ComponentData componentData = new ComponentData(ComponentDescriptor.create()
-                .propertyDescriptors(asList(Primitives.booleanProperty, TypeObjects.typeObjectSharedProperty))
+                .properties(asList(Primitives.booleanProperty, TypeObjects.typeObjectSharedProperty))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build());
 
-        TypeObjectDescriptor.TypeObject typeObjectSharedInstance = TypeObjectFactory.newInstance();
+        TypeObject typeObjectSharedInstance = TypeObjectFactory.newInstance();
         typeObjectSharedInstance.set("ref", "4ba1b6a0-9644-11e9-bc42-526af7764f64");
 
         GraphNode componentNode = new GenericComponentNode(componentData);
@@ -69,11 +69,11 @@ public class GenericComponentSerializerTypeObjectTest extends GenericComponentSe
     void shouldCorrectlySerializeGenericComponentWithEmptyTypeObjectReference() {
         // Given
         ComponentData componentData = new ComponentData(ComponentDescriptor.create()
-                .propertyDescriptors(asList(Primitives.booleanProperty, TypeObjects.typeObjectSharedProperty))
+                .properties(asList(Primitives.booleanProperty, TypeObjects.typeObjectSharedProperty))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build());
 
-        TypeObjectDescriptor.TypeObject typeObjectSharedInstance = TypeObjectFactory.newInstance();
+        TypeObject typeObjectSharedInstance = TypeObjectFactory.newInstance();
         typeObjectSharedInstance.set("ref", "");
 
         GraphNode componentNode = new GenericComponentNode(componentData);

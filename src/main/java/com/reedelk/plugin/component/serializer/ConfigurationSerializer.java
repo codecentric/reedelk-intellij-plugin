@@ -1,6 +1,6 @@
 package com.reedelk.plugin.component.serializer;
 
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.plugin.commons.JsonObjectFactory;
 import com.reedelk.plugin.service.module.impl.configuration.ConfigMetadata;
 import com.reedelk.runtime.commons.JsonParser;
@@ -16,7 +16,7 @@ public class ConfigurationSerializer {
 
     public static String serialize(@NotNull ConfigMetadata dataHolder) {
 
-        TypeObjectDescriptor typeObjectDescriptor =
+        ObjectDescriptor typeObjectDescriptor =
                 dataHolder.getConfigObjectDescriptor();
 
         JSONObject object = JsonObjectFactory.newJSONObject();

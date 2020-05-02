@@ -1,7 +1,7 @@
 package com.reedelk.plugin.component.type.generic;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.editor.properties.commons.PropertiesPanelContainer;
 import com.reedelk.plugin.editor.properties.renderer.AbstractComponentPropertiesRenderer;

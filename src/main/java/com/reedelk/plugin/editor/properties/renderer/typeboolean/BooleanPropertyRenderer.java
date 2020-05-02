@@ -2,7 +2,7 @@ package com.reedelk.plugin.editor.properties.renderer.typeboolean;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.util.ui.JBUI;
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.plugin.editor.properties.renderer.AbstractPropertyTypeRenderer;

@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer;
 
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.WhenDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.property.WhenDescriptor;
 import com.reedelk.plugin.commons.AtLeastOneWhenConditionIsTrue;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.FormBuilder;

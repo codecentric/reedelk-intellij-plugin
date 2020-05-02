@@ -1,6 +1,6 @@
 package com.reedelk.plugin.editor.palette;
 
-import com.reedelk.module.descriptor.model.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.editor.properties.commons.ContainerFactory;

@@ -1,8 +1,8 @@
 package com.reedelk.plugin.service.module.impl.component;
 
 import com.intellij.openapi.progress.ProgressIndicator;
-import com.reedelk.module.descriptor.ModuleDescriptor;
 import com.reedelk.module.descriptor.analyzer.ModuleDescriptorAnalyzer;
+import com.reedelk.module.descriptor.model.ModuleDescriptor;
 import com.reedelk.plugin.executor.AsyncProgressTask;
 import com.reedelk.runtime.component.Stop;
 import org.jetbrains.annotations.NotNull;

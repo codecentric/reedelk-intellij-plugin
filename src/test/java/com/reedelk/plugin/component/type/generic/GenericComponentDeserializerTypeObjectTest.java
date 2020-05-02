@@ -1,6 +1,6 @@
 package com.reedelk.plugin.component.type.generic;
 
-import com.reedelk.module.descriptor.model.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.fixture.ComponentNode1;
 import com.reedelk.plugin.fixture.Json;
@@ -19,7 +19,7 @@ public class GenericComponentDeserializerTypeObjectTest extends AbstractNodeDese
     void shouldCorrectlyDeserializeTypeObject() {
         // Given
         ComponentDescriptor descriptor = ComponentDescriptor.create()
-                .propertyDescriptors(asList(stringProperty, SamplePropertyDescriptors.TypeObjects.typeObjectProperty))
+                .properties(asList(stringProperty, SamplePropertyDescriptors.TypeObjects.typeObjectProperty))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build();
 
@@ -47,7 +47,7 @@ public class GenericComponentDeserializerTypeObjectTest extends AbstractNodeDese
     void shouldCorrectlyDeserializeSharedTypeObjectWithReference() {
         // Given
         ComponentDescriptor descriptor = ComponentDescriptor.create()
-                .propertyDescriptors(asList(booleanProperty, SamplePropertyDescriptors.TypeObjects.typeObjectSharedProperty))
+                .properties(asList(booleanProperty, SamplePropertyDescriptors.TypeObjects.typeObjectSharedProperty))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build();
 
@@ -75,7 +75,7 @@ public class GenericComponentDeserializerTypeObjectTest extends AbstractNodeDese
     void shouldCorrectlyDeserializeSharedEmptyTypeObject() {
         // Given
         ComponentDescriptor descriptor = ComponentDescriptor.create()
-                .propertyDescriptors(asList(booleanProperty, SamplePropertyDescriptors.TypeObjects.typeObjectSharedProperty))
+                .properties(asList(booleanProperty, SamplePropertyDescriptors.TypeObjects.typeObjectSharedProperty))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build();
 
@@ -103,7 +103,7 @@ public class GenericComponentDeserializerTypeObjectTest extends AbstractNodeDese
     void shouldCorrectlyDeserializeSharedTypeObjectWhenReferencePropertyNotPresent() {
         // Given
         ComponentDescriptor descriptor = ComponentDescriptor.create()
-                .propertyDescriptors(asList(booleanProperty, SamplePropertyDescriptors.TypeObjects.typeObjectSharedProperty))
+                .properties(asList(booleanProperty, SamplePropertyDescriptors.TypeObjects.typeObjectSharedProperty))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build();
 
@@ -131,7 +131,7 @@ public class GenericComponentDeserializerTypeObjectTest extends AbstractNodeDese
     void shouldCorrectlyDeserializeMissingSharedTypeObject() {
         // Given
         ComponentDescriptor descriptor = ComponentDescriptor.create()
-                .propertyDescriptors(asList(booleanProperty, SamplePropertyDescriptors.TypeObjects.typeObjectSharedProperty))
+                .properties(asList(booleanProperty, SamplePropertyDescriptors.TypeObjects.typeObjectSharedProperty))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build();
 

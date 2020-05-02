@@ -2,7 +2,7 @@ package com.reedelk.plugin.editor.properties.renderer.typemap.dynamic;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.table.JBTable;
-import com.reedelk.module.descriptor.model.TypeMapDescriptor;
+import com.reedelk.module.descriptor.model.property.MapDescriptor;
 import com.reedelk.plugin.editor.properties.commons.*;
 
 import javax.swing.table.TableColumn;
@@ -17,7 +17,7 @@ public class DynamicMapTableColumnModelFactory implements DisposableTableColumnM
     private final String valueName;
     private final ContainerContext context;
 
-    DynamicMapTableColumnModelFactory(Module module, TypeMapDescriptor propertyType, ContainerContext context) {
+    DynamicMapTableColumnModelFactory(Module module, MapDescriptor propertyType, ContainerContext context) {
         this.module = module;
         this.context = context;
         this.keyName = Optional.ofNullable(propertyType.getKeyName()).orElse(message("table.header.key.name"));

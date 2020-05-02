@@ -6,10 +6,10 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import com.reedelk.module.descriptor.ModuleDescriptor;
-import com.reedelk.module.descriptor.model.AutocompleteVariableDescriptor;
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.ModuleDescriptor;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.type.TypeDescriptor;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.ComponentService;
@@ -24,7 +24,6 @@ import java.util.Map;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.topic.ReedelkTopics.COMPLETION_EVENT_TOPIC;
-import static java.util.stream.Collectors.toList;
 
 public class CompletionServiceImpl implements CompletionService, CompilationStatusListener, ComponentListUpdateNotifier {
 
@@ -33,6 +32,8 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
     private final Map<String, Trie> typeTriesMap = new HashMap<>();
     private final SuggestionTree defaultComponentSuggestions = new SuggestionTree(typeTriesMap);
     private final Map<String, SuggestionTree> componentQualifiedNameSuggestionsMap = new HashMap<>();
+
+    private final Trie globalTypes = new Trie();
 
     // This tree contains the Functions and Types registered by each module.
     private SuggestionTree moduleSuggestions = new SuggestionTree(typeTriesMap);
@@ -49,7 +50,7 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
         connection.subscribe(CompilerTopics.COMPILATION_STATUS, this);
         connection.subscribe(ReedelkTopics.COMPONENTS_UPDATE_EVENTS, this);
 
-        DefaultComponentScriptSuggestions.get().forEach(defaultComponentSuggestions::add);
+
         initialize();
     }
 
@@ -90,43 +91,26 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
     }
 
     synchronized void updateAutocomplete(Collection<ModuleDescriptor> descriptors) {
-        typeTriesMap.clear();
-        moduleSuggestions = new SuggestionTree(typeTriesMap);
-        componentQualifiedNameSuggestionsMap.clear();
+        // Add all global types
+//TODO: fihish me
+        for (ModuleDescriptor descriptor : descriptors) {
+            List<TypeDescriptor> types = descriptor.getTypes();
+            for (TypeDescriptor type : types) {
 
-        // Add all autocomplete types registered by the module
-        descriptors.stream()
-                .map(ModuleDescriptor::getAutocompleteTypes)
-                .map(typeDescriptors -> typeDescriptors.stream()
-                        .map(Suggestion::create)
-                        .collect(toList()))
-                .forEach(moduleSuggestions::add);
-
-        // Add all autocomplete items registered by the module.
-        descriptors.stream()
-                .map(ModuleDescriptor::getAutocompleteItems)
-                .map(itemDescriptors -> itemDescriptors.stream()
-                        .map(Suggestion::create)
-                        .collect(toList()))
-                .forEach(moduleSuggestions::add);
-
-        // Add autocomplete for each component.
-        descriptors.forEach(descriptor ->
-                descriptor.getComponents().forEach(componentDescriptor -> {
-                    String componentFullyQualifiedName = componentDescriptor.getFullyQualifiedName();
-                    updateAutocomplete(componentFullyQualifiedName, componentDescriptor.getProperties());
-                }));
+            }
+        }
 
         // Fire update event done.
         fireCompletionsUpdatedEvent();
+
     }
 
     private void updateAutocomplete(String fullyQualifiedName, List<PropertyDescriptor> propertyDescriptors) {
         propertyDescriptors.forEach(descriptor -> {
-            if (descriptor.getType() instanceof TypeObjectDescriptor) {
+            if (descriptor.getType() instanceof ObjectDescriptor) {
                 // If the property type is TypeObject, we must recursively add the
                 // autocomplete tokens for each nested object type.
-                TypeObjectDescriptor typeObjectDescriptor = descriptor.getType();
+                ObjectDescriptor typeObjectDescriptor = descriptor.getType();
                 String typeFullyQualifiedName = typeObjectDescriptor.getTypeFullyQualifiedName();
                 List<PropertyDescriptor> properties = typeObjectDescriptor.getObjectProperties();
                 updateAutocomplete(typeFullyQualifiedName, properties);
@@ -140,7 +124,8 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
     //  QUALIFIED NAME BUT ALSO BY GIVEN PROPERTY! For the same qualified name there MIGHT
     //  BE TWO DIFFERENT PROPERTIES WITH DIFFERENT AUTOCOMPLETE!!!!
     private void updateAutocomplete(String fullyQualifiedName, PropertyDescriptor descriptor) {
-        List<AutocompleteVariableDescriptor> autocomplete = descriptor.getAutocompleteVariables();
+        /**
+        List<AutocompleteVariableDescriptor> autocomplete = descriptor.getScriptSignature().getAutocompleteVariables();
         if (!autocomplete.isEmpty()) {
             SuggestionTree componentSuggestionTree = new SuggestionTree(moduleSuggestions.getTypeTriesMap());
             List<Suggestion> componentSuggestions = autocomplete
@@ -149,6 +134,6 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
                     .collect(toList());
             componentSuggestions.forEach(componentSuggestionTree::add);
             componentQualifiedNameSuggestionsMap.put(fullyQualifiedName, componentSuggestionTree);
-        }
+        }*/
     }
 }

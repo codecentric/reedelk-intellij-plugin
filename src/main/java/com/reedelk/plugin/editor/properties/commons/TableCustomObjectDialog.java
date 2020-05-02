@@ -1,9 +1,9 @@
 package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.module.descriptor.model.ComponentDataHolder;
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.commons.InitValuesFiller;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,11 +19,11 @@ public class TableCustomObjectDialog extends AbstractPropertiesDialog {
     private final Module module;
     private final DialogType dialogType;
     private final ComponentDataHolder componentDataHolder;
-    private final TypeObjectDescriptor typeObjectDescriptor;
+    private final ObjectDescriptor typeObjectDescriptor;
 
     public TableCustomObjectDialog(@NotNull Module module,
                                    @NotNull String title,
-                                   @NotNull TypeObjectDescriptor typeObjectDescriptor,
+                                   @NotNull ObjectDescriptor typeObjectDescriptor,
                                    @NotNull ComponentDataHolder value,
                                    @NotNull DialogType dialogType) {
         super(module, title, message("dialog.custom.properties.btn.save"));
@@ -43,7 +43,7 @@ public class TableCustomObjectDialog extends AbstractPropertiesDialog {
 
         public MapTableCustomObjectPanel(@NotNull Module module,
                                          @NotNull ComponentDataHolder dataHolder,
-                                         @NotNull TypeObjectDescriptor objectDescriptor,
+                                         @NotNull ObjectDescriptor objectDescriptor,
                                          @NotNull DialogType dialogType) {
             List<PropertyDescriptor> descriptors = objectDescriptor.getObjectProperties();
 

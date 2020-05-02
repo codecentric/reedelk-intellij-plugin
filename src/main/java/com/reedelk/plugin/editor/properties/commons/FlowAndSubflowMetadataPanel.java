@@ -1,6 +1,6 @@
 package com.reedelk.plugin.editor.properties.commons;
 
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.commons.PredefinedPropertyDescriptor;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowSnapshot;

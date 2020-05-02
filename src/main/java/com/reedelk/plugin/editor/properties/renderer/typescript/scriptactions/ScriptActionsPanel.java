@@ -1,8 +1,8 @@
 package com.reedelk.plugin.editor.properties.renderer.typescript.scriptactions;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.ScriptSignatureDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.property.ScriptSignatureDescriptor;
 import com.reedelk.plugin.commons.ScriptFileNameValidator;
 import com.reedelk.plugin.commons.ScriptFunctionDefinitionBuilder;
 import com.reedelk.plugin.editor.properties.commons.ClickableLabel;

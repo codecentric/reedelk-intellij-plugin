@@ -1,7 +1,8 @@
 package com.reedelk.plugin.component.type.generic;
 
 import com.google.common.collect.ImmutableMap;
-import com.reedelk.module.descriptor.model.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.fixture.ComponentNode1;
 import com.reedelk.plugin.graph.deserializer.AbstractNodeDeserializerTest;
@@ -14,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.reedelk.module.descriptor.model.TypeObjectDescriptor.TypeObject;
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.Primitives.stringProperty;
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.SpecialTypes.listProperty;
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.SpecialTypes.listPropertyWithCustomValueType;
@@ -27,7 +27,7 @@ public class GenericComponentDeserializerTypeListTest extends AbstractNodeDeseri
     void shouldCorrectlyDeserializeGenericComponentWithListProperty() {
         // Given
         ComponentDescriptor descriptor = ComponentDescriptor.create()
-                .propertyDescriptors(asList(stringProperty, listProperty))
+                .properties(asList(stringProperty, listProperty))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build();
 
@@ -53,7 +53,7 @@ public class GenericComponentDeserializerTypeListTest extends AbstractNodeDeseri
     void shouldCorrectlyDeserializeGenericComponentWithEmptyListProperty() {
         // Given
         ComponentDescriptor descriptor = ComponentDescriptor.create()
-                .propertyDescriptors(asList(stringProperty, listProperty))
+                .properties(asList(stringProperty, listProperty))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build();
 
@@ -80,7 +80,7 @@ public class GenericComponentDeserializerTypeListTest extends AbstractNodeDeseri
     void shouldCorrectlyDeserializeComponentWithListCustomValueType() {
         // Given
         ComponentDescriptor descriptor = ComponentDescriptor.create()
-                .propertyDescriptors(asList(stringProperty, listPropertyWithCustomValueType))
+                .properties(asList(stringProperty, listPropertyWithCustomValueType))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build();
 
@@ -100,7 +100,7 @@ public class GenericComponentDeserializerTypeListTest extends AbstractNodeDeseri
                 .node(lastNode).is(node)
                 .hasDataWithValue("stringProperty", "first property")
                 .hasDataWithValue("listPropertyWithCustomValueType", actual -> {
-                    List<TypeObject> deSerializedList = (List<TypeObject>) actual;
+                    List<ObjectDescriptor.TypeObject> deSerializedList = (List<ObjectDescriptor.TypeObject>) actual;
 
                     boolean containsItem200 = assertListContains(deSerializedList, ImmutableMap.of(
                             "integerObjectProperty", 200,
@@ -124,7 +124,7 @@ public class GenericComponentDeserializerTypeListTest extends AbstractNodeDeseri
     void shouldCorrectlyDeserializeComponentWithEmptyListCustomValueType() {
         // Given
         ComponentDescriptor descriptor = ComponentDescriptor.create()
-                .propertyDescriptors(asList(stringProperty, listPropertyWithCustomValueType))
+                .properties(asList(stringProperty, listPropertyWithCustomValueType))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build();
 
@@ -144,13 +144,13 @@ public class GenericComponentDeserializerTypeListTest extends AbstractNodeDeseri
                 .node(lastNode).is(node)
                 .hasDataWithValue("stringProperty", "first property")
                 .hasDataWithValue("listPropertyWithCustomValueType", actual -> {
-                    List<TypeObject> deSerializedList = (List<TypeObject>) actual;
+                    List<ObjectDescriptor.TypeObject> deSerializedList = (List<ObjectDescriptor.TypeObject>) actual;
                     return deSerializedList.isEmpty();
                 })
                 .and().nodesCountIs(2);
     }
 
-    private boolean assertListContains(List<TypeObject> items, Map<String, Object> properties) {
+    private boolean assertListContains(List<ObjectDescriptor.TypeObject> items, Map<String, Object> properties) {
         return items.stream().anyMatch(typeObject ->
                 properties.keySet().stream().anyMatch(key -> {
                     Object actualValue = typeObject.get(key);

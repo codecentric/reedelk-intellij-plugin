@@ -1,6 +1,6 @@
 package com.reedelk.plugin.component.type.generic;
 
-import com.reedelk.module.descriptor.model.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.fixture.ComponentNode1;
 import com.reedelk.plugin.fixture.Json;
@@ -16,7 +16,7 @@ public class GenericComponentSerializerTypeResourceTest extends GenericComponent
     void shouldCorrectlySerializeGenericComponentWithResourceProperty() {
         // Given
         ComponentData componentData = new ComponentData(ComponentDescriptor.create()
-                .propertyDescriptors(asList(SamplePropertyDescriptors.Primitives.booleanProperty, SamplePropertyDescriptors.SpecialTypes.resourceProperty))
+                .properties(asList(SamplePropertyDescriptors.Primitives.booleanProperty, SamplePropertyDescriptors.SpecialTypes.resourceProperty))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build());
 
@@ -31,5 +31,4 @@ public class GenericComponentSerializerTypeResourceTest extends GenericComponent
         String expectedJson = Json.GenericComponent.WithResourceProperty.json();
         JSONAssert.assertEquals(expectedJson, actualJson, true);
     }
-
 }

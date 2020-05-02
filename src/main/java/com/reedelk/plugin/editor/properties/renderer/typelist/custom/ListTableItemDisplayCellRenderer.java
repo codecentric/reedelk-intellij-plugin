@@ -1,6 +1,6 @@
 package com.reedelk.plugin.editor.properties.renderer.typelist.custom;
 
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.plugin.editor.properties.commons.StripedRowCellRenderer;
 
 import javax.swing.*;
@@ -17,7 +17,7 @@ public class ListTableItemDisplayCellRenderer extends StripedRowCellRenderer {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         JLabel component = (StripedRowCellRenderer) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        component.setText(((TypeObjectDescriptor.TypeObject) value).get(listDisplayPropertyName));
+        component.setText(((ObjectDescriptor.TypeObject) value).get(listDisplayPropertyName));
         return component;
     }
 }

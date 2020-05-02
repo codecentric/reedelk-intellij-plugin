@@ -1,6 +1,6 @@
 package com.reedelk.plugin.editor.designer;
 
-import com.reedelk.module.descriptor.model.ComponentType;
+import com.reedelk.module.descriptor.model.component.ComponentType;
 import com.reedelk.plugin.graph.FlowGraph;
 
 import java.awt.*;

@@ -1,6 +1,6 @@
 package com.reedelk.plugin.component.type.generic;
 
-import com.reedelk.module.descriptor.model.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.plugin.commons.TypeObjectFactory;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.fixture.ComponentNode1;
@@ -12,8 +12,8 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.reedelk.module.descriptor.model.TypeObjectDescriptor.TypeObject;
-import static com.reedelk.module.descriptor.model.TypeObjectDescriptor.newInstance;
+import static com.reedelk.module.descriptor.model.property.ObjectDescriptor.TypeObject;
+import static com.reedelk.module.descriptor.model.property.ObjectDescriptor.newInstance;
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.Primitives.stringProperty;
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.SpecialTypes.listProperty;
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.SpecialTypes.listPropertyWithCustomValueType;
@@ -30,7 +30,7 @@ public class GenericComponentSerializerTypeListTest extends GenericComponentSeri
         myList.add("three");
 
         ComponentData componentData = new ComponentData(ComponentDescriptor.create()
-                .propertyDescriptors(asList(stringProperty, listProperty))
+                .properties(asList(stringProperty, listProperty))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build());
 
@@ -52,7 +52,7 @@ public class GenericComponentSerializerTypeListTest extends GenericComponentSeri
         List<Object> myList = new ArrayList<>();
 
         ComponentData componentData = new ComponentData(ComponentDescriptor.create()
-                .propertyDescriptors(asList(stringProperty, listProperty))
+                .properties(asList(stringProperty, listProperty))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build());
 
@@ -88,7 +88,7 @@ public class GenericComponentSerializerTypeListTest extends GenericComponentSeri
         myList.add(item2);
 
         ComponentData componentData = new ComponentData(ComponentDescriptor.create()
-                .propertyDescriptors(asList(stringProperty, listPropertyWithCustomValueType))
+                .properties(asList(stringProperty, listPropertyWithCustomValueType))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build());
 
@@ -110,7 +110,7 @@ public class GenericComponentSerializerTypeListTest extends GenericComponentSeri
         List<TypeObject> myList = new ArrayList<>();
 
         ComponentData componentData = new ComponentData(ComponentDescriptor.create()
-                .propertyDescriptors(asList(stringProperty, listPropertyWithCustomValueType))
+                .properties(asList(stringProperty, listPropertyWithCustomValueType))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build());
 

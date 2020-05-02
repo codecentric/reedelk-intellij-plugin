@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import org.jetbrains.annotations.NotNull;

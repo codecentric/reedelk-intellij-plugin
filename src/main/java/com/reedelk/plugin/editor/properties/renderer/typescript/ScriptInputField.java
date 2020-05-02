@@ -4,7 +4,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.module.Module;
 import com.intellij.util.messages.MessageBusConnection;
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.commons.DisableInspectionFor;
 import com.reedelk.plugin.commons.PopupUtils;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;

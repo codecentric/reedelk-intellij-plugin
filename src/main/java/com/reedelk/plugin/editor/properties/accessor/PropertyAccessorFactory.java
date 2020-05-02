@@ -1,6 +1,7 @@
 package com.reedelk.plugin.editor.properties.accessor;
 
-import com.reedelk.module.descriptor.model.*;
+import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
+import com.reedelk.module.descriptor.model.property.*;
 import com.reedelk.plugin.component.type.unknown.UnknownPropertyType;
 import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.graph.FlowSnapshot;
@@ -16,26 +17,26 @@ public class PropertyAccessorFactory {
 
     private String propertyName;
     private FlowSnapshot snapshot;
-    private TypeDescriptor typeDescriptor;
+    private PropertyTypeDescriptor typeDescriptor;
     private ComponentDataHolder dataHolder;
 
-    private static final Map<Class<? extends TypeDescriptor>, Class<? extends PropertyAccessor>> ACCESSOR_MAP;
+    private static final Map<Class<? extends PropertyTypeDescriptor>, Class<? extends PropertyAccessor>> ACCESSOR_MAP;
 
     static {
-        Map<Class<? extends TypeDescriptor>, Class<? extends PropertyAccessor>> tmp = new HashMap<>();
-        tmp.put(TypeMapDescriptor.class, DefaultPropertyAccessor.class);
-        tmp.put(TypeListDescriptor.class, DefaultPropertyAccessor.class);
-        tmp.put(TypeEnumDescriptor.class, DefaultPropertyAccessor.class);
+        Map<Class<? extends PropertyTypeDescriptor>, Class<? extends PropertyAccessor>> tmp = new HashMap<>();
+        tmp.put(MapDescriptor.class, DefaultPropertyAccessor.class);
+        tmp.put(ListDescriptor.class, DefaultPropertyAccessor.class);
+        tmp.put(EnumDescriptor.class, DefaultPropertyAccessor.class);
         tmp.put(UnknownPropertyType.class, DefaultPropertyAccessor.class);
-        tmp.put(TypeComboDescriptor.class, DefaultPropertyAccessor.class);
-        tmp.put(TypeObjectDescriptor.class, DefaultPropertyAccessor.class);
-        tmp.put(TypeScriptDescriptor.class, DefaultPropertyAccessor.class);
-        tmp.put(TypeResourceTextDescriptor.class, DefaultPropertyAccessor.class);
-        tmp.put(TypeResourceBinaryDescriptor.class, DefaultPropertyAccessor.class);
-        tmp.put(TypePasswordDescriptor.class, DefaultPropertyAccessor.class);
-        tmp.put(TypePrimitiveDescriptor.class, DefaultPropertyAccessor.class);
-        tmp.put(TypeDynamicMapDescriptor.class, DefaultPropertyAccessor.class);
-        tmp.put(TypeDynamicValueDescriptor.class, DefaultPropertyAccessor.class);
+        tmp.put(ComboDescriptor.class, DefaultPropertyAccessor.class);
+        tmp.put(ObjectDescriptor.class, DefaultPropertyAccessor.class);
+        tmp.put(ScriptDescriptor.class, DefaultPropertyAccessor.class);
+        tmp.put(ResourceTextDescriptor.class, DefaultPropertyAccessor.class);
+        tmp.put(ResourceBinaryDescriptor.class, DefaultPropertyAccessor.class);
+        tmp.put(PasswordDescriptor.class, DefaultPropertyAccessor.class);
+        tmp.put(PrimitiveDescriptor.class, DefaultPropertyAccessor.class);
+        tmp.put(DynamicMapDescriptor.class, DefaultPropertyAccessor.class);
+        tmp.put(DynamicValueDescriptor.class, DefaultPropertyAccessor.class);
         ACCESSOR_MAP = tmp;
     }
 
@@ -46,7 +47,7 @@ public class PropertyAccessorFactory {
         return new PropertyAccessorFactory();
     }
 
-    public PropertyAccessorFactory typeDescriptor(TypeDescriptor typeDescriptor) {
+    public PropertyAccessorFactory typeDescriptor(PropertyTypeDescriptor typeDescriptor) {
         this.typeDescriptor = typeDescriptor;
         return this;
     }

@@ -2,9 +2,9 @@ package com.reedelk.plugin.editor.properties.renderer.typeobject;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.util.messages.MessageBusConnection;
-import com.reedelk.module.descriptor.model.ComponentDataHolder;
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.commons.PopupUtils;
 import com.reedelk.plugin.commons.TypeObjectFactory;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
@@ -70,7 +70,7 @@ class ShareableConfigInputField extends DisposablePanel implements Configuration
         add(configSelectorCombo, CENTER);
         add(configActionsPanel, EAST);
 
-        TypeObjectDescriptor typeObjectDescriptor = descriptor.getType();
+        ObjectDescriptor typeObjectDescriptor = descriptor.getType();
         this.currentInputFieldTypeFullyQualifiedName = typeObjectDescriptor.getTypeFullyQualifiedName();
         ConfigurationService.getInstance(module).loadConfigurationsBy(typeObjectDescriptor);
     }
@@ -173,7 +173,7 @@ class ShareableConfigInputField extends DisposablePanel implements Configuration
                 .filter(configMetadata -> configMetadata.getId().equals(reference))
                 .findFirst()
                 .orElseGet(() -> {
-                    TypeObjectDescriptor.TypeObject unselectedConfigDefinition = TypeObjectFactory.newInstance();
+                    ObjectDescriptor.TypeObject unselectedConfigDefinition = TypeObjectFactory.newInstance();
                     unselectedConfigDefinition.set(JsonParser.Config.id(), reference);
                     unselectedConfigDefinition.set(JsonParser.Config.title(), String.format("Unresolved (%s)", reference));
                     return new ConfigMetadata(unselectedConfigDefinition);
@@ -189,8 +189,8 @@ class ShareableConfigInputField extends DisposablePanel implements Configuration
 
     private static final ConfigMetadata UNSELECTED_CONFIG;
     static {
-        TypeObjectDescriptor.TypeObject unselectedConfigDefinition = TypeObjectFactory.newInstance();
-        unselectedConfigDefinition.set(JsonParser.Config.id(), TypeObjectDescriptor.TypeObject.DEFAULT_CONFIG_REF);
+        ObjectDescriptor.TypeObject unselectedConfigDefinition = TypeObjectFactory.newInstance();
+        unselectedConfigDefinition.set(JsonParser.Config.id(), ObjectDescriptor.TypeObject.DEFAULT_CONFIG_REF);
         unselectedConfigDefinition.set(JsonParser.Config.title(), message("config.not.selected"));
         UNSELECTED_CONFIG = new ConfigMetadata(unselectedConfigDefinition);
     }

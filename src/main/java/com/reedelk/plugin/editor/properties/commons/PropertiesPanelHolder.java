@@ -1,9 +1,9 @@
 package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.module.descriptor.model.ComponentDataHolder;
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.TypeDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyTypeDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.reedelk.plugin.editor.properties.renderer.PropertyTypeRenderer;
@@ -119,7 +119,7 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
         return this.propertyAccessors.get(propertyName);
     }
 
-    protected PropertyAccessor getAccessor(String propertyName, TypeDescriptor propertyType, ComponentDataHolder dataHolder) {
+    protected PropertyAccessor getAccessor(String propertyName, PropertyTypeDescriptor propertyType, ComponentDataHolder dataHolder) {
         return PropertyAccessorFactory.get()
                 .typeDescriptor(propertyType)
                 .propertyName(propertyName)
@@ -136,7 +136,7 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
 
             String propertyName = propertyDescriptor.getName();
 
-            TypeDescriptor propertyType = propertyDescriptor.getType();
+            PropertyTypeDescriptor propertyType = propertyDescriptor.getType();
 
             PropertyAccessor propertyAccessor = getAccessor(propertyName, propertyType, dataHolder);
 
@@ -155,7 +155,7 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
 
             PropertyAccessor propertyAccessor = getAccessor(propertyName);
 
-            TypeDescriptor propertyType = descriptor.getType();
+            PropertyTypeDescriptor propertyType = descriptor.getType();
 
             PropertyTypeRenderer renderer = PropertyTypeRendererFactory.get().from(propertyType);
 

@@ -1,8 +1,8 @@
 package com.reedelk.plugin.editor.properties.renderer.typemap.dynamic;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.TypeMapDescriptor;
+import com.reedelk.module.descriptor.model.property.MapDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposableTabbedPane;
@@ -28,7 +28,7 @@ public class DynamicMapPropertyRenderer extends AbstractCollectionAwarePropertyT
                              @NotNull ContainerContext context) {
 
         final String propertyDisplayName = propertyDescriptor.getDisplayName();
-        final TypeMapDescriptor propertyType = propertyDescriptor.getType();
+        final MapDescriptor propertyType = propertyDescriptor.getType();
 
         return ofNullable(propertyType.getTabGroup())
                 .map((Function<String, JComponent>) tabGroupName -> {

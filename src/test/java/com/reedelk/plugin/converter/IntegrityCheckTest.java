@@ -1,6 +1,6 @@
 package com.reedelk.plugin.converter;
 
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.plugin.component.type.unknown.UnknownPropertyType;
 import com.reedelk.plugin.editor.properties.renderer.PropertyTypeRendererFactory;
 import com.reedelk.runtime.api.commons.PlatformTypes;
@@ -82,7 +82,7 @@ class IntegrityCheckTest {
         PropertyTypeRendererFactory.supportedConverters()
                 .stream()
                 // We remove the TypeObject and UnknownType since they are not exposed in the API.
-                .filter(aClass -> !aClass.equals(TypeObjectDescriptor.TypeObject.class))
+                .filter(aClass -> !aClass.equals(ObjectDescriptor.TypeObject.class))
                 .filter(aClass -> !aClass.equals(UnknownPropertyType.UnknownType.class))
                 .forEach(supportedConverterClazz -> {
             String typeFullyQualifiedName = supportedConverterClazz.getName();

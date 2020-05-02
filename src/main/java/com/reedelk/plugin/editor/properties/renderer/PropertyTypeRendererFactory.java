@@ -1,6 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer;
 
-import com.reedelk.module.descriptor.model.TypeDescriptor;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyTypeDescriptor;
 import com.reedelk.plugin.editor.properties.renderer.typebigdecimal.BigDecimalPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typebigdecimal.DynamicBigDecimalPropertyRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typebiginteger.BigIntegerPropertyRenderer;
@@ -46,7 +47,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 
-import static com.reedelk.module.descriptor.model.TypeObjectDescriptor.TypeObject;
 import static com.reedelk.plugin.component.type.unknown.UnknownPropertyType.UnknownType;
 
 public class PropertyTypeRendererFactory {
@@ -100,7 +100,7 @@ public class PropertyTypeRendererFactory {
         tmp.put(DynamicObjectMap.class, new DynamicMapPropertyRenderer());
 
         // NOT platform types (internal use only)
-        tmp.put(TypeObject.class, new ObjectPropertyRenderer());
+        tmp.put(ObjectDescriptor.TypeObject.class, new ObjectPropertyRenderer());
         tmp.put(UnknownType.class, new UnknownPropertyTypeRenderer());
 
         RENDERER = Collections.unmodifiableMap(tmp);
@@ -118,7 +118,7 @@ public class PropertyTypeRendererFactory {
         return RENDERER.keySet();
     }
 
-    public PropertyTypeRenderer from(TypeDescriptor propertyType) {
+    public PropertyTypeRenderer from(PropertyTypeDescriptor propertyType) {
         if (RENDERER.containsKey(propertyType.getType())) {
             return RENDERER.get(propertyType.getType());
         }

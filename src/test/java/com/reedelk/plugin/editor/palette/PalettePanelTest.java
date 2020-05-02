@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.palette;
 
-import com.reedelk.module.descriptor.ModuleDescriptor;
-import com.reedelk.module.descriptor.model.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.ModuleDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

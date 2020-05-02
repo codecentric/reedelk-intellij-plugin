@@ -1,9 +1,9 @@
 package com.reedelk.plugin.commons;
 
-import com.reedelk.module.descriptor.model.ComponentDataHolder;
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.Shared;
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.property.Shared;
 import com.reedelk.plugin.service.module.impl.configuration.ConfigMetadata;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -65,7 +65,7 @@ class InitValuesFillerTest {
         // Given
         String objectFullyQualifiedName = "com.esb.test.Component";
 
-        TypeObjectDescriptor typeObjectDescriptor =
+        ObjectDescriptor typeObjectDescriptor =
                 createTypeObjectDescriptor(objectFullyQualifiedName, asList(namePropertyDescriptor, zipCodePropertyDescriptor));
 
         PropertyDescriptor objectPropertyDescriptor =
@@ -80,7 +80,7 @@ class InitValuesFillerTest {
                 .fill(testDataHolder, singletonList(objectPropertyDescriptor));
 
         // Then
-        TypeObjectDescriptor.TypeObject configuration = testDataHolder.get("configuration");
+        ObjectDescriptor.TypeObject configuration = testDataHolder.get("configuration");
 
         String defaultName = configuration.get("name");
         assertThat(defaultName).isEqualTo("Test name");
@@ -95,7 +95,7 @@ class InitValuesFillerTest {
         String object1FullyQualifiedName = "com.esb.test.Component1";
         String object2FullyQualifiedName = "com.esb.test.Component2";
 
-        TypeObjectDescriptor typeObject2 = createTypeObjectDescriptor(object2FullyQualifiedName, asList(surnamePropertyDescriptor, zipCodePropertyDescriptor));
+        ObjectDescriptor typeObject2 = createTypeObjectDescriptor(object2FullyQualifiedName, asList(surnamePropertyDescriptor, zipCodePropertyDescriptor));
         PropertyDescriptor object2PropertyDescriptor =
                 PropertyDescriptor.builder()
                         .name("configuration2")
@@ -103,7 +103,7 @@ class InitValuesFillerTest {
                         .displayName("Configuration 2")
                         .build();
 
-        TypeObjectDescriptor typeObject1 =
+        ObjectDescriptor typeObject1 =
                 createTypeObjectDescriptor(object1FullyQualifiedName, asList(namePropertyDescriptor, object2PropertyDescriptor));
         PropertyDescriptor object1PropertyDescriptor =
                 PropertyDescriptor.builder()
@@ -117,11 +117,11 @@ class InitValuesFillerTest {
                 .fill(testDataHolder, singletonList(object1PropertyDescriptor));
 
         // Then
-        TypeObjectDescriptor.TypeObject configuration1 = testDataHolder.get("configuration1");
+        ObjectDescriptor.TypeObject configuration1 = testDataHolder.get("configuration1");
         String defaultName = configuration1.get("name");
         assertThat(defaultName).isEqualTo("Test name");
 
-        TypeObjectDescriptor.TypeObject configuration2 = configuration1.get("configuration2");
+        ObjectDescriptor.TypeObject configuration2 = configuration1.get("configuration2");
         String defaultSurname = configuration2.get("surname");
         assertThat(defaultSurname).isEqualTo("Test surname");
     }
@@ -131,7 +131,7 @@ class InitValuesFillerTest {
         // Given
         String objectFullyQualifiedName = "com.esb.test.Component";
 
-        TypeObjectDescriptor typeObjectDescriptor =
+        ObjectDescriptor typeObjectDescriptor =
                 createTypeObjectDescriptor(objectFullyQualifiedName, asList(namePropertyDescriptor, zipCodePropertyDescriptor), Shared.YES);
 
         PropertyDescriptor objectPropertyDescriptor =
@@ -146,12 +146,12 @@ class InitValuesFillerTest {
                 .fill(testDataHolder, singletonList(objectPropertyDescriptor));
 
         // Then
-        TypeObjectDescriptor.TypeObject configuration = testDataHolder.get("configuration");
+        ObjectDescriptor.TypeObject configuration = testDataHolder.get("configuration");
 
         assertThat(configuration.keys()).containsExactly(Component.ref());
 
         String reference = configuration.get(Component.ref());
-        assertThat(reference).isEqualTo(TypeObjectDescriptor.TypeObject.DEFAULT_CONFIG_REF);
+        assertThat(reference).isEqualTo(ObjectDescriptor.TypeObject.DEFAULT_CONFIG_REF);
     }
 
 

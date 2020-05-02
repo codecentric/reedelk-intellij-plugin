@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer.typelist.primitive;
 
 import com.intellij.ui.components.JBList;
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import org.jetbrains.annotations.NotNull;

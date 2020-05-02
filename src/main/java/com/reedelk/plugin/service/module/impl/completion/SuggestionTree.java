@@ -35,8 +35,8 @@ public class SuggestionTree {
                     Suggestion suggestion = maybeSuggestion.get();
 
                     // If there is more than one token, it must be an exact match.
-                    if (suggestion.getToken().equals(token)) {
-                        String returnType = suggestion.getReturnType();
+                    if (suggestion.lookupString().equals(token)) {
+                        String returnType = suggestion.typeText();
                         current = typeTriesMap.getOrDefault(returnType, UNKNOWN_TYPE_TRIE);
                     } else {
                         break;
@@ -59,7 +59,7 @@ public class SuggestionTree {
     public void add(List<Suggestion> suggestions) {
 
         Map<String, List<Suggestion>> typeAwareGroupedByType =
-                suggestions.stream().collect(groupingBy(Suggestion::getType));
+                suggestions.stream().collect(groupingBy(Suggestion::typeText));
 
         typeAwareGroupedByType
                 .keySet().forEach(type -> typeTriesMap.put(type, new Trie()));
@@ -70,7 +70,7 @@ public class SuggestionTree {
 
             // For each node
             descriptorsGroupedByType.forEach(typeAwareItem -> {
-                if (typeAwareItem.isGlobal()) {
+                if (typeAwareItem.lookupString().equals("global")) {//TODO: Finish me
                     // If it is global we add it to the root. The return type suggestion tree
                     // is the tree defining functions and variables belonging to this type.
                     root.insert(typeAwareItem);

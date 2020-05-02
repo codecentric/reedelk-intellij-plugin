@@ -7,7 +7,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.plugin.commons.FileUtils;
 import com.reedelk.plugin.commons.PluginModuleUtils;
 import com.reedelk.plugin.component.deserializer.ConfigurationDeserializer;
@@ -39,7 +39,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     }
 
     @Override
-    public void loadConfigurationsBy(TypeObjectDescriptor typeObjectDescriptor) {
+    public void loadConfigurationsBy(ObjectDescriptor typeObjectDescriptor) {
         PluginExecutors.runSmartReadAction(module, () -> {
             List<ConfigMetadata> configs = new ArrayList<>();
             ModuleRootManager.getInstance(module).getFileIndex().iterateContent(fileOrDir -> {
@@ -148,7 +148,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         });
     }
 
-    private Optional<? extends ConfigMetadata> getConfigurationFrom(VirtualFile virtualFile, TypeObjectDescriptor configTypeDescriptor) {
+    private Optional<? extends ConfigMetadata> getConfigurationFrom(VirtualFile virtualFile, ObjectDescriptor configTypeDescriptor) {
         Optional<Document> maybeDocument = getDocumentFromFile(virtualFile);
         if (maybeDocument.isPresent()) {
             String json = maybeDocument.get().getText();

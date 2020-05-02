@@ -1,8 +1,8 @@
 package com.reedelk.plugin.configuration;
 
-import com.reedelk.module.descriptor.model.ComponentDataHolder;
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.component.deserializer.ConfigurationDeserializer;
 import com.reedelk.plugin.fixture.ComponentNode1;
@@ -25,7 +25,7 @@ class DeserializerTest {
     @Test
     void shouldCorrectlyDeserializeSimpleConfig() {
         // Given
-        TypeObjectDescriptor httpConfigType = createTypeObjectDescriptor(
+        ObjectDescriptor httpConfigType = createTypeObjectDescriptor(
                 ComponentNode1.class.getName(), asList(host, port, keepAlive));
 
         String json = Sample.json();
@@ -51,7 +51,7 @@ class DeserializerTest {
     @Test
     void shouldCorrectlyDeserializeConfigWithNestedObjectProperties() {
         // Given
-        TypeObjectDescriptor httpConfigType =
+        ObjectDescriptor httpConfigType =
                 createTypeObjectDescriptor(ComponentNode1.class.getName(),
                         asList(host, port, keepAlive, securityConfigPropertyDescriptor));
 
@@ -70,7 +70,7 @@ class DeserializerTest {
                 .containsExactly("implementor", "id", "title",
                         "host", "port", "keepAlive", "securityConfig");
 
-        TypeObjectDescriptor.TypeObject securityConfig = dataHolder.get("securityConfig");
+        ObjectDescriptor.TypeObject securityConfig = dataHolder.get("securityConfig");
 
         PluginAssertion.assertThat(securityConfig)
                 .containsExactly("implementor", "userName", "password", "keyStoreConfig")
@@ -78,7 +78,7 @@ class DeserializerTest {
                 .hasKeyWithValue("userName", "myUserName")
                 .hasKeyWithValue("password", "myPassword");
 
-        TypeObjectDescriptor.TypeObject keyStoreConfig = securityConfig.get("keyStoreConfig");
+        ObjectDescriptor.TypeObject keyStoreConfig = securityConfig.get("keyStoreConfig");
         PluginAssertion.assertThat(keyStoreConfig)
                 .containsExactly("implementor", "algorithm")
                 .hasKeyWithValue("implementor", "com.reedelk.plugin.fixture.ComponentNode3")
@@ -88,7 +88,7 @@ class DeserializerTest {
     @Test
     void shouldCorrectlyDeserializeConfigWithNestedObjectPropertiesWhenNestedPropertyIsMissingInTheJson() {
         // Given
-        TypeObjectDescriptor httpConfigType =
+        ObjectDescriptor httpConfigType =
                 createTypeObjectDescriptor(ComponentNode1.class.getName(),
                         asList(host, port, keepAlive, securityConfigPropertyDescriptor));
 
@@ -107,7 +107,7 @@ class DeserializerTest {
                 .containsExactly("implementor", "id", "title",
                         "host", "port", "keepAlive", "securityConfig");
 
-        TypeObjectDescriptor.TypeObject nestedObject = dataHolder.get("securityConfig");
+        ObjectDescriptor.TypeObject nestedObject = dataHolder.get("securityConfig");
         PluginAssertion.assertThat(nestedObject)
                 .containsExactly("implementor", "keyStoreConfig");
     }
@@ -115,7 +115,7 @@ class DeserializerTest {
     @Test
     void shouldCorrectlyDeserializeConfigWithNestedObjectPropertiesWhenNestedPropertyIsNullInTheJson() {
         // Given
-        TypeObjectDescriptor httpConfigType =
+        ObjectDescriptor httpConfigType =
                 createTypeObjectDescriptor(ComponentNode1.class.getName(),
                         asList(host, port, keepAlive, securityConfigPropertyDescriptor));
 
@@ -134,7 +134,7 @@ class DeserializerTest {
                 .containsExactly("implementor", "id", "title",
                         "host", "port", "keepAlive", "securityConfig");
 
-        TypeObjectDescriptor.TypeObject nestedObject = dataHolder.get("securityConfig");
+        ObjectDescriptor.TypeObject nestedObject = dataHolder.get("securityConfig");
         PluginAssertion.assertThat(nestedObject)
                 .containsExactly("implementor", "keyStoreConfig");
     }
@@ -142,7 +142,7 @@ class DeserializerTest {
     @Test
     void shouldReturnEmptyWhenJsonContainsErrors() {
         // Given
-        TypeObjectDescriptor httpConfigType =
+        ObjectDescriptor httpConfigType =
                 createTypeObjectDescriptor(ComponentNode1.class.getName(),
                         asList(host, port, keepAlive, securityConfigPropertyDescriptor));
 
@@ -159,7 +159,7 @@ class DeserializerTest {
     @Test
     void shouldReturnEmptyWhenJsonImplementorIsDifferentFromConfigPropertyFullyQualifiedName() {
         // Given
-        TypeObjectDescriptor activeMqConfigType =
+        ObjectDescriptor activeMqConfigType =
                 // we provide an object descriptor with a different qualified name
                 createTypeObjectDescriptor(ComponentNode4.class.getName(), asList(host, port, keepAlive));
 
@@ -175,7 +175,7 @@ class DeserializerTest {
     @Test
     void shouldCorrectlyDeserializeConfigWithoutTitle() {
         // Given
-        TypeObjectDescriptor httpConfigType =
+        ObjectDescriptor httpConfigType =
                 createTypeObjectDescriptor(ComponentNode1.class.getName(), asList(host, port, keepAlive));
 
         String json = SampleWithoutTitle.json();
@@ -242,7 +242,7 @@ class DeserializerTest {
                     .displayName("Algorithm")
                     .build();
 
-    private final TypeObjectDescriptor keyStoreConfigObjectType = createTypeObjectDescriptor(
+    private final ObjectDescriptor keyStoreConfigObjectType = createTypeObjectDescriptor(
             ComponentNode3.class.getName(), singletonList(algorithm));
 
     private final PropertyDescriptor keyStoreConfig =
@@ -252,7 +252,7 @@ class DeserializerTest {
                     .displayName("Key Store config")
                     .build();
 
-    private final TypeObjectDescriptor securityConfigObjectType = createTypeObjectDescriptor(
+    private final ObjectDescriptor securityConfigObjectType = createTypeObjectDescriptor(
             ComponentNode2.class.getName(), asList(userName, password, keyStoreConfig));
 
     private final PropertyDescriptor securityConfigPropertyDescriptor =

@@ -1,7 +1,7 @@
 package com.reedelk.plugin.service.module.impl.configuration;
 
-import com.reedelk.module.descriptor.model.ComponentDataHolder;
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +16,7 @@ public class ConfigMetadata implements ComponentDataHolder {
     private static final String ABSENT_FILE = StringUtils.EMPTY;
 
     private final ComponentDataHolder data;
-    private final TypeObjectDescriptor configObjectDescriptor;
+    private final ObjectDescriptor configObjectDescriptor;
 
     // Used for unselected config definition.
     public ConfigMetadata(@NotNull ComponentDataHolder data) {
@@ -25,7 +25,7 @@ public class ConfigMetadata implements ComponentDataHolder {
     }
 
     public ConfigMetadata(@NotNull ComponentDataHolder data,
-                          @NotNull TypeObjectDescriptor configObjectDescriptor) {
+                          @NotNull ObjectDescriptor configObjectDescriptor) {
         this.data = data;
         this.configObjectDescriptor = configObjectDescriptor;
     }
@@ -67,7 +67,7 @@ public class ConfigMetadata implements ComponentDataHolder {
         return data.get(Implementor.name());
     }
 
-    public TypeObjectDescriptor getConfigObjectDescriptor() {
+    public ObjectDescriptor getConfigObjectDescriptor() {
         return configObjectDescriptor;
     }
 

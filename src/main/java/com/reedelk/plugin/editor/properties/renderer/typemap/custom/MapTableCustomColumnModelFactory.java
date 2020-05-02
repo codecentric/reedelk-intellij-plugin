@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer.typemap.custom;
 
 import com.intellij.ui.table.JBTable;
-import com.reedelk.module.descriptor.model.TypeMapDescriptor;
+import com.reedelk.module.descriptor.model.property.MapDescriptor;
 import com.reedelk.plugin.editor.properties.commons.DisposableTableColumnModelFactory;
 import com.reedelk.plugin.editor.properties.commons.StripedRowCellRenderer;
 import com.reedelk.plugin.editor.properties.commons.TableEditButtonCellEditor;
@@ -19,7 +19,7 @@ public class MapTableCustomColumnModelFactory implements DisposableTableColumnMo
     private final String keyName;
     private final String valueName;
 
-    public MapTableCustomColumnModelFactory(TypeMapDescriptor propertyType, TableCustomEditButtonAction action) {
+    public MapTableCustomColumnModelFactory(MapDescriptor propertyType, TableCustomEditButtonAction action) {
         this.action = action;
         this.keyName = Optional.ofNullable(propertyType.getKeyName()).orElse(message("table.header.key.name"));
         this.valueName = Optional.ofNullable(propertyType.getValueName()).orElse(message("table.header.value.name"));

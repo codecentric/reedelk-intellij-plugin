@@ -1,8 +1,8 @@
 package com.reedelk.plugin.editor.properties.renderer.typeenum;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.TypeEnumDescriptor;
+import com.reedelk.module.descriptor.model.property.EnumDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
@@ -24,7 +24,7 @@ public class EnumPropertyRenderer extends AbstractPropertyTypeRenderer {
                              @NotNull PropertyAccessor propertyAccessor,
                              @NotNull ContainerContext context) {
 
-        TypeEnumDescriptor propertyType = propertyDescriptor.getType();
+        EnumDescriptor propertyType = propertyDescriptor.getType();
 
         EnumDropDown dropDown = new EnumDropDown(propertyType.getNameAndDisplayNameMap());
 

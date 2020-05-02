@@ -1,7 +1,7 @@
 package com.reedelk.plugin.component.type.foreach;
 
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.TypeDynamicValueDescriptor;
+import com.reedelk.module.descriptor.model.property.DynamicValueDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.AbstractGraphTest;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.fixture.Json;
@@ -33,7 +33,7 @@ class ForEachSerializerTest extends AbstractGraphTest {
         ComponentData componentData = forEachNode1.componentData();
         componentData.set("collection", "#[['one','two','three']]");
 
-        TypeDynamicValueDescriptor descriptor = new TypeDynamicValueDescriptor();
+        DynamicValueDescriptor descriptor = new DynamicValueDescriptor();
         descriptor.setType(DynamicObject.class);
 
         PropertyDescriptor collectionProperty = PropertyDescriptor.builder()

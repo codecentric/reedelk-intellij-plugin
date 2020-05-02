@@ -1,10 +1,10 @@
 package com.reedelk.plugin.editor.properties.renderer.typelist;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.module.descriptor.model.ComponentDataHolder;
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.TypeListDescriptor;
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
+import com.reedelk.module.descriptor.model.property.ListDescriptor;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposableTabbedPane;
@@ -35,7 +35,7 @@ public class ListPropertyRenderer extends AbstractCollectionAwarePropertyTypeRen
                              @NotNull ContainerContext context) {
 
         final String propertyDisplayName = descriptor.getDisplayName();
-        final TypeListDescriptor propertyType = descriptor.getType();
+        final ListDescriptor propertyType = descriptor.getType();
 
         JComponent content = isTypeObjectDescriptor(propertyType) ?
                 createCustomObjectContent(module, propertyType, propertyAccessor) :
@@ -62,9 +62,9 @@ public class ListPropertyRenderer extends AbstractCollectionAwarePropertyTypeRen
 
     @NotNull
     private JComponent createCustomObjectContent(@NotNull Module module,
-                                                 @NotNull TypeListDescriptor propertyType,
+                                                 @NotNull ListDescriptor propertyType,
                                                  @NotNull PropertyAccessor propertyAccessor) {
-        final TypeObjectDescriptor objectDescriptor = (TypeObjectDescriptor) propertyType.getValueType();
+        final ObjectDescriptor objectDescriptor = (ObjectDescriptor) propertyType.getValueType();
         final String dialogTitle = ofNullable(propertyType.getDialogTitle()).orElse(EMPTY);
         final String listDisplayPropertyName = propertyType.getListDisplayProperty();
 
@@ -87,7 +87,7 @@ public class ListPropertyRenderer extends AbstractCollectionAwarePropertyTypeRen
         return new ListCustomObjectTableContainer(module, listDisplayPropertyName, addItemAction, action, propertyAccessor);
     }
 
-    private boolean isTypeObjectDescriptor(TypeListDescriptor propertyType) {
-        return propertyType.getValueType() instanceof TypeObjectDescriptor;
+    private boolean isTypeObjectDescriptor(ListDescriptor propertyType) {
+        return propertyType.getValueType() instanceof ObjectDescriptor;
     }
 }

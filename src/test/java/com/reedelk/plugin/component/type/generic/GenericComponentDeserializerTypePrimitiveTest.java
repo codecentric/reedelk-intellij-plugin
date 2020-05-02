@@ -1,6 +1,6 @@
 package com.reedelk.plugin.component.type.generic;
 
-import com.reedelk.module.descriptor.model.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.fixture.ComponentNode1;
 import com.reedelk.plugin.fixture.Json;
@@ -49,7 +49,7 @@ public class GenericComponentDeserializerTypePrimitiveTest extends AbstractNodeD
     }
 
     private ComponentDescriptor descriptor =
-            ComponentDescriptor.create().propertyDescriptors(asList(
+            ComponentDescriptor.create().properties(asList(
                     SamplePropertyDescriptors.Primitives.integerProperty,
                     SamplePropertyDescriptors.Primitives.integerObjectProperty,
                     SamplePropertyDescriptors.Primitives.longProperty,

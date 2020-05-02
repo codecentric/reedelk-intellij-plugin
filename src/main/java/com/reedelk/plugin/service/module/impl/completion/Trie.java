@@ -16,7 +16,7 @@ public class Trie {
 
     public void insert(Suggestion suggestion) {
         TrieNode current = root;
-        String word = suggestion.getToken();
+        String word = suggestion.lookupString();
         for (int i = 0; i < word.length(); i++) {
             current = current.getChildren().computeIfAbsent(word.charAt(i), c -> new TrieNode());
         }

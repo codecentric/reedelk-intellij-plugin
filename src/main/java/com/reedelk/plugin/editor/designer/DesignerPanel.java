@@ -3,7 +3,7 @@ package com.reedelk.plugin.editor.designer;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.util.messages.MessageBusConnection;
-import com.reedelk.module.descriptor.ModuleDescriptor;
+import com.reedelk.module.descriptor.model.ModuleDescriptor;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.DesignerWindowSizeCalculator;
 import com.reedelk.plugin.commons.ToolWindowUtils;

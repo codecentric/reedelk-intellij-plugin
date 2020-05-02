@@ -2,10 +2,10 @@ package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.util.ui.JBUI;
-import com.reedelk.module.descriptor.model.ComponentDataHolder;
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.TypeDescriptor;
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyTypeDescriptor;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import org.jetbrains.annotations.NotNull;
@@ -85,8 +85,8 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
             addTabFromSupplier(key, () -> {
                 // *Unroll* all the object properties in the Tab
                 PropertyDescriptor propertyDescriptor = propertyDescriptors.get(0);
-                TypeDescriptor type = propertyDescriptor.getType();
-                TypeObjectDescriptor typeObjectDescriptor = (TypeObjectDescriptor) type;
+                PropertyTypeDescriptor type = propertyDescriptor.getType();
+                ObjectDescriptor typeObjectDescriptor = (ObjectDescriptor) type;
                 List<PropertyDescriptor> objectProperties = typeObjectDescriptor.getObjectProperties();
                 String fullyQualifiedName = typeObjectDescriptor.getTypeFullyQualifiedName();
                 ComponentDataHolder objectDataHolder = componentData.get(propertyDescriptor.getName());
@@ -103,8 +103,8 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
     private boolean isSingleTypeObject(List<PropertyDescriptor> propertyDescriptors) {
         if (propertyDescriptors.size() == 1) {
             PropertyDescriptor propertyDescriptor = propertyDescriptors.get(0);
-            TypeDescriptor type = propertyDescriptor.getType();
-            return type instanceof TypeObjectDescriptor;
+            PropertyTypeDescriptor type = propertyDescriptor.getType();
+            return type instanceof ObjectDescriptor;
         }
         return false;
     }

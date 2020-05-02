@@ -2,7 +2,7 @@ package com.reedelk.plugin.service.module;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleServiceManager;
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.plugin.service.module.impl.configuration.ConfigMetadata;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,7 +12,7 @@ public interface ConfigurationService {
         return ModuleServiceManager.getService(module, ConfigurationService.class);
     }
 
-    void loadConfigurationsBy(TypeObjectDescriptor typeObjectDescriptor);
+    void loadConfigurationsBy(ObjectDescriptor typeObjectDescriptor);
 
     void saveConfiguration(ConfigMetadata updatedConfig);
 

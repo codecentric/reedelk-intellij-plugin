@@ -1,7 +1,7 @@
 package com.reedelk.plugin.commons;
 
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.TypePrimitiveDescriptor;
+import com.reedelk.module.descriptor.model.property.PrimitiveDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -15,7 +15,7 @@ class TooltipContentTest {
         // Given
         PropertyDescriptor descriptor = PropertyDescriptor.builder()
                 .name("myProperty")
-                .type(new TypePrimitiveDescriptor())
+                .type(new PrimitiveDescriptor())
                 .build();
         TooltipContent tooltipContent = TooltipContent.from(descriptor);
 
@@ -34,7 +34,7 @@ class TooltipContentTest {
                 .description("my description")
                 .example("<code>message.payload()</code>")
                 .defaultValue("'hello world'")
-                .type(new TypePrimitiveDescriptor())
+                .type(new PrimitiveDescriptor())
                 .build();
         TooltipContent tooltipContent = TooltipContent.from(descriptor);
 

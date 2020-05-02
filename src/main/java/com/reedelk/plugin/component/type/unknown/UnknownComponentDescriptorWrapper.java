@@ -1,8 +1,8 @@
 package com.reedelk.plugin.component.type.unknown;
 
-import com.reedelk.module.descriptor.model.ComponentDescriptor;
-import com.reedelk.module.descriptor.model.ComponentType;
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentType;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 
 import javax.swing.*;
 import java.awt.*;

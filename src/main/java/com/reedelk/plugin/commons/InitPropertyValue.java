@@ -1,7 +1,7 @@
 package com.reedelk.plugin.commons;
 
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.TypeDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyTypeDescriptor;
 import com.reedelk.plugin.converter.ValueConverterProvider;
 import com.reedelk.runtime.api.annotation.InitValue;
 import com.reedelk.runtime.api.commons.DefaultValues;
@@ -23,7 +23,7 @@ public class InitPropertyValue {
      */
     public static Object of(PropertyDescriptor descriptor) {
         String initValue = descriptor.getInitValue();
-        TypeDescriptor propertyType = descriptor.getType();
+        PropertyTypeDescriptor propertyType = descriptor.getType();
         return InitValue.USE_DEFAULT_VALUE.equals(initValue) ?
                 DefaultValues.defaultValue(propertyType.getType()) :
                 ValueConverterProvider.forDefaults().forType(propertyType.getType()).from(initValue);

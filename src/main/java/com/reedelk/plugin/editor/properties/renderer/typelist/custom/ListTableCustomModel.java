@@ -1,6 +1,6 @@
 package com.reedelk.plugin.editor.properties.renderer.typelist.custom;
 
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.TableModelDefaultAbstract;
 
@@ -14,7 +14,7 @@ public class ListTableCustomModel extends TableModelDefaultAbstract {
 
     public ListTableCustomModel(PropertyAccessor propertyAccessor) {
         this.propertyAccessor = propertyAccessor;
-        List<TypeObjectDescriptor.TypeObject> data = propertyAccessor.get();
+        List<ObjectDescriptor.TypeObject> data = propertyAccessor.get();
         if (data != null) {
             data.forEach(typeObject -> addRow(new Object[]{typeObject}));
         }
@@ -23,15 +23,15 @@ public class ListTableCustomModel extends TableModelDefaultAbstract {
     @SuppressWarnings("unchecked")
     @Override
     public Object getValueAt(int row, int column) {
-        return ((Vector<TypeObjectDescriptor.TypeObject>)dataVector.elementAt(row)).get(0); // 1 is the value
+        return ((Vector<ObjectDescriptor.TypeObject>)dataVector.elementAt(row)).get(0); // 1 is the value
     }
 
     @SuppressWarnings("unchecked")
     @Override
     protected void onUpdate(Vector<?> data) {
-        List<TypeObjectDescriptor.TypeObject> updated = new ArrayList<>();
+        List<ObjectDescriptor.TypeObject> updated = new ArrayList<>();
         data.forEach(vector -> {
-            TypeObjectDescriptor.TypeObject value = ((Vector<TypeObjectDescriptor.TypeObject>)vector).get(0); // 1 is the value
+            ObjectDescriptor.TypeObject value = ((Vector<ObjectDescriptor.TypeObject>)vector).get(0); // 1 is the value
             updated.add(value);
         });
         propertyAccessor.set(updated);

@@ -1,6 +1,6 @@
 package com.reedelk.plugin.service.module.impl.component;
 
-import com.reedelk.module.descriptor.ModuleDescriptor;
+import com.reedelk.module.descriptor.model.ModuleDescriptor;
 
 interface OnModuleDescriptorLoaded {
 

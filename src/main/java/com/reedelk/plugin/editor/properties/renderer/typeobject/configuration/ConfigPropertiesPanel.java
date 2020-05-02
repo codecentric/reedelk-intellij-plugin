@@ -2,8 +2,8 @@ package com.reedelk.plugin.editor.properties.renderer.typeobject.configuration;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.util.ui.JBUI;
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.commons.InitValuesFiller;
 import com.reedelk.plugin.commons.PredefinedPropertyDescriptor;
 import com.reedelk.plugin.editor.properties.commons.*;
@@ -15,7 +15,7 @@ import java.util.List;
 
 class ConfigPropertiesPanel extends DisposablePanel {
 
-    ConfigPropertiesPanel(Module module, ConfigMetadata configMetadata, TypeObjectDescriptor objectDescriptor, boolean isNewConfig) {
+    ConfigPropertiesPanel(Module module, ConfigMetadata configMetadata, ObjectDescriptor objectDescriptor, boolean isNewConfig) {
 
         List<PropertyDescriptor> descriptors = objectDescriptor.getObjectProperties();
 

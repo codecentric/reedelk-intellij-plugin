@@ -1,8 +1,8 @@
 package com.reedelk.plugin.component.serializer;
 
-import com.reedelk.module.descriptor.model.ComponentDataHolder;
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.component.ComponentData;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
@@ -26,7 +26,7 @@ public class ComponentDataHolderSerializer {
         TypeObjectSerializer.get().serialize(componentData, parent, propertiesDescriptors);
     }
 
-    public void serialize(@NotNull TypeObjectDescriptor typeObjectDescriptor,
+    public void serialize(@NotNull ObjectDescriptor typeObjectDescriptor,
                           @NotNull JSONObject jsonObject,
                           @NotNull ComponentDataHolder dataHolder) {
         List<PropertyDescriptor> propertiesDescriptor = typeObjectDescriptor.getObjectProperties();

@@ -1,8 +1,8 @@
 package com.reedelk.plugin.component.serializer;
 
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.TypeListDescriptor;
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.ListDescriptor;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.commons.JsonObjectFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,13 +35,13 @@ class TypeListSerializer {
                         // therefore we need to serialize it it as well.
                         if (SerializerUtils.isTypeObject(value)) {
 
-                            TypeListDescriptor type = propertyDescriptor.getType();
-                            TypeObjectDescriptor objectDescriptor = (TypeObjectDescriptor) type.getValueType();
+                            ListDescriptor type = propertyDescriptor.getType();
+                            ObjectDescriptor objectDescriptor = (ObjectDescriptor) type.getValueType();
                             JSONObject serializedListItem = JsonObjectFactory.newJSONObject();
 
                             List<PropertyDescriptor> propertiesDescriptor = objectDescriptor.getObjectProperties();
                             TypeObjectSerializer.get()
-                                    .serialize((TypeObjectDescriptor.TypeObject) value, serializedListItem, propertiesDescriptor);
+                                    .serialize((ObjectDescriptor.TypeObject) value, serializedListItem, propertiesDescriptor);
 
                             serialized.add(serializedListItem);
                         } else {

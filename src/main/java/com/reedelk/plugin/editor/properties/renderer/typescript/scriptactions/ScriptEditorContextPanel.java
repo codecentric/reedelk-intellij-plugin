@@ -8,7 +8,6 @@ import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.impl.completion.Suggestion;
 import com.reedelk.plugin.topic.ReedelkTopics;
-import com.reedelk.runtime.api.autocomplete.AutocompleteItemType;
 import com.reedelk.runtime.api.commons.StringUtils;
 
 import javax.swing.*;
@@ -19,8 +18,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.intellij.icons.AllIcons.Nodes.Function;
-import static com.intellij.icons.AllIcons.Nodes.Variable;
 import static com.intellij.util.ui.JBUI.Borders.*;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.awt.BorderLayout.CENTER;
@@ -91,8 +88,8 @@ class ScriptEditorContextPanel extends DisposablePanel implements CompletionServ
 
     static class ContextVariableLabel extends JLabel {
         ContextVariableLabel(Suggestion suggestion) {
-            super(message("script.editor.context.vars.html.template", suggestion.getSignature(), suggestion.getReturnType()));
-            setIcon(suggestion.getItemType() == AutocompleteItemType.FUNCTION ? Function : Variable);
+            super(message("script.editor.context.vars.html.template", suggestion.lookupString(), suggestion.typeText()));
+            setIcon(suggestion.icon());
             setBorder(emptyTop(4));
         }
     }
@@ -101,8 +98,8 @@ class ScriptEditorContextPanel extends DisposablePanel implements CompletionServ
         return CompletionService.getInstance(module)
                 .contextVariablesOf(componentFullyQualifiedName)
                 .stream()
-                .filter(suggestion -> StringUtils.isNotBlank(suggestion.getSignature()))
-                .sorted(Comparator.comparing(Suggestion::getSignature).reversed())
+                .filter(suggestion -> StringUtils.isNotBlank(suggestion.lookupString()))
+                .sorted(Comparator.comparing(Suggestion::lookupString).reversed())
                 .collect(Collectors.toList());
     }
 }

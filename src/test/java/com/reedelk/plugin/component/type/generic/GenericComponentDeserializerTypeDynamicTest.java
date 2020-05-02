@@ -1,6 +1,6 @@
 package com.reedelk.plugin.component.type.generic;
 
-import com.reedelk.module.descriptor.model.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.fixture.ComponentNode1;
 import com.reedelk.plugin.fixture.Json;
@@ -75,7 +75,7 @@ public class GenericComponentDeserializerTypeDynamicTest extends AbstractNodeDes
     }
 
     ComponentDescriptor descriptor = ComponentDescriptor.create()
-            .propertyDescriptors(asList(
+            .properties(asList(
                     SamplePropertyDescriptors.DynamicTypes.dynamicBigDecimalProperty,
                     SamplePropertyDescriptors.DynamicTypes.dynamicBigIntegerProperty,
                     SamplePropertyDescriptors.DynamicTypes.dynamicBooleanProperty,

@@ -1,6 +1,6 @@
 package com.reedelk.plugin.component.type.generic;
 
-import com.reedelk.module.descriptor.model.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.plugin.commons.TypeObjectFactory;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.fixture.ComponentNode1;
@@ -12,8 +12,8 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.reedelk.module.descriptor.model.TypeObjectDescriptor.TypeObject;
-import static com.reedelk.module.descriptor.model.TypeObjectDescriptor.newInstance;
+import static com.reedelk.module.descriptor.model.property.ObjectDescriptor.TypeObject;
+import static com.reedelk.module.descriptor.model.property.ObjectDescriptor.newInstance;
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.Primitives;
 import static com.reedelk.plugin.component.type.generic.SamplePropertyDescriptors.SpecialTypes;
 import static java.util.Arrays.asList;
@@ -28,7 +28,7 @@ public class GenericComponentSerializerTypeMapTest extends GenericComponentSeria
         myMap.put("key2", "value2");
 
         ComponentData componentData = new ComponentData(ComponentDescriptor.create()
-                .propertyDescriptors(asList(Primitives.stringProperty, SpecialTypes.mapProperty))
+                .properties(asList(Primitives.stringProperty, SpecialTypes.mapProperty))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build());
 
@@ -50,7 +50,7 @@ public class GenericComponentSerializerTypeMapTest extends GenericComponentSeria
         Map<String, Object> myMap = new HashMap<>();
 
         ComponentData componentData = new ComponentData(ComponentDescriptor.create()
-                .propertyDescriptors(asList(Primitives.stringProperty, SpecialTypes.mapProperty))
+                .properties(asList(Primitives.stringProperty, SpecialTypes.mapProperty))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build());
 
@@ -86,7 +86,7 @@ public class GenericComponentSerializerTypeMapTest extends GenericComponentSeria
         myMap.put("400", item2);
 
         ComponentData componentData = new ComponentData(ComponentDescriptor.create()
-                .propertyDescriptors(asList(Primitives.stringProperty, SpecialTypes.mapPropertyWithCustomValueType))
+                .properties(asList(Primitives.stringProperty, SpecialTypes.mapPropertyWithCustomValueType))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build());
 
@@ -108,7 +108,7 @@ public class GenericComponentSerializerTypeMapTest extends GenericComponentSeria
         Map<String, TypeObject> myMap = new HashMap<>();
 
         ComponentData componentData = new ComponentData(ComponentDescriptor.create()
-                .propertyDescriptors(asList(Primitives.stringProperty, SpecialTypes.mapPropertyWithCustomValueType))
+                .properties(asList(Primitives.stringProperty, SpecialTypes.mapPropertyWithCustomValueType))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build());
 

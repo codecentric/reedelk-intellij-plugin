@@ -1,6 +1,6 @@
 package com.reedelk.plugin.component.type.generic;
 
-import com.reedelk.module.descriptor.model.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.fixture.ComponentNode1;
 import com.reedelk.plugin.fixture.Json;
@@ -16,7 +16,7 @@ public class GenericComponentSerializerTypeComboTest extends GenericComponentSer
     void shouldCorrectlySerializeGenericComponentWithComboProperty() {
         // Given
         ComponentData componentData = new ComponentData(ComponentDescriptor.create()
-                .propertyDescriptors(asList(SamplePropertyDescriptors.Primitives.doubleObjectProperty, SamplePropertyDescriptors.SpecialTypes.comboProperty))
+                .properties(asList(SamplePropertyDescriptors.Primitives.doubleObjectProperty, SamplePropertyDescriptors.SpecialTypes.comboProperty))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build());
 

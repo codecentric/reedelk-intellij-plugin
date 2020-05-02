@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer.typeobject.configuration;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.plugin.editor.properties.commons.AbstractPropertiesDialog;
 import com.reedelk.plugin.service.module.impl.configuration.ConfigMetadata;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +12,7 @@ public class ConfigurationDialog extends AbstractPropertiesDialog {
 
     private Module module;
     private ConfigMetadata configMetadata;
-    private TypeObjectDescriptor objectDescriptor;
+    private ObjectDescriptor objectDescriptor;
 
     private boolean isNewConfig;
 
@@ -36,7 +36,7 @@ public class ConfigurationDialog extends AbstractPropertiesDialog {
 
         private Module module;
         private ConfigMetadata configMetadata;
-        private TypeObjectDescriptor objectDescriptor;
+        private ObjectDescriptor objectDescriptor;
         private String title;
         private String okActionLabel;
         private boolean isNewConfig;
@@ -66,7 +66,7 @@ public class ConfigurationDialog extends AbstractPropertiesDialog {
             return this;
         }
 
-        Builder objectDescriptor(TypeObjectDescriptor objectDescriptor) {
+        Builder objectDescriptor(ObjectDescriptor objectDescriptor) {
             this.objectDescriptor = objectDescriptor;
             return this;
         }

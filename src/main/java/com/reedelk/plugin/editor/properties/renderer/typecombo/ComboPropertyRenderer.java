@@ -1,8 +1,8 @@
 package com.reedelk.plugin.editor.properties.renderer.typecombo;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.TypeComboDescriptor;
+import com.reedelk.module.descriptor.model.property.ComboDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
@@ -23,7 +23,7 @@ public class ComboPropertyRenderer extends AbstractPropertyTypeRenderer {
                              @NotNull PropertyAccessor propertyAccessor,
                              @NotNull ContainerContext context) {
 
-        TypeComboDescriptor typeComboDescriptor = propertyDescriptor.getType();
+        ComboDescriptor typeComboDescriptor = propertyDescriptor.getType();
 
         String prototype = typeComboDescriptor.getPrototype();
         boolean editable = typeComboDescriptor.isEditable();

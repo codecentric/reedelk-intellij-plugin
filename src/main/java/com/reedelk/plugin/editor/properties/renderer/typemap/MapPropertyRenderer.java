@@ -1,10 +1,10 @@
 package com.reedelk.plugin.editor.properties.renderer.typemap;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.module.descriptor.model.ComponentDataHolder;
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.TypeMapDescriptor;
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
+import com.reedelk.module.descriptor.model.property.MapDescriptor;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.plugin.editor.properties.renderer.AbstractCollectionAwarePropertyTypeRenderer;
@@ -33,7 +33,7 @@ public class MapPropertyRenderer extends AbstractCollectionAwarePropertyTypeRend
                              @NotNull ContainerContext context) {
 
         final String propertyDisplayName = descriptor.getDisplayName();
-        final TypeMapDescriptor propertyType = descriptor.getType();
+        final MapDescriptor propertyType = descriptor.getType();
         final MapColumnAndModel columnAndModel = getColumnAndModel(module, propertyAccessor, propertyType);
 
         return ofNullable(propertyType.getTabGroup())
@@ -53,13 +53,13 @@ public class MapPropertyRenderer extends AbstractCollectionAwarePropertyTypeRend
 
     private MapColumnAndModel getColumnAndModel(@NotNull Module module,
                                                 @NotNull PropertyAccessor propertyAccessor,
-                                                @NotNull TypeMapDescriptor propertyType) {
+                                                @NotNull MapDescriptor propertyType) {
         return isTypeObjectDescriptor(propertyType) ?
                 createCustomObjectContent(module, propertyType, propertyAccessor) :
                 createContent(propertyType, propertyAccessor);
     }
 
-    private MapColumnAndModel createContent(@NotNull TypeMapDescriptor propertyType,
+    private MapColumnAndModel createContent(@NotNull MapDescriptor propertyType,
                                             @NotNull PropertyAccessor propertyAccessor) {
         MapTableModel tableModel = new MapTableModel(propertyAccessor);
         MapTableColumnModelFactory columnModel = new MapTableColumnModelFactory(propertyType);
@@ -67,10 +67,10 @@ public class MapPropertyRenderer extends AbstractCollectionAwarePropertyTypeRend
     }
 
     protected MapColumnAndModel createCustomObjectContent(@NotNull Module module,
-                                                          @NotNull TypeMapDescriptor propertyType,
+                                                          @NotNull MapDescriptor propertyType,
                                                           @NotNull PropertyAccessor propertyAccessor) {
 
-        final TypeObjectDescriptor typeObjectDescriptor = (TypeObjectDescriptor) propertyType.getValueType();
+        final ObjectDescriptor typeObjectDescriptor = (ObjectDescriptor) propertyType.getValueType();
         final String dialogTitle = ofNullable(propertyType.getDialogTitle()).orElse(EMPTY);
         TableCustomEditButtonAction action = value -> {
             String editDialogTitle = message("properties.type.map.value.edit", dialogTitle);
@@ -83,8 +83,8 @@ public class MapPropertyRenderer extends AbstractCollectionAwarePropertyTypeRend
         return new MapColumnAndModel(tableModel, columnModel);
     }
 
-    private boolean isTypeObjectDescriptor(TypeMapDescriptor propertyType) {
-        return propertyType.getValueType() instanceof TypeObjectDescriptor;
+    private boolean isTypeObjectDescriptor(MapDescriptor propertyType) {
+        return propertyType.getValueType() instanceof ObjectDescriptor;
     }
 
     static class MapColumnAndModel {

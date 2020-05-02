@@ -1,8 +1,8 @@
 package com.reedelk.plugin.component.type.generic;
 
 import com.google.common.collect.ImmutableMap;
-import com.reedelk.module.descriptor.model.ComponentDescriptor;
-import com.reedelk.module.descriptor.model.TypeObjectDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.fixture.ComponentNode1;
 import com.reedelk.plugin.graph.deserializer.AbstractNodeDeserializerTest;
@@ -25,7 +25,7 @@ public class GenericComponentDeserializerTypeMapTest extends AbstractNodeDeseria
     void shouldCorrectlyDeserializeGenericComponentWithMapProperty() {
         // Given
         ComponentDescriptor descriptor = ComponentDescriptor.create()
-                .propertyDescriptors(asList(stringProperty, mapProperty))
+                .properties(asList(stringProperty, mapProperty))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build();
 
@@ -51,7 +51,7 @@ public class GenericComponentDeserializerTypeMapTest extends AbstractNodeDeseria
     void shouldCorrectlyDeserializeGenericComponentWithEmptyMapProperty() {
         // Given
         ComponentDescriptor descriptor = ComponentDescriptor.create()
-                .propertyDescriptors(asList(stringProperty, mapProperty))
+                .properties(asList(stringProperty, mapProperty))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build();
 
@@ -78,7 +78,7 @@ public class GenericComponentDeserializerTypeMapTest extends AbstractNodeDeseria
     void shouldCorrectlyDeserializeComponentWithMapCustomValueType() {
         // Given
         ComponentDescriptor descriptor = ComponentDescriptor.create()
-                .propertyDescriptors(asList(stringProperty, mapPropertyWithCustomValueType))
+                .properties(asList(stringProperty, mapPropertyWithCustomValueType))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build();
 
@@ -98,7 +98,7 @@ public class GenericComponentDeserializerTypeMapTest extends AbstractNodeDeseria
                 .node(lastNode).is(node)
                 .hasDataWithValue("stringProperty", "first property")
                 .hasDataWithValue("mapPropertyWithCustomValueType", actual -> {
-                    Map<String, TypeObjectDescriptor.TypeObject> deSerializedMap = (Map<String, TypeObjectDescriptor.TypeObject>) actual;
+                    Map<String, ObjectDescriptor.TypeObject> deSerializedMap = (Map<String, ObjectDescriptor.TypeObject>) actual;
                     boolean containsAllKeys = deSerializedMap.containsKey("200") && deSerializedMap.containsKey("400");
                     boolean matches200 = containsProperties(deSerializedMap.get("200"), ImmutableMap.of(
                             "integerObjectProperty", 200,
@@ -118,7 +118,7 @@ public class GenericComponentDeserializerTypeMapTest extends AbstractNodeDeseria
     void shouldCorrectlyDeserializeComponentWithEmptyMapCustomValueType() {
         // Given
         ComponentDescriptor descriptor = ComponentDescriptor.create()
-                .propertyDescriptors(asList(stringProperty, mapPropertyWithCustomValueType))
+                .properties(asList(stringProperty, mapPropertyWithCustomValueType))
                 .fullyQualifiedName(ComponentNode1.class.getName())
                 .build();
 
@@ -138,13 +138,13 @@ public class GenericComponentDeserializerTypeMapTest extends AbstractNodeDeseria
                 .node(lastNode).is(node)
                 .hasDataWithValue("stringProperty", "first property")
                 .hasDataWithValue("mapPropertyWithCustomValueType", actual -> {
-                    Map<String, TypeObjectDescriptor.TypeObject> deSerializedMap = (Map<String, TypeObjectDescriptor.TypeObject>) actual;
+                    Map<String, ObjectDescriptor.TypeObject> deSerializedMap = (Map<String, ObjectDescriptor.TypeObject>) actual;
                     return deSerializedMap.isEmpty();
                 })
                 .and().nodesCountIs(2);
     }
 
-    private boolean containsProperties(TypeObjectDescriptor.TypeObject actual, Map<String,Object> properties) {
+    private boolean containsProperties(ObjectDescriptor.TypeObject actual, Map<String,Object> properties) {
         return properties.keySet().stream().allMatch(key -> {
             Object actualValue = actual.get(key);
             Object expectedValue = properties.get(key);

@@ -1,15 +1,8 @@
 package com.reedelk.plugin.service.module.impl.completion;
 
-import com.reedelk.plugin.assertion.PluginAssertion;
-import org.junit.jupiter.api.Test;
-
-import java.util.HashMap;
-import java.util.List;
-
-import static java.util.Arrays.asList;
-
 class SuggestionTreeTest {
 
+    /**
     @Test
     void shouldReturnEmptyWhenNoMatchesAreFound() {
         // Given
@@ -116,5 +109,5 @@ class SuggestionTreeTest {
 
         // Then
         PluginAssertion.assertThat(autocomplete).isEmpty();
-    }
+    }*/
 }

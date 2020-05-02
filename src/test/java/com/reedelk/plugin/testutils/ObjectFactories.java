@@ -1,6 +1,6 @@
 package com.reedelk.plugin.testutils;
 
-import com.reedelk.module.descriptor.model.*;
+import com.reedelk.module.descriptor.model.property.*;
 import com.reedelk.runtime.api.script.dynamicvalue.DynamicValue;
 
 import java.util.List;
@@ -9,8 +9,8 @@ import java.util.Map;
 public class ObjectFactories {
 
 
-    public static TypeObjectDescriptor createTypeObjectDescriptor(String fullyQualifiedName, List<PropertyDescriptor> propertiesDescriptor, Shared shared) {
-        TypeObjectDescriptor descriptor = new TypeObjectDescriptor();
+    public static ObjectDescriptor createTypeObjectDescriptor(String fullyQualifiedName, List<PropertyDescriptor> propertiesDescriptor, Shared shared) {
+        ObjectDescriptor descriptor = new ObjectDescriptor();
         descriptor.setTypeFullyQualifiedName(fullyQualifiedName);
         descriptor.setCollapsible(Collapsible.NO);
         descriptor.setShared(shared);
@@ -18,51 +18,51 @@ public class ObjectFactories {
         return descriptor;
     }
 
-    public static TypeObjectDescriptor createTypeObjectDescriptor(String fullyQualifiedName, List<PropertyDescriptor> propertiesDescriptor) {
+    public static ObjectDescriptor createTypeObjectDescriptor(String fullyQualifiedName, List<PropertyDescriptor> propertiesDescriptor) {
         return createTypeObjectDescriptor(fullyQualifiedName, propertiesDescriptor, Shared.NO);
     }
 
-    public static TypePrimitiveDescriptor createTypePrimitiveDescriptor(Class<?> clazzType) {
-        TypePrimitiveDescriptor descriptor = new TypePrimitiveDescriptor();
+    public static PrimitiveDescriptor createTypePrimitiveDescriptor(Class<?> clazzType) {
+        PrimitiveDescriptor descriptor = new PrimitiveDescriptor();
         descriptor.setType(clazzType);
         return descriptor;
     }
 
-    public static <T extends DynamicValue<?>> TypeDynamicValueDescriptor createTypeDynamicValueDescriptor(Class<T> dynamicClazzType) {
-        TypeDynamicValueDescriptor descriptor = new TypeDynamicValueDescriptor();
+    public static <T extends DynamicValue<?>> DynamicValueDescriptor createTypeDynamicValueDescriptor(Class<T> dynamicClazzType) {
+        DynamicValueDescriptor descriptor = new DynamicValueDescriptor();
         descriptor.setType(dynamicClazzType);
         return descriptor;
     }
 
-    public static TypeEnumDescriptor createTypeEnumDescriptor(Map<String,String> valueAndDisplayMap) {
-        TypeEnumDescriptor descriptor = new TypeEnumDescriptor();
+    public static EnumDescriptor createTypeEnumDescriptor(Map<String,String> valueAndDisplayMap) {
+        EnumDescriptor descriptor = new EnumDescriptor();
         descriptor.setNameAndDisplayNameMap(valueAndDisplayMap);
         return descriptor;
     }
 
-    public static TypeComboDescriptor createTypeComboDescriptor(boolean editable, String[] comboValues, String prototype) {
-        TypeComboDescriptor descriptor = new TypeComboDescriptor();
+    public static ComboDescriptor createTypeComboDescriptor(boolean editable, String[] comboValues, String prototype) {
+        ComboDescriptor descriptor = new ComboDescriptor();
         descriptor.setComboValues(comboValues);
         descriptor.setEditable(editable);
         descriptor.setPrototype(prototype);
         return descriptor;
     }
 
-    public static TypeMapDescriptor createTypeMapDescriptor(String tabGroup, TypeDescriptor valueType) {
-        TypeMapDescriptor descriptor = new TypeMapDescriptor();
+    public static MapDescriptor createTypeMapDescriptor(String tabGroup, PropertyTypeDescriptor valueType) {
+        MapDescriptor descriptor = new MapDescriptor();
         descriptor.setValueType(valueType);
         descriptor.setTabGroup(tabGroup);
         return descriptor;
     }
 
-    public static TypeListDescriptor createTypeListDescriptor(String tabGroup, TypeDescriptor valueType) {
-        TypeListDescriptor descriptor = new TypeListDescriptor();
+    public static ListDescriptor createTypeListDescriptor(String tabGroup, PropertyTypeDescriptor valueType) {
+        ListDescriptor descriptor = new ListDescriptor();
         descriptor.setValueType(valueType);
         descriptor.setTabGroup(tabGroup);
         return descriptor;
     }
 
-    public static ScriptSignatureDescriptor createScriptSignatureDefinition(List<String> arguments) {
+    public static ScriptSignatureDescriptor createScriptSignatureDefinition(List<ScriptSignatureArgument> arguments) {
         ScriptSignatureDescriptor definition = new ScriptSignatureDescriptor();
         definition.setArguments(arguments);
         return definition;

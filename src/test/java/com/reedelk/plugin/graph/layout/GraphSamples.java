@@ -1,6 +1,6 @@
 package com.reedelk.plugin.graph.layout;
 
-import com.reedelk.module.descriptor.model.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.plugin.AbstractGraphTest;
 import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.commons.Images;
@@ -370,7 +370,7 @@ public class GraphSamples {
         ComponentDescriptor descriptor = ComponentDescriptor.create()
                 .displayName(name)
                 .fullyQualifiedName(name)
-                .propertyDescriptors(Collections.emptyList())
+                .properties(Collections.emptyList())
                 .build();
         descriptor.setIcon(Icons.Component.Default);
         descriptor.setImage(Images.Component.DefaultComponent);

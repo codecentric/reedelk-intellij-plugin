@@ -1,7 +1,7 @@
 package com.reedelk.plugin.commons;
 
-import com.reedelk.module.descriptor.model.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.TypePrimitiveDescriptor;
+import com.reedelk.module.descriptor.model.property.PrimitiveDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.runtime.api.annotation.InitValue;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +12,7 @@ class InitPropertyValueTest {
     @Test
     void shouldUseDefaultValueWhenInitIsNotSpecified() {
         // Given
-        TypePrimitiveDescriptor typeDescriptor = new TypePrimitiveDescriptor();
+        PrimitiveDescriptor typeDescriptor = new PrimitiveDescriptor();
         typeDescriptor.setType(long.class);
 
         PropertyDescriptor descriptor = PropertyDescriptor.builder()
@@ -30,7 +30,7 @@ class InitPropertyValueTest {
     @Test
     void shouldUseDefaultValueWhenInitIsDefault_USE_DEFAULT_VALUE() {
         // Given
-        TypePrimitiveDescriptor typeDescriptor = new TypePrimitiveDescriptor();
+        PrimitiveDescriptor typeDescriptor = new PrimitiveDescriptor();
         typeDescriptor.setType(int.class);
 
         PropertyDescriptor descriptor = PropertyDescriptor.builder()
@@ -49,7 +49,7 @@ class InitPropertyValueTest {
     @Test
     void shouldConvertValueFromInitValueString() {
         // Given
-        TypePrimitiveDescriptor typeDescriptor = new TypePrimitiveDescriptor();
+        PrimitiveDescriptor typeDescriptor = new PrimitiveDescriptor();
         typeDescriptor.setType(long.class);
 
         PropertyDescriptor descriptor = PropertyDescriptor.builder()

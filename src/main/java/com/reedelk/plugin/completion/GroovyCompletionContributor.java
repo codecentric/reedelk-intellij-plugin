@@ -9,13 +9,10 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.impl.completion.Suggestion;
-import com.reedelk.runtime.api.autocomplete.AutocompleteItemType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.intellij.icons.AllIcons.Nodes.Method;
-import static com.intellij.icons.AllIcons.Nodes.Variable;
 import static com.reedelk.plugin.userdata.ScriptEditorKey.COMPONENT_FULLY_QUALIFIED_NAME;
 import static com.reedelk.plugin.userdata.ScriptEditorKey.MODULE_NAME;
 
@@ -44,10 +41,10 @@ public class GroovyCompletionContributor extends CompletionContributor {
 
     private void addSuggestion(@NotNull CompletionResultSet result, Suggestion suggestion) {
         final LookupElementBuilder lookupBuilder =
-                LookupElementBuilder.create(suggestion.getSuggestion())
-                        .withPresentableText(suggestion.getSignature())
-                        .withTypeText(suggestion.getReturnType())
-                        .withIcon(suggestion.getItemType() == AutocompleteItemType.FUNCTION ? Method : Variable);
+                LookupElementBuilder.create(suggestion.lookupString())
+                        .withPresentableText(suggestion.presentableText())
+                        .withTypeText(suggestion.typeText())
+                        .withIcon(suggestion.icon());
 
         // For some suggestions like for .put('') we must adjust the caret back by X positions.
         // If the suggestion definition has defined an offset, then we add an insert handler
@@ -55,7 +52,7 @@ public class GroovyCompletionContributor extends CompletionContributor {
         LookupElementBuilder finalLookupBuilder =
                 lookupBuilder.withInsertHandler((insertionContext, item) -> {
                     int currentOffset = insertionContext.getEditor().getCaretModel().getOffset();
-                    insertionContext.getEditor().getCaretModel().moveToOffset(currentOffset - suggestion.getCursorOffset());
+                    insertionContext.getEditor().getCaretModel().moveToOffset(currentOffset - suggestion.cursorOffset());
                 });
 
         result.addElement(finalLookupBuilder);

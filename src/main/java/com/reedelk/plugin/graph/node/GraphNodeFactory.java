@@ -1,7 +1,7 @@
 package com.reedelk.plugin.graph.node;
 
 import com.intellij.openapi.module.Module;
-import com.reedelk.module.descriptor.model.ComponentDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.plugin.commons.ImplementsInterface;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.component.ComponentDescriptionDecorator;
