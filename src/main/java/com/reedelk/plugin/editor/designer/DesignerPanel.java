@@ -7,6 +7,7 @@ import com.reedelk.module.descriptor.model.ModuleDescriptor;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.DesignerWindowSizeCalculator;
 import com.reedelk.plugin.commons.ToolWindowUtils;
+import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.editor.designer.debug.CenterOfNodeDrawable;
 import com.reedelk.plugin.editor.designer.debug.PrintFlowInfo;
 import com.reedelk.plugin.editor.designer.dnd.DesignerDropTargetListener;
@@ -28,7 +29,6 @@ import com.reedelk.plugin.graph.SnapshotListener;
 import com.reedelk.plugin.graph.layout.FlowGraphLayout;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.impl.component.ComponentListUpdateNotifier;
-import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.event.AncestorEvent;
@@ -93,8 +93,8 @@ public abstract class DesignerPanel extends DisposablePanel implements
         addMouseMotionListener(this);
 
         this.busConnection = module.getMessageBus().connect();
-        this.busConnection.subscribe(ReedelkTopics.COMPONENTS_UPDATE_EVENTS, this);
-        this.currentComponentPublisher = module.getProject().getMessageBus().syncPublisher(ReedelkTopics.CURRENT_COMPONENT_SELECTION_EVENTS);
+        this.busConnection.subscribe(Topics.COMPONENTS_UPDATE_EVENTS, this);
+        this.currentComponentPublisher = module.getProject().getMessageBus().syncPublisher(Topics.CURRENT_COMPONENT_SELECTION_EVENTS);
 
         addDropTargetListener(module, snapshot, actionHandler);
         addAncestorListener();

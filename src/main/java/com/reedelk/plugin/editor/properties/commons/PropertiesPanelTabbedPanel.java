@@ -44,12 +44,12 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
         if (propertiesByGroup.isEmpty()) {
             // The component does not have any property defined (e.g Try-Catch, Fork ...)
             String tabName = message("properties.panel.tab.title.general");
-            addTabFromSupplier(tabName, PanelWithText.NoPropertiesPanel::new);
+            addPropertiesTab(tabName, PanelWithText.NoPropertiesPanel::new);
             setTabComponentAt(count, new TabLabelVertical(tabName));
             count++;
         } else {
             for (Map.Entry<String, List<PropertyDescriptor>> entry : propertiesByGroup.entrySet()) {
-                addTabFromProperties(entry.getKey(), entry.getValue());
+                addPropertiesTab(entry.getKey(), entry.getValue());
                 setTabComponentAt(count, new TabLabelVertical(entry.getKey()));
                 count++;
             }
@@ -67,7 +67,7 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
 
         int count = 0;
         for (Map.Entry<String, Supplier<JComponent>> entry : componentByGroup.entrySet()) {
-            addTabFromSupplier(entry.getKey(), entry.getValue());
+            addPropertiesTab(entry.getKey(), entry.getValue());
             setTabComponentAt(count, new TabLabelVertical(entry.getKey()));
             count++;
         }
@@ -75,27 +75,31 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
         setTabComponentAt(count, new TabLabelVertical(message("properties.panel.tab.title.help")));
     }
 
-    private void addTabFromSupplier(String key, Supplier<JComponent> componentSupplier) {
+    private void addPropertiesTab(String key, Supplier<JComponent> componentSupplier) {
         GenericTab genericTab = new GenericTab(componentSupplier);
         addTab(key, genericTab);
     }
 
-    private void addTabFromProperties(String key, List<PropertyDescriptor> propertyDescriptors) {
+    private void addPropertiesTab(String propertyGroup, List<PropertyDescriptor> propertyDescriptors) {
         if (isSingleTypeObject(propertyDescriptors)) {
-            addTabFromSupplier(key, () -> {
-                // *Unroll* all the object properties in the Tab
+            addPropertiesTab(propertyGroup, () -> {
+                // we *Unroll* all the object properties in the Tab
                 PropertyDescriptor propertyDescriptor = propertyDescriptors.get(0);
                 PropertyTypeDescriptor type = propertyDescriptor.getType();
                 ObjectDescriptor typeObjectDescriptor = (ObjectDescriptor) type;
                 List<PropertyDescriptor> objectProperties = typeObjectDescriptor.getObjectProperties();
-                String fullyQualifiedName = typeObjectDescriptor.getTypeFullyQualifiedName();
+
+                String propertyName = propertyDescriptor.getName();
+                String componentPropertyPath = componentData.getFullyQualifiedName() + "#" + propertyName;
+
                 ComponentDataHolder objectDataHolder = componentData.get(propertyDescriptor.getName());
-                return new PropertiesPanelHolder(module, fullyQualifiedName, objectDataHolder, objectProperties, snapshot);
+                return new PropertiesPanelHolder(module, componentPropertyPath, objectDataHolder, objectProperties, snapshot);
             });
+
         } else {
-            addTabFromSupplier(key, () -> {
-                String fullyQualifiedName = componentData.getFullyQualifiedName();
-                return new PropertiesPanelHolder(module, fullyQualifiedName, componentData, propertyDescriptors, snapshot);
+            addPropertiesTab(propertyGroup, () -> {
+                String componentPropertyPath = componentData.getFullyQualifiedName();
+                return new PropertiesPanelHolder(module, componentPropertyPath, componentData, propertyDescriptors, snapshot);
             });
         }
     }

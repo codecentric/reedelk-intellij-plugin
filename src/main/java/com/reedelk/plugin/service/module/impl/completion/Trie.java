@@ -23,17 +23,6 @@ public class Trie {
         current.setSuggestion(suggestion);
     }
 
-    public List<Suggestion> traversal(TrieNode start, List<Suggestion> suggestion, String current) {
-        if (start.isSuggestion()) {
-            suggestion.add(start.getSuggestion());
-        }
-        start.getChildren().forEach((character, trieNode) -> {
-            String newCurrent = current + character;
-            traversal(trieNode, suggestion, newCurrent);
-        });
-        return suggestion;
-    }
-
     public List<Suggestion> autocomplete(String word) {
         List<Suggestion> suggestions = new ArrayList<>();
         TrieNode current = root;
@@ -59,5 +48,16 @@ public class Trie {
             String prefix = lastWordIndex != -1 ? word.substring(lastWordIndex + 1) : word;
             return traversal(current, suggestions, prefix);
         }
+    }
+
+    private List<Suggestion> traversal(TrieNode start, List<Suggestion> suggestion, String current) {
+        if (start.isSuggestion()) {
+            suggestion.add(start.getSuggestion());
+        }
+        start.getChildren().forEach((character, trieNode) -> {
+            String newCurrent = current + character;
+            traversal(trieNode, suggestion, newCurrent);
+        });
+        return suggestion;
     }
 }

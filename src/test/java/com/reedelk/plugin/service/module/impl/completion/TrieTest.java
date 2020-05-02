@@ -1,37 +1,25 @@
 package com.reedelk.plugin.service.module.impl.completion;
 
+import com.reedelk.plugin.assertion.PluginAssertion;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
 class TrieTest {
-
-    /**
+// TODO: Finish me.
     @Test
-    void shouldCorrectlyInsertSuggestionToken() {
-        // Given
-        Trie trie = new Trie();
-
-        // When
-        trie.insert(SampleSuggestions.UTIL);
-
-        // Then
-        List<Suggestion> result = trie.autocomplete("Ut");
-        PluginAssertion.assertThat(result)
-                .containsOnly(SampleSuggestions.UTIL);
-    }
-
-    @Test
-    void shouldCorrectlyFindMultipleSuggestionsByPrefix() {
+    void shouldFindMultipleSuggestionsByPrefix() {
         // Given
         Suggestion suggestion1 = Suggestion.create(Suggestion.Type.PROPERTY)
-                .withLookupString("text")
-                .withType("com.test.MyType")
-                .withPresentableText("text")
-                .withCursorOffset(0)
+                .withLookupString("method1")
+                .withPresentableText("method1()")
+                .withType(String.class.getName())
                 .build();
 
-        Suggestion suggestion2 = Suggestion.create(Suggestion.Type.FUNCTION)
-                .withLookupString("textWithMimeType")
-                .withType("com.test.MyType")
-                .withPresentableText("textWithMimeType()")
-                .withCursorOffset(0)
+        Suggestion suggestion2 = Suggestion.create(Suggestion.Type.PROPERTY)
+                .withLookupString("method2")
+                .withPresentableText("method2()")
+                .withType(String.class.getName())
                 .build();
 
         Trie trie = new Trie();
@@ -39,7 +27,7 @@ class TrieTest {
         trie.insert(suggestion2);
 
         // When
-        List<Suggestion> suggestions = trie.autocomplete("te");
+        List<Suggestion> suggestions = trie.autocomplete("me");
 
         // Then
         PluginAssertion.assertThat(suggestions)
@@ -47,7 +35,20 @@ class TrieTest {
                 .contains(suggestion1)
                 .contains(suggestion2);
     }
-
+/**
+ *     @Test
+ *     void shouldCorrectlyInsertSuggestionToken() {
+ *         // Given
+ *         Trie trie = new Trie();
+ *
+ *         // When
+ *         trie.insert(SampleSuggestions.UTIL);
+ *
+ *         // Then
+ *         List<Suggestion> result = trie.autocomplete("Ut");
+ *         PluginAssertion.assertThat(result)
+ *                 .containsOnly(SampleSuggestions.UTIL);
+ *     }
     @Test
     void shouldCorrectlyAllSuggestionsWhenEmptyString() {
         // Given

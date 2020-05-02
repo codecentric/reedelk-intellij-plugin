@@ -28,8 +28,8 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
+import static com.reedelk.plugin.commons.Topics.COMMIT_COMPONENT_PROPERTIES_EVENTS;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
-import static com.reedelk.plugin.topic.ReedelkTopics.COMMIT_COMPONENT_PROPERTIES_EVENTS;
 import static com.reedelk.runtime.api.commons.StringUtils.isBlank;
 
 public class ModuleBuilderBeforeTaskProvider extends BeforeRunTaskProvider<ModuleBuilderBeforeTask> {

@@ -4,10 +4,10 @@ import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.Colors;
+import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.impl.completion.Suggestion;
-import com.reedelk.plugin.topic.ReedelkTopics;
 import com.reedelk.runtime.api.commons.StringUtils;
 
 import javax.swing.*;
@@ -44,7 +44,7 @@ class ScriptEditorContextPanel extends DisposablePanel implements CompletionServ
         setBorder(MATTE_BORDER);
 
         this.connect = module.getMessageBus().connect();
-        connect.subscribe(ReedelkTopics.COMPLETION_EVENT_TOPIC, this);
+        connect.subscribe(Topics.COMPLETION_EVENT_TOPIC, this);
 
         JLabel panelTitle = new JLabel(message("script.editor.context.vars.title"));
         JPanel panelTitleWrapper = new JPanel();
@@ -77,11 +77,9 @@ class ScriptEditorContextPanel extends DisposablePanel implements CompletionServ
     @Override
     public void onCompletionsUpdated() {
         List<Suggestion> suggestions = getSuggestions();
-
         SwingUtilities.invokeLater(() -> {
             panelVariables.removeAll();
-            suggestions.forEach(suggestion ->
-                    panelVariables.add(new ContextVariableLabel(suggestion)));
+            suggestions.forEach(suggestion -> panelVariables.add(new ContextVariableLabel(suggestion)));
             panelVariables.repaint();
         });
     }

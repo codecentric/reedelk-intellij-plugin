@@ -26,7 +26,7 @@ class PropertyChangeNotifierDecorator implements PropertyAccessor {
     public <T> void set(T object) {
         wrapped.set(object);
         String propertyName = wrapped.getProperty();
-        context.notifyPropertyChanged(propertyName, object);
+        context.notifyPropertyChange(propertyName, object);
     }
 
     @Override

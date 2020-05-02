@@ -13,38 +13,42 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
 import java.util.function.BiPredicate;
 
-import static com.intellij.util.ui.JBUI.Borders;
+import static com.intellij.util.ui.JBUI.Borders.empty;
+import static java.util.Collections.emptyList;
 
 public class PropertiesPanelHolder extends DisposablePanel implements ContainerContext {
 
-    private final String componentFullyQualifiedName;
+    private static final Border PANEL_BORDERS = empty(8, 0, 0, 10);
+
+    private final String componentPropertyPath;
 
     private final transient Module module;
     private final transient FlowSnapshot snapshot;
     private final transient ComponentDataHolder dataHolder;
     private final transient List<PropertyDescriptor> descriptors = new ArrayList<>();
     private final transient List<JComponentHolder> componentHolders = new ArrayList<>();
-    private final transient Map<String, PropertyAccessor> propertyAccessors = new HashMap<>();
+    private final transient Map<String, PropertyAccessor> changeAwarePropertyAccessor = new HashMap<>();
     private final transient Map<String, List<InputChangeListener>> propertyChangeListeners = new HashMap<>();
 
     public PropertiesPanelHolder(@NotNull Module module,
-                                 @NotNull String componentFullyQualifiedName,
+                                 @NotNull String componentPropertyPath,
                                  @NotNull ComponentDataHolder dataHolder,
                                  @NotNull List<PropertyDescriptor> descriptors,
                                  @Nullable FlowSnapshot snapshot) {
         this.module = module;
         this.snapshot = snapshot;
         this.dataHolder = dataHolder;
-        this.componentFullyQualifiedName = componentFullyQualifiedName;
+        this.componentPropertyPath = componentPropertyPath;
         this.descriptors.addAll(descriptors);
 
         setLayout(new GridBagLayout());
-        setBorder(Borders.empty(8, 0, 0, 10));
+        setBorder(PANEL_BORDERS);
         initAccessors();
         renderProperties();
     }
@@ -54,10 +58,10 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
      * is a special, custom rendered property type.
      */
     public PropertiesPanelHolder(@NotNull Module module,
-                                 @NotNull String componentFullyQualifiedName,
+                                 @NotNull String componentPropertyPath,
                                  @NotNull ComponentDataHolder dataHolder,
                                  @Nullable FlowSnapshot snapshot) {
-        this(module, componentFullyQualifiedName, dataHolder, Collections.emptyList(), snapshot);
+        this(module, componentPropertyPath, dataHolder, emptyList(), snapshot);
     }
 
     /**
@@ -65,14 +69,14 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
      * immediately change the values on the Graph snapshot since it writes the values in a a config file.
      */
     public PropertiesPanelHolder(@NotNull Module module,
-                                 @NotNull String componentFullyQualifiedName,
+                                 @NotNull String componentPropertyPath,
                                  @NotNull ComponentDataHolder dataHolder,
                                  @NotNull List<PropertyDescriptor> descriptors) {
-        this(module, componentFullyQualifiedName, dataHolder, descriptors, null);
+        this(module, componentPropertyPath, dataHolder, descriptors, null);
     }
 
     @Override
-    public void subscribePropertyChange(String propertyName, InputChangeListener inputChangeListener) {
+    public void subscribeOnPropertyChange(String propertyName, InputChangeListener inputChangeListener) {
         List<InputChangeListener> changeListenersForProperty =
                 propertyChangeListeners.getOrDefault(propertyName, new ArrayList<>());
         changeListenersForProperty.add(inputChangeListener);
@@ -83,7 +87,7 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
     public <T> T propertyValueFrom(String propertyName) {
         // When an Enum does not have a default value, the property accessor
         // might be null. In this case its value would be null.
-        PropertyAccessor propertyAccessor = propertyAccessors.get(propertyName);
+        PropertyAccessor propertyAccessor = changeAwarePropertyAccessor.get(propertyName);
         return propertyAccessor != null ? propertyAccessor.get() : null;
     }
 
@@ -93,7 +97,7 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
     }
 
     @Override
-    public Optional<JComponent> getComponentMatchingMetadata(BiPredicate<String, String> metadataPredicate) {
+    public Optional<JComponent> findComponentMatchingMetadata(BiPredicate<String, String> metadataPredicate) {
         for (JComponentHolder holder : componentHolders) {
             if (holder.matches(metadataPredicate)) {
                 return Optional.of(holder.getComponent());
@@ -103,7 +107,7 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
     }
 
     @Override
-    public <T> void notifyPropertyChanged(String propertyName, T object) {
+    public <T> void notifyPropertyChange(String propertyName, T object) {
         if (propertyChangeListeners.containsKey(propertyName)) {
             propertyChangeListeners.get(propertyName)
                     .forEach(inputChangeListener -> inputChangeListener.onChange(object));
@@ -111,12 +115,8 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
     }
 
     @Override
-    public String componentFullyQualifiedName() {
-        return componentFullyQualifiedName;
-    }
-
-    public PropertyAccessor getAccessor(String propertyName) {
-        return this.propertyAccessors.get(propertyName);
+    public String componentPropertyPath() {
+        return componentPropertyPath;
     }
 
     protected PropertyAccessor getAccessor(String propertyName, PropertyTypeDescriptor propertyType, ComponentDataHolder dataHolder) {
@@ -142,7 +142,7 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
 
             PropertyAccessor propertyAccessorWrapper = new PropertyChangeNotifierDecorator(this, propertyAccessor);
 
-            propertyAccessors.put(propertyName, propertyAccessorWrapper);
+            changeAwarePropertyAccessor.put(propertyName, propertyAccessorWrapper);
 
         });
     }
@@ -153,15 +153,19 @@ public class PropertiesPanelHolder extends DisposablePanel implements ContainerC
 
             String propertyName = descriptor.getName();
 
-            PropertyAccessor propertyAccessor = getAccessor(propertyName);
+            PropertyAccessor propertyAccessor = changeAwarePropertyAccessor.get(propertyName);
 
             PropertyTypeDescriptor propertyType = descriptor.getType();
 
             PropertyTypeRenderer renderer = PropertyTypeRendererFactory.get().from(propertyType);
 
-            JComponent renderedComponent = renderer.render(module, descriptor, propertyAccessor, this);
+            // We wrap the current context to make the next renderer aware of the path to
+            // the property, starting from the component name.
+            ContainerContext propertyAwareContext = ContainerContextDecorator.decorateForProperty(propertyName, this);
 
-            renderer.addToParent(this, renderedComponent, descriptor, this);
+            JComponent renderedComponent = renderer.render(module, descriptor, propertyAccessor, propertyAwareContext);
+
+            renderer.addToParent(this, renderedComponent, descriptor, propertyAwareContext);
 
         });
     }

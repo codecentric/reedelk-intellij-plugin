@@ -7,6 +7,8 @@ import javax.swing.*;
 
 public class Suggestion {
 
+    private final String name;
+
     public enum Type {
         FUNCTION,
         PROPERTY
@@ -18,12 +20,17 @@ public class Suggestion {
     private final int cursorOffset;
     private final Icon icon;
 
-    private Suggestion(String lookupString, String presentableText, String typeText, Icon icon, int cursorOffset) {
+    private Suggestion(String name, String lookupString, String presentableText, String typeText, Icon icon, int cursorOffset) {
+        this.name = name;
         this.presentableText = presentableText;
         this.lookupString = lookupString;
         this.cursorOffset = cursorOffset;
         this.typeText = typeText;
         this.icon = icon;
+    }
+
+    public String name() {
+        return name;
     }
 
     public String presentableText() {
@@ -55,6 +62,7 @@ public class Suggestion {
         private String presentableText;
         private String lookupString;
         private String typeText;
+        private String name;
         private int cursorOffset;
         private final Icon icon;
 
@@ -78,13 +86,24 @@ public class Suggestion {
             return this;
         }
 
+        public Builder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
         public Builder withCursorOffset(int cursorOffset) {
             this.cursorOffset = cursorOffset;
             return this;
         }
 
         public Suggestion build() {
-            return new Suggestion(lookupString, presentableText, typeText, icon, cursorOffset);
+            if (presentableText == null) {
+                presentableText = lookupString;
+            }
+            if (name == null) {
+                name = lookupString;
+            }
+            return new Suggestion(name, lookupString, presentableText, typeText, icon, cursorOffset);
         }
     }
 }

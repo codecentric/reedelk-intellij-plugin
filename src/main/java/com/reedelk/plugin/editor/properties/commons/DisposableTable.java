@@ -7,8 +7,8 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.Sizes;
 import com.reedelk.plugin.commons.TableColumnModelUtils;
+import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
-import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -33,7 +33,7 @@ public class DisposableTable extends JBTable implements Disposable, CommitProper
         setRowHeight(Sizes.Table.ROW_HEIGHT);
         setFillsViewportHeight(fillViewPortHeight);
         this.busConnection = project.getMessageBus().connect();
-        this.busConnection.subscribe(ReedelkTopics.COMMIT_COMPONENT_PROPERTIES_EVENTS, this);
+        this.busConnection.subscribe(Topics.COMMIT_COMPONENT_PROPERTIES_EVENTS, this);
     }
 
     @Override

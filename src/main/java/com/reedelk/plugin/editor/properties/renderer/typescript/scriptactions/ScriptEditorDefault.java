@@ -37,7 +37,7 @@ class ScriptEditorDefault extends DisposablePanel {
         editorWrapperContainer.setBackground(SCRIPT_EDITOR_DIALOG_BACKGROUND);
 
         ThreeComponentsSplitter splitter = new DisposableThreeComponentsSplitter(HORIZONTAL);
-        splitter.setFirstComponent(new ScriptEditorContextPanel(module, context.componentFullyQualifiedName()));
+        splitter.setFirstComponent(new ScriptEditorContextPanel(module, context.componentPropertyPath()));
         splitter.setLastComponent(editorWrapperContainer);
         splitter.setDividerWidth(DIVIDER_WIDTH);
         splitter.setFirstSize(EDITOR_CONTEXT_VARIABLES_SIZE);

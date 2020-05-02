@@ -25,8 +25,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import static com.reedelk.plugin.commons.Topics.TOPIC_CONFIG_CHANGE;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
-import static com.reedelk.plugin.topic.ReedelkTopics.TOPIC_CONFIG_CHANGE;
 
 public class ConfigurationServiceImpl implements ConfigurationService {
 

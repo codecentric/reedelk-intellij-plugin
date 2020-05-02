@@ -95,7 +95,7 @@ public abstract class AbstractCollectionAwarePropertyTypeRenderer extends Abstra
             // for other components in the panel context having TabGroup metadata with the
             // same value of this tab group name.
             Optional<JComponent> componentMatchingMetadata =
-                    context.getComponentMatchingMetadata((key, value) ->
+                    context.findComponentMatchingMetadata((key, value) ->
                             TabGroup.class.getName().equals(key) && tabGroup.get().equals(value));
             // Exists a group of tabbed pane matching the TabGroup annotation's value.
             if (componentMatchingMetadata.isPresent()) {

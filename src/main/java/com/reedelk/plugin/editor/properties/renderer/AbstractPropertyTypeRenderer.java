@@ -57,7 +57,7 @@ public abstract class AbstractPropertyTypeRenderer implements PropertyTypeRender
         whens.stream()
                 .collect(groupingBy(WhenDescriptor::getPropertyName))
                 .forEach((propertyName, whensForPropertyName) ->
-                        context.subscribePropertyChange(propertyName, newValue -> {
+                        context.subscribeOnPropertyChange(propertyName, newValue -> {
                             boolean shouldBeVisible =
                                     AtLeastOneWhenConditionIsTrue.of(whensForPropertyName, pName -> newValue);
                             setVisible(shouldBeVisible, components);

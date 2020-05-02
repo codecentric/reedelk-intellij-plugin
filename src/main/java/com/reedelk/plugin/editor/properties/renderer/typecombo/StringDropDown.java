@@ -3,9 +3,9 @@ package com.reedelk.plugin.editor.properties.renderer.typecombo;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.util.messages.MessageBusConnection;
+import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
 import com.reedelk.plugin.editor.properties.commons.InputChangeListener;
-import com.reedelk.plugin.topic.ReedelkTopics;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
@@ -29,7 +29,7 @@ public class StringDropDown extends JComboBox<String> implements ItemListener, C
         addItemListener(this);
 
         this.connect = module.getProject().getMessageBus().connect();
-        this.connect.subscribe(ReedelkTopics.COMMIT_COMPONENT_PROPERTIES_EVENTS, this);
+        this.connect.subscribe(Topics.COMMIT_COMPONENT_PROPERTIES_EVENTS, this);
     }
 
     @Override

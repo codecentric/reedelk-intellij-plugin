@@ -15,7 +15,7 @@ public interface CompletionService {
 
     List<Suggestion> contextVariablesOf(String componentFullyQualifiedName);
 
-    List<Suggestion> autocompleteSuggestionOf(String componentFullyQualifiedName, String[] tokens);
+    List<Suggestion> autocompleteSuggestionOf(String componentPropertyPath, String[] tokens);
 
     interface OnCompletionEvent {
         void onCompletionsUpdated();

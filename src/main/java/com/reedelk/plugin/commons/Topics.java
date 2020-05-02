@@ -1,4 +1,4 @@
-package com.reedelk.plugin.topic;
+package com.reedelk.plugin.commons;
 
 import com.intellij.util.messages.Topic;
 import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
@@ -9,7 +9,7 @@ import static com.reedelk.plugin.service.module.CompletionService.OnCompletionEv
 import static com.reedelk.plugin.service.module.impl.configuration.ConfigurationServiceImpl.ConfigChangeListener;
 import static com.reedelk.plugin.service.module.impl.script.ScriptServiceImpl.ScriptResourceChangeListener;
 
-public class ReedelkTopics {
+public class Topics {
 
     public static final Topic<ConfigChangeListener> TOPIC_CONFIG_CHANGE =
             new Topic<>("config change events", ConfigChangeListener.class);
@@ -29,6 +29,6 @@ public class ReedelkTopics {
     public static final Topic<CommitPropertiesListener> COMMIT_COMPONENT_PROPERTIES_EVENTS =
             Topic.create("commit component properties events", CommitPropertiesListener.class);
 
-    private ReedelkTopics() {
+    private Topics() {
     }
 }

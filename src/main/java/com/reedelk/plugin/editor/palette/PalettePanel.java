@@ -14,9 +14,9 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.module.descriptor.model.ModuleDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
+import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.ComponentListUpdateNotifier;
-import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -60,7 +60,7 @@ public class PalettePanel extends JBPanel<PalettePanel> implements ComponentList
         add(componentsTreeScrollPanel, CENTER);
 
         MessageBusConnection connect = project.getMessageBus().connect();
-        connect.subscribe(ReedelkTopics.COMPONENTS_UPDATE_EVENTS, this);
+        connect.subscribe(Topics.COMPONENTS_UPDATE_EVENTS, this);
         connect.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
 
         updateComponentsForSelectedFile();

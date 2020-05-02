@@ -4,6 +4,7 @@ import com.intellij.codeInsight.completion.CompletionContributor;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -13,22 +14,29 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.reedelk.plugin.userdata.ScriptEditorKey.COMPONENT_FULLY_QUALIFIED_NAME;
-import static com.reedelk.plugin.userdata.ScriptEditorKey.MODULE_NAME;
+import static com.reedelk.plugin.commons.UserData.COMPONENT_PROPERTY_PATH;
+import static com.reedelk.plugin.commons.UserData.MODULE_NAME;
+import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
 public class GroovyCompletionContributor extends CompletionContributor {
 
     @Override
     public void fillCompletionVariants(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result) {
-        String moduleName = parameters.getEditor().getUserData(MODULE_NAME);
-        String componentFullyQualifiedName = parameters.getEditor().getUserData(COMPONENT_FULLY_QUALIFIED_NAME);
-        Project project = parameters.getEditor().getProject();
-        if (moduleName != null && project != null) {
+        Editor editor = parameters.getEditor();
+        Project project = editor.getProject();
+        String moduleName = editor.getUserData(MODULE_NAME);
+        String componentFullyQualifiedName = editor.getUserData(COMPONENT_PROPERTY_PATH);
+
+        if (project != null && isNotBlank(moduleName) && isNotBlank(componentFullyQualifiedName)) {
             computeResultSet(parameters, result, moduleName, componentFullyQualifiedName, project);
         }
     }
 
-    private void computeResultSet(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result, String moduleName, String componentFullyQualifiedName, Project project) {
+    private void computeResultSet(@NotNull CompletionParameters parameters,
+                                  @NotNull CompletionResultSet result,
+                                  @NotNull String moduleName,
+                                  @NotNull String componentFullyQualifiedName,
+                                  @NotNull Project project) {
         Module module = ModuleManager.getInstance(project).findModuleByName(moduleName);
         if (module == null) return;
 

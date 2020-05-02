@@ -16,7 +16,7 @@ import java.awt.dnd.DropTargetListener;
 import java.awt.image.ImageObserver;
 import java.util.Optional;
 
-import static com.reedelk.plugin.topic.ReedelkTopics.COMMIT_COMPONENT_PROPERTIES_EVENTS;
+import static com.reedelk.plugin.commons.Topics.COMMIT_COMPONENT_PROPERTIES_EVENTS;
 import static java.awt.dnd.DnDConstants.ACTION_COPY_OR_MOVE;
 
 public class DesignerDropTargetListener implements DropTargetListener {

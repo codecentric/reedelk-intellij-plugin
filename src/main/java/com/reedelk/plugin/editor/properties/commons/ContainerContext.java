@@ -6,16 +6,16 @@ import java.util.function.BiPredicate;
 
 public interface ContainerContext {
 
-    String componentFullyQualifiedName();
+    String componentPropertyPath();
 
     <T> T propertyValueFrom(String propertyName);
 
-    <T> void notifyPropertyChanged(String propertyName, T object);
-
-    Optional<JComponent> getComponentMatchingMetadata(BiPredicate<String, String> keyValuePredicate);
-
-    void subscribePropertyChange(String propertyName, InputChangeListener inputChangeListener);
-
     void addComponent(JComponentHolder componentHolder);
+
+    Optional<JComponent> findComponentMatchingMetadata(BiPredicate<String, String> keyValuePredicate);
+
+    <T> void notifyPropertyChange(String propertyName, T object);
+
+    void subscribeOnPropertyChange(String propertyName, InputChangeListener inputChangeListener);
 
 }

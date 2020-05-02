@@ -9,11 +9,11 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.module.descriptor.model.ModuleDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
+import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.component.type.unknown.Unknown;
 import com.reedelk.plugin.component.type.unknown.UnknownComponentDescriptorWrapper;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.service.module.ComponentService;
-import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.project.MavenImportListener;
 import org.jetbrains.idea.maven.project.MavenProject;
@@ -44,7 +44,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         connection.subscribe(MavenImportListener.TOPIC, this);
         connection.subscribe(CompilerTopics.COMPILATION_STATUS, this);
 
-        this.publisher = messageBus.syncPublisher(ReedelkTopics.COMPONENTS_UPDATE_EVENTS);
+        this.publisher = messageBus.syncPublisher(Topics.COMPONENTS_UPDATE_EVENTS);
 
         // When the service is initialized, then:
         // 1. Load Runtime Commons Module (i.e system components)

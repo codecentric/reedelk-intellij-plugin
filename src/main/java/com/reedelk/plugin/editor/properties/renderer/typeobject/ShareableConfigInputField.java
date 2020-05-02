@@ -27,8 +27,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+import static com.reedelk.plugin.commons.Topics.TOPIC_CONFIG_CHANGE;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
-import static com.reedelk.plugin.topic.ReedelkTopics.TOPIC_CONFIG_CHANGE;
 import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.EAST;
@@ -38,8 +38,8 @@ class ShareableConfigInputField extends DisposablePanel implements Configuration
     private final transient Module module;
     private final transient ContainerContext context;
     private final transient MessageBusConnection connect;
-    private final transient PropertyAccessor propertyAccessor;
     private final transient PropertyDescriptor descriptor;
+    private final transient PropertyAccessor propertyAccessor;
     private final transient ComponentDataHolder referenceDataHolder;
 
     private final ConfigSelectorCombo configSelectorCombo;
@@ -184,7 +184,7 @@ class ShareableConfigInputField extends DisposablePanel implements Configuration
         propertyAccessor.set(configReference);
         // If the selection has changed, we must notify all the
         // context subscribers that the property has changed.
-        context.notifyPropertyChanged(descriptor.getName(), referenceDataHolder);
+        context.notifyPropertyChange(descriptor.getName(), referenceDataHolder);
     }
 
     private static final ConfigMetadata UNSELECTED_CONFIG;

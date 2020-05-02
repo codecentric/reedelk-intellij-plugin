@@ -11,6 +11,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.ToolWindowUtils;
+import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.editor.DesignerEditor;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
@@ -20,7 +21,6 @@ import com.reedelk.plugin.editor.properties.renderer.ComponentPropertiesRenderer
 import com.reedelk.plugin.editor.properties.selection.*;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
-import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -43,7 +43,7 @@ public class PropertiesPanel extends DisposablePanel implements SelectionChangeL
         setEmptySelection();
 
         busConnection = project.getMessageBus().connect();
-        busConnection.subscribe(ReedelkTopics.CURRENT_COMPONENT_SELECTION_EVENTS, this);
+        busConnection.subscribe(Topics.CURRENT_COMPONENT_SELECTION_EVENTS, this);
         busConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
     }
 

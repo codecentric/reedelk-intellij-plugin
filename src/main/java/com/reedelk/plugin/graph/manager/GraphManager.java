@@ -14,12 +14,12 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.module.descriptor.model.ModuleDescriptor;
+import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.editor.DesignerEditor;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.graph.*;
 import com.reedelk.plugin.graph.deserializer.DeserializationError;
 import com.reedelk.plugin.service.module.impl.component.ComponentListUpdateNotifier;
-import com.reedelk.plugin.topic.ReedelkTopics;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -60,7 +60,7 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
         projectBusConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
 
         moduleBusConnection = module.getMessageBus().connect();
-        moduleBusConnection.subscribe(ReedelkTopics.COMPONENTS_UPDATE_EVENTS, this);
+        moduleBusConnection.subscribe(Topics.COMPONENTS_UPDATE_EVENTS, this);
     }
 
     @Override

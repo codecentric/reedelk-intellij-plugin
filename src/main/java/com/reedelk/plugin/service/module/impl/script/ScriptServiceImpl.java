@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static com.reedelk.plugin.commons.Topics.TOPIC_SCRIPT_RESOURCE;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
-import static com.reedelk.plugin.topic.ReedelkTopics.TOPIC_SCRIPT_RESOURCE;
 import static java.util.Collections.unmodifiableList;
 
 public class ScriptServiceImpl implements ScriptService {
