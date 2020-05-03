@@ -27,7 +27,7 @@ public class BooleanPropertyRenderer extends AbstractPropertyTypeRenderer {
         checkbox.addListener(accessor::set);
 
         PropertyTitleLabel propertyTitleLabel = new CheckboxPropertyTitle(descriptor);
-        FlowLayout flowLayout = new FlowLayout(FlowLayout.LEFT, 0, 0);
+        FlowLayout flowLayout = new FlowLayout(FlowLayout.LEFT, 0, 4);
 
         JPanel container = new DisposablePanel();
         container.setLayout(flowLayout);
