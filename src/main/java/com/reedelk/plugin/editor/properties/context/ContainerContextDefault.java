@@ -16,8 +16,8 @@ public class ContainerContextDefault implements ContainerContext {
 
     private final String componentPropertyPath;
     private final transient List<JComponentHolder> componentHolders = new ArrayList<>();
-    private final transient Map<String, PropertyAccessor> changeAwarePropertyAccessor = new HashMap<>();
-    private final transient Map<String, List<InputChangeListener>> propertyChangeListeners = new HashMap<>();
+    protected final transient Map<String, PropertyAccessor> changeAwarePropertyAccessor = new HashMap<>();
+    protected final transient Map<String, List<InputChangeListener>> propertyChangeListeners = new HashMap<>();
 
     public ContainerContextDefault(String componentPropertyPath) {
         this.componentPropertyPath = componentPropertyPath;
@@ -71,6 +71,7 @@ public class ContainerContextDefault implements ContainerContext {
     // We decorate each accessor with a property change decorator, which
     // notifies all the subscribers wishing to listen for a property change event
     // to be notified. This is needed for instance show/hide other properties using @When annotation.
+    @Override
     public PropertyAccessor getPropertyAccessor(PropertyDescriptor propertyDescriptor, FlowSnapshot snapshot, ComponentDataHolder dataHolder) {
 
         String propertyName = propertyDescriptor.getName();
@@ -96,9 +97,9 @@ public class ContainerContextDefault implements ContainerContext {
     }
 
     @NotNull
-    private String getPropertyPath(String propertyName) {
+    protected String getPropertyPath(String propertyName) {
         // Property path is: com.my.component.fully.qualified.name#property1#subproperty1#subsubproperty1
         //  or: com.my.component.fully.qualified.name#property2#subproperty1
-        return ComponentPropertyPath.join(componentPropertyPath, propertyName);
+        return ComponentPropertyPath.join(componentPropertyPath(), propertyName);
     }
 }
