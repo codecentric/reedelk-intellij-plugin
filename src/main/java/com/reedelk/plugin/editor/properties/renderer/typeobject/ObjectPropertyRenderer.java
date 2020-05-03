@@ -7,10 +7,7 @@ import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.property.Shared;
 import com.reedelk.plugin.commons.TooltipContent;
-import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
-import com.reedelk.plugin.editor.properties.commons.FormBuilder;
-import com.reedelk.plugin.editor.properties.commons.JComponentHolder;
-import com.reedelk.plugin.editor.properties.commons.PropertiesPanelHolder;
+import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.editor.properties.context.ContainerContextDecorator;
 import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
@@ -94,7 +91,7 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
                                    @NotNull ContainerContext context) {
         // If the property has any 'when' condition, we apply listener/s to make it
         // visible (or not) when the condition is met (or not).
-        applyWhenVisibility(descriptor.getWhens(), context, rendered);
+        WhenVisibilityApplier.on(descriptor.getWhens(), context, rendered);
 
         // Add the component to the parent container.
         FormBuilder.get().addFullWidthAndHeight(rendered, parent);

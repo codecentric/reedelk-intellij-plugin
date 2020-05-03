@@ -88,23 +88,25 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
     }
 
     private void addPropertiesTab(String propertyGroup, List<PropertyDescriptor> propertyDescriptors) {
-        // TODO: Creatiion of supplier can be made generic
+        JComponent panel;
         if (isSingleTypeObject(propertyDescriptors)) {
-            addPropertiesTab(propertyGroup, () -> {
-                // we *Unroll* all the object properties in the Tab
-                PropertyDescriptor propertyDescriptor = propertyDescriptors.get(0);
-                PropertyTypeDescriptor type = propertyDescriptor.getType();
-                ObjectDescriptor typeObjectDescriptor = (ObjectDescriptor) type;
-                List<PropertyDescriptor> objectProperties = typeObjectDescriptor.getObjectProperties();
+            // Single type object: we *Unroll* all the object properties in the tab
+            PropertyDescriptor propertyDescriptor = propertyDescriptors.get(0);
+            PropertyTypeDescriptor type = propertyDescriptor.getType();
+            ObjectDescriptor typeObjectDescriptor = (ObjectDescriptor) type;
+            List<PropertyDescriptor> objectProperties = typeObjectDescriptor.getObjectProperties();
 
-                ComponentDataHolder objectDataHolder = componentData.get(propertyDescriptor.getName());
-                return new PropertiesPanelHolder(module, context, objectDataHolder, objectProperties, snapshot);
-            });
+            ComponentDataHolder objectDataHolder = componentData.get(propertyDescriptor.getName());
+            panel = new PropertiesPanelHolder(module, context, objectDataHolder, objectProperties, snapshot);
+
+            // Apply visibility specified on this object property with @When annotations.
+            WhenVisibilityApplier.on(propertyDescriptor.getWhens(), context, panel);
 
         } else {
-            addPropertiesTab(propertyGroup, () ->
-                    new PropertiesPanelHolder(module, context, componentData, propertyDescriptors, snapshot));
+            // Visibility will be applied on each single property description in the panel holder.
+            panel = new PropertiesPanelHolder(module, context, componentData, propertyDescriptors, snapshot);
         }
+        addPropertiesTab(propertyGroup, () -> panel);
     }
 
     private boolean isSingleTypeObject(List<PropertyDescriptor> propertyDescriptors) {

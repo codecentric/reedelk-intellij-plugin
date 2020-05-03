@@ -3,10 +3,7 @@ package com.reedelk.plugin.editor.properties.renderer.typeboolean;
 import com.intellij.openapi.module.Module;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
-import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
-import com.reedelk.plugin.editor.properties.commons.FormBuilder;
-import com.reedelk.plugin.editor.properties.commons.JComponentHolder;
-import com.reedelk.plugin.editor.properties.commons.PropertyTitleLabel;
+import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.renderer.AbstractPropertyTypeRenderer;
@@ -47,7 +44,7 @@ public class BooleanPropertyRenderer extends AbstractPropertyTypeRenderer {
 
         // If the property has any 'when' condition, we apply listener/s to make it
         // visible (or not) when the condition is met (or not).
-        applyWhenVisibility(descriptor.getWhens(), context, rendered);
+        WhenVisibilityApplier.on(descriptor.getWhens(), context, rendered);
 
         // Add the component to the parent container.
         FormBuilder.get().addFullWidthAndHeight(rendered, parent);

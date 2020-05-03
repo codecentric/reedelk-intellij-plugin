@@ -4,10 +4,7 @@ import com.intellij.ui.JBColor;
 import com.reedelk.module.descriptor.model.property.CollectionAwareDescriptor;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.commons.Sizes;
-import com.reedelk.plugin.editor.properties.commons.DisposableTabbedPane;
-import com.reedelk.plugin.editor.properties.commons.FormBuilder;
-import com.reedelk.plugin.editor.properties.commons.JComponentHolder;
-import com.reedelk.plugin.editor.properties.commons.PropertyTitleLabel;
+import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.runtime.api.annotation.TabGroup;
 import org.jetbrains.annotations.NotNull;
@@ -29,9 +26,8 @@ public abstract class AbstractCollectionAwarePropertyTypeRenderer extends Abstra
                             @NotNull PropertyDescriptor descriptor,
                             @NotNull ContainerContext context) {
 
-
         final CollectionAwareDescriptor propertyType = descriptor.getType();
-        boolean isTabGroupPresent = ofNullable(propertyType.getTabGroup()).isPresent();
+        final boolean isTabGroupPresent = ofNullable(propertyType.getTabGroup()).isPresent();
 
         if (isTabGroupPresent) {
 
@@ -44,7 +40,7 @@ public abstract class AbstractCollectionAwarePropertyTypeRenderer extends Abstra
 
             // Note that the rendered component is the tabbed pane to be added to the parent container.
             // For now we assume that its visibility is the same for all the tabs present in the tabbed pane.
-            applyWhenVisibility(descriptor.getWhens(), context, rendered);
+            WhenVisibilityApplier.on(descriptor.getWhens(), context, rendered);
 
             // Add the component to the parent container.
             FormBuilder.get().addFullWidthAndHeight(rendered, parent);
@@ -62,7 +58,7 @@ public abstract class AbstractCollectionAwarePropertyTypeRenderer extends Abstra
             propertyTitleLabel.setBorder(emptyTop(6));
 
             // Apply visibility conditions to the label and the rendered component
-            applyWhenVisibility(descriptor.getWhens(), context, rendered, propertyTitleLabel);
+            WhenVisibilityApplier.on(descriptor.getWhens(), context, rendered, propertyTitleLabel);
 
             // Add the component and its property title label to the parent container.
             FormBuilder.get()
