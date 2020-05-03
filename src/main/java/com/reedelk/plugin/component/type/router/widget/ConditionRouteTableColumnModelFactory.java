@@ -3,7 +3,10 @@ package com.reedelk.plugin.component.type.router.widget;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.UIUtil;
-import com.reedelk.plugin.editor.properties.commons.*;
+import com.reedelk.plugin.editor.properties.commons.DisposableTableColumnModelFactory;
+import com.reedelk.plugin.editor.properties.commons.StripedRowCellRenderer;
+import com.reedelk.plugin.editor.properties.commons.TableDynamicCellEditor;
+import com.reedelk.plugin.editor.properties.commons.TableDynamicCellRenderer;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.runtime.api.commons.StringUtils;
 
@@ -16,17 +19,17 @@ import static com.reedelk.runtime.commons.JsonParser.Implementor;
 class ConditionRouteTableColumnModelFactory implements DisposableTableColumnModelFactory {
 
     private final Module module;
-    private final ContainerContext context;
+    private final String componentPropertyPath;
 
-    ConditionRouteTableColumnModelFactory(Module module, ContainerContext context) {
+    ConditionRouteTableColumnModelFactory(Module module, String componentPropertyPath) {
         this.module = module;
-        this.context = context;
+        this.componentPropertyPath = componentPropertyPath;
     }
 
     @Override
     public void create(JBTable table) {
-        TableDynamicCellRenderer cellRenderer = new TableDynamicCellRenderer(module, context);
-        TableDynamicCellEditor conditionCellEditor = new TableDynamicCellEditor(module, context);
+        TableDynamicCellRenderer cellRenderer = new TableDynamicCellRenderer(module, componentPropertyPath);
+        TableDynamicCellEditor conditionCellEditor = new TableDynamicCellEditor(module, componentPropertyPath);
 
         // Column 0 (Condition)
         TableColumn conditionColumn = table.getColumnModel().getColumn(0);

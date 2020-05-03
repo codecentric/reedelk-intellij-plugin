@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.accessor;
+package com.reedelk.plugin.editor.properties.context;
 
 import com.reedelk.plugin.graph.FlowSnapshot;
 

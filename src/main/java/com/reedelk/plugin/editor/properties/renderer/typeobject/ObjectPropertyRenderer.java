@@ -7,9 +7,14 @@ import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.property.Shared;
 import com.reedelk.plugin.commons.TooltipContent;
-import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
-import com.reedelk.plugin.editor.properties.accessor.PropertyAccessorFactory;
-import com.reedelk.plugin.editor.properties.commons.*;
+import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
+import com.reedelk.plugin.editor.properties.commons.FormBuilder;
+import com.reedelk.plugin.editor.properties.commons.JComponentHolder;
+import com.reedelk.plugin.editor.properties.commons.PropertiesPanelHolder;
+import com.reedelk.plugin.editor.properties.context.ContainerContext;
+import com.reedelk.plugin.editor.properties.context.ContainerContextDecorator;
+import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
+import com.reedelk.plugin.editor.properties.context.PropertyAccessorFactory;
 import com.reedelk.plugin.editor.properties.renderer.AbstractPropertyTypeRenderer;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.runtime.commons.JsonParser;
@@ -30,7 +35,7 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
         ObjectDescriptor objectDescriptor = descriptor.getType();
         return Shared.YES.equals(objectDescriptor.getShared()) ?
                 renderShareable(module, descriptor, accessor, context) :
-                renderInline(module, accessor, descriptor);
+                renderInline(module, accessor, descriptor, context);
     }
 
     @Override
@@ -49,7 +54,7 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
     }
 
     @NotNull
-    private JComponent renderInline(Module module, PropertyAccessor propertyAccessor, PropertyDescriptor descriptor) {
+    private JComponent renderInline(Module module, PropertyAccessor propertyAccessor, PropertyDescriptor descriptor, @NotNull ContainerContext context) {
         ObjectDescriptor objectDescriptor = descriptor.getType();
         TooltipContent tooltipContent = TooltipContent.from(descriptor);
         if (Collapsible.YES.equals(objectDescriptor.getCollapsible())) {
@@ -57,9 +62,9 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
             return new CollapsibleObjectTypeContainer(
                     descriptor.getDisplayName(),
                     tooltipContent,
-                    () -> renderObjectProperties(propertyAccessor, objectDescriptor, module));
+                    () -> renderObjectProperties(propertyAccessor, descriptor, module, context));
         } else {
-            JComponent propertiesPanel = renderObjectProperties(propertyAccessor, objectDescriptor, module);
+            JComponent propertiesPanel = renderObjectProperties(propertyAccessor, descriptor, module, context);
             // If the property type is a complex object (not shared), we wrap it in a bordered box with title
             // the name of the object property.
             return ContainerFactory.createObjectTypeContainer(propertiesPanel, descriptor.getDisplayName(), tooltipContent);
@@ -83,7 +88,10 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
         return new ShareableConfigInputField(module, dataHolder, descriptor, refAccessor, context);
     }
 
-    private void addToParentInline(@NotNull JComponent parent, @NotNull JComponent rendered, @NotNull PropertyDescriptor descriptor, @NotNull ContainerContext context) {
+    private void addToParentInline(@NotNull JComponent parent,
+                                   @NotNull JComponent rendered,
+                                   @NotNull PropertyDescriptor descriptor,
+                                   @NotNull ContainerContext context) {
         // If the property has any 'when' condition, we apply listener/s to make it
         // visible (or not) when the condition is met (or not).
         applyWhenVisibility(descriptor.getWhens(), context, rendered);
@@ -93,16 +101,24 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
     }
 
     @NotNull
-    private JComponent renderObjectProperties(PropertyAccessor propertyAccessor, ObjectDescriptor objectDescriptor, Module module) {
+    private JComponent renderObjectProperties(PropertyAccessor propertyAccessor,
+                                              PropertyDescriptor descriptor,
+                                              Module module,
+                                              @NotNull ContainerContext context) {
         // The accessor of type object returns a TypeObject map.
         ComponentDataHolder dataHolder = propertyAccessor.get();
 
         FlowSnapshot snapshot = propertyAccessor.getSnapshot();
 
+        ObjectDescriptor objectDescriptor = descriptor.getType();
+
         List<PropertyDescriptor> objectProperties = objectDescriptor.getObjectProperties();
 
-        String typeFullyQualifiedName = objectDescriptor.getTypeFullyQualifiedName();
+        // We are entering an object property: com.my.component#myObjectProperty1
+        String propertyName = descriptor.getName();
 
-        return new PropertiesPanelHolder(module, typeFullyQualifiedName, dataHolder, objectProperties, snapshot);
+        ContainerContext subPropertyContext = ContainerContextDecorator.decorateForProperty(propertyName, context);
+
+        return new PropertiesPanelHolder(module, subPropertyContext, dataHolder, objectProperties, snapshot);
     }
 }

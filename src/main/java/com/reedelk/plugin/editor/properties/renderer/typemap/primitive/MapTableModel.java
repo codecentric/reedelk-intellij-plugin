@@ -1,8 +1,8 @@
 package com.reedelk.plugin.editor.properties.renderer.typemap.primitive;
 
 import com.reedelk.plugin.commons.VectorUtils;
-import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.TableModelDefaultAbstract;
+import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
 import com.reedelk.runtime.api.commons.StringUtils;
 
 import java.util.LinkedHashMap;

@@ -3,12 +3,13 @@ package com.reedelk.plugin.editor.properties.renderer.typescript.scriptactions;
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.property.ScriptSignatureDescriptor;
+import com.reedelk.plugin.commons.ComponentPropertyPath;
 import com.reedelk.plugin.commons.ScriptFileNameValidator;
 import com.reedelk.plugin.commons.ScriptFunctionDefinitionBuilder;
 import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
-import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DialogConfirmAction;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
+import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.service.module.ScriptService;
 import com.reedelk.plugin.service.module.impl.script.ScriptResource;
 
@@ -53,7 +54,8 @@ public class ScriptActionsPanel extends DisposablePanel {
 
     public void editScript() {
         if (selected.isEditable()) {
-            DialogEditScript dialog = new DialogEditScript(module, selected.getPath(), context);
+            String scriptPropertyPath = ComponentPropertyPath.join(context.componentPropertyPath(), propertyDescriptor.getName());
+            DialogEditScript dialog = new DialogEditScript(module, selected.getPath(), scriptPropertyPath);
             dialog.show();
         }
     }

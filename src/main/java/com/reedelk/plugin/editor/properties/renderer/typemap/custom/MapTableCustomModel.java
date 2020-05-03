@@ -4,8 +4,8 @@ import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.commons.InitValuesFiller;
 import com.reedelk.plugin.commons.VectorUtils;
-import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.TableModelDefaultAbstract;
+import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
 

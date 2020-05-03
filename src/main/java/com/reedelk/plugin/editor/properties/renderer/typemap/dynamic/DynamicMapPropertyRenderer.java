@@ -3,11 +3,12 @@ package com.reedelk.plugin.editor.properties.renderer.typemap.dynamic;
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.property.MapDescriptor;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
-import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
-import com.reedelk.plugin.editor.properties.commons.ContainerContext;
+import com.reedelk.plugin.commons.ComponentPropertyPath;
 import com.reedelk.plugin.editor.properties.commons.DisposableTabbedPane;
 import com.reedelk.plugin.editor.properties.commons.DisposableTableModel;
 import com.reedelk.plugin.editor.properties.commons.TabLabelHorizontal;
+import com.reedelk.plugin.editor.properties.context.ContainerContext;
+import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.renderer.AbstractCollectionAwarePropertyTypeRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typemap.MapTableContainer;
 import com.reedelk.plugin.editor.properties.renderer.typemap.MapTableTabContainer;
@@ -29,12 +30,14 @@ public class DynamicMapPropertyRenderer extends AbstractCollectionAwarePropertyT
 
         final String propertyDisplayName = propertyDescriptor.getDisplayName();
         final MapDescriptor propertyType = propertyDescriptor.getType();
+        final String propertyName = propertyDescriptor.getName();
+        final String componentPropertyPath = ComponentPropertyPath.join(context.componentPropertyPath(), propertyName);
 
         return ofNullable(propertyType.getTabGroup())
                 .map((Function<String, JComponent>) tabGroupName -> {
                     // The table must fit into a Table Tab Group.
                     DisposableTableModel tableModel = new DynamicMapTableModel(propertyAccessor);
-                    DynamicMapTableColumnModelFactory columnModelFactory = new DynamicMapTableColumnModelFactory(module, propertyType, context);
+                    DynamicMapTableColumnModelFactory columnModelFactory = new DynamicMapTableColumnModelFactory(module, propertyType, componentPropertyPath);
                     final JComponent content = new MapTableTabContainer(module, tableModel, columnModelFactory);
                     final DisposableTabbedPane tabbedPane = tabbedPaneFrom(propertyDescriptor, context);
                     tabbedPane.addTab(propertyDisplayName, content);
@@ -45,7 +48,7 @@ public class DynamicMapPropertyRenderer extends AbstractCollectionAwarePropertyT
                     // Single table
                     final DisposableTableModel tableModel = new DynamicMapTableModel(propertyAccessor);
                     final DynamicMapTableColumnModelFactory columnModelFactory =
-                            new DynamicMapTableColumnModelFactory(module, propertyType, context);
+                            new DynamicMapTableColumnModelFactory(module, propertyType, componentPropertyPath);
                     return new MapTableContainer(module, tableModel, columnModelFactory);
                 });
     }

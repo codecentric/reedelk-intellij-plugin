@@ -1,6 +1,6 @@
 package com.reedelk.plugin.editor.properties.renderer.typelist.primitive;
 
-import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
+import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
 
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;

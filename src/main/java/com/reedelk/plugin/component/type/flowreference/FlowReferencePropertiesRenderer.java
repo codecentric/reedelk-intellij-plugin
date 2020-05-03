@@ -5,9 +5,11 @@ import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.component.type.flowreference.widget.SubflowSelector;
 import com.reedelk.plugin.component.type.generic.GenericComponentPropertiesRenderer;
-import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
-import com.reedelk.plugin.editor.properties.accessor.PropertyAccessorFactory;
 import com.reedelk.plugin.editor.properties.commons.*;
+import com.reedelk.plugin.editor.properties.context.ContainerContext;
+import com.reedelk.plugin.editor.properties.context.ContainerContextDefault;
+import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
+import com.reedelk.plugin.editor.properties.context.PropertyAccessorFactory;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.SubflowService;
@@ -41,7 +43,13 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
             throw new IllegalStateException("Reference property descriptor must not be null");
         }
 
+        String fullyQualifiedName = componentData.getFullyQualifiedName();
+
+        ContainerContext context = new ContainerContextDefault(fullyQualifiedName);
+
         Supplier<JComponent> componentSupplier = () -> {
+            // TODO: This accessor should be taken from the context .... because right now we
+            //  are bypassing the change notifier.
             PropertyAccessor referencePropertyAccessor = PropertyAccessorFactory.get()
                     .typeDescriptor(propertyDescriptor.get().getType())
                     .propertyName(FlowReference.ref())
@@ -55,10 +63,8 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
                     .filter(descriptor -> !FlowReference.ref().equals(descriptor.getName()))
                     .collect(toList());
 
-            String fullyQualifiedName = componentData.getFullyQualifiedName();
-
             DisposablePanel genericPropertiesPanel =
-                    new PropertiesPanelHolder(module, fullyQualifiedName, componentData, filteredDescriptors, snapshot);
+                    new PropertiesPanelHolder(module, context, componentData, filteredDescriptors, snapshot);
 
             PropertyDescriptor referencePropertyDescriptor = propertyDescriptor.get();
 
@@ -75,7 +81,7 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
 
         Map<String, Supplier<JComponent>> tabAndComponentSupplier =
                 ImmutableMap.of(defaultTabKey, componentSupplier);
-        return new PropertiesPanelContainer(componentData, tabAndComponentSupplier);
+        return new PropertiesPanelContainer(componentData, tabAndComponentSupplier, context);
     }
 
 

@@ -2,11 +2,13 @@ package com.reedelk.plugin.component.type.router;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
+import com.reedelk.plugin.commons.ComponentPropertyPath;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.component.type.generic.GenericComponentPropertiesRenderer;
 import com.reedelk.plugin.component.type.router.widget.RouterRouteTable;
 import com.reedelk.plugin.editor.properties.commons.PropertiesPanelContainer;
-import com.reedelk.plugin.editor.properties.commons.PropertiesPanelHolder;
+import com.reedelk.plugin.editor.properties.context.ContainerContext;
+import com.reedelk.plugin.editor.properties.context.ContainerContextDefault;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.runtime.api.commons.ImmutableMap;
@@ -42,20 +44,21 @@ public class RouterPropertiesRenderer extends GenericComponentPropertiesRenderer
         String propertyName = propertyDescriptor.getName();
         checkState("conditionAndRouteDefinitions".equals(propertyName), "Expected only one property named 'conditionAndRouteDefinitions' for Router.");
 
-        Supplier<JComponent> routerTableSupplier = () -> {
+        ContainerContext context = new ContainerContextDefault(componentFullyQualifiedName);
 
-            PropertiesPanelHolder propertiesPanel =
-                    new PropertiesPanelHolder(module, componentFullyQualifiedName, componentData, snapshot);
+        Supplier<JComponent> routerTableSupplier = () -> {
 
             List<RouterConditionRoutePair> conditionRoutePairList = componentData.get(DATA_CONDITION_ROUTE_PAIRS);
 
-            return new RouterRouteTable(module, snapshot, conditionRoutePairList, propertiesPanel);
+            String componentPropertyPath = ComponentPropertyPath.join(context.componentPropertyPath(), propertyName);
+
+            return new RouterRouteTable(module, snapshot, conditionRoutePairList, componentPropertyPath);
         };
 
         String defaultTabKey = message("properties.panel.tab.title.general");
 
         Map<String, Supplier<JComponent>> tabAndComponentSupplier =
                 ImmutableMap.of(defaultTabKey, routerTableSupplier);
-        return new PropertiesPanelContainer(componentData, tabAndComponentSupplier);
+        return new PropertiesPanelContainer(componentData, tabAndComponentSupplier, context);
     }
 }

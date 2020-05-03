@@ -22,10 +22,10 @@ public class DynamicValueField extends DisposablePanel {
     private DisposablePanel inputFieldContainer;
     private transient ScriptEditorChangeListener listener;
 
-    public DynamicValueField(Module module, DynamicValueInputFieldAdapter inputFieldAdapter, ContainerContext context) {
+    public DynamicValueField(Module module, DynamicValueInputFieldAdapter inputFieldAdapter, String scriptPropertyPath) {
         this.inputFieldAdapter = inputFieldAdapter;
 
-        this.editor = new DynamicValueScriptEditor(module, context);
+        this.editor = new DynamicValueScriptEditor(module, scriptPropertyPath);
 
         this.scriptContainer = createScriptModePanel(editor);
         this.inputFieldContainer = createInputFieldContainer();

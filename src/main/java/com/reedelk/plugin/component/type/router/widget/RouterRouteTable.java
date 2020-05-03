@@ -5,7 +5,6 @@ import com.intellij.ui.JBColor;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.component.type.router.RouterConditionRoutePair;
-import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.DisposableTable;
 import com.reedelk.plugin.graph.FlowSnapshot;
 
@@ -16,12 +15,12 @@ public class RouterRouteTable extends DisposableTable {
     public RouterRouteTable(Module module,
                             FlowSnapshot snapshot,
                             List<RouterConditionRoutePair> conditionRoutePairList,
-                            ContainerContext context) {
+                            String componentPropertyPath) {
         super(module.getProject(),
                 new ConditionRouteTableModel(conditionRoutePairList, snapshot),
                 false);
 
-        ConditionRouteTableColumnModelFactory factory = new ConditionRouteTableColumnModelFactory(module, context);
+        ConditionRouteTableColumnModelFactory factory = new ConditionRouteTableColumnModelFactory(module, componentPropertyPath);
         factory.create(this);
         setOpaque(true);
         setBackground(Colors.PROPERTIES_EMPTY_SELECTION_BACKGROUND);

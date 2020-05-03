@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.accessor;
+package com.reedelk.plugin.editor.properties.context;
 
 import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
 import com.reedelk.plugin.graph.FlowSnapshot;
@@ -56,5 +56,4 @@ public class DefaultPropertyAccessor implements PropertyAccessor {
     public String getProperty() {
         return propertyName;
     }
-
 }

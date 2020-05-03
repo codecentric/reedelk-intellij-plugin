@@ -3,7 +3,10 @@ package com.reedelk.plugin.editor.properties.renderer.typemap.dynamic;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.table.JBTable;
 import com.reedelk.module.descriptor.model.property.MapDescriptor;
-import com.reedelk.plugin.editor.properties.commons.*;
+import com.reedelk.plugin.editor.properties.commons.DisposableTableColumnModelFactory;
+import com.reedelk.plugin.editor.properties.commons.StripedRowCellRenderer;
+import com.reedelk.plugin.editor.properties.commons.TableDynamicCellEditor;
+import com.reedelk.plugin.editor.properties.commons.TableDynamicCellRenderer;
 
 import javax.swing.table.TableColumn;
 import java.util.Optional;
@@ -15,19 +18,19 @@ public class DynamicMapTableColumnModelFactory implements DisposableTableColumnM
     private final Module module;
     private final String keyName;
     private final String valueName;
-    private final ContainerContext context;
+    private final String componentPropertyPath;
 
-    DynamicMapTableColumnModelFactory(Module module, MapDescriptor propertyType, ContainerContext context) {
+    DynamicMapTableColumnModelFactory(Module module, MapDescriptor propertyType, String componentPropertyPath) {
         this.module = module;
-        this.context = context;
+        this.componentPropertyPath = componentPropertyPath;
         this.keyName = Optional.ofNullable(propertyType.getKeyName()).orElse(message("table.header.key.name"));
         this.valueName = Optional.ofNullable(propertyType.getValueName()).orElse(message("table.header.value.name"));
     }
 
     @Override
     public void create(JBTable table) {
-        TableDynamicCellEditor cellEditor = new TableDynamicCellEditor(module, context);
-        TableDynamicCellRenderer cellRenderer = new TableDynamicCellRenderer(module, context);
+        TableDynamicCellEditor cellEditor = new TableDynamicCellEditor(module, componentPropertyPath);
+        TableDynamicCellRenderer cellRenderer = new TableDynamicCellRenderer(module, componentPropertyPath);
 
         // Column 1 (the map key)
         TableColumn keyColumn = table.getColumnModel().getColumn(0);

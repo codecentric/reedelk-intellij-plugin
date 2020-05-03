@@ -5,6 +5,8 @@ import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
 import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.commons.InitValuesFiller;
+import com.reedelk.plugin.editor.properties.context.ContainerContext;
+import com.reedelk.plugin.editor.properties.context.ContainerContextDefault;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -56,8 +58,10 @@ public class TableCustomObjectDialog extends AbstractPropertiesDialog {
 
             String typeFullyQualifiedName = objectDescriptor.getTypeFullyQualifiedName();
 
+            ContainerContext context = new ContainerContextDefault(typeFullyQualifiedName);
+
             PropertiesPanelHolder propertiesPanel =
-                    new PropertiesPanelHolder(module, typeFullyQualifiedName, dataHolder, descriptors);
+                    new PropertiesPanelHolder(module, context, dataHolder, descriptors);
 
             setLayout(new BorderLayout());
             add(ContainerFactory.pushTop(propertiesPanel), CENTER);

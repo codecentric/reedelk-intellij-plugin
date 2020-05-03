@@ -35,8 +35,7 @@ class TypeObjectSerializer {
                 // If there are no when conditions, we serialize the value.
                 serialize(componentData, parent, propertyDescriptor);
             } else {
-                // We just serialize the property if and only if
-                // all the when conditions are satisfied.
+                // We just serialize the property if and only if all the when conditions are satisfied.
                 if (AtLeastOneWhenConditionIsTrue.of(whens, componentData::get)) {
                     serialize(componentData, parent, propertyDescriptor);
                 }

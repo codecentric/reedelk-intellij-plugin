@@ -1,8 +1,8 @@
 package com.reedelk.plugin.editor.properties.renderer.typelist.custom;
 
 import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
-import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.TableModelDefaultAbstract;
+import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
 
 import java.util.ArrayList;
 import java.util.List;

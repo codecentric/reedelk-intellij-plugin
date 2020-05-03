@@ -4,6 +4,8 @@ import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.editor.properties.commons.PropertiesPanelContainer;
+import com.reedelk.plugin.editor.properties.context.ContainerContext;
+import com.reedelk.plugin.editor.properties.context.ContainerContextDefault;
 import com.reedelk.plugin.editor.properties.renderer.AbstractComponentPropertiesRenderer;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -37,6 +39,8 @@ public class GenericComponentPropertiesRenderer extends AbstractComponentPropert
                 .collect(groupingBy(propertyDescriptor -> ofNullable(propertyDescriptor.getGroup()).orElse(defaultTabKey),
                         LinkedHashMap::new, toList()));
 
-        return new PropertiesPanelContainer(module, snapshot, componentData, propertiesByGroup);
+        ContainerContext context = new ContainerContextDefault(componentData.getFullyQualifiedName());
+
+        return new PropertiesPanelContainer(module, snapshot, componentData, propertiesByGroup, context);
     }
 }

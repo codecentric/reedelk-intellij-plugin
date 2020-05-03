@@ -5,7 +5,6 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.commons.ScriptFileUtils;
-import com.reedelk.plugin.editor.properties.commons.ContainerContext;
 import com.reedelk.plugin.editor.properties.commons.ScriptEditor;
 
 import javax.swing.*;
@@ -16,8 +15,8 @@ import static java.util.Collections.singletonList;
 
 public class DynamicValueScriptEditor extends ScriptEditor {
 
-    public DynamicValueScriptEditor(Module module, ContainerContext context) {
-        super(module, ScriptFileUtils.createEmptyInMemoryDocument(), context);
+    public DynamicValueScriptEditor(Module module, String scriptPropertyPath) {
+        super(module, ScriptFileUtils.createEmptyInMemoryDocument(), scriptPropertyPath);
     }
 
     @Override

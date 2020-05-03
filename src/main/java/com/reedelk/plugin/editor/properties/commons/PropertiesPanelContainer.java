@@ -2,10 +2,10 @@ package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.JBColor;
-import com.intellij.util.ui.JBUI;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.commons.Sizes;
 import com.reedelk.plugin.component.ComponentData;
+import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,6 +15,8 @@ import javax.swing.border.CompoundBorder;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+
+import static com.intellij.util.ui.JBUI.Borders.customLine;
 
 public class PropertiesPanelContainer extends DisposableThreeComponentsSplitter {
 
@@ -30,8 +32,8 @@ public class PropertiesPanelContainer extends DisposableThreeComponentsSplitter 
     private PropertiesPanelContainer(PropertiesPanelTabbedPanel properties) {
         super(HORIZONTAL);
 
-        Border outside = JBUI.Borders.customLine(JBColor.WHITE, 0, 0, 0, 3);
-        Border inside = JBUI.Borders.customLine(JBColor.LIGHT_GRAY, 0, 0, 0, 1);
+        Border outside = customLine(JBColor.WHITE, 0, 0, 0, 3);
+        Border inside = customLine(JBColor.LIGHT_GRAY, 0, 0, 0, 1);
         Border border = new CompoundBorder(outside, inside);
         properties.setBorder(border);
 
@@ -49,12 +51,14 @@ public class PropertiesPanelContainer extends DisposableThreeComponentsSplitter 
     public PropertiesPanelContainer(@NotNull Module module,
                                     @NotNull FlowSnapshot flowSnapshot,
                                     @NotNull ComponentData componentData,
-                                    @NotNull Map<String, List<PropertyDescriptor>> propertiesByGroup) {
-        this(new PropertiesPanelTabbedPanel(module, flowSnapshot, componentData, propertiesByGroup));
+                                    @NotNull Map<String, List<PropertyDescriptor>> propertiesByGroup,
+                                    @NotNull ContainerContext context) {
+        this(new PropertiesPanelTabbedPanel(module, flowSnapshot, componentData, propertiesByGroup, context));
     }
 
     public PropertiesPanelContainer(@NotNull ComponentData componentData,
-                                    @NotNull Map<String, Supplier<JComponent>> tabAndComponentSupplier) {
-        this(new PropertiesPanelTabbedPanel(componentData, tabAndComponentSupplier));
+                                    @NotNull Map<String, Supplier<JComponent>> tabAndComponentSupplier,
+                                    @NotNull ContainerContext context) {
+        this(new PropertiesPanelTabbedPanel(componentData, tabAndComponentSupplier, context));
     }
 }

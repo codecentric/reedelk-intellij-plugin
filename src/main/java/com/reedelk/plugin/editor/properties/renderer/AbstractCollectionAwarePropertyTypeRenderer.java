@@ -4,7 +4,11 @@ import com.intellij.ui.JBColor;
 import com.reedelk.module.descriptor.model.property.CollectionAwareDescriptor;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.commons.Sizes;
-import com.reedelk.plugin.editor.properties.commons.*;
+import com.reedelk.plugin.editor.properties.commons.DisposableTabbedPane;
+import com.reedelk.plugin.editor.properties.commons.FormBuilder;
+import com.reedelk.plugin.editor.properties.commons.JComponentHolder;
+import com.reedelk.plugin.editor.properties.commons.PropertyTitleLabel;
+import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.runtime.api.annotation.TabGroup;
 import org.jetbrains.annotations.NotNull;
 

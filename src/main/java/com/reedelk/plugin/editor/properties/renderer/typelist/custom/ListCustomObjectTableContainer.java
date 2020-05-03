@@ -3,8 +3,8 @@ package com.reedelk.plugin.editor.properties.renderer.typelist.custom;
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.plugin.commons.Sizes;
-import com.reedelk.plugin.editor.properties.accessor.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.commons.*;
+import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

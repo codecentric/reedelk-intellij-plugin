@@ -1,12 +1,12 @@
 package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.util.ui.JBUI;
 import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
 import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.property.PropertyTypeDescriptor;
 import com.reedelk.plugin.component.ComponentData;
+import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,29 +16,34 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import static com.intellij.util.ui.JBUI.emptyInsets;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
 
     private final transient Module module;
     private final transient FlowSnapshot snapshot;
+    private final transient ContainerContext context;
     private final transient ComponentData componentData;
 
     private PropertiesPanelTabbedPanel(@Nullable Module module,
                                        @Nullable FlowSnapshot snapshot,
-                                       @NotNull ComponentData componentData) {
+                                       @NotNull ComponentData componentData,
+                                       @NotNull ContainerContext context) {
         super(JTabbedPane.LEFT);
         this.module = module;
         this.snapshot = snapshot;
+        this.context = context;
         this.componentData = componentData;
-        setTabComponentInsets(JBUI.emptyInsets());
+        setTabComponentInsets(emptyInsets());
     }
 
     public PropertiesPanelTabbedPanel(@NotNull Module module,
                                       @NotNull FlowSnapshot flowSnapshot,
                                       @NotNull ComponentData componentData,
-                                      @NotNull Map<String, List<PropertyDescriptor>> propertiesByGroup) {
-        this(module, flowSnapshot, componentData);
+                                      @NotNull Map<String, List<PropertyDescriptor>> propertiesByGroup,
+                                      @NotNull ContainerContext context) {
+        this(module, flowSnapshot, componentData, context);
 
         int count = 0;
         if (propertiesByGroup.isEmpty()) {
@@ -48,6 +53,7 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
             setTabComponentAt(count, new TabLabelVertical(tabName));
             count++;
         } else {
+            // We add for each tab group all the properties belonging to that group.
             for (Map.Entry<String, List<PropertyDescriptor>> entry : propertiesByGroup.entrySet()) {
                 addPropertiesTab(entry.getKey(), entry.getValue());
                 setTabComponentAt(count, new TabLabelVertical(entry.getKey()));
@@ -62,8 +68,9 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
     // Used by specific and not generic components with their custom properties panel.
     // e.g Router or Flow Reference.
     public PropertiesPanelTabbedPanel(@NotNull ComponentData componentData,
-                                      @NotNull Map<String, Supplier<JComponent>> componentByGroup) {
-        this(null, null, componentData);
+                                      @NotNull Map<String, Supplier<JComponent>> componentByGroup,
+                                      @NotNull ContainerContext context) {
+        this(null, null, componentData, context);
 
         int count = 0;
         for (Map.Entry<String, Supplier<JComponent>> entry : componentByGroup.entrySet()) {
@@ -81,6 +88,7 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
     }
 
     private void addPropertiesTab(String propertyGroup, List<PropertyDescriptor> propertyDescriptors) {
+        // TODO: Creatiion of supplier can be made generic
         if (isSingleTypeObject(propertyDescriptors)) {
             addPropertiesTab(propertyGroup, () -> {
                 // we *Unroll* all the object properties in the Tab
@@ -89,18 +97,13 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
                 ObjectDescriptor typeObjectDescriptor = (ObjectDescriptor) type;
                 List<PropertyDescriptor> objectProperties = typeObjectDescriptor.getObjectProperties();
 
-                String propertyName = propertyDescriptor.getName();
-                String componentPropertyPath = componentData.getFullyQualifiedName() + "#" + propertyName;
-
                 ComponentDataHolder objectDataHolder = componentData.get(propertyDescriptor.getName());
-                return new PropertiesPanelHolder(module, componentPropertyPath, objectDataHolder, objectProperties, snapshot);
+                return new PropertiesPanelHolder(module, context, objectDataHolder, objectProperties, snapshot);
             });
 
         } else {
-            addPropertiesTab(propertyGroup, () -> {
-                String componentPropertyPath = componentData.getFullyQualifiedName();
-                return new PropertiesPanelHolder(module, componentPropertyPath, componentData, propertyDescriptors, snapshot);
-            });
+            addPropertiesTab(propertyGroup, () ->
+                    new PropertiesPanelHolder(module, context, componentData, propertyDescriptors, snapshot));
         }
     }
 
