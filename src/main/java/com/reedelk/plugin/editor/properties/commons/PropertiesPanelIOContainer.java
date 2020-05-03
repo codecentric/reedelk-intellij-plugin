@@ -1,55 +1,62 @@
 package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.ui.JBColor;
 import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.impl.completion.ComponentIO;
-import com.reedelk.plugin.service.module.impl.completion.Suggestion;
 
 import javax.swing.*;
-import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.StyleSheet;
-import java.util.List;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import java.awt.*;
 import java.util.Optional;
-import java.util.function.Consumer;
 
-public class PropertiesPanelIOContainer extends JEditorPane {
+import static com.intellij.util.ui.JBUI.Borders.customLine;
+import static com.intellij.util.ui.JBUI.Borders.emptyLeft;
+import static com.reedelk.plugin.commons.Colors.SCRIPT_EDITOR_CONTEXT_PANEL_TITLE_BG;
 
-    private static final String CONTENT_TYPE = "text/html";
-    private static final String HTML_TEMPLATE =
-            "<div style=\"color: #333333; padding-left:5px;padding-right:10px;font-family:verdana;font-size:10px\">" +
-                    "<p><b>Attributes:</b><br>" +
-                    "<span style=\"font-size:5px\">%s</span>" +
-                    "</p>" +
-                    "</div>";
+public class PropertiesPanelIOContainer extends DisposablePanel {
 
     public PropertiesPanelIOContainer(Module module, String componentFullyQualifiedName) {
-        HTMLEditorKit kit = new HTMLEditorKit();
-        setEditorKit(kit);
+        super(new BorderLayout());
+        add(new HeaderPanel("Component Input"), BorderLayout.NORTH);
+        DisposablePanel panel = ContainerFactory.pushTop(new ContentPanel(module, componentFullyQualifiedName));
+        panel.setBackground(Color.WHITE);
+        add(panel, BorderLayout.CENTER);
+        setBackground(Color.WHITE);
+    }
 
-        StyleSheet styleSheet = kit.getStyleSheet();
-        styleSheet.addRule(".attribute { font-size:8px; }");
 
-        Optional<ComponentIO> componentIO = CompletionService.getInstance(module).componentIOOf(componentFullyQualifiedName);
-        if (componentIO.isPresent()) {
-            ComponentIO inputAndOutput = componentIO.get();
-            List<Suggestion> outputAttributes = inputAndOutput.getOutputAttributes();
-            StringBuilder builder = new StringBuilder();
-            builder.append("<table class=\"attribute\">");
-            outputAttributes.forEach(new Consumer<Suggestion>() {
-                @Override
-                public void accept(Suggestion suggestion) {
-                    builder.append("<tr>");
-                    builder.append("<td>").append(suggestion.lookupString()).append("</td>");
-                    builder.append("<td>").append(suggestion.presentableType()).append("</td>");
-                    builder.append("</tr>");
-                }
-            });
-            builder.append("</table>");
+    static class HeaderPanel extends DisposablePanel {
+        public HeaderPanel(String text) {
+            super(new BorderLayout());
+            setBackground(SCRIPT_EDITOR_CONTEXT_PANEL_TITLE_BG);
 
-            setContentType(CONTENT_TYPE);
-            setText(String.format(HTML_TEMPLATE, builder.toString()));
-        } else {
-            setText("Not present");
+            JLabel label = new JLabel(text, SwingConstants.LEFT);
+            //label.setFont(label.getFont().deriveFont(Font, label.getFont().getSize()));
+            label.setForeground(Color.DARK_GRAY);
+            add(label, BorderLayout.WEST);
+            setPreferredSize(new Dimension(200, 25));
+
+            Border inside = emptyLeft(10);
+            Border outside = customLine(JBColor.LIGHT_GRAY, 0, 0, 1, 0);
+            setBorder(new CompoundBorder(outside, inside));
+        }
+    }
+
+    static class ContentPanel extends DisposablePanel {
+        public ContentPanel(Module module, String componentFullyQualifiedName) {
+            super(new GridBagLayout());
+            setBackground(Color.WHITE);
+
+            Optional<ComponentIO> componentIO = CompletionService.getInstance(module).componentIOOf(componentFullyQualifiedName);
+
+            FormBuilder.get().addLabel("Message", this);
+            FormBuilder.get().addLastField(new JLabel(), this);
+            FormBuilder.get().addLabel("Attributes", this);
+            FormBuilder.get().addLastField(new JLabel(), this);
+            FormBuilder.get().addLabel("Payload", this);
+            FormBuilder.get().addLastField(new JLabel(), this);
         }
     }
 }

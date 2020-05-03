@@ -27,7 +27,7 @@ public class PropertiesPanelContainer extends DisposableThreeComponentsSplitter 
                                      @NotNull PropertiesPanelTabbedPanel properties) {
         super(HORIZONTAL);
 
-        Border outside = customLine(JBColor.WHITE, 0, 0, 0, 3);
+        Border outside = customLine(JBColor.WHITE, 0, 0, 0, 0);
         Border inside = customLine(JBColor.LIGHT_GRAY, 0, 0, 0, 1);
         Border border = new CompoundBorder(outside, inside);
         properties.setBorder(border);
