@@ -80,7 +80,7 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
 
         Map<String, Supplier<JComponent>> tabAndComponentSupplier =
                 ImmutableMap.of(defaultTabKey, componentSupplier);
-        return new PropertiesPanelContainer(componentData, tabAndComponentSupplier, context);
+        return new PropertiesPanelContainer(module, componentData, tabAndComponentSupplier, context);
     }
 
 

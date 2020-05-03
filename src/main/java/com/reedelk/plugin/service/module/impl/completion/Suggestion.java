@@ -1,6 +1,7 @@
 package com.reedelk.plugin.service.module.impl.completion;
 
 import com.intellij.icons.AllIcons;
+import com.reedelk.plugin.commons.ToPresentableType;
 
 import javax.swing.*;
 
@@ -47,6 +48,10 @@ public class Suggestion {
 
     public String typeText() {
         return typeText;
+    }
+
+    public String presentableType() {
+        return ToPresentableType.from(typeText);
     }
 
     public Icon icon() {

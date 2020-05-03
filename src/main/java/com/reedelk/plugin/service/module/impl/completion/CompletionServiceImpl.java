@@ -1,12 +1,12 @@
 package com.reedelk.plugin.service.module.impl.completion;
 
-import com.intellij.openapi.compiler.CompilationStatusListener;
-import com.intellij.openapi.compiler.CompilerTopics;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.module.descriptor.model.ModuleDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentInputDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.type.TypeDescriptor;
@@ -27,7 +27,7 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.service.module.impl.completion.Suggestion.Type.PROPERTY;
 
 // TODO: work on this.
-public class CompletionServiceImpl implements CompletionService, CompilationStatusListener, ComponentListUpdateNotifier {
+public class CompletionServiceImpl implements CompletionService, ComponentListUpdateNotifier {
 
     private final Module module;
     private final MessageBus messageBus;
@@ -35,6 +35,8 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
     // Key is : componentQualifiedName#property1#subproperty1#subsubproperty1
     private final Map<String, Trie> componentPropertyAndTrie = new HashMap<>();
     private final Map<String, Trie> typeAndAndTries = new HashMap<>();
+    private final Map<String, ComponentIO> componentIO = new HashMap<>();
+
     private final Trie global = new Trie();
     private final Trie defaultVariables = new Trie();
 
@@ -60,7 +62,6 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
         defaultVariables.insert(context);
 
         MessageBusConnection connection = messageBus.connect();
-        connection.subscribe(CompilerTopics.COMPILATION_STATUS, this);
         connection.subscribe(Topics.COMPONENTS_UPDATE_EVENTS, this);
         initialize();
     }
@@ -79,6 +80,14 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
 
         suggestions.addAll(propertySuggestions);
         return suggestions;
+    }
+
+    @Override
+    public Optional<ComponentIO> componentIOOf(String componentFullyQualifiedName) {
+        if (componentIO.containsKey(componentFullyQualifiedName)) {
+            return Optional.of(componentIO.get(componentFullyQualifiedName));
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -119,11 +128,26 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
                 }
 
                 // Add component -> property types
-                moduleDescriptor.getComponents().forEach(componentDescriptor ->
-                        componentDescriptor.getProperties().forEach(propertyDescriptor -> {
-                            String parent = componentDescriptor.getFullyQualifiedName();
-                            register(propertyDescriptor, parent);
-                        }));
+                moduleDescriptor.getComponents().forEach(componentDescriptor -> {
+                    // Input/Output
+                    ComponentOutputDescriptor output = componentDescriptor.getOutput();
+                    ComponentInputDescriptor input = componentDescriptor.getInput();
+
+                    if (output != null) {
+                        String attributes = output.getAttributes(); // Attributes type.
+                        List<Suggestion> attributesItems = typeAndAndTries.get(attributes).autocomplete("");
+
+                        ComponentIO componentIO = new ComponentIO(attributesItems);
+                        this.componentIO.put(componentDescriptor.getFullyQualifiedName(), componentIO);
+                    }
+
+
+                    // Properties
+                    componentDescriptor.getProperties().forEach(propertyDescriptor -> {
+                        String parent = componentDescriptor.getFullyQualifiedName();
+                        register(propertyDescriptor, parent);
+                    });
+                        });
             } catch (Exception e) {
                 //ToDO:
                 e.printStackTrace();

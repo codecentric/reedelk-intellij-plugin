@@ -22,14 +22,9 @@ public class PropertiesPanelContainer extends DisposableThreeComponentsSplitter 
 
     private static final boolean HORIZONTAL = false;
 
-    private static final String CONTENT_TYPE = "text/html";
-    private static final String HTML_TEMPLATE =
-            "<div style=\"color: #333333; padding-left:5px;padding-right:10px;font-family:verdana\">" +
-                    "<h2>%s</h2>" +
-                    "<p>%s</p>" +
-                    "</div>";
-
-    private PropertiesPanelContainer(PropertiesPanelTabbedPanel properties) {
+    private PropertiesPanelContainer(@NotNull Module module,
+                                     @NotNull String componentFullyQualifiedName,
+                                     @NotNull PropertiesPanelTabbedPanel properties) {
         super(HORIZONTAL);
 
         Border outside = customLine(JBColor.WHITE, 0, 0, 0, 3);
@@ -37,13 +32,11 @@ public class PropertiesPanelContainer extends DisposableThreeComponentsSplitter 
         Border border = new CompoundBorder(outside, inside);
         properties.setBorder(border);
 
-        JEditorPane componentOutputData = new JEditorPane();
-        componentOutputData.setContentType(CONTENT_TYPE);
-        componentOutputData.setText(String.format(HTML_TEMPLATE, "Output", "Message Input"));
+        PropertiesPanelIOContainer componentIO = new PropertiesPanelIOContainer(module, componentFullyQualifiedName);
 
         setLastSize(Sizes.PropertiesPane.COMPONENT_OUTPUT_INFO_WIDTH);
         setInnerComponent(properties);
-        setLastComponent(componentOutputData);
+        setLastComponent(componentIO);
         setDividerWidth(0);
         setDividerMouseZoneSize(10);
     }
@@ -53,12 +46,17 @@ public class PropertiesPanelContainer extends DisposableThreeComponentsSplitter 
                                     @NotNull ComponentData componentData,
                                     @NotNull Map<String, List<PropertyDescriptor>> propertiesByGroup,
                                     @NotNull ContainerContext context) {
-        this(new PropertiesPanelTabbedPanel(module, flowSnapshot, componentData, propertiesByGroup, context));
+        this(module,
+                componentData.getFullyQualifiedName(),
+                new PropertiesPanelTabbedPanel(module, flowSnapshot, componentData, propertiesByGroup, context));
     }
 
-    public PropertiesPanelContainer(@NotNull ComponentData componentData,
+    public PropertiesPanelContainer(@NotNull Module module,
+                                    @NotNull ComponentData componentData,
                                     @NotNull Map<String, Supplier<JComponent>> tabAndComponentSupplier,
                                     @NotNull ContainerContext context) {
-        this(new PropertiesPanelTabbedPanel(componentData, tabAndComponentSupplier, context));
+        this(module,
+                componentData.getFullyQualifiedName(),
+                new PropertiesPanelTabbedPanel(componentData, tabAndComponentSupplier, context));
     }
 }

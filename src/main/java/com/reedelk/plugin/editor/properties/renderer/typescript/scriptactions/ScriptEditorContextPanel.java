@@ -86,7 +86,7 @@ class ScriptEditorContextPanel extends DisposablePanel implements CompletionServ
 
     static class ContextVariableLabel extends JLabel {
         ContextVariableLabel(Suggestion suggestion) {
-            super(message("script.editor.context.vars.html.template", suggestion.lookupString(), suggestion.typeText()));
+            super(message("script.editor.context.vars.html.template", suggestion.lookupString(), suggestion.presentableType()));
             setIcon(suggestion.icon());
             setBorder(emptyTop(4));
         }

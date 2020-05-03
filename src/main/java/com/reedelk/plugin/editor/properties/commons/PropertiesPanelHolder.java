@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.intellij.util.ui.JBUI.Borders.empty;
-import static java.util.Collections.emptyList;
 
 public class PropertiesPanelHolder extends DisposablePanel {
 
@@ -46,17 +45,6 @@ public class PropertiesPanelHolder extends DisposablePanel {
         setBorder(PANEL_BORDERS);
         initAccessors();
         renderProperties();
-    }
-
-    /**
-     * Used by router component. The only property rendered by the router is the condition route table which
-     * is a special, custom rendered property type.
-     */
-    public PropertiesPanelHolder(@NotNull Module module,
-                                 @NotNull ContainerContext context,
-                                 @NotNull ComponentDataHolder dataHolder,
-                                 @Nullable FlowSnapshot snapshot) {
-        this(module, context, dataHolder, emptyList(), snapshot);
     }
 
     /**

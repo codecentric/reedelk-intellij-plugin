@@ -59,6 +59,6 @@ public class RouterPropertiesRenderer extends GenericComponentPropertiesRenderer
 
         Map<String, Supplier<JComponent>> tabAndComponentSupplier =
                 ImmutableMap.of(defaultTabKey, routerTableSupplier);
-        return new PropertiesPanelContainer(componentData, tabAndComponentSupplier, context);
+        return new PropertiesPanelContainer(module, componentData, tabAndComponentSupplier, context);
     }
 }
