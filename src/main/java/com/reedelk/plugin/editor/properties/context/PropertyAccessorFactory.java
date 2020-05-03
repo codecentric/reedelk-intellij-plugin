@@ -13,7 +13,7 @@ import java.util.Map;
 
 import static com.reedelk.runtime.api.commons.Preconditions.checkState;
 
-public class PropertyAccessorFactory {
+class PropertyAccessorFactory {
 
     private String propertyName;
     private FlowSnapshot snapshot;
@@ -43,7 +43,7 @@ public class PropertyAccessorFactory {
     private PropertyAccessorFactory() {
     }
 
-    public static PropertyAccessorFactory get() {
+    static PropertyAccessorFactory get() {
         return new PropertyAccessorFactory();
     }
 

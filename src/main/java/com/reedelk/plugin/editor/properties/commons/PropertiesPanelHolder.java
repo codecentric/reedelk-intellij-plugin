@@ -72,19 +72,29 @@ public class PropertiesPanelHolder extends DisposablePanel {
     }
 
     private void initAccessors() {
-        descriptors.forEach(descriptor ->
-                context.getPropertyAccessor(descriptor, snapshot, dataHolder));
+        // We must init accessors so that visibility can be applied during rendering.
+        descriptors.forEach(descriptor -> {
+
+            String propertyName = descriptor.getName();
+
+            PropertyTypeDescriptor propertyType = descriptor.getType();
+
+            context.propertyAccessorOf(propertyName, propertyType, snapshot, dataHolder);
+        });
     }
 
     private void renderProperties() {
 
         descriptors.forEach(descriptor -> {
 
+            String propertyName = descriptor.getName();
+
             PropertyTypeDescriptor propertyType = descriptor.getType();
 
             PropertyTypeRenderer renderer = PropertyTypeRendererFactory.get().from(propertyType);
 
-            PropertyAccessor propertyAccessor = context.getPropertyAccessor(descriptor, snapshot, dataHolder);
+            PropertyAccessor propertyAccessor =
+                    context.propertyAccessorOf(propertyName, propertyType, snapshot, dataHolder);
 
             JComponent renderedComponent = renderer.render(module, descriptor, propertyAccessor, context);
 

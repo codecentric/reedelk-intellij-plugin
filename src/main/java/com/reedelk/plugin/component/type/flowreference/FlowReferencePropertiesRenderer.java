@@ -2,6 +2,7 @@ package com.reedelk.plugin.component.type.flowreference;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyTypeDescriptor;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.component.type.flowreference.widget.SubflowSelector;
 import com.reedelk.plugin.component.type.generic.GenericComponentPropertiesRenderer;
@@ -9,7 +10,6 @@ import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.editor.properties.context.ContainerContextDefault;
 import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
-import com.reedelk.plugin.editor.properties.context.PropertyAccessorFactory;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.SubflowService;
@@ -48,14 +48,13 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
         ContainerContext context = new ContainerContextDefault(fullyQualifiedName);
 
         Supplier<JComponent> componentSupplier = () -> {
-            // TODO: This accessor should be taken from the context .... because right now we
-            //  are bypassing the change notifier.
-            PropertyAccessor referencePropertyAccessor = PropertyAccessorFactory.get()
-                    .typeDescriptor(propertyDescriptor.get().getType())
-                    .propertyName(FlowReference.ref())
-                    .dataHolder(componentData)
-                    .snapshot(snapshot)
-                    .build();
+
+            String propertyName = FlowReference.ref();
+
+            PropertyTypeDescriptor propertyType = propertyDescriptor.get().getType();
+
+            PropertyAccessor referencePropertyAccessor =
+                    context.propertyAccessorOf(propertyName, propertyType, snapshot, componentData);
 
             List<PropertyDescriptor> descriptors = componentData.getPropertiesDescriptors();
             List<PropertyDescriptor> filteredDescriptors = descriptors

@@ -1,10 +1,12 @@
 package com.reedelk.plugin.editor.properties.context;
 
 import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
-import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
+import com.reedelk.module.descriptor.model.property.PropertyTypeDescriptor;
 import com.reedelk.plugin.editor.properties.commons.InputChangeListener;
 import com.reedelk.plugin.editor.properties.commons.JComponentHolder;
 import com.reedelk.plugin.graph.FlowSnapshot;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Optional;
@@ -24,6 +26,9 @@ public interface ContainerContext {
 
     void subscribeOnPropertyChange(String propertyName, InputChangeListener inputChangeListener);
 
-    PropertyAccessor getPropertyAccessor(PropertyDescriptor propertyDescriptor, FlowSnapshot snapshot, ComponentDataHolder dataHolder);
 
+    PropertyAccessor propertyAccessorOf(String propertyName,
+                                        @NotNull PropertyTypeDescriptor propertyTypeDescriptor,
+                                        @Nullable FlowSnapshot snapshot,
+                                        @NotNull ComponentDataHolder dataHolder);
 }

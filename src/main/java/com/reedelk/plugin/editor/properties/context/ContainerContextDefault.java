@@ -1,12 +1,12 @@
 package com.reedelk.plugin.editor.properties.context;
 
 import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
-import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.property.PropertyTypeDescriptor;
 import com.reedelk.plugin.editor.properties.commons.InputChangeListener;
 import com.reedelk.plugin.editor.properties.commons.JComponentHolder;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.*;
@@ -16,8 +16,8 @@ public class ContainerContextDefault implements ContainerContext {
 
     private final String componentPropertyPath;
     private final transient List<JComponentHolder> componentHolders = new ArrayList<>();
-    protected final transient Map<String, PropertyAccessor> changeAwarePropertyAccessor = new HashMap<>();
-    protected final transient Map<String, List<InputChangeListener>> propertyChangeListeners = new HashMap<>();
+    private final transient Map<String, PropertyAccessor> changeAwarePropertyAccessor = new HashMap<>();
+    private final transient Map<String, List<InputChangeListener>> propertyChangeListeners = new HashMap<>();
 
     public ContainerContextDefault(String componentPropertyPath) {
         this.componentPropertyPath = componentPropertyPath;
@@ -72,11 +72,10 @@ public class ContainerContextDefault implements ContainerContext {
     // notifies all the subscribers wishing to listen for a property change event
     // to be notified. This is needed for instance show/hide other properties using @When annotation.
     @Override
-    public PropertyAccessor getPropertyAccessor(PropertyDescriptor propertyDescriptor, FlowSnapshot snapshot, ComponentDataHolder dataHolder) {
-
-        String propertyName = propertyDescriptor.getName();
-
-        PropertyTypeDescriptor propertyType = propertyDescriptor.getType();
+    public PropertyAccessor propertyAccessorOf(String propertyName,
+                                               @NotNull PropertyTypeDescriptor propertyType,
+                                               @Nullable FlowSnapshot snapshot,
+                                               @NotNull ComponentDataHolder dataHolder) {
 
         // Original property accessor.
         PropertyAccessor propertyAccessor = PropertyAccessorFactory.get()

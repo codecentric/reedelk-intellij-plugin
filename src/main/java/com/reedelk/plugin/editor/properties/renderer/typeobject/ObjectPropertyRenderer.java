@@ -2,16 +2,12 @@ package com.reedelk.plugin.editor.properties.renderer.typeobject;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
-import com.reedelk.module.descriptor.model.property.Collapsible;
-import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
-import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.property.Shared;
+import com.reedelk.module.descriptor.model.property.*;
 import com.reedelk.plugin.commons.TooltipContent;
 import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.editor.properties.context.ContainerContextDecorator;
 import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
-import com.reedelk.plugin.editor.properties.context.PropertyAccessorFactory;
 import com.reedelk.plugin.editor.properties.renderer.AbstractPropertyTypeRenderer;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.runtime.commons.JsonParser;
@@ -73,14 +69,14 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
         ComponentDataHolder dataHolder = propertyAccessor.get();
         FlowSnapshot snapshot = propertyAccessor.getSnapshot();
 
+        String propertyName = JsonParser.Component.ref();
+
+        PropertyTypeDescriptor propertyType = descriptor.getType();
+
         // We create the accessor for the config reference:
         // a shareable config object is referenced with a unique UUID
-        PropertyAccessor refAccessor = PropertyAccessorFactory.get()
-                .typeDescriptor(descriptor.getType())
-                .propertyName(JsonParser.Component.ref())
-                .snapshot(snapshot)
-                .dataHolder(dataHolder)
-                .build();
+        PropertyAccessor refAccessor =
+                context.propertyAccessorOf(propertyName, propertyType, snapshot, dataHolder);
 
         return new ShareableConfigInputField(module, dataHolder, descriptor, refAccessor, context);
     }
