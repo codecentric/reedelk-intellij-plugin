@@ -1,4 +1,4 @@
-package com.reedelk.plugin.commons;
+package com.reedelk.plugin.editor.properties.context;
 
 public class ComponentPropertyPath {
 

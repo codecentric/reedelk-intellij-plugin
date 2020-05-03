@@ -2,11 +2,11 @@ package com.reedelk.plugin.component.type.router;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
-import com.reedelk.plugin.commons.ComponentPropertyPath;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.component.type.generic.GenericComponentPropertiesRenderer;
 import com.reedelk.plugin.component.type.router.widget.RouterRouteTable;
 import com.reedelk.plugin.editor.properties.commons.PropertiesPanelContainer;
+import com.reedelk.plugin.editor.properties.context.ComponentPropertyPath;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.editor.properties.context.ContainerContextDefault;
 import com.reedelk.plugin.graph.FlowSnapshot;

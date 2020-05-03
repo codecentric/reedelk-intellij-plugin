@@ -11,6 +11,7 @@ import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.type.TypeDescriptor;
 import com.reedelk.plugin.commons.Topics;
+import com.reedelk.plugin.editor.properties.context.ComponentPropertyPath;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.ComponentService;
@@ -137,14 +138,14 @@ public class CompletionServiceImpl implements CompletionService, CompilationStat
         if (propertyDescriptor.getType() instanceof ObjectDescriptor) {
             // If the property type is TypeObject, we must recursively add the suggestions for each nested property.
             String name = propertyDescriptor.getName();
-            String componentPropertyPath = parent + "#" + name;
+            String componentPropertyPath = ComponentPropertyPath.join(parent, name);
             ObjectDescriptor typeObjectDescriptor = propertyDescriptor.getType();
             typeObjectDescriptor.getObjectProperties()
                     .forEach(subProperty -> register(subProperty, componentPropertyPath));
 
         } else {
             String name = propertyDescriptor.getName();
-            String componentPropertyPath = parent + "#" + name;
+            String componentPropertyPath = ComponentPropertyPath.join(parent, name);
             Optional.ofNullable(propertyDescriptor.getScriptSignature()).ifPresent(scriptSignature -> {
                 Trie trie = new Trie();
                 scriptSignature.getArguments().stream()
