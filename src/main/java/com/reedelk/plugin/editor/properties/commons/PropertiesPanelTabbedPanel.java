@@ -7,6 +7,7 @@ import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.property.PropertyTypeDescriptor;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
+import com.reedelk.plugin.editor.properties.context.ContainerContextDecorator;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -97,9 +98,15 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
             List<PropertyDescriptor> objectProperties = typeObjectDescriptor.getObjectProperties();
 
             ComponentDataHolder objectDataHolder = componentData.get(propertyDescriptor.getName());
-            panel = new PropertiesPanelHolder(module, context, objectDataHolder, objectProperties, snapshot);
+
+            // We are entering an object property: com.my.component#myObjectProperty1
+            // We need a new context.
+            ContainerContext newContext = ContainerContextDecorator.decorateForProperty(propertyDescriptor.getName(), context);
+
+            panel = new PropertiesPanelHolder(module, newContext, objectDataHolder, objectProperties, snapshot);
 
             // Apply visibility specified on this object property with @When annotations.
+            // Note that the visibility is computed using the *parent* context on this object panel holder.
             WhenVisibilityApplier.on(propertyDescriptor.getWhens(), context, panel);
 
         } else {
