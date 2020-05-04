@@ -64,8 +64,8 @@ public class TypeObjectContainerHeader extends DisposablePanel {
 
             JSeparator jSeparator = new JSeparator();
             jSeparator.setForeground(Colors.TYPE_OBJECT_HORIZONTAL_SEPARATOR);
-            add(jSeparator, gbc);
 
+            add(jSeparator, gbc);
             setBorder(BORDER_HORIZONTAL_SEPARATOR_CONTAINER);
         }
     }
