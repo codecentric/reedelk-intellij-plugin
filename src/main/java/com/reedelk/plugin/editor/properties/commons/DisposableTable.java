@@ -2,6 +2,8 @@ package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
+import com.intellij.ui.JBColor;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.DisposableUtils;
@@ -12,14 +14,16 @@ import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.table.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.Collections;
 import java.util.Enumeration;
+
+import static com.intellij.util.ui.JBUI.Borders.customLine;
+import static com.intellij.util.ui.JBUI.Borders.emptyLeft;
 
 public class DisposableTable extends JBTable implements Disposable, CommitPropertiesListener {
 
@@ -32,6 +36,9 @@ public class DisposableTable extends JBTable implements Disposable, CommitProper
         addFocusListener(new ClearSelectionFocusListener());
         setRowHeight(Sizes.Table.ROW_HEIGHT);
         setFillsViewportHeight(fillViewPortHeight);
+
+        configureHeaderRenderer();
+
         this.busConnection = project.getMessageBus().connect();
         this.busConnection.subscribe(Topics.COMMIT_COMPONENT_PROPERTIES_EVENTS, this);
     }
@@ -61,6 +68,23 @@ public class DisposableTable extends JBTable implements Disposable, CommitProper
     @Override
     public void onCommit() {
         TableColumnModelUtils.onCommit(getColumnModel());
+    }
+
+    private void configureHeaderRenderer() {
+        JTableHeader tableHeader = getTableHeader();
+        tableHeader.setOpaque(false);
+        tableHeader.setDefaultRenderer((table, value, isSelected, hasFocus, row, column) -> {
+            JBLabel headerLabel = new JBLabel((String) value);
+            headerLabel.setOpaque(true);
+            Border border = emptyLeft(6);
+            // The first header has a border on the right side of the label to mark
+            // the end of the header content.
+            Border customLine = column == 0 ?
+                    customLine(JBColor.LIGHT_GRAY, 0, 0, 1, 1) :
+                    customLine(JBColor.LIGHT_GRAY, 0, 0, 1, 0);
+            headerLabel.setBorder(new CompoundBorder(customLine, border));
+            return headerLabel;
+        });
     }
 
     private class ClearSelectionFocusListener implements FocusListener {
