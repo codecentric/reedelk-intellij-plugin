@@ -6,14 +6,12 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.impl.completion.ComponentIO;
-import com.reedelk.plugin.service.module.impl.completion.Suggestion;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 import static com.intellij.icons.AllIcons.General.ArrowRight;
 import static com.intellij.util.ui.JBUI.Borders.customLine;
@@ -58,27 +56,21 @@ public class PropertiesPanelIOContainer extends DisposablePanel {
 
             Optional<ComponentIO> componentIO = CompletionService.getInstance(module).componentIOOf(componentFullyQualifiedName);
 
-
-            TypeObjectContainerHeader header =
-                    new TypeObjectContainerHeader("attributes", ArrowRight, () -> System.out.println("Clicked"));
-            FormBuilder.get().addFullWidthAndHeight(header, ContentPanel.this);
-
-            componentIO.ifPresent(new Consumer<ComponentIO>() {
-                @Override
-                public void accept(ComponentIO componentIO) {
-
-                    componentIO.getOutputAttributes().forEach(new Consumer<Suggestion>() {
-                        @Override
-                        public void accept(Suggestion suggestion) {
+            DisposableCollapsiblePane disposableCollapsiblePane =
+                    new DisposableCollapsiblePane("attributes", () -> {
+                        DisposablePanel content = new DisposablePanel(new GridBagLayout());
+                        content.setBackground(Color.WHITE);
+                        componentIO.ifPresent(componentIO1 -> componentIO1.getOutputAttributes().forEach(suggestion -> {
                             String label = suggestion.lookupString() + ": " + suggestion.presentableType();
                             JBLabel attributes = new JBLabel(label, JLabel.LEFT);
-                            attributes.setBorder(JBUI.Borders.emptyLeft(30));
-                            FormBuilder.get().addLabel(attributes, ContentPanel.this);
-                            FormBuilder.get().addLastField(Box.createHorizontalGlue(), ContentPanel.this);
-                        }
+                            attributes.setBorder(JBUI.Borders.emptyLeft(10));
+                            FormBuilder.get().addLabel(attributes, content);
+                            FormBuilder.get().addLastField(Box.createHorizontalGlue(), content);
+                        }));
+                        return content;
                     });
-                }
-            });
+
+            FormBuilder.get().addFullWidthAndHeight(disposableCollapsiblePane, ContentPanel.this);
 
 
             TypeObjectContainerHeader payload =

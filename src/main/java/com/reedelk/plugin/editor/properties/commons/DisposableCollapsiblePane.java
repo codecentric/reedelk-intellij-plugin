@@ -1,8 +1,9 @@
-package com.reedelk.plugin.editor.properties.renderer.typeobject;
+package com.reedelk.plugin.editor.properties.commons;
 
 import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.TooltipContent;
-import com.reedelk.plugin.editor.properties.commons.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,19 +15,26 @@ import static com.intellij.util.ui.JBUI.Borders.emptyLeft;
 import static com.reedelk.plugin.editor.properties.commons.PanelWithText.LoadingContentPanel;
 import static java.awt.BorderLayout.*;
 
-public class CollapsibleObjectTypeContainer extends DisposablePanel {
+public class DisposableCollapsiblePane extends DisposablePanel {
 
     private final String displayName;
     private final DisposablePanel collapsedContent;
     private final transient TooltipContent tooltipContent;
-    private final transient ContainerRenderingFunction renderingFunction;
+    private final transient ContentRenderer renderingFunction;
 
     private DisposablePanel unCollapsedContent;
 
     private boolean collapsed = true;
     private boolean loaded = false;
 
-    CollapsibleObjectTypeContainer(String displayName, TooltipContent tooltipContent, ContainerRenderingFunction unCollapsedContentRenderer) {
+    public DisposableCollapsiblePane(@NotNull String displayName,
+                                     @NotNull ContentRenderer unCollapsedContentRenderer) {
+        this(displayName, unCollapsedContentRenderer, null);
+    }
+
+    public DisposableCollapsiblePane(@NotNull String displayName,
+                                     @NotNull ContentRenderer unCollapsedContentRenderer,
+                                     @Nullable TooltipContent tooltipContent) {
         this.displayName = displayName;
         this.tooltipContent = tooltipContent;
         this.renderingFunction = unCollapsedContentRenderer;
@@ -34,8 +42,9 @@ public class CollapsibleObjectTypeContainer extends DisposablePanel {
         this.unCollapsedContent = new UnCollapsedContent(displayName, tooltipContent, new LoadingContentPanel());
 
         setLayout(new BorderLayout());
-        add(collapsedContent, CENTER);
+        setOpaque(false);
         setBorder(DefaultObjectTypeContainer.BORDER_OBJECT_TYPE_CONTAINER_TOP);
+        add(collapsedContent, CENTER);
     }
 
     @Override
@@ -82,22 +91,25 @@ public class CollapsibleObjectTypeContainer extends DisposablePanel {
 
     class UnCollapsedContent extends DisposablePanel {
         UnCollapsedContent(String displayName, TooltipContent tooltipContent, JComponent content) {
-            TypeObjectContainerHeader topHeader =
-                    new TypeObjectContainerHeader(displayName, tooltipContent, ArrowDown, clickAction);
-            setLayout(new BorderLayout());
-
 
             // we add a little bit of inset padding to make it clear are properties of un-collapsed object.
 
             JSeparator jSeparator = new JSeparator(JSeparator.VERTICAL);
+            jSeparator.setOpaque(false);
 
             DisposablePanel container = new DisposablePanel(new BorderLayout());
             container.setBorder(empty(5, 7, 0, 0));
             container.add(jSeparator, WEST);
-
+            container.setOpaque(false);
             content.setBorder(emptyLeft(10));
             container.add(content, CENTER);
 
+            // header
+            TypeObjectContainerHeader topHeader =
+                    new TypeObjectContainerHeader(displayName, tooltipContent, ArrowDown, clickAction);
+
+            setLayout(new BorderLayout());
+            setOpaque(false);
             add(topHeader, NORTH);
             add(container, CENTER);
         }

@@ -17,6 +17,7 @@ public class DisposablePanel extends JBPanel<DisposablePanel> implements Disposa
 
     public DisposablePanel(LayoutManager layoutManager) {
         super(layoutManager);
+        setOpaque(false);
     }
 
     @Override

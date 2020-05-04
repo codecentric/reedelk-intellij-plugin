@@ -2,8 +2,6 @@ package com.reedelk.plugin.editor.properties.commons;
 
 import javax.swing.*;
 
-public interface ContainerRenderingFunction {
-
+public interface ContentRenderer {
     JComponent render();
-
 }

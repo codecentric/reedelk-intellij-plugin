@@ -52,10 +52,10 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
         TooltipContent tooltipContent = TooltipContent.from(descriptor);
         if (Collapsible.YES.equals(objectDescriptor.getCollapsible())) {
             // Deferred rendering (only when it is un-collapsed)
-            return new CollapsibleObjectTypeContainer(
+            return new DisposableCollapsiblePane(
                     descriptor.getDisplayName(),
-                    tooltipContent,
-                    () -> renderObjectProperties(propertyAccessor, descriptor, module, context));
+                    () -> renderObjectProperties(propertyAccessor, descriptor, module, context), tooltipContent
+            );
         } else {
             JComponent propertiesPanel = renderObjectProperties(propertyAccessor, descriptor, module, context);
             // If the property type is a complex object (not shared), we wrap it in a bordered box with title
