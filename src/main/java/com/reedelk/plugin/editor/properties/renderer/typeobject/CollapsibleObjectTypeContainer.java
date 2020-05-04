@@ -27,9 +27,9 @@ public class CollapsibleObjectTypeContainer extends DisposablePanel {
     private boolean loaded = false;
 
     CollapsibleObjectTypeContainer(String displayName, TooltipContent tooltipContent, ContainerRenderingFunction unCollapsedContentRenderer) {
-        this.renderingFunction = unCollapsedContentRenderer;
         this.displayName = displayName;
         this.tooltipContent = tooltipContent;
+        this.renderingFunction = unCollapsedContentRenderer;
         this.collapsedContent = new CollapsedContent(displayName, tooltipContent);
         this.unCollapsedContent = new UnCollapsedContent(displayName, tooltipContent, new LoadingContentPanel());
 
@@ -83,7 +83,7 @@ public class CollapsibleObjectTypeContainer extends DisposablePanel {
     class UnCollapsedContent extends DisposablePanel {
         UnCollapsedContent(String displayName, TooltipContent tooltipContent, JComponent content) {
             TypeObjectContainerHeader topHeader =
-                    new TypeObjectContainerHeader(displayName, tooltipContent, ArrowDown, ClickableLabel.IconAlignment.LEFT, clickAction);
+                    new TypeObjectContainerHeader(displayName, tooltipContent, ArrowDown, clickAction);
             setLayout(new BorderLayout());
 
 
@@ -105,7 +105,7 @@ public class CollapsibleObjectTypeContainer extends DisposablePanel {
 
     class CollapsedContent extends TypeObjectContainerHeader {
         CollapsedContent(String displayName, TooltipContent tooltipContent) {
-            super(displayName, tooltipContent, ArrowRight, ClickableLabel.IconAlignment.LEFT, clickAction);
+            super(displayName, tooltipContent, ArrowRight, clickAction);
         }
     }
 

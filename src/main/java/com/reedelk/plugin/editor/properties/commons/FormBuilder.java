@@ -87,6 +87,13 @@ public class FormBuilder {
         return this;
     }
 
+    public FormBuilder addLabel(JLabel label, Container parent) {
+        GridBagLayout gbl = (GridBagLayout) parent.getLayout();
+        gbl.setConstraints(label, labelConstraints);
+        parent.add(label);
+        return this;
+    }
+
     public FormBuilder addFullWidthAndHeight(JComponent p, JComponent parent) {
         GridBagLayout gbl = (GridBagLayout) parent.getLayout();
         gbl.setConstraints(p, fullWidthAndHeightConstraints);

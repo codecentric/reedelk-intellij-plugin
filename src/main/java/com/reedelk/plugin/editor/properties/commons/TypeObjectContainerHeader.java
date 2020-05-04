@@ -4,42 +4,52 @@ import com.intellij.ui.components.JBLabel;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.TooltipContent;
 import com.reedelk.plugin.editor.properties.ClickableTooltip;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static com.intellij.util.ui.JBUI.Borders.empty;
-import static com.reedelk.plugin.editor.properties.commons.ClickableLabel.IconAlignment.RIGHT;
+import static com.reedelk.plugin.editor.properties.commons.ClickableLabel.IconAlignment.LEFT;
+import static com.reedelk.plugin.editor.properties.commons.ClickableLabel.OnClickAction;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.WEST;
 
 public class TypeObjectContainerHeader extends DisposablePanel {
 
-    public TypeObjectContainerHeader(String displayName, TooltipContent tooltipContent, Icon icon, ClickableLabel.OnClickAction labelClickListener) {
-        this(new ClickableLabel(displayName, icon, RIGHT, labelClickListener), tooltipContent);
+    public TypeObjectContainerHeader(String displayName, Icon icon, OnClickAction labelClickListener) {
+        this(new ClickableLabel(displayName, icon, LEFT, labelClickListener), null);
     }
 
-    public TypeObjectContainerHeader(String displayName, TooltipContent tooltipContent, Icon icon, ClickableLabel.IconAlignment iconAlignment, ClickableLabel.OnClickAction labelClickListener) {
-        this(new ClickableLabel(displayName, icon, iconAlignment, labelClickListener), tooltipContent);
+    public TypeObjectContainerHeader(String displayName, TooltipContent tooltipContent, Icon icon, OnClickAction labelClickListener) {
+        this(new ClickableLabel(displayName, icon, LEFT, labelClickListener), tooltipContent);
     }
 
     public TypeObjectContainerHeader(String displayName, TooltipContent tooltipContent) {
         this(new JBLabel(displayName), tooltipContent);
     }
 
-    private TypeObjectContainerHeader(JLabel label, TooltipContent tooltipContent) {
+    private TypeObjectContainerHeader(JLabel label, @Nullable TooltipContent tooltipContent) {
         label.setForeground(Colors.TOOL_WINDOW_PROPERTIES_TEXT);
+        label.setOpaque(false);
+
         HorizontalSeparator separator = new HorizontalSeparator();
+        separator.setOpaque(false);
+
+        JComponent westComponent = Optional.ofNullable(tooltipContent)
+                .map(content -> content.build()
+                        .map((Function<String, JComponent>) tooltipText -> {
+                            ClickableTooltip toolTip = new ClickableTooltip(tooltipText);
+                            DisposablePanel panel = ContainerFactory.createLabelNextToComponent(label, toolTip);
+                            panel.setOpaque(false);
+                            return panel;
+                        }).orElse(label)).orElse(label);
+
+        setOpaque(false);
         setLayout(new BorderLayout());
-
-        JComponent westComponent = tooltipContent.build()
-                .map((Function<String, JComponent>) tooltipText -> {
-                    ClickableTooltip toolTip = new ClickableTooltip(tooltipText);
-                    return ContainerFactory.createLabelNextToComponent(label, toolTip);
-                }).orElse(label);
-
         add(westComponent, WEST);
         add(separator, CENTER);
     }
