@@ -101,4 +101,11 @@ public class ContainerContextDefault implements ContainerContext {
         //  or: com.my.component.fully.qualified.name#property2#subproperty1
         return ComponentPropertyPath.join(componentPropertyPath(), propertyName);
     }
+
+    @Override
+    public void dispose() {
+        componentHolders.clear();
+        changeAwarePropertyAccessor.clear();
+        propertyChangeListeners.clear();
+    }
 }

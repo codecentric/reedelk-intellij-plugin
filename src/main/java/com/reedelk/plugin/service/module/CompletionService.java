@@ -2,12 +2,10 @@ package com.reedelk.plugin.service.module;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleServiceManager;
-import com.reedelk.plugin.service.module.impl.completion.ComponentIO;
 import com.reedelk.plugin.service.module.impl.completion.Suggestion;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CompletionService {
 
@@ -19,7 +17,7 @@ public interface CompletionService {
 
     List<Suggestion> autocompleteSuggestionOf(String componentPropertyPath, String[] tokens);
 
-    Optional<ComponentIO> componentIOOf(String componentFullyQualifiedName);
+    void loadComponentIO(String inputFQCN, String outputFQCN);
 
     interface OnCompletionEvent {
         void onCompletionsUpdated();

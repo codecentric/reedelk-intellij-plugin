@@ -1,5 +1,6 @@
 package com.reedelk.plugin.editor.properties.context;
 
+import com.intellij.openapi.Disposable;
 import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
 import com.reedelk.module.descriptor.model.property.PropertyTypeDescriptor;
 import com.reedelk.plugin.editor.properties.commons.InputChangeListener;
@@ -12,7 +13,7 @@ import javax.swing.*;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 
-public interface ContainerContext {
+public interface ContainerContext extends Disposable {
 
     String componentPropertyPath();
 

@@ -3,6 +3,7 @@ package com.reedelk.plugin.commons;
 import com.intellij.util.messages.Topic;
 import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
 import com.reedelk.plugin.editor.properties.selection.SelectionChangeListener;
+import com.reedelk.plugin.service.module.impl.completion.OnComponentIO;
 import com.reedelk.plugin.service.module.impl.component.ComponentListUpdateNotifier;
 
 import static com.reedelk.plugin.service.module.CompletionService.OnCompletionEvent;
@@ -28,6 +29,9 @@ public class Topics {
 
     public static final Topic<CommitPropertiesListener> COMMIT_COMPONENT_PROPERTIES_EVENTS =
             Topic.create("commit component properties events", CommitPropertiesListener.class);
+
+    public static final Topic<OnComponentIO> ON_COMPONENT_IO =
+            Topic.create("component input output ready", OnComponentIO.class);
 
     private Topics() {
     }

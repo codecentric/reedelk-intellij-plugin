@@ -16,11 +16,13 @@ import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.ComponentListUpdateNotifier;
+import com.reedelk.runtime.api.commons.ImmutableMap;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.flow.FlowContext;
 import com.reedelk.runtime.api.message.Message;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 import static com.reedelk.plugin.commons.Topics.COMPLETION_EVENT_TOPIC;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
@@ -40,7 +42,7 @@ public class CompletionServiceImpl implements CompletionService, ComponentListUp
     private final Trie global = new Trie();
     private final Trie defaultVariables = new Trie();
 
-
+    private OnComponentIO onComponentIO;
     // TODO: Take care of current module being developed suggestions.
 
     // Custom Functions are global so they are always present.
@@ -63,6 +65,8 @@ public class CompletionServiceImpl implements CompletionService, ComponentListUp
 
         MessageBusConnection connection = messageBus.connect();
         connection.subscribe(Topics.COMPONENTS_UPDATE_EVENTS, this);
+        onComponentIO = messageBus.syncPublisher(Topics.ON_COMPONENT_IO);
+
         initialize();
     }
 
@@ -83,11 +87,15 @@ public class CompletionServiceImpl implements CompletionService, ComponentListUp
     }
 
     @Override
-    public Optional<ComponentIO> componentIOOf(String componentFullyQualifiedName) {
-        if (componentIO.containsKey(componentFullyQualifiedName)) {
-            return Optional.of(componentIO.get(componentFullyQualifiedName));
-        }
-        return Optional.empty();
+    public void loadComponentIO(String inputFQCN, String outputFQCN) {
+        PluginExecutors.run(module, "Fetching IO", indicator -> {
+            if (componentIO.containsKey(inputFQCN)) {
+                ComponentIO result = componentIO.get(inputFQCN);
+                onComponentIO.onComponentIO(inputFQCN, outputFQCN, result);
+            } else {
+                onComponentIO.onComponentIONotFound(inputFQCN, outputFQCN);
+            }
+        });
     }
 
     @Override
@@ -134,10 +142,18 @@ public class CompletionServiceImpl implements CompletionService, ComponentListUp
                     ComponentInputDescriptor input = componentDescriptor.getInput();
 
                     if (output != null) {
-                        String attributes = output.getAttributes(); // Attributes type.
-                        List<Suggestion> attributesItems = typeAndAndTries.get(attributes).autocomplete("");
+                        String attributesTypes = output.getAttributes(); // Attributes type.
+                        List<Suggestion> attributesItems = typeAndAndTries.get(attributesTypes).autocomplete(StringUtils.EMPTY); // All for the type
+                        Map<String, ComponentIO.IOTypeDescriptor> map = new TreeMap<>(Comparator.naturalOrder());
+                        attributesItems.forEach(new Consumer<Suggestion>() {
+                            @Override
+                            public void accept(Suggestion suggestion) {
+                                map.put(suggestion.lookupString(),
+                                        ComponentIO.IOTypeDescriptor.create(suggestion.presentableType()));
+                            }
+                        });
 
-                        ComponentIO componentIO = new ComponentIO(attributesItems);
+                        ComponentIO componentIO = new ComponentIO(map, ImmutableMap.of());
                         this.componentIO.put(componentDescriptor.getFullyQualifiedName(), componentIO);
                     }
 

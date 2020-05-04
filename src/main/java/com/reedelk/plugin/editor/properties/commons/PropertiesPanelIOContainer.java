@@ -1,34 +1,89 @@
 package com.reedelk.plugin.editor.properties.commons;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;
+import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.JBUI;
+import com.reedelk.plugin.commons.Colors;
+import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.impl.completion.ComponentIO;
+import com.reedelk.plugin.service.module.impl.completion.OnComponentIO;
+import com.reedelk.runtime.api.commons.ImmutableMap;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
-import java.util.Optional;
+import java.util.Map;
 
-import static com.intellij.icons.AllIcons.General.ArrowRight;
 import static com.intellij.util.ui.JBUI.Borders.customLine;
 import static com.intellij.util.ui.JBUI.Borders.emptyLeft;
 import static com.reedelk.plugin.commons.Colors.SCRIPT_EDITOR_CONTEXT_PANEL_TITLE_BG;
 
-public class PropertiesPanelIOContainer extends DisposablePanel {
+public class PropertiesPanelIOContainer extends DisposablePanel implements OnComponentIO {
+
+    private final DisposablePanel loadingPanel;
+    private MessageBusConnection connection;
 
     public PropertiesPanelIOContainer(Module module, String componentFullyQualifiedName) {
         super(new BorderLayout());
+        loadingPanel = new PanelWithText.LoadingContentPanel();
+        loadingPanel.setOpaque(true);
+        loadingPanel.setBackground(JBColor.WHITE);
+
         add(new HeaderPanel("Input Message"), BorderLayout.NORTH);
-        DisposablePanel panel = ContainerFactory.pushTop(new ContentPanel(module, componentFullyQualifiedName));
-        panel.setBackground(Color.WHITE);
-        add(panel, BorderLayout.CENTER);
-        setBackground(Color.WHITE);
+        add(loadingPanel, BorderLayout.CENTER);
+        setBackground(JBColor.WHITE);
+
+        this.connection = module.getMessageBus().connect(this);
+        this.connection.subscribe(Topics.ON_COMPONENT_IO, this);
+
+        CompletionService.getInstance(module).loadComponentIO(componentFullyQualifiedName, componentFullyQualifiedName);
     }
 
+    @Override
+    public void onComponentIO(String inputFQCN, String outputFQCN, ComponentIO componentIO) {
+        ContentPanel contentPanel = new ContentPanel();
+        DisposablePanel panel = ContainerFactory.pushTop(contentPanel);
+        panel.setBackground(JBColor.WHITE);
+        remove(loadingPanel);
+        add(panel, BorderLayout.CENTER);
+
+        DisposableCollapsiblePane attributes = createPanel(htmlLabel("attributes", "Map"), componentIO.getAttributes());
+        FormBuilder.get().addFullWidthAndHeight(attributes, contentPanel);
+
+        DisposableCollapsiblePane payload = createPanel(htmlLabel("payload", "byte[]"), componentIO.getPayload());
+        FormBuilder.get().addFullWidthAndHeight(payload, contentPanel);
+
+        ApplicationManager.getApplication().invokeLater(this::repaint);
+    }
+
+    @Override
+    public void onComponentIONotFound(String inputFQCN, String outputFQCN) {
+        ContentPanel contentPanel = new ContentPanel();
+        DisposablePanel panel = ContainerFactory.pushTop(contentPanel);
+        panel.setBackground(JBColor.WHITE);
+        remove(loadingPanel);
+        add(panel, BorderLayout.CENTER);
+
+        DisposableCollapsiblePane attributes = createPanel(htmlLabel("attributes", "Map"), ImmutableMap.of());
+        FormBuilder.get().addFullWidthAndHeight(attributes, contentPanel);
+
+        DisposableCollapsiblePane payload = createPanel(htmlLabel("payload", "byte[]"), ImmutableMap.of());
+        FormBuilder.get().addFullWidthAndHeight(payload, contentPanel);
+
+        ApplicationManager.getApplication().invokeLater(this::repaint);
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        this.connection.disconnect();
+        this.connection = null;
+    }
 
     static class HeaderPanel extends DisposablePanel {
         public HeaderPanel(String text) {
@@ -37,7 +92,7 @@ public class PropertiesPanelIOContainer extends DisposablePanel {
 
             JLabel label = new JLabel(text, SwingConstants.LEFT);
             //label.setFont(label.getFont().deriveFont(Font, label.getFont().getSize()));
-            label.setForeground(Color.DARK_GRAY);
+            label.setForeground(JBColor.DARK_GRAY);
             add(label, BorderLayout.WEST);
             setPreferredSize(new Dimension(200, 25));
 
@@ -49,34 +104,34 @@ public class PropertiesPanelIOContainer extends DisposablePanel {
 
 
     static class ContentPanel extends DisposablePanel {
-        public ContentPanel(Module module, String componentFullyQualifiedName) {
+        public ContentPanel() {
             super(new GridBagLayout());
-            setBorder(JBUI.Borders.empty(5, 1, 5, 8));
-            setBackground(Color.WHITE);
-
-            Optional<ComponentIO> componentIO = CompletionService.getInstance(module).componentIOOf(componentFullyQualifiedName);
-
-            DisposableCollapsiblePane disposableCollapsiblePane =
-                    new DisposableCollapsiblePane("attributes", () -> {
-                        DisposablePanel content = new DisposablePanel(new GridBagLayout());
-                        content.setBackground(Color.WHITE);
-                        componentIO.ifPresent(componentIO1 -> componentIO1.getOutputAttributes().forEach(suggestion -> {
-                            String label = suggestion.lookupString() + ": " + suggestion.presentableType();
-                            JBLabel attributes = new JBLabel(label, JLabel.LEFT);
-                            attributes.setBorder(JBUI.Borders.emptyLeft(10));
-                            FormBuilder.get().addLabel(attributes, content);
-                            FormBuilder.get().addLastField(Box.createHorizontalGlue(), content);
-                        }));
-                        return content;
-                    });
-
-            FormBuilder.get().addFullWidthAndHeight(disposableCollapsiblePane, ContentPanel.this);
-
-
-            TypeObjectContainerHeader payload =
-                    new TypeObjectContainerHeader("payload", ArrowRight, () -> System.out.println("Clicked"));
-            payload.setBorder(JBUI.Borders.emptyTop(5));
-            FormBuilder.get().addFullWidthAndHeight(payload, ContentPanel.this);
+            setBorder(JBUI.Borders.empty(0, 1, 5, 8));
+            setBackground(JBColor.WHITE);
         }
+    }
+
+    private static DisposableCollapsiblePane createPanel(String title, Map<String, ComponentIO.IOTypeDescriptor> keyAndValue) {
+        return new DisposableCollapsiblePane(title, () -> {
+            DisposablePanel content = new DisposablePanel(new GridBagLayout());
+            content.setBackground(JBColor.WHITE);
+            keyAndValue.forEach((key, value) -> {
+                if (value.isNameOnly()) {
+                    String label = htmlLabel(key, value.getName());
+                    JBLabel attributes = new JBLabel(label, JLabel.LEFT);
+                    attributes.setForeground(Colors.TOOL_WINDOW_PROPERTIES_TEXT);
+                    attributes.setBorder(JBUI.Borders.empty());
+                    FormBuilder.get().addLabel(attributes, content);
+                    FormBuilder.get().addLastField(Box.createHorizontalGlue(), content);
+                }
+            });
+            return content;
+        });
+    }
+
+    private static final String HTML = "<html>%s : <i>%s</i></html>";
+
+    private static String htmlLabel(String key, String value) {
+        return String.format(HTML, key, value);
     }
 }

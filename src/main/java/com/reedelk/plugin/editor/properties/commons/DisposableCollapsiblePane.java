@@ -11,9 +11,9 @@ import java.awt.*;
 import static com.intellij.icons.AllIcons.General.ArrowDown;
 import static com.intellij.icons.AllIcons.General.ArrowRight;
 import static com.intellij.util.ui.JBUI.Borders.empty;
-import static com.intellij.util.ui.JBUI.Borders.emptyLeft;
 import static com.reedelk.plugin.editor.properties.commons.PanelWithText.LoadingContentPanel;
-import static java.awt.BorderLayout.*;
+import static java.awt.BorderLayout.CENTER;
+import static java.awt.BorderLayout.NORTH;
 
 public class DisposableCollapsiblePane extends DisposablePanel {
 
@@ -93,16 +93,7 @@ public class DisposableCollapsiblePane extends DisposablePanel {
         UnCollapsedContent(String displayName, TooltipContent tooltipContent, JComponent content) {
 
             // we add a little bit of inset padding to make it clear are properties of un-collapsed object.
-
-            JSeparator jSeparator = new JSeparator(JSeparator.VERTICAL);
-            jSeparator.setOpaque(false);
-
-            DisposablePanel container = new DisposablePanel(new BorderLayout());
-            container.setBorder(empty(5, 7, 0, 0));
-            container.add(jSeparator, WEST);
-            container.setOpaque(false);
-            content.setBorder(emptyLeft(10));
-            container.add(content, CENTER);
+            content.setBorder(empty(5, 20, 0, 0));
 
             // header
             TypeObjectContainerHeader topHeader =
@@ -111,7 +102,7 @@ public class DisposableCollapsiblePane extends DisposablePanel {
             setLayout(new BorderLayout());
             setOpaque(false);
             add(topHeader, NORTH);
-            add(container, CENTER);
+            add(content, CENTER);
         }
     }
 

@@ -90,4 +90,10 @@ public class PropertiesPanelHolder extends DisposablePanel {
 
         });
     }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        this.context.dispose();
+    }
 }

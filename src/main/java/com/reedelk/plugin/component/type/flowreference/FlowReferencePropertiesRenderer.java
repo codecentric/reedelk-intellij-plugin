@@ -62,7 +62,7 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
                     .filter(descriptor -> !FlowReference.ref().equals(descriptor.getName()))
                     .collect(toList());
 
-            DisposablePanel genericPropertiesPanel =
+            DisposablePanel panel =
                     new PropertiesPanelHolder(module, context, componentData, filteredDescriptors, snapshot);
 
             PropertyDescriptor referencePropertyDescriptor = propertyDescriptor.get();
@@ -71,9 +71,10 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
 
             PropertyTitleLabel propertyTitleLabel = new PropertyTitleLabel(referencePropertyDescriptor);
             FormBuilder.get()
-                    .addLabel(propertyTitleLabel, genericPropertiesPanel)
-                    .addLastField(selector, genericPropertiesPanel);
-            return genericPropertiesPanel;
+                    .addLabel(propertyTitleLabel, panel)
+                    .addLastField(selector, panel);
+
+            return panel;
         };
 
         String defaultTabKey = message("properties.panel.tab.title.general");
