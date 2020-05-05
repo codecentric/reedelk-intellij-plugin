@@ -2,6 +2,7 @@ package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.UIUtil;
 import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.editor.properties.renderer.typedynamicvalue.DynamicValueScriptEditor;
@@ -23,7 +24,9 @@ public class TableDynamicCellEditor implements TableCellEditor, Disposable {
     private CellEditorListener listener;
 
     public TableDynamicCellEditor(Module module, String componentPropertyPath) {
-        JLabel codeIcon = new JLabel(Code);
+        JBLabel codeIcon = new JBLabel(Code);
+        codeIcon.setOpaque(true);
+
         this.editor = new DynamicValueScriptEditor(module, componentPropertyPath);
         this.content = ContainerFactory.createLabelNextToComponentWithoutOuterBorder(codeIcon, editor);
     }
