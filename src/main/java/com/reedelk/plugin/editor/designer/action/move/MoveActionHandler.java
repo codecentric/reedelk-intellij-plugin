@@ -25,10 +25,10 @@ public class MoveActionHandler {
 
     public void handle() {
 
-        FlowGraph originalGraph = snapshot.getGraphOrThrowIfAbsent();
+        FlowGraph original = snapshot.getGraphOrThrowIfAbsent();
 
         // Copy the original graph
-        FlowGraph copy = originalGraph.copy();
+        FlowGraph copy = original.copy();
 
         // Remove the dropped node from the copy graph
         actionReplace.execute(copy);
@@ -66,7 +66,7 @@ public class MoveActionHandler {
                 scopedNode.removeFromScope(replacementNode);
             });
 
-            snapshot.updateSnapshot(this, originalGraph);
+            snapshot.updateSnapshot(this, original);
         }
     }
 

@@ -36,7 +36,6 @@ public class CompletionServiceImpl implements CompletionService, ComponentListUp
     // Key is : componentQualifiedName#property1#subproperty1#subsubproperty1
     private final Map<String, Trie> componentPropertyAndTrie = new HashMap<>();
     private final Map<String, TypeInfo> typeAndAndTries = new HashMap<>();
-    private final Map<String, ComponentIO> componentIO = new HashMap<>();
 
     private final Trie global = new Trie();
     private final Trie defaultVariables = new Trie();
@@ -69,6 +68,11 @@ public class CompletionServiceImpl implements CompletionService, ComponentListUp
         connection.subscribe(Topics.COMPONENTS_UPDATE_EVENTS, this);
         onComponentIO = messageBus.syncPublisher(Topics.ON_COMPONENT_IO);
 
+        // Init strategy:
+        // 1. Should not initialize here, but when the first one is asked and init is false.
+        // 1. Init first system components, they cannot be changed and they are final.
+        // 2. Init all global types
+        // 2. Cache all the trees for the types belonging to a component and not for all the components.
         initialize();
     }
 
@@ -136,8 +140,8 @@ public class CompletionServiceImpl implements CompletionService, ComponentListUp
     }
 
     synchronized void updateAutocomplete(Collection<ModuleDescriptor> moduleDescriptors) {
-        moduleDescriptors.forEach(moduleDescriptor -> {
 
+        moduleDescriptors.forEach(moduleDescriptor -> {
             try {
                 // We only register global types, since they are the most used ones.
                 List<TypeDescriptor> types = moduleDescriptor.getTypes();

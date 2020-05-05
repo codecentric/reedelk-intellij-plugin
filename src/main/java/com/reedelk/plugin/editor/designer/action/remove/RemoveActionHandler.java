@@ -19,9 +19,9 @@ public class RemoveActionHandler {
 
     public void handle() {
 
-        FlowGraph graph = snapshot.getGraphOrThrowIfAbsent();
+        FlowGraph original = snapshot.getGraphOrThrowIfAbsent();
 
-        FlowGraph copy = graph.copy();
+        FlowGraph copy = original.copy();
 
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
 

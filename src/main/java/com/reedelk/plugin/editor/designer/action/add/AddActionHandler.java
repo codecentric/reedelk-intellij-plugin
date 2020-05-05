@@ -19,7 +19,9 @@ public class AddActionHandler {
 
     public boolean handle() {
 
-        FlowGraph copy = snapshot.getGraphOrThrowIfAbsent();
+        FlowGraph original = snapshot.getGraphOrThrowIfAbsent();
+
+        FlowGraph copy = original.copy();
 
         FlowGraphChangeAware modifiableGraph = new FlowGraphChangeAware(copy);
 
