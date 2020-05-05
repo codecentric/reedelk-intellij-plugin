@@ -6,6 +6,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.commons.DisableInspectionFor;
+import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.PopupUtils;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
@@ -96,7 +97,7 @@ public class ScriptInputField extends DisposablePanel implements ScriptServiceIm
     @Override
     public void dispose() {
         super.dispose();
-        connect.disconnect();
+        DisposableUtils.dispose(connect);
     }
 
     private void updateWith(Collection<ScriptResource> scriptResources, ScriptResource selected) {

@@ -5,6 +5,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
 import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
+import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.PopupUtils;
 import com.reedelk.plugin.commons.TypeObjectFactory;
 import com.reedelk.plugin.editor.properties.commons.ComboActionsPanel;
@@ -136,7 +137,7 @@ class ShareableConfigInputField extends DisposablePanel implements Configuration
     @Override
     public void dispose() {
         super.dispose();
-        connect.disconnect();
+        DisposableUtils.dispose(connect);
     }
 
     private void updateWith(Collection<ConfigMetadata> configMetadata, ConfigMetadata selected) {

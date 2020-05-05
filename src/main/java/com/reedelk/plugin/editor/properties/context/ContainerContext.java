@@ -16,6 +16,8 @@ import javax.swing.*;
 import java.util.*;
 import java.util.function.BiPredicate;
 
+import static java.util.stream.Collectors.toList;
+
 public class ContainerContext implements Disposable {
 
     private static final Logger LOG = Logger.getInstance(ContainerContext.class);
@@ -39,6 +41,13 @@ public class ContainerContext implements Disposable {
         if (DebugControls.Properties.CONTAINER_CONTEXT_INFO) {
             LOG.info("CREATED_CONTAINER_CONTEXT: " + componentPropertyPath);
         }
+    }
+
+    public List<String> predecessors() {
+        List<GraphNode> predecessors = snapshot.getGraphOrThrowIfAbsent().predecessors(node);
+        return predecessors.stream()
+                .map(graphNode -> graphNode.componentData().getFullyQualifiedName())
+                .collect(toList());
     }
 
     public String componentPropertyPath() {

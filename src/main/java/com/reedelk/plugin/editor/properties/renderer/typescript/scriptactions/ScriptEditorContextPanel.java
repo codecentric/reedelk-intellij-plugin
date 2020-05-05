@@ -4,6 +4,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.Colors;
+import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.service.module.CompletionService;
@@ -44,7 +45,7 @@ class ScriptEditorContextPanel extends DisposablePanel implements CompletionServ
         setBorder(MATTE_BORDER);
 
         this.connect = module.getMessageBus().connect();
-        connect.subscribe(Topics.COMPLETION_EVENT_TOPIC, this);
+        this.connect.subscribe(Topics.COMPLETION_EVENT_TOPIC, this);
 
         JLabel panelTitle = new JLabel(message("script.editor.context.vars.title"));
         JPanel panelTitleWrapper = new JPanel();
@@ -69,9 +70,7 @@ class ScriptEditorContextPanel extends DisposablePanel implements CompletionServ
     @Override
     public void dispose() {
         super.dispose();
-        if (this.connect != null) {
-            this.connect.disconnect();
-        }
+        DisposableUtils.dispose(connect);
     }
 
     @Override

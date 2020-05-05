@@ -7,6 +7,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Colors;
+import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.service.module.CompletionService;
@@ -32,6 +33,9 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
     public PropertiesPanelIOContainer(Module module, ContainerContext context, String componentFullyQualifiedName) {
         super(new BorderLayout());
 
+
+        String predecessorFQCN = context.predecessors().stream().findFirst().orElse(null);
+
         loadingPanel = new PanelWithText.LoadingContentPanel();
         loadingPanel.setOpaque(true);
         loadingPanel.setBackground(JBColor.WHITE);
@@ -44,11 +48,12 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
         this.connection.subscribe(Topics.ON_COMPONENT_IO, this);
 
         CompletionService.getInstance(module)
-                .loadComponentIO(componentFullyQualifiedName, componentFullyQualifiedName);
+                .loadComponentIO(predecessorFQCN, componentFullyQualifiedName);
     }
 
     @Override
     public void onComponentIO(String inputFQCN, String outputFQCN, ComponentIO componentIO) {
+        // TODO:  Remove duplicated code here and below
         ContentPanel contentPanel = new ContentPanel();
         DisposablePanel panel = ContainerFactory.pushTop(contentPanel);
         panel.setBackground(JBColor.WHITE);
@@ -84,10 +89,7 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
     @Override
     public void dispose() {
         super.dispose();
-        if (this.connection != null) {
-            this.connection.disconnect();
-            this.connection = null;
-        }
+        DisposableUtils.dispose(connection);
     }
 
     static class HeaderPanel extends DisposablePanel {

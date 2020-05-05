@@ -4,10 +4,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.module.descriptor.model.ModuleDescriptor;
-import com.reedelk.plugin.commons.Colors;
-import com.reedelk.plugin.commons.DesignerWindowSizeCalculator;
-import com.reedelk.plugin.commons.ToolWindowUtils;
-import com.reedelk.plugin.commons.Topics;
+import com.reedelk.plugin.commons.*;
 import com.reedelk.plugin.editor.designer.debug.CenterOfNodeDrawable;
 import com.reedelk.plugin.editor.designer.debug.PrintFlowInfo;
 import com.reedelk.plugin.editor.designer.dnd.DesignerDropTargetListener;
@@ -303,7 +300,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
     public void dispose() {
         super.dispose();
         currentComponentPublisher.unselect();
-        busConnection.disconnect();
+        DisposableUtils.dispose(busConnection);
     }
 
     @Override

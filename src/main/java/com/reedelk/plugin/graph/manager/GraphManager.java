@@ -14,6 +14,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.module.descriptor.model.ModuleDescriptor;
+import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.editor.DesignerEditor;
 import com.reedelk.plugin.executor.PluginExecutors;
@@ -101,8 +102,8 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
     @Override
     public void dispose() {
         this.document = null;
-        this.projectBusConnection.disconnect();
-        this.moduleBusConnection.disconnect();
+        DisposableUtils.dispose(projectBusConnection);
+        DisposableUtils.dispose(moduleBusConnection);
     }
 
     /**
