@@ -43,9 +43,9 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
             throw new IllegalStateException("Reference property descriptor must not be null");
         }
 
-        String fullyQualifiedName = componentData.getFullyQualifiedName();
+        String componentFullyQualifiedName = componentData.getFullyQualifiedName();
 
-        ContainerContext context = new ContainerContextDefault(fullyQualifiedName);
+        ContainerContext context = new ContainerContextDefault(componentFullyQualifiedName);
 
         Supplier<JComponent> componentSupplier = () -> {
 
@@ -79,9 +79,11 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
 
         String defaultTabKey = message("properties.panel.tab.title.general");
 
-        Map<String, Supplier<JComponent>> tabAndComponentSupplier =
-                ImmutableMap.of(defaultTabKey, componentSupplier);
-        return new PropertiesPanelContainer(module, componentData, tabAndComponentSupplier, context);
+        Map<String, Supplier<JComponent>> tabAndComponentSupplier = ImmutableMap.of(defaultTabKey, componentSupplier);
+
+        PropertiesPanelTabbedPanel tabbedPanel = new PropertiesPanelTabbedPanel(componentData, tabAndComponentSupplier, context);
+
+        return new PropertiesThreeComponentsSplitter(module, context, componentFullyQualifiedName, snapshot, tabbedPanel);
     }
 
 

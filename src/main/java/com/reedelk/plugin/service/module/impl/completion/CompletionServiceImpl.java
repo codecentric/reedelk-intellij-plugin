@@ -5,6 +5,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.module.descriptor.model.ModuleDescriptor;
+import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentInputDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
@@ -16,13 +17,11 @@ import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.ComponentListUpdateNotifier;
-import com.reedelk.runtime.api.commons.ImmutableMap;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.flow.FlowContext;
 import com.reedelk.runtime.api.message.Message;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 import static com.reedelk.plugin.commons.Topics.COMPLETION_EVENT_TOPIC;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
@@ -42,6 +41,8 @@ public class CompletionServiceImpl implements CompletionService, ComponentListUp
     private final Trie global = new Trie();
     private final Trie defaultVariables = new Trie();
 
+
+    private ComponentInputProcessor processor;
     private OnComponentIO onComponentIO;
     // TODO: Take care of current module being developed suggestions.
 
@@ -51,6 +52,7 @@ public class CompletionServiceImpl implements CompletionService, ComponentListUp
     public CompletionServiceImpl(Project project, Module module) {
         this.module = module;
         this.messageBus = project.getMessageBus();
+        this.processor = new ComponentInputProcessor(typeAndAndTries);
 
         Suggestion message = Suggestion.create(PROPERTY)
                 .withLookupString("message")
@@ -71,13 +73,20 @@ public class CompletionServiceImpl implements CompletionService, ComponentListUp
     }
 
     @Override
-    public synchronized List<Suggestion> contextVariablesOf(String componentFullyQualifiedName) {
-        return autocompleteSuggestionOf(componentFullyQualifiedName, new String[]{StringUtils.EMPTY});
+    public synchronized List<Suggestion> contextVariablesOf(String componentPropertyPath) {
+        return autocompleteSuggestionOf(componentPropertyPath, new String[]{StringUtils.EMPTY});
     }
 
     @Override
     public synchronized List<Suggestion> autocompleteSuggestionOf(String componentPropertyPath, String[] tokens) {
-        List<Suggestion> suggestions = CompletionFinder.find(global, typeAndAndTries, tokens);
+        // If there is only one token, you must not search in global because you will never find a match
+        // for a token starting with ["message", ""].
+        List<Suggestion> suggestions;
+        if (tokens.length <= 1) {
+            suggestions = CompletionFinder.find(global, typeAndAndTries, tokens);
+        } else {
+            suggestions = new ArrayList<>();
+        }
 
         Trie root = componentPropertyAndTrie.getOrDefault(componentPropertyPath, defaultVariables);
         List<Suggestion> propertySuggestions = CompletionFinder.find(root, typeAndAndTries, tokens);
@@ -89,9 +98,15 @@ public class CompletionServiceImpl implements CompletionService, ComponentListUp
     @Override
     public void loadComponentIO(String inputFQCN, String outputFQCN) {
         PluginExecutors.run(module, "Fetching IO", indicator -> {
-            if (componentIO.containsKey(inputFQCN)) {
-                ComponentIO result = componentIO.get(inputFQCN);
-                onComponentIO.onComponentIO(inputFQCN, outputFQCN, result);
+
+            ComponentDescriptor componentDescriptorBy = componentService().findComponentDescriptorBy(inputFQCN);
+
+            ComponentInputDescriptor input = componentDescriptorBy.getInput();
+            ComponentOutputDescriptor output = componentDescriptorBy.getOutput();
+
+            Optional<ComponentIO> maybeComponentIO = processor.inputFrom(output);
+            if (maybeComponentIO.isPresent()) {
+                onComponentIO.onComponentIO(inputFQCN, outputFQCN, maybeComponentIO.get());
             } else {
                 onComponentIO.onComponentIONotFound(inputFQCN, outputFQCN);
             }
@@ -124,7 +139,7 @@ public class CompletionServiceImpl implements CompletionService, ComponentListUp
         moduleDescriptors.forEach(moduleDescriptor -> {
 
             try {
-                // Add all global types
+                // We only register global types, since they are the most used ones.
                 List<TypeDescriptor> types = moduleDescriptor.getTypes();
                 for (TypeDescriptor type : types) {
                     try {
@@ -137,52 +152,13 @@ public class CompletionServiceImpl implements CompletionService, ComponentListUp
 
                 // Add component -> property types
                 moduleDescriptor.getComponents().forEach(componentDescriptor -> {
-                    // Input/Output
-                    ComponentOutputDescriptor output = componentDescriptor.getOutput();
-                    ComponentInputDescriptor input = componentDescriptor.getInput();
-
-                    if (output != null) {
-                        String attributesTypes = output.getAttributes(); // Attributes type.
-
-                        TypeInfo info = typeAndAndTries.get(attributesTypes);
-
-                        List<Suggestion> attributesItems = info.getTrie().autocomplete(StringUtils.EMPTY); // All for the type
-                        Map<String, ComponentIO.IOTypeDescriptor> map = new TreeMap<>(Comparator.naturalOrder());
-                        attributesItems.forEach(new Consumer<Suggestion>() {
-                            @Override
-                            public void accept(Suggestion suggestion) {
-                                map.put(suggestion.lookupString(),
-                                        ComponentIO.IOTypeDescriptor.create(suggestion.presentableType()));
-                            }
-                        });
-
-                        // Extends
-                        TypeInfo extendsInfo = typeAndAndTries.get(info.getExtendsType());
-                        if (extendsInfo != null && extendsInfo.getTrie() != null) {
-                            List<Suggestion> extendsItems = extendsInfo.getTrie().autocomplete(StringUtils.EMPTY); // All for the type
-                            extendsItems.forEach(new Consumer<Suggestion>() {
-                                @Override
-                                public void accept(Suggestion suggestion) {
-                                    if (suggestion.getType().equals(PROPERTY)) {
-                                        map.put(suggestion.lookupString(),
-                                                ComponentIO.IOTypeDescriptor.create(suggestion.presentableType()));
-                                    }
-                                }
-                            });
-                        }
-
-
-                        ComponentIO componentIO = new ComponentIO(map, ImmutableMap.of());
-                        this.componentIO.put(componentDescriptor.getFullyQualifiedName(), componentIO);
-                    }
-
-
+                    // dunno these property types are not really needed, are they?
                     // Properties
                     componentDescriptor.getProperties().forEach(propertyDescriptor -> {
                         String parent = componentDescriptor.getFullyQualifiedName();
                         register(propertyDescriptor, parent);
                     });
-                        });
+                });
             } catch (Exception e) {
                 //ToDO:
                 e.printStackTrace();

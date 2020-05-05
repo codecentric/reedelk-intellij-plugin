@@ -8,6 +8,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.Topics;
+import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.impl.completion.ComponentIO;
 import com.reedelk.plugin.service.module.impl.completion.OnComponentIO;
@@ -28,8 +29,9 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
     private final DisposablePanel loadingPanel;
     private MessageBusConnection connection;
 
-    public PropertiesPanelIOContainer(Module module, String componentFullyQualifiedName) {
+    public PropertiesPanelIOContainer(Module module, FlowSnapshot snapshot, String componentFullyQualifiedName) {
         super(new BorderLayout());
+
         loadingPanel = new PanelWithText.LoadingContentPanel();
         loadingPanel.setOpaque(true);
         loadingPanel.setBackground(JBColor.WHITE);
@@ -41,7 +43,8 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
         this.connection = module.getMessageBus().connect(this);
         this.connection.subscribe(Topics.ON_COMPONENT_IO, this);
 
-        CompletionService.getInstance(module).loadComponentIO(componentFullyQualifiedName, componentFullyQualifiedName);
+        CompletionService.getInstance(module)
+                .loadComponentIO(componentFullyQualifiedName, componentFullyQualifiedName);
     }
 
     @Override
@@ -106,7 +109,7 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
     static class ContentPanel extends DisposablePanel {
         public ContentPanel() {
             super(new GridBagLayout());
-            setBorder(JBUI.Borders.empty(0, 1, 5, 8));
+            setBorder(JBUI.Borders.empty(0, 1, 0, 8));
             setBackground(JBColor.WHITE);
         }
     }

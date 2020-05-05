@@ -34,12 +34,12 @@ class ScriptEditorContextPanel extends DisposablePanel implements CompletionServ
 
     private final transient Module module;
     private final transient MessageBusConnection connect;
-    private final String componentFullyQualifiedName;
+    private final String componentPropertyPath;
     private final DisposablePanel panelVariables;
 
-    ScriptEditorContextPanel(Module module, String componentFullyQualifiedName) {
+    ScriptEditorContextPanel(Module module, String componentPropertyPath) {
+        this.componentPropertyPath = componentPropertyPath;
         this.module = module;
-        this.componentFullyQualifiedName = componentFullyQualifiedName;
         setLayout(new BorderLayout());
         setBorder(MATTE_BORDER);
 
@@ -94,7 +94,7 @@ class ScriptEditorContextPanel extends DisposablePanel implements CompletionServ
 
     private List<Suggestion> getSuggestions() {
         return CompletionService.getInstance(module)
-                .contextVariablesOf(componentFullyQualifiedName)
+                .contextVariablesOf(componentPropertyPath)
                 .stream()
                 .filter(suggestion -> StringUtils.isNotBlank(suggestion.lookupString()))
                 .sorted(Comparator.comparing(Suggestion::lookupString).reversed())

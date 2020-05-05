@@ -5,7 +5,8 @@ import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.component.type.generic.GenericComponentPropertiesRenderer;
 import com.reedelk.plugin.component.type.router.widget.RouterRouteTable;
-import com.reedelk.plugin.editor.properties.commons.PropertiesPanelContainer;
+import com.reedelk.plugin.editor.properties.commons.PropertiesPanelTabbedPanel;
+import com.reedelk.plugin.editor.properties.commons.PropertiesThreeComponentsSplitter;
 import com.reedelk.plugin.editor.properties.context.ComponentPropertyPath;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.editor.properties.context.ContainerContextDefault;
@@ -57,8 +58,10 @@ public class RouterPropertiesRenderer extends GenericComponentPropertiesRenderer
 
         String defaultTabKey = message("properties.panel.tab.title.general");
 
-        Map<String, Supplier<JComponent>> tabAndComponentSupplier =
-                ImmutableMap.of(defaultTabKey, routerTableSupplier);
-        return new PropertiesPanelContainer(module, componentData, tabAndComponentSupplier, context);
+        Map<String, Supplier<JComponent>> tabAndComponentSupplier = ImmutableMap.of(defaultTabKey, routerTableSupplier);
+
+        PropertiesPanelTabbedPanel tabbedPanel = new PropertiesPanelTabbedPanel(componentData, tabAndComponentSupplier, context);
+
+        return new PropertiesThreeComponentsSplitter(module, context, componentFullyQualifiedName, snapshot, tabbedPanel);
     }
 }

@@ -3,7 +3,8 @@ package com.reedelk.plugin.component.type.generic;
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.component.ComponentData;
-import com.reedelk.plugin.editor.properties.commons.PropertiesPanelContainer;
+import com.reedelk.plugin.editor.properties.commons.PropertiesPanelTabbedPanel;
+import com.reedelk.plugin.editor.properties.commons.PropertiesThreeComponentsSplitter;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.editor.properties.context.ContainerContextDefault;
 import com.reedelk.plugin.editor.properties.renderer.AbstractComponentPropertiesRenderer;
@@ -41,6 +42,10 @@ public class GenericComponentPropertiesRenderer extends AbstractComponentPropert
 
         ContainerContext context = new ContainerContextDefault(componentData.getFullyQualifiedName());
 
-        return new PropertiesPanelContainer(module, snapshot, componentData, propertiesByGroup, context);
+        String componentFullyQualifiedName = componentData.getFullyQualifiedName();
+
+        PropertiesPanelTabbedPanel panel = new PropertiesPanelTabbedPanel(module, snapshot, componentData, propertiesByGroup, context);
+
+        return new PropertiesThreeComponentsSplitter(module, context,  componentFullyQualifiedName, snapshot, panel);
     }
 }
