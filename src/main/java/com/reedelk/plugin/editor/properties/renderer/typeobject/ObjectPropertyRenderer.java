@@ -9,7 +9,6 @@ import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.editor.properties.context.ContainerContextDecorator;
 import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.renderer.AbstractPropertyTypeRenderer;
-import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.runtime.commons.JsonParser;
 import org.jetbrains.annotations.NotNull;
 
@@ -67,7 +66,6 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
     @NotNull
     private JComponent renderShareable(Module module, PropertyDescriptor descriptor, PropertyAccessor propertyAccessor, ContainerContext context) {
         ComponentDataHolder dataHolder = propertyAccessor.get();
-        FlowSnapshot snapshot = propertyAccessor.getSnapshot();
 
         String propertyName = JsonParser.Component.ref();
 
