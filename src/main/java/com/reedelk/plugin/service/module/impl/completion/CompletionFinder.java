@@ -7,9 +7,9 @@ import java.util.Optional;
 
 public class CompletionFinder {
 
-    private static final Trie UNKNOWN_TYPE_TRIE = new Trie();
+    private static final TypeInfo UNKNOWN_TYPE_TRIE = new TypeInfo();
 
-    public static List<Suggestion> find(Trie root, Map<String, Trie> typeAndTrieMap, String[] tokens) {
+    public static List<Suggestion> find(Trie root, Map<String, TypeInfo> typeAndTrieMap, String[] tokens) {
         Trie current = root;
         List<Suggestion> autocompleteResults = new ArrayList<>();
         for (int i = 0; i < tokens.length; i++) {
@@ -24,7 +24,7 @@ public class CompletionFinder {
                     // If there is more than one token, it must be an exact match.
                     if (suggestion.name().equals(token)) {
                         String returnType = suggestion.typeText();
-                        current = typeAndTrieMap.getOrDefault(returnType, UNKNOWN_TYPE_TRIE);
+                        current = typeAndTrieMap.getOrDefault(returnType, UNKNOWN_TYPE_TRIE).getTrie();
                     } else {
                         break;
                     }

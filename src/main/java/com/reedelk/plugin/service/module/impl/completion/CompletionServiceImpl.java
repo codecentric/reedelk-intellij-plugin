@@ -36,7 +36,7 @@ public class CompletionServiceImpl implements CompletionService, ComponentListUp
 
     // Key is : componentQualifiedName#property1#subproperty1#subsubproperty1
     private final Map<String, Trie> componentPropertyAndTrie = new HashMap<>();
-    private final Map<String, Trie> typeAndAndTries = new HashMap<>();
+    private final Map<String, TypeInfo> typeAndAndTries = new HashMap<>();
     private final Map<String, ComponentIO> componentIO = new HashMap<>();
 
     private final Trie global = new Trie();
@@ -143,7 +143,10 @@ public class CompletionServiceImpl implements CompletionService, ComponentListUp
 
                     if (output != null) {
                         String attributesTypes = output.getAttributes(); // Attributes type.
-                        List<Suggestion> attributesItems = typeAndAndTries.get(attributesTypes).autocomplete(StringUtils.EMPTY); // All for the type
+
+                        TypeInfo info = typeAndAndTries.get(attributesTypes);
+
+                        List<Suggestion> attributesItems = info.getTrie().autocomplete(StringUtils.EMPTY); // All for the type
                         Map<String, ComponentIO.IOTypeDescriptor> map = new TreeMap<>(Comparator.naturalOrder());
                         attributesItems.forEach(new Consumer<Suggestion>() {
                             @Override
@@ -152,6 +155,22 @@ public class CompletionServiceImpl implements CompletionService, ComponentListUp
                                         ComponentIO.IOTypeDescriptor.create(suggestion.presentableType()));
                             }
                         });
+
+                        // Extends
+                        TypeInfo extendsInfo = typeAndAndTries.get(info.getExtendsType());
+                        if (extendsInfo != null && extendsInfo.getTrie() != null) {
+                            List<Suggestion> extendsItems = extendsInfo.getTrie().autocomplete(StringUtils.EMPTY); // All for the type
+                            extendsItems.forEach(new Consumer<Suggestion>() {
+                                @Override
+                                public void accept(Suggestion suggestion) {
+                                    if (suggestion.getType().equals(PROPERTY)) {
+                                        map.put(suggestion.lookupString(),
+                                                ComponentIO.IOTypeDescriptor.create(suggestion.presentableType()));
+                                    }
+                                }
+                            });
+                        }
+
 
                         ComponentIO componentIO = new ComponentIO(map, ImmutableMap.of());
                         this.componentIO.put(componentDescriptor.getFullyQualifiedName(), componentIO);

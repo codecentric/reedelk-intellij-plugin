@@ -4,6 +4,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
+import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.InitValuesFiller;
 import com.reedelk.plugin.commons.PredefinedPropertyDescriptor;
 import com.reedelk.plugin.editor.properties.commons.*;
@@ -16,6 +17,8 @@ import java.awt.*;
 import java.util.List;
 
 class ConfigPropertiesPanel extends DisposablePanel {
+
+    private ContainerContext context;
 
     ConfigPropertiesPanel(Module module, ConfigMetadata configMetadata, ObjectDescriptor objectDescriptor, boolean isNewConfig) {
 
@@ -30,7 +33,7 @@ class ConfigPropertiesPanel extends DisposablePanel {
 
         String componentFullyQualifiedName = objectDescriptor.getTypeFullyQualifiedName();
 
-        ContainerContext context = new ContainerContextDefault(componentFullyQualifiedName);
+        context = new ContainerContextDefault(componentFullyQualifiedName);
 
         PropertiesPanelHolder propertiesPanel =
                 new PropertiesPanelHolder(module, context, configMetadata, descriptors);
@@ -38,6 +41,13 @@ class ConfigPropertiesPanel extends DisposablePanel {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         add(headerPanel);
         add(propertiesPanel);
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        DisposableUtils.dispose(context);
+        this.context = null;
     }
 
     static class ConfigMetadataHeaderPanel extends DisposablePanel {

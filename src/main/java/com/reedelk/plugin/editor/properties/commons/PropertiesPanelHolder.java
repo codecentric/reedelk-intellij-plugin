@@ -4,6 +4,7 @@ import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.module.descriptor.model.property.PropertyTypeDescriptor;
+import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.renderer.PropertyTypeRenderer;
@@ -25,10 +26,11 @@ public class PropertiesPanelHolder extends DisposablePanel {
     private static final Border PANEL_BORDERS = empty(8, 0, 0, 10);
 
     private final transient Module module;
-    private final ContainerContext context;
     private final transient FlowSnapshot snapshot;
     private final transient ComponentDataHolder dataHolder;
     private final transient List<PropertyDescriptor> descriptors = new ArrayList<>();
+
+    private transient ContainerContext context;
 
     public PropertiesPanelHolder(@NotNull Module module,
                                  @NotNull ContainerContext context,
@@ -94,6 +96,7 @@ public class PropertiesPanelHolder extends DisposablePanel {
     @Override
     public void dispose() {
         super.dispose();
-        this.context.dispose();
+        DisposableUtils.dispose(context);
+        this.context = null;
     }
 }

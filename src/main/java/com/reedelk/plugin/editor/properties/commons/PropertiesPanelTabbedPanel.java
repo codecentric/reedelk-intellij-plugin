@@ -99,12 +99,13 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
 
             ComponentDataHolder objectDataHolder = componentData.get(propertyDescriptor.getName());
 
-            // We are entering an object property: com.my.component#myObjectProperty1
-            // We need a new context.
-            ContainerContext newContext = ContainerContextDecorator.decorateForProperty(propertyDescriptor.getName(), context);
-
             panelSupplier = () -> {
                 // Lazy loading.
+
+                // We are entering an object property: com.my.component#myObjectProperty1
+                // We need a new context.
+                ContainerContext newContext = ContainerContextDecorator.decorateForProperty(propertyDescriptor.getName(), context);
+
                 JComponent panel = new PropertiesPanelHolder(module, newContext, objectDataHolder, objectProperties, snapshot);
                 // Apply visibility specified on this object property with @When annotations.
                 // Note that the visibility is computed using the *parent* context on this object panel holder.

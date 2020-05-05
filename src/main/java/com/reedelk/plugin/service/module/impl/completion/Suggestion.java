@@ -15,19 +15,25 @@ public class Suggestion {
         PROPERTY
     }
 
+    private final Type type;
     private final String presentableText;
     private final String lookupString;
     private final String typeText;
     private final int cursorOffset;
     private final Icon icon;
 
-    private Suggestion(String name, String lookupString, String presentableText, String typeText, Icon icon, int cursorOffset) {
+    private Suggestion(Type type, String name, String lookupString, String presentableText, String typeText, Icon icon, int cursorOffset) {
         this.name = name;
+        this.type = type;
         this.presentableText = presentableText;
         this.lookupString = lookupString;
         this.cursorOffset = cursorOffset;
         this.typeText = typeText;
         this.icon = icon;
+    }
+
+    public Type getType() {
+        return type;
     }
 
     public String name() {
@@ -64,6 +70,7 @@ public class Suggestion {
 
     static class Builder {
 
+        private final Type type;
         private String presentableText;
         private String lookupString;
         private String typeText;
@@ -72,6 +79,7 @@ public class Suggestion {
         private final Icon icon;
 
         public Builder(Type type) {
+            this.type = type;
             this.icon = Type.FUNCTION.equals(type) ?
                     AllIcons.Nodes.Method : AllIcons.Nodes.Variable;
         }
@@ -108,7 +116,7 @@ public class Suggestion {
             if (name == null) {
                 name = lookupString;
             }
-            return new Suggestion(name, lookupString, presentableText, typeText, icon, cursorOffset);
+            return new Suggestion(type, name, lookupString, presentableText, typeText, icon, cursorOffset);
         }
     }
 }

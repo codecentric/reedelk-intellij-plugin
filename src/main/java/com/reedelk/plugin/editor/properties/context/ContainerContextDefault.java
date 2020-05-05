@@ -1,7 +1,9 @@
 package com.reedelk.plugin.editor.properties.context;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
 import com.reedelk.module.descriptor.model.property.PropertyTypeDescriptor;
+import com.reedelk.plugin.commons.DebugControls;
 import com.reedelk.plugin.editor.properties.commons.InputChangeListener;
 import com.reedelk.plugin.editor.properties.commons.JComponentHolder;
 import com.reedelk.plugin.graph.FlowSnapshot;
@@ -14,13 +16,20 @@ import java.util.function.BiPredicate;
 
 public class ContainerContextDefault implements ContainerContext {
 
+    private static final Logger LOG = Logger.getInstance(ContainerContextDefault.class);
+
     private final String componentPropertyPath;
     private final transient List<JComponentHolder> componentHolders = new ArrayList<>();
     private final transient Map<String, PropertyAccessor> changeAwarePropertyAccessor = new HashMap<>();
     private final transient Map<String, List<InputChangeListener>> propertyChangeListeners = new HashMap<>();
 
+    private boolean disposed = false;
+
     public ContainerContextDefault(String componentPropertyPath) {
         this.componentPropertyPath = componentPropertyPath;
+        if (DebugControls.Properties.CONTAINER_CONTEXT_INFO) {
+            LOG.info("CREATED_CONTAINER_CONTEXT: " + componentPropertyPath);
+        }
     }
 
     @Override
@@ -104,8 +113,14 @@ public class ContainerContextDefault implements ContainerContext {
 
     @Override
     public void dispose() {
-        componentHolders.clear();
-        changeAwarePropertyAccessor.clear();
-        propertyChangeListeners.clear();
+        if (!disposed) {
+            componentHolders.clear();
+            propertyChangeListeners.clear();
+            changeAwarePropertyAccessor.clear();
+            disposed = true;
+            if (DebugControls.Properties.CONTAINER_CONTEXT_INFO) {
+                LOG.info("DISPOSED_CONTAINER_CONTEXT: " + componentPropertyPath);
+            }
+        }
     }
 }

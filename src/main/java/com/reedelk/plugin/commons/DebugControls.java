@@ -16,6 +16,14 @@ public class DebugControls {
         public static final boolean SHOW_HEIGHTS = ALL_ENABLED;
     }
 
+    public static class Properties {
+
+        private Properties() {
+        }
+
+        public static final boolean CONTAINER_CONTEXT_INFO = true;
+    }
+
     private DebugControls() {
     }
 }

@@ -9,7 +9,7 @@ import static com.reedelk.plugin.service.module.impl.completion.Suggestion.Type.
 
 public class TrieUtils {
 
-    public static void populate(Trie global, Map<String, Trie> typeAndTriesMap, TypeDescriptor typeDescriptor) {
+    public static void populate(Trie global, Map<String, TypeInfo> typeAndTriesMap, TypeDescriptor typeDescriptor) {
         // Global root type
         if (typeDescriptor.isGlobal()) {
             Suggestion globalTypeProperty = Suggestion.create(PROPERTY)
@@ -20,7 +20,8 @@ public class TrieUtils {
         }
 
         Trie typeTrie = new Trie();
-        typeAndTriesMap.put(typeDescriptor.getType(), typeTrie);
+        TypeInfo info = new TypeInfo(typeDescriptor.getExtendsType(), typeTrie);
+        typeAndTriesMap.put(typeDescriptor.getType(), info);
 
         // Functions for the type
         typeDescriptor.getFunctions().forEach(typeFunctionDescriptor -> {
