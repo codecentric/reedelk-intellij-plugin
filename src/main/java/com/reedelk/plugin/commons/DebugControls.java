@@ -21,7 +21,7 @@ public class DebugControls {
         private Properties() {
         }
 
-        public static final boolean CONTAINER_CONTEXT_INFO = true;
+        public static final boolean CONTAINER_CONTEXT_INFO = false;
     }
 
     private DebugControls() {
