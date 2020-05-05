@@ -7,6 +7,7 @@ import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.module.Module;
+import com.reedelk.plugin.commons.DebugControls;
 import com.reedelk.plugin.commons.DefaultConstants;
 import com.reedelk.runtime.api.commons.ScriptUtils;
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +24,7 @@ public class ScriptEditor extends DisposablePanel implements DocumentListener {
 
     private static final Logger LOG = Logger.getInstance(ScriptEditor.class);
 
+    private final String scriptPropertyPath;
     private final transient Module module;
     private final transient EditorEx editor;
     private final transient Document document;
@@ -33,6 +35,11 @@ public class ScriptEditor extends DisposablePanel implements DocumentListener {
                         @NotNull String scriptPropertyPath) {
         this.module = module;
         this.document = document;
+        this.scriptPropertyPath = scriptPropertyPath;
+
+        if (DebugControls.Script.SCRIPT_EDITOR_LIFECYCLE) {
+            LOG.info("SCRIPT_EDITOR_CREATED (" + scriptPropertyPath + ")");
+        }
 
         this.editor = (EditorEx) EditorFactory.getInstance()
                 .createEditor(document, module.getProject(), DefaultConstants.SCRIPT_FILE_TYPE, false);
@@ -59,6 +66,9 @@ public class ScriptEditor extends DisposablePanel implements DocumentListener {
         super.dispose();
         if (editor != null && !editor.isDisposed()) {
             EditorFactory.getInstance().releaseEditor(editor);
+            if (DebugControls.Script.SCRIPT_EDITOR_LIFECYCLE) {
+                LOG.info("SCRIPT_EDITOR_RELEASED (" + scriptPropertyPath + ")");
+            }
         }
     }
 
