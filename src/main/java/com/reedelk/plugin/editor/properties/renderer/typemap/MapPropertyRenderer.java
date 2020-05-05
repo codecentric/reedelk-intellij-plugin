@@ -7,6 +7,7 @@ import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
+import com.reedelk.plugin.editor.properties.context.ContainerContextDecorator;
 import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.renderer.AbstractCollectionAwarePropertyTypeRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typemap.custom.MapTableCustomColumnModelFactory;
@@ -35,7 +36,7 @@ public class MapPropertyRenderer extends AbstractCollectionAwarePropertyTypeRend
 
         final String propertyDisplayName = descriptor.getDisplayName();
         final MapDescriptor propertyType = descriptor.getType();
-        final MapColumnAndModel columnAndModel = getColumnAndModel(module, propertyAccessor, propertyType);
+        final MapColumnAndModel columnAndModel = getColumnAndModel(module, propertyAccessor, propertyType, descriptor.getName(), context);
 
         return ofNullable(propertyType.getTabGroup())
                 // Tab group exists
@@ -54,9 +55,11 @@ public class MapPropertyRenderer extends AbstractCollectionAwarePropertyTypeRend
 
     private MapColumnAndModel getColumnAndModel(@NotNull Module module,
                                                 @NotNull PropertyAccessor propertyAccessor,
-                                                @NotNull MapDescriptor propertyType) {
+                                                @NotNull MapDescriptor propertyType,
+                                                @NotNull String name,
+                                                @NotNull ContainerContext context) {
         return isTypeObjectDescriptor(propertyType) ?
-                createCustomObjectContent(module, propertyType, propertyAccessor) :
+                createCustomObjectContent(module, propertyType, propertyAccessor, name, context) :
                 createContent(propertyType, propertyAccessor);
     }
 
@@ -69,14 +72,19 @@ public class MapPropertyRenderer extends AbstractCollectionAwarePropertyTypeRend
 
     protected MapColumnAndModel createCustomObjectContent(@NotNull Module module,
                                                           @NotNull MapDescriptor propertyType,
-                                                          @NotNull PropertyAccessor propertyAccessor) {
+                                                          @NotNull PropertyAccessor propertyAccessor,
+                                                          @NotNull String propertyName,
+                                                          @NotNull ContainerContext context) {
 
         final ObjectDescriptor typeObjectDescriptor = (ObjectDescriptor) propertyType.getValueType();
         final String dialogTitle = ofNullable(propertyType.getDialogTitle()).orElse(EMPTY);
+
         TableCustomEditButtonAction action = value -> {
             String editDialogTitle = message("properties.type.map.value.edit", dialogTitle);
+            // We are entering a new object, we need a new context.
+            ContainerContext newContext = ContainerContextDecorator.decorateForProperty(propertyName, context);
             TableCustomObjectDialog dialog =
-                    new TableCustomObjectDialog(module, editDialogTitle, typeObjectDescriptor, (ComponentDataHolder) value, DialogType.EDIT);
+                    new TableCustomObjectDialog(module, newContext, editDialogTitle, typeObjectDescriptor, (ComponentDataHolder) value, DialogType.EDIT);
             dialog.showAndGet();
         };
         MapTableCustomColumnModelFactory columnModel = new MapTableCustomColumnModelFactory(propertyType, action);

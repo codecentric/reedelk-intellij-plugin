@@ -6,7 +6,6 @@ import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.editor.properties.commons.PropertiesPanelTabbedPanel;
 import com.reedelk.plugin.editor.properties.commons.PropertiesThreeComponentsSplitter;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
-import com.reedelk.plugin.editor.properties.context.ContainerContextDefault;
 import com.reedelk.plugin.editor.properties.renderer.AbstractComponentPropertiesRenderer;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -40,12 +39,12 @@ public class GenericComponentPropertiesRenderer extends AbstractComponentPropert
                 .collect(groupingBy(propertyDescriptor -> ofNullable(propertyDescriptor.getGroup()).orElse(defaultTabKey),
                         LinkedHashMap::new, toList()));
 
-        ContainerContext context = new ContainerContextDefault(componentData.getFullyQualifiedName());
-
         String componentFullyQualifiedName = componentData.getFullyQualifiedName();
 
-        PropertiesPanelTabbedPanel panel = new PropertiesPanelTabbedPanel(module, snapshot, componentData, propertiesByGroup, context);
+        ContainerContext context = new ContainerContext(snapshot, node, componentFullyQualifiedName);
 
-        return new PropertiesThreeComponentsSplitter(module, context,  componentFullyQualifiedName, snapshot, panel);
+        PropertiesPanelTabbedPanel panel = new PropertiesPanelTabbedPanel(module, componentData, propertiesByGroup, context);
+
+        return new PropertiesThreeComponentsSplitter(module, context,  componentFullyQualifiedName, panel);
     }
 }

@@ -8,7 +8,6 @@ import com.reedelk.plugin.component.type.flowreference.widget.SubflowSelector;
 import com.reedelk.plugin.component.type.generic.GenericComponentPropertiesRenderer;
 import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
-import com.reedelk.plugin.editor.properties.context.ContainerContextDefault;
 import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -45,7 +44,7 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
 
         String componentFullyQualifiedName = componentData.getFullyQualifiedName();
 
-        ContainerContext context = new ContainerContextDefault(componentFullyQualifiedName);
+        ContainerContext context = new ContainerContext(snapshot, node, componentFullyQualifiedName);
 
         Supplier<JComponent> componentSupplier = () -> {
 
@@ -53,8 +52,7 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
 
             PropertyTypeDescriptor propertyType = propertyDescriptor.get().getType();
 
-            PropertyAccessor referencePropertyAccessor =
-                    context.propertyAccessorOf(propertyName, propertyType, snapshot, componentData);
+            PropertyAccessor referencePropertyAccessor = context.propertyAccessorOf(propertyName, propertyType, componentData);
 
             List<PropertyDescriptor> descriptors = componentData.getPropertiesDescriptors();
             List<PropertyDescriptor> filteredDescriptors = descriptors
@@ -62,8 +60,7 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
                     .filter(descriptor -> !FlowReference.ref().equals(descriptor.getName()))
                     .collect(toList());
 
-            DisposablePanel panel =
-                    new PropertiesPanelHolder(module, context, componentData, filteredDescriptors, snapshot);
+            DisposablePanel panel = new PropertiesPanelHolder(module, context, componentData, filteredDescriptors);
 
             PropertyDescriptor referencePropertyDescriptor = propertyDescriptor.get();
 
@@ -83,7 +80,7 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
 
         PropertiesPanelTabbedPanel tabbedPanel = new PropertiesPanelTabbedPanel(componentData, tabAndComponentSupplier, context);
 
-        return new PropertiesThreeComponentsSplitter(module, context, componentFullyQualifiedName, snapshot, tabbedPanel);
+        return new PropertiesThreeComponentsSplitter(module, context, componentFullyQualifiedName, tabbedPanel);
     }
 
 

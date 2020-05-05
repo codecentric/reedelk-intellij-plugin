@@ -8,7 +8,6 @@ import com.reedelk.module.descriptor.model.property.PropertyTypeDescriptor;
 import com.reedelk.plugin.component.ComponentData;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.editor.properties.context.ContainerContextDecorator;
-import com.reedelk.plugin.graph.FlowSnapshot;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,28 +22,24 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
 
     private final transient Module module;
-    private final transient FlowSnapshot snapshot;
     private final transient ContainerContext context;
     private final transient ComponentData componentData;
 
     private PropertiesPanelTabbedPanel(@Nullable Module module,
-                                       @Nullable FlowSnapshot snapshot,
                                        @NotNull ComponentData componentData,
                                        @NotNull ContainerContext context) {
         super(JTabbedPane.LEFT);
         this.module = module;
-        this.snapshot = snapshot;
         this.context = context;
         this.componentData = componentData;
         setTabComponentInsets(emptyInsets());
     }
 
     public PropertiesPanelTabbedPanel(@NotNull Module module,
-                                      @NotNull FlowSnapshot flowSnapshot,
                                       @NotNull ComponentData componentData,
                                       @NotNull Map<String, List<PropertyDescriptor>> propertiesByGroup,
                                       @NotNull ContainerContext context) {
-        this(module, flowSnapshot, componentData, context);
+        this(module, componentData, context);
 
         int count = 0;
         if (propertiesByGroup.isEmpty()) {
@@ -71,7 +66,7 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
     public PropertiesPanelTabbedPanel(@NotNull ComponentData componentData,
                                       @NotNull Map<String, Supplier<JComponent>> componentByGroup,
                                       @NotNull ContainerContext context) {
-        this(null, null, componentData, context);
+        this(null, componentData, context);
 
         int count = 0;
         for (Map.Entry<String, Supplier<JComponent>> entry : componentByGroup.entrySet()) {
@@ -101,12 +96,11 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
 
             panelSupplier = () -> {
                 // Lazy loading.
-
                 // We are entering an object property: com.my.component#myObjectProperty1
                 // We need a new context.
                 ContainerContext newContext = ContainerContextDecorator.decorateForProperty(propertyDescriptor.getName(), context);
 
-                JComponent panel = new PropertiesPanelHolder(module, newContext, objectDataHolder, objectProperties, snapshot);
+                JComponent panel = new PropertiesPanelHolder(module, newContext, objectDataHolder, objectProperties);
                 // Apply visibility specified on this object property with @When annotations.
                 // Note that the visibility is computed using the *parent* context on this object panel holder.
                 WhenVisibilityApplier.on(propertyDescriptor.getWhens(), context, panel);
@@ -117,7 +111,7 @@ public class PropertiesPanelTabbedPanel extends DisposableTabbedPane {
             panelSupplier = () -> {
                 // Lazy loading.
                 // Visibility will be applied on each single property description in the panel holder.
-                return new PropertiesPanelHolder(module, context, componentData, propertyDescriptors, snapshot);
+                return new PropertiesPanelHolder(module, context, componentData, propertyDescriptors);
             };
         }
 

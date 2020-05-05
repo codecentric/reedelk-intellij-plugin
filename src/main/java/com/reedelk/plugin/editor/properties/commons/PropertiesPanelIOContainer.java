@@ -8,7 +8,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.Topics;
-import com.reedelk.plugin.graph.FlowSnapshot;
+import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.impl.completion.ComponentIO;
 import com.reedelk.plugin.service.module.impl.completion.OnComponentIO;
@@ -29,7 +29,7 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
     private final DisposablePanel loadingPanel;
     private MessageBusConnection connection;
 
-    public PropertiesPanelIOContainer(Module module, FlowSnapshot snapshot, String componentFullyQualifiedName) {
+    public PropertiesPanelIOContainer(Module module, ContainerContext context, String componentFullyQualifiedName) {
         super(new BorderLayout());
 
         loadingPanel = new PanelWithText.LoadingContentPanel();
@@ -84,8 +84,10 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
     @Override
     public void dispose() {
         super.dispose();
-        this.connection.disconnect();
-        this.connection = null;
+        if (this.connection != null) {
+            this.connection.disconnect();
+            this.connection = null;
+        }
     }
 
     static class HeaderPanel extends DisposablePanel {

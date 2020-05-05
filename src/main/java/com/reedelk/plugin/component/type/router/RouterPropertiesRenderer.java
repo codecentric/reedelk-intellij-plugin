@@ -9,7 +9,6 @@ import com.reedelk.plugin.editor.properties.commons.PropertiesPanelTabbedPanel;
 import com.reedelk.plugin.editor.properties.commons.PropertiesThreeComponentsSplitter;
 import com.reedelk.plugin.editor.properties.context.ComponentPropertyPath;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
-import com.reedelk.plugin.editor.properties.context.ContainerContextDefault;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.runtime.api.commons.ImmutableMap;
@@ -45,7 +44,7 @@ public class RouterPropertiesRenderer extends GenericComponentPropertiesRenderer
         String propertyName = propertyDescriptor.getName();
         checkState("conditionAndRouteDefinitions".equals(propertyName), "Expected only one property named 'conditionAndRouteDefinitions' for Router.");
 
-        ContainerContext context = new ContainerContextDefault(componentFullyQualifiedName);
+        ContainerContext context = new ContainerContext(snapshot, routerNode, componentFullyQualifiedName);
 
         Supplier<JComponent> routerTableSupplier = () -> {
 
@@ -62,6 +61,6 @@ public class RouterPropertiesRenderer extends GenericComponentPropertiesRenderer
 
         PropertiesPanelTabbedPanel tabbedPanel = new PropertiesPanelTabbedPanel(componentData, tabAndComponentSupplier, context);
 
-        return new PropertiesThreeComponentsSplitter(module, context, componentFullyQualifiedName, snapshot, tabbedPanel);
+        return new PropertiesThreeComponentsSplitter(module, context, componentFullyQualifiedName, tabbedPanel);
     }
 }

@@ -9,9 +9,7 @@ import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.renderer.PropertyTypeRenderer;
 import com.reedelk.plugin.editor.properties.renderer.PropertyTypeRendererFactory;
-import com.reedelk.plugin.graph.FlowSnapshot;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -26,7 +24,6 @@ public class PropertiesPanelHolder extends DisposablePanel {
     private static final Border PANEL_BORDERS = empty(8, 0, 0, 10);
 
     private final transient Module module;
-    private final transient FlowSnapshot snapshot;
     private final transient ComponentDataHolder dataHolder;
     private final transient List<PropertyDescriptor> descriptors = new ArrayList<>();
 
@@ -35,11 +32,9 @@ public class PropertiesPanelHolder extends DisposablePanel {
     public PropertiesPanelHolder(@NotNull Module module,
                                  @NotNull ContainerContext context,
                                  @NotNull ComponentDataHolder dataHolder,
-                                 @NotNull List<PropertyDescriptor> descriptors,
-                                 @Nullable FlowSnapshot snapshot) {
+                                 @NotNull List<PropertyDescriptor> descriptors) {
         this.module = module;
         this.context = context;
-        this.snapshot = snapshot;
         this.dataHolder = dataHolder;
         this.descriptors.addAll(descriptors);
 
@@ -47,18 +42,6 @@ public class PropertiesPanelHolder extends DisposablePanel {
         setBorder(PANEL_BORDERS);
         initAccessors();
         renderProperties();
-    }
-
-    /**
-     * Constructor used by a configuration panel dialog. The configuration panel dialog does not
-     * immediately change the values on the Graph snapshot since it writes the values in a config file only when
-     * the 'OK' button is pressed.
-     */
-    public PropertiesPanelHolder(@NotNull Module module,
-                                 @NotNull ContainerContext context,
-                                 @NotNull ComponentDataHolder dataHolder,
-                                 @NotNull List<PropertyDescriptor> descriptors) {
-        this(module, context, dataHolder, descriptors, null);
     }
 
     private void initAccessors() {
@@ -69,7 +52,7 @@ public class PropertiesPanelHolder extends DisposablePanel {
 
             PropertyTypeDescriptor propertyType = descriptor.getType();
 
-            context.propertyAccessorOf(propertyName, propertyType, snapshot, dataHolder);
+            context.propertyAccessorOf(propertyName, propertyType, dataHolder);
         });
     }
 
@@ -83,8 +66,7 @@ public class PropertiesPanelHolder extends DisposablePanel {
 
             PropertyTypeRenderer renderer = PropertyTypeRendererFactory.get().from(propertyType);
 
-            PropertyAccessor propertyAccessor =
-                    context.propertyAccessorOf(propertyName, propertyType, snapshot, dataHolder);
+            PropertyAccessor propertyAccessor = context.propertyAccessorOf(propertyName, propertyType, dataHolder);
 
             JComponent renderedComponent = renderer.render(module, descriptor, propertyAccessor, context);
 

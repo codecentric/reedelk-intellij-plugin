@@ -1,9 +1,10 @@
 package com.reedelk.plugin.editor.properties.context;
 
-public class ContainerContextDecorator extends ContainerContextDefault {
+public class ContainerContextDecorator extends ContainerContext {
 
     private ContainerContextDecorator(String propertyName, ContainerContext parent) {
-        super(ComponentPropertyPath.join(parent.componentPropertyPath(), propertyName));
+        super(parent.snapshot, parent.node,
+                ComponentPropertyPath.join(parent.componentPropertyPath(), propertyName));
     }
 
     public static ContainerContext decorateForProperty(String currentProperty, ContainerContext delegate) {

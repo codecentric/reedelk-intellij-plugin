@@ -57,7 +57,7 @@ public class TableEditButtonCellEditor extends AbstractCellEditor implements Tab
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        render.setBackground(row % 2 == 0 ? UIUtil.getDecoratedRowColor() : UIUtil.getTableBackground());
+        render.setBackground(row % 2 != 0 ? UIUtil.getDecoratedRowColor() : UIUtil.getTableBackground());
         render.setForeground(UIUtil.getTextFieldForeground());
         return render;
     }
@@ -65,7 +65,7 @@ public class TableEditButtonCellEditor extends AbstractCellEditor implements Tab
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         this.editorValue = value;
-        edit.setBackground(row % 2 == 0 ? UIUtil.getDecoratedRowColor() : UIUtil.getTableBackground());
+        edit.setBackground(row % 2 != 0 ? UIUtil.getDecoratedRowColor() : UIUtil.getTableBackground());
         edit.setForeground(UIUtil.getTextFieldForeground());
         return edit;
     }

@@ -14,7 +14,9 @@ public class CompletionFinder {
         List<Suggestion> autocompleteResults = new ArrayList<>();
         for (int i = 0; i < tokens.length; i++) {
             String token = tokens[i];
-            if (i == tokens.length - 1) {
+            if (current == null) { // TODO: Testme
+                autocompleteResults = new ArrayList<>();
+            } else if (i == tokens.length - 1) {
                 autocompleteResults = current.autocomplete(token);
             } else {
                 Optional<Suggestion> maybeSuggestion = current.autocomplete(token).stream().findFirst();

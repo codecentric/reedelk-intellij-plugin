@@ -75,8 +75,7 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
 
         // We create the accessor for the config reference:
         // a shareable config object is referenced with a unique UUID
-        PropertyAccessor refAccessor =
-                context.propertyAccessorOf(propertyName, propertyType, snapshot, dataHolder);
+        PropertyAccessor refAccessor = context.propertyAccessorOf(propertyName, propertyType, dataHolder);
 
         return new ShareableConfigInputField(module, dataHolder, descriptor, refAccessor, context);
     }
@@ -101,8 +100,6 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
         // The accessor of type object returns a TypeObject map.
         ComponentDataHolder dataHolder = propertyAccessor.get();
 
-        FlowSnapshot snapshot = propertyAccessor.getSnapshot();
-
         ObjectDescriptor objectDescriptor = descriptor.getType();
 
         List<PropertyDescriptor> objectProperties = objectDescriptor.getObjectProperties();
@@ -112,6 +109,6 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
 
         ContainerContext subPropertyContext = ContainerContextDecorator.decorateForProperty(propertyName, context);
 
-        return new PropertiesPanelHolder(module, subPropertyContext, dataHolder, objectProperties, snapshot);
+        return new PropertiesPanelHolder(module, subPropertyContext, dataHolder, objectProperties);
     }
 }

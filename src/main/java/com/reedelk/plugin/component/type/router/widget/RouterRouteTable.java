@@ -9,7 +9,7 @@ import com.reedelk.plugin.graph.FlowSnapshot;
 
 import java.util.List;
 
-import static com.intellij.util.ui.JBUI.Borders;
+import static com.intellij.util.ui.JBUI.Borders.customLine;
 
 public class RouterRouteTable extends DisposableTable {
 
@@ -24,6 +24,6 @@ public class RouterRouteTable extends DisposableTable {
         factory.create(this);
         setOpaque(true);
         setBackground(Colors.PROPERTIES_EMPTY_SELECTION_BACKGROUND);
-        setBorder(Borders.customLine(JBColor.LIGHT_GRAY, 0, 0, 1, 0));
+        setBorder(customLine(JBColor.LIGHT_GRAY, 0, 0, 1, 0));
     }
 }

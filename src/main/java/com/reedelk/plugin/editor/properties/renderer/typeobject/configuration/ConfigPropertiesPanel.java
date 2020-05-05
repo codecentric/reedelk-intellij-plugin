@@ -9,7 +9,6 @@ import com.reedelk.plugin.commons.InitValuesFiller;
 import com.reedelk.plugin.commons.PredefinedPropertyDescriptor;
 import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
-import com.reedelk.plugin.editor.properties.context.ContainerContextDefault;
 import com.reedelk.plugin.service.module.impl.configuration.ConfigMetadata;
 
 import javax.swing.*;
@@ -33,7 +32,7 @@ class ConfigPropertiesPanel extends DisposablePanel {
 
         String componentFullyQualifiedName = objectDescriptor.getTypeFullyQualifiedName();
 
-        context = new ContainerContextDefault(componentFullyQualifiedName);
+        context = new ContainerContext(null, null, componentFullyQualifiedName);
 
         PropertiesPanelHolder propertiesPanel =
                 new PropertiesPanelHolder(module, context, configMetadata, descriptors);

@@ -9,6 +9,7 @@ import com.reedelk.plugin.editor.properties.commons.DisposableTabbedPane;
 import com.reedelk.plugin.editor.properties.commons.TabLabelHorizontal;
 import com.reedelk.plugin.editor.properties.commons.TableCustomObjectDialog;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
+import com.reedelk.plugin.editor.properties.context.ContainerContextDecorator;
 import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.renderer.AbstractCollectionAwarePropertyTypeRenderer;
 import com.reedelk.plugin.editor.properties.renderer.typelist.custom.ListCustomObjectTableContainer;
@@ -38,7 +39,7 @@ public class ListPropertyRenderer extends AbstractCollectionAwarePropertyTypeRen
         final ListDescriptor propertyType = descriptor.getType();
 
         JComponent content = isTypeObjectDescriptor(propertyType) ?
-                createCustomObjectContent(module, propertyType, propertyAccessor) :
+                createCustomObjectContent(module, descriptor, propertyAccessor, context) :
                 createContent(descriptor, propertyAccessor);
 
         // No tab group
@@ -62,25 +63,33 @@ public class ListPropertyRenderer extends AbstractCollectionAwarePropertyTypeRen
 
     @NotNull
     private JComponent createCustomObjectContent(@NotNull Module module,
-                                                 @NotNull ListDescriptor propertyType,
-                                                 @NotNull PropertyAccessor propertyAccessor) {
+                                                 @NotNull PropertyDescriptor propertyDescriptor,
+                                                 @NotNull PropertyAccessor propertyAccessor,
+                                                 @NotNull ContainerContext context) {
+        final ListDescriptor propertyType = propertyDescriptor.getType();
         final ObjectDescriptor objectDescriptor = (ObjectDescriptor) propertyType.getValueType();
         final String dialogTitle = ofNullable(propertyType.getDialogTitle()).orElse(EMPTY);
         final String listDisplayPropertyName = propertyType.getListDisplayProperty();
 
         // Edit button action
         TableCustomEditButtonAction action = value -> {
+            // We are entering a new object, we need a new context.
+            ContainerContext newContext = ContainerContextDecorator.decorateForProperty(propertyDescriptor.getName(), context);
+
             String editDialogTitle = message("properties.type.map.value.edit", dialogTitle);
             TableCustomObjectDialog dialog =
-                    new TableCustomObjectDialog(module, editDialogTitle, objectDescriptor, (ComponentDataHolder) value, DialogType.EDIT);
+                    new TableCustomObjectDialog(module, newContext, editDialogTitle, objectDescriptor, (ComponentDataHolder) value, DialogType.EDIT);
             dialog.showAndGet();
         };
 
         // Create new item action
         ListCustomObjectAddItemAction addItemAction = newObject -> {
+            // We are entering a new object, we need a new context.
+            ContainerContext newContext = ContainerContextDecorator.decorateForProperty(propertyDescriptor.getName(), context);
+
             String newDialogTitle = message("properties.type.map.value.new", dialogTitle);
             TableCustomObjectDialog dialog =
-                    new TableCustomObjectDialog(module, newDialogTitle, objectDescriptor, newObject, DialogType.NEW);
+                    new TableCustomObjectDialog(module, newContext, newDialogTitle, objectDescriptor, newObject, DialogType.NEW);
             return dialog.showAndGet();
         };
 
