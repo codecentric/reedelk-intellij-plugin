@@ -30,7 +30,7 @@ public class TableDynamicCellEditor implements TableCellEditor, Disposable {
 
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-        this.editor.setBackground(row % 2 == 0 ? UIUtil.getDecoratedRowColor() : UIUtil.getTableBackground());
+        this.editor.setBackground(row % 2 != 0 ? UIUtil.getDecoratedRowColor() : UIUtil.getTableBackground());
         this.editor.setValue(value == null ? StringUtils.EMPTY : (String) value);
         return this.content;
     }

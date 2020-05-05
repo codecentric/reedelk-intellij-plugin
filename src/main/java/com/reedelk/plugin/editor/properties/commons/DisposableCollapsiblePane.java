@@ -29,12 +29,18 @@ public class DisposableCollapsiblePane extends DisposablePanel {
 
     public DisposableCollapsiblePane(@NotNull String displayName,
                                      @NotNull ContentRenderer unCollapsedContentRenderer) {
-        this(displayName, unCollapsedContentRenderer, null);
+        this(displayName, unCollapsedContentRenderer, null, false);
     }
 
     public DisposableCollapsiblePane(@NotNull String displayName,
                                      @NotNull ContentRenderer unCollapsedContentRenderer,
                                      @Nullable TooltipContent tooltipContent) {
+        this(displayName, unCollapsedContentRenderer, tooltipContent, true);
+    }
+    public DisposableCollapsiblePane(@NotNull String displayName,
+                                     @NotNull ContentRenderer unCollapsedContentRenderer,
+                                     @Nullable TooltipContent tooltipContent,
+                                     boolean defaultCollapsed) {
         this.displayName = displayName;
         this.tooltipContent = tooltipContent;
         this.renderingFunction = unCollapsedContentRenderer;
@@ -44,7 +50,13 @@ public class DisposableCollapsiblePane extends DisposablePanel {
         setLayout(new BorderLayout());
         setOpaque(false);
         setBorder(DefaultObjectTypeContainer.BORDER_OBJECT_TYPE_CONTAINER_TOP);
-        add(collapsedContent, CENTER);
+
+        if (defaultCollapsed) {
+            add(collapsedContent, CENTER);
+        } else {
+            add(unCollapsedContent, CENTER);
+            lazyLoadUnCollapsedContent();
+        }
     }
 
     @Override
@@ -64,10 +76,11 @@ public class DisposableCollapsiblePane extends DisposablePanel {
 
     private void unCollapse() {
         SwingUtilities.invokeLater(() -> {
-            remove(collapsedContent);
-            add(unCollapsedContent);
-            revalidate();
-            if (!loaded) {
+            if (loaded) {
+                removeAll();
+                add(unCollapsedContent);
+                revalidate();
+            } else {
                 lazyLoadUnCollapsedContent();
             }
         });
@@ -80,7 +93,7 @@ public class DisposableCollapsiblePane extends DisposablePanel {
      */
     private void lazyLoadUnCollapsedContent() {
         SwingUtilities.invokeLater(() -> {
-            remove(unCollapsedContent);
+            removeAll();
             JComponent renderedContent = renderingFunction.render();
             loaded = true;
             unCollapsedContent = new UnCollapsedContent(displayName, tooltipContent, renderedContent);

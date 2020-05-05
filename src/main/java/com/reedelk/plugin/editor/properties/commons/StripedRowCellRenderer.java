@@ -14,7 +14,7 @@ public class StripedRowCellRenderer extends DefaultTableCellRenderer {
         JLabel component = (StripedRowCellRenderer) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         component.setBorder(JBUI.Borders.emptyLeft(5));
         if (!isSelected) {
-            component.setBackground(row % 2 == 0 ? UIUtil.getDecoratedRowColor() : UIUtil.getTableBackground());
+            component.setBackground(row % 2 != 0 ? UIUtil.getDecoratedRowColor() : UIUtil.getTableBackground());
             component.setForeground(UIUtil.getTextFieldForeground());
         }
         return component;
