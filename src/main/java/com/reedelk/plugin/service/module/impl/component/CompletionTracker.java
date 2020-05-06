@@ -149,7 +149,7 @@ public class CompletionTracker implements ComponentService {
                 scriptSignature.getArguments().stream()
                         .map(argument -> Suggestion.create(PROPERTY)
                                 .withLookupString(argument.getArgumentName())
-                                .withResolver((item) -> argument.getArgumentType())
+                                .withType(argument.getArgumentType())
                                 .build()).forEach(trie::insert);
                 signatureTypesMap.put(componentPropertyPath, trie);
             });
@@ -180,11 +180,11 @@ public class CompletionTracker implements ComponentService {
     static {
         Suggestion message = Suggestion.create(PROPERTY)
                 .withLookupString("message")
-                .withResolver((item) -> Message.class.getName())
+                .withType(Message.class.getName())
                 .build();
         Suggestion context = Suggestion.create(PROPERTY)
                 .withLookupString("context")
-                .withResolver((item) -> FlowContext.class.getName())
+                .withType(FlowContext.class.getName())
                 .build();
         defaultSignatureTypes.insert(message);
         defaultSignatureTypes.insert(context);

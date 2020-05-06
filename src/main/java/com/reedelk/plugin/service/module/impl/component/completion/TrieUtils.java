@@ -1,6 +1,5 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
-import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.module.descriptor.model.type.TypeDescriptor;
 import com.reedelk.runtime.api.message.Message;
 import com.reedelk.runtime.api.message.MessageAttributes;
@@ -17,7 +16,7 @@ public class TrieUtils {
         if (typeDescriptor.isGlobal()) {
             Suggestion globalTypeProperty = Suggestion.create(PROPERTY)
                     .withLookupString(typeDescriptor.getDisplayName())
-                    .withResolver((previous) -> typeDescriptor.getType())
+                    .withType(typeDescriptor.getType())
                     .build();
             global.insert(globalTypeProperty);
         }
@@ -32,14 +31,11 @@ public class TrieUtils {
                         .withLookupString(typeFunctionDescriptor.getName() + "()")
                         .withPresentableText(typeFunctionDescriptor.getSignature())
                         .withCursorOffset(typeFunctionDescriptor.getCursorOffset())
-                        .withResolver(new Suggestion.TypeResolver() {
-                            @Override
-                            public String resolve(ComponentOutputDescriptor previousComponent) {
-                                if (typeFunctionDescriptor.getReturnType().equals(MessageAttributes.class.getName())) {
-                                    return previousComponent.getAttributes();
-                                } else {
-                                    return typeFunctionDescriptor.getReturnType();
-                                }
+                        .withResolver(previousComponent -> { // TODO: Here hsould be user controlled e.g DynamicType class and then depends on previous.
+                            if (typeFunctionDescriptor.getReturnType().equals(MessageAttributes.class.getName())) {
+                                return previousComponent != null ? previousComponent.getAttributes() : "DynamicType";
+                            } else {
+                                return typeFunctionDescriptor.getReturnType();
                             }
                         })
                         .build();
@@ -50,7 +46,7 @@ public class TrieUtils {
             typeDescriptor.getProperties().forEach(typePropertyDescriptor -> {
                 Suggestion propertySuggestion = Suggestion.create(PROPERTY)
                         .withLookupString(typePropertyDescriptor.getName())
-                        .withResolver((previousComponent) -> typePropertyDescriptor.getType())
+                        .withType(typePropertyDescriptor.getType())
                         .build();
                 typeTrie.insert(propertySuggestion);
             });
@@ -64,7 +60,7 @@ public class TrieUtils {
                         .withLookupString(typeFunctionDescriptor.getName() + "()")
                         .withPresentableText(typeFunctionDescriptor.getSignature())
                         .withCursorOffset(typeFunctionDescriptor.getCursorOffset())
-                        .withResolver((previousComponent) -> typeFunctionDescriptor.getReturnType())
+                        .withType(typeFunctionDescriptor.getReturnType())
                         .build();
                 typeTrie.insert(functionSuggestion);
             });
@@ -73,7 +69,7 @@ public class TrieUtils {
             typeDescriptor.getProperties().forEach(typePropertyDescriptor -> {
                 Suggestion propertySuggestion = Suggestion.create(PROPERTY)
                         .withLookupString(typePropertyDescriptor.getName())
-                        .withResolver((previousComponent) -> typePropertyDescriptor.getType())
+                        .withType(typePropertyDescriptor.getType())
                         .build();
                 typeTrie.insert(propertySuggestion);
             });

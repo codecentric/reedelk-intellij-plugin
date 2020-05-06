@@ -5,7 +5,6 @@ import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.commons.ToPresentableType;
 
 import javax.swing.*;
-import java.util.Map;
 
 
 public class Suggestion {
@@ -64,7 +63,7 @@ public class Suggestion {
     }
 
     public String presentableType() {
-        return ToPresentableType.from(Map.class.getName()); // TODO : Fixme!
+        return ToPresentableType.from(resolver.resolve(null)); // TODO : Fixme!
     }
 
     public Icon icon() {
@@ -98,6 +97,11 @@ public class Suggestion {
 
         public Builder withLookupString(String lookupString) {
             this.lookupString = lookupString;
+            return this;
+        }
+
+        public Builder withType(String type) {
+            this.resolver = previousOutputComponent -> type;
             return this;
         }
 
