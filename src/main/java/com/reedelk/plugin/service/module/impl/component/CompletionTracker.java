@@ -10,6 +10,7 @@ import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.editor.properties.context.ComponentPropertyPath;
+import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.completion.*;
@@ -86,16 +87,17 @@ public class CompletionTracker implements ComponentService {
     }
 
     @Override
-    public void inputOutputOf(String inputFullyQualifiedName, String outputFullyQualifiedName) {
+    public void inputOutputOf(ContainerContext context, String outputFullyQualifiedName) {
         PluginExecutors.run(module, "Fetching IO", indicator -> {
-            ComponentDescriptor componentDescriptorBy = componentTracker.getComponentDescriptor(inputFullyQualifiedName);
+            String predecessorFQCN = context.predecessor();
+            ComponentDescriptor componentDescriptorBy = componentTracker.getComponentDescriptor(predecessorFQCN);
             ComponentInputDescriptor input = componentDescriptorBy.getInput();
             ComponentOutputDescriptor output = componentDescriptorBy.getOutput();
             Optional<ComponentIO> maybeComponentIO = processor.inputFrom(output);
             if (maybeComponentIO.isPresent()) {
-                onComponentIO.onComponentIO(inputFullyQualifiedName, outputFullyQualifiedName, maybeComponentIO.get());
+                onComponentIO.onComponentIO(predecessorFQCN, outputFullyQualifiedName, maybeComponentIO.get());
             } else {
-                onComponentIO.onComponentIONotFound(inputFullyQualifiedName, outputFullyQualifiedName);
+                onComponentIO.onComponentIONotFound(predecessorFQCN, outputFullyQualifiedName);
             }
         });
     }

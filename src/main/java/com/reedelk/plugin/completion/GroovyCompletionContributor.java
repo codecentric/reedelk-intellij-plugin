@@ -8,6 +8,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
+import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
 import org.jetbrains.annotations.NotNull;
@@ -26,10 +27,14 @@ public class GroovyCompletionContributor extends CompletionContributor {
         Project project = editor.getProject();
         String moduleName = editor.getUserData(MODULE_NAME);
         String componentFullyQualifiedName = editor.getUserData(COMPONENT_PROPERTY_PATH);
-        String inputFullyQualifiedName = editor.getUserData(COMPONENT_INPUT_FQN);
+        ContainerContext context = editor.getUserData(COMPONENT_INPUT_FQN);
 
-        if (project != null && isNotBlank(moduleName) && isNotBlank(componentFullyQualifiedName)) {
-            computeResultSet(parameters, result, moduleName, componentFullyQualifiedName, inputFullyQualifiedName, project);
+        if (project != null &&
+                context != null &&
+                isNotBlank(moduleName) &&
+                isNotBlank(componentFullyQualifiedName)) {
+            String predecessorFQN = context.predecessor();
+            computeResultSet(parameters, result, moduleName, componentFullyQualifiedName, predecessorFQN, project);
         }
     }
 

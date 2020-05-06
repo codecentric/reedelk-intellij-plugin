@@ -3,6 +3,7 @@ package com.reedelk.plugin.service.module;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleServiceManager;
 import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
+import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
 import com.reedelk.plugin.service.module.impl.component.module.ModuleDTO;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +32,7 @@ public interface ComponentService {
         throw new UnsupportedOperationException();
     }
 
-    default void inputOutputOf(String inputFullyQualifiedName, String outputFullyQualifiedName) {
+    default void inputOutputOf(ContainerContext context, String outputFullyQualifiedName) {
         throw new UnsupportedOperationException();
     }
 

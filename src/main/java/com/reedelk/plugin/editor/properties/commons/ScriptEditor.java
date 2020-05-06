@@ -42,12 +42,11 @@ public class ScriptEditor extends DisposablePanel implements DocumentListener {
             LOG.info("SCRIPT_EDITOR_CREATED (" + scriptPropertyPath + ")");
         }
 
-        String predecessorFQN = context.predecessor();
         this.editor = (EditorEx) EditorFactory.getInstance()
                 .createEditor(document, module.getProject(), DefaultConstants.SCRIPT_FILE_TYPE, false);
         this.editor.putUserData(MODULE_NAME, module.getName());
         this.editor.putUserData(COMPONENT_PROPERTY_PATH, scriptPropertyPath);
-        this.editor.putUserData(COMPONENT_INPUT_FQN, predecessorFQN);
+        this.editor.putUserData(COMPONENT_INPUT_FQN, context);
         configure(editor);
 
         document.addDocumentListener(this);

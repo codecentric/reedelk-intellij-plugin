@@ -9,6 +9,7 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.plugin.commons.Topics;
+import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
@@ -84,8 +85,8 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     }
 
     @Override
-    public void inputOutputOf(String inputFullyQualifiedName, String outputFullyQualifiedName) {
-        completionTracker.inputOutputOf(inputFullyQualifiedName, outputFullyQualifiedName);
+    public void inputOutputOf(ContainerContext context, String outputFullyQualifiedName) {
+        completionTracker.inputOutputOf(context, outputFullyQualifiedName);
     }
 
     @Override

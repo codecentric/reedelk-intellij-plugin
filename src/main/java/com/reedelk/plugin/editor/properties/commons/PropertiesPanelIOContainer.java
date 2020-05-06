@@ -49,9 +49,8 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
         addAncestorListener(new AncestorListenerAdapter() {
             @Override
             public void ancestorAdded(AncestorEvent event) {
-                String predecessorFQCN = context.predecessor();
                 ComponentService.getInstance(module)
-                        .inputOutputOf(predecessorFQCN, componentFullyQualifiedName);
+                        .inputOutputOf(context, componentFullyQualifiedName);
             }
         });
     }
