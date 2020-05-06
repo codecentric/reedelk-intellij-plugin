@@ -32,12 +32,13 @@ public class DynamicMapPropertyRenderer extends AbstractCollectionAwarePropertyT
         final MapDescriptor propertyType = propertyDescriptor.getType();
         final String propertyName = propertyDescriptor.getName();
         final String componentPropertyPath = ComponentPropertyPath.join(context.componentPropertyPath(), propertyName);
+        String predecessorFQCN = context.predecessors().stream().findFirst().orElse(null);
 
         return ofNullable(propertyType.getTabGroup())
                 .map((Function<String, JComponent>) tabGroupName -> {
                     // The table must fit into a Table Tab Group.
                     DisposableTableModel tableModel = new DynamicMapTableModel(propertyAccessor);
-                    DynamicMapTableColumnModelFactory columnModelFactory = new DynamicMapTableColumnModelFactory(module, propertyType, componentPropertyPath);
+                    DynamicMapTableColumnModelFactory columnModelFactory = new DynamicMapTableColumnModelFactory(module, propertyType, componentPropertyPath, predecessorFQCN);
                     final JComponent content = new MapTableTabContainer(module, tableModel, columnModelFactory);
                     final DisposableTabbedPane tabbedPane = tabbedPaneFrom(propertyDescriptor, context);
                     tabbedPane.addTab(propertyDisplayName, content);
@@ -48,7 +49,7 @@ public class DynamicMapPropertyRenderer extends AbstractCollectionAwarePropertyT
                     // Single table
                     final DisposableTableModel tableModel = new DynamicMapTableModel(propertyAccessor);
                     final DynamicMapTableColumnModelFactory columnModelFactory =
-                            new DynamicMapTableColumnModelFactory(module, propertyType, componentPropertyPath);
+                            new DynamicMapTableColumnModelFactory(module, propertyType, componentPropertyPath, predecessorFQCN);
                     return new MapTableContainer(module, tableModel, columnModelFactory);
                 });
     }

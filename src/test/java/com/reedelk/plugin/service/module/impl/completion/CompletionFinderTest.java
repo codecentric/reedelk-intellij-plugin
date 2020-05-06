@@ -1,14 +1,15 @@
 package com.reedelk.plugin.service.module.impl.completion;
 
 import com.reedelk.module.descriptor.model.type.TypeFunctionDescriptor;
+import com.reedelk.plugin.service.module.impl.component.completion.TrieDefault;
 
 import java.util.Map;
 
 // TODO: Complete me.
 class CompletionFinderTest {
 
-    private Trie global;
-    private Map<String,Trie> typeAndTriesMap;
+    private TrieDefault global;
+    private Map<String, TrieDefault> typeAndTriesMap;
 /**
     @BeforeEach
     void setUp() {

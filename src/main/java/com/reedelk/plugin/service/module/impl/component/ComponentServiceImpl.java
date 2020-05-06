@@ -7,74 +7,54 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import com.reedelk.module.descriptor.model.ModuleDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.plugin.commons.Topics;
-import com.reedelk.plugin.component.type.unknown.Unknown;
-import com.reedelk.plugin.component.type.unknown.UnknownComponentDescriptorWrapper;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.service.module.ComponentService;
+import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
+import com.reedelk.plugin.service.module.impl.component.module.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.project.MavenImportListener;
 import org.jetbrains.idea.maven.project.MavenProject;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.util.Collections.unmodifiableCollection;
-import static java.util.stream.Collectors.toList;
 
 public class ComponentServiceImpl implements ComponentService, MavenImportListener, CompilationStatusListener {
 
     private final Module module;
-    private final ComponentListUpdateNotifier publisher;
+    private final ModuleChangeNotifier publisher;
 
     // MODULES
     private ModuleDTO flowControlModule; // system components module (loaded only once)
     private ModuleDTO currentModule; // current custom components module being developed (refreshed when compiled)
     private final List<ModuleDTO> mavenModules = new ArrayList<>(); // components from Maven dependencies (refreshed when Maven import finished)
 
-    // COMPONENTS
-    private final Map<String, ComponentDescriptor> flowControlModuleComponents = new HashMap<>(); // A map containing the component fully qualified name and the descriptor from flow control module
-    private final Map<String, ComponentDescriptor> currentModuleComponents = new HashMap<>(); // A map containing the component fully qualified name and the descriptor from current module being developed.
-    private final Map<String, ComponentDescriptor> mavenModulesComponents = new HashMap<>(); // A map containing the component fully qualified name and the descriptor from maven.
+    private ComponentTracker componentTracker;
+    private CompletionTracker completionTracker;
 
     public ComponentServiceImpl(Project project, Module module) {
-        this.module = module;
-
         MessageBus messageBus = project.getMessageBus();
-
         MessageBusConnection connection = messageBus.connect();
         connection.subscribe(MavenImportListener.TOPIC, this);
         connection.subscribe(CompilerTopics.COMPILATION_STATUS, this);
 
+        this.module = module;
         this.publisher = messageBus.syncPublisher(Topics.COMPONENTS_UPDATE_EVENTS);
+        this.componentTracker = new ComponentTracker();
+        this.completionTracker = new CompletionTracker(project, module, componentTracker);
 
-        // When the service is initialized, then:
-        // 1. Load Runtime Commons Module (i.e system components)
-        // 2. Load Maven Dependencies Components
-        // 3. Custom components (e.g from the current project).
-        asyncLoadFlowControlModuleDescriptor(() ->
-                asyncLoadMavenDependenciesComponents(() ->
+        // We load the modules in the following order:
+        // 1. flow-control module (e.g flow-ref, router, fork): these components are immutable.
+        // 2. maven-dependencies module (e.g module-ftp, module-csv): these components might change depending on the pom.xml
+        // 3. project-custom components module (e.g from the current project): these components change when the code in the current project is modified.
+        asyncLoadFlowControlModuleDescriptor((nextAction1) ->
+                asyncLoadMavenDependenciesComponents((nextAction2) ->
                         asyncLoadModuleCustomComponents()));
-    }
-
-    @Override
-    public synchronized ComponentDescriptor getComponentDescriptor(String componentFullyQualifiedName) {
-        // Is it a component from a maven dependency?
-        ComponentDescriptor descriptor = mavenModulesComponents.getOrDefault(componentFullyQualifiedName, null);
-        if (descriptor != null) return descriptor;
-
-        // Is it a system component?
-        descriptor = flowControlModuleComponents.getOrDefault(componentFullyQualifiedName, null);
-        if (descriptor != null) return descriptor;
-
-        // Is it a component in the current module being developed?
-        descriptor = currentModuleComponents.getOrDefault(componentFullyQualifiedName, null);
-        if (descriptor != null) return descriptor;
-
-        // The component is not known.
-        return new UnknownComponentDescriptorWrapper(Unknown.DESCRIPTOR);
     }
 
     @Override
@@ -89,20 +69,39 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     }
 
     @Override
+    public ComponentDescriptor getComponentDescriptor(String componentFullyQualifiedName) {
+        return componentTracker.getComponentDescriptor(componentFullyQualifiedName);
+    }
+
+    @Override
+    public Collection<Suggestion> suggestionsOf(String inputFullyQualifiedName, String componentPropertyPath, String[] tokens) {
+        return completionTracker.suggestionsOf(inputFullyQualifiedName, componentPropertyPath, tokens);
+    }
+
+    @Override
+    public Collection<Suggestion> variablesOf(String inputFullyQualifiedName, String componentPropertyPath) {
+        return completionTracker.variablesOf(inputFullyQualifiedName, componentPropertyPath);
+    }
+
+    @Override
+    public void inputOutputOf(String inputFullyQualifiedName, String outputFullyQualifiedName) {
+        completionTracker.inputOutputOf(inputFullyQualifiedName, outputFullyQualifiedName);
+    }
+
+    @Override
     public void importFinished(@NotNull Collection<MavenProject> importedProjects, @NotNull List<Module> newModules) {
         // Remove all components before updating them
         synchronized (this) {
             mavenModules.clear();
-            mavenModulesComponents.clear();
+            componentTracker.clearMaven();
+            completionTracker.clearMaven();
         }
 
-        // Notify that all components have been removed
-        notifyComponentListUpdate();
+        // Notify modules changed
+        onModuleChange();
 
-        // Update Maven dependencies components and do nothing when its done.
-        asyncLoadMavenDependenciesComponents(() -> {
-            // Nothing
-        });
+        // Update modules from Maven dependencies
+        asyncLoadMavenDependenciesComponents(noNextAction -> {});
     }
 
     @Override
@@ -110,42 +109,40 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         if (!aborted && errors == 0) {
             synchronized (this) {
                 currentModule = null;
-                currentModuleComponents.clear();
+                componentTracker.clearCurrent();
+                completionTracker.clearCurrent();
             }
 
-            // Notify that all components have been removed
-            notifyComponentListUpdate();
+            // Notify modules changed
+            onModuleChange();
 
-            // Update custom components
+            // Update modules from custom project
             asyncLoadModuleCustomComponents();
         }
     }
 
-    /**
-     * Updates available components from runtime commons module.
-     */
-    private void asyncLoadFlowControlModuleDescriptor(OnDone nextAction) {
+    private void asyncLoadFlowControlModuleDescriptor(Callback<Void> nextAction) {
         PluginExecutors.run(module, message("module.component.update.system.components"),
                 new LoadFlowControlModuleDescriptor(nextAction, flowControlModuleDescriptor -> {
-                    ModuleDTO dto = asModuleDTO(flowControlModuleDescriptor);
+                    ModuleDTO dto = ModuleDTOConverter.from(flowControlModuleDescriptor);
                     synchronized (this) {
                         flowControlModule = dto;
-                        registerComponents(flowControlModuleDescriptor, flowControlModuleComponents);
-                        notifyComponentListUpdate();
+                        componentTracker.registerFlowControl(flowControlModuleDescriptor);
+                        completionTracker.registerFlowControl(flowControlModuleDescriptor);
+                        onModuleChange();
                     }
                 }));
     }
 
-    private void asyncLoadMavenDependenciesComponents(OnDone nextAction) {
+    private void asyncLoadMavenDependenciesComponents(Callback<Void> nextAction) {
         PluginExecutors.run(module, message("module.component.update.component.for.module", module.getName()),
-                // We need to scan the maven dependencies, extract only the ones
-                // with module descriptor in it. We create
                 new LoadMavenDependenciesModuleDescriptorsTask(module, nextAction, mavenModuleDescriptor -> {
-                    ModuleDTO dto = asModuleDTO(mavenModuleDescriptor);
+                    ModuleDTO dto = ModuleDTOConverter.from(mavenModuleDescriptor);
                     synchronized (this) {
                         mavenModules.add(dto);
-                        registerComponents(mavenModuleDescriptor, mavenModulesComponents);
-                        notifyComponentListUpdate();
+                        componentTracker.registerMaven(mavenModuleDescriptor);
+                        completionTracker.registerMaven(mavenModuleDescriptor);
+                        onModuleChange();
                     }
                 }));
     }
@@ -153,39 +150,18 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     private void asyncLoadModuleCustomComponents() {
         PluginExecutors.run(module, message("module.component.update.component.for.module", module.getName()),
                 new LoadModuleCustomComponentModuleDescriptor(module, moduleCustomDescriptor -> {
-                    ModuleDTO dto = asModuleDTO(moduleCustomDescriptor);
-                    // Register global types
-                    // Register components
+                    ModuleDTO dto = ModuleDTOConverter.from(moduleCustomDescriptor);
                     synchronized (this) {
                         currentModule = dto;
-                        registerComponents(moduleCustomDescriptor, currentModuleComponents);
-                        notifyComponentListUpdate();
+                        componentTracker.registerCurrent(moduleCustomDescriptor);
+                        completionTracker.registerCurrent(moduleCustomDescriptor);
+                        onModuleChange();
                     }
                 }));
     }
 
-    private void registerComponents(ModuleDescriptor moduleDescriptor, Map<String, ComponentDescriptor> targetCollection) {
-        moduleDescriptor.getComponents()
-                .forEach(componentDescriptor ->
-                        targetCollection.put(componentDescriptor.getFullyQualifiedName(), componentDescriptor));
-    }
-
-    private void notifyComponentListUpdate() {
+    private void onModuleChange() {
         Collection<ModuleDTO> moduleComponents = getModules();
-        publisher.onComponentListUpdate(moduleComponents);
-    }
-
-    @NotNull
-    private ModuleDTO asModuleDTO(ModuleDescriptor moduleDescriptor) {
-        List<ModuleComponentDTO> moduleComponentDTOs = moduleDescriptor.getComponents()
-                .stream()
-                .map(componentDescriptor -> new ModuleComponentDTO(
-                        componentDescriptor.getFullyQualifiedName(),
-                        componentDescriptor.getDisplayName(),
-                        componentDescriptor.getImage(),
-                        componentDescriptor.getIcon(),
-                        componentDescriptor.isHidden()))
-                .collect(toList());
-        return new ModuleDTO(moduleDescriptor.getName(), moduleComponentDTOs);
+        publisher.onModuleChange(moduleComponents);
     }
 }

@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.module.impl.component;
+package com.reedelk.plugin.service.module.impl.component.module;
 
 import java.util.List;
 

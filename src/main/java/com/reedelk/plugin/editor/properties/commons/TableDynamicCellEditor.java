@@ -23,11 +23,11 @@ public class TableDynamicCellEditor implements TableCellEditor, Disposable {
     private final DisposablePanel content;
     private CellEditorListener listener;
 
-    public TableDynamicCellEditor(Module module, String componentPropertyPath) {
+    public TableDynamicCellEditor(Module module, String componentPropertyPath, String inputFullyQualifiedName) {
         JBLabel codeIcon = new JBLabel(Code);
         codeIcon.setOpaque(true);
 
-        this.editor = new DynamicValueScriptEditor(module, componentPropertyPath);
+        this.editor = new DynamicValueScriptEditor(module, componentPropertyPath, inputFullyQualifiedName);
         this.content = ContainerFactory.createLabelNextToComponentWithoutOuterBorder(codeIcon, editor);
     }
 

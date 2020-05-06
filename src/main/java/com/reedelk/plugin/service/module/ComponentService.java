@@ -3,7 +3,8 @@ package com.reedelk.plugin.service.module;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleServiceManager;
 import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
-import com.reedelk.plugin.service.module.impl.component.ModuleDTO;
+import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
+import com.reedelk.plugin.service.module.impl.component.module.ModuleDTO;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -14,8 +15,31 @@ public interface ComponentService {
         return ModuleServiceManager.getService(module, ComponentService.class);
     }
 
-    ComponentDescriptor getComponentDescriptor(String componentFullyQualifiedName);
+    default ComponentDescriptor getComponentDescriptor(String componentFullyQualifiedName) {
+        throw new UnsupportedOperationException();
+    }
 
-    Collection<ModuleDTO> getModules();
+    default Collection<ModuleDTO> getModules() {
+        throw new UnsupportedOperationException();
+    }
 
+    default Collection<Suggestion> suggestionsOf(String inputFullyQualifiedName, String componentPropertyPath, String[] tokens) {
+        throw new UnsupportedOperationException();
+    }
+
+    default Collection<Suggestion> variablesOf(String inputFullyQualifiedName, String componentPropertyPath) {
+        throw new UnsupportedOperationException();
+    }
+
+    default void inputOutputOf(String inputFullyQualifiedName, String outputFullyQualifiedName) {
+        throw new UnsupportedOperationException();
+    }
+
+    interface OnCompletionEvent {
+        void onCompletionsUpdated();
+    }
+
+    interface ModuleChangeNotifier {
+        void onModuleChange(Collection<ModuleDTO> modules);
+    }
 }

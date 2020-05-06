@@ -19,18 +19,20 @@ public class DynamicMapTableColumnModelFactory implements DisposableTableColumnM
     private final String keyName;
     private final String valueName;
     private final String componentPropertyPath;
+    private final String inputFullyQualifiedName;
 
-    DynamicMapTableColumnModelFactory(Module module, MapDescriptor propertyType, String componentPropertyPath) {
+    DynamicMapTableColumnModelFactory(Module module, MapDescriptor propertyType, String componentPropertyPath, String inputFullyQualifiedName) {
         this.module = module;
         this.componentPropertyPath = componentPropertyPath;
+        this.inputFullyQualifiedName = inputFullyQualifiedName;
         this.keyName = Optional.ofNullable(propertyType.getKeyName()).orElse(message("table.header.key.name"));
         this.valueName = Optional.ofNullable(propertyType.getValueName()).orElse(message("table.header.value.name"));
     }
 
     @Override
     public void create(JBTable table) {
-        TableDynamicCellEditor cellEditor = new TableDynamicCellEditor(module, componentPropertyPath);
-        TableDynamicCellRenderer cellRenderer = new TableDynamicCellRenderer(module, componentPropertyPath);
+        TableDynamicCellEditor cellEditor = new TableDynamicCellEditor(module, componentPropertyPath, inputFullyQualifiedName);
+        TableDynamicCellRenderer cellRenderer = new TableDynamicCellRenderer(module, componentPropertyPath, inputFullyQualifiedName);
 
         // Column 1 (the map key)
         TableColumn keyColumn = table.getColumnModel().getColumn(0);

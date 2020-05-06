@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.module.impl.completion;
+package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.runtime.api.commons.ImmutableMap;
@@ -7,13 +7,14 @@ import com.reedelk.runtime.api.message.MessageAttributes;
 
 import java.util.*;
 
-import static com.reedelk.plugin.service.module.impl.completion.Suggestion.Type.PROPERTY;
+import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
 
 public class ComponentInputProcessor {
 
-    private final Map<String, TypeInfo> typeAndAndTries;
+    private static final TypeInfo UNKNOWN_TYPE_TRIE = new TypeInfo();
+    private final TrieMapWrapper typeAndAndTries;
 
-    public ComponentInputProcessor(Map<String, TypeInfo> typeAndAndTries) {
+    public ComponentInputProcessor(TrieMapWrapper typeAndAndTries) {
         this.typeAndAndTries = typeAndAndTries;
     }
 
@@ -25,7 +26,7 @@ public class ComponentInputProcessor {
             Map<String, ComponentIO.IOTypeDescriptor> map = extractPropertiesFrom(attributesTypes);
 
             // Extends (such as MessageAttributes)
-            String extendsType = typeAndAndTries.get(attributesTypes).getExtendsType();
+            String extendsType = typeAndAndTries.getOrDefault(attributesTypes, UNKNOWN_TYPE_TRIE).getExtendsType();
             Map<String, ComponentIO.IOTypeDescriptor> extendsMap = extractPropertiesFrom(extendsType);
 
             extendsMap.putAll(map);
@@ -41,7 +42,7 @@ public class ComponentInputProcessor {
     }
 
     private Map<String, ComponentIO.IOTypeDescriptor> extractPropertiesFrom(String type) {
-        TypeInfo info = typeAndAndTries.get(type);
+        TypeInfo info = typeAndAndTries.getOrDefault(type, UNKNOWN_TYPE_TRIE);
         List<Suggestion> attributesItems = info.getTrie().autocomplete(StringUtils.EMPTY); // All for the type
         Map<String, ComponentIO.IOTypeDescriptor> map = new TreeMap<>(Comparator.naturalOrder());
         attributesItems.stream()

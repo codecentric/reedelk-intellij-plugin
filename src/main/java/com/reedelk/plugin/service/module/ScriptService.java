@@ -9,7 +9,6 @@ public interface ScriptService {
         return ModuleServiceManager.getService(module, ScriptService.class);
     }
 
-
     void fetchScriptResources();
 
     void addScript(String scriptFileName, String scriptBody);

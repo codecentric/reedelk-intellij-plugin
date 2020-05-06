@@ -24,8 +24,8 @@ import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.SnapshotListener;
 import com.reedelk.plugin.graph.layout.FlowGraphLayout;
 import com.reedelk.plugin.graph.node.GraphNode;
-import com.reedelk.plugin.service.module.impl.component.ComponentListUpdateNotifier;
-import com.reedelk.plugin.service.module.impl.component.ModuleDTO;
+import com.reedelk.plugin.service.module.ComponentService;
+import com.reedelk.plugin.service.module.impl.component.module.ModuleDTO;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.event.AncestorEvent;
@@ -45,7 +45,7 @@ import static javax.swing.SwingUtilities.invokeLater;
 public abstract class DesignerPanel extends DisposablePanel implements
         MouseMotionListener, MouseListenerAdapter, SnapshotListener,
         DropActionListener, HintResultListener, DrawableListener,
-        ComponentListUpdateNotifier {
+        ComponentService.ModuleChangeNotifier {
 
     static final int TOP_PADDING = 80;
 
@@ -283,7 +283,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
     }
 
     @Override
-    public void onComponentListUpdate(Collection<ModuleDTO> components) {
+    public void onModuleChange(Collection<ModuleDTO> components) {
         if (isVisible) {
             // When the component list is updated or we click on the 'compile' button
             // the graph is de-serialized to apply changes and refresh properties

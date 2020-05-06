@@ -8,7 +8,7 @@ import com.reedelk.plugin.assertion.graph.FlowGraphChangeAwareAssertion;
 import com.reedelk.plugin.assertion.suggestion.SuggestionAssertion;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowGraphChangeAware;
-import com.reedelk.plugin.service.module.impl.completion.Suggestion;
+import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
 
 import java.util.Collection;
 import java.util.Map;

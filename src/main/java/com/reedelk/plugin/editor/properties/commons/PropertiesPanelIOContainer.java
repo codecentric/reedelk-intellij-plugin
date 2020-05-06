@@ -10,9 +10,9 @@ import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
-import com.reedelk.plugin.service.module.CompletionService;
-import com.reedelk.plugin.service.module.impl.completion.ComponentIO;
-import com.reedelk.plugin.service.module.impl.completion.OnComponentIO;
+import com.reedelk.plugin.service.module.ComponentService;
+import com.reedelk.plugin.service.module.impl.component.completion.ComponentIO;
+import com.reedelk.plugin.service.module.impl.component.completion.OnComponentIO;
 import com.reedelk.runtime.api.commons.ImmutableMap;
 
 import javax.swing.*;
@@ -33,9 +33,6 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
     public PropertiesPanelIOContainer(Module module, ContainerContext context, String componentFullyQualifiedName) {
         super(new BorderLayout());
 
-
-        String predecessorFQCN = context.predecessors().stream().findFirst().orElse(null);
-
         loadingPanel = new PanelWithText.LoadingContentPanel();
         loadingPanel.setOpaque(true);
         loadingPanel.setBackground(JBColor.WHITE);
@@ -47,8 +44,8 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
         this.connection = module.getMessageBus().connect(this);
         this.connection.subscribe(Topics.ON_COMPONENT_IO, this);
 
-        CompletionService.getInstance(module)
-                .loadComponentIO(predecessorFQCN, componentFullyQualifiedName);
+        String predecessorFQCN = context.predecessors().stream().findFirst().orElse(null);
+        ComponentService.getInstance(module).inputOutputOf(predecessorFQCN, componentFullyQualifiedName);
     }
 
     @Override

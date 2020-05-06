@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.module.impl.component;
+package com.reedelk.plugin.service.module.impl.component.module;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
@@ -18,19 +18,19 @@ import java.util.Optional;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.util.stream.Collectors.toList;
 
-class LoadMavenDependenciesModuleDescriptorsTask implements AsyncProgressTask {
+public class LoadMavenDependenciesModuleDescriptorsTask implements AsyncProgressTask {
 
     private static final Logger LOG = Logger.getInstance(LoadMavenDependenciesModuleDescriptorsTask.class);
 
     private final Module module;
-    private final OnDone callback;
-    private final OnModuleDescriptorLoaded moduleDescriptorLoaded;
+    private final Callback<Void> onDone;
+    private final Callback<ModuleDescriptor> onReady;
     private final ModuleDescriptorAnalyzer moduleAnalyzer = new ModuleDescriptorAnalyzer();
 
-    LoadMavenDependenciesModuleDescriptorsTask(Module module, OnDone callback, OnModuleDescriptorLoaded moduleDescriptorLoaded) {
+    public LoadMavenDependenciesModuleDescriptorsTask(Module module, Callback<Void> onDone, Callback<ModuleDescriptor> onReady) {
         this.module = module;
-        this.callback = callback;
-        this.moduleDescriptorLoaded = moduleDescriptorLoaded;
+        this.onDone = onDone;
+        this.onReady = onReady;
     }
 
     @Override
@@ -45,10 +45,10 @@ class LoadMavenDependenciesModuleDescriptorsTask implements AsyncProgressTask {
                     .map(artifact -> artifact.getFile().getPath()).collect(toList())
                     .forEach(jarFilePath -> ModuleUtils.getModuleName(jarFilePath) // We only scan a module if its jar file has a module name.
                             .flatMap(moduleName -> readModuleDescriptorFromJarFile(jarFilePath, moduleName))
-                            .ifPresent(moduleDescriptorLoaded::onItem));
+                            .ifPresent(onReady::execute));
         });
 
-        callback.execute();
+        onDone.execute(null);
     }
 
     private Optional<ModuleDescriptor> readModuleDescriptorFromJarFile(String jarFilePath, String moduleName) {

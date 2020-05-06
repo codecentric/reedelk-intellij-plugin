@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.module.impl.component;
+package com.reedelk.plugin.service.module.impl.component.module;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
@@ -14,16 +14,16 @@ import org.jetbrains.annotations.NotNull;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.util.Arrays.stream;
 
-class LoadModuleCustomComponentModuleDescriptor implements AsyncProgressTask {
+public class LoadModuleCustomComponentModuleDescriptor implements AsyncProgressTask {
 
     private static final Logger LOG = Logger.getInstance(LoadModuleCustomComponentModuleDescriptor.class);
 
     private final Module module;
-    private final OnModuleDescriptorLoaded onModuleDescriptorLoaded;
+    private final Callback<ModuleDescriptor> onReady;
 
-    LoadModuleCustomComponentModuleDescriptor(Module module, OnModuleDescriptorLoaded onModuleDescriptorLoaded) {
+    public LoadModuleCustomComponentModuleDescriptor(Module module, Callback<ModuleDescriptor> onReady) {
         this.module = module;
-        this.onModuleDescriptorLoaded = onModuleDescriptorLoaded;
+        this.onReady = onReady;
     }
 
     @Override
@@ -40,7 +40,7 @@ class LoadModuleCustomComponentModuleDescriptor implements AsyncProgressTask {
                     ModuleDescriptorAnalyzer moduleAnalyzer = new ModuleDescriptorAnalyzer();
                     try {
                         ModuleDescriptor packageComponents = moduleAnalyzer.fromDirectory(moduleTargetClassesDirectory, mavenProject.getDisplayName(), true);
-                        onModuleDescriptorLoaded.onItem(packageComponents);
+                        onReady.execute(packageComponents);
                     } catch (ModuleDescriptorException exception) {
                         String message = message("module.analyze.error", module.getName(), exception.getMessage());
                         LOG.error(message, exception);

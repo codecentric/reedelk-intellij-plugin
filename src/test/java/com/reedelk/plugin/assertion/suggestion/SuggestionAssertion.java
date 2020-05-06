@@ -1,6 +1,6 @@
 package com.reedelk.plugin.assertion.suggestion;
 
-import com.reedelk.plugin.service.module.impl.completion.Suggestion;
+import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
 
 import java.util.Collection;
 

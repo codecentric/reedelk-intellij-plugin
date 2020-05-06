@@ -8,14 +8,14 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.reedelk.plugin.service.module.CompletionService;
-import com.reedelk.plugin.service.module.impl.completion.Suggestion;
+import com.reedelk.plugin.service.module.ComponentService;
+import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.Collection;
 
-import static com.reedelk.plugin.commons.UserData.COMPONENT_PROPERTY_PATH;
-import static com.reedelk.plugin.commons.UserData.MODULE_NAME;
+import static com.reedelk.plugin.commons.UserData.*;
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
 public class GroovyCompletionContributor extends CompletionContributor {
@@ -26,9 +26,10 @@ public class GroovyCompletionContributor extends CompletionContributor {
         Project project = editor.getProject();
         String moduleName = editor.getUserData(MODULE_NAME);
         String componentFullyQualifiedName = editor.getUserData(COMPONENT_PROPERTY_PATH);
+        String inputFullyQualifiedName = editor.getUserData(COMPONENT_INPUT_FQN);
 
         if (project != null && isNotBlank(moduleName) && isNotBlank(componentFullyQualifiedName)) {
-            computeResultSet(parameters, result, moduleName, componentFullyQualifiedName, project);
+            computeResultSet(parameters, result, moduleName, componentFullyQualifiedName, inputFullyQualifiedName, project);
         }
     }
 
@@ -36,13 +37,14 @@ public class GroovyCompletionContributor extends CompletionContributor {
                                   @NotNull CompletionResultSet result,
                                   @NotNull String moduleName,
                                   @NotNull String componentFullyQualifiedName,
+                                  @Nullable String inputFullyQualifiedName,
                                   @NotNull Project project) {
         Module module = ModuleManager.getInstance(project).findModuleByName(moduleName);
         if (module == null) return;
 
         TokenFinder.find(parameters).ifPresent(tokens -> {
-            CompletionService instance = CompletionService.getInstance(module);
-            List<Suggestion> suggestions = instance.autocompleteSuggestionOf(componentFullyQualifiedName, tokens);
+            ComponentService instance = ComponentService.getInstance(module);
+            Collection<Suggestion> suggestions = instance.suggestionsOf(inputFullyQualifiedName, componentFullyQualifiedName, tokens);
             suggestions.forEach(suggestion -> addSuggestion(result, suggestion));
         });
     }

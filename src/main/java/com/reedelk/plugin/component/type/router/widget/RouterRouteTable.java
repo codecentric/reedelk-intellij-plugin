@@ -16,11 +16,14 @@ public class RouterRouteTable extends DisposableTable {
     public RouterRouteTable(Module module,
                             FlowSnapshot snapshot,
                             List<RouterConditionRoutePair> conditionRoutePairList,
-                            String componentPropertyPath) {
+                            String componentPropertyPath,
+                            String inputFullyQualifiedName) {
         super(module.getProject(),
                 new ConditionRouteTableModel(conditionRoutePairList, snapshot),false);
 
-        ConditionRouteTableColumnModelFactory factory = new ConditionRouteTableColumnModelFactory(module, componentPropertyPath);
+        ConditionRouteTableColumnModelFactory factory =
+                new ConditionRouteTableColumnModelFactory(module, componentPropertyPath, inputFullyQualifiedName);
+
         factory.create(this);
         setOpaque(true);
         setBackground(Colors.PROPERTIES_EMPTY_SELECTION_BACKGROUND);

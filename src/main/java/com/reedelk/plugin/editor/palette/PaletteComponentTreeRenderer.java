@@ -4,7 +4,7 @@ import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
-import com.reedelk.plugin.service.module.impl.component.ModuleComponentDTO;
+import com.reedelk.plugin.service.module.impl.component.module.ModuleComponentDTO;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

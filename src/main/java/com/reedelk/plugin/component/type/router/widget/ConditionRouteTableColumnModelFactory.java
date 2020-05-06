@@ -20,16 +20,18 @@ class ConditionRouteTableColumnModelFactory implements DisposableTableColumnMode
 
     private final Module module;
     private final String componentPropertyPath;
+    private final String inputFullyQualifiedName;
 
-    ConditionRouteTableColumnModelFactory(Module module, String componentPropertyPath) {
+    ConditionRouteTableColumnModelFactory(Module module, String componentPropertyPath, String inputFullyQualifiedName) {
         this.module = module;
         this.componentPropertyPath = componentPropertyPath;
+        this.inputFullyQualifiedName = inputFullyQualifiedName;
     }
 
     @Override
     public void create(JBTable table) {
-        TableDynamicCellRenderer cellRenderer = new TableDynamicCellRenderer(module, componentPropertyPath);
-        TableDynamicCellEditor conditionCellEditor = new TableDynamicCellEditor(module, componentPropertyPath);
+        TableDynamicCellRenderer cellRenderer = new TableDynamicCellRenderer(module, componentPropertyPath, inputFullyQualifiedName);
+        TableDynamicCellEditor conditionCellEditor = new TableDynamicCellEditor(module, componentPropertyPath, inputFullyQualifiedName);
 
         // Column 0 (Condition)
         TableColumn conditionColumn = table.getColumnModel().getColumn(0);

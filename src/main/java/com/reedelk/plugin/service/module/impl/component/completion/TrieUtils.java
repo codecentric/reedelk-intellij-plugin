@@ -1,11 +1,11 @@
-package com.reedelk.plugin.service.module.impl.completion;
+package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.reedelk.module.descriptor.model.type.TypeDescriptor;
 
 import java.util.Map;
 
-import static com.reedelk.plugin.service.module.impl.completion.Suggestion.Type.FUNCTION;
-import static com.reedelk.plugin.service.module.impl.completion.Suggestion.Type.PROPERTY;
+import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.FUNCTION;
+import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
 
 public class TrieUtils {
 
@@ -19,7 +19,7 @@ public class TrieUtils {
             global.insert(globalTypeProperty);
         }
 
-        Trie typeTrie = new Trie();
+        TrieDefault typeTrie = new TrieDefault();
         TypeInfo info = new TypeInfo(typeDescriptor.getExtendsType(), typeTrie);
         typeAndTriesMap.put(typeDescriptor.getType(), info);
 

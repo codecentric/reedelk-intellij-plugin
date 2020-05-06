@@ -1,11 +1,13 @@
 package com.reedelk.plugin.service.module.impl.completion;
 
 import com.reedelk.plugin.assertion.PluginAssertion;
+import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
+import com.reedelk.plugin.service.module.impl.component.completion.TrieDefault;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-class TrieTest {
+class TrieDefaultTest {
 // TODO: Finish me.
     @Test
     void shouldFindMultipleSuggestionsByPrefix() {
@@ -22,7 +24,7 @@ class TrieTest {
                 .withType(String.class.getName())
                 .build();
 
-        Trie trie = new Trie();
+        TrieDefault trie = new TrieDefault();
         trie.insert(suggestion1);
         trie.insert(suggestion2);
 

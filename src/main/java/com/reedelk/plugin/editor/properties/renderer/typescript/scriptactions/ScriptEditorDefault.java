@@ -30,9 +30,10 @@ class ScriptEditorDefault extends DisposablePanel {
 
     ScriptEditorDefault(@NotNull Module module,
                         @NotNull Document document,
-                        @NotNull String scriptPropertyPath) {
+                        @NotNull String scriptPropertyPath,
+                        @NotNull String inputFullyQualifiedName) {
 
-        ScriptEditor editor = new ScriptEditor(module, document, scriptPropertyPath);
+        ScriptEditor editor = new ScriptEditor(module, document, scriptPropertyPath, inputFullyQualifiedName);
 
         // This panel forces the background color of the editor to not pick up the
         // bg color of the ThreeComponentsSplitter.
@@ -40,7 +41,7 @@ class ScriptEditorDefault extends DisposablePanel {
         editorWrapperContainer.setBackground(SCRIPT_EDITOR_DIALOG_BACKGROUND);
 
         ThreeComponentsSplitter splitter = new DisposableThreeComponentsSplitter(HORIZONTAL);
-        splitter.setFirstComponent(new ScriptEditorContextPanel(module, scriptPropertyPath));
+        splitter.setFirstComponent(new ScriptEditorContextPanel(module, scriptPropertyPath, inputFullyQualifiedName));
         splitter.setLastComponent(editorWrapperContainer);
         splitter.setDividerWidth(DIVIDER_WIDTH);
         splitter.setFirstSize(EDITOR_CONTEXT_VARIABLES_SIZE);

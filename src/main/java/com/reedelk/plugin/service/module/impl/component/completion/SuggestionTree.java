@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.module.impl.completion;
+package com.reedelk.plugin.service.module.impl.component.completion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,21 +9,21 @@ import static java.util.stream.Collectors.groupingBy;
 
 public class SuggestionTree {
 
-    private static final Trie UNKNOWN_TYPE_TRIE = new Trie();
+    private static final TrieDefault UNKNOWN_TYPE_TRIE = new TrieDefault();
 
-    private final Trie root = new Trie();
-    private final Map<String, Trie> typeTriesMap;
+    private final TrieDefault root = new TrieDefault();
+    private final Map<String, TrieDefault> typeTriesMap;
 
-    public SuggestionTree(Map<String, Trie> typeTriesMap) {
+    public SuggestionTree(Map<String, TrieDefault> typeTriesMap) {
         this.typeTriesMap = typeTriesMap;
     }
 
-    public Map<String, Trie> getTypeTriesMap() {
+    public Map<String, TrieDefault> getTypeTriesMap() {
         return typeTriesMap;
     }
 
     public List<Suggestion> autocomplete(String[] tokens) {
-        Trie current = root;
+        TrieDefault current = root;
         List<Suggestion> autocompleteResults = new ArrayList<>();
         for (int i = 0; i < tokens.length; i++) {
             String token = tokens[i];
@@ -62,11 +62,11 @@ public class SuggestionTree {
                 suggestions.stream().collect(groupingBy(Suggestion::typeText));
 
         typeAwareGroupedByType
-                .keySet().forEach(type -> typeTriesMap.put(type, new Trie()));
+                .keySet().forEach(type -> typeTriesMap.put(type, new TrieDefault()));
 
         typeAwareGroupedByType.forEach((type, descriptorsGroupedByType) -> {
             // Build trie with autocomplete definitions.
-            Trie current = typeTriesMap.get(type);
+            TrieDefault current = typeTriesMap.get(type);
 
             // For each node
             descriptorsGroupedByType.forEach(typeAwareItem -> {

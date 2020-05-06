@@ -33,7 +33,10 @@ public class DialogEditScript extends DialogWrapper {
     private Document tmpDocument;
     private Document originalDocument;
 
-    DialogEditScript(@NotNull Module module, String scriptFilePathAndName, String scriptPropertyPath) {
+    DialogEditScript(@NotNull Module module,
+                     @NotNull String scriptFilePathAndName,
+                     @NotNull String scriptPropertyPath,
+                     @NotNull String inputFullyQualifiedName) {
         super(module.getProject(), false);
         this.module = module;
         setTitle(message("script.dialog.edit.title"));
@@ -46,7 +49,7 @@ public class DialogEditScript extends DialogWrapper {
                     // We create a tmp virtual Reedelk file so that we can workaround,
                     // wrong autocompletion for Groovy files inside expression fields and script editors.
                     tmpDocument = ScriptFileUtils.createInMemoryDocumentWithContent(originalDocument.getText());
-                    return new ScriptEditorDefault(module, tmpDocument, scriptPropertyPath);
+                    return new ScriptEditorDefault(module, tmpDocument, scriptPropertyPath, inputFullyQualifiedName);
                 }).orElse(null);
 
         init();

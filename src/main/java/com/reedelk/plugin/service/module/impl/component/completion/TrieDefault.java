@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.module.impl.completion;
+package com.reedelk.plugin.service.module.impl.component.completion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,14 +6,15 @@ import java.util.Map;
 
 import static java.util.Collections.singletonList;
 
-public class Trie {
+public class TrieDefault implements Trie {
 
     private TrieNode root;
 
-    public Trie() {
+    public TrieDefault() {
         this.root = new TrieNode();
     }
 
+    @Override
     public void insert(Suggestion suggestion) {
         TrieNode current = root;
         String word = suggestion.lookupString();
@@ -23,13 +24,14 @@ public class Trie {
         current.setSuggestion(suggestion);
     }
 
-    public List<Suggestion> autocomplete(String word) {
+    @Override
+    public List<Suggestion> autocomplete(String token) {
         List<Suggestion> suggestions = new ArrayList<>();
         TrieNode current = root;
         int i = 0;
         int lastWordIndex = -1;
-        while (i < word.length()) {
-            char c = word.charAt(i);
+        while (i < token.length()) {
+            char c = token.charAt(i);
             Map<Character, TrieNode> children = current.getChildren();
             if (children.containsKey(c)) {
                 if (c == '.') {
@@ -45,9 +47,15 @@ public class Trie {
         if (current.isSuggestion()) {
             return singletonList(current.getSuggestion());
         } else {
-            String prefix = lastWordIndex != -1 ? word.substring(lastWordIndex + 1) : word;
+            String prefix = lastWordIndex != -1 ? token.substring(lastWordIndex + 1) : token;
             return traversal(current, suggestions, prefix);
         }
+    }
+
+    @Override
+    public void clear() {
+        this.root = null;
+        this.root = new TrieNode();
     }
 
     private List<Suggestion> traversal(TrieNode start, List<Suggestion> suggestion, String current) {

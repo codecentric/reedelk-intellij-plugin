@@ -14,9 +14,8 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.service.module.ComponentService;
-import com.reedelk.plugin.service.module.impl.component.ComponentListUpdateNotifier;
-import com.reedelk.plugin.service.module.impl.component.ModuleComponentDTO;
-import com.reedelk.plugin.service.module.impl.component.ModuleDTO;
+import com.reedelk.plugin.service.module.impl.component.module.ModuleComponentDTO;
+import com.reedelk.plugin.service.module.impl.component.module.ModuleDTO;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -33,7 +32,7 @@ import java.util.function.Predicate;
 import static java.awt.BorderLayout.CENTER;
 import static java.util.stream.Collectors.toList;
 
-public class PalettePanel extends JBPanel<PalettePanel> implements ComponentListUpdateNotifier, FileEditorManagerListener {
+public class PalettePanel extends JBPanel<PalettePanel> implements ComponentService.ModuleChangeNotifier, FileEditorManagerListener {
 
     private final transient Tree tree;
     private final transient Project project;
@@ -67,7 +66,7 @@ public class PalettePanel extends JBPanel<PalettePanel> implements ComponentList
     }
 
     @Override
-    public void onComponentListUpdate(Collection<ModuleDTO> modules) {
+    public void onModuleChange(Collection<ModuleDTO> modules) {
         // We only update the components for this module if and only if
         // the current selected file belongs to the module for which the
         // components have been updated.

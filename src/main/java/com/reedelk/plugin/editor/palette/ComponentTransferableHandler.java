@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.palette;
 
 import com.intellij.openapi.util.SystemInfo;
-import com.reedelk.plugin.service.module.impl.component.ModuleComponentDTO;
+import com.reedelk.plugin.service.module.impl.component.module.ModuleComponentDTO;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

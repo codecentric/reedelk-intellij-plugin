@@ -19,11 +19,11 @@ public class TableDynamicCellRenderer implements TableCellRenderer, Disposable {
     private final DisposablePanel content;
     private final DynamicValueScriptEditor editor;
 
-    public TableDynamicCellRenderer(Module module, String componentPropertyPath) {
+    public TableDynamicCellRenderer(Module module, String componentPropertyPath, String inputFullyQualifiedName) {
         JLabel codeIcon = new JBLabel(Code);
         codeIcon.setOpaque(true);
 
-        this.editor = new DynamicValueScriptEditor(module, componentPropertyPath);
+        this.editor = new DynamicValueScriptEditor(module, componentPropertyPath, inputFullyQualifiedName);
         this.content = ContainerFactory.createLabelNextToComponentWithoutOuterBorder(codeIcon, editor);
     }
 

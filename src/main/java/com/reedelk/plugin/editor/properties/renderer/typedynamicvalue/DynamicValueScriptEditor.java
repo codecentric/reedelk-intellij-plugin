@@ -15,8 +15,8 @@ import static java.util.Collections.singletonList;
 
 public class DynamicValueScriptEditor extends ScriptEditor {
 
-    public DynamicValueScriptEditor(Module module, String scriptPropertyPath) {
-        super(module, ScriptFileUtils.createEmptyInMemoryDocument(), scriptPropertyPath);
+    public DynamicValueScriptEditor(Module module, String scriptPropertyPath, String inputFullyQualifiedName) {
+        super(module, ScriptFileUtils.createEmptyInMemoryDocument(), scriptPropertyPath, inputFullyQualifiedName);
     }
 
     @Override

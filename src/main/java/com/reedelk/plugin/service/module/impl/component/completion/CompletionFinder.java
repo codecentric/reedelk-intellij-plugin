@@ -1,17 +1,16 @@
-package com.reedelk.plugin.service.module.impl.completion;
+package com.reedelk.plugin.service.module.impl.component.completion;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.Collection;
 import java.util.Optional;
 
 public class CompletionFinder {
 
     private static final TypeInfo UNKNOWN_TYPE_TRIE = new TypeInfo();
 
-    public static List<Suggestion> find(Trie root, Map<String, TypeInfo> typeAndTrieMap, String[] tokens) {
+    public static Collection<Suggestion> find(Trie root, TrieMapWrapper typeAndTrieMap, String[] tokens) {
         Trie current = root;
-        List<Suggestion> autocompleteResults = new ArrayList<>();
+        Collection<Suggestion> autocompleteResults = new ArrayList<>();
         for (int i = 0; i < tokens.length; i++) {
             String token = tokens[i];
             if (current == null) { // TODO: Testme

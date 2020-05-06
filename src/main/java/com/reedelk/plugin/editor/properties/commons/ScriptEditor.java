@@ -15,8 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 
 import static com.intellij.openapi.command.WriteCommandAction.writeCommandAction;
-import static com.reedelk.plugin.commons.UserData.COMPONENT_PROPERTY_PATH;
-import static com.reedelk.plugin.commons.UserData.MODULE_NAME;
+import static com.reedelk.plugin.commons.UserData.*;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.awt.BorderLayout.CENTER;
 
@@ -32,7 +31,8 @@ public class ScriptEditor extends DisposablePanel implements DocumentListener {
 
     public ScriptEditor(@NotNull Module module,
                         @NotNull Document document,
-                        @NotNull String scriptPropertyPath) {
+                        @NotNull String scriptPropertyPath,
+                        @NotNull String inputFullyQualifiedName) {
         this.module = module;
         this.document = document;
         this.scriptPropertyPath = scriptPropertyPath;
@@ -45,6 +45,7 @@ public class ScriptEditor extends DisposablePanel implements DocumentListener {
                 .createEditor(document, module.getProject(), DefaultConstants.SCRIPT_FILE_TYPE, false);
         this.editor.putUserData(MODULE_NAME, module.getName());
         this.editor.putUserData(COMPONENT_PROPERTY_PATH, scriptPropertyPath);
+        this.editor.putUserData(COMPONENT_INPUT_FQN, inputFullyQualifiedName);
         configure(this.editor);
 
         document.addDocumentListener(this);

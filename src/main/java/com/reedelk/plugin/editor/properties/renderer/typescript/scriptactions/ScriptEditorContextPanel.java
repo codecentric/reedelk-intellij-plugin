@@ -7,8 +7,8 @@ import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
-import com.reedelk.plugin.service.module.CompletionService;
-import com.reedelk.plugin.service.module.impl.completion.Suggestion;
+import com.reedelk.plugin.service.module.ComponentService;
+import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
 import com.reedelk.runtime.api.commons.StringUtils;
 
 import javax.swing.*;
@@ -25,7 +25,7 @@ import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 import static javax.swing.BorderFactory.createMatteBorder;
 
-class ScriptEditorContextPanel extends DisposablePanel implements CompletionService.OnCompletionEvent {
+class ScriptEditorContextPanel extends DisposablePanel implements ComponentService.OnCompletionEvent {
 
     private static final Border MATTE_BORDER = createMatteBorder(1, 1, 1, 0,
             Colors.SCRIPT_EDITOR_CONTEXT_PANEL_BORDER);
@@ -37,9 +37,11 @@ class ScriptEditorContextPanel extends DisposablePanel implements CompletionServ
     private final transient MessageBusConnection connect;
     private final String componentPropertyPath;
     private final DisposablePanel panelVariables;
+    private final String inputFullyQualifiedName;
 
-    ScriptEditorContextPanel(Module module, String componentPropertyPath) {
+    ScriptEditorContextPanel(Module module, String componentPropertyPath, String inputFullyQualifiedName) {
         this.componentPropertyPath = componentPropertyPath;
+        this.inputFullyQualifiedName = inputFullyQualifiedName;
         this.module = module;
         setLayout(new BorderLayout());
         setBorder(MATTE_BORDER);
@@ -92,8 +94,8 @@ class ScriptEditorContextPanel extends DisposablePanel implements CompletionServ
     }
 
     private List<Suggestion> getSuggestions() {
-        return CompletionService.getInstance(module)
-                .contextVariablesOf(componentPropertyPath)
+        return ComponentService.getInstance(module)
+                .variablesOf(inputFullyQualifiedName, componentPropertyPath)
                 .stream()
                 .filter(suggestion -> StringUtils.isNotBlank(suggestion.lookupString()))
                 .sorted(Comparator.comparing(Suggestion::lookupString).reversed())

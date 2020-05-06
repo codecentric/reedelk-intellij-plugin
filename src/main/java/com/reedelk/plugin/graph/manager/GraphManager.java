@@ -19,8 +19,8 @@ import com.reedelk.plugin.editor.DesignerEditor;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.graph.*;
 import com.reedelk.plugin.graph.deserializer.DeserializationError;
-import com.reedelk.plugin.service.module.impl.component.ComponentListUpdateNotifier;
-import com.reedelk.plugin.service.module.impl.component.ModuleDTO;
+import com.reedelk.plugin.service.module.ComponentService;
+import com.reedelk.plugin.service.module.impl.component.module.ModuleDTO;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -34,7 +34,11 @@ import static javax.swing.SwingUtilities.invokeLater;
  * - Flow Designer: updates caused by drag and drop and moving around components
  * - Properties Panel: updates cause by component's property changes from an input field
  */
-public abstract class GraphManager implements FileEditorManagerListener, FileEditorManagerListener.Before, SnapshotListener, Disposable, ComponentListUpdateNotifier {
+public abstract class GraphManager implements FileEditorManagerListener,
+        FileEditorManagerListener.Before,
+        SnapshotListener,
+        Disposable,
+        ComponentService.ModuleChangeNotifier {
 
     private static final Logger LOG = Logger.getInstance(GraphManager.class);
 
@@ -86,7 +90,7 @@ public abstract class GraphManager implements FileEditorManagerListener, FileEdi
     }
 
     @Override
-    public void onComponentListUpdate(Collection<ModuleDTO> modules) {
+    public void onModuleChange(Collection<ModuleDTO> modules) {
         // When the component list is updated, we MUST deserialize so that
         // unknown components are correctly resolved and visualized in the Designer.
         deserializeDocument();

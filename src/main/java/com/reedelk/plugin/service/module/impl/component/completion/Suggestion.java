@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.module.impl.completion;
+package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.intellij.icons.AllIcons;
 import com.reedelk.plugin.commons.ToPresentableType;
@@ -68,7 +68,7 @@ public class Suggestion {
         return new Builder(type);
     }
 
-    static class Builder {
+    public static class Builder {
 
         private final Type type;
         private String presentableText;
