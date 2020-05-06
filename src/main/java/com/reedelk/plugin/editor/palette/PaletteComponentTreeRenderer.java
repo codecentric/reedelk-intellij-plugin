@@ -1,10 +1,10 @@
 package com.reedelk.plugin.editor.palette;
 
-import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
+import com.reedelk.plugin.service.module.impl.component.ModuleComponentDTO;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -12,6 +12,8 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;
 import java.util.Optional;
+
+import static com.reedelk.plugin.commons.Icons.Component.Default;
 
 public class PaletteComponentTreeRenderer implements TreeCellRenderer {
 
@@ -42,17 +44,11 @@ public class PaletteComponentTreeRenderer implements TreeCellRenderer {
         if (value instanceof DefaultMutableTreeNode) {
 
             Object userObject = ((DefaultMutableTreeNode) value).getUserObject();
-
-            if (userObject instanceof ComponentDescriptor) {
-                ComponentDescriptor descriptor = (ComponentDescriptor) userObject;
-
-                this.value.setText(descriptor.getDisplayName());
-
-                Icon componentIcon = Optional.ofNullable(descriptor.getIcon()).orElse(Icons.Component.Default);
-                this.value.setIcon(componentIcon);
-                this.value.setForeground(selected ?
-                        Colors.PALETTE_TEXT_SELECTED :
-                        Colors.PALETTE_TEXT_UNSELECTED);
+            if (userObject instanceof ModuleComponentDTO) {
+                ModuleComponentDTO dto = (ModuleComponentDTO) userObject;
+                this.value.setText(dto.getDisplayName());
+                this.value.setIcon(Optional.ofNullable(dto.getIcon()).orElse(Default));
+                this.value.setForeground(selected ? Colors.PALETTE_TEXT_SELECTED : Colors.PALETTE_TEXT_UNSELECTED);
                 return renderer;
             }
         }

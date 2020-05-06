@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.palette;
 
 import com.intellij.openapi.util.SystemInfo;
-import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
+import com.reedelk.plugin.service.module.impl.component.ModuleComponentDTO;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -27,8 +27,8 @@ public class ComponentTransferableHandler extends TransferHandler {
 
         if (node != null) {
             Object userObject = node.getUserObject();
-            if (userObject instanceof ComponentDescriptor) {
-                ComponentDescriptor descriptor = (ComponentDescriptor) userObject;
+            if (userObject instanceof ModuleComponentDTO) {
+                ModuleComponentDTO descriptor = (ModuleComponentDTO) userObject;
                 setDragComponentImage(descriptor.getImage());
                 String fullyQualifiedName = descriptor.getFullyQualifiedName();
                 PaletteComponent paletteComponent = new PaletteComponent();

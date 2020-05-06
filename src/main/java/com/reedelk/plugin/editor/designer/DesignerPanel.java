@@ -3,7 +3,6 @@ package com.reedelk.plugin.editor.designer;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.util.messages.MessageBusConnection;
-import com.reedelk.module.descriptor.model.ModuleDescriptor;
 import com.reedelk.plugin.commons.*;
 import com.reedelk.plugin.editor.designer.debug.CenterOfNodeDrawable;
 import com.reedelk.plugin.editor.designer.debug.PrintFlowInfo;
@@ -26,6 +25,7 @@ import com.reedelk.plugin.graph.SnapshotListener;
 import com.reedelk.plugin.graph.layout.FlowGraphLayout;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.impl.component.ComponentListUpdateNotifier;
+import com.reedelk.plugin.service.module.impl.component.ModuleDTO;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.event.AncestorEvent;
@@ -283,7 +283,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
     }
 
     @Override
-    public void onComponentListUpdate(Collection<ModuleDescriptor> components) {
+    public void onComponentListUpdate(Collection<ModuleDTO> components) {
         if (isVisible) {
             // When the component list is updated or we click on the 'compile' button
             // the graph is de-serialized to apply changes and refresh properties

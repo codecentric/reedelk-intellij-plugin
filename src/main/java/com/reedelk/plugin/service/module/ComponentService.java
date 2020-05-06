@@ -2,8 +2,8 @@ package com.reedelk.plugin.service.module;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleServiceManager;
-import com.reedelk.module.descriptor.model.ModuleDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
+import com.reedelk.plugin.service.module.impl.component.ModuleDTO;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -16,6 +16,6 @@ public interface ComponentService {
 
     ComponentDescriptor findComponentDescriptorBy(String componentFullyQualifiedName);
 
-    Collection<ModuleDescriptor> getAllModuleComponents();
+    Collection<ModuleDTO> getModules();
 
 }

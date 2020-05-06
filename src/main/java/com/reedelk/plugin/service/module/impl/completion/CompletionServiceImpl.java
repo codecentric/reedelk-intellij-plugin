@@ -4,19 +4,18 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import com.reedelk.module.descriptor.model.ModuleDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentInputDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
-import com.reedelk.module.descriptor.model.type.TypeDescriptor;
 import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.editor.properties.context.ComponentPropertyPath;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.service.module.CompletionService;
 import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.ComponentListUpdateNotifier;
+import com.reedelk.plugin.service.module.impl.component.ModuleDTO;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.flow.FlowContext;
 import com.reedelk.runtime.api.message.Message;
@@ -118,7 +117,7 @@ public class CompletionServiceImpl implements CompletionService, ComponentListUp
     }
 
     @Override
-    public void onComponentListUpdate(Collection<ModuleDescriptor> moduleDescriptors) {
+    public void onComponentListUpdate(Collection<ModuleDTO> moduleDescriptors) {
         PluginExecutors.run(module,
                 message("module.completion.update.suggestions.task.title"),
                 indicator -> updateAutocomplete(moduleDescriptors));
@@ -134,15 +133,16 @@ public class CompletionServiceImpl implements CompletionService, ComponentListUp
 
     void initialize() {
         PluginExecutors.run(module, message("module.completion.init.suggestions.task.title"), indicator -> {
-            Collection<ModuleDescriptor> allModules = componentService().getAllModuleComponents();
+            Collection<ModuleDTO> allModules = componentService().getModules();
             updateAutocomplete(allModules);
         });
     }
 
-    synchronized void updateAutocomplete(Collection<ModuleDescriptor> moduleDescriptors) {
+    synchronized void updateAutocomplete(Collection<ModuleDTO> moduleDescriptors) {
 
         moduleDescriptors.forEach(moduleDescriptor -> {
             try {
+                /**
                 // We only register global types, since they are the most used ones.
                 List<TypeDescriptor> types = moduleDescriptor.getTypes();
                 for (TypeDescriptor type : types) {
@@ -162,7 +162,7 @@ public class CompletionServiceImpl implements CompletionService, ComponentListUp
                         String parent = componentDescriptor.getFullyQualifiedName();
                         register(propertyDescriptor, parent);
                     });
-                });
+                });*/
             } catch (Exception e) {
                 //ToDO:
                 e.printStackTrace();

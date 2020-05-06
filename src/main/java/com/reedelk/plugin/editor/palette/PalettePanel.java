@@ -12,11 +12,11 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.treeStructure.SimpleTree;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.messages.MessageBusConnection;
-import com.reedelk.module.descriptor.model.ModuleDescriptor;
-import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.ComponentListUpdateNotifier;
+import com.reedelk.plugin.service.module.impl.component.ModuleComponentDTO;
+import com.reedelk.plugin.service.module.impl.component.ModuleDTO;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -67,13 +67,13 @@ public class PalettePanel extends JBPanel<PalettePanel> implements ComponentList
     }
 
     @Override
-    public void onComponentListUpdate(Collection<ModuleDescriptor> components) {
+    public void onComponentListUpdate(Collection<ModuleDTO> modules) {
         // We only update the components for this module if and only if
         // the current selected file belongs to the module for which the
         // components have been updated.
         VirtualFile[] selectedFiles = FileEditorManager.getInstance(project).getSelectedFiles();
         if (selectedFiles.length > 0) {
-            ApplicationManager.getApplication().runReadAction(() -> updateComponents(components));
+            ApplicationManager.getApplication().runReadAction(() -> updateComponents(modules));
         }
     }
 
@@ -87,14 +87,14 @@ public class PalettePanel extends JBPanel<PalettePanel> implements ComponentList
         if (file != null) {
             Optional.ofNullable(ModuleUtil.findModuleForFile(file, project))
                     .ifPresent(module -> {
-                        Collection<ModuleDescriptor> moduleComponents = ComponentService.getInstance(module).getAllModuleComponents();
-                        updateComponents(moduleComponents);
+                        Collection<ModuleDTO> moduleDTOs = ComponentService.getInstance(module).getModules();
+                        updateComponents(moduleDTOs);
                     });
         }
     }
 
-    private void updateComponents(Collection<ModuleDescriptor> moduleComponents) {
-        List<DefaultMutableTreeNode> componentsTreeNodes = asTreeNodes(moduleComponents);
+    private void updateComponents(Collection<ModuleDTO> modules) {
+        List<DefaultMutableTreeNode> componentsTreeNodes = asTreeNodes(modules);
 
         SwingUtilities.invokeLater(() -> {
 
@@ -128,31 +128,31 @@ public class PalettePanel extends JBPanel<PalettePanel> implements ComponentList
     }
 
     @NotNull
-    static List<DefaultMutableTreeNode> asTreeNodes(Collection<ModuleDescriptor> moduleComponents) {
-        return moduleComponents.stream()
+    static List<DefaultMutableTreeNode> asTreeNodes(Collection<ModuleDTO> modules) {
+        return modules.stream()
                 .filter(ExcludeModuleWithoutComponents)
-                .sorted(Comparator.comparing(ModuleDescriptor::getName))
+                .sorted(Comparator.comparing(ModuleDTO::getName))
                 .map(PalettePanel::asTreeNode)
                 .collect(toList());
     }
 
     @NotNull
-    static DefaultMutableTreeNode asTreeNode(ModuleDescriptor moduleComponents) {
+    static DefaultMutableTreeNode asTreeNode(ModuleDTO moduleComponents) {
         DefaultMutableTreeNode componentTreeNode = new DefaultMutableTreeNode(moduleComponents.getName());
         moduleComponents.getComponents()
                 .stream()
                 .filter(ExcludeHiddenComponent)
-                .sorted(Comparator.comparing(ComponentDescriptor::getDisplayName))
+                .sorted(Comparator.comparing(ModuleComponentDTO::getDisplayName))
                 .forEach(componentDescriptor -> componentTreeNode.add(new DefaultMutableTreeNode(componentDescriptor)));
         return componentTreeNode;
     }
 
-    private static final Predicate<ComponentDescriptor> ExcludeHiddenComponent =
+    private static final Predicate<ModuleComponentDTO> ExcludeHiddenComponent =
             componentDescriptor -> !componentDescriptor.isHidden();
 
     // A module might not have any component if for instance all its components are hidden.
     // This is why in this method we filter all the component descriptors which are not hidden.
-    private static final Predicate<ModuleDescriptor> ExcludeModuleWithoutComponents =
+    private static final Predicate<ModuleDTO> ExcludeModuleWithoutComponents =
             moduleComponents -> moduleComponents.getComponents()
                     .stream()
                     .anyMatch(componentDescriptor -> !componentDescriptor.isHidden());
