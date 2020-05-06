@@ -119,7 +119,7 @@ public abstract class DesignerPanelAbstractActionHandler implements DesignerPane
             PaletteComponent paletteComponent = (PaletteComponent) transferable.getTransferData(FLAVOR);
             ComponentDescriptor componentDescriptor =
                     ComponentService.getInstance(module)
-                            .findComponentDescriptorBy(paletteComponent.getComponentFullyQualifiedName());
+                            .getComponentDescriptor(paletteComponent.getComponentFullyQualifiedName());
             return Optional.of(componentDescriptor);
         } catch (UnsupportedFlavorException | IOException e) {
             LOG.error("Could not extract dropped component name", e);

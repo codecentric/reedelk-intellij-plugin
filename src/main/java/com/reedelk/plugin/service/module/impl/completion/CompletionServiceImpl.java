@@ -102,7 +102,7 @@ public class CompletionServiceImpl implements CompletionService, ComponentListUp
     public void loadComponentIO(String inputFQCN, String outputFQCN) {
         PluginExecutors.run(module, "Fetching IO", indicator -> {
 
-            ComponentDescriptor componentDescriptorBy = componentService().findComponentDescriptorBy(inputFQCN);
+            ComponentDescriptor componentDescriptorBy = componentService().getComponentDescriptor(inputFQCN);
 
             ComponentInputDescriptor input = componentDescriptorBy.getInput();
             ComponentOutputDescriptor output = componentDescriptorBy.getOutput();

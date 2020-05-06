@@ -60,7 +60,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     }
 
     @Override
-    public synchronized ComponentDescriptor findComponentDescriptorBy(String componentFullyQualifiedName) {
+    public synchronized ComponentDescriptor getComponentDescriptor(String componentFullyQualifiedName) {
         // Is it a component from a maven dependency?
         ComponentDescriptor descriptor = mavenModulesComponents.getOrDefault(componentFullyQualifiedName, null);
         if (descriptor != null) return descriptor;

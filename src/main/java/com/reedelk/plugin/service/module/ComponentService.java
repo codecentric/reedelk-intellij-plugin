@@ -14,7 +14,7 @@ public interface ComponentService {
         return ModuleServiceManager.getService(module, ComponentService.class);
     }
 
-    ComponentDescriptor findComponentDescriptorBy(String componentFullyQualifiedName);
+    ComponentDescriptor getComponentDescriptor(String componentFullyQualifiedName);
 
     Collection<ModuleDTO> getModules();
 
