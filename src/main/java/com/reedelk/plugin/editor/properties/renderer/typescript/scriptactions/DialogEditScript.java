@@ -11,6 +11,7 @@ import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.PluginModuleUtils;
 import com.reedelk.plugin.commons.ScriptFileUtils;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
+import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,7 +37,7 @@ public class DialogEditScript extends DialogWrapper {
     DialogEditScript(@NotNull Module module,
                      @NotNull String scriptFilePathAndName,
                      @NotNull String scriptPropertyPath,
-                     @NotNull String inputFullyQualifiedName) {
+                     @NotNull ContainerContext context) {
         super(module.getProject(), false);
         this.module = module;
         setTitle(message("script.dialog.edit.title"));
@@ -49,7 +50,7 @@ public class DialogEditScript extends DialogWrapper {
                     // We create a tmp virtual Reedelk file so that we can workaround,
                     // wrong autocompletion for Groovy files inside expression fields and script editors.
                     tmpDocument = ScriptFileUtils.createInMemoryDocumentWithContent(originalDocument.getText());
-                    return new ScriptEditorDefault(module, tmpDocument, scriptPropertyPath, inputFullyQualifiedName);
+                    return new ScriptEditorDefault(module, tmpDocument, scriptPropertyPath, context);
                 }).orElse(null);
 
         init();

@@ -52,9 +52,7 @@ public class RouterPropertiesRenderer extends GenericComponentPropertiesRenderer
 
             String componentPropertyPath = ComponentPropertyPath.join(context.componentPropertyPath(), propertyName);
 
-            String predecessorFQCN = context.predecessors().stream().findFirst().orElse(null);
-
-            return new RouterRouteTable(module, snapshot, conditionRoutePairList, componentPropertyPath, predecessorFQCN);
+            return new RouterRouteTable(module, snapshot, conditionRoutePairList, componentPropertyPath, context);
         };
 
         String defaultTabKey = message("properties.panel.tab.title.general");

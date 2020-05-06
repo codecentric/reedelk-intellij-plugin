@@ -9,6 +9,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.commons.DebugControls;
 import com.reedelk.plugin.commons.DefaultConstants;
+import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.runtime.api.commons.ScriptUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,7 +33,7 @@ public class ScriptEditor extends DisposablePanel implements DocumentListener {
     public ScriptEditor(@NotNull Module module,
                         @NotNull Document document,
                         @NotNull String scriptPropertyPath,
-                        @NotNull String inputFullyQualifiedName) {
+                        @NotNull ContainerContext context) {
         this.module = module;
         this.document = document;
         this.scriptPropertyPath = scriptPropertyPath;
@@ -41,12 +42,13 @@ public class ScriptEditor extends DisposablePanel implements DocumentListener {
             LOG.info("SCRIPT_EDITOR_CREATED (" + scriptPropertyPath + ")");
         }
 
+        String predecessorFQN = context.predecessor();
         this.editor = (EditorEx) EditorFactory.getInstance()
                 .createEditor(document, module.getProject(), DefaultConstants.SCRIPT_FILE_TYPE, false);
         this.editor.putUserData(MODULE_NAME, module.getName());
         this.editor.putUserData(COMPONENT_PROPERTY_PATH, scriptPropertyPath);
-        this.editor.putUserData(COMPONENT_INPUT_FQN, inputFullyQualifiedName);
-        configure(this.editor);
+        this.editor.putUserData(COMPONENT_INPUT_FQN, predecessorFQN);
+        configure(editor);
 
         document.addDocumentListener(this);
         setLayout(new BorderLayout());

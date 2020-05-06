@@ -5,6 +5,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.UIUtil;
 import com.reedelk.plugin.commons.DisposableUtils;
+import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.editor.properties.renderer.typedynamicvalue.DynamicValueScriptEditor;
 import com.reedelk.runtime.api.commons.StringUtils;
 
@@ -19,11 +20,11 @@ public class TableDynamicCellRenderer implements TableCellRenderer, Disposable {
     private final DisposablePanel content;
     private final DynamicValueScriptEditor editor;
 
-    public TableDynamicCellRenderer(Module module, String componentPropertyPath, String inputFullyQualifiedName) {
+    public TableDynamicCellRenderer(Module module, String componentPropertyPath, ContainerContext context) {
         JLabel codeIcon = new JBLabel(Code);
         codeIcon.setOpaque(true);
 
-        this.editor = new DynamicValueScriptEditor(module, componentPropertyPath, inputFullyQualifiedName);
+        this.editor = new DynamicValueScriptEditor(module, componentPropertyPath, context);
         this.content = ContainerFactory.createLabelNextToComponentWithoutOuterBorder(codeIcon, editor);
     }
 

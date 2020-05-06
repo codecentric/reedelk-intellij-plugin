@@ -7,6 +7,7 @@ import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
+import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
 import com.reedelk.runtime.api.commons.StringUtils;
@@ -39,9 +40,11 @@ class ScriptEditorContextPanel extends DisposablePanel implements ComponentServi
     private final DisposablePanel panelVariables;
     private final String inputFullyQualifiedName;
 
-    ScriptEditorContextPanel(Module module, String componentPropertyPath, String inputFullyQualifiedName) {
+    ScriptEditorContextPanel(Module module,
+                             String componentPropertyPath,
+                             ContainerContext context) {
         this.componentPropertyPath = componentPropertyPath;
-        this.inputFullyQualifiedName = inputFullyQualifiedName;
+        this.inputFullyQualifiedName = context.predecessor();
         this.module = module;
         setLayout(new BorderLayout());
         setBorder(MATTE_BORDER);

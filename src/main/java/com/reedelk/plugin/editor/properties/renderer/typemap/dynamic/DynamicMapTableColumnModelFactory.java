@@ -7,6 +7,7 @@ import com.reedelk.plugin.editor.properties.commons.DisposableTableColumnModelFa
 import com.reedelk.plugin.editor.properties.commons.StripedRowCellRenderer;
 import com.reedelk.plugin.editor.properties.commons.TableDynamicCellEditor;
 import com.reedelk.plugin.editor.properties.commons.TableDynamicCellRenderer;
+import com.reedelk.plugin.editor.properties.context.ContainerContext;
 
 import javax.swing.table.TableColumn;
 import java.util.Optional;
@@ -15,25 +16,23 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class DynamicMapTableColumnModelFactory implements DisposableTableColumnModelFactory {
 
-    private final Module module;
     private final String keyName;
     private final String valueName;
-    private final String componentPropertyPath;
-    private final String inputFullyQualifiedName;
+    private final TableDynamicCellEditor cellEditor;
+    private final TableDynamicCellRenderer cellRenderer;
 
-    DynamicMapTableColumnModelFactory(Module module, MapDescriptor propertyType, String componentPropertyPath, String inputFullyQualifiedName) {
-        this.module = module;
-        this.componentPropertyPath = componentPropertyPath;
-        this.inputFullyQualifiedName = inputFullyQualifiedName;
-        this.keyName = Optional.ofNullable(propertyType.getKeyName()).orElse(message("table.header.key.name"));
-        this.valueName = Optional.ofNullable(propertyType.getValueName()).orElse(message("table.header.value.name"));
+    DynamicMapTableColumnModelFactory(Module module,
+                                      MapDescriptor propertyType,
+                                      String componentPropertyPath,
+                                      ContainerContext context) {
+        keyName = Optional.ofNullable(propertyType.getKeyName()).orElse(message("table.header.key.name"));
+        valueName = Optional.ofNullable(propertyType.getValueName()).orElse(message("table.header.value.name"));
+        cellEditor = new TableDynamicCellEditor(module, componentPropertyPath, context);
+        cellRenderer = new TableDynamicCellRenderer(module, componentPropertyPath, context);
     }
 
     @Override
     public void create(JBTable table) {
-        TableDynamicCellEditor cellEditor = new TableDynamicCellEditor(module, componentPropertyPath, inputFullyQualifiedName);
-        TableDynamicCellRenderer cellRenderer = new TableDynamicCellRenderer(module, componentPropertyPath, inputFullyQualifiedName);
-
         // Column 1 (the map key)
         TableColumn keyColumn = table.getColumnModel().getColumn(0);
         keyColumn.setHeaderValue(keyName);
@@ -42,7 +41,7 @@ public class DynamicMapTableColumnModelFactory implements DisposableTableColumnM
         // Column 2 (the map value)
         TableColumn valueColumn = table.getColumnModel().getColumn(1);
         valueColumn.setHeaderValue(valueName);
-        valueColumn.setCellRenderer(cellRenderer);
         valueColumn.setCellEditor(cellEditor);
+        valueColumn.setCellRenderer(cellRenderer);
     }
 }

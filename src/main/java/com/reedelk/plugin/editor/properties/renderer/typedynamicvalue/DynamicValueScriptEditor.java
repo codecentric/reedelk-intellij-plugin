@@ -6,6 +6,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.module.Module;
 import com.reedelk.plugin.commons.ScriptFileUtils;
 import com.reedelk.plugin.editor.properties.commons.ScriptEditor;
+import com.reedelk.plugin.editor.properties.context.ContainerContext;
 
 import javax.swing.*;
 
@@ -15,8 +16,10 @@ import static java.util.Collections.singletonList;
 
 public class DynamicValueScriptEditor extends ScriptEditor {
 
-    public DynamicValueScriptEditor(Module module, String scriptPropertyPath, String inputFullyQualifiedName) {
-        super(module, ScriptFileUtils.createEmptyInMemoryDocument(), scriptPropertyPath, inputFullyQualifiedName);
+    public DynamicValueScriptEditor(Module module,
+                                    String scriptPropertyPath,
+                                    ContainerContext context) {
+        super(module, ScriptFileUtils.createEmptyInMemoryDocument(), scriptPropertyPath, context);
     }
 
     @Override

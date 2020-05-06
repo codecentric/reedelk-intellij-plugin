@@ -2,6 +2,7 @@ package com.reedelk.plugin.editor.properties.commons;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
+import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.messages.MessageBusConnection;
@@ -18,6 +19,7 @@ import com.reedelk.runtime.api.commons.ImmutableMap;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
+import javax.swing.event.AncestorEvent;
 import java.awt.*;
 import java.util.Map;
 
@@ -41,11 +43,17 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
         add(loadingPanel, BorderLayout.CENTER);
         setBackground(JBColor.WHITE);
 
-        this.connection = module.getMessageBus().connect(this);
+        this.connection = module.getMessageBus().connect();
         this.connection.subscribe(Topics.ON_COMPONENT_IO, this);
 
-        String predecessorFQCN = context.predecessors().stream().findFirst().orElse(null);
-        ComponentService.getInstance(module).inputOutputOf(predecessorFQCN, componentFullyQualifiedName);
+        addAncestorListener(new AncestorListenerAdapter() {
+            @Override
+            public void ancestorAdded(AncestorEvent event) {
+                String predecessorFQCN = context.predecessor();
+                ComponentService.getInstance(module)
+                        .inputOutputOf(predecessorFQCN, componentFullyQualifiedName);
+            }
+        });
     }
 
     @Override

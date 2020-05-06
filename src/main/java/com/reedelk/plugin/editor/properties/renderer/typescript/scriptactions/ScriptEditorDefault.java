@@ -8,6 +8,7 @@ import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.DisposableThreeComponentsSplitter;
 import com.reedelk.plugin.editor.properties.commons.ScriptEditor;
+import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -31,9 +32,9 @@ class ScriptEditorDefault extends DisposablePanel {
     ScriptEditorDefault(@NotNull Module module,
                         @NotNull Document document,
                         @NotNull String scriptPropertyPath,
-                        @NotNull String inputFullyQualifiedName) {
+                        @NotNull ContainerContext context) {
 
-        ScriptEditor editor = new ScriptEditor(module, document, scriptPropertyPath, inputFullyQualifiedName);
+        ScriptEditor editor = new ScriptEditor(module, document, scriptPropertyPath, context);
 
         // This panel forces the background color of the editor to not pick up the
         // bg color of the ThreeComponentsSplitter.
@@ -41,7 +42,7 @@ class ScriptEditorDefault extends DisposablePanel {
         editorWrapperContainer.setBackground(SCRIPT_EDITOR_DIALOG_BACKGROUND);
 
         ThreeComponentsSplitter splitter = new DisposableThreeComponentsSplitter(HORIZONTAL);
-        splitter.setFirstComponent(new ScriptEditorContextPanel(module, scriptPropertyPath, inputFullyQualifiedName));
+        splitter.setFirstComponent(new ScriptEditorContextPanel(module, scriptPropertyPath, context));
         splitter.setLastComponent(editorWrapperContainer);
         splitter.setDividerWidth(DIVIDER_WIDTH);
         splitter.setFirstSize(EDITOR_CONTEXT_VARIABLES_SIZE);

@@ -28,28 +28,26 @@ public class DynamicMapPropertyRenderer extends AbstractCollectionAwarePropertyT
                              @NotNull PropertyAccessor propertyAccessor,
                              @NotNull ContainerContext context) {
 
-        final String propertyDisplayName = propertyDescriptor.getDisplayName();
-        final MapDescriptor propertyType = propertyDescriptor.getType();
-        final String propertyName = propertyDescriptor.getName();
-        final String componentPropertyPath = ComponentPropertyPath.join(context.componentPropertyPath(), propertyName);
-        String predecessorFQCN = context.predecessors().stream().findFirst().orElse(null);
+        MapDescriptor propertyType = propertyDescriptor.getType();
+        String propertyName = propertyDescriptor.getName();
+        String propertyDisplayName = propertyDescriptor.getDisplayName();
+        String componentPropertyPath = ComponentPropertyPath.join(context.componentPropertyPath(), propertyName);
 
         return ofNullable(propertyType.getTabGroup())
                 .map((Function<String, JComponent>) tabGroupName -> {
                     // The table must fit into a Table Tab Group.
                     DisposableTableModel tableModel = new DynamicMapTableModel(propertyAccessor);
-                    DynamicMapTableColumnModelFactory columnModelFactory = new DynamicMapTableColumnModelFactory(module, propertyType, componentPropertyPath, predecessorFQCN);
-                    final JComponent content = new MapTableTabContainer(module, tableModel, columnModelFactory);
-                    final DisposableTabbedPane tabbedPane = tabbedPaneFrom(propertyDescriptor, context);
+                    DynamicMapTableColumnModelFactory columnModelFactory = new DynamicMapTableColumnModelFactory(module, propertyType, componentPropertyPath, context);
+                    JComponent content = new MapTableTabContainer(module, tableModel, columnModelFactory);
+                    DisposableTabbedPane tabbedPane = tabbedPaneFrom(propertyDescriptor, context);
                     tabbedPane.addTab(propertyDisplayName, content);
                     tabbedPane.setTabComponentAt(tabbedPane.getTabCount() - 1, new TabLabelHorizontal(propertyDisplayName));
                     return tabbedPane;
 
                 }).orElseGet(() -> {
                     // Single table
-                    final DisposableTableModel tableModel = new DynamicMapTableModel(propertyAccessor);
-                    final DynamicMapTableColumnModelFactory columnModelFactory =
-                            new DynamicMapTableColumnModelFactory(module, propertyType, componentPropertyPath, predecessorFQCN);
+                    DisposableTableModel tableModel = new DynamicMapTableModel(propertyAccessor);
+                    DynamicMapTableColumnModelFactory columnModelFactory = new DynamicMapTableColumnModelFactory(module, propertyType, componentPropertyPath, context);
                     return new MapTableContainer(module, tableModel, columnModelFactory);
                 });
     }

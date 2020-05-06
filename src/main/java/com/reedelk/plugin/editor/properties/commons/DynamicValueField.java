@@ -3,6 +3,7 @@ package com.reedelk.plugin.editor.properties.commons;
 import com.intellij.openapi.module.Module;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Fonts;
+import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.editor.properties.renderer.typedynamicvalue.DynamicValueScriptEditor;
 import com.reedelk.runtime.api.commons.ScriptUtils;
 
@@ -22,11 +23,12 @@ public class DynamicValueField extends DisposablePanel {
     private DisposablePanel inputFieldContainer;
     private transient ScriptEditorChangeListener listener;
 
-    public DynamicValueField(Module module, DynamicValueInputFieldAdapter inputFieldAdapter, String scriptPropertyPath, String inputFullyQualifiedName) {
+    public DynamicValueField(Module module,
+                             DynamicValueInputFieldAdapter inputFieldAdapter,
+                             String scriptPropertyPath,
+                             ContainerContext context) {
         this.inputFieldAdapter = inputFieldAdapter;
-
-        this.editor = new DynamicValueScriptEditor(module, scriptPropertyPath, inputFullyQualifiedName);
-
+        this.editor = new DynamicValueScriptEditor(module, scriptPropertyPath, context);
         this.scriptContainer = createScriptModePanel(editor);
         this.inputFieldContainer = createInputFieldContainer();
 

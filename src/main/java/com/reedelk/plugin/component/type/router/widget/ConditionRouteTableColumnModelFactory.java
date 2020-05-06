@@ -7,6 +7,7 @@ import com.reedelk.plugin.editor.properties.commons.DisposableTableColumnModelFa
 import com.reedelk.plugin.editor.properties.commons.StripedRowCellRenderer;
 import com.reedelk.plugin.editor.properties.commons.TableDynamicCellEditor;
 import com.reedelk.plugin.editor.properties.commons.TableDynamicCellRenderer;
+import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.runtime.api.commons.StringUtils;
 
@@ -18,21 +19,18 @@ import static com.reedelk.runtime.commons.JsonParser.Implementor;
 
 class ConditionRouteTableColumnModelFactory implements DisposableTableColumnModelFactory {
 
-    private final Module module;
-    private final String componentPropertyPath;
-    private final String inputFullyQualifiedName;
+    private final TableDynamicCellRenderer cellRenderer;
+    private final TableDynamicCellEditor conditionCellEditor;
 
-    ConditionRouteTableColumnModelFactory(Module module, String componentPropertyPath, String inputFullyQualifiedName) {
-        this.module = module;
-        this.componentPropertyPath = componentPropertyPath;
-        this.inputFullyQualifiedName = inputFullyQualifiedName;
+    ConditionRouteTableColumnModelFactory(Module module,
+                                          String componentPropertyPath,
+                                          ContainerContext context) {
+        cellRenderer = new TableDynamicCellRenderer(module, componentPropertyPath, context);
+        conditionCellEditor = new TableDynamicCellEditor(module, componentPropertyPath, context);
     }
 
     @Override
     public void create(JBTable table) {
-        TableDynamicCellRenderer cellRenderer = new TableDynamicCellRenderer(module, componentPropertyPath, inputFullyQualifiedName);
-        TableDynamicCellEditor conditionCellEditor = new TableDynamicCellEditor(module, componentPropertyPath, inputFullyQualifiedName);
-
         // Column 0 (Condition)
         TableColumn conditionColumn = table.getColumnModel().getColumn(0);
         conditionColumn.setHeaderValue(ConditionRouteColumns.COLUMN_NAMES[0]);
