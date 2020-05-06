@@ -29,13 +29,19 @@ public class TableCustomObjectDialog extends AbstractPropertiesDialog {
                                    @NotNull ObjectDescriptor typeObjectDescriptor,
                                    @NotNull ComponentDataHolder value,
                                    @NotNull DialogType dialogType) {
-        super(module, title, message("dialog.custom.properties.btn.save"));
+        super(module, title, message("dialog.custom.properties.btn.done"));
         this.module = module;
         this.context = context;
         this.dialogType = dialogType;
         this.componentDataHolder = value;
         this.typeObjectDescriptor = typeObjectDescriptor;
         init();
+    }
+
+    @NotNull
+    @Override
+    protected Action[] createActions() {
+        return new Action[]{getOKAction()};
     }
 
     @Override

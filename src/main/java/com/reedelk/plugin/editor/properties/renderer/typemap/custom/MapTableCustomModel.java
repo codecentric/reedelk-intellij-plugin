@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-
-
 public class MapTableCustomModel extends TableModelDefaultAbstract {
 
     private final transient PropertyAccessor propertyAccessor;

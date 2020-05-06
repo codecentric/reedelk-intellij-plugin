@@ -41,8 +41,8 @@ public class MapPropertyRenderer extends AbstractCollectionAwarePropertyTypeRend
         return ofNullable(propertyType.getTabGroup())
                 // Tab group exists
                 .map((Function<String, JComponent>) tabGroupName -> {
-                    final JComponent content = new MapTableTabContainer(module, columnAndModel.model, columnAndModel.columnModelFactory);
-                    final DisposableTabbedPane tabbedPane = tabbedPaneFrom(descriptor, context);
+                    JComponent content = new MapTableTabContainer(module, columnAndModel.model, columnAndModel.columnModelFactory);
+                    DisposableTabbedPane tabbedPane = tabbedPaneFrom(descriptor, context);
                     tabbedPane.addTab(propertyDisplayName, content);
                     tabbedPane.setTabComponentAt(tabbedPane.getTabCount() - 1, new TabLabelHorizontal(propertyDisplayName));
                     return tabbedPane;
@@ -76,8 +76,8 @@ public class MapPropertyRenderer extends AbstractCollectionAwarePropertyTypeRend
                                                           @NotNull String propertyName,
                                                           @NotNull ContainerContext context) {
 
-        final ObjectDescriptor typeObjectDescriptor = (ObjectDescriptor) propertyType.getValueType();
-        final String dialogTitle = ofNullable(propertyType.getDialogTitle()).orElse(EMPTY);
+        ObjectDescriptor typeObjectDescriptor = (ObjectDescriptor) propertyType.getValueType();
+        String dialogTitle = ofNullable(propertyType.getDialogTitle()).orElse(EMPTY);
 
         TableCustomEditButtonAction action = value -> {
             String editDialogTitle = message("properties.type.map.value.edit", dialogTitle);
