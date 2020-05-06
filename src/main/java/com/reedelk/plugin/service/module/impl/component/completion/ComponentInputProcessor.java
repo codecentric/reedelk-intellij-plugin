@@ -43,7 +43,7 @@ public class ComponentInputProcessor {
 
     private Map<String, ComponentIO.IOTypeDescriptor> extractPropertiesFrom(String type) {
         TypeInfo info = typeAndAndTries.getOrDefault(type, UNKNOWN_TYPE_TRIE);
-        List<Suggestion> attributesItems = info.getTrie().autocomplete(StringUtils.EMPTY); // All for the type
+        Collection<Suggestion> attributesItems = info.getTrie().autocomplete(StringUtils.EMPTY); // All for the type
         Map<String, ComponentIO.IOTypeDescriptor> map = new TreeMap<>(Comparator.naturalOrder());
         attributesItems.stream()
                 .filter(suggestion -> suggestion.getType().equals(PROPERTY))

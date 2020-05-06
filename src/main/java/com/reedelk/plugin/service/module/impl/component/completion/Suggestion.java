@@ -1,12 +1,18 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.intellij.icons.AllIcons;
+import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.commons.ToPresentableType;
 
 import javax.swing.*;
+import java.util.Map;
 
 
 public class Suggestion {
+
+    public interface TypeResolver {
+        String resolve(ComponentOutputDescriptor previousOutputComponent);
+    }
 
     private final String name;
 
@@ -15,20 +21,21 @@ public class Suggestion {
         PROPERTY
     }
 
+    private final TypeResolver resolver;
+
     private final Type type;
     private final String presentableText;
     private final String lookupString;
-    private final String typeText;
     private final int cursorOffset;
     private final Icon icon;
 
-    private Suggestion(Type type, String name, String lookupString, String presentableText, String typeText, Icon icon, int cursorOffset) {
-        this.name = name;
-        this.type = type;
+    private Suggestion(Type type, String name, String lookupString, String presentableText, TypeResolver resolver, Icon icon, int cursorOffset) {
         this.presentableText = presentableText;
         this.lookupString = lookupString;
         this.cursorOffset = cursorOffset;
-        this.typeText = typeText;
+        this.resolver = resolver;
+        this.name = name;
+        this.type = type;
         this.icon = icon;
     }
 
@@ -52,12 +59,12 @@ public class Suggestion {
         return cursorOffset;
     }
 
-    public String typeText() {
-        return typeText;
+    public String typeText(ComponentOutputDescriptor componentOutputDescriptor) {
+        return resolver.resolve(componentOutputDescriptor);
     }
 
     public String presentableType() {
-        return ToPresentableType.from(typeText);
+        return ToPresentableType.from(Map.class.getName()); // TODO : Fixme!
     }
 
     public Icon icon() {
@@ -73,7 +80,7 @@ public class Suggestion {
         private final Type type;
         private String presentableText;
         private String lookupString;
-        private String typeText;
+        private TypeResolver resolver;
         private String name;
         private int cursorOffset;
         private final Icon icon;
@@ -94,8 +101,8 @@ public class Suggestion {
             return this;
         }
 
-        public Builder withType(String type) {
-            this.typeText = type;
+        public Builder withResolver(TypeResolver resolver) {
+            this.resolver = resolver;
             return this;
         }
 
@@ -116,7 +123,7 @@ public class Suggestion {
             if (name == null) {
                 name = lookupString;
             }
-            return new Suggestion(type, name, lookupString, presentableText, typeText, icon, cursorOffset);
+            return new Suggestion(type, name, lookupString, presentableText, resolver, icon, cursorOffset);
         }
     }
 }

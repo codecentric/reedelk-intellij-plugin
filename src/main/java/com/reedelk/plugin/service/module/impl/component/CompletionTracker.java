@@ -17,9 +17,11 @@ import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.flow.FlowContext;
 import com.reedelk.runtime.api.message.Message;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
-import static com.reedelk.plugin.commons.Topics.COMPLETION_EVENT_TOPIC;
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
 
 public class CompletionTracker implements ComponentService {
@@ -55,51 +57,27 @@ public class CompletionTracker implements ComponentService {
         this.componentTracker = componentTracker;
         this.processor = new ComponentInputProcessor(typesMap);
 
-        onCompletionEvent = project.getMessageBus().syncPublisher(COMPLETION_EVENT_TOPIC);
+        onCompletionEvent = project.getMessageBus().syncPublisher(Topics.COMPLETION_EVENT_TOPIC);
         onComponentIO = project.getMessageBus().syncPublisher(Topics.ON_COMPONENT_IO);
     }
 
     @Override
     public Collection<Suggestion> suggestionsOf(String inputFullyQualifiedName, String componentPropertyPath, String[] tokens) {
-        // TODO: This is wrong. The tree for type message payload and attributes should be a function of the previous component.
-        //  If think this *if* does not make sense, this logic should be embedded in the message.payload tree.
-        if (isMessagePayload(tokens)){
-            // User typed: message.payload()
-            ComponentDescriptor previouscomponetFQN = componentTracker.getComponentDescriptor(inputFullyQualifiedName);
-            List<String> payloadOutputTypes = previouscomponetFQN.getOutput().getPayload();
-            Collection<Suggestion> suggestions = new ArrayList<>();
-            for (String payloadOutput : payloadOutputTypes) {
-                TypeInfo orDefault = typesMap.getOrDefault(payloadOutput, null);// TODO Fixme
-                TrieDefault trie1 = orDefault.getTrie();
-                suggestions.addAll(CompletionFinder.find(trie1, typesMap, tokens));
-            }
-            return suggestions;
+        ComponentDescriptor previouscomponetFQN = componentTracker.getComponentDescriptor(inputFullyQualifiedName);
+        ComponentOutputDescriptor previousComponentOutput = previouscomponetFQN == null ? null : previouscomponetFQN.getOutput();
 
-        } else if (isMessageAttributes(tokens)) {
-            // User typed: message.attributes()
-            ComponentDescriptor previouscomponetFQN = componentTracker.getComponentDescriptor(inputFullyQualifiedName);
-            String attributes = previouscomponetFQN.getOutput().getAttributes();
-            TypeInfo orDefault = typesMap.getOrDefault(attributes, null);// TODO Fixme
-            TrieDefault trie1 = orDefault.getTrie();
+        // A suggestion for a property is computed as follows:
+        // Get signature for component property path from either flow control, maven modules or current module.
+        // if does not exists use the default.
+        Trie trie = flowControlSignatureTypes.get(componentPropertyPath);
+        if (trie == null) trie = mavenModulesSignatureTypes.get(componentPropertyPath);
+        if (trie == null) trie = currentModuleSignatureTypes.get(componentPropertyPath);
+        if (trie == null) trie = defaultSignatureTypes;
 
-            String[] subarray = new String[tokens.length - 2];
-            System.arraycopy(tokens, 2, subarray, 0, tokens.length - 2);
-            return CompletionFinder.find(trie1, typesMap, subarray);  // TODO: Super type as well!
-
-        } else {
-            // A suggestion for a property is computed as follows:
-            // Get signature for component property path from either flow control, maven modules or current module.
-            // if does not exists use the default.
-            Trie trie = flowControlSignatureTypes.get(componentPropertyPath);
-            if (trie == null) trie = mavenModulesSignatureTypes.get(componentPropertyPath);
-            if (trie == null) trie = currentModuleSignatureTypes.get(componentPropertyPath);
-            if (trie == null) trie = defaultSignatureTypes;
-
-            Collection<Suggestion> globalSuggestions = CompletionFinder.find(globalTypes, typesMap, tokens);
-            Collection<Suggestion> propertySuggestions = CompletionFinder.find(trie, typesMap, tokens);
-            globalSuggestions.addAll(propertySuggestions);
-            return globalSuggestions;
-        }
+        Collection<Suggestion> globalSuggestions = CompletionFinder.find(globalTypes, typesMap, previousComponentOutput, tokens);
+        Collection<Suggestion> propertySuggestions = CompletionFinder.find(trie, typesMap, previousComponentOutput, tokens);
+        globalSuggestions.addAll(propertySuggestions);
+        return globalSuggestions;
     }
 
     @Override
@@ -171,7 +149,7 @@ public class CompletionTracker implements ComponentService {
                 scriptSignature.getArguments().stream()
                         .map(argument -> Suggestion.create(PROPERTY)
                                 .withLookupString(argument.getArgumentName())
-                                .withType(argument.getArgumentType())
+                                .withResolver((item) -> argument.getArgumentType())
                                 .build()).forEach(trie::insert);
                 signatureTypesMap.put(componentPropertyPath, trie);
             });
@@ -202,23 +180,13 @@ public class CompletionTracker implements ComponentService {
     static {
         Suggestion message = Suggestion.create(PROPERTY)
                 .withLookupString("message")
-                .withType(Message.class.getName())
+                .withResolver((item) -> Message.class.getName())
                 .build();
         Suggestion context = Suggestion.create(PROPERTY)
                 .withLookupString("context")
-                .withType(FlowContext.class.getName())
+                .withResolver((item) -> FlowContext.class.getName())
                 .build();
         defaultSignatureTypes.insert(message);
         defaultSignatureTypes.insert(context);
-    }
-
-    private static boolean isMessageAttributes(String[] tokens) {
-        if (tokens.length < 2) return false;
-        return tokens[0].equals("message") && tokens[1].equals("attributes");
-    }
-
-    private static boolean isMessagePayload(String[] tokens) {
-        if (tokens.length < 2) return false;
-        return tokens[0].equals("message") && tokens[1].equals("payload");
     }
 }

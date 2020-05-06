@@ -3,13 +3,12 @@ package com.reedelk.plugin.service.module.impl.component.completion;
 public class TypeInfo {
 
     private String extendsType;
-    private TrieDefault trie;
+    private Trie trie;
 
     public TypeInfo() {
-
     }
 
-    public TypeInfo(String extendsType, TrieDefault trie) {
+    public TypeInfo(String extendsType, Trie trie) {
         this.extendsType = extendsType;
         this.trie = trie;
     }
@@ -18,7 +17,7 @@ public class TypeInfo {
         return extendsType;
     }
 
-    public TrieDefault getTrie() {
+    public Trie getTrie() {
         return trie;
     }
 }

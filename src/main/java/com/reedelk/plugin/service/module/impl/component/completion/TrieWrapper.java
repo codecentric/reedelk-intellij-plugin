@@ -10,6 +10,7 @@ public class TrieWrapper implements Trie {
     public TrieWrapper(Trie ...tries) {
         this.tries = tries;
     }
+
     @Override
     public Collection<Suggestion> autocomplete(String word) {
         Collection<Suggestion> result = new ArrayList<>();

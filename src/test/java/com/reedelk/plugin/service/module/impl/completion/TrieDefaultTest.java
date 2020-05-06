@@ -29,7 +29,7 @@ class TrieDefaultTest {
         trie.insert(suggestion2);
 
         // When
-        List<Suggestion> suggestions = trie.autocomplete("me");
+        List<Suggestion> suggestions = trie.autocomplete("me", );
 
         // Then
         PluginAssertion.assertThat(suggestions)
