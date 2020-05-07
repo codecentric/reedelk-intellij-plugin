@@ -46,7 +46,7 @@ public class ScriptEditor extends DisposablePanel implements DocumentListener {
                 .createEditor(document, module.getProject(), DefaultConstants.SCRIPT_FILE_TYPE, false);
         this.editor.putUserData(MODULE_NAME, module.getName());
         this.editor.putUserData(COMPONENT_PROPERTY_PATH, scriptPropertyPath);
-        this.editor.putUserData(COMPONENT_INPUT_FQN, context);
+        this.editor.putUserData(PROPERTY_CONTEXT, context);
         configure(editor);
 
         document.addDocumentListener(this);
@@ -67,6 +67,9 @@ public class ScriptEditor extends DisposablePanel implements DocumentListener {
     public void dispose() {
         super.dispose();
         if (editor != null && !editor.isDisposed()) {
+            this.editor.putUserData(MODULE_NAME, null);
+            this.editor.putUserData(PROPERTY_CONTEXT, null);
+            this.editor.putUserData(COMPONENT_PROPERTY_PATH, null);
             EditorFactory.getInstance().releaseEditor(editor);
             if (DebugControls.Script.SCRIPT_EDITOR_LIFECYCLE) {
                 LOG.info("SCRIPT_EDITOR_RELEASED (" + scriptPropertyPath + ")");

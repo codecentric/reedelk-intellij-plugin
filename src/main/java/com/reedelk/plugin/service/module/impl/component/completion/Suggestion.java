@@ -11,6 +11,29 @@ public class Suggestion {
 
     public interface TypeResolver {
         String resolve(ComponentOutputDescriptor previousOutputComponent);
+        String get();
+    }
+
+    public static abstract class AbstractTypeResolver implements TypeResolver {
+
+        private String resolved;
+
+        @Override
+        public String resolve(ComponentOutputDescriptor previousOutputComponent) {
+            if (resolved != null) {
+                return resolved;
+            } else {
+                resolved = doResolve(previousOutputComponent);
+                return resolved;
+            }
+        }
+
+        @Override
+        public String get() {
+            return resolved;
+        }
+
+        protected abstract String doResolve(ComponentOutputDescriptor previousOutputComponent);
     }
 
     private final String name;
@@ -63,7 +86,7 @@ public class Suggestion {
     }
 
     public String presentableType() {
-        return ToPresentableType.from(resolver.resolve(null)); // TODO : Fixme!
+        return ToPresentableType.from(resolver.get()); // TODO : Fixme!
     }
 
     public Icon icon() {
@@ -101,7 +124,12 @@ public class Suggestion {
         }
 
         public Builder withType(String type) {
-            this.resolver = previousOutputComponent -> type;
+            this.resolver = new AbstractTypeResolver() {
+                @Override
+                protected String doResolve(ComponentOutputDescriptor previousOutputComponent) {
+                    return type;
+                }
+            };
             return this;
         }
 

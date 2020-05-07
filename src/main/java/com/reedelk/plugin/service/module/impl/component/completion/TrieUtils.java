@@ -1,9 +1,11 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
+import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.module.descriptor.model.type.TypeDescriptor;
 import com.reedelk.module.descriptor.model.type.TypeFunctionDescriptor;
 import com.reedelk.module.descriptor.model.type.TypePropertyDescriptor;
 import com.reedelk.runtime.api.message.MessageAttributes;
+import com.reedelk.runtime.api.message.MessagePayload;
 
 import java.util.Map;
 
@@ -49,23 +51,35 @@ public class TrieUtils {
     }
 
     private static Suggestion.TypeResolver createResolver(TypePropertyDescriptor descriptor) {
-        return previousOutputComponent -> {
-            if (descriptor.getType().equals(MessageAttributes.class.getName())) {
-                return previousOutputComponent != null ? previousOutputComponent.getAttributes() :
-                        MessageAttributes.class.getName();
-            } else {
-                return descriptor.getType();
+        return new Suggestion.AbstractTypeResolver() {
+            @Override
+            protected String doResolve(ComponentOutputDescriptor previousOutputComponent) {
+                if (descriptor.getType().equals(MessageAttributes.class.getName())) {
+                    return previousOutputComponent != null ? previousOutputComponent.getAttributes() :
+                            MessageAttributes.class.getName();
+
+                } else if(descriptor.getType().equals(MessagePayload.class.getName())) {
+                    return previousOutputComponent != null ?
+                            String.join(",", previousOutputComponent.getPayload()) : Object.class.getName();
+
+                } else {
+                    return descriptor.getType();
+                }
             }
         };
     }
 
     private static Suggestion.TypeResolver createResolver(TypeFunctionDescriptor descriptor) {
-        return previousOutputComponent -> {
-            if (descriptor.getReturnType().equals(MessageAttributes.class.getName())) {
-                return previousOutputComponent != null ? previousOutputComponent.getAttributes() :
-                        MessageAttributes.class.getName();
-            } else {
-                return descriptor.getReturnType();
+        return new Suggestion.AbstractTypeResolver() {
+            @Override
+            protected String doResolve(ComponentOutputDescriptor previousOutputComponent) {
+                    if (descriptor.getReturnType().equals(MessageAttributes.class.getName())) {
+                        return previousOutputComponent != null ? previousOutputComponent.getAttributes() :
+                                MessageAttributes.class.getName();
+                    } else {
+                        return descriptor.getReturnType();
+                    }
+
             }
         };
     }

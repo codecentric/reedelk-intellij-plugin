@@ -27,7 +27,7 @@ public class GroovyCompletionContributor extends CompletionContributor {
         Project project = editor.getProject();
         String moduleName = editor.getUserData(MODULE_NAME);
         String componentFullyQualifiedName = editor.getUserData(COMPONENT_PROPERTY_PATH);
-        ContainerContext context = editor.getUserData(COMPONENT_INPUT_FQN);
+        ContainerContext context = editor.getUserData(PROPERTY_CONTEXT);
 
         if (project != null &&
                 context != null &&
