@@ -113,7 +113,7 @@ public class ContainerContext implements Disposable {
     }
 
     @NotNull
-    protected String getPropertyPath(String propertyName) {
+    public String getPropertyPath(String propertyName) {
         // Property path is: com.my.component.fully.qualified.name#property1#subproperty1#subsubproperty1
         //  or: com.my.component.fully.qualified.name#property2#subproperty1
         return ComponentPropertyPath.join(componentPropertyPath(), propertyName);

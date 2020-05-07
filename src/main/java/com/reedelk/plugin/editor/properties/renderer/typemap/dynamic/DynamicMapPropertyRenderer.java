@@ -6,7 +6,6 @@ import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.editor.properties.commons.DisposableTabbedPane;
 import com.reedelk.plugin.editor.properties.commons.DisposableTableModel;
 import com.reedelk.plugin.editor.properties.commons.TabLabelHorizontal;
-import com.reedelk.plugin.editor.properties.context.ComponentPropertyPath;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
 import com.reedelk.plugin.editor.properties.renderer.AbstractCollectionAwarePropertyTypeRenderer;
@@ -31,7 +30,7 @@ public class DynamicMapPropertyRenderer extends AbstractCollectionAwarePropertyT
         MapDescriptor propertyType = propertyDescriptor.getType();
         String propertyName = propertyDescriptor.getName();
         String propertyDisplayName = propertyDescriptor.getDisplayName();
-        String componentPropertyPath = ComponentPropertyPath.join(context.componentPropertyPath(), propertyName);
+        String componentPropertyPath = context.getPropertyPath(propertyName);
 
         return ofNullable(propertyType.getTabGroup())
                 .map((Function<String, JComponent>) tabGroupName -> {

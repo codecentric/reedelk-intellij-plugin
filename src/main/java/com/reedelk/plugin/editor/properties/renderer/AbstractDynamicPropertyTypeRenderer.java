@@ -4,7 +4,6 @@ import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.editor.properties.commons.DynamicValueField;
 import com.reedelk.plugin.editor.properties.commons.DynamicValueInputFieldAdapter;
-import com.reedelk.plugin.editor.properties.context.ComponentPropertyPath;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +19,7 @@ public abstract class AbstractDynamicPropertyTypeRenderer extends AbstractProper
                              @NotNull PropertyAccessor propertyAccessor,
                              @NotNull ContainerContext context) {
         String hint = propertyDescriptor.getHintValue();
-        String componentPropertyPath = ComponentPropertyPath.join(context.componentPropertyPath(), propertyDescriptor.getName());
+        String componentPropertyPath = context.getPropertyPath(propertyDescriptor.getName());
 
         DynamicValueInputFieldAdapter inputFieldAdapter = inputFieldAdapter(hint);
         DynamicValueField field = new DynamicValueField(module, inputFieldAdapter, componentPropertyPath, context);

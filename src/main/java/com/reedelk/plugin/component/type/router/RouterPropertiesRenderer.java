@@ -7,7 +7,6 @@ import com.reedelk.plugin.component.type.generic.GenericComponentPropertiesRende
 import com.reedelk.plugin.component.type.router.widget.RouterRouteTable;
 import com.reedelk.plugin.editor.properties.commons.PropertiesPanelTabbedPanel;
 import com.reedelk.plugin.editor.properties.commons.PropertiesThreeComponentsSplitter;
-import com.reedelk.plugin.editor.properties.context.ComponentPropertyPath;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -50,7 +49,7 @@ public class RouterPropertiesRenderer extends GenericComponentPropertiesRenderer
 
             List<RouterConditionRoutePair> conditionRoutePairList = componentData.get(DATA_CONDITION_ROUTE_PAIRS);
 
-            String componentPropertyPath = ComponentPropertyPath.join(context.componentPropertyPath(), propertyName);
+            String componentPropertyPath = context.getPropertyPath(propertyName);
 
             return new RouterRouteTable(module, snapshot, conditionRoutePairList, componentPropertyPath, context);
         };

@@ -8,7 +8,6 @@ import com.reedelk.plugin.commons.ScriptFunctionDefinitionBuilder;
 import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 import com.reedelk.plugin.editor.properties.commons.DialogConfirmAction;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
-import com.reedelk.plugin.editor.properties.context.ComponentPropertyPath;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.service.module.ScriptService;
 import com.reedelk.plugin.service.module.impl.script.ScriptResource;
@@ -54,7 +53,7 @@ public class ScriptActionsPanel extends DisposablePanel {
 
     public void editScript() {
         if (selected.isEditable()) {
-            String scriptPropertyPath = ComponentPropertyPath.join(context.componentPropertyPath(), propertyDescriptor.getName());
+            String scriptPropertyPath = context.getPropertyPath(propertyDescriptor.getName());
             DialogEditScript dialog = new DialogEditScript(module, selected.getPath(), scriptPropertyPath, context);
             dialog.show();
         }
