@@ -12,11 +12,11 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Optional;
 
-public class ConfigSelectorCombo extends ComboBox<ConfigMetadata> implements ItemListener {
+public class ConfigurationSelectorCombo extends ComboBox<ConfigMetadata> implements ItemListener {
 
     private transient InputChangeListener listener;
 
-    public ConfigSelectorCombo() {
+    public ConfigurationSelectorCombo() {
         setRenderer(new ConfigMetadataRenderer());
         addItemListener(this);
     }

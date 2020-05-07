@@ -4,7 +4,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.reedelk.module.descriptor.model.ModuleDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
-import com.reedelk.module.descriptor.model.component.ComponentInputDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
@@ -18,10 +17,7 @@ import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.flow.FlowContext;
 import com.reedelk.runtime.api.message.Message;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
 
@@ -35,9 +31,9 @@ public class CompletionTracker implements ComponentService {
             new TrieWrapper(flowControlModuleGlobalTypes, mavenModulesGlobalTypes, currentModuleGlobalTypes);
 
     // LOCAL MODULE TYPES MAPs
-    private final Map<String, TypeInfo> flowControlTypes = new HashMap<>(); // Fully qualified name of the module.
-    private final Map<String, TypeInfo> mavenModulesTypes = new HashMap<>();
-    private final Map<String, TypeInfo> currentModuleTypes = new HashMap<>();
+    private final Map<String, Trie> flowControlTypes = new HashMap<>(); // Fully qualified name of the module.
+    private final Map<String, Trie> mavenModulesTypes = new HashMap<>();
+    private final Map<String, Trie> currentModuleTypes = new HashMap<>();
     private final TrieMapWrapper typesMap =
             new TrieMapWrapper(flowControlTypes, mavenModulesTypes, currentModuleTypes);
 
@@ -64,8 +60,9 @@ public class CompletionTracker implements ComponentService {
 
     @Override
     public Collection<Suggestion> suggestionsOf(String inputFullyQualifiedName, String componentPropertyPath, String[] tokens) {
-        ComponentDescriptor previouscomponetFQN = componentTracker.componentDescriptorFrom(inputFullyQualifiedName);
-        ComponentOutputDescriptor previousComponentOutput = previouscomponetFQN == null ? null : previouscomponetFQN.getOutput();
+        ComponentDescriptor inputComponentDescriptor = componentTracker.componentDescriptorFrom(inputFullyQualifiedName);
+        ComponentOutputDescriptor previousComponentOutput =
+                inputComponentDescriptor == null ? null : inputComponentDescriptor.getOutput();
 
         // A suggestion for a property is computed as follows:
         // Get signature for component property path from either flow control, maven modules or current module.
@@ -91,14 +88,13 @@ public class CompletionTracker implements ComponentService {
         PluginExecutors.run(module, "Fetching IO", indicator -> {
             String predecessorFQCN = context.predecessor();
             ComponentDescriptor componentDescriptorBy = componentTracker.componentDescriptorFrom(predecessorFQCN);
-            ComponentInputDescriptor input = componentDescriptorBy.getInput();
             ComponentOutputDescriptor output = componentDescriptorBy.getOutput();
-            Optional<ComponentIO> maybeComponentIO = processor.inputFrom(output);
-            if (maybeComponentIO.isPresent()) {
-                onComponentIO.onComponentIO(predecessorFQCN, outputFullyQualifiedName, maybeComponentIO.get());
-            } else {
-                onComponentIO.onComponentIONotFound(predecessorFQCN, outputFullyQualifiedName);
-            }
+
+
+            ComponentIO.OutputDescriptor outputAttributes = processor.outputAttributesFrom(output);
+            List<ComponentIO.OutputDescriptor> outputPayload = processor.outputPayloadFrom(output);
+            ComponentIO componentIO = new ComponentIO(outputAttributes, outputPayload);
+            onComponentIO.onComponentIO(predecessorFQCN, outputFullyQualifiedName, componentIO);
         });
     }
 
@@ -159,7 +155,7 @@ public class CompletionTracker implements ComponentService {
     }
 
 
-    private void processModuleDescriptor(ModuleDescriptor moduleDescriptor, Trie globalTypes, Map<String, TypeInfo> localTypes, Map<String, Trie> signatureTypes) {
+    private void processModuleDescriptor(ModuleDescriptor moduleDescriptor, Trie globalTypes, Map<String, Trie> localTypes, Map<String, Trie> signatureTypes) {
         moduleDescriptor.getTypes().forEach(type -> {
             try {
                 TrieUtils.populate(globalTypes, localTypes, type);

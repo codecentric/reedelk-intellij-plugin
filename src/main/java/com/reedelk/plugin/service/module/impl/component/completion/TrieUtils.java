@@ -11,7 +11,7 @@ import static com.reedelk.plugin.service.module.impl.component.completion.Sugges
 
 public class TrieUtils {
 
-    public static void populate(Trie global, Map<String, TypeInfo> typeAndTriesMap, TypeDescriptor typeDescriptor) {
+    public static void populate(Trie global, Map<String, Trie> typeAndTriesMap, TypeDescriptor typeDescriptor) {
         // Global root type
         if (typeDescriptor.isGlobal()) {
             Suggestion globalTypeProperty = Suggestion.create(PROPERTY)
@@ -21,7 +21,7 @@ public class TrieUtils {
             global.insert(globalTypeProperty);
         }
 
-        final Trie typeTrie = new TrieDefault();
+        final Trie typeTrie = new TrieDefault(typeDescriptor.getExtendsType());
         if (MessageAttributes.class.getName().equals(typeDescriptor.getType()) ||
                 Message.class.getName().equals(typeDescriptor.getType())) {
 
@@ -75,8 +75,6 @@ public class TrieUtils {
             });
         }
 
-        TypeInfo info = new TypeInfo(typeDescriptor.getExtendsType(), typeTrie);
-        typeAndTriesMap.put(typeDescriptor.getType(), info);
-
+        typeAndTriesMap.put(typeDescriptor.getType(), typeTrie);
     }
 }

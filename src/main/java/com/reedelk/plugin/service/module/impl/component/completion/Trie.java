@@ -4,6 +4,8 @@ import java.util.Collection;
 
 public interface Trie {
 
+    String extendsType();
+
     void clear();
 
     void insert(Suggestion suggestion);

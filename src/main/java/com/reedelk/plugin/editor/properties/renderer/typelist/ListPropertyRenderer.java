@@ -5,9 +5,9 @@ import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
 import com.reedelk.module.descriptor.model.property.ListDescriptor;
 import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
+import com.reedelk.plugin.editor.properties.commons.DialogTableCustomObject;
 import com.reedelk.plugin.editor.properties.commons.DisposableTabbedPane;
 import com.reedelk.plugin.editor.properties.commons.TabLabelHorizontal;
-import com.reedelk.plugin.editor.properties.commons.TableCustomObjectDialog;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.editor.properties.context.ContainerContextDecorator;
 import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.util.function.Function;
 
-import static com.reedelk.plugin.editor.properties.commons.TableCustomObjectDialog.DialogType;
+import static com.reedelk.plugin.editor.properties.commons.DialogTableCustomObject.DialogType;
 import static com.reedelk.plugin.editor.properties.commons.TableEditButtonCellEditor.TableCustomEditButtonAction;
 import static com.reedelk.plugin.editor.properties.renderer.typelist.custom.ListCustomObjectTableContainer.ListCustomObjectAddItemAction;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
@@ -77,8 +77,8 @@ public class ListPropertyRenderer extends AbstractCollectionAwarePropertyTypeRen
             ContainerContext newContext = ContainerContextDecorator.decorateForProperty(propertyDescriptor.getName(), context);
 
             String editDialogTitle = message("properties.type.map.value.edit", dialogTitle);
-            TableCustomObjectDialog dialog =
-                    new TableCustomObjectDialog(module, newContext, editDialogTitle, objectDescriptor, (ComponentDataHolder) value, DialogType.EDIT);
+            DialogTableCustomObject dialog =
+                    new DialogTableCustomObject(module, newContext, editDialogTitle, objectDescriptor, (ComponentDataHolder) value, DialogType.EDIT);
             dialog.showAndGet();
         };
 
@@ -88,8 +88,8 @@ public class ListPropertyRenderer extends AbstractCollectionAwarePropertyTypeRen
             ContainerContext newContext = ContainerContextDecorator.decorateForProperty(propertyDescriptor.getName(), context);
 
             String newDialogTitle = message("properties.type.map.value.new", dialogTitle);
-            TableCustomObjectDialog dialog =
-                    new TableCustomObjectDialog(module, newContext, newDialogTitle, objectDescriptor, newObject, DialogType.NEW);
+            DialogTableCustomObject dialog =
+                    new DialogTableCustomObject(module, newContext, newDialogTitle, objectDescriptor, newObject, DialogType.NEW);
             return dialog.showAndGet();
         };
 

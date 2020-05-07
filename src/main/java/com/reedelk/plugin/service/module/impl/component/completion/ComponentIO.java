@@ -1,61 +1,47 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
-import java.util.Map;
+import java.util.Collection;
+import java.util.List;
 
 public class ComponentIO {
 
-    private final Map<String, IOTypeDescriptor> attributes;
-    private final Map<String, IOTypeDescriptor> payload;
+    private final OutputDescriptor attributes;
+    private final List<OutputDescriptor> payload;
 
-    public ComponentIO(Map<String, IOTypeDescriptor> attributes, Map<String, IOTypeDescriptor> payload) {
+    public ComponentIO(OutputDescriptor attributes, List<OutputDescriptor> payload) {
         this.attributes = attributes;
         this.payload = payload;
     }
 
-    public Map<String, IOTypeDescriptor> getPayload() {
-        return payload;
-    }
-
-    public Map<String, IOTypeDescriptor> getAttributes() {
+    public OutputDescriptor getAttributes() {
         return attributes;
     }
 
-    public static class IOTypeDescriptor {
+    public List<OutputDescriptor> getPayload() {
+        return payload;
+    }
 
-        private final boolean nameOnly;
-        private final String name;
-        private final Map<String, IOTypeDescriptor> typeProperties;
+    public static class OutputDescriptor {
 
-        private IOTypeDescriptor(String name) {
-            this.nameOnly = true;
-            this.name = name;
-            this.typeProperties = null;
+        private final String type;
+        private final Collection<Suggestion> properties;
+
+        public OutputDescriptor(String type) {
+            this.type = type;
+            this.properties = null;
         }
 
-        private IOTypeDescriptor(String name, Map<String, IOTypeDescriptor> typeProperties) {
-            this.nameOnly = false;
-            this.name = name;
-            this.typeProperties = typeProperties;
+        public OutputDescriptor(String type, Collection<Suggestion> properties) {
+            this.type = type;
+            this.properties = properties;
         }
 
-        public static IOTypeDescriptor create(String name) {
-            return new IOTypeDescriptor(name);
+        public String getType() {
+            return type;
         }
 
-        public static IOTypeDescriptor create(String name, Map<String, IOTypeDescriptor> typeProperties) {
-            return new IOTypeDescriptor(name, typeProperties);
-        }
-
-        public boolean isNameOnly() {
-            return nameOnly;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public Map<String, IOTypeDescriptor> getTypeProperties() {
-            return typeProperties;
+        public Collection<Suggestion> getProperties() {
+            return properties;
         }
     }
 }

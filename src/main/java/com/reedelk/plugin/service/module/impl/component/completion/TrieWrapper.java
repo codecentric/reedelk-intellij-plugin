@@ -21,6 +21,11 @@ public class TrieWrapper implements Trie {
     }
 
     @Override
+    public String extendsType() {
+        return null;
+    }
+
+    @Override
     public void clear() {
         throw new UnsupportedOperationException();
     }

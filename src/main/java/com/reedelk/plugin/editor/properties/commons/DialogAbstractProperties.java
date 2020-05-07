@@ -15,7 +15,7 @@ import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 /**
  * Dialog used by Configuration properties and Custom Object Map value.
  */
-public abstract class AbstractPropertiesDialog extends DialogWrapper implements Disposable {
+public abstract class DialogAbstractProperties extends DialogWrapper implements Disposable {
 
     private static final int MINIMUM_PANEL_WIDTH = 550;
     private static final int MINIMUM_PANEL_HEIGHT = 0;
@@ -23,7 +23,7 @@ public abstract class AbstractPropertiesDialog extends DialogWrapper implements 
     private DisposableScrollPane panel;
     private String okActionLabel;
 
-    protected AbstractPropertiesDialog(Module module, String title, String okActionLabel) {
+    protected DialogAbstractProperties(Module module, String title, String okActionLabel) {
         super(module.getProject(), false);
         this.okActionLabel = okActionLabel;
         setTitle(title);

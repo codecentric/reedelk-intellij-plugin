@@ -2,13 +2,13 @@ package com.reedelk.plugin.editor.properties.renderer.typeobject.configuration;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
-import com.reedelk.plugin.editor.properties.commons.AbstractPropertiesDialog;
+import com.reedelk.plugin.editor.properties.commons.DialogAbstractProperties;
 import com.reedelk.plugin.service.module.impl.configuration.ConfigMetadata;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class ConfigurationDialog extends AbstractPropertiesDialog {
+public class DialogConfiguration extends DialogAbstractProperties {
 
     private Module module;
     private ConfigMetadata configMetadata;
@@ -16,7 +16,7 @@ public class ConfigurationDialog extends AbstractPropertiesDialog {
 
     private boolean isNewConfig;
 
-    private ConfigurationDialog(@NotNull Module module,
+    private DialogConfiguration(@NotNull Module module,
                                 @NotNull String title,
                                 @NotNull String okActionLabel) {
         super(module, title, okActionLabel);
@@ -25,7 +25,13 @@ public class ConfigurationDialog extends AbstractPropertiesDialog {
 
     @Override
     protected JComponent content() {
-        return new ConfigPropertiesPanel(module, configMetadata, objectDescriptor, isNewConfig);
+        return new ConfigurationPropertiesPanel(module, configMetadata, objectDescriptor, isNewConfig);
+    }
+
+    @NotNull
+    @Override
+    protected Action[] createActions() {
+        return new Action[]{getOKAction()};
     }
 
     static Builder builder() {
@@ -71,8 +77,8 @@ public class ConfigurationDialog extends AbstractPropertiesDialog {
             return this;
         }
 
-        ConfigurationDialog build() {
-            ConfigurationDialog dialog = new ConfigurationDialog(module, title, okActionLabel);
+        DialogConfiguration build() {
+            DialogConfiguration dialog = new DialogConfiguration(module, title, okActionLabel);
             dialog.isNewConfig = isNewConfig;
             dialog.configMetadata = configMetadata;
             dialog.objectDescriptor = objectDescriptor;

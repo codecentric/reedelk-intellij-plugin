@@ -12,8 +12,8 @@ import com.reedelk.plugin.editor.properties.commons.ComboActionsPanel;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.editor.properties.context.PropertyAccessor;
-import com.reedelk.plugin.editor.properties.renderer.typeobject.configuration.ConfigControlPanel;
-import com.reedelk.plugin.editor.properties.renderer.typeobject.configuration.ConfigSelectorCombo;
+import com.reedelk.plugin.editor.properties.renderer.typeobject.configuration.ConfigurationControlPanel;
+import com.reedelk.plugin.editor.properties.renderer.typeobject.configuration.ConfigurationSelectorCombo;
 import com.reedelk.plugin.service.module.ConfigurationService;
 import com.reedelk.plugin.service.module.impl.configuration.ConfigMetadata;
 import com.reedelk.plugin.service.module.impl.configuration.ConfigurationServiceImpl;
@@ -43,7 +43,7 @@ class ShareableConfigInputField extends DisposablePanel implements Configuration
     private final transient PropertyAccessor propertyAccessor;
     private final transient ComponentDataHolder referenceDataHolder;
 
-    private final ConfigSelectorCombo configSelectorCombo;
+    private final ConfigurationSelectorCombo configurationSelectorCombo;
     private final String currentInputFieldTypeFullyQualifiedName;
     private final ComboActionsPanel<ConfigMetadata> configActionsPanel;
 
@@ -64,11 +64,11 @@ class ShareableConfigInputField extends DisposablePanel implements Configuration
         this.propertyAccessor = propertyAccessor;
 
         // The Config Selector Combo
-        this.configSelectorCombo = new ConfigSelectorCombo();
-        this.configActionsPanel = new ConfigControlPanel(module, descriptor.getType());
+        this.configurationSelectorCombo = new ConfigurationSelectorCombo();
+        this.configActionsPanel = new ConfigurationControlPanel(module, descriptor.getType());
 
         setLayout(new BorderLayout());
-        add(configSelectorCombo, CENTER);
+        add(configurationSelectorCombo, CENTER);
         add(configActionsPanel, EAST);
 
         ObjectDescriptor typeObjectDescriptor = descriptor.getType();
@@ -152,15 +152,15 @@ class ShareableConfigInputField extends DisposablePanel implements Configuration
 
         SwingUtilities.invokeLater(() -> {
             // We must remove any previous listener.
-            configSelectorCombo.removeListener();
+            configurationSelectorCombo.removeListener();
 
             // Update the model
-            configSelectorCombo.setModel(comboModel);
-            configSelectorCombo.setSelectedItem(selected);
+            configurationSelectorCombo.setModel(comboModel);
+            configurationSelectorCombo.setSelectedItem(selected);
             configActionsPanel.select(selected);
 
             // Add back the listener
-            configSelectorCombo.addListener(value -> {
+            configurationSelectorCombo.addListener(value -> {
                 ConfigMetadata selectedConfig = (ConfigMetadata) value;
                 configActionsPanel.select(selectedConfig);
                 setPropertyAccessorValue(selectedConfig.getId());

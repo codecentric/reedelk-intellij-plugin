@@ -14,14 +14,13 @@ import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.service.module.ComponentService;
 import com.reedelk.plugin.service.module.impl.component.completion.ComponentIO;
 import com.reedelk.plugin.service.module.impl.component.completion.OnComponentIO;
-import com.reedelk.runtime.api.commons.ImmutableMap;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.event.AncestorEvent;
 import java.awt.*;
-import java.util.Map;
+import java.util.List;
 
 import static com.intellij.util.ui.JBUI.Borders.customLine;
 import static com.intellij.util.ui.JBUI.Borders.emptyLeft;
@@ -57,7 +56,6 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
 
     @Override
     public void onComponentIO(String inputFQCN, String outputFQCN, ComponentIO componentIO) {
-        // TODO:  Remove duplicated code here and below
         ContentPanel contentPanel = new ContentPanel();
         DisposablePanel panel = ContainerFactory.pushTop(contentPanel);
         panel.setBackground(JBColor.WHITE);
@@ -67,25 +65,16 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
         DisposableCollapsiblePane attributes = createPanel(htmlLabel("attributes", "Map"), componentIO.getAttributes());
         FormBuilder.get().addFullWidthAndHeight(attributes, contentPanel);
 
-        DisposableCollapsiblePane payload = createPanel(htmlLabel("payload", "byte[]"), componentIO.getPayload());
-        FormBuilder.get().addFullWidthAndHeight(payload, contentPanel);
+        List<ComponentIO.OutputDescriptor> payloads = componentIO.getPayload();
+        if (payloads.size() == 1) {
+            ComponentIO.OutputDescriptor outputDescriptor = payloads.get(0);
+            DisposableCollapsiblePane payload = createPanel(htmlLabel("payload", outputDescriptor.getType()), outputDescriptor);
+            FormBuilder.get().addFullWidthAndHeight(payload, contentPanel);
+        } else {
+            // TODO: Handle mutlple types
+        }
 
-        ApplicationManager.getApplication().invokeLater(this::repaint);
-    }
 
-    @Override
-    public void onComponentIONotFound(String inputFQCN, String outputFQCN) {
-        ContentPanel contentPanel = new ContentPanel();
-        DisposablePanel panel = ContainerFactory.pushTop(contentPanel);
-        panel.setBackground(JBColor.WHITE);
-        remove(loadingPanel);
-        add(panel, BorderLayout.CENTER);
-
-        DisposableCollapsiblePane attributes = createPanel(htmlLabel("attributes", "Map"), ImmutableMap.of());
-        FormBuilder.get().addFullWidthAndHeight(attributes, contentPanel);
-
-        DisposableCollapsiblePane payload = createPanel(htmlLabel("payload", "byte[]"), ImmutableMap.of());
-        FormBuilder.get().addFullWidthAndHeight(payload, contentPanel);
 
         ApplicationManager.getApplication().invokeLater(this::repaint);
     }
@@ -122,20 +111,19 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
         }
     }
 
-    private static DisposableCollapsiblePane createPanel(String title, Map<String, ComponentIO.IOTypeDescriptor> keyAndValue) {
+    private static DisposableCollapsiblePane createPanel(String title, ComponentIO.OutputDescriptor descriptor) {
         return new DisposableCollapsiblePane(title, () -> {
             DisposablePanel content = new DisposablePanel(new GridBagLayout());
             content.setBackground(JBColor.WHITE);
-            keyAndValue.forEach((key, value) -> {
-                if (value.isNameOnly()) {
-                    String label = htmlLabel(key, value.getName());
-                    JBLabel attributes = new JBLabel(label, JLabel.LEFT);
-                    attributes.setForeground(Colors.TOOL_WINDOW_PROPERTIES_TEXT);
-                    attributes.setBorder(JBUI.Borders.empty());
-                    FormBuilder.get().addLabel(attributes, content);
-                    FormBuilder.get().addLastField(Box.createHorizontalGlue(), content);
-                }
+            descriptor.getProperties().forEach(suggestion -> {
+                String label = htmlLabel(suggestion.lookupString(), suggestion.presentableType());
+                JBLabel attributes = new JBLabel(label, JLabel.LEFT);
+                attributes.setForeground(Colors.TOOL_WINDOW_PROPERTIES_TEXT);
+                attributes.setBorder(JBUI.Borders.empty());
+                FormBuilder.get().addLabel(attributes, content);
+                FormBuilder.get().addLastField(Box.createHorizontalGlue(), content);
             });
+
             return content;
         });
     }

@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.util.function.Function;
 
-import static com.reedelk.plugin.editor.properties.commons.TableCustomObjectDialog.DialogType;
+import static com.reedelk.plugin.editor.properties.commons.DialogTableCustomObject.DialogType;
 import static com.reedelk.plugin.editor.properties.commons.TableEditButtonCellEditor.TableCustomEditButtonAction;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
@@ -83,8 +83,8 @@ public class MapPropertyRenderer extends AbstractCollectionAwarePropertyTypeRend
             String editDialogTitle = message("properties.type.map.value.edit", dialogTitle);
             // We are entering a new object, we need a new context.
             ContainerContext newContext = ContainerContextDecorator.decorateForProperty(propertyName, context);
-            TableCustomObjectDialog dialog =
-                    new TableCustomObjectDialog(module, newContext, editDialogTitle, typeObjectDescriptor, (ComponentDataHolder) value, DialogType.EDIT);
+            DialogTableCustomObject dialog =
+                    new DialogTableCustomObject(module, newContext, editDialogTitle, typeObjectDescriptor, (ComponentDataHolder) value, DialogType.EDIT);
             dialog.showAndGet();
         };
         MapTableCustomColumnModelFactory columnModel = new MapTableCustomColumnModelFactory(propertyType, action);

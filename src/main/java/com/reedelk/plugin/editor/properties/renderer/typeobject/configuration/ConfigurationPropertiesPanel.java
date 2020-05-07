@@ -15,11 +15,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-class ConfigPropertiesPanel extends DisposablePanel {
+class ConfigurationPropertiesPanel extends DisposablePanel {
 
     private ContainerContext context;
 
-    ConfigPropertiesPanel(Module module, ConfigMetadata configMetadata, ObjectDescriptor objectDescriptor, boolean isNewConfig) {
+    ConfigurationPropertiesPanel(Module module, ConfigMetadata configMetadata, ObjectDescriptor objectDescriptor, boolean isNewConfig) {
 
         List<PropertyDescriptor> descriptors = objectDescriptor.getObjectProperties();
 

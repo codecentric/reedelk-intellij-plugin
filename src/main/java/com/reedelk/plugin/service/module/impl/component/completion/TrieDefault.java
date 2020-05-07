@@ -8,10 +8,17 @@ import static java.util.Collections.singletonList;
 
 public class TrieDefault implements Trie {
 
+    private final String extendsType;
     private TrieNode root;
 
     public TrieDefault() {
         this.root = new TrieNode();
+        this.extendsType = null;
+    }
+
+    public TrieDefault(String extendsType) {
+        this.root = new TrieNode();
+        this.extendsType = extendsType;
     }
 
     @Override
@@ -50,6 +57,11 @@ public class TrieDefault implements Trie {
             String prefix = lastWordIndex != -1 ? token.substring(lastWordIndex + 1) : token;
             return traversal(current, suggestions, prefix);
         }
+    }
+
+    @Override
+    public String extendsType() {
+        return extendsType;
     }
 
     @Override

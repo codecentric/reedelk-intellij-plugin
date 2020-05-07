@@ -4,15 +4,16 @@ import java.util.Map;
 
 public class TrieMapWrapper  {
 
-    private final Map<String, TypeInfo>[] typeAndTries;
+    private final Map<String, Trie>[] typeAndTries;
 
-    public TrieMapWrapper(Map<String, TypeInfo> ...typeAndTries) {
+    @SafeVarargs
+    public TrieMapWrapper(Map<String, Trie> ...typeAndTries) {
         this.typeAndTries = typeAndTries;
     }
 
-    public TypeInfo getOrDefault(String fullyQualifiedTypeName, TypeInfo defaultOne) {
-        for (Map<String, TypeInfo> typeAndTrie : typeAndTries) {
-            TypeInfo typeInfo = typeAndTrie.get(fullyQualifiedTypeName);
+    public Trie getOrDefault(String fullyQualifiedTypeName, Trie defaultOne) {
+        for (Map<String, Trie> typeAndTrie : typeAndTries) {
+            Trie typeInfo = typeAndTrie.get(fullyQualifiedTypeName);
             if (typeInfo != null) return typeInfo;
         }
         return defaultOne;

@@ -16,13 +16,13 @@ import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.runtime.commons.JsonParser.Config;
 import static com.reedelk.runtime.commons.JsonParser.Implementor;
 
-public class ConfigControlPanel extends ComboActionsPanel<ConfigMetadata> {
+public class ConfigurationControlPanel extends ComboActionsPanel<ConfigMetadata> {
 
     private final String dialogTitle;
     private final transient Module module;
     private final transient ObjectDescriptor typeDescriptor;
 
-    public ConfigControlPanel(Module module, ObjectDescriptor typeDescriptor) {
+    public ConfigurationControlPanel(Module module, ObjectDescriptor typeDescriptor) {
         super();
         this.module = module;
         this.typeDescriptor = typeDescriptor;
@@ -46,7 +46,7 @@ public class ConfigControlPanel extends ComboActionsPanel<ConfigMetadata> {
 
         ConfigMetadata newConfigMetadata = new NewConfigMetadata(message("config.field.file.default"), configTypeObject, typeDescriptor);
 
-        ConfigurationDialog dialogAddConfiguration = ConfigurationDialog.builder()
+        DialogConfiguration dialogAddConfiguration = DialogConfiguration.builder()
                 .isNewConfig()
                 .module(module)
                 .objectDescriptor(typeDescriptor)
@@ -63,7 +63,7 @@ public class ConfigControlPanel extends ComboActionsPanel<ConfigMetadata> {
     @Override
     protected void onEdit(ConfigMetadata item) {
         if (item.isEditable()) {
-            ConfigurationDialog dialogEditConfiguration = ConfigurationDialog.builder()
+            DialogConfiguration dialogEditConfiguration = DialogConfiguration.builder()
                     .module(module)
                     .configMetadata(item)
                     .objectDescriptor(typeDescriptor)

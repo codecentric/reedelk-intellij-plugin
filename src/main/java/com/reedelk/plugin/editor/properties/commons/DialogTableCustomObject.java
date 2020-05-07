@@ -15,7 +15,7 @@ import java.util.List;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.awt.BorderLayout.CENTER;
 
-public class TableCustomObjectDialog extends AbstractPropertiesDialog {
+public class DialogTableCustomObject extends DialogAbstractProperties {
 
     private final Module module;
     private final DialogType dialogType;
@@ -23,7 +23,7 @@ public class TableCustomObjectDialog extends AbstractPropertiesDialog {
     private final ObjectDescriptor typeObjectDescriptor;
     private final ComponentDataHolder componentDataHolder;
 
-    public TableCustomObjectDialog(@NotNull Module module,
+    public DialogTableCustomObject(@NotNull Module module,
                                    @NotNull ContainerContext context,
                                    @NotNull String title,
                                    @NotNull ObjectDescriptor typeObjectDescriptor,

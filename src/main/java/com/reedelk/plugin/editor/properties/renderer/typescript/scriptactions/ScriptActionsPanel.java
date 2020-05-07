@@ -55,7 +55,7 @@ public class ScriptActionsPanel extends DisposablePanel {
         if (selected.isEditable()) {
             String scriptPropertyPath = context.getPropertyPath(propertyDescriptor.getName());
             DialogEditScript dialog = new DialogEditScript(module, selected.getPath(), scriptPropertyPath, context);
-            dialog.show();
+            dialog.showAndGet();
         }
     }
 
