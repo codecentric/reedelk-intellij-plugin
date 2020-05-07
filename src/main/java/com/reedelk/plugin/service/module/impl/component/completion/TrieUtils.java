@@ -1,7 +1,8 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.reedelk.module.descriptor.model.type.TypeDescriptor;
-import com.reedelk.runtime.api.message.Message;
+import com.reedelk.module.descriptor.model.type.TypeFunctionDescriptor;
+import com.reedelk.module.descriptor.model.type.TypePropertyDescriptor;
 import com.reedelk.runtime.api.message.MessageAttributes;
 
 import java.util.Map;
@@ -22,59 +23,50 @@ public class TrieUtils {
         }
 
         final Trie typeTrie = new TrieDefault(typeDescriptor.getExtendsType());
-        if (MessageAttributes.class.getName().equals(typeDescriptor.getType()) ||
-                Message.class.getName().equals(typeDescriptor.getType())) {
 
-            typeDescriptor.getFunctions().forEach(typeFunctionDescriptor -> {
-                Suggestion functionSuggestion = Suggestion.create(FUNCTION)
-                        .withName(typeFunctionDescriptor.getName())
-                        .withLookupString(typeFunctionDescriptor.getName() + "()")
-                        .withPresentableText(typeFunctionDescriptor.getSignature())
-                        .withCursorOffset(typeFunctionDescriptor.getCursorOffset())
-                        .withResolver(previousComponent -> { // TODO: Here hsould be user controlled e.g DynamicType class and then depends on previous.
-                            if (typeFunctionDescriptor.getReturnType().equals(MessageAttributes.class.getName())) {
-                                return previousComponent != null ? previousComponent.getAttributes() : MessageAttributes.class.getName();
-                            } else {
-                                return typeFunctionDescriptor.getReturnType();
-                            }
-                        })
-                        .build();
-                typeTrie.insert(functionSuggestion);
-            });
+        // Functions for the type
+        typeDescriptor.getFunctions().forEach(typeFunctionDescriptor -> {
+            Suggestion functionSuggestion = Suggestion.create(FUNCTION)
+                    .withName(typeFunctionDescriptor.getName())
+                    .withLookupString(typeFunctionDescriptor.getName() + "()")
+                    .withPresentableText(typeFunctionDescriptor.getSignature())
+                    .withCursorOffset(typeFunctionDescriptor.getCursorOffset())
+                    .withResolver(createResolver(typeFunctionDescriptor))
+                    .build();
+            typeTrie.insert(functionSuggestion);
+        });
 
-            // Properties for the type
-            typeDescriptor.getProperties().forEach(typePropertyDescriptor -> {
-                Suggestion propertySuggestion = Suggestion.create(PROPERTY)
-                        .withLookupString(typePropertyDescriptor.getName())
-                        .withType(typePropertyDescriptor.getType())
-                        .build();
-                typeTrie.insert(propertySuggestion);
-            });
-
-        } else {
-
-            // Functions for the type
-            typeDescriptor.getFunctions().forEach(typeFunctionDescriptor -> {
-                Suggestion functionSuggestion = Suggestion.create(FUNCTION)
-                        .withName(typeFunctionDescriptor.getName())
-                        .withLookupString(typeFunctionDescriptor.getName() + "()")
-                        .withPresentableText(typeFunctionDescriptor.getSignature())
-                        .withCursorOffset(typeFunctionDescriptor.getCursorOffset())
-                        .withType(typeFunctionDescriptor.getReturnType())
-                        .build();
-                typeTrie.insert(functionSuggestion);
-            });
-
-            // Properties for the type
-            typeDescriptor.getProperties().forEach(typePropertyDescriptor -> {
-                Suggestion propertySuggestion = Suggestion.create(PROPERTY)
-                        .withLookupString(typePropertyDescriptor.getName())
-                        .withType(typePropertyDescriptor.getType())
-                        .build();
-                typeTrie.insert(propertySuggestion);
-            });
-        }
+        // Properties for the type
+        typeDescriptor.getProperties().forEach(typePropertyDescriptor -> {
+            Suggestion propertySuggestion = Suggestion.create(PROPERTY)
+                    .withLookupString(typePropertyDescriptor.getName())
+                    .withResolver(createResolver(typePropertyDescriptor))
+                    .build();
+            typeTrie.insert(propertySuggestion);
+        });
 
         typeAndTriesMap.put(typeDescriptor.getType(), typeTrie);
+    }
+
+    private static Suggestion.TypeResolver createResolver(TypePropertyDescriptor descriptor) {
+        return previousOutputComponent -> {
+            if (descriptor.getType().equals(MessageAttributes.class.getName())) {
+                return previousOutputComponent != null ? previousOutputComponent.getAttributes() :
+                        MessageAttributes.class.getName();
+            } else {
+                return descriptor.getType();
+            }
+        };
+    }
+
+    private static Suggestion.TypeResolver createResolver(TypeFunctionDescriptor descriptor) {
+        return previousOutputComponent -> {
+            if (descriptor.getReturnType().equals(MessageAttributes.class.getName())) {
+                return previousOutputComponent != null ? previousOutputComponent.getAttributes() :
+                        MessageAttributes.class.getName();
+            } else {
+                return descriptor.getReturnType();
+            }
+        };
     }
 }
