@@ -17,7 +17,7 @@ public class ComponentTracker implements ComponentService {
     private final Map<String, ComponentDescriptor> mavenModulesComponents = new HashMap<>(); // A map containing the component fully qualified name and the descriptor from maven.
 
     @Override
-    public synchronized ComponentDescriptor getComponentDescriptor(String componentFullyQualifiedName) {
+    public ComponentDescriptor componentDescriptorFrom(String componentFullyQualifiedName) {
         // Is it a component from a maven dependency?
         ComponentDescriptor descriptor = mavenModulesComponents.getOrDefault(componentFullyQualifiedName, null);
         if (descriptor != null) return descriptor;

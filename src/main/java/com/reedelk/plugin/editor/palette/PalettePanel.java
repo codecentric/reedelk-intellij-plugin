@@ -86,7 +86,7 @@ public class PalettePanel extends JBPanel<PalettePanel> implements ComponentServ
         if (file != null) {
             Optional.ofNullable(ModuleUtil.findModuleForFile(file, project))
                     .ifPresent(module -> {
-                        Collection<ModuleDTO> moduleDTOs = ComponentService.getInstance(module).getModules();
+                        Collection<ModuleDTO> moduleDTOs = ComponentService.getInstance(module).listModules();
                         updateComponents(moduleDTOs);
                     });
         }

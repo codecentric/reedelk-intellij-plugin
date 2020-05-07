@@ -59,7 +59,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     }
 
     @Override
-    public Collection<ModuleDTO> getModules() {
+    public Collection<ModuleDTO> listModules() {
         List<ModuleDTO> descriptors;
         synchronized (this) {
             descriptors = new ArrayList<>(mavenModules);
@@ -70,22 +70,22 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     }
 
     @Override
-    public ComponentDescriptor getComponentDescriptor(String componentFullyQualifiedName) {
-        return componentTracker.getComponentDescriptor(componentFullyQualifiedName);
+    public synchronized ComponentDescriptor componentDescriptorFrom(String componentFullyQualifiedName) {
+        return componentTracker.componentDescriptorFrom(componentFullyQualifiedName);
     }
 
     @Override
-    public Collection<Suggestion> suggestionsOf(String inputFullyQualifiedName, String componentPropertyPath, String[] tokens) {
+    public synchronized Collection<Suggestion> suggestionsOf(String inputFullyQualifiedName, String componentPropertyPath, String[] tokens) {
         return completionTracker.suggestionsOf(inputFullyQualifiedName, componentPropertyPath, tokens);
     }
 
     @Override
-    public Collection<Suggestion> variablesOf(String inputFullyQualifiedName, String componentPropertyPath) {
+    public synchronized Collection<Suggestion> variablesOf(String inputFullyQualifiedName, String componentPropertyPath) {
         return completionTracker.variablesOf(inputFullyQualifiedName, componentPropertyPath);
     }
 
     @Override
-    public void inputOutputOf(ContainerContext context, String outputFullyQualifiedName) {
+    public synchronized void inputOutputOf(ContainerContext context, String outputFullyQualifiedName) {
         completionTracker.inputOutputOf(context, outputFullyQualifiedName);
     }
 
@@ -162,7 +162,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     }
 
     private void onModuleChange() {
-        Collection<ModuleDTO> moduleComponents = getModules();
+        Collection<ModuleDTO> moduleComponents = listModules();
         publisher.onModuleChange(moduleComponents);
     }
 }

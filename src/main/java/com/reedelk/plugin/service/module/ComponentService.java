@@ -16,11 +16,11 @@ public interface ComponentService {
         return ModuleServiceManager.getService(module, ComponentService.class);
     }
 
-    default ComponentDescriptor getComponentDescriptor(String componentFullyQualifiedName) {
+    default ComponentDescriptor componentDescriptorFrom(String componentFullyQualifiedName) {
         throw new UnsupportedOperationException();
     }
 
-    default Collection<ModuleDTO> getModules() {
+    default Collection<ModuleDTO> listModules() {
         throw new UnsupportedOperationException();
     }
 

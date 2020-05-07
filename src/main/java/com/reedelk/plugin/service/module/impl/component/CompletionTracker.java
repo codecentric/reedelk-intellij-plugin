@@ -64,7 +64,7 @@ public class CompletionTracker implements ComponentService {
 
     @Override
     public Collection<Suggestion> suggestionsOf(String inputFullyQualifiedName, String componentPropertyPath, String[] tokens) {
-        ComponentDescriptor previouscomponetFQN = componentTracker.getComponentDescriptor(inputFullyQualifiedName);
+        ComponentDescriptor previouscomponetFQN = componentTracker.componentDescriptorFrom(inputFullyQualifiedName);
         ComponentOutputDescriptor previousComponentOutput = previouscomponetFQN == null ? null : previouscomponetFQN.getOutput();
 
         // A suggestion for a property is computed as follows:
@@ -90,7 +90,7 @@ public class CompletionTracker implements ComponentService {
     public void inputOutputOf(ContainerContext context, String outputFullyQualifiedName) {
         PluginExecutors.run(module, "Fetching IO", indicator -> {
             String predecessorFQCN = context.predecessor();
-            ComponentDescriptor componentDescriptorBy = componentTracker.getComponentDescriptor(predecessorFQCN);
+            ComponentDescriptor componentDescriptorBy = componentTracker.componentDescriptorFrom(predecessorFQCN);
             ComponentInputDescriptor input = componentDescriptorBy.getInput();
             ComponentOutputDescriptor output = componentDescriptorBy.getOutput();
             Optional<ComponentIO> maybeComponentIO = processor.inputFrom(output);
