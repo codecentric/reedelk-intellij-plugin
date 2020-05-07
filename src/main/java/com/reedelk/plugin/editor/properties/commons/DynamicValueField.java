@@ -26,7 +26,8 @@ public class DynamicValueField extends DisposablePanel {
     public DynamicValueField(Module module,
                              DynamicValueInputFieldAdapter inputFieldAdapter,
                              String scriptPropertyPath,
-                             ContainerContext context) {
+                             ContainerContext context,
+                             Object initValue) {
         this.inputFieldAdapter = inputFieldAdapter;
         this.editor = new DynamicValueScriptEditor(module, scriptPropertyPath, context);
         this.scriptContainer = createScriptModePanel(editor);
@@ -34,16 +35,13 @@ public class DynamicValueField extends DisposablePanel {
 
         setBorder(JBUI.Borders.empty(2, 3));
         setLayout(new BorderLayout());
-        add(this.inputFieldContainer, CENTER);
-    }
 
-    public void setValue(Object newValue) {
-        // If the value is a script, we switch to a script
-        if (ScriptUtils.isScript(newValue)) {
-            editor.setValue((String) newValue);
-            switchComponent(scriptContainer, inputFieldContainer);
+        if (ScriptUtils.isScript(initValue)) {
+            editor.setValue((String) initValue);
+            add(this.scriptContainer, CENTER);
         } else {
-            inputFieldAdapter.setValue(newValue);
+            inputFieldAdapter.setValue(initValue);
+            add(this.inputFieldContainer, CENTER);
         }
     }
 

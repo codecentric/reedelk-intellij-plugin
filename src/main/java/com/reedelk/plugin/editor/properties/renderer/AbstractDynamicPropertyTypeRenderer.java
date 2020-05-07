@@ -21,9 +21,11 @@ public abstract class AbstractDynamicPropertyTypeRenderer extends AbstractProper
         String hint = propertyDescriptor.getHintValue();
         String componentPropertyPath = context.getPropertyPath(propertyDescriptor.getName());
 
+        Object initValue = propertyAccessor.get();
+
         DynamicValueInputFieldAdapter inputFieldAdapter = inputFieldAdapter(hint);
-        DynamicValueField field = new DynamicValueField(module, inputFieldAdapter, componentPropertyPath, context);
-        field.setValue(propertyAccessor.get());
+        DynamicValueField field =
+                new DynamicValueField(module, inputFieldAdapter, componentPropertyPath, context, initValue);
         field.addListener(propertyAccessor::set);
         return field;
     }
