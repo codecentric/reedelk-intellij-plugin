@@ -33,7 +33,7 @@ public class TrieUtils {
                         .withCursorOffset(typeFunctionDescriptor.getCursorOffset())
                         .withResolver(previousComponent -> { // TODO: Here hsould be user controlled e.g DynamicType class and then depends on previous.
                             if (typeFunctionDescriptor.getReturnType().equals(MessageAttributes.class.getName())) {
-                                return previousComponent != null ? previousComponent.getAttributes() : "DynamicType";
+                                return previousComponent != null ? previousComponent.getAttributes() : MessageAttributes.class.getName();
                             } else {
                                 return typeFunctionDescriptor.getReturnType();
                             }
