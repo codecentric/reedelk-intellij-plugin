@@ -31,7 +31,13 @@ public class DialogConfiguration extends DialogAbstractProperties {
     @NotNull
     @Override
     protected Action[] createActions() {
-        return new Action[]{getOKAction()};
+        if (isNewConfig) {
+            // If it is a new configuration the user can cancel as well.
+            return super.createActions();
+        } else {
+            // If it is editing an existing configuration the user can only save it.
+            return new Action[]{getOKAction()};
+        }
     }
 
     static Builder builder() {

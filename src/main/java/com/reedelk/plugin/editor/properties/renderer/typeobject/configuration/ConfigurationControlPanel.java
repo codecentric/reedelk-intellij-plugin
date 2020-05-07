@@ -70,9 +70,8 @@ public class ConfigurationControlPanel extends ComboActionsPanel<ConfigMetadata>
                     .title(message("config.dialog.edit.title", dialogTitle))
                     .okActionLabel(message("config.dialog.edit.btn.edit"))
                     .build();
-            if (dialogEditConfiguration.showAndGet()) {
-                ConfigurationService.getInstance(module).saveConfiguration(item);
-            }
+            dialogEditConfiguration.showAndGet();
+            ConfigurationService.getInstance(module).saveConfiguration(item);
         }
     }
 
