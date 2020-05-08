@@ -10,7 +10,6 @@ import java.awt.*;
 
 import static com.intellij.icons.AllIcons.General.ArrowDown;
 import static com.intellij.icons.AllIcons.General.ArrowRight;
-import static com.intellij.util.ui.JBUI.Borders.empty;
 import static com.reedelk.plugin.editor.properties.commons.PanelWithText.LoadingContentPanel;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
@@ -34,9 +33,16 @@ public class DisposableCollapsiblePane extends DisposablePanel {
 
     public DisposableCollapsiblePane(@NotNull String displayName,
                                      @NotNull ContentRenderer unCollapsedContentRenderer,
+                                     boolean defaultCollapsed) {
+        this(displayName, unCollapsedContentRenderer, null, defaultCollapsed);
+    }
+
+    public DisposableCollapsiblePane(@NotNull String displayName,
+                                     @NotNull ContentRenderer unCollapsedContentRenderer,
                                      @Nullable TooltipContent tooltipContent) {
         this(displayName, unCollapsedContentRenderer, tooltipContent, true);
     }
+
     public DisposableCollapsiblePane(@NotNull String displayName,
                                      @NotNull ContentRenderer unCollapsedContentRenderer,
                                      @Nullable TooltipContent tooltipContent,
@@ -104,14 +110,9 @@ public class DisposableCollapsiblePane extends DisposablePanel {
 
     class UnCollapsedContent extends DisposablePanel {
         UnCollapsedContent(String displayName, TooltipContent tooltipContent, JComponent content) {
-
-            // we add a little bit of inset padding to make it clear are properties of un-collapsed object.
-            content.setBorder(empty(5, 20, 0, 0));
-
             // header
             TypeObjectContainerHeader topHeader =
                     new TypeObjectContainerHeader(displayName, tooltipContent, ArrowDown, clickAction);
-
             setLayout(new BorderLayout());
             setOpaque(false);
             add(topHeader, NORTH);

@@ -1,61 +1,36 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.intellij.icons.AllIcons;
-import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.commons.ToPresentableType;
+import com.reedelk.runtime.api.commons.StringUtils;
 
 import javax.swing.*;
 
 
 public class Suggestion {
 
-    public interface TypeResolver {
-        String resolve(ComponentOutputDescriptor previousOutputComponent);
-        String get();
-    }
-
-    public static abstract class AbstractTypeResolver implements TypeResolver {
-
-        private String resolved;
-
-        @Override
-        public String resolve(ComponentOutputDescriptor previousOutputComponent) {
-            if (resolved != null) {
-                return resolved;
-            } else {
-                resolved = doResolve(previousOutputComponent);
-                return resolved;
-            }
-        }
-
-        @Override
-        public String get() {
-            return resolved;
-        }
-
-        protected abstract String doResolve(ComponentOutputDescriptor previousOutputComponent);
-    }
-
-    private final String name;
+    private final String presentableType;
 
     public enum Type {
         FUNCTION,
         PROPERTY
     }
 
-    private final TypeResolver resolver;
-
-    private final Type type;
+    private final String name;
+    private final String typeText;
     private final String presentableText;
     private final String lookupString;
-    private final int cursorOffset;
-    private final Icon icon;
 
-    private Suggestion(Type type, String name, String lookupString, String presentableText, TypeResolver resolver, Icon icon, int cursorOffset) {
+    private final Type type;
+    private final Icon icon;
+    private final int cursorOffset;
+
+    private Suggestion(Type type, String name, String lookupString, String typeText, String presentableType, String presentableText, Icon icon, int cursorOffset) {
         this.presentableText = presentableText;
         this.lookupString = lookupString;
         this.cursorOffset = cursorOffset;
-        this.resolver = resolver;
+        this.presentableType = presentableType;
+        this.typeText = typeText;
         this.name = name;
         this.type = type;
         this.icon = icon;
@@ -81,12 +56,15 @@ public class Suggestion {
         return cursorOffset;
     }
 
-    public String typeText(ComponentOutputDescriptor componentOutputDescriptor) {
-        return resolver.resolve(componentOutputDescriptor);
+    public String typeText() {
+        return typeText;
     }
 
     public String presentableType() {
-        return ToPresentableType.from(resolver.get()); // TODO : Fixme!
+        if (StringUtils.isNotBlank(presentableType)) {
+            return presentableType;
+        }
+        return ToPresentableType.from(typeText); // TODO : Fixme!
     }
 
     public Icon icon() {
@@ -102,10 +80,11 @@ public class Suggestion {
         private final Type type;
         private String presentableText;
         private String lookupString;
-        private TypeResolver resolver;
         private String name;
         private int cursorOffset;
         private final Icon icon;
+        private String typeText;
+        private String presentableType;
 
         public Builder(Type type) {
             this.type = type;
@@ -123,18 +102,13 @@ public class Suggestion {
             return this;
         }
 
-        public Builder withType(String type) {
-            this.resolver = new AbstractTypeResolver() {
-                @Override
-                protected String doResolve(ComponentOutputDescriptor previousOutputComponent) {
-                    return type;
-                }
-            };
+        public Builder withType(String typeText) {
+            this.typeText = typeText;
             return this;
         }
 
-        public Builder withResolver(TypeResolver resolver) {
-            this.resolver = resolver;
+        public Builder withPresentableType(String presentableType) {
+            this.presentableType = presentableType;
             return this;
         }
 
@@ -155,7 +129,7 @@ public class Suggestion {
             if (name == null) {
                 name = lookupString;
             }
-            return new Suggestion(type, name, lookupString, presentableText, resolver, icon, cursorOffset);
+            return new Suggestion(type, name, lookupString, typeText, presentableType, presentableText, icon, cursorOffset);
         }
     }
 }

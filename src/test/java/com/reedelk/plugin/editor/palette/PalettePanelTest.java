@@ -1,20 +1,23 @@
 package com.reedelk.plugin.editor.palette;
 
-import com.reedelk.module.descriptor.model.ModuleDescriptor;
-import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
+import com.reedelk.plugin.service.module.impl.component.module.ModuleComponentDTO;
+import com.reedelk.plugin.service.module.impl.component.module.ModuleDTO;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.swing.tree.DefaultMutableTreeNode;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.lenient;
@@ -23,11 +26,11 @@ import static org.mockito.Mockito.lenient;
 class PalettePanelTest {
 
     @Mock
-    private ComponentDescriptor mockDescriptor1;
+    private ModuleComponentDTO mockDescriptor1;
     @Mock
-    private ComponentDescriptor mockDescriptor2;
+    private ModuleComponentDTO mockDescriptor2;
     @Mock
-    private ComponentDescriptor mockDescriptor3;
+    private ModuleComponentDTO mockDescriptor3;
 
     @BeforeEach
     void setUp() {
@@ -44,101 +47,77 @@ class PalettePanelTest {
                 .getDisplayName();
     }
 
-    @Nested
-    @DisplayName("Build package tree node tests")
-    class BuildPackageTreeNode {
+    @Test
+    void shouldCorrectlyBuildPackageTreeNode() {
+        // Given
+        ModuleDTO module1 = new ModuleDTO("Module1", asList(mockDescriptor1, mockDescriptor2));
 
-        @Test
-        void shouldCorrectlyBuildPackageTreeNode() {
-            // Given
-            ModuleDescriptor module1 = new ModuleDescriptor();
-            module1.setName("Module1");
-            module1.setComponents(asList(mockDescriptor1, mockDescriptor2));
+        // When
+        DefaultMutableTreeNode treeNode = PalettePanel.asTreeNode(module1);
 
-            // When
-            DefaultMutableTreeNode treeNode = PalettePanel.asTreeNode(module1);
+        // Then
+        assertThat(treeNode.getUserObject()).isEqualTo("Module1");
 
-            // Then
-            assertThat(treeNode.getUserObject()).isEqualTo("Module1");
+        List<DefaultMutableTreeNode> children = toList(treeNode.children());
+        assertThat(children).hasSize(2);
 
-            List<DefaultMutableTreeNode> children = toList(treeNode.children());
-            assertThat(children).hasSize(2);
-
-            assertThatExistsChildrenWithUserObject(children, mockDescriptor1);
-            assertThatExistsChildrenWithUserObject(children, mockDescriptor2);
-        }
-
-        @Test
-        void shouldCorrectlyBuildPackageTreeNodeExcludingHiddenComponents() {
-            // Given
-            doReturn(true)
-                    .when(mockDescriptor2)
-                    .isHidden();
-            ModuleDescriptor module1 = new ModuleDescriptor();
-            module1.setName("Module1");
-            module1.setComponents(asList(mockDescriptor1, mockDescriptor2));
-
-            // When
-            DefaultMutableTreeNode treeNode = PalettePanel.asTreeNode(module1);
-
-            // Then
-            List<DefaultMutableTreeNode> children = toList(treeNode.children());
-
-            assertThat(children).hasSize(1);
-            assertThatExistsChildrenWithUserObject(children, mockDescriptor1);
-        }
+        assertThatExistsChildrenWithUserObject(children, mockDescriptor1);
+        assertThatExistsChildrenWithUserObject(children, mockDescriptor2);
     }
 
-    @Nested
-    @DisplayName("Get components packages tree nodes tests")
-    class GetModuleComponentsTreeNodes {
+    @Test
+    void shouldCorrectlyBuildPackageTreeNodeExcludingHiddenComponents() {
+        // Given
+        doReturn(true)
+                .when(mockDescriptor2)
+                .isHidden();
+        ModuleDTO module1 = new ModuleDTO("Module1", asList(mockDescriptor1, mockDescriptor2));
 
-        @Test
-        void shouldCorrectlyReturnCorrectComponentsPackagesTreeNodes() {
-            // Given
-            ModuleDescriptor module1 = new ModuleDescriptor();
-            module1.setName("Module1");
-            module1.setComponents(asList(mockDescriptor1, mockDescriptor2));
+        // When
+        DefaultMutableTreeNode treeNode = PalettePanel.asTreeNode(module1);
 
-            ModuleDescriptor module2 = new ModuleDescriptor();
-            module2.setName("Module2");
-            module2.setComponents(Collections.singletonList(mockDescriptor3));
+        // Then
+        List<DefaultMutableTreeNode> children = toList(treeNode.children());
 
-            // When
-            List<DefaultMutableTreeNode> treeNodes =
-                    PalettePanel.asTreeNodes(asList(module1, module2));
-
-            // Then
-            assertThat(treeNodes).hasSize(2);
-
-            assertExistsTreeNodeWithNameAndChildrenUserObjects(treeNodes, "Module1", mockDescriptor1, mockDescriptor2);
-            assertExistsTreeNodeWithNameAndChildrenUserObjects(treeNodes, "Module2", mockDescriptor3);
-        }
-
-        @Test
-        void shouldExcludeComponentsPackagesWithNoComponents() {
-            // Given
-            ModuleDescriptor module1 = new ModuleDescriptor();
-            module1.setName("Module1");
-            module1.setComponents(asList(mockDescriptor1, mockDescriptor2));
-
-            ModuleDescriptor module2 = new ModuleDescriptor();
-            module2.setName("Module2");
-
-            // When
-            List<DefaultMutableTreeNode> treeNodes =
-                    PalettePanel.asTreeNodes(asList(module1, module2));
-
-            // Then
-            assertThat(treeNodes).hasSize(1);
-            assertExistsTreeNodeWithNameAndChildrenUserObjects(treeNodes, "Module1", mockDescriptor1, mockDescriptor2);
-        }
+        assertThat(children).hasSize(1);
+        assertThatExistsChildrenWithUserObject(children, mockDescriptor1);
     }
 
-    private void assertThatExistsChildrenWithUserObject(List<DefaultMutableTreeNode> childrenTreeNodes, ComponentDescriptor expectedDescriptor) {
+    @Test
+    void shouldCorrectlyReturnCorrectComponentsPackagesTreeNodes() {
+        // Given
+        ModuleDTO module1 = new ModuleDTO("Module1", asList(mockDescriptor1, mockDescriptor2));
+        ModuleDTO module2 = new ModuleDTO("Module2", singletonList(mockDescriptor3));
+
+        // When
+        List<DefaultMutableTreeNode> treeNodes = PalettePanel.asTreeNodes(asList(module1, module2));
+
+        // Then
+        assertThat(treeNodes).hasSize(2);
+
+        assertExistsTreeNodeWithNameAndChildrenUserObjects(treeNodes, "Module1", mockDescriptor1, mockDescriptor2);
+        assertExistsTreeNodeWithNameAndChildrenUserObjects(treeNodes, "Module2", mockDescriptor3);
+    }
+
+    @Test
+    void shouldExcludeComponentsPackagesWithNoComponents() {
+        // Given
+        ModuleDTO module1 = new ModuleDTO("Module1", asList(mockDescriptor1, mockDescriptor2));
+        ModuleDTO module2 = new ModuleDTO("Module 2", emptyList());
+
+        // When
+        List<DefaultMutableTreeNode> treeNodes =
+                PalettePanel.asTreeNodes(asList(module1, module2));
+
+        // Then
+        assertThat(treeNodes).hasSize(1);
+        assertExistsTreeNodeWithNameAndChildrenUserObjects(treeNodes, "Module1", mockDescriptor1, mockDescriptor2);
+    }
+
+    private void assertThatExistsChildrenWithUserObject(List<DefaultMutableTreeNode> childrenTreeNodes, ModuleComponentDTO expectedDTO) {
         boolean found = childrenTreeNodes
                 .stream()
-                .anyMatch(defaultMutableTreeNode -> defaultMutableTreeNode.getUserObject() == expectedDescriptor);
+                .anyMatch(defaultMutableTreeNode -> defaultMutableTreeNode.getUserObject() == expectedDTO);
         assertThat(found).isTrue();
     }
 
@@ -149,19 +128,19 @@ class PalettePanelTest {
                 .findFirst();
     }
 
-    private void assertExistsTreeNodeWithNameAndChildrenUserObjects(List<DefaultMutableTreeNode> treeNodes, String expectedName, ComponentDescriptor... descriptors) {
+    private void assertExistsTreeNodeWithNameAndChildrenUserObjects(List<DefaultMutableTreeNode> treeNodes, String expectedName, ModuleComponentDTO... dtos) {
         Optional<DefaultMutableTreeNode> treeNodeMatchingName = getTreeNodeHavingName(treeNodes, expectedName);
         assertThat(treeNodeMatchingName).isPresent();
 
         DefaultMutableTreeNode treeNode = treeNodeMatchingName.get();
         List<DefaultMutableTreeNode> treeNodeChildren = toList(treeNode.children());
-        assertThat(treeNodeChildren).hasSize(descriptors.length);
+        assertThat(treeNodeChildren).hasSize(dtos.length);
 
-        stream(descriptors)
+        stream(dtos)
                 .forEach(descriptor -> assertThatExistsChildrenWithUserObject(treeNodeChildren, descriptor));
     }
 
-    private List<DefaultMutableTreeNode> toList(Enumeration enumeration) {
+    private List<DefaultMutableTreeNode> toList(Enumeration<?> enumeration) {
         List<DefaultMutableTreeNode> treeNodes = new ArrayList<>();
         while (enumeration.hasMoreElements()) {
             treeNodes.add((DefaultMutableTreeNode) enumeration.nextElement());

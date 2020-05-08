@@ -1,11 +1,8 @@
 package com.reedelk.plugin.service.module.impl.completion;
 
-import com.reedelk.plugin.assertion.PluginAssertion;
 import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
 import com.reedelk.plugin.service.module.impl.component.completion.TrieDefault;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 class TrieDefaultTest {
 // TODO: Finish me.
@@ -27,15 +24,15 @@ class TrieDefaultTest {
         TrieDefault trie = new TrieDefault();
         trie.insert(suggestion1);
         trie.insert(suggestion2);
-
+/**
         // When
-        List<Suggestion> suggestions = trie.autocomplete("me", );
+        List<Suggestion> suggestions = trie.autocomplete("me");
 
         // Then
         PluginAssertion.assertThat(suggestions)
                 .hasSize(2)
                 .contains(suggestion1)
-                .contains(suggestion2);
+                .contains(suggestion2);*/
     }
 /**
  *     @Test

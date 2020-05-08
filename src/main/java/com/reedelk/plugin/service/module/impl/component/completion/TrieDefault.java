@@ -1,23 +1,24 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.reedelk.runtime.api.commons.StringUtils;
 
-import static java.util.Collections.singletonList;
+import java.util.*;
 
 public class TrieDefault implements Trie {
 
     private final String extendsType;
+    private final String listItemType;
     private TrieNode root;
 
     public TrieDefault() {
         this.root = new TrieNode();
         this.extendsType = null;
+        this.listItemType = null;
     }
 
-    public TrieDefault(String extendsType) {
+    public TrieDefault(String extendsType, String listItemType) {
         this.root = new TrieNode();
+        this.listItemType = listItemType;
         this.extendsType = extendsType;
     }
 
@@ -32,8 +33,15 @@ public class TrieDefault implements Trie {
     }
 
     @Override
-    public List<Suggestion> autocomplete(String token) {
-        List<Suggestion> suggestions = new ArrayList<>();
+    public Collection<Suggestion> autocomplete(String word, TrieMapWrapper typeAndTrieMap) {
+        Set<Suggestion> autocomplete = autocomplete(word);
+        addExtendsTypeSuggestions(this, typeAndTrieMap, word, autocomplete);
+        return autocomplete;
+    }
+
+
+    private Set<Suggestion> autocomplete(String token) {
+        Set<Suggestion> suggestions = new HashSet<>();
         TrieNode current = root;
         int i = 0;
         int lastWordIndex = -1;
@@ -52,7 +60,7 @@ public class TrieDefault implements Trie {
         }
 
         if (current.isSuggestion()) {
-            return singletonList(current.getSuggestion());
+            return Collections.singleton(current.getSuggestion());
         } else {
             String prefix = lastWordIndex != -1 ? token.substring(lastWordIndex + 1) : token;
             return traversal(current, suggestions, prefix);
@@ -65,12 +73,17 @@ public class TrieDefault implements Trie {
     }
 
     @Override
+    public String listItemType() {
+        return listItemType;
+    }
+
+    @Override
     public void clear() {
         this.root = null;
         this.root = new TrieNode();
     }
 
-    private List<Suggestion> traversal(TrieNode start, List<Suggestion> suggestion, String current) {
+    private Set<Suggestion> traversal(TrieNode start, Set<Suggestion> suggestion, String current) {
         if (start.isSuggestion()) {
             suggestion.add(start.getSuggestion());
         }
@@ -79,5 +92,16 @@ public class TrieDefault implements Trie {
             traversal(trieNode, suggestion, newCurrent);
         });
         return suggestion;
+    }
+
+    private static final Trie UNKNOWN_TYPE_TRIE = new TrieDefault();
+
+    private static void addExtendsTypeSuggestions(Trie current, TrieMapWrapper typeAndTrieMap, String token, Collection<Suggestion> suggestions) {
+        if (current != null && StringUtils.isNotBlank(current.extendsType())) {
+            String extendsType = current.extendsType();
+            Trie currentTypeTrie = typeAndTrieMap.getOrDefault(extendsType, UNKNOWN_TYPE_TRIE);
+            suggestions.addAll(currentTypeTrie.autocomplete(token, typeAndTrieMap));
+            addExtendsTypeSuggestions(currentTypeTrie, typeAndTrieMap, token, suggestions);
+        }
     }
 }

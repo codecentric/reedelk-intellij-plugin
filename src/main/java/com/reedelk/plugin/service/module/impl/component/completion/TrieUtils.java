@@ -1,11 +1,6 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
-import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.module.descriptor.model.type.TypeDescriptor;
-import com.reedelk.module.descriptor.model.type.TypeFunctionDescriptor;
-import com.reedelk.module.descriptor.model.type.TypePropertyDescriptor;
-import com.reedelk.runtime.api.message.MessageAttributes;
-import com.reedelk.runtime.api.message.MessagePayload;
 
 import java.util.Map;
 
@@ -24,7 +19,7 @@ public class TrieUtils {
             global.insert(globalTypeProperty);
         }
 
-        final Trie typeTrie = new TrieDefault(typeDescriptor.getExtendsType());
+        final Trie typeTrie = new TrieDefault(typeDescriptor.getExtendsType(), typeDescriptor.getListItemType());
 
         // Functions for the type
         typeDescriptor.getFunctions().forEach(typeFunctionDescriptor -> {
@@ -33,7 +28,7 @@ public class TrieUtils {
                     .withLookupString(typeFunctionDescriptor.getName() + "()")
                     .withPresentableText(typeFunctionDescriptor.getSignature())
                     .withCursorOffset(typeFunctionDescriptor.getCursorOffset())
-                    .withResolver(createResolver(typeFunctionDescriptor))
+                    .withType(typeFunctionDescriptor.getReturnType())
                     .build();
             typeTrie.insert(functionSuggestion);
         });
@@ -42,45 +37,11 @@ public class TrieUtils {
         typeDescriptor.getProperties().forEach(typePropertyDescriptor -> {
             Suggestion propertySuggestion = Suggestion.create(PROPERTY)
                     .withLookupString(typePropertyDescriptor.getName())
-                    .withResolver(createResolver(typePropertyDescriptor))
+                    .withType(typePropertyDescriptor.getType())
                     .build();
             typeTrie.insert(propertySuggestion);
         });
 
         typeAndTriesMap.put(typeDescriptor.getType(), typeTrie);
-    }
-
-    private static Suggestion.TypeResolver createResolver(TypePropertyDescriptor descriptor) {
-        return new Suggestion.AbstractTypeResolver() {
-            @Override
-            protected String doResolve(ComponentOutputDescriptor previousOutputComponent) {
-                if (descriptor.getType().equals(MessageAttributes.class.getName())) {
-                    return previousOutputComponent != null ? previousOutputComponent.getAttributes() :
-                            MessageAttributes.class.getName();
-
-                } else if(descriptor.getType().equals(MessagePayload.class.getName())) {
-                    return previousOutputComponent != null ?
-                            String.join(",", previousOutputComponent.getPayload()) : Object.class.getName();
-
-                } else {
-                    return descriptor.getType();
-                }
-            }
-        };
-    }
-
-    private static Suggestion.TypeResolver createResolver(TypeFunctionDescriptor descriptor) {
-        return new Suggestion.AbstractTypeResolver() {
-            @Override
-            protected String doResolve(ComponentOutputDescriptor previousOutputComponent) {
-                    if (descriptor.getReturnType().equals(MessageAttributes.class.getName())) {
-                        return previousOutputComponent != null ? previousOutputComponent.getAttributes() :
-                                MessageAttributes.class.getName();
-                    } else {
-                        return descriptor.getReturnType();
-                    }
-
-            }
-        };
     }
 }

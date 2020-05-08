@@ -11,6 +11,15 @@ public class TrieMapWrapper  {
         this.typeAndTries = typeAndTries;
     }
 
+    public boolean contains(String fullyQualifiedTypeName) {
+        for (Map<String, Trie> typeAndTrie : typeAndTries) {
+            if (typeAndTrie.containsKey(fullyQualifiedTypeName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Trie getOrDefault(String fullyQualifiedTypeName, Trie defaultOne) {
         for (Map<String, Trie> typeAndTrie : typeAndTries) {
             Trie typeInfo = typeAndTrie.get(fullyQualifiedTypeName);

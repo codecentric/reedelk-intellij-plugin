@@ -91,8 +91,8 @@ public class CompletionTracker implements ComponentService {
             ComponentOutputDescriptor output = componentDescriptorBy.getOutput();
 
 
-            ComponentIO.OutputDescriptor outputAttributes = processor.outputAttributesFrom(output);
-            List<ComponentIO.OutputDescriptor> outputPayload = processor.outputPayloadFrom(output);
+            ComponentIO.IOTypeDescriptor outputAttributes = processor.outputAttributesFrom(output);
+            List<ComponentIO.IOTypeDescriptor> outputPayload = processor.outputPayloadFrom(output);
             ComponentIO componentIO = new ComponentIO(outputAttributes, outputPayload);
             onComponentIO.onComponentIO(predecessorFQCN, outputFullyQualifiedName, componentIO);
         });

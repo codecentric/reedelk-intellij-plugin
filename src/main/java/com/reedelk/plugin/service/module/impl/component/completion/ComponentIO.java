@@ -5,33 +5,46 @@ import java.util.List;
 
 public class ComponentIO {
 
-    private final OutputDescriptor attributes;
-    private final List<OutputDescriptor> payload;
+    private final IOTypeDescriptor attributes;
+    private final List<IOTypeDescriptor> payload;
 
-    public ComponentIO(OutputDescriptor attributes, List<OutputDescriptor> payload) {
+    public ComponentIO(IOTypeDescriptor attributes, List<IOTypeDescriptor> payload) {
         this.attributes = attributes;
         this.payload = payload;
     }
 
-    public OutputDescriptor getAttributes() {
+    public IOTypeDescriptor getAttributes() {
         return attributes;
     }
 
-    public List<OutputDescriptor> getPayload() {
+    public List<IOTypeDescriptor> getPayload() {
         return payload;
     }
 
-    public static class OutputDescriptor {
+    public static class IOTypeDTO {
+        public final String name;
+        public final String value;
+        public final IOTypeDescriptor complex;
 
-        private final String type;
-        private final Collection<Suggestion> properties;
-
-        public OutputDescriptor(String type) {
-            this.type = type;
-            this.properties = null;
+        public IOTypeDTO(String name, String value) {
+            this.name = name;
+            this.value = value;
+            this.complex = null;
         }
 
-        public OutputDescriptor(String type, Collection<Suggestion> properties) {
+        public IOTypeDTO(String name, IOTypeDescriptor complex) {
+            this.name = name;
+            this.value = null;
+            this.complex = complex;
+        }
+    }
+
+    public static class IOTypeDescriptor {
+
+        private final String type;
+        private final Collection<IOTypeDTO> properties;
+
+        public IOTypeDescriptor(String type, Collection<IOTypeDTO> properties) {
             this.type = type;
             this.properties = properties;
         }
@@ -40,7 +53,7 @@ public class ComponentIO {
             return type;
         }
 
-        public Collection<Suggestion> getProperties() {
+        public Collection<IOTypeDTO> getProperties() {
             return properties;
         }
     }

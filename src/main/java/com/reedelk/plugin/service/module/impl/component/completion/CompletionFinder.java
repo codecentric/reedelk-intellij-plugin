@@ -1,10 +1,17 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
+import com.reedelk.plugin.commons.ToPresentableType;
+import com.reedelk.runtime.api.commons.StringUtils;
+import com.reedelk.runtime.api.message.MessageAttributes;
+import com.reedelk.runtime.api.message.MessagePayload;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static java.util.Collections.singletonList;
 
 public class CompletionFinder {
 
@@ -18,38 +25,102 @@ public class CompletionFinder {
             if (current == null) {
                 autocompleteResults = new ArrayList<>();
             } else if (i == tokens.length - 1) {
-                autocompleteResults = autoComplete(current, typeAndTrieMap, token);
+                autocompleteResults = autoComplete(current, typeAndTrieMap, token, componentOutputDescriptor);
             } else {
-                Optional<Suggestion> maybeSuggestion = autoComplete(current, typeAndTrieMap, token).stream().findFirst();
-                if (maybeSuggestion.isPresent()) {
-                    Suggestion suggestion = maybeSuggestion.get();
+                // One match -> Multiple types...
+                // We need to find the exact match, all the exact match must be wrapped in a trie wrapper
+                List<Trie> collect = autoComplete(current, typeAndTrieMap, token, componentOutputDescriptor).stream()
+                        .filter(suggestion -> {
+                            return suggestion.name().equals(token); // We only keep exact matches. If there are, we can move forward, otherwise we stop.
+                        }).map(suggestion -> typeAndTrieMap.getOrDefault(suggestion.typeText(), UNKNOWN_TYPE_TRIE)).collect(Collectors.toList());
 
-                    // If there is more than one token, it must be an exact match.
-                    if (suggestion.name().equals(token)) {
-                        String returnType = suggestion.typeText(componentOutputDescriptor);
-                        current = typeAndTrieMap.getOrDefault(returnType, UNKNOWN_TYPE_TRIE);
-                    } else {
-                        break;
-                    }
-
-                } else {
+                if (collect.isEmpty()) {
                     // Could not found a match to follow for the current token.
                     // Therefore no match is found.
                     break;
                 }
+
+                current = new TrieWrapper(collect);
             }
         }
         return autocompleteResults;
     }
 
-    private static Collection<Suggestion> autoComplete(Trie current, TrieMapWrapper typeAndTrieMap, String token) {
-        Collection<Suggestion> suggestions = current.autocomplete(token);
-        // Suggestions from super type
-        String extendsType = current.extendsType();
-        if (extendsType != null) {
-            // TODO: This call should be recursive.
-             suggestions.addAll(typeAndTrieMap.getOrDefault(extendsType, UNKNOWN_TYPE_TRIE).autocomplete(token));
+    private static Collection<Suggestion> autoComplete(Trie current, TrieMapWrapper typeAndTrieMap, String token, ComponentOutputDescriptor descriptor) {
+        Collection<Suggestion> suggestions = current.autocomplete(token, typeAndTrieMap);
+
+        // TODO: Do not recreate a suggestion all the time!
+        // For each suggestion we need to pick up the extends type and figure out the display name.
+        List<Suggestion> finalSuggestions = new ArrayList<>();
+        for (Suggestion suggestion : suggestions) {
+            if (MessagePayload.class.getName().equals(suggestion.typeText())) {
+                getRealType(suggestion.typeText(), descriptor).forEach(new Consumer<String>() {
+                    @Override
+                    public void accept(String type) {
+                        // We need to create artificial suggestions due to the nature
+                        // of the message payload type.
+                        Suggestion sugg = Suggestion.create(suggestion.getType())
+                                .withType(type)
+                                .withPresentableType(getRealVisualType(suggestion.typeText(), typeAndTrieMap, descriptor))
+                                .withCursorOffset(suggestion.cursorOffset())
+                                .withName(suggestion.name())
+                                .withLookupString(suggestion.lookupString())
+                                .withPresentableText(suggestion.presentableText())
+                                .build();
+                        finalSuggestions.add(sugg);
+                    }
+                });
+
+            } else {
+                finalSuggestions.add(suggestion);
+            }
         }
-        return suggestions;
+
+        return finalSuggestions;
+    }
+
+    private static String getRealVisualType(String returnType, TrieMapWrapper typeAndTrieMap, ComponentOutputDescriptor descriptor) {
+        if (descriptor == null) return Object.class.getName();
+        if(returnType.equals(MessagePayload.class.getName())) {
+            // TODO: Descriptor might be null!
+            List<String> payload = Optional.ofNullable(descriptor.getPayload()).orElse(singletonList(Object.class.getName()));
+            return payload.stream().map(new Function<String, String>() {
+                @Override
+                public String apply(String payloadFullyQualifiedName) {
+                    Trie orDefault = typeAndTrieMap.getOrDefault(payloadFullyQualifiedName, null);
+                    return presentableTypeOfTrie(payloadFullyQualifiedName, orDefault);
+                }
+            }).collect(Collectors.joining(","));
+        }
+        return returnType;
+    }
+
+    public static String presentableTypeOfTrie(String payloadFullyQualifiedName, Trie orDefault) {
+        if (orDefault != null && StringUtils.isNotBlank(orDefault.listItemType())) {
+            // IT IS A LIST
+            String s = orDefault.listItemType(); // TODO: Here you should use the display name. Actually for everywhere must used displayname.
+            String s1 = typeNormalizer(orDefault.extendsType());
+            return ToPresentableType.from(s1) + "<" + ToPresentableType.from(s) + ">";
+        } else {
+            return ToPresentableType.from(payloadFullyQualifiedName);
+        }
+    }
+
+    private static String typeNormalizer(String type) {
+        if (ArrayList.class.getName().equals(type)) {
+            return "List"; // TODO: Do something here ...
+        }
+        return type;
+    }
+
+    private static List<String> getRealType(String returnType, ComponentOutputDescriptor descriptor) {
+        String finalType = returnType;
+        if (returnType.equals(MessageAttributes.class.getName())) {
+            finalType = descriptor != null ? descriptor.getAttributes() : MessageAttributes.class.getName();
+        } else if(returnType.equals(MessagePayload.class.getName())) {
+            // TODO: Use trie wrapper TrieWrapper
+            return descriptor != null ? descriptor.getPayload() : singletonList(Object.class.getName());
+        }
+        return Arrays.asList(finalType);
     }
 }
