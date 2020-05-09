@@ -1,6 +1,7 @@
 package com.reedelk.plugin.editor.properties.renderer.typeobject;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.util.ui.JBUI;
 import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
 import com.reedelk.module.descriptor.model.property.*;
 import com.reedelk.plugin.commons.TooltipContent;
@@ -53,8 +54,11 @@ public class ObjectPropertyRenderer extends AbstractPropertyTypeRenderer {
             // Deferred rendering (only when it is un-collapsed)
             return new DisposableCollapsiblePane(
                     descriptor.getDisplayName(),
-                    () -> renderObjectProperties(propertyAccessor, descriptor, module, context), tooltipContent
-            );
+                    () -> {
+                        JComponent content = renderObjectProperties(propertyAccessor, descriptor, module, context);
+                        content.setBorder(JBUI.Borders.emptyLeft(20));
+                        return content;
+                    }, tooltipContent);
         } else {
             JComponent propertiesPanel = renderObjectProperties(propertyAccessor, descriptor, module, context);
             // If the property type is a complex object (not shared), we wrap it in a bordered box with title
