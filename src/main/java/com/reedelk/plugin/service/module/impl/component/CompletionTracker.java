@@ -92,11 +92,10 @@ public class CompletionTracker implements ComponentService {
             ComponentDescriptor componentDescriptorBy = componentTracker.componentDescriptorFrom(predecessorFQCN);
             ComponentOutputDescriptor output = componentDescriptorBy.getOutput();
 
-
-            ComponentIO.IOTypeDescriptor outputAttributes = processor.outputAttributesFrom(output);
-            List<ComponentIO.IOTypeDescriptor> outputPayload = processor.outputPayloadFrom(output);
-            ComponentIO componentIO = new ComponentIO(outputAttributes, outputPayload);
-            onComponentIO.onComponentIO(predecessorFQCN, outputFullyQualifiedName, componentIO);
+            IOTypeDescriptor outputAttributes = processor.outputAttributesFrom(output);
+            List<IOTypeDescriptor> outputPayload = processor.outputPayloadFrom(output);
+            IOComponent IOComponent = new IOComponent(outputAttributes, outputPayload);
+            onComponentIO.onComponentIO(predecessorFQCN, outputFullyQualifiedName, IOComponent);
         });
     }
 

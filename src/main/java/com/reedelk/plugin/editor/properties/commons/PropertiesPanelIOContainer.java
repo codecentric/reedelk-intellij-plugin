@@ -12,7 +12,8 @@ import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.service.module.ComponentService;
-import com.reedelk.plugin.service.module.impl.component.completion.ComponentIO;
+import com.reedelk.plugin.service.module.impl.component.completion.IOComponent;
+import com.reedelk.plugin.service.module.impl.component.completion.IOTypeDescriptor;
 import com.reedelk.plugin.service.module.impl.component.completion.OnComponentIO;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.message.MessageAttributes;
@@ -60,7 +61,7 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
     }
 
     @Override
-    public void onComponentIO(String inputFQCN, String outputFQCN, ComponentIO componentIO) {
+    public void onComponentIO(String inputFQCN, String outputFQCN, IOComponent IOComponent) {
         DisposableScrollPane contentPanel = new ContentPanel();
         contentPanel.setBackground(JBColor.WHITE);
 
@@ -71,10 +72,10 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
         panel.setBorder(JBUI.Borders.empty(5, 2));
         contentPanel.setViewportView(panel);
 
-        List<ComponentIO.IOTypeDescriptor> payloads = componentIO.getPayload();
+        List<IOTypeDescriptor> payloads = IOComponent.getPayload();
         if (payloads.size() == 1) {
             // Inline
-            ComponentIO.IOTypeDescriptor IOTypeDescriptor = payloads.get(0);
+            IOTypeDescriptor IOTypeDescriptor = payloads.get(0);
             boolean collapsed = IOTypeDescriptor.getProperties().isEmpty(); // Collapsed if there are no properties
             DisposableCollapsiblePane payload = createPanel(htmlLabel("payload", IOTypeDescriptor.getType()), IOTypeDescriptor, 30, collapsed, true);
             payload.setBorder(JBUI.Borders.empty());
@@ -85,7 +86,7 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
             FormBuilder.get().addFullWidthAndHeight(payload, theContent);
         }
 
-        DisposableCollapsiblePane attributes = createPanel(htmlLabel("attributes", MessageAttributes.class.getSimpleName()), componentIO.getAttributes(), 30, false, true);
+        DisposableCollapsiblePane attributes = createPanel(htmlLabel("attributes", MessageAttributes.class.getSimpleName()), IOComponent.getAttributes(), 30, false, true);
         attributes.setBorder(JBUI.Borders.emptyTop(4));
         FormBuilder.get().addFullWidthAndHeight(attributes, theContent);
 
@@ -126,13 +127,13 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
         }
     }
 
-    private static DisposableCollapsiblePane createPanel(String title, List<ComponentIO.IOTypeDescriptor> payloads, int parentPadding, boolean defaultCollapsed, boolean horizontalBar) {
+    private static DisposableCollapsiblePane createPanel(String title, List<IOTypeDescriptor> payloads, int parentPadding, boolean defaultCollapsed, boolean horizontalBar) {
         return new DisposableCollapsiblePane(title, () -> {
             DisposablePanel content = new DisposablePanel(new GridBagLayout());
             content.setBackground(JBColor.WHITE);
-            payloads.forEach(new Consumer<ComponentIO.IOTypeDescriptor>() {
+            payloads.forEach(new Consumer<IOTypeDescriptor>() {
                 @Override
-                public void accept(ComponentIO.IOTypeDescriptor descriptor) {
+                public void accept(IOTypeDescriptor descriptor) {
                     String lab = htmlLabel(descriptor.getType(), "");
                     JBLabel paylodType = new JBLabel(lab, JLabel.LEFT);
                     paylodType.setForeground(Colors.TOOL_WINDOW_PROPERTIES_TEXT);
@@ -150,7 +151,7 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
                                     FormBuilder.get().addLabel(attributes, content);
                                     FormBuilder.get().addLastField(Box.createHorizontalGlue(), content);
                                 } else {
-                                    ComponentIO.IOTypeDescriptor complex = iotypeDTO.complex;
+                                    IOTypeDescriptor complex = iotypeDTO.complex;
                                     DisposableCollapsiblePane payload = createPanel(htmlLabel(iotypeDTO.name, complex.getType()), complex, parentPadding, true, horizontalBar);
                                     payload.setBorder(JBUI.Borders.empty());
                                     payload.setBorder(JBUI.Borders.emptyLeft(parentPadding - 20));
@@ -163,7 +164,7 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
         }, defaultCollapsed, horizontalBar);
     }
 
-    private static DisposableCollapsiblePane createPanel(String title, ComponentIO.IOTypeDescriptor descriptor, int parentPadding, boolean defaultCollapsed, boolean horizontalBar) {
+    private static DisposableCollapsiblePane createPanel(String title, IOTypeDescriptor descriptor, int parentPadding, boolean defaultCollapsed, boolean horizontalBar) {
         return new DisposableCollapsiblePane(title, () -> {
             DisposablePanel content = new DisposablePanel(new GridBagLayout());
             content.setBackground(JBColor.WHITE);
@@ -176,7 +177,7 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
                     FormBuilder.get().addLabel(attributes, content);
                     FormBuilder.get().addLastField(Box.createHorizontalGlue(), content);
                 } else {
-                    ComponentIO.IOTypeDescriptor complex = iotypeDTO.complex;
+                    IOTypeDescriptor complex = iotypeDTO.complex;
                     DisposableCollapsiblePane payload = createPanel(htmlLabel(iotypeDTO.name, ""), complex, parentPadding, true, false);
                     payload.setBorder(JBUI.Borders.empty());
                     payload.setBorder(JBUI.Borders.emptyLeft(parentPadding - 20));
