@@ -84,7 +84,9 @@ public class CompletionFinder {
         List<String> possibleTypes = dynamicSuggestions.stream()
                 .map(suggestion -> PresentableType.from(suggestion.typeText()))
                 .collect(toList());
-        Suggestion suggestion = dynamicSuggestions.stream().findAny().orElseThrow(() -> new PluginException("Error"));
+        Suggestion suggestion = dynamicSuggestions.stream()
+                .findAny()
+                .orElseThrow(() -> new PluginException("Expected at least one dynamic suggestion."));
         return Suggestion.create(suggestion.getType())
                 .withLookupString(suggestion.lookupString())
                 .withPresentableText(suggestion.presentableText())
