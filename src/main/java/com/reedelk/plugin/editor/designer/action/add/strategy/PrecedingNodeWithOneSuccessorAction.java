@@ -1,7 +1,7 @@
 package com.reedelk.plugin.editor.designer.action.add.strategy;
 
-import com.reedelk.plugin.commons.Half;
 import com.reedelk.plugin.commons.IsScopedGraphNode;
+import com.reedelk.plugin.commons.LiesBetweenTopAndBottom;
 import com.reedelk.plugin.editor.designer.action.ActionStrategy;
 import com.reedelk.plugin.editor.designer.action.remove.strategy.PlaceholderProvider;
 import com.reedelk.plugin.graph.FlowGraph;
@@ -49,7 +49,7 @@ public class PrecedingNodeWithOneSuccessorAction implements ActionStrategy {
         GraphNode successorOfClosestPrecedingNode = successors.get(0);
 
         if (BelongToSameScope.from(graph, precedingNode, successorOfClosestPrecedingNode)) {
-            if (withinYBounds(dropPoint.y, precedingNode)) {
+            if (LiesBetweenTopAndBottom.of(precedingNode, dropPoint.y, graphics)) {
                 graph.add(precedingNode, node);
                 graph.add(node, successorOfClosestPrecedingNode);
                 graph.remove(precedingNode, successorOfClosestPrecedingNode);
@@ -121,12 +121,6 @@ public class PrecedingNodeWithOneSuccessorAction implements ActionStrategy {
         // additional nodes next to them such as 'Placeholders' to let the
         // user know that they work only if they have successor nodes after them.
         node.onAdded(graph, placeholderProvider);
-    }
-
-    private boolean withinYBounds(int dropY, GraphNode node) {
-        int halfHeight = Half.of(node.height(graphics));
-        return dropY > node.y() - halfHeight &&
-                dropY < node.y() + halfHeight;
     }
 
     private static int scopeMaxXBound(FlowGraph graph, ScopedGraphNode scopedGraphNode, Graphics2D graphics) {
