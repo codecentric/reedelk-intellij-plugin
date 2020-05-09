@@ -43,7 +43,7 @@ public class CompletionTracker implements ComponentService {
     private final Map<String, Trie> currentModuleSignatureTypes = new HashMap<>();
 
     private OnComponentIO onComponentIO;
-    private ComponentInputProcessor processor;
+    private IOProcessor processor;
     private OnCompletionEvent onCompletionEvent;
 
     private final Module module;
@@ -54,7 +54,7 @@ public class CompletionTracker implements ComponentService {
         this.module = module;
         this.componentTracker = componentTracker;
         this.completionFinder = new CompletionFinder(typesMap);
-        this.processor = new ComponentInputProcessor(typesMap, completionFinder);
+        this.processor = new IOProcessor(typesMap, completionFinder);
 
         onCompletionEvent = project.getMessageBus().syncPublisher(Topics.COMPLETION_EVENT_TOPIC);
         onComponentIO = project.getMessageBus().syncPublisher(Topics.ON_COMPONENT_IO);
@@ -92,8 +92,8 @@ public class CompletionTracker implements ComponentService {
             ComponentDescriptor componentDescriptorBy = componentTracker.componentDescriptorFrom(predecessorFQCN);
             ComponentOutputDescriptor output = componentDescriptorBy.getOutput();
 
-            IOTypeDescriptor outputAttributes = processor.outputAttributesFrom(output);
-            List<IOTypeDescriptor> outputPayload = processor.outputPayloadFrom(output);
+            IOTypeDescriptor outputAttributes = processor.attributes(output);
+            List<IOTypeDescriptor> outputPayload = processor.payload(output);
             IOComponent IOComponent = new IOComponent(outputAttributes, outputPayload);
             onComponentIO.onComponentIO(predecessorFQCN, outputFullyQualifiedName, IOComponent);
         });

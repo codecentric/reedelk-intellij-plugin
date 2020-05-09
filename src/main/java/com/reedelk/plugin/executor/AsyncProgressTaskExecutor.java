@@ -10,7 +10,7 @@ public class AsyncProgressTaskExecutor extends Task.Backgroundable {
     private final AsyncProgressTask executor;
 
     public AsyncProgressTaskExecutor(@NotNull Module module, @NotNull String indicatorTitle, @NotNull AsyncProgressTask executor) {
-        super(module.getProject(), indicatorTitle, true);
+        super(module.getProject(), indicatorTitle, true, Backgroundable.ALWAYS_BACKGROUND);
         this.executor = executor;
     }
 
