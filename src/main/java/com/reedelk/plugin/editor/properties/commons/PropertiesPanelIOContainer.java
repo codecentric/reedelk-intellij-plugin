@@ -77,16 +77,16 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
             // Inline
             IOTypeDescriptor IOTypeDescriptor = payloads.get(0);
             boolean collapsed = IOTypeDescriptor.getProperties().isEmpty(); // Collapsed if there are no properties
-            DisposableCollapsiblePane payload = createPanel(htmlLabel("payload", IOTypeDescriptor.getType()), IOTypeDescriptor, 30, collapsed, true);
+            DisposableCollapsiblePane payload = createPanel(htmlLabel("<b>payload</b>", IOTypeDescriptor.getType()), IOTypeDescriptor, 30, collapsed, true);
             payload.setBorder(JBUI.Borders.empty());
             FormBuilder.get().addFullWidthAndHeight(payload, theContent);
         } else {
-            DisposableCollapsiblePane payload = createPanel(htmlLabel("payload", "(one of the following types)"), payloads, 30, false, true);
+            DisposableCollapsiblePane payload = createPanel(htmlLabel("<b>payload</b>", "(one of the following types)"), payloads, 30, false, true);
             payload.setBorder(JBUI.Borders.empty());
             FormBuilder.get().addFullWidthAndHeight(payload, theContent);
         }
 
-        DisposableCollapsiblePane attributes = createPanel(htmlLabel("attributes", MessageAttributes.class.getSimpleName()), IOComponent.getAttributes(), 30, false, true);
+        DisposableCollapsiblePane attributes = createPanel(htmlLabel("<b>attributes</b>", MessageAttributes.class.getSimpleName()), IOComponent.getAttributes(), 30, false, true);
         attributes.setBorder(JBUI.Borders.emptyTop(4));
         FormBuilder.get().addFullWidthAndHeight(attributes, theContent);
 

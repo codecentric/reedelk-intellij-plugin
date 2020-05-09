@@ -1,6 +1,7 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
 public class IOTypeDTO {
+
     public final String name;
     public final String value;
     public final IOTypeDescriptor complex;

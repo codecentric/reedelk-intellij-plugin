@@ -36,27 +36,28 @@ public class IOProcessor {
 
     public List<IOTypeDescriptor> payload(ComponentOutputDescriptor output) {
         List<String> outputPayloadTypes = output != null ? output.getPayload() : singletonList(Object.class.getName());
-        return compute(output, outputPayloadTypes);
+        return outputPayloadTypes
+                .stream()
+                .map(outputType -> asIOTypeDescriptor(output, outputType))
+                .collect(toList());
     }
 
     @NotNull
-    private List<IOTypeDescriptor> compute(ComponentOutputDescriptor output, List<String> outputPayloadTypes) {
-        return outputPayloadTypes.stream().map(outputType -> {
-            Trie typeTrie = typeAndAndTries.getOrDefault(outputType, UNKNOWN_TYPE_TRIE);
-            if (isNotBlank(typeTrie.listItemType())) {
-                // It is  a list, we need to find the suggestions for the list item type.
-                // List<FileType> : FileType
-                String typeDisplay = DynamicType.presentableTypeOfTrie(outputType, typeTrie) + " : " + PresentableType.from(typeTrie.listItemType());
-                String listItemType = typeTrie.listItemType();
-                Collection<IOTypeDTO> typeDTOs = findAndMapDTO(output, listItemType);
-                return new IOTypeDescriptor(typeDisplay, typeDTOs);
+    private IOTypeDescriptor asIOTypeDescriptor(ComponentOutputDescriptor output, String outputType) {
+        Trie typeTrie = typeAndAndTries.getOrDefault(outputType, UNKNOWN_TYPE_TRIE);
+        if (isNotBlank(typeTrie.listItemType())) {
+            // It is  a list, we need to find the suggestions for the list item type.
+            // List<FileType> : FileType
+            String typeDisplay = DynamicType.presentableTypeOfTrie(outputType, typeTrie) + " : " + PresentableType.from(typeTrie.listItemType());
+            String listItemType = typeTrie.listItemType();
+            Collection<IOTypeDTO> typeDTOs = findAndMapDTO(output, listItemType);
+            return new IOTypeDescriptor(typeDisplay, typeDTOs);
 
-            } else {
-                String typeDisplay = DynamicType.presentableTypeOfTrie(outputType, typeTrie);
-                Collection<IOTypeDTO> typeDTOs = findAndMapDTO(output, typeTrie);
-                return new IOTypeDescriptor(typeDisplay, typeDTOs);
-            }
-        }).collect(toList());
+        } else {
+            String typeDisplay = DynamicType.presentableTypeOfTrie(outputType, typeTrie);
+            Collection<IOTypeDTO> typeDTOs = findAndMapDTO(output, typeTrie);
+            return new IOTypeDescriptor(typeDisplay, typeDTOs);
+        }
     }
 
     @NotNull
@@ -85,33 +86,33 @@ public class IOProcessor {
     public Function<Suggestion, IOTypeDTO> mapper(ComponentOutputDescriptor output) {
         return suggestion -> {
             String suggestionType = suggestion.typeText();
-            Trie orDefault = typeAndAndTries.getOrDefault(suggestionType, UNKNOWN_TYPE_TRIE);
-            if (isNotBlank(orDefault.listItemType())) {
-                return mapListType(output, suggestion, suggestionType, orDefault);
+            Trie typeTrie = typeAndAndTries.getOrDefault(suggestionType, UNKNOWN_TYPE_TRIE);
+            if (isNotBlank(typeTrie.listItemType())) {
+                String listItemType = typeTrie.listItemType();
+                Trie listItemTrie = typeAndAndTries.getOrDefault(listItemType, UNKNOWN_TYPE_TRIE);
+                String typeDisplay = DynamicType.presentableTypeOfTrie(suggestionType, typeTrie) + " : " +
+                        PresentableType.from(listItemType);
+                return asTypeDTO(output, listItemType, listItemTrie,
+                        suggestion.lookupString(),
+                        typeDisplay);
             } else {
-                Collection<Suggestion> suggestions = find(orDefault, output);
-                if (suggestions.isEmpty()) {
-                    return new IOTypeDTO(suggestion.lookupString(), suggestion.presentableType());
-                } else {
-                    // Complex type
-                    IOTypeDescriptor compute = compute(output, singletonList(suggestionType)).stream().findAny().get();
-                    return new IOTypeDTO(suggestion.lookupString(), compute);
-                }
+                return asTypeDTO(output, suggestionType, typeTrie,
+                        suggestion.lookupString(),
+                        suggestion.presentableType());
             }
         };
     }
 
     @NotNull
-    private IOTypeDTO mapListType(ComponentOutputDescriptor output, Suggestion suggestion, String suggestionType, Trie orDefault) {
-        Trie listItemTrie = typeAndAndTries.getOrDefault(orDefault.listItemType(), UNKNOWN_TYPE_TRIE);
-        Collection<Suggestion> suggestions = find(listItemTrie, output);
+    private IOTypeDTO asTypeDTO(ComponentOutputDescriptor output, String suggestionType, Trie orDefault, String propertyName, String propertyType) {
+        Collection<Suggestion> suggestions = find(orDefault, output);
         if (suggestions.isEmpty()) {
-            return new IOTypeDTO(suggestion.lookupString(), suggestion.presentableType());
+            return new IOTypeDTO(propertyName, propertyType);
         } else {
             // Complex type
-            IOTypeDescriptor compute = compute(output, singletonList(orDefault.listItemType())).stream().findAny().get();
-            String typeDisplay = suggestion.lookupString() + " : " + DynamicType.presentableTypeOfTrie(suggestionType, orDefault) + " : " + PresentableType.from(orDefault.listItemType());
-            return new IOTypeDTO(typeDisplay, compute);
+            String finalPropertyName = propertyName + " : " + propertyType;
+            IOTypeDescriptor ioTypeDescriptor = asIOTypeDescriptor(output, suggestionType);
+            return new IOTypeDTO(finalPropertyName, ioTypeDescriptor);
         }
     }
 }
