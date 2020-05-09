@@ -46,9 +46,9 @@ public class IOProcessor {
     private IOTypeDescriptor asIOTypeDescriptor(ComponentOutputDescriptor output, String outputType) {
         Trie typeTrie = typeAndAndTries.getOrDefault(outputType, UNKNOWN_TYPE_TRIE);
         if (isNotBlank(typeTrie.listItemType())) {
-            // It is  a list, we need to find the suggestions for the list item type.
-            // List<FileType> : FileType
-            String typeDisplay = DynamicType.presentableTypeOfTrie(outputType, typeTrie) + " : " + PresentableType.from(typeTrie.listItemType());
+            // It is  a List type, we need to find the suggestions for the List item type.
+            // The list type display is: List<FileType> : FileType
+            String typeDisplay = listTypeDisplay(outputType, typeTrie, typeTrie.listItemType());
             String listItemType = typeTrie.listItemType();
             Collection<IOTypeDTO> typeDTOs = findAndMapDTO(output, listItemType);
             return new IOTypeDescriptor(typeDisplay, typeDTOs);
@@ -90,8 +90,8 @@ public class IOProcessor {
             if (isNotBlank(typeTrie.listItemType())) {
                 String listItemType = typeTrie.listItemType();
                 Trie listItemTrie = typeAndAndTries.getOrDefault(listItemType, UNKNOWN_TYPE_TRIE);
-                String typeDisplay = DynamicType.presentableTypeOfTrie(suggestionType, typeTrie) + " : " +
-                        PresentableType.from(listItemType);
+                // The list type display is: List<FileType> : FileType
+                String typeDisplay = listTypeDisplay(suggestionType, typeTrie, listItemType);
                 return asTypeDTO(output, listItemType, listItemTrie,
                         suggestion.lookupString(),
                         typeDisplay);
@@ -114,5 +114,10 @@ public class IOProcessor {
             IOTypeDescriptor ioTypeDescriptor = asIOTypeDescriptor(output, suggestionType);
             return new IOTypeDTO(finalPropertyName, ioTypeDescriptor);
         }
+    }
+
+    @NotNull
+    private String listTypeDisplay(String outputType, Trie typeTrie, String s) {
+        return DynamicType.presentableTypeOfTrie(outputType, typeTrie) + " : " + PresentableType.from(s);
     }
 }
