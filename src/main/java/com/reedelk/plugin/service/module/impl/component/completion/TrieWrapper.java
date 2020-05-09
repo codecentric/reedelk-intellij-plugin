@@ -1,19 +1,20 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
 public class TrieWrapper implements Trie {
 
-    private final Trie[] tries;
+    private final Collection<Trie> tries;
 
     public TrieWrapper(List<Trie> tries) {
-        this.tries = tries.toArray(new Trie[]{});
+        this.tries = tries;
     }
 
     public TrieWrapper(Trie ...tries) {
-        this.tries = tries;
+        this.tries = Arrays.asList(tries);
     }
 
     @Override

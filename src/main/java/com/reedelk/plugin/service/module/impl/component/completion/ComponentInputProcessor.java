@@ -1,6 +1,7 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
+import com.reedelk.plugin.service.module.impl.component.completion.commons.DynamicType;
 import com.reedelk.plugin.service.module.impl.component.completion.commons.PresentableType;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.message.MessageAttributes;
@@ -19,9 +20,11 @@ public class ComponentInputProcessor {
 
     private static final Trie UNKNOWN_TYPE_TRIE = new TrieDefault();
     private final TrieMapWrapper typeAndAndTries;
+    private final CompletionFinder completionFinder;
 
-    public ComponentInputProcessor(TrieMapWrapper typeAndAndTries) {
+    public ComponentInputProcessor(TrieMapWrapper typeAndAndTries, CompletionFinder completionFinder) {
         this.typeAndAndTries = typeAndAndTries;
+        this.completionFinder = completionFinder;
     }
 
     public ComponentIO.IOTypeDescriptor outputAttributesFrom(ComponentOutputDescriptor output) {
@@ -29,7 +32,7 @@ public class ComponentInputProcessor {
 
         Trie orDefault = typeAndAndTries.getOrDefault(attributeType, UNKNOWN_TYPE_TRIE);
         Collection<ComponentIO.IOTypeDTO> suggestions =
-                CompletionFinder.find(orDefault, typeAndAndTries, output, new String[]{""})
+                completionFinder.find(orDefault, output, new String[]{StringUtils.EMPTY})
                         .stream().filter(suggestion -> {
                     return suggestion.getType().equals(PROPERTY); // We only want properties in the component INput output panel.
                 }).sorted(Comparator.comparing(Suggestion::lookupString))
@@ -51,23 +54,23 @@ public class ComponentInputProcessor {
             Trie typeTrie = typeAndAndTries.getOrDefault(outputType, UNKNOWN_TYPE_TRIE);
             if (StringUtils.isNotBlank(typeTrie.listItemType())) {
                 Trie itemTypeTrie = typeAndAndTries.getOrDefault(typeTrie.listItemType(), UNKNOWN_TYPE_TRIE);
-                Collection<ComponentIO.IOTypeDTO> suggestions = CompletionFinder.find(itemTypeTrie, typeAndAndTries, output, new String[]{""})
+                Collection<ComponentIO.IOTypeDTO> suggestions = completionFinder.find(itemTypeTrie, output, new String[]{""})
                         .stream().filter(suggestion -> {
                             return suggestion.getType().equals(PROPERTY); // We only want properties in the component INput output panel.
                         }).map(mapper(typeAndAndTries, output))
                         .collect(toList());
                 // List<FileType> : FileType
-                String typeDisplay = CompletionFinder.presentableTypeOfTrie(outputType, typeTrie) + " : " + PresentableType.from(typeTrie.listItemType());
+                String typeDisplay = DynamicType.presentableTypeOfTrie(outputType, typeTrie) + " : " + PresentableType.from(typeTrie.listItemType());
                 return new ComponentIO.IOTypeDescriptor(typeDisplay, suggestions);
 
             } else {
-                Collection<ComponentIO.IOTypeDTO> suggestions = CompletionFinder.find(typeTrie, typeAndAndTries, output, new String[]{""})
+                Collection<ComponentIO.IOTypeDTO> suggestions = completionFinder.find(typeTrie, output, new String[]{""})
                         .stream().filter(suggestion -> {
                             return suggestion.getType().equals(PROPERTY); // We only want properties in the component INput output panel.
                         }).map(mapper(typeAndAndTries, output))
                         .collect(toList());
 
-                String typeDisplay = CompletionFinder.presentableTypeOfTrie(outputType, typeTrie);
+                String typeDisplay = DynamicType.presentableTypeOfTrie(outputType, typeTrie);
                 return new ComponentIO.IOTypeDescriptor(typeDisplay, suggestions);
             }
 
@@ -80,18 +83,18 @@ public class ComponentInputProcessor {
             Trie orDefault = typeAndAndTries.getOrDefault(suggestionType, UNKNOWN_TYPE_TRIE);
             if (StringUtils.isNotBlank(orDefault.listItemType())) {
                 Trie listItemTrie = typeAndAndTries.getOrDefault(orDefault.listItemType(), UNKNOWN_TYPE_TRIE);
-                Collection<Suggestion> suggestions = CompletionFinder.find(listItemTrie, typeAndAndTries, output, new String[]{""})
+                Collection<Suggestion> suggestions = completionFinder.find(listItemTrie, output, new String[]{""})
                         .stream().filter(suggestion1 -> suggestion1.getType().equals(PROPERTY)).collect(toList());
                 if (suggestions.isEmpty()) {
                     return new ComponentIO.IOTypeDTO(suggestion.lookupString(), suggestion.presentableType());
                 } else {
                     // Complex type
                     ComponentIO.IOTypeDescriptor compute = compute(output, Collections.singletonList(orDefault.listItemType())).stream().findAny().get();
-                    String typeDisplay = suggestion.lookupString() + " : " + CompletionFinder.presentableTypeOfTrie(suggestionType, orDefault) + " : " + PresentableType.from(orDefault.listItemType());
+                    String typeDisplay = suggestion.lookupString() + " : " + DynamicType.presentableTypeOfTrie(suggestionType, orDefault) + " : " + PresentableType.from(orDefault.listItemType());
                     return new ComponentIO.IOTypeDTO(typeDisplay, compute);
                 }
             } else {
-                Collection<Suggestion> suggestions = CompletionFinder.find(orDefault, typeAndAndTries, output, new String[]{""})
+                Collection<Suggestion> suggestions = completionFinder.find(orDefault, output, new String[]{""})
                         .stream().filter(suggestion1 -> suggestion1.getType().equals(PROPERTY)).collect(toList());
                 if (suggestions.isEmpty()) {
                     return new ComponentIO.IOTypeDTO(suggestion.lookupString(), suggestion.presentableType());

@@ -48,11 +48,13 @@ public class CompletionTracker implements ComponentService {
 
     private final Module module;
     private final ComponentTracker componentTracker;
+    private final CompletionFinder completionFinder;
 
     public CompletionTracker(Project project, Module module, ComponentTracker componentTracker) {
         this.module = module;
         this.componentTracker = componentTracker;
-        this.processor = new ComponentInputProcessor(typesMap);
+        this.completionFinder = new CompletionFinder(typesMap);
+        this.processor = new ComponentInputProcessor(typesMap, completionFinder);
 
         onCompletionEvent = project.getMessageBus().syncPublisher(Topics.COMPLETION_EVENT_TOPIC);
         onComponentIO = project.getMessageBus().syncPublisher(Topics.ON_COMPONENT_IO);
@@ -72,9 +74,9 @@ public class CompletionTracker implements ComponentService {
         if (trie == null) trie = currentModuleSignatureTypes.get(componentPropertyPath);
         if (trie == null) trie = defaultSignatureTypes;
 
-        Collection<Suggestion> globalSuggestions = CompletionFinder.find(globalTypes, typesMap, previousComponentOutput, tokens);
-        Collection<Suggestion> propertySuggestions = CompletionFinder.find(trie, typesMap, previousComponentOutput, tokens);
-        globalSuggestions.addAll(propertySuggestions);
+        Collection<Suggestion> globalSuggestions = completionFinder.find(globalTypes, previousComponentOutput, tokens);
+        Collection<Suggestion> localSuggestions = completionFinder.find(trie, previousComponentOutput, tokens);
+        globalSuggestions.addAll(localSuggestions);
         return globalSuggestions;
     }
 
