@@ -17,6 +17,7 @@ class CompletionFinderTest {
 
     // TODO: Test where the output is null!
 
+    private CompletionFinder completionFinder;
 
 
     @BeforeEach
@@ -58,6 +59,8 @@ class CompletionFinderTest {
 
         messageRootTrie = new TrieDefault();
         messageRootTrie.insert(message);
+
+        completionFinder = new CompletionFinder(typeAndTrieMap);
     }
 
     @Test
@@ -68,7 +71,7 @@ class CompletionFinderTest {
         String[] tokens = new String[] {"message", "paylo"};
 
         // When
-        Collection<Suggestion> suggestions = CompletionFinder.find(messageRootTrie, typeAndTrieMap, descriptor, tokens);
+        Collection<Suggestion> suggestions = completionFinder.find(messageRootTrie, tokens, descriptor);
 
         // Then
         assertThat(suggestions).hasSize(1);
@@ -85,7 +88,7 @@ class CompletionFinderTest {
         String[] tokens = new String[] {"message", "paylo"};
 
         // When
-        Collection<Suggestion> suggestions = CompletionFinder.find(messageRootTrie, typeAndTrieMap, descriptor, tokens);
+        Collection<Suggestion> suggestions = completionFinder.find(messageRootTrie, tokens, descriptor);
 
         // Then
         assertThat(suggestions).hasSize(1);
@@ -102,7 +105,7 @@ class CompletionFinderTest {
         String[] tokens = new String[] {"message", "paylo"};
 
         // When
-        Collection<Suggestion> suggestions = CompletionFinder.find(messageRootTrie, typeAndTrieMap, descriptor, tokens);
+        Collection<Suggestion> suggestions = completionFinder.find(messageRootTrie, tokens, descriptor);
 
         // Then
         assertThat(suggestions).hasSize(1);
@@ -119,7 +122,7 @@ class CompletionFinderTest {
         String[] tokens = new String[] {"message", "paylo"};
 
         // When
-        Collection<Suggestion> suggestions = CompletionFinder.find(messageRootTrie, typeAndTrieMap, descriptor, tokens);
+        Collection<Suggestion> suggestions = completionFinder.find(messageRootTrie, tokens, descriptor);
 
         // Then
         assertThat(suggestions).hasSize(1);
@@ -136,7 +139,7 @@ class CompletionFinderTest {
         String[] tokens = new String[] {"message", "payload", ""};
 
         // When
-        Collection<Suggestion> suggestions = CompletionFinder.find(messageRootTrie, typeAndTrieMap, descriptor, tokens);
+        Collection<Suggestion> suggestions = completionFinder.find(messageRootTrie, tokens, descriptor);
 
         // Then
         assertThat(suggestions).hasSize(3);
@@ -153,7 +156,7 @@ class CompletionFinderTest {
         String[] tokens = new String[] {"message", "payload", ""};
 
         // When
-        Collection<Suggestion> suggestions = CompletionFinder.find(messageRootTrie, typeAndTrieMap, descriptor, tokens);
+        Collection<Suggestion> suggestions = completionFinder.find(messageRootTrie, tokens, descriptor);
 
         // Then
         assertThat(suggestions).hasSize(4);

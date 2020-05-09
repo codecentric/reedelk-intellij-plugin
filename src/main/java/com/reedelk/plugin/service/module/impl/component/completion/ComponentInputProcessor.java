@@ -28,11 +28,12 @@ public class ComponentInputProcessor {
     }
 
     public IOTypeDescriptor outputAttributesFrom(ComponentOutputDescriptor output) {
+        //
         String attributeType = output != null ? output.getAttributes() : MessageAttributes.class.getName();
 
         Trie orDefault = typeAndAndTries.getOrDefault(attributeType, UNKNOWN_TYPE_TRIE);
         Collection<IOTypeDTO> suggestions =
-                completionFinder.find(orDefault, output, new String[]{StringUtils.EMPTY})
+                completionFinder.find(orDefault, new String[]{StringUtils.EMPTY}, output)
                         .stream().filter(suggestion -> {
                     return suggestion.getType().equals(PROPERTY); // We only want properties in the component INput output panel.
                 }).sorted(Comparator.comparing(Suggestion::lookupString))
@@ -53,8 +54,9 @@ public class ComponentInputProcessor {
         return outputPayloadTypes.stream().map(outputType -> {
             Trie typeTrie = typeAndAndTries.getOrDefault(outputType, UNKNOWN_TYPE_TRIE);
             if (StringUtils.isNotBlank(typeTrie.listItemType())) {
+                // It is  a list, we need to find the suggestions for the list item type.
                 Trie itemTypeTrie = typeAndAndTries.getOrDefault(typeTrie.listItemType(), UNKNOWN_TYPE_TRIE);
-                Collection<IOTypeDTO> suggestions = completionFinder.find(itemTypeTrie, output, new String[]{""})
+                Collection<IOTypeDTO> suggestions = completionFinder.find(itemTypeTrie, new String[]{""}, output)
                         .stream().filter(suggestion -> {
                             return suggestion.getType().equals(PROPERTY); // We only want properties in the component INput output panel.
                         }).map(mapper(typeAndAndTries, output))
@@ -64,7 +66,7 @@ public class ComponentInputProcessor {
                 return new IOTypeDescriptor(typeDisplay, suggestions);
 
             } else {
-                Collection<IOTypeDTO> suggestions = completionFinder.find(typeTrie, output, new String[]{""})
+                Collection<IOTypeDTO> suggestions = completionFinder.find(typeTrie, new String[]{""}, output)
                         .stream().filter(suggestion -> {
                             return suggestion.getType().equals(PROPERTY); // We only want properties in the component INput output panel.
                         }).map(mapper(typeAndAndTries, output))
@@ -83,7 +85,7 @@ public class ComponentInputProcessor {
             Trie orDefault = typeAndAndTries.getOrDefault(suggestionType, UNKNOWN_TYPE_TRIE);
             if (StringUtils.isNotBlank(orDefault.listItemType())) {
                 Trie listItemTrie = typeAndAndTries.getOrDefault(orDefault.listItemType(), UNKNOWN_TYPE_TRIE);
-                Collection<Suggestion> suggestions = completionFinder.find(listItemTrie, output, new String[]{""})
+                Collection<Suggestion> suggestions = completionFinder.find(listItemTrie, new String[]{""}, output)
                         .stream().filter(suggestion1 -> suggestion1.getType().equals(PROPERTY)).collect(toList());
                 if (suggestions.isEmpty()) {
                     return new IOTypeDTO(suggestion.lookupString(), suggestion.presentableType());
@@ -94,7 +96,7 @@ public class ComponentInputProcessor {
                     return new IOTypeDTO(typeDisplay, compute);
                 }
             } else {
-                Collection<Suggestion> suggestions = completionFinder.find(orDefault, output, new String[]{""})
+                Collection<Suggestion> suggestions = completionFinder.find(orDefault, new String[]{""}, output)
                         .stream().filter(suggestion1 -> suggestion1.getType().equals(PROPERTY)).collect(toList());
                 if (suggestions.isEmpty()) {
                     return new IOTypeDTO(suggestion.lookupString(), suggestion.presentableType());

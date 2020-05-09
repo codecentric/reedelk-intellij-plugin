@@ -74,8 +74,8 @@ public class CompletionTracker implements ComponentService {
         if (trie == null) trie = currentModuleSignatureTypes.get(componentPropertyPath);
         if (trie == null) trie = defaultSignatureTypes;
 
-        Collection<Suggestion> globalSuggestions = completionFinder.find(globalTypes, previousComponentOutput, tokens);
-        Collection<Suggestion> localSuggestions = completionFinder.find(trie, previousComponentOutput, tokens);
+        Collection<Suggestion> globalSuggestions = completionFinder.find(globalTypes, tokens, previousComponentOutput);
+        Collection<Suggestion> localSuggestions = completionFinder.find(trie, tokens, previousComponentOutput);
         globalSuggestions.addAll(localSuggestions);
         return globalSuggestions;
     }
