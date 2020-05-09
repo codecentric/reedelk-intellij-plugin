@@ -28,7 +28,7 @@ public class DynamicType {
 
         } else if (MessagePayload.class.getName().equals(suggestionType)) {
             return descriptor != null && descriptor.getPayload() != null ?
-                descriptor.getPayload() :
+                    descriptor.getPayload() :
                     singletonList(Object.class.getName());
 
         } else {
