@@ -56,7 +56,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
     private final transient SelectionChangeListener currentComponentPublisher;
 
     private transient HintResult hintResult = HintResult.EMPTY;
-    private transient HintRunnable hintCalculator; // TODO: This one should be removed and created a class to manage move operation
+    private transient HintRunnable hintCalculator;
     private transient HintDrawable hintDrawable;
 
     private transient GraphNode selected;

@@ -1,12 +1,16 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
-import com.reedelk.plugin.commons.ToPresentableType;
+import com.reedelk.plugin.service.module.impl.component.completion.commons.DynamicType;
+import com.reedelk.plugin.service.module.impl.component.completion.commons.PresentableType;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.message.MessageAttributes;
 import com.reedelk.runtime.api.message.MessagePayload;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
@@ -44,48 +48,53 @@ public class CompletionFinder {
         return autocompleteResults;
     }
 
+    private static boolean isDynamicSuggestion(Suggestion suggestion) {
+        return MessagePayload.class.getName().equals(suggestion.typeText()) ||
+                MessageAttributes.class.getName().equals(suggestion.typeText());
+    }
+
     private static Collection<Suggestion> autoComplete(Trie current, TrieMapWrapper typeAndTrieMap, String token, ComponentOutputDescriptor descriptor) {
         Collection<Suggestion> suggestions = current.autocomplete(token, typeAndTrieMap);
-
-        // TODO: Do not recreate a suggestion all the time!
-        // For each suggestion we need to pick up the extends type and figure out the display name.
         List<Suggestion> finalSuggestions = new ArrayList<>();
         for (Suggestion suggestion : suggestions) {
-            if (MessagePayload.class.getName().equals(suggestion.typeText()) ||
-                    MessageAttributes.class.getName().equals(suggestion.typeText())) {
-                getRealType(suggestion.typeText(), descriptor).forEach(type -> {
-                    // We need to create artificial suggestions due to the nature
-                    // of the message payload type.
-                    Suggestion dynamicSuggestion = Suggestion.create(suggestion.getType())
-                            .withType(type)
-                            .withName(suggestion.name())
-                            .withCursorOffset(suggestion.cursorOffset())
-                            .withLookupString(suggestion.lookupString())
-                            .withPresentableText(suggestion.presentableText())
-                            .withPresentableType(getRealVisualType(suggestion.typeText(), typeAndTrieMap, descriptor))
-                            .build();
-                    finalSuggestions.add(dynamicSuggestion);
-                });
-
+            if (isDynamicSuggestion(suggestion)) {
+                Collection<Suggestion> dynamicSuggestion =
+                        createDynamicSuggestion(typeAndTrieMap, descriptor, suggestion);
+                finalSuggestions.addAll(dynamicSuggestion);
             } else {
                 finalSuggestions.add(suggestion);
             }
         }
-
         return finalSuggestions;
     }
 
-    private static String getRealVisualType(String returnType, TrieMapWrapper typeAndTrieMap, ComponentOutputDescriptor descriptor) {
-        if (descriptor == null) return Object.class.getName();
-        if(returnType.equals(MessagePayload.class.getName())) {
-            // TODO: Descriptor might be null!
+    // We need to create an artificial suggestion for each dynamic type found.
+    // The dynamic types depend on the previous component output descriptor.
+    // Note that there might be multiple dynamic types because a component
+    // could have multiple outputs.
+    private static Collection<Suggestion> createDynamicSuggestion(TrieMapWrapper typeAndTrieMap, ComponentOutputDescriptor descriptor, Suggestion suggestion) {
+        return DynamicType.from(suggestion, descriptor).stream()
+                .map(dynamicType -> Suggestion.create(suggestion.getType())
+                        .withType(dynamicType)
+                        .withName(suggestion.name())
+                        .withCursorOffset(suggestion.cursorOffset())
+                        .withLookupString(suggestion.lookupString())
+                        .withPresentableText(suggestion.presentableText())
+                        .withPresentableType(presentableTypeOf(suggestion.typeText(), typeAndTrieMap, descriptor))
+                        .build()).collect(Collectors.toList());
+    }
+
+    private static String presentableTypeOf(String returnType, TrieMapWrapper typeAndTrieMap, ComponentOutputDescriptor descriptor) {
+        if (descriptor == null) return PresentableType.from(Object.class.getName());
+        if (MessagePayload.class.getName().equals(returnType)) {
+            // The descriptor
             List<String> payload = Optional.ofNullable(descriptor.getPayload()).orElse(singletonList(Object.class.getName()));
             return payload.stream().map(payloadFullyQualifiedName -> {
                 Trie orDefault = typeAndTrieMap.getOrDefault(payloadFullyQualifiedName, null);
                 return presentableTypeOfTrie(payloadFullyQualifiedName, orDefault);
             }).collect(Collectors.joining(","));
         }
-        if (returnType.equals(MessageAttributes.class.getName())) {
+        if (MessageAttributes.class.getName().equals(returnType)) {
             return MessageAttributes.class.getSimpleName();
         }
         return returnType;
@@ -96,9 +105,9 @@ public class CompletionFinder {
             // IT IS A LIST
             String s = orDefault.listItemType(); // TODO: Here you should use the display name. Actually for everywhere must used displayname.
             String s1 = typeNormalizer(orDefault.extendsType());
-            return ToPresentableType.from(s1) + "<" + ToPresentableType.from(s) + ">";
+            return PresentableType.from(s1) + "<" + PresentableType.from(s) + ">";
         } else {
-            return ToPresentableType.from(payloadFullyQualifiedName);
+            return PresentableType.from(payloadFullyQualifiedName);
         }
     }
 
@@ -107,16 +116,5 @@ public class CompletionFinder {
             return "List"; // TODO: Do something here ...
         }
         return type;
-    }
-
-    private static List<String> getRealType(String returnType, ComponentOutputDescriptor descriptor) {
-        String finalType = returnType;
-        if (returnType.equals(MessageAttributes.class.getName())) {
-            finalType = descriptor != null ? descriptor.getAttributes() : MessageAttributes.class.getName();
-        } else if(returnType.equals(MessagePayload.class.getName())) {
-            // TODO: Use trie wrapper TrieWrapper
-            return descriptor != null ? descriptor.getPayload() : singletonList(Object.class.getName());
-        }
-        return Arrays.asList(finalType);
     }
 }

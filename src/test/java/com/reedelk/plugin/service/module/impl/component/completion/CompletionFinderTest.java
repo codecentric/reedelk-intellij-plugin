@@ -15,80 +15,46 @@ class CompletionFinderTest {
     private TrieMapWrapper typeAndTrieMap;
     private Trie messageRootTrie;
 
+    // TODO: Test where the output is null!
+
+
+
     @BeforeEach
     void setUp() {
 
-        Trie messageTypeTrie = new TrieDefault();
-        Suggestion payload = Suggestion.create(Suggestion.Type.FUNCTION)
-                .withLookupString("payload")
-                .withName("payload")
-                .withType(MessagePayload.class.getName())
-                .build();
-        messageTypeTrie.insert(payload);
-
-        Trie listObjectType = new TrieDefault(ArrayList.class.getName(), MyItemType.class.getName());
-
-        Trie myItemTypeTrie = new TrieDefault();
-        Suggestion myItemMethod1 = Suggestion.create(Suggestion.Type.FUNCTION)
-                .withLookupString("method1")
-                .withName("method1")
-                .withType(String.class.getName())
-                .build();
-        myItemTypeTrie.insert(myItemMethod1);
-
-        Trie listMapType = new TrieDefault(ArrayList.class.getName(), MyMapType.class.getName());
-
-        Trie myMapType = new TrieDefault(HashMap.class.getName(), null);
-        Suggestion myMapProperty1 = Suggestion.create(Suggestion.Type.PROPERTY)
-                .withLookupString("property1")
-                .withName("property1")
-                .withType(String.class.getName())
-                .build();
-        myMapType.insert(myMapProperty1);
-        Suggestion myMapProperty2 = Suggestion.create(Suggestion.Type.PROPERTY)
-                .withLookupString("property2")
-                .withName("property2")
-                .withType(String.class.getName())
-                .build();
-        myMapType.insert(myMapProperty2);
-
-
-        Trie mySecondMapType = new TrieDefault(HashMap.class.getName(), null);
-        Suggestion mySecondMapProperty2 = Suggestion.create(Suggestion.Type.PROPERTY)
-                .withLookupString("secondProperty1")
-                .withName("secondProperty1")
-                .withType(String.class.getName())
-                .build();
-        mySecondMapType.insert(mySecondMapProperty2);
-
-
-        Trie hashMapType = new TrieDefault(Map.class.getName(), null);
-
-        Trie mapType = new TrieDefault(null, null);
-        mapType.insert(Suggestion.create(Suggestion.Type.FUNCTION)
-                .withName("size")
-                .withLookupString("size")
-                .withType(int.class.getName())
-                .build());
-
         Map<String, Trie> tries = new HashMap<>();
-        tries.put(Message.class.getName(), messageTypeTrie);
-        tries.put(MyListObjectType.class.getName(), listObjectType);
+
+        Trie messageType = new TrieDefault();
+        messageType.insert(createFunction("payload", "payload", MessagePayload.class.getName()));
+        tries.put(Message.class.getName(), messageType);
+
+        Trie listMyItemType = new TrieDefault(ArrayList.class.getName(), MyItemType.class.getName());
+        Trie myItemTypeTrie = new TrieDefault();
+        myItemTypeTrie.insert(createFunction("method1", "method1", String.class.getName()));
+        tries.put(ListMyItemType.class.getName(), listMyItemType);
         tries.put(MyItemType.class.getName(), myItemTypeTrie);
-        tries.put(MyListMapType.class.getName(), listMapType);
-        tries.put(MyMapType.class.getName(), myMapType);
-        tries.put(MySecondMapType.class.getName(), mySecondMapType);
-        tries.put(HashMap.class.getName(), hashMapType);
-        tries.put(Map.class.getName(), mapType);
+
+
+        Trie myMap1Type = new TrieDefault(HashMap.class.getName(), null);
+        myMap1Type.insert(createProperty("property1", "property1", String.class.getName()));
+        myMap1Type.insert(createProperty("property2", "property2", String.class.getName()));
+        tries.put(MyMap1Type.class.getName(), myMap1Type);
+
+        Trie listMyMap1Type = new TrieDefault(ArrayList.class.getName(), MyMap1Type.class.getName());
+        tries.put(ListMyMap1Type.class.getName(), listMyMap1Type);
+
+        Trie myMap2Type = new TrieDefault(HashMap.class.getName(), null);
+        myMap2Type.insert(createProperty("secondProperty1", "secondProperty1", String.class.getName()));
+        tries.put(MySecondMapType.class.getName(), myMap2Type);
+
+        Trie genericMapTypeFunctions = new TrieDefault(null, null);
+        genericMapTypeFunctions.insert(createFunction("size", "size", int.class.getName()));
+        tries.put(HashMap.class.getName(), new TrieDefault(Map.class.getName(), null));
+        tries.put(Map.class.getName(), genericMapTypeFunctions);
         typeAndTrieMap = new TrieMapWrapper(tries);
 
 
-
-        Suggestion message = Suggestion.create(Suggestion.Type.PROPERTY)
-                .withLookupString("message")
-                .withName("message")
-                .withType(Message.class.getName())
-                .build();
+        Suggestion message = createProperty("message", "message", Message.class.getName());
 
         messageRootTrie = new TrieDefault();
         messageRootTrie.insert(message);
@@ -115,7 +81,7 @@ class CompletionFinderTest {
     void shouldReturnListWithObjectDynamicMessagePayloadCorrectly() {
         // Given
         ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
-        descriptor.setPayload(Collections.singletonList(MyListObjectType.class.getName()));
+        descriptor.setPayload(Collections.singletonList(ListMyItemType.class.getName()));
         String[] tokens = new String[] {"message", "paylo"};
 
         // When
@@ -132,7 +98,7 @@ class CompletionFinderTest {
     void shouldReturnListWithMapDynamicMessagePayloadCorrectly() {
         // Given
         ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
-        descriptor.setPayload(Collections.singletonList(MyListMapType.class.getName()));
+        descriptor.setPayload(Collections.singletonList(ListMyMap1Type.class.getName()));
         String[] tokens = new String[] {"message", "paylo"};
 
         // When
@@ -141,7 +107,7 @@ class CompletionFinderTest {
         // Then
         assertThat(suggestions).hasSize(1);
         Suggestion suggestion = suggestions.stream().findFirst().get();
-        assertThat(suggestion.presentableType()).isEqualTo("List<MyMapType>");
+        assertThat(suggestion.presentableType()).isEqualTo("List<MyMap1Type>");
         assertThat(suggestion.getType()).isEqualTo(Suggestion.Type.FUNCTION);
     }
 
@@ -149,7 +115,7 @@ class CompletionFinderTest {
     void shouldReturnMapDynamicMessagePayloadCorrectly() {
         // Given
         ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
-        descriptor.setPayload(Collections.singletonList(MyMapType.class.getName()));
+        descriptor.setPayload(Collections.singletonList(MyMap1Type.class.getName()));
         String[] tokens = new String[] {"message", "paylo"};
 
         // When
@@ -158,7 +124,7 @@ class CompletionFinderTest {
         // Then
         assertThat(suggestions).hasSize(1);
         Suggestion suggestion = suggestions.stream().findFirst().get();
-        assertThat(suggestion.presentableType()).isEqualTo("MyMapType");
+        assertThat(suggestion.presentableType()).isEqualTo("MyMap1Type");
         assertThat(suggestion.getType()).isEqualTo(Suggestion.Type.FUNCTION);
     }
 
@@ -166,7 +132,7 @@ class CompletionFinderTest {
     void shouldAutocompleteReturnMapDynamicMessagePayloadCorrectly() {
         // Given
         ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
-        descriptor.setPayload(Collections.singletonList(MyMapType.class.getName()));
+        descriptor.setPayload(Collections.singletonList(MyMap1Type.class.getName()));
         String[] tokens = new String[] {"message", "payload", ""};
 
         // When
@@ -183,7 +149,7 @@ class CompletionFinderTest {
     void shouldReturnSuggestionsForMultipleReturnTypes() {
         // Given
         ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
-        descriptor.setPayload(Arrays.asList(MyMapType.class.getName(), MySecondMapType.class.getName()));
+        descriptor.setPayload(Arrays.asList(MyMap1Type.class.getName(), MySecondMapType.class.getName()));
         String[] tokens = new String[] {"message", "payload", ""};
 
         // When
@@ -201,5 +167,21 @@ class CompletionFinderTest {
     private void assertExistSuggestionWithName(Collection<Suggestion> suggestions, String expectedName) {
         boolean found = suggestions.stream().anyMatch(suggestion -> expectedName.equals(suggestion.name()));
         assertThat(found).withFailMessage("Could not find suggestion with expected name=<%s>", expectedName).isTrue();
+    }
+
+    private static Suggestion createFunction(String lookup, String name, String type) {
+        return Suggestion.create(Suggestion.Type.FUNCTION)
+                .withLookupString(lookup)
+                .withName(name)
+                .withType(type)
+                .build();
+    }
+
+    private static Suggestion createProperty(String lookup, String name, String type) {
+        return Suggestion.create(Suggestion.Type.PROPERTY)
+                .withLookupString(lookup)
+                .withName(name)
+                .withType(type)
+                .build();
     }
 }

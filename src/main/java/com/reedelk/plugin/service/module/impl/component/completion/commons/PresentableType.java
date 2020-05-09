@@ -1,13 +1,13 @@
-package com.reedelk.plugin.commons;
+package com.reedelk.plugin.service.module.impl.component.completion.commons;
 
 import com.reedelk.runtime.api.commons.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ToPresentableType {
+public class PresentableType {
 
-    private ToPresentableType() {
+    private PresentableType() {
     }
 
     // Converts a fully qualified name type e.g. com.my.component.MyType to MyType.

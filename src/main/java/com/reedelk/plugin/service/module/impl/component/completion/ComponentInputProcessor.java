@@ -1,7 +1,7 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
-import com.reedelk.plugin.commons.ToPresentableType;
+import com.reedelk.plugin.service.module.impl.component.completion.commons.PresentableType;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.message.MessageAttributes;
 import org.jetbrains.annotations.NotNull;
@@ -57,7 +57,7 @@ public class ComponentInputProcessor {
                         }).map(mapper(typeAndAndTries, output))
                         .collect(toList());
                 // List<FileType> : FileType
-                String typeDisplay = CompletionFinder.presentableTypeOfTrie(outputType, typeTrie) + " : " + ToPresentableType.from(typeTrie.listItemType());
+                String typeDisplay = CompletionFinder.presentableTypeOfTrie(outputType, typeTrie) + " : " + PresentableType.from(typeTrie.listItemType());
                 return new ComponentIO.IOTypeDescriptor(typeDisplay, suggestions);
 
             } else {
@@ -87,7 +87,7 @@ public class ComponentInputProcessor {
                 } else {
                     // Complex type
                     ComponentIO.IOTypeDescriptor compute = compute(output, Collections.singletonList(orDefault.listItemType())).stream().findAny().get();
-                    String typeDisplay = suggestion.lookupString() + " : " + CompletionFinder.presentableTypeOfTrie(suggestionType, orDefault) + " : " + ToPresentableType.from(orDefault.listItemType());
+                    String typeDisplay = suggestion.lookupString() + " : " + CompletionFinder.presentableTypeOfTrie(suggestionType, orDefault) + " : " + PresentableType.from(orDefault.listItemType());
                     return new ComponentIO.IOTypeDTO(typeDisplay, compute);
                 }
             } else {
