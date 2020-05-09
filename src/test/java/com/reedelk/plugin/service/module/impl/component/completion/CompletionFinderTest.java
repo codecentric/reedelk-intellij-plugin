@@ -39,6 +39,7 @@ class CompletionFinderTest {
         ListMyUnknownType.initialize(tries);
 
         // Attribute Types
+        MessageAttributeType.initialize(tries);
         MyAttributeType.initialize(tries);
 
         Suggestion message = createProperty("message", "message", Message.class.getName());
@@ -258,9 +259,25 @@ class CompletionFinderTest {
         Collection<Suggestion> suggestions = finder.find(messageRootTrie, tokens, descriptor);
 
         // Then
-        assertThat(suggestions).hasSize(2);
+        assertThat(suggestions).hasSize(3);
         assertExistSuggestionWithName(suggestions, "attributeProperty1");
         assertExistSuggestionWithName(suggestions, "attributeProperty2");
+        assertExistSuggestionWithName(suggestions, "component");
+    }
+
+    @Test
+    void shouldReturnCorrectDefaultSuggestionsForNullAttributeType() {
+        // Given
+        ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
+        descriptor.setAttributes(null);
+        String[] tokens = new String[] {"message", "attributes", ""};
+
+        // When
+        Collection<Suggestion> suggestions = finder.find(messageRootTrie, tokens, descriptor);
+
+        // Then
+        assertThat(suggestions).hasSize(1);
+        assertExistSuggestionWithName(suggestions, "component");
     }
 
     private void assertExistSuggestionWithName(Collection<Suggestion> suggestions, String expectedName) {
