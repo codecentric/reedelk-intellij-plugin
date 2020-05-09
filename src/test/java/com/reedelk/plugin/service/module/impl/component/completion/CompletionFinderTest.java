@@ -38,6 +38,9 @@ class CompletionFinderTest {
         ListMapFirstType.initialize(tries);
         ListMyUnknownType.initialize(tries);
 
+        // Attribute Types
+        MyAttributeType.initialize(tries);
+
         Suggestion message = createProperty("message", "message", Message.class.getName());
         messageRootTrie = new TrieDefault();
         messageRootTrie.insert(message);
@@ -156,7 +159,7 @@ class CompletionFinderTest {
     }
 
     // -------------------------------- Tests for --------------------------------
-    // message.payload() (we check that there are the correct suggestions)
+    // message.payload() (we check that there are the correct suggestions for the dynamic payload type)
     // ---------------------------------------------------------------------------
     @Test
     void shouldReturnCorrectSuggestionsForPayloadTypeMap() {
@@ -214,7 +217,7 @@ class CompletionFinderTest {
     }
 
     @Test
-    void shouldReturnEmptySuggestionsWhenMessagePayloadAnOutputDescriptorPayload() {
+    void shouldReturnEmptySuggestionsWhenMessagePayloadAndNullPayload() {
         // Given
         ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
         descriptor.setPayload(null);
@@ -239,6 +242,25 @@ class CompletionFinderTest {
 
         // Then
         assertThat(suggestions).isEmpty();
+    }
+
+    // -------------------------------- Tests for --------------------------------
+    // message.attributes() (we check that there are the correct suggestions for the dynamic attributes type)
+    // ---------------------------------------------------------------------------
+    @Test
+    void shouldReturnCorrectSuggestionsForAttributeType() {
+        // Given
+        ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
+        descriptor.setAttributes(MyAttributeType.class.getName());
+        String[] tokens = new String[] {"message", "attributes", ""};
+
+        // When
+        Collection<Suggestion> suggestions = finder.find(messageRootTrie, tokens, descriptor);
+
+        // Then
+        assertThat(suggestions).hasSize(2);
+        assertExistSuggestionWithName(suggestions, "attributeProperty1");
+        assertExistSuggestionWithName(suggestions, "attributeProperty2");
     }
 
     private void assertExistSuggestionWithName(Collection<Suggestion> suggestions, String expectedName) {
