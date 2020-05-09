@@ -1,5 +1,6 @@
 package com.reedelk.plugin.commons;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.text.StringUtil;
@@ -11,7 +12,6 @@ import com.reedelk.plugin.editor.palette.PaletteToolWindowFactory;
 import com.reedelk.plugin.editor.properties.PropertiesPanelToolWindowFactory;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.util.Optional;
 
 import static java.util.Arrays.stream;
@@ -25,13 +25,13 @@ public class ToolWindowUtils {
     }
 
     public static void notifyInfoWithoutShowing(Project project, String message, String runConfigName) {
-        SwingUtilities.invokeLater(() ->
+        ApplicationManager.getApplication().invokeLater(() ->
                 findToolWindowByRunConfig(project, runConfigName).ifPresent(toolWindow ->
                         notifyInfoBalloon(toolWindow.toolWindowId, message, project)));
     }
 
     public static void notifyInfo(Project project, String message, String runConfigName) {
-        SwingUtilities.invokeLater(() ->
+        ApplicationManager.getApplication().invokeLater(() ->
                 findToolWindowByRunConfig(project, runConfigName).ifPresent(toolWindow -> {
                     getContentBy(toolWindow.toolWindow, runConfigName).ifPresent(content ->
                             toolWindow.toolWindow.getContentManager().setSelectedContent(content));
@@ -40,7 +40,7 @@ public class ToolWindowUtils {
     }
 
     public static void notifyError(Project project, String message, String runConfigName) {
-        SwingUtilities.invokeLater(() ->
+        ApplicationManager.getApplication().invokeLater(() ->
                 findToolWindowByRunConfig(project, runConfigName).ifPresent(toolWindow -> {
                     getContentBy(toolWindow.toolWindow, runConfigName).ifPresent(content ->
                             toolWindow.toolWindow.getContentManager().setSelectedContent(content));

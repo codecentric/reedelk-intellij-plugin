@@ -1,5 +1,7 @@
 package com.reedelk.plugin.editor.properties.commons;
 
+import com.intellij.openapi.application.ApplicationManager;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.event.ComponentEvent;
@@ -25,7 +27,7 @@ public class GenericTab extends DisposableScrollPane {
 
                 // Lazy loading of Table content. We do it so that we can optimize the rendering
                 // of the component's properties.
-                SwingUtilities.invokeLater(() -> {
+                ApplicationManager.getApplication().invokeLater(() -> {
 
                     JComponent jComponent = componentSupplier.get();
 

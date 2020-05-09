@@ -56,6 +56,25 @@ public class CompletionTracker implements ComponentService {
 
         onCompletionEvent = project.getMessageBus().syncPublisher(Topics.COMPLETION_EVENT_TOPIC);
         onComponentIO = project.getMessageBus().syncPublisher(Topics.ON_COMPONENT_IO);
+
+        // Init async
+        Trie trie = new TrieDefault();
+        trie.insert(Suggestion.create(Suggestion.Type.FUNCTION)
+                .withLookupString("each { it }")
+                .withPresentableText("each")
+                .withCursorOffset(2)
+                .build());
+        trie.insert(Suggestion.create(Suggestion.Type.FUNCTION)
+                .withLookupString("eachWithIndex { it, i ->  }")
+                .withPresentableText("eachWithIndex")
+                .withCursorOffset(2)
+                .build());
+        trie.insert(Suggestion.create(Suggestion.Type.FUNCTION)
+                .withLookupString("collect { it }")
+                .withPresentableText("collect")
+                .withCursorOffset(2)
+                .build());
+        flowControlTypes.put(ArrayList.class.getName(), trie);
     }
 
     @Override

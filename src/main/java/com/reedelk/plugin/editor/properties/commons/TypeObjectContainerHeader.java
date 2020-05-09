@@ -21,23 +21,24 @@ import static java.awt.BorderLayout.WEST;
 public class TypeObjectContainerHeader extends DisposablePanel {
 
     public TypeObjectContainerHeader(String displayName, Icon icon, OnClickAction labelClickListener) {
-        this(new ClickableLabel(displayName, icon, LEFT, labelClickListener), null);
+        this(new ClickableLabel(displayName, icon, LEFT, labelClickListener), null, true);
     }
 
     public TypeObjectContainerHeader(String displayName, TooltipContent tooltipContent, Icon icon, OnClickAction labelClickListener) {
-        this(new ClickableLabel(displayName, icon, LEFT, labelClickListener), tooltipContent);
+        this(new ClickableLabel(displayName, icon, LEFT, labelClickListener), tooltipContent, true);
     }
 
     public TypeObjectContainerHeader(String displayName, TooltipContent tooltipContent) {
-        this(new JBLabel(displayName), tooltipContent);
+        this(new JBLabel(displayName), tooltipContent, true);
     }
 
-    private TypeObjectContainerHeader(JLabel label, @Nullable TooltipContent tooltipContent) {
+    public TypeObjectContainerHeader(String displayName, TooltipContent tooltipContent, Icon icon, OnClickAction clickAction, boolean horizontalBar) {
+        this(new ClickableLabel(displayName, icon, LEFT, clickAction), tooltipContent, horizontalBar);
+    }
+
+    private TypeObjectContainerHeader(JLabel label, @Nullable TooltipContent tooltipContent, boolean horizontalBar) {
         label.setForeground(Colors.TOOL_WINDOW_PROPERTIES_TEXT);
         label.setOpaque(false);
-
-        HorizontalSeparator separator = new HorizontalSeparator();
-        separator.setOpaque(false);
 
         JComponent westComponent = Optional.ofNullable(tooltipContent)
                 .map(content -> content.build()
@@ -51,7 +52,12 @@ public class TypeObjectContainerHeader extends DisposablePanel {
         setOpaque(false);
         setLayout(new BorderLayout());
         add(westComponent, WEST);
-        add(separator, CENTER);
+
+        if (horizontalBar) {
+            HorizontalSeparator separator = new HorizontalSeparator();
+            separator.setOpaque(false);
+            add(separator, CENTER);
+        }
     }
 
     private static class HorizontalSeparator extends DisposablePanel {

@@ -3,6 +3,7 @@ package com.reedelk.plugin.builder;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.JavaModuleType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbAwareRunnable;
@@ -32,7 +33,6 @@ import java.util.Optional;
 
 import static com.intellij.openapi.ui.Messages.showErrorDialog;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
-import static javax.swing.SwingUtilities.invokeLater;
 
 public class ModuleBuilder extends MavenModuleBuilder {
 
@@ -50,8 +50,7 @@ public class ModuleBuilder extends MavenModuleBuilder {
     public void setupRootModel(@NotNull ModifiableRootModel rootModel) {
         super.setupRootModel(rootModel);
 
-        @NotNull
-        final String contentEntryPath = getContentEntryPath(); // Not null because it is initialized by the setup of the root model.
+        @NotNull final String contentEntryPath = getContentEntryPath(); // Not null because it is initialized by the setup of the root model.
         final Project project = rootModel.getProject();
 
         VirtualFile root = LocalFileSystem.getInstance().findFileByPath(contentEntryPath);
@@ -67,11 +66,12 @@ public class ModuleBuilder extends MavenModuleBuilder {
                         FileUtils.copyDirectory(tmpDownloadDistributionPath.toFile(), destination.toFile());
                     } catch (IOException e) {
                         // We cannot recover here. We should just display an error message.
-                        invokeLater(() -> showErrorDialog(
-                                message("moduleBuilder.copy.distribution.error.message",
-                                        tmpDownloadDistributionPath.toString(),
-                                        destination.toString()),
-                                message("moduleBuilder.copy.distribution.error.title")));
+                        ApplicationManager.getApplication().invokeLater(() ->
+                                showErrorDialog(
+                                        message("moduleBuilder.copy.distribution.error.message",
+                                                tmpDownloadDistributionPath.toString(),
+                                                destination.toString()),
+                                        message("moduleBuilder.copy.distribution.error.title")));
                     }
 
                     // Create Runtime Run Configuration

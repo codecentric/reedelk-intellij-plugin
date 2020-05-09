@@ -1,5 +1,6 @@
 package com.reedelk.plugin.editor.designer;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.util.messages.MessageBusConnection;
@@ -40,7 +41,6 @@ import java.util.Optional;
 import static com.reedelk.plugin.editor.designer.dnd.DesignerDropTargetListener.DropActionListener;
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
-import static javax.swing.SwingUtilities.invokeLater;
 
 public abstract class DesignerPanel extends DisposablePanel implements
         MouseMotionListener, MouseListenerAdapter, SnapshotListener,
@@ -292,7 +292,8 @@ public abstract class DesignerPanel extends DisposablePanel implements
             // the selection would be bound to the old object before refreshing
             // the flow (or subflow) graph.
             snapshot.applyOnValidGraph(graph ->
-                    invokeLater(() -> select(defaultSelectedItem, false)));
+                    ApplicationManager.getApplication().invokeLater(() ->
+                            select(defaultSelectedItem, false)));
         }
     }
 
@@ -364,7 +365,8 @@ public abstract class DesignerPanel extends DisposablePanel implements
     }
 
     private void refresh() {
-        invokeLater(this::repaint);
+        ApplicationManager.getApplication()
+                .invokeLater(this::repaint);
     }
 
     private void addAncestorListener() {

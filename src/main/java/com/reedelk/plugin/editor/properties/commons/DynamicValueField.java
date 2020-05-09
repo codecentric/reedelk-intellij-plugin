@@ -1,5 +1,6 @@
 package com.reedelk.plugin.editor.properties.commons;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Fonts;
@@ -76,7 +77,7 @@ public class DynamicValueField extends DisposablePanel {
     }
 
     private void switchComponent(DisposablePanel visible, DisposablePanel invisible) {
-        SwingUtilities.invokeLater(() -> {
+        ApplicationManager.getApplication().invokeLater(() -> {
             DynamicValueField.this.add(visible, CENTER);
             visible.requestFocus();
             DynamicValueField.this.remove(invisible);

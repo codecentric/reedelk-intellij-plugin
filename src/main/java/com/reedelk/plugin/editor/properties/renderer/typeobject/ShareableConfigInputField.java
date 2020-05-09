@@ -1,5 +1,6 @@
 package com.reedelk.plugin.editor.properties.renderer.typeobject;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.module.descriptor.model.component.ComponentDataHolder;
@@ -150,7 +151,7 @@ class ShareableConfigInputField extends DisposablePanel implements Configuration
         DefaultComboBoxModel<ConfigMetadata> comboModel = new DefaultComboBoxModel<>();
         updatedConfigurations.forEach(comboModel::addElement);
 
-        SwingUtilities.invokeLater(() -> {
+        ApplicationManager.getApplication().invokeLater(() -> {
             // We must remove any previous listener.
             configurationSelectorCombo.removeListener();
 

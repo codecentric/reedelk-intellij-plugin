@@ -16,6 +16,7 @@ import com.reedelk.plugin.service.module.impl.component.completion.ComponentIO;
 import com.reedelk.plugin.service.module.impl.component.completion.OnComponentIO;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.message.MessageAttributes;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -35,7 +36,7 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
     private final DisposablePanel loadingPanel;
     private MessageBusConnection connection;
 
-    public PropertiesPanelIOContainer(Module module, ContainerContext context, String componentFullyQualifiedName) {
+    public PropertiesPanelIOContainer(@NotNull Module module, ContainerContext context, String componentFullyQualifiedName) {
         super(new BorderLayout());
 
         loadingPanel = new PanelWithText.LoadingContentPanel();
@@ -67,26 +68,32 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
         theContent.setBackground(JBColor.WHITE);
         DisposablePanel panel = ContainerFactory.pushTop(theContent);
         panel.setBackground(JBColor.WHITE);
+        panel.setBorder(JBUI.Borders.empty(5, 2));
         contentPanel.setViewportView(panel);
-
-        remove(loadingPanel);
-        add(contentPanel, BorderLayout.CENTER);
-
 
         List<ComponentIO.IOTypeDescriptor> payloads = componentIO.getPayload();
         if (payloads.size() == 1) {
             // Inline
             ComponentIO.IOTypeDescriptor IOTypeDescriptor = payloads.get(0);
-            DisposableCollapsiblePane payload = createPanel(htmlLabel("payload", IOTypeDescriptor.getType()), IOTypeDescriptor, 30, false);
+            boolean collapsed = IOTypeDescriptor.getProperties().isEmpty(); // Collapsed if there are no properties
+            DisposableCollapsiblePane payload = createPanel(htmlLabel("payload", IOTypeDescriptor.getType()), IOTypeDescriptor, 30, collapsed, true);
+            payload.setBorder(JBUI.Borders.empty());
             FormBuilder.get().addFullWidthAndHeight(payload, theContent);
         } else {
-            DisposableCollapsiblePane payload = createPanel(htmlLabel("payload", "one of the following types"), payloads, 30, false);
+            DisposableCollapsiblePane payload = createPanel(htmlLabel("payload", "(one of the following types)"), payloads, 30, false, true);
+            payload.setBorder(JBUI.Borders.empty());
             FormBuilder.get().addFullWidthAndHeight(payload, theContent);
         }
 
-        DisposableCollapsiblePane attributes = createPanel(htmlLabel("attributes", MessageAttributes.class.getSimpleName()), componentIO.getAttributes(), 30, false);
+        DisposableCollapsiblePane attributes = createPanel(htmlLabel("attributes", MessageAttributes.class.getSimpleName()), componentIO.getAttributes(), 30, false, true);
+        attributes.setBorder(JBUI.Borders.emptyTop(4));
         FormBuilder.get().addFullWidthAndHeight(attributes, theContent);
-        ApplicationManager.getApplication().invokeLater(this::repaint);
+
+        ApplicationManager.getApplication().invokeLater(() -> {
+            remove(loadingPanel);
+            add(contentPanel, BorderLayout.CENTER);
+            repaint();
+        });
     }
 
     @Override
@@ -119,7 +126,7 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
         }
     }
 
-    private static DisposableCollapsiblePane createPanel(String title, List<ComponentIO.IOTypeDescriptor> payloads, int parentPadding, boolean defaultCollapsed) {
+    private static DisposableCollapsiblePane createPanel(String title, List<ComponentIO.IOTypeDescriptor> payloads, int parentPadding, boolean defaultCollapsed, boolean horizontalBar) {
         return new DisposableCollapsiblePane(title, () -> {
             DisposablePanel content = new DisposablePanel(new GridBagLayout());
             content.setBackground(JBColor.WHITE);
@@ -144,7 +151,7 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
                                     FormBuilder.get().addLastField(Box.createHorizontalGlue(), content);
                                 } else {
                                     ComponentIO.IOTypeDescriptor complex = iotypeDTO.complex;
-                                    DisposableCollapsiblePane payload = createPanel(htmlLabel(iotypeDTO.name, complex.getType()), complex, parentPadding, true);
+                                    DisposableCollapsiblePane payload = createPanel(htmlLabel(iotypeDTO.name, complex.getType()), complex, parentPadding, true, horizontalBar);
                                     payload.setBorder(JBUI.Borders.empty());
                                     payload.setBorder(JBUI.Borders.emptyLeft(parentPadding - 20));
                                     FormBuilder.get().addFullWidthAndHeight(payload, content);
@@ -153,15 +160,14 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
                 }
             });
             return content;
-        }, defaultCollapsed);
+        }, defaultCollapsed, horizontalBar);
     }
 
-    private static DisposableCollapsiblePane createPanel(String title, ComponentIO.IOTypeDescriptor descriptor, int parentPadding, boolean defaultCollapsed) {
+    private static DisposableCollapsiblePane createPanel(String title, ComponentIO.IOTypeDescriptor descriptor, int parentPadding, boolean defaultCollapsed, boolean horizontalBar) {
         return new DisposableCollapsiblePane(title, () -> {
             DisposablePanel content = new DisposablePanel(new GridBagLayout());
             content.setBackground(JBColor.WHITE);
-            descriptor.getProperties().stream().sorted(Comparator.comparing(ioTypeDTO -> ioTypeDTO.name))
-                    .forEach(iotypeDTO -> {
+            descriptor.getProperties().stream().sorted(Comparator.comparing(ioTypeDTO -> ioTypeDTO.name)).forEach(iotypeDTO -> {
                 if (StringUtils.isNotBlank(iotypeDTO.value)) {
                     String label = htmlLabel(iotypeDTO.name, iotypeDTO.value);
                     JBLabel attributes = new JBLabel(label, JLabel.LEFT);
@@ -171,7 +177,7 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
                     FormBuilder.get().addLastField(Box.createHorizontalGlue(), content);
                 } else {
                     ComponentIO.IOTypeDescriptor complex = iotypeDTO.complex;
-                    DisposableCollapsiblePane payload = createPanel(htmlLabel(iotypeDTO.name, complex.getType()), complex, parentPadding, true);
+                    DisposableCollapsiblePane payload = createPanel(htmlLabel(iotypeDTO.name, ""), complex, parentPadding, true, false);
                     payload.setBorder(JBUI.Borders.empty());
                     payload.setBorder(JBUI.Borders.emptyLeft(parentPadding - 20));
                     FormBuilder.get().addFullWidthAndHeight(payload, content);
@@ -179,7 +185,7 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
             });
 
             return content;
-        }, defaultCollapsed);
+        }, defaultCollapsed, horizontalBar);
     }
 
     private static final String HTML_WITH_VALUE = "<html>%s : <i>%s</i></html>";
@@ -187,6 +193,8 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
 
     private static String htmlLabel(String key, String value) {
         if (StringUtils.isBlank(value)) {
+            key = key.replaceAll("<", "&lt;");
+            key = key.replaceAll(">", "&gt;");
             return String.format(HTML_WITHOUT_VALUE, key);
         } else {
             value = value.replaceAll("<", "&lt;");

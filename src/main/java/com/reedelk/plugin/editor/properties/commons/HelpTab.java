@@ -1,5 +1,6 @@
 package com.reedelk.plugin.editor.properties.commons;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.reedelk.plugin.commons.HyperlinkListenerUtils;
 import com.reedelk.plugin.component.ComponentData;
 
@@ -39,7 +40,7 @@ public class HelpTab extends DisposableScrollPane {
 
                 // Lazy loading of Table content. We do it so that we can optimize the rendering
                 // of the component's properties.
-                SwingUtilities.invokeLater(() -> {
+                ApplicationManager.getApplication().invokeLater(() -> {
 
                     ImageCache image_cache = new ImageCache((BufferedImage) componentData.getComponentImage());
                     String componentDescription = Optional.ofNullable(componentData.getDescription())

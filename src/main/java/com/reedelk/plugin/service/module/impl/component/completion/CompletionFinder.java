@@ -7,8 +7,6 @@ import com.reedelk.runtime.api.message.MessageAttributes;
 import com.reedelk.runtime.api.message.MessagePayload;
 
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
@@ -53,22 +51,20 @@ public class CompletionFinder {
         // For each suggestion we need to pick up the extends type and figure out the display name.
         List<Suggestion> finalSuggestions = new ArrayList<>();
         for (Suggestion suggestion : suggestions) {
-            if (MessagePayload.class.getName().equals(suggestion.typeText())) {
-                getRealType(suggestion.typeText(), descriptor).forEach(new Consumer<String>() {
-                    @Override
-                    public void accept(String type) {
-                        // We need to create artificial suggestions due to the nature
-                        // of the message payload type.
-                        Suggestion sugg = Suggestion.create(suggestion.getType())
-                                .withType(type)
-                                .withPresentableType(getRealVisualType(suggestion.typeText(), typeAndTrieMap, descriptor))
-                                .withCursorOffset(suggestion.cursorOffset())
-                                .withName(suggestion.name())
-                                .withLookupString(suggestion.lookupString())
-                                .withPresentableText(suggestion.presentableText())
-                                .build();
-                        finalSuggestions.add(sugg);
-                    }
+            if (MessagePayload.class.getName().equals(suggestion.typeText()) ||
+                    MessageAttributes.class.getName().equals(suggestion.typeText())) {
+                getRealType(suggestion.typeText(), descriptor).forEach(type -> {
+                    // We need to create artificial suggestions due to the nature
+                    // of the message payload type.
+                    Suggestion dynamicSuggestion = Suggestion.create(suggestion.getType())
+                            .withType(type)
+                            .withName(suggestion.name())
+                            .withCursorOffset(suggestion.cursorOffset())
+                            .withLookupString(suggestion.lookupString())
+                            .withPresentableText(suggestion.presentableText())
+                            .withPresentableType(getRealVisualType(suggestion.typeText(), typeAndTrieMap, descriptor))
+                            .build();
+                    finalSuggestions.add(dynamicSuggestion);
                 });
 
             } else {
@@ -84,13 +80,13 @@ public class CompletionFinder {
         if(returnType.equals(MessagePayload.class.getName())) {
             // TODO: Descriptor might be null!
             List<String> payload = Optional.ofNullable(descriptor.getPayload()).orElse(singletonList(Object.class.getName()));
-            return payload.stream().map(new Function<String, String>() {
-                @Override
-                public String apply(String payloadFullyQualifiedName) {
-                    Trie orDefault = typeAndTrieMap.getOrDefault(payloadFullyQualifiedName, null);
-                    return presentableTypeOfTrie(payloadFullyQualifiedName, orDefault);
-                }
+            return payload.stream().map(payloadFullyQualifiedName -> {
+                Trie orDefault = typeAndTrieMap.getOrDefault(payloadFullyQualifiedName, null);
+                return presentableTypeOfTrie(payloadFullyQualifiedName, orDefault);
             }).collect(Collectors.joining(","));
+        }
+        if (returnType.equals(MessageAttributes.class.getName())) {
+            return MessageAttributes.class.getSimpleName();
         }
         return returnType;
     }

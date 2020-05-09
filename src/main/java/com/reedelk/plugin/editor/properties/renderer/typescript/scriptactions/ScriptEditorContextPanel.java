@@ -1,5 +1,6 @@
 package com.reedelk.plugin.editor.properties.renderer.typescript.scriptactions;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.messages.MessageBusConnection;
@@ -81,8 +82,8 @@ class ScriptEditorContextPanel extends DisposablePanel implements ComponentServi
     @Override
     public void onCompletionsUpdated() {
         List<Suggestion> suggestions = getSuggestions();
-        SwingUtilities.invokeLater(() -> {
-            panelVariables.removeAll();
+        ApplicationManager.getApplication().invokeLater(() -> {
+                panelVariables.removeAll();
             suggestions.forEach(suggestion -> panelVariables.add(new ContextVariableLabel(suggestion)));
             panelVariables.repaint();
         });

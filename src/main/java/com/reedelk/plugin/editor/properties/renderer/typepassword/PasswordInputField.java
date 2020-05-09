@@ -1,5 +1,6 @@
 package com.reedelk.plugin.editor.properties.renderer.typepassword;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.ui.components.JBPasswordField;
 import com.reedelk.plugin.converter.ValueConverter;
 import com.reedelk.plugin.converter.ValueConverterProvider;
@@ -8,7 +9,6 @@ import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.InputChangeListener;
 import com.reedelk.runtime.api.annotation.Password;
 
-import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
@@ -31,7 +31,7 @@ public class PasswordInputField extends DisposablePanel implements DocumentListe
         char defaultEchoChar = passwordField.getEchoChar();
 
         showPassword = new ClickableLabel(ShowPassword, () ->
-                SwingUtilities.invokeLater(() -> {
+                ApplicationManager.getApplication().invokeLater(() -> {
                     if (isPasswordHidden) {
                         showPassword.setIcon(HidePassword);
                         showPassword.repaint();

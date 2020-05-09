@@ -95,21 +95,25 @@ public class ModuleBuilderBeforeTaskProvider extends BeforeRunTaskProvider<Modul
         if (isBlank(moduleName)) {
             String errorMessage = message("module.run.error.module.not.selected", moduleRunConfiguration.getName());
             Project project = env.getProject();
-            SwingUtilities.invokeLater(() -> ToolWindowUtils.notifyError(project, errorMessage, moduleRunConfiguration.getName()));
+            ApplicationManager.getApplication().invokeLater(() ->
+                    ApplicationManager.getApplication().invokeLater(() ->
+                            ToolWindowUtils.notifyError(project, errorMessage, moduleRunConfiguration.getName())));
             return false;
         }
 
         if (RuntimeComboManager.NO_RUNTIME_CONFIG_AVAILABLE.equals(runtimeConfigName)) {
             String errorMessage = message("module.run.error.runtime.to.be.defined", moduleRunConfiguration.getName());
             Project project = env.getProject();
-            SwingUtilities.invokeLater(() -> ToolWindowUtils.notifyError(project, errorMessage, moduleRunConfiguration.getName()));
+            ApplicationManager.getApplication().invokeLater(() ->
+                    ToolWindowUtils.notifyError(project, errorMessage, moduleRunConfiguration.getName()));
             return false;
         }
 
         if (isBlank(runtimeConfigName)) {
             String errorMessage = message("module.run.error.runtime.not.selected", moduleRunConfiguration.getName());
             Project project = env.getProject();
-            SwingUtilities.invokeLater(() -> ToolWindowUtils.notifyError(project, errorMessage, moduleRunConfiguration.getName()));
+            ApplicationManager.getApplication().invokeLater(() ->
+                    ToolWindowUtils.notifyError(project, errorMessage, moduleRunConfiguration.getName()));
             return false;
         }
 
@@ -118,7 +122,8 @@ public class ModuleBuilderBeforeTaskProvider extends BeforeRunTaskProvider<Modul
             // The Configuration has a module name which has been probably changed, hence it does not exists.
             String errorMessage = message("module.run.error.module.does.not.exists", moduleName, moduleRunConfiguration.getName());
             Project project = env.getProject();
-            SwingUtilities.invokeLater(() -> ToolWindowUtils.notifyError(project, errorMessage, moduleRunConfiguration.getName()));
+            ApplicationManager.getApplication().invokeLater(() ->
+                    ToolWindowUtils.notifyError(project, errorMessage, moduleRunConfiguration.getName()));
             return false;
         }
 

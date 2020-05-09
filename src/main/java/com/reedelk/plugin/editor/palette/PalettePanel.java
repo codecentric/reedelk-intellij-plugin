@@ -95,7 +95,7 @@ public class PalettePanel extends JBPanel<PalettePanel> implements ComponentServ
     private void updateComponents(Collection<ModuleDTO> modules) {
         List<DefaultMutableTreeNode> componentsTreeNodes = asTreeNodes(modules);
 
-        SwingUtilities.invokeLater(() -> {
+        ApplicationManager.getApplication().invokeLater(() -> {
 
             root.removeAllChildren();
 

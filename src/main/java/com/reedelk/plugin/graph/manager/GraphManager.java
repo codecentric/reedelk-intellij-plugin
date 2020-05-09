@@ -26,7 +26,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 
 import static com.reedelk.plugin.message.ReedelkBundle.message;
-import static javax.swing.SwingUtilities.invokeLater;
 
 /**
  * Centralizes updates of the graph coming from:
@@ -137,11 +136,13 @@ public abstract class GraphManager implements FileEditorManagerListener,
         PluginExecutors.onDeserializeExecutor(() -> {
             try {
                 FlowGraph deSerializedGraph = deserialize(module, json, graphProvider);
-                invokeLater(() -> snapshot.updateSnapshot(GraphManager.this, deSerializedGraph));
+                ApplicationManager.getApplication().invokeLater(() ->
+                        snapshot.updateSnapshot(GraphManager.this, deSerializedGraph));
             } catch (Exception exception) {
                 LOG.warn(message("graph.manager.error.deserialization", json, exception.getMessage()), exception);
                 FlowGraph deSerializedGraph = new ErrorFlowGraph(exception);
-                invokeLater(() -> snapshot.updateSnapshot(GraphManager.this, deSerializedGraph));
+                ApplicationManager.getApplication().invokeLater(() ->
+                        snapshot.updateSnapshot(GraphManager.this, deSerializedGraph));
             }
         });
     }

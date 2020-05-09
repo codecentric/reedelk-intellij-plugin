@@ -3,6 +3,7 @@ package com.reedelk.plugin.builder;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.ConfigurationException;
@@ -33,7 +34,6 @@ import static com.intellij.uiDesigner.core.GridConstraints.*;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.lang.String.join;
 import static java.util.Collections.singletonList;
-import static javax.swing.SwingUtilities.invokeLater;
 
 public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListener, Disposable {
 
@@ -77,7 +77,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
             });
 
         } else if (isDownloadedAlready()) {
-            invokeLater(() -> {
+            ApplicationManager.getApplication().invokeLater(() -> {
                 setRuntimeHomeVisible(false);
                 downloadedZipFileIcon.setVisible(true);
                 downloadedZipFile.setVisible(true);
@@ -87,7 +87,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
                 loadingPanel.repaint();
             });
         } else {
-            invokeLater(() -> {
+            ApplicationManager.getApplication().invokeLater(() -> {
                 setRuntimeHomeVisible(true);
                 downloadedZipFileIcon.setVisible(false);
                 downloadedZipFile.setVisible(false);
@@ -243,7 +243,8 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
 
         @Override
         public void run() {
-            invokeLater(() -> wizardContext.getWizard().updateButtons(false, false, false));
+            ApplicationManager.getApplication().invokeLater(() ->
+                    wizardContext.getWizard().updateButtons(false, false, false));
             try {
                 final int startStep = wizardContext.getWizard().getCurrentStep();
 
@@ -257,7 +258,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
                     runtimeConfigNameTextField.setText(downloadDistributionPath.getFileName().toString());
                     moduleBuilder.setTmpDownloadDistributionPath(downloadDistributionPath);
 
-                    invokeLater(() -> {
+                    ApplicationManager.getApplication().invokeLater(() -> {
                         // We stop the loading spinning wheel and move on to the next step.
                         loadingPanel.stopLoading();
                         wizardContext.getWizard().updateButtons(false, true, false);
@@ -266,7 +267,7 @@ public class ConfigureRuntimeStep extends ModuleWizardStep implements ItemListen
                 }
 
             } catch (Exception exception) {
-                invokeLater(() -> {
+                ApplicationManager.getApplication().invokeLater(() -> {
                     String errorMessage = message("runtimeBuilder.downloading.distribution.error.message", exception.getMessage());
                     String errorTitle = message("runtimeBuilder.downloading.distribution.error.title");
                     DownloadErrorPanel errorPanel = new DownloadErrorPanel();

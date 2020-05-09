@@ -1,5 +1,6 @@
 package com.reedelk.plugin.editor.properties.commons;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.TooltipContent;
 import org.jetbrains.annotations.NotNull;
@@ -17,41 +18,52 @@ import static java.awt.BorderLayout.NORTH;
 public class DisposableCollapsiblePane extends DisposablePanel {
 
     private final String displayName;
+    private final boolean horizontalBar;
     private final DisposablePanel collapsedContent;
     private final transient TooltipContent tooltipContent;
     private final transient ContentRenderer renderingFunction;
 
     private DisposablePanel unCollapsedContent;
 
-    private boolean collapsed = true;
+    private boolean collapsed;
     private boolean loaded = false;
 
     public DisposableCollapsiblePane(@NotNull String displayName,
                                      @NotNull ContentRenderer unCollapsedContentRenderer) {
-        this(displayName, unCollapsedContentRenderer, null, false);
+        this(displayName, unCollapsedContentRenderer, null, false, true);
     }
 
     public DisposableCollapsiblePane(@NotNull String displayName,
                                      @NotNull ContentRenderer unCollapsedContentRenderer,
                                      boolean defaultCollapsed) {
-        this(displayName, unCollapsedContentRenderer, null, defaultCollapsed);
+        this(displayName, unCollapsedContentRenderer, null, defaultCollapsed, true);
+    }
+
+    public DisposableCollapsiblePane(@NotNull String displayName,
+                                     @NotNull ContentRenderer unCollapsedContentRenderer,
+                                     boolean defaultCollapsed,
+                                     boolean horizontalBar) {
+        this(displayName, unCollapsedContentRenderer, null, defaultCollapsed, horizontalBar);
     }
 
     public DisposableCollapsiblePane(@NotNull String displayName,
                                      @NotNull ContentRenderer unCollapsedContentRenderer,
                                      @Nullable TooltipContent tooltipContent) {
-        this(displayName, unCollapsedContentRenderer, tooltipContent, true);
+        this(displayName, unCollapsedContentRenderer, tooltipContent, true, true);
     }
 
     public DisposableCollapsiblePane(@NotNull String displayName,
                                      @NotNull ContentRenderer unCollapsedContentRenderer,
                                      @Nullable TooltipContent tooltipContent,
-                                     boolean defaultCollapsed) {
+                                     boolean defaultCollapsed,
+                                     boolean horizontalBar) {
         this.displayName = displayName;
+        this.collapsed = defaultCollapsed;
+        this.horizontalBar = horizontalBar;
         this.tooltipContent = tooltipContent;
         this.renderingFunction = unCollapsedContentRenderer;
-        this.collapsedContent = new CollapsedContent(displayName, tooltipContent);
-        this.unCollapsedContent = new UnCollapsedContent(displayName, tooltipContent, new LoadingContentPanel());
+        this.collapsedContent = new CollapsedContent(displayName, tooltipContent, horizontalBar);
+        this.unCollapsedContent = new UnCollapsedContent(displayName, tooltipContent, new LoadingContentPanel(), horizontalBar);
 
         setLayout(new BorderLayout());
         setOpaque(false);
@@ -73,19 +85,21 @@ public class DisposableCollapsiblePane extends DisposablePanel {
     }
 
     private void collapse() {
-        SwingUtilities.invokeLater(() -> {
+        ApplicationManager.getApplication().invokeLater(() -> {
             remove(unCollapsedContent);
             add(collapsedContent);
             revalidate();
+            repaint();
         });
     }
 
     private void unCollapse() {
-        SwingUtilities.invokeLater(() -> {
+        ApplicationManager.getApplication().invokeLater(() -> {
             if (loaded) {
                 removeAll();
                 add(unCollapsedContent);
                 revalidate();
+                repaint();
             } else {
                 lazyLoadUnCollapsedContent();
             }
@@ -98,21 +112,22 @@ public class DisposableCollapsiblePane extends DisposablePanel {
      * properties are displayed in the Properties Tool Window.
      */
     private void lazyLoadUnCollapsedContent() {
-        SwingUtilities.invokeLater(() -> {
+        ApplicationManager.getApplication().invokeLater(() -> {
             removeAll();
             JComponent renderedContent = renderingFunction.render();
             loaded = true;
-            unCollapsedContent = new UnCollapsedContent(displayName, tooltipContent, renderedContent);
+            unCollapsedContent = new UnCollapsedContent(displayName, tooltipContent, renderedContent, horizontalBar);
             add(unCollapsedContent);
             revalidate();
+            repaint();
         });
     }
 
     class UnCollapsedContent extends DisposablePanel {
-        UnCollapsedContent(String displayName, TooltipContent tooltipContent, JComponent content) {
+        UnCollapsedContent(String displayName, TooltipContent tooltipContent, JComponent content, boolean horizontalBar) {
             // header
             TypeObjectContainerHeader topHeader =
-                    new TypeObjectContainerHeader(displayName, tooltipContent, ArrowDown, clickAction);
+                    new TypeObjectContainerHeader(displayName, tooltipContent, ArrowDown, clickAction, horizontalBar);
             setLayout(new BorderLayout());
             setOpaque(false);
             add(topHeader, NORTH);
@@ -121,8 +136,8 @@ public class DisposableCollapsiblePane extends DisposablePanel {
     }
 
     class CollapsedContent extends TypeObjectContainerHeader {
-        CollapsedContent(String displayName, TooltipContent tooltipContent) {
-            super(displayName, tooltipContent, ArrowRight, clickAction);
+        CollapsedContent(String displayName, TooltipContent tooltipContent, boolean horizontalBar) {
+            super(displayName, tooltipContent, ArrowRight, clickAction, horizontalBar);
         }
     }
 
