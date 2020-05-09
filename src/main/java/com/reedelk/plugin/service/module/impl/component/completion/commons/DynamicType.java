@@ -8,11 +8,9 @@ import com.reedelk.runtime.api.message.MessageAttributes;
 import com.reedelk.runtime.api.message.MessagePayload;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 import static java.util.Collections.singletonList;
 
 public class DynamicType {
@@ -21,21 +19,20 @@ public class DynamicType {
     }
 
     // Resolves the dynamic type from the output descriptor
-    @SuppressWarnings("UnnecessaryLocalVariable")
     public static List<String> from(Suggestion suggestion, ComponentOutputDescriptor descriptor) {
         String suggestionType = suggestion.typeText();
         if (MessageAttributes.class.getName().equals(suggestionType)) {
-            String attributeDynamicType = descriptor != null ?
-                    descriptor.getAttributes() : MessageAttributes.class.getName();
-            return Collections.singletonList(attributeDynamicType);
+            return descriptor != null && descriptor.getAttributes() != null ?
+                    singletonList(descriptor.getAttributes()) :
+                    singletonList(MessageAttributes.class.getName());
 
         } else if (MessagePayload.class.getName().equals(suggestionType)) {
-            List<String> payloadDynamicTypes = descriptor != null ?
-                    descriptor.getPayload() : singletonList(Object.class.getName());
-            return payloadDynamicTypes;
+            return descriptor != null && descriptor.getPayload() != null ?
+                descriptor.getPayload() :
+                    singletonList(Object.class.getName());
 
         } else {
-            return Collections.singletonList(Object.class.getName());
+            return singletonList(Object.class.getName());
         }
     }
 
@@ -61,17 +58,7 @@ public class DynamicType {
             return MessageAttributes.class.getSimpleName(); // We keep the message attributes.
         } else {
             Trie dynamicTypeTrie = typeAndTrieMap.getOrDefault(dynamicType, UnknownTypeTrie.get());
-            return presentableTypeOfTrie(dynamicType, dynamicTypeTrie);
-        }
-    }
-
-    public static String presentableTypeOfTrie(String dynamicType, Trie trie) {
-        if (isNotBlank(trie.listItemType())) {
-            // If exists a list item type, it is a list and we want to display it with: List<ItemType>
-            String listItemType = trie.listItemType();
-            return "List<" + PresentableType.from(listItemType) + ">";
-        } else {
-            return PresentableType.from(dynamicType);
+            return PresentableType.from(dynamicType, dynamicTypeTrie);
         }
     }
 

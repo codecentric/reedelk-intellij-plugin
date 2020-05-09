@@ -156,6 +156,32 @@ class CompletionFinderTest {
         assertExistSuggestionWithName(suggestions, "secondProperty2");
     }
 
+    @Test
+    void shouldReturnEmptySuggestionsWhenMessagePayloadAndNullOutputDescriptor() {
+        // Given
+        ComponentOutputDescriptor descriptor = null;
+        String[] tokens = new String[] {"message", "payload", ""};
+
+        // When
+        Collection<Suggestion> suggestions = completionFinder.find(messageRootTrie, tokens, descriptor);
+
+        // Then
+        assertThat(suggestions).isEmpty();
+    }
+
+    @Test
+    void shouldReturnEmptySuggestionsWhenMessagePayloadAnOutputDescriptorPayload() {
+        // Given
+        ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
+        descriptor.setPayload(null);
+        String[] tokens = new String[] {"message", "payload", ""};
+
+        // When
+        Collection<Suggestion> suggestions = completionFinder.find(messageRootTrie, tokens, descriptor);
+
+        // Then
+        assertThat(suggestions).isEmpty();
+    }
 
     private void assertExistSuggestionWithName(Collection<Suggestion> suggestions, String expectedName) {
         boolean found = suggestions.stream().anyMatch(suggestion -> expectedName.equals(suggestion.name()));
