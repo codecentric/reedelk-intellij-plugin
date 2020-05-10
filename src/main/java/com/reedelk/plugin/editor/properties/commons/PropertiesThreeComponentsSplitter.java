@@ -4,7 +4,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.ui.JBColor;
 import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.Sizes;
-import com.reedelk.plugin.editor.properties.componentio.ComponentInput;
+import com.reedelk.plugin.editor.properties.componentinput.ComponentInput;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import org.jetbrains.annotations.NotNull;
 

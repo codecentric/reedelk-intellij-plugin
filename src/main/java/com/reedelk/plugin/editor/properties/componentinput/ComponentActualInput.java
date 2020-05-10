@@ -1,13 +1,14 @@
-package com.reedelk.plugin.editor.properties.componentio;
+package com.reedelk.plugin.editor.properties.componentinput;
 
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Colors;
-import com.reedelk.plugin.editor.properties.commons.*;
+import com.reedelk.plugin.editor.properties.commons.DisposableCollapsiblePane;
+import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
+import com.reedelk.plugin.editor.properties.commons.FormBuilder;
 import com.reedelk.plugin.service.module.impl.component.componentio.IOComponent;
 import com.reedelk.plugin.service.module.impl.component.componentio.IOTypeDescriptor;
-import com.reedelk.plugin.service.module.impl.component.componentio.OnComponentIO;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.message.MessageAttributes;
 
@@ -17,25 +18,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ComponentActualInput extends DisposableScrollPane implements OnComponentIO {
-
-    private static final int LEFT_OFFSET = 24;
-
-    public ComponentActualInput() {
-        setBorder(JBUI.Borders.empty(0, 1, 0, 8));
-        setBackground(JBColor.WHITE);
-        setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-    }
+public class ComponentActualInput extends AbstractComponentInput {
 
     @Override
-    public void onComponentIO(String inputFQCN, String outputFQCN, IOComponent IOComponent) {
-        DisposablePanel theContent = new DisposablePanel(new GridBagLayout());
-        theContent.setBackground(JBColor.WHITE);
-        DisposablePanel panel = ContainerFactory.pushTop(theContent);
-        panel.setBackground(JBColor.WHITE);
-        panel.setBorder(JBUI.Borders.empty(5, 2));
-        setViewportView(panel);
-
+    void render(IOComponent IOComponent, DisposablePanel parent) {
         int topOffset = 0;
         if (StringUtils.isNotBlank(IOComponent.getPayloadDescription())) {
             DisposableCollapsiblePane description = new DisposableCollapsiblePane(htmlLabel("<b style=\"color: #666666\">description</b>", "", false), () -> {
@@ -45,7 +31,7 @@ public class ComponentActualInput extends DisposableScrollPane implements OnComp
             });
             topOffset = 4;
             description.setBorder(JBUI.Borders.empty());
-            FormBuilder.get().addFullWidthAndHeight(description, theContent);
+            FormBuilder.get().addFullWidthAndHeight(description, parent);
         }
 
         List<IOTypeDescriptor> payloads = IOComponent.getPayload();
@@ -55,16 +41,16 @@ public class ComponentActualInput extends DisposableScrollPane implements OnComp
             boolean collapsed = payloadIO.getProperties().isEmpty(); // Collapsed if there are no properties
             DisposableCollapsiblePane payload = createPanel(htmlLabel("<b style=\"color: #666666\">payload</b>", payloadIO.getType()), payloadIO, LEFT_OFFSET, collapsed, true);
             payload.setBorder(JBUI.Borders.emptyTop(topOffset));
-            FormBuilder.get().addFullWidthAndHeight(payload, theContent);
+            FormBuilder.get().addFullWidthAndHeight(payload, parent);
         } else {
             DisposableCollapsiblePane payload = createPanel(htmlLabel("<b style=\"color: #666666\">payload</b>", "(one of the following types)"), payloads, LEFT_OFFSET, false, true);
             payload.setBorder(JBUI.Borders.emptyTop(topOffset));
-            FormBuilder.get().addFullWidthAndHeight(payload, theContent);
+            FormBuilder.get().addFullWidthAndHeight(payload, parent);
         }
 
         DisposableCollapsiblePane attributes = createPanel(htmlLabel("<b style=\"color: #666666\">attributes</b>", MessageAttributes.class.getSimpleName()), IOComponent.getAttributes(), LEFT_OFFSET, false, true);
         attributes.setBorder(JBUI.Borders.emptyTop(4));
-        FormBuilder.get().addFullWidthAndHeight(attributes, theContent);
+        FormBuilder.get().addFullWidthAndHeight(attributes, parent);
     }
 
     private static DisposableCollapsiblePane createPanel(String title, List<IOTypeDescriptor> payloads, int parentPadding, boolean defaultCollapsed, boolean horizontalBar) {
@@ -127,28 +113,5 @@ public class ComponentActualInput extends DisposableScrollPane implements OnComp
 
             return content;
         }, defaultCollapsed, horizontalBar);
-    }
-
-    private static final String HTML_WITH_VALUE = "<html>%s : <i>%s</i></html>";
-    private static final String HTML_WITHOUT_VALUE = "<html>%s</html>";
-
-    private static String htmlLabel(String key, String value) {
-        return htmlLabel(key, value, true);
-    }
-
-    private static String htmlLabel(String key, String value, boolean escape) {
-        if (StringUtils.isBlank(value)) {
-            if (escape) {
-                key = key.replaceAll("<", "&lt;");
-                key = key.replaceAll(">", "&gt;");
-            }
-            return String.format(HTML_WITHOUT_VALUE, key);
-        } else {
-            if (escape) {
-                value = value.replaceAll("<", "&lt;");
-                value = value.replaceAll(">", "&gt;");
-            }
-            return String.format(HTML_WITH_VALUE, key, value);
-        }
     }
 }

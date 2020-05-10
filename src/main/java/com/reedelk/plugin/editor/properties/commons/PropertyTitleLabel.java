@@ -4,7 +4,6 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.commons.TooltipContent;
-import com.reedelk.plugin.editor.properties.ClickableTooltip;
 
 import javax.swing.*;
 import javax.swing.border.Border;

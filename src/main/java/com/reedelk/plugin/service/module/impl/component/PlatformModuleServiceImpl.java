@@ -130,8 +130,8 @@ public class PlatformModuleServiceImpl implements PlatformModuleService, MavenIm
                         flowControlModule = dto;
                         componentTracker.registerFlowControl(flowControlModuleDescriptor);
                         platformCompletionServiceImpl.registerFlowControl(flowControlModuleDescriptor);
-                        onModuleChange();
                     }
+                    onModuleChange();
                 }));
     }
 
@@ -143,8 +143,8 @@ public class PlatformModuleServiceImpl implements PlatformModuleService, MavenIm
                         mavenModules.add(dto);
                         componentTracker.registerMaven(mavenModuleDescriptor);
                         platformCompletionServiceImpl.registerMaven(mavenModuleDescriptor);
-                        onModuleChange();
                     }
+                    onModuleChange();
                 }));
     }
 
@@ -156,8 +156,8 @@ public class PlatformModuleServiceImpl implements PlatformModuleService, MavenIm
                         currentModule = dto;
                         componentTracker.registerCurrent(moduleCustomDescriptor);
                         platformCompletionServiceImpl.registerCurrent(moduleCustomDescriptor);
-                        onModuleChange();
                     }
+                    onModuleChange();
                 }));
     }
 

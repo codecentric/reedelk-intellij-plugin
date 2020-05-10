@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.componentio;
+package com.reedelk.plugin.editor.properties.componentinput;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;

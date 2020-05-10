@@ -1,8 +1,7 @@
-package com.reedelk.plugin.editor.properties;
+package com.reedelk.plugin.editor.properties.commons;
 
 import com.reedelk.plugin.commons.Icons;
 import com.reedelk.plugin.commons.PopupUtils;
-import com.reedelk.plugin.editor.properties.commons.ClickableLabel;
 
 import java.awt.event.MouseEvent;
 

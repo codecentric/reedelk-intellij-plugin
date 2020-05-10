@@ -3,7 +3,6 @@ package com.reedelk.plugin.editor.properties.commons;
 import com.intellij.ui.components.JBLabel;
 import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.TooltipContent;
-import com.reedelk.plugin.editor.properties.ClickableTooltip;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
