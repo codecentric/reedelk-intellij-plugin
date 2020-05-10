@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 import static java.util.stream.Collectors.toList;
 
 public class CompletionFinder {
@@ -15,6 +16,10 @@ public class CompletionFinder {
 
     public CompletionFinder(TrieMapWrapper typeAndTrieMap) {
         this.typeAndTrieMap = typeAndTrieMap;
+    }
+
+    public Collection<Suggestion> find(Trie root, ComponentOutputDescriptor componentOutputDescriptor) {
+        return find(root, new String[]{EMPTY}, componentOutputDescriptor);
     }
 
     public Collection<Suggestion> find(Trie root, String[] tokens, ComponentOutputDescriptor componentOutputDescriptor) {

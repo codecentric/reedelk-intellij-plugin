@@ -20,42 +20,44 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
-import static com.reedelk.runtime.api.commons.StringUtils.EMPTY;
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
 public class PlatformComponentIOServiceImpl implements PlatformModuleService {
 
-    private static final String TASK_INDICATOR_TEXT = "Analyzing component Input and Output";
-
     private final Module module;
-    private OnComponentIO onComponentIO;
+    private final OnComponentIO onComponentIO;
     private final TrieMapWrapper typeAndAndTries;
     private final CompletionFinder completionFinder;
-    private final PlatformComponentServiceImpl componentTracker;
+    private final PlatformComponentServiceImpl componentService;
 
-    public PlatformComponentIOServiceImpl(Module module, CompletionFinder completionFinder, TrieMapWrapper typesMap, PlatformComponentServiceImpl componentTracker) {
+    public PlatformComponentIOServiceImpl(@NotNull Module module,
+                                          @NotNull CompletionFinder completionFinder,
+                                          @NotNull TrieMapWrapper typesMap,
+                                          @NotNull PlatformComponentServiceImpl componentService) {
         this.module = module;
-        this.componentTracker = componentTracker;
-        this.completionFinder = completionFinder;
         this.typeAndAndTries = typesMap;
+        this.componentService = componentService;
+        this.completionFinder = completionFinder;
         onComponentIO = module.getProject().getMessageBus().syncPublisher(Topics.ON_COMPONENT_IO);
     }
 
     @Override
-    public void inputOutputOf(ContainerContext context, String outputFullyQualifiedName) {
-        PluginExecutors.run(module, TASK_INDICATOR_TEXT, indicator -> {
+    public void inputOutputOf(ContainerContext context, String componentFullyQualifiedName) {
+        PluginExecutors.run(module, message("component.io.ticker.text"), indicator -> {
             String predecessorFQCN = context.predecessor();
 
-            ComponentDescriptor componentDescriptorBy = componentTracker.componentDescriptorFrom(predecessorFQCN);
+            ComponentDescriptor componentDescriptorBy = componentService.componentDescriptorFrom(predecessorFQCN);
             ComponentOutputDescriptor output = componentDescriptorBy.getOutput();
 
             IOTypeDescriptor outputAttributes = attributes(output);
             List<IOTypeDescriptor> outputPayload = payload(output);
+
             IOComponent IOComponent = new IOComponent(outputAttributes, outputPayload);
-            onComponentIO.onComponentIO(predecessorFQCN, outputFullyQualifiedName, IOComponent);
+            onComponentIO.onComponentIO(predecessorFQCN, componentFullyQualifiedName, IOComponent);
         });
     }
 
@@ -73,7 +75,6 @@ public class PlatformComponentIOServiceImpl implements PlatformModuleService {
                 .collect(toList());
     }
 
-    @NotNull
     private IOTypeDescriptor asIOTypeDescriptor(ComponentOutputDescriptor output, String type) {
         Trie typeTrie = typeAndAndTries.getOrDefault(type, Default.UNKNOWN);
         if (isNotBlank(typeTrie.listItemType())) {
@@ -91,21 +92,11 @@ public class PlatformComponentIOServiceImpl implements PlatformModuleService {
         }
     }
 
-    @NotNull
-    private Collection<Suggestion> find(Trie trie, ComponentOutputDescriptor output) {
-        return completionFinder.find(trie, new String[]{EMPTY}, output)
-                .stream()
-                .filter(suggestion -> PROPERTY.equals(suggestion.getType()))
-                .collect(toList());
-    }
-
-    @NotNull
     private Collection<IOTypeItem> findAndMapDTO(ComponentOutputDescriptor output, String type) {
         Trie typeTrie = typeAndAndTries.getOrDefault(type, Default.UNKNOWN);
         return findAndMapDTO(output, typeTrie);
     }
 
-    @NotNull
     private Collection<IOTypeItem> findAndMapDTO(ComponentOutputDescriptor output, Trie typeTrie) {
         return find(typeTrie, output)
                 .stream()
@@ -116,35 +107,42 @@ public class PlatformComponentIOServiceImpl implements PlatformModuleService {
 
     public Function<Suggestion, IOTypeItem> mapper(ComponentOutputDescriptor output) {
         return suggestion -> {
-            String suggestionType = suggestion.typeText();
-            Trie typeTrie = typeAndAndTries.getOrDefault(suggestionType, Default.UNKNOWN);
+            String type = suggestion.typeText();
+            Trie typeTrie = typeAndAndTries.getOrDefault(type, Default.UNKNOWN);
             if (isNotBlank(typeTrie.listItemType())) {
                 // Unroll the list type
                 String listItemType = typeTrie.listItemType();
                 Trie listItemTrie = typeAndAndTries.getOrDefault(listItemType, Default.UNKNOWN);
                 // The list type display is: List<FileType> : FileType
-                String typeDisplay = PresentableTypeUtils.formatListDisplayType(suggestionType, typeTrie);
+                String typeDisplay = PresentableTypeUtils.formatListDisplayType(type, typeTrie);
                 return asTypeDTO(output, listItemType, listItemTrie,
                         suggestion.lookupString(),
                         typeDisplay);
             } else {
-                return asTypeDTO(output, suggestionType, typeTrie,
+                return asTypeDTO(output, type, typeTrie,
                         suggestion.lookupString(),
                         suggestion.presentableType());
             }
         };
     }
 
-    @NotNull
-    private IOTypeItem asTypeDTO(ComponentOutputDescriptor output, String suggestionType, Trie orDefault, String propertyName, String propertyType) {
-        Collection<Suggestion> suggestions = find(orDefault, output);
+    private IOTypeItem asTypeDTO(ComponentOutputDescriptor output, String type, Trie typeTrie, String propertyName, String propertyType) {
+        Collection<Suggestion> suggestions = find(typeTrie, output);
         if (suggestions.isEmpty()) {
+            // Simple name/value
             return new IOTypeItem(propertyName, propertyType);
         } else {
             // Complex type
             String finalPropertyName = propertyName + " : " + propertyType;
-            IOTypeDescriptor ioTypeDescriptor = asIOTypeDescriptor(output, suggestionType);
+            IOTypeDescriptor ioTypeDescriptor = asIOTypeDescriptor(output, type);
             return new IOTypeItem(finalPropertyName, ioTypeDescriptor);
         }
+    }
+
+    private Collection<Suggestion> find(Trie trie, ComponentOutputDescriptor output) {
+        return completionFinder.find(trie, output)
+                .stream()
+                .filter(suggestion -> PROPERTY.equals(suggestion.getType()))
+                .collect(toList());
     }
 }
