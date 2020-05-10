@@ -19,7 +19,7 @@ import com.reedelk.plugin.editor.DesignerEditor;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.graph.*;
 import com.reedelk.plugin.graph.deserializer.DeserializationError;
-import com.reedelk.plugin.service.module.ComponentService;
+import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.module.ModuleDTO;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,7 +37,7 @@ public abstract class GraphManager implements FileEditorManagerListener,
         FileEditorManagerListener.Before,
         SnapshotListener,
         Disposable,
-        ComponentService.ModuleChangeNotifier {
+        PlatformModuleService.ModuleChangeNotifier {
 
     private static final Logger LOG = Logger.getInstance(GraphManager.class);
 

@@ -9,7 +9,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
-import com.reedelk.plugin.service.module.ComponentService;
+import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,7 +48,7 @@ public class GroovyCompletionContributor extends CompletionContributor {
         if (module == null) return;
 
         TokenFinder.find(parameters).ifPresent(tokens -> {
-            ComponentService instance = ComponentService.getInstance(module);
+            PlatformModuleService instance = PlatformModuleService.getInstance(module);
             Collection<Suggestion> suggestions = instance.suggestionsOf(inputFullyQualifiedName, componentFullyQualifiedName, tokens);
             suggestions.forEach(suggestion -> addSuggestion(result, suggestion));
         });

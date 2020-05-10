@@ -4,7 +4,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import com.reedelk.plugin.service.module.ComponentService;
+import com.reedelk.plugin.service.module.PlatformModuleService;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -22,7 +22,7 @@ class CompletionTrackerTest {
     @Mock
     private MessageBus mockMessageBus;
     @Mock
-    private ComponentService mockComponentService;
+    private PlatformModuleService mockPlatformModuleService;
     @Mock
     private MessageBusConnection mockMessageBusConnection;
 

@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.module.impl.component.completion;
+package com.reedelk.plugin.service.module.impl.component.componentio;
 
 import java.util.List;
 
@@ -19,6 +19,5 @@ public class IOComponent {
     public List<IOTypeDescriptor> getPayload() {
         return payload;
     }
-
 
 }

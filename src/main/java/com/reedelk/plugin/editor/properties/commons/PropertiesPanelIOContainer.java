@@ -11,10 +11,10 @@ import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
-import com.reedelk.plugin.service.module.ComponentService;
-import com.reedelk.plugin.service.module.impl.component.completion.IOComponent;
-import com.reedelk.plugin.service.module.impl.component.completion.IOTypeDescriptor;
-import com.reedelk.plugin.service.module.impl.component.completion.OnComponentIO;
+import com.reedelk.plugin.service.module.PlatformModuleService;
+import com.reedelk.plugin.service.module.impl.component.componentio.IOComponent;
+import com.reedelk.plugin.service.module.impl.component.componentio.IOTypeDescriptor;
+import com.reedelk.plugin.service.module.impl.component.componentio.OnComponentIO;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.message.MessageAttributes;
 import org.jetbrains.annotations.NotNull;
@@ -54,7 +54,7 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
         addAncestorListener(new AncestorListenerAdapter() {
             @Override
             public void ancestorAdded(AncestorEvent event) {
-                ComponentService.getInstance(module)
+                PlatformModuleService.getInstance(module)
                         .inputOutputOf(context, componentFullyQualifiedName);
             }
         });

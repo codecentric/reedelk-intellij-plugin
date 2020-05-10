@@ -1,7 +1,6 @@
 package com.reedelk.plugin.service.module.impl.component;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
 import com.reedelk.module.descriptor.model.ModuleDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
@@ -10,18 +9,18 @@ import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.editor.properties.context.ComponentPropertyPath;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
-import com.reedelk.plugin.executor.PluginExecutors;
-import com.reedelk.plugin.service.module.ComponentService;
+import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.completion.*;
 import com.reedelk.runtime.api.commons.StringUtils;
-import com.reedelk.runtime.api.flow.FlowContext;
-import com.reedelk.runtime.api.message.Message;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
 
-public class CompletionTracker implements ComponentService {
+public class PlatformCompletionServiceImpl implements PlatformModuleService {
 
     // GLOBAL MODULE TYPES MAPs
     private final Trie flowControlModuleGlobalTypes = new TrieDefault();
@@ -42,22 +41,17 @@ public class CompletionTracker implements ComponentService {
     private final Map<String, Trie> mavenModulesSignatureTypes = new HashMap<>();
     private final Map<String, Trie> currentModuleSignatureTypes = new HashMap<>();
 
-    private OnComponentIO onComponentIO;
-    private IOProcessor processor;
-    private OnCompletionEvent onCompletionEvent;
-
-    private final Module module;
-    private final ComponentTracker componentTracker;
     private final CompletionFinder completionFinder;
+    private final OnCompletionEvent onCompletionEvent;
+    private final PlatformComponentServiceImpl componentTracker;
+    private final PlatformComponentIOServiceImpl componentIOService;
 
-    public CompletionTracker(Project project, Module module, ComponentTracker componentTracker) {
-        this.module = module;
+    public PlatformCompletionServiceImpl(Module module, PlatformComponentServiceImpl componentTracker) {
         this.componentTracker = componentTracker;
         this.completionFinder = new CompletionFinder(typesMap);
-        this.processor = new IOProcessor(typesMap, completionFinder);
+        this.onCompletionEvent = module.getProject().getMessageBus().syncPublisher(Topics.COMPLETION_EVENT_TOPIC);
 
-        onCompletionEvent = project.getMessageBus().syncPublisher(Topics.COMPLETION_EVENT_TOPIC);
-        onComponentIO = project.getMessageBus().syncPublisher(Topics.ON_COMPONENT_IO);
+        this.componentIOService = new PlatformComponentIOServiceImpl(module, completionFinder, typesMap, componentTracker);
     }
 
     @Override
@@ -72,7 +66,7 @@ public class CompletionTracker implements ComponentService {
         Trie trie = flowControlSignatureTypes.get(componentPropertyPath);
         if (trie == null) trie = mavenModulesSignatureTypes.get(componentPropertyPath);
         if (trie == null) trie = currentModuleSignatureTypes.get(componentPropertyPath);
-        if (trie == null) trie = defaultSignatureTypes;
+        if (trie == null) trie = Default.TRIE;
 
         Collection<Suggestion> globalSuggestions = completionFinder.find(globalTypes, tokens, previousComponentOutput);
         Collection<Suggestion> localSuggestions = completionFinder.find(trie, tokens, previousComponentOutput);
@@ -87,16 +81,7 @@ public class CompletionTracker implements ComponentService {
 
     @Override
     public void inputOutputOf(ContainerContext context, String outputFullyQualifiedName) {
-        PluginExecutors.run(module, "Fetching IO", indicator -> {
-            String predecessorFQCN = context.predecessor();
-            ComponentDescriptor componentDescriptorBy = componentTracker.componentDescriptorFrom(predecessorFQCN);
-            ComponentOutputDescriptor output = componentDescriptorBy.getOutput();
-
-            IOTypeDescriptor outputAttributes = processor.attributes(output);
-            List<IOTypeDescriptor> outputPayload = processor.payload(output);
-            IOComponent IOComponent = new IOComponent(outputAttributes, outputPayload);
-            onComponentIO.onComponentIO(predecessorFQCN, outputFullyQualifiedName, IOComponent);
-        });
+        componentIOService.inputOutputOf(context, outputFullyQualifiedName);
     }
 
     void fireCompletionsUpdatedEvent() {
@@ -129,8 +114,26 @@ public class CompletionTracker implements ComponentService {
     public void registerFlowControl(ModuleDescriptor moduleDescriptor) {
         processModuleDescriptor(moduleDescriptor, flowControlModuleGlobalTypes, flowControlTypes, flowControlSignatureTypes);
         // Init core
-        registerBuiltInFunctions();
+        Default.Types.register(flowControlTypes);
         fireCompletionsUpdatedEvent();
+    }
+
+    private void processModuleDescriptor(ModuleDescriptor moduleDescriptor, Trie globalTypes, Map<String, Trie> localTypes, Map<String, Trie> signatureTypes) {
+        moduleDescriptor.getTypes().forEach(type -> {
+            try {
+                TrieUtils.populate(globalTypes, localTypes, type);
+            } catch (Exception exception) {
+                exception.printStackTrace(); // TODO: Add log
+            }
+        });
+
+        // Signatures by component's properties
+        moduleDescriptor.getComponents().forEach(componentDescriptor -> {
+            componentDescriptor.getProperties().forEach(propertyDescriptor -> {
+                String parent = componentDescriptor.getFullyQualifiedName();
+                register(propertyDescriptor, parent, signatureTypes);
+            });
+        });
     }
 
     private void register(PropertyDescriptor propertyDescriptor, String parent, Map<String, Trie> signatureTypesMap) {
@@ -155,60 +158,5 @@ public class CompletionTracker implements ComponentService {
                 signatureTypesMap.put(componentPropertyPath, trie);
             });
         }
-    }
-
-
-    private void processModuleDescriptor(ModuleDescriptor moduleDescriptor, Trie globalTypes, Map<String, Trie> localTypes, Map<String, Trie> signatureTypes) {
-        moduleDescriptor.getTypes().forEach(type -> {
-            try {
-                TrieUtils.populate(globalTypes, localTypes, type);
-            } catch (Exception e) {
-                e.printStackTrace(); // TODO: Add log
-            }
-        });
-
-        // Signatures by component's properties
-        moduleDescriptor.getComponents().forEach(componentDescriptor -> {
-            componentDescriptor.getProperties().forEach(propertyDescriptor -> {
-                String parent = componentDescriptor.getFullyQualifiedName();
-                register(propertyDescriptor, parent, signatureTypes);
-            });
-        });
-    }
-
-    private void registerBuiltInFunctions() {
-        // Init async
-        Trie trie = new TrieDefault();
-        trie.insert(Suggestion.create(Suggestion.Type.FUNCTION)
-                .withLookupString("each { it }")
-                .withPresentableText("each")
-                .withCursorOffset(2)
-                .build());
-        trie.insert(Suggestion.create(Suggestion.Type.FUNCTION)
-                .withLookupString("eachWithIndex { it, i ->  }")
-                .withPresentableText("eachWithIndex")
-                .withCursorOffset(2)
-                .build());
-        trie.insert(Suggestion.create(Suggestion.Type.FUNCTION)
-                .withLookupString("collect { it }")
-                .withPresentableText("collect")
-                .withCursorOffset(2)
-                .build());
-        flowControlTypes.put(ArrayList.class.getName(), trie);
-    }
-
-    // Default script signature is message and context.
-    private static final TrieDefault defaultSignatureTypes = new TrieDefault();
-    static {
-        Suggestion message = Suggestion.create(PROPERTY)
-                .withLookupString("message")
-                .withType(Message.class.getName())
-                .build();
-        Suggestion context = Suggestion.create(PROPERTY)
-                .withLookupString("context")
-                .withType(FlowContext.class.getName())
-                .build();
-        defaultSignatureTypes.insert(message);
-        defaultSignatureTypes.insert(context);
     }
 }

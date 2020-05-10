@@ -17,7 +17,7 @@ import com.reedelk.plugin.editor.palette.PaletteComponent;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.GraphNodeFactory;
-import com.reedelk.plugin.service.module.ComponentService;
+import com.reedelk.plugin.service.module.PlatformModuleService;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -118,7 +118,7 @@ public abstract class DesignerPanelAbstractActionHandler implements DesignerPane
         try {
             PaletteComponent paletteComponent = (PaletteComponent) transferable.getTransferData(FLAVOR);
             ComponentDescriptor componentDescriptor =
-                    ComponentService.getInstance(module)
+                    PlatformModuleService.getInstance(module)
                             .componentDescriptorFrom(paletteComponent.getComponentFullyQualifiedName());
             return Optional.of(componentDescriptor);
         } catch (UnsupportedFlavorException | IOException e) {

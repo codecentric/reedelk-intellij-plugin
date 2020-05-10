@@ -25,7 +25,7 @@ import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.SnapshotListener;
 import com.reedelk.plugin.graph.layout.FlowGraphLayout;
 import com.reedelk.plugin.graph.node.GraphNode;
-import com.reedelk.plugin.service.module.ComponentService;
+import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.module.ModuleDTO;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,7 +45,7 @@ import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 public abstract class DesignerPanel extends DisposablePanel implements
         MouseMotionListener, MouseListenerAdapter, SnapshotListener,
         DropActionListener, HintResultListener, DrawableListener,
-        ComponentService.ModuleChangeNotifier {
+        PlatformModuleService.ModuleChangeNotifier {
 
     static final int TOP_PADDING = 80;
 

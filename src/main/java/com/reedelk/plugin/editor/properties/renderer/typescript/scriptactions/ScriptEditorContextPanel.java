@@ -9,7 +9,7 @@ import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
-import com.reedelk.plugin.service.module.ComponentService;
+import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
 import com.reedelk.runtime.api.commons.StringUtils;
 
@@ -27,7 +27,7 @@ import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 import static javax.swing.BorderFactory.createMatteBorder;
 
-class ScriptEditorContextPanel extends DisposablePanel implements ComponentService.OnCompletionEvent {
+class ScriptEditorContextPanel extends DisposablePanel implements PlatformModuleService.OnCompletionEvent {
 
     private static final Border MATTE_BORDER = createMatteBorder(1, 1, 1, 0,
             Colors.SCRIPT_EDITOR_CONTEXT_PANEL_BORDER);
@@ -98,7 +98,7 @@ class ScriptEditorContextPanel extends DisposablePanel implements ComponentServi
     }
 
     private List<Suggestion> getSuggestions() {
-        return ComponentService.getInstance(module)
+        return PlatformModuleService.getInstance(module)
                 .variablesOf(inputFullyQualifiedName, componentPropertyPath)
                 .stream()
                 .filter(suggestion -> StringUtils.isNotBlank(suggestion.lookupString()))

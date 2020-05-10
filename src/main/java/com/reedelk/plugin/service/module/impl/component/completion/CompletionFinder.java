@@ -59,7 +59,7 @@ public class CompletionFinder {
         List<Suggestion> withDynamicSuggestions = new ArrayList<>();
         for (Suggestion suggestion : suggestions) {
             if (DynamicTypeUtils.is(suggestion)) {
-                createDynamicSuggestions(descriptor, flatten, withDynamicSuggestions, suggestion);
+                createDynamicSuggestions(suggestion, descriptor, withDynamicSuggestions, flatten);
             } else {
                 withDynamicSuggestions.add(suggestion);
             }
@@ -67,27 +67,35 @@ public class CompletionFinder {
         return withDynamicSuggestions;
     }
 
-    private void createDynamicSuggestions(ComponentOutputDescriptor descriptor, boolean flatten, List<Suggestion> withDynamicSuggestions, Suggestion suggestion) {
+    private void createDynamicSuggestions(Suggestion originalSuggestion,
+                                          ComponentOutputDescriptor descriptor,
+                                          List<Suggestion> suggestionList,
+                                          boolean flatten) {
         Collection<Suggestion> dynamicSuggestions =
-                DynamicTypeUtils.createDynamicSuggestion(typeAndTrieMap, descriptor, suggestion);
+                DynamicTypeUtils.createDynamicSuggestion(typeAndTrieMap, descriptor, originalSuggestion);
         if (flatten && dynamicSuggestions.size() > 1) {
             // If the suggestion is terminal, e.g. message.payload() we must flatten the dynamic suggestions into one.
             // the type of each separate suggestion is separated by a comma. This happens when a component might
             // have multiple possible output types (e.g RESTListener: byte[], String or Map, depending on the HTTP request mime type).
-            withDynamicSuggestions.add(flatten(dynamicSuggestions));
+            Suggestion flattedSuggestions = flatten(dynamicSuggestions);
+            suggestionList.add(flattedSuggestions);
         } else {
             // If the suggestion is not terminal we add all the possible output of the previous component.
-            withDynamicSuggestions.addAll(dynamicSuggestions);
+            suggestionList.addAll(dynamicSuggestions);
         }
     }
 
-    private Suggestion flatten(Collection<Suggestion> dynamicSuggestions) {
-        List<String> possibleTypes = dynamicSuggestions.stream()
-                .map(suggestion -> PresentableTypeUtils.from(suggestion.typeText()))
-                .collect(toList());
-        Suggestion suggestion = dynamicSuggestions.stream()
+    /**
+     * Takes a group of suggestions which refer to the same lookup string and collapses them into one
+     * single suggestion with type equal to a comma separated list of all the suggestions in the group.
+     */
+    private Suggestion flatten(Collection<Suggestion> suggestions) {
+        Suggestion suggestion = suggestions.stream()
                 .findAny()
                 .orElseThrow(() -> new PluginException("Expected at least one dynamic suggestion."));
+        List<String> possibleTypes = suggestions.stream()
+                .map(s -> PresentableTypeUtils.from(s.typeText()))
+                .collect(toList());
         return Suggestion.create(suggestion.getType())
                 .withLookupString(suggestion.lookupString())
                 .withPresentableText(suggestion.presentableText())

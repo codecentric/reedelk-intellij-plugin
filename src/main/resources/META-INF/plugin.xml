@@ -44,8 +44,8 @@
         <moduleService serviceInterface="com.reedelk.plugin.service.module.HttpService"
                        serviceImplementation="com.reedelk.plugin.service.module.impl.http.HttpServiceImpl"/>
 
-        <moduleService serviceInterface="com.reedelk.plugin.service.module.ComponentService"
-                       serviceImplementation="com.reedelk.plugin.service.module.impl.component.ComponentServiceImpl"/>
+        <moduleService serviceInterface="com.reedelk.plugin.service.module.PlatformModuleService"
+                       serviceImplementation="com.reedelk.plugin.service.module.impl.component.PlatformModuleServiceImpl"/>
 
         <moduleService serviceInterface="com.reedelk.plugin.service.module.SubflowService"
                        serviceImplementation="com.reedelk.plugin.service.module.impl.subflow.SubflowServiceImpl"/>

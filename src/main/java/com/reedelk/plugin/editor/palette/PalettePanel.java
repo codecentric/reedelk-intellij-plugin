@@ -13,7 +13,7 @@ import com.intellij.ui.treeStructure.SimpleTree;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.plugin.commons.Topics;
-import com.reedelk.plugin.service.module.ComponentService;
+import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.module.ModuleComponentDTO;
 import com.reedelk.plugin.service.module.impl.component.module.ModuleDTO;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +32,7 @@ import java.util.function.Predicate;
 import static java.awt.BorderLayout.CENTER;
 import static java.util.stream.Collectors.toList;
 
-public class PalettePanel extends JBPanel<PalettePanel> implements ComponentService.ModuleChangeNotifier, FileEditorManagerListener {
+public class PalettePanel extends JBPanel<PalettePanel> implements PlatformModuleService.ModuleChangeNotifier, FileEditorManagerListener {
 
     private final transient Tree tree;
     private final transient Project project;
@@ -86,7 +86,7 @@ public class PalettePanel extends JBPanel<PalettePanel> implements ComponentServ
         if (file != null) {
             Optional.ofNullable(ModuleUtil.findModuleForFile(file, project))
                     .ifPresent(module -> {
-                        Collection<ModuleDTO> moduleDTOs = ComponentService.getInstance(module).listModules();
+                        Collection<ModuleDTO> moduleDTOs = PlatformModuleService.getInstance(module).listModules();
                         updateComponents(moduleDTOs);
                     });
         }

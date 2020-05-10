@@ -10,10 +10,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
-public interface ComponentService {
+public interface PlatformModuleService {
 
-    static ComponentService getInstance(@NotNull Module module) {
-        return ModuleServiceManager.getService(module, ComponentService.class);
+    static PlatformModuleService getInstance(@NotNull Module module) {
+        return ModuleServiceManager.getService(module, PlatformModuleService.class);
     }
 
     default ComponentDescriptor componentDescriptorFrom(String componentFullyQualifiedName) {

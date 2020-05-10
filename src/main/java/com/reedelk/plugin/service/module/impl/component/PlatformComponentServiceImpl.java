@@ -4,12 +4,12 @@ import com.reedelk.module.descriptor.model.ModuleDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.plugin.component.type.unknown.Unknown;
 import com.reedelk.plugin.component.type.unknown.UnknownComponentDescriptorWrapper;
-import com.reedelk.plugin.service.module.ComponentService;
+import com.reedelk.plugin.service.module.PlatformModuleService;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ComponentTracker implements ComponentService {
+public class PlatformComponentServiceImpl implements PlatformModuleService {
 
     // COMPONENTS
     private final Map<String, ComponentDescriptor> flowControlModuleComponents = new HashMap<>(); // A map containing the component fully qualified name and the descriptor from flow control module

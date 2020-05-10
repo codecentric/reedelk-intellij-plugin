@@ -11,7 +11,7 @@ import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.executor.PluginExecutors;
-import com.reedelk.plugin.service.module.ComponentService;
+import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
 import com.reedelk.plugin.service.module.impl.component.module.*;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +25,7 @@ import java.util.List;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static java.util.Collections.unmodifiableCollection;
 
-public class ComponentServiceImpl implements ComponentService, MavenImportListener, CompilationStatusListener {
+public class PlatformModuleServiceImpl implements PlatformModuleService, MavenImportListener, CompilationStatusListener {
 
     private final Module module;
     private final ModuleChangeNotifier publisher;
@@ -35,10 +35,10 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
     private ModuleDTO currentModule; // current custom components module being developed (refreshed when compiled)
     private final List<ModuleDTO> mavenModules = new ArrayList<>(); // components from Maven dependencies (refreshed when Maven import finished)
 
-    private ComponentTracker componentTracker;
-    private CompletionTracker completionTracker;
+    private PlatformComponentServiceImpl componentTracker;
+    private PlatformCompletionServiceImpl platformCompletionServiceImpl;
 
-    public ComponentServiceImpl(Project project, Module module) {
+    public PlatformModuleServiceImpl(Project project, Module module) {
         MessageBus messageBus = project.getMessageBus();
         MessageBusConnection connection = messageBus.connect();
         connection.subscribe(MavenImportListener.TOPIC, this);
@@ -46,8 +46,8 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
         this.module = module;
         this.publisher = messageBus.syncPublisher(Topics.COMPONENTS_UPDATE_EVENTS);
-        this.componentTracker = new ComponentTracker();
-        this.completionTracker = new CompletionTracker(project, module, componentTracker);
+        this.componentTracker = new PlatformComponentServiceImpl();
+        this.platformCompletionServiceImpl = new PlatformCompletionServiceImpl(module, componentTracker);
 
         // We load the modules in the following order:
         // 1. flow-control module (e.g flow-ref, router, fork): these components are immutable.
@@ -76,17 +76,17 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
 
     @Override
     public synchronized Collection<Suggestion> suggestionsOf(String inputFullyQualifiedName, String componentPropertyPath, String[] tokens) {
-        return completionTracker.suggestionsOf(inputFullyQualifiedName, componentPropertyPath, tokens);
+        return platformCompletionServiceImpl.suggestionsOf(inputFullyQualifiedName, componentPropertyPath, tokens);
     }
 
     @Override
     public synchronized Collection<Suggestion> variablesOf(String inputFullyQualifiedName, String componentPropertyPath) {
-        return completionTracker.variablesOf(inputFullyQualifiedName, componentPropertyPath);
+        return platformCompletionServiceImpl.variablesOf(inputFullyQualifiedName, componentPropertyPath);
     }
 
     @Override
     public synchronized void inputOutputOf(ContainerContext context, String outputFullyQualifiedName) {
-        completionTracker.inputOutputOf(context, outputFullyQualifiedName);
+        platformCompletionServiceImpl.inputOutputOf(context, outputFullyQualifiedName);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
         synchronized (this) {
             mavenModules.clear();
             componentTracker.clearMaven();
-            completionTracker.clearMaven();
+            platformCompletionServiceImpl.clearMaven();
         }
 
         // Notify modules changed
@@ -111,7 +111,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
             synchronized (this) {
                 currentModule = null;
                 componentTracker.clearCurrent();
-                completionTracker.clearCurrent();
+                platformCompletionServiceImpl.clearCurrent();
             }
 
             // Notify modules changed
@@ -129,7 +129,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                     synchronized (this) {
                         flowControlModule = dto;
                         componentTracker.registerFlowControl(flowControlModuleDescriptor);
-                        completionTracker.registerFlowControl(flowControlModuleDescriptor);
+                        platformCompletionServiceImpl.registerFlowControl(flowControlModuleDescriptor);
                         onModuleChange();
                     }
                 }));
@@ -142,7 +142,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                     synchronized (this) {
                         mavenModules.add(dto);
                         componentTracker.registerMaven(mavenModuleDescriptor);
-                        completionTracker.registerMaven(mavenModuleDescriptor);
+                        platformCompletionServiceImpl.registerMaven(mavenModuleDescriptor);
                         onModuleChange();
                     }
                 }));
@@ -155,7 +155,7 @@ public class ComponentServiceImpl implements ComponentService, MavenImportListen
                     synchronized (this) {
                         currentModule = dto;
                         componentTracker.registerCurrent(moduleCustomDescriptor);
-                        completionTracker.registerCurrent(moduleCustomDescriptor);
+                        platformCompletionServiceImpl.registerCurrent(moduleCustomDescriptor);
                         onModuleChange();
                     }
                 }));
