@@ -1,81 +1,44 @@
-package com.reedelk.plugin.editor.properties.commons;
+package com.reedelk.plugin.editor.properties.componentio;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.module.Module;
-import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;
-import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.commons.Colors;
-import com.reedelk.plugin.commons.DisposableUtils;
-import com.reedelk.plugin.commons.Topics;
-import com.reedelk.plugin.editor.properties.context.ContainerContext;
-import com.reedelk.plugin.service.module.PlatformModuleService;
+import com.reedelk.plugin.editor.properties.commons.*;
 import com.reedelk.plugin.service.module.impl.component.componentio.IOComponent;
 import com.reedelk.plugin.service.module.impl.component.componentio.IOTypeDescriptor;
 import com.reedelk.plugin.service.module.impl.component.componentio.OnComponentIO;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.message.MessageAttributes;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
-import javax.swing.event.AncestorEvent;
 import java.awt.*;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static com.intellij.util.ui.JBUI.Borders.customLine;
-import static com.intellij.util.ui.JBUI.Borders.emptyLeft;
-import static com.reedelk.plugin.commons.Colors.SCRIPT_EDITOR_CONTEXT_PANEL_TITLE_BG;
+public class ComponentActualInput extends DisposableScrollPane implements OnComponentIO {
 
-public class PropertiesPanelIOContainer extends DisposablePanel implements OnComponentIO {
+    private static final int LEFT_OFFSET = 24;
 
-    private final DisposablePanel loadingPanel;
-    private MessageBusConnection connection;
-
-    public PropertiesPanelIOContainer(@NotNull Module module, ContainerContext context, String componentFullyQualifiedName) {
-        super(new BorderLayout());
-
-        loadingPanel = new PanelWithText.LoadingContentPanel();
-        loadingPanel.setOpaque(true);
-        loadingPanel.setBackground(JBColor.WHITE);
-
-        add(new HeaderPanel("Input Message"), BorderLayout.NORTH);
-        add(loadingPanel, BorderLayout.CENTER);
+    public ComponentActualInput() {
+        setBorder(JBUI.Borders.empty(0, 1, 0, 8));
         setBackground(JBColor.WHITE);
-
-        this.connection = module.getMessageBus().connect();
-        this.connection.subscribe(Topics.ON_COMPONENT_IO, this);
-
-        addAncestorListener(new AncestorListenerAdapter() {
-            @Override
-            public void ancestorAdded(AncestorEvent event) {
-                PlatformModuleService.getInstance(module)
-                        .inputOutputOf(context, componentFullyQualifiedName);
-            }
-        });
+        setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
     }
 
-    private static final int LEFT_OFFSET = 20;
     @Override
     public void onComponentIO(String inputFQCN, String outputFQCN, IOComponent IOComponent) {
-        DisposableScrollPane contentPanel = new ContentPanel();
-        contentPanel.setBackground(JBColor.WHITE);
-
         DisposablePanel theContent = new DisposablePanel(new GridBagLayout());
         theContent.setBackground(JBColor.WHITE);
         DisposablePanel panel = ContainerFactory.pushTop(theContent);
         panel.setBackground(JBColor.WHITE);
         panel.setBorder(JBUI.Borders.empty(5, 2));
-        contentPanel.setViewportView(panel);
+        setViewportView(panel);
 
         int topOffset = 0;
         if (StringUtils.isNotBlank(IOComponent.getPayloadDescription())) {
-            DisposableCollapsiblePane description = new DisposableCollapsiblePane(htmlLabel("<b>description</b>", "", false), () -> {
+            DisposableCollapsiblePane description = new DisposableCollapsiblePane(htmlLabel("<b style=\"color: #666666\">description</b>", "", false), () -> {
                 JBLabel label = new JBLabel(htmlLabel(IOComponent.getPayloadDescription(), "", false));
                 label.setBorder(JBUI.Borders.emptyLeft(LEFT_OFFSET));
                 return label;
@@ -90,55 +53,18 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
             // Inline
             IOTypeDescriptor payloadIO = payloads.get(0);
             boolean collapsed = payloadIO.getProperties().isEmpty(); // Collapsed if there are no properties
-            DisposableCollapsiblePane payload = createPanel(htmlLabel("<b>payload</b>", payloadIO.getType()), payloadIO, LEFT_OFFSET, collapsed, true);
+            DisposableCollapsiblePane payload = createPanel(htmlLabel("<b style=\"color: #666666\">payload</b>", payloadIO.getType()), payloadIO, LEFT_OFFSET, collapsed, true);
             payload.setBorder(JBUI.Borders.emptyTop(topOffset));
             FormBuilder.get().addFullWidthAndHeight(payload, theContent);
         } else {
-            DisposableCollapsiblePane payload = createPanel(htmlLabel("<b>payload</b>", "(one of the following types)"), payloads, LEFT_OFFSET, false, true);
+            DisposableCollapsiblePane payload = createPanel(htmlLabel("<b style=\"color: #666666\">payload</b>", "(one of the following types)"), payloads, LEFT_OFFSET, false, true);
             payload.setBorder(JBUI.Borders.emptyTop(topOffset));
             FormBuilder.get().addFullWidthAndHeight(payload, theContent);
         }
 
-        DisposableCollapsiblePane attributes = createPanel(htmlLabel("<b>attributes</b>", MessageAttributes.class.getSimpleName()), IOComponent.getAttributes(), LEFT_OFFSET, false, true);
+        DisposableCollapsiblePane attributes = createPanel(htmlLabel("<b style=\"color: #666666\">attributes</b>", MessageAttributes.class.getSimpleName()), IOComponent.getAttributes(), LEFT_OFFSET, false, true);
         attributes.setBorder(JBUI.Borders.emptyTop(4));
         FormBuilder.get().addFullWidthAndHeight(attributes, theContent);
-
-        ApplicationManager.getApplication().invokeLater(() -> {
-            remove(loadingPanel);
-            add(contentPanel, BorderLayout.CENTER);
-            repaint();
-        });
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
-        DisposableUtils.dispose(connection);
-    }
-
-    static class HeaderPanel extends DisposablePanel {
-        public HeaderPanel(String text) {
-            super(new BorderLayout());
-            setBackground(SCRIPT_EDITOR_CONTEXT_PANEL_TITLE_BG);
-
-            JLabel label = new JLabel(text, SwingConstants.LEFT);
-            label.setForeground(JBColor.DARK_GRAY);
-            add(label, BorderLayout.WEST);
-            setPreferredSize(new Dimension(200, 25));
-
-            Border inside = emptyLeft(10);
-            Border outside = customLine(JBColor.LIGHT_GRAY, 0, 0, 1, 0);
-            setBorder(new CompoundBorder(outside, inside));
-        }
-    }
-
-
-    static class ContentPanel extends DisposableScrollPane {
-        public ContentPanel() {
-            setBorder(JBUI.Borders.empty(0, 1, 0, 8));
-            setBackground(JBColor.WHITE);
-            setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        }
     }
 
     private static DisposableCollapsiblePane createPanel(String title, List<IOTypeDescriptor> payloads, int parentPadding, boolean defaultCollapsed, boolean horizontalBar) {

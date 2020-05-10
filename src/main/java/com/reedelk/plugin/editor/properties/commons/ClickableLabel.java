@@ -14,6 +14,10 @@ public class ClickableLabel extends JBLabel implements MouseListener {
 
     private transient OnClickAction action;
 
+    public ClickableLabel(String text) {
+        this(text, null, null, IconAlignment.LEFT, null);
+    }
+
     public ClickableLabel(Icon icon) {
         this(StringUtils.EMPTY, icon, null, IconAlignment.LEFT, null);
     }

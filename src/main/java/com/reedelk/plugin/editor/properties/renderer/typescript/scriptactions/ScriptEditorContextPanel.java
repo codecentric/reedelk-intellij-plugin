@@ -45,7 +45,7 @@ class ScriptEditorContextPanel extends DisposablePanel implements PlatformModule
                              String componentPropertyPath,
                              ContainerContext context) {
         this.componentPropertyPath = componentPropertyPath;
-        this.inputFullyQualifiedName = context.predecessor();
+        this.inputFullyQualifiedName = context.predecessor().componentData().getFullyQualifiedName();
         this.module = module;
         setLayout(new BorderLayout());
         setBorder(MATTE_BORDER);
@@ -66,7 +66,7 @@ class ScriptEditorContextPanel extends DisposablePanel implements PlatformModule
         this.panelVariables.setLayout(boxLayout);
         this.panelVariables.setBorder(empty(5));
 
-        getSuggestions().forEach(suggestion -> panelVariables.add(new ContextVariableLabel(suggestion)));
+        suggestions().forEach(suggestion -> panelVariables.add(new ContextVariableLabel(suggestion)));
 
         JBScrollPane panelVariablesScrollPane = new JBScrollPane(panelVariables);
         panelVariablesScrollPane.setBorder(empty());
@@ -81,7 +81,7 @@ class ScriptEditorContextPanel extends DisposablePanel implements PlatformModule
 
     @Override
     public void onCompletionsUpdated() {
-        List<Suggestion> suggestions = getSuggestions();
+        List<Suggestion> suggestions = suggestions();
         ApplicationManager.getApplication().invokeLater(() -> {
             panelVariables.removeAll();
             suggestions.forEach(suggestion -> panelVariables.add(new ContextVariableLabel(suggestion)));
@@ -97,7 +97,7 @@ class ScriptEditorContextPanel extends DisposablePanel implements PlatformModule
         }
     }
 
-    private List<Suggestion> getSuggestions() {
+    private List<Suggestion> suggestions() {
         return PlatformModuleService.getInstance(module)
                 .variablesOf(inputFullyQualifiedName, componentPropertyPath)
                 .stream()

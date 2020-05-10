@@ -9,6 +9,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
+import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
 import org.jetbrains.annotations.NotNull;
@@ -29,11 +30,13 @@ public class GroovyCompletionContributor extends CompletionContributor {
         String componentFullyQualifiedName = editor.getUserData(COMPONENT_PROPERTY_PATH);
         ContainerContext context = editor.getUserData(PROPERTY_CONTEXT);
 
+        // TODO: This is bad
         if (project != null &&
                 context != null &&
                 isNotBlank(moduleName) &&
                 isNotBlank(componentFullyQualifiedName)) {
-            String predecessorFQN = context.predecessor();
+            GraphNode predecessorGraphNode = context.predecessor();
+            String predecessorFQN = predecessorGraphNode.componentData().getFullyQualifiedName();
             computeResultSet(parameters, result, moduleName, componentFullyQualifiedName, predecessorFQN, project);
         }
     }

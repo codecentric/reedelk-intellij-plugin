@@ -41,12 +41,15 @@ public class ContainerContext implements Disposable {
         }
     }
 
-    public String predecessor() {
+    // TODO: Review this logic..!!!
+    public GraphNode predecessor() {
         List<GraphNode> predecessors = snapshot.getGraphOrThrowIfAbsent().predecessors(node);
-        return predecessors.stream()
-                .map(graphNode -> graphNode.componentData().getFullyQualifiedName())
-                .findFirst()
-                .orElse(null);
+        return predecessors.stream().findFirst().orElse(null);
+    }
+
+    public GraphNode predecessor(GraphNode graphNode) {
+        List<GraphNode> predecessors = snapshot.getGraphOrThrowIfAbsent().predecessors(graphNode);
+        return predecessors.stream().findFirst().orElse(null);
     }
 
     public String componentPropertyPath() {

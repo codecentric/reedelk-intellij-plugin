@@ -6,12 +6,14 @@ import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.executor.PluginExecutors;
+import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.completion.*;
 import com.reedelk.plugin.service.module.impl.component.componentio.IOComponent;
 import com.reedelk.plugin.service.module.impl.component.componentio.IOTypeDescriptor;
 import com.reedelk.plugin.service.module.impl.component.componentio.IOTypeItem;
 import com.reedelk.plugin.service.module.impl.component.componentio.OnComponentIO;
+import com.reedelk.runtime.api.annotation.ComponentOutput;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.message.MessageAttributes;
 import org.jetbrains.annotations.NotNull;
@@ -46,20 +48,35 @@ public class PlatformComponentIOServiceImpl implements PlatformModuleService {
         onComponentIO = module.getProject().getMessageBus().syncPublisher(Topics.ON_COMPONENT_IO);
     }
 
+    // TODO: Catch any exception they are eaten up!
     @Override
     public void inputOutputOf(ContainerContext context, String componentFullyQualifiedName) {
         PluginExecutors.run(module, message("component.io.ticker.text"), indicator -> {
-            String predecessorFQCN = context.predecessor();
+            GraphNode predecessorNode = context.predecessor();
 
-            ComponentDescriptor componentDescriptorBy = componentService.componentDescriptorFrom(predecessorFQCN);
+            String fullyQualifiedName = predecessorNode.componentData().getFullyQualifiedName();
+            ComponentDescriptor componentDescriptorBy = componentService.componentDescriptorFrom(fullyQualifiedName);
             ComponentOutputDescriptor output = componentDescriptorBy.getOutput();
+
+
+            if (output != null && output.getPayload().contains(ComponentOutput.PreviousComponent.class.getName())) {
+                // We must take the payload from the previous component.
+                GraphNode predecessor = context.predecessor(predecessorNode);
+                String newFullyQualifiedName = predecessor.componentData().getFullyQualifiedName();
+                ComponentDescriptor newComponentDescriptor = componentService.componentDescriptorFrom(newFullyQualifiedName);
+                ComponentOutputDescriptor newOutput = newComponentDescriptor.getOutput();
+                output = new ComponentOutputDescriptor();
+                output.setDescription(newOutput.getDescription());
+                output.setPayload(newOutput.getPayload());
+                output.setAttributes(newOutput.getAttributes());
+            }
 
             IOTypeDescriptor outputAttributes = attributes(output);
             List<IOTypeDescriptor> outputPayload = payload(output);
 
             String description = output != null ? output.getDescription() : StringUtils.EMPTY;
             IOComponent IOComponent = new IOComponent(outputAttributes, outputPayload, description);
-            onComponentIO.onComponentIO(predecessorFQCN, componentFullyQualifiedName, IOComponent);
+            onComponentIO.onComponentIO(fullyQualifiedName, componentFullyQualifiedName, IOComponent);
         });
     }
 
