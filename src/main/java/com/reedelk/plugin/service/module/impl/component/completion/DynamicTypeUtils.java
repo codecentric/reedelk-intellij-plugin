@@ -1,9 +1,6 @@
-package com.reedelk.plugin.service.module.impl.component.completion.commons;
+package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
-import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
-import com.reedelk.plugin.service.module.impl.component.completion.Trie;
-import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
 import com.reedelk.runtime.api.message.MessageAttributes;
 import com.reedelk.runtime.api.message.MessagePayload;
 
@@ -13,9 +10,9 @@ import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 
-public class DynamicType {
+public class DynamicTypeUtils {
 
-    private DynamicType() {
+    private DynamicTypeUtils() {
     }
 
     // Resolves the dynamic type from the output descriptor
@@ -41,7 +38,7 @@ public class DynamicType {
     // Note that there might be multiple dynamic types because a component
     // could have multiple outputs.
     public static Collection<Suggestion> createDynamicSuggestion(TrieMapWrapper typeAndTrieMap, ComponentOutputDescriptor descriptor, Suggestion suggestion) {
-        return DynamicType.from(suggestion, descriptor).stream()
+        return DynamicTypeUtils.from(suggestion, descriptor).stream()
                 .map(dynamicType -> Suggestion.create(suggestion.getType())
                         .withType(dynamicType)
                         .withName(suggestion.name())
@@ -57,8 +54,8 @@ public class DynamicType {
         if (MessageAttributes.class.getName().equals(originalType)) {
             return MessageAttributes.class.getSimpleName(); // We keep the message attributes.
         } else {
-            Trie dynamicTypeTrie = typeAndTrieMap.getOrDefault(dynamicType, UnknownTypeTrie.get());
-            return PresentableType.from(dynamicType, dynamicTypeTrie);
+            Trie dynamicTypeTrie = typeAndTrieMap.getOrDefault(dynamicType, TrieUnknownType.get());
+            return PresentableTypeUtils.from(dynamicType, dynamicTypeTrie);
         }
     }
 

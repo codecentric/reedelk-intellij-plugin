@@ -1,7 +1,6 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.intellij.icons.AllIcons;
-import com.reedelk.plugin.service.module.impl.component.completion.commons.PresentableType;
 import com.reedelk.runtime.api.commons.StringUtils;
 
 import javax.swing.*;
@@ -64,7 +63,7 @@ public class Suggestion {
         if (StringUtils.isNotBlank(presentableType)) {
             return presentableType;
         }
-        return PresentableType.from(typeText); // TODO : Fixme!
+        return PresentableTypeUtils.from(typeText); // TODO : Fixme!
     }
 
     public Icon icon() {

@@ -1,7 +1,6 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
-import com.reedelk.plugin.service.module.impl.component.completion.commons.PresentableType;
 import com.reedelk.runtime.api.message.MessageAttributes;
 import org.jetbrains.annotations.NotNull;
 
@@ -47,13 +46,13 @@ public class IOProcessor {
         if (isNotBlank(typeTrie.listItemType())) {
             // It is  a List type, we need to find the suggestions for the List item type.
             // The list type display is: List<FileType> : FileType
-            String typeDisplay = PresentableType.formatListDisplayType(type, typeTrie);
+            String typeDisplay = PresentableTypeUtils.formatListDisplayType(type, typeTrie);
             String listItemType = typeTrie.listItemType();
             Collection<IOTypeDTO> typeDTOs = findAndMapDTO(output, listItemType);
             return new IOTypeDescriptor(typeDisplay, typeDTOs);
 
         } else {
-            String typeDisplay = PresentableType.from(type, typeTrie);
+            String typeDisplay = PresentableTypeUtils.from(type, typeTrie);
             Collection<IOTypeDTO> typeDTOs = findAndMapDTO(output, typeTrie);
             return new IOTypeDescriptor(typeDisplay, typeDTOs);
         }
@@ -90,7 +89,7 @@ public class IOProcessor {
                 String listItemType = typeTrie.listItemType();
                 Trie listItemTrie = typeAndAndTries.getOrDefault(listItemType, UNKNOWN_TYPE_TRIE);
                 // The list type display is: List<FileType> : FileType
-                String typeDisplay = PresentableType.formatListDisplayType(suggestionType, typeTrie);
+                String typeDisplay = PresentableTypeUtils.formatListDisplayType(suggestionType, typeTrie);
                 return asTypeDTO(output, listItemType, listItemTrie,
                         suggestion.lookupString(),
                         typeDisplay);

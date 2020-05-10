@@ -1,6 +1,5 @@
-package com.reedelk.plugin.service.module.impl.component.completion.commons;
+package com.reedelk.plugin.service.module.impl.component.completion;
 
-import com.reedelk.plugin.service.module.impl.component.completion.Trie;
 import com.reedelk.runtime.api.commons.StringUtils;
 
 import java.util.ArrayList;
@@ -8,9 +7,9 @@ import java.util.List;
 
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
-public class PresentableType {
+public class PresentableTypeUtils {
 
-    private PresentableType() {
+    private PresentableTypeUtils() {
     }
 
     // Converts a fully qualified name type e.g. com.my.component.MyType
@@ -30,13 +29,13 @@ public class PresentableType {
         if (isNotBlank(typeTrie.listItemType())) {
             // If exists a list item type, it is a list and we want to display it with: List<ItemType>
             String listItemType = typeTrie.listItemType();
-            return "List<" + PresentableType.from(listItemType) + ">";
+            return "List<" + PresentableTypeUtils.from(listItemType) + ">";
         } else {
-            return PresentableType.from(type);
+            return PresentableTypeUtils.from(type);
         }
     }
 
     public static String formatListDisplayType(String type, Trie typeTrie) {
-        return PresentableType.from(type, typeTrie) + " : " + PresentableType.from(typeTrie.listItemType());
+        return PresentableTypeUtils.from(type, typeTrie) + " : " + PresentableTypeUtils.from(typeTrie.listItemType());
     }
 }

@@ -2,9 +2,6 @@ package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.exception.PluginException;
-import com.reedelk.plugin.service.module.impl.component.completion.commons.DynamicType;
-import com.reedelk.plugin.service.module.impl.component.completion.commons.PresentableType;
-import com.reedelk.plugin.service.module.impl.component.completion.commons.UnknownTypeTrie;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,7 +37,7 @@ public class CompletionFinder {
                     // We only need to find exact matches. If there are no exact matches,
                     // we can not move forward with the autocomplete.
                     if (suggestion.name().equals(token)) {
-                        Trie trie = typeAndTrieMap.getOrDefault(suggestion.typeText(), UnknownTypeTrie.get());
+                        Trie trie = typeAndTrieMap.getOrDefault(suggestion.typeText(), TrieUnknownType.get());
                         exactMatchTries.add(trie);
                     }
                 }
@@ -61,18 +58,8 @@ public class CompletionFinder {
         Collection<Suggestion> suggestions = current.autocomplete(token, typeAndTrieMap);
         List<Suggestion> withDynamicSuggestions = new ArrayList<>();
         for (Suggestion suggestion : suggestions) {
-            if (DynamicType.is(suggestion)) {
-                Collection<Suggestion> dynamicSuggestions =
-                        DynamicType.createDynamicSuggestion(typeAndTrieMap, descriptor, suggestion);
-                if (flatten && dynamicSuggestions.size() > 1) {
-                    // If the suggestion is terminal, e.g. message.payload() we must flatten the dynamic suggestions into one.
-                    // the type of each separate suggestion is separated by a comma. This happens when a component might
-                    // have multiple possible output types (e.g RESTListener: byte[], String or Map, depending on the HTTP request mime type).
-                    withDynamicSuggestions.add(flatten(dynamicSuggestions));
-                } else {
-                    // If the suggestion is not terminal we add all the possible output of the previous component.
-                    withDynamicSuggestions.addAll(dynamicSuggestions);
-                }
+            if (DynamicTypeUtils.is(suggestion)) {
+                createDynamicSuggestions(descriptor, flatten, withDynamicSuggestions, suggestion);
             } else {
                 withDynamicSuggestions.add(suggestion);
             }
@@ -80,9 +67,23 @@ public class CompletionFinder {
         return withDynamicSuggestions;
     }
 
+    private void createDynamicSuggestions(ComponentOutputDescriptor descriptor, boolean flatten, List<Suggestion> withDynamicSuggestions, Suggestion suggestion) {
+        Collection<Suggestion> dynamicSuggestions =
+                DynamicTypeUtils.createDynamicSuggestion(typeAndTrieMap, descriptor, suggestion);
+        if (flatten && dynamicSuggestions.size() > 1) {
+            // If the suggestion is terminal, e.g. message.payload() we must flatten the dynamic suggestions into one.
+            // the type of each separate suggestion is separated by a comma. This happens when a component might
+            // have multiple possible output types (e.g RESTListener: byte[], String or Map, depending on the HTTP request mime type).
+            withDynamicSuggestions.add(flatten(dynamicSuggestions));
+        } else {
+            // If the suggestion is not terminal we add all the possible output of the previous component.
+            withDynamicSuggestions.addAll(dynamicSuggestions);
+        }
+    }
+
     private Suggestion flatten(Collection<Suggestion> dynamicSuggestions) {
         List<String> possibleTypes = dynamicSuggestions.stream()
-                .map(suggestion -> PresentableType.from(suggestion.typeText()))
+                .map(suggestion -> PresentableTypeUtils.from(suggestion.typeText()))
                 .collect(toList());
         Suggestion suggestion = dynamicSuggestions.stream()
                 .findAny()

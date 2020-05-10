@@ -1,6 +1,5 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
-import com.reedelk.plugin.service.module.impl.component.completion.commons.UnknownTypeTrie;
 import com.reedelk.runtime.api.commons.StringUtils;
 
 import java.util.*;
@@ -98,7 +97,7 @@ public class TrieDefault implements Trie {
     private static void addExtendsTypeSuggestions(Trie current, TrieMapWrapper typeAndTrieMap, String token, Collection<Suggestion> suggestions) {
         if (current != null && StringUtils.isNotBlank(current.extendsType())) {
             String extendsType = current.extendsType();
-            Trie currentTypeTrie = typeAndTrieMap.getOrDefault(extendsType, UnknownTypeTrie.get());
+            Trie currentTypeTrie = typeAndTrieMap.getOrDefault(extendsType, TrieUnknownType.get());
             suggestions.addAll(currentTypeTrie.autocomplete(token, typeAndTrieMap));
             addExtendsTypeSuggestions(currentTypeTrie, typeAndTrieMap, token, suggestions);
         }
