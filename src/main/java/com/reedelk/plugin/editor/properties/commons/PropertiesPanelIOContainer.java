@@ -60,6 +60,7 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
         });
     }
 
+    private static final int LEFT_OFFSET = 20;
     @Override
     public void onComponentIO(String inputFQCN, String outputFQCN, IOComponent IOComponent) {
         DisposableScrollPane contentPanel = new ContentPanel();
@@ -72,21 +73,33 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
         panel.setBorder(JBUI.Borders.empty(5, 2));
         contentPanel.setViewportView(panel);
 
+        int topOffset = 0;
+        if (StringUtils.isNotBlank(IOComponent.getPayloadDescription())) {
+            DisposableCollapsiblePane description = new DisposableCollapsiblePane(htmlLabel("<b>description</b>", "", false), () -> {
+                JBLabel label = new JBLabel(htmlLabel(IOComponent.getPayloadDescription(), "", false));
+                label.setBorder(JBUI.Borders.emptyLeft(LEFT_OFFSET));
+                return label;
+            });
+            topOffset = 4;
+            description.setBorder(JBUI.Borders.empty());
+            FormBuilder.get().addFullWidthAndHeight(description, theContent);
+        }
+
         List<IOTypeDescriptor> payloads = IOComponent.getPayload();
         if (payloads.size() == 1) {
             // Inline
-            IOTypeDescriptor IOTypeDescriptor = payloads.get(0);
-            boolean collapsed = IOTypeDescriptor.getProperties().isEmpty(); // Collapsed if there are no properties
-            DisposableCollapsiblePane payload = createPanel(htmlLabel("<b>payload</b>", IOTypeDescriptor.getType()), IOTypeDescriptor, 30, collapsed, true);
-            payload.setBorder(JBUI.Borders.empty());
+            IOTypeDescriptor payloadIO = payloads.get(0);
+            boolean collapsed = payloadIO.getProperties().isEmpty(); // Collapsed if there are no properties
+            DisposableCollapsiblePane payload = createPanel(htmlLabel("<b>payload</b>", payloadIO.getType()), payloadIO, LEFT_OFFSET, collapsed, true);
+            payload.setBorder(JBUI.Borders.emptyTop(topOffset));
             FormBuilder.get().addFullWidthAndHeight(payload, theContent);
         } else {
-            DisposableCollapsiblePane payload = createPanel(htmlLabel("<b>payload</b>", "(one of the following types)"), payloads, 30, false, true);
-            payload.setBorder(JBUI.Borders.empty());
+            DisposableCollapsiblePane payload = createPanel(htmlLabel("<b>payload</b>", "(one of the following types)"), payloads, LEFT_OFFSET, false, true);
+            payload.setBorder(JBUI.Borders.emptyTop(topOffset));
             FormBuilder.get().addFullWidthAndHeight(payload, theContent);
         }
 
-        DisposableCollapsiblePane attributes = createPanel(htmlLabel("<b>attributes</b>", MessageAttributes.class.getSimpleName()), IOComponent.getAttributes(), 30, false, true);
+        DisposableCollapsiblePane attributes = createPanel(htmlLabel("<b>attributes</b>", MessageAttributes.class.getSimpleName()), IOComponent.getAttributes(), LEFT_OFFSET, false, true);
         attributes.setBorder(JBUI.Borders.emptyTop(4));
         FormBuilder.get().addFullWidthAndHeight(attributes, theContent);
 
@@ -124,6 +137,7 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
         public ContentPanel() {
             setBorder(JBUI.Borders.empty(0, 1, 0, 8));
             setBackground(JBColor.WHITE);
+            setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         }
     }
 
@@ -193,13 +207,21 @@ public class PropertiesPanelIOContainer extends DisposablePanel implements OnCom
     private static final String HTML_WITHOUT_VALUE = "<html>%s</html>";
 
     private static String htmlLabel(String key, String value) {
+        return htmlLabel(key, value, true);
+    }
+
+    private static String htmlLabel(String key, String value, boolean escape) {
         if (StringUtils.isBlank(value)) {
-            key = key.replaceAll("<", "&lt;");
-            key = key.replaceAll(">", "&gt;");
+            if (escape) {
+                key = key.replaceAll("<", "&lt;");
+                key = key.replaceAll(">", "&gt;");
+            }
             return String.format(HTML_WITHOUT_VALUE, key);
         } else {
-            value = value.replaceAll("<", "&lt;");
-            value = value.replaceAll(">", "&gt;");
+            if (escape) {
+                value = value.replaceAll("<", "&lt;");
+                value = value.replaceAll(">", "&gt;");
+            }
             return String.format(HTML_WITH_VALUE, key, value);
         }
     }

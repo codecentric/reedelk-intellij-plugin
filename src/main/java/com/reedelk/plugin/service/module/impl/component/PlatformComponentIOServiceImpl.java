@@ -12,6 +12,7 @@ import com.reedelk.plugin.service.module.impl.component.componentio.IOComponent;
 import com.reedelk.plugin.service.module.impl.component.componentio.IOTypeDescriptor;
 import com.reedelk.plugin.service.module.impl.component.componentio.IOTypeItem;
 import com.reedelk.plugin.service.module.impl.component.componentio.OnComponentIO;
+import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.message.MessageAttributes;
 import org.jetbrains.annotations.NotNull;
 
@@ -56,7 +57,8 @@ public class PlatformComponentIOServiceImpl implements PlatformModuleService {
             IOTypeDescriptor outputAttributes = attributes(output);
             List<IOTypeDescriptor> outputPayload = payload(output);
 
-            IOComponent IOComponent = new IOComponent(outputAttributes, outputPayload);
+            String description = output != null ? output.getDescription() : StringUtils.EMPTY;
+            IOComponent IOComponent = new IOComponent(outputAttributes, outputPayload, description);
             onComponentIO.onComponentIO(predecessorFQCN, componentFullyQualifiedName, IOComponent);
         });
     }
@@ -71,11 +73,11 @@ public class PlatformComponentIOServiceImpl implements PlatformModuleService {
         List<String> outputPayloadTypes = output != null ? output.getPayload() : singletonList(Object.class.getName());
         return outputPayloadTypes
                 .stream()
-                .map(outputType -> asIOTypeDescriptor(output, outputType))
+                .map(outputType -> map(output, outputType))
                 .collect(toList());
     }
 
-    private IOTypeDescriptor asIOTypeDescriptor(ComponentOutputDescriptor output, String type) {
+    private IOTypeDescriptor map(ComponentOutputDescriptor output, String type) {
         Trie typeTrie = typeAndAndTries.getOrDefault(type, Default.UNKNOWN);
         if (isNotBlank(typeTrie.listItemType())) {
             // It is  a List type, we need to find the suggestions for the List item type.
@@ -134,7 +136,7 @@ public class PlatformComponentIOServiceImpl implements PlatformModuleService {
         } else {
             // Complex type
             String finalPropertyName = propertyName + " : " + propertyType;
-            IOTypeDescriptor ioTypeDescriptor = asIOTypeDescriptor(output, type);
+            IOTypeDescriptor ioTypeDescriptor = map(output, type);
             return new IOTypeItem(finalPropertyName, ioTypeDescriptor);
         }
     }

@@ -4,12 +4,14 @@ import java.util.List;
 
 public class IOComponent {
 
+    private final String payloadDescription;
     private final IOTypeDescriptor attributes;
     private final List<IOTypeDescriptor> payload;
 
-    public IOComponent(IOTypeDescriptor attributes, List<IOTypeDescriptor> payload) {
-        this.attributes = attributes;
+    public IOComponent(IOTypeDescriptor attributes, List<IOTypeDescriptor> payload, String payloadDescription) {
         this.payload = payload;
+        this.attributes = attributes;
+        this.payloadDescription = payloadDescription;
     }
 
     public IOTypeDescriptor getAttributes() {
@@ -20,4 +22,7 @@ public class IOComponent {
         return payload;
     }
 
+    public String getPayloadDescription() {
+        return payloadDescription;
+    }
 }
