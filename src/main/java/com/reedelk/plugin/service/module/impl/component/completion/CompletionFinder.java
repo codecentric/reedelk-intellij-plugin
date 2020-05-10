@@ -37,7 +37,7 @@ public class CompletionFinder {
                     // We only need to find exact matches. If there are no exact matches,
                     // we can not move forward with the autocomplete.
                     if (suggestion.name().equals(token)) {
-                        Trie trie = typeAndTrieMap.getOrDefault(suggestion.typeText(), TrieUnknownType.get());
+                        Trie trie = typeAndTrieMap.getOrDefault(suggestion.typeText(), Default.UNKNOWN);
                         exactMatchTries.add(trie);
                     }
                 }

@@ -54,7 +54,7 @@ public class DynamicTypeUtils {
         if (MessageAttributes.class.getName().equals(originalType)) {
             return MessageAttributes.class.getSimpleName(); // We keep the message attributes.
         } else {
-            Trie dynamicTypeTrie = typeAndTrieMap.getOrDefault(dynamicType, TrieUnknownType.get());
+            Trie dynamicTypeTrie = typeAndTrieMap.getOrDefault(dynamicType, Default.UNKNOWN);
             return PresentableTypeUtils.from(dynamicType, dynamicTypeTrie);
         }
     }

@@ -28,6 +28,8 @@ import static java.util.stream.Collectors.toList;
 
 public class PlatformComponentIOServiceImpl implements PlatformModuleService {
 
+    private static final String TASK_INDICATOR_TEXT = "Analyzing component Input and Output";
+
     private final Module module;
     private OnComponentIO onComponentIO;
     private final TrieMapWrapper typeAndAndTries;
@@ -44,8 +46,9 @@ public class PlatformComponentIOServiceImpl implements PlatformModuleService {
 
     @Override
     public void inputOutputOf(ContainerContext context, String outputFullyQualifiedName) {
-        PluginExecutors.run(module, "Fetching IO", indicator -> {
+        PluginExecutors.run(module, TASK_INDICATOR_TEXT, indicator -> {
             String predecessorFQCN = context.predecessor();
+
             ComponentDescriptor componentDescriptorBy = componentTracker.componentDescriptorFrom(predecessorFQCN);
             ComponentOutputDescriptor output = componentDescriptorBy.getOutput();
 
@@ -72,7 +75,7 @@ public class PlatformComponentIOServiceImpl implements PlatformModuleService {
 
     @NotNull
     private IOTypeDescriptor asIOTypeDescriptor(ComponentOutputDescriptor output, String type) {
-        Trie typeTrie = typeAndAndTries.getOrDefault(type, TrieUnknownType.get());
+        Trie typeTrie = typeAndAndTries.getOrDefault(type, Default.UNKNOWN);
         if (isNotBlank(typeTrie.listItemType())) {
             // It is  a List type, we need to find the suggestions for the List item type.
             // The list type display is: List<FileType> : FileType
@@ -98,7 +101,7 @@ public class PlatformComponentIOServiceImpl implements PlatformModuleService {
 
     @NotNull
     private Collection<IOTypeItem> findAndMapDTO(ComponentOutputDescriptor output, String type) {
-        Trie typeTrie = typeAndAndTries.getOrDefault(type, TrieUnknownType.get());
+        Trie typeTrie = typeAndAndTries.getOrDefault(type, Default.UNKNOWN);
         return findAndMapDTO(output, typeTrie);
     }
 
@@ -114,10 +117,11 @@ public class PlatformComponentIOServiceImpl implements PlatformModuleService {
     public Function<Suggestion, IOTypeItem> mapper(ComponentOutputDescriptor output) {
         return suggestion -> {
             String suggestionType = suggestion.typeText();
-            Trie typeTrie = typeAndAndTries.getOrDefault(suggestionType, TrieUnknownType.get());
+            Trie typeTrie = typeAndAndTries.getOrDefault(suggestionType, Default.UNKNOWN);
             if (isNotBlank(typeTrie.listItemType())) {
+                // Unroll the list type
                 String listItemType = typeTrie.listItemType();
-                Trie listItemTrie = typeAndAndTries.getOrDefault(listItemType, TrieUnknownType.get());
+                Trie listItemTrie = typeAndAndTries.getOrDefault(listItemType, Default.UNKNOWN);
                 // The list type display is: List<FileType> : FileType
                 String typeDisplay = PresentableTypeUtils.formatListDisplayType(suggestionType, typeTrie);
                 return asTypeDTO(output, listItemType, listItemTrie,

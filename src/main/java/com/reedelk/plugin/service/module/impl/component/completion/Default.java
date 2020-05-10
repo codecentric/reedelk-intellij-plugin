@@ -10,8 +10,10 @@ import static com.reedelk.plugin.service.module.impl.component.completion.Sugges
 
 public class Default {
 
+    public static final Trie UNKNOWN = new TrieDefault();
+
     // Default script signature is message and context.
-    public static final TrieDefault TRIE = new TrieDefault();
+    public static final Trie TRIE = new TrieDefault();
     static {
         Suggestion message = Suggestion.create(PROPERTY)
                 .withLookupString("message")

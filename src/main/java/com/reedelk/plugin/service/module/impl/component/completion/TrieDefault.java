@@ -97,7 +97,7 @@ public class TrieDefault implements Trie {
     private static void addExtendsTypeSuggestions(Trie current, TrieMapWrapper typeAndTrieMap, String token, Collection<Suggestion> suggestions) {
         if (current != null && StringUtils.isNotBlank(current.extendsType())) {
             String extendsType = current.extendsType();
-            Trie currentTypeTrie = typeAndTrieMap.getOrDefault(extendsType, TrieUnknownType.get());
+            Trie currentTypeTrie = typeAndTrieMap.getOrDefault(extendsType, Default.UNKNOWN);
             suggestions.addAll(currentTypeTrie.autocomplete(token, typeAndTrieMap));
             addExtendsTypeSuggestions(currentTypeTrie, typeAndTrieMap, token, suggestions);
         }
