@@ -1,6 +1,7 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.reedelk.runtime.api.commons.StringUtils;
+import com.reedelk.runtime.api.message.MessageAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,16 @@ public class PresentableTypeUtils {
             return "List<" + PresentableTypeUtils.from(listItemType) + ">";
         } else {
             return PresentableTypeUtils.from(type);
+        }
+    }
+
+    public static String presentableTypeOf(Suggestion suggestion, String dynamicType, TrieMapWrapper typeAndTrieMap) {
+        String originalType = suggestion.typeText();
+        if (MessageAttributes.class.getName().equals(originalType)) {
+            return MessageAttributes.class.getSimpleName(); // We keep the message attributes.
+        } else {
+            Trie dynamicTypeTrie = typeAndTrieMap.getOrDefault(dynamicType, Default.UNKNOWN);
+            return PresentableTypeUtils.from(dynamicType, dynamicTypeTrie);
         }
     }
 

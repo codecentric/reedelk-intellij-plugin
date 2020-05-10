@@ -49,9 +49,8 @@ public class PlatformCompletionServiceImpl implements PlatformModuleService {
     public PlatformCompletionServiceImpl(Module module, PlatformComponentServiceImpl componentTracker) {
         this.componentTracker = componentTracker;
         this.completionFinder = new CompletionFinder(typesMap);
-        this.onCompletionEvent = module.getProject().getMessageBus().syncPublisher(Topics.COMPLETION_EVENT_TOPIC);
-
         this.componentIOService = new PlatformComponentIOServiceImpl(module, completionFinder, typesMap, componentTracker);
+        this.onCompletionEvent = module.getProject().getMessageBus().syncPublisher(Topics.COMPLETION_EVENT_TOPIC);
     }
 
     @Override
@@ -85,7 +84,6 @@ public class PlatformCompletionServiceImpl implements PlatformModuleService {
     }
 
     void fireCompletionsUpdatedEvent() {
-        // TODO: Check where this one is used and if it is needed.
         onCompletionEvent.onCompletionsUpdated();
     }
 
@@ -154,7 +152,8 @@ public class PlatformCompletionServiceImpl implements PlatformModuleService {
                         .map(argument -> Suggestion.create(PROPERTY)
                                 .withLookupString(argument.getArgumentName())
                                 .withType(argument.getArgumentType())
-                                .build()).forEach(trie::insert);
+                                .build())
+                        .forEach(trie::insert);
                 signatureTypesMap.put(componentPropertyPath, trie);
             });
         }

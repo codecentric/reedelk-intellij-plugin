@@ -45,18 +45,9 @@ public class DynamicTypeUtils {
                         .withCursorOffset(suggestion.cursorOffset())
                         .withLookupString(suggestion.lookupString())
                         .withPresentableText(suggestion.presentableText())
-                        .withPresentableType(presentableTypeOf(suggestion, dynamicType, typeAndTrieMap))
+                        .withPresentableType(
+                                PresentableTypeUtils.presentableTypeOf(suggestion, dynamicType, typeAndTrieMap))
                         .build()).collect(Collectors.toList());
-    }
-
-    private static String presentableTypeOf(Suggestion suggestion, String dynamicType, TrieMapWrapper typeAndTrieMap) {
-        String originalType = suggestion.typeText();
-        if (MessageAttributes.class.getName().equals(originalType)) {
-            return MessageAttributes.class.getSimpleName(); // We keep the message attributes.
-        } else {
-            Trie dynamicTypeTrie = typeAndTrieMap.getOrDefault(dynamicType, Default.UNKNOWN);
-            return PresentableTypeUtils.from(dynamicType, dynamicTypeTrie);
-        }
     }
 
     public static boolean is(Suggestion suggestion) {

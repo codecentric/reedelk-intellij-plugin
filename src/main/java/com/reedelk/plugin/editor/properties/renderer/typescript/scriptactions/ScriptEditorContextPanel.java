@@ -83,7 +83,7 @@ class ScriptEditorContextPanel extends DisposablePanel implements PlatformModule
     public void onCompletionsUpdated() {
         List<Suggestion> suggestions = getSuggestions();
         ApplicationManager.getApplication().invokeLater(() -> {
-                panelVariables.removeAll();
+            panelVariables.removeAll();
             suggestions.forEach(suggestion -> panelVariables.add(new ContextVariableLabel(suggestion)));
             panelVariables.repaint();
         });

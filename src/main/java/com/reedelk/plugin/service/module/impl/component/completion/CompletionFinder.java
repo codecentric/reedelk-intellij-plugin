@@ -18,6 +18,7 @@ public class CompletionFinder {
         this.typeAndTrieMap = typeAndTrieMap;
     }
 
+    // Finds all the suggestion starting from root type.
     public Collection<Suggestion> find(Trie root, ComponentOutputDescriptor componentOutputDescriptor) {
         return find(root, new String[]{EMPTY}, componentOutputDescriptor);
     }
