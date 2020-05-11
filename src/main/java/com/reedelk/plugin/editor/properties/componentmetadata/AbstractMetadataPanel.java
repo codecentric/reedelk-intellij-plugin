@@ -1,40 +1,40 @@
-package com.reedelk.plugin.editor.properties.componentinput;
+package com.reedelk.plugin.editor.properties.componentmetadata;
 
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.DisposableScrollPane;
-import com.reedelk.plugin.service.module.impl.component.componentio.IOComponent;
-import com.reedelk.plugin.service.module.impl.component.componentio.OnComponentIO;
+import com.reedelk.plugin.service.module.impl.component.metadata.ComponentMetadata;
+import com.reedelk.plugin.service.module.impl.component.metadata.OnComponentMetadata;
 import com.reedelk.runtime.api.commons.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
 
-abstract class AbstractComponentInput extends DisposableScrollPane implements OnComponentIO {
+abstract class AbstractMetadataPanel extends DisposableScrollPane implements OnComponentMetadata {
 
     protected static final int LEFT_OFFSET = 24;
 
-    public AbstractComponentInput() {
+    public AbstractMetadataPanel() {
         setBorder(JBUI.Borders.empty(0, 1, 0, 8));
         setBackground(JBColor.WHITE);
         setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
     }
 
     @Override
-    public void onComponentIO(String inputFQCN, String outputFQCN, IOComponent IOComponent) {
+    public void onComponentMetadata(ComponentMetadata componentMetadata) {
         DisposablePanel theContent = new DisposablePanel(new GridBagLayout());
         theContent.setBackground(JBColor.WHITE);
         DisposablePanel panel = ContainerFactory.pushTop(theContent);
         panel.setBackground(JBColor.WHITE);
         panel.setBorder(JBUI.Borders.empty(5, 2));
 
-        render(IOComponent, theContent);
+        render(componentMetadata, theContent);
         setViewportView(panel);
     }
 
-    abstract void render(IOComponent IOComponent, DisposablePanel parent);
+    abstract void render(ComponentMetadata componentMetadata, DisposablePanel parent);
 
     private static final String HTML_WITH_VALUE = "<html>%s : <i>%s</i></html>";
     private static final String HTML_WITHOUT_VALUE = "<html>%s</html>";

@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.componentinput;
+package com.reedelk.plugin.editor.properties.componentmetadata;
 
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.JBUI;

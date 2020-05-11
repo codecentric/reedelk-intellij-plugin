@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.componentinput;
+package com.reedelk.plugin.editor.properties.componentmetadata;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
@@ -11,25 +11,25 @@ import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.PanelWithText;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.service.module.PlatformModuleService;
-import com.reedelk.plugin.service.module.impl.component.componentio.IOComponent;
-import com.reedelk.plugin.service.module.impl.component.componentio.OnComponentIO;
+import com.reedelk.plugin.service.module.impl.component.metadata.ComponentMetadata;
+import com.reedelk.plugin.service.module.impl.component.metadata.OnComponentMetadata;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import java.awt.*;
 
-public class ComponentInput extends DisposablePanel implements OnComponentIO {
+public class ComponentMetadataPanel extends DisposablePanel implements OnComponentMetadata {
 
-    private ComponentActualInput actualInput;
-    private ComponentExpectedInput expectedInput;
+    private MetadataInput metadataInput;
+    private MetadataExpectedInput metadataExpectedInput;
 
     private final DisposablePanel loadingPanel;
     private MessageBusConnection connection;
 
-    public ComponentInput(@NotNull Module module,
-                          @NotNull ContainerContext context,
-                          @NotNull String componentFullyQualifiedName) {
+    public ComponentMetadataPanel(@NotNull Module module,
+                                  @NotNull ContainerContext context,
+                                  @NotNull String componentFullyQualifiedName) {
         super(new BorderLayout());
 
         loadingPanel = new PanelWithText.LoadingContentPanel();
@@ -43,14 +43,14 @@ public class ComponentInput extends DisposablePanel implements OnComponentIO {
         this.connection = module.getMessageBus().connect();
         this.connection.subscribe(Topics.ON_COMPONENT_IO, this);
 
-        actualInput = new ComponentActualInput();
-        expectedInput = new ComponentExpectedInput();
+        metadataInput = new MetadataInput();
+        metadataExpectedInput = new MetadataExpectedInput();
 
         addAncestorListener(new AncestorListenerAdapter() {
             @Override
             public void ancestorAdded(AncestorEvent event) {
                 PlatformModuleService.getInstance(module)
-                        .inputOutputOf(context, componentFullyQualifiedName);
+                        .componentMetadataOf(context, componentFullyQualifiedName);
             }
         });
 
@@ -60,16 +60,30 @@ public class ComponentInput extends DisposablePanel implements OnComponentIO {
     }
 
     @Override
-    public void onComponentIO(String inputFQCN, String outputFQCN, IOComponent IOComponent) {
-        actualInput.onComponentIO(inputFQCN, outputFQCN, IOComponent);
-        expectedInput.onComponentIO(inputFQCN, outputFQCN, IOComponent);
-
+    public void onComponentMetadata(ComponentMetadata componentMetadata) {
         ApplicationManager.getApplication().invokeLater(() -> {
             remove(loadingPanel);
-            add(actualInput, BorderLayout.CENTER);
+            add(metadataInput, BorderLayout.CENTER);
             revalidate();
             repaint();
         });
+
+        metadataInput.onComponentMetadata(componentMetadata);
+        metadataExpectedInput.onComponentMetadata(componentMetadata);
+    }
+
+    @Override
+    public void onComponentMetadataError(String message) {
+        // TODO: Handle the error
+        ApplicationManager.getApplication().invokeLater(() -> {
+            remove(loadingPanel);
+            add(metadataInput, BorderLayout.CENTER);
+            revalidate();
+            repaint();
+        });
+
+        metadataInput.onComponentMetadataError(message);
+        metadataExpectedInput.onComponentMetadataError(message);
     }
 
     @Override
@@ -80,8 +94,8 @@ public class ComponentInput extends DisposablePanel implements OnComponentIO {
 
     private void showExpectedInput() {
         SwingUtilities.invokeLater(() -> {
-            remove(actualInput);
-            add(expectedInput, BorderLayout.CENTER);
+            remove(metadataInput);
+            add(metadataExpectedInput, BorderLayout.CENTER);
             revalidate();
             repaint();
         });
@@ -89,8 +103,8 @@ public class ComponentInput extends DisposablePanel implements OnComponentIO {
 
     private void showInputMessage() {
         ApplicationManager.getApplication().invokeLater(() -> {
-            remove(expectedInput);
-            add(actualInput, BorderLayout.CENTER);
+            remove(metadataExpectedInput);
+            add(metadataInput, BorderLayout.CENTER);
             revalidate();
             repaint();
         });

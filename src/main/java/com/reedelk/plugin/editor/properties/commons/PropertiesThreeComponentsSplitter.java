@@ -4,7 +4,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.ui.JBColor;
 import com.reedelk.plugin.commons.DisposableUtils;
 import com.reedelk.plugin.commons.Sizes;
-import com.reedelk.plugin.editor.properties.componentinput.ComponentInput;
+import com.reedelk.plugin.editor.properties.componentmetadata.ComponentMetadataPanel;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,11 +28,11 @@ public class PropertiesThreeComponentsSplitter extends DisposableThreeComponents
         Border rightLine = customLine(JBColor.LIGHT_GRAY, 0, 0, 0, 1);
         properties.setBorder(rightLine);
 
-        ComponentInput componentInputPanel = new ComponentInput(module, context, componentFullyQualifiedName);
+        ComponentMetadataPanel componentMetadataPanelPanel = new ComponentMetadataPanel(module, context, componentFullyQualifiedName);
 
         setLastSize(Sizes.PropertiesPane.COMPONENT_OUTPUT_INFO_WIDTH);
         setInnerComponent(properties);
-        setLastComponent(componentInputPanel);
+        setLastComponent(componentMetadataPanelPanel);
         setDividerWidth(0);
         setDividerMouseZoneSize(10);
     }

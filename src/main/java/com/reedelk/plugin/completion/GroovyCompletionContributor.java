@@ -36,6 +36,7 @@ public class GroovyCompletionContributor extends CompletionContributor {
                 isNotBlank(moduleName) &&
                 isNotBlank(componentFullyQualifiedName)) {
             GraphNode predecessorGraphNode = context.predecessor();
+            // TODO: THIS IS NULL POINTER FOR REST LISTENER because the listener does not have a predecessor.
             String predecessorFQN = predecessorGraphNode.componentData().getFullyQualifiedName();
             computeResultSet(parameters, result, moduleName, componentFullyQualifiedName, predecessorFQN, project);
         }

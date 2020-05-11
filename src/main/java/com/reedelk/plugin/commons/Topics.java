@@ -4,7 +4,7 @@ import com.intellij.util.messages.Topic;
 import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
 import com.reedelk.plugin.editor.properties.selection.SelectionChangeListener;
 import com.reedelk.plugin.service.module.PlatformModuleService;
-import com.reedelk.plugin.service.module.impl.component.componentio.OnComponentIO;
+import com.reedelk.plugin.service.module.impl.component.metadata.OnComponentMetadata;
 
 import static com.reedelk.plugin.service.module.impl.configuration.ConfigurationServiceImpl.ConfigChangeListener;
 import static com.reedelk.plugin.service.module.impl.script.ScriptServiceImpl.ScriptResourceChangeListener;
@@ -29,8 +29,8 @@ public class Topics {
     public static final Topic<CommitPropertiesListener> COMMIT_COMPONENT_PROPERTIES_EVENTS =
             Topic.create("commit component properties events", CommitPropertiesListener.class);
 
-    public static final Topic<OnComponentIO> ON_COMPONENT_IO =
-            Topic.create("component input output ready", OnComponentIO.class);
+    public static final Topic<OnComponentMetadata> ON_COMPONENT_IO =
+            Topic.create("component input output ready", OnComponentMetadata.class);
 
     private Topics() {
     }

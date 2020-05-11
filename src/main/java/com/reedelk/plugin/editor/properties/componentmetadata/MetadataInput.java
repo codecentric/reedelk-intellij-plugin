@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.componentinput;
+package com.reedelk.plugin.editor.properties.componentmetadata;
 
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;
@@ -7,8 +7,8 @@ import com.reedelk.plugin.commons.Colors;
 import com.reedelk.plugin.editor.properties.commons.DisposableCollapsiblePane;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.FormBuilder;
-import com.reedelk.plugin.service.module.impl.component.componentio.IOComponent;
-import com.reedelk.plugin.service.module.impl.component.componentio.IOTypeDescriptor;
+import com.reedelk.plugin.service.module.impl.component.metadata.ComponentMetadata;
+import com.reedelk.plugin.service.module.impl.component.metadata.MetadataTypeDescriptor;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.message.MessageAttributes;
 
@@ -18,14 +18,14 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ComponentActualInput extends AbstractComponentInput {
+public class MetadataInput extends AbstractMetadataPanel {
 
     @Override
-    void render(IOComponent IOComponent, DisposablePanel parent) {
+    void render(ComponentMetadata componentMetadata, DisposablePanel parent) {
         int topOffset = 0;
-        if (StringUtils.isNotBlank(IOComponent.getPayloadDescription())) {
+        if (StringUtils.isNotBlank(componentMetadata.getPayloadDescription())) {
             DisposableCollapsiblePane description = new DisposableCollapsiblePane(htmlLabel("<b style=\"color: #666666\">description</b>", "", false), () -> {
-                JBLabel label = new JBLabel(htmlLabel(IOComponent.getPayloadDescription(), "", false));
+                JBLabel label = new JBLabel(htmlLabel(componentMetadata.getPayloadDescription(), "", false));
                 label.setBorder(JBUI.Borders.emptyLeft(LEFT_OFFSET));
                 return label;
             });
@@ -34,10 +34,10 @@ public class ComponentActualInput extends AbstractComponentInput {
             FormBuilder.get().addFullWidthAndHeight(description, parent);
         }
 
-        List<IOTypeDescriptor> payloads = IOComponent.getPayload();
+        List<MetadataTypeDescriptor> payloads = componentMetadata.getPayload();
         if (payloads.size() == 1) {
             // Inline
-            IOTypeDescriptor payloadIO = payloads.get(0);
+            MetadataTypeDescriptor payloadIO = payloads.get(0);
             boolean collapsed = payloadIO.getProperties().isEmpty(); // Collapsed if there are no properties
             DisposableCollapsiblePane payload = createPanel(htmlLabel("<b style=\"color: #666666\">payload</b>", payloadIO.getType()), payloadIO, LEFT_OFFSET, collapsed, true);
             payload.setBorder(JBUI.Borders.emptyTop(topOffset));
@@ -48,18 +48,18 @@ public class ComponentActualInput extends AbstractComponentInput {
             FormBuilder.get().addFullWidthAndHeight(payload, parent);
         }
 
-        DisposableCollapsiblePane attributes = createPanel(htmlLabel("<b style=\"color: #666666\">attributes</b>", MessageAttributes.class.getSimpleName()), IOComponent.getAttributes(), LEFT_OFFSET, false, true);
+        DisposableCollapsiblePane attributes = createPanel(htmlLabel("<b style=\"color: #666666\">attributes</b>", MessageAttributes.class.getSimpleName()), componentMetadata.getAttributes(), LEFT_OFFSET, false, true);
         attributes.setBorder(JBUI.Borders.emptyTop(4));
         FormBuilder.get().addFullWidthAndHeight(attributes, parent);
     }
 
-    private static DisposableCollapsiblePane createPanel(String title, List<IOTypeDescriptor> payloads, int parentPadding, boolean defaultCollapsed, boolean horizontalBar) {
+    private static DisposableCollapsiblePane createPanel(String title, List<MetadataTypeDescriptor> payloads, int parentPadding, boolean defaultCollapsed, boolean horizontalBar) {
         return new DisposableCollapsiblePane(title, () -> {
             DisposablePanel content = new DisposablePanel(new GridBagLayout());
             content.setBackground(JBColor.WHITE);
-            payloads.forEach(new Consumer<IOTypeDescriptor>() {
+            payloads.forEach(new Consumer<MetadataTypeDescriptor>() {
                 @Override
-                public void accept(IOTypeDescriptor descriptor) {
+                public void accept(MetadataTypeDescriptor descriptor) {
                     String lab = htmlLabel(descriptor.getType(), "");
                     JBLabel paylodType = new JBLabel(lab, JLabel.LEFT);
                     paylodType.setForeground(Colors.TOOL_WINDOW_PROPERTIES_TEXT);
@@ -77,7 +77,7 @@ public class ComponentActualInput extends AbstractComponentInput {
                                     FormBuilder.get().addLabel(attributes, content);
                                     FormBuilder.get().addLastField(Box.createHorizontalGlue(), content);
                                 } else {
-                                    IOTypeDescriptor complex = iotypeDTO.complex;
+                                    MetadataTypeDescriptor complex = iotypeDTO.complex;
                                     DisposableCollapsiblePane payload = createPanel(htmlLabel(iotypeDTO.name, complex.getType()), complex, parentPadding, true, horizontalBar);
                                     payload.setBorder(JBUI.Borders.empty());
                                     payload.setBorder(JBUI.Borders.emptyLeft(parentPadding - 20));
@@ -90,7 +90,7 @@ public class ComponentActualInput extends AbstractComponentInput {
         }, defaultCollapsed, horizontalBar);
     }
 
-    private static DisposableCollapsiblePane createPanel(String title, IOTypeDescriptor descriptor, int parentPadding, boolean defaultCollapsed, boolean horizontalBar) {
+    private static DisposableCollapsiblePane createPanel(String title, MetadataTypeDescriptor descriptor, int parentPadding, boolean defaultCollapsed, boolean horizontalBar) {
         return new DisposableCollapsiblePane(title, () -> {
             DisposablePanel content = new DisposablePanel(new GridBagLayout());
             content.setBackground(JBColor.WHITE);
@@ -103,7 +103,7 @@ public class ComponentActualInput extends AbstractComponentInput {
                     FormBuilder.get().addLabel(attributes, content);
                     FormBuilder.get().addLastField(Box.createHorizontalGlue(), content);
                 } else {
-                    IOTypeDescriptor complex = iotypeDTO.complex;
+                    MetadataTypeDescriptor complex = iotypeDTO.complex;
                     DisposableCollapsiblePane payload = createPanel(htmlLabel(iotypeDTO.name, ""), complex, parentPadding, true, false);
                     payload.setBorder(JBUI.Borders.empty());
                     payload.setBorder(JBUI.Borders.emptyLeft(parentPadding - 20));
@@ -113,5 +113,10 @@ public class ComponentActualInput extends AbstractComponentInput {
 
             return content;
         }, defaultCollapsed, horizontalBar);
+    }
+
+    @Override
+    public void onComponentMetadataError(String message) {
+        // TODO: Handle error
     }
 }

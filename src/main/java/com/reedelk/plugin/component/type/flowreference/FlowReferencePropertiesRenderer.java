@@ -80,6 +80,7 @@ public class FlowReferencePropertiesRenderer extends GenericComponentPropertiesR
 
         PropertiesPanelTabbedPanel tabbedPanel = new PropertiesPanelTabbedPanel(componentData, tabAndComponentSupplier, context);
 
+        // TODO: Component fully qualified name is not needed.!
         return new PropertiesThreeComponentsSplitter(module, context, componentFullyQualifiedName, tabbedPanel);
     }
 

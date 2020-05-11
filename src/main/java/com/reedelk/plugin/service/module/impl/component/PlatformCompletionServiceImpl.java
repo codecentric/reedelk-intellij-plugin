@@ -44,12 +44,12 @@ public class PlatformCompletionServiceImpl implements PlatformModuleService {
     private final CompletionFinder completionFinder;
     private final OnCompletionEvent onCompletionEvent;
     private final PlatformComponentServiceImpl componentTracker;
-    private final PlatformComponentIOServiceImpl componentIOService;
+    private final PlatformComponentMetadataServiceImpl componentIOService;
 
     public PlatformCompletionServiceImpl(Module module, PlatformComponentServiceImpl componentTracker) {
         this.componentTracker = componentTracker;
         this.completionFinder = new CompletionFinder(typesMap);
-        this.componentIOService = new PlatformComponentIOServiceImpl(module, completionFinder, typesMap, componentTracker);
+        this.componentIOService = new PlatformComponentMetadataServiceImpl(module, completionFinder, typesMap, componentTracker);
         this.onCompletionEvent = module.getProject().getMessageBus().syncPublisher(Topics.COMPLETION_EVENT_TOPIC);
     }
 
@@ -78,9 +78,10 @@ public class PlatformCompletionServiceImpl implements PlatformModuleService {
         return suggestionsOf(inputFullyQualifiedName, componentPropertyPath, new String[]{StringUtils.EMPTY});
     }
 
+    // TODO: Component fullyqualified name not needed.
     @Override
-    public void inputOutputOf(ContainerContext context, String outputFullyQualifiedName) {
-        componentIOService.inputOutputOf(context, outputFullyQualifiedName);
+    public void componentMetadataOf(ContainerContext context, String componentFullyQualifiedName) {
+        componentIOService.componentMetadataOf(context, componentFullyQualifiedName);
     }
 
     void fireCompletionsUpdatedEvent() {
