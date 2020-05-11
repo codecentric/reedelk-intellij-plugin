@@ -3,15 +3,16 @@ package com.reedelk.plugin.editor.properties.metadata;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBUI;
-import com.reedelk.plugin.editor.properties.commons.DisposableCollapsiblePane;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.FormBuilder;
+import com.reedelk.plugin.service.module.impl.component.completion.PresentableTypeUtils;
 import com.reedelk.plugin.service.module.impl.component.metadata.ComponentMetadata;
 import com.reedelk.plugin.service.module.impl.component.metadata.ComponentMetadataExpectedInput;
 import com.reedelk.runtime.api.commons.StringUtils;
 
 import javax.swing.*;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class MetadataExpectedInput extends AbstractMetadataInputPanel {
 
@@ -36,23 +37,16 @@ public class MetadataExpectedInput extends AbstractMetadataInputPanel {
     private void render(ComponentMetadataExpectedInput input, DisposablePanel parent) {
         String inputDescription = input.getDescription();
         if (StringUtils.isNotBlank(inputDescription)) {
-            DisposableCollapsiblePane description = new DisposableCollapsiblePane(htmlLabel("<b style=\"color: #666666\">description</b>", "", false), () -> {
-                JBLabel label = new JBLabel(htmlLabel(inputDescription, "", false));
-                label.setBorder(JBUI.Borders.emptyLeft(LEFT_OFFSET));
-                return label;
-            });
-            description.setBorder(JBUI.Borders.empty());
+            JBLabel description = new JBLabel(htmlLabel(inputDescription, "", false));
             FormBuilder.get().addFullWidthAndHeight(description, parent);
+            description.setBorder(JBUI.Borders.empty(5));
         }
 
-        String expectedPayloadTypes = String.join(",", input.getPayload());
-
-        DisposableCollapsiblePane description = new DisposableCollapsiblePane(htmlLabel("<b style=\"color: #666666\">expected payload type</b>", "", false), () -> {
-            JBLabel label = new JBLabel(htmlLabel(expectedPayloadTypes, "", false));
-            label.setBorder(JBUI.Borders.emptyLeft(LEFT_OFFSET));
-            return label;
-        });
-        description.setBorder(JBUI.Borders.empty());
-        FormBuilder.get().addFullWidthAndHeight(description, parent);
+        String expectedPayloadTypes = input.getPayload().stream()
+                .map(PresentableTypeUtils::from)
+                .collect(Collectors.joining(", "));
+        JBLabel expectedType = new JBLabel(htmlLabel("<b style=\"color: #666666\">Expected type: </b>" + expectedPayloadTypes, "", false));
+        expectedType.setBorder(JBUI.Borders.empty(5));
+        FormBuilder.get().addFullWidthAndHeight(expectedType, parent);
     }
 }
