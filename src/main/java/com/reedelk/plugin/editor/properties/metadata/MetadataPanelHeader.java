@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.componentmetadata;
+package com.reedelk.plugin.editor.properties.metadata;
 
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.JBUI;
@@ -14,10 +14,10 @@ import java.awt.*;
 import static com.intellij.util.ui.JBUI.Borders.customLine;
 import static com.reedelk.plugin.commons.Colors.SCRIPT_EDITOR_CONTEXT_PANEL_TITLE_BG;
 
-public class ComponentInputHeader extends DisposablePanel {
+public class MetadataPanelHeader extends DisposablePanel {
 
-    public ComponentInputHeader(String header1Text, ClickableLabel.OnClickAction header1Action,
-                                String header2Text, ClickableLabel.OnClickAction header2Action) {
+    public MetadataPanelHeader(String header1Text, ClickableLabel.OnClickAction header1Action,
+                               String header2Text, ClickableLabel.OnClickAction header2Action) {
         super(new BorderLayout());
 
         ClickableLabel header1Label = new ClickableLabel(header1Text);

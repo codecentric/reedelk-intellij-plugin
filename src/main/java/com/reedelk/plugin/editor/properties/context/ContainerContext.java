@@ -41,6 +41,10 @@ public class ContainerContext implements Disposable {
         }
     }
 
+    public GraphNode node() {
+        return node;
+    }
+
     // TODO: Review this logic..!!!
     public GraphNode predecessor() {
         List<GraphNode> predecessors = snapshot.getGraphOrThrowIfAbsent().predecessors(node);

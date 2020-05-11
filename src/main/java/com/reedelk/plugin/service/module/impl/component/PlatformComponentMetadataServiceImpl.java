@@ -40,7 +40,7 @@ public class PlatformComponentMetadataServiceImpl implements PlatformModuleServi
         this.module = module;
         this.typeAndAndTries = typesMap;
         this.completionFinder = completionFinder;
-        this.inputDescriptorBuilder = new ComponentInputDescriptorBuilder();
+        this.inputDescriptorBuilder = new ComponentInputDescriptorBuilder(componentService);
         this.outputDescriptorBuilder = new ComponentOutputDescriptorBuilder(componentService);
         onComponentMetadata = module.getProject().getMessageBus().syncPublisher(Topics.ON_COMPONENT_IO);
     }

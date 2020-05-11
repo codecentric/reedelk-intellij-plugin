@@ -1,4 +1,4 @@
-package com.reedelk.plugin.editor.properties.componentmetadata;
+package com.reedelk.plugin.editor.properties.metadata;
 
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class MetadataInput extends AbstractMetadataPanel {
+public class MetadataActualInput extends AbstractMetadataInputPanel {
 
     @Override
     void render(ComponentMetadata componentMetadata, DisposablePanel parent) {
@@ -29,19 +29,6 @@ public class MetadataInput extends AbstractMetadataPanel {
             render(actualInput.get(), parent);
         } else {
             FormBuilder.get().addFullWidthAndHeight(new DataNotAvailable(), parent);
-        }
-    }
-
-    @Override
-    public void onComponentMetadataError(String message) {
-        // TODO: Handle me
-    }
-
-
-    static class DataNotAvailable extends DisposablePanel {
-        DataNotAvailable() {
-            super(new BorderLayout());
-            add(new JBLabel("Data is not available", JLabel.CENTER), BorderLayout.CENTER);
         }
     }
 
