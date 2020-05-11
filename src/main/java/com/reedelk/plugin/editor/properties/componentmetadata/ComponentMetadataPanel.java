@@ -74,7 +74,6 @@ public class ComponentMetadataPanel extends DisposablePanel implements OnCompone
 
     @Override
     public void onComponentMetadataError(String message) {
-        // TODO: Handle the error
         ApplicationManager.getApplication().invokeLater(() -> {
             remove(loadingPanel);
             add(metadataInput, BorderLayout.CENTER);

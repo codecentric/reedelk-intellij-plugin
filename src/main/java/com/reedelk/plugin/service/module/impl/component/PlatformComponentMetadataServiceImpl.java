@@ -1,6 +1,7 @@
 package com.reedelk.plugin.service.module.impl.component;
 
 import com.intellij.openapi.module.Module;
+import com.reedelk.module.descriptor.model.component.ComponentInputDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
@@ -30,6 +31,7 @@ public class PlatformComponentMetadataServiceImpl implements PlatformModuleServi
     private final TrieMapWrapper typeAndAndTries;
     private final CompletionFinder completionFinder;
     private final OnComponentMetadata onComponentMetadata;
+    private final ComponentInputDescriptorBuilder inputDescriptorBuilder;
     private final ComponentOutputDescriptorBuilder outputDescriptorBuilder;
 
     public PlatformComponentMetadataServiceImpl(@NotNull Module module,
@@ -39,6 +41,7 @@ public class PlatformComponentMetadataServiceImpl implements PlatformModuleServi
         this.module = module;
         this.typeAndAndTries = typesMap;
         this.completionFinder = completionFinder;
+        this.inputDescriptorBuilder = new ComponentInputDescriptorBuilder();
         this.outputDescriptorBuilder = new ComponentOutputDescriptorBuilder(componentService);
         onComponentMetadata = module.getProject().getMessageBus().syncPublisher(Topics.ON_COMPONENT_IO);
     }
@@ -48,6 +51,7 @@ public class PlatformComponentMetadataServiceImpl implements PlatformModuleServi
     public void componentMetadataOf(ContainerContext context, String componentFullyQualifiedName) {
         PluginExecutors.run(module, message("component.io.ticker.text"), indicator -> {
 
+            Optional<ComponentInputDescriptor> componentInputDescriptor = inputDescriptorBuilder.build(context);
             Optional<ComponentOutputDescriptor> componentOutputDescriptor = outputDescriptorBuilder.build(context);
             if (componentOutputDescriptor.isPresent()) {
                 ComponentOutputDescriptor componentOutput = componentOutputDescriptor.get();

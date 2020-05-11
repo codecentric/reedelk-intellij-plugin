@@ -1,7 +1,6 @@
 package com.reedelk.plugin.editor.properties.componentmetadata;
 
 import com.intellij.ui.JBColor;
-import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.DisposableScrollPane;
@@ -12,12 +11,14 @@ import com.reedelk.runtime.api.commons.StringUtils;
 import javax.swing.*;
 import java.awt.*;
 
+import static com.intellij.util.ui.JBUI.Borders.empty;
+
 abstract class AbstractMetadataPanel extends DisposableScrollPane implements OnComponentMetadata {
 
     protected static final int LEFT_OFFSET = 24;
 
     public AbstractMetadataPanel() {
-        setBorder(JBUI.Borders.empty(0, 1, 0, 8));
+        setBorder(empty());
         setBackground(JBColor.WHITE);
         setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
     }
@@ -28,7 +29,7 @@ abstract class AbstractMetadataPanel extends DisposableScrollPane implements OnC
         theContent.setBackground(JBColor.WHITE);
         DisposablePanel panel = ContainerFactory.pushTop(theContent);
         panel.setBackground(JBColor.WHITE);
-        panel.setBorder(JBUI.Borders.empty(5, 2));
+        panel.setBorder(empty(5, 2));
 
         render(componentMetadata, theContent);
         setViewportView(panel);
