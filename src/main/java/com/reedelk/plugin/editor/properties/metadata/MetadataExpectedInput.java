@@ -16,8 +16,6 @@ import java.util.stream.Collectors;
 
 public class MetadataExpectedInput extends AbstractMetadataInputPanel {
 
-    private static final int LEFT_OFFSET = 24;
-
     public MetadataExpectedInput() {
         setBorder(JBUI.Borders.empty(0, 1, 0, 8));
         setBackground(JBColor.WHITE);
