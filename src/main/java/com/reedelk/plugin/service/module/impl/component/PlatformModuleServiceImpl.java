@@ -60,13 +60,12 @@ public class PlatformModuleServiceImpl implements PlatformModuleService, MavenIm
 
     @Override
     public Collection<ModuleDTO> listModules() {
-        List<ModuleDTO> descriptors;
         synchronized (this) {
-            descriptors = new ArrayList<>(mavenModules);
+            List<ModuleDTO> descriptors = new ArrayList<>(mavenModules);
             if (flowControlModule != null) descriptors.add(flowControlModule);
             if (currentModule != null) descriptors.add(currentModule);
+            return unmodifiableCollection(descriptors);
         }
-        return unmodifiableCollection(descriptors);
     }
 
     @Override
