@@ -27,7 +27,6 @@ public class ComponentPropertiesRendererFactory {
 
     private static final Class<? extends ComponentPropertiesRenderer> GENERIC_RENDERER = GenericComponentPropertiesRenderer.class;
     private static final Map<String, Class<? extends ComponentPropertiesRenderer>> RENDERER;
-
     static {
         Map<String, Class<? extends ComponentPropertiesRenderer>> tmp = new HashMap<>();
         tmp.put(Stop.class.getName(), StopPropertiesRenderer.class);

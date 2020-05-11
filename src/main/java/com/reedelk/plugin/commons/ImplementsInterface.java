@@ -5,10 +5,10 @@ public class ImplementsInterface {
     private ImplementsInterface() {
     }
 
-    public static boolean by(Class target, Class targetInterfaceClazz) {
+    public static boolean by(Class<?> target, Class<?> targetInterfaceClazz) {
         if (target == null) return false;
-        Class[] interfaces = target.getInterfaces();
-        for (Class interfaceClazz : interfaces) {
+        Class<?>[] interfaces = target.getInterfaces();
+        for (Class<?> interfaceClazz : interfaces) {
             if (interfaceClazz == targetInterfaceClazz) return true;
         }
         return by(target.getSuperclass(), targetInterfaceClazz);

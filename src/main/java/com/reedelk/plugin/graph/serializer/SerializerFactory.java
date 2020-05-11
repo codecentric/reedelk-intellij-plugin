@@ -10,11 +10,9 @@ import com.reedelk.plugin.component.type.stop.StopSerializer;
 import com.reedelk.plugin.component.type.trycatch.TryCatchSerializer;
 import com.reedelk.plugin.component.type.unknown.Unknown;
 import com.reedelk.plugin.component.type.unknown.UnknownSerializer;
-import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.runtime.component.*;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,19 +21,19 @@ import static com.reedelk.runtime.api.commons.Preconditions.checkState;
 
 public class SerializerFactory {
 
-    private static final Class<? extends Serializer> GENERIC_SERIALIZER = GenericComponentSerializer.class;
-    private static final Map<String, Class<? extends Serializer>> COMPONENT_SERIALIZER_MAP;
+    private static final Serializer GENERIC_SERIALIZER = new GenericComponentSerializer();
 
+    private static final Map<String, Serializer> COMPONENT_SERIALIZER_MAP;
     static {
-        Map<String, Class<? extends Serializer>> tmp = new HashMap<>();
-        tmp.put(Stop.class.getName(), StopSerializer.class);
-        tmp.put(Fork.class.getName(), ForkSerializer.class);
-        tmp.put(Router.class.getName(), RouterSerializer.class);
-        tmp.put(Unknown.class.getName(), UnknownSerializer.class);
-        tmp.put(ForEach.class.getName(), ForEachSerializer.class);
-        tmp.put(TryCatch.class.getName(), TryCatchSerializer.class);
-        tmp.put(Placeholder.class.getName(), PlaceholderSerializer.class);
-        tmp.put(FlowReference.class.getName(), FlowReferenceSerializer.class);
+        Map<String, Serializer> tmp = new HashMap<>();
+        tmp.put(Stop.class.getName(), new StopSerializer());
+        tmp.put(Fork.class.getName(), new ForkSerializer());
+        tmp.put(Router.class.getName(), new RouterSerializer());
+        tmp.put(Unknown.class.getName(), new UnknownSerializer());
+        tmp.put(ForEach.class.getName(), new ForEachSerializer());
+        tmp.put(TryCatch.class.getName(), new TryCatchSerializer());
+        tmp.put(Placeholder.class.getName(), new PlaceholderSerializer());
+        tmp.put(FlowReference.class.getName(), new FlowReferenceSerializer());
         COMPONENT_SERIALIZER_MAP = Collections.unmodifiableMap(tmp);
     }
 
@@ -54,21 +52,9 @@ public class SerializerFactory {
     }
 
     public Serializer build() {
-        checkState(node != null, "node must not be null");
-
+        checkState(node != null, "graph node must not be null");
         String fullyQualifiedName = node.componentData().getFullyQualifiedName();
-        Class<? extends Serializer> serializerClazz = COMPONENT_SERIALIZER_MAP
+        return COMPONENT_SERIALIZER_MAP
                 .getOrDefault(fullyQualifiedName, GENERIC_SERIALIZER);
-        return instantiate(serializerClazz);
-    }
-
-    private static Serializer instantiate(Class<? extends Serializer> builderClazz) {
-        try {
-            return builderClazz
-                    .getDeclaredConstructor()
-                    .newInstance();
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException exception) {
-            throw new PluginException("Could not instantiate builder class=" + builderClazz.getName(), exception);
-        }
     }
 }

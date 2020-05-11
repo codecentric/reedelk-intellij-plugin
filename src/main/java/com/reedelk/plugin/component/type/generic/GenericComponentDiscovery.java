@@ -1,29 +1,27 @@
-package com.reedelk.plugin.service.module.impl.component.metadata;
+package com.reedelk.plugin.component.type.generic;
 
 import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.impl.component.PlatformComponentServiceImpl;
+import com.reedelk.plugin.service.module.impl.component.discovery.AbstractDiscoveryStrategy;
 import com.reedelk.runtime.api.annotation.ComponentOutput;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class ComponentOutputDescriptorBuilder {
+public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
 
-    private final PlatformComponentServiceImpl componentService;
-
-    public ComponentOutputDescriptorBuilder(PlatformComponentServiceImpl componentService) {
-        this.componentService = componentService;
+    public GenericComponentDiscovery(PlatformComponentServiceImpl componentService) {
+        super(componentService);
     }
 
-    // The component output might descriptor might not be present.
-    public Optional<ComponentOutputDescriptor> build(ContainerContext context) {
-        GraphNode componentGraphNode = context.predecessor();
+    @Override
+    public Optional<ComponentOutputDescriptor> compute(ContainerContext context, GraphNode predecessor) {
         String componentFullyQualifiedName =
-                componentGraphNode.componentData().getFullyQualifiedName();
+                predecessor.componentData().getFullyQualifiedName();
         ComponentDescriptor actualComponentDescriptor =
                 componentService.componentDescriptorFrom(componentFullyQualifiedName);
 
@@ -31,18 +29,18 @@ public class ComponentOutputDescriptorBuilder {
         if (actualComponentOutput == null) return Optional.empty();
 
         // Process payload types:
-        ComponentOutputDescriptor payloadRealTypes = findPayloadRealTypes(componentGraphNode, context, actualComponentOutput);
+        ComponentOutputDescriptor payloadRealTypes = findPayloadRealTypes(predecessor, context, actualComponentOutput);
         List<String> processedPayloadTypes = payloadRealTypes.getPayload();
         String processedDescription = payloadRealTypes.getDescription();
 
         // Process attribute type:
-        ComponentOutputDescriptor processedDescriptor = findAttributeRealType(componentGraphNode, context, actualComponentOutput);
+        ComponentOutputDescriptor processedDescriptor = findAttributeRealType(predecessor, context, actualComponentOutput);
         String processedAttributeType = processedDescriptor.getAttributes();
 
         ComponentOutputDescriptor finalComponentOutput = new ComponentOutputDescriptor();
         finalComponentOutput.setPayload(processedPayloadTypes);
-        finalComponentOutput.setAttributes(processedAttributeType);
         finalComponentOutput.setDescription(processedDescription);
+        finalComponentOutput.setAttributes(processedAttributeType);
         return Optional.of(finalComponentOutput);
     }
 
@@ -53,9 +51,11 @@ public class ComponentOutputDescriptorBuilder {
             String newFullyQualifiedName = predecessor.componentData().getFullyQualifiedName();
             ComponentDescriptor componentDescriptor = componentService.componentDescriptorFrom(newFullyQualifiedName);
             ComponentOutputDescriptor componentOutputDescriptor = componentDescriptor.getOutput();
-            if (componentOutputDescriptor == null) return defaultDescriptor();
-            // We need to recursively go back until we find a type
-            return findPayloadRealTypes(predecessor, context, componentOutputDescriptor);
+
+            // We need to recursively go back until we find a type.
+            return componentOutputDescriptor == null ?
+                    defaultDescriptor() :
+                    findPayloadRealTypes(predecessor, context, componentOutputDescriptor);
         } else {
             return previous;
         }

@@ -8,6 +8,7 @@ import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.completion.*;
+import com.reedelk.plugin.service.module.impl.component.discovery.DiscoveryStrategyFactory;
 import com.reedelk.plugin.service.module.impl.component.metadata.*;
 import com.reedelk.runtime.api.message.MessageAttributes;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +32,7 @@ public class PlatformComponentMetadataServiceImpl implements PlatformModuleServi
     private final CompletionFinder completionFinder;
     private final OnComponentMetadata onComponentMetadata;
     private final ComponentInputDescriptorBuilder inputDescriptorBuilder;
-    private final ComponentOutputDescriptorBuilder outputDescriptorBuilder;
+    private final PlatformComponentServiceImpl componentService;
 
     public PlatformComponentMetadataServiceImpl(@NotNull Module module,
                                                 @NotNull CompletionFinder completionFinder,
@@ -40,8 +41,8 @@ public class PlatformComponentMetadataServiceImpl implements PlatformModuleServi
         this.module = module;
         this.typeAndAndTries = typesMap;
         this.completionFinder = completionFinder;
+        this.componentService = componentService;
         this.inputDescriptorBuilder = new ComponentInputDescriptorBuilder(componentService);
-        this.outputDescriptorBuilder = new ComponentOutputDescriptorBuilder(componentService);
         onComponentMetadata = module.getProject().getMessageBus().syncPublisher(Topics.ON_COMPONENT_IO);
     }
 
@@ -52,7 +53,7 @@ public class PlatformComponentMetadataServiceImpl implements PlatformModuleServi
 
             try {
 
-                Optional<ComponentOutputDescriptor> componentOutputDescriptor = outputDescriptorBuilder.build(context);
+                Optional<ComponentOutputDescriptor> componentOutputDescriptor = DiscoveryStrategyFactory.get(context, componentService);
                 ComponentMetadataActualInput actualInput = componentOutputDescriptor.map(descriptor -> {
                     String description = descriptor.getDescription();
                     MetadataTypeDescriptor outputAttributes = attributes(descriptor);

@@ -52,7 +52,6 @@ public class DeserializerFactory {
         COMPONENT_DESERIALIZER_MAP = Collections.unmodifiableMap(tmp);
     }
 
-
     private DeserializerFactory() {
     }
 

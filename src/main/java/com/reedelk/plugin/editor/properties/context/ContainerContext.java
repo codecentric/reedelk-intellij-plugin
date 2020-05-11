@@ -51,6 +51,10 @@ public class ContainerContext implements Disposable {
         return predecessors.stream().findFirst().orElse(null);
     }
 
+    public List<GraphNode> predecessors() {
+        return snapshot.getGraphOrThrowIfAbsent().predecessors(node);
+    }
+
     public GraphNode predecessor(GraphNode graphNode) {
         List<GraphNode> predecessors = snapshot.getGraphOrThrowIfAbsent().predecessors(graphNode);
         return predecessors.stream().findFirst().orElse(null);
