@@ -6,7 +6,6 @@ import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.executor.PluginExecutors;
-import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.completion.*;
 import com.reedelk.plugin.service.module.impl.component.metadata.*;
@@ -48,25 +47,33 @@ public class PlatformComponentMetadataServiceImpl implements PlatformModuleServi
 
     // TODO: Catch any exception they are eaten up!
     @Override
-    public void componentMetadataOf(ContainerContext context, String componentFullyQualifiedName) {
+    public void componentMetadataOf(ContainerContext context) {
         PluginExecutors.run(module, message("component.io.ticker.text"), indicator -> {
 
-            Optional<ComponentInputDescriptor> componentInputDescriptor = inputDescriptorBuilder.build(context);
-            Optional<ComponentOutputDescriptor> componentOutputDescriptor = outputDescriptorBuilder.build(context);
-            if (componentOutputDescriptor.isPresent()) {
-                ComponentOutputDescriptor componentOutput = componentOutputDescriptor.get();
+            try {
 
-                String description = componentOutput.getDescription();
-                MetadataTypeDescriptor outputAttributes = attributes(componentOutput);
-                List<MetadataTypeDescriptor> outputPayload = payload(componentOutput);
-                ComponentMetadata componentMetadata = new ComponentMetadata(outputAttributes, outputPayload, description);
+                Optional<ComponentOutputDescriptor> componentOutputDescriptor = outputDescriptorBuilder.build(context);
+                ComponentMetadataActualInput actualInput = componentOutputDescriptor.map(descriptor -> {
+                    String description = descriptor.getDescription();
+                    MetadataTypeDescriptor outputAttributes = attributes(descriptor);
+                    List<MetadataTypeDescriptor> outputPayload = payload(descriptor);
+                    return new ComponentMetadataActualInput(outputAttributes, outputPayload, description);
+                }).orElse(null);
+
+                Optional<ComponentInputDescriptor> componentInputDescriptor = inputDescriptorBuilder.build(context);
+                ComponentMetadataExpectedInput expectedInput = componentInputDescriptor.map(descriptor -> {
+                    List<String> payload = descriptor.getPayload();
+                    String description = descriptor.getDescription();
+                    return new ComponentMetadataExpectedInput(payload, description);
+                }).orElse(null);
+
+                ComponentMetadata componentMetadata = new ComponentMetadata(actualInput, expectedInput);
 
                 onComponentMetadata.onComponentMetadata(componentMetadata);
 
-            } else {
-                GraphNode predecessor = context.predecessor();
-                String predecessorFullyQualifiedName = predecessor.componentData().getFullyQualifiedName();
-                onComponentMetadata.onComponentMetadataError("Component metadata could not be found for component: " + predecessorFullyQualifiedName);
+            } catch (Exception exception) {
+                // Extract current node fully qualified name
+                onComponentMetadata.onComponentMetadataError("Component metadata could not be found for component, cause=[" + exception.getMessage() + "]");
             }
         });
     }

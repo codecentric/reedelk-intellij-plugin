@@ -32,7 +32,7 @@ public interface PlatformModuleService {
         throw new UnsupportedOperationException();
     }
 
-    default void componentMetadataOf(ContainerContext context, String componentFullyQualifiedName) {
+    default void componentMetadataOf(ContainerContext context) {
         throw new UnsupportedOperationException();
     }
 

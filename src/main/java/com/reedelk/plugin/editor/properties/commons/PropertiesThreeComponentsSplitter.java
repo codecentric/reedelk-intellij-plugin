@@ -28,7 +28,7 @@ public class PropertiesThreeComponentsSplitter extends DisposableThreeComponents
         Border rightLine = customLine(JBColor.LIGHT_GRAY, 0, 0, 0, 1);
         properties.setBorder(rightLine);
 
-        ComponentMetadataPanel componentMetadataPanelPanel = new ComponentMetadataPanel(module, context, componentFullyQualifiedName);
+        ComponentMetadataPanel componentMetadataPanelPanel = new ComponentMetadataPanel(module, context);
 
         setLastSize(Sizes.PropertiesPane.COMPONENT_OUTPUT_INFO_WIDTH);
         setInnerComponent(properties);

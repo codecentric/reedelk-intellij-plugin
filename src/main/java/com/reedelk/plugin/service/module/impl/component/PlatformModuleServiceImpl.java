@@ -85,8 +85,8 @@ public class PlatformModuleServiceImpl implements PlatformModuleService, MavenIm
     }
 
     @Override
-    public synchronized void componentMetadataOf(ContainerContext context, String componentFullyQualifiedName) {
-        platformCompletionServiceImpl.componentMetadataOf(context, componentFullyQualifiedName);
+    public synchronized void componentMetadataOf(ContainerContext context) {
+        platformCompletionServiceImpl.componentMetadataOf(context);
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.reedelk.plugin.editor.properties.commons.DisposableCollapsiblePane;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.FormBuilder;
 import com.reedelk.plugin.service.module.impl.component.metadata.ComponentMetadata;
+import com.reedelk.plugin.service.module.impl.component.metadata.ComponentMetadataActualInput;
 import com.reedelk.plugin.service.module.impl.component.metadata.MetadataTypeDescriptor;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.message.MessageAttributes;
@@ -16,16 +17,39 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class MetadataInput extends AbstractMetadataPanel {
 
     @Override
     void render(ComponentMetadata componentMetadata, DisposablePanel parent) {
+        Optional<ComponentMetadataActualInput> actualInput = componentMetadata.getActualInput();
+        if (actualInput.isPresent()) {
+            render(actualInput.get(), parent);
+        } else {
+            FormBuilder.get().addFullWidthAndHeight(new DataNotAvailable(), parent);
+        }
+    }
+
+    @Override
+    public void onComponentMetadataError(String message) {
+        // TODO: Handle me
+    }
+
+
+    static class DataNotAvailable extends DisposablePanel {
+        DataNotAvailable() {
+            super(new BorderLayout());
+            add(new JBLabel("Data is not available", JLabel.CENTER), BorderLayout.CENTER);
+        }
+    }
+
+    private void render(ComponentMetadataActualInput input, DisposablePanel parent) {
         int topOffset = 0;
-        if (StringUtils.isNotBlank(componentMetadata.getPayloadDescription())) {
+        if (StringUtils.isNotBlank(input.getPayloadDescription())) {
             DisposableCollapsiblePane description = new DisposableCollapsiblePane(htmlLabel("<b style=\"color: #666666\">description</b>", "", false), () -> {
-                JBLabel label = new JBLabel(htmlLabel(componentMetadata.getPayloadDescription(), "", false));
+                JBLabel label = new JBLabel(htmlLabel(input.getPayloadDescription(), "", false));
                 label.setBorder(JBUI.Borders.emptyLeft(LEFT_OFFSET));
                 return label;
             });
@@ -34,7 +58,7 @@ public class MetadataInput extends AbstractMetadataPanel {
             FormBuilder.get().addFullWidthAndHeight(description, parent);
         }
 
-        List<MetadataTypeDescriptor> payloads = componentMetadata.getPayload();
+        List<MetadataTypeDescriptor> payloads = input.getPayload();
         if (payloads.size() == 1) {
             // Inline
             MetadataTypeDescriptor payloadIO = payloads.get(0);
@@ -48,7 +72,7 @@ public class MetadataInput extends AbstractMetadataPanel {
             FormBuilder.get().addFullWidthAndHeight(payload, parent);
         }
 
-        DisposableCollapsiblePane attributes = createPanel(htmlLabel("<b style=\"color: #666666\">attributes</b>", MessageAttributes.class.getSimpleName()), componentMetadata.getAttributes(), LEFT_OFFSET, false, true);
+        DisposableCollapsiblePane attributes = createPanel(htmlLabel("<b style=\"color: #666666\">attributes</b>", MessageAttributes.class.getSimpleName()), input.getAttributes(), LEFT_OFFSET, false, true);
         attributes.setBorder(JBUI.Borders.emptyTop(4));
         FormBuilder.get().addFullWidthAndHeight(attributes, parent);
     }
@@ -113,10 +137,5 @@ public class MetadataInput extends AbstractMetadataPanel {
 
             return content;
         }, defaultCollapsed, horizontalBar);
-    }
-
-    @Override
-    public void onComponentMetadataError(String message) {
-        // TODO: Handle error
     }
 }

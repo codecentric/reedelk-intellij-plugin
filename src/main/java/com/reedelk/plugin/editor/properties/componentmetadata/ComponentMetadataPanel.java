@@ -21,15 +21,13 @@ import java.awt.*;
 
 public class ComponentMetadataPanel extends DisposablePanel implements OnComponentMetadata {
 
-    private MetadataInput metadataInput;
-    private MetadataExpectedInput metadataExpectedInput;
+    private final MetadataInput metadataInput;
+    private final MetadataExpectedInput metadataExpectedInput;
 
     private final DisposablePanel loadingPanel;
     private MessageBusConnection connection;
 
-    public ComponentMetadataPanel(@NotNull Module module,
-                                  @NotNull ContainerContext context,
-                                  @NotNull String componentFullyQualifiedName) {
+    public ComponentMetadataPanel(@NotNull Module module, @NotNull ContainerContext context) {
         super(new BorderLayout());
 
         loadingPanel = new PanelWithText.LoadingContentPanel();
@@ -49,8 +47,7 @@ public class ComponentMetadataPanel extends DisposablePanel implements OnCompone
         addAncestorListener(new AncestorListenerAdapter() {
             @Override
             public void ancestorAdded(AncestorEvent event) {
-                PlatformModuleService.getInstance(module)
-                        .componentMetadataOf(context, componentFullyQualifiedName);
+                PlatformModuleService.getInstance(module).componentMetadataOf(context);
             }
         });
 

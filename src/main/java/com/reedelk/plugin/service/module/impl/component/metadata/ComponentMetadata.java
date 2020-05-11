@@ -1,28 +1,22 @@
 package com.reedelk.plugin.service.module.impl.component.metadata;
 
-import java.util.List;
+import java.util.Optional;
 
 public class ComponentMetadata {
 
-    private final String payloadDescription;
-    private final MetadataTypeDescriptor attributes;
-    private final List<MetadataTypeDescriptor> payload;
+    private final ComponentMetadataExpectedInput expectedInput;
+    private final ComponentMetadataActualInput actualInput;
 
-    public ComponentMetadata(MetadataTypeDescriptor attributes, List<MetadataTypeDescriptor> payload, String payloadDescription) {
-        this.payload = payload;
-        this.attributes = attributes;
-        this.payloadDescription = payloadDescription;
+    public ComponentMetadata(ComponentMetadataActualInput actualInput, ComponentMetadataExpectedInput expectedInput) {
+        this.expectedInput = expectedInput;
+        this.actualInput = actualInput;
     }
 
-    public MetadataTypeDescriptor getAttributes() {
-        return attributes;
+    public Optional<ComponentMetadataExpectedInput> getExpectedInput() {
+        return Optional.ofNullable(expectedInput);
     }
 
-    public List<MetadataTypeDescriptor> getPayload() {
-        return payload;
-    }
-
-    public String getPayloadDescription() {
-        return payloadDescription;
+    public Optional<ComponentMetadataActualInput> getActualInput() {
+        return Optional.ofNullable(actualInput);
     }
 }

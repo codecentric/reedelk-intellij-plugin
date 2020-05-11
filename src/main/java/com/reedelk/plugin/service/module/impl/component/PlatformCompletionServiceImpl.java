@@ -78,10 +78,9 @@ public class PlatformCompletionServiceImpl implements PlatformModuleService {
         return suggestionsOf(inputFullyQualifiedName, componentPropertyPath, new String[]{StringUtils.EMPTY});
     }
 
-    // TODO: Component fullyqualified name not needed.
     @Override
-    public void componentMetadataOf(ContainerContext context, String componentFullyQualifiedName) {
-        componentIOService.componentMetadataOf(context, componentFullyQualifiedName);
+    public void componentMetadataOf(ContainerContext context) {
+        componentIOService.componentMetadataOf(context);
     }
 
     void fireCompletionsUpdatedEvent() {
