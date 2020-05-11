@@ -2,6 +2,7 @@ package com.reedelk.plugin.editor.properties.metadata;
 
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;
+import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.DisposableScrollPane;
@@ -61,6 +62,7 @@ abstract class AbstractMetadataInputPanel extends DisposableScrollPane implement
                     new JBLabel(htmlLabel("An error occurred while fetching metadata for component: " + errorMessage, ""),
                             JLabel.CENTER);
             add(label, BorderLayout.CENTER);
+            setBorder(JBUI.Borders.empty(5));
         }
     }
 
@@ -69,6 +71,7 @@ abstract class AbstractMetadataInputPanel extends DisposableScrollPane implement
             super(new BorderLayout());
             add(new JBLabel(htmlLabel("Data is not available, make sure that the previous " +
                     "component define @ComponentOutput annotation.", ""), JLabel.CENTER), BorderLayout.CENTER);
+            setBorder(JBUI.Borders.empty(5));
         }
     }
 

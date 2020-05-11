@@ -47,7 +47,7 @@ public class MetadataExpectedInput extends AbstractMetadataInputPanel {
 
         String expectedPayloadTypes = String.join(",", input.getPayload());
 
-        DisposableCollapsiblePane description = new DisposableCollapsiblePane(htmlLabel("<b style=\"color: #666666\">payload</b>", "", false), () -> {
+        DisposableCollapsiblePane description = new DisposableCollapsiblePane(htmlLabel("<b style=\"color: #666666\">expected payload type</b>", "", false), () -> {
             JBLabel label = new JBLabel(htmlLabel(expectedPayloadTypes, "", false));
             label.setBorder(JBUI.Borders.emptyLeft(LEFT_OFFSET));
             return label;

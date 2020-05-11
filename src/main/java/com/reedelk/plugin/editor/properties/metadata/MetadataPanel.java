@@ -36,7 +36,7 @@ public class MetadataPanel extends DisposablePanel implements OnComponentMetadat
 
         MetadataPanelHeader metadataPanelHeader = new MetadataPanelHeader(
                 "Input Message", this::showInputMessage,
-                "Expected Input", this::showExpectedInput);
+                "Expected Payload", this::showExpectedInput);
 
         this.connection = module.getMessageBus().connect();
         this.connection.subscribe(Topics.ON_COMPONENT_IO, this);
