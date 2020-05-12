@@ -104,7 +104,7 @@ public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
         }
 
         @Override
-        public Optional<ScopedGraphNode> joiningScope() {
+        public Optional<ScopedGraphNode> joiningScope(GraphNode node) {
             List<GraphNode> graphNodes = subflowGraph.endNodes();
             if (graphNodes.size() > 1) {
                 Stack<ScopedGraphNode> of = FindScopes.of(subflowGraph, graphNodes.get(1));
@@ -114,7 +114,7 @@ public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
                 }
                 return Optional.of(last);
             } else {
-                return FindJoiningScope.of(subflowGraph, node());
+                return FindJoiningScope.of(subflowGraph, node);
             }
         }
 

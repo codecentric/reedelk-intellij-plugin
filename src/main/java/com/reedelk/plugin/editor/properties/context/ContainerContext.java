@@ -48,7 +48,7 @@ public class ContainerContext implements Disposable {
         return node;
     }
 
-    public Optional<ScopedGraphNode> joiningScope() {
+    public Optional<ScopedGraphNode> joiningScope(GraphNode node) {
         FlowGraph graph = snapshot.getGraphOrThrowIfAbsent();
         return FindJoiningScope.of(graph, node);
     }

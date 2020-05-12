@@ -12,7 +12,7 @@ public class FlowSnapshot {
 
     private FlowGraph graph;
 
-    public synchronized void updateSnapshot(Object notifier, @NotNull FlowGraph graph) {
+    public synchronized void updateSnapshot(@NotNull Object notifier, @NotNull FlowGraph graph) {
         this.graph = graph;
         for (SnapshotListener listener : listeners) {
             if (listener != notifier) {
@@ -31,18 +31,16 @@ public class FlowSnapshot {
         this.listeners.add(listener);
     }
 
-
     public synchronized void applyOnValidGraph(@NotNull Consumer<FlowGraph> validGraphConsumer) {
-        if (graph != null) {
-            if (!graph.isError()) {
-                validGraphConsumer.accept(graph);
-            }
+        if (graph != null && !graph.isError()) {
+            validGraphConsumer.accept(graph);
         }
     }
 
-    public synchronized void applyOnGraph(@NotNull Consumer<FlowGraph> validGraphConsumer,
-                             @NotNull Consumer<Void> emptyGraphConsumer,
-                             @NotNull Consumer<ErrorFlowGraph> errorGraphConsumer) {
+    public synchronized void applyOnGraph(
+            @NotNull Consumer<FlowGraph> validGraphConsumer,
+            @NotNull Consumer<Void> emptyGraphConsumer,
+            @NotNull Consumer<ErrorFlowGraph> errorGraphConsumer) {
         if (graph == null) {
             emptyGraphConsumer.accept(null);
         } else if (graph.isError()) {

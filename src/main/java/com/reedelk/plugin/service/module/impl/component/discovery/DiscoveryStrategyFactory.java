@@ -15,6 +15,7 @@ import com.reedelk.plugin.component.type.unknown.UnknownComponentDiscovery;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.graph.node.GraphNode;
+import com.reedelk.plugin.graph.node.ScopedGraphNode;
 import com.reedelk.plugin.service.module.impl.component.PlatformComponentService;
 import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
 import com.reedelk.runtime.component.*;
@@ -22,10 +23,13 @@ import com.reedelk.runtime.component.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
+import static com.reedelk.runtime.api.commons.Preconditions.checkState;
+
 public class DiscoveryStrategyFactory {
 
     private static final Class<? extends DiscoveryStrategy> GENERIC_DISCOVERY = GenericComponentDiscovery.class;
     private static final Map<String, Class<? extends DiscoveryStrategy>> DISCOVERY;
+
     static {
         Map<String, Class<? extends DiscoveryStrategy>> tmp = new HashMap<>();
         tmp.put(Stop.class.getName(), StopComponentDiscovery.class);
@@ -46,44 +50,23 @@ public class DiscoveryStrategyFactory {
                                                                     GraphNode nodeToFindInputMessage) {
 
         List<GraphNode> predecessors = context.predecessors(nodeToFindInputMessage);
-        if (predecessors.size() == 0) {
-            // If it is the first element, then the input is the last node(s).
-            List<GraphNode> graphNodes = context.endNodes();
-            if (graphNodes.size() == 1) {
-                GraphNode predecessor = graphNodes.get(0);
-                GraphNode componentGraphNode = context.predecessor();
-                String fullyQualifiedName =
-                        componentGraphNode.componentData().getFullyQualifiedName();
-                DiscoveryStrategy strategy = get(fullyQualifiedName, module, componentService, typeAndAndTries);
-                return strategy.compute(context, predecessor);
+        if (predecessors.size() == 0) return Optional.empty(); // First node of the flow/subflow (no input here).
 
-            } else {
-                // The last node is the end of scope.
-                return context.joiningScope()
-                        .flatMap(scopedGraphNode -> {
-                            String fullyQualifiedName = scopedGraphNode.componentData().getFullyQualifiedName();
-                            return get(fullyQualifiedName, module, componentService, typeAndAndTries).compute(context, predecessors);
-                        });
-            }
-
-            // It is wrong because it might be a joining scope, so first check
-            // if it is a joining scope, then decide what to do according to the number
-            // of predecessors.
-        } else if (predecessors.size() == 1) {
-            GraphNode predecessor = predecessors.get(0);
-            String fullyQualifiedName =
-                    predecessor.componentData().getFullyQualifiedName();
-            DiscoveryStrategy strategy = get(fullyQualifiedName, module, componentService, typeAndAndTries);
-            return strategy.compute(context, predecessor);
+        Optional<ScopedGraphNode> maybeScopedGraphNode = context.joiningScope(nodeToFindInputMessage);
+        if (maybeScopedGraphNode.isPresent()) {
+            // If it is a joining scope, then:
+            String fullyQualifiedScopeName = maybeScopedGraphNode.get().componentData().getFullyQualifiedName();
+            DiscoveryStrategy strategy = get(fullyQualifiedScopeName, module, componentService, typeAndAndTries);
+            return strategy.compute(context, predecessors);
 
         } else {
-            // TODO: You might have multiple predecessors but in that case no need for joining scope
-            //  but the scope they belong to.... this is wrong....
-            return context.joiningScope()
-                    .flatMap(scopedGraphNode -> {
-                        String fullyQualifiedName = scopedGraphNode.componentData().getFullyQualifiedName();
-                        return get(fullyQualifiedName, module, componentService, typeAndAndTries).compute(context, predecessors);
-                    });
+            // The current node does not have predecessors belonging to a scope.
+            checkState(predecessors.size() == 1,
+                    "Found [" + predecessors.size() +"] predecessors but expected only 1.");
+            GraphNode predecessor = predecessors.get(0);
+            String predecessorFullyQualifiedName = predecessor.componentData().getFullyQualifiedName();
+            DiscoveryStrategy strategy = get(predecessorFullyQualifiedName, module, componentService, typeAndAndTries);
+            return strategy.compute(context, predecessor);
         }
     }
 
