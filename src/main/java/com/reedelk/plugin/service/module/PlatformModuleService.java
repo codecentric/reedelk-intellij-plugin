@@ -24,11 +24,11 @@ public interface PlatformModuleService {
         throw new UnsupportedOperationException();
     }
 
-    default Collection<Suggestion> suggestionsOf(ComponentContext context, String[] tokens) {
+    default Collection<Suggestion> suggestionsOf(ComponentContext context, String componentPropertyPath, String[] tokens) {
         throw new UnsupportedOperationException();
     }
 
-    default Collection<Suggestion> variablesOf(ComponentContext context) {
+    default Collection<Suggestion> variablesOf(ComponentContext context, String componentPropertyPath) {
         throw new UnsupportedOperationException();
     }
 

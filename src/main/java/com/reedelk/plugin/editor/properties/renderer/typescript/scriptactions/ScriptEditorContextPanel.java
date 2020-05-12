@@ -35,15 +35,21 @@ class ScriptEditorContextPanel extends DisposablePanel implements PlatformModule
     private final transient MessageBusConnection connect;
     private final DisposablePanel panelVariables;
     private final ComponentContext componentContext;
+    private final  String componentPropertyPath;
 
     ScriptEditorContextPanel(@NotNull Module module, @NotNull ContainerContext context) {
-        this.componentContext = context.componentContext();
         this.module = module;
-        setLayout(new BorderLayout());
-        setBorder(MATTE_BORDER);
+        this.componentContext = context.componentContext();
+        this.componentPropertyPath = context.componentPropertyPath();
 
         this.connect = module.getMessageBus().connect();
         this.connect.subscribe(Topics.COMPLETION_EVENT_TOPIC, this);
+
+        this.panelVariables = new DisposablePanel();
+        BoxLayout boxLayout = new BoxLayout(panelVariables, BoxLayout.PAGE_AXIS);
+        this.panelVariables.setLayout(boxLayout);
+        this.panelVariables.setBorder(empty(5));
+        suggestions().forEach(suggestion -> panelVariables.add(new ContextVariableLabel(suggestion)));
 
         JLabel panelTitle = new JLabel(message("script.editor.context.vars.title"));
         JPanel panelTitleWrapper = new JPanel();
@@ -51,18 +57,14 @@ class ScriptEditorContextPanel extends DisposablePanel implements PlatformModule
         panelTitleWrapper.setBorder(COMPOUND_BORDER);
         panelTitleWrapper.setLayout(new BorderLayout());
         panelTitleWrapper.add(panelTitle, NORTH);
-        add(panelTitleWrapper, NORTH);
-
-        this.panelVariables = new DisposablePanel();
-        BoxLayout boxLayout = new BoxLayout(panelVariables, BoxLayout.PAGE_AXIS);
-        this.panelVariables.setLayout(boxLayout);
-        this.panelVariables.setBorder(empty(5));
-
-        suggestions().forEach(suggestion -> panelVariables.add(new ContextVariableLabel(suggestion)));
 
         JBScrollPane panelVariablesScrollPane = new JBScrollPane(panelVariables);
         panelVariablesScrollPane.setBorder(empty());
+
+        add(panelTitleWrapper, NORTH);
         add(panelVariablesScrollPane, CENTER);
+        setLayout(new BorderLayout());
+        setBorder(MATTE_BORDER);
     }
 
     @Override
@@ -91,7 +93,7 @@ class ScriptEditorContextPanel extends DisposablePanel implements PlatformModule
 
     private List<Suggestion> suggestions() {
         return PlatformModuleService.getInstance(module)
-                .variablesOf(componentContext)
+                .variablesOf(componentContext, componentPropertyPath)
                 .stream()
                 .filter(suggestion -> StringUtils.isNotBlank(suggestion.lookupString()))
                 .sorted(Comparator.comparing(Suggestion::lookupString).reversed())

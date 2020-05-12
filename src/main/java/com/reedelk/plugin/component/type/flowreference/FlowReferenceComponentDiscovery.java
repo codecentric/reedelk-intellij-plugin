@@ -91,7 +91,7 @@ public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
     static class SubflowGraphAwareContext extends ComponentContext {
 
         public SubflowGraphAwareContext(FlowGraph subflowGraph, GraphNode nodeWeWantOutputFrom) {
-            super(subflowGraph, nodeWeWantOutputFrom, null);
+            super(subflowGraph, nodeWeWantOutputFrom);
         }
 
         @Override

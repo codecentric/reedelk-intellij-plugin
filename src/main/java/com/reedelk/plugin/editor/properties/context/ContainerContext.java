@@ -45,7 +45,7 @@ public class ContainerContext implements Disposable {
 
     public ComponentContext componentContext() {
         FlowGraph context = snapshot.getGraphOrThrowIfAbsent();
-        return new ComponentContext(context, node, componentPropertyPath);
+        return new ComponentContext(context, node);
     }
 
     public String componentPropertyPath() {

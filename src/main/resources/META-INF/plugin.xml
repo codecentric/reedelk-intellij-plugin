@@ -88,7 +88,7 @@
                                        implementationClass="com.reedelk.plugin.language.ReedelkSyntaxHighlighterFactory"/>
 
         <completion.contributor language="any"
-                                implementationClass="com.reedelk.plugin.completion.GroovyCompletionContributor"
+                                implementationClass="com.reedelk.plugin.completion.ScriptCompletionContributor"
                                 order="first"/>
 
         <lang.parserDefinition language="reedelk"

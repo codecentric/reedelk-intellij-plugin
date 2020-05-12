@@ -14,20 +14,14 @@ public class ComponentContext {
 
     protected final FlowGraph graph;
     private final GraphNode node;
-    private String componentPropertyPath;
 
-    public ComponentContext(@NotNull FlowGraph graph, @Nullable GraphNode node, @Nullable String componentPropertyPath) {
+    public ComponentContext(@NotNull FlowGraph graph, @Nullable GraphNode node) {
         this.node = node;
         this.graph = graph;
-        this.componentPropertyPath = componentPropertyPath;
     }
 
     public GraphNode node() {
         return node;
-    }
-
-    public String componentPropertyPath() {
-        return componentPropertyPath;
     }
 
     public List<GraphNode> successors(GraphNode target) {

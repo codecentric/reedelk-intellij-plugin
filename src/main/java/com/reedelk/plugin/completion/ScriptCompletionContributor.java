@@ -15,11 +15,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
-import static com.reedelk.plugin.commons.UserData.COMPONENT_CONTEXT;
-import static com.reedelk.plugin.commons.UserData.MODULE_NAME;
+import static com.reedelk.plugin.commons.UserData.*;
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
-public class GroovyCompletionContributor extends CompletionContributor {
+public class ScriptCompletionContributor extends CompletionContributor {
 
     @Override
     public void fillCompletionVariants(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result) {
@@ -27,6 +26,7 @@ public class GroovyCompletionContributor extends CompletionContributor {
         Project project = editor.getProject();
         String moduleName = editor.getUserData(MODULE_NAME);
         ComponentContext context = editor.getUserData(COMPONENT_CONTEXT);
+        String componentPropertyPath = editor.getUserData(COMPONENT_PROPERTY_PATH);
 
         if (project != null && context != null && isNotBlank(moduleName)) {
 
@@ -35,7 +35,7 @@ public class GroovyCompletionContributor extends CompletionContributor {
 
             TokenFinder.find(parameters).ifPresent(tokens -> {
                 PlatformModuleService instance = PlatformModuleService.getInstance(module);
-                Collection<Suggestion> suggestions = instance.suggestionsOf(context, tokens);
+                Collection<Suggestion> suggestions = instance.suggestionsOf(context, componentPropertyPath, tokens);
                 suggestions.forEach(suggestion -> addSuggestion(result, suggestion));
             });
         }
