@@ -20,7 +20,6 @@ public class PropertiesThreeComponentsSplitter extends DisposableThreeComponents
 
     public PropertiesThreeComponentsSplitter(@NotNull Module module,
                                              @NotNull ContainerContext context,
-                                             @NotNull String componentFullyQualifiedName,
                                              @NotNull JComponent properties) {
         super(HORIZONTAL);
         this.context = context;

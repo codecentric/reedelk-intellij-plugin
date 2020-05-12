@@ -45,6 +45,6 @@ public class GenericComponentPropertiesRenderer extends AbstractComponentPropert
 
         PropertiesPanelTabbedPanel panel = new PropertiesPanelTabbedPanel(module, componentData, propertiesByGroup, context);
 
-        return new PropertiesThreeComponentsSplitter(module, context,  componentFullyQualifiedName, panel);
+        return new PropertiesThreeComponentsSplitter(module, context, panel);
     }
 }

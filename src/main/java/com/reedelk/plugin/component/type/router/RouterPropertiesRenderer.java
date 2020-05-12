@@ -60,6 +60,6 @@ public class RouterPropertiesRenderer extends GenericComponentPropertiesRenderer
 
         PropertiesPanelTabbedPanel tabbedPanel = new PropertiesPanelTabbedPanel(componentData, tabAndComponentSupplier, context);
 
-        return new PropertiesThreeComponentsSplitter(module, context, componentFullyQualifiedName, tabbedPanel);
+        return new PropertiesThreeComponentsSplitter(module, context, tabbedPanel);
     }
 }
