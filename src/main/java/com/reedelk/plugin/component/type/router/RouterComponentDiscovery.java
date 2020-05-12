@@ -6,6 +6,7 @@ import com.reedelk.plugin.component.type.generic.GenericComponentDiscovery;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.impl.component.PlatformComponentServiceImpl;
+import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
 import com.reedelk.plugin.service.module.impl.component.discovery.DiscoveryStrategyFactory;
 import com.reedelk.runtime.api.message.MessageAttributes;
 
@@ -15,13 +16,13 @@ import java.util.Optional;
 
 public class RouterComponentDiscovery extends GenericComponentDiscovery {
 
-    public RouterComponentDiscovery(Module module, PlatformComponentServiceImpl componentService) {
-        super(module, componentService);
+    public RouterComponentDiscovery(Module module, PlatformComponentServiceImpl componentService, TrieMapWrapper typeAndAndTries) {
+        super(module, componentService, typeAndAndTries);
     }
 
     @Override
     public Optional<? extends ComponentOutputDescriptor> compute(ContainerContext context, GraphNode predecessor) {
-        return DiscoveryStrategyFactory.get(context, module, componentService, predecessor);
+        return DiscoveryStrategyFactory.get(context, module, componentService, predecessor, typeAndAndTries);
     }
 
     @Override

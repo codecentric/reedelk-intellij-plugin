@@ -16,8 +16,10 @@ import com.reedelk.plugin.graph.deserializer.SubFlowDeserializer;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
 import com.reedelk.plugin.graph.utils.FindJoiningScope;
+import com.reedelk.plugin.graph.utils.FindScopes;
 import com.reedelk.plugin.service.module.SubflowService;
 import com.reedelk.plugin.service.module.impl.component.PlatformComponentServiceImpl;
+import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
 import com.reedelk.plugin.service.module.impl.component.discovery.AbstractDiscoveryStrategy;
 import com.reedelk.plugin.service.module.impl.component.discovery.DiscoveryStrategyFactory;
 import com.reedelk.plugin.service.module.impl.subflow.SubflowMetadata;
@@ -26,12 +28,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Stack;
 import java.util.concurrent.CountDownLatch;
 
 public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
 
-    public FlowReferenceComponentDiscovery(Module module, PlatformComponentServiceImpl componentService) {
-        super(module, componentService);
+    public FlowReferenceComponentDiscovery(Module module, PlatformComponentServiceImpl componentService, TrieMapWrapper typeAndAndTries) {
+        super(module, componentService, typeAndAndTries);
     }
 
     @Override
@@ -43,6 +46,7 @@ public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
             @Override
             public void run() {
 
+                try {
                 SubflowMetadata subflowMetadata = SubflowService.getInstance(module)
                         .listSubflows()
                         .stream()
@@ -51,12 +55,15 @@ public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
                             return subflowMetadata1.getId().equals(flowReference);
                         }).findFirst().orElse(null);
 
+                // TODO: Subflow metadata might be null
+                if (subflowMetadata == null) return;
+
                 String filePath = subflowMetadata.getFileURL();
                 // TODO: File path might be null!!
                 VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(filePath);
                 Document document = FileDocumentManager.getInstance().getDocument(fileByUrl);
 
-                try {
+
                     deserialize[0] = SubFlowDeserializer.deserialize(module, document.getText(), new FlowGraphProvider());
                 } catch (DeserializationError deserializationError) {
                     deserializationError.printStackTrace();
@@ -70,8 +77,12 @@ public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
         try {
             latch.await();
 
-            MyContext newContext = new MyContext(deserialize[0], predecessor);
-            return DiscoveryStrategyFactory.get(newContext, module, componentService, predecessor);
+            if (deserialize[0] != null) {
+                MyContext newContext = new MyContext(deserialize[0], predecessor);
+                return DiscoveryStrategyFactory.get(newContext, module, componentService, predecessor, typeAndAndTries);
+            } else {
+                return Optional.empty();
+            }
 
         } catch (InterruptedException e) {
             return Optional.empty();
@@ -94,7 +105,17 @@ public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
 
         @Override
         public Optional<ScopedGraphNode> joiningScope() {
-            return FindJoiningScope.of(subflowGraph, node());
+            List<GraphNode> graphNodes = subflowGraph.endNodes();
+            if (graphNodes.size() > 1) {
+                Stack<ScopedGraphNode> of = FindScopes.of(subflowGraph, graphNodes.get(1));
+                ScopedGraphNode last = of.pop();
+                while(graphNodes.isEmpty()) {
+                    last = of.pop();
+                }
+                return Optional.of(last);
+            } else {
+                return FindJoiningScope.of(subflowGraph, node());
+            }
         }
 
         @Override

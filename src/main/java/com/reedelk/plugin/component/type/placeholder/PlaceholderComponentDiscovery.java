@@ -6,13 +6,14 @@ import com.reedelk.plugin.component.type.generic.GenericComponentDiscovery;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.impl.component.PlatformComponentServiceImpl;
+import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
 
 import java.util.Optional;
 
 public class PlaceholderComponentDiscovery extends GenericComponentDiscovery {
 
-    public PlaceholderComponentDiscovery(Module module, PlatformComponentServiceImpl componentService) {
-        super(module, componentService);
+    public PlaceholderComponentDiscovery(Module module, PlatformComponentServiceImpl componentService, TrieMapWrapper typeAndAndTries) {
+        super(module, componentService, typeAndAndTries);
     }
 
     @Override
