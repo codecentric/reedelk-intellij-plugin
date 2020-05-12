@@ -9,9 +9,9 @@ import com.reedelk.plugin.service.module.impl.component.PlatformComponentService
 import com.reedelk.plugin.service.module.impl.component.completion.Default;
 import com.reedelk.plugin.service.module.impl.component.completion.Trie;
 import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
-import com.reedelk.plugin.service.module.impl.component.discovery.AbstractDiscoveryStrategy;
-import com.reedelk.plugin.service.module.impl.component.discovery.DiscoveryStrategyFactory;
-import com.reedelk.plugin.service.module.impl.component.discovery.MessagesComponentOutputDescriptor;
+import com.reedelk.plugin.service.module.impl.component.metadata.AbstractDiscoveryStrategy;
+import com.reedelk.plugin.service.module.impl.component.metadata.DiscoveryStrategyFactory;
+import com.reedelk.plugin.service.module.impl.component.metadata.MessagesComponentOutputDescriptor;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.message.MessageAttributes;
 

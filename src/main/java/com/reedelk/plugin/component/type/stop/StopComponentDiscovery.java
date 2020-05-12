@@ -6,7 +6,7 @@ import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.impl.component.PlatformComponentService;
 import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
-import com.reedelk.plugin.service.module.impl.component.discovery.AbstractDiscoveryStrategy;
+import com.reedelk.plugin.service.module.impl.component.metadata.AbstractDiscoveryStrategy;
 
 import java.util.Optional;
 

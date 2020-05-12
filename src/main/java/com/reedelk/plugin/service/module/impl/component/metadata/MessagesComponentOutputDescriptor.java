@@ -1,4 +1,4 @@
-package com.reedelk.plugin.service.module.impl.component.discovery;
+package com.reedelk.plugin.service.module.impl.component.metadata;
 
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 

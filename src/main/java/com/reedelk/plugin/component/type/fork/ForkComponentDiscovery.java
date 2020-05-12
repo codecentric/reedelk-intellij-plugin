@@ -8,8 +8,8 @@ import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.impl.component.PlatformComponentService;
 import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
-import com.reedelk.plugin.service.module.impl.component.discovery.DiscoveryStrategyFactory;
-import com.reedelk.plugin.service.module.impl.component.discovery.MessagesComponentOutputDescriptor;
+import com.reedelk.plugin.service.module.impl.component.metadata.DiscoveryStrategyFactory;
+import com.reedelk.plugin.service.module.impl.component.metadata.MessagesComponentOutputDescriptor;
 import com.reedelk.runtime.api.message.MessageAttributes;
 
 import java.util.Collection;

@@ -8,7 +8,6 @@ import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.completion.*;
-import com.reedelk.plugin.service.module.impl.component.discovery.DiscoveryStrategyFactory;
 import com.reedelk.plugin.service.module.impl.component.metadata.*;
 import com.reedelk.runtime.api.message.MessageAttributes;
 import org.jetbrains.annotations.NotNull;
