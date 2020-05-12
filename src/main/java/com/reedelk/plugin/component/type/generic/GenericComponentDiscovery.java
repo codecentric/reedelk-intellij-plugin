@@ -1,6 +1,7 @@
 package com.reedelk.plugin.component.type.generic;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.util.Pair;
 import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
@@ -10,11 +11,13 @@ import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrappe
 import com.reedelk.plugin.service.module.impl.component.metadata.AbstractDiscoveryStrategy;
 import com.reedelk.plugin.service.module.impl.component.metadata.DiscoveryStrategyFactory;
 import com.reedelk.runtime.api.annotation.ComponentOutput;
+import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.message.MessageAttributes;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import static java.util.Collections.singletonList;
 
 public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
 
@@ -31,47 +34,50 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
         // if the component output has not been defined for this component we return empty.
         if (componentOutput == null) return Optional.of(DEFAULT);
 
-        // Process payload types: TODO: this code is not clear. It should be optional
-        ComponentOutputDescriptor payloadRealTypes = findPayloadRealTypes(currentNode, context, componentOutput);
-        List<String> processedPayloadTypes = payloadRealTypes.getPayload();
-        String processedDescription = payloadRealTypes.getDescription();
-
-        // Process attribute type:
-        ComponentOutputDescriptor processedDescriptor = findAttributeRealType(currentNode, context, componentOutput);
-        String processedAttributeType = processedDescriptor.getAttributes();
+        // Here you might have components having 'PreviousComponent' only on attributes (e.g payload set),
+        // this means that the payload type would be from the current component output.
+        // But you might also have components defining PreviousComponents for both attributes and payload,
+        // for example Logger component.
+        Pair<List<String>, String> payloadTypesAndDescription =
+                discoverPayloadTypesAndDescription(currentNode, context, componentOutput);
+        String attributeType = discoverAttributeType(currentNode, context, componentOutput);
 
         ComponentOutputDescriptor finalComponentOutput = new ComponentOutputDescriptor();
-        finalComponentOutput.setPayload(processedPayloadTypes);
-        finalComponentOutput.setDescription(processedDescription);
-        finalComponentOutput.setAttributes(processedAttributeType);
+        finalComponentOutput.setDescription(payloadTypesAndDescription.second);
+        finalComponentOutput.setPayload(payloadTypesAndDescription.first);
+        finalComponentOutput.setAttributes(attributeType);
         return Optional.of(finalComponentOutput);
     }
 
-    private ComponentOutputDescriptor findPayloadRealTypes(GraphNode currentNode, ContainerContext context, ComponentOutputDescriptor currentComponentOutput) {
-        if (currentComponentOutput.getPayload().contains(ComponentOutput.PreviousComponent.class.getName())) {
-            // We need to recursively go back in the graph and find one node with a real type.
-            Optional<? extends ComponentOutputDescriptor> componentOutputDescriptor = DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, context, currentNode);
-            return componentOutputDescriptor.isPresent() ? componentOutputDescriptor.get() : DEFAULT;
+
+    private Pair<List<String>, String> discoverPayloadTypesAndDescription(GraphNode currentNode, ContainerContext context, ComponentOutputDescriptor currentOutput) {
+        if (currentOutput.getPayload().contains(ComponentOutput.PreviousComponent.class.getName())) {
+            // We need to recursively go back in the graph if the user specified that the payload
+            // type must be taken from the previous component.
+            return DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, context, currentNode)
+                    .map(descriptor -> Pair.create(descriptor.getPayload(), descriptor.getDescription()))
+                    .orElse(Pair.create(singletonList(Object.class.getName()), StringUtils.EMPTY));
         } else {
-            return currentComponentOutput;
+            return Pair.create(currentOutput.getPayload(), currentOutput.getDescription());
         }
     }
 
-    private ComponentOutputDescriptor findAttributeRealType(GraphNode currentNode, ContainerContext context, ComponentOutputDescriptor currentComponentOutput) {
-        if (ComponentOutput.PreviousComponent.class.getName().equals(currentComponentOutput.getAttributes())) {
-            // We need to recursively go back in the graph and find one node with a real type.
-            Optional<? extends ComponentOutputDescriptor> componentOutputDescriptor =
-                    DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, context, currentNode);
-            return componentOutputDescriptor.isPresent() ? componentOutputDescriptor.get() : DEFAULT;
+    private String discoverAttributeType(GraphNode currentNode, ContainerContext context, ComponentOutputDescriptor currentOutput) {
+        if (ComponentOutput.PreviousComponent.class.getName().equals(currentOutput.getAttributes())) {
+            // We need to recursively go back in the graph if the user specified that the attributes
+            // type must be taken from the previous component.
+            return DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, context, currentNode)
+                    .map(ComponentOutputDescriptor::getAttributes)
+                    .orElse(MessageAttributes.class.getName());
         } else {
-            return currentComponentOutput;
+            return currentOutput.getAttributes();
         }
     }
 
     private static final ComponentOutputDescriptor DEFAULT;
     static {
         DEFAULT = new ComponentOutputDescriptor();
-        DEFAULT.setPayload(Collections.singletonList(Object.class.getName()));
+        DEFAULT.setPayload(singletonList(Object.class.getName()));
         DEFAULT.setAttributes(MessageAttributes.class.getName());
     }
 }
