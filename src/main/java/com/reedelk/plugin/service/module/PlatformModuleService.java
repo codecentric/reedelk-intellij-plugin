@@ -16,7 +16,7 @@ public interface PlatformModuleService {
         return ModuleServiceManager.getService(module, PlatformModuleService.class);
     }
 
-    default ComponentDescriptor componentDescriptorFrom(String componentFullyQualifiedName) {
+    default ComponentDescriptor componentDescriptorOf(String componentFullyQualifiedName) {
         throw new UnsupportedOperationException();
     }
 

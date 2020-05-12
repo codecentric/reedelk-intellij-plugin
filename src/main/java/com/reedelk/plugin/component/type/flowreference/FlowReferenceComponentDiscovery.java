@@ -38,7 +38,7 @@ public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
     }
 
     @Override
-    public Optional<? extends ComponentOutputDescriptor> compute(ContainerContext context, GraphNode predecessor) {
+    public Optional<? extends ComponentOutputDescriptor> compute(ContainerContext context, GraphNode nodeWeWantOutputFrom) {
         // List
         CountDownLatch latch = new CountDownLatch(1);
         FlowGraph[] deserialize = new FlowGraph[1];
@@ -51,7 +51,7 @@ public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
                         .listSubflows()
                         .stream()
                         .filter(subflowMetadata1 -> {
-                            String flowReference = predecessor.componentData().get(JsonParser.FlowReference.ref());
+                            String flowReference = nodeWeWantOutputFrom.componentData().get(JsonParser.FlowReference.ref());
                             return subflowMetadata1.getId().equals(flowReference);
                         }).findFirst().orElse(null);
 
@@ -78,8 +78,8 @@ public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
             latch.await();
 
             if (deserialize[0] != null) {
-                MyContext newContext = new MyContext(deserialize[0], predecessor);
-                return DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, newContext, predecessor);
+                MyContext newContext = new MyContext(deserialize[0], nodeWeWantOutputFrom);
+                return DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, newContext, nodeWeWantOutputFrom);
             } else {
                 return Optional.empty();
             }

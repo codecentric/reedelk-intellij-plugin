@@ -21,7 +21,7 @@ public class ComponentInputDescriptorBuilder {
         String componentFullyQualifiedName =
                 componentGraphNode.componentData().getFullyQualifiedName();
         ComponentDescriptor actualComponentDescriptor =
-                componentService.componentDescriptorFrom(componentFullyQualifiedName);
+                componentService.componentDescriptorOf(componentFullyQualifiedName);
 
         return Optional.ofNullable(actualComponentDescriptor.getInput());
     }

@@ -45,7 +45,7 @@ public class GraphNodeFactory {
 
     public static <T extends GraphNode> T get(Module module, String componentName) {
         ComponentDescriptor componentDescriptor =
-                PlatformModuleService.getInstance(module).componentDescriptorFrom(componentName);
+                PlatformModuleService.getInstance(module).componentDescriptorOf(componentName);
         return GraphNodeFactory.get(componentDescriptor);
     }
 

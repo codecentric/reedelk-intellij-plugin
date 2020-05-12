@@ -43,9 +43,9 @@ public class DiscoveryStrategyFactory {
                                                                     PlatformComponentService componentService,
                                                                     TrieMapWrapper typeAndAndTries,
                                                                     ContainerContext context,
-                                                                    GraphNode current) {
+                                                                    GraphNode nodeToFindInputMessage) {
 
-        List<GraphNode> predecessors = context.predecessors(current);
+        List<GraphNode> predecessors = context.predecessors(nodeToFindInputMessage);
         if (predecessors.size() == 0) {
             // If it is the first element, then the input is the last node(s).
             List<GraphNode> graphNodes = context.endNodes();

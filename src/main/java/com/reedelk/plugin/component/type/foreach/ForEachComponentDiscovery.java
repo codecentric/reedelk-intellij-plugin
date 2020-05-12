@@ -27,9 +27,9 @@ public class ForEachComponentDiscovery extends AbstractDiscoveryStrategy {
     }
 
     @Override
-    public Optional<ComponentOutputDescriptor> compute(ContainerContext context, GraphNode predecessor) {
+    public Optional<ComponentOutputDescriptor> compute(ContainerContext context, GraphNode nodeWeWantOutputFrom) {
 
-        Optional<? extends ComponentOutputDescriptor> componentOutputDescriptor = DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, context, predecessor);
+        Optional<? extends ComponentOutputDescriptor> componentOutputDescriptor = DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, context, nodeWeWantOutputFrom);
         if (componentOutputDescriptor.isPresent()) {
             ComponentOutputDescriptor previousComponentOutput = componentOutputDescriptor.get();
             List<String> payload = previousComponentOutput.getPayload();

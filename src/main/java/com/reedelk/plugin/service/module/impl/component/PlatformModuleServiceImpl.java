@@ -69,8 +69,8 @@ public class PlatformModuleServiceImpl implements PlatformModuleService, MavenIm
     }
 
     @Override
-    public synchronized ComponentDescriptor componentDescriptorFrom(String componentFullyQualifiedName) {
-        return componentTracker.componentDescriptorFrom(componentFullyQualifiedName);
+    public synchronized ComponentDescriptor componentDescriptorOf(String componentFullyQualifiedName) {
+        return componentTracker.componentDescriptorOf(componentFullyQualifiedName);
     }
 
     @Override

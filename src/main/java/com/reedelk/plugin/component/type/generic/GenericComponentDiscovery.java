@@ -21,22 +21,21 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
     }
 
     @Override
-    public Optional<? extends ComponentOutputDescriptor> compute(ContainerContext context, GraphNode predecessor) {
-        String componentFullyQualifiedName =
-                predecessor.componentData().getFullyQualifiedName();
-        ComponentDescriptor actualComponentDescriptor =
-                componentService.componentDescriptorFrom(componentFullyQualifiedName);
+    public Optional<? extends ComponentOutputDescriptor> compute(ContainerContext context, GraphNode nodeWeWantOutputFrom) {
+        String componentFullyQualifiedName = nodeWeWantOutputFrom.componentData().getFullyQualifiedName();
+        ComponentDescriptor componentDescriptor = componentService.componentDescriptorOf(componentFullyQualifiedName);
 
-        ComponentOutputDescriptor actualComponentOutput = actualComponentDescriptor.getOutput();
-        if (actualComponentOutput == null) return Optional.empty();
+        ComponentOutputDescriptor componentOutput = componentDescriptor.getOutput();
+        // if the component output has not been defined for this component we return empty.
+        if (componentOutput == null) return Optional.empty();
 
         // Process payload types:
-        ComponentOutputDescriptor payloadRealTypes = findPayloadRealTypes(predecessor, context, actualComponentOutput);
+        ComponentOutputDescriptor payloadRealTypes = findPayloadRealTypes(nodeWeWantOutputFrom, context, componentOutput);
         List<String> processedPayloadTypes = payloadRealTypes.getPayload();
         String processedDescription = payloadRealTypes.getDescription();
 
         // Process attribute type:
-        ComponentOutputDescriptor processedDescriptor = findAttributeRealType(predecessor, context, actualComponentOutput);
+        ComponentOutputDescriptor processedDescriptor = findAttributeRealType(nodeWeWantOutputFrom, context, componentOutput);
         String processedAttributeType = processedDescriptor.getAttributes();
 
         ComponentOutputDescriptor finalComponentOutput = new ComponentOutputDescriptor();
@@ -51,7 +50,7 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
             // We need to recursively go back in the graph and find one node with a real type.
             GraphNode predecessor = context.predecessor(currentNode);
             String newFullyQualifiedName = predecessor.componentData().getFullyQualifiedName();
-            ComponentDescriptor componentDescriptor = componentService.componentDescriptorFrom(newFullyQualifiedName);
+            ComponentDescriptor componentDescriptor = componentService.componentDescriptorOf(newFullyQualifiedName);
             ComponentOutputDescriptor componentOutputDescriptor = componentDescriptor.getOutput();
 
             // We need to recursively go back until we find a type.
@@ -74,7 +73,7 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
             // We need to recursively go back in the graph and find one node with a real type.
             GraphNode predecessor = context.predecessor(currentNode);
             String newFullyQualifiedName = predecessor.componentData().getFullyQualifiedName();
-            ComponentDescriptor componentDescriptor = componentService.componentDescriptorFrom(newFullyQualifiedName);
+            ComponentDescriptor componentDescriptor = componentService.componentDescriptorOf(newFullyQualifiedName);
             ComponentOutputDescriptor componentOutputDescriptor = componentDescriptor.getOutput();
             if (componentOutputDescriptor == null) return defaultDescriptor();
             // We need to recursively go back until we find a type
