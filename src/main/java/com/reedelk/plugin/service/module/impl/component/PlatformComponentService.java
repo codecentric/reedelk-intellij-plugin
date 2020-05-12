@@ -9,7 +9,7 @@ import com.reedelk.plugin.service.module.PlatformModuleService;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PlatformComponentServiceImpl implements PlatformModuleService {
+public class PlatformComponentService implements PlatformModuleService {
 
     // COMPONENTS
     private final Map<String, ComponentDescriptor> flowControlModuleComponents = new HashMap<>(); // A map containing the component fully qualified name and the descriptor from flow control module

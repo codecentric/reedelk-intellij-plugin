@@ -5,7 +5,7 @@ import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentType;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.graph.node.GraphNode;
-import com.reedelk.plugin.service.module.impl.component.PlatformComponentServiceImpl;
+import com.reedelk.plugin.service.module.impl.component.PlatformComponentService;
 import com.reedelk.plugin.service.module.impl.component.completion.Default;
 import com.reedelk.plugin.service.module.impl.component.completion.Trie;
 import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
@@ -22,14 +22,14 @@ import java.util.Optional;
 
 public class ForEachComponentDiscovery extends AbstractDiscoveryStrategy {
 
-    public ForEachComponentDiscovery(Module module, PlatformComponentServiceImpl componentService, TrieMapWrapper typeAndAndTries) {
+    public ForEachComponentDiscovery(Module module, PlatformComponentService componentService, TrieMapWrapper typeAndAndTries) {
         super(module, componentService, typeAndAndTries);
     }
 
     @Override
     public Optional<ComponentOutputDescriptor> compute(ContainerContext context, GraphNode predecessor) {
 
-        Optional<? extends ComponentOutputDescriptor> componentOutputDescriptor = DiscoveryStrategyFactory.get(context, module, componentService, predecessor, typeAndAndTries);
+        Optional<? extends ComponentOutputDescriptor> componentOutputDescriptor = DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, context, predecessor);
         if (componentOutputDescriptor.isPresent()) {
             ComponentOutputDescriptor previousComponentOutput = componentOutputDescriptor.get();
             List<String> payload = previousComponentOutput.getPayload();

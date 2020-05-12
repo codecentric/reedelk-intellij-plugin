@@ -35,8 +35,8 @@ public class PlatformModuleServiceImpl implements PlatformModuleService, MavenIm
     private ModuleDTO currentModule; // current custom components module being developed (refreshed when compiled)
     private final List<ModuleDTO> mavenModules = new ArrayList<>(); // components from Maven dependencies (refreshed when Maven import finished)
 
-    private PlatformComponentServiceImpl componentTracker;
-    private PlatformCompletionServiceImpl platformCompletionServiceImpl;
+    private PlatformComponentService componentTracker;
+    private PlatformCompletionService platformCompletionService;
 
     public PlatformModuleServiceImpl(Project project, Module module) {
         MessageBus messageBus = project.getMessageBus();
@@ -46,8 +46,8 @@ public class PlatformModuleServiceImpl implements PlatformModuleService, MavenIm
 
         this.module = module;
         this.publisher = messageBus.syncPublisher(Topics.COMPONENTS_UPDATE_EVENTS);
-        this.componentTracker = new PlatformComponentServiceImpl();
-        this.platformCompletionServiceImpl = new PlatformCompletionServiceImpl(module, componentTracker);
+        this.componentTracker = new PlatformComponentService();
+        this.platformCompletionService = new PlatformCompletionService(module, componentTracker);
 
         // We load the modules in the following order:
         // 1. flow-control module (e.g flow-ref, router, fork): these components are immutable.
@@ -75,17 +75,17 @@ public class PlatformModuleServiceImpl implements PlatformModuleService, MavenIm
 
     @Override
     public synchronized Collection<Suggestion> suggestionsOf(ContainerContext context, String componentPropertyPath, String[] tokens) {
-        return platformCompletionServiceImpl.suggestionsOf(context, componentPropertyPath, tokens);
+        return platformCompletionService.suggestionsOf(context, componentPropertyPath, tokens);
     }
 
     @Override
     public synchronized Collection<Suggestion> variablesOf(ContainerContext context, String componentPropertyPath) {
-        return platformCompletionServiceImpl.variablesOf(context, componentPropertyPath);
+        return platformCompletionService.variablesOf(context, componentPropertyPath);
     }
 
     @Override
     public synchronized void componentMetadataOf(ContainerContext context) {
-        platformCompletionServiceImpl.componentMetadataOf(context);
+        platformCompletionService.componentMetadataOf(context);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class PlatformModuleServiceImpl implements PlatformModuleService, MavenIm
         synchronized (this) {
             mavenModules.clear();
             componentTracker.clearMaven();
-            platformCompletionServiceImpl.clearMaven();
+            platformCompletionService.clearMaven();
         }
 
         // Notify modules changed
@@ -110,7 +110,7 @@ public class PlatformModuleServiceImpl implements PlatformModuleService, MavenIm
             synchronized (this) {
                 currentModule = null;
                 componentTracker.clearCurrent();
-                platformCompletionServiceImpl.clearCurrent();
+                platformCompletionService.clearCurrent();
             }
 
             // Notify modules changed
@@ -128,7 +128,7 @@ public class PlatformModuleServiceImpl implements PlatformModuleService, MavenIm
                     synchronized (this) {
                         flowControlModule = dto;
                         componentTracker.registerFlowControl(flowControlModuleDescriptor);
-                        platformCompletionServiceImpl.registerFlowControl(flowControlModuleDescriptor);
+                        platformCompletionService.registerFlowControl(flowControlModuleDescriptor);
                     }
                     onModuleChange();
                 }));
@@ -141,7 +141,7 @@ public class PlatformModuleServiceImpl implements PlatformModuleService, MavenIm
                     synchronized (this) {
                         mavenModules.add(dto);
                         componentTracker.registerMaven(mavenModuleDescriptor);
-                        platformCompletionServiceImpl.registerMaven(mavenModuleDescriptor);
+                        platformCompletionService.registerMaven(mavenModuleDescriptor);
                     }
                     onModuleChange();
                 }));
@@ -154,7 +154,7 @@ public class PlatformModuleServiceImpl implements PlatformModuleService, MavenIm
                     synchronized (this) {
                         currentModule = dto;
                         componentTracker.registerCurrent(moduleCustomDescriptor);
-                        platformCompletionServiceImpl.registerCurrent(moduleCustomDescriptor);
+                        platformCompletionService.registerCurrent(moduleCustomDescriptor);
                     }
                     onModuleChange();
                 }));

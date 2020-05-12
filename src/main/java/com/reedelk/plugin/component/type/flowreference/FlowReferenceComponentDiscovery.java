@@ -18,7 +18,7 @@ import com.reedelk.plugin.graph.node.ScopedGraphNode;
 import com.reedelk.plugin.graph.utils.FindJoiningScope;
 import com.reedelk.plugin.graph.utils.FindScopes;
 import com.reedelk.plugin.service.module.SubflowService;
-import com.reedelk.plugin.service.module.impl.component.PlatformComponentServiceImpl;
+import com.reedelk.plugin.service.module.impl.component.PlatformComponentService;
 import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
 import com.reedelk.plugin.service.module.impl.component.discovery.AbstractDiscoveryStrategy;
 import com.reedelk.plugin.service.module.impl.component.discovery.DiscoveryStrategyFactory;
@@ -33,7 +33,7 @@ import java.util.concurrent.CountDownLatch;
 
 public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
 
-    public FlowReferenceComponentDiscovery(Module module, PlatformComponentServiceImpl componentService, TrieMapWrapper typeAndAndTries) {
+    public FlowReferenceComponentDiscovery(Module module, PlatformComponentService componentService, TrieMapWrapper typeAndAndTries) {
         super(module, componentService, typeAndAndTries);
     }
 
@@ -79,7 +79,7 @@ public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
 
             if (deserialize[0] != null) {
                 MyContext newContext = new MyContext(deserialize[0], predecessor);
-                return DiscoveryStrategyFactory.get(newContext, module, componentService, predecessor, typeAndAndTries);
+                return DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, newContext, predecessor);
             } else {
                 return Optional.empty();
             }

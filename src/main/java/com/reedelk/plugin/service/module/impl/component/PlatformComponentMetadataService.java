@@ -25,19 +25,19 @@ import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
-public class PlatformComponentMetadataServiceImpl implements PlatformModuleService {
+public class PlatformComponentMetadataService implements PlatformModuleService {
 
     private final Module module;
     private final TrieMapWrapper typeAndAndTries;
     private final CompletionFinder completionFinder;
     private final OnComponentMetadata onComponentMetadata;
     private final ComponentInputDescriptorBuilder inputDescriptorBuilder;
-    private final PlatformComponentServiceImpl componentService;
+    private final PlatformComponentService componentService;
 
-    public PlatformComponentMetadataServiceImpl(@NotNull Module module,
-                                                @NotNull CompletionFinder completionFinder,
-                                                @NotNull TrieMapWrapper typesMap,
-                                                @NotNull PlatformComponentServiceImpl componentService) {
+    public PlatformComponentMetadataService(@NotNull Module module,
+                                            @NotNull CompletionFinder completionFinder,
+                                            @NotNull TrieMapWrapper typesMap,
+                                            @NotNull PlatformComponentService componentService) {
         this.module = module;
         this.typeAndAndTries = typesMap;
         this.completionFinder = completionFinder;
@@ -47,7 +47,7 @@ public class PlatformComponentMetadataServiceImpl implements PlatformModuleServi
     }
 
     ComponentOutputDescriptor outputDescriptorOf(ContainerContext context) {
-        return DiscoveryStrategyFactory.get(context, module, componentService, context.node(), typeAndAndTries)
+        return DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, context, context.node())
                 .orElse(null);
     }
 
@@ -59,7 +59,7 @@ public class PlatformComponentMetadataServiceImpl implements PlatformModuleServi
             try {
 
                 Optional<? extends ComponentOutputDescriptor> componentOutputDescriptor =
-                        DiscoveryStrategyFactory.get(context, module, componentService, context.node(), typeAndAndTries);
+                        DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, context, context.node());
 
                 ComponentMetadataActualInput actualInput = componentOutputDescriptor.map(descriptor -> {
                     String description = descriptor.getDescription();

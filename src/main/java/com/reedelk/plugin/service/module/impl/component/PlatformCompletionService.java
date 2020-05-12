@@ -19,7 +19,7 @@ import java.util.Optional;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
 
-public class PlatformCompletionServiceImpl implements PlatformModuleService {
+public class PlatformCompletionService implements PlatformModuleService {
 
     // GLOBAL MODULE TYPES MAPs
     private final Trie flowControlModuleGlobalTypes = new TrieDefault();
@@ -42,11 +42,11 @@ public class PlatformCompletionServiceImpl implements PlatformModuleService {
 
     private final CompletionFinder completionFinder;
     private final OnCompletionEvent onCompletionEvent;
-    private final PlatformComponentMetadataServiceImpl componentMetadataService;
+    private final PlatformComponentMetadataService componentMetadataService;
 
-    public PlatformCompletionServiceImpl(Module module, PlatformComponentServiceImpl componentTracker) {
+    public PlatformCompletionService(Module module, PlatformComponentService componentTracker) {
         this.completionFinder = new CompletionFinder(typesMap);
-        this.componentMetadataService = new PlatformComponentMetadataServiceImpl(module, completionFinder, typesMap, componentTracker);
+        this.componentMetadataService = new PlatformComponentMetadataService(module, completionFinder, typesMap, componentTracker);
         this.onCompletionEvent = module.getProject().getMessageBus().syncPublisher(Topics.COMPLETION_EVENT_TOPIC);
     }
 

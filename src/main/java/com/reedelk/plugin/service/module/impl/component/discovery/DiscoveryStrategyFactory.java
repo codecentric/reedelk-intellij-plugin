@@ -15,7 +15,7 @@ import com.reedelk.plugin.component.type.unknown.UnknownComponentDiscovery;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.graph.node.GraphNode;
-import com.reedelk.plugin.service.module.impl.component.PlatformComponentServiceImpl;
+import com.reedelk.plugin.service.module.impl.component.PlatformComponentService;
 import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
 import com.reedelk.runtime.component.*;
 
@@ -39,7 +39,11 @@ public class DiscoveryStrategyFactory {
         DISCOVERY = Collections.unmodifiableMap(tmp);
     }
 
-    public static Optional<? extends ComponentOutputDescriptor> get(ContainerContext context, Module module, PlatformComponentServiceImpl componentService, GraphNode current, TrieMapWrapper typeAndAndTries) {
+    public static Optional<? extends ComponentOutputDescriptor> get(Module module,
+                                                                    PlatformComponentService componentService,
+                                                                    TrieMapWrapper typeAndAndTries,
+                                                                    ContainerContext context,
+                                                                    GraphNode current) {
 
         List<GraphNode> predecessors = context.predecessors(current);
         if (predecessors.size() == 0) {
@@ -83,16 +87,16 @@ public class DiscoveryStrategyFactory {
         }
     }
 
-    private static DiscoveryStrategy get(String componentFullyQualifiedName, Module module, PlatformComponentServiceImpl componentService, TrieMapWrapper typeAndAndTries) {
+    private static DiscoveryStrategy get(String componentFullyQualifiedName, Module module, PlatformComponentService componentService, TrieMapWrapper typeAndAndTries) {
         Class<? extends DiscoveryStrategy> rendererClazz =
                 DISCOVERY.getOrDefault(componentFullyQualifiedName, GENERIC_DISCOVERY);
         return instantiate(rendererClazz, module, componentService, typeAndAndTries);
     }
 
-    private static DiscoveryStrategy instantiate(Class<? extends DiscoveryStrategy> discoveryClazz, Module module, PlatformComponentServiceImpl componentService,  TrieMapWrapper typeAndAndTries) {
+    private static DiscoveryStrategy instantiate(Class<? extends DiscoveryStrategy> discoveryClazz, Module module, PlatformComponentService componentService, TrieMapWrapper typeAndAndTries) {
         try {
             return discoveryClazz
-                    .getConstructor(Module.class, PlatformComponentServiceImpl.class, TrieMapWrapper.class)
+                    .getConstructor(Module.class, PlatformComponentService.class, TrieMapWrapper.class)
                     .newInstance(module, componentService, typeAndAndTries);
         } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException exception) {
             throw new PluginException("Could not instantiate discovery strategy class=" + discoveryClazz.getName(), exception);

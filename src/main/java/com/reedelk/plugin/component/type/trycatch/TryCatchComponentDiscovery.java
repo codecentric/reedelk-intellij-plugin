@@ -4,7 +4,7 @@ import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.graph.node.GraphNode;
-import com.reedelk.plugin.service.module.impl.component.PlatformComponentServiceImpl;
+import com.reedelk.plugin.service.module.impl.component.PlatformComponentService;
 import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
 import com.reedelk.plugin.service.module.impl.component.discovery.AbstractDiscoveryStrategy;
 import com.reedelk.plugin.service.module.impl.component.discovery.DiscoveryStrategyFactory;
@@ -17,7 +17,7 @@ import java.util.Optional;
 
 public class TryCatchComponentDiscovery extends AbstractDiscoveryStrategy {
 
-    public TryCatchComponentDiscovery(Module module, PlatformComponentServiceImpl componentService, TrieMapWrapper typeAndAndTries) {
+    public TryCatchComponentDiscovery(Module module, PlatformComponentService componentService, TrieMapWrapper typeAndAndTries) {
         super(module, componentService, typeAndAndTries);
     }
 
@@ -26,7 +26,7 @@ public class TryCatchComponentDiscovery extends AbstractDiscoveryStrategy {
         List<GraphNode> successors = context.successors(predecessor);
         if (successors.get(0).equals(context.node())) {
             // Try branch (we take the one before the try-catch.
-            return DiscoveryStrategyFactory.get(context, module, componentService, predecessor, typeAndAndTries);
+            return DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, context, predecessor);
         } else {
             // We are in the catch
             ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();

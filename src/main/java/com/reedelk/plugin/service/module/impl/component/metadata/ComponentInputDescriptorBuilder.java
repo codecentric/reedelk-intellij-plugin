@@ -4,15 +4,15 @@ import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentInputDescriptor;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.graph.node.GraphNode;
-import com.reedelk.plugin.service.module.impl.component.PlatformComponentServiceImpl;
+import com.reedelk.plugin.service.module.impl.component.PlatformComponentService;
 
 import java.util.Optional;
 
 public class ComponentInputDescriptorBuilder {
 
-    private final PlatformComponentServiceImpl componentService;
+    private final PlatformComponentService componentService;
 
-    public ComponentInputDescriptorBuilder(PlatformComponentServiceImpl componentService) {
+    public ComponentInputDescriptorBuilder(PlatformComponentService componentService) {
         this.componentService = componentService;
     }
 
