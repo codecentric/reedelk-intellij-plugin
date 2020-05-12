@@ -13,6 +13,8 @@ import static com.reedelk.plugin.editor.properties.commons.PanelWithText.Loading
 
 public class MapTableTabContainer extends DisposablePanel {
 
+    private DisposableScrollableTable disposablePropertyTable;
+
     public MapTableTabContainer(@NotNull Module module,
                                 @NotNull DisposableTableModel tableModel,
                                 @NotNull DisposableTableColumnModelFactory columnModelFactory) {
@@ -21,9 +23,11 @@ public class MapTableTabContainer extends DisposablePanel {
             @Override
             public void componentShown(ComponentEvent e) {
 
+                if (disposablePropertyTable != null) return;
+
                 DisposablePanel mapContainer = new DisposablePanel();
                 mapContainer.setLayout(new BoxLayout(mapContainer, BoxLayout.Y_AXIS));
-                DisposableScrollableTable disposablePropertyTable =
+                disposablePropertyTable =
                         new DisposableScrollableTable(module.getProject(), Sizes.Table.TABBED, tableModel, columnModelFactory);
 
                 ClickableLabel.OnClickAction addAction = disposablePropertyTable::addEmptyRow;
