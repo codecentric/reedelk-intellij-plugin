@@ -8,7 +8,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
-import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowGraphProvider;
 import com.reedelk.plugin.graph.deserializer.DeserializationError;
@@ -18,13 +17,13 @@ import com.reedelk.plugin.graph.node.ScopedGraphNode;
 import com.reedelk.plugin.graph.utils.FindJoiningScope;
 import com.reedelk.plugin.graph.utils.FindScopes;
 import com.reedelk.plugin.service.module.SubflowService;
+import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.PlatformComponentService;
 import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
 import com.reedelk.plugin.service.module.impl.component.metadata.AbstractDiscoveryStrategy;
 import com.reedelk.plugin.service.module.impl.component.metadata.DiscoveryStrategyFactory;
 import com.reedelk.plugin.service.module.impl.subflow.SubflowMetadata;
 import com.reedelk.runtime.commons.JsonParser;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +37,7 @@ public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
     }
 
     @Override
-    public Optional<? extends ComponentOutputDescriptor> compute(ContainerContext context, GraphNode nodeWeWantOutputFrom) {
+    public Optional<? extends ComponentOutputDescriptor> compute(ComponentContext context, GraphNode nodeWeWantOutputFrom) {
         // List
         CountDownLatch latch = new CountDownLatch(1);
         FlowGraph[] deserialize = new FlowGraph[1];
@@ -78,7 +77,7 @@ public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
             latch.await();
 
             if (deserialize[0] != null) {
-                MyContext newContext = new MyContext(deserialize[0], nodeWeWantOutputFrom);
+                SubflowGraphAwareContext newContext = new SubflowGraphAwareContext(deserialize[0], nodeWeWantOutputFrom);
                 return DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, newContext, nodeWeWantOutputFrom);
             } else {
                 return Optional.empty();
@@ -89,53 +88,34 @@ public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
         }
     }
 
-    static class MyContext extends ContainerContext {
+    static class SubflowGraphAwareContext extends ComponentContext {
 
-        private final FlowGraph subflowGraph;
-
-        public MyContext(@NotNull FlowGraph subflowGraph, @NotNull GraphNode flowReference) {
-            super(null, flowReference, "does not matter");
-            this.subflowGraph = subflowGraph;
-        }
-
-        @Override
-        public GraphNode node() {
-            return super.node();
+        public SubflowGraphAwareContext(FlowGraph subflowGraph, GraphNode nodeWeWantOutputFrom) {
+            super(subflowGraph, nodeWeWantOutputFrom, null);
         }
 
         @Override
         public Optional<ScopedGraphNode> joiningScopeOf(GraphNode target) {
-            List<GraphNode> graphNodes = subflowGraph.endNodes();
+            List<GraphNode> graphNodes = graph.endNodes();
             if (graphNodes.size() > 1) {
-                Stack<ScopedGraphNode> of = FindScopes.of(subflowGraph, graphNodes.get(1));
+                Stack<ScopedGraphNode> of = FindScopes.of(graph, graphNodes.get(1));
                 ScopedGraphNode last = of.pop();
                 while(graphNodes.isEmpty()) {
                     last = of.pop();
                 }
                 return Optional.of(last);
             } else {
-                return FindJoiningScope.of(subflowGraph, target);
+                return FindJoiningScope.of(graph, target);
             }
-        }
-
-        @Override
-        public List<GraphNode> successors(GraphNode target) {
-            return subflowGraph.successors(target);
         }
 
         @Override
         public List<GraphNode> predecessors(GraphNode target) {
             if (target == node()) {
-                return subflowGraph.endNodes();
+                return graph.endNodes();
             } else {
-                return subflowGraph.predecessors(target);
+                return graph.predecessors(target);
             }
-        }
-
-        @Override
-        public GraphNode predecessor(GraphNode graphNode) {
-            List<GraphNode> predecessors = predecessors(graphNode);
-            return predecessors.stream().findFirst().orElse(null);
         }
     }
 }

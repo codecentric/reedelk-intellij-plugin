@@ -11,6 +11,7 @@ import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.PanelWithText;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.service.module.PlatformModuleService;
+import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.metadata.ComponentMetadata;
 import com.reedelk.plugin.service.module.impl.component.metadata.OnComponentMetadata;
 import org.jetbrains.annotations.NotNull;
@@ -47,7 +48,8 @@ public class MetadataPanel extends DisposablePanel implements OnComponentMetadat
         addAncestorListener(new AncestorListenerAdapter() {
             @Override
             public void ancestorAdded(AncestorEvent event) {
-                PlatformModuleService.getInstance(module).componentMetadataOf(context);
+                ComponentContext componentContext = context.componentContext();
+                PlatformModuleService.getInstance(module).componentMetadataOf(componentContext);
             }
         });
 

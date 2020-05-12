@@ -12,10 +12,10 @@ import com.reedelk.plugin.component.type.stop.StopComponentDiscovery;
 import com.reedelk.plugin.component.type.trycatch.TryCatchComponentDiscovery;
 import com.reedelk.plugin.component.type.unknown.Unknown;
 import com.reedelk.plugin.component.type.unknown.UnknownComponentDiscovery;
-import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
+import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.PlatformComponentService;
 import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
 import com.reedelk.runtime.component.*;
@@ -47,7 +47,7 @@ public class DiscoveryStrategyFactory {
     public static Optional<? extends ComponentOutputDescriptor> get(@NotNull Module module,
                                                                     @NotNull PlatformComponentService componentService,
                                                                     @NotNull TrieMapWrapper typeAndAndTries,
-                                                                    @NotNull ContainerContext context,
+                                                                    @NotNull ComponentContext context,
                                                                     @NotNull GraphNode nodeToFindInputMessage) {
 
         List<GraphNode> predecessors = context.predecessors(nodeToFindInputMessage);

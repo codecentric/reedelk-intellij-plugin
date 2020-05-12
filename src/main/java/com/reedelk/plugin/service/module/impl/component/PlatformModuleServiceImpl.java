@@ -9,7 +9,6 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.plugin.commons.Topics;
-import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
@@ -74,17 +73,17 @@ public class PlatformModuleServiceImpl implements PlatformModuleService, MavenIm
     }
 
     @Override
-    public synchronized Collection<Suggestion> suggestionsOf(ContainerContext context, String componentPropertyPath, String[] tokens) {
-        return platformCompletionService.suggestionsOf(context, componentPropertyPath, tokens);
+    public synchronized Collection<Suggestion> suggestionsOf(ComponentContext context, String[] tokens) {
+        return platformCompletionService.suggestionsOf(context, tokens);
     }
 
     @Override
-    public synchronized Collection<Suggestion> variablesOf(ContainerContext context, String componentPropertyPath) {
-        return platformCompletionService.variablesOf(context, componentPropertyPath);
+    public synchronized Collection<Suggestion> variablesOf(ComponentContext context) {
+        return platformCompletionService.variablesOf(context);
     }
 
     @Override
-    public synchronized void componentMetadataOf(ContainerContext context) {
+    public synchronized void componentMetadataOf(ComponentContext context) {
         platformCompletionService.componentMetadataOf(context);
     }
 

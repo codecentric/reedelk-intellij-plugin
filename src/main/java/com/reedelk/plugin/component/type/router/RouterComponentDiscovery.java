@@ -3,8 +3,8 @@ package com.reedelk.plugin.component.type.router;
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.component.type.generic.GenericComponentDiscovery;
-import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.graph.node.GraphNode;
+import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.PlatformComponentService;
 import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
 import com.reedelk.plugin.service.module.impl.component.metadata.DiscoveryStrategyFactory;
@@ -21,12 +21,12 @@ public class RouterComponentDiscovery extends GenericComponentDiscovery {
     }
 
     @Override
-    public Optional<? extends ComponentOutputDescriptor> compute(ContainerContext context, GraphNode currentNode) {
+    public Optional<? extends ComponentOutputDescriptor> compute(ComponentContext context, GraphNode currentNode) {
         return DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, context, currentNode);
     }
 
     @Override
-    public Optional<ComponentOutputDescriptor> compute(ContainerContext context, Collection<GraphNode> predecessors) {
+    public Optional<ComponentOutputDescriptor> compute(ComponentContext context, Collection<GraphNode> predecessors) {
         ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
         descriptor.setPayload(Collections.singletonList(Object.class.getName()));
         descriptor.setAttributes(MessageAttributes.class.getName());

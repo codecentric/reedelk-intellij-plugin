@@ -8,14 +8,15 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.service.module.PlatformModuleService;
+import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
-import static com.reedelk.plugin.commons.UserData.*;
+import static com.reedelk.plugin.commons.UserData.COMPONENT_CONTEXT;
+import static com.reedelk.plugin.commons.UserData.MODULE_NAME;
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
 public class GroovyCompletionContributor extends CompletionContributor {
@@ -25,32 +26,19 @@ public class GroovyCompletionContributor extends CompletionContributor {
         Editor editor = parameters.getEditor();
         Project project = editor.getProject();
         String moduleName = editor.getUserData(MODULE_NAME);
-        String componentPropertyPath = editor.getUserData(COMPONENT_PROPERTY_PATH);
-        ContainerContext context = editor.getUserData(PROPERTY_CONTEXT);
+        ComponentContext context = editor.getUserData(COMPONENT_CONTEXT);
 
-        // TODO: This is bad
-        if (project != null &&
-                context != null &&
-                isNotBlank(moduleName) &&
-                isNotBlank(componentPropertyPath)) {
-            computeResultSet(parameters, result, moduleName, componentPropertyPath, context, project);
+        if (project != null && context != null && isNotBlank(moduleName)) {
+
+            Module module = ModuleManager.getInstance(project).findModuleByName(moduleName);
+            if (module == null) return;
+
+            TokenFinder.find(parameters).ifPresent(tokens -> {
+                PlatformModuleService instance = PlatformModuleService.getInstance(module);
+                Collection<Suggestion> suggestions = instance.suggestionsOf(context, tokens);
+                suggestions.forEach(suggestion -> addSuggestion(result, suggestion));
+            });
         }
-    }
-
-    private void computeResultSet(@NotNull CompletionParameters parameters,
-                                  @NotNull CompletionResultSet result,
-                                  @NotNull String moduleName,
-                                  @NotNull String componentPropertyPath,
-                                  @NotNull ContainerContext context,
-                                  @NotNull Project project) {
-        Module module = ModuleManager.getInstance(project).findModuleByName(moduleName);
-        if (module == null) return;
-
-        TokenFinder.find(parameters).ifPresent(tokens -> {
-            PlatformModuleService instance = PlatformModuleService.getInstance(module);
-            Collection<Suggestion> suggestions = instance.suggestionsOf(context, componentPropertyPath, tokens);
-            suggestions.forEach(suggestion -> addSuggestion(result, suggestion));
-        });
     }
 
     private void addSuggestion(@NotNull CompletionResultSet result, Suggestion suggestion) {

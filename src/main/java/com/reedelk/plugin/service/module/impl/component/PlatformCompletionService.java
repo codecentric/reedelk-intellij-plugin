@@ -7,7 +7,6 @@ import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
 import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.editor.properties.context.ComponentPropertyPath;
-import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.completion.*;
 import com.reedelk.runtime.api.commons.StringUtils;
@@ -51,9 +50,9 @@ public class PlatformCompletionService implements PlatformModuleService {
     }
 
     @Override
-    public Collection<Suggestion> suggestionsOf(ContainerContext context, String componentPropertyPath, String[] tokens) {
+    public Collection<Suggestion> suggestionsOf(ComponentContext context, String[] tokens) {
         ComponentOutputDescriptor previousComponentOutput = componentMetadataService.outputDescriptorOf(context);
-
+        String componentPropertyPath = context.componentPropertyPath();
         // A suggestion for a property is computed as follows:
         // Get signature for component property path from either flow control, maven modules or current module.
         // if does not exists use the default.
@@ -69,12 +68,12 @@ public class PlatformCompletionService implements PlatformModuleService {
     }
 
     @Override
-    public Collection<Suggestion> variablesOf(ContainerContext context, String componentPropertyPath) {
-        return suggestionsOf(context, componentPropertyPath, new String[]{StringUtils.EMPTY});
+    public Collection<Suggestion> variablesOf(ComponentContext context) {
+        return suggestionsOf(context, new String[]{StringUtils.EMPTY});
     }
 
     @Override
-    public void componentMetadataOf(ContainerContext context) {
+    public void componentMetadataOf(ComponentContext context) {
         componentMetadataService.componentMetadataOf(context);
     }
 

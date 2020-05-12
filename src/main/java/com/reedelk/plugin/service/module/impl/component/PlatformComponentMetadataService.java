@@ -4,7 +4,6 @@ import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.component.ComponentInputDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.commons.Topics;
-import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.completion.*;
@@ -45,14 +44,13 @@ public class PlatformComponentMetadataService implements PlatformModuleService {
         onComponentMetadata = module.getProject().getMessageBus().syncPublisher(Topics.ON_COMPONENT_IO);
     }
 
-    ComponentOutputDescriptor outputDescriptorOf(ContainerContext context) {
+    ComponentOutputDescriptor outputDescriptorOf(ComponentContext context) {
         return DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, context, context.node())
                 .orElse(null);
     }
 
-    // TODO: Catch any exception they are eaten up!
     @Override
-    public void componentMetadataOf(ContainerContext context) {
+    public void componentMetadataOf(ComponentContext context) {
         PluginExecutors.run(module, message("component.io.ticker.text"), indicator -> {
 
             try {

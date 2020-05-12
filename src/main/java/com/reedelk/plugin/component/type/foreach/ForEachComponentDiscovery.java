@@ -3,8 +3,8 @@ package com.reedelk.plugin.component.type.foreach;
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentType;
-import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.graph.node.GraphNode;
+import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.PlatformComponentService;
 import com.reedelk.plugin.service.module.impl.component.completion.Default;
 import com.reedelk.plugin.service.module.impl.component.completion.Trie;
@@ -27,7 +27,7 @@ public class ForEachComponentDiscovery extends AbstractDiscoveryStrategy {
     }
 
     @Override
-    public Optional<ComponentOutputDescriptor> compute(ContainerContext context, GraphNode nodeWeWantOutputFrom) {
+    public Optional<ComponentOutputDescriptor> compute(ComponentContext context, GraphNode nodeWeWantOutputFrom) {
 
         Optional<? extends ComponentOutputDescriptor> componentOutputDescriptor = DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, context, nodeWeWantOutputFrom);
         if (componentOutputDescriptor.isPresent()) {
@@ -54,7 +54,7 @@ public class ForEachComponentDiscovery extends AbstractDiscoveryStrategy {
     }
 
     @Override
-    public Optional<? extends ComponentOutputDescriptor> compute(ContainerContext context, Collection<GraphNode> predecessors) {
+    public Optional<? extends ComponentOutputDescriptor> compute(ComponentContext context, Collection<GraphNode> predecessors) {
         ComponentType componentClass = context.node().getComponentClass();
         if (ComponentType.JOIN.equals(componentClass)) {
             MessagesComponentOutputDescriptor descriptor = new MessagesComponentOutputDescriptor();

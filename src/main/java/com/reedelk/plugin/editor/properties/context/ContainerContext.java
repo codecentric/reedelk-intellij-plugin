@@ -10,8 +10,7 @@ import com.reedelk.plugin.editor.properties.commons.JComponentHolder;
 import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
-import com.reedelk.plugin.graph.node.ScopedGraphNode;
-import com.reedelk.plugin.graph.utils.FindJoiningScope;
+import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,26 +43,9 @@ public class ContainerContext implements Disposable {
         }
     }
 
-    public GraphNode node() {
-        return node;
-    }
-
-    public Optional<ScopedGraphNode> joiningScopeOf(GraphNode target) {
-        FlowGraph graph = snapshot.getGraphOrThrowIfAbsent();
-        return FindJoiningScope.of(graph, target);
-    }
-
-    public List<GraphNode> successors(GraphNode target) {
-        return snapshot.getGraphOrThrowIfAbsent().successors(target);
-    }
-
-    public List<GraphNode> predecessors(GraphNode target) {
-        return snapshot.getGraphOrThrowIfAbsent().predecessors(target);
-    }
-
-    public GraphNode predecessor(GraphNode graphNode) {
-        List<GraphNode> predecessors = snapshot.getGraphOrThrowIfAbsent().predecessors(graphNode);
-        return predecessors.stream().findFirst().orElse(null);
+    public ComponentContext componentContext() {
+        FlowGraph context = snapshot.getGraphOrThrowIfAbsent();
+        return new ComponentContext(context, node, componentPropertyPath);
     }
 
     public String componentPropertyPath() {

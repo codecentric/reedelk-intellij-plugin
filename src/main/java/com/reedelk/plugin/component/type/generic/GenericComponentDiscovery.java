@@ -4,8 +4,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.util.Pair;
 import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
-import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.graph.node.GraphNode;
+import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.PlatformComponentService;
 import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
 import com.reedelk.plugin.service.module.impl.component.metadata.AbstractDiscoveryStrategy;
@@ -26,7 +26,7 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
     }
 
     @Override
-    public Optional<? extends ComponentOutputDescriptor> compute(ContainerContext context, GraphNode currentNode) {
+    public Optional<? extends ComponentOutputDescriptor> compute(ComponentContext context, GraphNode currentNode) {
         String componentFullyQualifiedName = currentNode.componentData().getFullyQualifiedName();
         ComponentDescriptor componentDescriptor = componentService.componentDescriptorOf(componentFullyQualifiedName);
 
@@ -50,7 +50,7 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
     }
 
 
-    private Pair<List<String>, String> discoverPayloadTypesAndDescription(GraphNode currentNode, ContainerContext context, ComponentOutputDescriptor currentOutput) {
+    private Pair<List<String>, String> discoverPayloadTypesAndDescription(GraphNode currentNode, ComponentContext context, ComponentOutputDescriptor currentOutput) {
         if (currentOutput.getPayload().contains(ComponentOutput.PreviousComponent.class.getName())) {
             // We need to recursively go back in the graph if the user specified that the payload
             // type must be taken from the previous component.
@@ -62,7 +62,7 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
         }
     }
 
-    private String discoverAttributeType(GraphNode currentNode, ContainerContext context, ComponentOutputDescriptor currentOutput) {
+    private String discoverAttributeType(GraphNode currentNode, ComponentContext context, ComponentOutputDescriptor currentOutput) {
         if (ComponentOutput.PreviousComponent.class.getName().equals(currentOutput.getAttributes())) {
             // We need to recursively go back in the graph if the user specified that the attributes
             // type must be taken from the previous component.

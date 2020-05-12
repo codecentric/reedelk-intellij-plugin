@@ -10,8 +10,10 @@ import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.service.module.PlatformModuleService;
+import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
 import com.reedelk.runtime.api.commons.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -29,23 +31,13 @@ import static javax.swing.BorderFactory.createMatteBorder;
 
 class ScriptEditorContextPanel extends DisposablePanel implements PlatformModuleService.OnCompletionEvent {
 
-    private static final Border MATTE_BORDER = createMatteBorder(1, 1, 1, 0,
-            Colors.SCRIPT_EDITOR_CONTEXT_PANEL_BORDER);
-    private static final Border COMPOUND_BORDER = new CompoundBorder(
-            customLine(Colors.SCRIPT_EDITOR_CONTEXT_PANEL_BORDER_BOTTOM, 0, 0, 1, 0),
-            empty(5));
-
     private final transient Module module;
     private final transient MessageBusConnection connect;
-    private final String componentPropertyPath;
     private final DisposablePanel panelVariables;
-    private final ContainerContext context;
+    private final ComponentContext componentContext;
 
-    ScriptEditorContextPanel(Module module,
-                             String componentPropertyPath,
-                             ContainerContext context) {
-        this.componentPropertyPath = componentPropertyPath;
-        this.context = context;
+    ScriptEditorContextPanel(@NotNull Module module, @NotNull ContainerContext context) {
+        this.componentContext = context.componentContext();
         this.module = module;
         setLayout(new BorderLayout());
         setBorder(MATTE_BORDER);
@@ -99,10 +91,17 @@ class ScriptEditorContextPanel extends DisposablePanel implements PlatformModule
 
     private List<Suggestion> suggestions() {
         return PlatformModuleService.getInstance(module)
-                .variablesOf(context, componentPropertyPath)
+                .variablesOf(componentContext)
                 .stream()
                 .filter(suggestion -> StringUtils.isNotBlank(suggestion.lookupString()))
                 .sorted(Comparator.comparing(Suggestion::lookupString).reversed())
                 .collect(Collectors.toList());
     }
+
+    private static final Border MATTE_BORDER = createMatteBorder(1, 1, 1, 0,
+            Colors.SCRIPT_EDITOR_CONTEXT_PANEL_BORDER);
+    private static final Border COMPOUND_BORDER = new CompoundBorder(
+            customLine(Colors.SCRIPT_EDITOR_CONTEXT_PANEL_BORDER_BOTTOM, 0, 0, 1, 0),
+            empty(5));
+
 }

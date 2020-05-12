@@ -3,7 +3,7 @@ package com.reedelk.plugin.service.module;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleServiceManager;
 import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
-import com.reedelk.plugin.editor.properties.context.ContainerContext;
+import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
 import com.reedelk.plugin.service.module.impl.component.module.ModuleDTO;
 import org.jetbrains.annotations.NotNull;
@@ -24,15 +24,15 @@ public interface PlatformModuleService {
         throw new UnsupportedOperationException();
     }
 
-    default Collection<Suggestion> suggestionsOf(ContainerContext context, String componentPropertyPath, String[] tokens) {
+    default Collection<Suggestion> suggestionsOf(ComponentContext context, String[] tokens) {
         throw new UnsupportedOperationException();
     }
 
-    default Collection<Suggestion> variablesOf(ContainerContext context, String componentPropertyPath) {
+    default Collection<Suggestion> variablesOf(ComponentContext context) {
         throw new UnsupportedOperationException();
     }
 
-    default void componentMetadataOf(ContainerContext context) {
+    default void componentMetadataOf(ComponentContext context) {
         throw new UnsupportedOperationException();
     }
 
