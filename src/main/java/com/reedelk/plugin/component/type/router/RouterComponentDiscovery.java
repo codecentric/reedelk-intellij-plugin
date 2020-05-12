@@ -21,8 +21,8 @@ public class RouterComponentDiscovery extends GenericComponentDiscovery {
     }
 
     @Override
-    public Optional<? extends ComponentOutputDescriptor> compute(ContainerContext context, GraphNode nodeWeWantOutputFrom) {
-        return DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, context, nodeWeWantOutputFrom);
+    public Optional<? extends ComponentOutputDescriptor> compute(ContainerContext context, GraphNode currentNode) {
+        return DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, context, currentNode);
     }
 
     @Override

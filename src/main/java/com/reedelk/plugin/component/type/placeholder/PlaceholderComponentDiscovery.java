@@ -17,7 +17,7 @@ public class PlaceholderComponentDiscovery extends GenericComponentDiscovery {
     }
 
     @Override
-    public Optional<? extends ComponentOutputDescriptor> compute(ContainerContext context, GraphNode nodeWeWantOutputFrom) {
+    public Optional<? extends ComponentOutputDescriptor> compute(ContainerContext context, GraphNode currentNode) {
         return Optional.empty();
     }
 }
