@@ -39,13 +39,13 @@ class ScriptEditorContextPanel extends DisposablePanel implements PlatformModule
     private final transient MessageBusConnection connect;
     private final String componentPropertyPath;
     private final DisposablePanel panelVariables;
-    private final String inputFullyQualifiedName;
+    private final ContainerContext context;
 
     ScriptEditorContextPanel(Module module,
                              String componentPropertyPath,
                              ContainerContext context) {
         this.componentPropertyPath = componentPropertyPath;
-        this.inputFullyQualifiedName = context.predecessor().componentData().getFullyQualifiedName();
+        this.context = context;
         this.module = module;
         setLayout(new BorderLayout());
         setBorder(MATTE_BORDER);
@@ -99,7 +99,7 @@ class ScriptEditorContextPanel extends DisposablePanel implements PlatformModule
 
     private List<Suggestion> suggestions() {
         return PlatformModuleService.getInstance(module)
-                .variablesOf(inputFullyQualifiedName, componentPropertyPath)
+                .variablesOf(context, componentPropertyPath)
                 .stream()
                 .filter(suggestion -> StringUtils.isNotBlank(suggestion.lookupString()))
                 .sorted(Comparator.comparing(Suggestion::lookupString).reversed())

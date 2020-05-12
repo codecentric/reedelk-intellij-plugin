@@ -19,7 +19,7 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
     }
 
     @Override
-    public Optional<ComponentOutputDescriptor> compute(ContainerContext context, GraphNode predecessor) {
+    public Optional<? extends ComponentOutputDescriptor> compute(ContainerContext context, GraphNode predecessor) {
         String componentFullyQualifiedName =
                 predecessor.componentData().getFullyQualifiedName();
         ComponentDescriptor actualComponentDescriptor =

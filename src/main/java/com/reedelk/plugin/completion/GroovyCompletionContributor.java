@@ -9,11 +9,9 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
-import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -27,33 +25,30 @@ public class GroovyCompletionContributor extends CompletionContributor {
         Editor editor = parameters.getEditor();
         Project project = editor.getProject();
         String moduleName = editor.getUserData(MODULE_NAME);
-        String componentFullyQualifiedName = editor.getUserData(COMPONENT_PROPERTY_PATH);
+        String componentPropertyPath = editor.getUserData(COMPONENT_PROPERTY_PATH);
         ContainerContext context = editor.getUserData(PROPERTY_CONTEXT);
 
         // TODO: This is bad
         if (project != null &&
                 context != null &&
                 isNotBlank(moduleName) &&
-                isNotBlank(componentFullyQualifiedName)) {
-            GraphNode predecessorGraphNode = context.predecessor();
-            // TODO: THIS IS NULL POINTER FOR REST LISTENER because the listener does not have a predecessor.
-            String predecessorFQN = predecessorGraphNode.componentData().getFullyQualifiedName();
-            computeResultSet(parameters, result, moduleName, componentFullyQualifiedName, predecessorFQN, project);
+                isNotBlank(componentPropertyPath)) {
+            computeResultSet(parameters, result, moduleName, componentPropertyPath, context, project);
         }
     }
 
     private void computeResultSet(@NotNull CompletionParameters parameters,
                                   @NotNull CompletionResultSet result,
                                   @NotNull String moduleName,
-                                  @NotNull String componentFullyQualifiedName,
-                                  @Nullable String inputFullyQualifiedName,
+                                  @NotNull String componentPropertyPath,
+                                  @NotNull ContainerContext context,
                                   @NotNull Project project) {
         Module module = ModuleManager.getInstance(project).findModuleByName(moduleName);
         if (module == null) return;
 
         TokenFinder.find(parameters).ifPresent(tokens -> {
             PlatformModuleService instance = PlatformModuleService.getInstance(module);
-            Collection<Suggestion> suggestions = instance.suggestionsOf(inputFullyQualifiedName, componentFullyQualifiedName, tokens);
+            Collection<Suggestion> suggestions = instance.suggestionsOf(context, componentPropertyPath, tokens);
             suggestions.forEach(suggestion -> addSuggestion(result, suggestion));
         });
     }

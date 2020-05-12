@@ -7,8 +7,11 @@ import com.reedelk.module.descriptor.model.property.PropertyTypeDescriptor;
 import com.reedelk.plugin.commons.DebugControls;
 import com.reedelk.plugin.editor.properties.commons.InputChangeListener;
 import com.reedelk.plugin.editor.properties.commons.JComponentHolder;
+import com.reedelk.plugin.graph.FlowGraph;
 import com.reedelk.plugin.graph.FlowSnapshot;
 import com.reedelk.plugin.graph.node.GraphNode;
+import com.reedelk.plugin.graph.node.ScopedGraphNode;
+import com.reedelk.plugin.graph.utils.FindJoiningScope;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,13 +48,26 @@ public class ContainerContext implements Disposable {
         return node;
     }
 
+    public Optional<ScopedGraphNode> joiningScope() {
+        FlowGraph graph = snapshot.getGraphOrThrowIfAbsent();
+        return FindJoiningScope.of(graph, node);
+    }
+
     // TODO: Review this logic..!!!
     public GraphNode predecessor() {
         List<GraphNode> predecessors = snapshot.getGraphOrThrowIfAbsent().predecessors(node);
         return predecessors.stream().findFirst().orElse(null);
     }
 
+    public List<GraphNode> endNodes() {
+        return snapshot.getGraphOrThrowIfAbsent().endNodes();
+    }
+
     public List<GraphNode> predecessors() {
+        return snapshot.getGraphOrThrowIfAbsent().predecessors(node);
+    }
+
+    public List<GraphNode> predecessors(GraphNode node) {
         return snapshot.getGraphOrThrowIfAbsent().predecessors(node);
     }
 

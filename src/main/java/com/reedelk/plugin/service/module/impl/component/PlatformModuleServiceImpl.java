@@ -74,13 +74,13 @@ public class PlatformModuleServiceImpl implements PlatformModuleService, MavenIm
     }
 
     @Override
-    public synchronized Collection<Suggestion> suggestionsOf(String inputFullyQualifiedName, String componentPropertyPath, String[] tokens) {
-        return platformCompletionServiceImpl.suggestionsOf(inputFullyQualifiedName, componentPropertyPath, tokens);
+    public synchronized Collection<Suggestion> suggestionsOf(ContainerContext context, String componentPropertyPath, String[] tokens) {
+        return platformCompletionServiceImpl.suggestionsOf(context, componentPropertyPath, tokens);
     }
 
     @Override
-    public synchronized Collection<Suggestion> variablesOf(String inputFullyQualifiedName, String componentPropertyPath) {
-        return platformCompletionServiceImpl.variablesOf(inputFullyQualifiedName, componentPropertyPath);
+    public synchronized Collection<Suggestion> variablesOf(ContainerContext context, String componentPropertyPath) {
+        return platformCompletionServiceImpl.variablesOf(context, componentPropertyPath);
     }
 
     @Override

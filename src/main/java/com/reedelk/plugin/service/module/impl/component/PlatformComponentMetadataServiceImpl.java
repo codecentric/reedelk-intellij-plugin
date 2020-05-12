@@ -46,6 +46,11 @@ public class PlatformComponentMetadataServiceImpl implements PlatformModuleServi
         onComponentMetadata = module.getProject().getMessageBus().syncPublisher(Topics.ON_COMPONENT_IO);
     }
 
+    ComponentOutputDescriptor outputDescriptorOf(ContainerContext context) {
+        return DiscoveryStrategyFactory.get(context, componentService, context.node())
+                .orElse(null);
+    }
+
     // TODO: Catch any exception they are eaten up!
     @Override
     public void componentMetadataOf(ContainerContext context) {
@@ -53,7 +58,8 @@ public class PlatformComponentMetadataServiceImpl implements PlatformModuleServi
 
             try {
 
-                Optional<ComponentOutputDescriptor> componentOutputDescriptor = DiscoveryStrategyFactory.get(context, componentService);
+                Optional<? extends ComponentOutputDescriptor> componentOutputDescriptor =
+                        DiscoveryStrategyFactory.get(context, componentService, context.node());
                 ComponentMetadataActualInput actualInput = componentOutputDescriptor.map(descriptor -> {
                     String description = descriptor.getDescription();
                     MetadataTypeDescriptor outputAttributes = attributes(descriptor);

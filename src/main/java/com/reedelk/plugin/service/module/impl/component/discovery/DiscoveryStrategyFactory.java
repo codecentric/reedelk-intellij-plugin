@@ -37,29 +37,50 @@ public class DiscoveryStrategyFactory {
         DISCOVERY = Collections.unmodifiableMap(tmp);
     }
 
-    public static Optional<ComponentOutputDescriptor> get(ContainerContext context, PlatformComponentServiceImpl componentService) {
-        GraphNode componentGraphNode = context.predecessor();
-        String componentFullyQualifiedName =
-                componentGraphNode.componentData().getFullyQualifiedName();
+    public static Optional<? extends ComponentOutputDescriptor> get(ContainerContext context, PlatformComponentServiceImpl componentService, GraphNode current) {
 
-        Class<? extends DiscoveryStrategy> rendererClazz =
-                DISCOVERY.getOrDefault(componentFullyQualifiedName, GENERIC_DISCOVERY);
-        DiscoveryStrategy strategy = instantiate(rendererClazz, componentService);
-
-        List<GraphNode> predecessors = context.predecessors();
+        List<GraphNode> predecessors = context.predecessors(current);
         if (predecessors.size() == 0) {
-            // TODO: First node.
-            return Optional.empty();
+            // If it is the first element, then the input is the last node(s).
+            List<GraphNode> graphNodes = context.endNodes();
+            if (graphNodes.size() == 1) {
+                GraphNode predecessor = graphNodes.get(0);
+                GraphNode componentGraphNode = context.predecessor();
+                String fullyQualifiedName =
+                        componentGraphNode.componentData().getFullyQualifiedName();
+                DiscoveryStrategy strategy = get(fullyQualifiedName, componentService);
+                return strategy.compute(context, predecessor);
+
+            } else {
+                // The last node is the end of scope.
+                return context.joiningScope()
+                        .flatMap(scopedGraphNode -> {
+                            String fullyQualifiedName = scopedGraphNode.componentData().getFullyQualifiedName();
+                            return get(fullyQualifiedName, componentService).compute(context, predecessors);
+                        });
+            }
+
         } else if (predecessors.size() == 1) {
             GraphNode predecessor = predecessors.get(0);
+            GraphNode componentGraphNode = context.predecessor();
+            String fullyQualifiedName =
+                    componentGraphNode.componentData().getFullyQualifiedName();
+            DiscoveryStrategy strategy = get(fullyQualifiedName, componentService);
             return strategy.compute(context, predecessor);
+
         } else {
-            // More than one
-            // Find scope node
-            // Use FindJoiningScope.of(graph, node);
-            // The joining scope of the predecessors determines the type of output.
-            return Optional.empty();
+            return context.joiningScope()
+                    .flatMap(scopedGraphNode -> {
+                        String fullyQualifiedName = scopedGraphNode.componentData().getFullyQualifiedName();
+                        return get(fullyQualifiedName, componentService).compute(context, predecessors);
+                    });
         }
+    }
+
+    private static DiscoveryStrategy get(String componentFullyQualifiedName, PlatformComponentServiceImpl componentService) {
+        Class<? extends DiscoveryStrategy> rendererClazz =
+                DISCOVERY.getOrDefault(componentFullyQualifiedName, GENERIC_DISCOVERY);
+        return instantiate(rendererClazz, componentService);
     }
 
     private static DiscoveryStrategy instantiate(Class<? extends DiscoveryStrategy> discoveryClazz, PlatformComponentServiceImpl componentService) {

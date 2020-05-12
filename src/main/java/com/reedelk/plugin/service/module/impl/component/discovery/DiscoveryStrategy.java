@@ -9,9 +9,9 @@ import java.util.Optional;
 
 public interface DiscoveryStrategy {
 
-    Optional<ComponentOutputDescriptor> compute(ContainerContext context, GraphNode predecessor);
+    Optional<? extends ComponentOutputDescriptor> compute(ContainerContext context, GraphNode predecessor);
 
-    default Optional<ComponentOutputDescriptor> compute(ContainerContext context, Collection<GraphNode> predecessors) {
+    default Optional<? extends ComponentOutputDescriptor> compute(ContainerContext context, Collection<GraphNode> predecessors) {
         throw new UnsupportedOperationException();
     }
 }

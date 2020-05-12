@@ -2,7 +2,6 @@ package com.reedelk.plugin.service.module.impl.component;
 
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.ModuleDescriptor;
-import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
@@ -43,21 +42,17 @@ public class PlatformCompletionServiceImpl implements PlatformModuleService {
 
     private final CompletionFinder completionFinder;
     private final OnCompletionEvent onCompletionEvent;
-    private final PlatformComponentServiceImpl componentTracker;
-    private final PlatformComponentMetadataServiceImpl componentIOService;
+    private final PlatformComponentMetadataServiceImpl componentMetadataService;
 
     public PlatformCompletionServiceImpl(Module module, PlatformComponentServiceImpl componentTracker) {
-        this.componentTracker = componentTracker;
         this.completionFinder = new CompletionFinder(typesMap);
-        this.componentIOService = new PlatformComponentMetadataServiceImpl(module, completionFinder, typesMap, componentTracker);
+        this.componentMetadataService = new PlatformComponentMetadataServiceImpl(module, completionFinder, typesMap, componentTracker);
         this.onCompletionEvent = module.getProject().getMessageBus().syncPublisher(Topics.COMPLETION_EVENT_TOPIC);
     }
 
     @Override
-    public Collection<Suggestion> suggestionsOf(String inputFullyQualifiedName, String componentPropertyPath, String[] tokens) {
-        ComponentDescriptor inputComponentDescriptor = componentTracker.componentDescriptorFrom(inputFullyQualifiedName);
-        ComponentOutputDescriptor previousComponentOutput =
-                inputComponentDescriptor == null ? null : inputComponentDescriptor.getOutput();
+    public Collection<Suggestion> suggestionsOf(ContainerContext context, String componentPropertyPath, String[] tokens) {
+        ComponentOutputDescriptor previousComponentOutput = componentMetadataService.outputDescriptorOf(context);
 
         // A suggestion for a property is computed as follows:
         // Get signature for component property path from either flow control, maven modules or current module.
@@ -74,13 +69,13 @@ public class PlatformCompletionServiceImpl implements PlatformModuleService {
     }
 
     @Override
-    public Collection<Suggestion> variablesOf(String inputFullyQualifiedName, String componentPropertyPath) {
-        return suggestionsOf(inputFullyQualifiedName, componentPropertyPath, new String[]{StringUtils.EMPTY});
+    public Collection<Suggestion> variablesOf(ContainerContext context, String componentPropertyPath) {
+        return suggestionsOf(context, componentPropertyPath, new String[]{StringUtils.EMPTY});
     }
 
     @Override
     public void componentMetadataOf(ContainerContext context) {
-        componentIOService.componentMetadataOf(context);
+        componentMetadataService.componentMetadataOf(context);
     }
 
     void fireCompletionsUpdatedEvent() {
