@@ -14,7 +14,6 @@ public class ScriptFunctionDefinitionBuilder {
     private ScriptFunctionDefinitionBuilder() {
     }
 
-    // TODO: Fixme
     public static String from(String scriptFunctionName, ScriptSignatureDescriptor signatureDefinition) {
         List<String> arguments = signatureDefinition.getArguments()
                 .stream()

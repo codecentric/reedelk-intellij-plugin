@@ -47,8 +47,8 @@ public class FlowDesignerEditorProvider implements FileEditorProvider, DumbAware
     @NotNull
     @Override
     public String getEditorTypeId() {
-        return "esb-flow-designer";
-    } // TODO: Esb flow designer?
+        return "reedelk-flow-designer";
+    }
 
     @NotNull
     @Override

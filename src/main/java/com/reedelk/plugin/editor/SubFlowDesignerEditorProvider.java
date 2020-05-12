@@ -47,7 +47,7 @@ public class SubFlowDesignerEditorProvider implements FileEditorProvider, DumbAw
     @NotNull
     @Override
     public String getEditorTypeId() {
-        return "esb-subflow-designer";
+        return "reedelk-subflow-designer";
     }
 
     @NotNull
