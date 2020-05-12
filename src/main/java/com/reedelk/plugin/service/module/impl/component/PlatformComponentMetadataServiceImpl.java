@@ -60,6 +60,7 @@ public class PlatformComponentMetadataServiceImpl implements PlatformModuleServi
 
                 Optional<? extends ComponentOutputDescriptor> componentOutputDescriptor =
                         DiscoveryStrategyFactory.get(context, componentService, context.node());
+
                 ComponentMetadataActualInput actualInput = componentOutputDescriptor.map(descriptor -> {
                     String description = descriptor.getDescription();
                     MetadataTypeDescriptor outputAttributes = attributes(descriptor);

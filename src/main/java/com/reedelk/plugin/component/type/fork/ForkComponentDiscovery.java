@@ -23,8 +23,7 @@ public class ForkComponentDiscovery extends GenericComponentDiscovery {
 
     @Override
     public Optional<? extends ComponentOutputDescriptor> compute(ContainerContext context, GraphNode predecessor) {
-        GraphNode predecessorOfFork = context.predecessor(predecessor);
-        return DiscoveryStrategyFactory.get(context, componentService, predecessorOfFork);
+        return DiscoveryStrategyFactory.get(context, componentService, predecessor);
     }
 
     @Override

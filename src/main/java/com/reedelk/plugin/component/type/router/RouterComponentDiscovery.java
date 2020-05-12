@@ -20,8 +20,7 @@ public class RouterComponentDiscovery extends GenericComponentDiscovery {
 
     @Override
     public Optional<? extends ComponentOutputDescriptor> compute(ContainerContext context, GraphNode predecessor) {
-        GraphNode predecessorOfRouter = context.predecessor(predecessor);
-        return DiscoveryStrategyFactory.get(context, componentService, predecessorOfRouter);
+        return DiscoveryStrategyFactory.get(context, componentService, predecessor);
     }
 
     @Override

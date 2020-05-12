@@ -60,11 +60,13 @@ public class DiscoveryStrategyFactory {
                         });
             }
 
+            // It is wrong because it might be a joining scope, so first check
+            // if it is a joining scope, then decide what to do according to the number
+            // of predecessors.
         } else if (predecessors.size() == 1) {
             GraphNode predecessor = predecessors.get(0);
-            GraphNode componentGraphNode = context.predecessor();
             String fullyQualifiedName =
-                    componentGraphNode.componentData().getFullyQualifiedName();
+                    predecessor.componentData().getFullyQualifiedName();
             DiscoveryStrategy strategy = get(fullyQualifiedName, componentService);
             return strategy.compute(context, predecessor);
 
