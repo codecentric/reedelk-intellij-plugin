@@ -31,16 +31,19 @@ public class ForEachComponentDiscovery extends AbstractDiscoveryStrategy {
 
         Optional<? extends ComponentOutputDescriptor> componentOutputDescriptor = DiscoveryStrategyFactory.get(context, module, componentService, predecessor, typeAndAndTries);
         if (componentOutputDescriptor.isPresent()) {
-            List<String> payload = componentOutputDescriptor.get().getPayload();
+            ComponentOutputDescriptor previousComponentOutput = componentOutputDescriptor.get();
+            List<String> payload = previousComponentOutput.getPayload();
             if (payload != null && payload.size() == 1) {
                 String precedingPayloadType = payload.get(0);
                 Trie orDefault = typeAndAndTries.getOrDefault(precedingPayloadType, Default.UNKNOWN);
+                ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
+                descriptor.setAttributes(previousComponentOutput.getAttributes());
                 if (StringUtils.isNotBlank(orDefault.listItemType())) {
-                    ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();
                     descriptor.setPayload(Collections.singletonList(orDefault.listItemType()));
-                    descriptor.setAttributes(MessageAttributes.class.getName());
-                    return Optional.of(descriptor);
+                } else {
+                    descriptor.setPayload(Collections.singletonList(precedingPayloadType));
                 }
+                return Optional.of(descriptor);
             }
         }
 
