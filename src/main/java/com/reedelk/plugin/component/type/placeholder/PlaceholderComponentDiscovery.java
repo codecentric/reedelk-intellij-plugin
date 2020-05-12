@@ -1,5 +1,6 @@
 package com.reedelk.plugin.component.type.placeholder;
 
+import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.component.type.generic.GenericComponentDiscovery;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
@@ -10,8 +11,8 @@ import java.util.Optional;
 
 public class PlaceholderComponentDiscovery extends GenericComponentDiscovery {
 
-    public PlaceholderComponentDiscovery(PlatformComponentServiceImpl componentService) {
-        super(componentService);
+    public PlaceholderComponentDiscovery(Module module, PlatformComponentServiceImpl componentService) {
+        super(module, componentService);
     }
 
     @Override

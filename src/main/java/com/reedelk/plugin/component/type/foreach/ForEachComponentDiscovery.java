@@ -1,5 +1,6 @@
 package com.reedelk.plugin.component.type.foreach;
 
+import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentType;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
@@ -16,8 +17,8 @@ import java.util.Optional;
 
 public class ForEachComponentDiscovery extends AbstractDiscoveryStrategy {
 
-    public ForEachComponentDiscovery(PlatformComponentServiceImpl componentService) {
-        super(componentService);
+    public ForEachComponentDiscovery(Module module, PlatformComponentServiceImpl componentService) {
+        super(module, componentService);
     }
 
     @Override

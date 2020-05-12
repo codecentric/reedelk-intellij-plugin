@@ -1,5 +1,6 @@
 package com.reedelk.plugin.component.type.generic;
 
+import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
@@ -14,8 +15,8 @@ import java.util.Optional;
 
 public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
 
-    public GenericComponentDiscovery(PlatformComponentServiceImpl componentService) {
-        super(componentService);
+    public GenericComponentDiscovery(Module module, PlatformComponentServiceImpl componentService) {
+        super(module, componentService);
     }
 
     @Override

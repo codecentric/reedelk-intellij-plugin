@@ -40,7 +40,7 @@ public class SubflowServiceImpl implements SubflowService {
             Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
             if (document != null) {
                 String json = document.getText();
-                SubflowMetadata metadata = createMetadata(json);
+                SubflowMetadata metadata = createMetadata(json, virtualFile.getUrl());
                 return Optional.of(metadata);
             }
         } catch (Exception e) {
@@ -49,10 +49,10 @@ public class SubflowServiceImpl implements SubflowService {
         return Optional.empty();
     }
 
-    private SubflowMetadata createMetadata(String json) {
+    private SubflowMetadata createMetadata(String json, String fileURL) {
         JSONObject subFlowDefinition = new JSONObject(json);
         String id = Subflow.id(subFlowDefinition);
         String title = Subflow.title(subFlowDefinition);
-        return new SubflowMetadata(id, title);
+        return new SubflowMetadata(id, title, fileURL);
     }
 }

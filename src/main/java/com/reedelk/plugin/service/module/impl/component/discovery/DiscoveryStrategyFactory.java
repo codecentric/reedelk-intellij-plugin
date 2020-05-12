@@ -1,5 +1,6 @@
 package com.reedelk.plugin.service.module.impl.component.discovery;
 
+import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.component.type.flowreference.FlowReferenceComponentDiscovery;
 import com.reedelk.plugin.component.type.foreach.ForEachComponentDiscovery;
@@ -37,7 +38,7 @@ public class DiscoveryStrategyFactory {
         DISCOVERY = Collections.unmodifiableMap(tmp);
     }
 
-    public static Optional<? extends ComponentOutputDescriptor> get(ContainerContext context, PlatformComponentServiceImpl componentService, GraphNode current) {
+    public static Optional<? extends ComponentOutputDescriptor> get(ContainerContext context, Module module, PlatformComponentServiceImpl componentService, GraphNode current) {
 
         List<GraphNode> predecessors = context.predecessors(current);
         if (predecessors.size() == 0) {
@@ -48,7 +49,7 @@ public class DiscoveryStrategyFactory {
                 GraphNode componentGraphNode = context.predecessor();
                 String fullyQualifiedName =
                         componentGraphNode.componentData().getFullyQualifiedName();
-                DiscoveryStrategy strategy = get(fullyQualifiedName, componentService);
+                DiscoveryStrategy strategy = get(fullyQualifiedName, module, componentService);
                 return strategy.compute(context, predecessor);
 
             } else {
@@ -56,7 +57,7 @@ public class DiscoveryStrategyFactory {
                 return context.joiningScope()
                         .flatMap(scopedGraphNode -> {
                             String fullyQualifiedName = scopedGraphNode.componentData().getFullyQualifiedName();
-                            return get(fullyQualifiedName, componentService).compute(context, predecessors);
+                            return get(fullyQualifiedName, module, componentService).compute(context, predecessors);
                         });
             }
 
@@ -67,29 +68,29 @@ public class DiscoveryStrategyFactory {
             GraphNode predecessor = predecessors.get(0);
             String fullyQualifiedName =
                     predecessor.componentData().getFullyQualifiedName();
-            DiscoveryStrategy strategy = get(fullyQualifiedName, componentService);
+            DiscoveryStrategy strategy = get(fullyQualifiedName, module, componentService);
             return strategy.compute(context, predecessor);
 
         } else {
             return context.joiningScope()
                     .flatMap(scopedGraphNode -> {
                         String fullyQualifiedName = scopedGraphNode.componentData().getFullyQualifiedName();
-                        return get(fullyQualifiedName, componentService).compute(context, predecessors);
+                        return get(fullyQualifiedName, module, componentService).compute(context, predecessors);
                     });
         }
     }
 
-    private static DiscoveryStrategy get(String componentFullyQualifiedName, PlatformComponentServiceImpl componentService) {
+    private static DiscoveryStrategy get(String componentFullyQualifiedName, Module module, PlatformComponentServiceImpl componentService) {
         Class<? extends DiscoveryStrategy> rendererClazz =
                 DISCOVERY.getOrDefault(componentFullyQualifiedName, GENERIC_DISCOVERY);
-        return instantiate(rendererClazz, componentService);
+        return instantiate(rendererClazz, module, componentService);
     }
 
-    private static DiscoveryStrategy instantiate(Class<? extends DiscoveryStrategy> discoveryClazz, PlatformComponentServiceImpl componentService) {
+    private static DiscoveryStrategy instantiate(Class<? extends DiscoveryStrategy> discoveryClazz, Module module, PlatformComponentServiceImpl componentService) {
         try {
             return discoveryClazz
-                    .getConstructor(PlatformComponentServiceImpl.class)
-                    .newInstance(componentService);
+                    .getConstructor(Module.class, PlatformComponentServiceImpl.class)
+                    .newInstance(module, componentService);
         } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException exception) {
             throw new PluginException("Could not instantiate discovery strategy class=" + discoveryClazz.getName(), exception);
         }

@@ -1,5 +1,6 @@
 package com.reedelk.plugin.component.type.router;
 
+import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.component.type.generic.GenericComponentDiscovery;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
@@ -14,13 +15,13 @@ import java.util.Optional;
 
 public class RouterComponentDiscovery extends GenericComponentDiscovery {
 
-    public RouterComponentDiscovery(PlatformComponentServiceImpl componentService) {
-        super(componentService);
+    public RouterComponentDiscovery(Module module, PlatformComponentServiceImpl componentService) {
+        super(module, componentService);
     }
 
     @Override
     public Optional<? extends ComponentOutputDescriptor> compute(ContainerContext context, GraphNode predecessor) {
-        return DiscoveryStrategyFactory.get(context, componentService, predecessor);
+        return DiscoveryStrategyFactory.get(context, module, componentService, predecessor);
     }
 
     @Override

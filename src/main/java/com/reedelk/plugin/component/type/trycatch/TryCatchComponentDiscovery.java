@@ -1,5 +1,6 @@
 package com.reedelk.plugin.component.type.trycatch;
 
+import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -15,8 +16,8 @@ import java.util.Optional;
 
 public class TryCatchComponentDiscovery extends AbstractDiscoveryStrategy {
 
-    public TryCatchComponentDiscovery(PlatformComponentServiceImpl componentService) {
-        super(componentService);
+    public TryCatchComponentDiscovery(Module module, PlatformComponentServiceImpl componentService) {
+        super(module, componentService);
     }
 
     @Override
@@ -24,7 +25,7 @@ public class TryCatchComponentDiscovery extends AbstractDiscoveryStrategy {
         List<GraphNode> successors = context.successors(predecessor);
         if (successors.get(0).equals(context.node())) {
             // Try branch (we take the one before the try-catch.
-            return DiscoveryStrategyFactory.get(context, componentService, predecessor);
+            return DiscoveryStrategyFactory.get(context, module, componentService, predecessor);
         } else {
             // We are in the catch
             ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();

@@ -47,7 +47,7 @@ public class PlatformComponentMetadataServiceImpl implements PlatformModuleServi
     }
 
     ComponentOutputDescriptor outputDescriptorOf(ContainerContext context) {
-        return DiscoveryStrategyFactory.get(context, componentService, context.node())
+        return DiscoveryStrategyFactory.get(context, module, componentService, context.node())
                 .orElse(null);
     }
 
@@ -59,7 +59,7 @@ public class PlatformComponentMetadataServiceImpl implements PlatformModuleServi
             try {
 
                 Optional<? extends ComponentOutputDescriptor> componentOutputDescriptor =
-                        DiscoveryStrategyFactory.get(context, componentService, context.node());
+                        DiscoveryStrategyFactory.get(context, module, componentService, context.node());
 
                 ComponentMetadataActualInput actualInput = componentOutputDescriptor.map(descriptor -> {
                     String description = descriptor.getDescription();

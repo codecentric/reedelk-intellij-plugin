@@ -1,5 +1,6 @@
 package com.reedelk.plugin.component.type.unknown;
 
+import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.graph.node.GraphNode;
@@ -10,8 +11,8 @@ import java.util.Optional;
 
 public class UnknownComponentDiscovery extends AbstractDiscoveryStrategy {
 
-    public UnknownComponentDiscovery(PlatformComponentServiceImpl componentService) {
-        super(componentService);
+    public UnknownComponentDiscovery(Module module, PlatformComponentServiceImpl componentService) {
+        super(module, componentService);
     }
 
     @Override
