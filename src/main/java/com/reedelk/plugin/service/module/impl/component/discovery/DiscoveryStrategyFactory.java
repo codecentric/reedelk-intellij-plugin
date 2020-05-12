@@ -19,6 +19,7 @@ import com.reedelk.plugin.graph.node.ScopedGraphNode;
 import com.reedelk.plugin.service.module.impl.component.PlatformComponentService;
 import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
 import com.reedelk.runtime.component.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -43,26 +44,32 @@ public class DiscoveryStrategyFactory {
         DISCOVERY = Collections.unmodifiableMap(tmp);
     }
 
-    public static Optional<? extends ComponentOutputDescriptor> get(Module module,
-                                                                    PlatformComponentService componentService,
-                                                                    TrieMapWrapper typeAndAndTries,
-                                                                    ContainerContext context,
-                                                                    GraphNode nodeToFindInputMessage) {
+    public static Optional<? extends ComponentOutputDescriptor> get(@NotNull Module module,
+                                                                    @NotNull PlatformComponentService componentService,
+                                                                    @NotNull TrieMapWrapper typeAndAndTries,
+                                                                    @NotNull ContainerContext context,
+                                                                    @NotNull GraphNode nodeToFindInputMessage) {
 
         List<GraphNode> predecessors = context.predecessors(nodeToFindInputMessage);
-        if (predecessors.size() == 0) return Optional.empty(); // First node of the flow/subflow (no input here).
+        if (predecessors.size() == 0) {
+            // First node of the flow/subflow (no input here).
+            return Optional.empty();
+        }
 
-        Optional<ScopedGraphNode> maybeScopedGraphNode = context.joiningScope(nodeToFindInputMessage);
+        Optional<ScopedGraphNode> maybeScopedGraphNode = context.joiningScopeOf(nodeToFindInputMessage);
         if (maybeScopedGraphNode.isPresent()) {
-            // If it is a joining scope, then:
-            String fullyQualifiedScopeName = maybeScopedGraphNode.get().componentData().getFullyQualifiedName();
-            DiscoveryStrategy strategy = get(fullyQualifiedScopeName, module, componentService, typeAndAndTries);
+            // The current node to find input message is joining a scope.
+            // We must use the strategy with multiple predecessor for the scope node it is joining.
+            String fullyQualifiedScopeNodeName = maybeScopedGraphNode.get().componentData().getFullyQualifiedName();
+            DiscoveryStrategy strategy = get(fullyQualifiedScopeNodeName, module, componentService, typeAndAndTries);
             return strategy.compute(context, predecessors);
 
         } else {
-            // The current node does not have predecessors belonging to a scope.
+            // The current node does not join any scope, therefore
+            // its predecessors must be at most 1.
             checkState(predecessors.size() == 1,
                     "Found [" + predecessors.size() +"] predecessors but expected only 1.");
+
             GraphNode predecessor = predecessors.get(0);
             String predecessorFullyQualifiedName = predecessor.componentData().getFullyQualifiedName();
             DiscoveryStrategy strategy = get(predecessorFullyQualifiedName, module, componentService, typeAndAndTries);

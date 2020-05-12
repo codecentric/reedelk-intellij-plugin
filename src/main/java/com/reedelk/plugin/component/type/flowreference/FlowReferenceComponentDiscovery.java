@@ -104,7 +104,7 @@ public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
         }
 
         @Override
-        public Optional<ScopedGraphNode> joiningScope(GraphNode node) {
+        public Optional<ScopedGraphNode> joiningScopeOf(GraphNode target) {
             List<GraphNode> graphNodes = subflowGraph.endNodes();
             if (graphNodes.size() > 1) {
                 Stack<ScopedGraphNode> of = FindScopes.of(subflowGraph, graphNodes.get(1));
@@ -114,37 +114,21 @@ public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
                 }
                 return Optional.of(last);
             } else {
-                return FindJoiningScope.of(subflowGraph, node);
+                return FindJoiningScope.of(subflowGraph, target);
             }
         }
 
         @Override
-        public List<GraphNode> successors(GraphNode node) {
-            return subflowGraph.successors(node);
+        public List<GraphNode> successors(GraphNode target) {
+            return subflowGraph.successors(target);
         }
 
         @Override
-        public GraphNode predecessor() {
-            List<GraphNode> predecessors = subflowGraph.endNodes();
-            return predecessors.stream().findFirst().orElse(null);
-        }
-
-        @Override
-        public List<GraphNode> endNodes() {
-            return subflowGraph.endNodes();
-        }
-
-        @Override
-        public List<GraphNode> predecessors() {
-            return subflowGraph.endNodes();
-        }
-
-        @Override
-        public List<GraphNode> predecessors(GraphNode node) {
-            if (node == node()) {
+        public List<GraphNode> predecessors(GraphNode target) {
+            if (target == node()) {
                 return subflowGraph.endNodes();
             } else {
-                return subflowGraph.predecessors(node);
+                return subflowGraph.predecessors(target);
             }
         }
 

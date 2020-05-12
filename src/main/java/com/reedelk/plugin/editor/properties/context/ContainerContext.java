@@ -48,31 +48,17 @@ public class ContainerContext implements Disposable {
         return node;
     }
 
-    public Optional<ScopedGraphNode> joiningScope(GraphNode node) {
+    public Optional<ScopedGraphNode> joiningScopeOf(GraphNode target) {
         FlowGraph graph = snapshot.getGraphOrThrowIfAbsent();
-        return FindJoiningScope.of(graph, node);
+        return FindJoiningScope.of(graph, target);
     }
 
-    public List<GraphNode> successors(GraphNode node) {
-        return snapshot.getGraphOrThrowIfAbsent().successors(node);
+    public List<GraphNode> successors(GraphNode target) {
+        return snapshot.getGraphOrThrowIfAbsent().successors(target);
     }
 
-    // TODO: Review this logic..!!!
-    public GraphNode predecessor() {
-        List<GraphNode> predecessors = snapshot.getGraphOrThrowIfAbsent().predecessors(node);
-        return predecessors.stream().findFirst().orElse(null);
-    }
-
-    public List<GraphNode> endNodes() {
-        return snapshot.getGraphOrThrowIfAbsent().endNodes();
-    }
-
-    public List<GraphNode> predecessors() {
-        return snapshot.getGraphOrThrowIfAbsent().predecessors(node);
-    }
-
-    public List<GraphNode> predecessors(GraphNode node) {
-        return snapshot.getGraphOrThrowIfAbsent().predecessors(node);
+    public List<GraphNode> predecessors(GraphNode target) {
+        return snapshot.getGraphOrThrowIfAbsent().predecessors(target);
     }
 
     public GraphNode predecessor(GraphNode graphNode) {
