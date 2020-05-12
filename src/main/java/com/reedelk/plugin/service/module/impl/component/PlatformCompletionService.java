@@ -51,7 +51,7 @@ public class PlatformCompletionService implements PlatformModuleService {
 
     @Override
     public Collection<Suggestion> suggestionsOf(ComponentContext context, String componentPropertyPath, String[] tokens) {
-        ComponentOutputDescriptor previousComponentOutput = componentMetadataService.outputDescriptorOf(context);
+        ComponentOutputDescriptor previousComponentOutput = componentMetadataService.componentOutputOf(context);
         // A suggestion for a property is computed as follows:
         // Get signature for component property path from either flow control, maven modules or current module.
         // if does not exists use the default.

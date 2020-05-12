@@ -21,7 +21,6 @@ import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.PlatformComponentService;
 import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
 import com.reedelk.plugin.service.module.impl.component.metadata.AbstractDiscoveryStrategy;
-import com.reedelk.plugin.service.module.impl.component.metadata.DiscoveryStrategyFactory;
 import com.reedelk.plugin.service.module.impl.subflow.SubflowMetadata;
 import com.reedelk.runtime.commons.JsonParser;
 
@@ -36,6 +35,7 @@ public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
         super(module, componentService, typeAndAndTries);
     }
 
+    // TODO: Fixme
     @Override
     public Optional<? extends ComponentOutputDescriptor> compute(ComponentContext context, GraphNode nodeWeWantOutputFrom) {
         // List
@@ -46,23 +46,21 @@ public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
             public void run() {
 
                 try {
-                SubflowMetadata subflowMetadata = SubflowService.getInstance(module)
-                        .listSubflows()
-                        .stream()
-                        .filter(subflowMetadata1 -> {
-                            String flowReference = nodeWeWantOutputFrom.componentData().get(JsonParser.FlowReference.ref());
-                            return subflowMetadata1.getId().equals(flowReference);
-                        }).findFirst().orElse(null);
+                    SubflowMetadata subflowMetadata = SubflowService.getInstance(module)
+                            .listSubflows()
+                            .stream()
+                            .filter(subflowMetadata1 -> {
+                                String flowReference = nodeWeWantOutputFrom.componentData().get(JsonParser.FlowReference.ref());
+                                return subflowMetadata1.getId().equals(flowReference);
+                            }).findFirst().orElse(null);
 
-                // TODO: Subflow metadata might be null
-                if (subflowMetadata == null) return;
+                    // TODO: Subflow metadata might be null
+                    if (subflowMetadata == null) return;
 
-                String filePath = subflowMetadata.getFileURL();
-                // TODO: File path might be null!!
-                VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(filePath);
-                Document document = FileDocumentManager.getInstance().getDocument(fileByUrl);
-
-
+                    String filePath = subflowMetadata.getFileURL();
+                    // TODO: File path might be null!!
+                    VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(filePath);
+                    Document document = FileDocumentManager.getInstance().getDocument(fileByUrl);
                     deserialize[0] = SubFlowDeserializer.deserialize(module, document.getText(), new FlowGraphProvider());
                 } catch (DeserializationError deserializationError) {
                     deserializationError.printStackTrace();
@@ -74,11 +72,11 @@ public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
                 .submit(AppExecutorUtil.getAppExecutorService());
 
         try {
-            latch.await();
+            latch.await(); // TODO: Await with timeout here!
 
             if (deserialize[0] != null) {
                 SubflowGraphAwareContext newContext = new SubflowGraphAwareContext(deserialize[0], nodeWeWantOutputFrom);
-                return DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, newContext, nodeWeWantOutputFrom);
+                return discover(newContext, nodeWeWantOutputFrom);
             } else {
                 return Optional.empty();
             }
@@ -100,7 +98,7 @@ public class FlowReferenceComponentDiscovery extends AbstractDiscoveryStrategy {
             if (graphNodes.size() > 1) {
                 Stack<ScopedGraphNode> of = FindScopes.of(graph, graphNodes.get(1));
                 ScopedGraphNode last = of.pop();
-                while(graphNodes.isEmpty()) {
+                while (graphNodes.isEmpty()) {
                     last = of.pop();
                 }
                 return Optional.of(last);

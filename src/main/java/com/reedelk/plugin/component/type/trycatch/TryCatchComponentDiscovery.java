@@ -7,7 +7,6 @@ import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.PlatformComponentService;
 import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
 import com.reedelk.plugin.service.module.impl.component.metadata.AbstractDiscoveryStrategy;
-import com.reedelk.plugin.service.module.impl.component.metadata.DiscoveryStrategyFactory;
 import com.reedelk.runtime.api.message.MessageAttributes;
 
 import java.util.Collection;
@@ -26,7 +25,7 @@ public class TryCatchComponentDiscovery extends AbstractDiscoveryStrategy {
         List<GraphNode> successors = context.successors(nodeWeWantOutputFrom);
         if (successors.get(0).equals(context.node())) {
             // Try branch (we take the one before the try-catch.
-            return DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, context, nodeWeWantOutputFrom);
+            return discover(context, nodeWeWantOutputFrom);
         } else {
             // We are in the catch
             ComponentOutputDescriptor descriptor = new ComponentOutputDescriptor();

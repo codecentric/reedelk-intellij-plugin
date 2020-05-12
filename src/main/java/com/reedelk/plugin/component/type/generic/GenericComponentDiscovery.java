@@ -9,7 +9,6 @@ import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.PlatformComponentService;
 import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
 import com.reedelk.plugin.service.module.impl.component.metadata.AbstractDiscoveryStrategy;
-import com.reedelk.plugin.service.module.impl.component.metadata.DiscoveryStrategyFactory;
 import com.reedelk.runtime.api.annotation.ComponentOutput;
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.message.MessageAttributes;
@@ -54,7 +53,7 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
         if (currentOutput.getPayload().contains(ComponentOutput.PreviousComponent.class.getName())) {
             // We need to recursively go back in the graph if the user specified that the payload
             // type must be taken from the previous component.
-            return DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, context, currentNode)
+            return discover(context, currentNode)
                     .map(descriptor -> Pair.create(descriptor.getPayload(), descriptor.getDescription()))
                     .orElse(Pair.create(singletonList(Object.class.getName()), StringUtils.EMPTY));
         } else {
@@ -66,7 +65,7 @@ public class GenericComponentDiscovery extends AbstractDiscoveryStrategy {
         if (ComponentOutput.PreviousComponent.class.getName().equals(currentOutput.getAttributes())) {
             // We need to recursively go back in the graph if the user specified that the attributes
             // type must be taken from the previous component.
-            return DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, context, currentNode)
+            return discover(context, currentNode)
                     .map(ComponentOutputDescriptor::getAttributes)
                     .orElse(MessageAttributes.class.getName());
         } else {

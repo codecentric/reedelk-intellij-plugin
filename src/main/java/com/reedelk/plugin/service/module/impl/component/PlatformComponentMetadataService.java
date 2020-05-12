@@ -44,7 +44,7 @@ public class PlatformComponentMetadataService implements PlatformModuleService {
         onComponentMetadata = module.getProject().getMessageBus().syncPublisher(Topics.ON_COMPONENT_IO);
     }
 
-    ComponentOutputDescriptor outputDescriptorOf(ComponentContext context) {
+    ComponentOutputDescriptor componentOutputOf(ComponentContext context) {
         return DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, context, context.node())
                 .orElse(null);
     }

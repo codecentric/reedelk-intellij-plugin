@@ -7,7 +7,6 @@ import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
 import com.reedelk.plugin.service.module.impl.component.PlatformComponentService;
 import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
-import com.reedelk.plugin.service.module.impl.component.metadata.DiscoveryStrategyFactory;
 import com.reedelk.runtime.api.message.MessageAttributes;
 
 import java.util.Collection;
@@ -22,7 +21,7 @@ public class RouterComponentDiscovery extends GenericComponentDiscovery {
 
     @Override
     public Optional<? extends ComponentOutputDescriptor> compute(ComponentContext context, GraphNode currentNode) {
-        return DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, context, currentNode);
+        return discover(context, currentNode);
     }
 
     @Override
