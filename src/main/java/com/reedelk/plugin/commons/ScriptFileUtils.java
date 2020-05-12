@@ -14,12 +14,13 @@ public class ScriptFileUtils {
     private ScriptFileUtils() {
     }
 
-    public static Document createEmptyInMemoryDocument() {
-        return createInMemoryDocumentWithContent(StringUtils.EMPTY);
+    public static Document createInMemoryDocument(String componentPropertyPath) {
+        return createInMemoryDocument(componentPropertyPath, StringUtils.EMPTY);
     }
 
-    public static Document createInMemoryDocumentWithContent(String content) {
-        VirtualFile myVirtualFile = new LightVirtualFile(SCRIPT_TMP_FILE_NAME, SCRIPT_FILE_TYPE, content);
+    public static Document createInMemoryDocument(String componentPropertyPath, String content) {
+        VirtualFile myVirtualFile =
+                new LightVirtualFile(String.format(SCRIPT_TMP_FILE_NAME, componentPropertyPath), SCRIPT_FILE_TYPE, content);
         return FileDocumentManager.getInstance().getDocument(myVirtualFile);
     }
 }

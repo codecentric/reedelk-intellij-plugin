@@ -11,7 +11,7 @@ public class DefaultConstants {
     }
 
     public static final FileType SCRIPT_FILE_TYPE = FileTypeManager.getInstance().getFileTypeByExtension("reedelk");
-    public static final String SCRIPT_TMP_FILE_NAME = "tmp." + SCRIPT_FILE_TYPE.getDefaultExtension();
+    public static final String SCRIPT_TMP_FILE_NAME = "%s." + SCRIPT_FILE_TYPE.getDefaultExtension();
 
     public static final String PROJECT_SOURCES_FOLDER = Paths.get("src").toString();
     public static final String PROJECT_RESOURCES_FOLDER = Paths.get("src", "main", "resources").toString();

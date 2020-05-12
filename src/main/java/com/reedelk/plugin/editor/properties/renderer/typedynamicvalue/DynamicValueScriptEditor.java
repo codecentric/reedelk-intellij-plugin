@@ -19,7 +19,7 @@ public class DynamicValueScriptEditor extends ScriptEditor {
     public DynamicValueScriptEditor(Module module,
                                     String scriptPropertyPath,
                                     ContainerContext context) {
-        super(module, ScriptFileUtils.createEmptyInMemoryDocument(), scriptPropertyPath, context);
+        super(module, ScriptFileUtils.createInMemoryDocument(scriptPropertyPath), scriptPropertyPath, context);
     }
 
     @Override
