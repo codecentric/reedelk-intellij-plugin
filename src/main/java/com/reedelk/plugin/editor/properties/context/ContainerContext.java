@@ -53,6 +53,10 @@ public class ContainerContext implements Disposable {
         return FindJoiningScope.of(graph, node);
     }
 
+    public List<GraphNode> successors(GraphNode node) {
+        return snapshot.getGraphOrThrowIfAbsent().successors(node);
+    }
+
     // TODO: Review this logic..!!!
     public GraphNode predecessor() {
         List<GraphNode> predecessors = snapshot.getGraphOrThrowIfAbsent().predecessors(node);
