@@ -33,9 +33,9 @@ class ScriptEditorContextPanel extends DisposablePanel implements PlatformModule
 
     private final transient Module module;
     private final transient MessageBusConnection connect;
+    private final String componentPropertyPath;
     private final DisposablePanel panelVariables;
     private final ComponentContext componentContext;
-    private final  String componentPropertyPath;
 
     ScriptEditorContextPanel(@NotNull Module module, @NotNull ContainerContext context) {
         this.module = module;
@@ -105,5 +105,4 @@ class ScriptEditorContextPanel extends DisposablePanel implements PlatformModule
     private static final Border COMPOUND_BORDER = new CompoundBorder(
             customLine(Colors.SCRIPT_EDITOR_CONTEXT_PANEL_BORDER_BOTTOM, 0, 0, 1, 0),
             empty(5));
-
 }
