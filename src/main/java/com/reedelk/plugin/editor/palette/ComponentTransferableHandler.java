@@ -36,6 +36,8 @@ public class ComponentTransferableHandler extends TransferHandler {
                 return new ComponentDescriptorTransferable(paletteComponent);
             }
         }
+        // We must reset the image, otherwise the last one is cached and used in the DnD.
+        setDragImage(null);
         return EMPTY;
     }
 
