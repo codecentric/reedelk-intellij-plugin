@@ -29,6 +29,7 @@ public class Default {
 
     public static class Types {
 
+        // TODO: Add lists, maps and so on ...
         public static void register(Map<String, Trie> trieMap) {
             // Init async
             Trie trie = new TrieDefault();
