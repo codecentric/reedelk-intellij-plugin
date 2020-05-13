@@ -3,12 +3,17 @@ package com.reedelk.plugin.editor.properties.commons;
 import com.intellij.openapi.Disposable;
 import com.intellij.ui.components.JBScrollPane;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class DisposableScrollPane extends JBScrollPane implements Disposable {
 
     public DisposableScrollPane(int verticalScrollbarAsNeeded, int horizontalScrollbarNever) {
         super(verticalScrollbarAsNeeded, horizontalScrollbarNever);
+    }
+
+    public DisposableScrollPane(JComponent component) {
+        super(component);
     }
 
     public DisposableScrollPane() {

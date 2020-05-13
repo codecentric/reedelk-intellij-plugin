@@ -1,11 +1,11 @@
 package com.reedelk.plugin.service.module.impl.component;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.ModuleDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.module.descriptor.model.property.ObjectDescriptor;
 import com.reedelk.module.descriptor.model.property.PropertyDescriptor;
-import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.editor.properties.context.ComponentPropertyPath;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.completion.*;
@@ -18,8 +18,11 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
+import static java.lang.String.format;
 
 class PlatformCompletionService implements PlatformModuleService {
+
+    private static final Logger LOG = Logger.getInstance(PlatformCompletionService.class);
 
     // GLOBAL MODULE TYPES MAPs
     private final Trie flowControlModuleGlobalTypes = new TrieDefault();
@@ -41,13 +44,11 @@ class PlatformCompletionService implements PlatformModuleService {
     private final Map<String, Trie> currentModuleSignatureTypes = new HashMap<>();
 
     private final CompletionFinder completionFinder;
-    private final OnCompletionEvent onCompletionEvent;
     private final PlatformComponentMetadataService componentMetadataService;
 
     public PlatformCompletionService(Module module, PlatformComponentService componentTracker) {
         this.completionFinder = new CompletionFinder(typesMap);
         this.componentMetadataService = new PlatformComponentMetadataService(module, completionFinder, typesMap, componentTracker);
-        this.onCompletionEvent = module.getProject().getMessageBus().syncPublisher(Topics.COMPLETION_EVENT_TOPIC);
     }
 
     @Override
@@ -77,10 +78,6 @@ class PlatformCompletionService implements PlatformModuleService {
         componentMetadataService.componentMetadataOf(context);
     }
 
-    void fireCompletionsUpdatedEvent() {
-        onCompletionEvent.onCompletionUpdated();
-    }
-
     public void clearMaven() {
         mavenModulesSignatureTypes.clear();
         mavenModulesGlobalTypes.clear();
@@ -94,28 +91,35 @@ class PlatformCompletionService implements PlatformModuleService {
     }
 
     public void registerCurrent(ModuleDescriptor moduleDescriptor) {
-        processModuleDescriptor(moduleDescriptor, currentModuleGlobalTypes, currentModuleTypes, currentModuleSignatureTypes);
-        fireCompletionsUpdatedEvent();
+        registerModuleDescriptor(moduleDescriptor,
+                currentModuleGlobalTypes,
+                currentModuleTypes,
+                currentModuleSignatureTypes);
     }
 
     public void registerMaven(ModuleDescriptor moduleDescriptor) {
-        processModuleDescriptor(moduleDescriptor, mavenModulesGlobalTypes, mavenModulesTypes, mavenModulesSignatureTypes);
-        fireCompletionsUpdatedEvent();
+        registerModuleDescriptor(moduleDescriptor,
+                mavenModulesGlobalTypes,
+                mavenModulesTypes,
+                mavenModulesSignatureTypes);
     }
 
     public void registerFlowControl(ModuleDescriptor moduleDescriptor) {
-        processModuleDescriptor(moduleDescriptor, flowControlModuleGlobalTypes, flowControlTypes, flowControlSignatureTypes);
+        registerModuleDescriptor(moduleDescriptor,
+                flowControlModuleGlobalTypes,
+                flowControlTypes,
+                flowControlSignatureTypes);
         // Init core
         Default.Types.register(flowControlTypes);
-        fireCompletionsUpdatedEvent();
     }
 
-    private void processModuleDescriptor(ModuleDescriptor moduleDescriptor, Trie globalTypes, Map<String, Trie> localTypes, Map<String, Trie> signatureTypes) {
+    private void registerModuleDescriptor(ModuleDescriptor moduleDescriptor, Trie globalTypes, Map<String, Trie> localTypes, Map<String, Trie> signatureTypes) {
         moduleDescriptor.getTypes().forEach(type -> {
             try {
                 TrieUtils.populate(globalTypes, localTypes, type);
             } catch (Exception exception) {
-                exception.printStackTrace(); // TODO: Add log
+                String errorMessage = format("Could not populate types for module descriptor=[%s], cause=[%s]", moduleDescriptor.getName(), exception.getMessage());
+                LOG.warn(errorMessage, exception);
             }
         });
 

@@ -42,10 +42,6 @@ public interface PlatformModuleService {
         void onComponentMetadataError(Exception exception);
     }
 
-    interface OnCompletionEvent {
-        void onCompletionUpdated();
-    }
-
     interface OnModuleEvent {
         void onModuleUpdated(Collection<ModuleDTO> modules);
     }

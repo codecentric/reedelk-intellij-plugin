@@ -1,13 +1,10 @@
 package com.reedelk.plugin.editor.properties.renderer.typescript.scriptactions;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
-import com.intellij.ui.components.JBScrollPane;
-import com.intellij.util.messages.MessageBusConnection;
+import com.intellij.ui.components.JBLabel;
 import com.reedelk.plugin.commons.Colors;
-import com.reedelk.plugin.commons.DisposableUtils;
-import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
+import com.reedelk.plugin.editor.properties.commons.DisposableScrollPane;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
@@ -29,58 +26,37 @@ import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 import static javax.swing.BorderFactory.createMatteBorder;
 
-class ScriptEditorContextPanel extends DisposablePanel implements PlatformModuleService.OnCompletionEvent {
+class ScriptEditorContextPanel extends DisposablePanel {
 
     private final transient Module module;
-    private final transient MessageBusConnection connect;
-    private final String componentPropertyPath;
-    private final DisposablePanel panelVariables;
-    private final ComponentContext componentContext;
+    private final transient DisposablePanel panelVariables;
+    private final transient ComponentContext componentContext;
+    private final String scriptPropertyPath;
 
-    ScriptEditorContextPanel(@NotNull Module module, @NotNull ContainerContext context) {
+    ScriptEditorContextPanel(@NotNull Module module, @NotNull String scriptPropertyPath, @NotNull ContainerContext context) {
         this.module = module;
+        this.scriptPropertyPath = scriptPropertyPath;
         this.componentContext = context.componentContext();
-        this.componentPropertyPath = context.componentPropertyPath();
-
-        this.connect = module.getMessageBus().connect();
-        this.connect.subscribe(Topics.COMPLETION_EVENT_TOPIC, this);
 
         this.panelVariables = new DisposablePanel();
         BoxLayout boxLayout = new BoxLayout(panelVariables, BoxLayout.PAGE_AXIS);
         this.panelVariables.setLayout(boxLayout);
         this.panelVariables.setBorder(empty(5));
         suggestions().forEach(suggestion -> panelVariables.add(new ContextVariableLabel(suggestion)));
+        DisposableScrollPane panelVariablesScrollPane = new DisposableScrollPane(panelVariables);
+        panelVariablesScrollPane.setBorder(empty());
 
-        JLabel panelTitle = new JLabel(message("script.editor.context.vars.title"));
-        JPanel panelTitleWrapper = new JPanel();
+        JBLabel panelTitle = new JBLabel(message("script.editor.context.vars.title"));
+        DisposablePanel panelTitleWrapper = new DisposablePanel();
         panelTitleWrapper.setBackground(Colors.SCRIPT_EDITOR_CONTEXT_PANEL_TITLE_BG);
         panelTitleWrapper.setBorder(COMPOUND_BORDER);
         panelTitleWrapper.setLayout(new BorderLayout());
         panelTitleWrapper.add(panelTitle, NORTH);
 
-        JBScrollPane panelVariablesScrollPane = new JBScrollPane(panelVariables);
-        panelVariablesScrollPane.setBorder(empty());
-
-        add(panelTitleWrapper, NORTH);
-        add(panelVariablesScrollPane, CENTER);
         setLayout(new BorderLayout());
         setBorder(MATTE_BORDER);
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
-        DisposableUtils.dispose(connect);
-    }
-
-    @Override
-    public void onCompletionUpdated() {
-        List<Suggestion> suggestions = suggestions();
-        ApplicationManager.getApplication().invokeLater(() -> {
-            panelVariables.removeAll();
-            suggestions.forEach(suggestion -> panelVariables.add(new ContextVariableLabel(suggestion)));
-            panelVariables.repaint();
-        });
+        add(panelTitleWrapper, NORTH);
+        add(panelVariablesScrollPane, CENTER);
     }
 
     static class ContextVariableLabel extends JLabel {
@@ -93,7 +69,7 @@ class ScriptEditorContextPanel extends DisposablePanel implements PlatformModule
 
     private List<Suggestion> suggestions() {
         return PlatformModuleService.getInstance(module)
-                .variablesOf(componentContext, componentPropertyPath)
+                .variablesOf(componentContext, scriptPropertyPath)
                 .stream()
                 .filter(suggestion -> StringUtils.isNotBlank(suggestion.lookupString()))
                 .sorted(Comparator.comparing(Suggestion::lookupString).reversed())

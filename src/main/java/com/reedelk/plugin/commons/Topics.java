@@ -4,7 +4,8 @@ import com.intellij.util.messages.Topic;
 import com.reedelk.plugin.editor.properties.CommitPropertiesListener;
 import com.reedelk.plugin.editor.properties.selection.SelectionChangeListener;
 
-import static com.reedelk.plugin.service.module.PlatformModuleService.*;
+import static com.reedelk.plugin.service.module.PlatformModuleService.OnComponentMetadataEvent;
+import static com.reedelk.plugin.service.module.PlatformModuleService.OnModuleEvent;
 import static com.reedelk.plugin.service.module.impl.configuration.ConfigurationServiceImpl.ConfigChangeListener;
 import static com.reedelk.plugin.service.module.impl.script.ScriptServiceImpl.ScriptResourceChangeListener;
 
@@ -12,9 +13,6 @@ public class Topics {
 
     public static final Topic<ConfigChangeListener> TOPIC_CONFIG_CHANGE =
             new Topic<>("config change events", ConfigChangeListener.class);
-
-    public static final Topic<OnCompletionEvent> COMPLETION_EVENT_TOPIC =
-            Topic.create("completion updated events", OnCompletionEvent.class);
 
     public static final Topic<OnModuleEvent> COMPONENTS_UPDATE_EVENTS =
             Topic.create("component update events", OnModuleEvent.class);

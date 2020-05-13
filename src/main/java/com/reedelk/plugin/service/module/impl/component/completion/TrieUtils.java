@@ -9,14 +9,14 @@ import static com.reedelk.plugin.service.module.impl.component.completion.Sugges
 
 public class TrieUtils {
 
-    public static void populate(Trie global, Map<String, Trie> typeAndTriesMap, TypeDescriptor typeDescriptor) {
+    public static void populate(Trie globalTypes, Map<String, Trie> localTypes, TypeDescriptor typeDescriptor) {
         // Global root type
         if (typeDescriptor.isGlobal()) {
             Suggestion globalTypeProperty = Suggestion.create(PROPERTY)
                     .withLookupString(typeDescriptor.getDisplayName())
                     .withType(typeDescriptor.getType())
                     .build();
-            global.insert(globalTypeProperty);
+            globalTypes.insert(globalTypeProperty);
         }
 
         final Trie typeTrie = new TrieDefault(typeDescriptor.getExtendsType(), typeDescriptor.getListItemType());
@@ -42,6 +42,6 @@ public class TrieUtils {
             typeTrie.insert(propertySuggestion);
         });
 
-        typeAndTriesMap.put(typeDescriptor.getType(), typeTrie);
+        localTypes.put(typeDescriptor.getType(), typeTrie);
     }
 }
