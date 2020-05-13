@@ -32,7 +32,7 @@ import java.util.function.Predicate;
 import static java.awt.BorderLayout.CENTER;
 import static java.util.stream.Collectors.toList;
 
-public class PalettePanel extends JBPanel<PalettePanel> implements PlatformModuleService.ModuleChangeNotifier, FileEditorManagerListener {
+public class PalettePanel extends JBPanel<PalettePanel> implements PlatformModuleService.OnModuleEvent, FileEditorManagerListener {
 
     private final transient Tree tree;
     private final transient Project project;
@@ -66,7 +66,7 @@ public class PalettePanel extends JBPanel<PalettePanel> implements PlatformModul
     }
 
     @Override
-    public void onModuleChange(Collection<ModuleDTO> modules) {
+    public void onModuleUpdated(Collection<ModuleDTO> modules) {
         // We only update the components for this module if and only if
         // the current selected file belongs to the module for which the
         // components have been updated.

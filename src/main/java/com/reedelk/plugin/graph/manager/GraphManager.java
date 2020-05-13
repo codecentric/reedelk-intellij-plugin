@@ -37,7 +37,7 @@ public abstract class GraphManager implements FileEditorManagerListener,
         FileEditorManagerListener.Before,
         SnapshotListener,
         Disposable,
-        PlatformModuleService.ModuleChangeNotifier {
+        PlatformModuleService.OnModuleEvent {
 
     private static final Logger LOG = Logger.getInstance(GraphManager.class);
 
@@ -89,7 +89,7 @@ public abstract class GraphManager implements FileEditorManagerListener,
     }
 
     @Override
-    public void onModuleChange(Collection<ModuleDTO> modules) {
+    public void onModuleUpdated(Collection<ModuleDTO> modules) {
         // When the component list is updated, we MUST deserialize so that
         // unknown components are correctly resolved and visualized in the Designer.
         deserializeDocument();

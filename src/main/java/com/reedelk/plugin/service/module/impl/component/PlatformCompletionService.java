@@ -10,6 +10,7 @@ import com.reedelk.plugin.editor.properties.context.ComponentPropertyPath;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.completion.*;
 import com.reedelk.runtime.api.commons.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -50,7 +51,7 @@ class PlatformCompletionService implements PlatformModuleService {
     }
 
     @Override
-    public Collection<Suggestion> suggestionsOf(ComponentContext context, String componentPropertyPath, String[] tokens) {
+    public Collection<Suggestion> suggestionsOf(@NotNull ComponentContext context, @NotNull String componentPropertyPath, String[] tokens) {
         ComponentOutputDescriptor previousComponentOutput = componentMetadataService.componentOutputOf(context);
         // A suggestion for a property is computed as follows:
         // Get signature for component property path from either flow control, maven modules or current module.
@@ -67,17 +68,17 @@ class PlatformCompletionService implements PlatformModuleService {
     }
 
     @Override
-    public Collection<Suggestion> variablesOf(ComponentContext context, String componentPropertyPath) {
+    public Collection<Suggestion> variablesOf(@NotNull ComponentContext context, @NotNull String componentPropertyPath) {
         return suggestionsOf(context, componentPropertyPath, new String[]{StringUtils.EMPTY});
     }
 
     @Override
-    public void componentMetadataOf(ComponentContext context) {
+    public void componentMetadataOf(@NotNull ComponentContext context) {
         componentMetadataService.componentMetadataOf(context);
     }
 
     void fireCompletionsUpdatedEvent() {
-        onCompletionEvent.onCompletionsUpdated();
+        onCompletionEvent.onCompletionUpdated();
     }
 
     public void clearMaven() {

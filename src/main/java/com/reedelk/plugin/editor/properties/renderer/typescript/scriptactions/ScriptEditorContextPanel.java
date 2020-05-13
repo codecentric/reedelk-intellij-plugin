@@ -74,7 +74,7 @@ class ScriptEditorContextPanel extends DisposablePanel implements PlatformModule
     }
 
     @Override
-    public void onCompletionsUpdated() {
+    public void onCompletionUpdated() {
         List<Suggestion> suggestions = suggestions();
         ApplicationManager.getApplication().invokeLater(() -> {
             panelVariables.removeAll();

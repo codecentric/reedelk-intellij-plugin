@@ -7,16 +7,16 @@ import com.reedelk.plugin.editor.properties.commons.ContainerFactory;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.DisposableScrollPane;
 import com.reedelk.plugin.editor.properties.commons.FormBuilder;
-import com.reedelk.plugin.service.module.impl.component.metadata.ComponentMetadata;
-import com.reedelk.plugin.service.module.impl.component.metadata.OnComponentMetadata;
+import com.reedelk.plugin.service.module.impl.component.metadata.ComponentMetadataDTO;
 import com.reedelk.runtime.api.commons.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
 
 import static com.intellij.util.ui.JBUI.Borders.empty;
+import static com.reedelk.plugin.service.module.PlatformModuleService.OnComponentMetadataEvent;
 
-abstract class AbstractMetadataInputPanel extends DisposableScrollPane implements OnComponentMetadata {
+abstract class AbstractMetadataInputPanel extends DisposableScrollPane implements OnComponentMetadataEvent {
 
     protected static final int LEFT_OFFSET = 24;
 
@@ -27,32 +27,32 @@ abstract class AbstractMetadataInputPanel extends DisposableScrollPane implement
     }
 
     @Override
-    public void onComponentMetadata(ComponentMetadata componentMetadata) {
+    public void onComponentMetadataUpdated(ComponentMetadataDTO componentMetadataDTO) {
         DisposablePanel theContent = new DisposablePanel(new GridBagLayout());
         theContent.setBackground(JBColor.WHITE);
         DisposablePanel panel = ContainerFactory.pushTop(theContent);
         panel.setBackground(JBColor.WHITE);
         panel.setBorder(empty(5, 2));
-        render(componentMetadata, theContent);
+        render(componentMetadataDTO, theContent);
         setViewportView(panel);
     }
 
     @Override
-    public void onComponentMetadataError(String message) {
+    public void onComponentMetadataError(Exception exception) {
         DisposablePanel theContent = new DisposablePanel(new GridBagLayout());
         theContent.setBackground(JBColor.WHITE);
         DisposablePanel panel = ContainerFactory.pushTop(theContent);
         panel.setBackground(JBColor.WHITE);
         panel.setBorder(empty(5, 2));
-        renderError(message, theContent);
+        renderError(exception, theContent);
         setViewportView(panel);
     }
 
-    abstract void render(ComponentMetadata componentMetadata, DisposablePanel parent);
+    abstract void render(ComponentMetadataDTO componentMetadataDTO, DisposablePanel parent);
 
 
-    public void renderError(String message, DisposablePanel parent) {
-        FormBuilder.get().addFullWidthAndHeight(new MetadataError(message), parent);
+    public void renderError(Exception exception, DisposablePanel parent) {
+        FormBuilder.get().addFullWidthAndHeight(new MetadataError(exception.getMessage()), parent);
     }
 
     static class MetadataError extends DisposablePanel {

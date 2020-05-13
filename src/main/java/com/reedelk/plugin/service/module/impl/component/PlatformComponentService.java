@@ -5,6 +5,7 @@ import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.plugin.component.type.unknown.Unknown;
 import com.reedelk.plugin.component.type.unknown.UnknownComponentDescriptorWrapper;
 import com.reedelk.plugin.service.module.PlatformModuleService;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +18,7 @@ class PlatformComponentService implements PlatformModuleService {
     private final Map<String, ComponentDescriptor> mavenModulesComponents = new HashMap<>(); // A map containing the component fully qualified name and the descriptor from maven.
 
     @Override
-    public ComponentDescriptor componentDescriptorOf(String componentFullyQualifiedName) {
+    public ComponentDescriptor componentDescriptorOf(@NotNull String componentFullyQualifiedName) {
         // Is it a component from a maven dependency?
         ComponentDescriptor descriptor = mavenModulesComponents.getOrDefault(componentFullyQualifiedName, null);
         if (descriptor != null) return descriptor;

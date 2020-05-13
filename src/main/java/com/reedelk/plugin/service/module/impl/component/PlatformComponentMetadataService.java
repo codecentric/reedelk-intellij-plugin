@@ -4,6 +4,7 @@ import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.component.ComponentInputDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.commons.Topics;
+import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.executor.PluginExecutors;
 import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.completion.*;
@@ -20,6 +21,7 @@ import java.util.function.Function;
 import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
+import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
@@ -28,7 +30,7 @@ class PlatformComponentMetadataService implements PlatformModuleService {
     private final Module module;
     private final TrieMapWrapper typeAndAndTries;
     private final CompletionFinder completionFinder;
-    private final OnComponentMetadata onComponentMetadata;
+    private final OnComponentMetadataEvent onComponentMetadataEvent;
     private final ComponentInputDescriptorBuilder inputDescriptorBuilder;
     private final PlatformComponentService componentService;
 
@@ -41,7 +43,7 @@ class PlatformComponentMetadataService implements PlatformModuleService {
         this.completionFinder = completionFinder;
         this.componentService = componentService;
         this.inputDescriptorBuilder = new ComponentInputDescriptorBuilder(componentService);
-        onComponentMetadata = module.getProject().getMessageBus().syncPublisher(Topics.ON_COMPONENT_IO);
+        onComponentMetadataEvent = module.getProject().getMessageBus().syncPublisher(Topics.ON_COMPONENT_IO);
     }
 
     ComponentOutputDescriptor componentOutputOf(ComponentContext context) {
@@ -50,46 +52,47 @@ class PlatformComponentMetadataService implements PlatformModuleService {
     }
 
     @Override
-    public void componentMetadataOf(ComponentContext context) {
+    public void componentMetadataOf(@NotNull ComponentContext context) {
         PluginExecutors.run(module, message("component.io.ticker.text"), indicator -> {
-
             try {
-
                 Optional<? extends ComponentOutputDescriptor> componentOutputDescriptor =
                         DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, context, context.node());
 
-                ComponentMetadataActualInput actualInput = componentOutputDescriptor.map(descriptor -> {
+                ComponentMetadataActualInputDTO actualInput = componentOutputDescriptor.map(descriptor -> {
                     String description = descriptor.getDescription();
-                    MetadataTypeDescriptor outputAttributes = attributes(descriptor);
-                    List<MetadataTypeDescriptor> outputPayload = payload(descriptor);
-                    return new ComponentMetadataActualInput(outputAttributes, outputPayload, description);
+                    MetadataTypeDTO outputAttributes = attributes(descriptor);
+                    List<MetadataTypeDTO> outputPayload = payload(descriptor);
+                    return new ComponentMetadataActualInputDTO(outputAttributes, outputPayload, description);
                 }).orElse(null);
 
                 Optional<ComponentInputDescriptor> componentInputDescriptor = inputDescriptorBuilder.build(context);
-                ComponentMetadataExpectedInput expectedInput = componentInputDescriptor.map(descriptor -> {
+                ComponentMetadataExpectedInputDTO expectedInput = componentInputDescriptor.map(descriptor -> {
                     List<String> payload = descriptor.getPayload();
                     String description = descriptor.getDescription();
-                    return new ComponentMetadataExpectedInput(payload, description);
+                    return new ComponentMetadataExpectedInputDTO(payload, description);
                 }).orElse(null);
 
-                ComponentMetadata componentMetadata = new ComponentMetadata(actualInput, expectedInput);
+                ComponentMetadataDTO componentMetadataDTO = new ComponentMetadataDTO(actualInput, expectedInput);
 
-                onComponentMetadata.onComponentMetadata(componentMetadata);
+                onComponentMetadataEvent.onComponentMetadataUpdated(componentMetadataDTO);
 
             } catch (Exception exception) {
-                // Extract current node fully qualified name
-                onComponentMetadata.onComponentMetadataError("Component metadata could not be found for component, cause=[" + exception.getMessage() + "]");
+                String componentFullyQualifiedName = context.node().componentData().getFullyQualifiedName();
+                String errorMessage =
+                        format("Component metadata could not be found for component=[%s], cause=[%s]", componentFullyQualifiedName, exception);
+                PluginException wrapped = new PluginException(errorMessage, exception);
+                onComponentMetadataEvent.onComponentMetadataError(wrapped);
             }
         });
     }
 
-    public MetadataTypeDescriptor attributes(ComponentOutputDescriptor output) {
+    public MetadataTypeDTO attributes(ComponentOutputDescriptor output) {
         String attributeType = output != null ? output.getAttributes() : MessageAttributes.class.getName();
-        Collection<MetadataTypeItemDescriptor> suggestions = findAndMapDTO(output, attributeType);
-        return new MetadataTypeDescriptor(MessageAttributes.class.getName(), suggestions);
+        Collection<MetadataTypeItemDTO> suggestions = findAndMapDTO(output, attributeType);
+        return new MetadataTypeDTO(MessageAttributes.class.getName(), suggestions);
     }
 
-    public List<MetadataTypeDescriptor> payload(ComponentOutputDescriptor output) {
+    public List<MetadataTypeDTO> payload(ComponentOutputDescriptor output) {
         List<String> outputPayloadTypes = output != null ? output.getPayload() : singletonList(Object.class.getName());
         return outputPayloadTypes
                 .stream()
@@ -97,29 +100,29 @@ class PlatformComponentMetadataService implements PlatformModuleService {
                 .collect(toList());
     }
 
-    private MetadataTypeDescriptor map(ComponentOutputDescriptor output, String type) {
+    private MetadataTypeDTO map(ComponentOutputDescriptor output, String type) {
         Trie typeTrie = typeAndAndTries.getOrDefault(type, Default.UNKNOWN);
         if (isNotBlank(typeTrie.listItemType())) {
             // It is  a List type, we need to find the suggestions for the List item type.
             // The list type display is: List<FileType> : FileType
             String typeDisplay = PresentableTypeUtils.formatListDisplayType(type, typeTrie);
             String listItemType = typeTrie.listItemType();
-            Collection<MetadataTypeItemDescriptor> typeDTOs = findAndMapDTO(output, listItemType);
-            return new MetadataTypeDescriptor(typeDisplay, typeDTOs);
+            Collection<MetadataTypeItemDTO> typeDTOs = findAndMapDTO(output, listItemType);
+            return new MetadataTypeDTO(typeDisplay, typeDTOs);
 
         } else {
             String typeDisplay = PresentableTypeUtils.from(type, typeTrie);
-            Collection<MetadataTypeItemDescriptor> typeDTOs = findAndMapDTO(output, typeTrie);
-            return new MetadataTypeDescriptor(typeDisplay, typeDTOs);
+            Collection<MetadataTypeItemDTO> typeDTOs = findAndMapDTO(output, typeTrie);
+            return new MetadataTypeDTO(typeDisplay, typeDTOs);
         }
     }
 
-    private Collection<MetadataTypeItemDescriptor> findAndMapDTO(ComponentOutputDescriptor output, String type) {
+    private Collection<MetadataTypeItemDTO> findAndMapDTO(ComponentOutputDescriptor output, String type) {
         Trie typeTrie = typeAndAndTries.getOrDefault(type, Default.UNKNOWN);
         return findAndMapDTO(output, typeTrie);
     }
 
-    private Collection<MetadataTypeItemDescriptor> findAndMapDTO(ComponentOutputDescriptor output, Trie typeTrie) {
+    private Collection<MetadataTypeItemDTO> findAndMapDTO(ComponentOutputDescriptor output, Trie typeTrie) {
         return find(typeTrie, output)
                 .stream()
                 .sorted(Comparator.comparing(Suggestion::lookupString))
@@ -127,7 +130,7 @@ class PlatformComponentMetadataService implements PlatformModuleService {
                 .collect(toList());
     }
 
-    public Function<Suggestion, MetadataTypeItemDescriptor> mapper(ComponentOutputDescriptor output) {
+    public Function<Suggestion, MetadataTypeItemDTO> mapper(ComponentOutputDescriptor output) {
         return suggestion -> {
             String type = suggestion.typeText();
             Trie typeTrie = typeAndAndTries.getOrDefault(type, Default.UNKNOWN);
@@ -148,16 +151,16 @@ class PlatformComponentMetadataService implements PlatformModuleService {
         };
     }
 
-    private MetadataTypeItemDescriptor asTypeDTO(ComponentOutputDescriptor output, String type, Trie typeTrie, String propertyName, String propertyType) {
+    private MetadataTypeItemDTO asTypeDTO(ComponentOutputDescriptor output, String type, Trie typeTrie, String propertyName, String propertyType) {
         Collection<Suggestion> suggestions = find(typeTrie, output);
         if (suggestions.isEmpty()) {
             // Simple name/value
-            return new MetadataTypeItemDescriptor(propertyName, propertyType);
+            return new MetadataTypeItemDTO(propertyName, propertyType);
         } else {
             // Complex type
             String finalPropertyName = propertyName + " : " + propertyType;
-            MetadataTypeDescriptor metadataTypeDescriptor = map(output, type);
-            return new MetadataTypeItemDescriptor(finalPropertyName, metadataTypeDescriptor);
+            MetadataTypeDTO metadataTypeDTO = map(output, type);
+            return new MetadataTypeItemDTO(finalPropertyName, metadataTypeDTO);
         }
     }
 

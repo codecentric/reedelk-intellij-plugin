@@ -10,17 +10,18 @@ import com.reedelk.plugin.commons.Topics;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.PanelWithText;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
-import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
-import com.reedelk.plugin.service.module.impl.component.metadata.ComponentMetadata;
-import com.reedelk.plugin.service.module.impl.component.metadata.OnComponentMetadata;
+import com.reedelk.plugin.service.module.impl.component.metadata.ComponentMetadataDTO;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import java.awt.*;
 
-public class MetadataPanel extends DisposablePanel implements OnComponentMetadata {
+import static com.reedelk.plugin.service.module.PlatformModuleService.OnComponentMetadataEvent;
+import static com.reedelk.plugin.service.module.PlatformModuleService.getInstance;
+
+public class MetadataPanel extends DisposablePanel implements OnComponentMetadataEvent {
 
     private final MetadataActualInput metadataActualInput;
     private final MetadataExpectedInput metadataExpectedInput;
@@ -49,7 +50,7 @@ public class MetadataPanel extends DisposablePanel implements OnComponentMetadat
             @Override
             public void ancestorAdded(AncestorEvent event) {
                 ComponentContext componentContext = context.componentContext();
-                PlatformModuleService.getInstance(module).componentMetadataOf(componentContext);
+                getInstance(module).componentMetadataOf(componentContext);
             }
         });
 
@@ -59,7 +60,7 @@ public class MetadataPanel extends DisposablePanel implements OnComponentMetadat
     }
 
     @Override
-    public void onComponentMetadata(ComponentMetadata componentMetadata) {
+    public void onComponentMetadataUpdated(ComponentMetadataDTO componentMetadataDTO) {
         ApplicationManager.getApplication().invokeLater(() -> {
             remove(loadingPanel);
             add(metadataActualInput, BorderLayout.CENTER);
@@ -67,12 +68,12 @@ public class MetadataPanel extends DisposablePanel implements OnComponentMetadat
             repaint();
         });
 
-        metadataActualInput.onComponentMetadata(componentMetadata);
-        metadataExpectedInput.onComponentMetadata(componentMetadata);
+        metadataActualInput.onComponentMetadataUpdated(componentMetadataDTO);
+        metadataExpectedInput.onComponentMetadataUpdated(componentMetadataDTO);
     }
 
     @Override
-    public void onComponentMetadataError(String message) {
+    public void onComponentMetadataError(Exception exception) {
         ApplicationManager.getApplication().invokeLater(() -> {
             remove(loadingPanel);
             add(metadataActualInput, BorderLayout.CENTER);
@@ -80,8 +81,8 @@ public class MetadataPanel extends DisposablePanel implements OnComponentMetadat
             repaint();
         });
 
-        metadataActualInput.onComponentMetadataError(message);
-        metadataExpectedInput.onComponentMetadataError(message);
+        metadataActualInput.onComponentMetadataError(exception);
+        metadataExpectedInput.onComponentMetadataError(exception);
     }
 
     @Override

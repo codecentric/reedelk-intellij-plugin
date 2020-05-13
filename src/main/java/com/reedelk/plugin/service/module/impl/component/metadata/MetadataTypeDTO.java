@@ -2,12 +2,12 @@ package com.reedelk.plugin.service.module.impl.component.metadata;
 
 import java.util.Collection;
 
-public class MetadataTypeDescriptor {
+public class MetadataTypeDTO {
 
     private final String type;
-    private final Collection<MetadataTypeItemDescriptor> properties;
+    private final Collection<MetadataTypeItemDTO> properties;
 
-    public MetadataTypeDescriptor(String type, Collection<MetadataTypeItemDescriptor> properties) {
+    public MetadataTypeDTO(String type, Collection<MetadataTypeItemDTO> properties) {
         this.type = type;
         this.properties = properties;
     }
@@ -16,7 +16,7 @@ public class MetadataTypeDescriptor {
         return type;
     }
 
-    public Collection<MetadataTypeItemDescriptor> getProperties() {
+    public Collection<MetadataTypeItemDTO> getProperties() {
         return properties;
     }
 }

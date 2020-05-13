@@ -2,12 +2,12 @@ package com.reedelk.plugin.service.module.impl.component.metadata;
 
 import java.util.List;
 
-public class ComponentMetadataExpectedInput {
+public class ComponentMetadataExpectedInputDTO {
 
     private final String description;
     private final List<String> payload;
 
-    public ComponentMetadataExpectedInput(List<String> payload, String description) {
+    public ComponentMetadataExpectedInputDTO(List<String> payload, String description) {
         this.payload = payload;
         this.description = description;
     }

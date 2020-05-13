@@ -45,7 +45,7 @@ import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 public abstract class DesignerPanel extends DisposablePanel implements
         MouseMotionListener, MouseListenerAdapter, SnapshotListener,
         DropActionListener, HintResultListener, DrawableListener,
-        PlatformModuleService.ModuleChangeNotifier {
+        PlatformModuleService.OnModuleEvent {
 
     static final int TOP_PADDING = 80;
 
@@ -283,7 +283,7 @@ public abstract class DesignerPanel extends DisposablePanel implements
     }
 
     @Override
-    public void onModuleChange(Collection<ModuleDTO> components) {
+    public void onModuleUpdated(Collection<ModuleDTO> components) {
         if (isVisible) {
             // When the component list is updated or we click on the 'compile' button
             // the graph is de-serialized to apply changes and refresh properties

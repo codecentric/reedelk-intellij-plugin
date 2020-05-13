@@ -27,7 +27,7 @@ import static java.util.Collections.unmodifiableCollection;
 public class PlatformModuleServiceImpl implements PlatformModuleService, MavenImportListener, CompilationStatusListener {
 
     private final Module module;
-    private final ModuleChangeNotifier publisher;
+    private final OnModuleEvent publisher;
 
     // MODULES
     private ModuleDTO flowControlModule; // system components module (loaded only once)
@@ -68,22 +68,22 @@ public class PlatformModuleServiceImpl implements PlatformModuleService, MavenIm
     }
 
     @Override
-    public synchronized ComponentDescriptor componentDescriptorOf(String componentFullyQualifiedName) {
+    public synchronized ComponentDescriptor componentDescriptorOf(@NotNull String componentFullyQualifiedName) {
         return componentTracker.componentDescriptorOf(componentFullyQualifiedName);
     }
 
     @Override
-    public synchronized Collection<Suggestion> suggestionsOf(ComponentContext context, String componentPropertyPath, String[] tokens) {
+    public synchronized Collection<Suggestion> suggestionsOf(@NotNull ComponentContext context, @NotNull String componentPropertyPath, String[] tokens) {
         return platformCompletionService.suggestionsOf(context, componentPropertyPath, tokens);
     }
 
     @Override
-    public synchronized Collection<Suggestion> variablesOf(ComponentContext context, String componentPropertyPath) {
+    public synchronized Collection<Suggestion> variablesOf(@NotNull ComponentContext context, @NotNull String componentPropertyPath) {
         return platformCompletionService.variablesOf(context, componentPropertyPath);
     }
 
     @Override
-    public synchronized void componentMetadataOf(ComponentContext context) {
+    public synchronized void componentMetadataOf(@NotNull ComponentContext context) {
         platformCompletionService.componentMetadataOf(context);
     }
 
@@ -161,6 +161,6 @@ public class PlatformModuleServiceImpl implements PlatformModuleService, MavenIm
 
     private void onModuleChange() {
         Collection<ModuleDTO> moduleComponents = listModules();
-        publisher.onModuleChange(moduleComponents);
+        publisher.onModuleUpdated(moduleComponents);
     }
 }
