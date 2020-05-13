@@ -4,8 +4,8 @@ import com.intellij.openapi.module.Module;
 import com.reedelk.module.descriptor.model.component.ComponentOutputDescriptor;
 import com.reedelk.plugin.component.type.generic.GenericComponentDiscovery;
 import com.reedelk.plugin.graph.node.GraphNode;
+import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
-import com.reedelk.plugin.service.module.impl.component.PlatformComponentService;
 import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
 import com.reedelk.runtime.api.message.MessageAttributes;
 
@@ -15,8 +15,8 @@ import java.util.Optional;
 
 public class RouterComponentDiscovery extends GenericComponentDiscovery {
 
-    public RouterComponentDiscovery(Module module, PlatformComponentService componentService, TrieMapWrapper typeAndAndTries) {
-        super(module, componentService, typeAndAndTries);
+    public RouterComponentDiscovery(Module module, PlatformModuleService moduleService, TrieMapWrapper typeAndAndTries) {
+        super(module, moduleService, typeAndAndTries);
     }
 
     @Override

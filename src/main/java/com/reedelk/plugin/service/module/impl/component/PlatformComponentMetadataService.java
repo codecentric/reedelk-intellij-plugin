@@ -23,7 +23,7 @@ import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
-public class PlatformComponentMetadataService implements PlatformModuleService {
+class PlatformComponentMetadataService implements PlatformModuleService {
 
     private final Module module;
     private final TrieMapWrapper typeAndAndTries;

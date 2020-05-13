@@ -18,7 +18,7 @@ import java.util.Optional;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
 
-public class PlatformCompletionService implements PlatformModuleService {
+class PlatformCompletionService implements PlatformModuleService {
 
     // GLOBAL MODULE TYPES MAPs
     private final Trie flowControlModuleGlobalTypes = new TrieDefault();

@@ -3,17 +3,17 @@ package com.reedelk.plugin.service.module.impl.component.metadata;
 import com.reedelk.module.descriptor.model.component.ComponentDescriptor;
 import com.reedelk.module.descriptor.model.component.ComponentInputDescriptor;
 import com.reedelk.plugin.graph.node.GraphNode;
+import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
-import com.reedelk.plugin.service.module.impl.component.PlatformComponentService;
 
 import java.util.Optional;
 
 public class ComponentInputDescriptorBuilder {
 
-    private final PlatformComponentService componentService;
+    private final PlatformModuleService moduleService;
 
-    public ComponentInputDescriptorBuilder(PlatformComponentService componentService) {
-        this.componentService = componentService;
+    public ComponentInputDescriptorBuilder(PlatformModuleService moduleService) {
+        this.moduleService = moduleService;
     }
 
     public Optional<ComponentInputDescriptor> build(ComponentContext context) {
@@ -21,7 +21,7 @@ public class ComponentInputDescriptorBuilder {
         String componentFullyQualifiedName =
                 componentGraphNode.componentData().getFullyQualifiedName();
         ComponentDescriptor actualComponentDescriptor =
-                componentService.componentDescriptorOf(componentFullyQualifiedName);
+                moduleService.componentDescriptorOf(componentFullyQualifiedName);
 
         return Optional.ofNullable(actualComponentDescriptor.getInput());
     }

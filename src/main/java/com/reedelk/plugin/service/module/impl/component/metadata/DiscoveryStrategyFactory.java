@@ -15,8 +15,8 @@ import com.reedelk.plugin.component.type.unknown.UnknownComponentDiscovery;
 import com.reedelk.plugin.exception.PluginException;
 import com.reedelk.plugin.graph.node.GraphNode;
 import com.reedelk.plugin.graph.node.ScopedGraphNode;
+import com.reedelk.plugin.service.module.PlatformModuleService;
 import com.reedelk.plugin.service.module.impl.component.ComponentContext;
-import com.reedelk.plugin.service.module.impl.component.PlatformComponentService;
 import com.reedelk.plugin.service.module.impl.component.completion.TrieMapWrapper;
 import com.reedelk.runtime.component.*;
 import org.jetbrains.annotations.NotNull;
@@ -45,7 +45,7 @@ public class DiscoveryStrategyFactory {
     }
 
     public static Optional<? extends ComponentOutputDescriptor> get(@NotNull Module module,
-                                                                    @NotNull PlatformComponentService componentService,
+                                                                    @NotNull PlatformModuleService moduleService,
                                                                     @NotNull TrieMapWrapper typeAndAndTries,
                                                                     @NotNull ComponentContext context,
                                                                     @NotNull GraphNode nodeToFindInputMessage) {
@@ -61,7 +61,7 @@ public class DiscoveryStrategyFactory {
             // The current node to find input message is joining a scope.
             // We must use the strategy with multiple predecessor for the scope node it is joining.
             String fullyQualifiedScopeNodeName = maybeScopedGraphNode.get().componentData().getFullyQualifiedName();
-            DiscoveryStrategy strategy = get(fullyQualifiedScopeNodeName, module, componentService, typeAndAndTries);
+            DiscoveryStrategy strategy = get(module, moduleService, typeAndAndTries, fullyQualifiedScopeNodeName);
             return strategy.compute(context, predecessors);
 
         } else {
@@ -72,22 +72,22 @@ public class DiscoveryStrategyFactory {
 
             GraphNode predecessor = predecessors.get(0);
             String predecessorFullyQualifiedName = predecessor.componentData().getFullyQualifiedName();
-            DiscoveryStrategy strategy = get(predecessorFullyQualifiedName, module, componentService, typeAndAndTries);
+            DiscoveryStrategy strategy = get(module, moduleService, typeAndAndTries, predecessorFullyQualifiedName);
             return strategy.compute(context, predecessor);
         }
     }
 
-    private static DiscoveryStrategy get(String componentFullyQualifiedName, Module module, PlatformComponentService componentService, TrieMapWrapper typeAndAndTries) {
+    private static DiscoveryStrategy get(Module module, PlatformModuleService moduleService, TrieMapWrapper typeAndAndTries, String componentFullyQualifiedName) {
         Class<? extends DiscoveryStrategy> rendererClazz =
                 DISCOVERY.getOrDefault(componentFullyQualifiedName, GENERIC_DISCOVERY);
-        return instantiate(rendererClazz, module, componentService, typeAndAndTries);
+        return instantiate(rendererClazz, module, moduleService, typeAndAndTries);
     }
 
-    private static DiscoveryStrategy instantiate(Class<? extends DiscoveryStrategy> discoveryClazz, Module module, PlatformComponentService componentService, TrieMapWrapper typeAndAndTries) {
+    private static DiscoveryStrategy instantiate(Class<? extends DiscoveryStrategy> discoveryClazz, Module module, PlatformModuleService moduleService, TrieMapWrapper typeAndAndTries) {
         try {
             return discoveryClazz
-                    .getConstructor(Module.class, PlatformComponentService.class, TrieMapWrapper.class)
-                    .newInstance(module, componentService, typeAndAndTries);
+                    .getConstructor(Module.class, PlatformModuleService.class, TrieMapWrapper.class)
+                    .newInstance(module, moduleService, typeAndAndTries);
         } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException exception) {
             throw new PluginException("Could not instantiate discovery strategy class=" + discoveryClazz.getName(), exception);
         }
