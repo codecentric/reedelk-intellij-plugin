@@ -3,6 +3,7 @@ package com.reedelk.plugin.editor.properties.renderer.typescript.scriptactions;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.components.JBLabel;
 import com.reedelk.plugin.commons.Colors;
+import com.reedelk.plugin.commons.HTMLUtils;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.DisposableScrollPane;
 import com.reedelk.plugin.editor.properties.context.ContainerContext;
@@ -61,7 +62,9 @@ class ScriptEditorContextPanel extends DisposablePanel {
 
     static class ContextVariableLabel extends JLabel {
         ContextVariableLabel(Suggestion suggestion) {
-            super(message("script.editor.context.vars.html.template", suggestion.lookupString(), suggestion.presentableType()));
+            super(message("script.editor.context.vars.html.template",
+                    suggestion.lookupString(),
+                    HTMLUtils.escape(suggestion.presentableType())));
             setIcon(suggestion.icon());
             setBorder(emptyTop(4));
         }

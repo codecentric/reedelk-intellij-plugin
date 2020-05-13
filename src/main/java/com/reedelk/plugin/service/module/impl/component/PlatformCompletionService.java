@@ -147,10 +147,15 @@ class PlatformCompletionService implements PlatformModuleService {
             Optional.ofNullable(propertyDescriptor.getScriptSignature()).ifPresent(scriptSignature -> {
                 TrieDefault trie = new TrieDefault();
                 scriptSignature.getArguments().stream()
-                        .map(argument -> Suggestion.create(PROPERTY)
+                        .map(argument -> {
+                            String argumentType = argument.getArgumentType();
+                            Trie typeTrie = typesMap.getOrDefault(argumentType, Default.UNKNOWN);
+                            String argumentPresentableType = PresentableTypeUtils.from(argumentType, typeTrie);
+                            return Suggestion.create(PROPERTY)
                                 .withLookupString(argument.getArgumentName())
                                 .withType(argument.getArgumentType())
-                                .build())
+                                .withPresentableType(argumentPresentableType)
+                                .build(); })
                         .forEach(trie::insert);
                 signatureTypesMap.put(componentPropertyPath, trie);
             });
