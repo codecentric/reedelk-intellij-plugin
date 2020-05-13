@@ -33,35 +33,40 @@ public class MetadataActualInput extends AbstractMetadataInputPanel {
     }
 
     private void render(ComponentMetadataActualInputDTO input, DisposablePanel parent) {
-        int topOffset = 0;
-        if (StringUtils.isNotBlank(input.getPayloadDescription())) {
-            DisposableCollapsiblePane description = new DisposableCollapsiblePane(htmlLabel("<b style=\"color: #666666\">description</b>", "", false), () -> {
-                JBLabel label = new JBLabel(htmlLabel(input.getPayloadDescription(), "", false));
-                label.setBorder(JBUI.Borders.emptyLeft(LEFT_OFFSET));
-                return label;
-            });
-            topOffset = 4;
-            description.setBorder(JBUI.Borders.empty());
-            FormBuilder.get().addFullWidthAndHeight(description, parent);
-        }
-
-        List<MetadataTypeDTO> payloads = input.getPayload();
-        if (payloads.size() == 1) {
-            // Inline
-            MetadataTypeDTO payloadIO = payloads.get(0);
-            boolean collapsed = payloadIO.getProperties().isEmpty(); // Collapsed if there are no properties
-            DisposableCollapsiblePane payload = createPanel(htmlLabel("<b style=\"color: #666666\">payload</b>", payloadIO.getType()), payloadIO, LEFT_OFFSET, collapsed, true);
-            payload.setBorder(JBUI.Borders.emptyTop(topOffset));
-            FormBuilder.get().addFullWidthAndHeight(payload, parent);
+        if (input.isMultipleMessages()) {
+            JBLabel label = new JBLabel(htmlLabel("Multiple messages: List<Message>", "", false));
+            FormBuilder.get().addFullWidthAndHeight(label, parent);
         } else {
-            DisposableCollapsiblePane payload = createPanel(htmlLabel("<b style=\"color: #666666\">payload</b>", "(one of the following types)"), payloads, LEFT_OFFSET, false, true);
-            payload.setBorder(JBUI.Borders.emptyTop(topOffset));
-            FormBuilder.get().addFullWidthAndHeight(payload, parent);
-        }
+            int topOffset = 0;
+            if (StringUtils.isNotBlank(input.getPayloadDescription())) {
+                DisposableCollapsiblePane description = new DisposableCollapsiblePane(htmlLabel("<b style=\"color: #666666\">description</b>", "", false), () -> {
+                    JBLabel label = new JBLabel(htmlLabel(input.getPayloadDescription(), "", false));
+                    label.setBorder(JBUI.Borders.emptyLeft(LEFT_OFFSET));
+                    return label;
+                });
+                topOffset = 4;
+                description.setBorder(JBUI.Borders.empty());
+                FormBuilder.get().addFullWidthAndHeight(description, parent);
+            }
 
-        DisposableCollapsiblePane attributes = createPanel(htmlLabel("<b style=\"color: #666666\">attributes</b>", MessageAttributes.class.getSimpleName()), input.getAttributes(), LEFT_OFFSET, false, true);
-        attributes.setBorder(JBUI.Borders.emptyTop(4));
-        FormBuilder.get().addFullWidthAndHeight(attributes, parent);
+            List<MetadataTypeDTO> payloads = input.getPayload();
+            if (payloads.size() == 1) {
+                // Inline
+                MetadataTypeDTO payloadIO = payloads.get(0);
+                boolean collapsed = payloadIO.getProperties().isEmpty(); // Collapsed if there are no properties
+                DisposableCollapsiblePane payload = createPanel(htmlLabel("<b style=\"color: #666666\">payload</b>", payloadIO.getType()), payloadIO, LEFT_OFFSET, collapsed, true);
+                payload.setBorder(JBUI.Borders.emptyTop(topOffset));
+                FormBuilder.get().addFullWidthAndHeight(payload, parent);
+            } else {
+                DisposableCollapsiblePane payload = createPanel(htmlLabel("<b style=\"color: #666666\">payload</b>", "(one of the following types)"), payloads, LEFT_OFFSET, false, true);
+                payload.setBorder(JBUI.Borders.emptyTop(topOffset));
+                FormBuilder.get().addFullWidthAndHeight(payload, parent);
+            }
+
+            DisposableCollapsiblePane attributes = createPanel(htmlLabel("<b style=\"color: #666666\">attributes</b>", MessageAttributes.class.getSimpleName()), input.getAttributes(), LEFT_OFFSET, false, true);
+            attributes.setBorder(JBUI.Borders.emptyTop(4));
+            FormBuilder.get().addFullWidthAndHeight(attributes, parent);
+        }
     }
 
     private static DisposableCollapsiblePane createPanel(String title, List<MetadataTypeDTO> payloads, int parentPadding, boolean defaultCollapsed, boolean horizontalBar) {

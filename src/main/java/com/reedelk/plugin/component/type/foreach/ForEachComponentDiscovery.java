@@ -25,6 +25,7 @@ public class ForEachComponentDiscovery extends AbstractDiscoveryStrategy {
         super(module, moduleService, typeAndAndTries);
     }
 
+    // TODO: Bug: For each followed by fork, displays List instead of Object
     @Override
     public Optional<ComponentOutputDescriptor> compute(ComponentContext context, GraphNode nodeWeWantOutputFrom) {
         Optional<? extends ComponentOutputDescriptor> componentOutputDescriptor = discover(context, nodeWeWantOutputFrom);

@@ -59,10 +59,14 @@ class PlatformComponentMetadataService implements PlatformModuleService {
                         DiscoveryStrategyFactory.get(module, componentService, typeAndAndTries, context, context.node());
 
                 ComponentMetadataActualInputDTO actualInput = componentOutputDescriptor.map(descriptor -> {
-                    String description = descriptor.getDescription();
-                    MetadataTypeDTO outputAttributes = attributes(descriptor);
-                    List<MetadataTypeDTO> outputPayload = payload(descriptor);
-                    return new ComponentMetadataActualInputDTO(outputAttributes, outputPayload, description);
+                    if (descriptor instanceof MultipleMessages) {
+                        return new ComponentMetadataActualInputDTO();
+                    } else {
+                        String description = descriptor.getDescription();
+                        MetadataTypeDTO outputAttributes = attributes(descriptor);
+                        List<MetadataTypeDTO> outputPayload = payload(descriptor);
+                        return new ComponentMetadataActualInputDTO(outputAttributes, outputPayload, description);
+                    }
                 }).orElse(null);
 
                 Optional<ComponentInputDescriptor> componentInputDescriptor = inputDescriptorBuilder.build(context);
