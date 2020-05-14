@@ -43,7 +43,7 @@ public class ScriptCompletionContributor extends CompletionContributor {
 
     private void addSuggestion(@NotNull CompletionResultSet result, Suggestion suggestion) {
         final LookupElementBuilder lookupBuilder =
-                LookupElementBuilder.create(suggestion.getLookup())
+                LookupElementBuilder.create(suggestion, suggestion.getLookup())
                         .withPresentableText(suggestion.getLookupDisplayValue())
                         .withTypeText(suggestion.getReturnTypeDisplayValue())
                         .withTailText(suggestion.getTailText())

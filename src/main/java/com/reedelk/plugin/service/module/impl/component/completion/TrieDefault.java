@@ -42,7 +42,6 @@ public class TrieDefault implements Trie {
         return autocomplete;
     }
 
-
     private Set<Suggestion> autocomplete(String token) {
         Set<Suggestion> suggestions = new HashSet<>();
         TrieNode current = root;
