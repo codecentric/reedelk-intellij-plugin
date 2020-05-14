@@ -25,7 +25,7 @@ public class TrieDefault implements Trie {
     @Override
     public void insert(Suggestion suggestion) {
         TrieNode current = root;
-        String word = suggestion.lookupString();
+        String word = suggestion.getLookup();
         for (int i = 0; i < word.length(); i++) {
             current = current.getChildren().computeIfAbsent(word.charAt(i), c -> new TrieNode());
         }

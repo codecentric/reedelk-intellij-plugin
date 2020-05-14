@@ -1,76 +1,74 @@
 package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.intellij.icons.AllIcons;
-import com.reedelk.runtime.api.commons.StringUtils;
+import com.reedelk.runtime.api.commons.Preconditions;
 
 import javax.swing.*;
 
-
 public class Suggestion {
 
-    public enum Type {
-        FUNCTION,
-        PROPERTY
-    }
-
-    private final String name;
-    private final String typeText;
-    private final String lookupString;
-    private final String presentableType;
-    private final String presentableText;
-
     private final Type type;
-    private final Icon icon;
+    private final String tailText;
+    private final String lookup;
+    private final String lookupDisplayValue;
+    private final String returnType;
+    private final String returnTypeDisplayValue;
     private final int cursorOffset;
 
-    private Suggestion(Type type, String name, String lookupString, String typeText, String presentableType, String presentableText, Icon icon, int cursorOffset) {
-        this.presentableText = presentableText;
-        this.lookupString = lookupString;
-        this.cursorOffset = cursorOffset;
-        this.presentableType = presentableType;
-        this.typeText = typeText;
-        this.name = name;
+    private Suggestion(Type type,
+                       String lookup,
+                       String lookupDisplayValue,
+                       String returnType,
+                       String returnTypeDisplayValue,
+                       String tailText,
+                       int cursorOffset) {
         this.type = type;
-        this.icon = icon;
+        this.lookup = lookup;
+        this.lookupDisplayValue = lookupDisplayValue;
+        this.returnType = returnType;
+        this.returnTypeDisplayValue = returnTypeDisplayValue;
+        this.cursorOffset = cursorOffset;
+        this.tailText = tailText;
     }
 
     public Type getType() {
         return type;
     }
 
-    public String name() {
-        return name;
+    public String getTailText() {
+        return tailText;
     }
 
-    public String presentableText() {
-        return presentableText;
+    public String getLookup() {
+        return lookup;
     }
 
-    public String lookupString() {
-        return lookupString;
+    public String getLookupDisplayValue() {
+        return lookupDisplayValue;
     }
 
-    public int cursorOffset() {
+    public String getReturnType() {
+        return returnType;
+    }
+
+    public String getReturnTypeDisplayValue() {
+        return returnTypeDisplayValue;
+    }
+
+    public int getCursorOffset() {
         return cursorOffset;
     }
 
-    public String typeText() {
-        return typeText;
-    }
+    public enum Type {
 
-    public String presentableType() {
-        if (StringUtils.isNotBlank(presentableType)) {
-            return presentableType;
+        FUNCTION(AllIcons.Nodes.Function),
+        PROPERTY(AllIcons.Nodes.Variable);
+
+        public final Icon icon;
+
+        Type(Icon icon) {
+            this.icon = icon;
         }
-        return PresentableTypeUtils.from(typeText); // TODO : Fixme!
-    }
-
-    public String tailText() {
-        return null;
-    }
-
-    public Icon icon() {
-        return icon;
     }
 
     public static Builder create(Type type) {
@@ -79,62 +77,62 @@ public class Suggestion {
 
     public static class Builder {
 
-        private final Type type;
-        private final Icon icon;
-
+        private Type type;
+        private String tailText;
+        private String lookup;
+        private String lookupDisplayValue;
+        private String returnType;
+        private String returnTypeDisplayValue;
         private int cursorOffset;
 
-        private String name;
-        private String typeText;
-        private String lookupString;
-        private String presentableText;
-        private String presentableType;
 
-        // TODO: It is pointless to use an icon here...
         public Builder(Type type) {
             this.type = type;
-            this.icon = Type.FUNCTION.equals(type) ?
-                    AllIcons.Nodes.Method : AllIcons.Nodes.Variable;
         }
 
-        public Builder withName(String name) {
-            this.name = name;
+        public Builder tailText(String tailText) {
+            this.tailText = tailText;
             return this;
         }
 
-        public Builder withType(String typeText) {
-            this.typeText = typeText;
+        public Builder lookup(String lookup) {
+            this.lookup = lookup;
             return this;
         }
 
-        public Builder withCursorOffset(int cursorOffset) {
+        public Builder lookupDisplayValue(String lookupDisplayValue) {
+            this.lookupDisplayValue = lookupDisplayValue;
+            return this;
+        }
+
+        public Builder returnType(String returnType) {
+            this.returnType = returnType;
+            return this;
+        }
+
+        public Builder returnTypeDisplayValue(String returnTypeDisplayValue) {
+            this.returnTypeDisplayValue = returnTypeDisplayValue;
+            return this;
+        }
+
+        public Builder cursorOffset(int cursorOffset) {
             this.cursorOffset = cursorOffset;
             return this;
         }
 
-        public Builder withLookupString(String lookupString) {
-            this.lookupString = lookupString;
-            return this;
-        }
-
-        public Builder withPresentableText(String presentableText) {
-            this.presentableText = presentableText;
-            return this;
-        }
-
-        public Builder withPresentableType(String presentableType) {
-            this.presentableType = presentableType;
-            return this;
-        }
-
         public Suggestion build() {
-            if (presentableText == null) {
-                presentableText = lookupString;
+            Preconditions.checkNotNull(lookup, "lookupString");
+            if (lookupDisplayValue == null) {
+                lookupDisplayValue = lookup;
             }
-            if (name == null) {
-                name = lookupString;
-            }
-            return new Suggestion(type, name, lookupString, typeText, presentableType, presentableText, icon, cursorOffset);
+            return new Suggestion(
+                    type,
+                    lookup,
+                    lookupDisplayValue,
+                    returnType,
+                    returnTypeDisplayValue,
+                    tailText,
+                    cursorOffset);
         }
     }
 }

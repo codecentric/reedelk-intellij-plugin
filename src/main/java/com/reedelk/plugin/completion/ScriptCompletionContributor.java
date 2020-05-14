@@ -43,10 +43,11 @@ public class ScriptCompletionContributor extends CompletionContributor {
 
     private void addSuggestion(@NotNull CompletionResultSet result, Suggestion suggestion) {
         final LookupElementBuilder lookupBuilder =
-                LookupElementBuilder.create(suggestion.lookupString())
-                        .withPresentableText(suggestion.presentableText())
-                        .withTypeText(suggestion.presentableType())
-                        .withIcon(suggestion.icon());
+                LookupElementBuilder.create(suggestion.getLookup())
+                        .withPresentableText(suggestion.getLookupDisplayValue())
+                        .withTypeText(suggestion.getReturnTypeDisplayValue())
+                        .withTailText(suggestion.getTailText())
+                        .withIcon(suggestion.getType().icon);
 
         // For some suggestions like for .put('') we must adjust the caret back by X positions.
         // If the suggestion definition has defined an offset, then we add an insert handler
@@ -54,7 +55,7 @@ public class ScriptCompletionContributor extends CompletionContributor {
         LookupElementBuilder finalLookupBuilder =
                 lookupBuilder.withInsertHandler((insertionContext, item) -> {
                     int currentOffset = insertionContext.getEditor().getCaretModel().getOffset();
-                    insertionContext.getEditor().getCaretModel().moveToOffset(currentOffset - suggestion.cursorOffset());
+                    insertionContext.getEditor().getCaretModel().moveToOffset(currentOffset - suggestion.getCursorOffset());
                 });
 
         result.addElement(finalLookupBuilder);

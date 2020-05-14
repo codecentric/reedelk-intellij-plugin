@@ -6,9 +6,9 @@ import com.reedelk.runtime.api.message.MessagePayload;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 
 public class DynamicTypeUtils {
 
@@ -17,7 +17,7 @@ public class DynamicTypeUtils {
 
     // Resolves the dynamic type from the output descriptor
     public static List<String> from(Suggestion suggestion, ComponentOutputDescriptor descriptor) {
-        String suggestionType = suggestion.typeText();
+        String suggestionType = suggestion.getReturnType();
         if (MessageAttributes.class.getName().equals(suggestionType)) {
             return descriptor != null && descriptor.getAttributes() != null ?
                     singletonList(descriptor.getAttributes()) :
@@ -40,18 +40,17 @@ public class DynamicTypeUtils {
     public static Collection<Suggestion> createDynamicSuggestion(TrieMapWrapper typeAndTrieMap, ComponentOutputDescriptor descriptor, Suggestion suggestion) {
         return DynamicTypeUtils.from(suggestion, descriptor).stream()
                 .map(dynamicType -> Suggestion.create(suggestion.getType())
-                        .withType(dynamicType)
-                        .withName(suggestion.name())
-                        .withCursorOffset(suggestion.cursorOffset())
-                        .withLookupString(suggestion.lookupString())
-                        .withPresentableText(suggestion.presentableText())
-                        .withPresentableType(
-                                PresentableTypeUtils.presentableTypeOf(suggestion, dynamicType, typeAndTrieMap))
-                        .build()).collect(Collectors.toList());
+                        .returnType(dynamicType)
+                        .lookup(suggestion.getLookup())
+                        .cursorOffset(suggestion.getCursorOffset())
+                        .lookupDisplayValue(suggestion.getLookupDisplayValue())
+                        .returnTypeDisplayValue(PresentableTypeUtils.presentableTypeOf(suggestion, dynamicType, typeAndTrieMap))
+                        .build())
+                .collect(toList());
     }
 
     public static boolean is(Suggestion suggestion) {
-        return MessagePayload.class.getName().equals(suggestion.typeText()) ||
-                MessageAttributes.class.getName().equals(suggestion.typeText());
+        return MessagePayload.class.getName().equals(suggestion.getReturnType()) ||
+                MessageAttributes.class.getName().equals(suggestion.getReturnType());
     }
 }

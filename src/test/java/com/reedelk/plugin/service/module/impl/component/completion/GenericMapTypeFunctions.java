@@ -17,10 +17,10 @@ public class GenericMapTypeFunctions implements TrieProvider {
     @Override
     public void register(Map<String, Trie> trieMap) {
         Trie trie = new TrieDefault(null, null);
-        trie.insert(createFunction("size", "size", int.class.getName()));
-        trie.insert(createFunction("each", "each", Void.class.getName()));
-        trie.insert(createFunction("eachWithIndex", "eachWithIndex", Void.class.getName()));
-        trie.insert(createFunction("find", "find", Object.class.getName()));
+        trie.insert(createFunction("size", int.class.getName()));
+        trie.insert(createFunction("each", Void.class.getName()));
+        trie.insert(createFunction("eachWithIndex", Void.class.getName()));
+        trie.insert(createFunction("find", Object.class.getName()));
         trieMap.put(Map.class.getName(), trie);
         // Hashmap for objects extending from it.
         trieMap.put(HashMap.class.getName(), new TrieDefault(Map.class.getName(), null));

@@ -58,8 +58,8 @@ public class ModuleSuggestionProcessor {
         // Global root type
         if (typeDescriptor.isGlobal()) {
             Suggestion globalTypeProperty = Suggestion.create(PROPERTY)
-                    .withLookupString(typeDescriptor.getDisplayName())
-                    .withType(typeDescriptor.getType())
+                    .lookup(typeDescriptor.getDisplayName())
+                    .returnType(typeDescriptor.getType())
                     .build();
             moduleGlobalTypes.insert(globalTypeProperty);
         }
@@ -69,11 +69,12 @@ public class ModuleSuggestionProcessor {
         // Functions for the type
         typeDescriptor.getFunctions().forEach(typeFunctionDescriptor -> {
             Suggestion functionSuggestion = Suggestion.create(FUNCTION)
-                    .withName(typeFunctionDescriptor.getName())
-                    .withLookupString(typeFunctionDescriptor.getName() + "()")
-                    .withPresentableText(typeFunctionDescriptor.getSignature())
-                    .withCursorOffset(typeFunctionDescriptor.getCursorOffset())
-                    .withType(typeFunctionDescriptor.getReturnType())
+                    .lookup(typeFunctionDescriptor.getName())
+                    // We remove from the signature the method name: the tail text will be (String param1, int param2) and so on.
+                    .tailText(typeFunctionDescriptor.getSignature().substring(typeFunctionDescriptor.getName().length()))
+                    .cursorOffset(typeFunctionDescriptor.getCursorOffset())
+                    .returnType(typeFunctionDescriptor.getReturnType())
+                    // TODO: Presentable return type!???
                     .build();
             typeTrie.insert(functionSuggestion);
         });
@@ -81,8 +82,8 @@ public class ModuleSuggestionProcessor {
         // Properties for the type
         typeDescriptor.getProperties().forEach(typePropertyDescriptor -> {
             Suggestion propertySuggestion = Suggestion.create(PROPERTY)
-                    .withLookupString(typePropertyDescriptor.getName())
-                    .withType(typePropertyDescriptor.getType())
+                    .lookup(typePropertyDescriptor.getName())
+                    .returnType(typePropertyDescriptor.getType())
                     .build();
             typeTrie.insert(propertySuggestion);
         });
@@ -118,9 +119,9 @@ public class ModuleSuggestionProcessor {
             Trie typeTrie = allTypesMap.getOrDefault(argumentType, Default.UNKNOWN);
             String argumentPresentableType = PresentableTypeUtils.from(argumentType, typeTrie);
             return Suggestion.create(PROPERTY)
-                    .withType(argument.getArgumentType())
-                    .withPresentableType(argumentPresentableType)
-                    .withLookupString(argument.getArgumentName())
+                    .returnType(argument.getArgumentType())
+                    .returnTypeDisplayValue(argumentPresentableType)
+                    .lookup(argument.getArgumentName())
                     .build();
         }).forEach(trie::insert);
         return trie;

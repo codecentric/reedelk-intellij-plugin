@@ -17,8 +17,8 @@ public class SuggestionAssertion {
     public SuggestionAssertion contains(String lookupString, String typeText) {
         boolean found = suggestions.stream()
                 .anyMatch(suggestion ->
-                        lookupString.equals(suggestion.lookupString()) &&
-                        typeText.equals(suggestion.typeText()));
+                        lookupString.equals(suggestion.getLookup()) &&
+                        typeText.equals(suggestion.getReturnType()));
         assertThat(found).isTrue();
         return this;
     }

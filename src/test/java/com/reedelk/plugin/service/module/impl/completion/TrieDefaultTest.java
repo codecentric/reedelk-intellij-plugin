@@ -10,15 +10,15 @@ class TrieDefaultTest {
     void shouldFindMultipleSuggestionsByPrefix() {
         // Given
         Suggestion suggestion1 = Suggestion.create(Suggestion.Type.PROPERTY)
-                .withLookupString("method1")
-                .withPresentableText("method1()")
-                .withType(String.class.getName())
+                .lookup("method1")
+                .lookupDisplayValue("method1()")
+                .returnType(String.class.getName())
                 .build();
 
         Suggestion suggestion2 = Suggestion.create(Suggestion.Type.PROPERTY)
-                .withLookupString("method2")
-                .withPresentableText("method2()")
-                .withType(String.class.getName())
+                .lookup("method2")
+                .lookupDisplayValue("method2()")
+                .returnType(String.class.getName())
                 .build();
 
         TrieDefault trie = new TrieDefault();

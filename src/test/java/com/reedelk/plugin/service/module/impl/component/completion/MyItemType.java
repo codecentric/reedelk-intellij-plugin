@@ -14,7 +14,7 @@ public class MyItemType implements TrieProvider {
     @Override
     public void register(Map<String, Trie> trieMap) {
         Trie trie = new TrieDefault();
-        trie.insert(SuggestionTestUtils.createFunction("method1", "method1", String.class.getName()));
+        trie.insert(SuggestionTestUtils.createFunction("method1", String.class.getName()));
         trieMap.put(MyItemType.class.getName(), trie);
     }
 }

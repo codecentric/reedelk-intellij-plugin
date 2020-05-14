@@ -18,7 +18,7 @@ public class MessageAttributeType implements TrieProvider {
     @Override
     public void register(Map<String, Trie> trieMap) {
         Trie trie = new TrieDefault();
-        trie.insert(createProperty("component", "component",String.class.getName()));
+        trie.insert(createProperty("component", String.class.getName()));
         trieMap.put(MessageAttributes.class.getName(), trie);
     }
 }

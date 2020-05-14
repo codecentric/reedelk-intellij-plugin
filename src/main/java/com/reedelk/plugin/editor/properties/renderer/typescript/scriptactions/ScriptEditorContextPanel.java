@@ -63,9 +63,9 @@ class ScriptEditorContextPanel extends DisposablePanel {
     static class ContextVariableLabel extends JLabel {
         ContextVariableLabel(Suggestion suggestion) {
             super(message("script.editor.context.vars.html.template",
-                    suggestion.lookupString(),
-                    HTMLUtils.escape(suggestion.presentableType())));
-            setIcon(suggestion.icon());
+                    suggestion.getLookupDisplayValue(),
+                    HTMLUtils.escape(suggestion.getReturnTypeDisplayValue())));
+            setIcon(suggestion.getType().icon);
             setBorder(emptyTop(4));
         }
     }
@@ -74,8 +74,8 @@ class ScriptEditorContextPanel extends DisposablePanel {
         return PlatformModuleService.getInstance(module)
                 .variablesOf(componentContext, scriptPropertyPath)
                 .stream()
-                .filter(suggestion -> StringUtils.isNotBlank(suggestion.lookupString()))
-                .sorted(Comparator.comparing(Suggestion::lookupString).reversed())
+                .filter(suggestion -> StringUtils.isNotBlank(suggestion.getLookupDisplayValue()))
+                .sorted(Comparator.comparing(Suggestion::getLookupDisplayValue).reversed())
                 .collect(Collectors.toList());
     }
 

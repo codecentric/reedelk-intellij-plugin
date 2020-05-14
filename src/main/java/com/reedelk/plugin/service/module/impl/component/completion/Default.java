@@ -16,13 +16,13 @@ public class Default {
     public static final Trie TRIE = new TrieDefault();
     static {
         Suggestion message = Suggestion.create(PROPERTY)
-                .withLookupString("message")
-                .withType(Message.class.getName())
+                .lookup("message")
+                .returnType(Message.class.getName())
                 .build();
         TRIE.insert(message);
         Suggestion context = Suggestion.create(PROPERTY)
-                .withLookupString("context")
-                .withType(FlowContext.class.getName())
+                .lookup("context")
+                .returnType(FlowContext.class.getName())
                 .build();
         TRIE.insert(context);
     }
@@ -34,19 +34,19 @@ public class Default {
             // Init async
             Trie trie = new TrieDefault();
             trie.insert(Suggestion.create(Suggestion.Type.FUNCTION)
-                    .withLookupString("each { it }")
-                    .withPresentableText("each")
-                    .withCursorOffset(2)
+                    .lookup("each { it }")
+                    .lookupDisplayValue("each")
+                    .cursorOffset(2)
                     .build());
             trie.insert(Suggestion.create(Suggestion.Type.FUNCTION)
-                    .withLookupString("eachWithIndex { it, i ->  }")
-                    .withPresentableText("eachWithIndex")
-                    .withCursorOffset(2)
+                    .lookup("eachWithIndex { it, i ->  }")
+                    .lookupDisplayValue("eachWithIndex")
+                    .cursorOffset(2)
                     .build());
             trie.insert(Suggestion.create(Suggestion.Type.FUNCTION)
-                    .withLookupString("collect { it }")
-                    .withPresentableText("collect")
-                    .withCursorOffset(2)
+                    .lookup("collect { it }")
+                    .lookupDisplayValue("collect")
+                    .cursorOffset(2)
                     .build());
             trieMap.put(ArrayList.class.getName(), trie);
         }

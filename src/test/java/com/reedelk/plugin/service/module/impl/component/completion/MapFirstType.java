@@ -18,8 +18,8 @@ public class MapFirstType extends HashMap<String, Serializable> implements TrieP
     @Override
     public void register(Map<String, Trie> trieMap) {
         Trie trie = new TrieDefault(HashMap.class.getName(), null);
-        trie.insert(createProperty("firstProperty1", "firstProperty1", String.class.getName()));
-        trie.insert(createProperty("firstProperty2", "firstProperty2", String.class.getName()));
+        trie.insert(createProperty("firstProperty1", String.class.getName()));
+        trie.insert(createProperty("firstProperty2", String.class.getName()));
         trieMap.put(MapFirstType.class.getName(), trie);
     }
 }

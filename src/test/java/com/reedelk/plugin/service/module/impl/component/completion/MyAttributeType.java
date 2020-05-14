@@ -18,8 +18,8 @@ public class MyAttributeType extends MessageAttributes implements TrieProvider {
     @Override
     public void register(Map<String, Trie> trieMap) {
         Trie trie = new TrieDefault(MessageAttributes.class.getName(), null);
-        trie.insert(createProperty("attributeProperty1", "attributeProperty1", String.class.getName()));
-        trie.insert(createProperty("attributeProperty2", "attributeProperty2", long.class.getName()));
+        trie.insert(createProperty("attributeProperty1", String.class.getName()));
+        trie.insert(createProperty("attributeProperty2", long.class.getName()));
         trieMap.put(MyAttributeType.class.getName(), trie);
     }
 }

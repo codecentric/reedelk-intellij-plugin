@@ -129,14 +129,14 @@ class PlatformComponentMetadataService implements PlatformModuleService {
     private Collection<MetadataTypeItemDTO> findAndMapDTO(ComponentOutputDescriptor output, Trie typeTrie) {
         return find(typeTrie, output)
                 .stream()
-                .sorted(Comparator.comparing(Suggestion::lookupString))
+                .sorted(Comparator.comparing(Suggestion::getLookup))
                 .map(mapper(output))
                 .collect(toList());
     }
 
     public Function<Suggestion, MetadataTypeItemDTO> mapper(ComponentOutputDescriptor output) {
         return suggestion -> {
-            String type = suggestion.typeText();
+            String type = suggestion.getReturnType();
             Trie typeTrie = typeAndAndTries.getOrDefault(type, Default.UNKNOWN);
             if (isNotBlank(typeTrie.listItemType())) {
                 // Unroll the list type
@@ -145,12 +145,12 @@ class PlatformComponentMetadataService implements PlatformModuleService {
                 // The list type display is: List<FileType> : FileType
                 String typeDisplay = PresentableTypeUtils.formatListDisplayType(type, typeTrie);
                 return asTypeDTO(output, listItemType, listItemTrie,
-                        suggestion.lookupString(),
+                        suggestion.getLookup(),
                         typeDisplay);
             } else {
                 return asTypeDTO(output, type, typeTrie,
-                        suggestion.lookupString(),
-                        suggestion.presentableType());
+                        suggestion.getLookup(),
+                        suggestion.getReturnTypeDisplayValue());
             }
         };
     }

@@ -42,7 +42,7 @@ class CompletionFinderTest {
         MessageAttributeType.initialize(tries);
         MyAttributeType.initialize(tries);
 
-        Suggestion message = createProperty("message", "message", Message.class.getName());
+        Suggestion message = createProperty("message", Message.class.getName());
         messageRootTrie = new TrieDefault();
         messageRootTrie.insert(message);
 
@@ -66,7 +66,7 @@ class CompletionFinderTest {
         assertThat(suggestions).hasSize(1);
 
         Suggestion suggestion = suggestions.iterator().next();
-        assertThat(suggestion.typeText()).isEqualTo(String.class.getName());
+        assertThat(suggestion.getReturnType()).isEqualTo(String.class.getName());
         assertThat(suggestion.getType()).isEqualTo(Type.FUNCTION);
     }
 
@@ -83,7 +83,7 @@ class CompletionFinderTest {
         // Then
         assertThat(suggestions).hasSize(1);
         Suggestion suggestion = suggestions.iterator().next();
-        assertThat(suggestion.presentableType()).isEqualTo("List<MyItemType>");
+        assertThat(suggestion.getReturnTypeDisplayValue()).isEqualTo("List<MyItemType>");
         assertThat(suggestion.getType()).isEqualTo(Type.FUNCTION);
     }
 
@@ -101,7 +101,7 @@ class CompletionFinderTest {
         // Then
         assertThat(suggestions).hasSize(1);
         Suggestion suggestion = suggestions.iterator().next();
-        assertThat(suggestion.presentableType()).isEqualTo("List<MyUnknownType>");
+        assertThat(suggestion.getReturnTypeDisplayValue()).isEqualTo("List<MyUnknownType>");
         assertThat(suggestion.getType()).isEqualTo(Type.FUNCTION);
     }
 
@@ -119,7 +119,7 @@ class CompletionFinderTest {
         assertThat(suggestions).hasSize(1);
 
         Suggestion suggestion = suggestions.iterator().next();
-        assertThat(suggestion.presentableType()).isEqualTo("List<MapFirstType>");
+        assertThat(suggestion.getReturnTypeDisplayValue()).isEqualTo("List<MapFirstType>");
         assertThat(suggestion.getType()).isEqualTo(Type.FUNCTION);
     }
 
@@ -137,7 +137,7 @@ class CompletionFinderTest {
         assertThat(suggestions).hasSize(1);
 
         Suggestion suggestion = suggestions.iterator().next();
-        assertThat(suggestion.presentableType()).isEqualTo("MapFirstType");
+        assertThat(suggestion.getReturnTypeDisplayValue()).isEqualTo("MapFirstType");
         assertThat(suggestion.getType()).isEqualTo(Type.FUNCTION);
     }
 
@@ -155,7 +155,7 @@ class CompletionFinderTest {
         assertThat(suggestions).hasSize(1);
 
         Suggestion suggestion = suggestions.iterator().next();
-        assertThat(suggestion.presentableType()).isEqualTo("MapFirstType,byte[],String");
+        assertThat(suggestion.getReturnTypeDisplayValue()).isEqualTo("MapFirstType,byte[],String");
         assertThat(suggestion.getType()).isEqualTo(Type.FUNCTION);
     }
 
@@ -281,7 +281,7 @@ class CompletionFinderTest {
     }
 
     private void assertExistSuggestionWithName(Collection<Suggestion> suggestions, String expectedName) {
-        boolean found = suggestions.stream().anyMatch(suggestion -> expectedName.equals(suggestion.name()));
+        boolean found = suggestions.stream().anyMatch(suggestion -> expectedName.equals(suggestion.getLookup()));
         assertThat(found)
                 .withFailMessage("Could not find suggestion with expected name=<%s>", expectedName)
                 .isTrue();

@@ -42,8 +42,8 @@ public class CompletionFinder {
                 for (Suggestion suggestion : suggestions) {
                     // We only need to find exact matches. If there are no exact matches,
                     // we can not move forward with the autocomplete.
-                    if (suggestion.name().equals(token)) {
-                        Trie trie = typeAndTrieMap.getOrDefault(suggestion.typeText(), Default.UNKNOWN);
+                    if (suggestion.getLookup().equals(token)) {
+                        Trie trie = typeAndTrieMap.getOrDefault(suggestion.getReturnType(), Default.UNKNOWN);
                         exactMatchTries.add(trie);
                     }
                 }
@@ -100,13 +100,12 @@ public class CompletionFinder {
                 .findAny()
                 .orElseThrow(() -> new PluginException("Expected at least one dynamic suggestion."));
         List<String> possibleTypes = suggestions.stream()
-                .map(s -> PresentableTypeUtils.from(s.typeText()))
+                .map(sugg -> PresentableTypeUtils.from(sugg.getReturnType()))
                 .collect(toList());
         return Suggestion.create(suggestion.getType())
-                .withName(suggestion.name())
-                .withLookupString(suggestion.lookupString())
-                .withPresentableText(suggestion.presentableText())
-                .withPresentableType(String.join(",", possibleTypes))
+                .lookup(suggestion.getLookup())
+                .lookupDisplayValue(suggestion.getLookupDisplayValue())
+                .returnTypeDisplayValue(String.join(",", possibleTypes))
                 .build();
     }
 }
