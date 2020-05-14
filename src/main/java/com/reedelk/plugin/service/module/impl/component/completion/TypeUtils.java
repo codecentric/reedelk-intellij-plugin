@@ -2,15 +2,18 @@ package com.reedelk.plugin.service.module.impl.component.completion;
 
 import com.reedelk.runtime.api.commons.StringUtils;
 import com.reedelk.runtime.api.message.MessageAttributes;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.reedelk.plugin.service.module.impl.component.completion.Default.DEFAULT_RETURN_TYPE;
 import static com.reedelk.runtime.api.commons.StringUtils.isNotBlank;
 
-public class PresentableTypeUtils {
+public class TypeUtils {
 
-    private PresentableTypeUtils() {
+    private TypeUtils() {
     }
 
     // Converts a fully qualified name type e.g. com.my.component.MyType
@@ -31,9 +34,9 @@ public class PresentableTypeUtils {
         if (isNotBlank(typeTrie.listItemType())) {
             // If exists a list item type, it is a list and we want to display it with: List<ItemType>
             String listItemType = typeTrie.listItemType();
-            return "List<" + PresentableTypeUtils.from(listItemType) + ">";
+            return "List<" + TypeUtils.from(listItemType) + ">";
         } else {
-            return PresentableTypeUtils.from(type);
+            return TypeUtils.from(type);
         }
     }
 
@@ -43,11 +46,24 @@ public class PresentableTypeUtils {
             return MessageAttributes.class.getSimpleName(); // We keep the message attributes.
         } else {
             Trie dynamicTypeTrie = typeAndTrieMap.getOrDefault(dynamicType, Default.UNKNOWN);
-            return PresentableTypeUtils.from(dynamicType, dynamicTypeTrie);
+            return TypeUtils.from(dynamicType, dynamicTypeTrie);
         }
     }
 
     public static String formatListDisplayType(String type, Trie typeTrie) {
-        return PresentableTypeUtils.from(type, typeTrie) + " : " + PresentableTypeUtils.from(typeTrie.listItemType());
+        return TypeUtils.from(type, typeTrie) + " : " + TypeUtils.from(typeTrie.listItemType());
+    }
+
+    @Nullable
+    public static String typeDisplayValueOf(@NotNull TypeAndTries allTypesMap, @Nullable String type) {
+        if (type == null) return null;
+        Trie typeTrie = allTypesMap.getOrDefault(type, Default.UNKNOWN);
+        return StringUtils.isNotBlank(typeTrie.displayName()) ?
+                typeTrie.displayName() :
+                TypeUtils.from(type, typeTrie);
+    }
+
+    public static String returnTypeOrDefault(String type) {
+        return StringUtils.isBlank(type) ? DEFAULT_RETURN_TYPE : type;
     }
 }

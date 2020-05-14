@@ -109,13 +109,13 @@ class PlatformComponentMetadataService implements PlatformModuleService {
         if (isNotBlank(typeTrie.listItemType())) {
             // It is  a List type, we need to find the suggestions for the List item type.
             // The list type display is: List<FileType> : FileType
-            String typeDisplay = PresentableTypeUtils.formatListDisplayType(type, typeTrie);
+            String typeDisplay = TypeUtils.formatListDisplayType(type, typeTrie);
             String listItemType = typeTrie.listItemType();
             Collection<MetadataTypeItemDTO> typeDTOs = findAndMapDTO(output, listItemType);
             return new MetadataTypeDTO(typeDisplay, typeDTOs);
 
         } else {
-            String typeDisplay = PresentableTypeUtils.from(type, typeTrie);
+            String typeDisplay = TypeUtils.from(type, typeTrie);
             Collection<MetadataTypeItemDTO> typeDTOs = findAndMapDTO(output, typeTrie);
             return new MetadataTypeDTO(typeDisplay, typeDTOs);
         }
@@ -143,7 +143,7 @@ class PlatformComponentMetadataService implements PlatformModuleService {
                 String listItemType = typeTrie.listItemType();
                 Trie listItemTrie = typeAndAndTries.getOrDefault(listItemType, Default.UNKNOWN);
                 // The list type display is: List<FileType> : FileType
-                String typeDisplay = PresentableTypeUtils.formatListDisplayType(type, typeTrie);
+                String typeDisplay = TypeUtils.formatListDisplayType(type, typeTrie);
                 return asTypeDTO(output, listItemType, listItemTrie,
                         suggestion.getInsertValue(),
                         typeDisplay);

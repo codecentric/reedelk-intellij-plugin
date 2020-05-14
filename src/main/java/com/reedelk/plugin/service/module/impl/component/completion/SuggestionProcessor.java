@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-import static java.lang.String.format;
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 
 public class SuggestionProcessor {
 
@@ -50,7 +50,8 @@ public class SuggestionProcessor {
                 Trie typeTrie = moduleTypes.get(typeDescriptor.getType());
                 populate(typeDescriptor, typeTrie);
             } catch (Exception exception) {
-                String errorMessage = format("Could not populate types for module descriptor=[%s], cause=[%s]", moduleDescriptor.getName(), exception.getMessage());
+                String errorMessage = message("module.completion.suggestion.processor.error",
+                        typeDescriptor.getType(), moduleDescriptor.getName(), exception.getMessage());
                 LOG.warn(errorMessage, exception);
             }
         });

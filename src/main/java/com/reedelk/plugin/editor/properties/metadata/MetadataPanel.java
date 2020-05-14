@@ -18,6 +18,7 @@ import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import java.awt.*;
 
+import static com.reedelk.plugin.message.ReedelkBundle.message;
 import static com.reedelk.plugin.service.module.PlatformModuleService.OnComponentMetadataEvent;
 import static com.reedelk.plugin.service.module.PlatformModuleService.getInstance;
 
@@ -36,10 +37,9 @@ public class MetadataPanel extends DisposablePanel implements OnComponentMetadat
         loadingPanel.setOpaque(true);
         loadingPanel.setBackground(JBColor.WHITE);
 
-        // TODO: Extract strings
         MetadataPanelHeader metadataPanelHeader = new MetadataPanelHeader(
-                "Input Message", this::showInputMessage,
-                "Expected Payload", this::showExpectedInput);
+                message("metadata.input.message"), this::showInputMessage,
+                message("metadata.expected.input"), this::showExpectedInput);
 
         this.connection = module.getMessageBus().connect();
         this.connection.subscribe(Topics.ON_COMPONENT_IO, this);

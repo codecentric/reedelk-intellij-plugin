@@ -64,7 +64,7 @@ public class CompletionFinder {
         Collection<Suggestion> suggestions = current.autocomplete(token, typeAndTrieMap);
         List<Suggestion> withDynamicSuggestions = new ArrayList<>();
         for (Suggestion suggestion : suggestions) {
-            if (DynamicTypeUtils.is(suggestion)) {
+            if (TypeDynamicUtils.is(suggestion)) {
                 createDynamicSuggestions(suggestion, descriptor, withDynamicSuggestions, flatten);
             } else {
                 withDynamicSuggestions.add(suggestion);
@@ -78,7 +78,7 @@ public class CompletionFinder {
                                           List<Suggestion> suggestionList,
                                           boolean flatten) {
         Collection<Suggestion> dynamicSuggestions =
-                DynamicTypeUtils.createDynamicSuggestion(typeAndTrieMap, descriptor, originalSuggestion);
+                TypeDynamicUtils.createDynamicSuggestion(typeAndTrieMap, descriptor, originalSuggestion);
         if (flatten && dynamicSuggestions.size() > 1) {
             // If the suggestion is terminal, e.g. message.payload() we must flatten the dynamic suggestions into one.
             // the type of each separate suggestion is separated by a comma. This happens when a component might
@@ -100,7 +100,7 @@ public class CompletionFinder {
                 .findAny()
                 .orElseThrow(() -> new PluginException("Expected at least one dynamic suggestion."));
         List<String> possibleTypes = suggestions.stream()
-                .map(sugg -> PresentableTypeUtils.from(sugg.getReturnType()))
+                .map(sugg -> TypeUtils.from(sugg.getReturnType()))
                 .collect(toList());
         return Suggestion.create(suggestion.getType())
                 .insertValue(suggestion.getInsertValue())

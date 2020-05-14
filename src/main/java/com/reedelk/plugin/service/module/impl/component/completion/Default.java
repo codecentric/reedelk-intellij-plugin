@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
-import static com.reedelk.plugin.service.module.impl.component.completion.SuggestionFactory.typeDisplayValueOf;
+import static com.reedelk.plugin.service.module.impl.component.completion.TypeUtils.typeDisplayValueOf;
 
 public class Default {
 
@@ -22,13 +22,13 @@ public class Default {
         Suggestion message = Suggestion.create(PROPERTY)
                 .insertValue("message")
                 .returnType(Message.class.getName())
-                .returnTypeDisplayValue(PresentableTypeUtils.from(Message.class.getName()))
+                .returnTypeDisplayValue(TypeUtils.from(Message.class.getName()))
                 .build();
         TRIE.insert(message);
         Suggestion context = Suggestion.create(PROPERTY)
                 .insertValue("context")
                 .returnType(FlowContext.class.getName())
-                .returnTypeDisplayValue(PresentableTypeUtils.from(FlowContext.class.getName()))
+                .returnTypeDisplayValue(TypeUtils.from(FlowContext.class.getName()))
                 .build();
         TRIE.insert(context);
     }

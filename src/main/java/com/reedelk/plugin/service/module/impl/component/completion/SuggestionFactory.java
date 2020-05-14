@@ -6,10 +6,10 @@ import com.reedelk.module.descriptor.model.type.TypeFunctionDescriptor;
 import com.reedelk.module.descriptor.model.type.TypePropertyDescriptor;
 import com.reedelk.runtime.api.commons.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import static com.reedelk.plugin.service.module.impl.component.completion.Default.DEFAULT_RETURN_TYPE;
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.*;
+import static com.reedelk.plugin.service.module.impl.component.completion.TypeUtils.returnTypeOrDefault;
+import static com.reedelk.plugin.service.module.impl.component.completion.TypeUtils.typeDisplayValueOf;
 import static com.reedelk.runtime.api.commons.Preconditions.checkState;
 
 public class SuggestionFactory {
@@ -24,7 +24,7 @@ public class SuggestionFactory {
         // name if it was bound to the script engine with a different name.
         String globalToken = StringUtils.isNotBlank(typeDescriptor.getDisplayName()) ?
                 typeDescriptor.getDisplayName() :
-                PresentableTypeUtils.from(typeDescriptor.getType());
+                TypeUtils.from(typeDescriptor.getType());
         return Suggestion.create(GLOBAL)
                 .returnTypeDisplayValue(globalToken)
                 .insertValue(globalToken)
@@ -64,18 +64,5 @@ public class SuggestionFactory {
                 .insertValue(descriptor.getArgumentName())
                 .returnType(argumentType)
                 .build();
-    }
-
-    @Nullable
-    public static String typeDisplayValueOf(@NotNull TypeAndTries allTypesMap, @Nullable String type) {
-        if (type == null) return null;
-        Trie typeTrie = allTypesMap.getOrDefault(type, Default.UNKNOWN);
-        return StringUtils.isNotBlank(typeTrie.displayName()) ?
-                typeTrie.displayName() :
-                PresentableTypeUtils.from(type, typeTrie);
-    }
-
-    private static String returnTypeOrDefault(String type) {
-        return StringUtils.isBlank(type) ? DEFAULT_RETURN_TYPE : type;
     }
 }

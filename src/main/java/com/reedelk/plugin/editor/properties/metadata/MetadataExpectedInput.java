@@ -5,7 +5,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBUI;
 import com.reedelk.plugin.editor.properties.commons.DisposablePanel;
 import com.reedelk.plugin.editor.properties.commons.FormBuilder;
-import com.reedelk.plugin.service.module.impl.component.completion.PresentableTypeUtils;
+import com.reedelk.plugin.service.module.impl.component.completion.TypeUtils;
 import com.reedelk.plugin.service.module.impl.component.metadata.ComponentMetadataDTO;
 import com.reedelk.plugin.service.module.impl.component.metadata.ComponentMetadataExpectedInputDTO;
 import com.reedelk.runtime.api.commons.StringUtils;
@@ -41,7 +41,7 @@ public class MetadataExpectedInput extends AbstractMetadataInputPanel {
         }
 
         String expectedPayloadTypes = input.getPayload().stream()
-                .map(PresentableTypeUtils::from)
+                .map(TypeUtils::from)
                 .collect(Collectors.joining(", "));
         JBLabel expectedType = new JBLabel(htmlLabel("<b style=\"color: #666666\">Expected type: </b>" + expectedPayloadTypes, "", false));
         expectedType.setBorder(JBUI.Borders.empty(5));

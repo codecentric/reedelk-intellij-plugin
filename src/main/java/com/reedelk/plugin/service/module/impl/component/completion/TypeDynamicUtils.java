@@ -10,9 +10,9 @@ import java.util.List;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
-public class DynamicTypeUtils {
+public class TypeDynamicUtils {
 
-    private DynamicTypeUtils() {
+    private TypeDynamicUtils() {
     }
 
     // Resolves the dynamic type from the output descriptor
@@ -38,14 +38,14 @@ public class DynamicTypeUtils {
     // Note that there might be multiple dynamic types because a component
     // could have multiple outputs.
     public static Collection<Suggestion> createDynamicSuggestion(TypeAndTries typeAndTrieMap, ComponentOutputDescriptor descriptor, Suggestion suggestion) {
-        return DynamicTypeUtils.from(suggestion, descriptor).stream()
+        return TypeDynamicUtils.from(suggestion, descriptor).stream()
                 .map(dynamicType -> Suggestion.create(suggestion.getType())
                         .returnType(dynamicType)
                         .insertValue(suggestion.getInsertValue())
                         .lookupToken(suggestion.getLookupToken())
                         .tailText(suggestion.getTailText())
                         .cursorOffset(suggestion.getCursorOffset())
-                        .returnTypeDisplayValue(PresentableTypeUtils.presentableTypeOf(suggestion, dynamicType, typeAndTrieMap))
+                        .returnTypeDisplayValue(TypeUtils.presentableTypeOf(suggestion, dynamicType, typeAndTrieMap))
                         .build())
                 .collect(toList());
     }
