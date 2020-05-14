@@ -1,0 +1,176 @@
+package com.reedelk.plugin.service.module.impl.component.completion;
+
+import com.reedelk.module.descriptor.model.type.TypeDescriptor;
+import com.reedelk.module.descriptor.model.type.TypeFunctionDescriptor;
+import com.reedelk.plugin.assertion.PluginAssertion;
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.FUNCTION;
+import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.GLOBAL;
+import static com.reedelk.plugin.service.module.impl.component.completion.SuggestionTestUtils.createMethod;
+import static com.reedelk.plugin.service.module.impl.component.completion.SuggestionTestUtils.createType;
+import static java.util.Collections.emptyList;
+
+class SuggestionFactoryTest {
+
+    private TypeAndTries allTypesMap = new TypeAndTries();
+
+    // Suggestions from global type
+    @Test
+    void shouldCorrectlyCreateSuggestionFromGlobalType() {
+        // Given
+        String type = "com.test.internal.type.FileType";
+        TypeDescriptor fileType = createType(type, emptyList(), emptyList());
+        fileType.setGlobal(true);
+
+        // When
+        Suggestion suggestion = SuggestionFactory.create(fileType);
+
+        // Then
+        PluginAssertion.assertThat(suggestion)
+                .hasType(GLOBAL)
+                .hasLookupToken("FileType")
+                .hasOffset(0)
+                .hasReturnType(type)
+                .hasInsertValue("FileType")
+                .hasTailText(null)
+                .hasReturnDisplayValue("FileType");
+    }
+
+    @Test
+    void shouldCorrectlyCreateSuggestionFromGlobalTypeWhenDisplayNameIsPresent() {
+        // Given
+        String type = "com.test.internal.type.FileType";
+        String displayName = "MyDisplayName";
+        TypeDescriptor fileType = createType(type, emptyList(), emptyList());
+        fileType.setDisplayName(displayName);
+        fileType.setGlobal(true);
+
+        // When
+        Suggestion suggestion = SuggestionFactory.create(fileType);
+
+        // Then
+        PluginAssertion.assertThat(suggestion)
+                .hasType(GLOBAL)
+                .hasLookupToken(displayName)
+                .hasOffset(0)
+                .hasReturnType(type)
+                .hasInsertValue(displayName)
+                .hasTailText(null)
+                .hasReturnDisplayValue(displayName);
+    }
+
+    // Suggestions from function descriptor
+    @Test
+    void shouldCorrectlyCreateSuggestionFromTypeFunctionDescriptor() {
+        // Given
+        TypeFunctionDescriptor method =
+                createMethod("method1", "method1(String key)", String.class.getName(), 1);
+
+        // When
+        Suggestion suggestion = SuggestionFactory.create(allTypesMap, method);
+
+        // Then
+        PluginAssertion.assertThat(suggestion)
+                .hasType(FUNCTION)
+                .hasLookupToken("method1")
+                .hasOffset(1)
+                .hasReturnType(String.class.getName())
+                .hasInsertValue("method1()")
+                .hasTailText("(String key)")
+                .hasReturnDisplayValue("String");
+    }
+
+    @Test
+    void shouldCorrectlyCreateSuggestionFromTypeFunctionDescriptorWhenReturnIsVoid() {
+        // Given
+        TypeFunctionDescriptor method =
+                createMethod("method1", "method1(String key)", "void", 1);
+
+        // When
+        Suggestion suggestion = SuggestionFactory.create(allTypesMap, method);
+
+        // Then
+        PluginAssertion.assertThat(suggestion)
+                .hasType(FUNCTION)
+                .hasLookupToken("method1")
+                .hasOffset(1)
+                .hasReturnType("void")
+                .hasInsertValue("method1()")
+                .hasTailText("(String key)")
+                .hasReturnDisplayValue("void");
+    }
+
+    @Test
+    void shouldCorrectlyCreateSuggestionFromTypeFunctionDescriptorWhenReturnIsNull() {
+        // Given
+        TypeFunctionDescriptor method =
+                createMethod("method1", "method1(String key)", null, 1);
+
+        // When
+        Suggestion suggestion = SuggestionFactory.create(allTypesMap, method);
+
+        // Then
+        PluginAssertion.assertThat(suggestion)
+                .hasType(FUNCTION)
+                .hasLookupToken("method1")
+                .hasOffset(1)
+                .hasReturnType(null)
+                .hasInsertValue("method1()")
+                .hasTailText("(String key)")
+                .hasReturnDisplayValue(null);
+    }
+
+    @Test
+    void shouldCorrectlyCreateSuggestionFromTypeFunctionDescriptorWhenReturnListWithItemType() {
+        // Given
+        Map<String, Trie> moduleTypes = new HashMap<>();
+        moduleTypes.put("com.test.MyListItem", new TrieImpl(ArrayList.class.getName(), "com.test.MyItem", null));
+        TypeAndTries allTypesMap = new TypeAndTries(moduleTypes);
+
+        TypeFunctionDescriptor method =
+                createMethod("method1", "method1(String key)", "com.test.MyListItem", 1);
+
+        // When
+        Suggestion suggestion = SuggestionFactory.create(allTypesMap, method);
+
+        // Then
+        PluginAssertion.assertThat(suggestion)
+                .hasType(FUNCTION)
+                .hasLookupToken("method1")
+                .hasOffset(1)
+                .hasReturnType("com.test.MyListItem")
+                .hasInsertValue("method1()")
+                .hasTailText("(String key)")
+                .hasReturnDisplayValue("List<MyItem>");
+    }
+
+    @Test
+    void shouldCorrectlyCreateSuggestionFromTypeFunctionDescriptorWhenReturnListWithItemTypeAndDisplayName() {
+        // Given
+        String displayName = "MyListItemDisplayName";
+        Map<String, Trie> moduleTypes = new HashMap<>();
+        moduleTypes.put("com.test.MyListItem", new TrieImpl(ArrayList.class.getName(), "com.test.MyItem", displayName));
+        TypeAndTries allTypesMap = new TypeAndTries(moduleTypes);
+
+        TypeFunctionDescriptor method =
+                createMethod("method1", "method1(String key)", "com.test.MyListItem", 1);
+
+        // When
+        Suggestion suggestion = SuggestionFactory.create(allTypesMap, method);
+
+        // Then
+        PluginAssertion.assertThat(suggestion)
+                .hasType(FUNCTION)
+                .hasLookupToken("method1")
+                .hasOffset(1)
+                .hasReturnType("com.test.MyListItem")
+                .hasInsertValue("method1()")
+                .hasTailText("(String key)")
+                .hasReturnDisplayValue("MyListItemDisplayName");
+    }
+}

@@ -11,11 +11,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.FUNCTION;
 import static com.reedelk.plugin.service.module.impl.component.completion.Suggestion.Type.PROPERTY;
+import static com.reedelk.plugin.service.module.impl.component.completion.SuggestionTestUtils.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -69,39 +69,5 @@ class ModuleSuggestionProcessorTest {
                 .contains(PROPERTY, "id", "id", String.class.getName(), String.class.getSimpleName())
                 .contains(PROPERTY, "age", "age", int.class.getName(), int.class.getSimpleName())
                 .contains(FUNCTION, "method1()", "method1", String.class.getName(), String.class.getSimpleName());
-    }
-
-    private TypePropertyDescriptor createStringProperty(String name) {
-        TypePropertyDescriptor idProperty = new TypePropertyDescriptor();
-        idProperty.setType(String.class.getName());
-        idProperty.setName(name);
-        return idProperty;
-    }
-    private TypePropertyDescriptor createIntProperty(String name) {
-        TypePropertyDescriptor idProperty = new TypePropertyDescriptor();
-        idProperty.setType(int.class.getName());
-        idProperty.setName(name);
-        return idProperty;
-    }
-
-    private TypeFunctionDescriptor createMethod(String name, String signature, String returnType, int cursorOffset) {
-        TypeFunctionDescriptor method = new TypeFunctionDescriptor();
-        method.setCursorOffset(cursorOffset);
-        method.setReturnType(returnType);
-        method.setSignature(signature);
-        method.setName(name);
-        return method;
-    }
-
-    private TypeFunctionDescriptor createMethod(String name, String signature, String returnType) {
-        return createMethod(name, signature, returnType, 0);
-    }
-
-    private TypeDescriptor createType(String type, List<TypePropertyDescriptor> properties, List<TypeFunctionDescriptor> functions) {
-        TypeDescriptor typeDescriptor = new TypeDescriptor();
-        typeDescriptor.setProperties(properties);
-        typeDescriptor.setFunctions(functions);
-        typeDescriptor.setType(type);
-        return typeDescriptor;
     }
 }

@@ -37,6 +37,11 @@ public class TrieMultipleWrapper implements Trie {
     }
 
     @Override
+    public String displayName() {
+        return null;
+    }
+
+    @Override
     public void clear() {
         throw new UnsupportedOperationException();
     }

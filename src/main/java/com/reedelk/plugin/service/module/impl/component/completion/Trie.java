@@ -8,6 +8,8 @@ public interface Trie {
 
     String listItemType();
 
+    String displayName();
+
     void clear();
 
     void insert(Suggestion suggestion);

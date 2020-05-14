@@ -2,62 +2,55 @@ package com.reedelk.plugin.assertion.suggestion;
 
 import com.reedelk.plugin.service.module.impl.component.completion.Suggestion;
 
-import java.util.Collection;
-import java.util.Objects;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SuggestionAssertion {
 
-    private final Collection<Suggestion> suggestions;
+    private final Suggestion suggestion;
 
-    public SuggestionAssertion(Collection<Suggestion> suggestions) {
-        this.suggestions = suggestions;
+    public SuggestionAssertion(Suggestion suggestion) {
+        this.suggestion = suggestion;
     }
 
-    public SuggestionAssertion contains(Suggestion.Type expectedType,
-                                        String expectedLookup,
-                                        String expectedLookupDisplayValue,
-                                        String expectedReturnType,
-                                        String expectedReturnTypeDisplayValue) {
-        boolean found = suggestions.stream().anyMatch(suggestion -> {
-            Suggestion.Type actualType = suggestion.getType();
-            String actualLookup = suggestion.getInsertValue();
-            String actualLookupDisplayValue = suggestion.getLookupToken();
-            String actualReturnType = suggestion.getReturnType();
-            String actualReturnTypeDisplayValue = suggestion.getReturnTypeDisplayValue();
-            return Objects.equals(actualType, expectedType) &&
-                    Objects.equals(actualLookup, expectedLookup) &&
-                    Objects.equals(actualLookupDisplayValue, expectedLookupDisplayValue) &&
-                    Objects.equals(actualReturnType, expectedReturnType) &&
-                    Objects.equals(actualReturnTypeDisplayValue, expectedReturnTypeDisplayValue);
-                });
-        assertThat(found).isTrue();
+    public SuggestionAssertion hasType(Suggestion.Type expectedType) {
+        Suggestion.Type actualType = suggestion.getType();
+        assertThat(actualType).isEqualTo(expectedType);
         return this;
     }
 
-    public SuggestionAssertion contains(Suggestion expectedSuggestion) {
-        boolean found = suggestions.stream()
-                .anyMatch(suggestion -> suggestion == expectedSuggestion);
-        assertThat(found).isTrue();
+    public SuggestionAssertion hasReturnType(String expectedReturnType) {
+        String actualReturnType = suggestion.getReturnType();
+        assertThat(actualReturnType).isEqualTo(expectedReturnType);
         return this;
     }
 
-    public SuggestionAssertion containsOnly(Suggestion expectedSuggestion) {
-        assertThat(suggestions).hasSize(1);
-        boolean found = suggestions.stream()
-                .anyMatch(suggestion -> suggestion == expectedSuggestion);
-        assertThat(found).isTrue();
+    public SuggestionAssertion hasReturnDisplayValue(String expectedReturnDisplayValue) {
+        String actualReturnDisplayValue = suggestion.getReturnTypeDisplayValue();
+        assertThat(actualReturnDisplayValue).isEqualTo(expectedReturnDisplayValue);
         return this;
     }
 
-    public SuggestionAssertion hasSize(int expectedSize) {
-        assertThat(suggestions).hasSize(expectedSize);
+    public SuggestionAssertion hasInsertValue(String expectedInsertValue) {
+        String actualInsertValue = suggestion.getInsertValue();
+        assertThat(actualInsertValue).isEqualTo(expectedInsertValue);
         return this;
     }
 
-    public SuggestionAssertion isEmpty() {
-        assertThat(suggestions).isEmpty();
+    public SuggestionAssertion hasLookupToken(String expectedLookupToken) {
+        String actualLookupToken = suggestion.getLookupToken();
+        assertThat(actualLookupToken).isEqualTo(expectedLookupToken);
+        return this;
+    }
+
+    public SuggestionAssertion hasTailText(String expectedTailText) {
+        String actualTailText = suggestion.getTailText();
+        assertThat(actualTailText).isEqualTo(expectedTailText);
+        return this;
+    }
+
+    public SuggestionAssertion hasOffset(int expectedOffset) {
+        int actualOffset = suggestion.getCursorOffset();
+        assertThat(actualOffset).isEqualTo(expectedOffset);
         return this;
     }
 }

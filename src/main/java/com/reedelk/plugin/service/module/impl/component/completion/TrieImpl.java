@@ -10,6 +10,7 @@ import java.util.Set;
 public class TrieImpl implements Trie {
 
     private final String extendsType;
+    private final String displayName;
     private final String listItemType;
     private TrieNode root;
 
@@ -17,11 +18,13 @@ public class TrieImpl implements Trie {
         this.root = new TrieNode();
         this.extendsType = null;
         this.listItemType = null;
+        this.displayName = null;
     }
 
-    public TrieImpl(String extendsType, String listItemType) {
+    public TrieImpl(String extendsType, String listItemType, String displayName) {
         this.root = new TrieNode();
         this.listItemType = listItemType;
+        this.displayName = displayName;
         this.extendsType = extendsType;
     }
 
@@ -77,6 +80,11 @@ public class TrieImpl implements Trie {
     @Override
     public String listItemType() {
         return listItemType;
+    }
+
+    @Override
+    public String displayName() {
+        return displayName;
     }
 
     @Override
